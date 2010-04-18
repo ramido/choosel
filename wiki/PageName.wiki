@@ -1,0 +1,160 @@
+#summary List of used 3rd party components and frameworks
+
+==Google App Engine / Java (GAE/J)==
+Server-side web application framework
+
+*Version:* 1.3.1
+
+*URL:* http://code.google.com/p/googleappengine/
+
+*License:* Apache License 2.0
+
+==Google Web Toolkit (GWT)==
+
+Web application framework
+
+*Version:* 2.0.3
+
+*URL:* http://code.google.com/webtoolkit/
+
+*License:* Apache License 2.0
+
+==Mockito==
+
+Testing with mock objects 
+
+*Version:* 1.8.2
+
+*URL:* http://mockito.org/
+
+*License:* MIT License
+
+==GWT Log==
+
+Logging framework for GWT
+
+*Version:* 3.0.1
+
+*URL:* http://code.google.com/p/gwt-log/
+
+*License:* Apache License 2.0
+
+==FlexViz==
+
+Graph Visualization Component
+
+*Version:* Custom Build
+
+*URL:* http://sourceforge.net/projects/flexviz/
+
+*License:* Mozilla Public License 1.1 (MPL 1.1)
+
+==Simile Timeline==
+
+Timeline Component
+
+*Version:* 2.3.0
+
+*URL:* http://code.google.com/p/simile-widgets/
+
+*License:* New BSD License
+
+==Simile Ajax API==
+
+Required for Simile Timeline integration
+
+*Version:* 2.2.0
+
+*URL:* http://code.google.com/p/simile-widgets/
+
+*License:* New BSD License
+
+==Gin==
+
+Dependency injection for GWT
+
+*Version:* 20091021
+
+*URL:* http://code.google.com/p/google-gin/
+
+*License:* Apache License 2.0
+
+==Guice==
+
+Dependency injection framework, required for Gin
+
+*Version:* 2.0
+
+*URL:* http://code.google.com/p/google-guice/
+
+*License:* Apache License 2.0
+
+==GWT DnD==
+
+Drag and Drop functionality
+
+*Version:* 3.0.0
+
+*URL:* http://code.google.com/p/gwt-dnd/
+
+*License:* Apache License 2.0
+
+==GWT FX==
+
+Visual Effects
+
+*Version:* 0.5.0-m1
+
+*URL:* http://code.google.com/p/gwt-fx/
+
+*License:* Apache License 2.0
+
+==GWT Maps==
+
+Google Maps API
+
+*Version:* 1.0
+
+*URL:* http://code.google.com/p/gwt-google-apis/
+
+*License:* Apache License 2.0
+
+==GWT Visualization==
+
+Google Visualization API
+
+*Version:* 1.0.2
+
+*URL:* http://code.google.com/p/gwt-google-apis/
+
+*License:* Apache License 2.0
+
+==GWT 2 SWF==
+
+Flash/Flex integration into GWT
+
+*Version:* 0.6.0
+
+*URL:* http://code.google.com/p/gwt2swf/
+
+*License:* Apache License 2.0
+
+==GWT Query==
+
+JQuery functionality within GWT
+
+*Version:* 1.0-PATCHED
+
+*URL:* http://code.google.com/p/gwtquery/
+
+*License:* MIT License
+
+==Apache Xalan==
+
+XSLT Processor
+
+*Version:* 2.7.1
+
+*URL:* http://xml.apache.org/xalan-j/
+
+*License:* Apache License 2.0
