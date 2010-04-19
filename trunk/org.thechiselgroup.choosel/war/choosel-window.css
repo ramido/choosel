@@ -1,0 +1,128 @@
+/** Window-System (includes Desktop) */
+
+.dialog-content {
+	background-color: rgb(255, 255, 255);
+	height: 100%;
+	width: 100%;
+	min-width: 150px;
+    max-width: 600px;
+    padding: 5px;
+    
+    display: table-cell; 
+}
+
+.dialog-message {
+	position: absolute;
+	width: 400px;
+	font-size: 20pt;
+	font-weight: bold;
+    border: 1px solid rgb(159, 188, 215);
+    padding: 3px;	
+    background-color: rgb(214, 230, 244);
+    color: rgb(112, 106, 170);
+}
+
+.dialog-panel {
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+}
+
+.dialog-buttonbar {
+  border-top: 1px solid rgb(159, 188, 215);
+  background-color: rgb(214, 230, 244);
+  margin-top: 4px;
+}
+
+.desktop {
+    background-color: rgb(164, 195, 235);
+}
+
+.window {
+  border-top: 1px solid rgb(159, 188, 215);
+  border-left: 1px solid rgb(159, 188, 215);
+  border-right: 1px solid rgb(159, 188, 215);
+  border-bottom: 1px solid rgb(159, 188, 215);
+	
+  display: block;
+  background-color: rgb(214, 230, 244);
+  /**background-color: rgb(226, 226, 226);*/
+  
+  box-shadow: 1px 1px 3px #333333;
+  -moz-box-shadow: 1px 1px 3px #333333;
+  -webkit-box-shadow: 1px 1px 3px #333333;
+}
+
+.window .window-header {
+  padding: 2px;
+	
+  border-bottom: 1px solid rgb(159, 188, 215);
+     
+  margin-bottom: 2px;
+  padding-bottom: 1px;
+ 
+  background-color: rgb(193, 217, 241);
+  
+  overflow: hidden;
+}
+
+.window-header-label {
+  font-weight: bold;
+  color: rgb(112, 106, 170);
+  text-align: left;
+  display: inline; /* required so we can calculate minimum width based on header */
+}
+ 
+.window-button-panel {
+  margin-left: 5px;
+  margin-right: 2px;
+  cursor: default;
+}
+
+.window .dragdrop-boundary {
+  background-color: rgb(159, 188, 215);
+  border: 1px solid black;
+}
+
+.window .window-resize-edge {
+  background-color: rgb(193, 217, 241);
+  line-height: 1px;
+  font-size: 1px;
+}
+
+.window .window-resize-nw .dragdrop-handle {
+  cursor: nw-resize;
+}
+
+.window .window-resize-n .dragdrop-handle {
+  cursor: n-resize;
+}
+
+.window .window-resize-ne .dragdrop-handle {
+  cursor: ne-resize;
+}
+
+.window .window-resize-w .dragdrop-handle {
+  cursor: w-resize;
+}
+
+.window .window-resize-e .dragdrop-handle {
+  cursor: e-resize;
+}
+
+.window .window-resize-sw .dragdrop-handle {
+  cursor: sw-resize;
+}
+
+.window .window-resize-s .dragdrop-handle {
+  cursor: s-resize;
+}
+
+.window .window-resize-se .dragdrop-handle {
+  cursor: se-resize;
+}
+
+.windowTransparent {
+    filter: alpha(opacity = 30);
+    opacity: 0.3;
+}

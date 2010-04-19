@@ -1,0 +1,81 @@
+/*******************************************************************************
+ * Copyright 2009, 2010 Lars Grammel 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at 
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0 
+ *     
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ * See the License for the specific language governing permissions and 
+ * limitations under the License.  
+ *******************************************************************************/
+package org.thechiselgroup.choosel.client.command.ui;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.thechiselgroup.choosel.client.command.ui.CommandPresenter;
+import org.thechiselgroup.choosel.client.command.ui.CommandPresenter.Display;
+
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Command;
+
+public class CommandPresenterTest {
+
+    @Mock
+    private Display display;
+
+    @Mock
+    private Command command;
+
+    private CommandPresenter presenter;
+
+    protected ClickHandler clickHandler;
+
+    @Before
+    public void setUp() {
+	MockitoAnnotations.initMocks(this);
+
+	// TODO extract to utility class with reflection
+	when(display.addClickHandler(any(ClickHandler.class))).thenAnswer(
+		new Answer<HandlerRegistration>() {
+		    public HandlerRegistration answer(
+			    InvocationOnMock invocation) {
+
+			clickHandler = (ClickHandler) invocation.getArguments()[0];
+			return null;
+		    }
+		});
+
+	presenter = new CommandPresenter(display, command);
+	presenter.init();
+    }
+
+    @Test
+    public void initialState() {
+	verify(display).addClickHandler(any(ClickHandler.class));
+    }
+
+    @Test
+    public void callExecuteOnClick() {
+	clickHandler.onClick(new ClickEvent() {
+	});
+
+	verify(command, times(1)).execute();
+    }
+
+}
