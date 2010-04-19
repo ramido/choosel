@@ -1,0 +1,32 @@
+#summary Describes how to set up an development environment for Choosel.
+#labels Setup,Featured
+
+= Setting up Java, GAE/J & GWT =
+
+   * Install [http://www.java.com/en/download/manual.jsp Java] (Java 5 is good enough)
+   * Install [http://code.google.com/webtoolkit/download.html Google Web Toolkit]
+   * Install [http://code.google.com/appengine/downloads.html Google App Engine SDK for Java]
+
+= Setting up Eclipse =
+
+We recommend using [http://www.eclipse.org Eclipse] for working on Choosel. The following setup is known to work:
+
+   * [http://www.eclipse.org/downloads/packages/eclipse-ide-java-developers/galileosr2 Eclipse IDE for Java Developers 3.5 (Galileo)]
+   * Subversion Plugin for Eclipse
+      * [http://www.eclipse.org/subversive/downloads.php Subversive]
+      * [http://www.polarion.com/products/svn/subversive/download.php Team Providers]
+      * Change Setting in Eclipse Preferences: Window/Preferences-->Team/SVN-->SVN Connector-->SVN Connector = SVNKit 1.3.0
+   * [http://code.google.com/eclipse/ Google Plugin for Eclipse]
+
+= Checking out choosel from SVN repository =
+
+   * [http://code.google.com/p/choosel/source/checkout general project checkout information]
+   * Check out "org.thechiselgroup.choosel" as Eclipse project
+
+= Adjust launch configuration =
+
+   * Run configuration... --> choosel --> Arguments --> Adjust -javaagent part to use the app engine location on you computer
+
+= That's it =
+
+You should be able to run choosel in your development development environment now - just run the choosel launch configuration.
