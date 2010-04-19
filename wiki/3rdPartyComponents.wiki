@@ -1,6 +1,8 @@
 #summary List of used 3rd party components and frameworks
 #labels 3rdparty,license
 
+The Choosel Mashup Framework includes and uses the following software components developed by various people and organizations:
+
 ==Google App Engine / Java (GAE/J)==
 Server-side web application framework
 
