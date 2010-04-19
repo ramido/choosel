@@ -30,3 +30,5 @@ We recommend using [http://www.eclipse.org Eclipse] for working on Choosel. The 
 = That's it =
 
 You should be able to run choosel in your development development environment now - just run the choosel launch configuration.
+
+If you encounter problems setting up choosel with this guide, complain on the [http://groups.google.com/group/choosel choosel mailing list].
