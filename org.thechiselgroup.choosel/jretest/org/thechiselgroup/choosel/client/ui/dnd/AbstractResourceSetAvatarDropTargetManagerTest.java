@@ -1,0 +1,106 @@
+/*******************************************************************************
+ * Copyright 2009, 2010 Lars Grammel 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at 
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0 
+ *     
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ * See the License for the specific language governing permissions and 
+ * limitations under the License.  
+ *******************************************************************************/
+package org.thechiselgroup.choosel.client.ui.dnd;
+
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.thechiselgroup.choosel.client.command.CommandManager;
+import org.thechiselgroup.choosel.client.test.DndTestHelpers;
+import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
+import org.thechiselgroup.choosel.client.ui.dnd.AbstractResourceSetAvatarDropTargetManager;
+import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
+import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropCommandFactory;
+import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropController;
+import org.thechiselgroup.choosel.client.views.ViewAccessor;
+
+import com.google.gwt.user.client.ui.Widget;
+
+public class AbstractResourceSetAvatarDropTargetManagerTest {
+
+    public static class TestDragAvatarDropTargetManager extends
+	    AbstractResourceSetAvatarDropTargetManager {
+	public TestDragAvatarDropTargetManager(CommandManager commandManager,
+		ResourceSetAvatarDragController dragController,
+		ViewAccessor viewAccessor) {
+
+	    super(commandManager, dragController, viewAccessor);
+	}
+
+	@Override
+	protected ResourceSetAvatarDropCommandFactory createCommandFactory(
+		Widget widget, ViewAccessor viewAccessor) {
+	    return null;
+	}
+    }
+
+    private AbstractResourceSetAvatarDropTargetManager manager;
+
+    @Mock
+    private ResourceSetAvatarDragController dragController;
+
+    @Mock
+    private CommandManager commandManager;
+
+    @Mock
+    private ViewAccessor viewAccessor;
+
+    @Mock
+    private Widget widget;
+
+    @Test
+    public void registerDropController() {
+	manager.enableDropTarget(widget);
+
+	ArgumentCaptor<ResourceSetAvatarDropController> captor = ArgumentCaptor
+		.forClass(ResourceSetAvatarDropController.class);
+
+	verify(dragController, times(1)).registerDropController(
+		captor.capture());
+
+	assertEquals(widget, captor.getValue().getDropTarget());
+    }
+
+    @Test
+    public void disposeRemovesDropController() {
+	manager.disableDropTarget(widget);
+	verify(dragController, times(1))
+		.unregisterDropControllerFor(eq(widget));
+    }
+
+    @Before
+    public void setUp() throws Exception {
+	MockitoGWTBridge bridge = MockitoGWTBridge.setUp();
+	MockitoAnnotations.initMocks(this);
+	DndTestHelpers.mockDragClientBundle(bridge);
+
+	manager = spy(new TestDragAvatarDropTargetManager(commandManager,
+		dragController, viewAccessor));
+    }
+
+    @After
+    public void tearDown() {
+	MockitoGWTBridge.tearDown();
+    }
+
+}

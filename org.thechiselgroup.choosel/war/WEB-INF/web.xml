@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
+
+  <servlet>
+    <servlet-name>authentication</servlet-name>
+    <servlet-class>org.thechiselgroup.choosel.server.authentication.AuthenticationServiceServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>authentication</servlet-name>
+    <url-pattern>/org_thechiselgroup_choosel/authentication</url-pattern>
+  </servlet-mapping>  
+
+  <servlet>
+    <servlet-name>feedback</servlet-name>
+    <servlet-class>org.thechiselgroup.choosel.server.feedback.FeedbackServiceServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>feedback</servlet-name>
+    <url-pattern>/org_thechiselgroup_choosel/feedback</url-pattern>
+  </servlet-mapping>  
+  
+  <!-- 
+  DEACTIVED SERVLETS
+  
+  <servlet>
+    <servlet-name>sparqlQuery</servlet-name>
+    <servlet-class>org.thechiselgroup.choosel.server.domain.other.SparqlQueryServiceImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>sparqlQuery</servlet-name>
+    <url-pattern>/org_thechiselgroup_choosel/sparqlQuery</url-pattern>
+  </servlet-mapping>  
+  
+  <servlet>
+    <servlet-name>proxyServlet</servlet-name>
+    <servlet-class>org.thechiselgroup.choosel.server.domain.other.ProxyServiceImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>proxyServlet</servlet-name>
+    <url-pattern>/org_thechiselgroup_choosel/proxy</url-pattern>
+  </servlet-mapping>  
+  
+  <servlet>
+    <servlet-name>iplocator</servlet-name>
+    <servlet-class>org.thechiselgroup.choosel.server.domain.other.IPLocatorServiceImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>iplocator</servlet-name>
+    <url-pattern>/org_thechiselgroup_choosel/iplocator</url-pattern>
+  </servlet-mapping>  
+   -->
+  
+  <servlet>
+    <servlet-name>georss</servlet-name>
+    <servlet-class>org.thechiselgroup.choosel.server.domain.other.GeoRSSServiceImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>georss</servlet-name>
+    <url-pattern>/org_thechiselgroup_choosel/georss</url-pattern>
+  </servlet-mapping>  
+
+  <servlet>
+    <servlet-name>ncbo_mapping</servlet-name>
+    <servlet-class>org.thechiselgroup.choosel.server.domain.ncbo.NCBOMappingNeighbourhoodServiceServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ncbo_mapping</servlet-name>
+    <url-pattern>/org_thechiselgroup_choosel/ncbo_mapping</url-pattern>
+  </servlet-mapping>  
+
+  <servlet>
+    <servlet-name>ncbo_concept_search</servlet-name>
+    <servlet-class>org.thechiselgroup.choosel.server.domain.ncbo.NCBOConceptSearchServiceImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ncbo_concept_search</servlet-name>
+    <url-pattern>/org_thechiselgroup_choosel/ncbo_concept_search</url-pattern>
+  </servlet-mapping>  
+
+  <servlet>
+    <servlet-name>ncbo_concept_neighbourhood</servlet-name>
+    <servlet-class>org.thechiselgroup.choosel.server.domain.ncbo.NCBOConceptNeighbourhoodServiceServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ncbo_concept_neighbourhood</servlet-name>
+    <url-pattern>/org_thechiselgroup_choosel/ncbo_concept_neighbourhood</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>workspace</servlet-name>
+    <servlet-class>org.thechiselgroup.choosel.server.workspace.WorkspacePersistenceServiceServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>workspace</servlet-name>
+    <url-pattern>/org_thechiselgroup_choosel/workspace</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>workspace-sharing</servlet-name>
+    <servlet-class>org.thechiselgroup.choosel.server.workspace.WorkspaceSharingServiceServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>workspace-sharing</servlet-name>
+    <url-pattern>/org_thechiselgroup_choosel/workspace-sharing</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>acceptInvitation</servlet-name>
+    <servlet-class>org.thechiselgroup.choosel.server.workspace.AcceptInvitationServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>acceptInvitation</servlet-name>
+    <url-pattern>/acceptInvitation</url-pattern>
+  </servlet-mapping>
+
+<!-- gwt-log remote logging service -->  
+<servlet>
+  <servlet-name>remoteLoggerServiceImpl</servlet-name>
+  <servlet-class>com.allen_sauer.gwt.log.server.RemoteLoggerServiceImpl</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>remoteLoggerServiceImpl</servlet-name>
+  <url-pattern>/org_thechiselgroup_choosel/gwt-log</url-pattern>
+</servlet-mapping>
+ 
+</web-app>

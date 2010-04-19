@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hash>
+  <mapping-to type="array">
+    <mapping-to>
+      <comment nil="true"/>
+      <map-type>Human</map-type>
+      <created-at>2008-05-09 08:25:23</created-at>
+      <updated-at>2008-08-05 17:26:06</updated-at>
+      <source-name>OtherCarbonName</source-name>
+      <source-ont-name>NanoParticle Ontology (NPO)</source-ont-name>
+      <destination-id>CHEBI:27594</destination-id>
+      <id>98216</id>
+      <user-id>38139</user-id>
+      <relationship-type nil="true"/>
+      <destination-ont-name>Chemical entities of biological interest</destination-ont-name>
+      <destination-name>Carbon</destination-name>
+      <map-source nil="true"/>
+      <destination-ont>1007</destination-ont>
+      <source-id>OtherCarbon</source-id>
+      <destination-version-id>38377</destination-version-id>
+      <source-version-id>29531</source-version-id>
+      <source-ont>1083</source-ont>
+    </mapping-to>
+  </mapping-to>
+  <mapping-from type="array">
+    <mapping-from>
+      <comment nil="true"/>
+      <map-type>Automatic</map-type>
+      <created-at>2009-08-13 13:50:03</created-at>
+      <updated-at>2009-08-13 13:50:03</updated-at>
+      <source-name>Carbon</source-name>
+      <source-ont-name>Chemical entities of biological interest</source-ont-name>
+      <destination-id>OtherCarbon</destination-id>
+      <id>1801522</id>
+      <user-id>38342</user-id>
+      <relationship-type>lexical similarity</relationship-type>
+      <destination-ont-name>NanoParticle Ontology (NPO)</destination-ont-name>
+      <destination-name>OtherCarbonName</destination-name>
+      <map-source>&lt;a href="http://www.bioontology.org/wiki/index.php/LOOM"&gt;LOOM&lt;/a&gt;</map-source>
+      <destination-ont>1083</destination-ont>
+      <source-id>CHEBI:27594</source-id>
+      <destination-version-id>29531</destination-version-id>
+      <source-version-id>39895</source-version-id>
+      <source-ont>1007</source-ont>
+    </mapping-from>
+  </mapping-from>
+</hash>
