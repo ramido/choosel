@@ -1,0 +1,6 @@
+#summary Mailing lists in this project
+#labels Groups
+
+   * [http://groups.google.com/group/choosel choosel] (questions, discussions, feedback, news)
+   * [http://groups.google.com/group/choosel-commit choosel-commit] (commit notifications)
+   * [http://groups.google.com/group/choosel-issues choosel-issues] (issue tracker updates)
