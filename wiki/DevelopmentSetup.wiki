@@ -32,3 +32,9 @@ We recommend using [http://www.eclipse.org Eclipse] for working on Choosel. The 
 You should be able to run choosel in your development development environment now - just run the choosel launch configuration.
 
 If you encounter problems setting up choosel with this guide, complain on the [http://groups.google.com/group/choosel choosel mailing list] :-)
+
+= Optional setup =
+
+There is a Mylin task connector for Google Code. It can be used to access the Choosel issue tracker from within Eclipse.
+
+[http://code.google.com/p/googlecode-mylyn-connector/]
