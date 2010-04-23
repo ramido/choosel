@@ -122,16 +122,6 @@ Google Maps API
 
 *License:* Apache License 2.0
 
-==GWT Visualization==
-
-Google Visualization API
-
-*Version:* 1.0.2
-
-*URL:* http://code.google.com/p/gwt-google-apis/
-
-*License:* Apache License 2.0
-
 ==GWT 2 SWF==
 
 Flash/Flex integration into GWT
