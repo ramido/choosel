@@ -5,8 +5,9 @@
   	
   <property name="dist" location="bin/dist"/>
   <property name="src" location="src"/>
+  <property name="class-dir" location="war/WEB-INF/classes"/>
   <property name="lib" location="lib"/>
-  <property name="app-lib" value="choosel-lib"/>
+  <property name="app-lib" value="bin/build/lib"/>
  
   <!-- tasks that are called from external application ant buildfiles -->
 	
@@ -43,9 +44,10 @@
   	      description="creates the module jar file for choosel"
   	      depends="choosel-prepare">
   	
-    <jar destfile="${dist}/choosel-${choosel-version}.jar"
-         basedir="${src}"
-    />
+    <jar destfile="${dist}/choosel-${choosel-version}.jar">
+      <fileset dir="${src}" />
+      <fileset dir="${class-dir}" /> 
+    </jar>
   </target>
 	
   <target name="choosel-copy-libs-to-dist" 
