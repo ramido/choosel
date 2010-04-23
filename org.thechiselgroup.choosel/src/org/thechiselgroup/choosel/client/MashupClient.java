@@ -55,17 +55,9 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.visualization.client.AbstractDataTable;
-import com.google.gwt.visualization.client.DataTable;
-import com.google.gwt.visualization.client.VisualizationUtils;
-import com.google.gwt.visualization.client.AbstractDataTable.ColumnType;
-import com.google.gwt.visualization.client.visualizations.ColumnChart;
 
 // TODO refactor / split up this whole class to facilitate DI
 public class MashupClient implements EntryPoint {
@@ -138,10 +130,6 @@ public class MashupClient implements EntryPoint {
 
 	BrowserDetect.checkBrowser();
 
-	// currently disabled testing stuff
-	// addGenericSend();
-	// loadVisualization();
-
 	DockPanel mainPanel = new DockPanel();
 	RootPanel.get().add(mainPanel);
 
@@ -166,12 +154,6 @@ public class MashupClient implements EntryPoint {
 	addGraphButton();
 
 	addTestDataSourceButton();
-
-	// addSparqlQueryButton();
-
-	// injector.getIPLocatorService().getClientLocation(
-
-	// dataSourceAddedCallback);
 
 	// TODO extract constant
 	String workspaceIdParam = Window.Location.getParameter("workspaceId");
@@ -299,31 +281,6 @@ public class MashupClient implements EntryPoint {
 
 	editPanel.add(display.getUndoButton());
 	editPanel.add(display.getRedoButton());
-    }
-
-    private void addSparqlQueryButton() {
-	Button button = new Button("SPARQL");
-	button.addClickHandler(new ClickHandler() {
-
-	    @Override
-	    public void onClick(ClickEvent event) {
-		injector.getSparqlQueryService().runSparqlQuery(
-			new AsyncCallback<String>() {
-			    @Override
-			    public void onSuccess(String result) {
-				desktop.asWidget().add(new Label(result));
-			    }
-
-			    @Override
-			    public void onFailure(Throwable caught) {
-				desktop.asWidget().add(
-					new Label(caught.getMessage()));
-			    }
-			});
-	    }
-
-	});
-	dataPanel.add(button);
     }
 
     private void addTimelineButton() {
@@ -510,93 +467,6 @@ public class MashupClient implements EntryPoint {
 
     private void createGraphView() {
 	createWindowForViewType("Graph");
-    }
-
-    // TODO remove
-    private void addGenericSend() {
-	final Button sendButton = new Button("Send");
-	final TextBox nameField = new TextBox();
-	final Label result = new Label();
-
-	desktop.asWidget().add(nameField);
-	desktop.asWidget().add(sendButton);
-	desktop.asWidget().add(result);
-
-	sendButton.addClickHandler(new ClickHandler() {
-
-	    @Override
-	    public void onClick(ClickEvent event) {
-		String textToServer = nameField.getText();
-
-		injector.getProxyService().fetchURL(textToServer,
-			new AsyncCallback<String>() {
-			    public void onFailure(Throwable e) {
-				result.setText(e.getMessage());
-			    }
-
-			    public void onSuccess(String x) {
-				result.setText(x);
-			    }
-			});
-	    }
-	});
-    }
-
-    private void loadVisualization() {
-	// Create a callback to be called when the visualization API
-	// has been loaded.
-	Runnable onLoadCallback = new Runnable() {
-	    public void run() {
-		Panel panel = injector.getDesktop().asWidget();
-
-		// Create a pie chart visualization.
-		ColumnChart barChart = new ColumnChart(createTable(),
-			createOptions());
-
-		panel.add(barChart);
-
-		barChart.draw(createTable2(), createOptions());
-	    }
-
-	    private ColumnChart.Options createOptions() {
-		ColumnChart.Options options = ColumnChart.Options.create();
-		options.setWidth(400);
-		options.setHeight(240);
-		options.set3D(true);
-		options.setTitle("My Daily Activities");
-		options.setMin(0);
-		return options;
-	    }
-
-	    private AbstractDataTable createTable() {
-		DataTable data = DataTable.create();
-		// data.addColumn(ColumnType.STRING, "Task");
-		// data.addColumn(ColumnType.NUMBER, "Hours per Day");
-		data.addRows(0);
-		// data.setValue(0, 0, "Work");
-		// data.setValue(0, 1, 14);
-		// data.setValue(1, 0, "Sleep");
-		// data.setValue(1, 1, 10);
-		return data;
-	    }
-
-	    private AbstractDataTable createTable2() {
-		DataTable data = DataTable.create();
-		data.addColumn(ColumnType.STRING, "Task");
-		data.addColumn(ColumnType.NUMBER, "Hours per Day");
-		data.addRows(2);
-		data.setValue(0, 0, "Work");
-		data.setValue(0, 1, 14);
-		data.setValue(1, 0, "Sleep");
-		data.setValue(1, 1, 10);
-		return data;
-	    }
-	};
-
-	// Load the visualization api, passing the onLoadCallback to be called
-	// when loading is done.
-	VisualizationUtils.loadVisualizationApi(onLoadCallback,
-		ColumnChart.PACKAGE);
     }
 
     private void createWindowForViewType(String viewType) {
