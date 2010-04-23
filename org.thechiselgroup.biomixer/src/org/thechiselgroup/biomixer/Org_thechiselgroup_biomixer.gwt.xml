@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module rename-to='org_thechiselgroup_biomixer'>
+  <inherits name='org.thechiselgroup.choosel.org_thechiselgroup_choosel'/>
+</module>
