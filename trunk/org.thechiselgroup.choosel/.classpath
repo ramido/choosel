@@ -13,7 +13,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/gwt-maps-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/xalan-2.7.1.jar"/>
-	<classpathentry kind="lib" path="lib/gwt-visualization-1.0.2.jar"/>
 	<classpathentry kind="lib" path="lib/guice-2.0.jar"/>
 	<classpathentry kind="lib" path="lib/gwtquery-1.0-PATCHED.jar"/>
 	<classpathentry kind="lib" path="lib/gin-20091021.jar" sourcepath="lib/gin-20091021-src.jar"/>
