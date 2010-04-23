@@ -16,12 +16,16 @@
  limitations under the License. 
 -->
 <module rename-to='org_thechiselgroup_choosel'>
+
+  <!-- CSS files -->
+  <stylesheet src="css/choosel.css" />
+  <stylesheet src="css/choosel-dnd.css" />
+  <stylesheet src="css/choosel-window.css" />
+  <stylesheet src="css/choosel-actionbar.css" />
   
   <!-- GWT basics --> 
   <inherits name='com.google.gwt.user.User'/>
   <inherits name='com.google.gwt.user.theme.standard.Standard'/>
-  <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
-  <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
  
   <!-- Dependency injection: guice, gin -->
   <inherits name="com.google.gwt.inject.Inject"/>

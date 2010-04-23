@@ -1,0 +1,73 @@
+<project name="org.thechiselgroup.choosel" 
+         default="choosel-dist" basedir=".">
+
+  <property name="choosel-version" value="0.0" />
+  	
+  <property name="dist" location="bin/dist"/>
+  <property name="src" location="src"/>
+  <property name="lib" location="lib"/>
+  <property name="app-lib" value="choosel-lib"/>
+ 
+  <!-- tasks that are called from external application ant buildfiles -->
+	
+  <target name="application-prepare"
+  	      description="prepares folders in application"
+  	      depends="application-clean">
+  	 
+    <mkdir dir="${app-dir}/${app-lib}"/>
+  </target>
+	
+  <target name="application-clean" 
+          description="clean automatically created resources in application project">
+    
+    <delete dir="${app-dir}/${app-lib}"/>
+  </target>
+	
+  <target name="application-import-libs"
+  	      description="imports libraries from choosel into application project"
+  	      depends="application-prepare,choosel-dist">
+  	 
+    <copy todir="${app-dir}/${app-lib}">
+      <fileset dir="${dist}"/>
+    </copy>
+  </target>
+	
+  <!-- choosel framework tasks -->
+	
+  <target name="choosel-dist" 
+	      description="creates choosel distribution"
+  	      depends="choosel-create-module-jar, choosel-copy-libs-to-dist">
+  </target>
+	
+  <target name="choosel-create-module-jar"
+  	      description="creates the module jar file for choosel"
+  	      depends="choosel-prepare">
+  	
+    <jar destfile="${dist}/choosel-${choosel-version}.jar"
+         basedir="${src}"
+    />
+  </target>
+	
+  <target name="choosel-copy-libs-to-dist" 
+	      description="copies the requried libraries to the dist directory"
+          depends="choosel-prepare" >
+  	
+    <copy todir="${dist}">
+      <fileset dir="${lib}"/>
+    </copy>
+  </target>
+	
+  <target name="choosel-clean" 
+          description="clean automatically created resources in choosel project">
+  	
+  	<delete dir="${dist}"/>
+  </target>
+	
+  <target name="choosel-prepare"
+  	      description="create folders required for choosel build"
+          depends="choosel-clean">
+  	
+    <mkdir dir="${dist}"/>
+  </target>
+
+</project>
