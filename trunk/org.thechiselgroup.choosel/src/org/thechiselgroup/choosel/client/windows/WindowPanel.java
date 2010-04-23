@@ -33,6 +33,7 @@ import org.thechiselgroup.choosel.client.ui.popup.DefaultPopupManager;
 
 import com.allen_sauer.gwt.dnd.client.util.Location;
 import com.allen_sauer.gwt.dnd.client.util.WidgetLocation;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
@@ -275,34 +276,34 @@ public class WindowPanel extends NEffectPanel implements
 	headerBar.setCellHorizontalAlignment(headerWidget,
 		HasAlignment.ALIGN_LEFT);
 
-	closeImage = new Image(IMAGE_CLOSE_INVISIBLE);
+	closeImage = new Image(getInvisibleCloseImageUrl());
 	closeImage.addStyleName(CSS_WINDOW_BUTTON_PANEL);
 
 	closeImage.addMouseOverHandler(new MouseOverHandler() {
 	    @Override
 	    public void onMouseOver(MouseOverEvent event) {
-		closeImage.setUrl(IMAGE_CLOSE_ACTIVE);
+		closeImage.setUrl(getActiveCloseImageUrl());
 	    }
 	});
 
 	closeImage.addMouseOutHandler(new MouseOutHandler() {
 	    @Override
 	    public void onMouseOut(MouseOutEvent event) {
-		closeImage.setUrl(IMAGE_CLOSE_VISIBLE);
+		closeImage.setUrl(getVisibleCloseImageUrl());
 	    }
 	});
 
 	rootPanel.addMouseOverHandler(new MouseOverHandler() {
 	    @Override
 	    public void onMouseOver(MouseOverEvent event) {
-		closeImage.setUrl(IMAGE_CLOSE_VISIBLE);
+		closeImage.setUrl(getVisibleCloseImageUrl());
 	    }
 	});
 
 	rootPanel.addMouseOutHandler(new MouseOutHandler() {
 	    @Override
 	    public void onMouseOut(MouseOutEvent event) {
-		closeImage.setUrl(IMAGE_CLOSE_INVISIBLE);
+		closeImage.setUrl(getInvisibleCloseImageUrl());
 	    }
 	});
 
@@ -347,7 +348,7 @@ public class WindowPanel extends NEffectPanel implements
 
     @Override
     public void dragProxyAttached() {
-	closeImage.setUrl(IMAGE_CLOSE_INVISIBLE);
+	closeImage.setUrl(getInvisibleCloseImageUrl());
     }
 
     @Override
@@ -361,6 +362,10 @@ public class WindowPanel extends NEffectPanel implements
 
     public int getAbsoluteY() {
 	return getAbsoluteTop() - getParent().getAbsoluteTop();
+    }
+
+    private String getActiveCloseImageUrl() {
+	return getModuleBase() + IMAGE_CLOSE_ACTIVE;
     }
 
     /*
@@ -378,6 +383,10 @@ public class WindowPanel extends NEffectPanel implements
 	return contentWidth;
     }
 
+    private String getInvisibleCloseImageUrl() {
+	return getModuleBase() + IMAGE_CLOSE_INVISIBLE;
+    }
+
     public int getMinimumWidth() {
 	int minimumWidth = 20;
 
@@ -385,9 +394,17 @@ public class WindowPanel extends NEffectPanel implements
 		.getOffsetWidth() : minimumWidth;
     }
 
+    protected String getModuleBase() {
+	return GWT.getModuleBaseURL();
+    }
+
     // TODO move into model
     public WindowContent getViewContent() {
 	return this.viewContent;
+    }
+
+    private String getVisibleCloseImageUrl() {
+	return getModuleBase() + IMAGE_CLOSE_VISIBLE;
     }
 
     public String getWindowTitle() {
