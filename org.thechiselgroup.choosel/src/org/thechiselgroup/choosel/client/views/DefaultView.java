@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.thechiselgroup.choosel.client.MashupClient;
 import org.thechiselgroup.choosel.client.configuration.MashupInjectionConstants;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.persistence.Memento;
@@ -45,16 +44,8 @@ import org.thechiselgroup.choosel.client.resources.ResourceSetRemovedEventHandle
 import org.thechiselgroup.choosel.client.resources.ResourceSplitter;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
-import org.thechiselgroup.choosel.client.resources.ui.DefaultResourceSetAvatarFactory;
-import org.thechiselgroup.choosel.client.resources.ui.DisableIfEmptyResourceSetAvatarFactory;
-import org.thechiselgroup.choosel.client.resources.ui.HideIfEmptyResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
-import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
-import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceSetsPresenter;
-import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarType;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
-import org.thechiselgroup.choosel.client.ui.dnd.DropTargetResourceSetAvatarFactory;
-import org.thechiselgroup.choosel.client.ui.dnd.SelectionDropTargetManager;
 import org.thechiselgroup.choosel.client.util.HandlerRegistrationSet;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 
@@ -123,8 +114,6 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private Map<String, Layer> categoriesToLayers = new HashMap<String, Layer>();
 
-    private ResourceEventsForwarder combinedResourcesToAllForwarder;
-
     private CombinedResourceSet combinedUserResourceSets;
 
     private DockPanel configurationPanel;
@@ -172,6 +161,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 	    @Named(MashupInjectionConstants.AVATAR_FACTORY_TYPE) ResourceSetsPresenter splittedSetsPresenter,
 	    @Named(MashupInjectionConstants.AVATAR_FACTORY_ALL_RESOURCES) ResourceSetsPresenter allResourcesSetPresenter,
 	    @Named(MashupInjectionConstants.AVATAR_FACTORY_SELECTION) ResourceSetsPresenter selectionPresenter,
+	    @Named(MashupInjectionConstants.AVATAR_FACTORY_SELECTION_DROP) ResourceSetsPresenter selectionDropPresenter,
 	    ResourceSplitter resourceSplitter,
 	    ViewContentDisplay contentDisplay, String label, String contentType) {
 
@@ -184,6 +174,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 	this.splittedSetsPresenter = splittedSetsPresenter;
 	this.allResourcesSetPresenter = allResourcesSetPresenter;
 	this.selectionPresenter = selectionPresenter;
+	this.selectionDropPresenter = selectionDropPresenter;
 	this.resourceSplitter = resourceSplitter;
 	this.contentDisplay = contentDisplay;
     }
@@ -421,22 +412,13 @@ public class DefaultView extends AbstractWindowContent implements View {
 	initCombinedResourcesSetPresenterUI();
 	initOriginalResourceSetsPresenterUI();
 	initSplittedResourceSetsPresenterUI();
+	initSelectionDropPresenterUI();
+	initSelectionDragSourceUI();
+    }
 
-	// XXX HACK move to factories etc
-	ResourceSetAvatarFactory defaultFactory = new DefaultResourceSetAvatarFactory(
-		"avatar-selection", ResourceSetAvatarType.SELECTION);
-	ResourceSetAvatarFactory hidingFactory = new HideIfEmptyResourceSetAvatarFactory(
-		defaultFactory);
-	ResourceSetAvatarFactory disablingFactory = new DisableIfEmptyResourceSetAvatarFactory(
-		hidingFactory);
-	ResourceSetAvatarFactory dropTargetFactory = new DropTargetResourceSetAvatarFactory(
-		disablingFactory, new SelectionDropTargetManager(
-			MashupClient.injector.getCommandManager(),
-			MashupClient.injector.getDragController(),
-			new DefaultViewAccessor()));
-	ResourceSetsPresenter selectionDropPresenter = new ResourceSetAvatarResourceSetsPresenter(
-		dropTargetFactory);
+    private void initSelectionDropPresenterUI() {
 	selectionDropPresenter.init();
+
 	DefaultResourceSet resources = new DefaultResourceSet();
 	resources.setLabel("add selection");
 	selectionDropPresenter.addResourceSet(resources);
@@ -446,9 +428,6 @@ public class DefaultView extends AbstractWindowContent implements View {
 	configurationPanel.add(widget, DockPanel.EAST);
 	configurationPanel.setCellHorizontalAlignment(widget,
 		HasAlignment.ALIGN_RIGHT);
-
-	// old
-	initSelectionDragSourceUI();
     }
 
     // TODO eliminate inner class, implement methods in DefaultView & test them
@@ -783,6 +762,8 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     // XXX might not be necessary (use presenter instead?)
     private List<ResourceSet> selectionSets = new ArrayList<ResourceSet>();
+
+    private ResourceSetsPresenter selectionDropPresenter;
 
     public void addSelectionSet(ResourceSet selectionSet) {
 	assert selectionSet != null;
