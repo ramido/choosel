@@ -63,12 +63,15 @@ public class DefaultWindowContentProducerProvider implements
 
     protected final Map<String, WindowContentFactory> windowContentFactories = new HashMap<String, WindowContentFactory>();
 
+    private ResourceSetAvatarFactory dropTargetFactory;
+
     @Inject
     public DefaultWindowContentProducerProvider(
 	    @Named(AVATAR_FACTORY_SET) ResourceSetAvatarFactory userSetsDragAvatarFactory,
 	    @Named(AVATAR_FACTORY_TYPE) ResourceSetAvatarFactory typesDragAvatarFactory,
 	    @Named(AVATAR_FACTORY_ALL_RESOURCES) ResourceSetAvatarFactory allResourcesDragAvatarFactory,
 	    @Named(AVATAR_FACTORY_SELECTION) ResourceSetAvatarFactory selectionDragAvatarFactory,
+	    @Named(AVATAR_FACTORY_SELECTION_DROP) ResourceSetAvatarFactory dropTargetFactory,
 	    @Named(HOVER_MODEL) ResourceSet hoverModel,
 	    ResourceSetFactory resourceSetFactory,
 	    @Named(LABEL_PROVIDER_SELECTION_SET) LabelProvider selectionModelLabelFactory,
@@ -80,6 +83,7 @@ public class DefaultWindowContentProducerProvider implements
 	this.typesDragAvatarFactory = typesDragAvatarFactory;
 	this.allResourcesDragAvatarFactory = allResourcesDragAvatarFactory;
 	this.selectionDragAvatarFactory = selectionDragAvatarFactory;
+	this.dropTargetFactory = dropTargetFactory;
 	this.contentDropTargetManager = contentDropTargetManager;
 	this.hoverModel = hoverModel;
 	this.resourceSetFactory = resourceSetFactory;
@@ -147,9 +151,9 @@ public class DefaultWindowContentProducerProvider implements
 	windowContentFactories.put(contentType, new ViewFactory(contentType,
 		contentDisplayFactory, userSetsDragAvatarFactory,
 		typesDragAvatarFactory, allResourcesDragAvatarFactory,
-		selectionDragAvatarFactory, hoverModel, resourceSetFactory,
-		selectionModelLabelFactory, categorizer, labelProvider,
-		contentDropTargetManager));
+		selectionDragAvatarFactory, dropTargetFactory, hoverModel,
+		resourceSetFactory, selectionModelLabelFactory, categorizer,
+		labelProvider, contentDropTargetManager));
     }
 
 }

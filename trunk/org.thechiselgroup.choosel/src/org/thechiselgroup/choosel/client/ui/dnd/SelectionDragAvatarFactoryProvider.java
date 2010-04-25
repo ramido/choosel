@@ -21,10 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
-import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetContainer;
-import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.action.RemoveSelectionSetAction;
 import org.thechiselgroup.choosel.client.resources.ui.DefaultResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.DelegatingResourceSetAvatarFactory;
@@ -49,11 +47,8 @@ public class SelectionDragAvatarFactoryProvider implements
 	ResourceSetAvatarFactoryProvider {
 
     private final ResourceSetAvatarDragController dragController;
-    private final LabelProvider resourceSetLabelFactory;
-    private final ResourceSetFactory resourceSetFactory;
     private final PopupManagerFactory popupManagerFactory;
     private final ViewAccessor viewAccessor;
-    private final ResourceSetAvatarDropTargetManager dropTargetManager;
     private final ResourceSetContainer setHoverModel;
     private final ResourceSet hoverModel;
     private final CommandManager commandManager;
@@ -63,21 +58,14 @@ public class SelectionDragAvatarFactoryProvider implements
 	    ResourceSetAvatarDragController dragController,
 	    @Named(HOVER_MODEL) ResourceSet hoverModel,
 	    @Named(HOVER_MODEL) ResourceSetContainer setHoverModel,
-	    @Named(AVATAR_FACTORY_SELECTION) ResourceSetAvatarDropTargetManager dropTargetManager,
-	    ViewAccessor viewAccessor,
-	    PopupManagerFactory popupManagerFactory,
-	    ResourceSetFactory resourceSetFactory,
-	    @Named(LABEL_PROVIDER_RESOURCE_SET) LabelProvider resourceSetLabelFactory,
+	    ViewAccessor viewAccessor, PopupManagerFactory popupManagerFactory,
 	    CommandManager commandManager) {
 
 	this.dragController = dragController;
 	this.hoverModel = hoverModel;
 	this.setHoverModel = setHoverModel;
-	this.dropTargetManager = dropTargetManager;
 	this.viewAccessor = viewAccessor;
 	this.popupManagerFactory = popupManagerFactory;
-	this.resourceSetFactory = resourceSetFactory;
-	this.resourceSetLabelFactory = resourceSetLabelFactory;
 	this.commandManager = commandManager;
     }
 
@@ -86,19 +74,11 @@ public class SelectionDragAvatarFactoryProvider implements
 	ResourceSetAvatarFactory defaultFactory = new DefaultResourceSetAvatarFactory(
 		"avatar-selection", ResourceSetAvatarType.SELECTION);
 
-	// ResourceSetAvatarFactory disablingFactory = new
-	// DisableIfEmptyResourceSetAvatarFactory(
-	// defaultFactory);
-
 	ResourceSetAvatarFactory updateFactory = new UpdateResourceSetAvatarLabelFactory(
 		defaultFactory);
 
 	ResourceSetAvatarFactory dragEnableFactory = new DragEnableResourceSetAvatarFactory(
 		updateFactory, dragController);
-
-	// ResourceSetAvatarFactory dropTargetFactory = new
-	// DropTargetResourceSetAvatarFactory(
-	// dragEnableFactory, dropTargetManager);
 
 	ResourceSetAvatarFactory highlightingFactory = new HighlightingResourceSetAvatarFactory(
 		dragEnableFactory, hoverModel, setHoverModel, dragController);

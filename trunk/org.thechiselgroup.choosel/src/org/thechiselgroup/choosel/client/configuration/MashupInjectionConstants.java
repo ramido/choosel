@@ -37,6 +37,8 @@ public interface MashupInjectionConstants {
 
     String AVATAR_FACTORY_SELECTION = "selection-resource-sets-presenter";
 
+    String AVATAR_FACTORY_SELECTION_DROP = "selection-resource-sets-presenter-drop";
+
     String AVATAR_FACTORY_SET = "default-resource-sets-presenter";
 
     String AVATAR_FACTORY_TYPE = "type-resource-sets-presenter";

@@ -61,6 +61,7 @@ import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropTargetManager;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetDropTargetManager;
 import org.thechiselgroup.choosel.client.ui.dnd.SelectionDragAvatarFactoryProvider;
+import org.thechiselgroup.choosel.client.ui.dnd.SelectionDropTargetFactoryProvider;
 import org.thechiselgroup.choosel.client.ui.dnd.SelectionDropTargetManager;
 import org.thechiselgroup.choosel.client.ui.dnd.ViewDisplayDropTargetManager;
 import org.thechiselgroup.choosel.client.ui.messages.DefaultMessageManager;
@@ -184,6 +185,9 @@ public class MashupClientModule extends AbstractGinModule implements
 	bind(ResourceSetAvatarFactory.class).annotatedWith(
 		Names.named(AVATAR_FACTORY_SELECTION)).toProvider(
 		SelectionDragAvatarFactoryProvider.class).in(Singleton.class);
+	bind(ResourceSetAvatarFactory.class).annotatedWith(
+		Names.named(AVATAR_FACTORY_SELECTION_DROP)).toProvider(
+		SelectionDropTargetFactoryProvider.class).in(Singleton.class);
     }
 
     @Override

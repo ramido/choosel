@@ -45,12 +45,6 @@ import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ResourceSplitter;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
-import org.thechiselgroup.choosel.client.views.DefaultView;
-import org.thechiselgroup.choosel.client.views.Layer;
-import org.thechiselgroup.choosel.client.views.ResourceItem;
-import org.thechiselgroup.choosel.client.views.Slot;
-import org.thechiselgroup.choosel.client.views.ViewContentDisplay;
-import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -66,6 +60,7 @@ public class DefaultViewTest {
 		ResourceSetsPresenter splittedSetsPresenter,
 		ResourceSetsPresenter automaticSetPresenter,
 		ResourceSetsPresenter selectionPresenter,
+		ResourceSetsPresenter selectionDropPresenter,
 		ResourceSplitter resourceSplitter,
 		ViewContentDisplay contentDisplay, String label,
 		String contentType) {
@@ -73,7 +68,8 @@ public class DefaultViewTest {
 	    super(hoverModel, selectionModelLabelFactory, resourceSetFactory,
 		    originalSetsPresenter, splittedSetsPresenter,
 		    automaticSetPresenter, selectionPresenter,
-		    resourceSplitter, contentDisplay, label, contentType);
+		    selectionDropPresenter, resourceSplitter, contentDisplay,
+		    label, contentType);
 	}
 
 	@Override
@@ -116,6 +112,9 @@ public class DefaultViewTest {
 
     @Mock
     private ResourceSetsPresenter selectionPresenter;
+
+    @Mock
+    private ResourceSetsPresenter selectionDropPresenter;
 
     private Slot slot;
 
@@ -362,7 +361,8 @@ public class DefaultViewTest {
 	view = spy(new TestView(hoverModel, new SelectionModelLabelFactory(),
 		new DefaultResourceSetFactory(), originalSetsPresenter,
 		splittedSetsPresenter, allResourcesSetPresenter,
-		selectionPresenter, resourceSplitter, contentDisplay, "", ""));
+		selectionPresenter, selectionDropPresenter, resourceSplitter,
+		contentDisplay, "", ""));
     }
 
     @Test

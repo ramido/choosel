@@ -52,6 +52,8 @@ public class ViewFactory implements WindowContentFactory {
 
     private ResourceSetAvatarFactory typesDragAvatarFactory;
 
+    private ResourceSetAvatarFactory dropTargetFactory;
+
     private ResourceSetAvatarFactory userSetsDragAvatarFactory;
 
     private final String contentType;
@@ -65,6 +67,7 @@ public class ViewFactory implements WindowContentFactory {
 	    @Named(AVATAR_FACTORY_TYPE) ResourceSetAvatarFactory typesDragAvatarFactory,
 	    @Named(AVATAR_FACTORY_ALL_RESOURCES) ResourceSetAvatarFactory allResourcesDragAvatarFactory,
 	    @Named(AVATAR_FACTORY_SELECTION) ResourceSetAvatarFactory selectionDragAvatarFactory,
+	    @Named(AVATAR_FACTORY_SELECTION_DROP) ResourceSetAvatarFactory dropTargetFactory,
 	    @Named(HOVER_MODEL) ResourceSet hoverModel,
 	    ResourceSetFactory resourceSetFactory,
 	    @Named(LABEL_PROVIDER_SELECTION_SET) LabelProvider selectionModelLabelFactory,
@@ -78,6 +81,7 @@ public class ViewFactory implements WindowContentFactory {
 	this.typesDragAvatarFactory = typesDragAvatarFactory;
 	this.allResourcesDragAvatarFactory = allResourcesDragAvatarFactory;
 	this.selectionDragAvatarFactory = selectionDragAvatarFactory;
+	this.dropTargetFactory = dropTargetFactory;
 	this.contentDropTargetManager = contentDropTargetManager;
 	this.hoverModel = hoverModel;
 	this.resourceSetFactory = resourceSetFactory;
@@ -103,7 +107,8 @@ public class ViewFactory implements WindowContentFactory {
 		new ResourceSetAvatarResourceSetsPresenter(
 			allResourcesDragAvatarFactory),
 		new ResourceSetAvatarResourceSetsPresenter(
-			selectionDragAvatarFactory), resourceSplitter,
-		contentDisplay, contentType, contentType);
+			selectionDragAvatarFactory),
+		new ResourceSetAvatarResourceSetsPresenter(dropTargetFactory),
+		resourceSplitter, contentDisplay, contentType, contentType);
     }
 }
