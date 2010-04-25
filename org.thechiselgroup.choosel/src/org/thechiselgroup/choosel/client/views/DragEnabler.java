@@ -17,7 +17,6 @@ package org.thechiselgroup.choosel.client.views;
 
 import static com.google.gwt.user.client.DOM.*;
 
-import org.thechiselgroup.choosel.client.MashupClient;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
@@ -25,7 +24,9 @@ import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarType;
 import org.thechiselgroup.choosel.client.ui.CSS;
 import org.thechiselgroup.choosel.client.ui.ZIndex;
 import org.thechiselgroup.choosel.client.ui.dnd.DragProxyEventReceiver;
+import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
+import org.thechiselgroup.choosel.client.windows.Desktop;
 
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.MouseDownEvent;
@@ -89,9 +90,17 @@ public class DragEnabler {
 
     private ResourceSetAvatar panel;
 
-    public DragEnabler(ResourceItem item) {
+    private Desktop desktop;
+
+    private ResourceSetAvatarDragController dragController;
+
+    public DragEnabler(ResourceItem item, Desktop desktop,
+	    ResourceSetAvatarDragController dragController) {
+
 	assert item != null;
 
+	this.desktop = desktop;
+	this.dragController = dragController;
 	this.item = item;
     }
 
@@ -100,8 +109,7 @@ public class DragEnabler {
 
 	// add to desktop - need widget container
 	// FIXME use dependency injection
-	AbsolutePanel desktopWidget = MashupClient.injector.getDesktop()
-		.asWidget();
+	AbsolutePanel desktopWidget = desktop.asWidget();
 
 	int left = absoluteLeft - desktopWidget.getAbsoluteLeft();
 	int top = absoluteTop - desktopWidget.getAbsoluteTop();
@@ -131,8 +139,7 @@ public class DragEnabler {
 	desktopWidget.add(panel);
 
 	// make it draggable
-	// FIXME dependency injection
-	MashupClient.injector.getDragController().setDraggable(panel, true);
+	dragController.setDraggable(panel, true);
     }
 
     public void createTransparentDragProxy(final int absoluteLeft,
@@ -140,8 +147,7 @@ public class DragEnabler {
 	createDragWidget(absoluteLeft, absoluteTop);
 
 	// TODO remove code duplication
-	AbsolutePanel desktopWidget = MashupClient.injector.getDesktop()
-		.asWidget();
+	AbsolutePanel desktopWidget = desktop.asWidget();
 	int left = absoluteLeft - desktopWidget.getAbsoluteLeft() - 5;
 	int top = absoluteTop - desktopWidget.getAbsoluteTop() - 5;
 

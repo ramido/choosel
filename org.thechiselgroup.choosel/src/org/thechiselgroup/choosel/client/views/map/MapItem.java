@@ -19,6 +19,7 @@ import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
+import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.IconResourceItem;
 import org.thechiselgroup.choosel.client.views.Layer;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
@@ -77,12 +78,17 @@ public class MapItem extends IconResourceItem {
 
     private ResourceOverlay overlay;
 
+    private DragEnablerFactory dragEnablerFactory;
+
     public MapItem(LatLng point, final Resource individual,
 	    ResourceSet hoverModel, PopupManager popupManager,
-	    Layer layerModel, ViewContentDisplayCallback callback) {
+	    Layer layerModel, ViewContentDisplayCallback callback,
+	    DragEnablerFactory dragEnablerFactory) {
 
 	super(individual, hoverModel, popupManager, layerModel);
+
 	this.callback = callback;
+	this.dragEnablerFactory = dragEnablerFactory;
 	this.overlay = new ResourceOverlay(point, Point.newInstance(-10, -10),
 		getDefaultIconURL()); // -10 = - (width /2)
 	this.eventHandler = new MarkerEventHandler();
@@ -99,7 +105,7 @@ public class MapItem extends IconResourceItem {
 	overlay.addMouseOutHandler(eventHandler);
 	overlay.addClickHandler(eventHandler);
 
-	final DragEnabler enabler = new DragEnabler(this);
+	final DragEnabler enabler = dragEnablerFactory.createDragEnabler(this);
 	overlay.addMouseUpHandler(new MouseUpHandler() {
 	    @Override
 	    public void onMouseUp(MouseUpEvent event) {

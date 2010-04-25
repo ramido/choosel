@@ -27,6 +27,7 @@ import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.ui.widget.timeline.TimeLineWidget;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
+import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.Layer;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.Slot;
@@ -41,13 +42,17 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
     private static final String MEMENTO_ZOOM_PREFIX = "zoom-band-";
     private static final String MEMENTO_DATE = "date";
     private TimeLineWidget timelineWidget;
+    private DragEnablerFactory dragEnablerFactory;
 
     @Inject
-    public TimeLineViewContentDisplay(PopupManagerFactory popupManagerFactory,
+    public TimeLineViewContentDisplay(
+	    PopupManagerFactory popupManagerFactory,
 	    DetailsWidgetHelper detailsWidgetHelper,
-	    @Named(MashupInjectionConstants.HOVER_MODEL) ResourceSet hoverModel) {
+	    @Named(MashupInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
+	    DragEnablerFactory dragEnablerFactory) {
 
 	super(popupManagerFactory, detailsWidgetHelper, hoverModel);
+	this.dragEnablerFactory = dragEnablerFactory;
     }
 
     @Override
@@ -55,7 +60,7 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
 	PopupManager popupManager = createPopupManager(layer, i);
 
 	TimeLineItem timeLineItem = new TimeLineItem(i, this, popupManager,
-		hoverModel, layer);
+		hoverModel, layer, dragEnablerFactory);
 
 	timelineWidget.addEvent(timeLineItem.getTimeLineEvent());
 

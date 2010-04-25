@@ -25,6 +25,7 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.widget.timeline.TimeLineEvent;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
+import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.IconResourceItem;
 import org.thechiselgroup.choosel.client.views.Layer;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
@@ -72,13 +73,17 @@ public class TimeLineItem extends IconResourceItem {
 
     private final TimeLineViewContentDisplay view;
 
+    private DragEnablerFactory dragEnablerFactory;
+
     public TimeLineItem(final Resource individual,
 	    TimeLineViewContentDisplay view, PopupManager popupManager,
-	    ResourceSet hoverModel, Layer layerModel) {
+	    ResourceSet hoverModel, Layer layerModel,
+	    DragEnablerFactory dragEnablerFactory) {
 
 	super(individual, hoverModel, popupManager, layerModel);
 
 	this.view = view;
+	this.dragEnablerFactory = dragEnablerFactory;
 
 	String date = (String) getResourceValue(SlotResolver.DATE_SLOT_ID);
 
@@ -156,7 +161,7 @@ public class TimeLineItem extends IconResourceItem {
 	element.mouseout(mouseOutListener);
 	element.click(mouseClickListener);
 
-	final DragEnabler enabler = new DragEnabler(this);
+	final DragEnabler enabler = dragEnablerFactory.createDragEnabler(this);
 	element.mouseup(new Function() {
 	    @Override
 	    public boolean f(Event e) {
