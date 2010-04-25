@@ -11,6 +11,7 @@ import org.thechiselgroup.choosel.client.ui.CSS;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
+import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.Layer;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.Slot;
@@ -46,12 +47,18 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
 
     private MapWidget map;
 
+    private DragEnablerFactory dragEnablerFactory;
+
     @Inject
-    public MapViewContentDisplay(PopupManagerFactory popupManagerFactory,
+    public MapViewContentDisplay(
+	    PopupManagerFactory popupManagerFactory,
 	    DetailsWidgetHelper detailsWidgetHelper,
-	    @Named(MashupInjectionConstants.HOVER_MODEL) ResourceSet hoverModel) {
+	    @Named(MashupInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
+	    DragEnablerFactory dragEnablerFactory) {
 
 	super(popupManagerFactory, detailsWidgetHelper, hoverModel);
+
+	this.dragEnablerFactory = dragEnablerFactory;
     }
 
     @Override
@@ -76,7 +83,7 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
 	PopupManager popupManager = createPopupManager(layer, resource);
 
 	MapItem mapItem = new MapItem(latLng, resource, hoverModel,
-		popupManager, layer, getCallback());
+		popupManager, layer, getCallback(), dragEnablerFactory);
 
 	map.addOverlay(mapItem.getOverlay());
 
@@ -95,21 +102,21 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
     public Widget createWidget() {
 	map = new MapWidget();
 
-/*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
- * You may obtain a copy of the License at 
- *
- *    http://www.apache.org/licenses/LICENSE-2.0 
- *     
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
- * limitations under the License.  
- *******************************************************************************/
+	/*******************************************************************************
+	 * Copyright 2009, 2010 Lars Grammel
+	 * 
+	 * Licensed under the Apache License, Version 2.0 (the "License"); you
+	 * may not use this file except in compliance with the License. You may
+	 * obtain a copy of the License at
+	 * 
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 * 
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+	 * implied. See the License for the specific language governing
+	 * permissions and limitations under the License.
+	 *******************************************************************************/
 	DOM.setStyleAttribute(map.getElement(), CSS.OVERFLOW, CSS.HIDDEN);
 
 	map.setWidth("100%");

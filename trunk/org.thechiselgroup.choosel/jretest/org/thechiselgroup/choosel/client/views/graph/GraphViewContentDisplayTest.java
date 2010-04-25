@@ -49,10 +49,9 @@ import org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidgetReadyHandler
 import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeDragEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeDragHandler;
+import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.Layer;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
-import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay;
-import org.thechiselgroup.choosel.client.views.graph.MoveNodeCommand;
 import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay.Display;
 
 public class GraphViewContentDisplayTest {
@@ -67,20 +66,12 @@ public class GraphViewContentDisplayTest {
 		PopupManagerFactory popupManagerFactory,
 		DetailsWidgetHelper detailsWidgetHelper,
 		CommandManager commandManager, ResourceManager resourceManager,
-		ErrorHandler errorHandler) {
+		ErrorHandler errorHandler, DragEnablerFactory dragEnablerFactory) {
 
 	    super(display, hoverModel, mappingService,
 		    conceptNeighbourhoodService, popupManagerFactory,
 		    detailsWidgetHelper, commandManager, resourceManager,
-		    errorHandler);
-	}
-
-	@Override
-	protected void expandMappingNeighbourhood(Resource resource) {
-	}
-
-	@Override
-	protected void expandConceptNeighbourhood(Resource resource) {
+		    errorHandler, dragEnablerFactory);
 	}
 
 	@Override
@@ -88,34 +79,17 @@ public class GraphViewContentDisplayTest {
 		PropertyValueResolver resolver) {
 	    return popupManager;
 	}
+
+	@Override
+	protected void expandConceptNeighbourhood(Resource resource) {
+	}
+
+	@Override
+	protected void expandMappingNeighbourhood(Resource resource) {
+	}
     }
 
-    private GraphViewContentDisplay contentDisplay;
-
-    @Mock
-    private Node node;
-
-    private Point sourceLocation;
-
-    private Point targetLocation;
-
-    @Mock
-    private PopupManagerFactory popupManagerFactory;
-
-    @Mock
-    private DetailsWidgetHelper detailsWidgetHelper;
-
-    @Mock
-    private NCBOConceptNeighbourhoodServiceAsync conceptNeighbourhoodService;
-
-    @Mock
-    private Display display;
-
-    @Mock
-    private ResourceSet hoverModel;
-
-    @Mock
-    private NCBOMappingNeighbourhoodServiceAsync mappingService;
+    private ResourceSet allResources;
 
     @Mock
     private ViewContentDisplayCallback callback;
@@ -123,44 +97,51 @@ public class GraphViewContentDisplayTest {
     @Mock
     private CommandManager commandManager;
 
-    @Mock
-    private ResourceManager resourceManager;
-
-    @Mock
-    private Layer layer;
-
     private Resource concept1;
 
     private Resource concept2;
 
     @Mock
-    protected PopupManager popupManager;
+    private NCBOConceptNeighbourhoodServiceAsync conceptNeighbourhoodService;
 
-    private ResourceSet allResources;
+    private GraphViewContentDisplay contentDisplay;
+
+    @Mock
+    private DetailsWidgetHelper detailsWidgetHelper;
+
+    @Mock
+    private Display display;
+
+    @Mock
+    private DragEnablerFactory dragEnablerFactory;
 
     @Mock
     private ErrorHandler errorHandler;
 
-    @Test
-    public void addNeighbourhoodArcWhenAddingConceptReferringCurrentConcepts() {
-	concept1 = createResource(NcboUriHelper.NCBO_CONCEPT, 1);
-	concept2 = createResource(NcboUriHelper.NCBO_CONCEPT, 2);
+    @Mock
+    private ResourceSet hoverModel;
 
-	when(callback.containsResourceWithUri(concept1.getUri())).thenReturn(
-		true);
+    @Mock
+    private Layer layer;
 
-	concept2.getUriListValue(
-		NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS).add(
-		concept1.getUri());
+    @Mock
+    private NCBOMappingNeighbourhoodServiceAsync mappingService;
 
-	contentDisplay.createResourceItem(layer, concept1);
-	contentDisplay.createResourceItem(layer, concept2);
+    @Mock
+    private Node node;
 
-	ArgumentCaptor<Arc> argument = ArgumentCaptor.forClass(Arc.class);
-	verify(display, times(1)).addArc(argument.capture());
-	assertEquals(concept2.getUri(), argument.getValue().getSourceNodeId());
-	assertEquals(concept1.getUri(), argument.getValue().getTargetNodeId());
-    }
+    @Mock
+    protected PopupManager popupManager;
+
+    @Mock
+    private PopupManagerFactory popupManagerFactory;
+
+    @Mock
+    private ResourceManager resourceManager;
+
+    private Point sourceLocation;
+
+    private Point targetLocation;
 
     @Test
     public void addNeighbourhoodArcWhenAddingConceptReferedFromCurrentConcepts() {
@@ -184,19 +165,25 @@ public class GraphViewContentDisplayTest {
 	assertEquals(concept2.getUri(), argument.getValue().getTargetNodeId());
     }
 
-    // TODO current work
     @Test
-    public void loadNeighbourhoodWhenAddingConcept() {
-	concept1 = createResource(1);
+    public void addNeighbourhoodArcWhenAddingConceptReferringCurrentConcepts() {
+	concept1 = createResource(NcboUriHelper.NCBO_CONCEPT, 1);
+	concept2 = createResource(NcboUriHelper.NCBO_CONCEPT, 2);
+
+	when(callback.containsResourceWithUri(concept1.getUri())).thenReturn(
+		true);
+
+	concept2.getUriListValue(
+		NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS).add(
+		concept1.getUri());
 
 	contentDisplay.createResourceItem(layer, concept1);
+	contentDisplay.createResourceItem(layer, concept2);
 
-	// verify(contentDisplay, times(1)).expandNeighbourhood(eq(concept1));
-    }
-
-    @Test
-    public void doNotLoadNeighbourhoodWhenAddingConceptWithLoadedNeighbourhood() {
-
+	ArgumentCaptor<Arc> argument = ArgumentCaptor.forClass(Arc.class);
+	verify(display, times(1)).addArc(argument.capture());
+	assertEquals(concept2.getUri(), argument.getValue().getSourceNodeId());
+	assertEquals(concept1.getUri(), argument.getValue().getTargetNodeId());
     }
 
     /*
@@ -233,6 +220,21 @@ public class GraphViewContentDisplayTest {
 	assertEquals(display, command2.getGraphDisplay());
     }
 
+    @Test
+    public void doNotLoadNeighbourhoodWhenAddingConceptWithLoadedNeighbourhood() {
+
+    }
+
+    // TODO current work
+    @Test
+    public void loadNeighbourhoodWhenAddingConcept() {
+	concept1 = createResource(1);
+
+	contentDisplay.createResourceItem(layer, concept1);
+
+	// verify(contentDisplay, times(1)).expandNeighbourhood(eq(concept1));
+    }
+
     @Before
     public void setUp() throws Exception {
 	MockitoGWTBridge.setUp();
@@ -248,7 +250,7 @@ public class GraphViewContentDisplayTest {
 	contentDisplay = spy(new TestGraphViewContentDisplay(display,
 		hoverModel, mappingService, conceptNeighbourhoodService,
 		popupManagerFactory, detailsWidgetHelper, commandManager,
-		resourceManager, errorHandler));
+		resourceManager, errorHandler, dragEnablerFactory));
 
 	contentDisplay.init(callback);
 

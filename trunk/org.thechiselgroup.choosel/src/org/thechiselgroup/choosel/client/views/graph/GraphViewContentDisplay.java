@@ -72,6 +72,7 @@ import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseOverEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseOverHandler;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
+import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.Layer;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.Slot;
@@ -117,6 +118,9 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 	    ArcMouseClickHandler, ArcMouseDoubleClickHandler, NodeDragHandler,
 	    NodeDragHandleMouseDownHandler, NodeDragHandleMouseMoveHandler {
 
+	// XXX find cleaner solution that maps to nodes
+	private DragEnabler dragEnabler;
+
 	@Override
 	public void onDrag(NodeDragEvent event) {
 	    commandManager.addExecutedCommand(new MoveNodeCommand(display,
@@ -154,6 +158,16 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 	}
 
 	@Override
+	public void onMouseDown(NodeDragHandleMouseDownEvent event) {
+	    dragEnabler = dragEnablerFactory
+		    .createDragEnabler(getGraphItem(event.getNode()));
+
+	    dragEnabler.createTransparentDragProxy(event.getMouseX()
+		    + asWidget().getAbsoluteLeft(), event.getMouseY()
+		    + asWidget().getAbsoluteTop());
+	}
+
+	@Override
 	public void onMouseMove(MouseMoveEvent event) {
 	    // TODO restrict to mouse move for current graph item
 	    Collection<GraphItem> values = nodeIdToGraphItemMap.values();
@@ -162,6 +176,13 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 		graphItem.getPopupManager().onMouseMove(event.getClientX(),
 			event.getClientY());
 	    }
+	}
+
+	@Override
+	public void onMouseMove(NodeDragHandleMouseMoveEvent event) {
+	    dragEnabler.forwardMouseMove(event.getMouseX()
+		    + asWidget().getAbsoluteLeft(), event.getMouseY()
+		    + asWidget().getAbsoluteTop());
 	}
 
 	@Override
@@ -186,25 +207,6 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 		    .getMouseY());
 	}
 
-	// XXX find cleaner solution that maps to nodes
-	private DragEnabler dragEnabler;
-
-	@Override
-	public void onMouseDown(NodeDragHandleMouseDownEvent event) {
-	    dragEnabler = new DragEnabler(getGraphItem(event.getNode()));
-
-	    dragEnabler.createTransparentDragProxy(event.getMouseX()
-		    + asWidget().getAbsoluteLeft(), event.getMouseY()
-		    + asWidget().getAbsoluteTop());
-	}
-
-	@Override
-	public void onMouseMove(NodeDragHandleMouseMoveEvent event) {
-	    dragEnabler.forwardMouseMove(event.getMouseX()
-		    + asWidget().getAbsoluteLeft(), event.getMouseY()
-		    + asWidget().getAbsoluteTop());
-	}
-
     }
 
     private static final String MEMENTO_X = "x";
@@ -217,13 +219,17 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 
     private static final String NODE_TYPE_OTHER = "other";
 
-    // advanced node class: (incoming, outgoing, expanded: state machine)
-
     private final CommandManager commandManager;
+
+    // advanced node class: (incoming, outgoing, expanded: state machine)
 
     private final NCBOConceptNeighbourhoodServiceAsync conceptNeighbourhoodService;
 
     private final Display display;
+
+    public DragEnablerFactory dragEnablerFactory;
+
+    private ErrorHandler errorHandler;
 
     private final NCBOMappingNeighbourhoodServiceAsync mappingNeighbourhoodService;
 
@@ -232,8 +238,6 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
     private boolean ready = false;
 
     private ResourceManager resourceManager;
-
-    private ErrorHandler errorHandler;
 
     @Inject
     public GraphViewContentDisplay(
@@ -244,7 +248,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 	    PopupManagerFactory popupManagerFactory,
 	    DetailsWidgetHelper detailsWidgetHelper,
 	    CommandManager commandManager, ResourceManager resourceManager,
-	    ErrorHandler errorHandler) {
+	    ErrorHandler errorHandler, DragEnablerFactory dragEnablerFactory) {
 
 	super(popupManagerFactory, detailsWidgetHelper, hoverModel);
 
@@ -254,6 +258,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 	this.commandManager = commandManager;
 	this.resourceManager = resourceManager;
 	this.errorHandler = errorHandler;
+	this.dragEnablerFactory = dragEnablerFactory;
     }
 
     private void addArcsToRelatedConcepts(final Resource concept) {
@@ -357,32 +362,15 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 	return item;
     }
 
-    private void positionNode(Node node) {
-	// FIXME positioning: FlexVis takes care of positioning nodes into empty
-	// space except for first node - if the node is the first node, we put
-	// it in the center
-	// TODO improve interface to access all resources
-	Iterator<Resource> it = getCallback().getAllResources().iterator();
+    // TODO eliminate duplicate (callback)
+    private void createMappingArc(String sourceId, String targetId) {
+	Arc arc = new Arc(getArcId(sourceId, targetId), sourceId, targetId,
+		"mapping");
 
-	if (!it.hasNext()) {
-	    return; // for tests
-	}
-
-	it.next(); // there are already some nodes (this one is already added)
-	if (it.hasNext()) {
-	    return; // there are already some nodes (this one is already added)
-	}
-
-	Widget displayWidget = display.asWidget();
-
-	if (displayWidget == null) {
-	    return; // for tests
-	}
-
-	int height = displayWidget.getOffsetHeight();
-	int width = displayWidget.getOffsetWidth();
-
-	display.setLocation(node, new Point(width / 2, height / 2));
+	display.addArc(arc);
+	display.setArcStyle(arc, GraphDisplay.ARC_COLOR, "#D4D4D4");
+	display.setArcStyle(arc, GraphDisplay.ARC_STYLE,
+		GraphDisplay.ARC_STYLE_DASHED);
     }
 
     // TODO should work with other stuff (non-predefined attributes)
@@ -398,17 +386,6 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 	}
 
 	return new Node(resource.getUri(), "", NODE_TYPE_OTHER);
-    }
-
-    // TODO eliminate duplicate (callback)
-    private void createMappingArc(String sourceId, String targetId) {
-	Arc arc = new Arc(getArcId(sourceId, targetId), sourceId, targetId,
-		"mapping");
-
-	display.addArc(arc);
-	display.setArcStyle(arc, GraphDisplay.ARC_COLOR, "#D4D4D4");
-	display.setArcStyle(arc, GraphDisplay.ARC_STYLE,
-		GraphDisplay.ARC_STYLE_DASHED);
     }
 
     @Override
@@ -601,6 +578,34 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
     @Override
     public boolean isReady() {
 	return ready;
+    }
+
+    private void positionNode(Node node) {
+	// FIXME positioning: FlexVis takes care of positioning nodes into empty
+	// space except for first node - if the node is the first node, we put
+	// it in the center
+	// TODO improve interface to access all resources
+	Iterator<Resource> it = getCallback().getAllResources().iterator();
+
+	if (!it.hasNext()) {
+	    return; // for tests
+	}
+
+	it.next(); // there are already some nodes (this one is already added)
+	if (it.hasNext()) {
+	    return; // there are already some nodes (this one is already added)
+	}
+
+	Widget displayWidget = display.asWidget();
+
+	if (displayWidget == null) {
+	    return; // for tests
+	}
+
+	int height = displayWidget.getOffsetHeight();
+	int width = displayWidget.getOffsetWidth();
+
+	display.setLocation(node, new Point(width / 2, height / 2));
     }
 
     @Override

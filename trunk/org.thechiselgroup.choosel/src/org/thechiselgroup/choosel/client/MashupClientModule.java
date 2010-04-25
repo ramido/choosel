@@ -77,6 +77,7 @@ import org.thechiselgroup.choosel.client.util.URLFetchService;
 import org.thechiselgroup.choosel.client.util.xslt.SarissaDocumentProcessor;
 import org.thechiselgroup.choosel.client.views.DefaultViewAccessor;
 import org.thechiselgroup.choosel.client.views.DefaultWindowContentFactory;
+import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
 import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay;
 import org.thechiselgroup.choosel.client.windows.DefaultDesktop;
@@ -221,6 +222,8 @@ public class MashupClientModule extends AbstractGinModule implements
 	bind(DetailsWidgetHelper.class).in(Singleton.class);
 	bind(HandlerManager.class).toProvider(HandlerManagerProvider.class).in(
 		Singleton.class);
+
+	bind(DragEnablerFactory.class).in(Singleton.class);
 
 	bindLabelProviders();
 

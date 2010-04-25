@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.thechiselgroup.choosel.client.MashupClient;
 import org.thechiselgroup.choosel.client.geometry.Rectangle;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.ui.CSS;
@@ -157,35 +156,25 @@ public class DefaultResourceSetAvatarDragController extends
 
     private Rectangle boundaryRectangle = new Rectangle(0, 0, 0, 0);
 
+    private Desktop desktop;
+
     private Widget dragProxy;
 
     private Map<Widget, ResourceSetAvatarDropController> dropControllers = new HashMap<Widget, ResourceSetAvatarDropController>();
 
+    private List<Widget> invisibleDropTargets = new ArrayList<Widget>();
+
     private long lastResetCacheTimeMillis;
 
     private ShadeManager shadeManager;
+
+    private RemoveHandle shadeRemoveHandle;
 
     // used as shade background for drag avatar drop targets with rounded
     // corners
     private List<Element> shadeSpans = new ArrayList<Element>();
 
     private List<Area> visibleDropAreas;
-
-    private RemoveHandle shadeRemoveHandle;
-
-    public DefaultResourceSetAvatarDragController(AbsolutePanel boundaryPanel,
-	    ShadeManager shadeManager) {
-
-	super(boundaryPanel);
-
-	assert shadeManager != null;
-
-	this.shadeManager = shadeManager;
-	this.boundaryDropController = new BoundaryDropController(boundaryPanel,
-		false);
-
-	setBehaviorDragStartSensitivity(2);
-    }
 
     /**
      * Constructor for dependency injection --> TODO change to @Named tags
@@ -194,10 +183,17 @@ public class DefaultResourceSetAvatarDragController extends
     public DefaultResourceSetAvatarDragController(Desktop desktop,
 	    ShadeManager shadeManager) {
 
-	this(desktop.asWidget(), shadeManager);
-    }
+	super(desktop.asWidget());
 
-    private List<Widget> invisibleDropTargets = new ArrayList<Widget>();
+	assert shadeManager != null;
+
+	this.shadeManager = shadeManager;
+	this.desktop = desktop;
+	this.boundaryDropController = new BoundaryDropController(desktop
+		.asWidget(), false);
+
+	setBehaviorDragStartSensitivity(2);
+    }
 
     private void addDragAvatarDropTargetShadeSpans() {
 	for (ResourceSetAvatarDropController dropController : dropControllers
@@ -440,9 +436,7 @@ public class DefaultResourceSetAvatarDragController extends
 
     private List<Area> getWindowAreas() {
 	List<Area> windowAreas = new ArrayList<Area>();
-	// TODO dependency injection
-	List<WindowPanel> windows = MashupClient.injector.getDesktop()
-		.getWindows();
+	List<WindowPanel> windows = desktop.getWindows();
 	for (WindowPanel window : windows) {
 	    Rectangle r = Rectangle.fromWidget(window);
 	    windowAreas.add(new Area(r, window, null));
