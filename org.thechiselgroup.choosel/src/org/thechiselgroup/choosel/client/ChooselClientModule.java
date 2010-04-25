@@ -23,12 +23,6 @@ import org.thechiselgroup.choosel.client.command.DefaultCommandManager;
 import org.thechiselgroup.choosel.client.command.ui.CommandPresenterFactory;
 import org.thechiselgroup.choosel.client.command.ui.DefaultCommandManagerPresenterDisplay;
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
-import org.thechiselgroup.choosel.client.domain.ncbo.NCBOConceptNeighbourhoodServiceAsync;
-import org.thechiselgroup.choosel.client.domain.ncbo.NCBOConceptNeighbourhoodServiceAsyncClientImplementation;
-import org.thechiselgroup.choosel.client.domain.ncbo.NCBOConceptSearchServiceAsync;
-import org.thechiselgroup.choosel.client.domain.ncbo.NCBOConceptSearchServiceAsyncClientImplementation;
-import org.thechiselgroup.choosel.client.domain.ncbo.NCBOMappingNeighbourhoodServiceAsync;
-import org.thechiselgroup.choosel.client.domain.ncbo.NCBOMappingNeighbourhoodServiceAsyncClientImplementation;
 import org.thechiselgroup.choosel.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.client.error_handling.ErrorHandlingAsyncCommandExecutor;
 import org.thechiselgroup.choosel.client.error_handling.FeedbackDialogErrorHandler;
@@ -265,15 +259,22 @@ public class ChooselClientModule extends AbstractGinModule implements
 		Singleton.class);
 	bind(URLFetchService.class).to(FlashURLFetchService.class).in(
 		Singleton.class);
-	bind(NCBOConceptSearchServiceAsync.class).to(
-		NCBOConceptSearchServiceAsyncClientImplementation.class).in(
+
+	bindCustomServices();
+
+	bindApplication();
+    }
+
+    protected void bindCustomServices() {
+    }
+
+    private void bindApplication() {
+	bind(ChooselApplication.class).to(getApplicationClass()).in(
 		Singleton.class);
-	bind(NCBOConceptNeighbourhoodServiceAsync.class).to(
-		NCBOConceptNeighbourhoodServiceAsyncClientImplementation.class)
-		.in(Singleton.class);
-	bind(NCBOMappingNeighbourhoodServiceAsync.class).to(
-		NCBOMappingNeighbourhoodServiceAsyncClientImplementation.class)
-		.in(Singleton.class);
+    }
+
+    protected Class<? extends ChooselApplication> getApplicationClass() {
+	return ChooselApplication.class;
     }
 
     protected void bindViewContentDisplayFactories() {

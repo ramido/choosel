@@ -16,6 +16,8 @@
 package org.thechiselgroup.choosel.client;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.thechiselgroup.choosel.client.authentication.AuthenticationManager;
@@ -27,7 +29,6 @@ import org.thechiselgroup.choosel.client.command.ui.CommandManagerPresenter;
 import org.thechiselgroup.choosel.client.command.ui.CommandPresenterFactory;
 import org.thechiselgroup.choosel.client.command.ui.DefaultCommandManagerPresenterDisplay;
 import org.thechiselgroup.choosel.client.command.ui.CommandPresenter.ButtonDisplay;
-import org.thechiselgroup.choosel.client.domain.ncbo.NCBOConceptSearchCommand;
 import org.thechiselgroup.choosel.client.domain.other.GeoRSSServiceAsync;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
@@ -37,14 +38,11 @@ import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceS
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.test.ResourcesTestHelper;
 import org.thechiselgroup.choosel.client.ui.ActionBar;
-import org.thechiselgroup.choosel.client.ui.HelpWindowContent;
-import org.thechiselgroup.choosel.client.ui.TextCommandPresenter;
 import org.thechiselgroup.choosel.client.ui.dialog.DialogManager;
 import org.thechiselgroup.choosel.client.views.list.ListViewContentDisplay;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 import org.thechiselgroup.choosel.client.windows.CreateWindowCommand;
 import org.thechiselgroup.choosel.client.windows.Desktop;
-import org.thechiselgroup.choosel.client.windows.WindowContent;
 import org.thechiselgroup.choosel.client.windows.WindowContentProducer;
 import org.thechiselgroup.choosel.client.workspace.SaveButtonUpdater;
 import org.thechiselgroup.choosel.client.workspace.WorkspaceManager;
@@ -105,6 +103,16 @@ public class ChooselApplication {
 	}
     }
 
+    public static final String DATA_PANEL = "data";
+
+    public static final String EDIT_PANEL = "edit";
+
+    public static final String HELP_PANEL = "help";
+
+    public static final String VIEWS_PANEL = "views";
+
+    public static final String WORKSPACE_PANEL = "workspace";
+
     @Inject
     private ActionBar actionBar;
 
@@ -115,7 +123,13 @@ public class ChooselApplication {
     private AuthenticationManager authenticationManager;
 
     @Inject
+    private AsyncCommandExecutor blockingCommandExecutor;
+
+    @Inject
     private CommandManager commandManager;
+
+    @Inject
+    private DefaultCommandManagerPresenterDisplay commandManagerPresenterDisplay;
 
     @Inject
     private CommandPresenterFactory commandPresenterFactory;
@@ -131,12 +145,8 @@ public class ChooselApplication {
     @Inject
     private DialogManager dialogManager;
 
-    private HorizontalPanel editPanel;
-
     @Inject
     private GeoRSSServiceAsync geoRssService;
-
-    private HorizontalPanel helpPanel;
 
     @Inject
     private InfoDialog infoDialog;
@@ -147,38 +157,38 @@ public class ChooselApplication {
     @Inject
     private NewWorkspaceCommand newWorkspaceCommand;
 
+    private Map<String, HorizontalPanel> panels = new HashMap<String, HorizontalPanel>();
+
     @Inject
     private ResourceSetFactory resourceSetsFactory;
 
     @Inject
     private SaveWorkspaceCommand saveWorkspaceCommand;
 
-    private HorizontalPanel searchPanel;
-
     @Inject
     private ShareWorkspaceCommand shareWorkspaceCommand;
-
-    private HorizontalPanel viewsPanel;
 
     @Inject
     private WindowContentProducer windowContentProducer;
 
     @Inject
+    private WorkspaceManager workspaceManager;
+
+    @Inject
     private WorkspacePersistenceManager workspacePersistenceManager;
 
     @Inject
-    private WorkspaceManager workspaceManager;
+    private DefaultWorkspacePresenterDisplay workspacePresenterDisplay;
 
-    private HorizontalPanel workspacePanel;
+    public void addButton(String panelId, String label, ClickHandler handler) {
+	assert panelId != null;
+	assert label != null;
+	assert handler != null;
 
-    @Inject
-    private NCBOConceptSearchCommand ncboConceptSearchCommand;
-
-    @Inject
-    private DefaultCommandManagerPresenterDisplay commandManagerPresenterDisplay;
-
-    @Inject
-    private AsyncCommandExecutor blockingCommandExecutor;
+	Button button = new Button(label);
+	button.addClickHandler(handler);
+	addWidget(panelId, button);
+    }
 
     private void addDataSourcesButton() {
 	Button b = new Button("Tsunami / Earthquake");
@@ -217,80 +227,23 @@ public class ChooselApplication {
 	dataPanel.add(b);
     }
 
-    private void addGraphButton() {
-	Button b = new Button("Graph");
-	b.addClickHandler(new ClickHandler() {
-
-	    @Override
-	    public void onClick(ClickEvent event) {
-		createGraphView();
-	    }
-
-	});
-	viewsPanel.add(b);
-    }
-
-    private void addHelpButton() {
-	Button b = new Button("?");
-	b.addClickHandler(new ClickHandler() {
-
-	    @Override
-	    public void onClick(ClickEvent event) {
-		createHelpWindow();
-	    }
-
-	});
-	helpPanel.add(b);
-    }
-
-    private void addInfoButton() {
-	Button b = new Button("About");
-	b.addClickHandler(new ClickHandler() {
+    protected void addInfoButton() {
+	addButton(HELP_PANEL, "About", new ClickHandler() {
 	    @Override
 	    public void onClick(ClickEvent event) {
 		dialogManager.show(infoDialog);
 	    }
 	});
-	helpPanel.add(b);
     }
 
-    private void addListButton() {
-	Button button = new Button(ListViewContentDisplay.TYPE);
-	button.addClickHandler(new ClickHandler() {
+    public void addPanel(String id, String name) {
+	assert id != null;
+	assert name != null;
 
-	    @Override
-	    public void onClick(ClickEvent event) {
-		createWindowForViewType(ListViewContentDisplay.TYPE);
-	    }
-
-	});
-	viewsPanel.add(button);
-    }
-
-    private void addMapButton() {
-	Button mapButton = new Button("Map");
-	mapButton.addClickHandler(new ClickHandler() {
-
-	    @Override
-	    public void onClick(ClickEvent event) {
-		createWindowForViewType("Map");
-	    }
-
-	});
-	viewsPanel.add(mapButton);
-    }
-
-    private void addNoteButton() {
-	Button button = new Button("Note");
-	button.addClickHandler(new ClickHandler() {
-
-	    @Override
-	    public void onClick(ClickEvent event) {
-		createWindowForViewType("note");
-	    }
-
-	});
-	viewsPanel.add(button);
+	HorizontalPanel panel = new HorizontalPanel();
+	panel.setSpacing(2);
+	actionBar.addPanel(name, panel);
+	panels.put(id, panel);
     }
 
     // TODO change into command
@@ -330,101 +283,89 @@ public class ChooselApplication {
 	dataPanel.add(b);
     }
 
-    private void addTimelineButton() {
-	Button mapButton = new Button("Timeline");
-	mapButton.addClickHandler(new ClickHandler() {
+    public void addWidget(String panelId, Widget widget) {
+	assert panelId != null;
+	assert panels.containsKey(panelId);
+	assert widget != null;
 
+	panels.get(panelId).add(widget);
+    }
+
+    public void addWindowContentButton(String panelId, String label,
+	    final String contentType) {
+
+	assert panelId != null;
+	assert label != null;
+	assert contentType != null;
+	// TODO assert factory for content type is available
+
+	addButton(panelId, label, new ClickHandler() {
 	    @Override
 	    public void onClick(ClickEvent event) {
-		createWindowForViewType("Timeline");
+		createWindow(contentType);
 	    }
-
 	});
-	viewsPanel.add(mapButton);
     }
 
-    private void createGraphView() {
-	createWindowForViewType("Graph");
-    }
-
-    private void createHelpWindow() {
+    private void createWindow(String contentType) {
 	commandManager.execute(new CreateWindowCommand(desktop,
-		new HelpWindowContent()));
-    }
-
-    private WindowContent createWindowContent(String viewType) {
-	return windowContentProducer.createWindowContent(viewType);
-    }
-
-    private void createWindowForViewType(String viewType) {
-	commandManager.execute(new CreateWindowCommand(desktop,
-		createWindowContent(viewType)));
+		windowContentProducer.createWindowContent(contentType)));
     }
 
     public void init() {
 	BrowserDetect.checkBrowser();
 
-	DockPanel mainPanel = new DockPanel();
-	RootPanel.get().add(mainPanel);
+	DockPanel mainPanel = createMainPanel();
 
 	initDesktop(mainPanel);
 	initActionBar(mainPanel);
+	initAuthenticationBar();
 
-	((VerticalPanel) actionBar.asWidget()).add(authenticationBar);
-
-	initWorkspacePresenter();
+	initWorkspacePanel();
 	initCommandManagerPresenter();
 
-	initNCBOSearchField();
+	initCustomActions();
+
+	loadWorkspaceIfParamSet();
+    }
+
+    protected void initCustomActions() {
 	addDataSourcesButton();
-	addHelpButton();
-	addInfoButton();
-
-	addNoteButton();
-	addListButton();
-	addMapButton();
-	addTimelineButton();
-	addGraphButton();
-
 	addTestDataSourceButton();
 
-	// TODO extract constant
-	String workspaceIdParam = Window.Location.getParameter("workspaceId");
-	if (workspaceIdParam != null) {
-	    long workspaceID = Long.parseLong(workspaceIdParam);
+	addWindowContentButton(HELP_PANEL, "?", "help");
+	addInfoButton();
 
-	    LoadWorkspaceCommand loadWorkspaceCommand = new LoadWorkspaceCommand(
-		    workspaceID, "", workspacePersistenceManager);
-	    blockingCommandExecutor.execute(loadWorkspaceCommand);
-	}
+	addWindowContentButton(VIEWS_PANEL, "Note", "note");
+	addWindowContentButton(VIEWS_PANEL, "List", ListViewContentDisplay.TYPE);
+	addWindowContentButton(VIEWS_PANEL, "Map", "Map");
+	addWindowContentButton(VIEWS_PANEL, "Timeline", "Timeline");
+	addWindowContentButton(VIEWS_PANEL, "Graph", "Graph");
+    }
+
+    private DockPanel createMainPanel() {
+	DockPanel mainPanel = new DockPanel();
+	RootPanel.get().add(mainPanel);
+	return mainPanel;
+    }
+
+    private void initAuthenticationBar() {
+	((VerticalPanel) actionBar.asWidget()).add(authenticationBar);
     }
 
     private void initActionBar(DockPanel mainPanel) {
 	mainPanel.add(actionBar.asWidget(), DockPanel.NORTH);
 
-	workspacePanel = new HorizontalPanel();
-	workspacePanel.setSpacing(2);
-	actionBar.addPanel("Workspace", workspacePanel);
+	addPanel(WORKSPACE_PANEL, "Workspace");
+	addPanel(EDIT_PANEL, "Edit");
 
-	editPanel = new HorizontalPanel();
-	editPanel.setSpacing(2);
-	actionBar.addPanel("Edit", editPanel);
+	initCustomPanels();
+    }
 
-	viewsPanel = new HorizontalPanel();
-	viewsPanel.setSpacing(2);
-	actionBar.addPanel("Views", viewsPanel);
-
-	searchPanel = new HorizontalPanel();
-	searchPanel.setSpacing(2);
-	actionBar.addPanel("NCBO Concept Search", searchPanel);
-
-	dataPanel = new HorizontalPanel();
-	dataPanel.setSpacing(2);
-	actionBar.addPanel("Data Sources", dataPanel);
-
-	helpPanel = new HorizontalPanel();
-	helpPanel.setSpacing(2);
-	actionBar.addPanel("Help", helpPanel);
+    protected void initCustomPanels() {
+	addPanel(VIEWS_PANEL, "Views");
+	addPanel(DATA_PANEL, "Data Sources");
+	addPanel(HELP_PANEL, "Help");
     }
 
     private void initCommandManagerPresenter() {
@@ -433,8 +374,8 @@ public class ChooselApplication {
 
 	presenter.init();
 
-	editPanel.add(commandManagerPresenterDisplay.getUndoButton());
-	editPanel.add(commandManagerPresenterDisplay.getRedoButton());
+	addWidget(EDIT_PANEL, commandManagerPresenterDisplay.getUndoButton());
+	addWidget(EDIT_PANEL, commandManagerPresenterDisplay.getRedoButton());
     }
 
     private void initDesktop(DockPanel mainPanel) {
@@ -456,20 +397,7 @@ public class ChooselApplication {
 	mainPanel.add(desktop.asWidget(), DockPanel.CENTER);
     }
 
-    private void initNCBOSearchField() {
-	TextCommandPresenter presenter = new TextCommandPresenter(
-		ncboConceptSearchCommand, "Search");
-
-	presenter.init();
-
-	searchPanel.add(presenter.getTextBox());
-	searchPanel.add(presenter.getExecuteButton());
-    }
-
-    @Inject
-    private DefaultWorkspacePresenterDisplay workspacePresenterDisplay;
-
-    private void initWorkspacePresenter() {
+    private void initWorkspacePanel() {
 	// title area
 	// TODO refactor title area part
 	WorkspacePresenter presenter = new WorkspacePresenter(workspaceManager,
@@ -484,19 +412,19 @@ public class ChooselApplication {
 	// new workspace
 	ButtonDisplay newButton = commandPresenterFactory.createCommandButton(
 		"New", newWorkspaceCommand);
-	workspacePanel.add(newButton);
+	addWidget(WORKSPACE_PANEL, newButton);
 
 	// load workspace
 	ButtonDisplay loadButton = commandPresenterFactory.createCommandButton(
 		"Load...", loadWorkspaceDialogCommand);
-	workspacePanel.add(loadButton);
+	addWidget(WORKSPACE_PANEL, loadButton);
 	new AuthenticationBasedEnablingStateWrapper(authenticationManager,
 		loadButton).init();
 
 	// save workspace
 	ButtonDisplay saveButton = commandPresenterFactory.createCommandButton(
 		"Save", saveWorkspaceCommand);
-	workspacePanel.add(saveButton);
+	addWidget(WORKSPACE_PANEL, saveButton);
 	saveButton.setWidth("60px");
 	AuthenticationBasedEnablingStateWrapper authWrapper = new AuthenticationBasedEnablingStateWrapper(
 		authenticationManager, saveButton);
@@ -506,9 +434,21 @@ public class ChooselApplication {
 	// share workspace
 	ButtonDisplay shareButton = commandPresenterFactory
 		.createCommandButton("Share", shareWorkspaceCommand);
-	workspacePanel.add(shareButton);
+	addWidget(WORKSPACE_PANEL, shareButton);
 	new AuthenticationBasedEnablingStateWrapper(authenticationManager,
 		shareButton).init();
+    }
+
+    private void loadWorkspaceIfParamSet() {
+	// TODO extract constant
+	String workspaceIdParam = Window.Location.getParameter("workspaceId");
+	if (workspaceIdParam != null) {
+	    long workspaceID = Long.parseLong(workspaceIdParam);
+
+	    LoadWorkspaceCommand loadWorkspaceCommand = new LoadWorkspaceCommand(
+		    workspaceID, "", workspacePersistenceManager);
+	    blockingCommandExecutor.execute(loadWorkspaceCommand);
+	}
     }
 
 }
