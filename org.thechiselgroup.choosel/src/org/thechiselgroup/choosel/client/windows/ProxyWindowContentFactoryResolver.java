@@ -25,11 +25,11 @@ public class ProxyWindowContentFactoryResolver {
     private ProxyWindowContentFactory proxyFactory;
 
     @Inject
-    public ProxyWindowContentFactoryResolver(@Named(PROXY) WindowContentFactory proxyFactory) {
+    public ProxyWindowContentFactoryResolver(@Named(PROXY) WindowContentProducer proxyFactory) {
 	this.proxyFactory = (ProxyWindowContentFactory) proxyFactory;
     }
 
-    public void setDelegate(WindowContentFactory delegate) {
+    public void setDelegate(WindowContentProducer delegate) {
 	proxyFactory.setDelegate(delegate);
     }
 

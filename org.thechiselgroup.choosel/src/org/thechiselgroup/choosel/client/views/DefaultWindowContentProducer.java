@@ -31,12 +31,12 @@ import org.thechiselgroup.choosel.client.ui.NoteWindowContent;
 import org.thechiselgroup.choosel.client.ui.dnd.DropEnabledViewContentDisplay;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropTargetManager;
 import org.thechiselgroup.choosel.client.windows.WindowContent;
-import org.thechiselgroup.choosel.client.windows.WindowContentFactory;
+import org.thechiselgroup.choosel.client.windows.WindowContentProducer;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-public class DefaultWindowContentFactory implements WindowContentFactory {
+public class DefaultWindowContentProducer implements WindowContentProducer {
 
     private ResourceSetAvatarFactory userSetsDragAvatarFactory;
 
@@ -59,7 +59,7 @@ public class DefaultWindowContentFactory implements WindowContentFactory {
     private final ResourceSetAvatarFactory allResourcesDragAvatarFactory;
 
     @Inject
-    public DefaultWindowContentFactory(
+    public DefaultWindowContentProducer(
 	    @Named(AVATAR_FACTORY_SET) ResourceSetAvatarFactory userSetsDragAvatarFactory,
 	    @Named(AVATAR_FACTORY_TYPE) ResourceSetAvatarFactory typesDragAvatarFactory,
 	    @Named(AVATAR_FACTORY_ALL_RESOURCES) ResourceSetAvatarFactory allResourcesDragAvatarFactory,

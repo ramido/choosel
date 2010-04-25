@@ -30,7 +30,7 @@ import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccess
 import org.thechiselgroup.choosel.client.services.ForwardingAsyncCallback;
 import org.thechiselgroup.choosel.client.windows.Desktop;
 import org.thechiselgroup.choosel.client.windows.WindowContent;
-import org.thechiselgroup.choosel.client.windows.WindowContentFactory;
+import org.thechiselgroup.choosel.client.windows.WindowContentProducer;
 import org.thechiselgroup.choosel.client.windows.WindowPanel;
 import org.thechiselgroup.choosel.client.workspace.dto.ResourceSetDTO;
 import org.thechiselgroup.choosel.client.workspace.dto.WindowDTO;
@@ -49,7 +49,7 @@ public class DefaultWorkspacePersistenceManager implements
 
     private WorkspacePersistenceServiceAsync service;
 
-    private WindowContentFactory viewFactory;
+    private WindowContentProducer viewFactory;
 
     private WorkspaceManager workspaceManager;
 
@@ -63,7 +63,7 @@ public class DefaultWorkspacePersistenceManager implements
     public DefaultWorkspacePersistenceManager(
 	    WorkspaceManager workspaceManager, Desktop desktop,
 	    WorkspacePersistenceServiceAsync service,
-	    WindowContentFactory viewFactory, ResourceManager resourceManager,
+	    WindowContentProducer viewFactory, ResourceManager resourceManager,
 	    ResourceSetFactory resourceSetFactory,
 	    WorkspaceSharingServiceAsync sharingService) {
 

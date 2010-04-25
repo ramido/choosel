@@ -46,7 +46,7 @@ import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.client.views.View;
 import org.thechiselgroup.choosel.client.windows.Desktop;
 import org.thechiselgroup.choosel.client.windows.WindowContent;
-import org.thechiselgroup.choosel.client.windows.WindowContentFactory;
+import org.thechiselgroup.choosel.client.windows.WindowContentProducer;
 import org.thechiselgroup.choosel.client.windows.WindowPanel;
 import org.thechiselgroup.choosel.client.workspace.DefaultWorkspacePersistenceManager;
 import org.thechiselgroup.choosel.client.workspace.Workspace;
@@ -95,7 +95,7 @@ public class DefaultWorkspacePersistenceManagerTest {
     private TestPersistableWindowContent windowContent;
 
     @Mock
-    private WindowContentFactory viewFactory;
+    private WindowContentProducer viewFactory;
 
     @Mock
     private WindowPanel window;

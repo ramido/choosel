@@ -76,14 +76,14 @@ import org.thechiselgroup.choosel.client.util.HandlerManagerProvider;
 import org.thechiselgroup.choosel.client.util.URLFetchService;
 import org.thechiselgroup.choosel.client.util.xslt.SarissaDocumentProcessor;
 import org.thechiselgroup.choosel.client.views.DefaultViewAccessor;
-import org.thechiselgroup.choosel.client.views.DefaultWindowContentFactory;
+import org.thechiselgroup.choosel.client.views.DefaultWindowContentProducerProvider;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
 import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay;
 import org.thechiselgroup.choosel.client.windows.DefaultDesktop;
 import org.thechiselgroup.choosel.client.windows.Desktop;
 import org.thechiselgroup.choosel.client.windows.ProxyWindowContentFactory;
-import org.thechiselgroup.choosel.client.windows.WindowContentFactory;
+import org.thechiselgroup.choosel.client.windows.WindowContentProducer;
 import org.thechiselgroup.choosel.client.workspace.DefaultWorkspaceManager;
 import org.thechiselgroup.choosel.client.workspace.DefaultWorkspacePersistenceManager;
 import org.thechiselgroup.choosel.client.workspace.WorkspaceManager;
@@ -211,9 +211,9 @@ public class MashupClientModule extends AbstractGinModule implements
 		MessageBlockingCommandExecutor.class).in(Singleton.class);
 	bind(CommandPresenterFactory.class).in(Singleton.class);
 
-	bind(WindowContentFactory.class).to(DefaultWindowContentFactory.class)
-		.in(Singleton.class);
-	bind(WindowContentFactory.class).annotatedWith(Names.named(PROXY)).to(
+	bind(WindowContentProducer.class).toProvider(
+		DefaultWindowContentProducerProvider.class).in(Singleton.class);
+	bind(WindowContentProducer.class).annotatedWith(Names.named(PROXY)).to(
 		ProxyWindowContentFactory.class).in(Singleton.class);
 
 	bindDragAvatarDropTargetManagers();

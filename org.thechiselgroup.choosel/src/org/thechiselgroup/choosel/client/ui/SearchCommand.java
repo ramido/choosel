@@ -19,7 +19,7 @@ import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.windows.CreateWindowCommand;
 import org.thechiselgroup.choosel.client.windows.Desktop;
 import org.thechiselgroup.choosel.client.windows.WindowContent;
-import org.thechiselgroup.choosel.client.windows.WindowContentFactory;
+import org.thechiselgroup.choosel.client.windows.WindowContentProducer;
 
 import com.google.gwt.user.client.Command;
 
@@ -31,12 +31,12 @@ public class SearchCommand implements Command, HasTextParameter {
 
     private String searchTerm;
 
-    private WindowContentFactory viewFactory;
+    private WindowContentProducer viewFactory;
 
     private String contentType;
 
     public SearchCommand(CommandManager commandManager, Desktop desktop,
-	    WindowContentFactory viewFactory, String contentType) {
+	    WindowContentProducer viewFactory, String contentType) {
 
 	this.commandManager = commandManager;
 	this.desktop = desktop;
