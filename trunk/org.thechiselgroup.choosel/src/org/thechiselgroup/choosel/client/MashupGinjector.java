@@ -38,10 +38,6 @@ import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.ui.ActionBar;
 import org.thechiselgroup.choosel.client.ui.dialog.DialogManager;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
-import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay;
-import org.thechiselgroup.choosel.client.views.list.ListViewContentDisplay;
-import org.thechiselgroup.choosel.client.views.map.MapViewContentDisplay;
-import org.thechiselgroup.choosel.client.views.timeline.TimeLineViewContentDisplay;
 import org.thechiselgroup.choosel.client.windows.Desktop;
 import org.thechiselgroup.choosel.client.windows.ProxyWindowContentFactoryResolver;
 import org.thechiselgroup.choosel.client.windows.WindowContentProducer;
@@ -74,17 +70,9 @@ public interface MashupGinjector extends Ginjector {
 
     DefaultCommandManagerPresenterDisplay createCommandManagerPresenterDisplay();
 
-    GraphViewContentDisplay createGraph();
-
-    ListViewContentDisplay createList();
-
-    MapViewContentDisplay createMap();
-
     ProxyWindowContentFactoryResolver getProxyViewFactoryResolver();
 
     ResourceSplitter createResourceSplitter();
-
-    TimeLineViewContentDisplay createTimeLine();
 
     DefaultWorkspacePresenterDisplay createWorkspacePresenterDisplay();
 

@@ -79,7 +79,12 @@ import org.thechiselgroup.choosel.client.views.DefaultViewAccessor;
 import org.thechiselgroup.choosel.client.views.DefaultWindowContentProducerProvider;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
+import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay;
+import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplayFactory;
+import org.thechiselgroup.choosel.client.views.list.ListViewContentDisplayFactory;
+import org.thechiselgroup.choosel.client.views.map.MapViewContentDisplayFactory;
+import org.thechiselgroup.choosel.client.views.timeline.TimeLineViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.windows.DefaultDesktop;
 import org.thechiselgroup.choosel.client.windows.Desktop;
 import org.thechiselgroup.choosel.client.windows.ProxyWindowContentFactory;
@@ -211,6 +216,8 @@ public class MashupClientModule extends AbstractGinModule implements
 		MessageBlockingCommandExecutor.class).in(Singleton.class);
 	bind(CommandPresenterFactory.class).in(Singleton.class);
 
+	bindViewContentDisplayFactories();
+
 	bind(WindowContentProducer.class).toProvider(
 		DefaultWindowContentProducerProvider.class).in(Singleton.class);
 	bind(WindowContentProducer.class).annotatedWith(Names.named(PROXY)).to(
@@ -263,5 +270,24 @@ public class MashupClientModule extends AbstractGinModule implements
 	bind(NCBOMappingNeighbourhoodServiceAsync.class).to(
 		NCBOMappingNeighbourhoodServiceAsyncClientImplementation.class)
 		.in(Singleton.class);
+    }
+
+    protected void bindViewContentDisplayFactories() {
+	bindViewContentDisplayFactory(TYPE_MAP,
+		MapViewContentDisplayFactory.class);
+	bindViewContentDisplayFactory(TYPE_LIST,
+		ListViewContentDisplayFactory.class);
+	bindViewContentDisplayFactory(TYPE_GRAPH,
+		GraphViewContentDisplayFactory.class);
+	bindViewContentDisplayFactory(TYPE_TIMELINE,
+		TimeLineViewContentDisplayFactory.class);
+    }
+
+    protected void bindViewContentDisplayFactory(
+	    String type,
+	    Class<? extends ViewContentDisplayFactory> viewContentDisplayFactoryClass) {
+
+	bind(ViewContentDisplayFactory.class).annotatedWith(Names.named(type))
+		.to(viewContentDisplayFactoryClass).in(Singleton.class);
     }
 }

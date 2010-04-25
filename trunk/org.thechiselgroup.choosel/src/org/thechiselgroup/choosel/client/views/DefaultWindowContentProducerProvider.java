@@ -17,6 +17,9 @@ package org.thechiselgroup.choosel.client.views;
 
 import static org.thechiselgroup.choosel.client.configuration.MashupInjectionConstants.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.thechiselgroup.choosel.client.MashupClient;
 import org.thechiselgroup.choosel.client.label.CategoryLabelProvider;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
@@ -38,25 +41,27 @@ import com.google.inject.name.Named;
 public class DefaultWindowContentProducerProvider implements
 	Provider<WindowContentProducer> {
 
-    private ResourceSetAvatarFactory userSetsDragAvatarFactory;
-
-    private ResourceSetAvatarFactory typesDragAvatarFactory;
-
-    private ResourceSetAvatarFactory selectionDragAvatarFactory;
-
-    private ResourceSet hoverModel;
-
-    private ResourceSetFactory resourceSetFactory;
-
-    private LabelProvider selectionModelLabelFactory;
+    private final ResourceSetAvatarFactory allResourcesDragAvatarFactory;
 
     private ResourceCategorizer categorizer;
 
-    private CategoryLabelProvider labelProvider;
-
     private ResourceSetAvatarDropTargetManager contentDropTargetManager;
 
-    private final ResourceSetAvatarFactory allResourcesDragAvatarFactory;
+    private ResourceSet hoverModel;
+
+    private CategoryLabelProvider labelProvider;
+
+    private ResourceSetFactory resourceSetFactory;
+
+    private ResourceSetAvatarFactory selectionDragAvatarFactory;
+
+    private LabelProvider selectionModelLabelFactory;
+
+    private ResourceSetAvatarFactory typesDragAvatarFactory;
+
+    private ResourceSetAvatarFactory userSetsDragAvatarFactory;
+
+    protected final Map<String, ViewContentDisplayFactory> viewContentDisplayFactories = new HashMap<String, ViewContentDisplayFactory>();
 
     @Inject
     public DefaultWindowContentProducerProvider(
@@ -87,85 +92,78 @@ public class DefaultWindowContentProducerProvider implements
     public WindowContentProducer get() {
 	DefaultWindowContentProducer contentProducer = new DefaultWindowContentProducer();
 
-	registerWindowContentFactory(contentProducer, "ncbo-search",
-		new WindowContentFactory() {
-		    @Override
-		    public WindowContent createWindowContent() {
-			return MashupClient.injector
-				.createNCBOSearchViewContent();
-		    }
-		});
+	// TODO move into subclass !?
+	register(contentProducer, "ncbo-search", new WindowContentFactory() {
+	    @Override
+	    public WindowContent createWindowContent() {
+		return MashupClient.injector.createNCBOSearchViewContent();
+	    }
+	});
 
-	registerWindowContentFactory(contentProducer, "help",
-		new WindowContentFactory() {
-		    @Override
-		    public WindowContent createWindowContent() {
-			return new HelpWindowContent();
-		    }
-		});
+	register(contentProducer, "help", new WindowContentFactory() {
+	    @Override
+	    public WindowContent createWindowContent() {
+		return new HelpWindowContent();
+	    }
+	});
 
-	registerWindowContentFactory(contentProducer, "note",
-		new WindowContentFactory() {
-		    @Override
-		    public WindowContent createWindowContent() {
-			return new NoteWindowContent();
-		    }
-		});
+	register(contentProducer, "note", new WindowContentFactory() {
+	    @Override
+	    public WindowContent createWindowContent() {
+		return new NoteWindowContent();
+	    }
+	});
 
-	registViewContentDisplay(contentProducer, "Map",
-		new ViewContentDisplayFactory() {
-		    @Override
-		    public ViewContentDisplay createViewContentDisplay() {
-			return MashupClient.injector.createMap();
-		    }
-		});
-
-	registViewContentDisplay(contentProducer, "Graph",
-		new ViewContentDisplayFactory() {
-		    @Override
-		    public ViewContentDisplay createViewContentDisplay() {
-			return MashupClient.injector.createGraph();
-		    }
-		});
-
-	registViewContentDisplay(contentProducer, "List",
-		new ViewContentDisplayFactory() {
-		    @Override
-		    public ViewContentDisplay createViewContentDisplay() {
-			return MashupClient.injector.createList();
-		    }
-		});
-
-	registViewContentDisplay(contentProducer, "Timeline",
-		new ViewContentDisplayFactory() {
-		    @Override
-		    public ViewContentDisplay createViewContentDisplay() {
-			return MashupClient.injector.createTimeLine();
-		    }
-		});
+	registerViewContentDisplayFactories(contentProducer);
 
 	return contentProducer;
     }
 
-    private void registViewContentDisplay(
-	    DefaultWindowContentProducer contentProducer, String contentType,
-	    ViewContentDisplayFactory contentDisplayFactory) {
+    private void registerViewContentDisplayFactories(
+	    DefaultWindowContentProducer contentProducer) {
 
-	registerWindowContentFactory(contentProducer, contentType,
-		new ViewFactory(contentType, contentDisplayFactory,
-			userSetsDragAvatarFactory, typesDragAvatarFactory,
-			allResourcesDragAvatarFactory,
-			selectionDragAvatarFactory, hoverModel,
-			resourceSetFactory, selectionModelLabelFactory,
-			categorizer, labelProvider, contentDropTargetManager));
+	for (Map.Entry<String, ViewContentDisplayFactory> entry : viewContentDisplayFactories
+		.entrySet()) {
+	    register(contentProducer, entry.getKey(), entry.getValue());
+	}
     }
 
-    private void registerWindowContentFactory(
-	    DefaultWindowContentProducer contentProducer, String contentType,
-	    WindowContentFactory windowContentFactory) {
+    @Inject
+    public void injectGraph(@Named(TYPE_GRAPH) ViewContentDisplayFactory factory) {
+	viewContentDisplayFactories.put(TYPE_GRAPH, factory);
+    }
 
-	contentProducer.registerViewContentDisplayFactory(contentType,
-		windowContentFactory);
+    @Inject
+    public void injectTimeline(
+	    @Named(TYPE_TIMELINE) ViewContentDisplayFactory factory) {
+	viewContentDisplayFactories.put(TYPE_TIMELINE, factory);
+    }
+
+    @Inject
+    public void injectList(@Named(TYPE_LIST) ViewContentDisplayFactory factory) {
+	viewContentDisplayFactories.put(TYPE_LIST, factory);
+    }
+
+    @Inject
+    public void injectMap(@Named(TYPE_MAP) ViewContentDisplayFactory factory) {
+	viewContentDisplayFactories.put(TYPE_MAP, factory);
+    }
+
+    private void register(DefaultWindowContentProducer contentProducer,
+	    String contentType, ViewContentDisplayFactory contentDisplayFactory) {
+
+	register(contentProducer, contentType, new ViewFactory(contentType,
+		contentDisplayFactory, userSetsDragAvatarFactory,
+		typesDragAvatarFactory, allResourcesDragAvatarFactory,
+		selectionDragAvatarFactory, hoverModel, resourceSetFactory,
+		selectionModelLabelFactory, categorizer, labelProvider,
+		contentDropTargetManager));
+    }
+
+    private void register(DefaultWindowContentProducer contentProducer,
+	    String contentType, WindowContentFactory windowContentFactory) {
+
+	contentProducer.register(contentType, windowContentFactory);
     }
 
 }

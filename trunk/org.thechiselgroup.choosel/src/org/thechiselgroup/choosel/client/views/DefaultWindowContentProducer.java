@@ -33,8 +33,8 @@ public class DefaultWindowContentProducer implements WindowContentProducer {
 	return windowContentFactories.get(contentType).createWindowContent();
     }
 
-    public void registerViewContentDisplayFactory(final String contentType,
-	    final WindowContentFactory windowContentFactory) {
+    public void register(String contentType,
+	    WindowContentFactory windowContentFactory) {
 
 	assert contentType != null;
 	assert windowContentFactory != null;
