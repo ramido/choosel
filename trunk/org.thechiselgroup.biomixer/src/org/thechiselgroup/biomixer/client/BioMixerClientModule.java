@@ -15,8 +15,34 @@
  *******************************************************************************/
 package org.thechiselgroup.biomixer.client;
 
+import org.thechiselgroup.choosel.client.ChooselApplication;
 import org.thechiselgroup.choosel.client.ChooselClientModule;
+import org.thechiselgroup.choosel.client.domain.ncbo.NCBOConceptNeighbourhoodServiceAsync;
+import org.thechiselgroup.choosel.client.domain.ncbo.NCBOConceptNeighbourhoodServiceAsyncClientImplementation;
+import org.thechiselgroup.choosel.client.domain.ncbo.NCBOConceptSearchServiceAsync;
+import org.thechiselgroup.choosel.client.domain.ncbo.NCBOConceptSearchServiceAsyncClientImplementation;
+import org.thechiselgroup.choosel.client.domain.ncbo.NCBOMappingNeighbourhoodServiceAsync;
+import org.thechiselgroup.choosel.client.domain.ncbo.NCBOMappingNeighbourhoodServiceAsyncClientImplementation;
+
+import com.google.inject.Singleton;
 
 public class BioMixerClientModule extends ChooselClientModule {
 
+    @Override
+    protected Class<? extends ChooselApplication> getApplicationClass() {
+	return BioMixerApplication.class;
+    }
+
+    @Override
+    protected void bindCustomServices() {
+	bind(NCBOConceptSearchServiceAsync.class).to(
+		NCBOConceptSearchServiceAsyncClientImplementation.class).in(
+		Singleton.class);
+	bind(NCBOConceptNeighbourhoodServiceAsync.class).to(
+		NCBOConceptNeighbourhoodServiceAsyncClientImplementation.class)
+		.in(Singleton.class);
+	bind(NCBOMappingNeighbourhoodServiceAsync.class).to(
+		NCBOMappingNeighbourhoodServiceAsyncClientImplementation.class)
+		.in(Singleton.class);
+    }
 }
