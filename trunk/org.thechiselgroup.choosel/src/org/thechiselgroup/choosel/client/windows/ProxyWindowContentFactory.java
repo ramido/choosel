@@ -15,24 +15,24 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.windows;
 
-public class ProxyWindowContentFactory implements WindowContentFactory {
+public class ProxyWindowContentFactory implements WindowContentProducer {
 
     /*
      * The purpose of this class is to break initialization cycles
      */
 
-    private WindowContentFactory delegate;
+    private WindowContentProducer delegate;
 
     @Override
     public WindowContent createWindowContent(String contentType) {
 	return delegate.createWindowContent(contentType);
     }
 
-    public WindowContentFactory getDelegate() {
+    public WindowContentProducer getDelegate() {
 	return delegate;
     }
 
-    public void setDelegate(WindowContentFactory delegate) {
+    public void setDelegate(WindowContentProducer delegate) {
 	this.delegate = delegate;
     }
 

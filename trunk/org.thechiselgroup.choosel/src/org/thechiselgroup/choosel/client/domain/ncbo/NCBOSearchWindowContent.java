@@ -30,7 +30,7 @@ import org.thechiselgroup.choosel.client.ui.HasTextParameter;
 import org.thechiselgroup.choosel.client.views.View;
 import org.thechiselgroup.choosel.client.views.list.ListViewContentDisplay;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
-import org.thechiselgroup.choosel.client.windows.WindowContentFactory;
+import org.thechiselgroup.choosel.client.windows.WindowContentProducer;
 import org.thechiselgroup.choosel.client.windows.WindowPanel;
 
 import com.allen_sauer.gwt.log.client.Log;
@@ -104,12 +104,12 @@ public class NCBOSearchWindowContent extends AbstractWindowContent implements
 
     private String searchTerm;
 
-    private WindowContentFactory viewFactory;
+    private WindowContentProducer viewFactory;
 
     @Inject
     public NCBOSearchWindowContent(ResourceSetFactory resourceSetFactory,
 	    NCBOConceptSearchServiceAsync searchService,
-	    @Named(PROXY) WindowContentFactory viewFactory) {
+	    @Named(PROXY) WindowContentProducer viewFactory) {
 
 	/*
 	 * In WindowContent implementations, the proxy view factory should be

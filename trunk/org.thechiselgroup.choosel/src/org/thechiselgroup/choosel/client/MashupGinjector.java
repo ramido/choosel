@@ -44,7 +44,7 @@ import org.thechiselgroup.choosel.client.views.map.MapViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.timeline.TimeLineViewContentDisplay;
 import org.thechiselgroup.choosel.client.windows.Desktop;
 import org.thechiselgroup.choosel.client.windows.ProxyWindowContentFactoryResolver;
-import org.thechiselgroup.choosel.client.windows.WindowContentFactory;
+import org.thechiselgroup.choosel.client.windows.WindowContentProducer;
 import org.thechiselgroup.choosel.client.workspace.WorkspaceManager;
 import org.thechiselgroup.choosel.client.workspace.WorkspacePersistenceManager;
 import org.thechiselgroup.choosel.client.workspace.WorkspacePresenter.DefaultWorkspacePresenterDisplay;
@@ -124,7 +124,7 @@ public interface MashupGinjector extends Ginjector {
 
     SparqlQueryServiceAsync getSparqlQueryService();
 
-    WindowContentFactory getViewFactory();
+    WindowContentProducer getViewFactory();
 
     WorkspaceManager getWorkspaceManager();
 

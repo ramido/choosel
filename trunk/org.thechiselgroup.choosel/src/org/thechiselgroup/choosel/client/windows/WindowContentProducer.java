@@ -13,21 +13,10 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.domain.ncbo;
+package org.thechiselgroup.choosel.client.windows;
 
-import org.thechiselgroup.choosel.client.command.CommandManager;
-import org.thechiselgroup.choosel.client.ui.SearchCommand;
-import org.thechiselgroup.choosel.client.windows.Desktop;
-import org.thechiselgroup.choosel.client.windows.WindowContentProducer;
+public interface WindowContentProducer {
 
-import com.google.inject.Inject;
-
-public class NCBOConceptSearchCommand extends SearchCommand {
-
-    @Inject
-    public NCBOConceptSearchCommand(CommandManager commandManager,
-	    Desktop desktop, WindowContentProducer viewFactory) {
-	super(commandManager, desktop, viewFactory, "ncbo-search");
-    }
+    WindowContent createWindowContent(String contentType);
 
 }
