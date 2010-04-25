@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.messages;
 
-import static org.thechiselgroup.choosel.client.configuration.MashupInjectionConstants.*;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.*;
 
 import org.thechiselgroup.choosel.client.command.AsyncCommand;
 import org.thechiselgroup.choosel.client.command.AsyncCommandExecutor;

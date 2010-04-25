@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import static org.thechiselgroup.choosel.client.configuration.MashupInjectionConstants.*;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.*;
 
 import java.util.HashMap;
 import java.util.Map;

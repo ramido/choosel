@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.windows;
 
-import static org.thechiselgroup.choosel.client.configuration.MashupInjectionConstants.*;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.*;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;

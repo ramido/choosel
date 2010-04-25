@@ -70,8 +70,5 @@
   <!-- Client XPath/XSLT support via wrapping native browser support -->
   <script src="js/lib/sarissa-0.9.9.4/sarissa-compressed.js"/>
   <script src="js/lib/sarissa-0.9.9.4/sarissa_ieemu_xpath-compressed.js"/>
- 
-  <!--  Starting Point -->
-  <entry-point class='org.thechiselgroup.choosel.client.ChooselEntryPoint'/>
 
 </module>

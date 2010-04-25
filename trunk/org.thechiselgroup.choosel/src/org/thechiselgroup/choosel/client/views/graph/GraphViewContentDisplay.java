@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
-import org.thechiselgroup.choosel.client.configuration.MashupInjectionConstants;
+import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.domain.ncbo.NCBO;
 import org.thechiselgroup.choosel.client.domain.ncbo.NCBOConceptNeighbourhoodServiceAsync;
 import org.thechiselgroup.choosel.client.domain.ncbo.NCBOMappingNeighbourhoodServiceAsync;
@@ -242,7 +242,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
     @Inject
     public GraphViewContentDisplay(
 	    Display display,
-	    @Named(MashupInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
+	    @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
 	    NCBOMappingNeighbourhoodServiceAsync mappingService,
 	    NCBOConceptNeighbourhoodServiceAsync conceptNeighbourhoodService,
 	    PopupManagerFactory popupManagerFactory,

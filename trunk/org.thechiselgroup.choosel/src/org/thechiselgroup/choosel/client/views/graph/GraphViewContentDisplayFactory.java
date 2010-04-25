@@ -16,7 +16,7 @@
 package org.thechiselgroup.choosel.client.views.graph;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
-import org.thechiselgroup.choosel.client.configuration.MashupInjectionConstants;
+import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.domain.ncbo.NCBOConceptNeighbourhoodServiceAsync;
 import org.thechiselgroup.choosel.client.domain.ncbo.NCBOMappingNeighbourhoodServiceAsync;
 import org.thechiselgroup.choosel.client.error_handling.ErrorHandler;
@@ -49,7 +49,7 @@ public class GraphViewContentDisplayFactory implements
     @Inject
     public GraphViewContentDisplayFactory(
 	    Display display,
-	    @Named(MashupInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
+	    @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
 	    NCBOMappingNeighbourhoodServiceAsync mappingService,
 	    NCBOConceptNeighbourhoodServiceAsync conceptNeighbourhoodService,
 	    PopupManagerFactory popupManagerFactory,

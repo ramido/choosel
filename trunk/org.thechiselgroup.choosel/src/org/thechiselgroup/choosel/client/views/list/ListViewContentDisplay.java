@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.thechiselgroup.choosel.client.configuration.MashupInjectionConstants;
+import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
@@ -198,7 +198,7 @@ public class ListViewContentDisplay extends AbstractViewContentDisplay {
 
     @Inject
     public ListViewContentDisplay(
-	    @Named(MashupInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
+	    @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
 	    PopupManagerFactory popupManagerFactory,
 	    DetailsWidgetHelper detailsWidgetHelper,
 	    ResourceSetAvatarDragController dragController) {

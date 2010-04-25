@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.dnd;
 
-import static org.thechiselgroup.choosel.client.configuration.MashupInjectionConstants.*;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.*;
 
 import java.util.ArrayList;
 import java.util.List;

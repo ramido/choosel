@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.list;
 
-import org.thechiselgroup.choosel.client.configuration.MashupInjectionConstants;
+import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
@@ -38,7 +38,7 @@ public class ListViewContentDisplayFactory implements ViewContentDisplayFactory 
 
     @Inject
     public ListViewContentDisplayFactory(
-	    @Named(MashupInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
+	    @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
 	    PopupManagerFactory popupManagerFactory,
 	    DetailsWidgetHelper detailsWidgetHelper,
 	    ResourceSetAvatarDragController dragController) {

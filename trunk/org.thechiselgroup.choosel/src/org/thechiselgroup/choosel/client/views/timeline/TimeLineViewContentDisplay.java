@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.client.views.timeline;
 import java.util.Date;
 import java.util.List;
 
-import org.thechiselgroup.choosel.client.configuration.MashupInjectionConstants;
+import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
@@ -48,7 +48,7 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
     public TimeLineViewContentDisplay(
 	    PopupManagerFactory popupManagerFactory,
 	    DetailsWidgetHelper detailsWidgetHelper,
-	    @Named(MashupInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
+	    @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
 	    DragEnablerFactory dragEnablerFactory) {
 
 	super(popupManagerFactory, detailsWidgetHelper, hoverModel);

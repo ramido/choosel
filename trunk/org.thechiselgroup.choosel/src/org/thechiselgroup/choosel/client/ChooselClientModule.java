@@ -22,7 +22,7 @@ import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.command.DefaultCommandManager;
 import org.thechiselgroup.choosel.client.command.ui.CommandPresenterFactory;
 import org.thechiselgroup.choosel.client.command.ui.DefaultCommandManagerPresenterDisplay;
-import org.thechiselgroup.choosel.client.configuration.MashupInjectionConstants;
+import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.domain.ncbo.NCBOConceptNeighbourhoodServiceAsync;
 import org.thechiselgroup.choosel.client.domain.ncbo.NCBOConceptNeighbourhoodServiceAsyncClientImplementation;
 import org.thechiselgroup.choosel.client.domain.ncbo.NCBOConceptSearchServiceAsync;
@@ -102,8 +102,8 @@ import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 
-public class MashupClientModule extends AbstractGinModule implements
-	MashupInjectionConstants {
+public class ChooselClientModule extends AbstractGinModule implements
+	ChooselInjectionConstants {
 
     private void bindDisplays() {
 	bind(DefaultCommandManagerPresenterDisplay.class);

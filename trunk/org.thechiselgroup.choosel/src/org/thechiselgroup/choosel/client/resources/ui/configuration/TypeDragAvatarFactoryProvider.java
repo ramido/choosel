@@ -15,12 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources.ui.configuration;
 
-import static org.thechiselgroup.choosel.client.configuration.MashupInjectionConstants.*;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.*;
 
 import java.util.Collections;
 import java.util.List;
 
-import org.thechiselgroup.choosel.client.configuration.MashupInjectionConstants;
+import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetContainer;
 import org.thechiselgroup.choosel.client.resources.ui.DefaultResourceSetAvatarFactory;
@@ -53,8 +53,8 @@ public class TypeDragAvatarFactoryProvider implements
     @Inject
     public TypeDragAvatarFactoryProvider(
 	    ResourceSetAvatarDragController dragController,
-	    @Named(MashupInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
-	    @Named(MashupInjectionConstants.HOVER_MODEL) ResourceSetContainer setHoverModel,
+	    @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
+	    @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSetContainer setHoverModel,
 	    @Named(AVATAR_FACTORY_TYPE) ResourceSetAvatarDropTargetManager dropTargetManager,
 	    ViewAccessor viewAccessor, PopupManagerFactory popupManagerFactory) {
 
