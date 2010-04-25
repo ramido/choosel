@@ -13,30 +13,13 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client;
+package org.thechiselgroup.biomixer.client;
 
-import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.client.GWT;
+import org.thechiselgroup.choosel.client.ChooselGinjector;
 
-public class ChooselEntryPoint implements EntryPoint {
+import com.google.gwt.inject.client.GinModules;
 
-    public final void onModuleLoad() {
-	ChooselGinjector injector = GWT.create(getChooselGinjectorClass());
-
-	// TODO what is this for?
-	// resolves initialization cycles
-	injector.getProxyViewFactoryResolver().setDelegate(
-		injector.getViewFactory());
-
-	injector.getApplication().init();
-    }
-
-    /**
-     * Choosel applications should override to implement their own
-     * ChooseGinjector that links their custom configuration module.
-     */
-    protected Class<? extends ChooselGinjector> getChooselGinjectorClass() {
-	return ChooselGinjector.class;
-    }
+@GinModules(BioMixerClientModule.class)
+public interface BioMixerGinjector extends ChooselGinjector {
 
 }

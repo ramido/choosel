@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.thechiselgroup.choosel.client.configuration.MashupInjectionConstants;
+import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.CombinedResourceSet;
@@ -154,14 +154,14 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     @Inject
     public DefaultView(
-	    @Named(MashupInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
-	    @Named(MashupInjectionConstants.LABEL_PROVIDER_SELECTION_SET) LabelProvider selectionModelLabelFactory,
+	    @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
+	    @Named(ChooselInjectionConstants.LABEL_PROVIDER_SELECTION_SET) LabelProvider selectionModelLabelFactory,
 	    ResourceSetFactory resourceSetFactory,
-	    @Named(MashupInjectionConstants.AVATAR_FACTORY_SET) ResourceSetsPresenter userSetsPresenter,
-	    @Named(MashupInjectionConstants.AVATAR_FACTORY_TYPE) ResourceSetsPresenter splittedSetsPresenter,
-	    @Named(MashupInjectionConstants.AVATAR_FACTORY_ALL_RESOURCES) ResourceSetsPresenter allResourcesSetPresenter,
-	    @Named(MashupInjectionConstants.AVATAR_FACTORY_SELECTION) ResourceSetsPresenter selectionPresenter,
-	    @Named(MashupInjectionConstants.AVATAR_FACTORY_SELECTION_DROP) ResourceSetsPresenter selectionDropPresenter,
+	    @Named(ChooselInjectionConstants.AVATAR_FACTORY_SET) ResourceSetsPresenter userSetsPresenter,
+	    @Named(ChooselInjectionConstants.AVATAR_FACTORY_TYPE) ResourceSetsPresenter splittedSetsPresenter,
+	    @Named(ChooselInjectionConstants.AVATAR_FACTORY_ALL_RESOURCES) ResourceSetsPresenter allResourcesSetPresenter,
+	    @Named(ChooselInjectionConstants.AVATAR_FACTORY_SELECTION) ResourceSetsPresenter selectionPresenter,
+	    @Named(ChooselInjectionConstants.AVATAR_FACTORY_SELECTION_DROP) ResourceSetsPresenter selectionDropPresenter,
 	    ResourceSplitter resourceSplitter,
 	    ViewContentDisplay contentDisplay, String label, String contentType) {
 

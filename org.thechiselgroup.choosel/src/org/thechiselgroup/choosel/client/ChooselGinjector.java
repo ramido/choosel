@@ -18,10 +18,8 @@ package org.thechiselgroup.choosel.client;
 import org.thechiselgroup.choosel.client.windows.ProxyWindowContentFactoryResolver;
 import org.thechiselgroup.choosel.client.windows.WindowContentProducer;
 
-import com.google.gwt.inject.client.GinModules;
 import com.google.gwt.inject.client.Ginjector;
 
-@GinModules(MashupClientModule.class)
 public interface ChooselGinjector extends Ginjector {
 
     ChooselApplication getApplication();

@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.configuration;
 
-public interface MashupInjectionConstants {
+public interface ChooselInjectionConstants {
 
     String TYPE_MAP = "Map";
 
