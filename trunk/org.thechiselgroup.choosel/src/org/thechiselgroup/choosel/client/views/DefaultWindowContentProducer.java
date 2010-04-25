@@ -17,6 +17,9 @@ package org.thechiselgroup.choosel.client.views;
 
 import static org.thechiselgroup.choosel.client.configuration.MashupInjectionConstants.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.thechiselgroup.choosel.client.MashupClient;
 import org.thechiselgroup.choosel.client.label.CategoryLabelProvider;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
@@ -119,17 +122,39 @@ public class DefaultWindowContentProducer implements WindowContentProducer {
 
     // TODO replace with factory // map of factories
     private ViewContentDisplay createContentDisplay(String contentType) {
-	if ("Map".equals(contentType)) {
-	    return MashupClient.injector.createMap();
-	} else if ("List".equals(contentType)) {
-	    return MashupClient.injector.createList();
-	} else if ("Timeline".equals(contentType)) {
-	    return MashupClient.injector.createTimeLine();
-	} else if ("Graph".equals(contentType)) {
-	    return MashupClient.injector.createGraph();
-	}
+	Map<String, ViewContentDisplayFactory> viewContentDisplayFactories = new HashMap<String, ViewContentDisplayFactory>();
 
-	throw new RuntimeException("content type " + contentType
-		+ " not supported.");
+	viewContentDisplayFactories.put("Map", new ViewContentDisplayFactory() {
+	    @Override
+	    public ViewContentDisplay createViewContentDisplay() {
+		return MashupClient.injector.createMap();
+	    }
+	});
+	viewContentDisplayFactories.put("Graph",
+		new ViewContentDisplayFactory() {
+		    @Override
+		    public ViewContentDisplay createViewContentDisplay() {
+			return MashupClient.injector.createGraph();
+		    }
+		});
+	viewContentDisplayFactories.put("List",
+		new ViewContentDisplayFactory() {
+		    @Override
+		    public ViewContentDisplay createViewContentDisplay() {
+			return MashupClient.injector.createList();
+		    }
+		});
+	viewContentDisplayFactories.put("Timeline",
+		new ViewContentDisplayFactory() {
+		    @Override
+		    public ViewContentDisplay createViewContentDisplay() {
+			return MashupClient.injector.createTimeLine();
+		    }
+		});
+
+	assert viewContentDisplayFactories.containsKey(contentType);
+
+	return viewContentDisplayFactories.get(contentType)
+		.createViewContentDisplay();
     }
 }
