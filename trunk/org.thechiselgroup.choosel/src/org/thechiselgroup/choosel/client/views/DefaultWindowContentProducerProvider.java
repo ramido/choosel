@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.client.views;
 
 import static org.thechiselgroup.choosel.client.configuration.MashupInjectionConstants.*;
 
+import org.thechiselgroup.choosel.client.MashupClient;
 import org.thechiselgroup.choosel.client.label.CategoryLabelProvider;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
@@ -80,11 +81,45 @@ public class DefaultWindowContentProducerProvider implements
 
     @Override
     public WindowContentProducer get() {
-	return new DefaultWindowContentProducer(userSetsDragAvatarFactory,
-		typesDragAvatarFactory, allResourcesDragAvatarFactory,
-		selectionDragAvatarFactory, hoverModel, resourceSetFactory,
-		selectionModelLabelFactory, categorizer, labelProvider,
-		contentDropTargetManager);
+	DefaultWindowContentProducer contentProducer = new DefaultWindowContentProducer(
+		userSetsDragAvatarFactory, typesDragAvatarFactory,
+		allResourcesDragAvatarFactory, selectionDragAvatarFactory,
+		hoverModel, resourceSetFactory, selectionModelLabelFactory,
+		categorizer, labelProvider, contentDropTargetManager);
+
+	contentProducer.registerViewContentDisplayFactory("Map",
+		new ViewContentDisplayFactory() {
+		    @Override
+		    public ViewContentDisplay createViewContentDisplay() {
+			return MashupClient.injector.createMap();
+		    }
+		});
+
+	contentProducer.registerViewContentDisplayFactory("Graph",
+		new ViewContentDisplayFactory() {
+		    @Override
+		    public ViewContentDisplay createViewContentDisplay() {
+			return MashupClient.injector.createGraph();
+		    }
+		});
+
+	contentProducer.registerViewContentDisplayFactory("List",
+		new ViewContentDisplayFactory() {
+		    @Override
+		    public ViewContentDisplay createViewContentDisplay() {
+			return MashupClient.injector.createList();
+		    }
+		});
+
+	contentProducer.registerViewContentDisplayFactory("Timeline",
+		new ViewContentDisplayFactory() {
+		    @Override
+		    public ViewContentDisplay createViewContentDisplay() {
+			return MashupClient.injector.createTimeLine();
+		    }
+		});
+
+	return contentProducer;
     }
 
 }

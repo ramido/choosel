@@ -41,25 +41,27 @@ import com.google.inject.name.Named;
 
 public class DefaultWindowContentProducer implements WindowContentProducer {
 
-    private ResourceSetAvatarFactory userSetsDragAvatarFactory;
-
-    private ResourceSetAvatarFactory typesDragAvatarFactory;
-
-    private ResourceSetAvatarFactory selectionDragAvatarFactory;
-
-    private ResourceSet hoverModel;
-
-    private ResourceSetFactory resourceSetFactory;
-
-    private LabelProvider selectionModelLabelFactory;
+    private final ResourceSetAvatarFactory allResourcesDragAvatarFactory;
 
     private ResourceCategorizer categorizer;
 
-    private CategoryLabelProvider labelProvider;
-
     private ResourceSetAvatarDropTargetManager contentDropTargetManager;
 
-    private final ResourceSetAvatarFactory allResourcesDragAvatarFactory;
+    private ResourceSet hoverModel;
+
+    private CategoryLabelProvider labelProvider;
+
+    private ResourceSetFactory resourceSetFactory;
+
+    private ResourceSetAvatarFactory selectionDragAvatarFactory;
+
+    private LabelProvider selectionModelLabelFactory;
+
+    private ResourceSetAvatarFactory typesDragAvatarFactory;
+
+    private ResourceSetAvatarFactory userSetsDragAvatarFactory;
+
+    private Map<String, ViewContentDisplayFactory> viewContentDisplayFactories = new HashMap<String, ViewContentDisplayFactory>();
 
     @Inject
     public DefaultWindowContentProducer(
@@ -84,6 +86,12 @@ public class DefaultWindowContentProducer implements WindowContentProducer {
 	this.selectionModelLabelFactory = selectionModelLabelFactory;
 	this.categorizer = categorizer;
 	this.labelProvider = labelProvider;
+    }
+
+    private ViewContentDisplay createContentDisplay(String contentType) {
+	assert viewContentDisplayFactories.containsKey(contentType);
+	return viewContentDisplayFactories.get(contentType)
+		.createViewContentDisplay();
     }
 
     public WindowContent createWindowContent(String contentType) {
@@ -120,41 +128,12 @@ public class DefaultWindowContentProducer implements WindowContentProducer {
 	return view;
     }
 
-    // TODO replace with factory // map of factories
-    private ViewContentDisplay createContentDisplay(String contentType) {
-	Map<String, ViewContentDisplayFactory> viewContentDisplayFactories = new HashMap<String, ViewContentDisplayFactory>();
+    public void registerViewContentDisplayFactory(String contentType,
+	    ViewContentDisplayFactory viewContentDisplayFactory) {
 
-	viewContentDisplayFactories.put("Map", new ViewContentDisplayFactory() {
-	    @Override
-	    public ViewContentDisplay createViewContentDisplay() {
-		return MashupClient.injector.createMap();
-	    }
-	});
-	viewContentDisplayFactories.put("Graph",
-		new ViewContentDisplayFactory() {
-		    @Override
-		    public ViewContentDisplay createViewContentDisplay() {
-			return MashupClient.injector.createGraph();
-		    }
-		});
-	viewContentDisplayFactories.put("List",
-		new ViewContentDisplayFactory() {
-		    @Override
-		    public ViewContentDisplay createViewContentDisplay() {
-			return MashupClient.injector.createList();
-		    }
-		});
-	viewContentDisplayFactories.put("Timeline",
-		new ViewContentDisplayFactory() {
-		    @Override
-		    public ViewContentDisplay createViewContentDisplay() {
-			return MashupClient.injector.createTimeLine();
-		    }
-		});
+	assert contentType != null;
+	assert viewContentDisplayFactory != null;
 
-	assert viewContentDisplayFactories.containsKey(contentType);
-
-	return viewContentDisplayFactories.get(contentType)
-		.createViewContentDisplay();
+	viewContentDisplayFactories.put(contentType, viewContentDisplayFactory);
     }
 }
