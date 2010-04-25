@@ -20,7 +20,7 @@ import static org.thechiselgroup.choosel.client.configuration.MashupInjectionCon
 import java.util.HashMap;
 import java.util.Map;
 
-import org.thechiselgroup.choosel.client.MashupClient;
+import org.thechiselgroup.choosel.client.domain.ncbo.NCBOSearchWindowContent;
 import org.thechiselgroup.choosel.client.label.CategoryLabelProvider;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
@@ -66,6 +66,9 @@ public class DefaultWindowContentProducerProvider implements
     private ResourceSetAvatarFactory dropTargetFactory;
 
     @Inject
+    protected NCBOSearchWindowContent nCBOSearchViewContent;
+
+    @Inject
     public DefaultWindowContentProducerProvider(
 	    @Named(AVATAR_FACTORY_SET) ResourceSetAvatarFactory userSetsDragAvatarFactory,
 	    @Named(AVATAR_FACTORY_TYPE) ResourceSetAvatarFactory typesDragAvatarFactory,
@@ -94,7 +97,7 @@ public class DefaultWindowContentProducerProvider implements
 	windowContentFactories.put("ncbo-search", new WindowContentFactory() {
 	    @Override
 	    public WindowContent createWindowContent() {
-		return MashupClient.injector.createNCBOSearchViewContent();
+		return nCBOSearchViewContent;
 	    }
 	});
 
