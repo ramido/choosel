@@ -24,7 +24,11 @@ import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
+import org.thechiselgroup.choosel.client.ui.HelpWindowContent;
+import org.thechiselgroup.choosel.client.ui.NoteWindowContent;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropTargetManager;
+import org.thechiselgroup.choosel.client.windows.WindowContent;
+import org.thechiselgroup.choosel.client.windows.WindowContentFactory;
 import org.thechiselgroup.choosel.client.windows.WindowContentProducer;
 
 import com.google.inject.Inject;
@@ -81,13 +85,34 @@ public class DefaultWindowContentProducerProvider implements
 
     @Override
     public WindowContentProducer get() {
-	DefaultWindowContentProducer contentProducer = new DefaultWindowContentProducer(
-		userSetsDragAvatarFactory, typesDragAvatarFactory,
-		allResourcesDragAvatarFactory, selectionDragAvatarFactory,
-		hoverModel, resourceSetFactory, selectionModelLabelFactory,
-		categorizer, labelProvider, contentDropTargetManager);
+	DefaultWindowContentProducer contentProducer = new DefaultWindowContentProducer();
 
-	contentProducer.registerViewContentDisplayFactory("Map",
+	registerWindowContentFactory(contentProducer, "ncbo-search",
+		new WindowContentFactory() {
+		    @Override
+		    public WindowContent createWindowContent() {
+			return MashupClient.injector
+				.createNCBOSearchViewContent();
+		    }
+		});
+
+	registerWindowContentFactory(contentProducer, "help",
+		new WindowContentFactory() {
+		    @Override
+		    public WindowContent createWindowContent() {
+			return new HelpWindowContent();
+		    }
+		});
+
+	registerWindowContentFactory(contentProducer, "note",
+		new WindowContentFactory() {
+		    @Override
+		    public WindowContent createWindowContent() {
+			return new NoteWindowContent();
+		    }
+		});
+
+	registViewContentDisplay(contentProducer, "Map",
 		new ViewContentDisplayFactory() {
 		    @Override
 		    public ViewContentDisplay createViewContentDisplay() {
@@ -95,7 +120,7 @@ public class DefaultWindowContentProducerProvider implements
 		    }
 		});
 
-	contentProducer.registerViewContentDisplayFactory("Graph",
+	registViewContentDisplay(contentProducer, "Graph",
 		new ViewContentDisplayFactory() {
 		    @Override
 		    public ViewContentDisplay createViewContentDisplay() {
@@ -103,7 +128,7 @@ public class DefaultWindowContentProducerProvider implements
 		    }
 		});
 
-	contentProducer.registerViewContentDisplayFactory("List",
+	registViewContentDisplay(contentProducer, "List",
 		new ViewContentDisplayFactory() {
 		    @Override
 		    public ViewContentDisplay createViewContentDisplay() {
@@ -111,7 +136,7 @@ public class DefaultWindowContentProducerProvider implements
 		    }
 		});
 
-	contentProducer.registerViewContentDisplayFactory("Timeline",
+	registViewContentDisplay(contentProducer, "Timeline",
 		new ViewContentDisplayFactory() {
 		    @Override
 		    public ViewContentDisplay createViewContentDisplay() {
@@ -120,6 +145,27 @@ public class DefaultWindowContentProducerProvider implements
 		});
 
 	return contentProducer;
+    }
+
+    private void registViewContentDisplay(
+	    DefaultWindowContentProducer contentProducer, String contentType,
+	    ViewContentDisplayFactory contentDisplayFactory) {
+
+	registerWindowContentFactory(contentProducer, contentType,
+		new ViewFactory(contentType, contentDisplayFactory,
+			userSetsDragAvatarFactory, typesDragAvatarFactory,
+			allResourcesDragAvatarFactory,
+			selectionDragAvatarFactory, hoverModel,
+			resourceSetFactory, selectionModelLabelFactory,
+			categorizer, labelProvider, contentDropTargetManager));
+    }
+
+    private void registerWindowContentFactory(
+	    DefaultWindowContentProducer contentProducer, String contentType,
+	    WindowContentFactory windowContentFactory) {
+
+	contentProducer.registerViewContentDisplayFactory(contentType,
+		windowContentFactory);
     }
 
 }
