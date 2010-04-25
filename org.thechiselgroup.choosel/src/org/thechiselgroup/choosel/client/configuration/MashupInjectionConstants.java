@@ -17,6 +17,14 @@ package org.thechiselgroup.choosel.client.configuration;
 
 public interface MashupInjectionConstants {
 
+    String TYPE_MAP = "Map";
+
+    String TYPE_LIST = "List";
+
+    String TYPE_GRAPH = "Graph";
+
+    String TYPE_TIMELINE = "Timeline";
+
     String DROP_TARGET_MANAGER_VIEW_CONTENT = "drop-target-manager-view-content";
 
     String HOVER_MODEL = "hoverModel";
