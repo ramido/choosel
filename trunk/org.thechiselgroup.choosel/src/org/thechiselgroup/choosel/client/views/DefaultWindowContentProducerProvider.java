@@ -61,7 +61,7 @@ public class DefaultWindowContentProducerProvider implements
 
     private ResourceSetAvatarFactory userSetsDragAvatarFactory;
 
-    protected final Map<String, ViewContentDisplayFactory> viewContentDisplayFactories = new HashMap<String, ViewContentDisplayFactory>();
+    protected final Map<String, WindowContentFactory> windowContentFactories = new HashMap<String, WindowContentFactory>();
 
     @Inject
     public DefaultWindowContentProducerProvider(
@@ -86,84 +86,70 @@ public class DefaultWindowContentProducerProvider implements
 	this.selectionModelLabelFactory = selectionModelLabelFactory;
 	this.categorizer = categorizer;
 	this.labelProvider = labelProvider;
-    }
 
-    @Override
-    public WindowContentProducer get() {
-	DefaultWindowContentProducer contentProducer = new DefaultWindowContentProducer();
-
-	// TODO move into subclass !?
-	register(contentProducer, "ncbo-search", new WindowContentFactory() {
+	windowContentFactories.put("ncbo-search", new WindowContentFactory() {
 	    @Override
 	    public WindowContent createWindowContent() {
 		return MashupClient.injector.createNCBOSearchViewContent();
 	    }
 	});
 
-	register(contentProducer, "help", new WindowContentFactory() {
+	windowContentFactories.put("help", new WindowContentFactory() {
 	    @Override
 	    public WindowContent createWindowContent() {
 		return new HelpWindowContent();
 	    }
 	});
 
-	register(contentProducer, "note", new WindowContentFactory() {
+	windowContentFactories.put("note", new WindowContentFactory() {
 	    @Override
 	    public WindowContent createWindowContent() {
 		return new NoteWindowContent();
 	    }
 	});
+    }
 
-	registerViewContentDisplayFactories(contentProducer);
-
+    @Override
+    public WindowContentProducer get() {
+	DefaultWindowContentProducer contentProducer = new DefaultWindowContentProducer();
+	for (Map.Entry<String, WindowContentFactory> entry : windowContentFactories
+		.entrySet()) {
+	    contentProducer.register(entry.getKey(), entry.getValue());
+	}
 	return contentProducer;
     }
 
-    private void registerViewContentDisplayFactories(
-	    DefaultWindowContentProducer contentProducer) {
-
-	for (Map.Entry<String, ViewContentDisplayFactory> entry : viewContentDisplayFactories
-		.entrySet()) {
-	    register(contentProducer, entry.getKey(), entry.getValue());
-	}
+    @Inject
+    public void registerGraph(
+	    @Named(TYPE_GRAPH) ViewContentDisplayFactory factory) {
+	registerViewContentDisplayFactory(TYPE_GRAPH, factory);
     }
 
     @Inject
-    public void injectGraph(@Named(TYPE_GRAPH) ViewContentDisplayFactory factory) {
-	viewContentDisplayFactories.put(TYPE_GRAPH, factory);
-    }
-
-    @Inject
-    public void injectTimeline(
+    public void registerTimeline(
 	    @Named(TYPE_TIMELINE) ViewContentDisplayFactory factory) {
-	viewContentDisplayFactories.put(TYPE_TIMELINE, factory);
+	registerViewContentDisplayFactory(TYPE_TIMELINE, factory);
     }
 
     @Inject
-    public void injectList(@Named(TYPE_LIST) ViewContentDisplayFactory factory) {
-	viewContentDisplayFactories.put(TYPE_LIST, factory);
+    public void registerList(@Named(TYPE_LIST) ViewContentDisplayFactory factory) {
+	registerViewContentDisplayFactory(TYPE_LIST, factory);
     }
 
     @Inject
-    public void injectMap(@Named(TYPE_MAP) ViewContentDisplayFactory factory) {
-	viewContentDisplayFactories.put(TYPE_MAP, factory);
+    public void registerMap(@Named(TYPE_MAP) ViewContentDisplayFactory factory) {
+	registerViewContentDisplayFactory(TYPE_MAP, factory);
     }
 
-    private void register(DefaultWindowContentProducer contentProducer,
-	    String contentType, ViewContentDisplayFactory contentDisplayFactory) {
+    private void registerViewContentDisplayFactory(String contentType,
+	    ViewContentDisplayFactory contentDisplayFactory) {
 
-	register(contentProducer, contentType, new ViewFactory(contentType,
+	windowContentFactories.put(contentType, new ViewFactory(contentType,
 		contentDisplayFactory, userSetsDragAvatarFactory,
 		typesDragAvatarFactory, allResourcesDragAvatarFactory,
 		selectionDragAvatarFactory, hoverModel, resourceSetFactory,
 		selectionModelLabelFactory, categorizer, labelProvider,
 		contentDropTargetManager));
-    }
-
-    private void register(DefaultWindowContentProducer contentProducer,
-	    String contentType, WindowContentFactory windowContentFactory) {
-
-	contentProducer.register(contentType, windowContentFactory);
     }
 
 }
