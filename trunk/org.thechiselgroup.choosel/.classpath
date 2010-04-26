@@ -22,7 +22,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/gwt-log-3.0.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/gwt-dnd-3.0.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/aopalliance.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

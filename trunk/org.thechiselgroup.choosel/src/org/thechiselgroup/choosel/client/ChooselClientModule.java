@@ -71,7 +71,6 @@ import org.thechiselgroup.choosel.client.util.HandlerManagerProvider;
 import org.thechiselgroup.choosel.client.util.URLFetchService;
 import org.thechiselgroup.choosel.client.util.xslt.SarissaDocumentProcessor;
 import org.thechiselgroup.choosel.client.views.DefaultViewAccessor;
-import org.thechiselgroup.choosel.client.views.DefaultWindowContentProducerProvider;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
@@ -217,7 +216,7 @@ public class ChooselClientModule extends AbstractGinModule implements
 	bindViewContentDisplayFactories();
 
 	bind(WindowContentProducer.class).toProvider(
-		DefaultWindowContentProducerProvider.class).in(Singleton.class);
+		getContentProducerProviderClass()).in(Singleton.class);
 	bind(WindowContentProducer.class).annotatedWith(Names.named(PROXY)).to(
 		ProxyWindowContentFactory.class).in(Singleton.class);
 
@@ -263,6 +262,10 @@ public class ChooselClientModule extends AbstractGinModule implements
 	bindCustomServices();
 
 	bindApplication();
+    }
+
+    protected Class<? extends ChooselWindowContentProducerProvider> getContentProducerProviderClass() {
+	return ChooselWindowContentProducerProvider.class;
     }
 
     protected void bindCustomServices() {

@@ -24,8 +24,6 @@ import java.util.Map;
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.domain.ncbo.NCBO;
-import org.thechiselgroup.choosel.client.domain.ncbo.NCBOConceptNeighbourhoodServiceAsync;
-import org.thechiselgroup.choosel.client.domain.ncbo.NCBOMappingNeighbourhoodServiceAsync;
 import org.thechiselgroup.choosel.client.domain.ncbo.NcboUriHelper;
 import org.thechiselgroup.choosel.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.client.geometry.Point;
@@ -223,7 +221,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 
     // advanced node class: (incoming, outgoing, expanded: state machine)
 
-    private final NCBOConceptNeighbourhoodServiceAsync conceptNeighbourhoodService;
+    private final NeighbourhoodServiceAsync conceptNeighbourhoodService;
 
     private final Display display;
 
@@ -231,7 +229,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 
     private ErrorHandler errorHandler;
 
-    private final NCBOMappingNeighbourhoodServiceAsync mappingNeighbourhoodService;
+    private final NeighbourhoodServiceAsync mappingNeighbourhoodService;
 
     private final Map<String, GraphItem> nodeIdToGraphItemMap = new HashMap<String, GraphItem>();
 
@@ -243,14 +241,22 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
     public GraphViewContentDisplay(
 	    Display display,
 	    @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
-	    NCBOMappingNeighbourhoodServiceAsync mappingService,
-	    NCBOConceptNeighbourhoodServiceAsync conceptNeighbourhoodService,
+	    @Named("mapping") NeighbourhoodServiceAsync mappingService,
+	    @Named("concept") NeighbourhoodServiceAsync conceptNeighbourhoodService,
 	    PopupManagerFactory popupManagerFactory,
 	    DetailsWidgetHelper detailsWidgetHelper,
 	    CommandManager commandManager, ResourceManager resourceManager,
 	    ErrorHandler errorHandler, DragEnablerFactory dragEnablerFactory) {
 
 	super(popupManagerFactory, detailsWidgetHelper, hoverModel);
+
+	assert display != null;
+	assert mappingService != null;
+	assert conceptNeighbourhoodService != null;
+	assert commandManager != null;
+	assert resourceManager != null;
+	assert errorHandler != null;
+	assert dragEnablerFactory != null;
 
 	this.display = display;
 	this.mappingNeighbourhoodService = mappingService;

@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.views;
+package org.thechiselgroup.choosel.client;
 
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.thechiselgroup.choosel.client.domain.ncbo.NCBOSearchWindowContent;
 import org.thechiselgroup.choosel.client.label.CategoryLabelProvider;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
@@ -30,6 +29,9 @@ import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.ui.HelpWindowContent;
 import org.thechiselgroup.choosel.client.ui.NoteWindowContent;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropTargetManager;
+import org.thechiselgroup.choosel.client.views.DefaultWindowContentProducer;
+import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
+import org.thechiselgroup.choosel.client.views.ViewFactory;
 import org.thechiselgroup.choosel.client.windows.WindowContent;
 import org.thechiselgroup.choosel.client.windows.WindowContentFactory;
 import org.thechiselgroup.choosel.client.windows.WindowContentProducer;
@@ -38,14 +40,16 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.name.Named;
 
-public class DefaultWindowContentProducerProvider implements
+public class ChooselWindowContentProducerProvider implements
 	Provider<WindowContentProducer> {
 
-    private final ResourceSetAvatarFactory allResourcesDragAvatarFactory;
+    private ResourceSetAvatarFactory allResourcesDragAvatarFactory;
 
     private ResourceCategorizer categorizer;
 
     private ResourceSetAvatarDropTargetManager contentDropTargetManager;
+
+    private ResourceSetAvatarFactory dropTargetFactory;
 
     private ResourceSet hoverModel;
 
@@ -63,13 +67,8 @@ public class DefaultWindowContentProducerProvider implements
 
     protected final Map<String, WindowContentFactory> windowContentFactories = new HashMap<String, WindowContentFactory>();
 
-    private ResourceSetAvatarFactory dropTargetFactory;
-
     @Inject
-    protected NCBOSearchWindowContent nCBOSearchViewContent;
-
-    @Inject
-    public DefaultWindowContentProducerProvider(
+    public ChooselWindowContentProducerProvider(
 	    @Named(AVATAR_FACTORY_SET) ResourceSetAvatarFactory userSetsDragAvatarFactory,
 	    @Named(AVATAR_FACTORY_TYPE) ResourceSetAvatarFactory typesDragAvatarFactory,
 	    @Named(AVATAR_FACTORY_ALL_RESOURCES) ResourceSetAvatarFactory allResourcesDragAvatarFactory,
@@ -82,6 +81,18 @@ public class DefaultWindowContentProducerProvider implements
 	    CategoryLabelProvider labelProvider,
 	    @Named(DROP_TARGET_MANAGER_VIEW_CONTENT) ResourceSetAvatarDropTargetManager contentDropTargetManager) {
 
+	assert userSetsDragAvatarFactory != null;
+	assert typesDragAvatarFactory != null;
+	assert allResourcesDragAvatarFactory != null;
+	assert selectionDragAvatarFactory != null;
+	assert dropTargetFactory != null;
+	assert contentDropTargetManager != null;
+	assert hoverModel != null;
+	assert resourceSetFactory != null;
+	assert selectionModelLabelFactory != null;
+	assert categorizer != null;
+	assert labelProvider != null;
+
 	this.userSetsDragAvatarFactory = userSetsDragAvatarFactory;
 	this.typesDragAvatarFactory = typesDragAvatarFactory;
 	this.allResourcesDragAvatarFactory = allResourcesDragAvatarFactory;
@@ -93,13 +104,6 @@ public class DefaultWindowContentProducerProvider implements
 	this.selectionModelLabelFactory = selectionModelLabelFactory;
 	this.categorizer = categorizer;
 	this.labelProvider = labelProvider;
-
-	windowContentFactories.put("ncbo-search", new WindowContentFactory() {
-	    @Override
-	    public WindowContent createWindowContent() {
-		return nCBOSearchViewContent;
-	    }
-	});
 
 	windowContentFactories.put("help", new WindowContentFactory() {
 	    @Override
@@ -133,12 +137,6 @@ public class DefaultWindowContentProducerProvider implements
     }
 
     @Inject
-    public void registerTimeline(
-	    @Named(TYPE_TIMELINE) ViewContentDisplayFactory factory) {
-	registerViewContentDisplayFactory(TYPE_TIMELINE, factory);
-    }
-
-    @Inject
     public void registerList(@Named(TYPE_LIST) ViewContentDisplayFactory factory) {
 	registerViewContentDisplayFactory(TYPE_LIST, factory);
     }
@@ -146,6 +144,12 @@ public class DefaultWindowContentProducerProvider implements
     @Inject
     public void registerMap(@Named(TYPE_MAP) ViewContentDisplayFactory factory) {
 	registerViewContentDisplayFactory(TYPE_MAP, factory);
+    }
+
+    @Inject
+    public void registerTimeline(
+	    @Named(TYPE_TIMELINE) ViewContentDisplayFactory factory) {
+	registerViewContentDisplayFactory(TYPE_TIMELINE, factory);
     }
 
     private void registerViewContentDisplayFactory(String contentType,

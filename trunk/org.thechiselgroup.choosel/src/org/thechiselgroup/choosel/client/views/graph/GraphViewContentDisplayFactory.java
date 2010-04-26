@@ -17,8 +17,6 @@ package org.thechiselgroup.choosel.client.views.graph;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
-import org.thechiselgroup.choosel.client.domain.ncbo.NCBOConceptNeighbourhoodServiceAsync;
-import org.thechiselgroup.choosel.client.domain.ncbo.NCBOMappingNeighbourhoodServiceAsync;
 import org.thechiselgroup.choosel.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceManager;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
@@ -37,8 +35,8 @@ public class GraphViewContentDisplayFactory implements
 
     private final Display display;
     private final ResourceSet hoverModel;
-    private final NCBOMappingNeighbourhoodServiceAsync mappingService;
-    private final NCBOConceptNeighbourhoodServiceAsync conceptNeighbourhoodService;
+    private final NeighbourhoodServiceAsync mappingService;
+    private final NeighbourhoodServiceAsync conceptNeighbourhoodService;
     private final PopupManagerFactory popupManagerFactory;
     private final DetailsWidgetHelper detailsWidgetHelper;
     private final CommandManager commandManager;
@@ -50,8 +48,8 @@ public class GraphViewContentDisplayFactory implements
     public GraphViewContentDisplayFactory(
 	    Display display,
 	    @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
-	    NCBOMappingNeighbourhoodServiceAsync mappingService,
-	    NCBOConceptNeighbourhoodServiceAsync conceptNeighbourhoodService,
+	    @Named("mapping") NeighbourhoodServiceAsync mappingService,
+	    @Named("concept") NeighbourhoodServiceAsync conceptNeighbourhoodService,
 	    PopupManagerFactory popupManagerFactory,
 	    DetailsWidgetHelper detailsWidgetHelper,
 	    CommandManager commandManager, ResourceManager resourceManager,
