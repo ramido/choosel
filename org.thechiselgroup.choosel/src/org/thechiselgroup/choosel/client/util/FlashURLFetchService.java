@@ -25,6 +25,7 @@ import org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget;
 import pl.rmalinowski.gwt2swf.client.ui.SWFWidget;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 
@@ -37,7 +38,8 @@ public class FlashURLFetchService extends SWFWidget implements URLFetchService {
 	INITIALIZING, NOT_INITIALIZED, READY
     }
 
-    public static final String SWF_FILE = "org_thechiselgroup_choosel/swf/FlexProxy.swf";
+    public static final String SWF_FILE = GWT.getModuleBaseURL()
+	    + "swf/FlexProxy.swf";
 
     private static Map<String, FlashURLFetchService> widgets = new HashMap<String, FlashURLFetchService>();
 

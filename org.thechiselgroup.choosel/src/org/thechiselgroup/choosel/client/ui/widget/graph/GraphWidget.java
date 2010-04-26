@@ -26,6 +26,7 @@ import org.thechiselgroup.choosel.client.util.ArrayUtils;
 import pl.rmalinowski.gwt2swf.client.ui.SWFWidget;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.shared.EventHandler;
@@ -58,7 +59,8 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
 
     private final static String LAYOUT_NAME = "Force Directed Layout";
 
-    public static final String SWF_FILE = "org_thechiselgroup_choosel/swf/BasicGraph.swf";
+    public static final String SWF_FILE = GWT.getModuleBaseURL()
+	    + "swf/BasicGraph.swf";
 
     private static Map<String, GraphWidget> widgets = new HashMap<String, GraphWidget>();
 
