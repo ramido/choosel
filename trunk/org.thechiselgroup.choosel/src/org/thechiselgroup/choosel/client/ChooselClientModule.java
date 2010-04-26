@@ -74,7 +74,6 @@ import org.thechiselgroup.choosel.client.views.DefaultViewAccessor;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
-import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.list.ListViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.map.MapViewContentDisplayFactory;
@@ -100,9 +99,6 @@ public class ChooselClientModule extends AbstractGinModule implements
 
     private void bindDisplays() {
 	bind(DefaultCommandManagerPresenterDisplay.class);
-
-	bind(GraphViewContentDisplay.Display.class).to(
-		GraphViewContentDisplay.DefaultDisplay.class);
 
 	bind(WorkspacePresenter.WorkspacePresenterDisplay.class).to(
 		WorkspacePresenter.DefaultWorkspacePresenterDisplay.class);

@@ -25,7 +25,6 @@ import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
-import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay.Display;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -33,7 +32,6 @@ import com.google.inject.name.Named;
 public class GraphViewContentDisplayFactory implements
 	ViewContentDisplayFactory {
 
-    private final Display display;
     private final ResourceSet hoverModel;
     private final NeighbourhoodServiceAsync mappingService;
     private final NeighbourhoodServiceAsync conceptNeighbourhoodService;
@@ -46,7 +44,6 @@ public class GraphViewContentDisplayFactory implements
 
     @Inject
     public GraphViewContentDisplayFactory(
-	    Display display,
 	    @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
 	    @Named("mapping") NeighbourhoodServiceAsync mappingService,
 	    @Named("concept") NeighbourhoodServiceAsync conceptNeighbourhoodService,
@@ -55,7 +52,6 @@ public class GraphViewContentDisplayFactory implements
 	    CommandManager commandManager, ResourceManager resourceManager,
 	    ErrorHandler errorHandler, DragEnablerFactory dragEnablerFactory) {
 
-	this.display = display;
 	this.hoverModel = hoverModel;
 	this.mappingService = mappingService;
 	this.conceptNeighbourhoodService = conceptNeighbourhoodService;
@@ -69,9 +65,10 @@ public class GraphViewContentDisplayFactory implements
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-	return new GraphViewContentDisplay(display, hoverModel, mappingService,
-		conceptNeighbourhoodService, popupManagerFactory,
-		detailsWidgetHelper, commandManager, resourceManager,
-		errorHandler, dragEnablerFactory);
+	return new GraphViewContentDisplay(
+		new GraphViewContentDisplay.DefaultDisplay(), hoverModel,
+		mappingService, conceptNeighbourhoodService,
+		popupManagerFactory, detailsWidgetHelper, commandManager,
+		resourceManager, errorHandler, dragEnablerFactory);
     }
 }
