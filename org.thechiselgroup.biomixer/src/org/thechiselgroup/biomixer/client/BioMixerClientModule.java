@@ -15,18 +15,24 @@
  *******************************************************************************/
 package org.thechiselgroup.biomixer.client;
 
+import org.thechiselgroup.biomixer.client.domain.ncbo.NCBOConceptNeighbourhoodServiceAsyncClientImplementation;
+import org.thechiselgroup.biomixer.client.domain.ncbo.NCBOConceptSearchServiceAsync;
+import org.thechiselgroup.biomixer.client.domain.ncbo.NCBOConceptSearchServiceAsyncClientImplementation;
+import org.thechiselgroup.biomixer.client.domain.ncbo.NCBOMappingNeighbourhoodServiceAsyncClientImplementation;
 import org.thechiselgroup.choosel.client.ChooselApplication;
 import org.thechiselgroup.choosel.client.ChooselClientModule;
-import org.thechiselgroup.choosel.client.domain.ncbo.NCBOConceptNeighbourhoodServiceAsync;
-import org.thechiselgroup.choosel.client.domain.ncbo.NCBOConceptNeighbourhoodServiceAsyncClientImplementation;
-import org.thechiselgroup.choosel.client.domain.ncbo.NCBOConceptSearchServiceAsync;
-import org.thechiselgroup.choosel.client.domain.ncbo.NCBOConceptSearchServiceAsyncClientImplementation;
-import org.thechiselgroup.choosel.client.domain.ncbo.NCBOMappingNeighbourhoodServiceAsync;
-import org.thechiselgroup.choosel.client.domain.ncbo.NCBOMappingNeighbourhoodServiceAsyncClientImplementation;
+import org.thechiselgroup.choosel.client.ChooselWindowContentProducerProvider;
+import org.thechiselgroup.choosel.client.views.graph.NeighbourhoodServiceAsync;
 
 import com.google.inject.Singleton;
+import com.google.inject.name.Names;
 
 public class BioMixerClientModule extends ChooselClientModule {
+
+    @Override
+    protected Class<? extends ChooselWindowContentProducerProvider> getContentProducerProviderClass() {
+	return BioMixerWindowContentProducerProvider.class;
+    }
 
     @Override
     protected Class<? extends ChooselApplication> getApplicationClass() {
@@ -38,10 +44,12 @@ public class BioMixerClientModule extends ChooselClientModule {
 	bind(NCBOConceptSearchServiceAsync.class).to(
 		NCBOConceptSearchServiceAsyncClientImplementation.class).in(
 		Singleton.class);
-	bind(NCBOConceptNeighbourhoodServiceAsync.class).to(
+	bind(NeighbourhoodServiceAsync.class).annotatedWith(
+		Names.named("concept")).to(
 		NCBOConceptNeighbourhoodServiceAsyncClientImplementation.class)
 		.in(Singleton.class);
-	bind(NCBOMappingNeighbourhoodServiceAsync.class).to(
+	bind(NeighbourhoodServiceAsync.class).annotatedWith(
+		Names.named("mapping")).to(
 		NCBOMappingNeighbourhoodServiceAsyncClientImplementation.class)
 		.in(Singleton.class);
     }
