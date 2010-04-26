@@ -75,6 +75,20 @@ public class ViewFactory implements WindowContentFactory {
 	    CategoryLabelProvider labelProvider,
 	    @Named(DROP_TARGET_MANAGER_VIEW_CONTENT) ResourceSetAvatarDropTargetManager contentDropTargetManager) {
 
+	assert contentType != null;
+	assert viewContentDisplayFactory != null;
+	assert userSetsDragAvatarFactory != null;
+	assert typesDragAvatarFactory != null;
+	assert allResourcesDragAvatarFactory != null;
+	assert selectionDragAvatarFactory != null;
+	assert dropTargetFactory != null;
+	assert contentDropTargetManager != null;
+	assert hoverModel != null;
+	assert resourceSetFactory != null;
+	assert selectionModelLabelFactory != null;
+	assert categorizer != null;
+	assert labelProvider != null;
+
 	this.contentType = contentType;
 	this.viewContentDisplayFactory = viewContentDisplayFactory;
 	this.userSetsDragAvatarFactory = userSetsDragAvatarFactory;

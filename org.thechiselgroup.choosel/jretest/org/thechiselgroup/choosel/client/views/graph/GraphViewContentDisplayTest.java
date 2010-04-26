@@ -29,8 +29,6 @@ import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.command.UndoableCommand;
 import org.thechiselgroup.choosel.client.domain.ncbo.NCBO;
-import org.thechiselgroup.choosel.client.domain.ncbo.NCBOConceptNeighbourhoodServiceAsync;
-import org.thechiselgroup.choosel.client.domain.ncbo.NCBOMappingNeighbourhoodServiceAsync;
 import org.thechiselgroup.choosel.client.domain.ncbo.NcboUriHelper;
 import org.thechiselgroup.choosel.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.client.geometry.Point;
@@ -58,11 +56,10 @@ public class GraphViewContentDisplayTest {
 
     public class TestGraphViewContentDisplay extends GraphViewContentDisplay {
 
-	public TestGraphViewContentDisplay(
-		Display display,
+	public TestGraphViewContentDisplay(Display display,
 		ResourceSet hoverModel,
-		NCBOMappingNeighbourhoodServiceAsync mappingService,
-		NCBOConceptNeighbourhoodServiceAsync conceptNeighbourhoodService,
+		NeighbourhoodServiceAsync mappingService,
+		NeighbourhoodServiceAsync conceptNeighbourhoodService,
 		PopupManagerFactory popupManagerFactory,
 		DetailsWidgetHelper detailsWidgetHelper,
 		CommandManager commandManager, ResourceManager resourceManager,
@@ -102,7 +99,7 @@ public class GraphViewContentDisplayTest {
     private Resource concept2;
 
     @Mock
-    private NCBOConceptNeighbourhoodServiceAsync conceptNeighbourhoodService;
+    private NeighbourhoodServiceAsync conceptNeighbourhoodService;
 
     private GraphViewContentDisplay contentDisplay;
 
@@ -125,7 +122,7 @@ public class GraphViewContentDisplayTest {
     private Layer layer;
 
     @Mock
-    private NCBOMappingNeighbourhoodServiceAsync mappingService;
+    private NeighbourhoodServiceAsync mappingService;
 
     @Mock
     private Node node;

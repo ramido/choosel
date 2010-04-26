@@ -498,6 +498,9 @@ public class DefaultResourceSetAvatarDragController extends
 
     public void unregisterDropController(
 	    ResourceSetAvatarDropController dropController) {
+
+	assert dropController != null;
+
 	dropControllers.remove(dropController.getDropTarget());
     }
 
