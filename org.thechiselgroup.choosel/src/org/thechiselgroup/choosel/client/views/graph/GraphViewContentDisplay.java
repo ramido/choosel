@@ -330,8 +330,19 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 
 	display.setNodeStyle(node, "showDragImage", "true");
 
+	if (isConcept(resource)) {
+	    item.setDefaultColors("#DAE5F3", "#AFC6E5");
+
+	    // TODO this should be false if set of available neighbourhoods
+	    // equals 0
+	    display.setNodeStyle(node, "showArrow", "true");
+	}
+
 	if (isMapping(resource)) {
 	    item.setDefaultColors("#E4E4E4", "#D4D4D4");
+
+	    // TODO this should be false if set of available neighbourhoods
+	    // equals 0
 	    display.setNodeStyle(node, "showArrow", "false");
 	}
 
