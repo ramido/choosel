@@ -70,8 +70,10 @@ import org.thechiselgroup.choosel.client.util.FlashURLFetchService;
 import org.thechiselgroup.choosel.client.util.HandlerManagerProvider;
 import org.thechiselgroup.choosel.client.util.URLFetchService;
 import org.thechiselgroup.choosel.client.util.xslt.SarissaDocumentProcessor;
+import org.thechiselgroup.choosel.client.views.DefaultSlotResolver;
 import org.thechiselgroup.choosel.client.views.DefaultViewAccessor;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
+import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplayFactory;
@@ -255,9 +257,15 @@ public class ChooselClientModule extends AbstractGinModule implements
 	bind(URLFetchService.class).to(FlashURLFetchService.class).in(
 		Singleton.class);
 
+	bind(SlotResolver.class).to(getSlotResolverClass()).in(Singleton.class);
+
 	bindCustomServices();
 
 	bindApplication();
+    }
+
+    protected Class<? extends SlotResolver> getSlotResolverClass() {
+	return DefaultSlotResolver.class;
     }
 
     protected Class<? extends ChooselWindowContentProducerProvider> getContentProducerProviderClass() {
