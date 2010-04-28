@@ -44,6 +44,10 @@ import com.google.inject.name.Named;
 
 public class MapViewContentDisplay extends AbstractViewContentDisplay {
 
+    public static final String LONGITUDE = "longitude";
+
+    public static final String LATITUDE = "latitude";
+
     private static final String MEMENTO_CENTER_LATITUDE = "center-latitude";
 
     private static final String MEMENTO_CENTER_LONGITUDE = "center-longitude";
@@ -83,17 +87,18 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
 	map.checkResize();
     }
 
+    // TODO test
     @Override
     public ResourceItem createResourceItem(Layer layer, Resource resource) {
 	// TODO iterate over path
 	// TODO resolve sets
+	// TODO separate resolvers for latitude and longitude
+
 	Resource location = (Resource) layer.getValue(
 		SlotResolver.LOCATION_SLOT_ID, resource);
 
-	double latitude = ((Number) location.getValue("latitude"))
-		.doubleValue();
-	double longitude = ((Number) location.getValue("longitude"))
-		.doubleValue();
+	double latitude = toDouble(location.getValue(LATITUDE));
+	double longitude = toDouble(location.getValue(LONGITUDE));
 
 	LatLng latLng = LatLng.newInstance(latitude, longitude);
 
@@ -105,6 +110,22 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
 	map.addOverlay(mapItem.getOverlay());
 
 	return mapItem;
+    }
+
+    // TODO move to library class
+    private double toDouble(Object value) {
+	assert value != null;
+
+	if (value instanceof Number) {
+	    return ((Number) value).doubleValue();
+	}
+
+	if (value instanceof String) {
+	    return Double.parseDouble((String) value);
+	}
+
+	throw new IllegalArgumentException("" + value
+		+ " could not be converted to double");
     }
 
     @Override

@@ -17,25 +17,10 @@ package org.thechiselgroup.choosel.client.resolver;
 
 import org.thechiselgroup.choosel.client.resources.Resource;
 
-public class SimplePropertyValueResolver implements PropertyValueResolver {
+public class SelfPropertyValueResolver implements PropertyValueResolver {
 
-    private String propertyName;
-
-    public SimplePropertyValueResolver(String propertyName) {
-	super();
-	this.propertyName = propertyName;
+    @Override
+    public Object getValue(Resource resource) {
+	return resource;
     }
-
-    public String getPropertyName() {
-	return propertyName;
-    }
-
-    public void setPropertyName(String propertyName) {
-	this.propertyName = propertyName;
-    }
-
-    public Object getValue(Resource individual) {
-	return individual.getValue(propertyName);
-    }
-
 }

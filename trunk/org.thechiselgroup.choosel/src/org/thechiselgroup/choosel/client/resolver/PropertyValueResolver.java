@@ -19,6 +19,6 @@ import org.thechiselgroup.choosel.client.resources.Resource;
 
 public interface PropertyValueResolver {
 
-    Object getValue(Resource resources);
+    Object getValue(Resource resource);
 
 }
