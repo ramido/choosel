@@ -196,18 +196,15 @@ public class ChooselApplication {
 
 	    @Override
 	    public void onClick(ClickEvent event) {
-		String title = "Data Sources";
-		final ResourceSetsPresenter dataSourcesPresenter = new ResourceSetAvatarResourceSetsPresenter(
-			defaultDragAvatarFactory);
-		dataSourcesPresenter.init();
+		final ResourceSetsPresenter dataSourcesPresenter = createResourceSetsPresenter();
 
-		commandManager.execute(new CreateWindowCommand(desktop,
-			new AbstractWindowContent(title, "TODO") {
-			    @Override
-			    public Widget asWidget() {
-				return dataSourcesPresenter.asWidget();
-			    }
-			}));
+		// TODO this type cannot be stored yet
+		createWindow(new AbstractWindowContent("Data Sources", "TODO") {
+		    @Override
+		    public Widget asWidget() {
+			return dataSourcesPresenter.asWidget();
+		    }
+		});
 
 		geoRssService
 			.getGeoRSS(
@@ -266,8 +263,7 @@ public class ChooselApplication {
 			    }
 			}));
 
-		ResourceSet resourceSet = resourceSetsFactory
-			.createResourceSet();
+		ResourceSet resourceSet = createResourceSet();
 		resourceSet.setLabel("Test");
 		resourceSet.addAll(ResourcesTestHelper.createResources(1, 2, 3,
 			4, 5));
@@ -307,6 +303,12 @@ public class ChooselApplication {
 	});
     }
 
+    private DockPanel createMainPanel() {
+	DockPanel mainPanel = new DockPanel();
+	RootPanel.get().add(mainPanel);
+	return mainPanel;
+    }
+
     private void createWindow(String contentType) {
 	commandManager.execute(new CreateWindowCommand(desktop,
 		windowContentProducer.createWindowContent(contentType)));
@@ -329,6 +331,29 @@ public class ChooselApplication {
 	loadWorkspaceIfParamSet();
     }
 
+    private void initActionBar(DockPanel mainPanel) {
+	mainPanel.add(actionBar.asWidget(), DockPanel.NORTH);
+
+	addPanel(WORKSPACE_PANEL, "Workspace");
+	addPanel(EDIT_PANEL, "Edit");
+
+	initCustomPanels();
+    }
+
+    private void initAuthenticationBar() {
+	((VerticalPanel) actionBar.asWidget()).add(authenticationBar);
+    }
+
+    private void initCommandManagerPresenter() {
+	CommandManagerPresenter presenter = new CommandManagerPresenter(
+		commandManager, commandManagerPresenterDisplay);
+
+	presenter.init();
+
+	addWidget(EDIT_PANEL, commandManagerPresenterDisplay.getUndoButton());
+	addWidget(EDIT_PANEL, commandManagerPresenterDisplay.getRedoButton());
+    }
+
     protected void initCustomActions() {
 	addDataSourcesButton();
 	addTestDataSourceButton();
@@ -343,39 +368,10 @@ public class ChooselApplication {
 	addWindowContentButton(VIEWS_PANEL, "Graph", "Graph");
     }
 
-    private DockPanel createMainPanel() {
-	DockPanel mainPanel = new DockPanel();
-	RootPanel.get().add(mainPanel);
-	return mainPanel;
-    }
-
-    private void initAuthenticationBar() {
-	((VerticalPanel) actionBar.asWidget()).add(authenticationBar);
-    }
-
-    private void initActionBar(DockPanel mainPanel) {
-	mainPanel.add(actionBar.asWidget(), DockPanel.NORTH);
-
-	addPanel(WORKSPACE_PANEL, "Workspace");
-	addPanel(EDIT_PANEL, "Edit");
-
-	initCustomPanels();
-    }
-
     protected void initCustomPanels() {
 	addPanel(VIEWS_PANEL, "Views");
 	addPanel(DATA_PANEL, "Data Sources");
 	addPanel(HELP_PANEL, "Help");
-    }
-
-    private void initCommandManagerPresenter() {
-	CommandManagerPresenter presenter = new CommandManagerPresenter(
-		commandManager, commandManagerPresenterDisplay);
-
-	presenter.init();
-
-	addWidget(EDIT_PANEL, commandManagerPresenterDisplay.getUndoButton());
-	addWidget(EDIT_PANEL, commandManagerPresenterDisplay.getRedoButton());
     }
 
     private void initDesktop(DockPanel mainPanel) {
@@ -449,6 +445,21 @@ public class ChooselApplication {
 		    workspaceID, "", workspacePersistenceManager);
 	    blockingCommandExecutor.execute(loadWorkspaceCommand);
 	}
+    }
+
+    protected void createWindow(AbstractWindowContent content) {
+	commandManager.execute(new CreateWindowCommand(desktop, content));
+    }
+
+    protected ResourceSetsPresenter createResourceSetsPresenter() {
+	final ResourceSetsPresenter dataSourcesPresenter = new ResourceSetAvatarResourceSetsPresenter(
+		defaultDragAvatarFactory);
+	dataSourcesPresenter.init();
+	return dataSourcesPresenter;
+    }
+
+    protected ResourceSet createResourceSet() {
+	return resourceSetsFactory.createResourceSet();
     }
 
 }
