@@ -27,31 +27,31 @@ import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay.Dis
 
 public class GraphItem extends ResourceItem {
 
-    private static final String BLUE_3 = "#DAE5F3";
-
     private static final String BLACK = "#000000";
 
     private static final String BLUE_1 = "#AFC6E5";
 
     private static final String BLUE_2 = "#447595";
 
-    private static final String YELLOW_2 = "#D4D0C8";
-
-    private static final String YELLOW_1 = "#FFFFE1";
-
-    public static final String GRAY_2 = "#474444";
+    private static final String BLUE_3 = "#DAE5F3";
 
     public static final String GRAY_1 = "#D4D4D4";
 
+    public static final String GRAY_2 = "#474444";
+
     public static final String ORANGE = "#E7B076";
 
-    private Node node;
+    private static final String YELLOW_1 = "#FFFFE1";
 
-    private Display display;
+    private static final String YELLOW_2 = "#D4D0C8";
 
     private String defaultBackgroundColor = BLUE_3;
 
     private String defaultBorderColor = BLUE_1;
+
+    private Display display;
+
+    private Node node;
 
     public GraphItem(Resource individual, ResourceSet hoverModel,
 	    PopupManager popupManager, Node node,
@@ -65,14 +65,14 @@ public class GraphItem extends ResourceItem {
 	updateStyling();
     }
 
+    public Node getNode() {
+	return node;
+    }
+
     public void setDefaultColors(String backgroundColor, String borderColor) {
 	this.defaultBorderColor = borderColor;
 	this.defaultBackgroundColor = backgroundColor;
 	updateStyling();
-    }
-
-    public Node getNode() {
-	return node;
     }
 
     @Override
