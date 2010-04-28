@@ -28,9 +28,6 @@ import org.thechiselgroup.choosel.client.resolver.PropertyValueResolver;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
-import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
-import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
-import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
 
 public class DetailsWidgetHelperTest {
@@ -72,8 +69,8 @@ public class DetailsWidgetHelperTest {
 	MockitoGWTBridge.setUp();
 	MockitoAnnotations.initMocks(this);
 
-	underTest = new DetailsWidgetHelper(resourceSetFactory, avatarFactory,
-		null);
+	underTest = new DefaultDetailsWidgetHelper(resourceSetFactory,
+		avatarFactory, null);
 
 	when(avatarFactory.createAvatar(any(ResourceSet.class))).thenReturn(
 		avatar);
