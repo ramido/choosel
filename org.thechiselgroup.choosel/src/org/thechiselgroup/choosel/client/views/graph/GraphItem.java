@@ -121,7 +121,4 @@ public class GraphItem extends ResourceItem {
 	}
     }
 
-    public void hidePopup() {
-	popupManager.hidePopup();
-    }
 }
