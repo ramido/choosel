@@ -199,11 +199,12 @@ public class ListViewContentDisplay extends AbstractViewContentDisplay {
     @Inject
     public ListViewContentDisplay(
 	    @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
-	    PopupManagerFactory popupManagerFactory,
+	    PopupManagerFactory popupManagerFactory, SlotResolver slotResolver,
 	    DetailsWidgetHelper detailsWidgetHelper,
 	    ResourceSetAvatarDragController dragController) {
 
-	super(popupManagerFactory, detailsWidgetHelper, hoverModel);
+	super(popupManagerFactory, detailsWidgetHelper, hoverModel,
+		slotResolver);
 
 	this.dragController = dragController;
 	this.display = new DefaultDisplay();
@@ -255,8 +256,7 @@ public class ListViewContentDisplay extends AbstractViewContentDisplay {
 
     @Override
     public void initLayer(Layer layerModel, List<Layer> layers) {
-
-	SlotResolver.createDescriptionSlotResolver(layerModel);
+	getSlotResolver().createDescriptionSlotResolver(layerModel);
     }
 
     @Override

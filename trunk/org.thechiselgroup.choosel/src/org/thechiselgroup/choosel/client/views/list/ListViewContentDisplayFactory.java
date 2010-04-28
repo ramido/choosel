@@ -20,6 +20,7 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
+import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
 
@@ -28,32 +29,30 @@ import com.google.inject.name.Named;
 
 public class ListViewContentDisplayFactory implements ViewContentDisplayFactory {
 
-    private final ResourceSet hoverModel;
-
-    private final PopupManagerFactory popupManagerFactory;
-
-    private final DetailsWidgetHelper detailsWidgetHelper;
-
-    private final ResourceSetAvatarDragController dragController;
+    @Inject
+    @Named(ChooselInjectionConstants.HOVER_MODEL)
+    private ResourceSet hoverModel;
 
     @Inject
-    public ListViewContentDisplayFactory(
-	    @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
-	    PopupManagerFactory popupManagerFactory,
-	    DetailsWidgetHelper detailsWidgetHelper,
-	    ResourceSetAvatarDragController dragController) {
+    private PopupManagerFactory popupManagerFactory;
 
-	this.hoverModel = hoverModel;
-	this.popupManagerFactory = popupManagerFactory;
-	this.detailsWidgetHelper = detailsWidgetHelper;
-	this.dragController = dragController;
+    @Inject
+    private DetailsWidgetHelper detailsWidgetHelper;
 
+    @Inject
+    private ResourceSetAvatarDragController dragController;
+
+    @Inject
+    private SlotResolver slotResolver;
+
+    @Inject
+    public ListViewContentDisplayFactory() {
     }
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
 	return new ListViewContentDisplay(hoverModel, popupManagerFactory,
-		detailsWidgetHelper, dragController);
+		slotResolver, detailsWidgetHelper, dragController);
     }
 
 }

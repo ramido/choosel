@@ -43,8 +43,7 @@ public class SlotResolver {
 
     public static final String LOCATION_SLOT_ID = "location";
 
-    public static void createColorSlotResolver(Layer layerModel,
-	    List<Layer> layers) {
+    public void createColorSlotResolver(Layer layerModel, List<Layer> layers) {
 
 	String color = SlotResolver.COLORS[layers.size()];
 
@@ -52,13 +51,13 @@ public class SlotResolver {
 		new FixedValuePropertyValueResolver(color));
     }
 
-    public static void createDateSlotResolver(Layer layerModel) {
+    public void createDateSlotResolver(Layer layerModel) {
 	layerModel.putResolver(SlotResolver.DATE_SLOT_ID,
 		new SimplePropertyValueResolver("date"));
 
     }
 
-    public static void createDescriptionSlotResolver(Layer layerModel) {
+    public void createDescriptionSlotResolver(Layer layerModel) {
 	// TODO switch based on category -- need category as part of layerModel
 	// TODO resources as part of layerModel
 	// TODO how to do the automatic color assignment?
@@ -110,7 +109,7 @@ public class SlotResolver {
 	}
     }
 
-    public static void createLabelSlotResolver(Layer layerModel) {
+    public void createLabelSlotResolver(Layer layerModel) {
 	Converter<Float, String> converter = new Converter<Float, String>() {
 	    @Override
 	    public String convert(Float value) throws ConversionException {
@@ -130,7 +129,7 @@ public class SlotResolver {
 		new PropertyValueResolverConverterWrapper(resolver, converter));
     }
 
-    public static void createLocationSlotResolver(Layer layer) {
+    public void createLocationSlotResolver(Layer layer) {
 	layer.putResolver(SlotResolver.LOCATION_SLOT_ID,
 		new SimplePropertyValueResolver("location"));
 

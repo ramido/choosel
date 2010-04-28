@@ -49,6 +49,7 @@ import org.thechiselgroup.choosel.client.ui.widget.graph.NodeDragEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeDragHandler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.Layer;
+import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay.Display;
 
@@ -57,7 +58,7 @@ public class GraphViewContentDisplayTest {
     public class TestGraphViewContentDisplay extends GraphViewContentDisplay {
 
 	public TestGraphViewContentDisplay(Display display,
-		ResourceSet hoverModel,
+		ResourceSet hoverModel, SlotResolver slotResolver,
 		NeighbourhoodServiceAsync mappingService,
 		NeighbourhoodServiceAsync conceptNeighbourhoodService,
 		PopupManagerFactory popupManagerFactory,
@@ -65,7 +66,7 @@ public class GraphViewContentDisplayTest {
 		CommandManager commandManager, ResourceManager resourceManager,
 		ErrorHandler errorHandler, DragEnablerFactory dragEnablerFactory) {
 
-	    super(display, hoverModel, mappingService,
+	    super(display, hoverModel, slotResolver, mappingService,
 		    conceptNeighbourhoodService, popupManagerFactory,
 		    detailsWidgetHelper, commandManager, resourceManager,
 		    errorHandler, dragEnablerFactory);
@@ -97,6 +98,9 @@ public class GraphViewContentDisplayTest {
     private Resource concept1;
 
     private Resource concept2;
+
+    @Mock
+    private SlotResolver slotResolver;
 
     @Mock
     private NeighbourhoodServiceAsync conceptNeighbourhoodService;
@@ -245,9 +249,10 @@ public class GraphViewContentDisplayTest {
 	when(callback.getAllResources()).thenReturn(allResources);
 
 	contentDisplay = spy(new TestGraphViewContentDisplay(display,
-		hoverModel, mappingService, conceptNeighbourhoodService,
-		popupManagerFactory, detailsWidgetHelper, commandManager,
-		resourceManager, errorHandler, dragEnablerFactory));
+		hoverModel, slotResolver, mappingService,
+		conceptNeighbourhoodService, popupManagerFactory,
+		detailsWidgetHelper, commandManager, resourceManager,
+		errorHandler, dragEnablerFactory));
 
 	contentDisplay.init(callback);
 

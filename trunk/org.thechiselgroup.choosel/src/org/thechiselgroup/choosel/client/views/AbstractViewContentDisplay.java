@@ -38,14 +38,18 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
 
     private boolean restoring = false;
 
+    private SlotResolver slotResolver;
+
     private Widget widget;
 
     public AbstractViewContentDisplay(PopupManagerFactory popupManagerFactory,
-	    DetailsWidgetHelper detailsWidgetHelper, ResourceSet hoverModel) {
+	    DetailsWidgetHelper detailsWidgetHelper, ResourceSet hoverModel,
+	    SlotResolver slotResolver) {
 
 	this.popupManagerFactory = popupManagerFactory;
 	this.detailsWidgetHelper = detailsWidgetHelper;
 	this.hoverModel = hoverModel;
+	this.slotResolver = slotResolver;
     }
 
     public Widget asWidget() {
@@ -105,6 +109,10 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
 
     public ViewContentDisplayCallback getCallback() {
 	return callback;
+    }
+
+    public SlotResolver getSlotResolver() {
+	return slotResolver;
     }
 
     @Override
