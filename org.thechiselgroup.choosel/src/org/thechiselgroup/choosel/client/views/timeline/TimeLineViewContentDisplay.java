@@ -48,10 +48,13 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
     public TimeLineViewContentDisplay(
 	    PopupManagerFactory popupManagerFactory,
 	    DetailsWidgetHelper detailsWidgetHelper,
+	    SlotResolver slotResolver,
 	    @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
 	    DragEnablerFactory dragEnablerFactory) {
 
-	super(popupManagerFactory, detailsWidgetHelper, hoverModel);
+	super(popupManagerFactory, detailsWidgetHelper, hoverModel,
+		slotResolver);
+
 	this.dragEnablerFactory = dragEnablerFactory;
     }
 
@@ -77,10 +80,10 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
 
     @Override
     public void initLayer(Layer layerModel, List<Layer> layers) {
-	SlotResolver.createDescriptionSlotResolver(layerModel);
-	SlotResolver.createColorSlotResolver(layerModel, layers);
-	SlotResolver.createLabelSlotResolver(layerModel);
-	SlotResolver.createDateSlotResolver(layerModel);
+	getSlotResolver().createDescriptionSlotResolver(layerModel);
+	getSlotResolver().createColorSlotResolver(layerModel, layers);
+	getSlotResolver().createLabelSlotResolver(layerModel);
+	getSlotResolver().createDateSlotResolver(layerModel);
     }
 
     @Override

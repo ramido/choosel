@@ -20,6 +20,7 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
+import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
 
@@ -28,31 +29,31 @@ import com.google.inject.name.Named;
 
 public class MapViewContentDisplayFactory implements ViewContentDisplayFactory {
 
-    private final PopupManagerFactory popupManagerFactory;
-
-    private final DetailsWidgetHelper detailsWidgetHelper;
-
-    private final ResourceSet hoverModel;
-
-    private final DragEnablerFactory dragEnablerFactory;
+    @Inject
+    private PopupManagerFactory popupManagerFactory;
 
     @Inject
-    public MapViewContentDisplayFactory(
-	    PopupManagerFactory popupManagerFactory,
-	    DetailsWidgetHelper detailsWidgetHelper,
-	    @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
-	    DragEnablerFactory dragEnablerFactory) {
+    private DetailsWidgetHelper detailsWidgetHelper;
 
-	this.popupManagerFactory = popupManagerFactory;
-	this.detailsWidgetHelper = detailsWidgetHelper;
-	this.hoverModel = hoverModel;
-	this.dragEnablerFactory = dragEnablerFactory;
+    @Inject
+    @Named(ChooselInjectionConstants.HOVER_MODEL)
+    private ResourceSet hoverModel;
+
+    @Inject
+    private DragEnablerFactory dragEnablerFactory;
+
+    @Inject
+    private SlotResolver slotResolver;
+
+    @Inject
+    public MapViewContentDisplayFactory() {
     }
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
 	return new MapViewContentDisplay(popupManagerFactory,
-		detailsWidgetHelper, hoverModel, dragEnablerFactory);
+		detailsWidgetHelper, slotResolver, hoverModel,
+		dragEnablerFactory);
     }
 
 }

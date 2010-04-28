@@ -241,6 +241,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
     public GraphViewContentDisplay(
 	    Display display,
 	    @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
+	    SlotResolver slotResolver,
 	    @Named("mapping") NeighbourhoodServiceAsync mappingService,
 	    @Named("concept") NeighbourhoodServiceAsync conceptNeighbourhoodService,
 	    PopupManagerFactory popupManagerFactory,
@@ -248,7 +249,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 	    CommandManager commandManager, ResourceManager resourceManager,
 	    ErrorHandler errorHandler, DragEnablerFactory dragEnablerFactory) {
 
-	super(popupManagerFactory, detailsWidgetHelper, hoverModel);
+	super(popupManagerFactory, detailsWidgetHelper, hoverModel,
+		slotResolver);
 
 	assert display != null;
 	assert mappingService != null;
@@ -568,7 +570,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 
     @Override
     public void initLayer(Layer layerModel, List<Layer> layers) {
-	SlotResolver.createDescriptionSlotResolver(layerModel);
+	getSlotResolver().createDescriptionSlotResolver(layerModel);
 	// TODO run layout ==> where should this be invoked?
 	// display.layOut();
     }

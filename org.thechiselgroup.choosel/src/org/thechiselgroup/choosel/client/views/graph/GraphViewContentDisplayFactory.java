@@ -23,6 +23,7 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
+import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
 
@@ -32,42 +33,48 @@ import com.google.inject.name.Named;
 public class GraphViewContentDisplayFactory implements
 	ViewContentDisplayFactory {
 
-    private final ResourceSet hoverModel;
-    private final NeighbourhoodServiceAsync mappingService;
-    private final NeighbourhoodServiceAsync conceptNeighbourhoodService;
-    private final PopupManagerFactory popupManagerFactory;
-    private final DetailsWidgetHelper detailsWidgetHelper;
-    private final CommandManager commandManager;
-    private final ResourceManager resourceManager;
-    private final ErrorHandler errorHandler;
-    private final DragEnablerFactory dragEnablerFactory;
+    @Inject
+    @Named(ChooselInjectionConstants.HOVER_MODEL)
+    private ResourceSet hoverModel;
 
     @Inject
-    public GraphViewContentDisplayFactory(
-	    @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
-	    @Named("mapping") NeighbourhoodServiceAsync mappingService,
-	    @Named("concept") NeighbourhoodServiceAsync conceptNeighbourhoodService,
-	    PopupManagerFactory popupManagerFactory,
-	    DetailsWidgetHelper detailsWidgetHelper,
-	    CommandManager commandManager, ResourceManager resourceManager,
-	    ErrorHandler errorHandler, DragEnablerFactory dragEnablerFactory) {
+    @Named("mapping")
+    private NeighbourhoodServiceAsync mappingService;
 
-	this.hoverModel = hoverModel;
-	this.mappingService = mappingService;
-	this.conceptNeighbourhoodService = conceptNeighbourhoodService;
-	this.popupManagerFactory = popupManagerFactory;
-	this.detailsWidgetHelper = detailsWidgetHelper;
-	this.commandManager = commandManager;
-	this.resourceManager = resourceManager;
-	this.errorHandler = errorHandler;
-	this.dragEnablerFactory = dragEnablerFactory;
+    @Inject
+    @Named("concept")
+    private NeighbourhoodServiceAsync conceptNeighbourhoodService;
+
+    @Inject
+    private PopupManagerFactory popupManagerFactory;
+
+    @Inject
+    private DetailsWidgetHelper detailsWidgetHelper;
+
+    @Inject
+    private CommandManager commandManager;
+
+    @Inject
+    private ResourceManager resourceManager;
+
+    @Inject
+    private ErrorHandler errorHandler;
+
+    @Inject
+    private DragEnablerFactory dragEnablerFactory;
+
+    @Inject
+    private SlotResolver slotResolver;
+
+    @Inject
+    public GraphViewContentDisplayFactory() {
     }
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
 	return new GraphViewContentDisplay(
 		new GraphViewContentDisplay.DefaultDisplay(), hoverModel,
-		mappingService, conceptNeighbourhoodService,
+		slotResolver, mappingService, conceptNeighbourhoodService,
 		popupManagerFactory, detailsWidgetHelper, commandManager,
 		resourceManager, errorHandler, dragEnablerFactory);
     }

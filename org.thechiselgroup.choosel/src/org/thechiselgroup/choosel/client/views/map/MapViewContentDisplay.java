@@ -68,10 +68,12 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
     public MapViewContentDisplay(
 	    PopupManagerFactory popupManagerFactory,
 	    DetailsWidgetHelper detailsWidgetHelper,
+	    SlotResolver slotResolver,
 	    @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
 	    DragEnablerFactory dragEnablerFactory) {
 
-	super(popupManagerFactory, detailsWidgetHelper, hoverModel);
+	super(popupManagerFactory, detailsWidgetHelper, hoverModel,
+		slotResolver);
 
 	this.dragEnablerFactory = dragEnablerFactory;
     }
@@ -134,10 +136,10 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
 
     @Override
     public void initLayer(Layer layerModel, List<Layer> layers) {
-	SlotResolver.createLabelSlotResolver(layerModel);
-	SlotResolver.createDescriptionSlotResolver(layerModel);
-	SlotResolver.createLocationSlotResolver(layerModel);
-	SlotResolver.createColorSlotResolver(layerModel, layers);
+	getSlotResolver().createLabelSlotResolver(layerModel);
+	getSlotResolver().createDescriptionSlotResolver(layerModel);
+	getSlotResolver().createLocationSlotResolver(layerModel);
+	getSlotResolver().createColorSlotResolver(layerModel, layers);
     }
 
     @Override
