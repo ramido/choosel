@@ -39,14 +39,6 @@ import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Arc;
-import org.thechiselgroup.choosel.client.ui.widget.graph.ArcMouseClickEvent;
-import org.thechiselgroup.choosel.client.ui.widget.graph.ArcMouseClickHandler;
-import org.thechiselgroup.choosel.client.ui.widget.graph.ArcMouseDoubleClickEvent;
-import org.thechiselgroup.choosel.client.ui.widget.graph.ArcMouseDoubleClickHandler;
-import org.thechiselgroup.choosel.client.ui.widget.graph.ArcMouseOutEvent;
-import org.thechiselgroup.choosel.client.ui.widget.graph.ArcMouseOutHandler;
-import org.thechiselgroup.choosel.client.ui.widget.graph.ArcMouseOverEvent;
-import org.thechiselgroup.choosel.client.ui.widget.graph.ArcMouseOverHandler;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidgetReadyEvent;
@@ -77,7 +69,6 @@ import org.thechiselgroup.choosel.client.views.Slot;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.user.client.ui.Widget;
@@ -112,9 +103,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
     private class GraphEventHandler extends ViewToIndividualItemEventForwarder
 	    implements NodeMouseOverHandler, NodeMouseOutHandler,
 	    NodeMouseClickHandler, NodeMouseDoubleClickHandler,
-	    MouseMoveHandler, ArcMouseOverHandler, ArcMouseOutHandler,
-	    ArcMouseClickHandler, ArcMouseDoubleClickHandler, NodeDragHandler,
-	    NodeDragHandleMouseDownHandler, NodeDragHandleMouseMoveHandler {
+	    MouseMoveHandler, NodeDragHandler, NodeDragHandleMouseDownHandler,
+	    NodeDragHandleMouseMoveHandler {
 
 	// XXX find cleaner solution that maps to nodes
 	private DragEnabler dragEnabler;
@@ -128,19 +118,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 	}
 
 	@Override
-	public void onMouseClick(ArcMouseClickEvent event) {
-	    Log.debug("onMouseClick " + event);
-	}
-
-	@Override
 	public void onMouseClick(NodeMouseClickEvent event) {
 	    getCallback().switchSelection(getGraphItem(event).getResource());
-	}
-
-	@Override
-	public void onMouseDoubleClick(ArcMouseDoubleClickEvent event) {
-	    Log.debug("onMouseDoubleClick " + event);
-	    getGraph().removeArc(event.getArc());
 	}
 
 	@Override
@@ -184,19 +163,9 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 	}
 
 	@Override
-	public void onMouseOut(ArcMouseOutEvent event) {
-	    Log.debug("onMouseOut " + event);
-	}
-
-	@Override
 	public void onMouseOut(NodeMouseOutEvent event) {
 	    onMouseOut(getGraphItem(event), event.getMouseX(), event
 		    .getMouseY());
-	}
-
-	@Override
-	public void onMouseOver(ArcMouseOverEvent event) {
-	    Log.debug("onMouseOver " + event);
 	}
 
 	@Override
@@ -555,11 +524,6 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 				expandMappingNeighbourhood2(getResource(node));
 			    }
 			}, NODE_TYPE_CONCEPT);
-
-		display.addEventHandler(ArcMouseOverEvent.TYPE, handler);
-		display.addEventHandler(ArcMouseOutEvent.TYPE, handler);
-		display.addEventHandler(ArcMouseClickEvent.TYPE, handler);
-		display.addEventHandler(ArcMouseDoubleClickEvent.TYPE, handler);
 
 		display.addEventHandler(NodeDragEvent.TYPE, handler);
 
