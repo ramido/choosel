@@ -18,7 +18,6 @@ package org.thechiselgroup.choosel.client.resources;
 import java.io.Serializable;
 import java.util.HashMap;
 
-
 // TODO introduce resource ID's
 // TODO equality / hash based on ID
 public class Resource implements Serializable {
@@ -35,6 +34,7 @@ public class Resource implements Serializable {
     }
 
     public Resource(String uri) {
+	assert uri != null;
 	this.uri = uri;
     }
 
@@ -59,6 +59,32 @@ public class Resource implements Serializable {
 	return properties;
     }
 
+    public String getUri() {
+	return uri;
+    }
+
+    /**
+     * TODO improve type identification as using the first part of the URI is a
+     * poor way to do this. Using semantic web technologies like RDF-S might be
+     * a better approach.
+     * 
+     * @return first part of the URI until the ':'.
+     */
+    public String getType() {
+	return uri.substring(0, uri.indexOf(':'));
+    }
+
+    public UriList getUriListValue(String key) {
+	UriList result = (UriList) getValue(key);
+
+	if (result == null) {
+	    result = new UriList();
+	    putValue(key, result);
+	}
+
+	return result;
+    }
+
     public Object getValue(String key) {
 	return properties.get(key);
     }
@@ -73,21 +99,6 @@ public class Resource implements Serializable {
 
     public void putValue(String key, Serializable value) {
 	properties.put(key, value);
-    }
-
-    public String getUri() {
-	return uri;
-    }
-
-    public UriList getUriListValue(String key) {
-	UriList result = (UriList) getValue(key);
-
-	if (result == null) {
-	    result = new UriList();
-	    putValue(key, result);
-	}
-
-	return result;
     }
 
     @Override
