@@ -41,6 +41,7 @@ import org.thechiselgroup.choosel.client.resources.ResourceManager;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetContainer;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
+import org.thechiselgroup.choosel.client.resources.ui.DefaultDetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.configuration.AllResourceSetAvatarFactoryProvider;
@@ -221,7 +222,9 @@ public class ChooselClientModule extends AbstractGinModule implements
 	bindDragAvatarDropTargetManagers();
 	bindDragAvatarFactories();
 
-	bind(DetailsWidgetHelper.class).in(Singleton.class);
+	bind(DetailsWidgetHelper.class).to(getDetailsWidgetHelperClass()).in(
+		Singleton.class);
+
 	bind(HandlerManager.class).toProvider(HandlerManagerProvider.class).in(
 		Singleton.class);
 
@@ -262,6 +265,10 @@ public class ChooselClientModule extends AbstractGinModule implements
 	bindCustomServices();
 
 	bindApplication();
+    }
+
+    protected Class<? extends DetailsWidgetHelper> getDetailsWidgetHelperClass() {
+	return DefaultDetailsWidgetHelper.class;
     }
 
     protected Class<? extends SlotResolver> getSlotResolverClass() {
