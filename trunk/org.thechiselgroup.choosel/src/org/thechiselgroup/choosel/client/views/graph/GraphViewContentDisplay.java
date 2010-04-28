@@ -122,13 +122,12 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 	    getCallback().switchSelection(getGraphItem(event).getResource());
 	}
 
+	// TODO remove --> move into neighbourhood expansion
 	@Override
 	public void onMouseDoubleClick(NodeMouseDoubleClickEvent event) {
 	    Resource resource = getGraphItem(event).getResource();
 
 	    if (isConcept(resource)) {
-		// expandConceptNeighbourhood(resource);
-		getGraphItem(event).hidePopup();
 	    } else if (isMapping(resource)) {
 		expandMapping(resource);
 	    }
