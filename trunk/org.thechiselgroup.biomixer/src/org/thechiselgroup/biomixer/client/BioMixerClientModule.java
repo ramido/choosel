@@ -22,12 +22,18 @@ import org.thechiselgroup.biomixer.client.domain.ncbo.NCBOMappingNeighbourhoodSe
 import org.thechiselgroup.choosel.client.ChooselApplication;
 import org.thechiselgroup.choosel.client.ChooselClientModule;
 import org.thechiselgroup.choosel.client.ChooselWindowContentProducerProvider;
+import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.graph.NeighbourhoodServiceAsync;
 
 import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 
 public class BioMixerClientModule extends ChooselClientModule {
+
+    @Override
+    protected Class<? extends SlotResolver> getSlotResolverClass() {
+	return BioMixerSlotResolver.class;
+    }
 
     @Override
     protected Class<? extends ChooselWindowContentProducerProvider> getContentProducerProviderClass() {
