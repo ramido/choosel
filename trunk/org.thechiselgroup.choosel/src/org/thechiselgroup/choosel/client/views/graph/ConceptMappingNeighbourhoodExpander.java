@@ -17,8 +17,6 @@ package org.thechiselgroup.choosel.client.views.graph;
 
 import org.thechiselgroup.choosel.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.client.resources.Resource;
-import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay.GraphNodeExpander;
-import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay.GraphNodeExpansionCallback;
 
 public class ConceptMappingNeighbourhoodExpander implements GraphNodeExpander {
 

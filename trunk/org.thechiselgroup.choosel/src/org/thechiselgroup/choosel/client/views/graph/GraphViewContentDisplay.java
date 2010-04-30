@@ -158,24 +158,6 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 
     }
 
-    public static interface GraphNodeExpander {
-
-	void expand(Resource resource,
-		GraphNodeExpansionCallback expansionCallback);
-
-    }
-
-    public static interface GraphNodeExpansionCallback {
-
-	void createMappingArc(String sourceId, String targetId);
-
-	Display getDisplay();
-
-	ResourceManager getResourceManager();
-
-	ViewContentDisplayCallback getViewContentDisplayCallback();
-    }
-
     private static final String MEMENTO_X = "x";
 
     // advanced node class: (incoming, outgoing, expanded: state machine)
@@ -457,6 +439,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 		display.addEventHandler(NodeDragEvent.TYPE, handler);
 		display.addEventHandler(MouseMoveEvent.getType(), handler);
 
+		// TODO inject from external structure
 		registerNodeMenuItem(NcboUriHelper.NCBO_CONCEPT, "Concepts",
 			new ConceptConceptNeighbourhoodExpander(
 				conceptNeighbourhoodService, errorHandler));
