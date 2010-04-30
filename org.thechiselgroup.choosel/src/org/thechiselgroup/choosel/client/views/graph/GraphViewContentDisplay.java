@@ -72,7 +72,8 @@ import com.google.inject.name.Named;
 
 // TODO separate out ncbo specific stuff and service calls
 // TODO register listener for double click on node --> change expansion state
-public class GraphViewContentDisplay extends AbstractViewContentDisplay {
+public class GraphViewContentDisplay extends AbstractViewContentDisplay
+	implements GraphNodeExpansionCallback {
 
     // TODO move to ncbo stuff
     public static final String ARC_TYPE_MAPPING = "mapping";
@@ -173,38 +174,13 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 
     private final Display display;
 
+    public Display getDisplay() {
+	return display;
+    }
+
     public DragEnablerFactory dragEnablerFactory;
 
     private ErrorHandler errorHandler;
-
-    private GraphNodeExpansionCallback expansionCallback = new GraphNodeExpansionCallback() {
-
-	@Override
-	public void createArc(String arcType, String sourceId, String targetId) {
-	    GraphViewContentDisplay.this.createArc(arcType, sourceId, targetId);
-	}
-
-	@Override
-	public Display getDisplay() {
-	    return GraphViewContentDisplay.this.display;
-	}
-
-	@Override
-	public ResourceManager getResourceManager() {
-	    return GraphViewContentDisplay.this.resourceManager;
-	}
-
-	@Override
-	public ViewContentDisplayCallback getViewContentDisplayCallback() {
-	    return GraphViewContentDisplay.this.getCallback();
-	}
-
-	@Override
-	public String getArcId(String arcType, String sourceId, String targetId) {
-	    return GraphViewContentDisplay.this.getArcId(arcType, sourceId,
-		    targetId);
-	}
-    };
 
     private final NeighbourhoodServiceAsync mappingNeighbourhoodService;
 
@@ -216,11 +192,15 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 
     private ResourceManager resourceManager;
 
+    public ResourceManager getResourceManager() {
+	return resourceManager;
+    }
+
     @Inject
     public GraphViewContentDisplay(
 	    Display display,
 	    @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
-	    @Named(ARC_TYPE_MAPPING) NeighbourhoodServiceAsync mappingService,
+	    @Named("mapping") NeighbourhoodServiceAsync mappingService,
 	    @Named("concept") NeighbourhoodServiceAsync conceptNeighbourhoodService,
 	    PopupManagerFactory popupManagerFactory,
 	    DetailsWidgetHelper detailsWidgetHelper,
@@ -316,12 +296,12 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
     public void checkResize() {
     }
 
-    protected String getArcId(String arcType, String sourceId, String targetId) {
+    public String getArcId(String arcType, String sourceId, String targetId) {
 	// FIXME this needs escaping of special characters to work properly
 	return arcType + ":" + sourceId + "_" + targetId;
     }
 
-    private void createArc(String arcType, String sourceId, String targetId) {
+    public void createArc(String arcType, String sourceId, String targetId) {
 	Arc arc = new Arc(getArcId(arcType, sourceId, targetId), sourceId,
 		targetId, arcType);
 
@@ -401,7 +381,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
     protected void expandMappingNeighbourhood(Resource resource) {
 	mappingNeighbourhoodService.getNeighbourhood(resource,
 		new MappingNeighbourhoodCallback(display, getCallback(),
-			errorHandler, expansionCallback));
+			errorHandler, this));
     }
 
     private String getCategory(Resource resource) {
@@ -501,7 +481,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 		    @Override
 		    public void onNodeMenuItemClicked(Node node) {
 			nodeExpander.expand(getResource(node),
-				expansionCallback);
+				GraphViewContentDisplay.this);
 		    }
 		}, category);
     }

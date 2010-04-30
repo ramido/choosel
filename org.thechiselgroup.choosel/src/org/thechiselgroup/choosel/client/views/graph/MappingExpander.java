@@ -28,7 +28,7 @@ public class MappingExpander implements GraphNodeExpander {
 	    GraphNodeExpansionCallback expansionCallback) {
 
 	ViewContentDisplayCallback displayCallback = expansionCallback
-		.getViewContentDisplayCallback();
+		.getCallback();
 	ResourceManager resourceManager2 = expansionCallback
 		.getResourceManager();
 

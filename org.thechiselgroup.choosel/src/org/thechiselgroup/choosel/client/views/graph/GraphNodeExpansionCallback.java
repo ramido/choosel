@@ -25,7 +25,7 @@ public interface GraphNodeExpansionCallback {
 
     ResourceManager getResourceManager();
 
-    ViewContentDisplayCallback getViewContentDisplayCallback();
+    ViewContentDisplayCallback getCallback();
 
     void createArc(String arcType, String sourceId, String targetId);
 
