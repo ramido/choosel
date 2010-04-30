@@ -15,23 +15,33 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.graph;
 
-import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
-import org.thechiselgroup.choosel.client.resources.ResourceManager;
-import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
+import org.thechiselgroup.choosel.client.domain.ncbo.NCBO;
+import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 
-public interface GraphNodeExpansionCallback extends ResourceCategorizer {
+public class AutomaticMappingExpander implements GraphNodeExpander {
 
-    GraphDisplay getDisplay();
+    @Override
+    public void expand(Resource mapping,
+	    GraphNodeExpansionCallback expansionCallback) {
 
-    ResourceManager getResourceManager();
+	ViewContentDisplayCallback callback = expansionCallback.getCallback();
 
-    ViewContentDisplayCallback getCallback();
+	String sourceURI = (String) mapping.getValue(NCBO.MAPPING_SOURCE);
 
-    void createArc(String arcType, String sourceId, String targetId);
+	if (callback.containsResourceWithUri(sourceURI)) {
+	    expansionCallback.createArc(
+		    GraphViewContentDisplay.ARC_TYPE_MAPPING, sourceURI,
+		    mapping.getUri());
+	}
 
-    String getArcId(String arcType, String sourceId, String targetId);
+	String destinationURI = (String) mapping
+		.getValue(NCBO.MAPPING_DESTINATION);
 
-    boolean isRestoring();
-
+	if (callback.containsResourceWithUri(destinationURI)) {
+	    expansionCallback.createArc(
+		    GraphViewContentDisplay.ARC_TYPE_MAPPING, mapping.getUri(),
+		    destinationURI);
+	}
+    }
 }

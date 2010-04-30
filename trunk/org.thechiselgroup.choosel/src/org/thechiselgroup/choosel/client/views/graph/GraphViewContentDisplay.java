@@ -22,7 +22,6 @@ import java.util.Map;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
-import org.thechiselgroup.choosel.client.domain.ncbo.NCBO;
 import org.thechiselgroup.choosel.client.domain.ncbo.NcboUriHelper;
 import org.thechiselgroup.choosel.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.client.geometry.Point;
@@ -31,7 +30,6 @@ import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceManager;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.UriList;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
@@ -226,69 +224,6 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 	this.dragEnablerFactory = dragEnablerFactory;
     }
 
-    private void addArcsToRelatedConcepts(Resource concept) {
-	// search neighbourhood uri list for neighbours
-	UriList neighbours = concept
-		.getUriListValue(NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS);
-	for (String uri : neighbours) {
-	    if (getCallback().containsResourceWithUri(uri)) {
-		createArc(NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS,
-			concept.getUri(), uri);
-	    }
-	}
-
-	// get all concepts and see if the new concept is contained in the uri
-	// list
-	for (Resource resource : getCallback().getAllResources()) {
-	    if (NcboUriHelper.NCBO_CONCEPT.equals(getCategory(resource))) {
-		UriList neighbours2 = resource
-			.getUriListValue(NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS);
-		if (neighbours2.contains(concept.getUri())) {
-		    createArc(NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS,
-			    resource.getUri(), concept.getUri());
-		}
-	    }
-	}
-    }
-
-    private void addMappingArcsToConcept(Resource concept) {
-	for (Resource resource2 : getCallback().getAllResources()) {
-	    if (NcboUriHelper.NCBO_MAPPING.equals(getCategory(resource2))) {
-		String sourceURI = (String) resource2
-			.getValue(NCBO.MAPPING_SOURCE);
-
-		if (concept.getUri().equals(sourceURI)) {
-		    createArc(ARC_TYPE_MAPPING, sourceURI, resource2.getUri());
-		}
-
-		String destinationURI = (String) resource2
-			.getValue(NCBO.MAPPING_DESTINATION);
-
-		if (concept.getUri().equals(destinationURI)) {
-		    createArc(ARC_TYPE_MAPPING, resource2.getUri(),
-			    destinationURI);
-		}
-	    }
-	}
-    }
-
-    private void addMappingToConceptArcs(Resource mapping) {
-	ViewContentDisplayCallback callback = getCallback();
-
-	String sourceURI = (String) mapping.getValue(NCBO.MAPPING_SOURCE);
-
-	if (callback.containsResourceWithUri(sourceURI)) {
-	    createArc(ARC_TYPE_MAPPING, sourceURI, mapping.getUri());
-	}
-
-	String destinationURI = (String) mapping
-		.getValue(NCBO.MAPPING_DESTINATION);
-
-	if (callback.containsResourceWithUri(destinationURI)) {
-	    createArc(ARC_TYPE_MAPPING, mapping.getUri(), destinationURI);
-	}
-    }
-
     @Override
     public void checkResize() {
     }
@@ -305,7 +240,11 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 		.getArcStyle(arcType));
     }
 
-    private GraphItem createGraphItem(Layer layer, Resource resource) {
+    @Override
+    public GraphItem createResourceItem(Layer layer, Resource resource) {
+	assert layer != null;
+	assert resource != null;
+
 	String label = layer.getValue(SlotResolver.GRAPH_LABEL_SLOT, resource);
 	String category = getCategory(resource);
 	PopupManager popupManager = createPopupManager(resource, layer
@@ -335,26 +274,13 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 	    display.setNodeStyle(item.getNode(), "showArrow", "true");
 	}
 
-	return item;
-    }
-
-    @Override
-    public GraphItem createResourceItem(Layer layer, Resource resource) {
-	GraphItem item = createGraphItem(layer, resource);
-	String category = getCategory(resource);
-
 	if (NcboUriHelper.NCBO_CONCEPT.equals(category)) {
-	    if (!isRestoring()) {
-		// only look automatically for mappings if not restoring
-		expandMappingNeighbourhood(resource);
-	    }
-
-	    addArcsToRelatedConcepts(resource);
-	    addMappingArcsToConcept(resource);
+	    new AutomaticConceptExpander(mappingNeighbourhoodService,
+		    errorHandler).expand(resource, this);
 	}
 
 	if (NcboUriHelper.NCBO_MAPPING.equals(category)) {
-	    addMappingToConceptArcs(resource);
+	    new AutomaticMappingExpander().expand(resource, this);
 	}
 
 	return item;
@@ -366,18 +292,12 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 	return display.asWidget();
     }
 
-    protected void expandMappingNeighbourhood(Resource resource) {
-	mappingNeighbourhoodService.getNeighbourhood(resource,
-		new MappingNeighbourhoodCallback(display, getCallback(),
-			errorHandler, this));
-    }
-
     public String getArcId(String arcType, String sourceId, String targetId) {
 	// FIXME this needs escaping of special characters to work properly
 	return arcType + ":" + sourceId + "_" + targetId;
     }
 
-    private String getCategory(Resource resource) {
+    public String getCategory(Resource resource) {
 	return resourceCategorizer.getCategory(resource);
     }
 
