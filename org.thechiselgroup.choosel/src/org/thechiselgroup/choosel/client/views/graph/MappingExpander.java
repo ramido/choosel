@@ -20,8 +20,6 @@ import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceManager;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
-import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay.GraphNodeExpander;
-import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay.GraphNodeExpansionCallback;
 
 public class MappingExpander implements GraphNodeExpander {
 

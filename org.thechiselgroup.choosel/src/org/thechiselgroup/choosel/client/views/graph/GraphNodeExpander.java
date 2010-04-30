@@ -15,31 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.graph;
 
-import org.thechiselgroup.choosel.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.client.resources.Resource;
 
-public class ConceptConceptNeighbourhoodExpander implements GraphNodeExpander {
+public interface GraphNodeExpander {
 
-    private NeighbourhoodServiceAsync neighbourhoodService;
+    void expand(Resource resource, GraphNodeExpansionCallback expansionCallback);
 
-    private ErrorHandler errorHandler;
-
-    public ConceptConceptNeighbourhoodExpander(
-	    NeighbourhoodServiceAsync neighbourhoodService,
-	    ErrorHandler errorHandler) {
-
-	this.neighbourhoodService = neighbourhoodService;
-	this.errorHandler = errorHandler;
-    }
-
-    @Override
-    public void expand(Resource resource,
-	    GraphNodeExpansionCallback expansionCallback) {
-
-	neighbourhoodService.getNeighbourhood(resource,
-		new ConceptNeighbourhoodCallback(
-			expansionCallback.getDisplay(), expansionCallback
-				.getViewContentDisplayCallback(),
-			expansionCallback.getResourceManager(), errorHandler));
-    }
 }
