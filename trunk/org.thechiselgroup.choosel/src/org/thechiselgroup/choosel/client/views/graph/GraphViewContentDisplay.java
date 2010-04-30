@@ -52,8 +52,6 @@ import org.thechiselgroup.choosel.client.ui.widget.graph.NodeEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMenuItemClickedHandler;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseClickEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseClickHandler;
-import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseDoubleClickEvent;
-import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseDoubleClickHandler;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseOutEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseOutHandler;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseOverEvent;
@@ -99,9 +97,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 
     private class GraphEventHandler extends ViewToIndividualItemEventForwarder
 	    implements NodeMouseOverHandler, NodeMouseOutHandler,
-	    NodeMouseClickHandler, NodeMouseDoubleClickHandler,
-	    MouseMoveHandler, NodeDragHandler, NodeDragHandleMouseDownHandler,
-	    NodeDragHandleMouseMoveHandler {
+	    NodeMouseClickHandler, MouseMoveHandler, NodeDragHandler,
+	    NodeDragHandleMouseDownHandler, NodeDragHandleMouseMoveHandler {
 
 	// XXX find cleaner solution that maps to nodes
 	private DragEnabler dragEnabler;
@@ -117,17 +114,6 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 	@Override
 	public void onMouseClick(NodeMouseClickEvent event) {
 	    getCallback().switchSelection(getGraphItem(event).getResource());
-	}
-
-	// TODO remove --> move into neighbourhood expansion
-	@Override
-	public void onMouseDoubleClick(NodeMouseDoubleClickEvent event) {
-	    Resource resource = getGraphItem(event).getResource();
-
-	    if (isConcept(resource)) {
-	    } else if (isMapping(resource)) {
-		expandMapping(resource);
-	    }
 	}
 
 	@Override
@@ -242,7 +228,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 	// get all concepts and see if the new concept is contained in the uri
 	// list
 	for (Resource resource : getCallback().getAllResources()) {
-	    if (isConcept(resource)) {
+	    if (NcboUriHelper.NCBO_CONCEPT.equals(getCategory(resource))) {
 		UriList neighbours2 = resource
 			.getUriListValue(NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS);
 		if (neighbours2.contains(concept.getUri())) {
@@ -254,7 +240,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 
     private void addMappingArcsToConcept(Resource concept) {
 	for (Resource resource2 : getCallback().getAllResources()) {
-	    if (isMapping(resource2)) {
+	    if (NcboUriHelper.NCBO_MAPPING.equals(getCategory(resource2))) {
 		String sourceURI = (String) resource2
 			.getValue(NCBO.MAPPING_SOURCE);
 
@@ -376,7 +362,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
     public GraphItem createResourceItem(Layer layer, Resource resource) {
 	GraphItem item = createGraphItem(layer, resource);
 
-	if (isConcept(resource)) {
+	if (NcboUriHelper.NCBO_CONCEPT.equals(getCategory(resource))) {
 	    if (!isRestoring()) {
 		// only look automatically for mappings if not restoring
 		expandMappingNeighbourhood(resource);
@@ -386,7 +372,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 	    addMappingArcsToConcept(resource);
 	}
 
-	if (isMapping(resource)) {
+	if (NcboUriHelper.NCBO_MAPPING.equals(getCategory(resource))) {
 	    addMappingToConceptArcs(resource);
 	}
 
@@ -514,11 +500,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 		display.addEventHandler(NodeMouseOverEvent.TYPE, handler);
 		display.addEventHandler(NodeMouseOutEvent.TYPE, handler);
 		display.addEventHandler(NodeMouseClickEvent.TYPE, handler);
-		display
-			.addEventHandler(NodeMouseDoubleClickEvent.TYPE,
-				handler);
 
-		display.addNodeMenuItemHandler("Concept Neighbourhood",
+		display.addNodeMenuItemHandler("Concepts",
 			new NodeMenuItemClickedHandler() {
 			    @Override
 			    public void onNodeMenuItemClicked(Node node) {
@@ -533,19 +516,19 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 			    }
 			}, NcboUriHelper.NCBO_CONCEPT);
 
+		display.addNodeMenuItemHandler("Concepts",
+			new NodeMenuItemClickedHandler() {
+			    @Override
+			    public void onNodeMenuItemClicked(Node node) {
+				expandMapping(getResource(node));
+			    }
+			}, NcboUriHelper.NCBO_MAPPING);
+
 		display.addEventHandler(NodeDragEvent.TYPE, handler);
 
 		display.addEventHandler(MouseMoveEvent.getType(), handler);
 	    }
 	});
-    }
-
-    private boolean isConcept(Resource resource) {
-	return resource.getUri().startsWith(NcboUriHelper.NCBO_CONCEPT);
-    }
-
-    private boolean isMapping(Resource resource) {
-	return resource.getUri().startsWith(NcboUriHelper.NCBO_MAPPING);
     }
 
     @Override
