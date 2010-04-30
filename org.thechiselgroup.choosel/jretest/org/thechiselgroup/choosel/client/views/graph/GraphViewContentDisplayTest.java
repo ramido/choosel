@@ -259,7 +259,7 @@ public class GraphViewContentDisplayTest {
 	contentDisplay.init(callback);
 
 	when(resourceCategorizer.getCategory(any(Resource.class))).thenReturn(
-		"default");
+		NcboUriHelper.NCBO_CONCEPT);
 
 	ArgumentCaptor<GraphWidgetReadyHandler> argument = ArgumentCaptor
 		.forClass(GraphWidgetReadyHandler.class);
