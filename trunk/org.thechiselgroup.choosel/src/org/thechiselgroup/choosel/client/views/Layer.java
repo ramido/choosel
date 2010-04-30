@@ -69,12 +69,6 @@ public class Layer {
 	}
     }
 
-    public void putResolver(String slotID, PropertyValueResolver resolver) {
-	assert resolver != null;
-
-	getSlot(slotID).setResolver(resolver);
-    }
-
     public void setCategory(String category) {
 	this.category = category;
 

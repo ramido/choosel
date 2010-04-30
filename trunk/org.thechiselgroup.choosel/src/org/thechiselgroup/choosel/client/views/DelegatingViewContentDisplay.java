@@ -15,8 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import java.util.List;
-
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.Resource;
 
@@ -63,10 +61,6 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
 
     public void init(ViewContentDisplayCallback callback) {
 	delegate.init(callback);
-    }
-
-    public void initLayer(Layer layerModel, List<Layer> layers) {
-	delegate.initLayer(layerModel, layers);
     }
 
     public boolean isReady() {

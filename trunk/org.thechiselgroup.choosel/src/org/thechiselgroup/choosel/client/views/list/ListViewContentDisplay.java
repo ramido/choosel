@@ -254,12 +254,6 @@ public class ListViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     @Override
-    public void initLayer(Layer layerModel, List<Layer> layers) {
-	layerModel.putResolver(SlotResolver.DESCRIPTION_SLOT, getSlotResolver()
-		.createDescriptionSlotResolver(layerModel.getCategory()));
-    }
-
-    @Override
     public void removeResourceItem(ResourceItem listItem) {
 	display.removeIndividualItem((ListItem) listItem);
     }

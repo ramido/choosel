@@ -34,7 +34,7 @@ import com.google.inject.name.Named;
 
 public class ViewFactory implements WindowContentFactory {
 
-    private final ResourceSetAvatarFactory allResourcesDragAvatarFactory;
+    private ResourceSetAvatarFactory allResourcesDragAvatarFactory;
 
     private ResourceCategorizer categorizer;
 
@@ -56,9 +56,11 @@ public class ViewFactory implements WindowContentFactory {
 
     private ResourceSetAvatarFactory userSetsDragAvatarFactory;
 
-    private final String contentType;
+    private String contentType;
 
-    private final ViewContentDisplayFactory viewContentDisplayFactory;
+    private ViewContentDisplayFactory viewContentDisplayFactory;
+
+    private SlotResolver slotResolver;
 
     public ViewFactory(
 	    String contentType,
@@ -73,7 +75,8 @@ public class ViewFactory implements WindowContentFactory {
 	    @Named(LABEL_PROVIDER_SELECTION_SET) LabelProvider selectionModelLabelFactory,
 	    ResourceCategorizer categorizer,
 	    CategoryLabelProvider labelProvider,
-	    @Named(DROP_TARGET_MANAGER_VIEW_CONTENT) ResourceSetAvatarDropTargetManager contentDropTargetManager) {
+	    @Named(DROP_TARGET_MANAGER_VIEW_CONTENT) ResourceSetAvatarDropTargetManager contentDropTargetManager,
+	    SlotResolver slotResolver) {
 
 	assert contentType != null;
 	assert viewContentDisplayFactory != null;
@@ -88,6 +91,7 @@ public class ViewFactory implements WindowContentFactory {
 	assert selectionModelLabelFactory != null;
 	assert categorizer != null;
 	assert labelProvider != null;
+	assert slotResolver != null;
 
 	this.contentType = contentType;
 	this.viewContentDisplayFactory = viewContentDisplayFactory;
@@ -102,6 +106,7 @@ public class ViewFactory implements WindowContentFactory {
 	this.selectionModelLabelFactory = selectionModelLabelFactory;
 	this.categorizer = categorizer;
 	this.labelProvider = labelProvider;
+	this.slotResolver = slotResolver;
     }
 
     @Override
@@ -123,6 +128,7 @@ public class ViewFactory implements WindowContentFactory {
 		new ResourceSetAvatarResourceSetsPresenter(
 			selectionDragAvatarFactory),
 		new ResourceSetAvatarResourceSetsPresenter(dropTargetFactory),
-		resourceSplitter, contentDisplay, contentType, contentType);
+		resourceSplitter, contentDisplay, contentType, contentType,
+		slotResolver);
     }
 }

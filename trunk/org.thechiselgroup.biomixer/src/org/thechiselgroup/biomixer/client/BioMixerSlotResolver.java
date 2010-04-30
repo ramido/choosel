@@ -32,11 +32,13 @@ import org.thechiselgroup.choosel.client.views.SlotResolver;
 
 public class BioMixerSlotResolver implements SlotResolver {
 
+    private static final String[] COLORS = new String[] { "#6495ed", "#b22222" };
+
     @Override
     public PropertyValueResolver createColorSlotResolver(String category,
 	    List<Layer> layers) {
 
-	String color = SlotResolver.COLORS[layers.size()];
+	String color = COLORS[layers.size()];
 	return new FixedValuePropertyValueResolver(color);
     }
 

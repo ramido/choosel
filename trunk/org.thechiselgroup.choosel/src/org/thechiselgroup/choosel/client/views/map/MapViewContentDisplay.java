@@ -15,8 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.map;
 
-import java.util.List;
-
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.Resource;
@@ -151,18 +149,6 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
 	map.setScrollWheelZoomEnabled(true);
 
 	return map;
-    }
-
-    @Override
-    public void initLayer(Layer layerModel, List<Layer> layers) {
-	layerModel.putResolver(SlotResolver.DESCRIPTION_SLOT, getSlotResolver()
-		.createDescriptionSlotResolver(layerModel.getCategory()));
-	layerModel.putResolver(SlotResolver.COLOR_SLOT, getSlotResolver()
-		.createColorSlotResolver(layerModel.getCategory(), layers));
-	layerModel.putResolver(SlotResolver.LABEL_SLOT, getSlotResolver()
-		.createLabelSlotResolver(layerModel.getCategory()));
-	layerModel.putResolver(SlotResolver.LOCATION_SLOT, getSlotResolver()
-		.createLocationSlotResolver(layerModel.getCategory()));
     }
 
     @Override

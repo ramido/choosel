@@ -31,6 +31,8 @@ import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.label.DefaultCategoryLabelProvider;
 import org.thechiselgroup.choosel.client.label.SelectionModelLabelFactory;
 import org.thechiselgroup.choosel.client.persistence.Memento;
+import org.thechiselgroup.choosel.client.resolver.NullPropertyValueResolver;
+import org.thechiselgroup.choosel.client.resolver.PropertyValueResolver;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.Resource;
@@ -63,17 +65,24 @@ public class DefaultViewTest {
 		ResourceSetsPresenter selectionDropPresenter,
 		ResourceSplitter resourceSplitter,
 		ViewContentDisplay contentDisplay, String label,
-		String contentType) {
+		String contentType, SlotResolver slotResolver) {
 
 	    super(hoverModel, selectionModelLabelFactory, resourceSetFactory,
 		    originalSetsPresenter, splittedSetsPresenter,
 		    automaticSetPresenter, selectionPresenter,
 		    selectionDropPresenter, resourceSplitter, contentDisplay,
-		    label, contentType);
+		    label, contentType, slotResolver);
 	}
 
 	@Override
 	protected void initUI() {
+	}
+
+	@Override
+	protected PropertyValueResolver createValueResolver(String slotID,
+		String category, List<Layer> layers) {
+
+	    return new NullPropertyValueResolver();
 	}
     }
 
@@ -108,13 +117,16 @@ public class DefaultViewTest {
     private ResourceSet selection;
 
     @Mock
+    private ResourceSetsPresenter selectionDropPresenter;
+
+    @Mock
     private HandlerRegistration selectionHandlerRegistration;
 
     @Mock
     private ResourceSetsPresenter selectionPresenter;
 
     @Mock
-    private ResourceSetsPresenter selectionDropPresenter;
+    private SlotResolver slotResolver;
 
     @Mock
     private ResourceSetsPresenter splittedSetsPresenter;
@@ -360,7 +372,7 @@ public class DefaultViewTest {
 		new DefaultResourceSetFactory(), originalSetsPresenter,
 		splittedSetsPresenter, allResourcesSetPresenter,
 		selectionPresenter, selectionDropPresenter, resourceSplitter,
-		contentDisplay, "", ""));
+		contentDisplay, "", "", slotResolver));
     }
 
     @Test

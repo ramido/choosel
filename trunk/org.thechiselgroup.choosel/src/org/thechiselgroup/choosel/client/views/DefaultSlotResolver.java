@@ -27,11 +27,13 @@ import org.thechiselgroup.choosel.client.util.Converter;
 
 public class DefaultSlotResolver implements SlotResolver {
 
+    private static final String[] COLORS = new String[] { "#6495ed", "#b22222" };
+
     @Override
     public PropertyValueResolver createColorSlotResolver(String category,
 	    List<Layer> layers) {
 
-	String color = SlotResolver.COLORS[layers.size()];
+	String color = COLORS[layers.size()];
 	return new FixedValuePropertyValueResolver(color);
     }
 
