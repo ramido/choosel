@@ -198,12 +198,10 @@ public class ListViewContentDisplay extends AbstractViewContentDisplay {
     @Inject
     public ListViewContentDisplay(
 	    @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
-	    PopupManagerFactory popupManagerFactory, SlotResolver slotResolver,
-	    DetailsWidgetHelper detailsWidgetHelper,
+	    PopupManagerFactory popupManagerFactory, DetailsWidgetHelper detailsWidgetHelper,
 	    ResourceSetAvatarDragController dragController) {
 
-	super(popupManagerFactory, detailsWidgetHelper, hoverModel,
-		slotResolver);
+	super(popupManagerFactory, detailsWidgetHelper, hoverModel);
 
 	this.dragController = dragController;
 	this.display = new DefaultDisplay();

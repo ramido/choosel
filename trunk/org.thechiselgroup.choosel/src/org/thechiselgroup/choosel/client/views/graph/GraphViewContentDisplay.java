@@ -208,16 +208,15 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
     public GraphViewContentDisplay(
 	    Display display,
 	    @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
-	    SlotResolver slotResolver,
 	    @Named("mapping") NeighbourhoodServiceAsync mappingService,
 	    @Named("concept") NeighbourhoodServiceAsync conceptNeighbourhoodService,
 	    PopupManagerFactory popupManagerFactory,
 	    DetailsWidgetHelper detailsWidgetHelper,
-	    CommandManager commandManager, ResourceManager resourceManager,
-	    ErrorHandler errorHandler, DragEnablerFactory dragEnablerFactory) {
+	    CommandManager commandManager,
+	    ResourceManager resourceManager, ErrorHandler errorHandler,
+	    DragEnablerFactory dragEnablerFactory) {
 
-	super(popupManagerFactory, detailsWidgetHelper, hoverModel,
-		slotResolver);
+	super(popupManagerFactory, detailsWidgetHelper, hoverModel);
 
 	assert display != null;
 	assert mappingService != null;

@@ -66,10 +66,10 @@ public class GraphViewContentDisplayTest {
 		CommandManager commandManager, ResourceManager resourceManager,
 		ErrorHandler errorHandler, DragEnablerFactory dragEnablerFactory) {
 
-	    super(display, hoverModel, slotResolver, mappingService,
-		    conceptNeighbourhoodService, popupManagerFactory,
-		    detailsWidgetHelper, commandManager, resourceManager,
-		    errorHandler, dragEnablerFactory);
+	    super(display, hoverModel, mappingService, conceptNeighbourhoodService,
+		    popupManagerFactory, detailsWidgetHelper,
+		    commandManager, resourceManager, errorHandler,
+		    dragEnablerFactory);
 	}
 
 	@Override
