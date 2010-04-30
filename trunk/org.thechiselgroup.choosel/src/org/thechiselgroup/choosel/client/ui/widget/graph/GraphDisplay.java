@@ -26,41 +26,27 @@ import com.google.gwt.event.shared.GwtEvent.Type;
 
 public interface GraphDisplay extends WidgetAdaptable {
 
-    // String ARC_STYLE = "arcStyle";
-    //
-    // String ARC_STYLE_SOLID = "solid";
-    //
-    // String ARC_STYLE_DASHED = "dashed";
-    //
-    // /**
-    // * number in px
-    // */
-    // String ARC_DASH_LENGTH = "arcDashLength";
-    //
-    // /**
-    // * parameters: Color
-    // *
-    // * TODO convert to 0xffffff for Flex
-    // */
-    // String ARC_COLOR = "arcColor";
-    //
-    // /**
-    // * parameters: number in px
-    // */
-    // String ARC_THICKNESS = "arcThickness";
-
     String ARC_COLOR = "normalLineColor";
+
     String ARC_STYLE = "normalLineStyle";
+
     String ARC_STYLE_DASHED = "dashed";
+
+    String ARC_STYLE_SOLID = "solid";
+
     // FIXME these a flexviz specific, use generic ones & translate in
     // graphwidget
 
     String NODE_BACKGROUND_COLOR = "normalBackgroundColor";
+
     String NODE_BORDER_COLOR = "normalBorderColor";
 
     String NODE_FONT_COLOR = "normalColor";
+
     String NODE_FONT_WEIGHT = "normalFontWeight";
+
     String NODE_FONT_WEIGHT_BOLD = "bold";
+
     String NODE_FONT_WEIGHT_NORMAL = "normal";
 
     void addArc(Arc arc);
@@ -78,8 +64,6 @@ public interface GraphDisplay extends WidgetAdaptable {
     boolean containsArc(String arcId);
 
     boolean containsNode(String nodeId);
-
-    // Object getArcTypeStyle(String arcId, String key);
 
     Arc getArc(String arcId);
 
@@ -103,7 +87,5 @@ public interface GraphDisplay extends WidgetAdaptable {
 
     void addNodeMenuItemHandler(String menuLabel,
 	    NodeMenuItemClickedHandler handler, String nodeClass);
-
-    // Object getNodeTypeStyle(String nodeId, String key);
 
 }

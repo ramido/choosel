@@ -75,9 +75,6 @@ import com.google.inject.name.Named;
 public class GraphViewContentDisplay extends AbstractViewContentDisplay
 	implements GraphNodeExpansionCallback {
 
-    // TODO move to ncbo stuff
-    public static final String ARC_TYPE_MAPPING = "mapping";
-
     public static class DefaultDisplay extends GraphWidget implements Display {
 
 	// TODO why is size needed in the first place??
@@ -162,21 +159,22 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
     }
 
+    // TODO move to ncbo stuff
+    public static final String ARC_TYPE_MAPPING = "mapping";
+
     private static final String MEMENTO_X = "x";
 
     // advanced node class: (incoming, outgoing, expanded: state machine)
 
     private static final String MEMENTO_Y = "y";
 
+    private ArcStyleProvider arcStyleProvider;
+
     private final CommandManager commandManager;
 
     private final NeighbourhoodServiceAsync conceptNeighbourhoodService;
 
     private final Display display;
-
-    public Display getDisplay() {
-	return display;
-    }
 
     public DragEnablerFactory dragEnablerFactory;
 
@@ -192,10 +190,6 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
     private ResourceManager resourceManager;
 
-    public ResourceManager getResourceManager() {
-	return resourceManager;
-    }
-
     @Inject
     public GraphViewContentDisplay(
 	    Display display,
@@ -206,7 +200,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 	    DetailsWidgetHelper detailsWidgetHelper,
 	    CommandManager commandManager, ResourceManager resourceManager,
 	    ErrorHandler errorHandler, DragEnablerFactory dragEnablerFactory,
-	    ResourceCategorizer resourceCategorizer) {
+	    ResourceCategorizer resourceCategorizer,
+	    ArcStyleProvider arcStyleProvider) {
 
 	super(popupManagerFactory, detailsWidgetHelper, hoverModel);
 
@@ -218,7 +213,9 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 	assert errorHandler != null;
 	assert dragEnablerFactory != null;
 	assert resourceCategorizer != null;
+	assert arcStyleProvider != null;
 
+	this.arcStyleProvider = arcStyleProvider;
 	this.resourceCategorizer = resourceCategorizer;
 	this.display = display;
 	this.mappingNeighbourhoodService = mappingService;
@@ -296,25 +293,16 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     public void checkResize() {
     }
 
-    public String getArcId(String arcType, String sourceId, String targetId) {
-	// FIXME this needs escaping of special characters to work properly
-	return arcType + ":" + sourceId + "_" + targetId;
-    }
-
     public void createArc(String arcType, String sourceId, String targetId) {
 	Arc arc = new Arc(getArcId(arcType, sourceId, targetId), sourceId,
 		targetId, arcType);
 
 	display.addArc(arc);
 
-	// TODO lookup values from special provider
-	if (NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS.equals(arcType)) {
-	    display.setArcStyle(arc, GraphDisplay.ARC_COLOR, "#AFC6E5");
-	} else if (ARC_TYPE_MAPPING.equals(arcType)) {
-	    display.setArcStyle(arc, GraphDisplay.ARC_COLOR, "#D4D4D4");
-	    display.setArcStyle(arc, GraphDisplay.ARC_STYLE,
-		    GraphDisplay.ARC_STYLE_DASHED);
-	}
+	display.setArcStyle(arc, GraphDisplay.ARC_COLOR, arcStyleProvider
+		.getArcColor(arcType));
+	display.setArcStyle(arc, GraphDisplay.ARC_STYLE, arcStyleProvider
+		.getArcStyle(arcType));
     }
 
     private GraphItem createGraphItem(Layer layer, Resource resource) {
@@ -384,8 +372,17 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 			errorHandler, this));
     }
 
+    public String getArcId(String arcType, String sourceId, String targetId) {
+	// FIXME this needs escaping of special characters to work properly
+	return arcType + ":" + sourceId + "_" + targetId;
+    }
+
     private String getCategory(Resource resource) {
 	return resourceCategorizer.getCategory(resource);
+    }
+
+    public Display getDisplay() {
+	return display;
     }
 
     private GraphItem getGraphItem(Node node) {
@@ -398,6 +395,10 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
     private Resource getResource(Node node) {
 	return getGraphItem(node).getResource();
+    }
+
+    public ResourceManager getResourceManager() {
+	return resourceManager;
     }
 
     @Override

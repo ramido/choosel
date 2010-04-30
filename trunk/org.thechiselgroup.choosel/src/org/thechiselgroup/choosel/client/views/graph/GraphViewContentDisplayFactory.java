@@ -67,6 +67,9 @@ public class GraphViewContentDisplayFactory implements
     private ResourceManager resourceManager;
 
     @Inject
+    private ArcStyleProvider arcStyleProvider;
+
+    @Inject
     public GraphViewContentDisplayFactory() {
     }
 
@@ -77,6 +80,6 @@ public class GraphViewContentDisplayFactory implements
 		mappingService, conceptNeighbourhoodService,
 		popupManagerFactory, detailsWidgetHelper, commandManager,
 		resourceManager, errorHandler, dragEnablerFactory,
-		resourceCategorizer);
+		resourceCategorizer, arcStyleProvider);
     }
 }

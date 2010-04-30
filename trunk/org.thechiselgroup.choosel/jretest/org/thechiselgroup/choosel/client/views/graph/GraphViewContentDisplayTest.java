@@ -66,12 +66,14 @@ public class GraphViewContentDisplayTest {
 		CommandManager commandManager, ResourceManager resourceManager,
 		ErrorHandler errorHandler,
 		DragEnablerFactory dragEnablerFactory,
-		ResourceCategorizer resourceCategorizer) {
+		ResourceCategorizer resourceCategorizer,
+		ArcStyleProvider arcStyleProvider) {
 
 	    super(display, hoverModel, mappingService,
 		    conceptNeighbourhoodService, popupManagerFactory,
 		    detailsWidgetHelper, commandManager, resourceManager,
-		    errorHandler, dragEnablerFactory, resourceCategorizer);
+		    errorHandler, dragEnablerFactory, resourceCategorizer,
+		    arcStyleProvider);
 	}
 
 	@Override
@@ -141,6 +143,9 @@ public class GraphViewContentDisplayTest {
 
     @Mock
     private ResourceCategorizer resourceCategorizer;
+
+    @Mock
+    private ArcStyleProvider arcStyleProvider;
 
     @Test
     public void addNeighbourhoodArcWhenAddingConceptReferedFromCurrentConcepts() {
@@ -250,7 +255,7 @@ public class GraphViewContentDisplayTest {
 		hoverModel, mappingService, conceptNeighbourhoodService,
 		popupManagerFactory, detailsWidgetHelper, commandManager,
 		resourceManager, errorHandler, dragEnablerFactory,
-		resourceCategorizer));
+		resourceCategorizer, arcStyleProvider));
 
 	contentDisplay.init(callback);
 
