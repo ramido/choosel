@@ -21,12 +21,14 @@ import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 
 public interface GraphNodeExpansionCallback {
 
-    void createMappingArc(String sourceId, String targetId);
-
     GraphDisplay getDisplay();
 
     ResourceManager getResourceManager();
 
     ViewContentDisplayCallback getViewContentDisplayCallback();
+
+    void createArc(String arcType, String sourceId, String targetId);
+
+    String getArcId(String arcType, String sourceId, String targetId);
 
 }

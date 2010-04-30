@@ -26,6 +26,8 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.thechiselgroup.choosel.client.domain.ncbo.NCBO;
 import org.thechiselgroup.choosel.client.domain.ncbo.NcboUriHelper;
 import org.thechiselgroup.choosel.client.error_handling.ErrorHandler;
@@ -35,12 +37,9 @@ import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceManager;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.ui.widget.graph.Arc;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
-import org.thechiselgroup.choosel.client.views.graph.ConceptNeighbourhoodCallback;
-import org.thechiselgroup.choosel.client.views.graph.NeighbourhoodServiceResult;
 
 public class ConceptNeighbourhoodCallbackTest {
 
@@ -64,9 +63,18 @@ public class ConceptNeighbourhoodCallbackTest {
     private Resource concept2;
 
     @Mock
+    private Resource concept2FromResult;
+
+    @Mock
     private Node concept2Node;
 
     private String concept2Uri;
+
+    @Mock
+    private ErrorHandler errorHandler;
+
+    @Mock
+    private GraphNodeExpansionCallback expansionCallback;
 
     @Mock
     private GraphDisplay graphDisplay;
@@ -75,9 +83,6 @@ public class ConceptNeighbourhoodCallbackTest {
 
     @Mock
     private Resource inputConceptFromResult;
-
-    @Mock
-    private Resource concept2FromResult;
 
     private String inputConceptUri;
 
@@ -89,9 +94,6 @@ public class ConceptNeighbourhoodCallbackTest {
     private ResourceManager resourceManager;
 
     private NeighbourhoodServiceResult result;
-
-    @Mock
-    private ErrorHandler errorHandler;
 
     @Test
     public void addNodesToDataProvider() {
@@ -105,25 +107,40 @@ public class ConceptNeighbourhoodCallbackTest {
     public void arcsAdded() {
 	neighbourhoodCallback.onSuccess(result);
 
-	ArgumentCaptor<Arc> argument = ArgumentCaptor.forClass(Arc.class);
-	verify(graphDisplay, times(1)).addArc(argument.capture());
-	assertEquals(inputConceptUri, argument.getValue().getSourceNodeId());
-	assertEquals(concept2Uri, argument.getValue().getTargetNodeId());
+	ArgumentCaptor<String> sourceArgument = ArgumentCaptor
+		.forClass(String.class);
+	ArgumentCaptor<String> destArgument = ArgumentCaptor
+		.forClass(String.class);
+
+	verify(expansionCallback, times(1)).createArc(
+		eq(NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS),
+		sourceArgument.capture(), destArgument.capture());
+
+	assertEquals(inputConceptUri, sourceArgument.getAllValues().get(0));
+	assertEquals(concept2Uri, destArgument.getAllValues().get(0));
     }
 
     @Test
     public void arcsAddedJustOnce() {
 	when(
-		graphDisplay.containsArc(neighbourhoodCallback.calculateArcId(
+		graphDisplay.containsArc(expansionCallback.getArcId(
+			NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS,
 			inputConceptUri, concept2Uri))).thenReturn(false, true);
 
 	neighbourhoodCallback.onSuccess(result);
 	neighbourhoodCallback.onSuccess(result); // call again
 
-	ArgumentCaptor<Arc> argument = ArgumentCaptor.forClass(Arc.class);
-	verify(graphDisplay, times(1)).addArc(argument.capture());
-	assertEquals(inputConceptUri, argument.getValue().getSourceNodeId());
-	assertEquals(concept2Uri, argument.getValue().getTargetNodeId());
+	ArgumentCaptor<String> sourceArgument = ArgumentCaptor
+		.forClass(String.class);
+	ArgumentCaptor<String> destArgument = ArgumentCaptor
+		.forClass(String.class);
+
+	verify(expansionCallback, times(1)).createArc(
+		eq(NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS),
+		sourceArgument.capture(), destArgument.capture());
+
+	assertEquals(inputConceptUri, sourceArgument.getAllValues().get(0));
+	assertEquals(concept2Uri, destArgument.getAllValues().get(0));
     }
 
     @Test
@@ -210,8 +227,21 @@ public class ConceptNeighbourhoodCallbackTest {
 
 	when(callback.getAutomaticResourceSet()).thenReturn(automaticResources);
 
-	neighbourhoodCallback = new ConceptNeighbourhoodCallback(graphDisplay,
-		callback, resourceManager, errorHandler);
-    }
+	when(
+		expansionCallback.getArcId(any(String.class),
+			any(String.class), any(String.class))).thenAnswer(
+		new Answer<String>() {
+		    @Override
+		    public String answer(InvocationOnMock invocation)
+			    throws Throwable {
 
+			return invocation.getArguments()[0] + ":"
+				+ invocation.getArguments()[1] + "_"
+				+ invocation.getArguments()[2];
+		    }
+		});
+
+	neighbourhoodCallback = new ConceptNeighbourhoodCallback(graphDisplay,
+		callback, resourceManager, errorHandler, expansionCallback);
+    }
 }

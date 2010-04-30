@@ -36,10 +36,13 @@ public class ConceptConceptNeighbourhoodExpander implements GraphNodeExpander {
     public void expand(Resource resource,
 	    GraphNodeExpansionCallback expansionCallback) {
 
+	// TODO reuse methods exposed by expansionCallback within
+	// ConceptNeighbourhoodCallback
 	neighbourhoodService.getNeighbourhood(resource,
 		new ConceptNeighbourhoodCallback(
 			expansionCallback.getDisplay(), expansionCallback
 				.getViewContentDisplayCallback(),
-			expansionCallback.getResourceManager(), errorHandler));
+			expansionCallback.getResourceManager(), errorHandler,
+			expansionCallback));
     }
 }

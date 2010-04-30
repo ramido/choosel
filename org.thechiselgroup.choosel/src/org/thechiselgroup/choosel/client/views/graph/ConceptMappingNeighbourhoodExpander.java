@@ -39,6 +39,7 @@ public class ConceptMappingNeighbourhoodExpander implements GraphNodeExpander {
 	neighbourhoodService.getNeighbourhood(resource,
 		new MappingNeighbourhoodCallback2(expansionCallback
 			.getDisplay(), expansionCallback
-			.getViewContentDisplayCallback(), errorHandler));
+			.getViewContentDisplayCallback(), errorHandler,
+			expansionCallback));
     }
 }
