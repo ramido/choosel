@@ -158,13 +158,29 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 
     }
 
+    public static interface GraphNodeExpander {
+
+	void expand(Resource resource,
+		GraphNodeExpansionCallback expansionCallback);
+
+    }
+
+    public static interface GraphNodeExpansionCallback {
+
+	void createMappingArc(String sourceId, String targetId);
+
+	ResourceManager getResourceManager();
+
+	ViewContentDisplayCallback getViewContentDisplayCallback();
+    }
+
     private static final String MEMENTO_X = "x";
+
+    // advanced node class: (incoming, outgoing, expanded: state machine)
 
     private static final String MEMENTO_Y = "y";
 
     private final CommandManager commandManager;
-
-    // advanced node class: (incoming, outgoing, expanded: state machine)
 
     private final NeighbourhoodServiceAsync conceptNeighbourhoodService;
 
@@ -174,11 +190,31 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 
     private ErrorHandler errorHandler;
 
+    private GraphNodeExpansionCallback expansionCallback = new GraphNodeExpansionCallback() {
+
+	@Override
+	public void createMappingArc(String sourceId, String targetId) {
+	    GraphViewContentDisplay.this.createMappingArc(sourceId, targetId);
+	}
+
+	@Override
+	public ResourceManager getResourceManager() {
+	    return GraphViewContentDisplay.this.resourceManager;
+	}
+
+	@Override
+	public ViewContentDisplayCallback getViewContentDisplayCallback() {
+	    return GraphViewContentDisplay.this.getCallback();
+	}
+    };
+
     private final NeighbourhoodServiceAsync mappingNeighbourhoodService;
 
     private final Map<String, GraphItem> nodeIdToGraphItemMap = new HashMap<String, GraphItem>();
 
     private boolean ready = false;
+
+    private ResourceCategorizer resourceCategorizer;
 
     private ResourceManager resourceManager;
 
@@ -291,8 +327,6 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 	display.setArcStyle(arc, GraphDisplay.ARC_COLOR, "#AFC6E5");
     }
 
-    private ResourceCategorizer resourceCategorizer;
-
     private GraphItem createGraphItem(Layer layer, Resource resource) {
 	String label = layer.getValue(SlotResolver.GRAPH_LABEL_SLOT, resource);
 	String category = getCategory(resource);
@@ -324,27 +358,6 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 	}
 
 	return item;
-    }
-
-    private void setGraphItemColors(Resource resource, GraphItem item) {
-	// TODO use dependency injection
-	String category = getCategory(resource);
-
-	if (category.equals(NcboUriHelper.NCBO_CONCEPT)) {
-	    String backgroundColor = "#DAE5F3";
-	    String borderColor = "#AFC6E5";
-	    item.setDefaultColors(backgroundColor, borderColor);
-	}
-
-	if (category.equals(NcboUriHelper.NCBO_MAPPING)) {
-	    String backgroundColor = "#E4E4E4";
-	    String borderColor = "#D4D4D4";
-	    item.setDefaultColors(backgroundColor, borderColor);
-	}
-    }
-
-    private String getCategory(Resource resource) {
-	return resourceCategorizer.getCategory(resource);
     }
 
     // TODO eliminate duplicate (callback)
@@ -379,12 +392,6 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 	return item;
     }
 
-    @Override
-    public String[] getSlotIDs() {
-	return new String[] { SlotResolver.DESCRIPTION_SLOT,
-		SlotResolver.GRAPH_LABEL_SLOT };
-    }
-
     // TODO encapsulate in display, use dependency injection
     @Override
     protected Widget createWidget() {
@@ -397,22 +404,6 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 	conceptNeighbourhoodService.getNeighbourhood(resource,
 		new ConceptNeighbourhoodCallback(display, getCallback(),
 			resourceManager, errorHandler));
-    }
-
-    public static interface GraphNodeExpansionCallback {
-
-	ResourceManager getResourceManager();
-
-	ViewContentDisplayCallback getViewContentDisplayCallback();
-
-	void createMappingArc(String sourceId, String targetId);
-    }
-
-    public static interface GraphNodeExpander {
-
-	void expand(Resource resource,
-		GraphNodeExpansionCallback expansionCallback);
-
     }
 
     protected void expandMappingNeighbourhood(Resource resource) {
@@ -432,6 +423,10 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 	return sourceId + "_" + targetId;
     }
 
+    private String getCategory(Resource resource) {
+	return resourceCategorizer.getCategory(resource);
+    }
+
     private GraphItem getGraphItem(Node node) {
 	return nodeIdToGraphItemMap.get(node.getId());
     }
@@ -445,15 +440,21 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     @Override
+    public String[] getSlotIDs() {
+	return new String[] { SlotResolver.DESCRIPTION_SLOT,
+		SlotResolver.GRAPH_LABEL_SLOT };
+    }
+
+    @Override
     public void init(ViewContentDisplayCallback callback) {
 	super.init(callback);
-
-	final GraphEventHandler handler = new GraphEventHandler();
 
 	display.addGraphWidgetReadyHandler(new GraphWidgetReadyHandler() {
 	    @Override
 	    public void onWidgetReady(GraphWidgetReadyEvent event) {
 		ready = true;
+
+		GraphEventHandler handler = new GraphEventHandler();
 
 		display.addEventHandler(NodeDragHandleMouseDownEvent.TYPE,
 			handler);
@@ -478,133 +479,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 			    }
 			}, NcboUriHelper.NCBO_CONCEPT);
 
-		final GraphNodeExpander expander1 = new GraphNodeExpander() {
-
-		    @Override
-		    public void expand(Resource mapping,
-			    GraphNodeExpansionCallback expansionCallback) {
-
-			ViewContentDisplayCallback displayCallback = expansionCallback
-				.getViewContentDisplayCallback();
-			ResourceManager resourceManager2 = expansionCallback
-				.getResourceManager();
-
-			ResourceSet automaticSet = displayCallback
-				.getAutomaticResourceSet();
-
-			String sourceUri = (String) mapping
-				.getValue(NCBO.MAPPING_SOURCE);
-			if (!displayCallback.containsResourceWithUri(sourceUri)) {
-			    if (!resourceManager2.contains(sourceUri)) {
-				Resource concept = new Resource(sourceUri);
-
-				concept
-					.putValue(
-						NCBO.CONCEPT_SHORT_ID,
-						(String) mapping
-							.getValue(NCBO.MAPPING_SOURCE_CONCEPT_ID));
-				concept
-					.putValue(
-						NCBO.CONCEPT_NAME,
-						(String) mapping
-							.getValue(NCBO.MAPPING_SOURCE_CONCEPT_NAME));
-				concept
-					.putValue(
-						NCBO.CONCEPT_ONTOLOGY_ID,
-						(String) mapping
-							.getValue(NCBO.MAPPING_SOURCE_ONTOLOGY_ID));
-				concept
-					.putValue(
-						NCBO.CONCEPT_ONTOLOGY_NAME,
-						(String) mapping
-							.getValue(NCBO.MAPPING_SOURCE_ONTOLOGY_NAME));
-
-				resourceManager2.add(concept);
-			    }
-
-			    Resource concept = resourceManager2
-				    .getByUri(sourceUri);
-
-			    automaticSet.add(concept);
-
-			    expansionCallback.createMappingArc(sourceUri,
-				    mapping.getUri());
-			}
-
-			String destinationUri = (String) mapping
-				.getValue(NCBO.MAPPING_DESTINATION);
-
-			if (!displayCallback
-				.containsResourceWithUri(destinationUri)) {
-			    if (!resourceManager2.contains(destinationUri)) {
-				Resource concept = new Resource(destinationUri);
-
-				concept
-					.putValue(
-						NCBO.CONCEPT_SHORT_ID,
-						(String) mapping
-							.getValue(NCBO.MAPPING_DESTINATION_CONCEPT_ID));
-				concept
-					.putValue(
-						NCBO.CONCEPT_NAME,
-						(String) mapping
-							.getValue(NCBO.MAPPING_DESTINATION_CONCEPT_NAME));
-				concept
-					.putValue(
-						NCBO.CONCEPT_ONTOLOGY_ID,
-						(String) mapping
-							.getValue(NCBO.MAPPING_DESTINATION_ONTOLOGY_ID));
-				concept
-					.putValue(
-						NCBO.CONCEPT_ONTOLOGY_NAME,
-						(String) mapping
-							.getValue(NCBO.MAPPING_DESTINATION_ONTOLOGY_NAME));
-
-				resourceManager2.add(concept);
-			    }
-
-			    Resource concept = resourceManager2
-				    .getByUri(destinationUri);
-
-			    automaticSet.add(concept);
-
-			    expansionCallback.createMappingArc(
-				    mapping.getUri(), destinationUri);
-			}
-		    }
-		};
-
-		display.addNodeMenuItemHandler("Concepts",
-			new NodeMenuItemClickedHandler() {
-			    @Override
-			    public void onNodeMenuItemClicked(Node node) {
-				expander1.expand(getResource(node),
-					new GraphNodeExpansionCallback() {
-
-					    @Override
-					    public ViewContentDisplayCallback getViewContentDisplayCallback() {
-						return GraphViewContentDisplay.this
-							.getCallback();
-					    }
-
-					    @Override
-					    public ResourceManager getResourceManager() {
-						return GraphViewContentDisplay.this.resourceManager;
-					    }
-
-					    @Override
-					    public void createMappingArc(
-						    String sourceId,
-						    String targetId) {
-						GraphViewContentDisplay.this
-							.createMappingArc(
-								sourceId,
-								targetId);
-					    }
-					});
-			    }
-			}, NcboUriHelper.NCBO_MAPPING);
-
+		registerNodeMenuItem(new MappingExpander(), "Concepts",
+			NcboUriHelper.NCBO_MAPPING);
 	    }
 	});
     }
@@ -640,6 +516,19 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 	int width = displayWidget.getOffsetWidth();
 
 	display.setLocation(node, new Point(width / 2, height / 2));
+    }
+
+    private void registerNodeMenuItem(final GraphNodeExpander nodeExpander,
+	    String menuLabel, String category) {
+
+	display.addNodeMenuItemHandler(menuLabel,
+		new NodeMenuItemClickedHandler() {
+		    @Override
+		    public void onNodeMenuItemClicked(Node node) {
+			nodeExpander.expand(getResource(node),
+				expansionCallback);
+		    }
+		}, category);
     }
 
     @Override
@@ -680,5 +569,22 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 	    state.addChild(resource.getUri(), nodeMemento);
 	}
 	return state;
+    }
+
+    private void setGraphItemColors(Resource resource, GraphItem item) {
+	// TODO use dependency injection
+	String category = getCategory(resource);
+
+	if (category.equals(NcboUriHelper.NCBO_CONCEPT)) {
+	    String backgroundColor = "#DAE5F3";
+	    String borderColor = "#AFC6E5";
+	    item.setDefaultColors(backgroundColor, borderColor);
+	}
+
+	if (category.equals(NcboUriHelper.NCBO_MAPPING)) {
+	    String backgroundColor = "#E4E4E4";
+	    String borderColor = "#D4D4D4";
+	    item.setDefaultColors(backgroundColor, borderColor);
+	}
     }
 }
