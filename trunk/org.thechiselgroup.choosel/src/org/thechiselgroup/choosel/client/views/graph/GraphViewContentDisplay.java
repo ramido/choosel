@@ -74,6 +74,9 @@ import com.google.inject.name.Named;
 // TODO register listener for double click on node --> change expansion state
 public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 
+    // TODO move to ncbo stuff
+    public static final String ARC_TYPE_MAPPING = "mapping";
+
     public static class DefaultDisplay extends GraphWidget implements Display {
 
 	// TODO why is size needed in the first place??
@@ -177,8 +180,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
     private GraphNodeExpansionCallback expansionCallback = new GraphNodeExpansionCallback() {
 
 	@Override
-	public void createMappingArc(String sourceId, String targetId) {
-	    GraphViewContentDisplay.this.createMappingArc(sourceId, targetId);
+	public void createArc(String arcType, String sourceId, String targetId) {
+	    GraphViewContentDisplay.this.createArc(arcType, sourceId, targetId);
 	}
 
 	@Override
@@ -194,6 +197,12 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 	@Override
 	public ViewContentDisplayCallback getViewContentDisplayCallback() {
 	    return GraphViewContentDisplay.this.getCallback();
+	}
+
+	@Override
+	public String getArcId(String arcType, String sourceId, String targetId) {
+	    return GraphViewContentDisplay.this.getArcId(arcType, sourceId,
+		    targetId);
 	}
     };
 
@@ -211,7 +220,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
     public GraphViewContentDisplay(
 	    Display display,
 	    @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
-	    @Named("mapping") NeighbourhoodServiceAsync mappingService,
+	    @Named(ARC_TYPE_MAPPING) NeighbourhoodServiceAsync mappingService,
 	    @Named("concept") NeighbourhoodServiceAsync conceptNeighbourhoodService,
 	    PopupManagerFactory popupManagerFactory,
 	    DetailsWidgetHelper detailsWidgetHelper,
@@ -240,13 +249,14 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 	this.dragEnablerFactory = dragEnablerFactory;
     }
 
-    private void addArcsToRelatedConcepts(final Resource concept) {
+    private void addArcsToRelatedConcepts(Resource concept) {
 	// search neighbourhood uri list for neighbours
 	UriList neighbours = concept
 		.getUriListValue(NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS);
 	for (String uri : neighbours) {
 	    if (getCallback().containsResourceWithUri(uri)) {
-		createConceptArc(concept.getUri(), uri);
+		createArc(NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS,
+			concept.getUri(), uri);
 	    }
 	}
 
@@ -257,7 +267,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 		UriList neighbours2 = resource
 			.getUriListValue(NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS);
 		if (neighbours2.contains(concept.getUri())) {
-		    createConceptArc(resource.getUri(), concept.getUri());
+		    createArc(NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS,
+			    resource.getUri(), concept.getUri());
 		}
 	    }
 	}
@@ -270,50 +281,60 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 			.getValue(NCBO.MAPPING_SOURCE);
 
 		if (concept.getUri().equals(sourceURI)) {
-		    createMappingArc(sourceURI, resource2.getUri());
+		    createArc(ARC_TYPE_MAPPING, sourceURI, resource2.getUri());
 		}
 
 		String destinationURI = (String) resource2
 			.getValue(NCBO.MAPPING_DESTINATION);
 
 		if (concept.getUri().equals(destinationURI)) {
-		    createMappingArc(resource2.getUri(), destinationURI);
+		    createArc(ARC_TYPE_MAPPING, resource2.getUri(),
+			    destinationURI);
 		}
 	    }
 	}
     }
 
     private void addMappingToConceptArcs(Resource mapping) {
+	ViewContentDisplayCallback callback = getCallback();
+
 	String sourceURI = (String) mapping.getValue(NCBO.MAPPING_SOURCE);
 
-	if (getCallback().containsResourceWithUri(sourceURI)) {
-	    createMappingArc(sourceURI, mapping.getUri());
+	if (callback.containsResourceWithUri(sourceURI)) {
+	    createArc(ARC_TYPE_MAPPING, sourceURI, mapping.getUri());
 	}
 
 	String destinationURI = (String) mapping
 		.getValue(NCBO.MAPPING_DESTINATION);
 
-	if (getCallback().containsResourceWithUri(destinationURI)) {
-	    createMappingArc(mapping.getUri(), destinationURI);
+	if (callback.containsResourceWithUri(destinationURI)) {
+	    createArc(ARC_TYPE_MAPPING, mapping.getUri(), destinationURI);
 	}
-    }
-
-    // FIXME remove duplication (callback)
-    protected String calculateArcId(String sourceUri, String targetUri) {
-	return NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS + ":"
-		+ sourceUri + "_" + targetUri;
     }
 
     @Override
     public void checkResize() {
     }
 
-    // FIXME remove duplication (callback)
-    private void createConceptArc(String sourceUri, String targetUri) {
-	Arc arc = new Arc(calculateArcId(sourceUri, targetUri), sourceUri,
-		targetUri, NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS);
+    protected String getArcId(String arcType, String sourceId, String targetId) {
+	// FIXME this needs escaping of special characters to work properly
+	return arcType + ":" + sourceId + "_" + targetId;
+    }
+
+    private void createArc(String arcType, String sourceId, String targetId) {
+	Arc arc = new Arc(getArcId(arcType, sourceId, targetId), sourceId,
+		targetId, arcType);
+
 	display.addArc(arc);
-	display.setArcStyle(arc, GraphDisplay.ARC_COLOR, "#AFC6E5");
+
+	// TODO lookup values from special provider
+	if (NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS.equals(arcType)) {
+	    display.setArcStyle(arc, GraphDisplay.ARC_COLOR, "#AFC6E5");
+	} else if (ARC_TYPE_MAPPING.equals(arcType)) {
+	    display.setArcStyle(arc, GraphDisplay.ARC_COLOR, "#D4D4D4");
+	    display.setArcStyle(arc, GraphDisplay.ARC_STYLE,
+		    GraphDisplay.ARC_STYLE_DASHED);
+	}
     }
 
     private GraphItem createGraphItem(Layer layer, Resource resource) {
@@ -349,22 +370,12 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 	return item;
     }
 
-    // TODO eliminate duplicate (callback)
-    private void createMappingArc(String sourceId, String targetId) {
-	Arc arc = new Arc(getArcId(sourceId, targetId), sourceId, targetId,
-		"mapping");
-
-	display.addArc(arc);
-	display.setArcStyle(arc, GraphDisplay.ARC_COLOR, "#D4D4D4");
-	display.setArcStyle(arc, GraphDisplay.ARC_STYLE,
-		GraphDisplay.ARC_STYLE_DASHED);
-    }
-
     @Override
     public GraphItem createResourceItem(Layer layer, Resource resource) {
 	GraphItem item = createGraphItem(layer, resource);
+	String category = getCategory(resource);
 
-	if (NcboUriHelper.NCBO_CONCEPT.equals(getCategory(resource))) {
+	if (NcboUriHelper.NCBO_CONCEPT.equals(category)) {
 	    if (!isRestoring()) {
 		// only look automatically for mappings if not restoring
 		expandMappingNeighbourhood(resource);
@@ -374,7 +385,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 	    addMappingArcsToConcept(resource);
 	}
 
-	if (NcboUriHelper.NCBO_MAPPING.equals(getCategory(resource))) {
+	if (NcboUriHelper.NCBO_MAPPING.equals(category)) {
 	    addMappingToConceptArcs(resource);
 	}
 
@@ -390,12 +401,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
     protected void expandMappingNeighbourhood(Resource resource) {
 	mappingNeighbourhoodService.getNeighbourhood(resource,
 		new MappingNeighbourhoodCallback(display, getCallback(),
-			errorHandler));
-    }
-
-    // TODO eliminate duplicate (callback)
-    protected String getArcId(String sourceId, String targetId) {
-	return sourceId + "_" + targetId;
+			errorHandler, expansionCallback));
     }
 
     private String getCategory(Resource resource) {

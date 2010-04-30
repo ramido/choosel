@@ -24,7 +24,6 @@ import org.thechiselgroup.choosel.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.client.geometry.Point;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceManager;
-import org.thechiselgroup.choosel.client.ui.widget.graph.Arc;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
@@ -38,24 +37,12 @@ public class ConceptNeighbourhoodCallback extends AbstractNeighbourhoodCallback 
 
     public ConceptNeighbourhoodCallback(GraphDisplay graph,
 	    ViewContentDisplayCallback contentDisplayCallback,
-	    ResourceManager resourceManager, ErrorHandler errorHandler) {
-	super(graph, contentDisplayCallback, errorHandler);
+	    ResourceManager resourceManager, ErrorHandler errorHandler,
+	    GraphNodeExpansionCallback expansionCallback) {
+
+	super(graph, contentDisplayCallback, errorHandler, expansionCallback);
+
 	this.resourceManager = resourceManager;
-    }
-
-    // TODO better arc id generation (problem: uniqueness)
-    // TODO arc id by enumeration
-    // for test
-    protected String calculateArcId(String sourceUri, String targetUri) {
-	return NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS + ":"
-		+ sourceUri + "_" + targetUri;
-    }
-
-    private void createArc(String sourceUri, String targetUri) {
-	Arc arc = new Arc(calculateArcId(sourceUri, targetUri), sourceUri,
-		targetUri, NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS);
-	graph.addArc(arc);
-	graph.setArcStyle(arc, GraphDisplay.ARC_COLOR, "#AFC6E5");
     }
 
     private void createArcs(List<Relationship> relationships) {
@@ -63,11 +50,15 @@ public class ConceptNeighbourhoodCallback extends AbstractNeighbourhoodCallback 
 	    String targetUri = relationship.getTarget().getUri();
 	    String sourceUri = relationship.getSource().getUri();
 
-	    if (graph.containsArc(calculateArcId(sourceUri, targetUri))) {
+	    if (graph.containsArc(expansionCallback.getArcId(
+		    NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS, sourceUri,
+		    targetUri))) {
 		continue;
 	    }
 
-	    createArc(sourceUri, targetUri);
+	    expansionCallback.createArc(
+		    NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS, sourceUri,
+		    targetUri);
 	}
     }
 

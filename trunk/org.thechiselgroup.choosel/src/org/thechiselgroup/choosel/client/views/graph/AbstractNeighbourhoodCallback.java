@@ -33,15 +33,20 @@ public abstract class AbstractNeighbourhoodCallback extends
 
     protected final GraphDisplay graph;
 
+    protected final GraphNodeExpansionCallback expansionCallback;
+
     public AbstractNeighbourhoodCallback(GraphDisplay graph,
 	    ViewContentDisplayCallback contentDisplayCallback,
-	    ErrorHandler errorHandler) {
+	    ErrorHandler errorHandler,
+	    GraphNodeExpansionCallback expansionCallback) {
 
 	super(errorHandler);
 
+	assert expansionCallback != null;
 	assert graph != null;
 	assert contentDisplayCallback != null;
 
+	this.expansionCallback = expansionCallback;
 	this.contentDisplayCallback = contentDisplayCallback;
 	this.graph = graph;
     }

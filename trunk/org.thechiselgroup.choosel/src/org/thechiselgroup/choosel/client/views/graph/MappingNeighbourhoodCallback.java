@@ -24,7 +24,6 @@ import org.thechiselgroup.choosel.client.domain.ncbo.NcboUriHelper;
 import org.thechiselgroup.choosel.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.client.geometry.Point;
 import org.thechiselgroup.choosel.client.resources.Resource;
-import org.thechiselgroup.choosel.client.ui.widget.graph.Arc;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
@@ -36,32 +35,21 @@ public class MappingNeighbourhoodCallback extends AbstractNeighbourhoodCallback 
 
     public MappingNeighbourhoodCallback(GraphDisplay graph,
 	    ViewContentDisplayCallback contentDisplayCallback,
-	    ErrorHandler errorHandler) {
+	    ErrorHandler errorHandler,
+	    GraphNodeExpansionCallback expansionCallback) {
 
-	super(graph, contentDisplayCallback, errorHandler);
+	super(graph, contentDisplayCallback, errorHandler, expansionCallback);
     }
 
     private void addRelationshipArcs(List<Relationship> displayableRelationships) {
 	for (Relationship relationship : displayableRelationships) {
-	    // FIXME concept short ids vs concept ids
-	    // FIXME check for duplicates
-	    // FIXME have real arc id
 	    String sourceId = relationship.getSource().getUri();
 	    String targetId = relationship.getTarget().getUri();
 
-	    Arc arc = new Arc(getArcId(sourceId, targetId), sourceId, targetId,
-		    "mapping");
-
-	    graph.addArc(arc);
-	    graph.setArcStyle(arc, GraphDisplay.ARC_COLOR, "#D4D4D4");
-	    graph.setArcStyle(arc, GraphDisplay.ARC_STYLE,
-		    GraphDisplay.ARC_STYLE_DASHED);
+	    expansionCallback.createArc(
+		    GraphViewContentDisplay.ARC_TYPE_MAPPING, sourceId,
+		    targetId);
 	}
-    }
-
-    // for test
-    protected String getArcId(String sourceId, String targetId) {
-	return sourceId + "_" + targetId;
     }
 
     // filter mappings: check if source & target node are contained
@@ -97,8 +85,11 @@ public class MappingNeighbourhoodCallback extends AbstractNeighbourhoodCallback 
 	    String destinationUri = mapping.getTarget().getUri();
 	    String sourceUri = mapping.getSource().getUri();
 
-	    if (containsUri(sourceUri) && containsUri(destinationUri)
-		    && !graph.containsArc(getArcId(sourceUri, destinationUri))) {
+	    if (containsUri(sourceUri)
+		    && containsUri(destinationUri)
+		    && !graph.containsArc(expansionCallback.getArcId(
+			    GraphViewContentDisplay.ARC_TYPE_MAPPING,
+			    sourceUri, destinationUri))) {
 		result.add(mapping);
 	    }
 	}

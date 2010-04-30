@@ -32,13 +32,8 @@ import org.thechiselgroup.choosel.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.ui.widget.graph.Arc;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
-import org.thechiselgroup.choosel.client.views.graph.GraphItem;
-import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay;
-import org.thechiselgroup.choosel.client.views.graph.MappingNeighbourhoodCallback;
-import org.thechiselgroup.choosel.client.views.graph.NeighbourhoodServiceResult;
 import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay.Display;
 
 public class MappingNeighbourhoodCallbackTest {
@@ -95,39 +90,49 @@ public class MappingNeighbourhoodCallbackTest {
     @Mock
     private ErrorHandler errorHandler;
 
+    @Mock
+    private GraphNodeExpansionCallback expansionCallback;
+
     @Test
     public void addMappingArcs() {
 	underTest.onSuccess(result);
 
-	ArgumentCaptor<Arc> argument = ArgumentCaptor.forClass(Arc.class);
-	verify(graphDisplay, times(2)).addArc(argument.capture());
+	ArgumentCaptor<String> sourceArgument = ArgumentCaptor
+		.forClass(String.class);
+	ArgumentCaptor<String> destArgument = ArgumentCaptor
+		.forClass(String.class);
 
-	assertEquals(inputConceptUri, argument.getAllValues().get(0)
-		.getSourceNodeId());
-	assertEquals(mappingUri, argument.getAllValues().get(0)
-		.getTargetNodeId());
+	verify(expansionCallback, times(2)).createArc(
+		eq(GraphViewContentDisplay.ARC_TYPE_MAPPING),
+		sourceArgument.capture(), destArgument.capture());
 
-	assertEquals(mappingUri, argument.getAllValues().get(1)
-		.getSourceNodeId());
-	assertEquals(concept2Uri, argument.getAllValues().get(1)
-		.getTargetNodeId());
+	assertEquals(inputConceptUri, sourceArgument.getAllValues().get(0));
+	assertEquals(mappingUri, destArgument.getAllValues().get(0));
+
+	assertEquals(mappingUri, sourceArgument.getAllValues().get(1));
+	assertEquals(concept2Uri, destArgument.getAllValues().get(1));
     }
 
     @Test
     public void doNotAddDuplicateArcs() {
 	when(
-		graphDisplay.containsArc(underTest.getArcId(mappingUri,
+		graphDisplay.containsArc(expansionCallback.getArcId(
+			GraphViewContentDisplay.ARC_TYPE_MAPPING, mappingUri,
 			concept2Uri))).thenReturn(true);
 
 	underTest.onSuccess(result);
 
-	ArgumentCaptor<Arc> argument = ArgumentCaptor.forClass(Arc.class);
-	verify(graphDisplay, times(1)).addArc(argument.capture());
+	ArgumentCaptor<String> sourceArgument = ArgumentCaptor
+		.forClass(String.class);
+	ArgumentCaptor<String> destArgument = ArgumentCaptor
+		.forClass(String.class);
 
-	assertEquals(inputConceptUri, argument.getAllValues().get(0)
-		.getSourceNodeId());
-	assertEquals(mappingUri, argument.getAllValues().get(0)
-		.getTargetNodeId());
+	verify(expansionCallback, times(1)).createArc(
+		eq(GraphViewContentDisplay.ARC_TYPE_MAPPING),
+		sourceArgument.capture(), destArgument.capture());
+
+	assertEquals(inputConceptUri, sourceArgument.getAllValues().get(0));
+	assertEquals(mappingUri, destArgument.getAllValues().get(0));
     }
 
     @Before
@@ -185,7 +190,21 @@ public class MappingNeighbourhoodCallbackTest {
 		    }
 		});
 
+	when(
+		expansionCallback.getArcId(any(String.class),
+			any(String.class), any(String.class))).thenAnswer(
+		new Answer<String>() {
+		    @Override
+		    public String answer(InvocationOnMock invocation)
+			    throws Throwable {
+
+			return invocation.getArguments()[0] + ":"
+				+ invocation.getArguments()[1] + "_"
+				+ invocation.getArguments()[2];
+		    }
+		});
+
 	underTest = new MappingNeighbourhoodCallback(graphDisplay, callback,
-		errorHandler);
+		errorHandler, expansionCallback);
     }
 }
