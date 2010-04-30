@@ -31,6 +31,7 @@ import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resolver.PropertyValueResolver;
 import org.thechiselgroup.choosel.client.resolver.SimplePropertyValueResolver;
 import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.client.resources.ResourceByUriTypeCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceManager;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.UriList;
@@ -65,7 +66,6 @@ import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.Layer;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
-import org.thechiselgroup.choosel.client.views.Slot;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 
@@ -330,23 +330,42 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 
 	display.setNodeStyle(node, "showDragImage", "true");
 
-	if (isConcept(resource)) {
-	    item.setDefaultColors("#DAE5F3", "#AFC6E5");
+	setGraphItemColors(resource, item);
 
+	// TODO use dependency injection
+	String category = new ResourceByUriTypeCategorizer()
+		.getCategory(resource);
+
+	if (category.equals(NcboUriHelper.NCBO_CONCEPT)) {
 	    // TODO this should be false if set of available neighbourhoods
 	    // equals 0
 	    display.setNodeStyle(node, "showArrow", "true");
 	}
-
-	if (isMapping(resource)) {
-	    item.setDefaultColors("#E4E4E4", "#D4D4D4");
-
+	if (category.equals(NcboUriHelper.NCBO_MAPPING)) {
 	    // TODO this should be false if set of available neighbourhoods
 	    // equals 0
 	    display.setNodeStyle(node, "showArrow", "false");
 	}
 
 	return item;
+    }
+
+    private void setGraphItemColors(Resource resource, GraphItem item) {
+	// TODO use dependency injection
+	String category = new ResourceByUriTypeCategorizer()
+		.getCategory(resource);
+
+	if (category.equals(NcboUriHelper.NCBO_CONCEPT)) {
+	    String backgroundColor = "#DAE5F3";
+	    String borderColor = "#AFC6E5";
+	    item.setDefaultColors(backgroundColor, borderColor);
+	}
+
+	if (category.equals(NcboUriHelper.NCBO_MAPPING)) {
+	    String backgroundColor = "#E4E4E4";
+	    String borderColor = "#D4D4D4";
+	    item.setDefaultColors(backgroundColor, borderColor);
+	}
     }
 
     // TODO eliminate duplicate (callback)
@@ -397,8 +416,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     @Override
-    public Slot[] createSlots() {
-	return new Slot[] { new Slot(SlotResolver.DESCRIPTION_SLOT_ID) };
+    public String[] getSlotIDs() {
+	return new String[] { SlotResolver.DESCRIPTION_SLOT };
     }
 
     // TODO encapsulate in display, use dependency injection
@@ -544,9 +563,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 
     @Override
     public void initLayer(Layer layerModel, List<Layer> layers) {
-	getSlotResolver().createDescriptionSlotResolver(layerModel);
-	// TODO run layout ==> where should this be invoked?
-	// display.layOut();
+	layerModel.putResolver(SlotResolver.DESCRIPTION_SLOT, getSlotResolver()
+		.createDescriptionSlotResolver(layerModel.getCategory()));
     }
 
     private boolean isConcept(Resource resource) {

@@ -17,6 +17,6 @@ package org.thechiselgroup.choosel.client.views;
 
 public interface SlotFactory {
 
-    Slot[] createSlots();
+    String[] getSlotIDs();
 
 }

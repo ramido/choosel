@@ -40,7 +40,7 @@ public abstract class IconResourceItem extends ResourceItem {
     private void initIconURLs() {
 	// TODO move colors to color provider
 	// TODO use CSS, add border
-	defaultIconURL = getIconURL((String) getResourceValue(SlotResolver.COLOR_SLOT_ID));
+	defaultIconURL = getIconURL((String) getResourceValue(SlotResolver.COLOR_SLOT));
 	highlightIconURL = getIconURL("#FDF49A");
 	grayedOutIconURL = getIconURL("#dddddd");
 	selectedIconURL = getIconURL("#E7B076");
@@ -48,7 +48,7 @@ public abstract class IconResourceItem extends ResourceItem {
 
     // TODO enable usage of border color (use different icons)
     private String getIconURL(String color) {
-	String label = (String) getResourceValue(SlotResolver.LABEL_SLOT_ID);
+	String label = (String) getResourceValue(SlotResolver.LABEL_SLOT);
 	return IconURLFactory.getFlatIconURL(label, color);
     }
 

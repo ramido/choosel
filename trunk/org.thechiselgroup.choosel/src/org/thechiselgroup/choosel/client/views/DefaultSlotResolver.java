@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.client.views;
 import java.util.List;
 
 import org.thechiselgroup.choosel.client.resolver.FixedValuePropertyValueResolver;
+import org.thechiselgroup.choosel.client.resolver.PropertyValueResolver;
 import org.thechiselgroup.choosel.client.resolver.PropertyValueResolverConverterWrapper;
 import org.thechiselgroup.choosel.client.resolver.SimplePropertyValueResolver;
 import org.thechiselgroup.choosel.client.test.ResourcesTestHelper;
@@ -26,42 +27,39 @@ import org.thechiselgroup.choosel.client.util.Converter;
 
 public class DefaultSlotResolver implements SlotResolver {
 
-    public void createColorSlotResolver(Layer layerModel, List<Layer> layers) {
+    @Override
+    public PropertyValueResolver createColorSlotResolver(String category,
+	    List<Layer> layers) {
 
 	String color = SlotResolver.COLORS[layers.size()];
-
-	layerModel.putResolver(COLOR_SLOT_ID,
-		new FixedValuePropertyValueResolver(color));
+	return new FixedValuePropertyValueResolver(color);
     }
 
-    public void createDateSlotResolver(Layer layerModel) {
-	layerModel.putResolver(SlotResolver.DATE_SLOT_ID,
-		new SimplePropertyValueResolver("date"));
-
+    @Override
+    public PropertyValueResolver createDateSlotResolver(String type) {
+	return new SimplePropertyValueResolver("date");
     }
 
-    public void createDescriptionSlotResolver(Layer layerModel) {
+    @Override
+    public PropertyValueResolver createDescriptionSlotResolver(String category) {
 	// TODO switch based on category -- need category as part of layerModel
 	// TODO resources as part of layerModel
 	// TODO how to do the automatic color assignment?
 	// TODO refactor // extract
-	if ("tsunami".equals(layerModel.getCategory())) {
-	    layerModel.putResolver(SlotResolver.DESCRIPTION_SLOT_ID,
-		    new SimplePropertyValueResolver("date"));
-	} else if ("earthquake".equals(layerModel.getCategory())) {
-	    layerModel.putResolver(SlotResolver.DESCRIPTION_SLOT_ID,
-		    new SimplePropertyValueResolver("description"));
-	} else if (ResourcesTestHelper.DEFAULT_TYPE.equals(layerModel
-		.getCategory())) {
-	    layerModel.putResolver(SlotResolver.DESCRIPTION_SLOT_ID,
-		    new SimplePropertyValueResolver(
-			    ResourcesTestHelper.LABEL_KEY));
+	if ("tsunami".equals(category)) {
+	    return new SimplePropertyValueResolver("date");
+	} else if ("earthquake".equals(category)) {
+	    return new SimplePropertyValueResolver("description");
+	} else if (ResourcesTestHelper.DEFAULT_TYPE.equals(category)) {
+	    return new SimplePropertyValueResolver(
+		    ResourcesTestHelper.LABEL_KEY);
 	} else {
 	    throw new RuntimeException("failed creating slot mapping");
 	}
     }
 
-    public void createLabelSlotResolver(Layer layerModel) {
+    @Override
+    public PropertyValueResolver createLabelSlotResolver(String category) {
 	Converter<Float, String> converter = new Converter<Float, String>() {
 	    @Override
 	    public String convert(Float value) throws ConversionException {
@@ -77,14 +75,11 @@ public class DefaultSlotResolver implements SlotResolver {
 	SimplePropertyValueResolver resolver = new SimplePropertyValueResolver(
 		"magnitude");
 
-	layerModel.putResolver(SlotResolver.LABEL_SLOT_ID,
-		new PropertyValueResolverConverterWrapper(resolver, converter));
+	return new PropertyValueResolverConverterWrapper(resolver, converter);
     }
 
-    public void createLocationSlotResolver(Layer layer) {
-	layer.putResolver(SlotResolver.LOCATION_SLOT_ID,
-		new SimplePropertyValueResolver("location"));
-
+    @Override
+    public PropertyValueResolver createLocationSlotResolver(String category) {
+	return new SimplePropertyValueResolver("location");
     }
-
 }

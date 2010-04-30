@@ -30,7 +30,6 @@ import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.Layer;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
-import org.thechiselgroup.choosel.client.views.Slot;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -40,8 +39,11 @@ import com.google.inject.name.Named;
 public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
 
     private static final String MEMENTO_ZOOM_PREFIX = "zoom-band-";
+
     private static final String MEMENTO_DATE = "date";
+
     private TimeLineWidget timelineWidget;
+
     private DragEnablerFactory dragEnablerFactory;
 
     @Inject
@@ -71,19 +73,23 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     @Override
-    public Slot[] createSlots() {
-	return new Slot[] { new Slot(SlotResolver.DESCRIPTION_SLOT_ID),
-		new Slot(SlotResolver.LABEL_SLOT_ID),
-		new Slot(SlotResolver.COLOR_SLOT_ID),
-		new Slot(SlotResolver.DATE_SLOT_ID) };
+    public String[] getSlotIDs() {
+	return new String[] { SlotResolver.DESCRIPTION_SLOT,
+		SlotResolver.LABEL_SLOT, SlotResolver.COLOR_SLOT,
+		SlotResolver.DATE_SLOT };
     }
 
     @Override
     public void initLayer(Layer layerModel, List<Layer> layers) {
-	getSlotResolver().createDescriptionSlotResolver(layerModel);
-	getSlotResolver().createColorSlotResolver(layerModel, layers);
-	getSlotResolver().createLabelSlotResolver(layerModel);
-	getSlotResolver().createDateSlotResolver(layerModel);
+	// TODO should happen automatically based on available slots...
+	layerModel.putResolver(SlotResolver.DESCRIPTION_SLOT, getSlotResolver()
+		.createDescriptionSlotResolver(layerModel.getCategory()));
+	layerModel.putResolver(SlotResolver.COLOR_SLOT, getSlotResolver()
+		.createColorSlotResolver(layerModel.getCategory(), layers));
+	layerModel.putResolver(SlotResolver.LABEL_SLOT, getSlotResolver()
+		.createLabelSlotResolver(layerModel.getCategory()));
+	layerModel.putResolver(SlotResolver.DATE_SLOT, getSlotResolver()
+		.createDateSlotResolver(layerModel.getCategory()));
     }
 
     @Override

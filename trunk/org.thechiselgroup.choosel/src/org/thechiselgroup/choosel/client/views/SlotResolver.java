@@ -17,28 +17,31 @@ package org.thechiselgroup.choosel.client.views;
 
 import java.util.List;
 
+import org.thechiselgroup.choosel.client.resolver.PropertyValueResolver;
+
 // TODO create more flexible slot system
 public interface SlotResolver {
 
-    String COLOR_SLOT_ID = "color";
+    String COLOR_SLOT = "color";
 
     String[] COLORS = new String[] { "#6495ed", "#b22222" };
 
-    String DATE_SLOT_ID = "date";
+    String DATE_SLOT = "date";
 
-    String DESCRIPTION_SLOT_ID = "description";
+    String DESCRIPTION_SLOT = "description";
 
-    String LABEL_SLOT_ID = "label";
+    String LABEL_SLOT = "label";
 
-    String LOCATION_SLOT_ID = "location";
+    String LOCATION_SLOT = "location";
 
-    void createLocationSlotResolver(Layer layer);
+    PropertyValueResolver createLocationSlotResolver(String category);
 
-    void createLabelSlotResolver(Layer layerModel);
+    PropertyValueResolver createLabelSlotResolver(String category);
 
-    void createDescriptionSlotResolver(Layer layerModel);
+    PropertyValueResolver createDescriptionSlotResolver(String category);
 
-    void createDateSlotResolver(Layer layerModel);
+    PropertyValueResolver createDateSlotResolver(String category);
 
-    void createColorSlotResolver(Layer layerModel, List<Layer> layers);
+    PropertyValueResolver createColorSlotResolver(String category,
+	    List<Layer> layers);
 }

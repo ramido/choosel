@@ -30,7 +30,6 @@ import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.Layer;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
-import org.thechiselgroup.choosel.client.views.Slot;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.list.ListItem.ListItemLabel;
 
@@ -227,8 +226,8 @@ public class ListViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     @Override
-    public Slot[] createSlots() {
-	return new Slot[] { new Slot(SlotResolver.DESCRIPTION_SLOT_ID) };
+    public String[] getSlotIDs() {
+	return new String[] { SlotResolver.DESCRIPTION_SLOT };
     }
 
     @Override
@@ -256,7 +255,8 @@ public class ListViewContentDisplay extends AbstractViewContentDisplay {
 
     @Override
     public void initLayer(Layer layerModel, List<Layer> layers) {
-	getSlotResolver().createDescriptionSlotResolver(layerModel);
+	layerModel.putResolver(SlotResolver.DESCRIPTION_SLOT, getSlotResolver()
+		.createDescriptionSlotResolver(layerModel.getCategory()));
     }
 
     @Override

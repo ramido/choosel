@@ -123,7 +123,7 @@ public class ListItem extends ResourceItem {
     }
 
     public void init() {
-	String description = (String) getResourceValue(SlotResolver.DESCRIPTION_SLOT_ID);
+	String description = (String) getResourceValue(SlotResolver.DESCRIPTION_SLOT);
 
 	// FIXME use factory and dispose
 	DefaultResourceSet set = new DefaultResourceSet();

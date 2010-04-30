@@ -29,7 +29,6 @@ import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.Layer;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
-import org.thechiselgroup.choosel.client.views.Slot;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 
 import com.google.gwt.maps.client.MapType;
@@ -95,7 +94,7 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
 	// TODO separate resolvers for latitude and longitude
 
 	Resource location = (Resource) layer.getValue(
-		SlotResolver.LOCATION_SLOT_ID, resource);
+		SlotResolver.LOCATION_SLOT, resource);
 
 	double latitude = toDouble(location.getValue(LATITUDE));
 	double longitude = toDouble(location.getValue(LONGITUDE));
@@ -129,11 +128,10 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     @Override
-    public Slot[] createSlots() {
-	return new Slot[] { new Slot(SlotResolver.DESCRIPTION_SLOT_ID),
-		new Slot(SlotResolver.LABEL_SLOT_ID),
-		new Slot(SlotResolver.COLOR_SLOT_ID),
-		new Slot(SlotResolver.LOCATION_SLOT_ID) };
+    public String[] getSlotIDs() {
+	return new String[] { SlotResolver.DESCRIPTION_SLOT,
+		SlotResolver.LABEL_SLOT, SlotResolver.COLOR_SLOT,
+		SlotResolver.LOCATION_SLOT };
     }
 
     @Override
@@ -157,10 +155,14 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
 
     @Override
     public void initLayer(Layer layerModel, List<Layer> layers) {
-	getSlotResolver().createLabelSlotResolver(layerModel);
-	getSlotResolver().createDescriptionSlotResolver(layerModel);
-	getSlotResolver().createLocationSlotResolver(layerModel);
-	getSlotResolver().createColorSlotResolver(layerModel, layers);
+	layerModel.putResolver(SlotResolver.DESCRIPTION_SLOT, getSlotResolver()
+		.createDescriptionSlotResolver(layerModel.getCategory()));
+	layerModel.putResolver(SlotResolver.COLOR_SLOT, getSlotResolver()
+		.createColorSlotResolver(layerModel.getCategory(), layers));
+	layerModel.putResolver(SlotResolver.LABEL_SLOT, getSlotResolver()
+		.createLabelSlotResolver(layerModel.getCategory()));
+	layerModel.putResolver(SlotResolver.LOCATION_SLOT, getSlotResolver()
+		.createLocationSlotResolver(layerModel.getCategory()));
     }
 
     @Override

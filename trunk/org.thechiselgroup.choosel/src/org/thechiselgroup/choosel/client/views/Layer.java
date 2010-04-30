@@ -32,6 +32,10 @@ public class Layer {
     // TODO serialization, memento
     private Map<String, Slot> slots = new HashMap<String, Slot>();
 
+    public Layer() {
+	// TODO Auto-generated constructor stub
+    }
+
     public String getCategory() {
 	return category;
     }

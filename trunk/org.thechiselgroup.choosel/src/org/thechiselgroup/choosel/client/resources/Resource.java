@@ -63,17 +63,6 @@ public class Resource implements Serializable {
 	return uri;
     }
 
-    /**
-     * TODO improve type identification as using the first part of the URI is a
-     * poor way to do this. Using semantic web technologies like RDF-S might be
-     * a better approach.
-     * 
-     * @return first part of the URI until the ':'.
-     */
-    public String getType() {
-	return uri.substring(0, uri.indexOf(':'));
-    }
-
     public UriList getUriListValue(String key) {
 	UriList result = (UriList) getValue(key);
 

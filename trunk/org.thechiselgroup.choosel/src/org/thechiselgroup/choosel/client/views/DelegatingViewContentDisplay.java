@@ -44,8 +44,9 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
 	return delegate.createResourceItem(layer, resource);
     }
 
-    public Slot[] createSlots() {
-	return delegate.createSlots();
+    @Override
+    public String[] getSlotIDs() {
+	return delegate.getSlotIDs();
     }
 
     public void dispose() {

@@ -116,8 +116,6 @@ public class DefaultViewTest {
     @Mock
     private ResourceSetsPresenter selectionDropPresenter;
 
-    private Slot slot;
-
     @Mock
     private ResourceSetsPresenter splittedSetsPresenter;
 
@@ -495,16 +493,14 @@ public class DefaultViewTest {
     public void setUp() {
 	MockitoAnnotations.initMocks(this);
 
-	slot = new Slot(SLOT_ID);
-
 	createView();
 
 	when(
 		contentDisplay.createResourceItem(any(Layer.class),
 			any(Resource.class))).thenReturn(resourceItem);
 
-	when(contentDisplay.createSlots()).thenReturn(new Slot[] { slot },
-		new Slot[0]);
+	when(contentDisplay.getSlotIDs()).thenReturn(new String[] { SLOT_ID },
+		new String[] {});
 
 	when(
 		selection.addHandler(any(GwtEvent.Type.class),
