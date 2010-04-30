@@ -73,6 +73,11 @@ public abstract class ResourceItem {
     public ResourceItem(Resource resource, ResourceSet hoverModel,
 	    PopupManager popupManager, Layer layer) {
 
+	assert resource != null;
+	assert hoverModel != null;
+	assert popupManager != null;
+	assert layer != null;
+
 	this.resource = resource;
 	this.popupManager = popupManager;
 	this.hoverModel = hoverModel;

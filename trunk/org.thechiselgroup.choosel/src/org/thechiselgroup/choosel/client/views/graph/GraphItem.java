@@ -53,13 +53,17 @@ public class GraphItem extends ResourceItem {
 
     private Node node;
 
-    public GraphItem(Resource individual, ResourceSet hoverModel,
-	    PopupManager popupManager, Node node,
+    public GraphItem(Resource resource, ResourceSet hoverModel,
+	    PopupManager popupManager, String label, String category,
 	    GraphViewContentDisplay.Display display, Layer Layer) {
 
-	super(individual, hoverModel, popupManager, Layer);
+	super(resource, hoverModel, popupManager, Layer);
 
-	this.node = node;
+	assert label != null;
+	assert category != null;
+	assert display != null;
+
+	this.node = new Node(resource.getUri(), label, category);
 	this.display = display;
 
 	updateStyling();

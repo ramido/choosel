@@ -310,31 +310,31 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
     private GraphItem createGraphItem(Layer layer, Resource resource) {
 	String label = layer.getValue(SlotResolver.GRAPH_LABEL_SLOT, resource);
 	String category = getCategory(resource);
-	Node node = new Node(resource.getUri(), label, category);
-
 	PopupManager popupManager = createPopupManager(resource, layer
 		.getResolver(SlotResolver.DESCRIPTION_SLOT));
+
 	GraphItem item = new GraphItem(resource, hoverModel, popupManager,
-		node, display, layer);
+		label, category, display, layer);
 
-	nodeIdToGraphItemMap.put(node.getId(), item);
+	nodeIdToGraphItemMap.put(item.getNode().getId(), item);
 
-	display.addNode(node);
-	positionNode(node);
+	display.addNode(item.getNode());
+	positionNode(item.getNode());
 
-	display.setNodeStyle(node, "showDragImage", "true");
+	// TODO remove once new drag and drop mechanism works...
+	display.setNodeStyle(item.getNode(), "showDragImage", "true");
 
 	setGraphItemColors(resource, item);
 
 	if (category.equals(NcboUriHelper.NCBO_CONCEPT)) {
 	    // TODO this should be false if set of available neighbourhoods
 	    // equals 0
-	    display.setNodeStyle(node, "showArrow", "true");
+	    display.setNodeStyle(item.getNode(), "showArrow", "true");
 	}
 	if (category.equals(NcboUriHelper.NCBO_MAPPING)) {
 	    // TODO this should be false if set of available neighbourhoods
 	    // equals 0
-	    display.setNodeStyle(node, "showArrow", "false");
+	    display.setNodeStyle(item.getNode(), "showArrow", "false");
 	}
 
 	return item;
