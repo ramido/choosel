@@ -24,8 +24,6 @@ public interface SlotResolver {
 
     String COLOR_SLOT = "color";
 
-    String[] COLORS = new String[] { "#6495ed", "#b22222" };
-
     String DATE_SLOT = "date";
 
     String DESCRIPTION_SLOT = "description";
@@ -44,4 +42,5 @@ public interface SlotResolver {
 
     PropertyValueResolver createColorSlotResolver(String category,
 	    List<Layer> layers);
+
 }

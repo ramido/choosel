@@ -18,7 +18,6 @@ package org.thechiselgroup.choosel.client.views.graph;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
@@ -559,12 +558,6 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 		display.addEventHandler(MouseMoveEvent.getType(), handler);
 	    }
 	});
-    }
-
-    @Override
-    public void initLayer(Layer layerModel, List<Layer> layers) {
-	layerModel.putResolver(SlotResolver.DESCRIPTION_SLOT, getSlotResolver()
-		.createDescriptionSlotResolver(layerModel.getCategory()));
     }
 
     private boolean isConcept(Resource resource) {

@@ -16,7 +16,6 @@
 package org.thechiselgroup.choosel.client.views.timeline;
 
 import java.util.Date;
-import java.util.List;
 
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.persistence.Memento;
@@ -77,19 +76,6 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
 	return new String[] { SlotResolver.DESCRIPTION_SLOT,
 		SlotResolver.LABEL_SLOT, SlotResolver.COLOR_SLOT,
 		SlotResolver.DATE_SLOT };
-    }
-
-    @Override
-    public void initLayer(Layer layerModel, List<Layer> layers) {
-	// TODO should happen automatically based on available slots...
-	layerModel.putResolver(SlotResolver.DESCRIPTION_SLOT, getSlotResolver()
-		.createDescriptionSlotResolver(layerModel.getCategory()));
-	layerModel.putResolver(SlotResolver.COLOR_SLOT, getSlotResolver()
-		.createColorSlotResolver(layerModel.getCategory(), layers));
-	layerModel.putResolver(SlotResolver.LABEL_SLOT, getSlotResolver()
-		.createLabelSlotResolver(layerModel.getCategory()));
-	layerModel.putResolver(SlotResolver.DATE_SLOT, getSlotResolver()
-		.createDateSlotResolver(layerModel.getCategory()));
     }
 
     @Override

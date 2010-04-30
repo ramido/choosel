@@ -15,18 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import java.util.List;
-
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
 import org.thechiselgroup.choosel.client.util.Disposable;
 
 // TODO might need view as parameter for a few of those...
-public interface ViewContentDisplay extends WidgetAdaptable, SlotFactory,
-	Disposable {
-
-    void initLayer(Layer layerModel, List<Layer> layers);
+public interface ViewContentDisplay extends WidgetAdaptable, Disposable {
 
     ResourceItem createResourceItem(Layer layer, Resource resource);
 
@@ -45,5 +40,7 @@ public interface ViewContentDisplay extends WidgetAdaptable, SlotFactory,
     void restore(Memento state);
 
     boolean isReady();
+
+    String[] getSlotIDs();
 
 }

@@ -23,6 +23,7 @@ import java.util.Map;
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.persistence.Memento;
+import org.thechiselgroup.choosel.client.resolver.PropertyValueResolver;
 import org.thechiselgroup.choosel.client.resources.CombinedResourceSet;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
@@ -152,6 +153,8 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private ResourceSetsPresenter userSetsPresenter;
 
+    private SlotResolver slotResolver;
+
     @Inject
     public DefaultView(
 	    @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
@@ -163,10 +166,24 @@ public class DefaultView extends AbstractWindowContent implements View {
 	    @Named(ChooselInjectionConstants.AVATAR_FACTORY_SELECTION) ResourceSetsPresenter selectionPresenter,
 	    @Named(ChooselInjectionConstants.AVATAR_FACTORY_SELECTION_DROP) ResourceSetsPresenter selectionDropPresenter,
 	    ResourceSplitter resourceSplitter,
-	    ViewContentDisplay contentDisplay, String label, String contentType) {
+	    ViewContentDisplay contentDisplay, String label,
+	    String contentType, SlotResolver slotResolver) {
 
 	super(label, contentType);
 
+	assert slotResolver != null;
+	assert hoverModel != null;
+	assert selectionModelLabelFactory != null;
+	assert resourceSetFactory != null;
+	assert userSetsPresenter != null;
+	assert splittedSetsPresenter != null;
+	assert allResourcesSetPresenter != null;
+	assert selectionPresenter != null;
+	assert selectionDropPresenter != null;
+	assert resourceSplitter != null;
+	assert contentDisplay != null;
+
+	this.slotResolver = slotResolver;
 	this.hoverModel = hoverModel;
 	this.selectionModelLabelFactory = selectionModelLabelFactory;
 	this.resourceSetFactory = resourceSetFactory;
@@ -288,8 +305,10 @@ public class DefaultView extends AbstractWindowContent implements View {
 	String[] slotIDs = contentDisplay.getSlotIDs();
 	Slot[] slots = new Slot[slotIDs.length];
 
+	List<Layer> layers = getLayers();
 	for (int i = 0; i < slots.length; i++) {
-	    slots[i] = new Slot(slotIDs[i]);
+	    slots[i] = new Slot(slotIDs[i], createValueResolver(slotIDs[i],
+		    category, layers));
 	}
 
 	// TODO create slots automatically
@@ -300,13 +319,34 @@ public class DefaultView extends AbstractWindowContent implements View {
 	layer.setCategory(category);
 	layer.setResources(resources);
 
-	contentDisplay.initLayer(layer, getLayers());
-
 	addLayer(layer);
 
 	checkResize();
 
 	return layer;
+    }
+
+    // TODO replace list of layers with more generic context
+    protected PropertyValueResolver createValueResolver(String slotID,
+	    String category, List<Layer> layers) {
+
+	assert category != null;
+	assert slotID != null;
+
+	// TODO use maps instead
+	if (slotID.equals(SlotResolver.COLOR_SLOT)) {
+	    return slotResolver.createColorSlotResolver(category, layers);
+	} else if (slotID.equals(SlotResolver.LABEL_SLOT)) {
+	    return slotResolver.createLabelSlotResolver(category);
+	} else if (slotID.equals(SlotResolver.DESCRIPTION_SLOT)) {
+	    return slotResolver.createDescriptionSlotResolver(category);
+	} else if (slotID.equals(SlotResolver.DATE_SLOT)) {
+	    return slotResolver.createDateSlotResolver(category);
+	} else if (slotID.equals(SlotResolver.LOCATION_SLOT)) {
+	    return slotResolver.createLocationSlotResolver(category);
+	}
+
+	throw new IllegalArgumentException("Invalid slot id: " + slotID);
     }
 
     public void dispose() {

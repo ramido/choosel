@@ -25,30 +25,20 @@ public class Slot {
     // TODO allow for several resolvers (heterogeneous collections)
     private PropertyValueResolver resolver;
 
-    public PropertyValueResolver getResolver() {
-	return resolver;
-    }
+    public Slot(String id, PropertyValueResolver resolver) {
+	assert id != null;
+	assert resolver != null;
 
-    public void setResolver(PropertyValueResolver resolver) {
-	this.resolver = resolver;
-    }
-
-    private String label;
-
-    public Slot(String id) {
 	this.id = id;
+	this.resolver = resolver;
     }
 
     public String getId() {
 	return id;
     }
 
-    public String getLabel() {
-	return label;
-    }
-
-    public void setLabel(String label) {
-	this.label = label;
+    public PropertyValueResolver getResolver() {
+	return resolver;
     }
 
 }
