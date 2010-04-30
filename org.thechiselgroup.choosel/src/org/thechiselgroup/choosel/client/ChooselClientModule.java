@@ -77,6 +77,8 @@ import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
+import org.thechiselgroup.choosel.client.views.graph.ArcStyleProvider;
+import org.thechiselgroup.choosel.client.views.graph.DefaultArcStyleProvider;
 import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.list.ListViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.map.MapViewContentDisplayFactory;
@@ -99,6 +101,14 @@ import com.google.inject.name.Names;
 
 public class ChooselClientModule extends AbstractGinModule implements
 	ChooselInjectionConstants {
+
+    private void bindApplication() {
+	bind(ChooselApplication.class).to(getApplicationClass()).in(
+		Singleton.class);
+    }
+
+    protected void bindCustomServices() {
+    }
 
     private void bindDisplays() {
 	bind(DefaultCommandManagerPresenterDisplay.class);
@@ -136,6 +146,28 @@ public class ChooselClientModule extends AbstractGinModule implements
 		ViewDisplayDropTargetManager.class).in(Singleton.class);
     }
 
+    private void bindDragAvatarFactories() {
+	bind(ResourceSetAvatarFactory.class).toProvider(
+		DefaultResourceSetAvatarFactoryProvider.class).in(
+		Singleton.class);
+	bind(ResourceSetAvatarFactory.class).annotatedWith(
+		Names.named(AVATAR_FACTORY_SET)).toProvider(
+		ResourceSetsDragAvatarFactoryProvider.class)
+		.in(Singleton.class);
+	bind(ResourceSetAvatarFactory.class).annotatedWith(
+		Names.named(AVATAR_FACTORY_ALL_RESOURCES)).toProvider(
+		AllResourceSetAvatarFactoryProvider.class).in(Singleton.class);
+	bind(ResourceSetAvatarFactory.class).annotatedWith(
+		Names.named(AVATAR_FACTORY_TYPE)).toProvider(
+		TypeDragAvatarFactoryProvider.class).in(Singleton.class);
+	bind(ResourceSetAvatarFactory.class).annotatedWith(
+		Names.named(AVATAR_FACTORY_SELECTION)).toProvider(
+		SelectionDragAvatarFactoryProvider.class).in(Singleton.class);
+	bind(ResourceSetAvatarFactory.class).annotatedWith(
+		Names.named(AVATAR_FACTORY_SELECTION_DROP)).toProvider(
+		SelectionDropTargetFactoryProvider.class).in(Singleton.class);
+    }
+
     private void bindHoverModel() {
 	/*
 	 * We use a counting resource set, because elements might get removed
@@ -160,26 +192,23 @@ public class ChooselClientModule extends AbstractGinModule implements
 		ResourceSetLabelFactory.class).in(Singleton.class);
     }
 
-    private void bindDragAvatarFactories() {
-	bind(ResourceSetAvatarFactory.class).toProvider(
-		DefaultResourceSetAvatarFactoryProvider.class).in(
-		Singleton.class);
-	bind(ResourceSetAvatarFactory.class).annotatedWith(
-		Names.named(AVATAR_FACTORY_SET)).toProvider(
-		ResourceSetsDragAvatarFactoryProvider.class)
-		.in(Singleton.class);
-	bind(ResourceSetAvatarFactory.class).annotatedWith(
-		Names.named(AVATAR_FACTORY_ALL_RESOURCES)).toProvider(
-		AllResourceSetAvatarFactoryProvider.class).in(Singleton.class);
-	bind(ResourceSetAvatarFactory.class).annotatedWith(
-		Names.named(AVATAR_FACTORY_TYPE)).toProvider(
-		TypeDragAvatarFactoryProvider.class).in(Singleton.class);
-	bind(ResourceSetAvatarFactory.class).annotatedWith(
-		Names.named(AVATAR_FACTORY_SELECTION)).toProvider(
-		SelectionDragAvatarFactoryProvider.class).in(Singleton.class);
-	bind(ResourceSetAvatarFactory.class).annotatedWith(
-		Names.named(AVATAR_FACTORY_SELECTION_DROP)).toProvider(
-		SelectionDropTargetFactoryProvider.class).in(Singleton.class);
+    protected void bindViewContentDisplayFactories() {
+	bindViewContentDisplayFactory(TYPE_MAP,
+		MapViewContentDisplayFactory.class);
+	bindViewContentDisplayFactory(TYPE_LIST,
+		ListViewContentDisplayFactory.class);
+	bindViewContentDisplayFactory(TYPE_GRAPH,
+		GraphViewContentDisplayFactory.class);
+	bindViewContentDisplayFactory(TYPE_TIMELINE,
+		TimeLineViewContentDisplayFactory.class);
+    }
+
+    protected void bindViewContentDisplayFactory(
+	    String type,
+	    Class<? extends ViewContentDisplayFactory> viewContentDisplayFactoryClass) {
+
+	bind(ViewContentDisplayFactory.class).annotatedWith(Names.named(type))
+		.to(viewContentDisplayFactoryClass).in(Singleton.class);
     }
 
     @Override
@@ -253,6 +282,9 @@ public class ChooselClientModule extends AbstractGinModule implements
 	bind(CategoryLabelProvider.class).toProvider(
 		MappingCategoryLabelProviderProvider.class).in(Singleton.class);
 
+	bind(ArcStyleProvider.class).to(getArcStyleProviderClass()).in(
+		Singleton.class);
+
 	bindDisplays();
 
 	bind(DocumentProcessor.class).to(SarissaDocumentProcessor.class).in(
@@ -267,46 +299,23 @@ public class ChooselClientModule extends AbstractGinModule implements
 	bindApplication();
     }
 
-    protected Class<? extends DetailsWidgetHelper> getDetailsWidgetHelperClass() {
-	return DefaultDetailsWidgetHelper.class;
+    protected Class<? extends ChooselApplication> getApplicationClass() {
+	return ChooselApplication.class;
     }
 
-    protected Class<? extends SlotResolver> getSlotResolverClass() {
-	return DefaultSlotResolver.class;
+    protected Class<? extends ArcStyleProvider> getArcStyleProviderClass() {
+	return DefaultArcStyleProvider.class;
     }
 
     protected Class<? extends ChooselWindowContentProducerProvider> getContentProducerProviderClass() {
 	return ChooselWindowContentProducerProvider.class;
     }
 
-    protected void bindCustomServices() {
+    protected Class<? extends DetailsWidgetHelper> getDetailsWidgetHelperClass() {
+	return DefaultDetailsWidgetHelper.class;
     }
 
-    private void bindApplication() {
-	bind(ChooselApplication.class).to(getApplicationClass()).in(
-		Singleton.class);
-    }
-
-    protected Class<? extends ChooselApplication> getApplicationClass() {
-	return ChooselApplication.class;
-    }
-
-    protected void bindViewContentDisplayFactories() {
-	bindViewContentDisplayFactory(TYPE_MAP,
-		MapViewContentDisplayFactory.class);
-	bindViewContentDisplayFactory(TYPE_LIST,
-		ListViewContentDisplayFactory.class);
-	bindViewContentDisplayFactory(TYPE_GRAPH,
-		GraphViewContentDisplayFactory.class);
-	bindViewContentDisplayFactory(TYPE_TIMELINE,
-		TimeLineViewContentDisplayFactory.class);
-    }
-
-    protected void bindViewContentDisplayFactory(
-	    String type,
-	    Class<? extends ViewContentDisplayFactory> viewContentDisplayFactoryClass) {
-
-	bind(ViewContentDisplayFactory.class).annotatedWith(Names.named(type))
-		.to(viewContentDisplayFactoryClass).in(Singleton.class);
+    protected Class<? extends SlotResolver> getSlotResolverClass() {
+	return DefaultSlotResolver.class;
     }
 }
