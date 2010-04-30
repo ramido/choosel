@@ -24,6 +24,7 @@ import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay.Gra
 import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay.GraphNodeExpansionCallback;
 
 public class MappingExpander implements GraphNodeExpander {
+
     @Override
     public void expand(Resource mapping,
 	    GraphNodeExpansionCallback expansionCallback) {

@@ -169,6 +169,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 
 	void createMappingArc(String sourceId, String targetId);
 
+	Display getDisplay();
+
 	ResourceManager getResourceManager();
 
 	ViewContentDisplayCallback getViewContentDisplayCallback();
@@ -195,6 +197,11 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 	@Override
 	public void createMappingArc(String sourceId, String targetId) {
 	    GraphViewContentDisplay.this.createMappingArc(sourceId, targetId);
+	}
+
+	@Override
+	public Display getDisplay() {
+	    return GraphViewContentDisplay.this.display;
 	}
 
 	@Override
@@ -412,12 +419,6 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 			errorHandler));
     }
 
-    protected void expandMappingNeighbourhood2(Resource resource) {
-	mappingNeighbourhoodService.getNeighbourhood(resource,
-		new MappingNeighbourhoodCallback2(display, getCallback(),
-			errorHandler));
-    }
-
     // TODO eliminate duplicate (callback)
     protected String getArcId(String sourceId, String targetId) {
 	return sourceId + "_" + targetId;
@@ -471,16 +472,13 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 				expandConceptNeighbourhood(getResource(node));
 			    }
 			}, NcboUriHelper.NCBO_CONCEPT);
-		display.addNodeMenuItemHandler("Mappings",
-			new NodeMenuItemClickedHandler() {
-			    @Override
-			    public void onNodeMenuItemClicked(Node node) {
-				expandMappingNeighbourhood2(getResource(node));
-			    }
-			}, NcboUriHelper.NCBO_CONCEPT);
 
-		registerNodeMenuItem(new MappingExpander(), "Concepts",
-			NcboUriHelper.NCBO_MAPPING);
+		registerNodeMenuItem(NcboUriHelper.NCBO_CONCEPT, "Mappings",
+			new ConceptMappingNeighbourhoodExpander(
+				mappingNeighbourhoodService, errorHandler));
+
+		registerNodeMenuItem(NcboUriHelper.NCBO_MAPPING, "Concepts",
+			new MappingExpander());
 	    }
 	});
     }
@@ -518,8 +516,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 	display.setLocation(node, new Point(width / 2, height / 2));
     }
 
-    private void registerNodeMenuItem(final GraphNodeExpander nodeExpander,
-	    String menuLabel, String category) {
+    private void registerNodeMenuItem(String category, String menuLabel,
+	    final GraphNodeExpander nodeExpander) {
 
 	display.addNodeMenuItemHandler(menuLabel,
 		new NodeMenuItemClickedHandler() {
