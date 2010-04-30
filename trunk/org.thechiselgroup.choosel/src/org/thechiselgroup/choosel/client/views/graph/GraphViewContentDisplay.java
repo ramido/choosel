@@ -320,7 +320,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 	if (category.equals(NcboUriHelper.NCBO_MAPPING)) {
 	    // TODO this should be false if set of available neighbourhoods
 	    // equals 0
-	    display.setNodeStyle(item.getNode(), "showArrow", "false");
+	    display.setNodeStyle(item.getNode(), "showArrow", "true");
 	}
 
 	return item;
@@ -399,56 +399,20 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 			resourceManager, errorHandler));
     }
 
-    private void expandMapping(Resource mapping) {
-	String sourceUri = (String) mapping.getValue(NCBO.MAPPING_SOURCE);
-	if (!getCallback().containsResourceWithUri(sourceUri)) {
-	    if (!resourceManager.contains(sourceUri)) {
-		Resource concept = new Resource(sourceUri);
+    public static interface GraphNodeExpansionCallback {
 
-		concept.putValue(NCBO.CONCEPT_SHORT_ID, (String) mapping
-			.getValue(NCBO.MAPPING_SOURCE_CONCEPT_ID));
-		concept.putValue(NCBO.CONCEPT_NAME, (String) mapping
-			.getValue(NCBO.MAPPING_SOURCE_CONCEPT_NAME));
-		concept.putValue(NCBO.CONCEPT_ONTOLOGY_ID, (String) mapping
-			.getValue(NCBO.MAPPING_SOURCE_ONTOLOGY_ID));
-		concept.putValue(NCBO.CONCEPT_ONTOLOGY_NAME, (String) mapping
-			.getValue(NCBO.MAPPING_SOURCE_ONTOLOGY_NAME));
+	ResourceManager getResourceManager();
 
-		resourceManager.add(concept);
-	    }
+	ViewContentDisplayCallback getViewContentDisplayCallback();
 
-	    Resource concept = resourceManager.getByUri(sourceUri);
+	void createMappingArc(String sourceId, String targetId);
+    }
 
-	    getCallback().getAutomaticResourceSet().add(concept);
+    public static interface GraphNodeExpander {
 
-	    createMappingArc(sourceUri, mapping.getUri());
-	}
+	void expand(Resource resource,
+		GraphNodeExpansionCallback expansionCallback);
 
-	String destinationUri = (String) mapping
-		.getValue(NCBO.MAPPING_DESTINATION);
-
-	if (!getCallback().containsResourceWithUri(destinationUri)) {
-	    if (!resourceManager.contains(destinationUri)) {
-		Resource concept = new Resource(destinationUri);
-
-		concept.putValue(NCBO.CONCEPT_SHORT_ID, (String) mapping
-			.getValue(NCBO.MAPPING_DESTINATION_CONCEPT_ID));
-		concept.putValue(NCBO.CONCEPT_NAME, (String) mapping
-			.getValue(NCBO.MAPPING_DESTINATION_CONCEPT_NAME));
-		concept.putValue(NCBO.CONCEPT_ONTOLOGY_ID, (String) mapping
-			.getValue(NCBO.MAPPING_DESTINATION_ONTOLOGY_ID));
-		concept.putValue(NCBO.CONCEPT_ONTOLOGY_NAME, (String) mapping
-			.getValue(NCBO.MAPPING_DESTINATION_ONTOLOGY_NAME));
-
-		resourceManager.add(concept);
-	    }
-
-	    Resource concept = resourceManager.getByUri(destinationUri);
-
-	    getCallback().getAutomaticResourceSet().add(concept);
-
-	    createMappingArc(mapping.getUri(), destinationUri);
-	}
     }
 
     protected void expandMappingNeighbourhood(Resource resource) {
@@ -466,10 +430,6 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
     // TODO eliminate duplicate (callback)
     protected String getArcId(String sourceId, String targetId) {
 	return sourceId + "_" + targetId;
-    }
-
-    private GraphWidget getGraph() {
-	return (GraphWidget) asWidget();
     }
 
     private GraphItem getGraphItem(Node node) {
@@ -500,6 +460,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 		display.addEventHandler(NodeMouseOverEvent.TYPE, handler);
 		display.addEventHandler(NodeMouseOutEvent.TYPE, handler);
 		display.addEventHandler(NodeMouseClickEvent.TYPE, handler);
+		display.addEventHandler(NodeDragEvent.TYPE, handler);
+		display.addEventHandler(MouseMoveEvent.getType(), handler);
 
 		display.addNodeMenuItemHandler("Concepts",
 			new NodeMenuItemClickedHandler() {
@@ -516,17 +478,133 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 			    }
 			}, NcboUriHelper.NCBO_CONCEPT);
 
+		final GraphNodeExpander expander1 = new GraphNodeExpander() {
+
+		    @Override
+		    public void expand(Resource mapping,
+			    GraphNodeExpansionCallback expansionCallback) {
+
+			ViewContentDisplayCallback displayCallback = expansionCallback
+				.getViewContentDisplayCallback();
+			ResourceManager resourceManager2 = expansionCallback
+				.getResourceManager();
+
+			ResourceSet automaticSet = displayCallback
+				.getAutomaticResourceSet();
+
+			String sourceUri = (String) mapping
+				.getValue(NCBO.MAPPING_SOURCE);
+			if (!displayCallback.containsResourceWithUri(sourceUri)) {
+			    if (!resourceManager2.contains(sourceUri)) {
+				Resource concept = new Resource(sourceUri);
+
+				concept
+					.putValue(
+						NCBO.CONCEPT_SHORT_ID,
+						(String) mapping
+							.getValue(NCBO.MAPPING_SOURCE_CONCEPT_ID));
+				concept
+					.putValue(
+						NCBO.CONCEPT_NAME,
+						(String) mapping
+							.getValue(NCBO.MAPPING_SOURCE_CONCEPT_NAME));
+				concept
+					.putValue(
+						NCBO.CONCEPT_ONTOLOGY_ID,
+						(String) mapping
+							.getValue(NCBO.MAPPING_SOURCE_ONTOLOGY_ID));
+				concept
+					.putValue(
+						NCBO.CONCEPT_ONTOLOGY_NAME,
+						(String) mapping
+							.getValue(NCBO.MAPPING_SOURCE_ONTOLOGY_NAME));
+
+				resourceManager2.add(concept);
+			    }
+
+			    Resource concept = resourceManager2
+				    .getByUri(sourceUri);
+
+			    automaticSet.add(concept);
+
+			    expansionCallback.createMappingArc(sourceUri,
+				    mapping.getUri());
+			}
+
+			String destinationUri = (String) mapping
+				.getValue(NCBO.MAPPING_DESTINATION);
+
+			if (!displayCallback
+				.containsResourceWithUri(destinationUri)) {
+			    if (!resourceManager2.contains(destinationUri)) {
+				Resource concept = new Resource(destinationUri);
+
+				concept
+					.putValue(
+						NCBO.CONCEPT_SHORT_ID,
+						(String) mapping
+							.getValue(NCBO.MAPPING_DESTINATION_CONCEPT_ID));
+				concept
+					.putValue(
+						NCBO.CONCEPT_NAME,
+						(String) mapping
+							.getValue(NCBO.MAPPING_DESTINATION_CONCEPT_NAME));
+				concept
+					.putValue(
+						NCBO.CONCEPT_ONTOLOGY_ID,
+						(String) mapping
+							.getValue(NCBO.MAPPING_DESTINATION_ONTOLOGY_ID));
+				concept
+					.putValue(
+						NCBO.CONCEPT_ONTOLOGY_NAME,
+						(String) mapping
+							.getValue(NCBO.MAPPING_DESTINATION_ONTOLOGY_NAME));
+
+				resourceManager2.add(concept);
+			    }
+
+			    Resource concept = resourceManager2
+				    .getByUri(destinationUri);
+
+			    automaticSet.add(concept);
+
+			    expansionCallback.createMappingArc(
+				    mapping.getUri(), destinationUri);
+			}
+		    }
+		};
+
 		display.addNodeMenuItemHandler("Concepts",
 			new NodeMenuItemClickedHandler() {
 			    @Override
 			    public void onNodeMenuItemClicked(Node node) {
-				expandMapping(getResource(node));
+				expander1.expand(getResource(node),
+					new GraphNodeExpansionCallback() {
+
+					    @Override
+					    public ViewContentDisplayCallback getViewContentDisplayCallback() {
+						return GraphViewContentDisplay.this
+							.getCallback();
+					    }
+
+					    @Override
+					    public ResourceManager getResourceManager() {
+						return GraphViewContentDisplay.this.resourceManager;
+					    }
+
+					    @Override
+					    public void createMappingArc(
+						    String sourceId,
+						    String targetId) {
+						GraphViewContentDisplay.this
+							.createMappingArc(
+								sourceId,
+								targetId);
+					    }
+					});
 			    }
 			}, NcboUriHelper.NCBO_MAPPING);
 
-		display.addEventHandler(NodeDragEvent.TYPE, handler);
-
-		display.addEventHandler(MouseMoveEvent.getType(), handler);
 	    }
 	});
     }
