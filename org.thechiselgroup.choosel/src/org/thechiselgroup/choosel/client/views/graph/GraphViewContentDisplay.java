@@ -405,14 +405,6 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 	return display.asWidget();
     }
 
-    protected void expandConceptNeighbourhood(Resource resource) {
-	// TODO introduce factories for callbacks that return
-	// service + callback + name
-	conceptNeighbourhoodService.getNeighbourhood(resource,
-		new ConceptNeighbourhoodCallback(display, getCallback(),
-			resourceManager, errorHandler));
-    }
-
     protected void expandMappingNeighbourhood(Resource resource) {
 	mappingNeighbourhoodService.getNeighbourhood(resource,
 		new MappingNeighbourhoodCallback(display, getCallback(),
@@ -465,13 +457,9 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 		display.addEventHandler(NodeDragEvent.TYPE, handler);
 		display.addEventHandler(MouseMoveEvent.getType(), handler);
 
-		display.addNodeMenuItemHandler("Concepts",
-			new NodeMenuItemClickedHandler() {
-			    @Override
-			    public void onNodeMenuItemClicked(Node node) {
-				expandConceptNeighbourhood(getResource(node));
-			    }
-			}, NcboUriHelper.NCBO_CONCEPT);
+		registerNodeMenuItem(NcboUriHelper.NCBO_CONCEPT, "Concepts",
+			new ConceptConceptNeighbourhoodExpander(
+				conceptNeighbourhoodService, errorHandler));
 
 		registerNodeMenuItem(NcboUriHelper.NCBO_CONCEPT, "Mappings",
 			new ConceptMappingNeighbourhoodExpander(
