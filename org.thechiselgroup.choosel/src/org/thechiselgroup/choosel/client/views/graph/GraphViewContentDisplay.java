@@ -27,10 +27,8 @@ import org.thechiselgroup.choosel.client.domain.ncbo.NcboUriHelper;
 import org.thechiselgroup.choosel.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.client.geometry.Point;
 import org.thechiselgroup.choosel.client.persistence.Memento;
-import org.thechiselgroup.choosel.client.resolver.PropertyValueResolver;
-import org.thechiselgroup.choosel.client.resolver.SimplePropertyValueResolver;
 import org.thechiselgroup.choosel.client.resources.Resource;
-import org.thechiselgroup.choosel.client.resources.ResourceByUriTypeCategorizer;
+import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceManager;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.UriList;
@@ -178,12 +176,6 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 
     private static final String MEMENTO_Y = "y";
 
-    private static final String NODE_TYPE_CONCEPT = "concept";
-
-    private static final String NODE_TYPE_MAPPING = "mapping";
-
-    private static final String NODE_TYPE_OTHER = "other";
-
     private final CommandManager commandManager;
 
     // advanced node class: (incoming, outgoing, expanded: state machine)
@@ -212,9 +204,9 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 	    @Named("concept") NeighbourhoodServiceAsync conceptNeighbourhoodService,
 	    PopupManagerFactory popupManagerFactory,
 	    DetailsWidgetHelper detailsWidgetHelper,
-	    CommandManager commandManager,
-	    ResourceManager resourceManager, ErrorHandler errorHandler,
-	    DragEnablerFactory dragEnablerFactory) {
+	    CommandManager commandManager, ResourceManager resourceManager,
+	    ErrorHandler errorHandler, DragEnablerFactory dragEnablerFactory,
+	    ResourceCategorizer resourceCategorizer) {
 
 	super(popupManagerFactory, detailsWidgetHelper, hoverModel);
 
@@ -225,7 +217,9 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 	assert resourceManager != null;
 	assert errorHandler != null;
 	assert dragEnablerFactory != null;
+	assert resourceCategorizer != null;
 
+	this.resourceCategorizer = resourceCategorizer;
 	this.display = display;
 	this.mappingNeighbourhoodService = mappingService;
 	this.conceptNeighbourhoodService = conceptNeighbourhoodService;
@@ -311,28 +305,26 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 	display.setArcStyle(arc, GraphDisplay.ARC_COLOR, "#AFC6E5");
     }
 
+    private ResourceCategorizer resourceCategorizer;
+
     private GraphItem createGraphItem(Layer layer, Resource resource) {
-	Node node = createNode(resource);
+	String label = layer.getValue(SlotResolver.GRAPH_LABEL_SLOT, resource);
+	String category = getCategory(resource);
+	Node node = new Node(resource.getUri(), label, category);
 
-	display.addNode(node);
-
-	positionNode(node);
-
-	final PropertyValueResolver resolver = new SimplePropertyValueResolver(
-		NCBO.CONCEPT_NAME);
-	PopupManager popupManager = createPopupManager(resource, resolver);
+	PopupManager popupManager = createPopupManager(resource, layer
+		.getResolver(SlotResolver.DESCRIPTION_SLOT));
 	GraphItem item = new GraphItem(resource, hoverModel, popupManager,
 		node, display, layer);
 
 	nodeIdToGraphItemMap.put(node.getId(), item);
 
+	display.addNode(node);
+	positionNode(node);
+
 	display.setNodeStyle(node, "showDragImage", "true");
 
 	setGraphItemColors(resource, item);
-
-	// TODO use dependency injection
-	String category = new ResourceByUriTypeCategorizer()
-		.getCategory(resource);
 
 	if (category.equals(NcboUriHelper.NCBO_CONCEPT)) {
 	    // TODO this should be false if set of available neighbourhoods
@@ -350,8 +342,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 
     private void setGraphItemColors(Resource resource, GraphItem item) {
 	// TODO use dependency injection
-	String category = new ResourceByUriTypeCategorizer()
-		.getCategory(resource);
+	String category = getCategory(resource);
 
 	if (category.equals(NcboUriHelper.NCBO_CONCEPT)) {
 	    String backgroundColor = "#DAE5F3";
@@ -366,6 +357,10 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 	}
     }
 
+    private String getCategory(Resource resource) {
+	return resourceCategorizer.getCategory(resource);
+    }
+
     // TODO eliminate duplicate (callback)
     private void createMappingArc(String sourceId, String targetId) {
 	Arc arc = new Arc(getArcId(sourceId, targetId), sourceId, targetId,
@@ -375,21 +370,6 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 	display.setArcStyle(arc, GraphDisplay.ARC_COLOR, "#D4D4D4");
 	display.setArcStyle(arc, GraphDisplay.ARC_STYLE,
 		GraphDisplay.ARC_STYLE_DASHED);
-    }
-
-    // TODO should work with other stuff (non-predefined attributes)
-    // --> may need layer
-    private Node createNode(Resource resource) {
-	if (isConcept(resource)) {
-	    String title = (String) resource.getValue(NCBO.CONCEPT_NAME);
-	    return new Node(resource.getUri(), title, NODE_TYPE_CONCEPT);
-	}
-
-	if (isMapping(resource)) {
-	    return new Node(resource.getUri(), "", NODE_TYPE_MAPPING);
-	}
-
-	return new Node(resource.getUri(), "", NODE_TYPE_OTHER);
     }
 
     @Override
@@ -415,7 +395,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 
     @Override
     public String[] getSlotIDs() {
-	return new String[] { SlotResolver.DESCRIPTION_SLOT };
+	return new String[] { SlotResolver.DESCRIPTION_SLOT,
+		SlotResolver.GRAPH_LABEL_SLOT };
     }
 
     // TODO encapsulate in display, use dependency injection
@@ -543,14 +524,14 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay {
 			    public void onNodeMenuItemClicked(Node node) {
 				expandConceptNeighbourhood(getResource(node));
 			    }
-			}, NODE_TYPE_CONCEPT);
+			}, NcboUriHelper.NCBO_CONCEPT);
 		display.addNodeMenuItemHandler("Mappings",
 			new NodeMenuItemClickedHandler() {
 			    @Override
 			    public void onNodeMenuItemClicked(Node node) {
 				expandMappingNeighbourhood2(getResource(node));
 			    }
-			}, NODE_TYPE_CONCEPT);
+			}, NcboUriHelper.NCBO_CONCEPT);
 
 		display.addEventHandler(NodeDragEvent.TYPE, handler);
 

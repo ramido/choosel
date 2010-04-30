@@ -99,11 +99,11 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     static final String MEMENTO_RESOURCE_SET_PREFIX = "resourceSet-";
 
+    static final String MEMENTO_SELECTION = "selection";
+
     static final String MEMENTO_SELECTION_SET_COUNT = "selectionSetCount";
 
     static final String MEMENTO_SELECTION_SET_PREFIX = "selectionSet-";
-
-    static final String MEMENTO_SELECTION = "selection";
 
     private CombinedResourceSet allResources;
 
@@ -139,6 +139,8 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private ResourceAddedEventHandler selectionAddedHandler;
 
+    private ResourceSetsPresenter selectionDropPresenter;
+
     private LabelProvider selectionModelLabelFactory;
 
     private ResourceSetsPresenter selectionPresenter;
@@ -149,11 +151,14 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private HandlerRegistration selectionResourceRemovedHandlerRegistration;
 
+    // XXX might not be necessary (use presenter instead?)
+    private List<ResourceSet> selectionSets = new ArrayList<ResourceSet>();
+
+    private SlotResolver slotResolver;
+
     private ResourceSetsPresenter splittedSetsPresenter;
 
     private ResourceSetsPresenter userSetsPresenter;
-
-    private SlotResolver slotResolver;
 
     @Inject
     public DefaultView(
@@ -262,6 +267,16 @@ public class DefaultView extends AbstractWindowContent implements View {
 		.addHandler(ResourceRemovedEvent.TYPE, selectionRemovedHandler);
     }
 
+    public void addSelectionSet(ResourceSet selectionSet) {
+	assert selectionSet != null;
+
+	this.selectionSets.add(selectionSet);
+	selectionPresenter.addResourceSet(selectionSet);
+
+	// XXX HACK
+	updateSelectionAvatars();
+    }
+
     public Widget asWidget() {
 	return mainPanel;
     }
@@ -297,6 +312,10 @@ public class DefaultView extends AbstractWindowContent implements View {
 		+ " has no label";
 
 	return combinedUserResourceSets.containsResourceSet(resourceSet);
+    }
+
+    public boolean containsSelectionSet(ResourceSet resourceSet) {
+	return selectionSets.contains(resourceSet);
     }
 
     // protected for test case until refactored, return is also for test only
@@ -344,6 +363,8 @@ public class DefaultView extends AbstractWindowContent implements View {
 	    return slotResolver.createDateSlotResolver(category);
 	} else if (slotID.equals(SlotResolver.LOCATION_SLOT)) {
 	    return slotResolver.createLocationSlotResolver(category);
+	} else if (slotID.equals(SlotResolver.GRAPH_LABEL_SLOT)) {
+	    return slotResolver.createGraphLabelSlotResolver(category);
 	}
 
 	throw new IllegalArgumentException("Invalid slot id: " + slotID);
@@ -465,20 +486,6 @@ public class DefaultView extends AbstractWindowContent implements View {
 	initSelectionDragSourceUI();
     }
 
-    private void initSelectionDropPresenterUI() {
-	selectionDropPresenter.init();
-
-	DefaultResourceSet resources = new DefaultResourceSet();
-	resources.setLabel("add selection");
-	selectionDropPresenter.addResourceSet(resources);
-
-	Widget widget = selectionDropPresenter.asWidget();
-
-	configurationPanel.add(widget, DockPanel.EAST);
-	configurationPanel.setCellHorizontalAlignment(widget,
-		HasAlignment.ALIGN_RIGHT);
-    }
-
     // TODO eliminate inner class, implement methods in DefaultView & test them
     private void initContentDisplay() {
 	contentDisplayCallback = new ViewContentDisplayCallback() {
@@ -525,10 +532,6 @@ public class DefaultView extends AbstractWindowContent implements View {
 	    }
 	};
 	contentDisplay.init(contentDisplayCallback);
-    }
-
-    public boolean containsSelectionSet(ResourceSet resourceSet) {
-	return selectionSets.contains(resourceSet);
     }
 
     private void initHoverModelHooks() {
@@ -618,6 +621,20 @@ public class DefaultView extends AbstractWindowContent implements View {
 	configurationPanel.setCellHorizontalAlignment(widget,
 		HasAlignment.ALIGN_RIGHT);
 	configurationPanel.setCellWidth(widget, "100%"); // eats up all space
+    }
+
+    private void initSelectionDropPresenterUI() {
+	selectionDropPresenter.init();
+
+	DefaultResourceSet resources = new DefaultResourceSet();
+	resources.setLabel("add selection");
+	selectionDropPresenter.addResourceSet(resources);
+
+	Widget widget = selectionDropPresenter.asWidget();
+
+	configurationPanel.add(widget, DockPanel.EAST);
+	configurationPanel.setCellHorizontalAlignment(widget,
+		HasAlignment.ALIGN_RIGHT);
     }
 
     private void initSelectionModelResourceHandlers() {
@@ -720,6 +737,12 @@ public class DefaultView extends AbstractWindowContent implements View {
 	selectionResourceRemovedHandlerRegistration = null;
     }
 
+    public void removeSelectionSet(ResourceSet selectionSet) {
+	assert selectionSet != null;
+	this.selectionSets.remove(selectionSet);
+	selectionPresenter.removeResourceSet(selectionSet);
+    }
+
     protected void resize(int width, int height) {
 	/*
 	 * special resize method required, because otherwise window height
@@ -809,27 +832,6 @@ public class DefaultView extends AbstractWindowContent implements View {
 	return memento;
     }
 
-    // XXX might not be necessary (use presenter instead?)
-    private List<ResourceSet> selectionSets = new ArrayList<ResourceSet>();
-
-    private ResourceSetsPresenter selectionDropPresenter;
-
-    public void addSelectionSet(ResourceSet selectionSet) {
-	assert selectionSet != null;
-
-	this.selectionSets.add(selectionSet);
-	selectionPresenter.addResourceSet(selectionSet);
-
-	// XXX HACK
-	updateSelectionAvatars();
-    }
-
-    public void removeSelectionSet(ResourceSet selectionSet) {
-	assert selectionSet != null;
-	this.selectionSets.remove(selectionSet);
-	selectionPresenter.removeResourceSet(selectionSet);
-    }
-
     public void setSelection(ResourceSet newSelectionModel) {
 	// assert newSelectionModel != null;
 
@@ -855,19 +857,6 @@ public class DefaultView extends AbstractWindowContent implements View {
 
 	// XXX HACK
 	updateSelectionAvatars();
-    }
-
-    // XXX HACK
-    private void updateSelectionAvatars() {
-	Map<ResourceSet, ResourceSetAvatar> avatars = selectionPresenter
-		.getAvatars();
-	for (ResourceSetAvatar avatar : avatars.values()) {
-	    if (avatar.getResourceSet().equals(selection)) {
-		avatar.setEnabledCSSClass("avatar-selection");
-	    } else {
-		avatar.setEnabledCSSClass("avatar-resourceSet");
-	    }
-	}
     }
 
     private void setSelectionStatusVisible(boolean selectionStatus) {
@@ -923,6 +912,19 @@ public class DefaultView extends AbstractWindowContent implements View {
 	for (int i = 0; i < resourceSets.size(); i++) {
 	    storeResourceSet(persistanceManager, memento,
 		    MEMENTO_RESOURCE_SET_PREFIX + i, resourceSets.get(i));
+	}
+    }
+
+    // XXX HACK
+    private void updateSelectionAvatars() {
+	Map<ResourceSet, ResourceSetAvatar> avatars = selectionPresenter
+		.getAvatars();
+	for (ResourceSetAvatar avatar : avatars.values()) {
+	    if (avatar.getResourceSet().equals(selection)) {
+		avatar.setEnabledCSSClass("avatar-selection");
+	    } else {
+		avatar.setEnabledCSSClass("avatar-resourceSet");
+	    }
 	}
     }
 

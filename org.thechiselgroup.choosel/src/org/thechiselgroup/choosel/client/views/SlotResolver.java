@@ -32,6 +32,10 @@ public interface SlotResolver {
 
     String LOCATION_SLOT = "location";
 
+    String GRAPH_LABEL_SLOT = "graphLabel";
+
+    PropertyValueResolver createGraphLabelSlotResolver(String category);
+
     PropertyValueResolver createLocationSlotResolver(String category);
 
     PropertyValueResolver createLabelSlotResolver(String category);

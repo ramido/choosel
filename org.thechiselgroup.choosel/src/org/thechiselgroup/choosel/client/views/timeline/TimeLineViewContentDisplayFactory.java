@@ -37,9 +37,6 @@ public class TimeLineViewContentDisplayFactory implements
     private DetailsWidgetHelper detailsWidgetHelper;
 
     @Inject
-    private SlotResolver slotResolver;
-
-    @Inject
     @Named(ChooselInjectionConstants.HOVER_MODEL)
     private ResourceSet hoverModel;
 

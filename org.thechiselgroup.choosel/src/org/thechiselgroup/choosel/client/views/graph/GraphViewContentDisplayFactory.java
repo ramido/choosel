@@ -18,12 +18,12 @@ package org.thechiselgroup.choosel.client.views.graph;
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.error_handling.ErrorHandler;
+import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceManager;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
 
@@ -34,6 +34,22 @@ public class GraphViewContentDisplayFactory implements
 	ViewContentDisplayFactory {
 
     @Inject
+    private CommandManager commandManager;
+
+    @Inject
+    @Named("concept")
+    private NeighbourhoodServiceAsync conceptNeighbourhoodService;
+
+    @Inject
+    private DetailsWidgetHelper detailsWidgetHelper;
+
+    @Inject
+    private DragEnablerFactory dragEnablerFactory;
+
+    @Inject
+    private ErrorHandler errorHandler;
+
+    @Inject
     @Named(ChooselInjectionConstants.HOVER_MODEL)
     private ResourceSet hoverModel;
 
@@ -42,29 +58,13 @@ public class GraphViewContentDisplayFactory implements
     private NeighbourhoodServiceAsync mappingService;
 
     @Inject
-    @Named("concept")
-    private NeighbourhoodServiceAsync conceptNeighbourhoodService;
-
-    @Inject
     private PopupManagerFactory popupManagerFactory;
 
     @Inject
-    private DetailsWidgetHelper detailsWidgetHelper;
-
-    @Inject
-    private CommandManager commandManager;
+    private ResourceCategorizer resourceCategorizer;
 
     @Inject
     private ResourceManager resourceManager;
-
-    @Inject
-    private ErrorHandler errorHandler;
-
-    @Inject
-    private DragEnablerFactory dragEnablerFactory;
-
-    @Inject
-    private SlotResolver slotResolver;
 
     @Inject
     public GraphViewContentDisplayFactory() {
@@ -74,8 +74,9 @@ public class GraphViewContentDisplayFactory implements
     public ViewContentDisplay createViewContentDisplay() {
 	return new GraphViewContentDisplay(
 		new GraphViewContentDisplay.DefaultDisplay(), hoverModel,
-		mappingService, conceptNeighbourhoodService, popupManagerFactory,
-		detailsWidgetHelper, commandManager, resourceManager,
-		errorHandler, dragEnablerFactory);
+		mappingService, conceptNeighbourhoodService,
+		popupManagerFactory, detailsWidgetHelper, commandManager,
+		resourceManager, errorHandler, dragEnablerFactory,
+		resourceCategorizer);
     }
 }

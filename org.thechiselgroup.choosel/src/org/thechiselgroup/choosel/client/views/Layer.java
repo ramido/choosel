@@ -56,11 +56,11 @@ public class Layer {
 	return slots.get(slotID);
     }
 
-    public Object getValue(String slotID, Resource resource) {
+    public <T> T getValue(String slotID, Resource resource) {
 	assert getResolver(slotID) != null : "no resolver for slot: " + slotID
 		+ " ( available slots: " + slots.keySet() + " )";
 
-	return getResolver(slotID).getValue(resource);
+	return (T) getResolver(slotID).getValue(resource);
     }
 
     public void initSlots(Slot[] slots) {
