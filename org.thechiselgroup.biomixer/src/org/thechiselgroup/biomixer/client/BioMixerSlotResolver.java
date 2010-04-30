@@ -15,36 +15,24 @@
  *******************************************************************************/
 package org.thechiselgroup.biomixer.client;
 
-import java.util.List;
-
 import org.thechiselgroup.choosel.client.domain.ncbo.NCBO;
 import org.thechiselgroup.choosel.client.domain.ncbo.NcboUriHelper;
 import org.thechiselgroup.choosel.client.resolver.FixedValuePropertyValueResolver;
 import org.thechiselgroup.choosel.client.resolver.NullPropertyValueResolver;
 import org.thechiselgroup.choosel.client.resolver.PropertyValueResolver;
-import org.thechiselgroup.choosel.client.resolver.PropertyValueResolverConverterWrapper;
 import org.thechiselgroup.choosel.client.resolver.SimplePropertyValueResolver;
 import org.thechiselgroup.choosel.client.resources.Resource;
-import org.thechiselgroup.choosel.client.util.ConversionException;
-import org.thechiselgroup.choosel.client.util.Converter;
-import org.thechiselgroup.choosel.client.views.Layer;
-import org.thechiselgroup.choosel.client.views.SlotResolver;
+import org.thechiselgroup.choosel.client.views.DefaultSlotResolver;
 
-public class BioMixerSlotResolver implements SlotResolver {
-
-    private static final String[] COLORS = new String[] { "#6495ed", "#b22222" };
+public class BioMixerSlotResolver extends DefaultSlotResolver {
 
     @Override
-    public PropertyValueResolver createColorSlotResolver(String category,
-	    List<Layer> layers) {
+    public PropertyValueResolver createGraphLabelSlotResolver(String category) {
+	if (NcboUriHelper.NCBO_CONCEPT.equals(category)) {
+	    return new SimplePropertyValueResolver(NCBO.CONCEPT_NAME);
+	}
 
-	String color = COLORS[layers.size()];
-	return new FixedValuePropertyValueResolver(color);
-    }
-
-    @Override
-    public PropertyValueResolver createDateSlotResolver(String type) {
-	return new SimplePropertyValueResolver("date");
+	return new FixedValuePropertyValueResolver("");
     }
 
     @Override
@@ -82,28 +70,6 @@ public class BioMixerSlotResolver implements SlotResolver {
 	} else {
 	    throw new RuntimeException("failed creating slot mapping");
 	}
-    }
-
-    @Override
-    public PropertyValueResolver createLabelSlotResolver(String category) {
-	// TODO replace this code with null label slot resolver
-
-	Converter<Float, String> converter = new Converter<Float, String>() {
-	    @Override
-	    public String convert(Float value) throws ConversionException {
-		if (value != null) {
-		    int f = (value).intValue();
-		    return "" + f;
-		}
-
-		return "";
-	    }
-	};
-
-	SimplePropertyValueResolver resolver = new SimplePropertyValueResolver(
-		"magnitude");
-
-	return new PropertyValueResolverConverterWrapper(resolver, converter);
     }
 
     @Override
