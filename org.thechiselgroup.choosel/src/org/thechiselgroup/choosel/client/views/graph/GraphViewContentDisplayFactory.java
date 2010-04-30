@@ -74,8 +74,8 @@ public class GraphViewContentDisplayFactory implements
     public ViewContentDisplay createViewContentDisplay() {
 	return new GraphViewContentDisplay(
 		new GraphViewContentDisplay.DefaultDisplay(), hoverModel,
-		slotResolver, mappingService, conceptNeighbourhoodService,
-		popupManagerFactory, detailsWidgetHelper, commandManager,
-		resourceManager, errorHandler, dragEnablerFactory);
+		mappingService, conceptNeighbourhoodService, popupManagerFactory,
+		detailsWidgetHelper, commandManager, resourceManager,
+		errorHandler, dragEnablerFactory);
     }
 }

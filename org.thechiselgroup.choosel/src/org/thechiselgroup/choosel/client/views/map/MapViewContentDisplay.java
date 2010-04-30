@@ -69,12 +69,10 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
     public MapViewContentDisplay(
 	    PopupManagerFactory popupManagerFactory,
 	    DetailsWidgetHelper detailsWidgetHelper,
-	    SlotResolver slotResolver,
 	    @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
 	    DragEnablerFactory dragEnablerFactory) {
 
-	super(popupManagerFactory, detailsWidgetHelper, hoverModel,
-		slotResolver);
+	super(popupManagerFactory, detailsWidgetHelper, hoverModel);
 
 	this.dragEnablerFactory = dragEnablerFactory;
     }
