@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.client.views;
 import java.util.List;
 
 import org.thechiselgroup.choosel.client.resolver.FixedValuePropertyValueResolver;
+import org.thechiselgroup.choosel.client.resolver.NullPropertyValueResolver;
 import org.thechiselgroup.choosel.client.resolver.PropertyValueResolver;
 import org.thechiselgroup.choosel.client.resolver.PropertyValueResolverConverterWrapper;
 import org.thechiselgroup.choosel.client.resolver.SimplePropertyValueResolver;
@@ -58,6 +59,11 @@ public class DefaultSlotResolver implements SlotResolver {
 	} else {
 	    throw new RuntimeException("failed creating slot mapping");
 	}
+    }
+
+    @Override
+    public PropertyValueResolver createGraphLabelSlotResolver(String category) {
+	return new NullPropertyValueResolver();
     }
 
     @Override

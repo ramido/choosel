@@ -35,6 +35,7 @@ import org.thechiselgroup.choosel.client.geometry.Point;
 import org.thechiselgroup.choosel.client.resolver.PropertyValueResolver;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceManager;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
@@ -49,7 +50,6 @@ import org.thechiselgroup.choosel.client.ui.widget.graph.NodeDragEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeDragHandler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.Layer;
-import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay.Display;
 
@@ -58,18 +58,20 @@ public class GraphViewContentDisplayTest {
     public class TestGraphViewContentDisplay extends GraphViewContentDisplay {
 
 	public TestGraphViewContentDisplay(Display display,
-		ResourceSet hoverModel, SlotResolver slotResolver,
+		ResourceSet hoverModel,
 		NeighbourhoodServiceAsync mappingService,
 		NeighbourhoodServiceAsync conceptNeighbourhoodService,
 		PopupManagerFactory popupManagerFactory,
 		DetailsWidgetHelper detailsWidgetHelper,
 		CommandManager commandManager, ResourceManager resourceManager,
-		ErrorHandler errorHandler, DragEnablerFactory dragEnablerFactory) {
+		ErrorHandler errorHandler,
+		DragEnablerFactory dragEnablerFactory,
+		ResourceCategorizer resourceCategorizer) {
 
-	    super(display, hoverModel, mappingService, conceptNeighbourhoodService,
-		    popupManagerFactory, detailsWidgetHelper,
-		    commandManager, resourceManager, errorHandler,
-		    dragEnablerFactory);
+	    super(display, hoverModel, mappingService,
+		    conceptNeighbourhoodService, popupManagerFactory,
+		    detailsWidgetHelper, commandManager, resourceManager,
+		    errorHandler, dragEnablerFactory, resourceCategorizer);
 	}
 
 	@Override
@@ -98,9 +100,6 @@ public class GraphViewContentDisplayTest {
     private Resource concept1;
 
     private Resource concept2;
-
-    @Mock
-    private SlotResolver slotResolver;
 
     @Mock
     private NeighbourhoodServiceAsync conceptNeighbourhoodService;
@@ -143,6 +142,9 @@ public class GraphViewContentDisplayTest {
     private Point sourceLocation;
 
     private Point targetLocation;
+
+    @Mock
+    private ResourceCategorizer resourceCategorizer;
 
     @Test
     public void addNeighbourhoodArcWhenAddingConceptReferedFromCurrentConcepts() {
@@ -249,12 +251,15 @@ public class GraphViewContentDisplayTest {
 	when(callback.getAllResources()).thenReturn(allResources);
 
 	contentDisplay = spy(new TestGraphViewContentDisplay(display,
-		hoverModel, slotResolver, mappingService,
-		conceptNeighbourhoodService, popupManagerFactory,
-		detailsWidgetHelper, commandManager, resourceManager,
-		errorHandler, dragEnablerFactory));
+		hoverModel, mappingService, conceptNeighbourhoodService,
+		popupManagerFactory, detailsWidgetHelper, commandManager,
+		resourceManager, errorHandler, dragEnablerFactory,
+		resourceCategorizer));
 
 	contentDisplay.init(callback);
+
+	when(resourceCategorizer.getCategory(any(Resource.class))).thenReturn(
+		"default");
 
 	ArgumentCaptor<GraphWidgetReadyHandler> argument = ArgumentCaptor
 		.forClass(GraphWidgetReadyHandler.class);

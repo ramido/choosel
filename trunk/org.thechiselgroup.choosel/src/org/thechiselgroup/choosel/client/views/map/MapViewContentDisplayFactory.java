@@ -20,7 +20,6 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
 
@@ -41,9 +40,6 @@ public class MapViewContentDisplayFactory implements ViewContentDisplayFactory {
 
     @Inject
     private DragEnablerFactory dragEnablerFactory;
-
-    @Inject
-    private SlotResolver slotResolver;
 
     @Inject
     public MapViewContentDisplayFactory() {
