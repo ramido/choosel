@@ -81,10 +81,6 @@ public class GraphViewContentDisplayTest {
 	}
 
 	@Override
-	protected void expandConceptNeighbourhood(Resource resource) {
-	}
-
-	@Override
 	protected void expandMappingNeighbourhood(Resource resource) {
 	}
     }
