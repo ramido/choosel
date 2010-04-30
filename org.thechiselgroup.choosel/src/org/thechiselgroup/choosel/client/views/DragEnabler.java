@@ -129,7 +129,7 @@ public class DragEnabler {
 	// --> this can cause event forwarding (i.e. to windows) to fail
 	// TODO title
 	final String text = (String) item
-		.getResourceValue(SlotResolver.DESCRIPTION_SLOT_ID);
+		.getResourceValue(SlotResolver.DESCRIPTION_SLOT);
 	panel = new InvisibleResourceSetAvatar(text, "avatar-resourceSet",
 		resources, ResourceSetAvatarType.SET, span, item
 			.getPopupManager());

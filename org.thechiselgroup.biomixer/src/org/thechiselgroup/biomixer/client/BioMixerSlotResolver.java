@@ -20,6 +20,7 @@ import java.util.List;
 import org.thechiselgroup.choosel.client.domain.ncbo.NCBO;
 import org.thechiselgroup.choosel.client.domain.ncbo.NcboUriHelper;
 import org.thechiselgroup.choosel.client.resolver.FixedValuePropertyValueResolver;
+import org.thechiselgroup.choosel.client.resolver.NullPropertyValueResolver;
 import org.thechiselgroup.choosel.client.resolver.PropertyValueResolver;
 import org.thechiselgroup.choosel.client.resolver.PropertyValueResolverConverterWrapper;
 import org.thechiselgroup.choosel.client.resolver.SimplePropertyValueResolver;
@@ -31,61 +32,58 @@ import org.thechiselgroup.choosel.client.views.SlotResolver;
 
 public class BioMixerSlotResolver implements SlotResolver {
 
-    public void createColorSlotResolver(Layer layerModel, List<Layer> layers) {
+    @Override
+    public PropertyValueResolver createColorSlotResolver(String category,
+	    List<Layer> layers) {
+
 	String color = SlotResolver.COLORS[layers.size()];
-
-	layerModel.putResolver(COLOR_SLOT_ID,
-		new FixedValuePropertyValueResolver(color));
+	return new FixedValuePropertyValueResolver(color);
     }
 
-    public void createDateSlotResolver(Layer layerModel) {
-	layerModel.putResolver(SlotResolver.DATE_SLOT_ID,
-		new SimplePropertyValueResolver("date"));
-
+    @Override
+    public PropertyValueResolver createDateSlotResolver(String type) {
+	return new SimplePropertyValueResolver("date");
     }
 
-    public void createDescriptionSlotResolver(Layer layerModel) {
+    @Override
+    public PropertyValueResolver createDescriptionSlotResolver(String category) {
 	// TODO switch based on category -- need category as part of layerModel
 	// TODO resources as part of layerModel
 	// TODO how to do the automatic color assignment?
 	// TODO refactor // extract
-	if (NcboUriHelper.NCBO_CONCEPT.equals(layerModel.getCategory())) {
-	    layerModel.putResolver(SlotResolver.DESCRIPTION_SLOT_ID,
-		    new PropertyValueResolver() {
-			@Override
-			public Object getValue(Resource resource) {
-			    return resource.getValue(NCBO.CONCEPT_NAME)
-				    + " [from: "
-				    + resource
-					    .getValue(NCBO.CONCEPT_ONTOLOGY_NAME)
-				    + "]";
-			}
-		    });
-	} else if (NcboUriHelper.NCBO_MAPPING.equals(layerModel.getCategory())) {
-	    layerModel.putResolver(SlotResolver.DESCRIPTION_SLOT_ID,
-		    new PropertyValueResolver() {
-			@Override
-			public Object getValue(Resource resource) {
-			    return resource
-				    .getValue(NCBO.MAPPING_SOURCE_CONCEPT_NAME)
-				    + " ["
-				    + resource
-					    .getValue(NCBO.MAPPING_SOURCE_ONTOLOGY_NAME)
-				    + "] --> "
-				    + resource
-					    .getValue(NCBO.MAPPING_DESTINATION_CONCEPT_NAME)
-				    + " ["
-				    + resource
-					    .getValue(NCBO.MAPPING_DESTINATION_ONTOLOGY_NAME)
-				    + "]";
-			}
-		    });
+	if (NcboUriHelper.NCBO_CONCEPT.equals(category)) {
+	    return new PropertyValueResolver() {
+		@Override
+		public Object getValue(Resource resource) {
+		    return resource.getValue(NCBO.CONCEPT_NAME) + " [from: "
+			    + resource.getValue(NCBO.CONCEPT_ONTOLOGY_NAME)
+			    + "]";
+		}
+	    };
+	} else if (NcboUriHelper.NCBO_MAPPING.equals(category)) {
+	    return new PropertyValueResolver() {
+		@Override
+		public Object getValue(Resource resource) {
+		    return resource.getValue(NCBO.MAPPING_SOURCE_CONCEPT_NAME)
+			    + " ["
+			    + resource
+				    .getValue(NCBO.MAPPING_SOURCE_ONTOLOGY_NAME)
+			    + "] --> "
+			    + resource
+				    .getValue(NCBO.MAPPING_DESTINATION_CONCEPT_NAME)
+			    + " ["
+			    + resource
+				    .getValue(NCBO.MAPPING_DESTINATION_ONTOLOGY_NAME)
+			    + "]";
+		}
+	    };
 	} else {
 	    throw new RuntimeException("failed creating slot mapping");
 	}
     }
 
-    public void createLabelSlotResolver(Layer layerModel) {
+    @Override
+    public PropertyValueResolver createLabelSlotResolver(String category) {
 	// TODO replace this code with null label slot resolver
 
 	Converter<Float, String> converter = new Converter<Float, String>() {
@@ -103,11 +101,12 @@ public class BioMixerSlotResolver implements SlotResolver {
 	SimplePropertyValueResolver resolver = new SimplePropertyValueResolver(
 		"magnitude");
 
-	layerModel.putResolver(SlotResolver.LABEL_SLOT_ID,
-		new PropertyValueResolverConverterWrapper(resolver, converter));
+	return new PropertyValueResolverConverterWrapper(resolver, converter);
     }
 
-    public void createLocationSlotResolver(Layer layer) {
+    @Override
+    public PropertyValueResolver createLocationSlotResolver(String category) {
+	return new NullPropertyValueResolver();
     }
 
 }

@@ -85,7 +85,7 @@ public class TimeLineItem extends IconResourceItem {
 	this.view = view;
 	this.dragEnablerFactory = dragEnablerFactory;
 
-	String date = (String) getResourceValue(SlotResolver.DATE_SLOT_ID);
+	String date = (String) getResourceValue(SlotResolver.DATE_SLOT);
 
 	timeLineEvent = TimeLineEvent.create(date, null, getDefaultIconURL(),
 		this);

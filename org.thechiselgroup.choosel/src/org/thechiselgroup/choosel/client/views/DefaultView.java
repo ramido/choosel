@@ -285,9 +285,18 @@ public class DefaultView extends AbstractWindowContent implements View {
     // protected for test case until refactored, return is also for test only
     // TODO cleanup
     protected Layer createLayer(String category, ResourceSet resources) {
-	Layer layer = new Layer();
+	String[] slotIDs = contentDisplay.getSlotIDs();
+	Slot[] slots = new Slot[slotIDs.length];
 
-	layer.initSlots(contentDisplay.createSlots());
+	for (int i = 0; i < slots.length; i++) {
+	    slots[i] = new Slot(slotIDs[i]);
+	}
+
+	// TODO create slots automatically
+	// --> need slot resolver here...
+
+	Layer layer = new Layer();
+	layer.initSlots(slots);
 	layer.setCategory(category);
 	layer.setResources(resources);
 

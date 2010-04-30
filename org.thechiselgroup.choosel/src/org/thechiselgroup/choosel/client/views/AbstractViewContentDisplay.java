@@ -68,7 +68,7 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
 	    final Resource resource) {
 
 	final PropertyValueResolver resolver = layer
-		.getResolver(SlotResolver.DESCRIPTION_SLOT_ID);
+		.getResolver(SlotResolver.DESCRIPTION_SLOT);
 
 	return createPopupManager(resource, resolver);
     }
