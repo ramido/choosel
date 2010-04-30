@@ -82,9 +82,6 @@ public class GraphViewContentDisplayTest {
 	    return popupManager;
 	}
 
-	@Override
-	protected void expandMappingNeighbourhood(Resource resource) {
-	}
     }
 
     private ResourceSet allResources;
