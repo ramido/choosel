@@ -79,7 +79,7 @@ public class AutomaticConceptExpanderTest {
 		.forClass(String.class);
 	ArgumentCaptor<String> destArgument = ArgumentCaptor
 		.forClass(String.class);
-	verify(expansionCallback, times(1)).createArc(
+	verify(expansionCallback, times(1)).showArc(
 		eq(NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS),
 		sourceArgument.capture(), destArgument.capture());
 	assertEquals(concept1.getUri(), sourceArgument.getValue());
@@ -104,7 +104,7 @@ public class AutomaticConceptExpanderTest {
 		.forClass(String.class);
 	ArgumentCaptor<String> destArgument = ArgumentCaptor
 		.forClass(String.class);
-	verify(expansionCallback, times(1)).createArc(
+	verify(expansionCallback, times(1)).showArc(
 		eq(NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS),
 		sourceArgument.capture(), destArgument.capture());
 	assertEquals(concept2.getUri(), sourceArgument.getValue());

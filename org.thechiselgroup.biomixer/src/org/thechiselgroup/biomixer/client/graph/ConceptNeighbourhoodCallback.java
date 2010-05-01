@@ -54,13 +54,7 @@ public class ConceptNeighbourhoodCallback extends AbstractNeighbourhoodCallback 
 	    String targetUri = relationship.getTarget().getUri();
 	    String sourceUri = relationship.getSource().getUri();
 
-	    if (graph.containsArc(expansionCallback.getArcId(
-		    NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS, sourceUri,
-		    targetUri))) {
-		continue;
-	    }
-
-	    expansionCallback.createArc(
+	    expansionCallback.showArc(
 		    NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS, sourceUri,
 		    targetUri);
 	}

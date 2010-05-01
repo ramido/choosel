@@ -51,9 +51,8 @@ public class MappingNeighbourhoodCallback extends AbstractNeighbourhoodCallback 
 	    String sourceId = relationship.getSource().getUri();
 	    String targetId = relationship.getTarget().getUri();
 
-	    expansionCallback.createArc(
-		    GraphViewContentDisplay.ARC_TYPE_MAPPING, sourceId,
-		    targetId);
+	    expansionCallback.showArc(GraphViewContentDisplay.ARC_TYPE_MAPPING,
+		    sourceId, targetId);
 	}
     }
 
@@ -90,11 +89,7 @@ public class MappingNeighbourhoodCallback extends AbstractNeighbourhoodCallback 
 	    String destinationUri = mapping.getTarget().getUri();
 	    String sourceUri = mapping.getSource().getUri();
 
-	    if (containsUri(sourceUri)
-		    && containsUri(destinationUri)
-		    && !graph.containsArc(expansionCallback.getArcId(
-			    GraphViewContentDisplay.ARC_TYPE_MAPPING,
-			    sourceUri, destinationUri))) {
+	    if (containsUri(sourceUri) && containsUri(destinationUri)) {
 		result.add(mapping);
 	    }
 	}
@@ -106,9 +101,8 @@ public class MappingNeighbourhoodCallback extends AbstractNeighbourhoodCallback 
     public void onSuccess(NeighbourhoodServiceResult result) {
 	List<Resource> displayableMappings = calculateDisplayableMappings(result);
 	addResources(displayableMappings);
-	List<Relationship> displayableRelationships = calculateDisplayableRelationships(result
-		.getRelationships());
-	addRelationshipArcs(displayableRelationships);
+	addRelationshipArcs(calculateDisplayableRelationships(result
+		.getRelationships()));
 	layoutNodes(displayableMappings);
     }
 

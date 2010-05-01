@@ -58,7 +58,7 @@ public class MappingExpander implements GraphNodeExpander {
 
 	    automaticSet.add(concept);
 
-	    expansionCallback.createArc(
+	    expansionCallback.showArc(
 		    GraphViewContentDisplay.ARC_TYPE_MAPPING, sourceUri,
 		    mapping.getUri());
 	}
@@ -86,7 +86,7 @@ public class MappingExpander implements GraphNodeExpander {
 
 	    automaticSet.add(concept);
 
-	    expansionCallback.createArc(
+	    expansionCallback.showArc(
 		    GraphViewContentDisplay.ARC_TYPE_MAPPING, mapping.getUri(),
 		    destinationUri);
 	}

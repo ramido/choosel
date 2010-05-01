@@ -218,9 +218,18 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     public void checkResize() {
     }
 
-    public void createArc(String arcType, String sourceId, String targetId) {
-	Arc arc = new Arc(getArcId(arcType, sourceId, targetId), sourceId,
-		targetId, arcType);
+    public void showArc(String arcType, String sourceId, String targetId) {
+	assert arcType != null;
+	assert sourceId != null;
+	assert targetId != null;
+
+	String arcId = getArcId(arcType, sourceId, targetId);
+
+	if (display.containsArc(arcId)) {
+	    return;
+	}
+
+	Arc arc = new Arc(arcId, sourceId, targetId, arcType);
 
 	display.addArc(arc);
 

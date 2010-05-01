@@ -28,9 +28,13 @@ public interface GraphNodeExpansionCallback extends ResourceCategorizer {
 
     ViewContentDisplayCallback getCallback();
 
-    void createArc(String arcType, String sourceId, String targetId);
+    /**
+     * Displays the specified arc. If the arc is already displayed, nothing
+     * changes. If the arc is not visible yet, it is created.
+     */
+    void showArc(String arcType, String sourceId, String targetId);
 
-    String getArcId(String arcType, String sourceId, String targetId);
+    // String getArcId(String arcType, String sourceId, String targetId);
 
     boolean isRestoring();
 
