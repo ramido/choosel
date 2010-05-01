@@ -60,20 +60,19 @@ public class GraphViewContentDisplayTest {
 	public TestGraphViewContentDisplay(Display display,
 		ResourceSet hoverModel,
 		NeighbourhoodServiceAsync mappingService,
-		NeighbourhoodServiceAsync conceptNeighbourhoodService,
 		PopupManagerFactory popupManagerFactory,
 		DetailsWidgetHelper detailsWidgetHelper,
 		CommandManager commandManager, ResourceManager resourceManager,
 		ErrorHandler errorHandler,
 		DragEnablerFactory dragEnablerFactory,
 		ResourceCategorizer resourceCategorizer,
-		ArcStyleProvider arcStyleProvider) {
+		ArcStyleProvider arcStyleProvider,
+		NodeMenuEntryRegistry registry) {
 
-	    super(display, hoverModel, mappingService,
-		    conceptNeighbourhoodService, popupManagerFactory,
+	    super(display, hoverModel, mappingService, popupManagerFactory,
 		    detailsWidgetHelper, commandManager, resourceManager,
 		    errorHandler, dragEnablerFactory, resourceCategorizer,
-		    arcStyleProvider);
+		    arcStyleProvider, registry);
 	}
 
 	@Override
@@ -87,6 +86,9 @@ public class GraphViewContentDisplayTest {
     private ResourceSet allResources;
 
     @Mock
+    private ArcStyleProvider arcStyleProvider;
+
+    @Mock
     private ViewContentDisplayCallback callback;
 
     @Mock
@@ -95,9 +97,6 @@ public class GraphViewContentDisplayTest {
     private Resource concept1;
 
     private Resource concept2;
-
-    @Mock
-    private NeighbourhoodServiceAsync conceptNeighbourhoodService;
 
     private GraphViewContentDisplay contentDisplay;
 
@@ -132,17 +131,17 @@ public class GraphViewContentDisplayTest {
     private PopupManagerFactory popupManagerFactory;
 
     @Mock
-    private ResourceManager resourceManager;
-
-    private Point sourceLocation;
-
-    private Point targetLocation;
+    private NodeMenuEntryRegistry registry;
 
     @Mock
     private ResourceCategorizer resourceCategorizer;
 
     @Mock
-    private ArcStyleProvider arcStyleProvider;
+    private ResourceManager resourceManager;
+
+    private Point sourceLocation;
+
+    private Point targetLocation;
 
     @Test
     public void addNeighbourhoodArcWhenAddingConceptReferedFromCurrentConcepts() {
@@ -249,10 +248,10 @@ public class GraphViewContentDisplayTest {
 	when(callback.getAllResources()).thenReturn(allResources);
 
 	contentDisplay = spy(new TestGraphViewContentDisplay(display,
-		hoverModel, mappingService, conceptNeighbourhoodService,
-		popupManagerFactory, detailsWidgetHelper, commandManager,
-		resourceManager, errorHandler, dragEnablerFactory,
-		resourceCategorizer, arcStyleProvider));
+		hoverModel, mappingService, popupManagerFactory,
+		detailsWidgetHelper, commandManager, resourceManager,
+		errorHandler, dragEnablerFactory, resourceCategorizer,
+		arcStyleProvider, registry));
 
 	contentDisplay.init(callback);
 
