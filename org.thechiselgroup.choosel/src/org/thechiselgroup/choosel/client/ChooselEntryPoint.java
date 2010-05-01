@@ -16,12 +16,11 @@
 package org.thechiselgroup.choosel.client;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.client.GWT;
 
-public class ChooselEntryPoint implements EntryPoint {
+public abstract class ChooselEntryPoint implements EntryPoint {
 
     public final void onModuleLoad() {
-	ChooselGinjector injector = GWT.create(getChooselGinjectorClass());
+	ChooselGinjector injector = createChooselGinjector();
 
 	// TODO what is this for?
 	// resolves initialization cycles
@@ -33,10 +32,13 @@ public class ChooselEntryPoint implements EntryPoint {
 
     /**
      * Choosel applications should override to implement their own
-     * ChooseGinjector that links their custom configuration module.
+     * ChooseGinjector that links their custom configuration module. They need
+     * to call GWT.create with their own classes, because the GWT compilation
+     * requires GWT.create to be called with a class literal.
      */
-    protected Class<? extends ChooselGinjector> getChooselGinjectorClass() {
-	return ChooselGinjector.class;
-    }
+    protected abstract ChooselGinjector createChooselGinjector();
+    // {
+    // return GWT.create(ChooselGinjector.class);
+    // }
 
 }
