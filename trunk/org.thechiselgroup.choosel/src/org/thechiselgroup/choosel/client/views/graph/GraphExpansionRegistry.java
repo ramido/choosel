@@ -23,18 +23,41 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
-public class NodeMenuEntryRegistry {
+public class GraphExpansionRegistry {
+
+    private Map<String, GraphNodeExpander> automaticExpandersByCategory = new HashMap<String, GraphNodeExpander>();
 
     private Map<String, List<NodeMenuEntry>> menuEntriesByCategory = new HashMap<String, List<NodeMenuEntry>>();
 
-    public void putNodeMenuEntry(String category, String label,
-	    GraphNodeExpander expander) {
-
+    public GraphNodeExpander getAutomaticExpander(String category) {
 	assert category != null;
-	assert label != null;
+
+	if (!automaticExpandersByCategory.containsKey(category)) {
+	    return new NullGraphNodeExpander();
+	}
+
+	return automaticExpandersByCategory.get(category);
+    }
+
+    public List<NodeMenuEntry> getNodeMenuEntries(String category) {
+	assert category != null;
+
+	if (!menuEntriesByCategory.containsKey(category)) {
+	    return Collections.emptyList();
+	}
+
+	return menuEntriesByCategory.get(category);
+    }
+
+    public Set<Entry<String, List<NodeMenuEntry>>> getNodeMenuEntriesByCategory() {
+	return menuEntriesByCategory.entrySet();
+    }
+
+    public void putAutomaticExpander(String category, GraphNodeExpander expander) {
+	assert category != null;
 	assert expander != null;
 
-	putNodeMenuEntry(category, new NodeMenuEntry(label, expander));
+	automaticExpandersByCategory.put(category, expander);
     }
 
     public void putNodeMenuEntry(String category, NodeMenuEntry nodeMenuEntry) {
@@ -48,17 +71,13 @@ public class NodeMenuEntryRegistry {
 	menuEntriesByCategory.get(category).add(nodeMenuEntry);
     }
 
-    public Set<Entry<String, List<NodeMenuEntry>>> getNodeMenuEntriesByCategory() {
-	return menuEntriesByCategory.entrySet();
-    }
+    public void putNodeMenuEntry(String category, String label,
+	    GraphNodeExpander expander) {
 
-    public List<NodeMenuEntry> getNodeMenuEntries(String category) {
 	assert category != null;
+	assert label != null;
+	assert expander != null;
 
-	if (!menuEntriesByCategory.containsKey(category)) {
-	    return Collections.emptyList();
-	}
-
-	return menuEntriesByCategory.get(category);
+	putNodeMenuEntry(category, new NodeMenuEntry(label, expander));
     }
 }

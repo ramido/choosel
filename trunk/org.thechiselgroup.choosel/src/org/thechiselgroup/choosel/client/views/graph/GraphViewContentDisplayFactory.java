@@ -17,7 +17,6 @@ package org.thechiselgroup.choosel.client.views.graph;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
-import org.thechiselgroup.choosel.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceManager;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
@@ -46,21 +45,14 @@ public class GraphViewContentDisplayFactory implements
     private DragEnablerFactory dragEnablerFactory;
 
     @Inject
-    private ErrorHandler errorHandler;
-
-    @Inject
     @Named(ChooselInjectionConstants.HOVER_MODEL)
     private ResourceSet hoverModel;
-
-    @Inject
-    @Named("mapping")
-    private NeighbourhoodServiceAsync mappingService;
 
     @Inject
     private PopupManagerFactory popupManagerFactory;
 
     @Inject
-    private NodeMenuEntryRegistry registry;
+    private GraphExpansionRegistry registry;
 
     @Inject
     private ResourceCategorizer resourceCategorizer;
@@ -76,9 +68,8 @@ public class GraphViewContentDisplayFactory implements
     public ViewContentDisplay createViewContentDisplay() {
 	return new GraphViewContentDisplay(
 		new GraphViewContentDisplay.DefaultDisplay(), hoverModel,
-		mappingService, popupManagerFactory, detailsWidgetHelper,
-		commandManager, resourceManager, errorHandler,
-		dragEnablerFactory, resourceCategorizer, arcStyleProvider,
-		registry);
+		popupManagerFactory, detailsWidgetHelper, commandManager,
+		resourceManager, dragEnablerFactory, resourceCategorizer,
+		arcStyleProvider, registry);
     }
 }
