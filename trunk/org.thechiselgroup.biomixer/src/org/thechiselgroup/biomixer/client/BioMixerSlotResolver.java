@@ -77,4 +77,34 @@ public class BioMixerSlotResolver extends DefaultSlotResolver {
 	return new NullPropertyValueResolver();
     }
 
+    @Override
+    public PropertyValueResolver createGraphNodeBackgroundColorResolver(
+	    String category) {
+
+	if (category.equals(NcboUriHelper.NCBO_CONCEPT)) {
+	    return new FixedValuePropertyValueResolver("#DAE5F3");
+	}
+
+	if (category.equals(NcboUriHelper.NCBO_MAPPING)) {
+	    return new FixedValuePropertyValueResolver("#E4E4E4");
+	}
+
+	return super.createGraphNodeBackgroundColorResolver(category);
+    }
+
+    @Override
+    public PropertyValueResolver createGraphNodeBorderColorResolver(
+	    String category) {
+
+	if (category.equals(NcboUriHelper.NCBO_CONCEPT)) {
+	    return new FixedValuePropertyValueResolver("#AFC6E5");
+	}
+
+	if (category.equals(NcboUriHelper.NCBO_MAPPING)) {
+	    return new FixedValuePropertyValueResolver("#D4D4D4");
+	}
+
+	return super.createGraphNodeBorderColorResolver(category);
+    }
+
 }

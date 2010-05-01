@@ -28,23 +28,31 @@ public interface SlotResolver {
 
     String DESCRIPTION_SLOT = "description";
 
+    String GRAPH_LABEL_SLOT = "graphLabel";
+
+    String GRAPH_NODE_BACKGROUND_COLOR_SLOT = "graphNodeBackgroundColor";
+
+    String GRAPH_NODE_BORDER_COLOR_SLOT = "graphNodeBorderColor";
+
     String LABEL_SLOT = "label";
 
     String LOCATION_SLOT = "location";
 
-    String GRAPH_LABEL_SLOT = "graphLabel";
-
-    PropertyValueResolver createGraphLabelSlotResolver(String category);
-
-    PropertyValueResolver createLocationSlotResolver(String category);
-
-    PropertyValueResolver createLabelSlotResolver(String category);
-
-    PropertyValueResolver createDescriptionSlotResolver(String category);
+    PropertyValueResolver createColorSlotResolver(String category,
+	    List<Layer> layers);
 
     PropertyValueResolver createDateSlotResolver(String category);
 
-    PropertyValueResolver createColorSlotResolver(String category,
-	    List<Layer> layers);
+    PropertyValueResolver createDescriptionSlotResolver(String category);
+
+    PropertyValueResolver createGraphLabelSlotResolver(String category);
+
+    PropertyValueResolver createGraphNodeBackgroundColorResolver(String category);
+
+    PropertyValueResolver createGraphNodeBorderColorResolver(String category);
+
+    PropertyValueResolver createLabelSlotResolver(String category);
+
+    PropertyValueResolver createLocationSlotResolver(String category);
 
 }

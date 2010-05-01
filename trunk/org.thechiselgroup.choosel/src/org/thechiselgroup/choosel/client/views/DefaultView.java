@@ -352,7 +352,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 	assert category != null;
 	assert slotID != null;
 
-	// TODO use maps instead
+	// TODO use maps instead, need better slot system
 	if (slotID.equals(SlotResolver.COLOR_SLOT)) {
 	    return slotResolver.createColorSlotResolver(category, layers);
 	} else if (slotID.equals(SlotResolver.LABEL_SLOT)) {
@@ -365,6 +365,11 @@ public class DefaultView extends AbstractWindowContent implements View {
 	    return slotResolver.createLocationSlotResolver(category);
 	} else if (slotID.equals(SlotResolver.GRAPH_LABEL_SLOT)) {
 	    return slotResolver.createGraphLabelSlotResolver(category);
+	} else if (slotID.equals(SlotResolver.GRAPH_NODE_BORDER_COLOR_SLOT)) {
+	    return slotResolver.createGraphNodeBorderColorResolver(category);
+	} else if (slotID.equals(SlotResolver.GRAPH_NODE_BACKGROUND_COLOR_SLOT)) {
+	    return slotResolver
+		    .createGraphNodeBackgroundColorResolver(category);
 	}
 
 	throw new IllegalArgumentException("Invalid slot id: " + slotID);
