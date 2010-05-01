@@ -13,23 +13,16 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.label;
+package org.thechiselgroup.biomixer.client;
 
-import org.thechiselgroup.choosel.client.domain.ncbo.NcboUriHelper;
+import org.thechiselgroup.choosel.client.label.MappingCategoryLabelProvider;
 
-import com.google.inject.Provider;
+public class BioMixerMappingCategoryLabelProvider extends
+	MappingCategoryLabelProvider {
 
-public class MappingCategoryLabelProviderProvider implements
-	Provider<MappingCategoryLabelProvider> {
-
-    @Override
-    public MappingCategoryLabelProvider get() {
-	MappingCategoryLabelProvider provider = new MappingCategoryLabelProvider();
-
-	provider.mapCategoryToLabel(NcboUriHelper.NCBO_CONCEPT, "Concept");
-	provider.mapCategoryToLabel(NcboUriHelper.NCBO_MAPPING, "Mapping");
-
-	return provider;
+    public BioMixerMappingCategoryLabelProvider() {
+	mapCategoryToLabel(NcboUriHelper.NCBO_CONCEPT, "Concept");
+	mapCategoryToLabel(NcboUriHelper.NCBO_MAPPING, "Mapping");
     }
 
 }

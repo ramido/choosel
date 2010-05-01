@@ -29,7 +29,7 @@ import org.thechiselgroup.choosel.client.error_handling.FeedbackDialogErrorHandl
 import org.thechiselgroup.choosel.client.error_handling.LoggingAsyncCommandExecutor;
 import org.thechiselgroup.choosel.client.label.CategoryLabelProvider;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
-import org.thechiselgroup.choosel.client.label.MappingCategoryLabelProviderProvider;
+import org.thechiselgroup.choosel.client.label.MappingCategoryLabelProvider;
 import org.thechiselgroup.choosel.client.label.ResourceSetLabelFactory;
 import org.thechiselgroup.choosel.client.label.SelectionModelLabelFactory;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceManager;
@@ -280,8 +280,8 @@ public class ChooselClientModule extends AbstractGinModule implements
 
 	bind(ResourceCategorizer.class).to(ResourceByUriTypeCategorizer.class)
 		.in(Singleton.class);
-	bind(CategoryLabelProvider.class).toProvider(
-		MappingCategoryLabelProviderProvider.class).in(Singleton.class);
+	bind(CategoryLabelProvider.class).to(getCategoryLabelProviderClass())
+		.in(Singleton.class);
 
 	bind(ArcStyleProvider.class).to(getArcStyleProviderClass()).in(
 		Singleton.class);
@@ -301,6 +301,10 @@ public class ChooselClientModule extends AbstractGinModule implements
 	bindCustomServices();
 
 	bindApplication();
+    }
+
+    protected Class<? extends CategoryLabelProvider> getCategoryLabelProviderClass() {
+	return MappingCategoryLabelProvider.class;
     }
 
     protected Class<? extends GraphExpansionRegistry> getGraphExpansionRegistryClass() {

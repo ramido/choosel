@@ -19,8 +19,8 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.thechiselgroup.biomixer.client.NCBO;
 import org.thechiselgroup.biomixer.client.services.NCBOMappingNeighbourhoodService;
-import org.thechiselgroup.choosel.client.domain.ncbo.NCBO;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.services.ServiceException;
 import org.thechiselgroup.choosel.client.views.graph.NeighbourhoodServiceResult;

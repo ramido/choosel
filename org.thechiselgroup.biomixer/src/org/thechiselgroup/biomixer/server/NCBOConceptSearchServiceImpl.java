@@ -22,9 +22,9 @@ import java.util.Set;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
+import org.thechiselgroup.biomixer.client.NCBO;
+import org.thechiselgroup.biomixer.client.NcboUriHelper;
 import org.thechiselgroup.biomixer.client.services.NCBOConceptSearchService;
-import org.thechiselgroup.choosel.client.domain.ncbo.NCBO;
-import org.thechiselgroup.choosel.client.domain.ncbo.NcboUriHelper;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.services.ServiceException;
 import org.thechiselgroup.choosel.server.XMLCallServlet;

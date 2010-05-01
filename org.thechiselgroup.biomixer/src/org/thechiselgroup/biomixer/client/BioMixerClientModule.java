@@ -24,6 +24,7 @@ import org.thechiselgroup.biomixer.client.services.NCBOMappingNeighbourhoodServi
 import org.thechiselgroup.choosel.client.ChooselApplication;
 import org.thechiselgroup.choosel.client.ChooselClientModule;
 import org.thechiselgroup.choosel.client.ChooselWindowContentProducerProvider;
+import org.thechiselgroup.choosel.client.label.CategoryLabelProvider;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.graph.ArcStyleProvider;
@@ -58,6 +59,11 @@ public class BioMixerClientModule extends ChooselClientModule {
     @Override
     protected Class<? extends ArcStyleProvider> getArcStyleProviderClass() {
 	return BioMixerArcStyleProvider.class;
+    }
+
+    @Override
+    protected Class<? extends CategoryLabelProvider> getCategoryLabelProviderClass() {
+	return BioMixerMappingCategoryLabelProvider.class;
     }
 
     @Override

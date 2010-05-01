@@ -17,7 +17,6 @@ package org.thechiselgroup.choosel.client.ui.dnd;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.command.UndoableCommand;
-import org.thechiselgroup.choosel.client.domain.ncbo.NcboUriHelper;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
@@ -86,7 +85,7 @@ public class ResourceSetAvatarDropController extends SimpleDropController {
 	}
 
 	for (Resource resource : resourceSet) {
-	    if (!resource.getUri().startsWith(NcboUriHelper.NCBO_CONCEPT)) {
+	    if (!resource.getUri().startsWith("ncbo-concept")) {
 		return false;
 	    }
 	}
