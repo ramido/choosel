@@ -25,7 +25,6 @@ import java.util.Map.Entry;
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.domain.ncbo.NcboUriHelper;
-import org.thechiselgroup.choosel.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.client.geometry.Point;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.Resource;
@@ -176,15 +175,11 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
     public DragEnablerFactory dragEnablerFactory;
 
-    private ErrorHandler errorHandler;
-
-    private final NeighbourhoodServiceAsync mappingNeighbourhoodService;
-
     private final Map<String, GraphItem> nodeIdToGraphItemMap = new HashMap<String, GraphItem>();
 
     private boolean ready = false;
 
-    private NodeMenuEntryRegistry registry;
+    private GraphExpansionRegistry registry;
 
     private ResourceCategorizer resourceCategorizer;
 
@@ -194,21 +189,18 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     public GraphViewContentDisplay(
 	    Display display,
 	    @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
-	    @Named("mapping") NeighbourhoodServiceAsync mappingService,
 	    PopupManagerFactory popupManagerFactory,
 	    DetailsWidgetHelper detailsWidgetHelper,
 	    CommandManager commandManager, ResourceManager resourceManager,
-	    ErrorHandler errorHandler, DragEnablerFactory dragEnablerFactory,
+	    DragEnablerFactory dragEnablerFactory,
 	    ResourceCategorizer resourceCategorizer,
-	    ArcStyleProvider arcStyleProvider, NodeMenuEntryRegistry registry) {
+	    ArcStyleProvider arcStyleProvider, GraphExpansionRegistry registry) {
 
 	super(popupManagerFactory, detailsWidgetHelper, hoverModel);
 
 	assert display != null;
-	assert mappingService != null;
 	assert commandManager != null;
 	assert resourceManager != null;
-	assert errorHandler != null;
 	assert dragEnablerFactory != null;
 	assert resourceCategorizer != null;
 	assert arcStyleProvider != null;
@@ -217,10 +209,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 	this.arcStyleProvider = arcStyleProvider;
 	this.resourceCategorizer = resourceCategorizer;
 	this.display = display;
-	this.mappingNeighbourhoodService = mappingService;
 	this.commandManager = commandManager;
 	this.resourceManager = resourceManager;
-	this.errorHandler = errorHandler;
 	this.dragEnablerFactory = dragEnablerFactory;
 	this.registry = registry;
     }
@@ -267,14 +257,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 	display.setNodeStyle(item.getNode(), "showArrow", registry
 		.getNodeMenuEntries(category).isEmpty() ? "false" : "true");
 
-	if (NcboUriHelper.NCBO_CONCEPT.equals(category)) {
-	    new AutomaticConceptExpander(mappingNeighbourhoodService,
-		    errorHandler).expand(resource, this);
-	}
-
-	if (NcboUriHelper.NCBO_MAPPING.equals(category)) {
-	    new AutomaticMappingExpander().expand(resource, this);
-	}
+	registry.getAutomaticExpander(category).expand(resource, this);
 
 	return item;
     }

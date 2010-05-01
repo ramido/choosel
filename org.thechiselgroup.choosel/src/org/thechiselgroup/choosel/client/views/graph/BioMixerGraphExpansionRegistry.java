@@ -21,13 +21,19 @@ import org.thechiselgroup.choosel.client.error_handling.ErrorHandler;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-public class BioMixerNodeMenuEntryRegistry extends NodeMenuEntryRegistry {
+public class BioMixerGraphExpansionRegistry extends GraphExpansionRegistry {
 
     @Inject
-    public BioMixerNodeMenuEntryRegistry(
+    public BioMixerGraphExpansionRegistry(
 	    @Named("mapping") NeighbourhoodServiceAsync mappingNeighbourhoodService,
 	    @Named("concept") NeighbourhoodServiceAsync conceptNeighbourhoodService,
 	    ErrorHandler errorHandler) {
+
+	putAutomaticExpander(NcboUriHelper.NCBO_CONCEPT,
+		new AutomaticConceptExpander(mappingNeighbourhoodService,
+			errorHandler));
+	putAutomaticExpander(NcboUriHelper.NCBO_MAPPING,
+		new AutomaticMappingExpander());
 
 	putNodeMenuEntry(NcboUriHelper.NCBO_CONCEPT, "Concepts",
 		new ConceptConceptNeighbourhoodExpander(
@@ -38,5 +44,4 @@ public class BioMixerNodeMenuEntryRegistry extends NodeMenuEntryRegistry {
 	putNodeMenuEntry(NcboUriHelper.NCBO_MAPPING, "Concepts",
 		new MappingExpander());
     }
-
 }

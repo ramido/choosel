@@ -78,10 +78,10 @@ import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.graph.ArcStyleProvider;
-import org.thechiselgroup.choosel.client.views.graph.BioMixerNodeMenuEntryRegistry;
+import org.thechiselgroup.choosel.client.views.graph.BioMixerGraphExpansionRegistry;
 import org.thechiselgroup.choosel.client.views.graph.DefaultArcStyleProvider;
 import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplayFactory;
-import org.thechiselgroup.choosel.client.views.graph.NodeMenuEntryRegistry;
+import org.thechiselgroup.choosel.client.views.graph.GraphExpansionRegistry;
 import org.thechiselgroup.choosel.client.views.list.ListViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.map.MapViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.timeline.TimeLineViewContentDisplayFactory;
@@ -287,8 +287,8 @@ public class ChooselClientModule extends AbstractGinModule implements
 	bind(ArcStyleProvider.class).to(getArcStyleProviderClass()).in(
 		Singleton.class);
 
-	bind(NodeMenuEntryRegistry.class).to(
-		BioMixerNodeMenuEntryRegistry.class).in(Singleton.class);
+	bind(GraphExpansionRegistry.class).to(
+		BioMixerGraphExpansionRegistry.class).in(Singleton.class);
 
 	bindDisplays();
 

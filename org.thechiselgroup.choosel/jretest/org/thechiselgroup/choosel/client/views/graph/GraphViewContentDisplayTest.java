@@ -28,9 +28,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.command.UndoableCommand;
-import org.thechiselgroup.choosel.client.domain.ncbo.NCBO;
-import org.thechiselgroup.choosel.client.domain.ncbo.NcboUriHelper;
-import org.thechiselgroup.choosel.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.client.geometry.Point;
 import org.thechiselgroup.choosel.client.resolver.PropertyValueResolver;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
@@ -40,9 +37,9 @@ import org.thechiselgroup.choosel.client.resources.ResourceManager;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
+import org.thechiselgroup.choosel.client.test.ResourcesTestHelper;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
-import org.thechiselgroup.choosel.client.ui.widget.graph.Arc;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidgetReadyEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidgetReadyHandler;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
@@ -59,20 +56,18 @@ public class GraphViewContentDisplayTest {
 
 	public TestGraphViewContentDisplay(Display display,
 		ResourceSet hoverModel,
-		NeighbourhoodServiceAsync mappingService,
 		PopupManagerFactory popupManagerFactory,
 		DetailsWidgetHelper detailsWidgetHelper,
 		CommandManager commandManager, ResourceManager resourceManager,
-		ErrorHandler errorHandler,
 		DragEnablerFactory dragEnablerFactory,
 		ResourceCategorizer resourceCategorizer,
 		ArcStyleProvider arcStyleProvider,
-		NodeMenuEntryRegistry registry) {
+		GraphExpansionRegistry registry) {
 
-	    super(display, hoverModel, mappingService, popupManagerFactory,
+	    super(display, hoverModel, popupManagerFactory,
 		    detailsWidgetHelper, commandManager, resourceManager,
-		    errorHandler, dragEnablerFactory, resourceCategorizer,
-		    arcStyleProvider, registry);
+		    dragEnablerFactory, resourceCategorizer, arcStyleProvider,
+		    registry);
 	}
 
 	@Override
@@ -96,8 +91,6 @@ public class GraphViewContentDisplayTest {
 
     private Resource concept1;
 
-    private Resource concept2;
-
     private GraphViewContentDisplay contentDisplay;
 
     @Mock
@@ -110,16 +103,10 @@ public class GraphViewContentDisplayTest {
     private DragEnablerFactory dragEnablerFactory;
 
     @Mock
-    private ErrorHandler errorHandler;
-
-    @Mock
     private ResourceSet hoverModel;
 
     @Mock
     private Layer layer;
-
-    @Mock
-    private NeighbourhoodServiceAsync mappingService;
 
     @Mock
     private Node node;
@@ -130,8 +117,7 @@ public class GraphViewContentDisplayTest {
     @Mock
     private PopupManagerFactory popupManagerFactory;
 
-    @Mock
-    private NodeMenuEntryRegistry registry;
+    private GraphExpansionRegistry registry;
 
     @Mock
     private ResourceCategorizer resourceCategorizer;
@@ -143,48 +129,8 @@ public class GraphViewContentDisplayTest {
 
     private Point targetLocation;
 
-    @Test
-    public void addNeighbourhoodArcWhenAddingConceptReferedFromCurrentConcepts() {
-	concept1 = createResource(NcboUriHelper.NCBO_CONCEPT, 1);
-	concept2 = createResource(NcboUriHelper.NCBO_CONCEPT, 2);
-	allResources.add(concept1);
-
-	when(callback.containsResourceWithUri(concept1.getUri())).thenReturn(
-		true);
-
-	concept1.getUriListValue(
-		NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS).add(
-		concept2.getUri());
-
-	contentDisplay.createResourceItem(layer, concept1);
-	contentDisplay.createResourceItem(layer, concept2);
-
-	ArgumentCaptor<Arc> argument = ArgumentCaptor.forClass(Arc.class);
-	verify(display, times(1)).addArc(argument.capture());
-	assertEquals(concept1.getUri(), argument.getValue().getSourceNodeId());
-	assertEquals(concept2.getUri(), argument.getValue().getTargetNodeId());
-    }
-
-    @Test
-    public void addNeighbourhoodArcWhenAddingConceptReferringCurrentConcepts() {
-	concept1 = createResource(NcboUriHelper.NCBO_CONCEPT, 1);
-	concept2 = createResource(NcboUriHelper.NCBO_CONCEPT, 2);
-
-	when(callback.containsResourceWithUri(concept1.getUri())).thenReturn(
-		true);
-
-	concept2.getUriListValue(
-		NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS).add(
-		concept1.getUri());
-
-	contentDisplay.createResourceItem(layer, concept1);
-	contentDisplay.createResourceItem(layer, concept2);
-
-	ArgumentCaptor<Arc> argument = ArgumentCaptor.forClass(Arc.class);
-	verify(display, times(1)).addArc(argument.capture());
-	assertEquals(concept2.getUri(), argument.getValue().getSourceNodeId());
-	assertEquals(concept1.getUri(), argument.getValue().getTargetNodeId());
-    }
+    @Mock
+    private GraphNodeExpander automaticExpander;
 
     /*
      * Test case: node drag event gets fired, test that correct move command is
@@ -221,24 +167,21 @@ public class GraphViewContentDisplayTest {
     }
 
     @Test
-    public void doNotLoadNeighbourhoodWhenAddingConceptWithLoadedNeighbourhood() {
-
-    }
-
-    // TODO current work
-    @Test
     public void loadNeighbourhoodWhenAddingConcept() {
 	concept1 = createResource(1);
 
 	contentDisplay.createResourceItem(layer, concept1);
 
-	// verify(contentDisplay, times(1)).expandNeighbourhood(eq(concept1));
+	verify(automaticExpander, times(1)).expand(eq(concept1),
+		any(GraphNodeExpansionCallback.class));
     }
 
     @Before
     public void setUp() throws Exception {
 	MockitoGWTBridge.setUp();
 	MockitoAnnotations.initMocks(this);
+
+	registry = spy(new GraphExpansionRegistry());
 
 	sourceLocation = new Point(10, 15);
 	targetLocation = new Point(20, 25);
@@ -248,15 +191,17 @@ public class GraphViewContentDisplayTest {
 	when(callback.getAllResources()).thenReturn(allResources);
 
 	contentDisplay = spy(new TestGraphViewContentDisplay(display,
-		hoverModel, mappingService, popupManagerFactory,
-		detailsWidgetHelper, commandManager, resourceManager,
-		errorHandler, dragEnablerFactory, resourceCategorizer,
-		arcStyleProvider, registry));
+		hoverModel, popupManagerFactory, detailsWidgetHelper,
+		commandManager, resourceManager, dragEnablerFactory,
+		resourceCategorizer, arcStyleProvider, registry));
 
 	contentDisplay.init(callback);
 
 	when(resourceCategorizer.getCategory(any(Resource.class))).thenReturn(
-		NcboUriHelper.NCBO_CONCEPT);
+		ResourcesTestHelper.DEFAULT_TYPE);
+
+	when(registry.getAutomaticExpander(any(String.class))).thenReturn(
+		automaticExpander);
 
 	ArgumentCaptor<GraphWidgetReadyHandler> argument = ArgumentCaptor
 		.forClass(GraphWidgetReadyHandler.class);
