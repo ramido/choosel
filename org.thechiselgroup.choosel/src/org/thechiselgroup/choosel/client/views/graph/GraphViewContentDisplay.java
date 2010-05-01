@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
@@ -265,16 +264,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
 	setGraphItemColors(resource, item);
 
-	if (category.equals(NcboUriHelper.NCBO_CONCEPT)) {
-	    // TODO this should be false if set of available neighbourhoods
-	    // equals 0
-	    display.setNodeStyle(item.getNode(), "showArrow", "true");
-	}
-	if (category.equals(NcboUriHelper.NCBO_MAPPING)) {
-	    // TODO this should be false if set of available neighbourhoods
-	    // equals 0
-	    display.setNodeStyle(item.getNode(), "showArrow", "true");
-	}
+	display.setNodeStyle(item.getNode(), "showArrow", registry
+		.getNodeMenuEntries(category).isEmpty() ? "false" : "true");
 
 	if (NcboUriHelper.NCBO_CONCEPT.equals(category)) {
 	    new AutomaticConceptExpander(mappingNeighbourhoodService,
@@ -355,9 +346,9 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     }
 
     private void initNodeMenuItems() {
-	Set<Entry<String, List<NodeMenuEntry>>> nodeMenuEntriesByType = registry
-		.getNodeMenuEntriesByType();
-	for (Entry<String, List<NodeMenuEntry>> entry : nodeMenuEntriesByType) {
+	for (Entry<String, List<NodeMenuEntry>> entry : registry
+		.getNodeMenuEntriesByCategory()) {
+
 	    String category = entry.getKey();
 	    for (NodeMenuEntry nodeMenuEntry : entry.getValue()) {
 		registerNodeMenuItem(category, nodeMenuEntry.getLabel(),
