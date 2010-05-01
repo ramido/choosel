@@ -32,8 +32,6 @@ import org.thechiselgroup.choosel.client.views.graph.GraphNodeExpansionCallback;
 import org.thechiselgroup.choosel.client.views.graph.NeighbourhoodServiceResult;
 import org.thechiselgroup.choosel.client.views.graph.Relationship;
 
-import com.allen_sauer.gwt.log.client.Log;
-
 // TODO extract superclass
 public class ConceptNeighbourhoodCallback extends AbstractNeighbourhoodCallback {
 
@@ -65,9 +63,6 @@ public class ConceptNeighbourhoodCallback extends AbstractNeighbourhoodCallback 
 
 	Node inputNode = getNode(inputResource);
 	Point inputLocation = graph.getLocation(inputNode);
-
-	Log.debug("ConceptNeighbourhoodCallback.onSuccess - input location "
-		+ inputLocation.x + ", " + inputLocation.y);
 
 	List<Node> nodesToLayout = new ArrayList<Node>();
 	for (Resource resource : newResources) {
