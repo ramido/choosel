@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.biomixer.client.graph;
 
-import org.thechiselgroup.choosel.client.domain.ncbo.NcboUriHelper;
+import org.thechiselgroup.biomixer.client.NcboUriHelper;
 import org.thechiselgroup.choosel.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.client.views.graph.GraphExpansionRegistry;
 import org.thechiselgroup.choosel.client.views.graph.NeighbourhoodServiceAsync;

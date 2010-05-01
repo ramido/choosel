@@ -15,8 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.biomixer.client.services;
 
-import org.thechiselgroup.choosel.client.domain.ncbo.NCBO;
-import org.thechiselgroup.choosel.client.domain.ncbo.NcboUriHelper;
+import org.thechiselgroup.biomixer.client.NCBO;
+import org.thechiselgroup.biomixer.client.NcboUriHelper;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.util.DocumentProcessor;
 import org.thechiselgroup.choosel.client.util.URLFetchService;

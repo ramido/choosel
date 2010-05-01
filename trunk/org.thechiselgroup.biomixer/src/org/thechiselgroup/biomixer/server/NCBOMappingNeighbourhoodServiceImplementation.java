@@ -25,9 +25,9 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.thechiselgroup.biomixer.client.NCBO;
+import org.thechiselgroup.biomixer.client.NcboUriHelper;
 import org.thechiselgroup.biomixer.client.services.NCBOMappingNeighbourhoodService;
-import org.thechiselgroup.choosel.client.domain.ncbo.NCBO;
-import org.thechiselgroup.choosel.client.domain.ncbo.NcboUriHelper;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.services.ServiceException;
 import org.thechiselgroup.choosel.client.views.graph.NeighbourhoodServiceResult;

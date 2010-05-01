@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.thechiselgroup.choosel.client.domain.ncbo.NCBO;
+import org.thechiselgroup.biomixer.client.NCBO;
 import org.thechiselgroup.choosel.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.client.geometry.Point;
 import org.thechiselgroup.choosel.client.resources.Resource;
