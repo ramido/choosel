@@ -34,11 +34,10 @@ public class GraphViewContentDisplayFactory implements
 	ViewContentDisplayFactory {
 
     @Inject
-    private CommandManager commandManager;
+    private ArcStyleProvider arcStyleProvider;
 
     @Inject
-    @Named("concept")
-    private NeighbourhoodServiceAsync conceptNeighbourhoodService;
+    private CommandManager commandManager;
 
     @Inject
     private DetailsWidgetHelper detailsWidgetHelper;
@@ -61,13 +60,13 @@ public class GraphViewContentDisplayFactory implements
     private PopupManagerFactory popupManagerFactory;
 
     @Inject
+    private NodeMenuEntryRegistry registry;
+
+    @Inject
     private ResourceCategorizer resourceCategorizer;
 
     @Inject
     private ResourceManager resourceManager;
-
-    @Inject
-    private ArcStyleProvider arcStyleProvider;
 
     @Inject
     public GraphViewContentDisplayFactory() {
@@ -77,9 +76,9 @@ public class GraphViewContentDisplayFactory implements
     public ViewContentDisplay createViewContentDisplay() {
 	return new GraphViewContentDisplay(
 		new GraphViewContentDisplay.DefaultDisplay(), hoverModel,
-		mappingService, conceptNeighbourhoodService,
-		popupManagerFactory, detailsWidgetHelper, commandManager,
-		resourceManager, errorHandler, dragEnablerFactory,
-		resourceCategorizer, arcStyleProvider);
+		mappingService, popupManagerFactory, detailsWidgetHelper,
+		commandManager, resourceManager, errorHandler,
+		dragEnablerFactory, resourceCategorizer, arcStyleProvider,
+		registry);
     }
 }
