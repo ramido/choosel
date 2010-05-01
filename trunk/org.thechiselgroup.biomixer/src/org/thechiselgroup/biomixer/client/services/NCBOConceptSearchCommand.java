@@ -13,20 +13,21 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.views.graph;
+package org.thechiselgroup.biomixer.client.services;
 
-import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
+import org.thechiselgroup.choosel.client.command.CommandManager;
+import org.thechiselgroup.choosel.client.ui.SearchCommand;
+import org.thechiselgroup.choosel.client.windows.Desktop;
+import org.thechiselgroup.choosel.client.windows.WindowContentProducer;
 
-public class DefaultArcStyleProvider implements ArcStyleProvider {
+import com.google.inject.Inject;
 
-    @Override
-    public String getArcColor(String arcType) {
-	return "#AFC6E5";
-    }
+public class NCBOConceptSearchCommand extends SearchCommand {
 
-    @Override
-    public String getArcStyle(String arcType) {
-	return GraphDisplay.ARC_STYLE_SOLID;
+    @Inject
+    public NCBOConceptSearchCommand(CommandManager commandManager,
+	    Desktop desktop, WindowContentProducer viewFactory) {
+	super(commandManager, desktop, viewFactory, "ncbo-search");
     }
 
 }

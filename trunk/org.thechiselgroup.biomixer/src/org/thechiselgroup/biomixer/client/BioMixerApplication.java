@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.biomixer.client;
 
-import org.thechiselgroup.biomixer.client.domain.ncbo.NCBOConceptSearchCommand;
+import org.thechiselgroup.biomixer.client.services.NCBOConceptSearchCommand;
 import org.thechiselgroup.choosel.client.ChooselApplication;
 import org.thechiselgroup.choosel.client.ui.TextCommandPresenter;
 import org.thechiselgroup.choosel.client.views.list.ListViewContentDisplay;
