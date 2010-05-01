@@ -13,20 +13,17 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.views.graph;
+package org.thechiselgroup.biomixer.client.services;
 
-import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
+import java.util.Set;
 
-public class DefaultArcStyleProvider implements ArcStyleProvider {
+import org.thechiselgroup.choosel.client.resources.Resource;
 
-    @Override
-    public String getArcColor(String arcType) {
-	return "#AFC6E5";
-    }
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
-    @Override
-    public String getArcStyle(String arcType) {
-	return GraphDisplay.ARC_STYLE_SOLID;
-    }
+// TODO generalize search interface
+public interface NCBOConceptSearchServiceAsync {
+
+    void searchConcepts(String queryText, AsyncCallback<Set<Resource>> callback);
 
 }

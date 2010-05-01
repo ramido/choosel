@@ -13,20 +13,39 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.views.graph;
+package org.thechiselgroup.biomixer.client.graph;
 
+import org.thechiselgroup.choosel.client.domain.ncbo.NCBO;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
+import org.thechiselgroup.choosel.client.views.graph.DefaultArcStyleProvider;
+import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay;
 
-public class DefaultArcStyleProvider implements ArcStyleProvider {
+public class BioMixerArcStyleProvider extends DefaultArcStyleProvider {
 
     @Override
     public String getArcColor(String arcType) {
-	return "#AFC6E5";
+	if (NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS.equals(arcType)) {
+	    return "#AFC6E5";
+	}
+
+	if (GraphViewContentDisplay.ARC_TYPE_MAPPING.equals(arcType)) {
+	    return "#D4D4D4";
+	}
+
+	return super.getArcColor(arcType);
     }
 
     @Override
     public String getArcStyle(String arcType) {
-	return GraphDisplay.ARC_STYLE_SOLID;
+	if (NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS.equals(arcType)) {
+	    return GraphDisplay.ARC_STYLE_SOLID;
+	}
+
+	if (GraphViewContentDisplay.ARC_TYPE_MAPPING.equals(arcType)) {
+	    return GraphDisplay.ARC_STYLE_DASHED;
+	}
+
+	return super.getArcStyle(arcType);
     }
 
 }

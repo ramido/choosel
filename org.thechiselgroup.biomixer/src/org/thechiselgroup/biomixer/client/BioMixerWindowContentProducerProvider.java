@@ -17,7 +17,7 @@ package org.thechiselgroup.biomixer.client;
 
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.*;
 
-import org.thechiselgroup.biomixer.client.domain.ncbo.NCBOSearchWindowContent;
+import org.thechiselgroup.biomixer.client.services.NCBOSearchWindowContent;
 import org.thechiselgroup.choosel.client.ChooselWindowContentProducerProvider;
 import org.thechiselgroup.choosel.client.label.CategoryLabelProvider;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
