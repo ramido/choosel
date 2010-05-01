@@ -67,6 +67,20 @@ public class DefaultSlotResolver implements SlotResolver {
     }
 
     @Override
+    public PropertyValueResolver createGraphNodeBackgroundColorResolver(
+	    String category) {
+
+	return new FixedValuePropertyValueResolver("#DAE5F3");
+    }
+
+    @Override
+    public PropertyValueResolver createGraphNodeBorderColorResolver(
+	    String category) {
+
+	return new FixedValuePropertyValueResolver("#AFC6E5");
+    }
+
+    @Override
     public PropertyValueResolver createLabelSlotResolver(String category) {
 	Converter<Float, String> converter = new Converter<Float, String>() {
 	    @Override

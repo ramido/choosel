@@ -24,7 +24,6 @@ import java.util.Map.Entry;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
-import org.thechiselgroup.choosel.client.domain.ncbo.NcboUriHelper;
 import org.thechiselgroup.choosel.client.geometry.Point;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.Resource;
@@ -238,6 +237,11 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
 	String label = layer.getValue(SlotResolver.GRAPH_LABEL_SLOT, resource);
 	String category = getCategory(resource);
+	String backgroundColor = layer.getValue(
+		SlotResolver.GRAPH_NODE_BACKGROUND_COLOR_SLOT, resource);
+	String borderColor = layer.getValue(
+		SlotResolver.GRAPH_NODE_BORDER_COLOR_SLOT, resource);
+
 	PopupManager popupManager = createPopupManager(resource, layer
 		.getResolver(SlotResolver.DESCRIPTION_SLOT));
 
@@ -249,10 +253,11 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 	display.addNode(item.getNode());
 	positionNode(item.getNode());
 
+	// needs to be done after node is added to graph
+	item.setDefaultColors(backgroundColor, borderColor);
+
 	// TODO remove once new drag and drop mechanism works...
 	display.setNodeStyle(item.getNode(), "showDragImage", "true");
-
-	setGraphItemColors(resource, item);
 
 	display.setNodeStyle(item.getNode(), "showArrow", registry
 		.getNodeMenuEntries(category).isEmpty() ? "false" : "true");
@@ -300,7 +305,9 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     @Override
     public String[] getSlotIDs() {
 	return new String[] { SlotResolver.DESCRIPTION_SLOT,
-		SlotResolver.GRAPH_LABEL_SLOT };
+		SlotResolver.GRAPH_LABEL_SLOT,
+		SlotResolver.GRAPH_NODE_BORDER_COLOR_SLOT,
+		SlotResolver.GRAPH_NODE_BACKGROUND_COLOR_SLOT };
     }
 
     @Override
@@ -424,22 +431,5 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 	    state.addChild(resource.getUri(), nodeMemento);
 	}
 	return state;
-    }
-
-    private void setGraphItemColors(Resource resource, GraphItem item) {
-	// TODO use dependency injection
-	String category = getCategory(resource);
-
-	if (category.equals(NcboUriHelper.NCBO_CONCEPT)) {
-	    String backgroundColor = "#DAE5F3";
-	    String borderColor = "#AFC6E5";
-	    item.setDefaultColors(backgroundColor, borderColor);
-	}
-
-	if (category.equals(NcboUriHelper.NCBO_MAPPING)) {
-	    String backgroundColor = "#E4E4E4";
-	    String borderColor = "#D4D4D4";
-	    item.setDefaultColors(backgroundColor, borderColor);
-	}
     }
 }
