@@ -70,7 +70,7 @@ public class AutomaticConceptExpander implements GraphNodeExpander {
 		.getUriListValue(NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS);
 	for (String uri : neighbours) {
 	    if (expansionCallback.getCallback().containsResourceWithUri(uri)) {
-		expansionCallback.createArc(
+		expansionCallback.showArc(
 			NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS,
 			concept.getUri(), uri);
 	    }
@@ -87,7 +87,7 @@ public class AutomaticConceptExpander implements GraphNodeExpander {
 		UriList neighbours2 = resource
 			.getUriListValue(NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS);
 		if (neighbours2.contains(concept.getUri())) {
-		    expansionCallback.createArc(
+		    expansionCallback.showArc(
 			    NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS,
 			    resource.getUri(), concept.getUri());
 		}
@@ -107,7 +107,7 @@ public class AutomaticConceptExpander implements GraphNodeExpander {
 			.getValue(NCBO.MAPPING_SOURCE);
 
 		if (concept.getUri().equals(sourceURI)) {
-		    expansionCallback.createArc(
+		    expansionCallback.showArc(
 			    GraphViewContentDisplay.ARC_TYPE_MAPPING,
 			    sourceURI, resource2.getUri());
 		}
@@ -116,7 +116,7 @@ public class AutomaticConceptExpander implements GraphNodeExpander {
 			.getValue(NCBO.MAPPING_DESTINATION);
 
 		if (concept.getUri().equals(destinationURI)) {
-		    expansionCallback.createArc(
+		    expansionCallback.showArc(
 			    GraphViewContentDisplay.ARC_TYPE_MAPPING, resource2
 				    .getUri(), destinationURI);
 		}

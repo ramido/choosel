@@ -28,7 +28,6 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.thechiselgroup.biomixer.client.NCBO;
 import org.thechiselgroup.biomixer.client.NcboUriHelper;
-import org.thechiselgroup.biomixer.client.graph.MappingNeighbourhoodCallback;
 import org.thechiselgroup.choosel.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
@@ -107,7 +106,7 @@ public class MappingNeighbourhoodCallbackTest {
 	ArgumentCaptor<String> destArgument = ArgumentCaptor
 		.forClass(String.class);
 
-	verify(expansionCallback, times(2)).createArc(
+	verify(expansionCallback, times(2)).showArc(
 		eq(GraphViewContentDisplay.ARC_TYPE_MAPPING),
 		sourceArgument.capture(), destArgument.capture());
 
@@ -116,28 +115,6 @@ public class MappingNeighbourhoodCallbackTest {
 
 	assertEquals(mappingUri, sourceArgument.getAllValues().get(1));
 	assertEquals(concept2Uri, destArgument.getAllValues().get(1));
-    }
-
-    @Test
-    public void doNotAddDuplicateArcs() {
-	when(
-		graphDisplay.containsArc(expansionCallback.getArcId(
-			GraphViewContentDisplay.ARC_TYPE_MAPPING, mappingUri,
-			concept2Uri))).thenReturn(true);
-
-	underTest.onSuccess(result);
-
-	ArgumentCaptor<String> sourceArgument = ArgumentCaptor
-		.forClass(String.class);
-	ArgumentCaptor<String> destArgument = ArgumentCaptor
-		.forClass(String.class);
-
-	verify(expansionCallback, times(1)).createArc(
-		eq(GraphViewContentDisplay.ARC_TYPE_MAPPING),
-		sourceArgument.capture(), destArgument.capture());
-
-	assertEquals(inputConceptUri, sourceArgument.getAllValues().get(0));
-	assertEquals(mappingUri, destArgument.getAllValues().get(0));
     }
 
     @Before
@@ -192,20 +169,6 @@ public class MappingNeighbourhoodCallbackTest {
 			return availableResources
 				.containsResourceWithUri((String) invocation
 					.getArguments()[0]);
-		    }
-		});
-
-	when(
-		expansionCallback.getArcId(any(String.class),
-			any(String.class), any(String.class))).thenAnswer(
-		new Answer<String>() {
-		    @Override
-		    public String answer(InvocationOnMock invocation)
-			    throws Throwable {
-
-			return invocation.getArguments()[0] + ":"
-				+ invocation.getArguments()[1] + "_"
-				+ invocation.getArguments()[2];
 		    }
 		});
 

@@ -33,7 +33,7 @@ public class AutomaticMappingExpander implements GraphNodeExpander {
 	String sourceURI = (String) mapping.getValue(NCBO.MAPPING_SOURCE);
 
 	if (callback.containsResourceWithUri(sourceURI)) {
-	    expansionCallback.createArc(
+	    expansionCallback.showArc(
 		    GraphViewContentDisplay.ARC_TYPE_MAPPING, sourceURI,
 		    mapping.getUri());
 	}
@@ -42,7 +42,7 @@ public class AutomaticMappingExpander implements GraphNodeExpander {
 		.getValue(NCBO.MAPPING_DESTINATION);
 
 	if (callback.containsResourceWithUri(destinationURI)) {
-	    expansionCallback.createArc(
+	    expansionCallback.showArc(
 		    GraphViewContentDisplay.ARC_TYPE_MAPPING, mapping.getUri(),
 		    destinationURI);
 	}
