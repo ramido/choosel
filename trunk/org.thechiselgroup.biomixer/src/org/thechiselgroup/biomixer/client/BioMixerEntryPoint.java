@@ -18,11 +18,13 @@ package org.thechiselgroup.biomixer.client;
 import org.thechiselgroup.choosel.client.ChooselEntryPoint;
 import org.thechiselgroup.choosel.client.ChooselGinjector;
 
+import com.google.gwt.core.client.GWT;
+
 public class BioMixerEntryPoint extends ChooselEntryPoint {
 
     @Override
-    protected Class<? extends ChooselGinjector> getChooselGinjectorClass() {
-	return BioMixerGinjector.class;
+    protected ChooselGinjector createChooselGinjector() {
+	return GWT.create(BioMixerGinjector.class);
     }
 
 }
