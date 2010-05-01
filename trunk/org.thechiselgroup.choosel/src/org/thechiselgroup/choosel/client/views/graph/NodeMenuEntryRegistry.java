@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.client.views.graph;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,8 +48,17 @@ public class NodeMenuEntryRegistry {
 	menuEntriesByCategory.get(category).add(nodeMenuEntry);
     }
 
-    public Set<Entry<String, List<NodeMenuEntry>>> getNodeMenuEntriesByType() {
+    public Set<Entry<String, List<NodeMenuEntry>>> getNodeMenuEntriesByCategory() {
 	return menuEntriesByCategory.entrySet();
     }
 
+    public List<NodeMenuEntry> getNodeMenuEntries(String category) {
+	assert category != null;
+
+	if (!menuEntriesByCategory.containsKey(category)) {
+	    return Collections.emptyList();
+	}
+
+	return menuEntriesByCategory.get(category);
+    }
 }
