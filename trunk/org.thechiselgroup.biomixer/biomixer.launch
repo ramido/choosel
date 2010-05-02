@@ -20,6 +20,6 @@
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="com.google.gwt.eclipse.core.moduleClasspathProvider"/>
 <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="org.thechiselgroup.biomixer"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-javaagent:C:\opt\appengine-java-sdk-1.3.1\lib\agent\appengine-agent.jar"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-ea:org.thechiselgroup.choosel... -da:com.allen_sauer.gwt.dnd... -javaagent:C:\opt\appengine-java-sdk-1.3.1\lib\agent\appengine-agent.jar"/>
 <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="/org.thechiselgroup.biomixer/war"/>
 </launchConfiguration>

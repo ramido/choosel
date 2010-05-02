@@ -56,12 +56,6 @@
    
   <!-- View: Map -->
   <inherits name="com.google.gwt.maps.GoogleMaps" />
-  <!--  map key for bio-mixer.appspot.com
-  <script src="http://maps.google.com/maps?gwt=1&amp;file=api&amp;v=2&amp;sensor=false&amp;key=ABQIAAAAUSQ19DnbWFmnXLrOTDG68hRytvPggOGW33pDAYFjzHEjMtL32BQJ59mhcG4u2HJcX6tckq6dRBPYGg" />
-   -->
-  <!--  map key for chisel-mashups.appspot.com 
-  <script src="http://maps.google.com/maps?gwt=1&amp;file=api&amp;v=2&amp;sensor=false&amp;key=ABQIAAAAUSQ19DnbWFmnXLrOTDG68hRF8-neMkStf_01SZbrYdgRBrBlaBTzpoj2lcWYxmatGpS6yMGTPboTkQ" />
-  -->
 
   <!-- View: Timeline -->
   <script src="js/lib/simile-ajax-api-2.2.0/simile-ajax-api.js"/>

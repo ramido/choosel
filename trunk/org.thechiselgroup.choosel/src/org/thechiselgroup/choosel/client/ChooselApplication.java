@@ -15,10 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import org.thechiselgroup.choosel.client.authentication.AuthenticationManager;
 import org.thechiselgroup.choosel.client.authentication.ui.AuthenticationBar;
@@ -29,17 +27,13 @@ import org.thechiselgroup.choosel.client.command.ui.CommandManagerPresenter;
 import org.thechiselgroup.choosel.client.command.ui.CommandPresenterFactory;
 import org.thechiselgroup.choosel.client.command.ui.DefaultCommandManagerPresenterDisplay;
 import org.thechiselgroup.choosel.client.command.ui.CommandPresenter.ButtonDisplay;
-import org.thechiselgroup.choosel.client.domain.other.GeoRSSServiceAsync;
-import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
-import org.thechiselgroup.choosel.client.test.ResourcesTestHelper;
 import org.thechiselgroup.choosel.client.ui.ActionBar;
 import org.thechiselgroup.choosel.client.ui.dialog.DialogManager;
-import org.thechiselgroup.choosel.client.views.list.ListViewContentDisplay;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 import org.thechiselgroup.choosel.client.windows.CreateWindowCommand;
 import org.thechiselgroup.choosel.client.windows.Desktop;
@@ -55,13 +49,11 @@ import org.thechiselgroup.choosel.client.workspace.command.NewWorkspaceCommand;
 import org.thechiselgroup.choosel.client.workspace.command.SaveWorkspaceCommand;
 import org.thechiselgroup.choosel.client.workspace.command.ShareWorkspaceCommand;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -70,40 +62,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-public class ChooselApplication {
-
-    private static class DataSourceCallBack implements
-	    AsyncCallback<Set<Resource>> {
-
-	private ResourceSetsPresenter dataSourcesPresenter;
-
-	private String label;
-
-	private final ResourceSetFactory resourceSetFactory;
-
-	public DataSourceCallBack(String label,
-		ResourceSetsPresenter dataSourcesPresenter,
-		ResourceSetFactory resourceSetsFactory) {
-
-	    this.label = label;
-	    this.dataSourcesPresenter = dataSourcesPresenter;
-	    this.resourceSetFactory = resourceSetsFactory;
-	}
-
-	public void onFailure(Throwable e) {
-	    Log.error(e.getMessage(), e);
-	}
-
-	public void onSuccess(Set<Resource> resources) {
-	    ResourceSet resourceSet = resourceSetFactory.createResourceSet();
-	    resourceSet.addAll(resources);
-	    resourceSet.setLabel(label);
-
-	    dataSourcesPresenter.addResourceSet(resourceSet);
-	}
-    }
-
-    public static final String DATA_PANEL = "data";
+public abstract class ChooselApplication {
 
     public static final String EDIT_PANEL = "edit";
 
@@ -126,7 +85,7 @@ public class ChooselApplication {
     private AsyncCommandExecutor blockingCommandExecutor;
 
     @Inject
-    private CommandManager commandManager;
+    protected CommandManager commandManager;
 
     @Inject
     private DefaultCommandManagerPresenterDisplay commandManagerPresenterDisplay;
@@ -134,19 +93,14 @@ public class ChooselApplication {
     @Inject
     private CommandPresenterFactory commandPresenterFactory;
 
-    private HorizontalPanel dataPanel;
+    @Inject
+    protected ResourceSetAvatarFactory defaultDragAvatarFactory;
 
     @Inject
-    private ResourceSetAvatarFactory defaultDragAvatarFactory;
-
-    @Inject
-    private Desktop desktop;
+    protected Desktop desktop;
 
     @Inject
     private DialogManager dialogManager;
-
-    @Inject
-    private GeoRSSServiceAsync geoRssService;
 
     @Inject
     private InfoDialog infoDialog;
@@ -160,7 +114,7 @@ public class ChooselApplication {
     private Map<String, HorizontalPanel> panels = new HashMap<String, HorizontalPanel>();
 
     @Inject
-    private ResourceSetFactory resourceSetsFactory;
+    protected ResourceSetFactory resourceSetsFactory;
 
     @Inject
     private SaveWorkspaceCommand saveWorkspaceCommand;
@@ -190,40 +144,6 @@ public class ChooselApplication {
 	addWidget(panelId, button);
     }
 
-    private void addDataSourcesButton() {
-	Button b = new Button("Tsunami / Earthquake");
-	b.addClickHandler(new ClickHandler() {
-
-	    @Override
-	    public void onClick(ClickEvent event) {
-		final ResourceSetsPresenter dataSourcesPresenter = createResourceSetsPresenter();
-
-		// TODO this type cannot be stored yet
-		createWindow(new AbstractWindowContent("Data Sources", "TODO") {
-		    @Override
-		    public Widget asWidget() {
-			return dataSourcesPresenter.asWidget();
-		    }
-		});
-
-		geoRssService
-			.getGeoRSS(
-				"http://earthquake.usgs.gov/eqcenter/catalogs/shakerss.xml",
-				"earthquake", new DataSourceCallBack(
-					"earthquake", dataSourcesPresenter,
-					resourceSetsFactory));
-		geoRssService
-			.getGeoRSS(
-				"http://www.prh.noaa.gov/ptwc/feeds/ptwc_rss_pacific.xml",
-				"tsunami", new DataSourceCallBack("tsunami",
-					dataSourcesPresenter,
-					resourceSetsFactory));
-	    }
-
-	});
-	dataPanel.add(b);
-    }
-
     protected void addInfoButton() {
 	addButton(HELP_PANEL, "About", new ClickHandler() {
 	    @Override
@@ -241,42 +161,6 @@ public class ChooselApplication {
 	panel.setSpacing(2);
 	actionBar.addPanel(name, panel);
 	panels.put(id, panel);
-    }
-
-    // TODO change into command
-    private void addTestDataSourceButton() {
-	Button b = new Button("Test Data");
-	b.addClickHandler(new ClickHandler() {
-
-	    @Override
-	    public void onClick(ClickEvent event) {
-		String title = "TestResources";
-		final ResourceSetsPresenter dataSourcesPresenter = new ResourceSetAvatarResourceSetsPresenter(
-			defaultDragAvatarFactory);
-		dataSourcesPresenter.init();
-
-		commandManager.execute(new CreateWindowCommand(desktop,
-			new AbstractWindowContent(title, "TODO") {
-			    @Override
-			    public Widget asWidget() {
-				return dataSourcesPresenter.asWidget();
-			    }
-			}));
-
-		ResourceSet resourceSet = createResourceSet();
-		resourceSet.setLabel("Test");
-		resourceSet.addAll(ResourcesTestHelper.createResources(1, 2, 3,
-			4, 5));
-		for (Resource resource : resourceSet) {
-		    resource.putValue("date", new Date().toString());
-		}
-
-		dataSourcesPresenter.addResourceSet(resourceSet);
-	    }
-
-	});
-
-	dataPanel.add(b);
     }
 
     public void addWidget(String panelId, Widget widget) {
@@ -307,6 +191,21 @@ public class ChooselApplication {
 	DockPanel mainPanel = new DockPanel();
 	RootPanel.get().add(mainPanel);
 	return mainPanel;
+    }
+
+    protected ResourceSet createResourceSet() {
+	return resourceSetsFactory.createResourceSet();
+    }
+
+    protected ResourceSetsPresenter createResourceSetsPresenter() {
+	final ResourceSetsPresenter dataSourcesPresenter = new ResourceSetAvatarResourceSetsPresenter(
+		defaultDragAvatarFactory);
+	dataSourcesPresenter.init();
+	return dataSourcesPresenter;
+    }
+
+    protected void createWindow(AbstractWindowContent content) {
+	commandManager.execute(new CreateWindowCommand(desktop, content));
     }
 
     private void createWindow(String contentType) {
@@ -354,25 +253,9 @@ public class ChooselApplication {
 	addWidget(EDIT_PANEL, commandManagerPresenterDisplay.getRedoButton());
     }
 
-    protected void initCustomActions() {
-	addDataSourcesButton();
-	addTestDataSourceButton();
+    protected abstract void initCustomActions();
 
-	addWindowContentButton(HELP_PANEL, "?", "help");
-	addInfoButton();
-
-	addWindowContentButton(VIEWS_PANEL, "Note", "note");
-	addWindowContentButton(VIEWS_PANEL, "List", ListViewContentDisplay.TYPE);
-	addWindowContentButton(VIEWS_PANEL, "Map", "Map");
-	addWindowContentButton(VIEWS_PANEL, "Timeline", "Timeline");
-	addWindowContentButton(VIEWS_PANEL, "Graph", "Graph");
-    }
-
-    protected void initCustomPanels() {
-	addPanel(VIEWS_PANEL, "Views");
-	addPanel(DATA_PANEL, "Data Sources");
-	addPanel(HELP_PANEL, "Help");
-    }
+    protected abstract void initCustomPanels();
 
     private void initDesktop(DockPanel mainPanel) {
 	// absolute root panel required for drag & drop
@@ -445,21 +328,6 @@ public class ChooselApplication {
 		    workspaceID, "", workspacePersistenceManager);
 	    blockingCommandExecutor.execute(loadWorkspaceCommand);
 	}
-    }
-
-    protected void createWindow(AbstractWindowContent content) {
-	commandManager.execute(new CreateWindowCommand(desktop, content));
-    }
-
-    protected ResourceSetsPresenter createResourceSetsPresenter() {
-	final ResourceSetsPresenter dataSourcesPresenter = new ResourceSetAvatarResourceSetsPresenter(
-		defaultDragAvatarFactory);
-	dataSourcesPresenter.init();
-	return dataSourcesPresenter;
-    }
-
-    protected ResourceSet createResourceSet() {
-	return resourceSetsFactory.createResourceSet();
     }
 
 }

@@ -79,6 +79,7 @@ import org.thechiselgroup.choosel.client.views.ViewAccessor;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.graph.ArcStyleProvider;
 import org.thechiselgroup.choosel.client.views.graph.DefaultArcStyleProvider;
+import org.thechiselgroup.choosel.client.views.graph.DefaultGraphExpansionRegistry;
 import org.thechiselgroup.choosel.client.views.graph.GraphExpansionRegistry;
 import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.list.ListViewContentDisplayFactory;
@@ -308,7 +309,7 @@ public class ChooselClientModule extends AbstractGinModule implements
     }
 
     protected Class<? extends GraphExpansionRegistry> getGraphExpansionRegistryClass() {
-	return GraphExpansionRegistry.class;
+	return DefaultGraphExpansionRegistry.class;
     }
 
     protected Class<? extends ChooselApplication> getApplicationClass() {
