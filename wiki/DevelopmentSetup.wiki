@@ -18,18 +18,19 @@ We recommend using [http://www.eclipse.org Eclipse] for working on Choosel. The 
       * Change Setting in Eclipse Preferences: Window/Preferences-->Team/SVN-->SVN Connector-->SVN Connector = SVNKit 1.3.0
    * [http://code.google.com/eclipse/ Google Plugin for Eclipse]
 
-= Checking out choosel from SVN repository =
+= Checking out Choosel and example application from SVN repository =
 
    * [http://code.google.com/p/choosel/source/checkout general project checkout information]
    * Check out "org.thechiselgroup.choosel" as Eclipse project
+   * Check out "org.thechiselgroup.chooselexample" as Eclipse project
 
 = Adjust launch configuration =
 
-   * Run configuration... --> choosel --> Arguments --> Adjust -javaagent part to use the app engine location on you computer
+   * Run configuration... --> choosel-example --> Arguments --> Adjust -javaagent part to use the app engine location on you computer
 
 = That's it =
 
-You should be able to run choosel in your development development environment now - just run the choosel launch configuration.
+You should be able to run choosel-example in your development development environment now - just run the choosel-example launch configuration.
 
 If you encounter problems setting up choosel with this guide, complain on the [http://groups.google.com/group/choosel choosel mailing list] :-)
 
