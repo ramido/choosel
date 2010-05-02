@@ -19,13 +19,9 @@ import java.util.List;
 
 import org.thechiselgroup.choosel.client.resolver.FixedValuePropertyValueResolver;
 import org.thechiselgroup.choosel.client.resolver.PropertyValueResolver;
-import org.thechiselgroup.choosel.client.resolver.PropertyValueResolverConverterWrapper;
 import org.thechiselgroup.choosel.client.resolver.SimplePropertyValueResolver;
-import org.thechiselgroup.choosel.client.test.ResourcesTestHelper;
-import org.thechiselgroup.choosel.client.util.ConversionException;
-import org.thechiselgroup.choosel.client.util.Converter;
 
-public class DefaultSlotResolver implements SlotResolver {
+public abstract class DefaultSlotResolver implements SlotResolver {
 
     private static final String[] COLORS = new String[] { "#6495ed", "#b22222" };
 
@@ -40,24 +36,6 @@ public class DefaultSlotResolver implements SlotResolver {
     @Override
     public PropertyValueResolver createDateSlotResolver(String type) {
 	return new SimplePropertyValueResolver("date");
-    }
-
-    @Override
-    public PropertyValueResolver createDescriptionSlotResolver(String category) {
-	// TODO switch based on category -- need category as part of layerModel
-	// TODO resources as part of layerModel
-	// TODO how to do the automatic color assignment?
-	// TODO refactor // extract
-	if ("tsunami".equals(category)) {
-	    return new SimplePropertyValueResolver("date");
-	} else if ("earthquake".equals(category)) {
-	    return new SimplePropertyValueResolver("description");
-	} else if (ResourcesTestHelper.DEFAULT_TYPE.equals(category)) {
-	    return new SimplePropertyValueResolver(
-		    ResourcesTestHelper.LABEL_KEY);
-	} else {
-	    throw new RuntimeException("failed creating slot mapping");
-	}
     }
 
     @Override
@@ -81,22 +59,7 @@ public class DefaultSlotResolver implements SlotResolver {
 
     @Override
     public PropertyValueResolver createLabelSlotResolver(String category) {
-	Converter<Float, String> converter = new Converter<Float, String>() {
-	    @Override
-	    public String convert(Float value) throws ConversionException {
-		if (value != null) {
-		    int f = (value).intValue();
-		    return "" + f;
-		}
-
-		return "";
-	    }
-	};
-
-	SimplePropertyValueResolver resolver = new SimplePropertyValueResolver(
-		"magnitude");
-
-	return new PropertyValueResolverConverterWrapper(resolver, converter);
+	return new FixedValuePropertyValueResolver("");
     }
 
     @Override

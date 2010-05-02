@@ -5,6 +5,8 @@
 
 <web-app>
 
+  <!-- EXAMPLE FILE, NEEDS TO BE COPIED TO APPLICATIONS -->
+
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>
@@ -26,56 +28,6 @@
     <servlet-name>feedback</servlet-name>
     <url-pattern>/org_thechiselgroup_choosel/feedback</url-pattern>
   </servlet-mapping>  
-  
-  <!-- 
-  DEACTIVED SERVLETS
-
-  <servlet>
-    <servlet-name>proxyServlet</servlet-name>
-    <servlet-class>org.thechiselgroup.choosel.server.domain.other.ProxyServiceImpl</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>proxyServlet</servlet-name>
-    <url-pattern>/org_thechiselgroup_choosel/proxy</url-pattern>
-  </servlet-mapping>  
-
-   -->
-  
-  <servlet>
-    <servlet-name>georss</servlet-name>
-    <servlet-class>org.thechiselgroup.choosel.server.domain.other.GeoRSSServiceImpl</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>georss</servlet-name>
-    <url-pattern>/org_thechiselgroup_choosel/georss</url-pattern>
-  </servlet-mapping>  
-
-  <servlet>
-    <servlet-name>ncbo_mapping</servlet-name>
-    <servlet-class>org.thechiselgroup.choosel.server.domain.ncbo.NCBOMappingNeighbourhoodServiceServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>ncbo_mapping</servlet-name>
-    <url-pattern>/org_thechiselgroup_choosel/ncbo_mapping</url-pattern>
-  </servlet-mapping>  
-
-  <servlet>
-    <servlet-name>ncbo_concept_search</servlet-name>
-    <servlet-class>org.thechiselgroup.choosel.server.domain.ncbo.NCBOConceptSearchServiceImpl</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>ncbo_concept_search</servlet-name>
-    <url-pattern>/org_thechiselgroup_choosel/ncbo_concept_search</url-pattern>
-  </servlet-mapping>  
-
-  <servlet>
-    <servlet-name>ncbo_concept_neighbourhood</servlet-name>
-    <servlet-class>org.thechiselgroup.choosel.server.domain.ncbo.NCBOConceptNeighbourhoodServiceServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>ncbo_concept_neighbourhood</servlet-name>
-    <url-pattern>/org_thechiselgroup_choosel/ncbo_concept_neighbourhood</url-pattern>
-  </servlet-mapping>
   
   <servlet>
     <servlet-name>workspace</servlet-name>

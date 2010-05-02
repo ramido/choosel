@@ -18,4 +18,8 @@
 <module rename-to='org_thechiselgroup_biomixer'>
   <inherits name='org.thechiselgroup.choosel.org_thechiselgroup_choosel'/>
   <entry-point class='org.thechiselgroup.biomixer.client.BioMixerEntryPoint'/>
+  
+  <!-- Google maps key for bio-mixer.appspot.com -->
+  <script src="http://maps.google.com/maps?gwt=1&amp;file=api&amp;v=2&amp;sensor=false&amp;key=ABQIAAAAUSQ19DnbWFmnXLrOTDG68hRytvPggOGW33pDAYFjzHEjMtL32BQJ59mhcG4u2HJcX6tckq6dRBPYGg" />
+  
 </module>

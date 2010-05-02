@@ -13,20 +13,13 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.domain.other;
+package org.thechiselgroup.choosel.client.views.graph;
 
-import java.util.Set;
+public class DefaultGraphExpansionRegistry extends GraphExpansionRegistry {
 
-import org.thechiselgroup.choosel.client.resources.Resource;
-import org.thechiselgroup.choosel.client.services.ServiceException;
-
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-
-@RemoteServiceRelativePath("georss")
-public interface GeoRSSService extends RemoteService {
-
-    Set<Resource> getGeoRSS(String url, String className)
-	    throws ServiceException;
+    /*
+     * only here so gin injection binding works (cannot bind
+     * GraphExpansionRegistry to self)
+     */
 
 }
