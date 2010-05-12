@@ -31,24 +31,29 @@ public class DelegatingResourceSet extends AbstractResourceSet {
 	this.delegate = delegate;
     }
 
+    @Override
     public void add(Resource resource) {
 	delegate.add(resource);
     }
 
+    @Override
     public <H extends ResourceEventHandler> HandlerRegistration addHandler(
 	    Type<H> type, H handler) {
 	return delegate.addHandler(type, handler);
     }
 
+    @Override
     public HandlerRegistration addLabelChangedEventHandler(
 	    LabelChangedEventHandler eventHandler) {
 	return delegate.addLabelChangedEventHandler(eventHandler);
     }
 
+    @Override
     public boolean contains(Resource resource) {
 	return delegate.contains(resource);
     }
 
+    @Override
     public Resource getByUri(String uri) {
 	return delegate.getByUri(uri);
     }
@@ -57,14 +62,17 @@ public class DelegatingResourceSet extends AbstractResourceSet {
 	return delegate;
     }
 
+    @Override
     public String getLabel() {
 	return delegate.getLabel();
     }
 
+    @Override
     public boolean hasLabel() {
 	return delegate.hasLabel();
     }
 
+    @Override
     public boolean isEmpty() {
 	return delegate.isEmpty();
     }
@@ -74,22 +82,27 @@ public class DelegatingResourceSet extends AbstractResourceSet {
 	return delegate.isModifiable();
     }
 
+    @Override
     public Iterator<Resource> iterator() {
 	return delegate.iterator();
     }
 
+    @Override
     public void remove(Resource resource) {
 	delegate.remove(resource);
     }
 
+    @Override
     public void setLabel(String label) {
 	delegate.setLabel(label);
     }
 
+    @Override
     public int size() {
 	return delegate.size();
     }
 
+    @Override
     public List<Resource> toList() {
 	return delegate.toList();
     }

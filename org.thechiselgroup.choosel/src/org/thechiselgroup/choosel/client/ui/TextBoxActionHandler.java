@@ -28,10 +28,12 @@ import com.google.gwt.event.dom.client.KeyUpHandler;
 public abstract class TextBoxActionHandler implements ClickHandler,
         KeyUpHandler {
 
+    @Override
     public void onClick(ClickEvent event) {
         execute();
     }
 
+    @Override
     public void onKeyUp(KeyUpEvent event) {
         if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
     	execute();

@@ -26,6 +26,7 @@ public class ResourceSetLabelFactory implements LabelProvider {
 	prefix = "Resource Set";
     }
 
+    @Override
     public String nextLabel() {
 	return prefix + " " + Integer.toString(currentIndex++);
     }

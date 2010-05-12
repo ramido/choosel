@@ -53,6 +53,7 @@ public class CommandPresenterTest {
 	// TODO extract to utility class with reflection
 	when(display.addClickHandler(any(ClickHandler.class))).thenAnswer(
 		new Answer<HandlerRegistration>() {
+		    @Override
 		    public HandlerRegistration answer(
 			    InvocationOnMock invocation) {
 

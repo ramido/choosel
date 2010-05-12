@@ -26,6 +26,7 @@ public class LoggingAsyncCommandExecutor implements AsyncCommandExecutor {
     public LoggingAsyncCommandExecutor() {
     }
 
+    @Override
     public void execute(AsyncCommand command) {
 	command.execute(new NullAsyncCallback<Void>() {
 	    @Override

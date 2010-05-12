@@ -300,12 +300,14 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
 	addFlashVar(FLASH_VAR_SWFID, getSwfId());
     }
 
+    @Override
     public void addArc(Arc arc) {
 	arcsByID.put(arc.getId(), arc);
 	_addArc(getSwfId(), arc.getId(), arc.getSourceNodeId(), arc
 		.getTargetNodeId(), arc.getType());
     }
 
+    @Override
     public <T extends EventHandler> HandlerRegistration addEventHandler(
 	    Type<T> type, T handler) {
 
@@ -316,17 +318,20 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
 	}
     }
 
+    @Override
     public HandlerRegistration addGraphWidgetReadyHandler(
 	    GraphWidgetReadyHandler handler) {
 
 	return addHandler(handler, GraphWidgetReadyEvent.TYPE);
     }
 
+    @Override
     public void addNode(Node node) {
 	_addNode(getSwfId(), node.getId(), node.getType(), node.getLabel());
 	nodesByID.put(node.getId(), node);
     }
 
+    @Override
     public void addNodeMenuItemHandler(String menuLabel,
 	    NodeMenuItemClickedHandler handler, String nodeType) {
 
@@ -382,6 +387,7 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
 	return arcsByID.get(arcID);
     }
 
+    @Override
     public Point getLocation(Node node) {
 	Location result = _getNodeLocation(getSwfId(), node.getId());
 	return new Point((int) result.getX(), (int) result.getY());
@@ -402,10 +408,12 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
 	return _getSelectedNodeID(getSwfId());
     }
 
+    @Override
     public void layOut() {
 	_runLayout(getSwfId(), LAYOUT_NAME);
     }
 
+    @Override
     public void layOutNodes(Collection<Node> nodes) {
 	if (nodes.size() == 0) {
 	    return;
@@ -524,11 +532,13 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
 	fireEvent(new GraphWidgetReadyEvent(this));
     }
 
+    @Override
     public void removeArc(Arc arc) {
 	_removeArc(getSwfId(), arc.getId());
 	arcsByID.remove(arc.getId());
     }
 
+    @Override
     public void removeNode(Node node) {
 	_removeNode(getSwfId(), node.getId());
 	nodesByID.remove(node.getId());
@@ -539,10 +549,12 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
 	_setArcStyle(getSwfId(), arc.getId(), styleProperty, styleValue);
     }
 
+    @Override
     public void setLocation(Node node, Point point) {
 	_setNodeLocation(getSwfId(), node.getId(), point.x, point.y);
     }
 
+    @Override
     public void setNodeStyle(Node node, String styleProperty, String styleValue) {
 	_setNodeStyle(getSwfId(), node.getId(), styleProperty, styleValue);
     }

@@ -22,6 +22,7 @@ public class StubbingArgumentCaptor<T> implements Answer<T> {
 
     private Object[] arguments;
 
+    @Override
     public T answer(InvocationOnMock invocation) {
 	arguments = invocation.getArguments();
 	return null;

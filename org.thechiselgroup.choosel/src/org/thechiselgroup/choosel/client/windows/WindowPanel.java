@@ -443,6 +443,7 @@ public class WindowPanel extends NEffectPanel implements
 		headerContainer);
 
 	rootPanel.addClickHandler(new ClickHandler() {
+	    @Override
 	    public void onClick(ClickEvent event) {
 		// TODO fix bug: window not to front
 		// deactivated because of list box issue

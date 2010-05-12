@@ -53,6 +53,7 @@ public class DefaultWorkspaceManager implements WorkspaceManager {
 	return handlerManager.addHandler(WorkspaceSwitchedEvent.TYPE, h);
     }
 
+    @Override
     public void createNewWorkspace() {
 	Workspace workspace = new Workspace();
 	workspace.setName("Untitled Workspace");
@@ -65,6 +66,7 @@ public class DefaultWorkspaceManager implements WorkspaceManager {
 	setWorkspace(workspace);
     }
 
+    @Override
     public Workspace getWorkspace() {
 	if (workspace == null) {
 	    createNewWorkspace();

@@ -267,6 +267,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 		.addHandler(ResourceRemovedEvent.TYPE, selectionRemovedHandler);
     }
 
+    @Override
     public void addSelectionSet(ResourceSet selectionSet) {
 	assert selectionSet != null;
 
@@ -277,6 +278,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 	updateSelectionAvatars();
     }
 
+    @Override
     public Widget asWidget() {
 	return mainPanel;
     }
@@ -314,6 +316,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 	return combinedUserResourceSets.containsResourceSet(resourceSet);
     }
 
+    @Override
     public boolean containsSelectionSet(ResourceSet resourceSet) {
 	return selectionSets.contains(resourceSet);
     }
@@ -375,6 +378,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 	throw new IllegalArgumentException("Invalid slot id: " + slotID);
     }
 
+    @Override
     public void dispose() {
 	Log.debug("dispose view " + toString());
 
@@ -430,6 +434,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 	return allResources;
     }
 
+    @Override
     public ResourceSet getSelection() {
 	return selection;
     }
@@ -742,6 +747,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 	selectionResourceRemovedHandlerRegistration = null;
     }
 
+    @Override
     public void removeSelectionSet(ResourceSet selectionSet) {
 	assert selectionSet != null;
 	this.selectionSets.remove(selectionSet);
@@ -837,6 +843,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 	return memento;
     }
 
+    @Override
     public void setSelection(ResourceSet newSelectionModel) {
 	// assert newSelectionModel != null;
 

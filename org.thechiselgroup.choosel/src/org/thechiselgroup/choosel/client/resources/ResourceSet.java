@@ -46,6 +46,7 @@ public interface ResourceSet extends Iterable<Resource>, ResourceContainer,
 
     boolean isModifiable();
 
+    @Override
     Iterator<Resource> iterator();
 
     int size();

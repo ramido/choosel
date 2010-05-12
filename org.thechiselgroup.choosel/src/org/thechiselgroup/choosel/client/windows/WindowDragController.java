@@ -56,6 +56,7 @@ public abstract class WindowDragController extends AbstractDragController {
 	controller.bringToFront(window);
     }
 
+    @Override
     public final void dragMove() {
 	int desiredDraggableX = Math.max(0, Math.min(context.desiredDraggableX
 		- desktopOffsetX, desktopWidth

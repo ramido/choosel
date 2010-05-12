@@ -35,6 +35,7 @@ public class ResourceEventsForwarder implements ResourceAddedEventHandler,
 	this.target = target;
     }
 
+    @Override
     public void dispose() {
 	addHandlerRegistration.removeHandler();
 	addHandlerRegistration = null;

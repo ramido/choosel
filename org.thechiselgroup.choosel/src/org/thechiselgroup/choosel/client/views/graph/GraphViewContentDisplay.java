@@ -218,6 +218,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     public void checkResize() {
     }
 
+    @Override
     public void showArc(String arcType, String sourceId, String targetId) {
 	assert arcType != null;
 	assert sourceId != null;
@@ -287,10 +288,12 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 	return arcType + ":" + sourceId + "_" + targetId;
     }
 
+    @Override
     public String getCategory(Resource resource) {
 	return resourceCategorizer.getCategory(resource);
     }
 
+    @Override
     public Display getDisplay() {
 	return display;
     }
@@ -307,6 +310,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 	return getGraphItem(node).getResource();
     }
 
+    @Override
     public ResourceManager getResourceManager() {
 	return resourceManager;
     }

@@ -53,6 +53,7 @@ public class ResourceSplitter extends AbstractResourceContainer {
 	return new HashMap<String, ResourceSet>(categorizedSets);
     }
 
+    @Override
     public void add(Resource resource) {
 	String category = categorizer.getCategory(resource);
 	ResourceSet resourceSet = getResourceSet(category);
@@ -75,6 +76,7 @@ public class ResourceSplitter extends AbstractResourceContainer {
 	return categorizedSets.get(category);
     }
 
+    @Override
     public void remove(Resource resource) {
 	// check if sets exists --> possible bug add/remove events
 

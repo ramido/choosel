@@ -321,6 +321,7 @@ public class DefaultResourceSetAvatarDragController extends
 	super.dragEnd();
     }
 
+    @Override
     public void dragMove() {
 	updateCacheAndBoundary();
 	moveProxyElement();
@@ -475,6 +476,7 @@ public class DefaultResourceSetAvatarDragController extends
 	}
     }
 
+    @Override
     public void registerDropController(
 	    ResourceSetAvatarDropController dropController) {
 	dropControllers.put(dropController.getDropTarget(), dropController);
@@ -496,6 +498,7 @@ public class DefaultResourceSetAvatarDragController extends
 	}
     }
 
+    @Override
     public void unregisterDropController(
 	    ResourceSetAvatarDropController dropController) {
 
@@ -504,6 +507,7 @@ public class DefaultResourceSetAvatarDragController extends
 	dropControllers.remove(dropController.getDropTarget());
     }
 
+    @Override
     public void unregisterDropControllerFor(Widget dropTarget) {
 	unregisterDropController(dropControllers.get(dropTarget));
     }

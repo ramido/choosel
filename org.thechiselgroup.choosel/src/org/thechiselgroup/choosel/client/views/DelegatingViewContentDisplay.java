@@ -30,14 +30,17 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
 	this.delegate = delegate;
     }
 
+    @Override
     public Widget asWidget() {
 	return delegate.asWidget();
     }
 
+    @Override
     public void checkResize() {
 	delegate.checkResize();
     }
 
+    @Override
     public ResourceItem createResourceItem(Layer layer, Resource resource) {
 	return delegate.createResourceItem(layer, resource);
     }
@@ -47,10 +50,12 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
 	return delegate.getSlotIDs();
     }
 
+    @Override
     public void dispose() {
 	delegate.dispose();
     }
 
+    @Override
     public void endRestore() {
 	delegate.endRestore();
     }
@@ -59,14 +64,17 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
 	return delegate;
     }
 
+    @Override
     public void init(ViewContentDisplayCallback callback) {
 	delegate.init(callback);
     }
 
+    @Override
     public boolean isReady() {
 	return delegate.isReady();
     }
 
+    @Override
     public void removeResourceItem(ResourceItem resourceItem) {
 	delegate.removeResourceItem(resourceItem);
     }
@@ -81,6 +89,7 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
 	return delegate.save();
     }
 
+    @Override
     public void startRestore() {
 	delegate.startRestore();
     }

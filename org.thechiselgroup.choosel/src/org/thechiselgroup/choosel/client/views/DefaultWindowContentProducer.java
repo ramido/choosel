@@ -26,6 +26,7 @@ public class DefaultWindowContentProducer implements WindowContentProducer {
 
     private Map<String, WindowContentFactory> windowContentFactories = new HashMap<String, WindowContentFactory>();
 
+    @Override
     public WindowContent createWindowContent(String contentType) {
 	assert contentType != null;
 	assert windowContentFactories.containsKey(contentType);

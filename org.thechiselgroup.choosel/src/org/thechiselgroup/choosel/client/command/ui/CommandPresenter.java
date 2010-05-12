@@ -59,10 +59,12 @@ public class CommandPresenter implements WidgetAdaptable, Presenter {
 	this.command = command;
     }
 
+    @Override
     public Widget asWidget() {
 	return display.asWidget();
     }
 
+    @Override
     public void init() {
 	display.addClickHandler(new ClickHandler() {
 	    @Override

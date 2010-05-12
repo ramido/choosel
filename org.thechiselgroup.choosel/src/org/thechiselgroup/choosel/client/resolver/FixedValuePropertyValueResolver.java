@@ -25,6 +25,7 @@ public class FixedValuePropertyValueResolver implements PropertyValueResolver {
 	this.value = value;
     }
 
+    @Override
     public Object getValue(Resource resource) {
 	return value;
     };

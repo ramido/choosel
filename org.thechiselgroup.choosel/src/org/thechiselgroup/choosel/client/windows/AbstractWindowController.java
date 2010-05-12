@@ -38,14 +38,17 @@ public abstract class AbstractWindowController implements WindowController {
 	resizeDragController = new WindowResizeController(this, commandManager);
     }
 
+    @Override
     public AbsolutePanel getBoundaryPanel() {
 	return boundaryPanel;
     }
 
+    @Override
     public WindowMoveController getMoveDragController() {
 	return moveController;
     }
 
+    @Override
     public WindowResizeController getResizeDragController() {
 	return resizeDragController;
     }

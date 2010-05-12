@@ -19,6 +19,7 @@ import com.google.gwt.core.client.EntryPoint;
 
 public abstract class ChooselEntryPoint implements EntryPoint {
 
+    @Override
     public final void onModuleLoad() {
 	ChooselGinjector injector = createChooselGinjector();
 

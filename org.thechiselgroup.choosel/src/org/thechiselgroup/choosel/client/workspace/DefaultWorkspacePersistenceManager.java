@@ -84,6 +84,7 @@ public class DefaultWorkspacePersistenceManager implements
 	this.service = service;
     }
 
+    @Override
     public void shareWorkspace(final String emailAddress,
 	    final AsyncCallback<Void> callback) {
 

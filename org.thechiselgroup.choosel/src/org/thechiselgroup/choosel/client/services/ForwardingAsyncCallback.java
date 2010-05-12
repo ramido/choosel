@@ -26,10 +26,12 @@ public class ForwardingAsyncCallback<T> implements AsyncCallback<T> {
 	this.delegate = delegate;
     }
 
+    @Override
     public void onFailure(Throwable caught) {
 	delegate.onFailure(caught);
     }
 
+    @Override
     public void onSuccess(T result) {
 	delegate.onSuccess(null);
     }

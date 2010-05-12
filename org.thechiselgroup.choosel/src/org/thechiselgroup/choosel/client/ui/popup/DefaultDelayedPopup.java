@@ -73,6 +73,7 @@ public class DefaultDelayedPopup extends PopupPanel implements MouseOutHandler,
 	addStyleName(CSS_ALPHA);
     }
 
+    @Override
     public void hideDelayed() {
 	showTimer.cancel();
 	hideTimer.schedule(hideDelay);
@@ -101,6 +102,7 @@ public class DefaultDelayedPopup extends PopupPanel implements MouseOutHandler,
 	removeStyleName(CSS_ALPHA);
     }
 
+    @Override
     public void showDelayed() {
 	hideTimer.cancel();
 	showTimer.schedule(showDelay);

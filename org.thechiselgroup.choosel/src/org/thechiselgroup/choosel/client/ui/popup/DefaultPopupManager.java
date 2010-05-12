@@ -391,6 +391,7 @@ public class DefaultPopupManager implements Opacity, PopupManager {
 	this.popupMouseEventsHandler = new PopupMouseEventsHandler(this);
     }
 
+    @Override
     public HandlerRegistration addPopupClosingHandler(
 	    PopupClosingHandler handler) {
 	return eventBus.addHandler(PopupClosingEvent.TYPE, handler);
@@ -403,10 +404,12 @@ public class DefaultPopupManager implements Opacity, PopupManager {
 		.addMouseOutHandler(popupMouseEventsHandler);
     }
 
+    @Override
     public HandlerRegistration addPopupMouseOutHandler(MouseOutHandler handler) {
 	return eventBus.addHandler(MouseOutEvent.getType(), handler);
     }
 
+    @Override
     public HandlerRegistration addPopupMouseOverHandler(MouseOverHandler handler) {
 	return eventBus.addHandler(MouseOverEvent.getType(), handler);
     }
@@ -474,6 +477,7 @@ public class DefaultPopupManager implements Opacity, PopupManager {
 	}
     }
 
+    @Override
     public int getHideDelay() {
 	return hideDelay;
     }
@@ -501,6 +505,7 @@ public class DefaultPopupManager implements Opacity, PopupManager {
      * @return Delay between showing mouse movement stops and popups gets shown
      *         in ms.
      */
+    @Override
     public int getShowDelay() {
 	return showDelay;
     }
@@ -513,6 +518,7 @@ public class DefaultPopupManager implements Opacity, PopupManager {
 	setPopupTransparency(OPACITY_TRANSPARENT);
     }
 
+    @Override
     public void hidePopup() {
 	if (isEnabled()) {
 	    setState(INACTIVE_STATE);
@@ -531,6 +537,7 @@ public class DefaultPopupManager implements Opacity, PopupManager {
 	return hideDelay > 0;
     }
 
+    @Override
     public void onMouseDown(int clientX, int clientY) {
 	updateMousePosition(clientX, clientY);
 
@@ -540,33 +547,40 @@ public class DefaultPopupManager implements Opacity, PopupManager {
 	}
     }
 
+    @Override
     public void onMouseDown(Point pointInClientArea) {
 	onMouseDown(pointInClientArea.x, pointInClientArea.y);
     }
 
+    @Override
     public void onMouseMove(int clientX, int clientY) {
 	updateMousePosition(clientX, clientY);
 	state.onSourceMouseMove(this);
     }
 
+    @Override
     public void onMouseMove(Point pointInClientArea) {
 	onMouseMove(pointInClientArea.x, pointInClientArea.y);
     }
 
+    @Override
     public void onMouseOut(int clientX, int clientY) {
 	updateMousePosition(clientX, clientY);
 	state.onSourceMouseOut(DefaultPopupManager.this);
     }
 
+    @Override
     public void onMouseOut(Point pointInClientArea) {
 	onMouseOut(pointInClientArea.x, pointInClientArea.y);
     }
 
+    @Override
     public void onMouseOver(int clientX, int clientY) {
 	updateMousePosition(clientX, clientY);
 	state.onSourceMouseOver(DefaultPopupManager.this);
     }
 
+    @Override
     public void onMouseOver(Point pointInClientArea) {
 	onMouseOver(pointInClientArea.x, pointInClientArea.y);
     }
@@ -582,6 +596,7 @@ public class DefaultPopupManager implements Opacity, PopupManager {
      *            Delay between showing mouse out of source/popup and popups
      *            gets hidden in ms.
      */
+    @Override
     public void setHideDelay(int delay) {
 	this.hideDelay = delay;
     }
@@ -624,6 +639,7 @@ public class DefaultPopupManager implements Opacity, PopupManager {
      *            Delay between showing mouse movement stops and popups gets
      *            shown in ms.
      */
+    @Override
     public void setShowDelay(int showDelay) {
 	this.showDelay = showDelay;
     }
