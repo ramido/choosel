@@ -26,6 +26,7 @@ public class SelectionModelLabelFactory implements LabelProvider {
 	prefix = "Selection";
     }
 
+    @Override
     public String nextLabel() {
 	return prefix + " " + Integer.toString(currentIndex++);
     }

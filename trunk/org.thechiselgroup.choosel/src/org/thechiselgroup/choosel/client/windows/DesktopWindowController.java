@@ -30,6 +30,7 @@ public class DesktopWindowController extends AbstractWindowController {
 	return (DefaultDesktop) getBoundaryPanel();
     }
 
+    @Override
     public void close(WindowPanel window) {
 	getDesktopPanel().removeWindow(window);
     }

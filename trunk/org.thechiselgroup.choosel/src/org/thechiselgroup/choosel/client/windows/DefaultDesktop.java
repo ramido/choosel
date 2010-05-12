@@ -61,11 +61,13 @@ public class DefaultDesktop extends AbsolutePanel implements Desktop, HasSize {
 	return this;
     }
 
+    @Override
     public void bringToFront(WindowPanel window) {
 	removeWindowInternal(window);
 	addWindowInternal(window);
     }
 
+    @Override
     public void clearWindows() {
 	List<WindowPanel> windows = new ArrayList<WindowPanel>(getWindows());
 	for (WindowPanel w : windows) {
@@ -85,6 +87,7 @@ public class DefaultDesktop extends AbsolutePanel implements Desktop, HasSize {
     }
 
     // TODO what about views // view factories??
+    @Override
     public WindowPanel createWindow(WindowContent content) {
 	content.init();
 
@@ -101,6 +104,7 @@ public class DefaultDesktop extends AbsolutePanel implements Desktop, HasSize {
 	return window;
     }
 
+    @Override
     public WindowPanel createWindow(WindowContent content, int x, int y,
 	    int windowOffsetWidth, int windowOffsetHeight) {
 
@@ -124,6 +128,7 @@ public class DefaultDesktop extends AbsolutePanel implements Desktop, HasSize {
 	return getOffsetWidth();
     }
 
+    @Override
     public List<WindowPanel> getWindows() {
 	return windows;
     }
@@ -140,6 +145,7 @@ public class DefaultDesktop extends AbsolutePanel implements Desktop, HasSize {
 	add(copyRightLabel);
     }
 
+    @Override
     public void removeWindow(WindowPanel window) {
 	removeWindowInternal(window);
 	remove(window);

@@ -40,6 +40,7 @@ public abstract class AbstractWindowContent implements WindowContent {
     public void init() {
     }
 
+    @Override
     public void setLabel(String label) {
 	this.label = label;
     }

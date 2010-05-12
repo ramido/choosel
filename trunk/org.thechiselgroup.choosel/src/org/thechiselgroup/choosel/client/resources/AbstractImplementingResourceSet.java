@@ -37,6 +37,7 @@ public abstract class AbstractImplementingResourceSet extends
 	this.labelDelegate = new DefaultHasLabel(this);
     }
 
+    @Override
     public <H extends ResourceEventHandler> HandlerRegistration addHandler(
 	    Type<H> type, H handler) {
 	return eventBus.addHandler(type, handler);

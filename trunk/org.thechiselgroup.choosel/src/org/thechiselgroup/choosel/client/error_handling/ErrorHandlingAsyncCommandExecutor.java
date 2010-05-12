@@ -30,6 +30,7 @@ public class ErrorHandlingAsyncCommandExecutor implements AsyncCommandExecutor {
 	this.errorHandler = errorHandler;
     }
 
+    @Override
     public void execute(AsyncCommand command) {
 	command.execute(new ErrorHandlingAsyncCallback<Void>(errorHandler));
     }

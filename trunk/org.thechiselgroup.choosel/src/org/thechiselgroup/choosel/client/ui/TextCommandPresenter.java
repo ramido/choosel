@@ -52,6 +52,7 @@ public class TextCommandPresenter implements Presenter {
 	return textBox;
     }
 
+    @Override
     public void init() {
 	textBox = new TextBox();
 	executeButton = new Button(buttonLabel);

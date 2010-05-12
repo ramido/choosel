@@ -51,6 +51,7 @@ public abstract class AbstractResourceSetAvatarDropTargetManager implements
 	dragController.unregisterDropControllerFor(dropTarget);
     }
 
+    @Override
     public void enableDropTarget(Widget dropTarget) {
 	assert dropTarget != null;
 

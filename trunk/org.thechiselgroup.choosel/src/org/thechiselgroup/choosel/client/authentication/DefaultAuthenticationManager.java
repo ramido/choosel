@@ -64,6 +64,7 @@ public class DefaultAuthenticationManager implements AuthenticationManager {
 	return state;
     }
 
+    @Override
     public Throwable getFailure() {
 	return failure;
     }

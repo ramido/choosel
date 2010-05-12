@@ -113,6 +113,7 @@ public class FlashURLFetchService extends SWFWidget implements URLFetchService {
 	}
     }
 
+    @Override
     public void fetchURL(String url, AsyncCallback<String> callback) {
 	addUrlCallback(url, callback);
 

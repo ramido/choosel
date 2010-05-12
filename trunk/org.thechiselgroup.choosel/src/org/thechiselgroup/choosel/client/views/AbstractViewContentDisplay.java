@@ -50,6 +50,7 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
 	this.hoverModel = hoverModel;
     }
 
+    @Override
     public Widget asWidget() {
 	if (widget == null) {
 	    widget = createWidget();

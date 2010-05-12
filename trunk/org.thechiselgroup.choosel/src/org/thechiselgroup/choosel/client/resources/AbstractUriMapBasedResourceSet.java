@@ -26,6 +26,7 @@ public abstract class AbstractUriMapBasedResourceSet extends
 
     protected Map<String, Resource> uriToResource = new HashMap<String, Resource>();
 
+    @Override
     public void add(Resource resource) {
 	assert resource != null;
 
@@ -40,6 +41,7 @@ public abstract class AbstractUriMapBasedResourceSet extends
 	return uriToResource.put(resource.getUri(), resource);
     }
 
+    @Override
     public boolean contains(Resource resource) {
 	assert resource != null;
 	return uriToResource.containsKey(resource.getUri());
@@ -49,10 +51,12 @@ public abstract class AbstractUriMapBasedResourceSet extends
 
     protected abstract void doRemove(Resource resource);
 
+    @Override
     public Resource getByUri(String uri) {
 	return uriToResource.get(uri);
     }
 
+    @Override
     public List<Resource> toList() {
 	return new ArrayList<Resource>(uriToResource.values());
     }
@@ -68,6 +72,7 @@ public abstract class AbstractUriMapBasedResourceSet extends
 	return uriToResource.values().iterator();
     }
 
+    @Override
     public void remove(Resource resource) {
 	if (!contains(resource)) {
 	    return;
@@ -80,6 +85,7 @@ public abstract class AbstractUriMapBasedResourceSet extends
 	uriToResource.remove(key);
     }
 
+    @Override
     public int size() {
 	return uriToResource.size();
     }

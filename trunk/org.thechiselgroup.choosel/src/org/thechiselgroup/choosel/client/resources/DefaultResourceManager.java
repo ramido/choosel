@@ -47,6 +47,7 @@ public class DefaultResourceManager implements ResourceManager {
 
     private Map<String, ResourceElement> keysToResourceElements = new HashMap<String, ResourceElement>();
 
+    @Override
     public Resource add(Resource resource) {
 	String key = resource.getUri();
 
@@ -57,6 +58,7 @@ public class DefaultResourceManager implements ResourceManager {
 	return getResourceElement(key).resource;
     }
 
+    @Override
     public Resource allocate(String uri) {
 	ResourceElement resourceElement = getResourceElement(uri);
 	resourceElement.allocate();
@@ -68,10 +70,12 @@ public class DefaultResourceManager implements ResourceManager {
 	keysToResourceElements.clear();
     }
 
+    @Override
     public boolean contains(String uri) {
 	return keysToResourceElements.containsKey(uri);
     }
 
+    @Override
     public void deallocate(String uri) {
 	assert uri != null;
 
@@ -87,6 +91,7 @@ public class DefaultResourceManager implements ResourceManager {
 	}
     }
 
+    @Override
     public Resource getByUri(String uri) {
 	return getResourceElement(uri).resource;
     }

@@ -46,6 +46,7 @@ public class UriList implements Serializable, Iterable<String> {
 	return isLoaded;
     }
 
+    @Override
     public Iterator<String> iterator() {
 	return delegate.iterator();
     }

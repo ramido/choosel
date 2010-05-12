@@ -50,6 +50,7 @@ public class DefaultDocumentFetchService implements DocumentFetchService {
 	this.domBuilderFactory = domBuilderFactory;
     }
 
+    @Override
     public Document fetchXML(String urlAsString) throws IOException,
 	    SAXException, ParserConfigurationException {
 

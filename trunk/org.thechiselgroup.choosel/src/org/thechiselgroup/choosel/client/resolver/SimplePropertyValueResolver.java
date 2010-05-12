@@ -34,6 +34,7 @@ public class SimplePropertyValueResolver implements PropertyValueResolver {
 	this.propertyName = propertyName;
     }
 
+    @Override
     public Object getValue(Resource individual) {
 	return individual.getValue(propertyName);
     }

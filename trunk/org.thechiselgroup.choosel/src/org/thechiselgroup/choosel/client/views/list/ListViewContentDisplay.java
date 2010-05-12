@@ -53,6 +53,7 @@ public class ListViewContentDisplay extends AbstractViewContentDisplay {
 
 	private List<String> listItems = new ArrayList<String>();
 
+	@Override
 	public void addItem(ListItem listItem) {
 	    listItem.init();
 

@@ -90,6 +90,7 @@ public class WorkspacePresenter implements Presenter {
 		.setName(display.getWorkspaceNameText().getText());
     }
 
+    @Override
     public void init() {
 	display.getTextKeyUpHandlers().addKeyUpHandler(new KeyUpHandler() {
 
