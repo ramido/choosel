@@ -161,3 +161,13 @@ Client-side XSLT Processor
 *URL:* http://dev.abiss.gr/sarissa/
 
 *License:* Apache License 2.0
+
+==Protovis==
+
+JavaScript Visualization Library
+
+*Version*: 3.2
+
+*URL*: http://vis.stanford.edu/protovis/
+
+*License*: BSD License
