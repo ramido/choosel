@@ -26,7 +26,7 @@ import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 
-public abstract class ResourceItem {
+public class ResourceItem {
 
     public class HighlightingManager implements MouseOverHandler,
 	    MouseOutHandler, PopupClosingHandler {
@@ -181,7 +181,9 @@ public abstract class ResourceItem {
 	updateStyling();
     }
 
-    protected abstract void setStatusStyling(Status status);
+    protected void setStatusStyling(Status status) {
+
+    }
 
     protected void updateStyling() {
 	setStatusStyling(calculateStatus());
