@@ -36,6 +36,7 @@ Version: Custom Build
 URL: http://sourceforge.net/projects/flexviz/
 License: Mozilla Public License 1.1 (MPL 1.1)
 
+
 Simile Timeline
 Timeline Component
 Version: 2.3.0
@@ -111,3 +112,10 @@ Client-side XSLT Processor
 Version: 0.9.9.4
 URL: http://dev.abiss.gr/sarissa/
 License: Apache License 2.0 
+
+
+Protovis
+JavaScript Visualization Library
+Version: 3.2
+URL: http://vis.stanford.edu/protovis/
+License: BSD License
