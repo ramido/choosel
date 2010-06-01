@@ -25,6 +25,8 @@ public interface ChooselInjectionConstants {
 
     String TYPE_TIMELINE = "Timeline";
 
+    String TYPE_CHART = "Chart";
+
     String DROP_TARGET_MANAGER_VIEW_CONTENT = "drop-target-manager-view-content";
 
     String HOVER_MODEL = "hoverModel";

@@ -77,6 +77,7 @@ import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
+import org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.graph.ArcStyleProvider;
 import org.thechiselgroup.choosel.client.views.graph.DefaultArcStyleProvider;
 import org.thechiselgroup.choosel.client.views.graph.DefaultGraphExpansionRegistry;
@@ -203,12 +204,13 @@ public class ChooselClientModule extends AbstractGinModule implements
 		GraphViewContentDisplayFactory.class);
 	bindViewContentDisplayFactory(TYPE_TIMELINE,
 		TimeLineViewContentDisplayFactory.class);
+	bindViewContentDisplayFactory(TYPE_CHART,
+		ChartViewContentDisplayFactory.class);
     }
 
     protected void bindViewContentDisplayFactory(
 	    String type,
 	    Class<? extends ViewContentDisplayFactory> viewContentDisplayFactoryClass) {
-
 	bind(ViewContentDisplayFactory.class).annotatedWith(Names.named(type))
 		.to(viewContentDisplayFactoryClass).in(Singleton.class);
     }

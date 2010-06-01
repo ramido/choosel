@@ -37,6 +37,7 @@ import org.thechiselgroup.choosel.client.windows.WindowContent;
 import org.thechiselgroup.choosel.client.windows.WindowContentFactory;
 import org.thechiselgroup.choosel.client.windows.WindowContentProducer;
 
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.name.Named;
@@ -156,6 +157,12 @@ public class ChooselWindowContentProducerProvider implements
     public void registerTimeline(
 	    @Named(TYPE_TIMELINE) ViewContentDisplayFactory factory) {
 	registerViewContentDisplayFactory(TYPE_TIMELINE, factory);
+    }
+    
+    @Inject
+    public void registerChart(
+	    @Named(TYPE_CHART) ViewContentDisplayFactory factory) {
+	registerViewContentDisplayFactory(TYPE_CHART, factory);
     }
 
     private void registerViewContentDisplayFactory(String contentType,
