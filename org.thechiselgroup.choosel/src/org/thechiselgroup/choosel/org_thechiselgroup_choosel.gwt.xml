@@ -61,6 +61,9 @@
   <script src="js/lib/simile-ajax-api-2.2.0/simile-ajax-api.js"/>
   <script src="js/lib/timeline-2.3.0/timeline-api.js"/>
   
+  <!-- View: Chart -->
+  <script src="js/lib/protovis-3.2/protovis-3.2/protovis-d3.2.js"/>
+  
   <!-- Client XPath/XSLT support via wrapping native browser support -->
   <script src="js/lib/sarissa-0.9.9.4/sarissa-compressed.js"/>
   <script src="js/lib/sarissa-0.9.9.4/sarissa_ieemu_xpath-compressed.js"/>
