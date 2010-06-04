@@ -29,9 +29,6 @@ public abstract class ChartWidget extends Widget {
     
     private ArrayList<Object> chartItemArray = new ArrayList<Object>();
     
-    protected JavaScriptObject colours = ArrayUtils.toJsArray(new String[] {
-	    "yellow", "orange","brown"});
-    
     private ArrayList<Double> dataArray = new ArrayList<Double>();
     
     private int height = 0;
@@ -115,21 +112,12 @@ public abstract class ChartWidget extends Widget {
 
     protected native Chart registerFillStyle() /*-{
         var chart = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chart,
-        colours = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::colours,
         val = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::val,
         thisChart = this;
         
         return chart.fillStyle(function() {
-            if(thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::getChartItem(I)(this.index)
-               	    .@org.thechiselgroup.choosel.client.views.chart.ChartItem::isHighlighted()()) {
-                return colours[0];
-            } else if(thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::getChartItem(I)(this.index)
-                    .@org.thechiselgroup.choosel.client.views.chart.ChartItem::isSelected()()) {
-                return colours[1]; 
-            } else {
-                return (this.index == val.length-1 && val.length % (colours.length - 2) == 1 && colours.length > 3 ?
-                	colours[this.index % (colours.length - 2) + 3] : colours[this.index % (colours.length - 2) + 2]);
-            }});
+            return thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::getChartItem(I)(this.index)
+               	    .@org.thechiselgroup.choosel.client.views.chart.ChartItem::getColour()();});
     }-*/;
 
     public void removeEvent(int position) {

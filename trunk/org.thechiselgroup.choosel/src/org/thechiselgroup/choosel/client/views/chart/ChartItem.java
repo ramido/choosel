@@ -18,16 +18,21 @@ package org.thechiselgroup.choosel.client.views.chart;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
+import org.thechiselgroup.choosel.client.ui.widget.chart.ArrayUtils;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.IconResourceItem;
 import org.thechiselgroup.choosel.client.views.Layer;
+import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay;
 
-public class ChartItem extends IconResourceItem {
+import com.google.gwt.core.client.JavaScriptObject;
+
+public class ChartItem extends ResourceItem {
 
     private DragEnablerFactory dragEnablerFactory;
 
     public boolean highlighted = false;
+    
+    protected String[] colours = new String[]{"yellow", "orange","brown","blue"};
 
     private final ChartViewContentDisplay view;
 
@@ -61,6 +66,20 @@ public class ChartItem extends IconResourceItem {
     @Override
     protected void setStatusStyling(Status status) {
 	view.getChartWidget().renderChart();
+    }
+    
+    public String getColour() {
+	switch(calculateStatus()) {
+	case HIGHLIGHTED_SELECTED: 
+	case HIGHLIGHTED: 
+	    return colours[0];
+	case GRAYED_OUT: 
+	case DEFAULT:
+	    return colours[2];
+	case SELECTED:
+	    return colours[1];
+	}
+	throw new RuntimeException("No colour available");
     }
 
 }
