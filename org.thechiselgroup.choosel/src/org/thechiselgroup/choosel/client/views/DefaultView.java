@@ -882,7 +882,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 	    return;
 	}
 
-	getResource(resource).setHightlighted(showHover);
+	getResource(resource).setHighlighted(showHover);
     }
 
     private void storeAutomaticResources(

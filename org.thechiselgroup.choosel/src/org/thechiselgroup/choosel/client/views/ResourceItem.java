@@ -33,17 +33,17 @@ public class ResourceItem {
 
 	@Override
 	public void onMouseOut(MouseOutEvent e) {
-	    setHightlighted(false);
+	    setHighlighted(false);
 	}
 
 	@Override
 	public void onMouseOver(MouseOverEvent e) {
-	    setHightlighted(true);
+	    setHighlighted(true);
 	}
 
 	@Override
 	public void onPopupClosing(PopupClosingEvent event) {
-	    setHightlighted(false);
+	    setHighlighted(false);
 	}
 
     }
@@ -147,7 +147,7 @@ public class ResourceItem {
 	return selected;
     }
 
-    public void setHightlighted(boolean highlighted) {
+    public void setHighlighted(boolean highlighted) {
 	if (this.highlighted == highlighted) {
 	    return;
 	}

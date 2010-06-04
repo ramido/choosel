@@ -16,7 +16,6 @@
 package org.thechiselgroup.choosel.client.views.chart;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.persistence.Memento;
@@ -26,7 +25,6 @@ import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget;
-import org.thechiselgroup.choosel.client.ui.widget.chart.ForceDirectedChart;
 import org.thechiselgroup.choosel.client.ui.widget.chart.BarChart;
 import org.thechiselgroup.choosel.client.ui.widget.chart.LineChart;
 import org.thechiselgroup.choosel.client.ui.widget.chart.PieChart;
@@ -35,6 +33,7 @@ import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.Layer;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
+import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -42,10 +41,22 @@ import com.google.inject.name.Named;
 
 public class ChartViewContentDisplay extends AbstractViewContentDisplay {
 
-    private ChartWidget chartWidget;
-    private DragEnablerFactory dragEnablerFactory;
-    
+    public static interface Display {
+
+	void addItem(ChartItem chartItem);
+
+	void addStyleName(ChartItem chartItem, String cssClass);
+
+	void removeIndividualItem(ChartItem chartItem);
+
+	void removeStyleName(ChartItem chartItem, String cssClass);
+
+    }
     private static final String MEMENTO_CHART_DATA_ARRAY = "data-array";
+
+    public ChartWidget chartWidget;
+
+    private DragEnablerFactory dragEnablerFactory;
 
     @Inject
     public ChartViewContentDisplay(
@@ -60,15 +71,30 @@ public class ChartViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     @Override
+    public void checkResize() {
+	chartWidget.checkResize();
+    }
+
+    @Override
     public ResourceItem createResourceItem(Layer layer, Resource i) {
 	PopupManager popupManager = createPopupManager(layer, i);
 
-	ChartItem chartItem = new ChartItem(i, this, popupManager,
-		hoverModel, layer, dragEnablerFactory);
-	
+	ChartItem chartItem = new ChartItem(i, this, popupManager, hoverModel,
+		layer, dragEnablerFactory);
+
 	chartWidget.addEvent(chartItem);
 
 	return chartItem;
+    }
+
+    @Override
+    public Widget createWidget() {
+	chartWidget = new BarChart();
+	return chartWidget;
+    }
+
+    public ChartWidget getChartWidget() {
+	return chartWidget;
     }
 
     @Override
@@ -79,23 +105,15 @@ public class ChartViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     @Override
-    public Widget createWidget() {
-	chartWidget = new BarChart();
-	return chartWidget;
-    }
-
-    @Override
-    public void checkResize() {
-	chartWidget.checkResize();
-    }
-    
-    @Override
     public void removeResourceItem(ResourceItem resourceItem) {
-	chartWidget.removeEvent(chartWidget.getDataArray().size()-1);
+	chartWidget.removeEvent(chartWidget.getDataArray().size() - 1);
     }
 
-    public ChartWidget getChartWidget() {
-	return chartWidget;
+    @Override
+    public void restore(Memento state) {
+	ArrayList<Double> dataArray = (ArrayList<Double>) state
+		.getValue(MEMENTO_CHART_DATA_ARRAY);
+	chartWidget.setDataArray(dataArray);
     }
 
     @Override
@@ -105,9 +123,11 @@ public class ChartViewContentDisplay extends AbstractViewContentDisplay {
 	return state;
     }
 
-    @Override
-    public void restore(Memento state) {
-	ArrayList<Double> dataArray = (ArrayList<Double>) state.getValue(MEMENTO_CHART_DATA_ARRAY);
-	chartWidget.setDataArray(dataArray);
-    }
+    // public void onBrowserEvent(Event event) {
+    // Window.alert("got here");
+    // switch (DOM.eventGetType(event)) {
+    // case Event.ONMOUSEMOVE: Window.alert("moved");
+    // }
+    // }
+
 }

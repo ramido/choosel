@@ -53,14 +53,14 @@ public class MapItem extends IconResourceItem {
 	public void onMouseOut(MouseOutEvent event) {
 	    getPopupManager()
 		    .onMouseOut(event.getClientX(), event.getClientY());
-	    setHightlighted(false);
+	    setHighlighted(false);
 	}
 
 	@Override
 	public void onMouseOver(MouseOverEvent event) {
 	    getPopupManager().onMouseOver(event.getClientX(),
 		    event.getClientY());
-	    setHightlighted(true);
+	    setHighlighted(true);
 	}
     }
 

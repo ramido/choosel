@@ -21,7 +21,7 @@ import com.google.gwt.user.client.Element;
 class Chart extends JavaScriptObject {
 
     public static native Chart create(Element element, int width, int height) /*-{
-            
+        
         var vis = new $wnd.pv.Panel()
             .canvas(element)
             .width(width)
