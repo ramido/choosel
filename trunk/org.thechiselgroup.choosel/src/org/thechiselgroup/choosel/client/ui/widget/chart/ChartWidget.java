@@ -25,85 +25,143 @@ import com.google.gwt.user.client.ui.Widget;
 
 public abstract class ChartWidget extends Widget {
 
-    private Chart chart;
-    private int width = 0;
-    private int height = 0;
-    private int counter = 0;
-
-    public ArrayList<Double> dataArray = new ArrayList<Double>();
-    public ArrayList<Object> chartItemArray = new ArrayList<Object>();
-    public JavaScriptObject val = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArray));
+    protected Chart chart;
     
+    private ArrayList<Object> chartItemArray = new ArrayList<Object>();
+    
+    protected JavaScriptObject colours = ArrayUtils.toJsArray(new String[] {
+	    "yellow", "orange","brown"});
+    
+    private ArrayList<Double> dataArray = new ArrayList<Double>();
+    
+    private int height = 0;
+    
+    protected JavaScriptObject val = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArray));
+    
+    private int width = 0;
+
     public ChartWidget() {
 	setElement(DOM.createDiv());
+    }
+
+    public void addEvent(ChartItem chartItem) {
+	chartItemArray.add(chartItem);
+	dataArray.add(Double.valueOf(chartItem.getResource().getValue(
+		"magnitude").toString()));
+	val = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArray));
+	updateChart();
+    }
+
+    public void checkResize() {
+	if (chart != null)
+	    resize(getOffsetWidth(), getOffsetHeight());
+    }
+
+    protected abstract Chart drawChart(int width, int height);
+
+    public JavaScriptObject getChart() {
+	return chart;
+    }
+
+    public ChartItem getChartItem(int index) {
+	return (ChartItem) chartItemArray.get(index);
+    }
+
+    public ArrayList<Double> getDataArray() {
+	return dataArray;
     }
 
     @Override
     protected void onAttach() {
 	super.onAttach();
-	
+
 	if (chart == null)
-	    renderChart();
+	    updateChart();
     }
-    
-    public JavaScriptObject getChart() {
-	return chart;
+
+    protected void onMouseClick(int index) {
+	ChartItem chartItem = getChartItem(index);
+	chartItem.onMouseClick();
+	chartItemArray.set(index, chartItem);
     }
-    
-    public void checkResize() {
-	if(chart != null)
-	    resize(getOffsetWidth(), getOffsetHeight());
+
+    protected void onMouseOut(int index, int x, int y) {
+	ChartItem chartItem = getChartItem(index);
+	chartItem.setHighlighted(false);
+	chartItem.onMouseOut(x + getAbsoluteLeft(), y + getAbsoluteTop());
+	chartItemArray.set(index, chartItem);
     }
-    
-    public void resize(int width, int height) {
-	this.width = width;
-	this.height = height;
-	renderChart();
+
+    protected void onMouseOver(int index, int x, int y) {
+	ChartItem chartItem = getChartItem(index);
+	chartItem.setHighlighted(true);
+	chartItem.onMouseOver(x + getAbsoluteLeft(), y + getAbsoluteTop());
+	chartItemArray.set(index, chartItem);
     }
-    
-    public void addEvent(ChartItem chartItem) {
-	chartItemArray.add(counter,chartItem);
-	dataArray.add(counter++,Double.valueOf(chartItem.getResource().getValue("magnitude").toString()));
-	val = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArray));
-	renderChart();
-    }
-    
+
+    protected native Chart registerEvents() /*-{
+        var chart = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chart,
+        thisChart = this;
+        
+        return chart.event("click",function() 
+        	{thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onMouseClick(I)(this.index);})
+            .event("mouseout",function() 
+            	{thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onMouseOut(III)
+            	    (this.index,chart.mouse().x,chart.mouse().y);})
+            .event("mouseover",function() 
+            	{thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onMouseOver(III)
+            	    (this.index,chart.mouse().x,chart.mouse().y);});
+    }-*/;
+
+    protected native Chart registerFillStyle() /*-{
+        var chart = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chart,
+        colours = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::colours,
+        val = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::val,
+        thisChart = this;
+        
+        return chart.fillStyle(function() {
+            if(thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::getChartItem(I)(this.index)
+               	    .@org.thechiselgroup.choosel.client.views.chart.ChartItem::isHighlighted()()) {
+                return colours[0];
+            } else if(thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::getChartItem(I)(this.index)
+                    .@org.thechiselgroup.choosel.client.views.chart.ChartItem::isSelected()()) {
+                return colours[1]; 
+            } else {
+                return (this.index == val.length-1 && val.length % (colours.length - 2) == 1 && colours.length > 3 ?
+                	colours[this.index % (colours.length - 2) + 3] : colours[this.index % (colours.length - 2) + 2]);
+            }});
+    }-*/;
+
     public void removeEvent(int position) {
 	chartItemArray.remove(position);
 	dataArray.remove(position);
 	val = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArray));
-	counter--;
-	renderChart();
+	updateChart();
     }
-    
-    private void renderChart() {
-	chart = Chart.create(getElement(), width, height);
-	drawGraph(chart, width, height);
+
+    public native void renderChart() /*-{
+        var chart = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chart;
+	chart.root.render();
+    }-*/;
+
+    public void resize(int width, int height) {
+	this.width = width;
+	this.height = height;
+	updateChart();
     }
-    
+
     public void setDataArray(ArrayList<Double> dataArray) {
 	this.dataArray = dataArray;
     }
     
-    public ArrayList<Double> getDataArray() {
-	return dataArray;
-    }
-    
-    protected abstract void drawGraph(JavaScriptObject chart, int width, int height);
-    
-    private void onClick(int index, int x, int y) {
-	onMouseOut(index,x,y);
-	removeEvent(index);
-    }
-    
-    private void onMouseOver(int index, int x, int y) {
-	ChartItem chartItem = (ChartItem)chartItemArray.get(index);
-	chartItem.onMouseOver(x+getAbsoluteLeft(),y+getAbsoluteTop());
-    }
-    
-    private void onMouseOut(int index, int x, int y) {
-	ChartItem chartItem = (ChartItem)chartItemArray.get(index);
-	chartItem.onMouseOut(x+getAbsoluteLeft(),y+getAbsoluteTop());
+    public void updateChart() {
+	chart = Chart.create(getElement(), width, height);
+	chart = drawChart(width, height);
+	if(chartItemArray.size() != 0) {
+	    chart = registerFillStyle();
+	    chart = registerEvents();
+	}
+	renderChart();
     }
 
 }

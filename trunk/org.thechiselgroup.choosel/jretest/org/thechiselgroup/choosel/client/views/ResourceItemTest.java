@@ -48,7 +48,7 @@ public class ResourceItemTest {
 
     @Test
     public void statusIsHighlightedSelected() {
-	underTest.setHightlighted(true);
+	underTest.setHighlighted(true);
 	underTest.setSelected(true);
 
 	assertEquals(Status.HIGHLIGHTED_SELECTED, underTest.calculateStatus());
@@ -56,7 +56,7 @@ public class ResourceItemTest {
 
     @Test
     public void statusisHighlighted() {
-	underTest.setHightlighted(true);
+	underTest.setHighlighted(true);
 	underTest.setSelected(false);
 	assertEquals(Status.HIGHLIGHTED, underTest.calculateStatus());
     }
@@ -75,7 +75,7 @@ public class ResourceItemTest {
 
     @Test
     public void statusVsGrayIsHighlighted() {
-	underTest.setHightlighted(true);
+	underTest.setHighlighted(true);
 	assertEquals(Status.HIGHLIGHTED, underTest
 		.calculateStatusNormalVsGraySelection());
     }
@@ -120,7 +120,7 @@ public class ResourceItemTest {
 
     @Test
     public void setHightlightedUpdateStylingCalled() {
-	underTest.setHightlighted(true);
+	underTest.setHighlighted(true);
 	verify(underTest, times(1)).updateStyling();
     }
 
