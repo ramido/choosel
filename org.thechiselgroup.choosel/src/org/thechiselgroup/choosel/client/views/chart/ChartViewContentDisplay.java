@@ -54,7 +54,7 @@ public class ChartViewContentDisplay extends AbstractViewContentDisplay {
     }
     private static final String MEMENTO_CHART_DATA_ARRAY = "data-array";
 
-    public ChartWidget chartWidget;
+    private ChartWidget chartWidget;
 
     private DragEnablerFactory dragEnablerFactory;
 
