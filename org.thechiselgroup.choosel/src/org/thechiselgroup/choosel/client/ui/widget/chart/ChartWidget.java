@@ -33,9 +33,9 @@ public abstract class ChartWidget extends Widget {
     
     private int height = 0;
     
-    protected JavaScriptObject val = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArray));
-    
     private int width = 0;
+
+    protected JavaScriptObject val = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArray));
 
     public ChartWidget() {
 	setElement(DOM.createDiv());
@@ -79,21 +79,16 @@ public abstract class ChartWidget extends Widget {
     protected void onMouseClick(int index) {
 	ChartItem chartItem = getChartItem(index);
 	chartItem.onMouseClick();
-	chartItemArray.set(index, chartItem);
     }
 
     protected void onMouseOut(int index, int x, int y) {
 	ChartItem chartItem = getChartItem(index);
-	chartItem.setHighlighted(false);
 	chartItem.onMouseOut(x + getAbsoluteLeft(), y + getAbsoluteTop());
-	chartItemArray.set(index, chartItem);
     }
 
     protected void onMouseOver(int index, int x, int y) {
 	ChartItem chartItem = getChartItem(index);
-	chartItem.setHighlighted(true);
 	chartItem.onMouseOver(x + getAbsoluteLeft(), y + getAbsoluteTop());
-	chartItemArray.set(index, chartItem);
     }
 
     protected native Chart registerEvents() /*-{
@@ -112,7 +107,6 @@ public abstract class ChartWidget extends Widget {
 
     protected native Chart registerFillStyle() /*-{
         var chart = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chart,
-        val = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::val,
         thisChart = this;
         
         return chart.fillStyle(function() {
