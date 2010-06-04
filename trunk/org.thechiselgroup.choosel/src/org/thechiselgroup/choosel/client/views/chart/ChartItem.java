@@ -42,7 +42,6 @@ public class ChartItem extends IconResourceItem {
 
     public void onMouseClick() {
 	view.getCallback().switchSelection(getResource());
-	view.getChartWidget().renderChart();
     }
 
     public void onMouseDown() {
@@ -58,10 +57,9 @@ public class ChartItem extends IconResourceItem {
 	popupManager.onMouseOver(x, y);
 	hoverModel.add(getResource());
     }
-
+    
     @Override
-    public void setHighlighted(boolean highlighted) {
-	super.setHighlighted(highlighted);
+    protected void setStatusStyling(Status status) {
 	view.getChartWidget().renderChart();
     }
 

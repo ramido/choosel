@@ -147,7 +147,7 @@ public class ResourceItem {
 	return selected;
     }
 
-    public void setHighlighted(boolean highlighted) {
+    public final void setHighlighted(boolean highlighted) {
 	if (this.highlighted == highlighted) {
 	    return;
 	}
@@ -181,6 +181,12 @@ public class ResourceItem {
 	updateStyling();
     }
 
+    /**
+     * Should be overridden by subclasses to apply correct styling to the visual representation.
+     * Gets called whenever status (highlighting, selecting, etc.) changes.
+     * 
+     * @param status Current status of resource item.
+     */
     protected void setStatusStyling(Status status) {
 
     }
