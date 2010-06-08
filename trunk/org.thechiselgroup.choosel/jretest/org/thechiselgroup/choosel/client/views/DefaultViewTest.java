@@ -32,7 +32,7 @@ import org.thechiselgroup.choosel.client.label.DefaultCategoryLabelProvider;
 import org.thechiselgroup.choosel.client.label.SelectionModelLabelFactory;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resolver.NullPropertyValueResolver;
-import org.thechiselgroup.choosel.client.resolver.PropertyValueResolver;
+import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.Resource;
@@ -79,7 +79,7 @@ public class DefaultViewTest {
 	}
 
 	@Override
-	protected PropertyValueResolver createValueResolver(String slotID,
+	protected ResourceSetToValueResolver createValueResolver(String slotID,
 		String category, List<Layer> layers) {
 
 	    return new NullPropertyValueResolver();
@@ -353,13 +353,20 @@ public class DefaultViewTest {
 
 	resources.add(createResource(2));
 
+	ArgumentCaptor<ResourceSet> captor = ArgumentCaptor
+		.forClass(ResourceSet.class);
 	verify(contentDisplay, times(2)).createResourceItem(any(Layer.class),
-		any(Resource.class));
+		captor.capture());
 
-	verify(contentDisplay, times(1)).createResourceItem(any(Layer.class),
-		eq(resources.toList().get(0)));
-	verify(contentDisplay, times(1)).createResourceItem(any(Layer.class),
-		eq(resources.toList().get(1)));
+	List<ResourceSet> capturedResourceSets = captor.getAllValues();
+	for (ResourceSet capturedResourceSet : capturedResourceSets) {
+	    assertEquals(1, capturedResourceSet.size());
+	}
+
+	ResourceSet unionSet = toResourceSet(capturedResourceSets
+		.toArray(new ResourceSet[capturedResourceSets.size()]));
+	
+	assertTrue(unionSet.containsAll(resources));
     }
 
     private void createView() {
@@ -509,7 +516,7 @@ public class DefaultViewTest {
 
 	when(
 		contentDisplay.createResourceItem(any(Layer.class),
-			any(Resource.class))).thenReturn(resourceItem);
+			any(ResourceSet.class))).thenReturn(resourceItem);
 
 	when(contentDisplay.getSlotIDs()).thenReturn(new String[] { SLOT_ID },
 		new String[] {});

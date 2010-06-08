@@ -15,25 +15,25 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resolver;
 
-import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.util.Converter;
 
 public class PropertyValueResolverConverterWrapper implements
-	PropertyValueResolver {
+	ResourceSetToValueResolver {
 
-    private PropertyValueResolver delegate;
+    private ResourceSetToValueResolver delegate;
 
     private Converter converter;
 
     public PropertyValueResolverConverterWrapper(
-	    PropertyValueResolver delegate, Converter converter) {
+	    ResourceSetToValueResolver delegate, Converter converter) {
 	super();
 	this.delegate = delegate;
 	this.converter = converter;
     }
 
     @Override
-    public Object getValue(Resource individual) {
+    public Object getValue(ResourceSet individual) {
 	return converter.convert(delegate.getValue(individual));
     }
 

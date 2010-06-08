@@ -44,7 +44,7 @@ public abstract class ChartWidget extends Widget {
 
     public void addEvent(ChartItem chartItem) {
 	chartItemArray.add(chartItem);
-	dataArray.add(Double.valueOf(chartItem.getResource().getValue(
+	dataArray.add(Double.valueOf(chartItem.getResourceSet().getFirstResource().getValue(
 		"magnitude").toString()));
 	val = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArray));
 	updateChart();

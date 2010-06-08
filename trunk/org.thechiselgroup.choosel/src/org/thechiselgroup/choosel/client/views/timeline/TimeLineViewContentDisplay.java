@@ -58,10 +58,10 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     @Override
-    public ResourceItem createResourceItem(Layer layer, Resource i) {
-	PopupManager popupManager = createPopupManager(layer, i);
+    public ResourceItem createResourceItem(Layer layer, ResourceSet resources) {
+	PopupManager popupManager = createPopupManager(layer, resources);
 
-	TimeLineItem timeLineItem = new TimeLineItem(i, this, popupManager,
+	TimeLineItem timeLineItem = new TimeLineItem(resources, this, popupManager,
 		hoverModel, layer, dragEnablerFactory);
 
 	timelineWidget.addEvent(timeLineItem.getTimeLineEvent());

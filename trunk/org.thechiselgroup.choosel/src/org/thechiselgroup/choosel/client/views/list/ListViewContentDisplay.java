@@ -124,8 +124,8 @@ public class ListViewContentDisplay extends AbstractViewContentDisplay {
 	    return ((ListItemLabel) event.getSource()).getListItem();
 	}
 
-	private Resource getResource(GwtEvent<?> event) {
-	    return getListItem(event).getResource();
+	private ResourceSet getResource(GwtEvent<?> event) {
+	    return getListItem(event).getResourceSet();
 	}
 
 	@Override
@@ -135,12 +135,12 @@ public class ListViewContentDisplay extends AbstractViewContentDisplay {
 
 	@Override
 	public void onMouseOut(MouseOutEvent e) {
-	    hoverModel.remove(getResource(e));
+	    hoverModel.removeAll(getResource(e));
 	}
 
 	@Override
 	public void onMouseOver(MouseOverEvent e) {
-	    hoverModel.add(getResource(e));
+	    hoverModel.addAll(getResource(e));
 	}
     }
 
@@ -214,9 +214,9 @@ public class ListViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     @Override
-    public ResourceItem createResourceItem(Layer layer, Resource individual) {
-	PopupManager popupManager = createPopupManager(layer, individual);
-	ListItem listItem = new ListItem(individual, hoverModel, popupManager,
+    public ResourceItem createResourceItem(Layer layer, ResourceSet resources) {
+	PopupManager popupManager = createPopupManager(layer, resources);
+	ListItem listItem = new ListItem(resources, hoverModel, popupManager,
 		display, layer, dragController);
 
 	addItem(listItem);

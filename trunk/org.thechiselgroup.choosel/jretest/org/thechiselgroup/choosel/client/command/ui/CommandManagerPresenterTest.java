@@ -28,8 +28,9 @@ import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.command.DefaultCommandManager;
 import org.thechiselgroup.choosel.client.command.ui.CommandManagerPresenter;
 import org.thechiselgroup.choosel.client.command.ui.CommandManagerPresenter.CommandManagerPresenterDisplay;
-import org.thechiselgroup.choosel.client.resolver.PropertyValueResolver;
+import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.client.test.TestUndoableCommandWithDescription;
 
@@ -55,7 +56,7 @@ public class CommandManagerPresenterTest {
     private HasClickHandlers redoClickHandlers;
 
     @Mock
-    private PropertyValueResolver resolver;
+    private ResourceSetToValueResolver resolver;
 
     @Mock
     private HasClickHandlers undoClickHandlers;
@@ -193,7 +194,7 @@ public class CommandManagerPresenterTest {
 	commandManagerPresenter = new CommandManagerPresenter(commandManager,
 		display);
 
-	when(resolver.getValue(any(Resource.class))).thenReturn("");
+	when(resolver.getValue(any(ResourceSet.class))).thenReturn("");
 	when(display.getUndoClickHandlers()).thenReturn(undoClickHandlers);
 	when(display.getRedoClickHandlers()).thenReturn(redoClickHandlers);
 	when(command.getDescription()).thenReturn(COMMAND_DESCRIPTION);

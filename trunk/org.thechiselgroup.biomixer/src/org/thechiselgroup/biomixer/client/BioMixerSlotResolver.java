@@ -17,15 +17,15 @@ package org.thechiselgroup.biomixer.client;
 
 import org.thechiselgroup.choosel.client.resolver.FixedValuePropertyValueResolver;
 import org.thechiselgroup.choosel.client.resolver.NullPropertyValueResolver;
-import org.thechiselgroup.choosel.client.resolver.PropertyValueResolver;
+import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resolver.SimplePropertyValueResolver;
-import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.views.DefaultSlotResolver;
 
 public class BioMixerSlotResolver extends DefaultSlotResolver {
 
     @Override
-    public PropertyValueResolver createGraphLabelSlotResolver(String category) {
+    public ResourceSetToValueResolver createGraphLabelSlotResolver(String category) {
 	if (NcboUriHelper.NCBO_CONCEPT.equals(category)) {
 	    return new SimplePropertyValueResolver(NCBO.CONCEPT_NAME);
 	}
@@ -34,34 +34,34 @@ public class BioMixerSlotResolver extends DefaultSlotResolver {
     }
 
     @Override
-    public PropertyValueResolver createDescriptionSlotResolver(String category) {
+    public ResourceSetToValueResolver createDescriptionSlotResolver(String category) {
 	// TODO switch based on category -- need category as part of layerModel
 	// TODO resources as part of layerModel
 	// TODO how to do the automatic color assignment?
 	// TODO refactor // extract
 	if (NcboUriHelper.NCBO_CONCEPT.equals(category)) {
-	    return new PropertyValueResolver() {
+	    return new ResourceSetToValueResolver() {
 		@Override
-		public Object getValue(Resource resource) {
-		    return resource.getValue(NCBO.CONCEPT_NAME) + " [from: "
-			    + resource.getValue(NCBO.CONCEPT_ONTOLOGY_NAME)
+		public Object getValue(ResourceSet resources) {
+		    return resources.getFirstResource().getValue(NCBO.CONCEPT_NAME) + " [from: "
+			    + resources.getFirstResource().getValue(NCBO.CONCEPT_ONTOLOGY_NAME)
 			    + "]";
 		}
 	    };
 	} else if (NcboUriHelper.NCBO_MAPPING.equals(category)) {
-	    return new PropertyValueResolver() {
+	    return new ResourceSetToValueResolver() {
 		@Override
-		public Object getValue(Resource resource) {
-		    return resource.getValue(NCBO.MAPPING_SOURCE_CONCEPT_NAME)
+		public Object getValue(ResourceSet resources) {
+		    return resources.getFirstResource().getValue(NCBO.MAPPING_SOURCE_CONCEPT_NAME)
 			    + " ["
-			    + resource
-				    .getValue(NCBO.MAPPING_SOURCE_ONTOLOGY_NAME)
+			    + resources
+				    .getFirstResource().getValue(NCBO.MAPPING_SOURCE_ONTOLOGY_NAME)
 			    + "] --> "
-			    + resource
-				    .getValue(NCBO.MAPPING_DESTINATION_CONCEPT_NAME)
+			    + resources
+				    .getFirstResource().getValue(NCBO.MAPPING_DESTINATION_CONCEPT_NAME)
 			    + " ["
-			    + resource
-				    .getValue(NCBO.MAPPING_DESTINATION_ONTOLOGY_NAME)
+			    + resources
+				    .getFirstResource().getValue(NCBO.MAPPING_DESTINATION_ONTOLOGY_NAME)
 			    + "]";
 		}
 	    };
@@ -71,12 +71,12 @@ public class BioMixerSlotResolver extends DefaultSlotResolver {
     }
 
     @Override
-    public PropertyValueResolver createLocationSlotResolver(String category) {
+    public ResourceSetToValueResolver createLocationSlotResolver(String category) {
 	return new NullPropertyValueResolver();
     }
 
     @Override
-    public PropertyValueResolver createGraphNodeBackgroundColorResolver(
+    public ResourceSetToValueResolver createGraphNodeBackgroundColorResolver(
 	    String category) {
 
 	if (category.equals(NcboUriHelper.NCBO_CONCEPT)) {
@@ -91,7 +91,7 @@ public class BioMixerSlotResolver extends DefaultSlotResolver {
     }
 
     @Override
-    public PropertyValueResolver createGraphNodeBorderColorResolver(
+    public ResourceSetToValueResolver createGraphNodeBorderColorResolver(
 	    String category) {
 
 	if (category.equals(NcboUriHelper.NCBO_CONCEPT)) {

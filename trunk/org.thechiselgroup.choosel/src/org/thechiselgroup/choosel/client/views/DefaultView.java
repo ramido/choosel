@@ -23,7 +23,7 @@ import java.util.Map;
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.persistence.Memento;
-import org.thechiselgroup.choosel.client.resolver.PropertyValueResolver;
+import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.CombinedResourceSet;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
@@ -238,8 +238,13 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     private void addResource(Layer layer, Resource resource) {
+	// Added when changing resource item to contain resource sets
+	// TODO use factory & dispose + clean up
+	DefaultResourceSet resourceSet = new DefaultResourceSet();
+	resourceSet.add(resource);
+	
 	ResourceItem resourceItem = contentDisplay.createResourceItem(layer,
-		resource);
+		resourceSet);
 	resourceItems.put(resource, resourceItem);
 	resourceItem.setSelectionStatusVisible(selection != null
 		&& !selection.isEmpty());
@@ -349,7 +354,7 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     // TODO replace list of layers with more generic context
-    protected PropertyValueResolver createValueResolver(String slotID,
+    protected ResourceSetToValueResolver createValueResolver(String slotID,
 	    String category, List<Layer> layers) {
 
 	assert category != null;
@@ -526,7 +531,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 	    }
 
 	    @Override
-	    public void switchSelection(Resource resource) {
+	    public void switchSelection(ResourceSet resources) {
 		// XXX HACK TODO cleanup --> we create selections when stuff
 		// gets selected...
 		if (selection == null) {
@@ -538,7 +543,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
 		assert selection != null;
 
-		getSelection().switchContainment(resource);
+		getSelection().switchContainment(resources);
 	    }
 	};
 	contentDisplay.init(contentDisplayCallback);

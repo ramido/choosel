@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.IconURLFactory;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
@@ -30,10 +29,10 @@ public abstract class IconResourceItem extends ResourceItem {
 
     private String selectedIconURL;
 
-    public IconResourceItem(Resource individual, ResourceSet hoverModel,
+    public IconResourceItem(ResourceSet resources, ResourceSet hoverModel,
 	    PopupManager popupManager, Layer layerModel) {
 
-	super(individual, hoverModel, popupManager, layerModel);
+	super(resources, hoverModel, popupManager, layerModel);
 	initIconURLs();
     }
 

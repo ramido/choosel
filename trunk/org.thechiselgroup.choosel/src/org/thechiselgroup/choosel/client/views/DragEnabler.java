@@ -121,17 +121,13 @@ public class DragEnabler {
 	setStyleAttribute(span, CSS.TOP, "" + top + CSS.PX);
 	setIntStyleAttribute(span, CSS.Z_INDEX, -1);
 
-	// FIXME use factory
-	DefaultResourceSet resources = new DefaultResourceSet();
-	resources.add(item.getResource());
-
 	// FIXME: we are not at the correct part of the widget hierarchy
 	// --> this can cause event forwarding (i.e. to windows) to fail
 	// TODO title
 	final String text = (String) item
 		.getResourceValue(SlotResolver.DESCRIPTION_SLOT);
 	panel = new InvisibleResourceSetAvatar(text, "avatar-resourceSet",
-		resources, ResourceSetAvatarType.SET, span, item
+		item.getResourceSet(), ResourceSetAvatarType.SET, span, item
 			.getPopupManager());
 
 	span.setClassName("avatar-invisible");

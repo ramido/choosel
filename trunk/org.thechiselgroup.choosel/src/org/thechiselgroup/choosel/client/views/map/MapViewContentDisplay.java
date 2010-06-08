@@ -84,22 +84,22 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
 
     // TODO test
     @Override
-    public ResourceItem createResourceItem(Layer layer, Resource resource) {
+    public ResourceItem createResourceItem(Layer layer, ResourceSet resources) {
 	// TODO iterate over path
 	// TODO resolve sets
 	// TODO separate resolvers for latitude and longitude
 
 	Resource location = (Resource) layer.getValue(
-		SlotResolver.LOCATION_SLOT, resource);
+		SlotResolver.LOCATION_SLOT, resources);
 
 	double latitude = toDouble(location.getValue(LATITUDE));
 	double longitude = toDouble(location.getValue(LONGITUDE));
 
 	LatLng latLng = LatLng.newInstance(latitude, longitude);
 
-	PopupManager popupManager = createPopupManager(layer, resource);
+	PopupManager popupManager = createPopupManager(layer, resources);
 
-	MapItem mapItem = new MapItem(latLng, resource, hoverModel,
+	MapItem mapItem = new MapItem(latLng, resources, hoverModel,
 		popupManager, layer, getCallback(), dragEnablerFactory);
 
 	map.addOverlay(mapItem.getOverlay());

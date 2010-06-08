@@ -52,8 +52,15 @@ public interface ResourceSet extends Iterable<Resource>, ResourceContainer,
     int size();
 
     void switchContainment(Resource resource);
+    
+    void switchContainment(ResourceSet resources);
 
     // FIXME toList should be unmodifiable copy
     List<Resource> toList();
 
+    // XXX hack to make changes in resource item work
+    // trace and replace with something more sensible,
+    // especially in the graph
+    Resource getFirstResource();
+    
 }

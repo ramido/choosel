@@ -15,8 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.list;
 
-import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
-import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarType;
@@ -72,11 +70,11 @@ public class ListItem extends ResourceItem {
 
     private ResourceSetAvatarDragController dragController;
 
-    public ListItem(Resource individual, ResourceSet hoverModel,
+    public ListItem(ResourceSet resources, ResourceSet hoverModel,
 	    PopupManager popupManager, ListViewContentDisplay.Display display,
 	    Layer layerModel, ResourceSetAvatarDragController dragController) {
 
-	super(individual, hoverModel, popupManager, layerModel);
+	super(resources, hoverModel, popupManager, layerModel);
 
 	this.display = display;
 	this.dragController = dragController;
@@ -125,10 +123,7 @@ public class ListItem extends ResourceItem {
     public void init() {
 	String description = (String) getResourceValue(SlotResolver.DESCRIPTION_SLOT);
 
-	// FIXME use factory and dispose
-	DefaultResourceSet set = new DefaultResourceSet();
-	set.add(getResource());
-	this.label = new ListItemLabel(description, dragController, set);
+	this.label = new ListItemLabel(description, dragController, getResourceSet());
 	this.label.addStyleName(CSS_LIST);
 
 	DefaultPopupManager.linkManagerToSource(popupManager, getLabel());

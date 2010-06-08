@@ -24,7 +24,7 @@ public class ResourceItemTest {
     @Mock
     private ResourceSet hoverModel;
     @Mock
-    private Resource resource;
+    private ResourceSet resources;
 
     private ResourceItem underTest;
 
@@ -32,7 +32,7 @@ public class ResourceItemTest {
     public void setUp() {
 	MockitoAnnotations.initMocks(this);
 
-	underTest = spy(new ResourceItem(resource, hoverModel, popupManager,
+	underTest = spy(new ResourceItem(resources, hoverModel, popupManager,
 		layer));
     }
 

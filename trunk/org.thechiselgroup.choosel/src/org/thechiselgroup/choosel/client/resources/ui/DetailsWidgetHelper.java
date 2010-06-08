@@ -15,8 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources.ui;
 
-import org.thechiselgroup.choosel.client.resolver.PropertyValueResolver;
+import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
 
@@ -45,8 +46,8 @@ public abstract class DetailsWidgetHelper {
 	this.dragController = dragController;
     }
 
-    public abstract Widget createDetailsWidget(Resource resource,
-	    PropertyValueResolver resolver);
+    public abstract Widget createDetailsWidget(ResourceSet resourceSet,
+	    ResourceSetToValueResolver resolver);
 
     protected void addRow(Resource resource, VerticalPanel verticalPanel,
 	    String label, String property) {
