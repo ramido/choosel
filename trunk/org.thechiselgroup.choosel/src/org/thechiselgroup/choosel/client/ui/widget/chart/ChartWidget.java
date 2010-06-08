@@ -21,6 +21,7 @@ import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 
 public abstract class ChartWidget extends Widget {
@@ -76,33 +77,30 @@ public abstract class ChartWidget extends Widget {
 	    updateChart();
     }
 
-    protected void onMouseClick(int index) {
+    protected void onEvent(int index, Event e) {
 	ChartItem chartItem = getChartItem(index);
-	chartItem.onMouseClick();
-    }
-
-    protected void onMouseOut(int index, int x, int y) {
-	ChartItem chartItem = getChartItem(index);
-	chartItem.onMouseOut(x + getAbsoluteLeft(), y + getAbsoluteTop());
-    }
-
-    protected void onMouseOver(int index, int x, int y) {
-	ChartItem chartItem = getChartItem(index);
-	chartItem.onMouseOver(x + getAbsoluteLeft(), y + getAbsoluteTop());
+	chartItem.onEvent(e);
     }
 
     protected native Chart registerEvents() /*-{
         var chart = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chart,
         thisChart = this;
         
-        return chart.event("click",function() 
-        	{thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onMouseClick(I)(this.index);})
+        return chart.event("mousedown",function() 
+            	{thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onEvent(ILcom/google/gwt/user/client/Event;)
+            	    (this.index,$wnd.pv.event);})
+            .event("mousemove",function() 
+            	{thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onEvent(ILcom/google/gwt/user/client/Event;)
+            	    (this.index,$wnd.pv.event);})
             .event("mouseout",function() 
-            	{thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onMouseOut(III)
-            	    (this.index,chart.mouse().x,chart.mouse().y);})
+            	{thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onEvent(ILcom/google/gwt/user/client/Event;)
+            	    (this.index,$wnd.pv.event);})
             .event("mouseover",function() 
-            	{thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onMouseOver(III)
-            	    (this.index,chart.mouse().x,chart.mouse().y);});
+            	{thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onEvent(ILcom/google/gwt/user/client/Event;)
+            	    (this.index,$wnd.pv.event);})
+            .event("mouseup",function() 
+            	{thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onEvent(ILcom/google/gwt/user/client/Event;)
+            	    (this.index,$wnd.pv.event);});
     }-*/;
 
     protected native Chart registerFillStyle() /*-{
@@ -145,5 +143,5 @@ public abstract class ChartWidget extends Widget {
 	}
 	renderChart();
     }
-
+    
 }

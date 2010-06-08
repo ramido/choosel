@@ -217,12 +217,9 @@ public class DragEnabler {
     }
 
     public void forwardMouseDown(NativeEvent e) {
-	Element element = e.getCurrentEventTarget().cast();
-	int absoluteLeft = element.getAbsoluteLeft();
-	int absoluteTop = element.getAbsoluteTop();
-
-	createDragWidget(absoluteLeft, absoluteTop);
-
+	//TODO center the panel both horizontally and vertically relative to cursor
+	createDragWidget(e.getScreenX(), e.getScreenY() - desktop.asWidget().getAbsoluteTop());
+	
 	// fake mouse down event on widget
 	MouseDownEvent mouseEvent = new MouseDownEvent() {
 	    @Override
@@ -230,8 +227,10 @@ public class DragEnabler {
 		return panel;
 	    }
 	};
+	
 	mouseEvent.setRelativeElement(panel.getElement());
 	mouseEvent.setNativeEvent(e);
+
 	panel.fireEvent(mouseEvent);
     }
 
@@ -259,6 +258,7 @@ public class DragEnabler {
 	    }
 
 	    @Override
+	    
 	    public int getRelativeY(com.google.gwt.dom.client.Element target) {
 		return getClientY() - target.getAbsoluteTop()
 			+ target.getScrollTop()
@@ -312,6 +312,7 @@ public class DragEnabler {
 	    return;
 	}
 
+	
 	MouseUpEvent mouseEvent = new MouseUpEvent() {
 	    @Override
 	    public Object getSource() {

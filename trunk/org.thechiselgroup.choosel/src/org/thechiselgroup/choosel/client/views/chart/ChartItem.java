@@ -18,45 +18,60 @@ package org.thechiselgroup.choosel.client.views.chart;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
+import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.Layer;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 
-public class ChartItem extends ResourceItem {
+import com.google.gwt.user.client.Event;
 
-    private DragEnablerFactory dragEnablerFactory;
+public class ChartItem extends ResourceItem {
 
     public boolean highlighted = false;
     
-    protected String[] colours = new String[]{"yellow", "orange","brown","blue"};
+    protected String[] colours = {"yellow", "orange", "steelblue"};
 
     private final ChartViewContentDisplay view;
 
+    private DragEnabler enabler;
+    
     public ChartItem(final Resource individual, ChartViewContentDisplay view,
 	    PopupManager popupManager, ResourceSet hoverModel,
 	    Layer layerModel, DragEnablerFactory dragEnablerFactory) {
 	super(individual, hoverModel, popupManager, layerModel);
 
 	this.view = view;
-	this.dragEnablerFactory = dragEnablerFactory;
+	enabler = dragEnablerFactory.createDragEnabler(this);
     }
-
-    public void onMouseClick() {
-	view.getCallback().switchSelection(getResource());
-    }
-
-    public void onMouseDown() {
-//	final DragEnabler enabler = dragEnablerFactory.createDragEnabler(this);
-    }
-
-    public void onMouseOut(int x, int y) {
-	popupManager.onMouseOut(x, y);
-	hoverModel.remove(getResource());
-    }
-
-    public void onMouseOver(int x, int y) {
-	popupManager.onMouseOver(x, y);
-	hoverModel.add(getResource());
+    
+    public void onEvent(Event e) {
+	switch(e.getTypeInt()) {
+	case Event.ONMOUSEDOWN: {
+	    popupManager.onMouseDown(e.getClientX(), e.getClientY());
+	    enabler.forwardMouseDown(e);
+	}
+	    break;
+	case Event.ONMOUSEMOVE: {
+	    popupManager.onMouseMove(e.getClientX(), e.getClientY());
+	    enabler.forwardMouseMove(e);
+	}
+	    break;
+	case Event.ONMOUSEOUT: {
+	    popupManager.onMouseOut(e.getClientX(), e.getClientY());
+	    hoverModel.remove(getResource());
+	    enabler.forwardMouseOut(e);
+	}
+	    break;
+	case Event.ONMOUSEOVER: {
+	    popupManager.onMouseOver(e.getClientX(), e.getClientY());
+	    hoverModel.add(getResource());
+	}
+	    break;
+	case Event.ONMOUSEUP: {
+	    enabler.forwardMouseUp(e);
+	}
+	    break;
+	}
     }
     
     @Override
