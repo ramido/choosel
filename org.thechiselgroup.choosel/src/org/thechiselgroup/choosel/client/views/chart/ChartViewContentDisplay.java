@@ -123,11 +123,4 @@ public class ChartViewContentDisplay extends AbstractViewContentDisplay {
 	return state;
     }
 
-    // public void onBrowserEvent(Event event) {
-    // Window.alert("got here");
-    // switch (DOM.eventGetType(event)) {
-    // case Event.ONMOUSEMOVE: Window.alert("moved");
-    // }
-    // }
-
 }

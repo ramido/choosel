@@ -5,19 +5,19 @@ public class LineChart extends ChartWidget {
     @Override
     public native Chart drawChart(int width, int height) /*-{
 
-	var val = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::val,
+	var chart = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chart,
+        val = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::val,
 	graph = this;
         
-        chart.add($wnd.pv.Line)
-            .data(val)
-            .bottom(function(d) {return d * height / 8;})
-            .left(function() {return this.index * width / val.length + 15;})
-          .add($wnd.pv.Dot)
-            .event("click",function() {return graph.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onMouseClick(I)(this.index);})
-            .event("mousemove",function() {return graph.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onMouseOver(III)(this.index,chart.mouse().x,chart.mouse().y);})
-            .event("mouseout",function() {return graph.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onMouseOut(III)(this.index,chart.mouse().x,chart.mouse().y);})
-          .root.render();
-          
+        
+        chart.add($wnd.pv.Bar)
+            .data([1, 1.2, 1.7, 1.5, .7])
+            .bottom(0)
+            .width(20)
+            .height(function(d) {return d * 80;})
+            .left(function() {return this.index * 25;})
+	.root.render();
+        
         return chart;
 
     }-*/;
