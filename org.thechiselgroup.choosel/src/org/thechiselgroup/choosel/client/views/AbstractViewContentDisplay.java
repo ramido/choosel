@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import org.thechiselgroup.choosel.client.resolver.PropertyValueResolver;
+import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
@@ -63,22 +63,20 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
     public void checkResize() {
     }
 
-    protected PopupManager createPopupManager(final Layer layer,
-	    final Resource resource) {
+    protected PopupManager createPopupManager(Layer layer,
+	    ResourceSet resource) {
 
-	final PropertyValueResolver resolver = layer
-		.getResolver(SlotResolver.DESCRIPTION_SLOT);
-
-	return createPopupManager(resource, resolver);
+	return createPopupManager(resource, layer
+		.getResolver(SlotResolver.DESCRIPTION_SLOT));
     }
 
-    protected PopupManager createPopupManager(final Resource resource,
-	    final PropertyValueResolver resolver) {
+    protected PopupManager createPopupManager(final ResourceSet resources,
+	    final ResourceSetToValueResolver resolver) {
 
 	WidgetFactory widgetFactory = new WidgetFactory() {
 	    @Override
 	    public Widget createWidget() {
-		return detailsWidgetHelper.createDetailsWidget(resource,
+		return detailsWidgetHelper.createDetailsWidget(resources,
 			resolver);
 	    }
 	};

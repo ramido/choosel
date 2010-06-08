@@ -29,7 +29,7 @@ import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.command.UndoableCommand;
 import org.thechiselgroup.choosel.client.geometry.Point;
-import org.thechiselgroup.choosel.client.resolver.PropertyValueResolver;
+import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
@@ -71,8 +71,8 @@ public class GraphViewContentDisplayTest {
 	}
 
 	@Override
-	protected PopupManager createPopupManager(Resource concept,
-		PropertyValueResolver resolver) {
+	protected PopupManager createPopupManager(ResourceSet resources,
+		ResourceSetToValueResolver resolver) {
 	    return popupManager;
 	}
 
@@ -170,7 +170,7 @@ public class GraphViewContentDisplayTest {
     public void loadNeighbourhoodWhenAddingConcept() {
 	concept1 = createResource(1);
 
-	contentDisplay.createResourceItem(layer, concept1);
+	contentDisplay.createResourceItem(layer, toResourceSet(concept1));
 
 	verify(automaticExpander, times(1)).expand(eq(concept1),
 		any(GraphNodeExpansionCallback.class));

@@ -46,7 +46,7 @@ public class MapItem extends IconResourceItem {
 
 	@Override
 	public void onClick(ClickEvent event) {
-	    callback.switchSelection(getResource());
+	    callback.switchSelection(getResourceSet());
 	}
 
 	@Override
@@ -80,12 +80,12 @@ public class MapItem extends IconResourceItem {
 
     private DragEnablerFactory dragEnablerFactory;
 
-    public MapItem(LatLng point, final Resource individual,
+    public MapItem(LatLng point, ResourceSet resources,
 	    ResourceSet hoverModel, PopupManager popupManager,
 	    Layer layerModel, ViewContentDisplayCallback callback,
 	    DragEnablerFactory dragEnablerFactory) {
 
-	super(individual, hoverModel, popupManager, layerModel);
+	super(resources, hoverModel, popupManager, layerModel);
 
 	this.callback = callback;
 	this.dragEnablerFactory = dragEnablerFactory;

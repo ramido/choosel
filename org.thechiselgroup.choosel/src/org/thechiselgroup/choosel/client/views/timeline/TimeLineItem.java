@@ -75,12 +75,12 @@ public class TimeLineItem extends IconResourceItem {
 
     private DragEnablerFactory dragEnablerFactory;
 
-    public TimeLineItem(final Resource individual,
+    public TimeLineItem(ResourceSet resources,
 	    TimeLineViewContentDisplay view, PopupManager popupManager,
 	    ResourceSet hoverModel, Layer layerModel,
 	    DragEnablerFactory dragEnablerFactory) {
 
-	super(individual, hoverModel, popupManager, layerModel);
+	super(resources, hoverModel, popupManager, layerModel);
 
 	this.view = view;
 	this.dragEnablerFactory = dragEnablerFactory;
@@ -129,17 +129,17 @@ public class TimeLineItem extends IconResourceItem {
     }
 
     private void onMouseClick(Event e) {
-	view.getCallback().switchSelection(getResource());
+	view.getCallback().switchSelection(getResourceSet());
     }
 
     public void onMouseOut(Event e) {
 	popupManager.onMouseOut(e.getClientX(), e.getClientY());
-	hoverModel.remove(getResource());
+	hoverModel.removeAll(getResourceSet());
     }
 
     public void onMouseOver(Event e) {
 	popupManager.onMouseOver(e.getClientX(), e.getClientY());
-	hoverModel.add(getResource());
+	hoverModel.addAll(getResourceSet());
     }
 
     public void onPainted(String labelElementID, String iconElementID) {

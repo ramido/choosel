@@ -15,12 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resolver;
 
-import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
-public class SelfPropertyValueResolver implements PropertyValueResolver {
+
+public class SelfPropertyValueResolver implements ResourceSetToValueResolver {
 
     @Override
-    public Object getValue(Resource resource) {
-	return resource;
+    public Object getValue(ResourceSet resources) {
+	return resources;
     }
 }

@@ -64,21 +64,21 @@ public class ResourceItem {
 
     protected final PopupManager popupManager;
 
-    private final Resource resource;
+    private final ResourceSet resources;
 
     private boolean selected;
 
     private boolean selectionStatusVisible;
 
-    public ResourceItem(Resource resource, ResourceSet hoverModel,
+    public ResourceItem(ResourceSet resources, ResourceSet hoverModel,
 	    PopupManager popupManager, Layer layer) {
 
-	assert resource != null;
+	assert resources != null;
 	assert hoverModel != null;
 	assert popupManager != null;
 	assert layer != null;
 
-	this.resource = resource;
+	this.resources = resources;
 	this.popupManager = popupManager;
 	this.hoverModel = hoverModel;
 	this.layer = layer;
@@ -131,12 +131,12 @@ public class ResourceItem {
 	return popupManager;
     }
 
-    public Resource getResource() {
-	return resource;
+    public ResourceSet getResourceSet() {
+	return resources;
     }
 
     public Object getResourceValue(String slotID) {
-	return layer.getValue(slotID, getResource());
+	return layer.getValue(slotID, getResourceSet());
     }
 
     public boolean isHighlighted() {
@@ -147,6 +147,7 @@ public class ResourceItem {
 	return selected;
     }
 
+    // TODO introduce partial highlighting
     public final void setHighlighted(boolean highlighted) {
 	if (this.highlighted == highlighted) {
 	    return;
@@ -155,9 +156,9 @@ public class ResourceItem {
 	this.highlighted = highlighted;
 
 	if (highlighted) {
-	    hoverModel.add(resource);
+	    hoverModel.addAll(resources);
 	} else {
-	    hoverModel.remove(resource);
+	    hoverModel.removeAll(resources);
 	}
 
 	updateStyling();

@@ -15,20 +15,20 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.client.ui.popup.PopupClosingEvent;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
-import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItem.HighlightingManager;
 
 import com.google.gwt.event.dom.client.MouseOutEvent;
@@ -40,7 +40,7 @@ public class HighlightingManagerTest {
     private PopupManager popupManager;
 
     @Mock
-    private Resource resource;
+    private ResourceSet resources;
 
     @Mock
     private ResourceSet highlightedResources;
@@ -65,7 +65,7 @@ public class HighlightingManagerTest {
     public void neverRemovedForPopupClosingWithoutMouseOver() {
 	doPopupClosing();
 
-	verify(highlightedResources, never()).remove(eq(resource));
+	verify(highlightedResources, never()).removeAll(eq(resources));
     }
 
     @Test
@@ -74,7 +74,7 @@ public class HighlightingManagerTest {
 	doMouseOut();
 	doPopupClosing();
 
-	verify(highlightedResources, times(1)).remove(eq(resource));
+	verify(highlightedResources, times(1)).removeAll(resources);
     }
 
     @Test
@@ -83,7 +83,7 @@ public class HighlightingManagerTest {
 	doPopupClosing();
 	doMouseOut();
 
-	verify(highlightedResources, times(1)).remove(eq(resource));
+	verify(highlightedResources, times(1)).removeAll(eq(resources));
     }
 
     @Before
@@ -91,7 +91,7 @@ public class HighlightingManagerTest {
 	MockitoGWTBridge.setUp();
 	MockitoAnnotations.initMocks(this);
 
-	underTest = new ResourceItem(resource, highlightedResources,
+	underTest = new ResourceItem(resources, highlightedResources,
 		popupManager, null) {
 
 	    @Override

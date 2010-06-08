@@ -16,14 +16,14 @@
 package org.thechiselgroup.choosel.client.views;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
-import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
 import org.thechiselgroup.choosel.client.util.Disposable;
 
 // TODO might need view as parameter for a few of those...
 public interface ViewContentDisplay extends WidgetAdaptable, Disposable {
 
-    ResourceItem createResourceItem(Layer layer, Resource resource);
+    ResourceItem createResourceItem(Layer layer, ResourceSet resources);
 
     void removeResourceItem(ResourceItem resourceItem);
 

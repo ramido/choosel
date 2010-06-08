@@ -15,6 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
+import java.util.List;
+
 public abstract class AbstractResourceSet extends AbstractResourceContainer
 	implements ResourceSet {
 
@@ -52,11 +54,30 @@ public abstract class AbstractResourceSet extends AbstractResourceContainer
 
     @Override
     public final void switchContainment(Resource resource) {
+	assert resource != null;
+	
 	if (contains(resource)) {
 	    remove(resource);
+	    assert !contains(resource);
 	} else {
 	    add(resource);
+	    assert contains(resource);
+	}
+    }
+    
+    @Override
+    public void switchContainment(ResourceSet resources) {
+	assert resources != null;
+	
+	for (Resource resource : resources) {
+	    switchContainment(resource);
 	}
     }
 
+    @Override
+    public Resource getFirstResource() {
+	assert !isEmpty();
+	return toList().get(0);
+    }
+    
 }

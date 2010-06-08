@@ -76,10 +76,10 @@ public class ChartViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     @Override
-    public ResourceItem createResourceItem(Layer layer, Resource i) {
-	PopupManager popupManager = createPopupManager(layer, i);
+    public ResourceItem createResourceItem(Layer layer, ResourceSet resources) {
+	PopupManager popupManager = createPopupManager(layer, resources);
 
-	ChartItem chartItem = new ChartItem(i, this, popupManager, hoverModel,
+	ChartItem chartItem = new ChartItem(resources, this, popupManager, hoverModel,
 		layer, dragEnablerFactory);
 
 	chartWidget.addEvent(chartItem);

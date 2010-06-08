@@ -17,7 +17,7 @@ package org.thechiselgroup.choosel.client.views;
 
 import java.util.List;
 
-import org.thechiselgroup.choosel.client.resolver.PropertyValueResolver;
+import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 
 // TODO create more flexible slot system
 public interface SlotResolver {
@@ -38,21 +38,21 @@ public interface SlotResolver {
 
     String LOCATION_SLOT = "location";
 
-    PropertyValueResolver createColorSlotResolver(String category,
+    ResourceSetToValueResolver createColorSlotResolver(String category,
 	    List<Layer> layers);
 
-    PropertyValueResolver createDateSlotResolver(String category);
+    ResourceSetToValueResolver createDateSlotResolver(String category);
 
-    PropertyValueResolver createDescriptionSlotResolver(String category);
+    ResourceSetToValueResolver createDescriptionSlotResolver(String category);
 
-    PropertyValueResolver createGraphLabelSlotResolver(String category);
+    ResourceSetToValueResolver createGraphLabelSlotResolver(String category);
 
-    PropertyValueResolver createGraphNodeBackgroundColorResolver(String category);
+    ResourceSetToValueResolver createGraphNodeBackgroundColorResolver(String category);
 
-    PropertyValueResolver createGraphNodeBorderColorResolver(String category);
+    ResourceSetToValueResolver createGraphNodeBorderColorResolver(String category);
 
-    PropertyValueResolver createLabelSlotResolver(String category);
+    ResourceSetToValueResolver createLabelSlotResolver(String category);
 
-    PropertyValueResolver createLocationSlotResolver(String category);
+    ResourceSetToValueResolver createLocationSlotResolver(String category);
 
 }

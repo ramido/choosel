@@ -112,7 +112,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
 	@Override
 	public void onMouseClick(NodeMouseClickEvent event) {
-	    getCallback().switchSelection(getGraphItem(event).getResource());
+	    getCallback().switchSelection(getGraphItem(event).getResourceSet());
 	}
 
 	@Override
@@ -241,21 +241,21 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     }
 
     @Override
-    public GraphItem createResourceItem(Layer layer, Resource resource) {
+    public GraphItem createResourceItem(Layer layer, ResourceSet resources) {
 	assert layer != null;
-	assert resource != null;
+	assert resources != null;
 
-	String label = layer.getValue(SlotResolver.GRAPH_LABEL_SLOT, resource);
-	String category = getCategory(resource);
+	String label = layer.getValue(SlotResolver.GRAPH_LABEL_SLOT, resources);
+	String category = getCategory(resources.getFirstResource());
 	String backgroundColor = layer.getValue(
-		SlotResolver.GRAPH_NODE_BACKGROUND_COLOR_SLOT, resource);
+		SlotResolver.GRAPH_NODE_BACKGROUND_COLOR_SLOT, resources);
 	String borderColor = layer.getValue(
-		SlotResolver.GRAPH_NODE_BORDER_COLOR_SLOT, resource);
+		SlotResolver.GRAPH_NODE_BORDER_COLOR_SLOT, resources);
 
-	PopupManager popupManager = createPopupManager(resource, layer
+	PopupManager popupManager = createPopupManager(resources, layer
 		.getResolver(SlotResolver.DESCRIPTION_SLOT));
 
-	GraphItem item = new GraphItem(resource, hoverModel, popupManager,
+	GraphItem item = new GraphItem(resources, hoverModel, popupManager,
 		label, category, display, layer);
 
 	nodeIdToGraphItemMap.put(item.getNode().getId(), item);
@@ -272,7 +272,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 	display.setNodeStyle(item.getNode(), "showArrow", registry
 		.getNodeMenuEntries(category).isEmpty() ? "false" : "true");
 
-	registry.getAutomaticExpander(category).expand(resource, this);
+	registry.getAutomaticExpander(category).expand(resources.getFirstResource(), this);
 
 	return item;
     }
@@ -307,7 +307,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     }
 
     private Resource getResource(Node node) {
-	return getGraphItem(node).getResource();
+	return getGraphItem(node).getResourceSet().getFirstResource();
     }
 
     @Override

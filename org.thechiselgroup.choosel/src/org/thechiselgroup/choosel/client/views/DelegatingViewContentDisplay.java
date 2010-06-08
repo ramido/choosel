@@ -16,7 +16,7 @@
 package org.thechiselgroup.choosel.client.views;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
-import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -41,8 +41,8 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
     }
 
     @Override
-    public ResourceItem createResourceItem(Layer layer, Resource resource) {
-	return delegate.createResourceItem(layer, resource);
+    public ResourceItem createResourceItem(Layer layer, ResourceSet resources) {
+	return delegate.createResourceItem(layer, resources);
     }
 
     @Override

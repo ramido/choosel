@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import org.thechiselgroup.choosel.client.resolver.PropertyValueResolver;
+import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 
 // TODO cloning / serialization for memento & storage support
 public class Slot {
@@ -23,9 +23,9 @@ public class Slot {
     private final String id;
 
     // TODO allow for several resolvers (heterogeneous collections)
-    private PropertyValueResolver resolver;
+    private ResourceSetToValueResolver resolver;
 
-    public Slot(String id, PropertyValueResolver resolver) {
+    public Slot(String id, ResourceSetToValueResolver resolver) {
 	assert id != null;
 	assert resolver != null;
 
@@ -37,7 +37,7 @@ public class Slot {
 	return id;
     }
 
-    public PropertyValueResolver getResolver() {
+    public ResourceSetToValueResolver getResolver() {
 	return resolver;
     }
 

@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.client.views;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.thechiselgroup.choosel.client.resolver.PropertyValueResolver;
+import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
@@ -40,7 +40,7 @@ public class Layer {
 	return category;
     }
 
-    public PropertyValueResolver getResolver(String slotID) {
+    public ResourceSetToValueResolver getResolver(String slotID) {
 	return getSlot(slotID).getResolver();
     }
 
@@ -56,11 +56,11 @@ public class Layer {
 	return slots.get(slotID);
     }
 
-    public <T> T getValue(String slotID, Resource resource) {
+    public <T> T getValue(String slotID, ResourceSet resources) {
 	assert getResolver(slotID) != null : "no resolver for slot: " + slotID
 		+ " ( available slots: " + slots.keySet() + " )";
 
-	return (T) getResolver(slotID).getValue(resource);
+	return (T) getResolver(slotID).getValue(resources);
     }
 
     public void initSlots(Slot[] slots) {

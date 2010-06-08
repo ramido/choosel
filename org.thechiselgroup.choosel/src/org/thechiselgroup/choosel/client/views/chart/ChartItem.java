@@ -35,10 +35,11 @@ public class ChartItem extends ResourceItem {
 
     private DragEnabler enabler;
     
-    public ChartItem(final Resource individual, ChartViewContentDisplay view,
+    public ChartItem(ResourceSet resources, ChartViewContentDisplay view,
 	    PopupManager popupManager, ResourceSet hoverModel,
 	    Layer layerModel, DragEnablerFactory dragEnablerFactory) {
-	super(individual, hoverModel, popupManager, layerModel);
+	
+	super(resources, hoverModel, popupManager, layerModel);
 
 	this.view = view;
 	enabler = dragEnablerFactory.createDragEnabler(this);
@@ -58,13 +59,13 @@ public class ChartItem extends ResourceItem {
 	    break;
 	case Event.ONMOUSEOUT: {
 	    popupManager.onMouseOut(e.getClientX(), e.getClientY());
-	    hoverModel.remove(getResource());
+	    hoverModel.removeAll(getResourceSet());
 	    enabler.forwardMouseOut(e);
 	}
 	    break;
 	case Event.ONMOUSEOVER: {
 	    popupManager.onMouseOver(e.getClientX(), e.getClientY());
-	    hoverModel.add(getResource());
+	    hoverModel.addAll(getResourceSet());
 	}
 	    break;
 	case Event.ONMOUSEUP: {

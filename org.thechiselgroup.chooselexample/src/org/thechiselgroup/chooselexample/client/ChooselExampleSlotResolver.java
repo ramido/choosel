@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.chooselexample.client;
 
-import org.thechiselgroup.choosel.client.resolver.PropertyValueResolver;
+import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resolver.PropertyValueResolverConverterWrapper;
 import org.thechiselgroup.choosel.client.resolver.SimplePropertyValueResolver;
 import org.thechiselgroup.choosel.client.test.ResourcesTestHelper;
@@ -26,7 +26,7 @@ import org.thechiselgroup.choosel.client.views.DefaultSlotResolver;
 public class ChooselExampleSlotResolver extends DefaultSlotResolver {
 
     @Override
-    public PropertyValueResolver createDescriptionSlotResolver(String category) {
+    public ResourceSetToValueResolver createDescriptionSlotResolver(String category) {
 	// TODO switch based on category -- need category as part of layerModel
 	// TODO resources as part of layerModel
 	// TODO how to do the automatic color assignment?
@@ -48,7 +48,7 @@ public class ChooselExampleSlotResolver extends DefaultSlotResolver {
     }
 
     @Override
-    public PropertyValueResolver createLabelSlotResolver(String category) {
+    public ResourceSetToValueResolver createLabelSlotResolver(String category) {
 	Converter<Float, String> converter = new Converter<Float, String>() {
 	    @Override
 	    public String convert(Float value) throws ConversionException {
@@ -68,12 +68,12 @@ public class ChooselExampleSlotResolver extends DefaultSlotResolver {
     }
 
     @Override
-    public PropertyValueResolver createDateSlotResolver(String type) {
+    public ResourceSetToValueResolver createDateSlotResolver(String type) {
 	return new SimplePropertyValueResolver("date");
     }
 
     @Override
-    public PropertyValueResolver createLocationSlotResolver(String category) {
+    public ResourceSetToValueResolver createLocationSlotResolver(String category) {
 	return new SimplePropertyValueResolver("location");
     }
 }

@@ -76,6 +76,14 @@ public final class ResourcesTestHelper {
 	return result;
     }
 
+    public static DefaultResourceSet toResourceSet(Resource... resources) {
+	DefaultResourceSet result = new DefaultResourceSet();
+	for (Resource resource : resources) {
+	    result.add(resource);
+	}
+	return result;
+    }
+
     public static DefaultResourceSet toLabeledResources(
 	    ResourceSet... resourceSets) {
 
