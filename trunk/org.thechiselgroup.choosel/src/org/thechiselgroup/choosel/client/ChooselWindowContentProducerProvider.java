@@ -37,7 +37,6 @@ import org.thechiselgroup.choosel.client.windows.WindowContent;
 import org.thechiselgroup.choosel.client.windows.WindowContentFactory;
 import org.thechiselgroup.choosel.client.windows.WindowContentProducer;
 
-import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.name.Named;
@@ -163,6 +162,24 @@ public class ChooselWindowContentProducerProvider implements
     public void registerChart(
 	    @Named(TYPE_CHART) ViewContentDisplayFactory factory) {
 	registerViewContentDisplayFactory(TYPE_CHART, factory);
+    }
+    
+    @Inject
+    public void registerBar(
+	    @Named(TYPE_BAR) ViewContentDisplayFactory factory) {
+	registerViewContentDisplayFactory(TYPE_BAR, factory);
+    }
+    
+    @Inject
+    public void registerPie(
+	    @Named(TYPE_PIE) ViewContentDisplayFactory factory) {
+	registerViewContentDisplayFactory(TYPE_PIE, factory);
+    }
+    
+    @Inject
+    public void registerLine(
+	    @Named(TYPE_LINE) ViewContentDisplayFactory factory) {
+	registerViewContentDisplayFactory(TYPE_LINE, factory);
     }
 
     private void registerViewContentDisplayFactory(String contentType,

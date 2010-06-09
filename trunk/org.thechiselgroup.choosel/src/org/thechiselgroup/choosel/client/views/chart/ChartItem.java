@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.chart;
 
-import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
@@ -31,7 +30,10 @@ public class ChartItem extends ResourceItem {
     
     protected String[] colours = {"yellow", "orange", "steelblue"};
 
-    private final ChartViewContentDisplay view;
+    private ChartViewContentDisplay view;
+    private BarViewContentDisplay view1;
+    private PieViewContentDisplay view2;
+    private LineViewContentDisplay view3;
 
     public DragEnabler enabler;
     
@@ -45,8 +47,49 @@ public class ChartItem extends ResourceItem {
 	enabler = dragEnablerFactory.createDragEnabler(this);
     }
     
+    public ChartItem(ResourceSet resources, BarViewContentDisplay view1,
+	    PopupManager popupManager, ResourceSet hoverModel,
+	    Layer layerModel, DragEnablerFactory dragEnablerFactory) {
+	
+	super(resources, hoverModel, popupManager, layerModel);
+
+	this.view1 = view1;
+	enabler = dragEnablerFactory.createDragEnabler(this);
+    }
+    
+    public ChartItem(ResourceSet resources, PieViewContentDisplay view2,
+	    PopupManager popupManager, ResourceSet hoverModel,
+	    Layer layerModel, DragEnablerFactory dragEnablerFactory) {
+	
+	super(resources, hoverModel, popupManager, layerModel);
+
+	this.view2 = view2;
+	enabler = dragEnablerFactory.createDragEnabler(this);
+    }
+    
+    public ChartItem(ResourceSet resources, LineViewContentDisplay view3,
+	    PopupManager popupManager, ResourceSet hoverModel,
+	    Layer layerModel, DragEnablerFactory dragEnablerFactory) {
+	
+	super(resources, hoverModel, popupManager, layerModel);
+
+	this.view3 = view3;
+	enabler = dragEnablerFactory.createDragEnabler(this);
+    }
+    
     public void onEvent(Event e) {
 	switch(e.getTypeInt()) {
+	case Event.ONCLICK: {
+	    if(view != null)
+		view.getCallback().switchSelection(getResourceSet());
+	    if(view1 != null)
+		view1.getCallback().switchSelection(getResourceSet());
+	    if(view2 != null)
+		view2.getCallback().switchSelection(getResourceSet());
+	    if(view3 != null)
+		view3.getCallback().switchSelection(getResourceSet());
+	}
+	    break;
 	case Event.ONMOUSEDOWN: {
 	    popupManager.onMouseDown(e.getClientX(), e.getClientY());
 	    enabler.forwardMouseDownWithEventPosition(e);
@@ -77,10 +120,29 @@ public class ChartItem extends ResourceItem {
 
     @Override
     protected void setStatusStyling(Status status) {
-	view.getChartWidget().renderChart();
+	if(view != null)
+	    view.getChartWidget().renderChart();
+	if(view1 != null)
+	    view1.getChartWidget().renderChart();
+	if(view2 != null)
+	    view2.getChartWidget().renderChart();
+	if(view3 != null)
+	    view3.getChartWidget().renderChart();
     }
     
     public String getColour() {
+//	switch(calculateStatus()) {
+//	case HIGHLIGHTED_SELECTED: 
+//	case HIGHLIGHTED: 
+//	    return colours[0];
+//	case GRAYED_OUT: 
+//	case DEFAULT:
+//	    return colours[2];
+//	case SELECTED:
+//	    return colours[1];
+//	}
+//	throw new RuntimeException("No colour available");
+	
 	switch(calculateStatus()) {
 	case HIGHLIGHTED_SELECTED: 
 	case HIGHLIGHTED: 

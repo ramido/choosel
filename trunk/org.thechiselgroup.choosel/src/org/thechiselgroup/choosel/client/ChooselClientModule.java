@@ -77,7 +77,10 @@ import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
+import org.thechiselgroup.choosel.client.views.chart.BarViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplayFactory;
+import org.thechiselgroup.choosel.client.views.chart.LineViewContentDisplayFactory;
+import org.thechiselgroup.choosel.client.views.chart.PieViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.graph.ArcStyleProvider;
 import org.thechiselgroup.choosel.client.views.graph.DefaultArcStyleProvider;
 import org.thechiselgroup.choosel.client.views.graph.DefaultGraphExpansionRegistry;
@@ -206,6 +209,12 @@ public class ChooselClientModule extends AbstractGinModule implements
 		TimeLineViewContentDisplayFactory.class);
 	bindViewContentDisplayFactory(TYPE_CHART,
 		ChartViewContentDisplayFactory.class);
+	bindViewContentDisplayFactory(TYPE_BAR,
+		BarViewContentDisplayFactory.class);
+	bindViewContentDisplayFactory(TYPE_PIE,
+		PieViewContentDisplayFactory.class);
+	bindViewContentDisplayFactory(TYPE_LINE,
+		LineViewContentDisplayFactory.class);
     }
 
     protected void bindViewContentDisplayFactory(
