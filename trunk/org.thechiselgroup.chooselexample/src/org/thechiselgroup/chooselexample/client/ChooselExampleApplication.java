@@ -155,7 +155,9 @@ public class ChooselExampleApplication extends ChooselApplication {
 	addWindowContentButton(VIEWS_PANEL, "List", ListViewContentDisplay.TYPE);
 	addWindowContentButton(VIEWS_PANEL, "Map", "Map");
 	addWindowContentButton(VIEWS_PANEL, "Timeline", "Timeline");
-	addWindowContentButton(VIEWS_PANEL, "Chart", "Chart");
+	addWindowContentButton(VIEWS_PANEL, "Bar", "Bar");
+	addWindowContentButton(VIEWS_PANEL, "Pie", "Pie");
+	addWindowContentButton(VIEWS_PANEL, "Line", "Line");
     }
 
     @Override
