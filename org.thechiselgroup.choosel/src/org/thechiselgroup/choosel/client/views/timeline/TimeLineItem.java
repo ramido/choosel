@@ -186,7 +186,7 @@ public class TimeLineItem extends IconResourceItem {
 	element.mousedown(new Function() {
 	    @Override
 	    public boolean f(Event e) {
-		enabler.forwardMouseDown(e);
+		enabler.forwardMouseDownWithTargetElementPosition(e);
 		return false;
 	    }
 	});
