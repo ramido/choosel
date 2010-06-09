@@ -8,13 +8,12 @@ public class LineChart extends ChartWidget {
         val = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::val,
 	thisChart = this;
         
-        chart.add($wnd.pv.Line)
+        var bar = chart.add($wnd.pv.Line)
             .data(val)
-            .bottom(function(d) {return d * 80;})
-            .left(function() {return this.index * 20 + 15;})
-          .add($wnd.pv.Dot);
+            .bottom(function(d) {return d * height / 10;})
+            .left(function() {return this.index * width / val.length;});
 
-        return chart;
+        return bar;
 
     }-*/;
     
