@@ -69,10 +69,10 @@ public class FlashURLFetchService extends SWFWidget implements URLFetchService {
     }-*/;
 
     private static native void exportStaticMethods() /*-{
-        $wnd._flexproxy_loaded=
-        @org.thechiselgroup.choosel.client.util.FlashURLFetchService::_onLoad(Ljava/lang/String;);
-        $wnd._flexproxy_callback=
-        @org.thechiselgroup.choosel.client.util.FlashURLFetchService::_callback(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;);
+        $wnd._flexproxy_loaded=$entry(
+        @org.thechiselgroup.choosel.client.util.FlashURLFetchService::_onLoad(Ljava/lang/String;));
+        $wnd._flexproxy_callback=$entry(
+        @org.thechiselgroup.choosel.client.util.FlashURLFetchService::_callback(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;));
     }-*/;
 
     private Map<String, List<AsyncCallback<String>>> requests = new HashMap<String, List<AsyncCallback<String>>>();
