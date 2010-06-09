@@ -27,6 +27,12 @@ public interface ChooselInjectionConstants {
 
     String TYPE_CHART = "Chart";
 
+    String TYPE_BAR = "Bar";
+
+    String TYPE_PIE = "Pie";
+
+    String TYPE_LINE = "Line";
+
     String DROP_TARGET_MANAGER_VIEW_CONTENT = "drop-target-manager-view-content";
 
     String HOVER_MODEL = "hoverModel";

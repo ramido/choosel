@@ -86,7 +86,10 @@ public abstract class ChartWidget extends Widget {
         var chart = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chart,
         thisChart = this;
         
-        return chart.event("mousedown",function() 
+        return chart.event("click",function() 
+            	{thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onEvent(ILcom/google/gwt/user/client/Event;)
+            	    (this.index,$wnd.pv.event);})
+            .event("mousedown",function() 
             	{thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onEvent(ILcom/google/gwt/user/client/Event;)
             	    (this.index,$wnd.pv.event);})
             .event("mousemove",function() 
