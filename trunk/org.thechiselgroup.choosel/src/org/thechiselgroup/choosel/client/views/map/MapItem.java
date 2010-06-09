@@ -127,7 +127,7 @@ public class MapItem extends IconResourceItem {
 	overlay.addMouseDownHandler(new MouseDownHandler() {
 	    @Override
 	    public void onMouseDown(MouseDownEvent event) {
-		enabler.forwardMouseDown(event.getNativeEvent());
+		enabler.forwardMouseDownWithTargetElementPosition(event.getNativeEvent());
 		event.stopPropagation(); // to prevent standard map drag
 	    }
 	});

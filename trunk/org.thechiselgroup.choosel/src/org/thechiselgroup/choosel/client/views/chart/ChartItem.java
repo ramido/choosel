@@ -33,7 +33,7 @@ public class ChartItem extends ResourceItem {
 
     private final ChartViewContentDisplay view;
 
-    private DragEnabler enabler;
+    public DragEnabler enabler;
     
     public ChartItem(ResourceSet resources, ChartViewContentDisplay view,
 	    PopupManager popupManager, ResourceSet hoverModel,
@@ -49,7 +49,7 @@ public class ChartItem extends ResourceItem {
 	switch(e.getTypeInt()) {
 	case Event.ONMOUSEDOWN: {
 	    popupManager.onMouseDown(e.getClientX(), e.getClientY());
-	    enabler.forwardMouseDown(e);
+	    enabler.forwardMouseDownWithEventPosition(e);
 	}
 	    break;
 	case Event.ONMOUSEMOVE: {
@@ -74,7 +74,7 @@ public class ChartItem extends ResourceItem {
 	    break;
 	}
     }
-    
+
     @Override
     protected void setStatusStyling(Status status) {
 	view.getChartWidget().renderChart();
