@@ -77,6 +77,22 @@ public class ChartItem extends ResourceItem {
 	enabler = dragEnablerFactory.createDragEnabler(this);
     }
     
+    public void onBrushEvent(Event e) {
+	switch(e.getTypeInt()) {
+	case Event.ONMOUSEMOVE: {
+	    if(view != null)
+		view.getCallback().switchSelection(getResourceSet());
+	    if(view1 != null)
+		view1.getCallback().switchSelection(getResourceSet());
+	    if(view2 != null)
+		view2.getCallback().switchSelection(getResourceSet());
+	    if(view3 != null)
+		view3.getCallback().switchSelection(getResourceSet());
+	}
+		break;
+	}
+    }
+    
     public void onEvent(Event e) {
 	switch(e.getTypeInt()) {
 	case Event.ONCLICK: {
@@ -90,14 +106,14 @@ public class ChartItem extends ResourceItem {
 		view3.getCallback().switchSelection(getResourceSet());
 	}
 	    break;
-	case Event.ONMOUSEDOWN: {
-	    popupManager.onMouseDown(e.getClientX(), e.getClientY());
-	    enabler.forwardMouseDownWithEventPosition(e);
-	}
-	    break;
 	case Event.ONMOUSEMOVE: {
 	    popupManager.onMouseMove(e.getClientX(), e.getClientY());
 	    enabler.forwardMouseMove(e);
+	}
+	    break;
+	case Event.ONMOUSEDOWN: {
+	    popupManager.onMouseDown(e.getClientX(), e.getClientY());
+	    enabler.forwardMouseDownWithEventPosition(e);
 	}
 	    break;
 	case Event.ONMOUSEOUT: {
@@ -131,18 +147,6 @@ public class ChartItem extends ResourceItem {
     }
     
     public String getColour() {
-//	switch(calculateStatus()) {
-//	case HIGHLIGHTED_SELECTED: 
-//	case HIGHLIGHTED: 
-//	    return colours[0];
-//	case GRAYED_OUT: 
-//	case DEFAULT:
-//	    return colours[2];
-//	case SELECTED:
-//	    return colours[1];
-//	}
-//	throw new RuntimeException("No colour available");
-	
 	switch(calculateStatus()) {
 	case HIGHLIGHTED_SELECTED: 
 	case HIGHLIGHTED: 
@@ -154,6 +158,17 @@ public class ChartItem extends ResourceItem {
 	    return colours[1];
 	}
 	throw new RuntimeException("No colour available");
+    }
+    
+    public void setBrushingSelection() {
+	if(view != null)
+	    view.getCallback().switchSelection(getResourceSet());
+	if(view1 != null)
+	    view1.getCallback().switchSelection(getResourceSet());
+	if(view2 != null)
+	    view2.getCallback().switchSelection(getResourceSet());
+	if(view3 != null)
+	    view3.getCallback().switchSelection(getResourceSet());
     }
 
 }

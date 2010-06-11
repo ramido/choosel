@@ -77,7 +77,14 @@ public abstract class ChartWidget extends Widget {
 	    updateChart();
     }
 
+    protected void onBrushEvent(int index, Event e) {
+//	Window.alert(""+e.getType());
+	ChartItem chartItem = getChartItem(index);
+	chartItem.onBrushEvent(e);
+    }
+    
     protected void onEvent(int index, Event e) {
+//	Window.alert(""+e.getType());
 	ChartItem chartItem = getChartItem(index);
 	chartItem.onEvent(e);
     }
@@ -89,6 +96,7 @@ public abstract class ChartWidget extends Widget {
         return chart.event("click",function() 
             	{thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onEvent(ILcom/google/gwt/user/client/Event;)
             	    (this.index,$wnd.pv.event);})
+//            .event("mousedown", $wnd.pv.Behavior.select())
             .event("mousedown",function() 
             	{thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onEvent(ILcom/google/gwt/user/client/Event;)
             	    (this.index,$wnd.pv.event);})
@@ -145,6 +153,11 @@ public abstract class ChartWidget extends Widget {
 	    chart = registerEvents();
 	}
 	renderChart();
+    }
+    
+    protected void setBrushingSelection(int index) {
+	ChartItem chartItem = getChartItem(index);
+	chartItem.setBrushingSelection();
     }
     
 }
