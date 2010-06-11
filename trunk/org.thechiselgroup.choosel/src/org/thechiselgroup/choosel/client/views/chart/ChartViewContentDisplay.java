@@ -26,8 +26,6 @@ import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget;
 import org.thechiselgroup.choosel.client.ui.widget.chart.BarChart;
-import org.thechiselgroup.choosel.client.ui.widget.chart.LineChart;
-import org.thechiselgroup.choosel.client.ui.widget.chart.PieChart;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.Layer;
