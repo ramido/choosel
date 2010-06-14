@@ -28,7 +28,7 @@ import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-public class LineViewContentDisplayFactory implements
+public class DotViewContentDisplayFactory implements
 	ViewContentDisplayFactory {
 
     @Inject
@@ -45,12 +45,12 @@ public class LineViewContentDisplayFactory implements
     private DragEnablerFactory dragEnablerFactory;
 
     @Inject
-    public LineViewContentDisplayFactory() {
+    public DotViewContentDisplayFactory() {
     }
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-	return new LineViewContentDisplay(popupManagerFactory,
+	return new DotViewContentDisplay(popupManagerFactory,
 		detailsWidgetHelper, hoverModel, dragEnablerFactory);
     }
 }

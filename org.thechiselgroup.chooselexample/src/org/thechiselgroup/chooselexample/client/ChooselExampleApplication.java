@@ -132,8 +132,8 @@ public class ChooselExampleApplication extends ChooselApplication {
 
 		ResourceSet resourceSet = createResourceSet();
 		resourceSet.setLabel("Test");
-		resourceSet.addAll(ResourcesTestHelper.createResources(1, 2, 3,
-			4, 5));
+		for(int i = 0; i < 25; i++)
+			resourceSet.add(ResourcesTestHelper.createResource(i));
 		for (Resource resource : resourceSet) {
 		    resource.putValue("date", new Date().toString());
 		}
@@ -157,7 +157,7 @@ public class ChooselExampleApplication extends ChooselApplication {
 	addWindowContentButton(VIEWS_PANEL, "Timeline", "Timeline");
 	addWindowContentButton(VIEWS_PANEL, "Bar", "Bar");
 	addWindowContentButton(VIEWS_PANEL, "Pie", "Pie");
-	addWindowContentButton(VIEWS_PANEL, "Line", "Line");
+	addWindowContentButton(VIEWS_PANEL, "Dot", "Dot");
     }
 
     @Override

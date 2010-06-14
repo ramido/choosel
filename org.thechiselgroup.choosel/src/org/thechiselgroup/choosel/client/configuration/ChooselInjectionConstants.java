@@ -31,7 +31,7 @@ public interface ChooselInjectionConstants {
 
     String TYPE_PIE = "Pie";
 
-    String TYPE_LINE = "Line";
+    String TYPE_DOT = "Dot";
 
     String DROP_TARGET_MANAGER_VIEW_CONTENT = "drop-target-manager-view-content";
 
