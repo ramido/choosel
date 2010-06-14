@@ -79,7 +79,7 @@ import org.thechiselgroup.choosel.client.views.ViewAccessor;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.chart.BarViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplayFactory;
-import org.thechiselgroup.choosel.client.views.chart.LineViewContentDisplayFactory;
+import org.thechiselgroup.choosel.client.views.chart.DotViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.chart.PieViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.graph.ArcStyleProvider;
 import org.thechiselgroup.choosel.client.views.graph.DefaultArcStyleProvider;
@@ -213,8 +213,8 @@ public class ChooselClientModule extends AbstractGinModule implements
 		BarViewContentDisplayFactory.class);
 	bindViewContentDisplayFactory(TYPE_PIE,
 		PieViewContentDisplayFactory.class);
-	bindViewContentDisplayFactory(TYPE_LINE,
-		LineViewContentDisplayFactory.class);
+	bindViewContentDisplayFactory(TYPE_DOT,
+		DotViewContentDisplayFactory.class);
     }
 
     protected void bindViewContentDisplayFactory(

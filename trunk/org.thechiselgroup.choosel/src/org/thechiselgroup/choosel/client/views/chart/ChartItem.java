@@ -33,7 +33,7 @@ public class ChartItem extends ResourceItem {
     private ChartViewContentDisplay view;
     private BarViewContentDisplay view1;
     private PieViewContentDisplay view2;
-    private LineViewContentDisplay view3;
+    private DotViewContentDisplay view3;
 
     public DragEnabler enabler;
     
@@ -67,7 +67,7 @@ public class ChartItem extends ResourceItem {
 	enabler = dragEnablerFactory.createDragEnabler(this);
     }
     
-    public ChartItem(ResourceSet resources, LineViewContentDisplay view3,
+    public ChartItem(ResourceSet resources, DotViewContentDisplay view3,
 	    PopupManager popupManager, ResourceSet hoverModel,
 	    Layer layerModel, DragEnablerFactory dragEnablerFactory) {
 	
@@ -77,20 +77,15 @@ public class ChartItem extends ResourceItem {
 	enabler = dragEnablerFactory.createDragEnabler(this);
     }
     
-    public void onBrushEvent(Event e) {
-	switch(e.getTypeInt()) {
-	case Event.ONMOUSEMOVE: {
-	    if(view != null)
-		view.getCallback().switchSelection(getResourceSet());
-	    if(view1 != null)
-		view1.getCallback().switchSelection(getResourceSet());
-	    if(view2 != null)
-		view2.getCallback().switchSelection(getResourceSet());
-	    if(view3 != null)
-		view3.getCallback().switchSelection(getResourceSet());
-	}
-		break;
-	}
+    public void onBrushEvent() {
+	if(view != null)
+	    view.getCallback().switchSelection(getResourceSet());
+	if(view1 != null)
+	    view1.getCallback().switchSelection(getResourceSet());
+	if(view2 != null)
+	    view2.getCallback().switchSelection(getResourceSet());
+	if(view3 != null)
+	    view3.getCallback().switchSelection(getResourceSet());
     }
     
     public void onEvent(Event e) {

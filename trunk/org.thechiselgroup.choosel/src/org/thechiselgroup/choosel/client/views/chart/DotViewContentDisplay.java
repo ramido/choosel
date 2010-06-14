@@ -38,7 +38,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-public class LineViewContentDisplay extends AbstractViewContentDisplay {
+public class DotViewContentDisplay extends AbstractViewContentDisplay {
 
     public static interface Display {
 
@@ -58,7 +58,7 @@ public class LineViewContentDisplay extends AbstractViewContentDisplay {
     private DragEnablerFactory dragEnablerFactory;
 
     @Inject
-    public LineViewContentDisplay(
+    public DotViewContentDisplay(
 	    PopupManagerFactory popupManagerFactory,
 	    DetailsWidgetHelper detailsWidgetHelper,
 	    @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,

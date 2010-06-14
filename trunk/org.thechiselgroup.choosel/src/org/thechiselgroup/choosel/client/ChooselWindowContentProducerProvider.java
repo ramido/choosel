@@ -178,8 +178,8 @@ public class ChooselWindowContentProducerProvider implements
     
     @Inject
     public void registerLine(
-	    @Named(TYPE_LINE) ViewContentDisplayFactory factory) {
-	registerViewContentDisplayFactory(TYPE_LINE, factory);
+	    @Named(TYPE_DOT) ViewContentDisplayFactory factory) {
+	registerViewContentDisplayFactory(TYPE_DOT, factory);
     }
 
     private void registerViewContentDisplayFactory(String contentType,
