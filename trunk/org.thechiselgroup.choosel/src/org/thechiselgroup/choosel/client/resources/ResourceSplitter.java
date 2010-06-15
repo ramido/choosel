@@ -20,11 +20,12 @@ import java.util.Map;
 
 import org.thechiselgroup.choosel.client.label.CategoryLabelProvider;
 
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
 
+// TODO update & extend (1, many sets added / removed) test case
 public class ResourceSplitter extends AbstractResourceContainer {
 
     private final ResourceCategorizer categorizer;
@@ -38,7 +39,8 @@ public class ResourceSplitter extends AbstractResourceContainer {
     private final CategoryLabelProvider labelProvider;
 
     @Inject
-    public ResourceSplitter(ResourceCategorizer categorizer,
+    public ResourceSplitter(
+	    ResourceCategorizer categorizer, // new categorizer interface
 	    ResourceSetFactory resourceSetFactory,
 	    CategoryLabelProvider labelProvider) {
 
@@ -55,9 +57,12 @@ public class ResourceSplitter extends AbstractResourceContainer {
 
     @Override
     public void add(Resource resource) {
+	// TODO needs to return Set<String> --> need new interface
+	// TODO keep old resource categorizer interface, create wrapper
 	String category = categorizer.getCategory(resource);
-	ResourceSet resourceSet = getResourceSet(category);
 
+	// TODO do this in a loop
+	ResourceSet resourceSet = getResourceSet(category);
 	resourceSet.add(resource);
     }
 
@@ -80,6 +85,7 @@ public class ResourceSplitter extends AbstractResourceContainer {
     public void remove(Resource resource) {
 	// check if sets exists --> possible bug add/remove events
 
+	// TODO change me - you can figure this one out
 	String category = categorizer.getCategory(resource);
 	ResourceSet resourceSet = getResourceSet(category);
 
