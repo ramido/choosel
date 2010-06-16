@@ -17,7 +17,6 @@ package org.thechiselgroup.choosel.client.resources;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import org.thechiselgroup.choosel.client.label.CategoryLabelProvider;
 
@@ -28,8 +27,6 @@ import com.google.inject.Inject;
 
 // TODO update & extend (1, many sets added / removed) test case
 public class ResourceSplitter extends AbstractResourceContainer {
-
-    // private final ResourceCategorizer categorizer;
 
     private final ResourceMultiCategorizer multiCategorizer;
 
@@ -42,25 +39,16 @@ public class ResourceSplitter extends AbstractResourceContainer {
     private final CategoryLabelProvider labelProvider;
 
     @Inject
-    public ResourceSplitter(
-	    ResourceCategorizer categorizer, // new categorizer interface
+    public ResourceSplitter(ResourceCategorizer categorizer,
 	    ResourceSetFactory resourceSetFactory,
 	    CategoryLabelProvider labelProvider) {
 
-	ResourceCategorizerToMultiCategorizerAdapter adapter = new ResourceCategorizerToMultiCategorizerAdapter(
-		categorizer);
-	this.multiCategorizer = adapter;
-
-	this.resourceSetFactory = resourceSetFactory;
-	this.labelProvider = labelProvider;
-
-	this.eventBus = new HandlerManager(this);
+	this(new ResourceCategorizerToMultiCategorizerAdapter(categorizer),
+		resourceSetFactory, labelProvider);
     }
 
     @Inject
-    public ResourceSplitter(
-	    ResourceMultiCategorizer multiCategorizer, // new categorizer
-						       // interface
+    public ResourceSplitter(ResourceMultiCategorizer multiCategorizer,
 	    ResourceSetFactory resourceSetFactory,
 	    CategoryLabelProvider labelProvider) {
 
@@ -77,12 +65,7 @@ public class ResourceSplitter extends AbstractResourceContainer {
 
     @Override
     public void add(Resource resource) {
-	// TODO needs to return Set<String> --> need new interface
-	// TODO keep old resource categorizer interface, create wrapper
-	Set<String> categories = multiCategorizer.getCategories(resource);
-
-	// TODO do this in a loop
-	for (String category : categories) {
+	for (String category : multiCategorizer.getCategories(resource)) {
 	    ResourceSet resourceSet = getResourceSet(category);
 	    resourceSet.add(resource);
 	}
@@ -105,12 +88,7 @@ public class ResourceSplitter extends AbstractResourceContainer {
 
     @Override
     public void remove(Resource resource) {
-	// check if sets exists --> possible bug add/remove events
-
-	// TODO change me - you can figure this one out
-	Set<String> categories = multiCategorizer.getCategories(resource);
-
-	for (String category : categories) {
+	for (String category : multiCategorizer.getCategories(resource)) {
 	    ResourceSet resourceSet = getResourceSet(category);
 
 	    resourceSet.remove(resource);

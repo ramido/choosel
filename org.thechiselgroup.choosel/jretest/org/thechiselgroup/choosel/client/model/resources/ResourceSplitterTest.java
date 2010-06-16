@@ -15,9 +15,16 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.model.resources;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResource;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResources;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.toResourceSet;
+import static org.thechiselgroup.choosel.client.util.CollectionUtils.toSet;
 
 import java.util.Map;
 
@@ -31,11 +38,11 @@ import org.thechiselgroup.choosel.client.label.DefaultCategoryLabelProvider;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.Resource;
-import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceCategoryAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourceCategoryAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceCategoryRemovedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourceCategoryRemovedEventHandler;
+import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSplitter;
 
@@ -53,32 +60,33 @@ public class ResourceSplitterTest {
 
     private DefaultResourceSet resources1;
 
-    // TODO label provider for resource sets
-
     private DefaultResourceSet resources2;
 
     private ResourceSplitter splitter;
 
     private CategoryLabelProvider labelProvider;
 
+    @Mock
+    private ResourceMultiCategorizer categorizer;
+
     @Test
-    public void labelProvider() {
-	String label1 = "label1";
-	String label2 = "label2";
+    public void addResourceWithMultipleCategoriesCreatesMultipleCategories() {
+	Resource resource = createResource(1);
 
-	when(labelProvider.getLabel(CATEGORY_1)).thenReturn(label1);
-	when(labelProvider.getLabel(CATEGORY_2)).thenReturn(label2);
+	when(categorizer.getCategories(resource)).thenReturn(
+		toSet(CATEGORY_1, CATEGORY_2));
 
-	splitter.addAll(resources1);
-	splitter.addAll(resources2);
+	splitter.add(resource);
 
 	Map<String, ResourceSet> result = splitter.getCategorizedResourceSets();
 
 	assertEquals(2, result.size());
 	assertTrue(result.containsKey(CATEGORY_1));
-	assertEquals(label1, result.get(CATEGORY_1).getLabel());
+	assertTrue(result.get(CATEGORY_1).containsEqualResources(
+		toResourceSet(resource)));
 	assertTrue(result.containsKey(CATEGORY_2));
-	assertEquals(label2, result.get(CATEGORY_2).getLabel());
+	assertTrue(result.get(CATEGORY_2).containsEqualResources(
+		toResourceSet(resource)));
     }
 
     @Test
@@ -126,6 +134,26 @@ public class ResourceSplitterTest {
     }
 
     @Test
+    public void labelProvider() {
+	String label1 = "label1";
+	String label2 = "label2";
+
+	when(labelProvider.getLabel(CATEGORY_1)).thenReturn(label1);
+	when(labelProvider.getLabel(CATEGORY_2)).thenReturn(label2);
+
+	splitter.addAll(resources1);
+	splitter.addAll(resources2);
+
+	Map<String, ResourceSet> result = splitter.getCategorizedResourceSets();
+
+	assertEquals(2, result.size());
+	assertTrue(result.containsKey(CATEGORY_1));
+	assertEquals(label1, result.get(CATEGORY_1).getLabel());
+	assertTrue(result.containsKey(CATEGORY_2));
+	assertEquals(label2, result.get(CATEGORY_2).getLabel());
+    }
+
+    @Test
     public void removeResourceSet() {
 	splitter.addAll(resources1);
 	splitter.addAll(resources2);
@@ -142,17 +170,6 @@ public class ResourceSplitterTest {
     public void setUp() {
 	MockitoAnnotations.initMocks(this);
 
-	ResourceCategorizer categorizer = new ResourceCategorizer() {
-	    @Override
-	    public String getCategory(Resource resource) {
-		if (resources1.contains(resource)) {
-		    return CATEGORY_1;
-		} else {
-		    return CATEGORY_2;
-		}
-	    }
-	};
-
 	labelProvider = spy(new DefaultCategoryLabelProvider());
 
 	splitter = new ResourceSplitter(categorizer,
@@ -160,5 +177,17 @@ public class ResourceSplitterTest {
 
 	resources1 = createResources("test", 1, 2, 3);
 	resources2 = createResources("test", 4, 5);
+
+	when(categorizer.getCategories(resources1.toList().get(0))).thenReturn(
+		toSet(CATEGORY_1));
+	when(categorizer.getCategories(resources1.toList().get(1))).thenReturn(
+		toSet(CATEGORY_1));
+	when(categorizer.getCategories(resources1.toList().get(2))).thenReturn(
+		toSet(CATEGORY_1));
+
+	when(categorizer.getCategories(resources2.toList().get(0))).thenReturn(
+		toSet(CATEGORY_2));
+	when(categorizer.getCategories(resources2.toList().get(1))).thenReturn(
+		toSet(CATEGORY_2));
     }
 }
