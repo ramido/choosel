@@ -16,7 +16,9 @@
 package org.thechiselgroup.choosel.client.util;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public final class CollectionUtils {
 
@@ -30,6 +32,14 @@ public final class CollectionUtils {
 	    result.add(t);
 	}
 	return result;
+    }
+
+    public static <T> Set<T> toSet(T... ts) {
+	Set<T> set = new HashSet<T>();
+	for (T t : ts) {
+	    set.add(t);
+	}
+	return set;
     }
 
 }
