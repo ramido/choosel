@@ -36,51 +36,51 @@ import org.thechiselgroup.choosel.client.views.ViewAccessor;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 public class PopupResourceSetAvatarFactory extends
-	DelegatingResourceSetAvatarFactory {
+        DelegatingResourceSetAvatarFactory {
 
     public static interface Action {
 
-	void execute(ResourceSet resources, View view);
+        void execute(ResourceSet resources, View view);
 
-	String getLabel();
+        String getLabel();
 
     }
 
     public static class ActionToDragAvatarPopupWidgetFactoryActionAdapter
-	    implements ResourceSetAvatarPopupWidgetFactoryAction {
+            implements ResourceSetAvatarPopupWidgetFactoryAction {
 
-	private ResourceSetAvatar avatar;
+        private ResourceSetAvatar avatar;
 
-	private Action delegate;
+        private Action delegate;
 
-	private PopupManager popupManager;
+        private PopupManager popupManager;
 
-	private ViewAccessor viewAccessor;
+        private ViewAccessor viewAccessor;
 
-	public ActionToDragAvatarPopupWidgetFactoryActionAdapter(
-		ViewAccessor viewAccessor, ResourceSetAvatar avatar,
-		Action delegate) {
+        public ActionToDragAvatarPopupWidgetFactoryActionAdapter(
+                ViewAccessor viewAccessor, ResourceSetAvatar avatar,
+                Action delegate) {
 
-	    this.viewAccessor = viewAccessor;
-	    this.avatar = avatar;
-	    this.delegate = delegate;
-	}
+            this.viewAccessor = viewAccessor;
+            this.avatar = avatar;
+            this.delegate = delegate;
+        }
 
-	@Override
-	public void execute() {
-	    delegate.execute(avatar.getResourceSet(), viewAccessor
-		    .findView(avatar));
-	    popupManager.hidePopup();
-	}
+        @Override
+        public void execute() {
+            delegate.execute(avatar.getResourceSet(),
+                    viewAccessor.findView(avatar));
+            popupManager.hidePopup();
+        }
 
-	@Override
-	public String getLabel() {
-	    return delegate.getLabel();
-	}
+        @Override
+        public String getLabel() {
+            return delegate.getLabel();
+        }
 
-	public void setPopupManager(PopupManager popupManager) {
-	    this.popupManager = popupManager;
-	}
+        public void setPopupManager(PopupManager popupManager) {
+            this.popupManager = popupManager;
+        }
     }
 
     private List<Action> actions;
@@ -96,69 +96,69 @@ public class PopupResourceSetAvatarFactory extends
     private final boolean resourceLabelModifiable;
 
     public PopupResourceSetAvatarFactory(ResourceSetAvatarFactory delegate,
-	    ViewAccessor viewAccessor, PopupManagerFactory popupManagerFactory,
-	    List<Action> actions, String subHeaderText, String infoText,
-	    boolean resourceLabelModifiable) {
+            ViewAccessor viewAccessor, PopupManagerFactory popupManagerFactory,
+            List<Action> actions, String subHeaderText, String infoText,
+            boolean resourceLabelModifiable) {
 
-	super(delegate);
+        super(delegate);
 
-	this.viewAccessor = viewAccessor;
-	this.popupManagerFactory = popupManagerFactory;
-	this.infoText = infoText;
-	this.actions = actions;
-	this.subHeaderText = subHeaderText;
-	this.resourceLabelModifiable = resourceLabelModifiable;
+        this.viewAccessor = viewAccessor;
+        this.popupManagerFactory = popupManagerFactory;
+        this.infoText = infoText;
+        this.actions = actions;
+        this.subHeaderText = subHeaderText;
+        this.resourceLabelModifiable = resourceLabelModifiable;
     }
 
     @Override
     public ResourceSetAvatar createAvatar(final ResourceSet resources) {
-	final ResourceSetAvatar avatar = delegate.createAvatar(resources);
+        final ResourceSetAvatar avatar = delegate.createAvatar(resources);
 
-	List<ResourceSetAvatarPopupWidgetFactoryAction> actionAdapters = new ArrayList<ResourceSetAvatarPopupWidgetFactoryAction>();
-	for (Action action : actions) {
-	    actionAdapters
-		    .add(new ActionToDragAvatarPopupWidgetFactoryActionAdapter(
-			    viewAccessor, avatar, action));
-	}
+        List<ResourceSetAvatarPopupWidgetFactoryAction> actionAdapters = new ArrayList<ResourceSetAvatarPopupWidgetFactoryAction>();
+        for (Action action : actions) {
+            actionAdapters
+                    .add(new ActionToDragAvatarPopupWidgetFactoryActionAdapter(
+                            viewAccessor, avatar, action));
+        }
 
-	ResourceSetAvatarPopupWidgetFactory widgetFactory = new ResourceSetAvatarPopupWidgetFactory(
-		avatar.getText(), subHeaderText, actionAdapters, infoText,
-		resourceLabelModifiable ? new HeaderUpdatedEventHandler() {
-		    @Override
-		    public void headerLabelChanged(String newLabel) {
-			resources.setLabel(newLabel);
-		    }
-		} : null);
+        ResourceSetAvatarPopupWidgetFactory widgetFactory = new ResourceSetAvatarPopupWidgetFactory(
+                avatar.getText(), subHeaderText, actionAdapters, infoText,
+                resourceLabelModifiable ? new HeaderUpdatedEventHandler() {
+                    @Override
+                    public void headerLabelChanged(String newLabel) {
+                        resources.setLabel(newLabel);
+                    }
+                } : null);
 
-	final PopupManager popupManager = popupManagerFactory
-		.createPopupManager(widgetFactory);
+        final PopupManager popupManager = popupManagerFactory
+                .createPopupManager(widgetFactory);
 
-	for (ResourceSetAvatarPopupWidgetFactoryAction action : actionAdapters) {
-	    ((ActionToDragAvatarPopupWidgetFactoryActionAdapter) action)
-		    .setPopupManager(popupManager);
-	}
+        for (ResourceSetAvatarPopupWidgetFactoryAction action : actionAdapters) {
+            ((ActionToDragAvatarPopupWidgetFactoryActionAdapter) action)
+                    .setPopupManager(popupManager);
+        }
 
-	final Disposable link = DefaultPopupManager.linkManagerToSource(
-		popupManager, avatar);
+        final Disposable link = DefaultPopupManager.linkManagerToSource(
+                popupManager, avatar);
 
-	popupManager.setEnabled(avatar.isEnabled());
-	final HandlerRegistration handlerRegistration = avatar
-		.addEnabledStatusHandler(new ResourceSetAvatarEnabledStatusEventHandler() {
-		    @Override
-		    public void onDragAvatarEnabledStatusChange(
-			    ResourceSetAvatarEnabledStatusEvent event) {
-			popupManager.setEnabled(avatar.isEnabled());
-		    }
-		});
+        popupManager.setEnabled(avatar.isEnabled());
+        final HandlerRegistration handlerRegistration = avatar
+                .addEnabledStatusHandler(new ResourceSetAvatarEnabledStatusEventHandler() {
+                    @Override
+                    public void onDragAvatarEnabledStatusChange(
+                            ResourceSetAvatarEnabledStatusEvent event) {
+                        popupManager.setEnabled(avatar.isEnabled());
+                    }
+                });
 
-	avatar.addDisposable(new Disposable() {
-	    @Override
-	    public void dispose() {
-		handlerRegistration.removeHandler();
-		link.dispose();
-	    }
-	});
+        avatar.addDisposable(new Disposable() {
+            @Override
+            public void dispose() {
+                handlerRegistration.removeHandler();
+                link.dispose();
+            }
+        });
 
-	return avatar;
+        return avatar;
     }
 }

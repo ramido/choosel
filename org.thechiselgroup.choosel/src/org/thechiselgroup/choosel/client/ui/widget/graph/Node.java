@@ -24,36 +24,36 @@ public class Node {
     private String type;
 
     public Node(String id, String label, String type) {
-	assert id != null;
-	assert type != null;
+        assert id != null;
+        assert type != null;
 
-	this.id = id;
-	this.label = (label == null) ? "" : label;
-	this.type = type;
+        this.id = id;
+        this.label = (label == null) ? "" : label;
+        this.type = type;
     }
 
     public String getId() {
-	return id;
+        return id;
     }
 
     public String getLabel() {
-	return label;
+        return label;
     }
 
     public String getType() {
-	return type;
+        return type;
     }
 
     public void setId(String id) {
-	this.id = id;
+        this.id = id;
     }
 
     public void setLabel(String label) {
-	this.label = label;
+        this.label = label;
     }
 
     public void setType(String type) {
-	this.type = type;
+        this.type = type;
     }
 
 }

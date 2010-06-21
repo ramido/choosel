@@ -20,8 +20,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 public class GraphExpansionRegistry {
 
@@ -30,54 +30,54 @@ public class GraphExpansionRegistry {
     private Map<String, List<NodeMenuEntry>> menuEntriesByCategory = new HashMap<String, List<NodeMenuEntry>>();
 
     public GraphNodeExpander getAutomaticExpander(String category) {
-	assert category != null;
+        assert category != null;
 
-	if (!automaticExpandersByCategory.containsKey(category)) {
-	    return new NullGraphNodeExpander();
-	}
+        if (!automaticExpandersByCategory.containsKey(category)) {
+            return new NullGraphNodeExpander();
+        }
 
-	return automaticExpandersByCategory.get(category);
+        return automaticExpandersByCategory.get(category);
     }
 
     public List<NodeMenuEntry> getNodeMenuEntries(String category) {
-	assert category != null;
+        assert category != null;
 
-	if (!menuEntriesByCategory.containsKey(category)) {
-	    return Collections.emptyList();
-	}
+        if (!menuEntriesByCategory.containsKey(category)) {
+            return Collections.emptyList();
+        }
 
-	return menuEntriesByCategory.get(category);
+        return menuEntriesByCategory.get(category);
     }
 
     public Set<Entry<String, List<NodeMenuEntry>>> getNodeMenuEntriesByCategory() {
-	return menuEntriesByCategory.entrySet();
+        return menuEntriesByCategory.entrySet();
     }
 
     public void putAutomaticExpander(String category, GraphNodeExpander expander) {
-	assert category != null;
-	assert expander != null;
+        assert category != null;
+        assert expander != null;
 
-	automaticExpandersByCategory.put(category, expander);
+        automaticExpandersByCategory.put(category, expander);
     }
 
     public void putNodeMenuEntry(String category, NodeMenuEntry nodeMenuEntry) {
-	assert category != null;
-	assert nodeMenuEntry != null;
+        assert category != null;
+        assert nodeMenuEntry != null;
 
-	if (!menuEntriesByCategory.containsKey(category)) {
-	    menuEntriesByCategory.put(category, new ArrayList<NodeMenuEntry>());
-	}
+        if (!menuEntriesByCategory.containsKey(category)) {
+            menuEntriesByCategory.put(category, new ArrayList<NodeMenuEntry>());
+        }
 
-	menuEntriesByCategory.get(category).add(nodeMenuEntry);
+        menuEntriesByCategory.get(category).add(nodeMenuEntry);
     }
 
     public void putNodeMenuEntry(String category, String label,
-	    GraphNodeExpander expander) {
+            GraphNodeExpander expander) {
 
-	assert category != null;
-	assert label != null;
-	assert expander != null;
+        assert category != null;
+        assert label != null;
+        assert expander != null;
 
-	putNodeMenuEntry(category, new NodeMenuEntry(label, expander));
+        putNodeMenuEntry(category, new NodeMenuEntry(label, expander));
     }
 }

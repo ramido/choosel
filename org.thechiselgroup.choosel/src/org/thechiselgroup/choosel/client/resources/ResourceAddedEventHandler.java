@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
-
 public interface ResourceAddedEventHandler extends ResourceEventHandler {
 
     void onResourceAdded(ResourceAddedEvent e);

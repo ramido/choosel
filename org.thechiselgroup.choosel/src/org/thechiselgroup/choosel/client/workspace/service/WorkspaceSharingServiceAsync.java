@@ -22,6 +22,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public interface WorkspaceSharingServiceAsync {
 
     void shareWorkspace(WorkspaceDTO workspaceDTO, String emailAddress,
-	    AsyncCallback<Void> callback);
+            AsyncCallback<Void> callback);
 
 }

@@ -20,9 +20,9 @@
 	<classpathentry exported="true" kind="lib" path="testlibs/mockito-all-1.8.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/gwt-fx-0.5.0_m1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/gwt-log-3.0.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/gwt-dnd-3.0.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/aopalliance.jar"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/gwt-dnd-3.0.0-patched.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

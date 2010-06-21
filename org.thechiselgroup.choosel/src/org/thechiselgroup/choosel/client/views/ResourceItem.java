@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.popup.PopupClosingEvent;
 import org.thechiselgroup.choosel.client.ui.popup.PopupClosingHandler;
@@ -29,28 +28,28 @@ import com.google.gwt.event.dom.client.MouseOverHandler;
 public class ResourceItem {
 
     public class HighlightingManager implements MouseOverHandler,
-	    MouseOutHandler, PopupClosingHandler {
+            MouseOutHandler, PopupClosingHandler {
 
-	@Override
-	public void onMouseOut(MouseOutEvent e) {
-	    setHighlighted(false);
-	}
+        @Override
+        public void onMouseOut(MouseOutEvent e) {
+            setHighlighted(false);
+        }
 
-	@Override
-	public void onMouseOver(MouseOverEvent e) {
-	    setHighlighted(true);
-	}
+        @Override
+        public void onMouseOver(MouseOverEvent e) {
+            setHighlighted(true);
+        }
 
-	@Override
-	public void onPopupClosing(PopupClosingEvent event) {
-	    setHighlighted(false);
-	}
+        @Override
+        public void onPopupClosing(PopupClosingEvent event) {
+            setHighlighted(false);
+        }
 
     }
 
     public static enum Status {
 
-	DEFAULT, GRAYED_OUT, HIGHLIGHTED, HIGHLIGHTED_SELECTED, SELECTED
+        DEFAULT, GRAYED_OUT, HIGHLIGHTED, HIGHLIGHTED_SELECTED, SELECTED
 
     }
 
@@ -71,128 +70,130 @@ public class ResourceItem {
     private boolean selectionStatusVisible;
 
     public ResourceItem(ResourceSet resources, ResourceSet hoverModel,
-	    PopupManager popupManager, Layer layer) {
+            PopupManager popupManager, Layer layer) {
 
-	assert resources != null;
-	assert hoverModel != null;
-	assert popupManager != null;
-	assert layer != null;
+        assert resources != null;
+        assert hoverModel != null;
+        assert popupManager != null;
+        assert layer != null;
 
-	this.resources = resources;
-	this.popupManager = popupManager;
-	this.hoverModel = hoverModel;
-	this.layer = layer;
+        this.resources = resources;
+        this.popupManager = popupManager;
+        this.hoverModel = hoverModel;
+        this.layer = layer;
 
-	highlightingManager = new HighlightingManager();
+        highlightingManager = new HighlightingManager();
 
-	this.popupManager.addPopupMouseOverHandler(highlightingManager);
-	this.popupManager.addPopupMouseOutHandler(highlightingManager);
-	this.popupManager.addPopupClosingHandler(highlightingManager);
+        this.popupManager.addPopupMouseOverHandler(highlightingManager);
+        this.popupManager.addPopupMouseOutHandler(highlightingManager);
+        this.popupManager.addPopupClosingHandler(highlightingManager);
     }
 
     protected Status calculateStatus() {
-	if (isHighlighted() && isSelected()) {
-	    return Status.HIGHLIGHTED_SELECTED;
-	}
+        if (isHighlighted() && isSelected()) {
+            return Status.HIGHLIGHTED_SELECTED;
+        }
 
-	if (isHighlighted()) {
-	    return Status.HIGHLIGHTED;
-	}
+        if (isHighlighted()) {
+            return Status.HIGHLIGHTED;
+        }
 
-	if (isSelected()) {
-	    return Status.SELECTED;
-	}
+        if (isSelected()) {
+            return Status.SELECTED;
+        }
 
-	return Status.DEFAULT;
+        return Status.DEFAULT;
     }
 
     protected Status calculateStatusNormalVsGraySelection() {
-	if (isHighlighted()) {
-	    return Status.HIGHLIGHTED;
-	}
+        if (isHighlighted()) {
+            return Status.HIGHLIGHTED;
+        }
 
-	if (selectionStatusVisible && isSelected()) {
-	    return Status.DEFAULT;
-	}
+        if (selectionStatusVisible && isSelected()) {
+            return Status.DEFAULT;
+        }
 
-	if (selectionStatusVisible) {
-	    return Status.GRAYED_OUT;
-	}
+        if (selectionStatusVisible) {
+            return Status.GRAYED_OUT;
+        }
 
-	return Status.DEFAULT;
+        return Status.DEFAULT;
     }
 
     // for test only
     HighlightingManager getHighlightingManager() {
-	return highlightingManager;
+        return highlightingManager;
     }
 
     public final PopupManager getPopupManager() {
-	return popupManager;
+        return popupManager;
     }
 
     public ResourceSet getResourceSet() {
-	return resources;
+        return resources;
     }
 
     public Object getResourceValue(String slotID) {
-	return layer.getValue(slotID, getResourceSet());
+        return layer.getValue(slotID, getResourceSet());
     }
 
     public boolean isHighlighted() {
-	return highlighted;
+        return highlighted;
     }
 
     public boolean isSelected() {
-	return selected;
+        return selected;
     }
 
     // TODO introduce partial highlighting
     public final void setHighlighted(boolean highlighted) {
-	if (this.highlighted == highlighted) {
-	    return;
-	}
+        if (this.highlighted == highlighted) {
+            return;
+        }
 
-	this.highlighted = highlighted;
+        this.highlighted = highlighted;
 
-	if (highlighted) {
-	    hoverModel.addAll(resources);
-	} else {
-	    hoverModel.removeAll(resources);
-	}
+        if (highlighted) {
+            hoverModel.addAll(resources);
+        } else {
+            hoverModel.removeAll(resources);
+        }
 
-	updateStyling();
+        updateStyling();
     }
 
     public void setSelected(boolean selected) {
-	if (this.selected == selected) {
-	    return;
-	}
+        if (this.selected == selected) {
+            return;
+        }
 
-	this.selected = selected;
-	updateStyling();
+        this.selected = selected;
+        updateStyling();
     }
 
     public void setSelectionStatusVisible(boolean visible) {
-	if (this.selectionStatusVisible == visible) {
-	    return;
-	}
+        if (this.selectionStatusVisible == visible) {
+            return;
+        }
 
-	this.selectionStatusVisible = visible;
-	updateStyling();
+        this.selectionStatusVisible = visible;
+        updateStyling();
     }
 
     /**
-     * Should be overridden by subclasses to apply correct styling to the visual representation.
-     * Gets called whenever status (highlighting, selecting, etc.) changes.
+     * Should be overridden by subclasses to apply correct styling to the visual
+     * representation. Gets called whenever status (highlighting, selecting,
+     * etc.) changes.
      * 
-     * @param status Current status of resource item.
+     * @param status
+     *            Current status of resource item.
      */
     protected void setStatusStyling(Status status) {
 
     }
 
     protected void updateStyling() {
-	setStatusStyling(calculateStatus());
+        setStatusStyling(calculateStatus());
     }
 }

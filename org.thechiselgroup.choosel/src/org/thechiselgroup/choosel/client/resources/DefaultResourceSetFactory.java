@@ -18,15 +18,15 @@ package org.thechiselgroup.choosel.client.resources;
 import com.google.inject.Provider;
 
 public class DefaultResourceSetFactory implements ResourceSetFactory,
-	Provider<ResourceSet> {
-
-    @Override
-    public ResourceSet get() {
-	return createResourceSet();
-    }
+        Provider<ResourceSet> {
 
     @Override
     public ResourceSet createResourceSet() {
-	return new DefaultResourceSet();
+        return new DefaultResourceSet();
+    }
+
+    @Override
+    public ResourceSet get() {
+        return createResourceSet();
     }
 }

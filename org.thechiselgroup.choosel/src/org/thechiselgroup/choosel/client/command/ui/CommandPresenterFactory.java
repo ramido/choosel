@@ -31,22 +31,22 @@ public class CommandPresenterFactory {
 
     @Inject
     public CommandPresenterFactory(AsyncCommandExecutor asyncCommandExecutor) {
-	this.asyncCommandExecutor = asyncCommandExecutor;
-    }
-
-    public ButtonDisplay createCommandButton(String text, Command command) {
-	ButtonDisplay display = new ButtonDisplay(text);
-	CommandPresenter presenter = new CommandPresenter(display, command);
-	presenter.init();
-	return display;
+        this.asyncCommandExecutor = asyncCommandExecutor;
     }
 
     public ButtonDisplay createCommandButton(String text, AsyncCommand command) {
-	ButtonDisplay display = new ButtonDisplay(text);
-	CommandPresenter presenter = new CommandPresenter(display,
-		new AsyncCommandToCommandAdapter(command, asyncCommandExecutor));
-	presenter.init();
+        ButtonDisplay display = new ButtonDisplay(text);
+        CommandPresenter presenter = new CommandPresenter(display,
+                new AsyncCommandToCommandAdapter(command, asyncCommandExecutor));
+        presenter.init();
 
-	return display;
+        return display;
+    }
+
+    public ButtonDisplay createCommandButton(String text, Command command) {
+        ButtonDisplay display = new ButtonDisplay(text);
+        CommandPresenter presenter = new CommandPresenter(display, command);
+        presenter.init();
+        return display;
     }
 }

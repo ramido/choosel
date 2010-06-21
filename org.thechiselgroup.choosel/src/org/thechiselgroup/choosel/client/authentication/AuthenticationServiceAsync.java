@@ -20,6 +20,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public interface AuthenticationServiceAsync {
 
     void getAuthentication(String redirectURL,
-	    AsyncCallback<Authentication> callback);
+            AsyncCallback<Authentication> callback);
 
 }

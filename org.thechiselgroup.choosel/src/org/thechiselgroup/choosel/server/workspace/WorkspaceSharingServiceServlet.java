@@ -34,73 +34,75 @@ import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class WorkspaceSharingServiceServlet extends RemoteServiceServlet
-	implements WorkspaceSharingService {
+        implements WorkspaceSharingService {
 
     // TODO move
     public static String constructURL(String path, HttpServletRequest request,
-	    ServletContext servletContext) {
+            ServletContext servletContext) {
 
-	String scheme = request.getScheme();
-	String server = request.getServerName();
-	int port = request.getServerPort();
-	// starts with /, ends without /
-	String contextPath = servletContext.getContextPath();
+        String scheme = request.getScheme();
+        String server = request.getServerName();
+        int port = request.getServerPort();
+        // starts with /, ends without /
+        String contextPath = servletContext.getContextPath();
 
-	return scheme + "://" + server + ":" + port + contextPath + "/" + path;
+        return scheme + "://" + server + ":" + port + contextPath + "/" + path;
     }
 
     private WorkspaceSharingService service = null;
 
     private String constructURL(String servlet) {
-	HttpServletRequest request = perThreadRequest.get();
-	ServletContext servletContext = getServletContext();
+        HttpServletRequest request = perThreadRequest.get();
+        ServletContext servletContext = getServletContext();
 
-	return constructURL(servlet, request, servletContext);
+        return constructURL(servlet, request, servletContext);
     }
 
     private WorkspaceSharingService getServiceDelegate()
-	    throws NoSuchAlgorithmException {
+            throws NoSuchAlgorithmException {
 
-	if (service == null) {
-	    service = new WorkspaceSharingServiceImplementation(PMF.get(),
-		    new WorkspaceSecurityManager(UserServiceFactory
-			    .getUserService()), UserServiceFactory
-			    .getUserService(), MailServiceFactory
-			    .getMailService(), new PasswordGenerator(
-			    SecureRandom.getInstance("SHA1PRNG")),
-		    constructURL("acceptInvitation"));
-	}
+        if (service == null) {
+            service = new WorkspaceSharingServiceImplementation(PMF.get(),
+                    new WorkspaceSecurityManager(UserServiceFactory
+                            .getUserService()),
+                    UserServiceFactory.getUserService(),
+                    MailServiceFactory.getMailService(), new PasswordGenerator(
+                            SecureRandom.getInstance("SHA1PRNG")),
+                    constructURL("acceptInvitation"));
+        }
 
-	return service;
+        return service;
     }
 
     @Override
     public void shareWorkspace(WorkspaceDTO workspaceDTO, String emailAddress)
-	    throws ServiceException {
+            throws ServiceException {
 
-	long startTime = -1;
-	if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {
-	    startTime = System.currentTimeMillis();
-	}
+        long startTime = -1;
+        if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {
+            startTime = System.currentTimeMillis();
+        }
 
-	Log.debug("WorkspaceSharingServiceServlet.shareWorkspace - "
-		+ workspaceDTO.getName() + " " + workspaceDTO.getId());
+        Log.debug("WorkspaceSharingServiceServlet.shareWorkspace - "
+                + workspaceDTO.getName() + " " + workspaceDTO.getId());
 
-	try {
-	    getServiceDelegate().shareWorkspace(workspaceDTO, emailAddress);
-	} catch (ServiceException e) {
-	    Log.error("shareWorkspace failed: "
-		    + StackTraceHelper.getStackTraceAsString(e), e);
-	    throw e;
-	} catch (Exception e) {
-	    Log.error("shareWorkspace failed: "
-		    + StackTraceHelper.getStackTraceAsString(e), e);
-	    throw new ServiceException(e);
-	} finally {
-	    if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {
-		Log.debug("shareWorkspace completed in "
-			+ (System.currentTimeMillis() - startTime) + " ms");
-	    }
-	}
+        try {
+            getServiceDelegate().shareWorkspace(workspaceDTO, emailAddress);
+        } catch (ServiceException e) {
+            Log.error(
+                    "shareWorkspace failed: "
+                            + StackTraceHelper.getStackTraceAsString(e), e);
+            throw e;
+        } catch (Exception e) {
+            Log.error(
+                    "shareWorkspace failed: "
+                            + StackTraceHelper.getStackTraceAsString(e), e);
+            throw new ServiceException(e);
+        } finally {
+            if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {
+                Log.debug("shareWorkspace completed in "
+                        + (System.currentTimeMillis() - startTime) + " ms");
+            }
+        }
     }
 }

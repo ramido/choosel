@@ -16,7 +16,6 @@
 package org.thechiselgroup.choosel.client.views;
 
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
-import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.WidgetFactory;
@@ -41,90 +40,89 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
     private Widget widget;
 
     public AbstractViewContentDisplay(PopupManagerFactory popupManagerFactory,
-	    DetailsWidgetHelper detailsWidgetHelper, ResourceSet hoverModel) {
+            DetailsWidgetHelper detailsWidgetHelper, ResourceSet hoverModel) {
 
-	assert popupManagerFactory != null;
+        assert popupManagerFactory != null;
 
-	this.popupManagerFactory = popupManagerFactory;
-	this.detailsWidgetHelper = detailsWidgetHelper;
-	this.hoverModel = hoverModel;
+        this.popupManagerFactory = popupManagerFactory;
+        this.detailsWidgetHelper = detailsWidgetHelper;
+        this.hoverModel = hoverModel;
     }
 
     @Override
     public Widget asWidget() {
-	if (widget == null) {
-	    widget = createWidget();
-	}
+        if (widget == null) {
+            widget = createWidget();
+        }
 
-	return widget;
+        return widget;
     }
 
     @Override
     public void checkResize() {
     }
 
-    protected PopupManager createPopupManager(Layer layer,
-	    ResourceSet resource) {
+    protected PopupManager createPopupManager(Layer layer, ResourceSet resource) {
 
-	return createPopupManager(resource, layer
-		.getResolver(SlotResolver.DESCRIPTION_SLOT));
+        return createPopupManager(resource,
+                layer.getResolver(SlotResolver.DESCRIPTION_SLOT));
     }
 
     protected PopupManager createPopupManager(final ResourceSet resources,
-	    final ResourceSetToValueResolver resolver) {
+            final ResourceSetToValueResolver resolver) {
 
-	WidgetFactory widgetFactory = new WidgetFactory() {
-	    @Override
-	    public Widget createWidget() {
-		return detailsWidgetHelper.createDetailsWidget(resources,
-			resolver);
-	    }
-	};
+        WidgetFactory widgetFactory = new WidgetFactory() {
+            @Override
+            public Widget createWidget() {
+                return detailsWidgetHelper.createDetailsWidget(resources,
+                        resolver);
+            }
+        };
 
-	return popupManagerFactory.createPopupManager(widgetFactory);
+        return popupManagerFactory.createPopupManager(widgetFactory);
     }
 
     protected abstract Widget createWidget();
 
     @Override
     public void dispose() {
-	callback = null;
-	detailsWidgetHelper = null;
-	hoverModel = null;
-	popupManagerFactory = null;
+        callback = null;
+        detailsWidgetHelper = null;
+        hoverModel = null;
+        popupManagerFactory = null;
 
-	if (widget instanceof Disposable) {
-	    ((Disposable) widget).dispose();
-	}
-	widget = null;
+        if (widget instanceof Disposable) {
+            ((Disposable) widget).dispose();
+        }
+        widget = null;
     }
 
     @Override
     public void endRestore() {
-	restoring = false;
+        restoring = false;
     }
 
     public ViewContentDisplayCallback getCallback() {
-	return callback;
+        return callback;
     }
 
     @Override
     public void init(ViewContentDisplayCallback callback) {
-	this.callback = callback;
+        this.callback = callback;
     }
 
     @Override
     public boolean isReady() {
-	return true;
+        return true;
     }
 
     public boolean isRestoring() {
-	return restoring;
+        return restoring;
     }
 
     @Override
     public void startRestore() {
-	restoring = true;
+        restoring = true;
     }
 
 }

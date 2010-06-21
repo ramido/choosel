@@ -15,9 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources.command;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createLabeledResources;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResource;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResources;
 
 import java.util.List;
 
@@ -28,7 +32,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.command.AddResourceSetToViewCommand;
 import org.thechiselgroup.choosel.client.util.CollectionUtils;
 import org.thechiselgroup.choosel.client.views.View;
 
@@ -43,32 +46,32 @@ public class AddResourceSetToViewCommandTest {
 
     @Test
     public void addAlreadyContainedResourcesOnUndo() {
-	ResourceSet viewResources = createResources(1);
-	when(view.getResources()).thenReturn(viewResources);
+        ResourceSet viewResources = createResources(1);
+        when(view.getResources()).thenReturn(viewResources);
 
-	setUpCommand(createLabeledResources(1, 2));
-	when(view.containsResourceSet(resources)).thenReturn(false, true, true,
-		false); // for assertions to work in command
+        setUpCommand(createLabeledResources(1, 2));
+        when(view.containsResourceSet(resources)).thenReturn(false, true, true,
+                false); // for assertions to work in command
 
-	underTest.execute();
-	underTest.undo();
+        underTest.execute();
+        underTest.undo();
 
-	ArgumentCaptor<Iterable> argument = ArgumentCaptor
-		.forClass(Iterable.class);
-	verify(view, times(1)).addResources(argument.capture());
-	List<Resource> list = CollectionUtils.toList(argument.getValue());
+        ArgumentCaptor<Iterable> argument = ArgumentCaptor
+                .forClass(Iterable.class);
+        verify(view, times(1)).addResources(argument.capture());
+        List<Resource> list = CollectionUtils.toList(argument.getValue());
 
-	assertEquals(true, list.contains(createResource(1)));
-    }
-
-    private void setUpCommand(ResourceSet resources) {
-	this.resources = resources;
-	this.underTest = new AddResourceSetToViewCommand(view, resources);
+        assertEquals(true, list.contains(createResource(1)));
     }
 
     @Before
     public void setUp() {
-	MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.initMocks(this);
+    }
+
+    private void setUpCommand(ResourceSet resources) {
+        this.resources = resources;
+        this.underTest = new AddResourceSetToViewCommand(view, resources);
     }
 
 }

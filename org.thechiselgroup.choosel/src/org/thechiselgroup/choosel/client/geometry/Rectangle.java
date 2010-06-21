@@ -27,22 +27,22 @@ import com.google.gwt.user.client.ui.Widget;
 public final class Rectangle {
 
     public static Rectangle fromWidget(Widget widget) {
-	int x = widget.getAbsoluteLeft();
-	int y = widget.getAbsoluteTop();
-	int height = widget.getOffsetHeight();
-	int width = widget.getOffsetWidth();
+        int x = widget.getAbsoluteLeft();
+        int y = widget.getAbsoluteTop();
+        int height = widget.getOffsetHeight();
+        int width = widget.getOffsetWidth();
 
-	return new Rectangle(x, y, width, height);
+        return new Rectangle(x, y, width, height);
     }
 
     // TODO move to library
     private static int[] toArray(Collection<Integer> set) {
-	int[] result = new int[set.size()];
-	int i = 0;
-	for (Integer x : set) {
-	    result[i++] = x.intValue();
-	}
-	return result;
+        int[] result = new int[set.size()];
+        int i = 0;
+        for (Integer x : set) {
+            result[i++] = x.intValue();
+        }
+        return result;
     }
 
     private final int height;
@@ -54,228 +54,228 @@ public final class Rectangle {
     private final int y;
 
     public Rectangle(int x, int y, int width, int height) {
-	assert width >= 0;
-	assert height >= 0;
+        assert width >= 0;
+        assert height >= 0;
 
-	this.x = x;
-	this.y = y;
-	this.width = width;
-	this.height = height;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
     }
 
     private List<Rectangle> calculateGrid(int[] xCoords, int[] yCoords) {
-	List<Rectangle> grid = new ArrayList<Rectangle>();
-	for (int i = 0; i < yCoords.length - 1; i++) {
-	    for (int j = 0; j < xCoords.length - 1; j++) {
-		int x = xCoords[j];
-		int y = yCoords[i];
-		int width = xCoords[j + 1] - x;
-		int height = yCoords[i + 1] - y;
+        List<Rectangle> grid = new ArrayList<Rectangle>();
+        for (int i = 0; i < yCoords.length - 1; i++) {
+            for (int j = 0; j < xCoords.length - 1; j++) {
+                int x = xCoords[j];
+                int y = yCoords[i];
+                int width = xCoords[j + 1] - x;
+                int height = yCoords[i + 1] - y;
 
-		grid.add(new Rectangle(x, y, width, height));
-	    }
-	}
-	return grid;
+                grid.add(new Rectangle(x, y, width, height));
+            }
+        }
+        return grid;
     }
 
     /**
      * calculates the set of x coordinates.
      */
     private int[] calculateXCoordinates(List<Rectangle> overlayingAreas) {
-	SortedSet<Integer> xCoordinates = new TreeSet<Integer>();
+        SortedSet<Integer> xCoordinates = new TreeSet<Integer>();
 
-	xCoordinates.add(Integer.valueOf(x));
-	xCoordinates.add(Integer.valueOf(x + width));
+        xCoordinates.add(Integer.valueOf(x));
+        xCoordinates.add(Integer.valueOf(x + width));
 
-	for (Rectangle r : overlayingAreas) {
-	    if (r.x > x && r.x < x + width) {
-		xCoordinates.add(r.x);
-	    }
+        for (Rectangle r : overlayingAreas) {
+            if (r.x > x && r.x < x + width) {
+                xCoordinates.add(r.x);
+            }
 
-	    if (r.x + r.width > x && r.x + r.width < x + width) {
-		xCoordinates.add(r.x + r.width);
-	    }
-	}
+            if (r.x + r.width > x && r.x + r.width < x + width) {
+                xCoordinates.add(r.x + r.width);
+            }
+        }
 
-	return toArray(xCoordinates);
+        return toArray(xCoordinates);
     }
 
     private int[] calculateYCoordinates(List<Rectangle> highlightedAreas) {
-	SortedSet<Integer> yCoordinates = new TreeSet<Integer>();
-	yCoordinates.add(Integer.valueOf(y));
-	yCoordinates.add(Integer.valueOf(y + height));
-	for (Rectangle r : highlightedAreas) {
-	    if (r.y > y && r.y < y + height) {
-		yCoordinates.add(r.y);
-	    }
+        SortedSet<Integer> yCoordinates = new TreeSet<Integer>();
+        yCoordinates.add(Integer.valueOf(y));
+        yCoordinates.add(Integer.valueOf(y + height));
+        for (Rectangle r : highlightedAreas) {
+            if (r.y > y && r.y < y + height) {
+                yCoordinates.add(r.y);
+            }
 
-	    if (r.y + r.height > y && r.y + r.height < y + height) {
-		yCoordinates.add(r.y + r.height);
-	    }
-	}
-	return toArray(yCoordinates);
+            if (r.y + r.height > y && r.y + r.height < y + height) {
+                yCoordinates.add(r.y + r.height);
+            }
+        }
+        return toArray(yCoordinates);
     }
 
     /**
      * Borders contain x, y as well.
      */
     public boolean contains(int x, int y) {
-	return (this.x <= x) && (x < this.x + this.width) && (this.y <= y)
-		&& (y < this.y + this.height);
+        return (this.x <= x) && (x < this.x + this.width) && (this.y <= y)
+                && (y < this.y + this.height);
     }
 
     public boolean contains(Rectangle r) {
-	assert r != null;
+        assert r != null;
 
-	if (this == r) {
-	    return true;
-	}
+        if (this == r) {
+            return true;
+        }
 
-	/*
-	 * all four corners of r have to be inside this rectangle --> this can
-	 * be checked by checking the two x and the two y numbers
-	 */
-	if (!isValidX(r.x)) {
-	    return false;
-	}
+        /*
+         * all four corners of r have to be inside this rectangle --> this can
+         * be checked by checking the two x and the two y numbers
+         */
+        if (!isValidX(r.x)) {
+            return false;
+        }
 
-	if (!isValidX(r.x + r.width)) {
-	    return false;
-	}
+        if (!isValidX(r.x + r.width)) {
+            return false;
+        }
 
-	if (!isValidY(r.y)) {
-	    return false;
-	}
+        if (!isValidY(r.y)) {
+            return false;
+        }
 
-	if (!isValidY(r.y + r.height)) {
-	    return false;
-	}
+        if (!isValidY(r.y + r.height)) {
+            return false;
+        }
 
-	return true;
+        return true;
     }
 
     @Override
     public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	Rectangle other = (Rectangle) obj;
-	if (height != other.height)
-	    return false;
-	if (width != other.width)
-	    return false;
-	if (x != other.x)
-	    return false;
-	if (y != other.y)
-	    return false;
-	return true;
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Rectangle other = (Rectangle) obj;
+        if (height != other.height)
+            return false;
+        if (width != other.width)
+            return false;
+        if (x != other.x)
+            return false;
+        if (y != other.y)
+            return false;
+        return true;
     }
 
     public int getHeight() {
-	return height;
+        return height;
     }
 
     public int getWidth() {
-	return width;
+        return width;
     }
 
     public int getX() {
-	return x;
+        return x;
     }
 
     public int getY() {
-	return y;
+        return y;
     }
 
     @Override
     public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + height;
-	result = prime * result + width;
-	result = prime * result + x;
-	result = prime * result + y;
-	return result;
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + height;
+        result = prime * result + width;
+        result = prime * result + x;
+        result = prime * result + y;
+        return result;
     }
 
     public Rectangle intersection(Rectangle r) {
-	assert intersects(r);
+        assert intersects(r);
 
-	int x1 = Math.max(this.x, r.x);
-	int y1 = Math.max(this.y, r.y);
+        int x1 = Math.max(this.x, r.x);
+        int y1 = Math.max(this.y, r.y);
 
-	int x2 = Math.min(this.x + this.width, r.x + r.width);
-	int y2 = Math.min(this.y + this.height, r.y + r.height);
+        int x2 = Math.min(this.x + this.width, r.x + r.width);
+        int y2 = Math.min(this.y + this.height, r.y + r.height);
 
-	int width = x2 - x1;
-	int height = y2 - y1;
+        int width = x2 - x1;
+        int height = y2 - y1;
 
-	return new Rectangle(x1, y1, width, height);
+        return new Rectangle(x1, y1, width, height);
     }
 
     public boolean intersects(Rectangle r) {
-	assert r != null;
+        assert r != null;
 
-	if (this == r) {
-	    return true;
-	}
-	return ((x + width >= r.x) && (y + height >= r.y)
-		&& (r.x + r.width >= x) && (r.y + r.height >= y));
+        if (this == r) {
+            return true;
+        }
+        return ((x + width >= r.x) && (y + height >= r.y)
+                && (r.x + r.width >= x) && (r.y + r.height >= y));
     }
 
     private boolean isValidX(final int x) {
-	return (x >= this.x) && (x <= this.x + this.width);
+        return (x >= this.x) && (x <= this.x + this.width);
     }
 
     private boolean isValidY(final int y) {
-	return (y >= this.y) && (y <= this.y + this.height);
+        return (y >= this.y) && (y <= this.y + this.height);
     }
 
     /**
      * Returns a new Rectangle based on this one with new x, y.
      */
     public Rectangle move(int x, int y) {
-	return new Rectangle(x, y, this.width, this.height);
+        return new Rectangle(x, y, this.width, this.height);
     }
 
     private void removeHiddenAreas(List<Rectangle> overlayingRectangles,
-	    List<Rectangle> grid) {
+            List<Rectangle> grid) {
 
-	gridLoop: for (Iterator<Rectangle> it = grid.iterator(); it.hasNext();) {
-	    Rectangle r = it.next();
-	    for (Rectangle highlighted : overlayingRectangles) {
-		if (highlighted.contains(r)) {
-		    it.remove();
-		    continue gridLoop;
-		}
-	    }
+        gridLoop: for (Iterator<Rectangle> it = grid.iterator(); it.hasNext();) {
+            Rectangle r = it.next();
+            for (Rectangle highlighted : overlayingRectangles) {
+                if (highlighted.contains(r)) {
+                    it.remove();
+                    continue gridLoop;
+                }
+            }
 
-	}
+        }
     }
 
     public List<Rectangle> removeRectangles(List<Rectangle> rectangles) {
-	int[] xCoords = calculateXCoordinates(rectangles);
-	int[] yCoords = calculateYCoordinates(rectangles);
+        int[] xCoords = calculateXCoordinates(rectangles);
+        int[] yCoords = calculateYCoordinates(rectangles);
 
-	List<Rectangle> grid = calculateGrid(xCoords, yCoords);
+        List<Rectangle> grid = calculateGrid(xCoords, yCoords);
 
-	removeHiddenAreas(rectangles, grid);
+        removeHiddenAreas(rectangles, grid);
 
-	return grid;
+        return grid;
     }
 
     /**
      * Returns a new Rectangle based on this one with new width, height.
      */
     public Rectangle resize(int width, int height) {
-	return new Rectangle(this.x, this.y, width, height);
+        return new Rectangle(this.x, this.y, width, height);
     }
 
     @Override
     public String toString() {
-	return "(" + x + "," + y + "," + width + "," + height + ")";
+        return "(" + x + "," + y + "," + width + "," + height + ")";
     }
 }

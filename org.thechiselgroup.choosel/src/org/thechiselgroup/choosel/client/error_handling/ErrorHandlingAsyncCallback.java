@@ -22,18 +22,18 @@ public class ErrorHandlingAsyncCallback<T> implements AsyncCallback<T> {
     private ErrorHandler errorHandler;
 
     public ErrorHandlingAsyncCallback(ErrorHandler errorHandler) {
-	assert errorHandler != null;
-	this.errorHandler = errorHandler;
+        assert errorHandler != null;
+        this.errorHandler = errorHandler;
     }
 
     @Override
     public void onFailure(Throwable caught) {
-	errorHandler.handleError(caught);
+        errorHandler.handleError(caught);
     }
 
     @Override
     public void onSuccess(T result) {
-	// hook method
+        // hook method
     }
 
 }

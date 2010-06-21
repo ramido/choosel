@@ -22,6 +22,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 // TODO remove TimeLineItem dependency --> use payload object instead
 public class TimeLineEvent extends JavaScriptObject {
 
+    // @formatter:off        
     public static native TimeLineEvent create(String date, String text,
 	    String icon, TimeLineItem timeLineItem) /*-{
         var parseDateTimeFunction = 
@@ -48,6 +49,10 @@ public class TimeLineEvent extends JavaScriptObject {
 
         return evt;
     }-*/;
+    // @formatter:on
+
+    protected TimeLineEvent() {
+    }
 
     public final native String getID() /*-{
         return this.getID();
@@ -60,8 +65,5 @@ public class TimeLineEvent extends JavaScriptObject {
     public final native void setIcon(String url) /*-{
         this._icon = url;
     }-*/;
-
-    protected TimeLineEvent() {
-    }
 
 }

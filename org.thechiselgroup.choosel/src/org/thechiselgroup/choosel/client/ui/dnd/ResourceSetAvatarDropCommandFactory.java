@@ -20,8 +20,8 @@ import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 
 public interface ResourceSetAvatarDropCommandFactory {
 
-    public UndoableCommand createCommand(ResourceSetAvatar dragAvatar);
-
     public boolean canDrop(ResourceSetAvatar dragAvatar);
+
+    public UndoableCommand createCommand(ResourceSetAvatar dragAvatar);
 
 }

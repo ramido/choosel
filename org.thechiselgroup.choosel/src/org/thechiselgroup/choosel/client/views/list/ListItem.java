@@ -30,29 +30,29 @@ public class ListItem extends ResourceItem {
 
     public class ListItemLabel extends ResourceSetAvatar {
 
-	public ListItemLabel(String text,
-		ResourceSetAvatarDragController dragController,
-		ResourceSet resources) {
+        public ListItemLabel(String text,
+                ResourceSetAvatarDragController dragController,
+                ResourceSet resources) {
 
-	    super(text, "avatar-resourceSet", resources,
-		    ResourceSetAvatarType.SET);
+            super(text, "avatar-resourceSet", resources,
+                    ResourceSetAvatarType.SET);
 
-	    removeStyleName(CSS_CLASS);
-	    setEnabled(true);
-	    dragController.setDraggable(this, true);
-	}
+            removeStyleName(CSS_CLASS);
+            setEnabled(true);
+            dragController.setDraggable(this, true);
+        }
 
-	@Override
-	public void setEnabled(boolean dragEnabled) {
-	    super.setEnabled(dragEnabled);
+        public ListItem getListItem() {
+            return ListItem.this;
+        }
 
-	    removeStyleName(CSS_AVATAR_DISABLED);
-	    removeStyleName("avatar-resourceSet");
-	}
+        @Override
+        public void setEnabled(boolean dragEnabled) {
+            super.setEnabled(dragEnabled);
 
-	public ListItem getListItem() {
-	    return ListItem.this;
-	}
+            removeStyleName(CSS_AVATAR_DISABLED);
+            removeStyleName("avatar-resourceSet");
+        }
 
     }
 
@@ -71,62 +71,63 @@ public class ListItem extends ResourceItem {
     private ResourceSetAvatarDragController dragController;
 
     public ListItem(ResourceSet resources, ResourceSet hoverModel,
-	    PopupManager popupManager, ListViewContentDisplay.Display display,
-	    Layer layerModel, ResourceSetAvatarDragController dragController) {
+            PopupManager popupManager, ListViewContentDisplay.Display display,
+            Layer layerModel, ResourceSetAvatarDragController dragController) {
 
-	super(resources, hoverModel, popupManager, layerModel);
+        super(resources, hoverModel, popupManager, layerModel);
 
-	this.display = display;
-	this.dragController = dragController;
+        this.display = display;
+        this.dragController = dragController;
     }
 
     public ListItemLabel getLabel() {
-	return label;
+        return label;
+    }
+
+    public void init() {
+        String description = (String) getResourceValue(SlotResolver.DESCRIPTION_SLOT);
+
+        this.label = new ListItemLabel(description, dragController,
+                getResourceSet());
+        this.label.addStyleName(CSS_LIST);
+
+        DefaultPopupManager.linkManagerToSource(popupManager, getLabel());
     }
 
     @Override
     protected void setStatusStyling(Status status) {
-	switch (status) {
-	case HIGHLIGHTED_SELECTED: {
-	    display.removeStyleName(this, CSS_GRAYED_OUT);
-	    display.addStyleName(this, CSS_SELECTED);
-	    display.addStyleName(this, CSS_HIGHLIGHTED);
-	}
-	    break;
-	case HIGHLIGHTED: {
-	    display.removeStyleName(this, CSS_SELECTED);
-	    display.removeStyleName(this, CSS_GRAYED_OUT);
-	    display.addStyleName(this, CSS_HIGHLIGHTED);
-	}
-	    break;
-	case DEFAULT: {
-	    display.removeStyleName(this, CSS_SELECTED);
-	    display.removeStyleName(this, CSS_GRAYED_OUT);
-	    display.removeStyleName(this, CSS_HIGHLIGHTED);
-	}
-	    break;
-	case GRAYED_OUT: {
-	    display.removeStyleName(this, CSS_SELECTED);
-	    display.removeStyleName(this, CSS_HIGHLIGHTED);
-	    display.addStyleName(this, CSS_GRAYED_OUT);
-	}
-	    break;
-	case SELECTED: {
-	    display.removeStyleName(this, CSS_GRAYED_OUT);
-	    display.removeStyleName(this, CSS_HIGHLIGHTED);
-	    display.addStyleName(this, CSS_SELECTED);
-	}
-	    break;
-	}
-    }
-
-    public void init() {
-	String description = (String) getResourceValue(SlotResolver.DESCRIPTION_SLOT);
-
-	this.label = new ListItemLabel(description, dragController, getResourceSet());
-	this.label.addStyleName(CSS_LIST);
-
-	DefaultPopupManager.linkManagerToSource(popupManager, getLabel());
+        switch (status) {
+        case HIGHLIGHTED_SELECTED: {
+            display.removeStyleName(this, CSS_GRAYED_OUT);
+            display.addStyleName(this, CSS_SELECTED);
+            display.addStyleName(this, CSS_HIGHLIGHTED);
+        }
+            break;
+        case HIGHLIGHTED: {
+            display.removeStyleName(this, CSS_SELECTED);
+            display.removeStyleName(this, CSS_GRAYED_OUT);
+            display.addStyleName(this, CSS_HIGHLIGHTED);
+        }
+            break;
+        case DEFAULT: {
+            display.removeStyleName(this, CSS_SELECTED);
+            display.removeStyleName(this, CSS_GRAYED_OUT);
+            display.removeStyleName(this, CSS_HIGHLIGHTED);
+        }
+            break;
+        case GRAYED_OUT: {
+            display.removeStyleName(this, CSS_SELECTED);
+            display.removeStyleName(this, CSS_HIGHLIGHTED);
+            display.addStyleName(this, CSS_GRAYED_OUT);
+        }
+            break;
+        case SELECTED: {
+            display.removeStyleName(this, CSS_GRAYED_OUT);
+            display.removeStyleName(this, CSS_HIGHLIGHTED);
+            display.addStyleName(this, CSS_SELECTED);
+        }
+            break;
+        }
     }
 
 }

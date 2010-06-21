@@ -21,8 +21,8 @@ import org.thechiselgroup.choosel.client.geometry.Point;
 import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
 
 import com.google.gwt.event.shared.EventHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 public interface GraphDisplay extends WidgetAdaptable {
 
@@ -52,12 +52,15 @@ public interface GraphDisplay extends WidgetAdaptable {
     void addArc(Arc arc);
 
     <T extends EventHandler> HandlerRegistration addEventHandler(Type<T> type,
-	    T handler);
+            T handler);
 
     HandlerRegistration addGraphWidgetReadyHandler(
-	    GraphWidgetReadyHandler handler);
+            GraphWidgetReadyHandler handler);
 
     void addNode(Node node);
+
+    void addNodeMenuItemHandler(String menuLabel,
+            NodeMenuItemClickedHandler handler, String nodeClass);
 
     void animateMoveTo(Node node, Point targetLocation);
 
@@ -84,8 +87,5 @@ public interface GraphDisplay extends WidgetAdaptable {
     void setLocation(Node node, Point location);
 
     void setNodeStyle(Node node, String styleProperty, String styleValue);
-
-    void addNodeMenuItemHandler(String menuLabel,
-	    NodeMenuItemClickedHandler handler, String nodeClass);
 
 }

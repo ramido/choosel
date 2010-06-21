@@ -30,41 +30,41 @@ public abstract class IconResourceItem extends ResourceItem {
     private String selectedIconURL;
 
     public IconResourceItem(ResourceSet resources, ResourceSet hoverModel,
-	    PopupManager popupManager, Layer layerModel) {
+            PopupManager popupManager, Layer layerModel) {
 
-	super(resources, hoverModel, popupManager, layerModel);
-	initIconURLs();
+        super(resources, hoverModel, popupManager, layerModel);
+        initIconURLs();
     }
 
-    private void initIconURLs() {
-	// TODO move colors to color provider
-	// TODO use CSS, add border
-	defaultIconURL = getIconURL((String) getResourceValue(SlotResolver.COLOR_SLOT));
-	highlightIconURL = getIconURL("#FDF49A");
-	grayedOutIconURL = getIconURL("#dddddd");
-	selectedIconURL = getIconURL("#E7B076");
+    protected String getDefaultIconURL() {
+        return defaultIconURL;
+    }
+
+    protected String getGrayedOutIconURL() {
+        return grayedOutIconURL;
+    }
+
+    protected String getHighlightIconURL() {
+        return highlightIconURL;
     }
 
     // TODO enable usage of border color (use different icons)
     private String getIconURL(String color) {
-	String label = (String) getResourceValue(SlotResolver.LABEL_SLOT);
-	return IconURLFactory.getFlatIconURL(label, color);
-    }
-
-    protected String getDefaultIconURL() {
-	return defaultIconURL;
-    }
-
-    protected String getGrayedOutIconURL() {
-	return grayedOutIconURL;
-    }
-
-    protected String getHighlightIconURL() {
-	return highlightIconURL;
+        String label = (String) getResourceValue(SlotResolver.LABEL_SLOT);
+        return IconURLFactory.getFlatIconURL(label, color);
     }
 
     protected String getSelectedIconURL() {
-	return selectedIconURL;
+        return selectedIconURL;
+    }
+
+    private void initIconURLs() {
+        // TODO move colors to color provider
+        // TODO use CSS, add border
+        defaultIconURL = getIconURL((String) getResourceValue(SlotResolver.COLOR_SLOT));
+        highlightIconURL = getIconURL("#FDF49A");
+        grayedOutIconURL = getIconURL("#dddddd");
+        selectedIconURL = getIconURL("#E7B076");
     }
 
 }

@@ -23,8 +23,8 @@ import org.thechiselgroup.choosel.client.util.Disposable;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 public class UpdateResourceSetAvatarWhenLabelChangesManager implements
-	LabelChangedEventHandler,
-	ResourceSetAvatarResourcesChangedEventHandler, Disposable {
+        LabelChangedEventHandler,
+        ResourceSetAvatarResourcesChangedEventHandler, Disposable {
 
     private final ResourceSetAvatar avatar;
 
@@ -33,53 +33,53 @@ public class UpdateResourceSetAvatarWhenLabelChangesManager implements
     private HandlerRegistration avatarChangeHandlerRegistration;
 
     public UpdateResourceSetAvatarWhenLabelChangesManager(
-	    ResourceSetAvatar avatar) {
-	assert avatar != null;
-	this.avatar = avatar;
+            ResourceSetAvatar avatar) {
+        assert avatar != null;
+        this.avatar = avatar;
     }
 
     private void deregisterLabelChangedHandler() {
-	labelChangedHandlerRegistration.removeHandler();
-	labelChangedHandlerRegistration = null;
+        labelChangedHandlerRegistration.removeHandler();
+        labelChangedHandlerRegistration = null;
     }
 
     @Override
     public void dispose() {
-	deregisterLabelChangedHandler();
-	avatarChangeHandlerRegistration.removeHandler();
-	avatarChangeHandlerRegistration = null;
+        deregisterLabelChangedHandler();
+        avatarChangeHandlerRegistration.removeHandler();
+        avatarChangeHandlerRegistration = null;
     }
 
     private ResourceSet getResources() {
-	return avatar.getResourceSet();
+        return avatar.getResourceSet();
     }
 
     public void init() {
-	avatarChangeHandlerRegistration = avatar
-		.addResourceChangedHandler(this);
-	registerResourceSetHandlers(getResources());
-	avatar.addDisposable(this);
-	updateAvatarState(getResources().getLabel());
+        avatarChangeHandlerRegistration = avatar
+                .addResourceChangedHandler(this);
+        registerResourceSetHandlers(getResources());
+        avatar.addDisposable(this);
+        updateAvatarState(getResources().getLabel());
     }
 
     @Override
     public void onLabelChanged(LabelChangedEvent event) {
-	updateAvatarState(event.getNewLabel());
+        updateAvatarState(event.getNewLabel());
     }
 
     @Override
     public void onResourcesChanged(ResourceSetAvatarResourcesChangedEvent event) {
-	deregisterLabelChangedHandler();
-	registerResourceSetHandlers(event.getNewResources());
-	updateAvatarState(event.getNewResources().getLabel());
+        deregisterLabelChangedHandler();
+        registerResourceSetHandlers(event.getNewResources());
+        updateAvatarState(event.getNewResources().getLabel());
     }
 
     private void registerResourceSetHandlers(ResourceSet resourceSet) {
-	labelChangedHandlerRegistration = resourceSet
-		.addLabelChangedEventHandler(this);
+        labelChangedHandlerRegistration = resourceSet
+                .addLabelChangedEventHandler(this);
     }
 
     private void updateAvatarState(String label) {
-	avatar.setText(label);
+        avatar.setText(label);
     }
 }

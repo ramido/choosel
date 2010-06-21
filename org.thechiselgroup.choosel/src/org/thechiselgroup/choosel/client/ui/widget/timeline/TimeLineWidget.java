@@ -28,74 +28,74 @@ public class TimeLineWidget extends Widget {
     private TimeLineEventSource eventSource;
 
     private DateTimeFormat inputFormat = DateTimeFormat
-	    .getFormat("MMM d yyyy HH:mm:ss z");
+            .getFormat("MMM d yyyy HH:mm:ss z");
 
     // TODO http://code.google.com/p/google-web-toolkit/issues/detail?id=3415
     // wait for fix to switch to "EEE, dd MMM yyyy HH:mm:ss z"
     private DateTimeFormat outputFormat = DateTimeFormat
-	    .getFormat("dd MMM yyyy HH:mm:ss z");
+            .getFormat("dd MMM yyyy HH:mm:ss z");
 
     public TimeLineWidget() {
-	setElement(DOM.createDiv());
+        setElement(DOM.createDiv());
+    }
+
+    public void addEvent(TimeLineEvent event) {
+        eventSource.addEvent(event);
+        timeLine.paint();
+    }
+
+    public Date getCenterVisibleDate() {
+        // TODO
+        // http://code.google.com/p/google-web-toolkit/issues/detail?id=3415
+        // wait for fix to switch to "EEE, dd MMM yyyy HH:mm:ss z"
+        return outputFormat.parse(timeLine.getCenterVisibleDateAsGMTString()
+                .substring(5));
+    }
+
+    public TimeLine getTimeLine() {
+        return timeLine;
+    }
+
+    public final int getZoomIndex(int bandNumber) {
+        return timeLine.getZoomIndex(bandNumber);
     }
 
     public void layout() {
-	if (timeLine != null) {
-	    timeLine.layout();
-	}
+        if (timeLine != null) {
+            timeLine.layout();
+        }
     }
 
     @Override
     protected void onAttach() {
-	super.onAttach();
+        super.onAttach();
 
-	if (timeLine == null) {
-	    eventSource = TimeLineEventSource.create();
+        if (timeLine == null) {
+            eventSource = TimeLineEventSource.create();
 
-	    timeLine = TimeLine.create(getElement(), eventSource, inputFormat
-		    .format(new Date()));
+            timeLine = TimeLine.create(getElement(), eventSource,
+                    inputFormat.format(new Date()));
 
-	    timeLine.disableBubbles();
-	    timeLine.registerPaintListener();
-	}
-    }
-
-    public TimeLine getTimeLine() {
-	return timeLine;
-    }
-
-    public final int getZoomIndex(int bandNumber) {
-	return timeLine.getZoomIndex(bandNumber);
-    }
-
-    public final void setZoomIndex(int bandNumber, int zoomIndex) {
-	timeLine.setZoomIndex(bandNumber, zoomIndex);
-    }
-
-    public void setCenterVisibleDate(Date date) {
-	assert date != null;
-	// TODO use output format once
-	// http://code.google.com/p/google-web-toolkit/issues/detail?id=3415
-	// is fixed.
-	timeLine.setCenterVisibleDate(DateTimeFormat.getFormat(
-		"EEE, dd MMM yyyy HH:mm:ss z").format(date));
-    }
-
-    public Date getCenterVisibleDate() {
-	// TODO
-	// http://code.google.com/p/google-web-toolkit/issues/detail?id=3415
-	// wait for fix to switch to "EEE, dd MMM yyyy HH:mm:ss z"
-	return outputFormat.parse(timeLine.getCenterVisibleDateAsGMTString()
-		.substring(5));
-    }
-
-    public void addEvent(TimeLineEvent event) {
-	eventSource.addEvent(event);
-	timeLine.paint();
+            timeLine.disableBubbles();
+            timeLine.registerPaintListener();
+        }
     }
 
     public void removeEvent(TimeLineEvent event) {
-	eventSource.removeEvent(event);
-	timeLine.paint();
+        eventSource.removeEvent(event);
+        timeLine.paint();
+    }
+
+    public void setCenterVisibleDate(Date date) {
+        assert date != null;
+        // TODO use output format once
+        // http://code.google.com/p/google-web-toolkit/issues/detail?id=3415
+        // is fixed.
+        timeLine.setCenterVisibleDate(DateTimeFormat.getFormat(
+                "EEE, dd MMM yyyy HH:mm:ss z").format(date));
+    }
+
+    public final void setZoomIndex(int bandNumber, int zoomIndex) {
+        timeLine.setZoomIndex(bandNumber, zoomIndex);
     }
 }

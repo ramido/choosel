@@ -21,7 +21,7 @@ public class DefaultPopupManagerFactory implements PopupManagerFactory {
 
     @Override
     public PopupManager createPopupManager(WidgetFactory widgetFactory) {
-	return new DefaultPopupManager(widgetFactory);
+        return new DefaultPopupManager(widgetFactory);
     }
 
 }

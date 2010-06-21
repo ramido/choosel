@@ -23,23 +23,23 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 public class ResourceSetDropTargetManager extends
-	AbstractResourceSetAvatarDropTargetManager {
+        AbstractResourceSetAvatarDropTargetManager {
 
     @Inject
     public ResourceSetDropTargetManager(CommandManager commandManager,
-	    ResourceSetAvatarDragController dragController,
-	    ViewAccessor viewAccessor) {
+            ResourceSetAvatarDragController dragController,
+            ViewAccessor viewAccessor) {
 
-	super(commandManager, dragController, viewAccessor);
+        super(commandManager, dragController, viewAccessor);
     }
 
     @Override
     protected ResourceSetAvatarDropCommandFactory createCommandFactory(
-	    Widget dropTarget, ViewAccessor viewAccessor) {
+            Widget dropTarget, ViewAccessor viewAccessor) {
 
-	assert dropTarget instanceof ResourceSetAvatar;
+        assert dropTarget instanceof ResourceSetAvatar;
 
-	return new ResourceSetPresenterDropCommandFactory(
-		(ResourceSetAvatar) dropTarget, viewAccessor);
+        return new ResourceSetPresenterDropCommandFactory(
+                (ResourceSetAvatar) dropTarget, viewAccessor);
     }
 }

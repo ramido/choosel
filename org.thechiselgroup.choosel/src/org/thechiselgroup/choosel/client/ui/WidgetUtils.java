@@ -20,14 +20,14 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class WidgetUtils {
 
-    public static void setPosition(Widget widget, int x, int y) {
-	DOM.setStyleAttribute(widget.getElement(), CSS.LEFT, x + CSS.PX);
-	DOM.setStyleAttribute(widget.getElement(), CSS.TOP, y + CSS.PX);
+    public static void setMaxWidth(Widget widget, int maxWidth) {
+        DOM.setStyleAttribute(widget.getElement(), CSS.MAX_WIDTH, maxWidth
+                + CSS.PX);
     }
 
-    public static void setMaxWidth(Widget widget, int maxWidth) {
-	DOM.setStyleAttribute(widget.getElement(), CSS.MAX_WIDTH, maxWidth
-		+ CSS.PX);
+    public static void setPosition(Widget widget, int x, int y) {
+        DOM.setStyleAttribute(widget.getElement(), CSS.LEFT, x + CSS.PX);
+        DOM.setStyleAttribute(widget.getElement(), CSS.TOP, y + CSS.PX);
     }
 
 }

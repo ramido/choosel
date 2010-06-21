@@ -19,16 +19,16 @@ import com.google.gwt.user.client.ui.Widget;
 
 public interface Dialog {
 
-    Widget getContent();
+    void cancel();
 
-    String getTitle();
+    Widget getContent();
 
     String getOkayButtonLabel();
 
-    void cancel();
-
-    void okay();
+    String getTitle();
 
     void init(DialogCallback callback);
+
+    void okay();
 
 }

@@ -24,7 +24,7 @@ import org.xml.sax.SAXException;
 
 public interface DocumentFetchService {
 
-    Document fetchXML(String urlAsString) throws IOException,
-	    SAXException, ParserConfigurationException;
+    Document fetchXML(String urlAsString) throws IOException, SAXException,
+            ParserConfigurationException;
 
 }

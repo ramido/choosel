@@ -19,12 +19,12 @@ import com.google.gwt.event.shared.HandlerRegistration;
 
 public interface AuthenticationManager {
 
+    HandlerRegistration addAuthenticationStateChangedEventHandler(
+            AuthenticationStateChangedEventHandler handler);
+
     Authentication getAuthentication();
 
     AuthenticationState getAuthenticationState();
-
-    HandlerRegistration addAuthenticationStateChangedEventHandler(
-	    AuthenticationStateChangedEventHandler handler);
 
     Throwable getFailure();
 

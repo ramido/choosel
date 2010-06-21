@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources.ui.configuration;
 
-import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.*;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.HOVER_MODEL;
 
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetContainer;
@@ -33,23 +33,23 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 public class DefaultResourceSetAvatarFactoryProvider extends
-	AbstractResourceSetAvatarFactoryProvider {
+        AbstractResourceSetAvatarFactoryProvider {
 
     @Inject
     public DefaultResourceSetAvatarFactoryProvider(
-	    ResourceSetAvatarDragController dragController,
-	    @Named(HOVER_MODEL) ResourceSet hoverModel,
-	    @Named(HOVER_MODEL) ResourceSetContainer setHoverModel,
-	    ResourceSetAvatarDropTargetManager dropTargetManager) {
+            ResourceSetAvatarDragController dragController,
+            @Named(HOVER_MODEL) ResourceSet hoverModel,
+            @Named(HOVER_MODEL) ResourceSetContainer setHoverModel,
+            ResourceSetAvatarDropTargetManager dropTargetManager) {
 
-	super(new HighlightingResourceSetAvatarFactory(
-		new DropTargetResourceSetAvatarFactory(
-			new DragEnableResourceSetAvatarFactory(
-				new UpdateResourceSetAvatarLabelFactory(
-					new DefaultResourceSetAvatarFactory(
-						"avatar-resourceSet",
-						ResourceSetAvatarType.SET)),
-				dragController), dropTargetManager),
-		hoverModel, setHoverModel, dragController));
+        super(new HighlightingResourceSetAvatarFactory(
+                new DropTargetResourceSetAvatarFactory(
+                        new DragEnableResourceSetAvatarFactory(
+                                new UpdateResourceSetAvatarLabelFactory(
+                                        new DefaultResourceSetAvatarFactory(
+                                                "avatar-resourceSet",
+                                                ResourceSetAvatarType.SET)),
+                                dragController), dropTargetManager),
+                hoverModel, setHoverModel, dragController));
     }
 }

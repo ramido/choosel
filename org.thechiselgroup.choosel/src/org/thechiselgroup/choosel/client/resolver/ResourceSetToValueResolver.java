@@ -17,7 +17,6 @@ package org.thechiselgroup.choosel.client.resolver;
 
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
-
 public interface ResourceSetToValueResolver {
 
     Object getValue(ResourceSet resources);

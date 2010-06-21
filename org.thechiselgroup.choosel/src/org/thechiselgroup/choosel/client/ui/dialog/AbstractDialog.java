@@ -21,18 +21,18 @@ public abstract class AbstractDialog implements Dialog {
 
     @Override
     public void init(DialogCallback callback) {
-	assert callback != null;
-	this.callback = callback;
+        assert callback != null;
+        this.callback = callback;
 
     }
 
     protected void setOkayButtonEnabled(boolean enabled) {
-	// TODO find better initialization order
-	if (callback == null) {
-	    return;
-	}
+        // TODO find better initialization order
+        if (callback == null) {
+            return;
+        }
 
-	callback.setOkayButtonEnabled(enabled);
+        callback.setOkayButtonEnabled(enabled);
     }
 
 }

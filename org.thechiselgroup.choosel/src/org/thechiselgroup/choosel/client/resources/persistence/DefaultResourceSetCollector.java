@@ -25,19 +25,19 @@ public class DefaultResourceSetCollector implements ResourceSetCollector {
     private List<ResourceSet> resourceSets = new ArrayList<ResourceSet>();
 
     public List<ResourceSet> getResourceSets() {
-	return resourceSets;
+        return resourceSets;
     }
 
     @Override
     public int storeResourceSet(ResourceSet resourceSet) {
-	assert resourceSet != null;
+        assert resourceSet != null;
 
-	if (!resourceSets.contains(resourceSet)) {
-	    resourceSets.add(resourceSet);
-	}
+        if (!resourceSets.contains(resourceSet)) {
+            resourceSets.add(resourceSet);
+        }
 
-	assert resourceSets.contains(resourceSet);
-	return resourceSets.indexOf(resourceSet);
+        assert resourceSets.contains(resourceSet);
+        return resourceSets.indexOf(resourceSet);
     }
 
 }

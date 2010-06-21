@@ -28,35 +28,35 @@ public class UriList implements Serializable, Iterable<String> {
     private boolean isLoaded;
 
     public void add(String uri) {
-	assert uri != null;
+        assert uri != null;
 
-	if (delegate.contains(uri)) {
-	    return;
-	}
+        if (delegate.contains(uri)) {
+            return;
+        }
 
-	delegate.add(uri);
+        delegate.add(uri);
     }
 
     public boolean contains(String uri) {
-	assert uri != null;
-	return delegate.contains(uri);
+        assert uri != null;
+        return delegate.contains(uri);
     }
 
     public boolean isLoaded() {
-	return isLoaded;
+        return isLoaded;
     }
 
     @Override
     public Iterator<String> iterator() {
-	return delegate.iterator();
+        return delegate.iterator();
     }
 
     public void setLoaded(boolean isLoaded) {
-	this.isLoaded = isLoaded;
+        this.isLoaded = isLoaded;
     }
 
     public int size() {
-	return delegate.size();
+        return delegate.size();
     }
 
 }

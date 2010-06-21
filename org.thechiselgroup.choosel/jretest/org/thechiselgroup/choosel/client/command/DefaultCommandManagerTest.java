@@ -15,24 +15,16 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.command;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.client.command.CommandAddedEvent;
-import org.thechiselgroup.choosel.client.command.CommandAddedEventHandler;
-import org.thechiselgroup.choosel.client.command.CommandManagerClearedEvent;
-import org.thechiselgroup.choosel.client.command.CommandManagerClearedEventHandler;
-import org.thechiselgroup.choosel.client.command.CommandRedoneEvent;
-import org.thechiselgroup.choosel.client.command.CommandRedoneEventHandler;
-import org.thechiselgroup.choosel.client.command.CommandUndoneEvent;
-import org.thechiselgroup.choosel.client.command.CommandUndoneEventHandler;
-import org.thechiselgroup.choosel.client.command.DefaultCommandManager;
-import org.thechiselgroup.choosel.client.command.UndoableCommand;
 
 public class DefaultCommandManagerTest {
 
@@ -46,220 +38,220 @@ public class DefaultCommandManagerTest {
 
     @Test
     public void addedCommandIsUndoCommand() {
-	underTest.addExecutedCommand(command1);
-	assertEquals(command1, underTest.getUndoCommand());
+        underTest.addExecutedCommand(command1);
+        assertEquals(command1, underTest.getUndoCommand());
     }
 
     @Test
     public void cannotRedoAfterClear() {
-	underTest.execute(command1);
-	underTest.undo();
-	underTest.clear();
-	assertEquals(false, underTest.canRedo());
+        underTest.execute(command1);
+        underTest.undo();
+        underTest.clear();
+        assertEquals(false, underTest.canRedo());
     }
 
     @Test
     public void cannotRedoByDefault() {
-	assertEquals(false, underTest.canRedo());
+        assertEquals(false, underTest.canRedo());
     }
 
     @Test
     public void cannotUndoAfterClear() {
-	underTest.execute(command1);
-	underTest.clear();
-	assertEquals(false, underTest.canUndo());
+        underTest.execute(command1);
+        underTest.clear();
+        assertEquals(false, underTest.canUndo());
     }
 
     @Test
     public void cannotUndoAfterUndoneExecutedCommand() {
-	underTest.execute(command1);
-	underTest.undo();
-	assertEquals(false, underTest.canUndo());
+        underTest.execute(command1);
+        underTest.undo();
+        assertEquals(false, underTest.canUndo());
     }
 
     @Test
     public void cannotUndoByDefault() {
-	assertEquals(false, underTest.canUndo());
+        assertEquals(false, underTest.canUndo());
     }
 
     @Test
     public void canRedo2ndCommandAfterCommandUndone() {
-	underTest.execute(command1);
-	underTest.execute(command2);
-	underTest.undo();
-	underTest.undo();
-	underTest.redo();
-	assertEquals(true, underTest.canRedo());
-	assertEquals(command2, underTest.getRedoCommand());
+        underTest.execute(command1);
+        underTest.execute(command2);
+        underTest.undo();
+        underTest.undo();
+        underTest.redo();
+        assertEquals(true, underTest.canRedo());
+        assertEquals(command2, underTest.getRedoCommand());
     }
 
     @Test
     public void canRedoAfterCommandUndone() {
-	underTest.execute(command1);
-	assertEquals(false, underTest.canRedo());
+        underTest.execute(command1);
+        assertEquals(false, underTest.canRedo());
 
-	underTest.undo();
-	assertEquals(true, underTest.canRedo());
+        underTest.undo();
+        assertEquals(true, underTest.canRedo());
     }
 
     @Test
     public void canUndoAfterAddedCommand() {
-	underTest.addExecutedCommand(command1);
-	assertEquals(true, underTest.canUndo());
+        underTest.addExecutedCommand(command1);
+        assertEquals(true, underTest.canUndo());
     }
 
     @Test
     public void canUndoAfterExecutedCommand() {
-	underTest.execute(command1);
-	assertEquals(true, underTest.canUndo());
+        underTest.execute(command1);
+        assertEquals(true, underTest.canUndo());
     }
 
     @Test
     public void canUndoRedoneCommand() {
-	underTest.execute(command1);
-	underTest.undo();
-	underTest.redo();
-	assertEquals(true, underTest.canUndo());
+        underTest.execute(command1);
+        underTest.undo();
+        underTest.redo();
+        assertEquals(true, underTest.canUndo());
     }
 
     @Test
     public void clearRedoStackOnAddExecutedCommand() {
-	underTest.execute(command1);
-	underTest.undo();
-	underTest.addExecutedCommand(command2);
-	assertEquals(false, underTest.canRedo());
+        underTest.execute(command1);
+        underTest.undo();
+        underTest.addExecutedCommand(command2);
+        assertEquals(false, underTest.canRedo());
     }
 
     @Test
     public void clearRedoStackOnExecute() {
-	underTest.execute(command1);
-	underTest.undo();
-	underTest.execute(command2);
-	assertEquals(false, underTest.canRedo());
+        underTest.execute(command1);
+        underTest.undo();
+        underTest.execute(command2);
+        assertEquals(false, underTest.canRedo());
     }
 
     @Test
     public void executeCommand() {
-	underTest.execute(command1);
-	verify(command1, times(1)).execute();
+        underTest.execute(command1);
+        verify(command1, times(1)).execute();
     }
 
     @Test
     public void executedCommandIsUndoCommand() {
-	underTest.execute(command1);
-	assertEquals(command1, underTest.getUndoCommand());
+        underTest.execute(command1);
+        assertEquals(command1, underTest.getUndoCommand());
     }
 
     @Test
     public void fireClearEventOnClear() {
-	CommandManagerClearedEventHandler handler = mock(CommandManagerClearedEventHandler.class);
+        CommandManagerClearedEventHandler handler = mock(CommandManagerClearedEventHandler.class);
 
-	underTest.execute(command1);
-	underTest.addHandler(CommandManagerClearedEvent.TYPE, handler);
-	underTest.clear();
+        underTest.execute(command1);
+        underTest.addHandler(CommandManagerClearedEvent.TYPE, handler);
+        underTest.clear();
 
-	ArgumentCaptor<CommandManagerClearedEvent> argument = ArgumentCaptor
-		.forClass(CommandManagerClearedEvent.class);
-	verify(handler, times(1)).onCleared(argument.capture());
+        ArgumentCaptor<CommandManagerClearedEvent> argument = ArgumentCaptor
+                .forClass(CommandManagerClearedEvent.class);
+        verify(handler, times(1)).onCleared(argument.capture());
 
-	assertEquals(null, argument.getValue().getCommand());
-	assertEquals(underTest, argument.getValue().getCommandManager());
+        assertEquals(null, argument.getValue().getCommand());
+        assertEquals(underTest, argument.getValue().getCommandManager());
     }
 
     @Test
     public void fireCommandAddedEventOnAddExecutedCommand() {
-	CommandAddedEventHandler handler = mock(CommandAddedEventHandler.class);
+        CommandAddedEventHandler handler = mock(CommandAddedEventHandler.class);
 
-	underTest.addHandler(CommandAddedEvent.TYPE, handler);
-	underTest.addExecutedCommand(command1);
+        underTest.addHandler(CommandAddedEvent.TYPE, handler);
+        underTest.addExecutedCommand(command1);
 
-	ArgumentCaptor<CommandAddedEvent> argument = ArgumentCaptor
-		.forClass(CommandAddedEvent.class);
-	verify(handler, times(1)).onCommandAdded(argument.capture());
+        ArgumentCaptor<CommandAddedEvent> argument = ArgumentCaptor
+                .forClass(CommandAddedEvent.class);
+        verify(handler, times(1)).onCommandAdded(argument.capture());
 
-	assertEquals(command1, argument.getValue().getCommand());
-	assertEquals(underTest, argument.getValue().getCommandManager());
+        assertEquals(command1, argument.getValue().getCommand());
+        assertEquals(underTest, argument.getValue().getCommandManager());
     }
 
     @Test
     public void fireCommandAddedEventOnExecute() {
-	CommandAddedEventHandler handler = mock(CommandAddedEventHandler.class);
+        CommandAddedEventHandler handler = mock(CommandAddedEventHandler.class);
 
-	underTest.addHandler(CommandAddedEvent.TYPE, handler);
-	underTest.execute(command1);
+        underTest.addHandler(CommandAddedEvent.TYPE, handler);
+        underTest.execute(command1);
 
-	ArgumentCaptor<CommandAddedEvent> argument = ArgumentCaptor
-		.forClass(CommandAddedEvent.class);
-	verify(handler, times(1)).onCommandAdded(argument.capture());
+        ArgumentCaptor<CommandAddedEvent> argument = ArgumentCaptor
+                .forClass(CommandAddedEvent.class);
+        verify(handler, times(1)).onCommandAdded(argument.capture());
 
-	assertEquals(command1, argument.getValue().getCommand());
-	assertEquals(underTest, argument.getValue().getCommandManager());
+        assertEquals(command1, argument.getValue().getCommand());
+        assertEquals(underTest, argument.getValue().getCommandManager());
     }
 
     @Test
     public void fireCommandRedoneEventOnRedo() {
-	CommandRedoneEventHandler handler = mock(CommandRedoneEventHandler.class);
+        CommandRedoneEventHandler handler = mock(CommandRedoneEventHandler.class);
 
-	underTest.addHandler(CommandRedoneEvent.TYPE, handler);
-	underTest.execute(command1);
-	underTest.undo();
-	underTest.redo();
+        underTest.addHandler(CommandRedoneEvent.TYPE, handler);
+        underTest.execute(command1);
+        underTest.undo();
+        underTest.redo();
 
-	ArgumentCaptor<CommandRedoneEvent> argument = ArgumentCaptor
-		.forClass(CommandRedoneEvent.class);
-	verify(handler, times(1)).onCommandRedone(argument.capture());
+        ArgumentCaptor<CommandRedoneEvent> argument = ArgumentCaptor
+                .forClass(CommandRedoneEvent.class);
+        verify(handler, times(1)).onCommandRedone(argument.capture());
 
-	assertEquals(command1, argument.getValue().getCommand());
-	assertEquals(underTest, argument.getValue().getCommandManager());
+        assertEquals(command1, argument.getValue().getCommand());
+        assertEquals(underTest, argument.getValue().getCommandManager());
     }
 
     @Test
     public void fireCommandUndoneEventOnUndo() {
-	CommandUndoneEventHandler handler = mock(CommandUndoneEventHandler.class);
+        CommandUndoneEventHandler handler = mock(CommandUndoneEventHandler.class);
 
-	underTest.addHandler(CommandUndoneEvent.TYPE, handler);
-	underTest.execute(command1);
-	underTest.undo();
+        underTest.addHandler(CommandUndoneEvent.TYPE, handler);
+        underTest.execute(command1);
+        underTest.undo();
 
-	ArgumentCaptor<CommandUndoneEvent> argument = ArgumentCaptor
-		.forClass(CommandUndoneEvent.class);
-	verify(handler, times(1)).onCommandUndone(argument.capture());
+        ArgumentCaptor<CommandUndoneEvent> argument = ArgumentCaptor
+                .forClass(CommandUndoneEvent.class);
+        verify(handler, times(1)).onCommandUndone(argument.capture());
 
-	assertEquals(command1, argument.getValue().getCommand());
-	assertEquals(underTest, argument.getValue().getCommandManager());
+        assertEquals(command1, argument.getValue().getCommand());
+        assertEquals(underTest, argument.getValue().getCommandManager());
     }
 
     @Test
     public void redoUndoneCommand() {
-	underTest.execute(command1);
-	verify(command1, times(1)).execute();
-	underTest.undo();
-	verify(command1, times(1)).execute();
-	underTest.redo();
-	verify(command1, times(2)).execute();
+        underTest.execute(command1);
+        verify(command1, times(1)).execute();
+        underTest.undo();
+        verify(command1, times(1)).execute();
+        underTest.redo();
+        verify(command1, times(2)).execute();
     }
 
     @Before
     public void setUp() {
-	MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.initMocks(this);
 
-	underTest = new DefaultCommandManager();
+        underTest = new DefaultCommandManager();
     }
 
     @Test
     public void undoExecutedCommand() {
-	underTest.execute(command1);
-	verify(command1, times(0)).undo();
+        underTest.execute(command1);
+        verify(command1, times(0)).undo();
 
-	underTest.undo();
-	verify(command1, times(1)).undo();
+        underTest.undo();
+        verify(command1, times(1)).undo();
     }
 
     @Test
     public void undoneCommandIsRedoCommand() {
-	underTest.execute(command1);
-	underTest.undo();
-	assertEquals(command1, underTest.getRedoCommand());
+        underTest.execute(command1);
+        underTest.undo();
+        assertEquals(command1, underTest.getRedoCommand());
     }
 
 }

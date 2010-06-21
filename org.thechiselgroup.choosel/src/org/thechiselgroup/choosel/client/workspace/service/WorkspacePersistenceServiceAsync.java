@@ -24,10 +24,10 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface WorkspacePersistenceServiceAsync {
 
-    void saveWorkspace(WorkspaceDTO workspace, AsyncCallback<Long> callback);
+    void loadWorkspace(Long id, AsyncCallback<WorkspaceDTO> callback);
 
     void loadWorkspacePreviews(AsyncCallback<List<WorkspacePreviewDTO>> callback);
 
-    void loadWorkspace(Long id, AsyncCallback<WorkspaceDTO> callback);
+    void saveWorkspace(WorkspaceDTO workspace, AsyncCallback<Long> callback);
 
 }

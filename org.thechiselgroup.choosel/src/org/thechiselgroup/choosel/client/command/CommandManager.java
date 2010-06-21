@@ -15,21 +15,23 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.command;
 
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 public interface CommandManager {
 
+    void addExecutedCommand(UndoableCommand command);
+
     <H extends CommandManagerEventHandler> HandlerRegistration addHandler(
-	    Type<H> type, H handler);
+            Type<H> type, H handler);
 
     boolean canRedo();
 
     boolean canUndo();
 
-    void execute(UndoableCommand command);
+    void clear();
 
-    void addExecutedCommand(UndoableCommand command);
+    void execute(UndoableCommand command);
 
     UndoableCommand getRedoCommand();
 
@@ -38,7 +40,5 @@ public interface CommandManager {
     void redo();
 
     void undo();
-
-    void clear();
 
 }

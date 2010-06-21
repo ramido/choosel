@@ -32,50 +32,50 @@ public class NodeDragEvent extends GwtEvent<NodeDragHandler> {
     private final int startY;
 
     public NodeDragEvent(Node node, int startX, int startY, int endX, int endY) {
-	assert node != null;
+        assert node != null;
 
-	this.node = node;
-	this.startX = startX;
-	this.startY = startY;
-	this.endX = endX;
-	this.endY = endY;
+        this.node = node;
+        this.startX = startX;
+        this.startY = startY;
+        this.endX = endX;
+        this.endY = endY;
 
     }
 
     @Override
     protected void dispatch(NodeDragHandler handler) {
-	handler.onDrag(this);
+        handler.onDrag(this);
     }
 
     @Override
     public Type<NodeDragHandler> getAssociatedType() {
-	return TYPE;
+        return TYPE;
     }
 
     public int getEndX() {
-	return endX;
+        return endX;
     }
 
     public int getEndY() {
-	return endY;
+        return endY;
     }
 
     public Node getNode() {
-	return node;
+        return node;
     }
 
     public int getStartX() {
-	return startX;
+        return startX;
     }
 
     public int getStartY() {
-	return startY;
+        return startY;
     }
 
     @Override
     public String toString() {
-	return "NodeDragEvent [endX=" + endX + ", endY=" + endY + ", node="
-		+ node + ", startX=" + startX + ", startY=" + startY + "]";
+        return "NodeDragEvent [endX=" + endX + ", endY=" + endY + ", node="
+                + node + ", startX=" + startX + ", startY=" + startY + "]";
     }
 
 }

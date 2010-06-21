@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.messages;
 
-import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.*;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.DEFAULT;
 
 import org.thechiselgroup.choosel.client.command.AsyncCommand;
 import org.thechiselgroup.choosel.client.command.AsyncCommandExecutor;
@@ -32,24 +32,24 @@ public class MessageBlockingCommandExecutor implements AsyncCommandExecutor {
 
     @Inject
     public MessageBlockingCommandExecutor(MessageManager messageManager,
-	    @Named(DEFAULT) AsyncCommandExecutor delegate) {
+            @Named(DEFAULT) AsyncCommandExecutor delegate) {
 
-	assert messageManager != null;
-	assert delegate != null;
+        assert messageManager != null;
+        assert delegate != null;
 
-	this.messageManager = messageManager;
-	this.delegate = delegate;
+        this.messageManager = messageManager;
+        this.delegate = delegate;
     }
 
     @Override
     public void execute(AsyncCommand command) {
-	String description = null;
+        String description = null;
 
-	if (command instanceof HasDescription) {
-	    description = ((HasDescription) command).getDescription();
-	}
+        if (command instanceof HasDescription) {
+            description = ((HasDescription) command).getDescription();
+        }
 
-	delegate.execute(new AsyncCommandMessageWrapper(
-		messageManager, description, command));
+        delegate.execute(new AsyncCommandMessageWrapper(messageManager,
+                description, command));
     }
 }

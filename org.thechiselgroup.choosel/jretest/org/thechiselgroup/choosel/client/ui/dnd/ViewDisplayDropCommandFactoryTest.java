@@ -15,9 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.dnd;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
 
 import org.junit.After;
 import org.junit.Before;
@@ -58,85 +58,87 @@ public class ViewDisplayDropCommandFactoryTest {
 
     @Test
     public void addedSetForAllIsUnmodifiable() {
-	testResourceSetInCommandIsModifiable(false, ResourceSetAvatarType.ALL);
+        testResourceSetInCommandIsModifiable(false, ResourceSetAvatarType.ALL);
     }
 
     @Test
     public void addedSetForNormalSetIsUnmodifiable() {
-	testResourceSetInCommandIsModifiable(true, ResourceSetAvatarType.SET);
+        testResourceSetInCommandIsModifiable(true, ResourceSetAvatarType.SET);
     }
 
     @Test
     public void addedSetForSelectionIsUnmodifiable() {
-	testResourceSetInCommandIsModifiable(false, ResourceSetAvatarType.SELECTION);
+        testResourceSetInCommandIsModifiable(false,
+                ResourceSetAvatarType.SELECTION);
     }
 
     @Test
     public void addedSetForTypeIsUnmodifiable() {
-	testResourceSetInCommandIsModifiable(false, ResourceSetAvatarType.SELECTION);
+        testResourceSetInCommandIsModifiable(false,
+                ResourceSetAvatarType.SELECTION);
     }
 
     @Test
     public void cannotDropIfResourcesAlreadyContained() {
-	when(view.containsResourceSet(resources)).thenReturn(true);
+        when(view.containsResourceSet(resources)).thenReturn(true);
 
-	assertEquals(false, underTest.canDrop(dragAvatar));
+        assertEquals(false, underTest.canDrop(dragAvatar));
     }
 
     @Test
     public void cannotDropIfResourcesAlreadyContainedForUnlabeledSet() {
-	when(view.containsResources(resources)).thenReturn(true);
-	when(dragAvatar.getType()).thenReturn(ResourceSetAvatarType.SET);
-	resources.setLabel(null);
+        when(view.containsResources(resources)).thenReturn(true);
+        when(dragAvatar.getType()).thenReturn(ResourceSetAvatarType.SET);
+        resources.setLabel(null);
 
-	assertEquals(false, underTest.canDrop(dragAvatar));
+        assertEquals(false, underTest.canDrop(dragAvatar));
     }
 
     @Test
     public void cannotDropIfSameView() {
-	when(accessor.findView(eq(dragAvatar))).thenReturn(view);
+        when(accessor.findView(eq(dragAvatar))).thenReturn(view);
 
-	assertEquals(false, underTest.canDrop(dragAvatar));
+        assertEquals(false, underTest.canDrop(dragAvatar));
     }
 
     @Before
     public void setUp() throws Exception {
-	MockitoGWTBridge.setUp();
-	MockitoAnnotations.initMocks(this);
+        MockitoGWTBridge.setUp();
+        MockitoAnnotations.initMocks(this);
 
-	resources = new DefaultResourceSet();
-	resources.setLabel("test");
+        resources = new DefaultResourceSet();
+        resources.setLabel("test");
 
-	underTest = new ViewDisplayDropCommandFactory(dropTarget, accessor);
+        underTest = new ViewDisplayDropCommandFactory(dropTarget, accessor);
 
-	when(accessor.findView(eq(dropTarget))).thenReturn(view);
-	when(dragAvatar.getResourceSet()).thenReturn(resources);
+        when(accessor.findView(eq(dropTarget))).thenReturn(view);
+        when(dragAvatar.getResourceSet()).thenReturn(resources);
     }
 
     @After
     public void tearDown() {
-	MockitoGWTBridge.tearDown();
+        MockitoGWTBridge.tearDown();
     }
 
     private void testResourceSetInCommandIsModifiable(boolean modifiable,
-	    ResourceSetAvatarType type) {
-	when(dragAvatar.getType()).thenReturn(type);
+            ResourceSetAvatarType type) {
+        when(dragAvatar.getType()).thenReturn(type);
 
-	UndoableCommand result = underTest.createCommand(dragAvatar);
+        UndoableCommand result = underTest.createCommand(dragAvatar);
 
-	assertEquals(true, result instanceof AddResourceSetToViewCommand);
-	AddResourceSetToViewCommand result2 = (AddResourceSetToViewCommand) result;
+        assertEquals(true, result instanceof AddResourceSetToViewCommand);
+        AddResourceSetToViewCommand result2 = (AddResourceSetToViewCommand) result;
 
-	assertEquals(modifiable, result2.getResourceSet().isModifiable());
+        assertEquals(modifiable, result2.getResourceSet().isModifiable());
     }
 
     @Test
     public void useAddResourcesCommandForUnlabeledResourceSet() {
-	when(dragAvatar.getType()).thenReturn(ResourceSetAvatarType.SET);
-	resources.setLabel(null);
+        when(dragAvatar.getType()).thenReturn(ResourceSetAvatarType.SET);
+        resources.setLabel(null);
 
-	UndoableCommand result = underTest.createCommand(dragAvatar);
+        UndoableCommand result = underTest.createCommand(dragAvatar);
 
-	assertEquals(true, result instanceof AddResourcesToViewCommand);
+        assertEquals(true, result instanceof AddResourcesToViewCommand);
     }
 }

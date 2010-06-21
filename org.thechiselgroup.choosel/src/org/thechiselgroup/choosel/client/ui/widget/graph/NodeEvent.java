@@ -27,27 +27,27 @@ public abstract class NodeEvent<T extends EventHandler> extends GwtEvent<T> {
     private final Node node;
 
     public NodeEvent(Node node, int mouseX, int mouseY) {
-	this.node = node;
-	this.mouseX = mouseX;
-	this.mouseY = mouseY;
+        this.node = node;
+        this.mouseX = mouseX;
+        this.mouseY = mouseY;
     }
 
     public int getMouseX() {
-	return mouseX;
+        return mouseX;
     }
 
     public int getMouseY() {
-	return mouseY;
+        return mouseY;
     }
 
     public Node getNode() {
-	return node;
+        return node;
     }
 
     @Override
     public String toString() {
-	return "NodeEvent [mouseX=" + mouseX + ", mouseY=" + mouseY + ", node="
-		+ node + "]";
+        return "NodeEvent [mouseX=" + mouseX + ", mouseY=" + mouseY + ", node="
+                + node + "]";
     }
 
 }

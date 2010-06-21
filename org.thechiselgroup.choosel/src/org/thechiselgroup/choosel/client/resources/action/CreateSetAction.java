@@ -21,7 +21,6 @@ import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.command.AddResourceSetToViewCommand;
-import org.thechiselgroup.choosel.client.resources.ui.popup.PopupResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.popup.PopupResourceSetAvatarFactory.Action;
 import org.thechiselgroup.choosel.client.views.View;
 
@@ -34,35 +33,35 @@ public class CreateSetAction implements Action {
     private CommandManager commandManager;
 
     public CreateSetAction(ResourceSetFactory resourceSetFactory,
-	    LabelProvider resourceSetLabelFactory, CommandManager commandManager) {
+            LabelProvider resourceSetLabelFactory, CommandManager commandManager) {
 
-	this.resourceSetFactory = resourceSetFactory;
-	this.resourceSetLabelFactory = resourceSetLabelFactory;
-	this.commandManager = commandManager;
+        this.resourceSetFactory = resourceSetFactory;
+        this.resourceSetLabelFactory = resourceSetLabelFactory;
+        this.commandManager = commandManager;
     }
 
-    @Override
-    public String getLabel() {
-	return "Create set from selection";
+    protected UndoableCommand createCommand(ResourceSet resources, View view) {
+        final ResourceSet newResources = resourceSetFactory.createResourceSet();
+        newResources.setLabel(resourceSetLabelFactory.nextLabel());
+        newResources.addAll(resources);
+
+        return new AddResourceSetToViewCommand(view, newResources,
+                "Create set '" + newResources.getLabel() + "' from selection") {
+
+            @Override
+            public void execute() {
+                view.addSelectionSet(newResources);
+            }
+        };
     }
 
     @Override
     public void execute(ResourceSet resources, View view) {
-	commandManager.execute(createCommand(resources, view));
+        commandManager.execute(createCommand(resources, view));
     }
 
-    protected UndoableCommand createCommand(ResourceSet resources, View view) {
-	final ResourceSet newResources = resourceSetFactory.createResourceSet();
-	newResources.setLabel(resourceSetLabelFactory.nextLabel());
-	newResources.addAll(resources);
-
-	return new AddResourceSetToViewCommand(view, newResources,
-		"Create set '" + newResources.getLabel() + "' from selection") {
-
-	    @Override
-	    public void execute() {
-		view.addSelectionSet(newResources);
-	    }
-	};
+    @Override
+    public String getLabel() {
+        return "Create set from selection";
     }
 }

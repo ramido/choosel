@@ -39,7 +39,7 @@ public interface SlotResolver {
     String LOCATION_SLOT = "location";
 
     ResourceSetToValueResolver createColorSlotResolver(String category,
-	    List<Layer> layers);
+            List<Layer> layers);
 
     ResourceSetToValueResolver createDateSlotResolver(String category);
 
@@ -47,9 +47,11 @@ public interface SlotResolver {
 
     ResourceSetToValueResolver createGraphLabelSlotResolver(String category);
 
-    ResourceSetToValueResolver createGraphNodeBackgroundColorResolver(String category);
+    ResourceSetToValueResolver createGraphNodeBackgroundColorResolver(
+            String category);
 
-    ResourceSetToValueResolver createGraphNodeBorderColorResolver(String category);
+    ResourceSetToValueResolver createGraphNodeBorderColorResolver(
+            String category);
 
     ResourceSetToValueResolver createLabelSlotResolver(String category);
 

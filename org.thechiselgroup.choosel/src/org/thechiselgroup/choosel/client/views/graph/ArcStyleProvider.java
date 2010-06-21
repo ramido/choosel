@@ -17,8 +17,8 @@ package org.thechiselgroup.choosel.client.views.graph;
 
 public interface ArcStyleProvider {
 
-    String getArcStyle(String arcType);
-
     String getArcColor(String arcType);
+
+    String getArcStyle(String arcType);
 
 }

@@ -34,44 +34,44 @@ public class TextCommandPresenter implements Presenter {
     private TextBox textBox;
 
     public <T extends Command & HasTextParameter> TextCommandPresenter(
-	    T command, String buttonLabel) {
+            T command, String buttonLabel) {
 
-	assert command != null;
-	assert buttonLabel != null;
+        assert command != null;
+        assert buttonLabel != null;
 
-	this.command = command;
-	this.hasTextParameter = command;
-	this.buttonLabel = buttonLabel;
+        this.command = command;
+        this.hasTextParameter = command;
+        this.buttonLabel = buttonLabel;
     }
 
     public Button getExecuteButton() {
-	return executeButton;
+        return executeButton;
     }
 
     public TextBox getTextBox() {
-	return textBox;
+        return textBox;
     }
 
     @Override
     public void init() {
-	textBox = new TextBox();
-	executeButton = new Button(buttonLabel);
+        textBox = new TextBox();
+        executeButton = new Button(buttonLabel);
 
-	TextBoxActionHandler handler = new TextBoxActionHandler() {
-	    @Override
-	    protected void execute() {
-		hasTextParameter.initParameter(textBox.getText());
+        TextBoxActionHandler handler = new TextBoxActionHandler() {
+            @Override
+            protected void execute() {
+                hasTextParameter.initParameter(textBox.getText());
 
-		// remove focus after enter / click
-		textBox.setFocus(false);
-		executeButton.setFocus(false);
+                // remove focus after enter / click
+                textBox.setFocus(false);
+                executeButton.setFocus(false);
 
-		command.execute();
-	    }
-	};
+                command.execute();
+            }
+        };
 
-	executeButton.addClickHandler(handler);
-	textBox.addKeyUpHandler(handler);
+        executeButton.addClickHandler(handler);
+        textBox.addKeyUpHandler(handler);
     }
 
 }

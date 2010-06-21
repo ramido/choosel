@@ -21,6 +21,6 @@ public class NullGraphNodeExpander implements GraphNodeExpander {
 
     @Override
     public void expand(Resource resource,
-	    GraphNodeExpansionCallback expansionCallback) {
+            GraphNodeExpansionCallback expansionCallback) {
     }
 }

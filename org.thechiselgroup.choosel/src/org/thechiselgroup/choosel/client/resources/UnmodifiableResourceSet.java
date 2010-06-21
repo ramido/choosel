@@ -18,27 +18,27 @@ package org.thechiselgroup.choosel.client.resources;
 public class UnmodifiableResourceSet extends DelegatingResourceSet {
 
     public UnmodifiableResourceSet(ResourceSet delegate) {
-	super(delegate);
-    }
-
-    @Override
-    public void setLabel(String label) {
-	throw new UnsupportedOperationException();
+        super(delegate);
     }
 
     @Override
     public void add(Resource i) {
-	throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void remove(Resource i) {
-	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean isModifiable() {
-	return false;
+        return false;
+    }
+
+    @Override
+    public void remove(Resource i) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void setLabel(String label) {
+        throw new UnsupportedOperationException();
     }
 
 }

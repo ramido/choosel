@@ -18,28 +18,28 @@ package org.thechiselgroup.choosel.client.resources;
 import com.google.gwt.event.shared.GwtEvent;
 
 public class ResourceSetAddedEvent extends
-	GwtEvent<ResourceSetAddedEventHandler> {
+        GwtEvent<ResourceSetAddedEventHandler> {
 
     public static final GwtEvent.Type<ResourceSetAddedEventHandler> TYPE = new GwtEvent.Type<ResourceSetAddedEventHandler>();
 
     private final ResourceSet resourceSet;
 
     public ResourceSetAddedEvent(ResourceSet resourceSet) {
-	this.resourceSet = resourceSet;
+        this.resourceSet = resourceSet;
     }
 
     @Override
     protected void dispatch(ResourceSetAddedEventHandler handler) {
-	handler.onResourceSetAdded(this);
+        handler.onResourceSetAdded(this);
     }
 
     @Override
     public GwtEvent.Type<ResourceSetAddedEventHandler> getAssociatedType() {
-	return TYPE;
+        return TYPE;
     }
 
     public ResourceSet getResourceSet() {
-	return resourceSet;
+        return resourceSet;
     }
 
 }

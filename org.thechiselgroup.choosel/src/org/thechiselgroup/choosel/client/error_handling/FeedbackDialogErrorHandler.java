@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.error_handling;
 
-import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.*;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.LOG;
 
 import org.thechiselgroup.choosel.client.command.AsyncCommandExecutor;
 import org.thechiselgroup.choosel.client.feedback.FeedbackDialog;
@@ -36,27 +36,27 @@ public class FeedbackDialogErrorHandler implements ErrorHandler {
 
     @Inject
     public FeedbackDialogErrorHandler(DialogManager dialogManager,
-	    @Named(LOG) AsyncCommandExecutor executor,
-	    FeedbackServiceAsync feedbackService) {
+            @Named(LOG) AsyncCommandExecutor executor,
+            FeedbackServiceAsync feedbackService) {
 
-	// we use the log command executor to prevent invite loops
+        // we use the log command executor to prevent invite loops
 
-	assert dialogManager != null;
-	assert executor != null;
-	assert feedbackService != null;
+        assert dialogManager != null;
+        assert executor != null;
+        assert feedbackService != null;
 
-	this.executor = executor;
-	this.feedbackService = feedbackService;
-	this.dialogManager = dialogManager;
+        this.executor = executor;
+        this.feedbackService = feedbackService;
+        this.dialogManager = dialogManager;
     }
 
     @Override
     public void handleError(final Throwable error) {
-	assert error != null;
+        assert error != null;
 
-	Log.error(error.getMessage(), error);
+        Log.error(error.getMessage(), error);
 
-	dialogManager
-		.show(new FeedbackDialog(error, executor, feedbackService));
+        dialogManager
+                .show(new FeedbackDialog(error, executor, feedbackService));
     }
 }

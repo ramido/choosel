@@ -24,21 +24,21 @@ public class ManagedResourceSet extends AbstractUriMapBasedResourceSet {
 
     @Inject
     public ManagedResourceSet(ResourceManager resourceManager) {
-	this.resourceManager = resourceManager;
+        this.resourceManager = resourceManager;
     }
 
     @Override
     protected void doAdd(Resource resource) {
-	resourceManager.add(resource);
-	Resource realResource = resourceManager.allocate(resource.getUri());
-	addResourceToMap(realResource);
+        resourceManager.add(resource);
+        Resource realResource = resourceManager.allocate(resource.getUri());
+        addResourceToMap(realResource);
     }
 
     @Override
     public void doRemove(Resource resource) {
-	String key = resource.getUri();
-	removeResourceFromMap(key);
-	resourceManager.deallocate(key);
+        String key = resource.getUri();
+        removeResourceFromMap(key);
+        resourceManager.deallocate(key);
     }
 
 }

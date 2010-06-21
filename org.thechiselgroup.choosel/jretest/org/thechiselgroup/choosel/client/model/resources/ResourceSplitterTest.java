@@ -71,123 +71,123 @@ public class ResourceSplitterTest {
 
     @Test
     public void addResourceWithMultipleCategoriesCreatesMultipleCategories() {
-	Resource resource = createResource(1);
+        Resource resource = createResource(1);
 
-	when(categorizer.getCategories(resource)).thenReturn(
-		toSet(CATEGORY_1, CATEGORY_2));
+        when(categorizer.getCategories(resource)).thenReturn(
+                toSet(CATEGORY_1, CATEGORY_2));
 
-	splitter.add(resource);
+        splitter.add(resource);
 
-	Map<String, ResourceSet> result = splitter.getCategorizedResourceSets();
+        Map<String, ResourceSet> result = splitter.getCategorizedResourceSets();
 
-	assertEquals(2, result.size());
-	assertTrue(result.containsKey(CATEGORY_1));
-	assertTrue(result.get(CATEGORY_1).containsEqualResources(
-		toResourceSet(resource)));
-	assertTrue(result.containsKey(CATEGORY_2));
-	assertTrue(result.get(CATEGORY_2).containsEqualResources(
-		toResourceSet(resource)));
+        assertEquals(2, result.size());
+        assertTrue(result.containsKey(CATEGORY_1));
+        assertTrue(result.get(CATEGORY_1).containsEqualResources(
+                toResourceSet(resource)));
+        assertTrue(result.containsKey(CATEGORY_2));
+        assertTrue(result.get(CATEGORY_2).containsEqualResources(
+                toResourceSet(resource)));
     }
 
     @Test
     public void createCategories() {
-	splitter.addAll(resources1);
-	splitter.addAll(resources2);
+        splitter.addAll(resources1);
+        splitter.addAll(resources2);
 
-	Map<String, ResourceSet> result = splitter.getCategorizedResourceSets();
+        Map<String, ResourceSet> result = splitter.getCategorizedResourceSets();
 
-	assertEquals(2, result.size());
-	assertTrue(result.containsKey(CATEGORY_1));
-	assertTrue(result.get(CATEGORY_1).containsEqualResources(resources1));
-	assertTrue(result.containsKey(CATEGORY_2));
-	assertTrue(result.get(CATEGORY_2).containsEqualResources(resources2));
+        assertEquals(2, result.size());
+        assertTrue(result.containsKey(CATEGORY_1));
+        assertTrue(result.get(CATEGORY_1).containsEqualResources(resources1));
+        assertTrue(result.containsKey(CATEGORY_2));
+        assertTrue(result.get(CATEGORY_2).containsEqualResources(resources2));
     }
 
     @Test
     public void fireResourceSetCreatedEvents() {
-	splitter.addHandler(ResourceCategoryAddedEvent.TYPE, addedHandler);
-	splitter.addAll(resources1);
+        splitter.addHandler(ResourceCategoryAddedEvent.TYPE, addedHandler);
+        splitter.addAll(resources1);
 
-	ArgumentCaptor<ResourceCategoryAddedEvent> eventCaptor = ArgumentCaptor
-		.forClass(ResourceCategoryAddedEvent.class);
+        ArgumentCaptor<ResourceCategoryAddedEvent> eventCaptor = ArgumentCaptor
+                .forClass(ResourceCategoryAddedEvent.class);
 
-	verify(addedHandler, times(1)).onResourceCategoryAdded(
-		eventCaptor.capture());
+        verify(addedHandler, times(1)).onResourceCategoryAdded(
+                eventCaptor.capture());
 
-	ResourceCategoryAddedEvent event = eventCaptor.getValue();
-	assertTrue(event.getResourceSet().containsEqualResources(resources1));
-	assertEquals(CATEGORY_1, event.getCategory());
+        ResourceCategoryAddedEvent event = eventCaptor.getValue();
+        assertTrue(event.getResourceSet().containsEqualResources(resources1));
+        assertEquals(CATEGORY_1, event.getCategory());
     }
 
     @Test
     public void fireResourceSetRemoveEvents() {
-	splitter.addHandler(ResourceCategoryRemovedEvent.TYPE, removedHandler);
-	splitter.addAll(resources1);
-	splitter.removeAll(resources1);
+        splitter.addHandler(ResourceCategoryRemovedEvent.TYPE, removedHandler);
+        splitter.addAll(resources1);
+        splitter.removeAll(resources1);
 
-	ArgumentCaptor<ResourceCategoryRemovedEvent> eventCaptor = ArgumentCaptor
-		.forClass(ResourceCategoryRemovedEvent.class);
-	verify(removedHandler, times(1)).onResourceCategoryRemoved(
-		eventCaptor.capture());
-	ResourceCategoryRemovedEvent event = eventCaptor.getValue();
-	assertEquals(CATEGORY_1, event.getCategory());
+        ArgumentCaptor<ResourceCategoryRemovedEvent> eventCaptor = ArgumentCaptor
+                .forClass(ResourceCategoryRemovedEvent.class);
+        verify(removedHandler, times(1)).onResourceCategoryRemoved(
+                eventCaptor.capture());
+        ResourceCategoryRemovedEvent event = eventCaptor.getValue();
+        assertEquals(CATEGORY_1, event.getCategory());
     }
 
     @Test
     public void labelProvider() {
-	String label1 = "label1";
-	String label2 = "label2";
+        String label1 = "label1";
+        String label2 = "label2";
 
-	when(labelProvider.getLabel(CATEGORY_1)).thenReturn(label1);
-	when(labelProvider.getLabel(CATEGORY_2)).thenReturn(label2);
+        when(labelProvider.getLabel(CATEGORY_1)).thenReturn(label1);
+        when(labelProvider.getLabel(CATEGORY_2)).thenReturn(label2);
 
-	splitter.addAll(resources1);
-	splitter.addAll(resources2);
+        splitter.addAll(resources1);
+        splitter.addAll(resources2);
 
-	Map<String, ResourceSet> result = splitter.getCategorizedResourceSets();
+        Map<String, ResourceSet> result = splitter.getCategorizedResourceSets();
 
-	assertEquals(2, result.size());
-	assertTrue(result.containsKey(CATEGORY_1));
-	assertEquals(label1, result.get(CATEGORY_1).getLabel());
-	assertTrue(result.containsKey(CATEGORY_2));
-	assertEquals(label2, result.get(CATEGORY_2).getLabel());
+        assertEquals(2, result.size());
+        assertTrue(result.containsKey(CATEGORY_1));
+        assertEquals(label1, result.get(CATEGORY_1).getLabel());
+        assertTrue(result.containsKey(CATEGORY_2));
+        assertEquals(label2, result.get(CATEGORY_2).getLabel());
     }
 
     @Test
     public void removeResourceSet() {
-	splitter.addAll(resources1);
-	splitter.addAll(resources2);
-	splitter.removeAll(resources1);
+        splitter.addAll(resources1);
+        splitter.addAll(resources2);
+        splitter.removeAll(resources1);
 
-	Map<String, ResourceSet> result = splitter.getCategorizedResourceSets();
+        Map<String, ResourceSet> result = splitter.getCategorizedResourceSets();
 
-	assertEquals(1, result.size());
-	assertTrue(result.containsKey(CATEGORY_2));
-	assertTrue(result.get(CATEGORY_2).containsEqualResources(resources2));
+        assertEquals(1, result.size());
+        assertTrue(result.containsKey(CATEGORY_2));
+        assertTrue(result.get(CATEGORY_2).containsEqualResources(resources2));
     }
 
     @Before
     public void setUp() {
-	MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.initMocks(this);
 
-	labelProvider = spy(new DefaultCategoryLabelProvider());
+        labelProvider = spy(new DefaultCategoryLabelProvider());
 
-	splitter = new ResourceSplitter(categorizer,
-		new DefaultResourceSetFactory(), labelProvider);
+        splitter = new ResourceSplitter(categorizer,
+                new DefaultResourceSetFactory(), labelProvider);
 
-	resources1 = createResources("test", 1, 2, 3);
-	resources2 = createResources("test", 4, 5);
+        resources1 = createResources("test", 1, 2, 3);
+        resources2 = createResources("test", 4, 5);
 
-	when(categorizer.getCategories(resources1.toList().get(0))).thenReturn(
-		toSet(CATEGORY_1));
-	when(categorizer.getCategories(resources1.toList().get(1))).thenReturn(
-		toSet(CATEGORY_1));
-	when(categorizer.getCategories(resources1.toList().get(2))).thenReturn(
-		toSet(CATEGORY_1));
+        when(categorizer.getCategories(resources1.toList().get(0))).thenReturn(
+                toSet(CATEGORY_1));
+        when(categorizer.getCategories(resources1.toList().get(1))).thenReturn(
+                toSet(CATEGORY_1));
+        when(categorizer.getCategories(resources1.toList().get(2))).thenReturn(
+                toSet(CATEGORY_1));
 
-	when(categorizer.getCategories(resources2.toList().get(0))).thenReturn(
-		toSet(CATEGORY_2));
-	when(categorizer.getCategories(resources2.toList().get(1))).thenReturn(
-		toSet(CATEGORY_2));
+        when(categorizer.getCategories(resources2.toList().get(0))).thenReturn(
+                toSet(CATEGORY_2));
+        when(categorizer.getCategories(resources2.toList().get(1))).thenReturn(
+                toSet(CATEGORY_2));
     }
 }

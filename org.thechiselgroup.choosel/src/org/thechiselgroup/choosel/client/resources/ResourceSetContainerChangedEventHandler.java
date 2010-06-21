@@ -16,7 +16,7 @@
 package org.thechiselgroup.choosel.client.resources;
 
 public interface ResourceSetContainerChangedEventHandler extends
-	ResourceSetEventHandler {
+        ResourceSetEventHandler {
 
     void onResourceSetContainerChanged(ResourceSetContainerChangedEvent event);
 

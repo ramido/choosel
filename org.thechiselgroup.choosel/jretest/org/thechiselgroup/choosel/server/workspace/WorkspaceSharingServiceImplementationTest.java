@@ -21,8 +21,6 @@ import org.junit.Before;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.server.util.PasswordGenerator;
-import org.thechiselgroup.choosel.server.workspace.WorkspaceSecurityManager;
-import org.thechiselgroup.choosel.server.workspace.WorkspaceSharingServiceImplementation;
 
 import com.google.appengine.api.mail.MailService;
 import com.google.appengine.api.users.UserService;
@@ -50,11 +48,11 @@ public class WorkspaceSharingServiceImplementationTest {
 
     @Before
     public void setUp() {
-	MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.initMocks(this);
 
-	underTest = new WorkspaceSharingServiceImplementation(
-		persistenceManagerFactory, workspaceSecurityManager,
-		userService, mailService, passwordGenerator, BASEURL);
+        underTest = new WorkspaceSharingServiceImplementation(
+                persistenceManagerFactory, workspaceSecurityManager,
+                userService, mailService, passwordGenerator, BASEURL);
     }
 
 }

@@ -38,29 +38,29 @@ public abstract class DetailsWidgetHelper {
     // TODO use dragavatarfactory instead of provider
     @Inject
     public DetailsWidgetHelper(ResourceSetFactory resourceSetFactory,
-	    ResourceSetAvatarFactory dragAvatarFactory,
-	    ResourceSetAvatarDragController dragController) {
+            ResourceSetAvatarFactory dragAvatarFactory,
+            ResourceSetAvatarDragController dragController) {
 
-	this.resourceSetFactory = resourceSetFactory;
-	this.avatarFactory = dragAvatarFactory;
-	this.dragController = dragController;
+        this.resourceSetFactory = resourceSetFactory;
+        this.avatarFactory = dragAvatarFactory;
+        this.dragController = dragController;
+    }
+
+    protected void addRow(Resource resource, VerticalPanel verticalPanel,
+            String label, String property) {
+        addRow(resource, verticalPanel, label, property, true);
+    }
+
+    protected void addRow(Resource resource, VerticalPanel verticalPanel,
+            String label, String property, boolean nowrap) {
+        Object resourceValue = resource.getValue(property);
+        String value = resourceValue.toString();
+        HTML html = GWT.create(HTML.class);
+        html.setHTML("<span " + (nowrap ? "style='white-space:nowrap;'" : "")
+                + "><b>" + label + ":</b> " + value + " </span>");
+        verticalPanel.add(html);
     }
 
     public abstract Widget createDetailsWidget(ResourceSet resourceSet,
-	    ResourceSetToValueResolver resolver);
-
-    protected void addRow(Resource resource, VerticalPanel verticalPanel,
-	    String label, String property) {
-	addRow(resource, verticalPanel, label, property, true);
-    }
-
-    protected void addRow(Resource resource, VerticalPanel verticalPanel,
-	    String label, String property, boolean nowrap) {
-	Object resourceValue = resource.getValue(property);
-	String value = resourceValue.toString();
-	HTML html = GWT.create(HTML.class);
-	html.setHTML("<span " + (nowrap ? "style='white-space:nowrap;'" : "")
-		+ "><b>" + label + ":</b> " + value + " </span>");
-	verticalPanel.add(html);
-    }
+            ResourceSetToValueResolver resolver);
 }

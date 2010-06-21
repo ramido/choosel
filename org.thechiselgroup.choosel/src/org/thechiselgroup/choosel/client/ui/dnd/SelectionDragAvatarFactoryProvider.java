@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.dnd;
 
-import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.*;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.HOVER_MODEL;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,82 +44,87 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 public class SelectionDragAvatarFactoryProvider implements
-	ResourceSetAvatarFactoryProvider {
+        ResourceSetAvatarFactoryProvider {
 
     private final ResourceSetAvatarDragController dragController;
+
     private final PopupManagerFactory popupManagerFactory;
+
     private final ViewAccessor viewAccessor;
+
     private final ResourceSetContainer setHoverModel;
+
     private final ResourceSet hoverModel;
+
     private final CommandManager commandManager;
 
     @Inject
     public SelectionDragAvatarFactoryProvider(
-	    ResourceSetAvatarDragController dragController,
-	    @Named(HOVER_MODEL) ResourceSet hoverModel,
-	    @Named(HOVER_MODEL) ResourceSetContainer setHoverModel,
-	    ViewAccessor viewAccessor, PopupManagerFactory popupManagerFactory,
-	    CommandManager commandManager) {
+            ResourceSetAvatarDragController dragController,
+            @Named(HOVER_MODEL) ResourceSet hoverModel,
+            @Named(HOVER_MODEL) ResourceSetContainer setHoverModel,
+            ViewAccessor viewAccessor, PopupManagerFactory popupManagerFactory,
+            CommandManager commandManager) {
 
-	this.dragController = dragController;
-	this.hoverModel = hoverModel;
-	this.setHoverModel = setHoverModel;
-	this.viewAccessor = viewAccessor;
-	this.popupManagerFactory = popupManagerFactory;
-	this.commandManager = commandManager;
+        this.dragController = dragController;
+        this.hoverModel = hoverModel;
+        this.setHoverModel = setHoverModel;
+        this.viewAccessor = viewAccessor;
+        this.popupManagerFactory = popupManagerFactory;
+        this.commandManager = commandManager;
     }
 
     @Override
     public ResourceSetAvatarFactory get() {
-	ResourceSetAvatarFactory defaultFactory = new DefaultResourceSetAvatarFactory(
-		"avatar-selection", ResourceSetAvatarType.SELECTION);
+        ResourceSetAvatarFactory defaultFactory = new DefaultResourceSetAvatarFactory(
+                "avatar-selection", ResourceSetAvatarType.SELECTION);
 
-	ResourceSetAvatarFactory updateFactory = new UpdateResourceSetAvatarLabelFactory(
-		defaultFactory);
+        ResourceSetAvatarFactory updateFactory = new UpdateResourceSetAvatarLabelFactory(
+                defaultFactory);
 
-	ResourceSetAvatarFactory dragEnableFactory = new DragEnableResourceSetAvatarFactory(
-		updateFactory, dragController);
+        ResourceSetAvatarFactory dragEnableFactory = new DragEnableResourceSetAvatarFactory(
+                updateFactory, dragController);
 
-	ResourceSetAvatarFactory highlightingFactory = new HighlightingResourceSetAvatarFactory(
-		dragEnableFactory, hoverModel, setHoverModel, dragController);
+        ResourceSetAvatarFactory highlightingFactory = new HighlightingResourceSetAvatarFactory(
+                dragEnableFactory, hoverModel, setHoverModel, dragController);
 
-	// XXX refactor
-	ResourceSetAvatarFactory clickFactory = new DelegatingResourceSetAvatarFactory(
-		highlightingFactory) {
-	    @Override
-	    public ResourceSetAvatar createAvatar(ResourceSet resources) {
-		final ResourceSetAvatar avatar = delegate
-			.createAvatar(resources);
+        // XXX refactor
+        ResourceSetAvatarFactory clickFactory = new DelegatingResourceSetAvatarFactory(
+                highlightingFactory) {
+            @Override
+            public ResourceSetAvatar createAvatar(ResourceSet resources) {
+                final ResourceSetAvatar avatar = delegate
+                        .createAvatar(resources);
 
-		avatar.addClickHandler(new ClickHandler() {
-		    @Override
-		    public void onClick(ClickEvent event) {
-			View v = viewAccessor.findView(avatar);
-			if (avatar.getResourceSet().equals(v.getSelection())) {
-			    v.setSelection(null);
-			} else {
-			    v.setSelection(avatar.getResourceSet());
-			}
-		    }
-		});
+                avatar.addClickHandler(new ClickHandler() {
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        View v = viewAccessor.findView(avatar);
+                        if (avatar.getResourceSet().equals(v.getSelection())) {
+                            v.setSelection(null);
+                        } else {
+                            v.setSelection(avatar.getResourceSet());
+                        }
+                    }
+                });
 
-		return avatar;
-	    }
-	};
+                return avatar;
+            }
+        };
 
-	List<Action> actions = new ArrayList<Action>();
-	actions.add(new RemoveSelectionSetAction(commandManager));
-	// actions.add(new CreateSetAction(resourceSetFactory,
-	// resourceSetLabelFactory, commandManager));
+        List<Action> actions = new ArrayList<Action>();
+        actions.add(new RemoveSelectionSetAction(commandManager));
+        // actions.add(new CreateSetAction(resourceSetFactory,
+        // resourceSetLabelFactory, commandManager));
 
-	return new PopupResourceSetAvatarFactory(clickFactory, viewAccessor,
-		popupManagerFactory, actions, "View selection",
-		"<p><b>Drag</b> this selection to create filtered views"
-			+ " (by dropping on view content), to"
-			+ " synchronize the selection in multiple views "
-			+ "(by dropping on other selections) "
-			+ "or to add resources"
-			+ " to a different set or view "
-			+ "(by dropping on 'All').</p>", true);
+        return new PopupResourceSetAvatarFactory(clickFactory, viewAccessor,
+                popupManagerFactory, actions, "View selection",
+                "<p><b>Drag</b> this selection to create filtered views"
+                        + " (by dropping on view content), to"
+                        + " synchronize the selection in multiple views "
+                        + "(by dropping on other selections) "
+                        + "or to add resources"
+                        + " to a different set or view "
+                        + "(by dropping on 'All').</p>", true);
     }
 }

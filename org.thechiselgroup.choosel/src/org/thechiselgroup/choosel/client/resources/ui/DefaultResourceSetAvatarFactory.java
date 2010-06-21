@@ -19,26 +19,28 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
 import com.google.inject.Inject;
 
-public class DefaultResourceSetAvatarFactory implements ResourceSetAvatarFactory {
+public class DefaultResourceSetAvatarFactory implements
+        ResourceSetAvatarFactory {
 
     private String enabledCSSClass;
 
     private ResourceSetAvatarType type;
 
     @Inject
-    public DefaultResourceSetAvatarFactory(String enabledCSSClass, ResourceSetAvatarType type) {
-	assert enabledCSSClass != null;
-	assert type != null;
+    public DefaultResourceSetAvatarFactory(String enabledCSSClass,
+            ResourceSetAvatarType type) {
+        assert enabledCSSClass != null;
+        assert type != null;
 
-	this.enabledCSSClass = enabledCSSClass;
-	this.type = type;
+        this.enabledCSSClass = enabledCSSClass;
+        this.type = type;
     }
 
     @Override
     public ResourceSetAvatar createAvatar(ResourceSet resources) {
-	assert resources != null;
-	return new ResourceSetAvatar(resources.getLabel(), enabledCSSClass, resources,
-		type);
+        assert resources != null;
+        return new ResourceSetAvatar(resources.getLabel(), enabledCSSClass,
+                resources, type);
     }
 
 }

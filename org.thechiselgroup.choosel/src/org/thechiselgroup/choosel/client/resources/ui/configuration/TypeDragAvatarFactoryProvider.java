@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources.ui.configuration;
 
-import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.*;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_TYPE;
 
 import java.util.Collections;
 import java.util.List;
@@ -29,7 +29,6 @@ import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactoryProvider;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarType;
 import org.thechiselgroup.choosel.client.resources.ui.popup.PopupResourceSetAvatarFactory;
-import org.thechiselgroup.choosel.client.resources.ui.popup.PopupResourceSetAvatarFactory.Action;
 import org.thechiselgroup.choosel.client.ui.dnd.DragEnableResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.ui.dnd.DropTargetResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
@@ -41,59 +40,64 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 public class TypeDragAvatarFactoryProvider implements
-	ResourceSetAvatarFactoryProvider {
+        ResourceSetAvatarFactoryProvider {
 
     private final ResourceSetAvatarDragController dragController;
+
     private final ResourceSet hoverModel;
+
     private final ResourceSetContainer setHoverModel;
+
     private final PopupManagerFactory popupManagerFactory;
+
     private final ViewAccessor viewAccessor;
+
     private final ResourceSetAvatarDropTargetManager dropTargetManager;
 
     @Inject
     public TypeDragAvatarFactoryProvider(
-	    ResourceSetAvatarDragController dragController,
-	    @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
-	    @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSetContainer setHoverModel,
-	    @Named(AVATAR_FACTORY_TYPE) ResourceSetAvatarDropTargetManager dropTargetManager,
-	    ViewAccessor viewAccessor, PopupManagerFactory popupManagerFactory) {
+            ResourceSetAvatarDragController dragController,
+            @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
+            @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSetContainer setHoverModel,
+            @Named(AVATAR_FACTORY_TYPE) ResourceSetAvatarDropTargetManager dropTargetManager,
+            ViewAccessor viewAccessor, PopupManagerFactory popupManagerFactory) {
 
-	this.dragController = dragController;
-	this.hoverModel = hoverModel;
-	this.setHoverModel = setHoverModel;
-	this.dropTargetManager = dropTargetManager;
-	this.viewAccessor = viewAccessor;
-	this.popupManagerFactory = popupManagerFactory;
+        this.dragController = dragController;
+        this.hoverModel = hoverModel;
+        this.setHoverModel = setHoverModel;
+        this.dropTargetManager = dropTargetManager;
+        this.viewAccessor = viewAccessor;
+        this.popupManagerFactory = popupManagerFactory;
     }
 
     @Override
     public ResourceSetAvatarFactory get() {
-	ResourceSetAvatarFactory defaultFactory = new DefaultResourceSetAvatarFactory(
-		"avatar-type", ResourceSetAvatarType.TYPE);
+        ResourceSetAvatarFactory defaultFactory = new DefaultResourceSetAvatarFactory(
+                "avatar-type", ResourceSetAvatarType.TYPE);
 
-	ResourceSetAvatarFactory dragEnableFactory = new DragEnableResourceSetAvatarFactory(
-		defaultFactory, dragController);
+        ResourceSetAvatarFactory dragEnableFactory = new DragEnableResourceSetAvatarFactory(
+                defaultFactory, dragController);
 
-	ResourceSetAvatarFactory dropTargetFactory = new DropTargetResourceSetAvatarFactory(
-		dragEnableFactory, dropTargetManager);
+        ResourceSetAvatarFactory dropTargetFactory = new DropTargetResourceSetAvatarFactory(
+                dragEnableFactory, dropTargetManager);
 
-	ResourceSetAvatarFactory highlightingFactory = new HighlightingResourceSetAvatarFactory(
-		dropTargetFactory, hoverModel, setHoverModel, dragController);
+        ResourceSetAvatarFactory highlightingFactory = new HighlightingResourceSetAvatarFactory(
+                dropTargetFactory, hoverModel, setHoverModel, dragController);
 
-	List<PopupResourceSetAvatarFactory.Action> actions = Collections
-		.emptyList();
+        List<PopupResourceSetAvatarFactory.Action> actions = Collections
+                .emptyList();
 
-	return new PopupResourceSetAvatarFactory(highlightingFactory,
-		viewAccessor, popupManagerFactory, actions, "Resource type",
-		"<p><b>Drag</b> to add resources " + "with this type "
-			+ "from this view to other views "
-			+ "(by dropping on 'All' set), "
-			+ "to create filtered views containing "
-			+ "resources of this type from this view "
-			+ "(by dropping on view content) " + "or to "
-			+ "select resources of this type from this "
-			+ "view in other views "
-			+ "(by dropping on selection).</p>", false);
+        return new PopupResourceSetAvatarFactory(highlightingFactory,
+                viewAccessor, popupManagerFactory, actions, "Resource type",
+                "<p><b>Drag</b> to add resources " + "with this type "
+                        + "from this view to other views "
+                        + "(by dropping on 'All' set), "
+                        + "to create filtered views containing "
+                        + "resources of this type from this view "
+                        + "(by dropping on view content) " + "or to "
+                        + "select resources of this type from this "
+                        + "view in other views "
+                        + "(by dropping on selection).</p>", false);
     }
 
 }

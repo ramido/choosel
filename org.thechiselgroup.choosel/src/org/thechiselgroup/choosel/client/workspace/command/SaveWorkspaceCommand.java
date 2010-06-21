@@ -30,18 +30,18 @@ public class SaveWorkspaceCommand implements Command {
 
     @Inject
     public SaveWorkspaceCommand(
-	    WorkspacePersistenceManager workspacePersistenceManager,
-	    ErrorHandler errorHandler) {
+            WorkspacePersistenceManager workspacePersistenceManager,
+            ErrorHandler errorHandler) {
 
-	this.workspacePersistenceManager = workspacePersistenceManager;
-	this.errorHandler = errorHandler;
+        this.workspacePersistenceManager = workspacePersistenceManager;
+        this.errorHandler = errorHandler;
     }
 
     @Override
     public void execute() {
-	workspacePersistenceManager
-		.saveWorkspace(new ErrorHandlingAsyncCallback<Void>(
-			errorHandler));
+        workspacePersistenceManager
+                .saveWorkspace(new ErrorHandlingAsyncCallback<Void>(
+                        errorHandler));
     }
 
 }

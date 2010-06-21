@@ -22,12 +22,12 @@ public class DefaultResourceSet extends AbstractUriMapBasedResourceSet {
 
     @Override
     protected void doAdd(Resource resource) {
-	addResourceToMap(resource);
+        addResourceToMap(resource);
     }
 
     @Override
     protected void doRemove(Resource resource) {
-	removeResourceFromMap(resource.getUri());
+        removeResourceFromMap(resource.getUri());
     }
 
 }

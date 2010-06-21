@@ -17,28 +17,29 @@ package org.thechiselgroup.choosel.client.workspace;
 
 import com.google.gwt.event.shared.GwtEvent;
 
-public class WorkspaceSwitchedEvent extends GwtEvent<WorkspaceSwitchedEventHandler> {
+public class WorkspaceSwitchedEvent extends
+        GwtEvent<WorkspaceSwitchedEventHandler> {
 
     public static final Type<WorkspaceSwitchedEventHandler> TYPE = new Type<WorkspaceSwitchedEventHandler>();
 
     private final Workspace workspace;
 
     public WorkspaceSwitchedEvent(Workspace workspace) {
-	this.workspace = workspace;
+        this.workspace = workspace;
     }
 
     @Override
     protected void dispatch(WorkspaceSwitchedEventHandler handler) {
-	handler.onWorkspaceSwitched(this);
+        handler.onWorkspaceSwitched(this);
     }
 
     @Override
     public Type<WorkspaceSwitchedEventHandler> getAssociatedType() {
-	return TYPE;
+        return TYPE;
     }
 
     public Workspace getWorkspace() {
-	return workspace;
+        return workspace;
     }
 
 }

@@ -33,7 +33,8 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 
-public class HighlightingResourceSetAvatarFactory extends DelegatingResourceSetAvatarFactory {
+public class HighlightingResourceSetAvatarFactory extends
+        DelegatingResourceSetAvatarFactory {
 
     private final ResourceSetAvatarDragController dragController;
 
@@ -41,103 +42,105 @@ public class HighlightingResourceSetAvatarFactory extends DelegatingResourceSetA
 
     private ResourceSetContainer setHoverModel;
 
-    public HighlightingResourceSetAvatarFactory(ResourceSetAvatarFactory delegate,
-	    ResourceSet hoverModel, ResourceSetContainer setHoverModel,
-	    ResourceSetAvatarDragController dragController) {
+    public HighlightingResourceSetAvatarFactory(
+            ResourceSetAvatarFactory delegate, ResourceSet hoverModel,
+            ResourceSetContainer setHoverModel,
+            ResourceSetAvatarDragController dragController) {
 
-	super(delegate);
+        super(delegate);
 
-	assert hoverModel != null;
-	assert setHoverModel != null;
-	assert dragController != null;
+        assert hoverModel != null;
+        assert setHoverModel != null;
+        assert dragController != null;
 
-	this.dragController = dragController;
-	this.hoverModel = hoverModel;
-	this.setHoverModel = setHoverModel;
+        this.dragController = dragController;
+        this.hoverModel = hoverModel;
+        this.setHoverModel = setHoverModel;
     }
 
     public void addDragHandler(DragHandler handler) {
-	dragController.addDragHandler(handler);
+        dragController.addDragHandler(handler);
     }
 
     private void addToHover(ResourceSetAvatar avatar) {
-	hoverModel.addAll(avatar.getResourceSet());
-	setHoverModel.setResourceSet(avatar.getResourceSet());
+        hoverModel.addAll(avatar.getResourceSet());
+        setHoverModel.setResourceSet(avatar.getResourceSet());
     }
 
     @Override
     public ResourceSetAvatar createAvatar(ResourceSet resources) {
-	final ResourceSetAvatar avatar = delegate.createAvatar(resources);
+        final ResourceSetAvatar avatar = delegate.createAvatar(resources);
 
-	final HandlerRegistration mouseOverHandlerRegistration = avatar
-		.addMouseOverHandler(new MouseOverHandler() {
-		    @Override
-		    public void onMouseOver(MouseOverEvent event) {
-			addToHover(avatar);
-		    }
-		});
-	final HandlerRegistration mouseOutHandlerRegistration = avatar
-		.addMouseOutHandler(new MouseOutHandler() {
-		    @Override
-		    public void onMouseOut(MouseOutEvent event) {
-			removeFromHover(avatar);
-		    }
-		});
-	final HandlerRegistration containerChangedHandler = setHoverModel
-		.addResourceSetContainerChangedEventHandler(new ResourceSetContainerChangedEventHandler() {
-		    @Override
-		    public void onResourceSetContainerChanged(
-			    ResourceSetContainerChangedEvent event) {
+        final HandlerRegistration mouseOverHandlerRegistration = avatar
+                .addMouseOverHandler(new MouseOverHandler() {
+                    @Override
+                    public void onMouseOver(MouseOverEvent event) {
+                        addToHover(avatar);
+                    }
+                });
+        final HandlerRegistration mouseOutHandlerRegistration = avatar
+                .addMouseOutHandler(new MouseOutHandler() {
+                    @Override
+                    public void onMouseOut(MouseOutEvent event) {
+                        removeFromHover(avatar);
+                    }
+                });
+        final HandlerRegistration containerChangedHandler = setHoverModel
+                .addResourceSetContainerChangedEventHandler(new ResourceSetContainerChangedEventHandler() {
+                    @Override
+                    public void onResourceSetContainerChanged(
+                            ResourceSetContainerChangedEvent event) {
 
-			avatar.setHover(shouldHighlight(avatar, event
-				.getResourceSet()));
-		    }
+                        avatar.setHover(shouldHighlight(avatar,
+                                event.getResourceSet()));
+                    }
 
-		});
+                });
 
-	final DragHandlerAdapter dragHandler = new DragHandlerAdapter() {
-	    @Override
-	    public void onDragStart(DragStartEvent event) {
-		removeFromHover(avatar);
-	    }
+        final DragHandlerAdapter dragHandler = new DragHandlerAdapter() {
+            @Override
+            public void onDragStart(DragStartEvent event) {
+                removeFromHover(avatar);
+            }
 
-	};
-	addDragHandler(dragHandler);
+        };
+        addDragHandler(dragHandler);
 
-	avatar.addDisposable(new Disposable() {
-	    @Override
-	    public void dispose() {
-		removeDragHandler(dragHandler);
-		mouseOverHandlerRegistration.removeHandler();
-		mouseOutHandlerRegistration.removeHandler();
-		containerChangedHandler.removeHandler();
-	    }
-	});
+        avatar.addDisposable(new Disposable() {
+            @Override
+            public void dispose() {
+                removeDragHandler(dragHandler);
+                mouseOverHandlerRegistration.removeHandler();
+                mouseOutHandlerRegistration.removeHandler();
+                containerChangedHandler.removeHandler();
+            }
+        });
 
-	return avatar;
+        return avatar;
     }
 
     public void removeDragHandler(DragHandler handler) {
-	dragController.removeDragHandler(handler);
+        dragController.removeDragHandler(handler);
     }
 
     private void removeFromHover(ResourceSetAvatar avatar) {
-	hoverModel.removeAll(avatar.getResourceSet());
-	setHoverModel.setResourceSet(null);
+        hoverModel.removeAll(avatar.getResourceSet());
+        setHoverModel.setResourceSet(null);
     }
 
-    private boolean shouldHighlight(ResourceSetAvatar avatar, ResourceSet resources) {
-	ResourceSet dragAvatarResources = avatar.getResourceSet();
+    private boolean shouldHighlight(ResourceSetAvatar avatar,
+            ResourceSet resources) {
+        ResourceSet dragAvatarResources = avatar.getResourceSet();
 
-	while (dragAvatarResources instanceof UnmodifiableResourceSet) {
-	    dragAvatarResources = ((DelegatingResourceSet) dragAvatarResources)
-		    .getDelegate();
-	}
+        while (dragAvatarResources instanceof UnmodifiableResourceSet) {
+            dragAvatarResources = ((DelegatingResourceSet) dragAvatarResources)
+                    .getDelegate();
+        }
 
-	while (resources instanceof UnmodifiableResourceSet) {
-	    resources = ((DelegatingResourceSet) resources).getDelegate();
-	}
+        while (resources instanceof UnmodifiableResourceSet) {
+            resources = ((DelegatingResourceSet) resources).getDelegate();
+        }
 
-	return resources == dragAvatarResources;
+        return resources == dragAvatarResources;
     }
 }

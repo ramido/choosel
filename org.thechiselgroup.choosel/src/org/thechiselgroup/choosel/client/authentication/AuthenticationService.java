@@ -24,6 +24,6 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 public interface AuthenticationService extends RemoteService {
 
     Authentication getAuthentication(String redirectURL)
-	    throws ServiceException;
+            throws ServiceException;
 
 }

@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.map;
 
-import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
@@ -42,26 +41,26 @@ import com.google.gwt.maps.client.geom.Point;
 public class MapItem extends IconResourceItem {
 
     private class MarkerEventHandler implements ClickHandler, MouseOutHandler,
-	    MouseOverHandler {
+            MouseOverHandler {
 
-	@Override
-	public void onClick(ClickEvent event) {
-	    callback.switchSelection(getResourceSet());
-	}
+        @Override
+        public void onClick(ClickEvent event) {
+            callback.switchSelection(getResourceSet());
+        }
 
-	@Override
-	public void onMouseOut(MouseOutEvent event) {
-	    getPopupManager()
-		    .onMouseOut(event.getClientX(), event.getClientY());
-	    setHighlighted(false);
-	}
+        @Override
+        public void onMouseOut(MouseOutEvent event) {
+            getPopupManager()
+                    .onMouseOut(event.getClientX(), event.getClientY());
+            setHighlighted(false);
+        }
 
-	@Override
-	public void onMouseOver(MouseOverEvent event) {
-	    getPopupManager().onMouseOver(event.getClientX(),
-		    event.getClientY());
-	    setHighlighted(true);
-	}
+        @Override
+        public void onMouseOver(MouseOverEvent event) {
+            getPopupManager().onMouseOver(event.getClientX(),
+                    event.getClientY());
+            setHighlighted(true);
+        }
     }
 
     private static final int Z_INDEX_DEFAULT = 5;
@@ -80,102 +79,103 @@ public class MapItem extends IconResourceItem {
 
     private DragEnablerFactory dragEnablerFactory;
 
-    public MapItem(LatLng point, ResourceSet resources,
-	    ResourceSet hoverModel, PopupManager popupManager,
-	    Layer layerModel, ViewContentDisplayCallback callback,
-	    DragEnablerFactory dragEnablerFactory) {
+    public MapItem(LatLng point, ResourceSet resources, ResourceSet hoverModel,
+            PopupManager popupManager, Layer layerModel,
+            ViewContentDisplayCallback callback,
+            DragEnablerFactory dragEnablerFactory) {
 
-	super(resources, hoverModel, popupManager, layerModel);
+        super(resources, hoverModel, popupManager, layerModel);
 
-	this.callback = callback;
-	this.dragEnablerFactory = dragEnablerFactory;
-	this.overlay = new ResourceOverlay(point, Point.newInstance(-10, -10),
-		getDefaultIconURL()); // -10 = - (width /2)
-	this.eventHandler = new MarkerEventHandler();
+        this.callback = callback;
+        this.dragEnablerFactory = dragEnablerFactory;
+        this.overlay = new ResourceOverlay(point, Point.newInstance(-10, -10),
+                getDefaultIconURL()); // -10 = - (width /2)
+        this.eventHandler = new MarkerEventHandler();
 
-	initEventHandlers();
+        initEventHandlers();
     }
 
     public ResourceOverlay getOverlay() {
-	return overlay;
+        return overlay;
     }
 
     private void initEventHandlers() {
-	overlay.addMouseOverHandler(eventHandler);
-	overlay.addMouseOutHandler(eventHandler);
-	overlay.addClickHandler(eventHandler);
+        overlay.addMouseOverHandler(eventHandler);
+        overlay.addMouseOutHandler(eventHandler);
+        overlay.addClickHandler(eventHandler);
 
-	final DragEnabler enabler = dragEnablerFactory.createDragEnabler(this);
-	overlay.addMouseUpHandler(new MouseUpHandler() {
-	    @Override
-	    public void onMouseUp(MouseUpEvent event) {
-		enabler.forwardMouseUp(event.getNativeEvent());
-	    }
-	});
-	overlay.addMouseOutHandler(new MouseOutHandler() {
-	    @Override
-	    public void onMouseOut(MouseOutEvent event) {
-		enabler.forwardMouseOut(event.getNativeEvent());
-	    }
-	});
-	overlay.addMouseMoveHandler(new MouseMoveHandler() {
-	    @Override
-	    public void onMouseMove(MouseMoveEvent event) {
-		enabler.forwardMouseMove(event.getNativeEvent());
-	    }
-	});
-	overlay.addMouseDownHandler(new MouseDownHandler() {
-	    @Override
-	    public void onMouseDown(MouseDownEvent event) {
-		enabler.forwardMouseDownWithTargetElementPosition(event.getNativeEvent());
-		event.stopPropagation(); // to prevent standard map drag
-	    }
-	});
+        final DragEnabler enabler = dragEnablerFactory.createDragEnabler(this);
+        overlay.addMouseUpHandler(new MouseUpHandler() {
+            @Override
+            public void onMouseUp(MouseUpEvent event) {
+                enabler.forwardMouseUp(event.getNativeEvent());
+            }
+        });
+        overlay.addMouseOutHandler(new MouseOutHandler() {
+            @Override
+            public void onMouseOut(MouseOutEvent event) {
+                enabler.forwardMouseOut(event.getNativeEvent());
+            }
+        });
+        overlay.addMouseMoveHandler(new MouseMoveHandler() {
+            @Override
+            public void onMouseMove(MouseMoveEvent event) {
+                enabler.forwardMouseMove(event.getNativeEvent());
+            }
+        });
+        overlay.addMouseDownHandler(new MouseDownHandler() {
+            @Override
+            public void onMouseDown(MouseDownEvent event) {
+                enabler.forwardMouseDownWithTargetElementPosition(event
+                        .getNativeEvent());
+                event.stopPropagation(); // to prevent standard map drag
+            }
+        });
     }
 
     public void setDefaultStyle() {
-	overlay.setIconURL(getDefaultIconURL());
-	overlay.setZIndex(Z_INDEX_DEFAULT);
+        overlay.setIconURL(getDefaultIconURL());
+        overlay.setZIndex(Z_INDEX_DEFAULT);
     }
 
     private void setGrayedOutStyle() {
-	overlay.setIconURL(getGrayedOutIconURL());
-	overlay.setZIndex(Z_INDEX_GRAYED_OUT);
+        overlay.setIconURL(getGrayedOutIconURL());
+        overlay.setZIndex(Z_INDEX_GRAYED_OUT);
     }
 
     private void setHighlightedStyle() {
-	overlay.setIconURL(getHighlightIconURL());
-	overlay.setZIndex(Z_INDEX_HIGHLIGHTED);
+        overlay.setIconURL(getHighlightIconURL());
+        overlay.setZIndex(Z_INDEX_HIGHLIGHTED);
     }
 
     private void setSelectedStyle() {
-	overlay.setIconURL(getSelectedIconURL());
-	overlay.setZIndex(Z_INDEX_SELECTED);
+        overlay.setIconURL(getSelectedIconURL());
+        overlay.setZIndex(Z_INDEX_SELECTED);
     }
 
     @Override
     protected void setStatusStyling(Status status) {
-	switch (status) {
-	case HIGHLIGHTED_SELECTED: {
-	    setHighlightedStyle();
-	}
-	    break;
-	case HIGHLIGHTED: {
-	    setHighlightedStyle();
-	}
-	    break;
-	case DEFAULT: {
-	    setDefaultStyle();
-	}
-	    break;
-	case GRAYED_OUT: {
-	    setGrayedOutStyle();
-	}
-	    break;
-	case SELECTED: {
-	    setSelectedStyle();
-	}
-	    break;
-	}
+        switch (status) {
+        case HIGHLIGHTED_SELECTED: {
+            setHighlightedStyle();
+        }
+            break;
+        case HIGHLIGHTED: {
+            setHighlightedStyle();
+        }
+            break;
+        case DEFAULT: {
+            setDefaultStyle();
+        }
+            break;
+        case GRAYED_OUT: {
+            setGrayedOutStyle();
+        }
+            break;
+        case SELECTED: {
+            setSelectedStyle();
+        }
+            break;
+        }
     }
 }

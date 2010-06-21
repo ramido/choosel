@@ -19,6 +19,6 @@ import org.thechiselgroup.choosel.client.command.UndoableCommand;
 import org.thechiselgroup.choosel.client.util.HasDescription;
 
 public interface TestUndoableCommandWithDescription extends UndoableCommand,
-	HasDescription {
+        HasDescription {
 
 }

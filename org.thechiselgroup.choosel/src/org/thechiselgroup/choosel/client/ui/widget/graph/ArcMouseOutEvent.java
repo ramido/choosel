@@ -17,20 +17,20 @@ package org.thechiselgroup.choosel.client.ui.widget.graph;
 
 public class ArcMouseOutEvent extends ArcEvent<ArcMouseOutHandler> {
 
-    public ArcMouseOutEvent(Arc arc, int mouseX, int mouseY) {
-	super(arc, mouseX, mouseY);
-    }
-
     public static final Type<ArcMouseOutHandler> TYPE = new Type<ArcMouseOutHandler>();
+
+    public ArcMouseOutEvent(Arc arc, int mouseX, int mouseY) {
+        super(arc, mouseX, mouseY);
+    }
 
     @Override
     protected void dispatch(ArcMouseOutHandler handler) {
-	handler.onMouseOut(this);
+        handler.onMouseOut(this);
     }
 
     @Override
     public Type<ArcMouseOutHandler> getAssociatedType() {
-	return TYPE;
+        return TYPE;
     }
 
 }

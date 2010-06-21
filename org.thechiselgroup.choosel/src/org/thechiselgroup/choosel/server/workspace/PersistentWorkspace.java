@@ -56,59 +56,59 @@ public class PersistentWorkspace {
     private WindowDTO[] windows;
 
     public Long getId() {
-	return id;
+        return id;
     }
 
     public Set<PersistentSharingInvitation> getInvitations() {
-	return invitations;
+        return invitations;
     }
 
     public String getName() {
-	return name;
+        return name;
     }
 
     public Set<PersistentWorkspacePermission> getPermissions() {
-	return permissions;
+        return permissions;
     }
 
     public Resource[] getResources() {
-	return resources;
+        return resources;
     }
 
     public ResourceSetDTO[] getResourceSets() {
-	return resourceSets;
+        return resourceSets;
     }
 
     public WindowDTO[] getWindows() {
-	return windows;
+        return windows;
     }
 
     public void setId(Long id) {
-	this.id = id;
+        this.id = id;
     }
 
     public void setInvitations(Set<PersistentSharingInvitation> invitations) {
-	this.invitations = invitations;
+        this.invitations = invitations;
     }
 
     public void setName(String name) {
-	this.name = name;
+        this.name = name;
     }
 
     public void setPermissions(Set<PersistentWorkspacePermission> permissions) {
-	this.permissions = permissions;
+        this.permissions = permissions;
     }
 
     public void setResources(Resource[] resources) {
-	this.resources = resources;
+        this.resources = resources;
     }
 
     public void setResourceSets(ResourceSetDTO[] resourceSets) {
-	this.resourceSets = resourceSets;
+        this.resourceSets = resourceSets;
     }
 
     public void setWindows(WindowDTO[] windows) {
-	this.windows = windows;
+        this.windows = windows;
     }
 
 }

@@ -15,9 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.server.workspace;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,10 +40,6 @@ import org.thechiselgroup.choosel.client.workspace.dto.WindowDTO;
 import org.thechiselgroup.choosel.client.workspace.dto.WorkspaceDTO;
 import org.thechiselgroup.choosel.client.workspace.dto.WorkspacePreviewDTO;
 import org.thechiselgroup.choosel.client.workspace.service.WorkspacePersistenceService;
-import org.thechiselgroup.choosel.server.workspace.PersistentWorkspace;
-import org.thechiselgroup.choosel.server.workspace.PersistentWorkspacePermission;
-import org.thechiselgroup.choosel.server.workspace.WorkspacePersistenceServiceImplementation;
-import org.thechiselgroup.choosel.server.workspace.WorkspaceSecurityManager;
 
 public class WorkspacePersistenceServiceImplementationTest {
 
@@ -65,60 +62,60 @@ public class WorkspacePersistenceServiceImplementationTest {
     @Mock
     private WorkspaceSecurityManager securityManager;
 
-    @Before
-    public void setUp() {
-	MockitoAnnotations.initMocks(this);
+    @Test
+    public void getAllWorkspaces() throws ServiceException {
+        PersistentWorkspacePermission permission = new PersistentWorkspacePermission();
+        permission.setWorkspace(persistentWorkspace);
 
-	workspaceDTOs = new WorkspaceDTO[] { new WorkspaceDTO(null, NAME),
-		new WorkspaceDTO() };
+        Collection<PersistentWorkspacePermission> permissions = new ArrayList<PersistentWorkspacePermission>();
+        permissions.add(permission);
+        when(securityManager.getWorkspacePermissionsForCurrentUser(manager))
+                .thenReturn(permissions);
+        when(manager.getObjectById(PersistentWorkspace.class, ID)).thenReturn(
+                persistentWorkspace);
 
-	service = new WorkspacePersistenceServiceImplementation(pmf,
-		securityManager);
+        List<WorkspacePreviewDTO> result = service.loadWorkspacePreviews();
 
-	persistentWorkspace = new PersistentWorkspace();
-	persistentWorkspace.setId(ID);
-	persistentWorkspace.setName(NAME);
-
-	when(pmf.getPersistenceManager()).thenReturn(manager);
+        List<WorkspacePreviewDTO> expected = new ArrayList<WorkspacePreviewDTO>();
+        expected.add(new WorkspacePreviewDTO(ID, NAME));
+        Assert2.assertEquals(expected, result);
     }
 
     // TODO test DTO update
 
     @Test
     public void saveNewWorkspaceDTO() throws ServiceException {
-	WindowDTO windowDTO = new WindowDTO();
-	workspaceDTOs[0].setWindows(new WindowDTO[] { windowDTO });
-	workspaceDTOs[0].setResources(new Resource[0]);
-	workspaceDTOs[0].setResourceSets(new ResourceSetDTO[0]);
-	persistentWorkspace.setWindows(new WindowDTO[] { windowDTO });
+        WindowDTO windowDTO = new WindowDTO();
+        workspaceDTOs[0].setWindows(new WindowDTO[] { windowDTO });
+        workspaceDTOs[0].setResources(new Resource[0]);
+        workspaceDTOs[0].setResourceSets(new ResourceSetDTO[0]);
+        persistentWorkspace.setWindows(new WindowDTO[] { windowDTO });
 
-	when(manager.makePersistent(Matchers.any())).thenReturn(
-		persistentWorkspace);
+        when(manager.makePersistent(Matchers.any())).thenReturn(
+                persistentWorkspace);
 
-	Long result = service.saveWorkspace(workspaceDTOs[0]);
+        Long result = service.saveWorkspace(workspaceDTOs[0]);
 
-	verify(pmf).getPersistenceManager();
-	verify(manager).makePersistent(any(PersistentWorkspace.class));
-	verify(manager).close();
-	assertEquals(ID, result);
+        verify(pmf).getPersistenceManager();
+        verify(manager).makePersistent(any(PersistentWorkspace.class));
+        verify(manager).close();
+        assertEquals(ID, result);
     }
 
-    @Test
-    public void getAllWorkspaces() throws ServiceException {
-	PersistentWorkspacePermission permission = new PersistentWorkspacePermission();
-	permission.setWorkspace(persistentWorkspace);
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
 
-	Collection<PersistentWorkspacePermission> permissions = new ArrayList<PersistentWorkspacePermission>();
-	permissions.add(permission);
-	when(securityManager.getWorkspacePermissionsForCurrentUser(manager))
-		.thenReturn(permissions);
-	when(manager.getObjectById(PersistentWorkspace.class, ID)).thenReturn(
-		persistentWorkspace);
+        workspaceDTOs = new WorkspaceDTO[] { new WorkspaceDTO(null, NAME),
+                new WorkspaceDTO() };
 
-	List<WorkspacePreviewDTO> result = service.loadWorkspacePreviews();
+        service = new WorkspacePersistenceServiceImplementation(pmf,
+                securityManager);
 
-	List<WorkspacePreviewDTO> expected = new ArrayList<WorkspacePreviewDTO>();
-	expected.add(new WorkspacePreviewDTO(ID, NAME));
-	Assert2.assertEquals(expected, result);
+        persistentWorkspace = new PersistentWorkspace();
+        persistentWorkspace.setId(ID);
+        persistentWorkspace.setName(NAME);
+
+        when(pmf.getPersistenceManager()).thenReturn(manager);
     }
 }

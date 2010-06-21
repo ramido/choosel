@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.server.urlfetch;
 
-import static com.google.appengine.api.urlfetch.FetchOptions.Builder.*;
+import static com.google.appengine.api.urlfetch.FetchOptions.Builder.withDeadline;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -47,71 +47,71 @@ public class CachedDocumentFetchService implements DocumentFetchService {
     private DocumentBuilderFactory domBuilderFactory;
 
     public CachedDocumentFetchService(URLFetchService fetchService,
-	    PersistenceManagerFactory pmf,
-	    DocumentBuilderFactory domBuilderFactory) {
+            PersistenceManagerFactory pmf,
+            DocumentBuilderFactory domBuilderFactory) {
 
-	this.fetchService = fetchService;
-	this.pmf = pmf;
-	this.domBuilderFactory = domBuilderFactory;
+        this.fetchService = fetchService;
+        this.pmf = pmf;
+        this.domBuilderFactory = domBuilderFactory;
     }
 
     @Override
     public Document fetchXML(String urlAsString) throws IOException,
-	    SAXException, ParserConfigurationException {
+            SAXException, ParserConfigurationException {
 
-	assert urlAsString != null;
+        assert urlAsString != null;
 
-	// try to get from cache
-	PersistenceManager manager = getPersistenceManager();
-	try {
-	    Query query = manager.newQuery(PersistentHttpResult.class,
-		    "url == urlParam");
-	    query.declareParameters("String urlParam");
+        // try to get from cache
+        PersistenceManager manager = getPersistenceManager();
+        try {
+            Query query = manager.newQuery(PersistentHttpResult.class,
+                    "url == urlParam");
+            query.declareParameters("String urlParam");
 
-	    Collection<PersistentHttpResult> cachedResults = (Collection<PersistentHttpResult>) query
-		    .execute(urlAsString);
+            Collection<PersistentHttpResult> cachedResults = (Collection<PersistentHttpResult>) query
+                    .execute(urlAsString);
 
-	    if (!cachedResults.isEmpty()) {
-		Blob resultBlob = cachedResults.iterator().next().getResult();
-		return parseDocument(resultBlob.getBytes());
-	    }
-	} finally {
-	    manager.close();
-	}
+            if (!cachedResults.isEmpty()) {
+                Blob resultBlob = cachedResults.iterator().next().getResult();
+                return parseDocument(resultBlob.getBytes());
+            }
+        } finally {
+            manager.close();
+        }
 
-	HTTPRequest request = new HTTPRequest(new URL(urlAsString),
-		HTTPMethod.GET, withDeadline(10d).followRedirects()
-			.disallowTruncate());
+        HTTPRequest request = new HTTPRequest(new URL(urlAsString),
+                HTTPMethod.GET, withDeadline(10d).followRedirects()
+                        .disallowTruncate());
 
-	byte[] content = fetchService.fetch(request).getContent();
+        byte[] content = fetchService.fetch(request).getContent();
 
-	store(urlAsString, content);
+        store(urlAsString, content);
 
-	return parseDocument(content);
-    }
-
-    private void store(String urlAsString, byte[] content) {
-	PersistenceManager manager = getPersistenceManager();
-	try {
-	    PersistentHttpResult permission = new PersistentHttpResult();
-	    permission.setFetchDate(new Date());
-	    permission.setUrl(urlAsString);
-	    permission.setResult(new Blob(content));
-	    manager.makePersistent(permission);
-	} finally {
-	    manager.close();
-	}
-    }
-
-    private Document parseDocument(byte[] bytes) throws SAXException,
-	    IOException, ParserConfigurationException {
-	ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
-
-	return domBuilderFactory.newDocumentBuilder().parse(stream);
+        return parseDocument(content);
     }
 
     private PersistenceManager getPersistenceManager() {
-	return pmf.getPersistenceManager();
+        return pmf.getPersistenceManager();
+    }
+
+    private Document parseDocument(byte[] bytes) throws SAXException,
+            IOException, ParserConfigurationException {
+        ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
+
+        return domBuilderFactory.newDocumentBuilder().parse(stream);
+    }
+
+    private void store(String urlAsString, byte[] content) {
+        PersistenceManager manager = getPersistenceManager();
+        try {
+            PersistentHttpResult permission = new PersistentHttpResult();
+            permission.setFetchDate(new Date());
+            permission.setUrl(urlAsString);
+            permission.setResult(new Blob(content));
+            manager.makePersistent(permission);
+        } finally {
+            manager.close();
+        }
     }
 
 }

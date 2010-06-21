@@ -31,26 +31,26 @@ public class PositionManager {
     private final int horizontalSteps;
 
     public PositionManager(HasSize desktop, int horizontalSteps,
-	    int verticalSteps, int padding) {
+            int verticalSteps, int padding) {
 
-	this.desktop = desktop;
-	this.verticalSteps = verticalSteps;
-	this.horizontalSteps = horizontalSteps;
-	this.padding = padding;
-    }
-
-    public Point getNextLocation(int windowWidth, int windowHeight) {
-	int x = calculate(windowWidth, desktop.getWidth(), horizontalSteps);
-	int y = calculate(windowHeight, desktop.getHeight(), verticalSteps);
-
-	invocationCounter++;
-
-	return new Point(x, y);
+        this.desktop = desktop;
+        this.verticalSteps = verticalSteps;
+        this.horizontalSteps = horizontalSteps;
+        this.padding = padding;
     }
 
     private int calculate(int windowLength, int offsetLength, int steps) {
-	int availableLength = offsetLength - windowLength - 2 * padding;
-	int stepLength = availableLength / steps;
-	return padding + stepLength * (invocationCounter % steps);
+        int availableLength = offsetLength - windowLength - 2 * padding;
+        int stepLength = availableLength / steps;
+        return padding + stepLength * (invocationCounter % steps);
+    }
+
+    public Point getNextLocation(int windowWidth, int windowHeight) {
+        int x = calculate(windowWidth, desktop.getWidth(), horizontalSteps);
+        int y = calculate(windowHeight, desktop.getHeight(), verticalSteps);
+
+        invocationCounter++;
+
+        return new Point(x, y);
     }
 }

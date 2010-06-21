@@ -30,22 +30,22 @@ public class PopupClosingEvent extends GwtEvent<PopupClosingHandler> {
     private final PopupManager manager;
 
     public PopupClosingEvent(PopupManager manager) {
-	assert manager != null;
-	this.manager = manager;
+        assert manager != null;
+        this.manager = manager;
     }
 
     @Override
     protected void dispatch(PopupClosingHandler handler) {
-	handler.onPopupClosing(this);
+        handler.onPopupClosing(this);
     }
 
     @Override
     public GwtEvent.Type<PopupClosingHandler> getAssociatedType() {
-	return TYPE;
+        return TYPE;
     }
 
     public PopupManager getManager() {
-	return manager;
+        return manager;
     }
 
 }

@@ -26,7 +26,7 @@ import org.thechiselgroup.choosel.client.views.View;
  * are not explicitly contained in another user set for this view.
  */
 public class RemoveResourceSetFromViewCommand implements UndoableCommand,
-	HasDescription {
+        HasDescription {
 
     private ResourceSet resourceSet;
 
@@ -35,49 +35,49 @@ public class RemoveResourceSetFromViewCommand implements UndoableCommand,
     private String description;
 
     public RemoveResourceSetFromViewCommand(View view, ResourceSet resourceSet) {
-	this(view, resourceSet, "Remove resource set '"
-		+ resourceSet.getLabel() + "' from view");
+        this(view, resourceSet, "Remove resource set '"
+                + resourceSet.getLabel() + "' from view");
     }
 
     public RemoveResourceSetFromViewCommand(View view, ResourceSet resourceSet,
-	    String description) {
+            String description) {
 
-	assert view != null;
-	assert resourceSet != null;
-	assert resourceSet.hasLabel();
-	assert description != null;
+        assert view != null;
+        assert resourceSet != null;
+        assert resourceSet.hasLabel();
+        assert description != null;
 
-	this.description = description;
-	this.view = view;
-	this.resourceSet = resourceSet;
+        this.description = description;
+        this.view = view;
+        this.resourceSet = resourceSet;
     }
 
     @Override
     public void execute() {
-	assert view.containsResourceSet(resourceSet);
-	view.removeResourceSet(resourceSet);
-	assert !view.containsResourceSet(resourceSet);
+        assert view.containsResourceSet(resourceSet);
+        view.removeResourceSet(resourceSet);
+        assert !view.containsResourceSet(resourceSet);
     }
 
     // TODO add view name / label once available
     @Override
     public String getDescription() {
-	return description;
+        return description;
     }
 
     public ResourceSet getResourceSet() {
-	return resourceSet;
+        return resourceSet;
     }
 
     public View getView() {
-	return view;
+        return view;
     }
 
     @Override
     public void undo() {
-	assert !view.containsResourceSet(resourceSet);
-	view.addResourceSet(resourceSet);
-	assert view.containsResourceSet(resourceSet);
+        assert !view.containsResourceSet(resourceSet);
+        view.addResourceSet(resourceSet);
+        assert view.containsResourceSet(resourceSet);
     }
 
 }

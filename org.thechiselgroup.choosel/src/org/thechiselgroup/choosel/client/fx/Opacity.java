@@ -18,8 +18,11 @@ package org.thechiselgroup.choosel.client.fx;
 public interface Opacity {
 
     int OPACITY_TRANSPARENT = 0;
+
     int OPACITY_80_PERCENT = 80;
+
     int OPACITY_SEMI_TRANSPARENT = OPACITY_80_PERCENT;
+
     int OPACITY_OPAQUE = 100;
 
 }

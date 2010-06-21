@@ -25,42 +25,42 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 
 public class HelpWindowContent extends AbstractWindowContent implements
-	Persistable {
+        Persistable {
 
     public HelpWindowContent() {
-	super("Help", "help");
+        super("Help", "help");
     }
 
     @Override
     public Widget asWidget() {
-	String playList = "<object width=\"700\" height=\"483\">"
-		+ "<param name=\"movie\" value=\"http://www.youtube-nocookie.com/p/C67C71F54B5E198B&amp;hl=en_US&amp;fs=1&hd=1&rel=0&autoplay=1\"></param>"
-		+ "<param name=\"allowFullScreen\" value=\"true\"></param>"
-		+ "<param name=\"allowscriptaccess\" value=\"always\"></param>"
-		+ "<param name=\"wmode\" value=\"transparent\"></param>"
-		+ "<embed src=\"http://www.youtube-nocookie.com/p/C67C71F54B5E198B&amp;hl=en_US&amp;fs=1&hd=1&rel=0&autoplay=1\" "
-		+ "type=\"application/x-shockwave-flash\" "
-		+ "width=\"700\" height=\"483\" "
-		+ "allowscriptaccess=\"always\" wmode=\"transparent\" allowfullscreen=\"true\"></embed></object>";
+        String playList = "<object width=\"700\" height=\"483\">"
+                + "<param name=\"movie\" value=\"http://www.youtube-nocookie.com/p/C67C71F54B5E198B&amp;hl=en_US&amp;fs=1&hd=1&rel=0&autoplay=1\"></param>"
+                + "<param name=\"allowFullScreen\" value=\"true\"></param>"
+                + "<param name=\"allowscriptaccess\" value=\"always\"></param>"
+                + "<param name=\"wmode\" value=\"transparent\"></param>"
+                + "<embed src=\"http://www.youtube-nocookie.com/p/C67C71F54B5E198B&amp;hl=en_US&amp;fs=1&hd=1&rel=0&autoplay=1\" "
+                + "type=\"application/x-shockwave-flash\" "
+                + "width=\"700\" height=\"483\" "
+                + "allowscriptaccess=\"always\" wmode=\"transparent\" allowfullscreen=\"true\"></embed></object>";
 
-	// String youtube = "<object width=\"425\" height=\"344\">"
-	// +
-	// "<param name=\"movie\" value=\"http://www.youtube.com/v/8lMDN24TLmE&hl=en_US&fs=1&rel=0\"></param>"
-	// + "<param name=\"allowFullScreen\" value=\"true\"></param>"
-	// + "<param name=\"allowscriptaccess\" value=\"always\"></param>"
-	// + "<param name=\"wmode\" value=\"transparent\"></param>"
-	// +
-	// "<embed src=\"http://www.youtube.com/v/8lMDN24TLmE&hl=en_US&fs=1&rel=0\" "
-	// +
-	// "type=\"application/x-shockwave-flash\" allowscriptaccess=\"always\" "
-	// +
-	// "allowfullscreen=\"true\" wmode=\"transparent\" width=\"425\" height=\"344\">"
-	// + "</embed></object>";
+        // String youtube = "<object width=\"425\" height=\"344\">"
+        // +
+        // "<param name=\"movie\" value=\"http://www.youtube.com/v/8lMDN24TLmE&hl=en_US&fs=1&rel=0\"></param>"
+        // + "<param name=\"allowFullScreen\" value=\"true\"></param>"
+        // + "<param name=\"allowscriptaccess\" value=\"always\"></param>"
+        // + "<param name=\"wmode\" value=\"transparent\"></param>"
+        // +
+        // "<embed src=\"http://www.youtube.com/v/8lMDN24TLmE&hl=en_US&fs=1&rel=0\" "
+        // +
+        // "type=\"application/x-shockwave-flash\" allowscriptaccess=\"always\" "
+        // +
+        // "allowfullscreen=\"true\" wmode=\"transparent\" width=\"425\" height=\"344\">"
+        // + "</embed></object>";
 
-	final String html = "<p style=\"width: 660px; margin: 10px; padding-bottom: 10px;\"><b>This tutorial contains 20 videos that explain the "
-		+ "different features of Bio-Mixer. Please use the video controls or hover over the video to"
-		+ " jump to a specific tutorial.</b></p>" + playList;
-	return new HTML(html);
+        final String html = "<p style=\"width: 660px; margin: 10px; padding-bottom: 10px;\"><b>This tutorial contains 20 videos that explain the "
+                + "different features of Bio-Mixer. Please use the video controls or hover over the video to"
+                + " jump to a specific tutorial.</b></p>" + playList;
+        return new HTML(html);
     }
 
     @Override
@@ -69,6 +69,6 @@ public class HelpWindowContent extends AbstractWindowContent implements
 
     @Override
     public Memento save(ResourceSetCollector resourceSetCollector) {
-	return new Memento();
+        return new Memento();
     }
 }

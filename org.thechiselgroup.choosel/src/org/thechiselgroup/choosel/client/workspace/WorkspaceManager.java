@@ -20,12 +20,12 @@ import com.google.gwt.event.shared.HandlerRegistration;
 public interface WorkspaceManager {
 
     HandlerRegistration addSwitchedWorkspaceEventHandler(
-	    WorkspaceSwitchedEventHandler h);
+            WorkspaceSwitchedEventHandler h);
+
+    void createNewWorkspace();
 
     Workspace getWorkspace();
 
     void setWorkspace(Workspace workspace);
-
-    void createNewWorkspace();
 
 }

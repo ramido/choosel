@@ -24,15 +24,15 @@ public class StubbingArgumentCaptor<T> implements Answer<T> {
 
     @Override
     public T answer(InvocationOnMock invocation) {
-	arguments = invocation.getArguments();
-	return null;
-    }
-
-    public boolean wasCalled() {
-	return arguments != null;
+        arguments = invocation.getArguments();
+        return null;
     }
 
     public <S> S getAs(Class<S> clazz, int index) {
-	return clazz.cast(arguments[index]);
+        return clazz.cast(arguments[index]);
+    }
+
+    public boolean wasCalled() {
+        return arguments != null;
     }
 }

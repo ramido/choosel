@@ -53,7 +53,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 public class WindowPanel extends NEffectPanel implements
-	DragProxyEventReceiver, Opacity {
+        DragProxyEventReceiver, Opacity {
 
     /**
      * WindowPanel direction constant, used in
@@ -62,14 +62,14 @@ public class WindowPanel extends NEffectPanel implements
      */
     public static class DirectionConstant {
 
-	public final int directionBits;
+        public final int directionBits;
 
-	public final String directionLetters;
+        public final String directionLetters;
 
-	private DirectionConstant(int directionBits, String directionLetters) {
-	    this.directionBits = directionBits;
-	    this.directionLetters = directionLetters;
-	}
+        private DirectionConstant(int directionBits, String directionLetters) {
+            this.directionBits = directionBits;
+            this.directionLetters = directionLetters;
+        }
     }
 
     private static final int BORDER_THICKNESS = 3;
@@ -108,7 +108,7 @@ public class WindowPanel extends NEffectPanel implements
      * Specifies that resizing occur at the east edge.
      */
     public static final DirectionConstant EAST = new DirectionConstant(
-	    DIRECTION_EAST, "e");
+            DIRECTION_EAST, "e");
 
     private static final String IMAGE_CLOSE_ACTIVE = "images/close_active.gif";
 
@@ -120,42 +120,44 @@ public class WindowPanel extends NEffectPanel implements
      * Specifies that resizing occur at the both edge.
      */
     public static final DirectionConstant NORTH = new DirectionConstant(
-	    DIRECTION_NORTH, "n");
+            DIRECTION_NORTH, "n");
 
     /**
      * Specifies that resizing occur at the north-east edge.
      */
     public static final DirectionConstant NORTH_EAST = new DirectionConstant(
-	    DIRECTION_NORTH | DIRECTION_EAST, "ne");
+            DIRECTION_NORTH | DIRECTION_EAST, "ne");
 
     /**
      * Specifies that resizing occur at the north-west edge.
      */
     public static final DirectionConstant NORTH_WEST = new DirectionConstant(
-	    DIRECTION_NORTH | DIRECTION_WEST, "nw");
+            DIRECTION_NORTH | DIRECTION_WEST, "nw");
 
     /**
      * Specifies that resizing occur at the south edge.
      */
     public static final DirectionConstant SOUTH = new DirectionConstant(
-	    DIRECTION_SOUTH, "s");
+            DIRECTION_SOUTH, "s");
 
     /**
      * Specifies that resizing occur at the south-east edge.
      */
     public static final DirectionConstant SOUTH_EAST = new DirectionConstant(
-	    DIRECTION_SOUTH | DIRECTION_EAST, "se");
+            DIRECTION_SOUTH | DIRECTION_EAST, "se");
 
     /**
      * Specifies that resizing occur at the south-west edge.
      */
     public static final DirectionConstant SOUTH_WEST = new DirectionConstant(
-	    DIRECTION_SOUTH | DIRECTION_WEST, "sw");
+            DIRECTION_SOUTH | DIRECTION_WEST, "sw");
+
     /**
      * Specifies that resizing occur at the west edge.
      */
     public static final DirectionConstant WEST = new DirectionConstant(
-	    DIRECTION_WEST, "w");
+            DIRECTION_WEST, "w");
+
     private static final int WINDOW_BORDER_FROM_CSS = 2;
 
     private Image closeImage;
@@ -196,46 +198,46 @@ public class WindowPanel extends NEffectPanel implements
     private String windowTitle;
 
     public void adjustSize() {
-	int height = contentWidget.getOffsetHeight();
-	int width = contentWidget.getOffsetWidth();
+        int height = contentWidget.getOffsetHeight();
+        int width = contentWidget.getOffsetWidth();
 
-	setContentSize(width, height);
+        setContentSize(width, height);
     }
 
     // TODO refactor
     public void animateMoveToLocation(final int x, final int y) {
-	WidgetLocation location = new WidgetLocation(this, getParent());
+        WidgetLocation location = new WidgetLocation(this, getParent());
 
-	Move move = new Move(x - location.getLeft(), y - location.getTop()) {
-	    @Override
-	    public void tearDownEffect() {
-		// do not super.tearDownEffects as this resets to original state
-		// reset root panel position as this is affected by move
-		WidgetUtils.setPosition(rootPanel, 0, 0);
-	    };
-	};
+        Move move = new Move(x - location.getLeft(), y - location.getTop()) {
+            @Override
+            public void tearDownEffect() {
+                // do not super.tearDownEffects as this resets to original state
+                // reset root panel position as this is affected by move
+                WidgetUtils.setPosition(rootPanel, 0, 0);
+            };
+        };
 
-	move.addEffectCompletedHandler(new EffectCompletedHandler() {
-	    @Override
-	    public void onEffectCompleted(EffectCompletedEvent event) {
-		removeEffects();
-		setLocation(x, y);
-		assert x == new WidgetLocation(WindowPanel.this, getParent())
-			.getLeft();
-		assert y == new WidgetLocation(WindowPanel.this, getParent())
-			.getTop();
-		assert 0 == new WidgetLocation(rootPanel, WindowPanel.this)
-			.getLeft();
-		assert 0 == new WidgetLocation(rootPanel, WindowPanel.this)
-			.getTop();
-	    }
-	});
+        move.addEffectCompletedHandler(new EffectCompletedHandler() {
+            @Override
+            public void onEffectCompleted(EffectCompletedEvent event) {
+                removeEffects();
+                setLocation(x, y);
+                assert x == new WidgetLocation(WindowPanel.this, getParent())
+                        .getLeft();
+                assert y == new WidgetLocation(WindowPanel.this, getParent())
+                        .getTop();
+                assert 0 == new WidgetLocation(rootPanel, WindowPanel.this)
+                        .getLeft();
+                assert 0 == new WidgetLocation(rootPanel, WindowPanel.this)
+                        .getTop();
+            }
+        });
 
-	move.setTransitionType(FXUtil.EASE_OUT);
-	move.setDuration(FXUtil.MORPH_DURATION_IN_SECONDS);
+        move.setTransitionType(FXUtil.EASE_OUT);
+        move.setDuration(FXUtil.MORPH_DURATION_IN_SECONDS);
 
-	addEffect(move);
-	playEffects();
+        addEffect(move);
+        playEffects();
     }
 
     /**
@@ -244,388 +246,389 @@ public class WindowPanel extends NEffectPanel implements
      */
     // TODO rename to animate hide, add effect completed handler in method
     public void close() {
-	NEffect fade = createHideEffect();
+        NEffect fade = createHideEffect();
 
-	fade.addEffectCompletedHandler(new EffectCompletedHandler() {
-	    @Override
-	    public void onEffectCompleted(EffectCompletedEvent event) {
-		removeEffects();
-		windowController.close(WindowPanel.this);
-	    }
-	});
+        fade.addEffectCompletedHandler(new EffectCompletedHandler() {
+            @Override
+            public void onEffectCompleted(EffectCompletedEvent event) {
+                removeEffects();
+                windowController.close(WindowPanel.this);
+            }
+        });
 
-	addEffect(fade);
-	playEffects();
+        addEffect(fade);
+        playEffects();
     }
 
     // hook
     protected ClickHandler createCloseButtonClickHandler() {
-	return new ClickHandler() {
-	    @Override
-	    public void onClick(ClickEvent event) {
-		close();
-	    }
-	};
+        return new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                close();
+            }
+        };
     }
 
     private HorizontalPanel createHeaderBar() {
-	HorizontalPanel headerBar = new HorizontalPanel();
+        HorizontalPanel headerBar = new HorizontalPanel();
 
-	headerBar.setSize("100%", "");
-	headerBar.add(headerWidget);
-	headerBar.setCellHorizontalAlignment(headerWidget,
-		HasAlignment.ALIGN_LEFT);
+        headerBar.setSize("100%", "");
+        headerBar.add(headerWidget);
+        headerBar.setCellHorizontalAlignment(headerWidget,
+                HasAlignment.ALIGN_LEFT);
 
-	closeImage = new Image(getInvisibleCloseImageUrl());
-	closeImage.addStyleName(CSS_WINDOW_BUTTON_PANEL);
+        closeImage = new Image(getInvisibleCloseImageUrl());
+        closeImage.addStyleName(CSS_WINDOW_BUTTON_PANEL);
 
-	closeImage.addMouseOverHandler(new MouseOverHandler() {
-	    @Override
-	    public void onMouseOver(MouseOverEvent event) {
-		closeImage.setUrl(getActiveCloseImageUrl());
-	    }
-	});
+        closeImage.addMouseOverHandler(new MouseOverHandler() {
+            @Override
+            public void onMouseOver(MouseOverEvent event) {
+                closeImage.setUrl(getActiveCloseImageUrl());
+            }
+        });
 
-	closeImage.addMouseOutHandler(new MouseOutHandler() {
-	    @Override
-	    public void onMouseOut(MouseOutEvent event) {
-		closeImage.setUrl(getVisibleCloseImageUrl());
-	    }
-	});
+        closeImage.addMouseOutHandler(new MouseOutHandler() {
+            @Override
+            public void onMouseOut(MouseOutEvent event) {
+                closeImage.setUrl(getVisibleCloseImageUrl());
+            }
+        });
 
-	rootPanel.addMouseOverHandler(new MouseOverHandler() {
-	    @Override
-	    public void onMouseOver(MouseOverEvent event) {
-		closeImage.setUrl(getVisibleCloseImageUrl());
-	    }
-	});
+        rootPanel.addMouseOverHandler(new MouseOverHandler() {
+            @Override
+            public void onMouseOver(MouseOverEvent event) {
+                closeImage.setUrl(getVisibleCloseImageUrl());
+            }
+        });
 
-	rootPanel.addMouseOutHandler(new MouseOutHandler() {
-	    @Override
-	    public void onMouseOut(MouseOutEvent event) {
-		closeImage.setUrl(getInvisibleCloseImageUrl());
-	    }
-	});
+        rootPanel.addMouseOutHandler(new MouseOutHandler() {
+            @Override
+            public void onMouseOut(MouseOutEvent event) {
+                closeImage.setUrl(getInvisibleCloseImageUrl());
+            }
+        });
 
-	// disable dragging / transparency on mouse down over image
-	closeImage.addMouseDownHandler(new MouseDownHandler() {
-	    @Override
-	    public void onMouseDown(MouseDownEvent event) {
-		event.stopPropagation();
-		event.preventDefault();
-	    }
-	});
+        // disable dragging / transparency on mouse down over image
+        closeImage.addMouseDownHandler(new MouseDownHandler() {
+            @Override
+            public void onMouseDown(MouseDownEvent event) {
+                event.stopPropagation();
+                event.preventDefault();
+            }
+        });
 
-	closeImage.addClickHandler(createCloseButtonClickHandler());
+        closeImage.addClickHandler(createCloseButtonClickHandler());
 
-	DefaultPopupManager manager = DefaultPopupManager.createPopupManager(
-		closeImage, new WidgetFactory() {
-		    @Override
-		    public Widget createWidget() {
-			return new Label(getClosePopupLabel());
-		    }
-		});
-	manager.setHideDelay(0);
+        DefaultPopupManager manager = DefaultPopupManager.createPopupManager(
+                closeImage, new WidgetFactory() {
+                    @Override
+                    public Widget createWidget() {
+                        return new Label(getClosePopupLabel());
+                    }
+                });
+        manager.setHideDelay(0);
 
-	headerBar.add(closeImage);
-	headerBar.setCellHorizontalAlignment(closeImage,
-		HasAlignment.ALIGN_RIGHT);
-	headerBar.setCellVerticalAlignment(closeImage,
-		HasAlignment.ALIGN_MIDDLE);
+        headerBar.add(closeImage);
+        headerBar.setCellHorizontalAlignment(closeImage,
+                HasAlignment.ALIGN_RIGHT);
+        headerBar.setCellVerticalAlignment(closeImage,
+                HasAlignment.ALIGN_MIDDLE);
 
-	return headerBar;
+        return headerBar;
     }
 
     // hook
     protected NEffect createHideEffect() {
-	return FXUtil.createOpacityMorph(Opacity.OPACITY_OPAQUE,
-		OPACITY_TRANSPARENT);
+        return FXUtil.createOpacityMorph(Opacity.OPACITY_OPAQUE,
+                OPACITY_TRANSPARENT);
     }
 
     protected NEffect createShowEffect() {
-	return FXUtil.createOpacityMorph(OPACITY_TRANSPARENT, OPACITY_OPAQUE);
+        return FXUtil.createOpacityMorph(OPACITY_TRANSPARENT, OPACITY_OPAQUE);
     }
 
     @Override
     public void dragProxyAttached() {
-	closeImage.setUrl(getInvisibleCloseImageUrl());
+        closeImage.setUrl(getInvisibleCloseImageUrl());
     }
 
     @Override
     public void dragProxyDetached() {
-	// ignored
+        // ignored
     }
 
     public int getAbsoluteX() {
-	return getAbsoluteLeft() - getParent().getAbsoluteLeft();
+        return getAbsoluteLeft() - getParent().getAbsoluteLeft();
     }
 
     public int getAbsoluteY() {
-	return getAbsoluteTop() - getParent().getAbsoluteTop();
+        return getAbsoluteTop() - getParent().getAbsoluteTop();
     }
 
     private String getActiveCloseImageUrl() {
-	return getModuleBase() + IMAGE_CLOSE_ACTIVE;
+        return getModuleBase() + IMAGE_CLOSE_ACTIVE;
     }
 
     /*
      * hook method
      */
     protected String getClosePopupLabel() {
-	return "Close";
+        return "Close";
     }
 
     public int getContentHeight() {
-	return contentHeight;
+        return contentHeight;
     }
 
     public int getContentWidth() {
-	return contentWidth;
+        return contentWidth;
     }
 
     private String getInvisibleCloseImageUrl() {
-	return getModuleBase() + IMAGE_CLOSE_INVISIBLE;
+        return getModuleBase() + IMAGE_CLOSE_INVISIBLE;
     }
 
     public int getMinimumWidth() {
-	int minimumWidth = 20;
+        int minimumWidth = 20;
 
-	return headerWidget.getOffsetWidth() > minimumWidth ? headerWidget
-		.getOffsetWidth() : minimumWidth;
+        return headerWidget.getOffsetWidth() > minimumWidth ? headerWidget
+                .getOffsetWidth() : minimumWidth;
     }
 
     protected String getModuleBase() {
-	return GWT.getModuleBaseURL();
+        return GWT.getModuleBaseURL();
     }
 
     // TODO move into model
     public WindowContent getViewContent() {
-	return this.viewContent;
+        return this.viewContent;
     }
 
     private String getVisibleCloseImageUrl() {
-	return getModuleBase() + IMAGE_CLOSE_VISIBLE;
+        return getModuleBase() + IMAGE_CLOSE_VISIBLE;
     }
 
     public String getWindowTitle() {
-	return windowTitle;
+        return windowTitle;
     }
 
     public int getZIndex() {
-	return DOM.getIntStyleAttribute(getElement(), CSS.Z_INDEX);
+        return DOM.getIntStyleAttribute(getElement(), CSS.Z_INDEX);
     }
 
     public void init(WindowController windowController, String title,
-	    Widget contentWidget) {
+            Widget contentWidget) {
 
-	initShowEvent();
+        initShowEvent();
 
-	this.windowTitle = title;
-	this.rootPanel = new FocusPanel();
-	setWidget(this.rootPanel);
+        this.windowTitle = title;
+        this.rootPanel = new FocusPanel();
+        setWidget(this.rootPanel);
 
-	this.windowController = windowController;
+        this.windowController = windowController;
 
-	rootPanel.addStyleName(CSS_WINDOW);
+        rootPanel.addStyleName(CSS_WINDOW);
 
-	this.headerWidget = new Label(title);
-	headerWidget.addStyleName(CSS_WINDOW_HEADER_LABEL);
+        this.headerWidget = new Label(title);
+        headerWidget.addStyleName(CSS_WINDOW_HEADER_LABEL);
 
-	this.contentWidget = contentWidget;
+        this.contentWidget = contentWidget;
 
-	HorizontalPanel headerBar = createHeaderBar();
+        HorizontalPanel headerBar = createHeaderBar();
 
-	headerContainer = new FocusPanel();
-	headerContainer.addStyleName(CSS_WINDOW_HEADER);
-	headerContainer.add(headerBar);
+        headerContainer = new FocusPanel();
+        headerContainer.addStyleName(CSS_WINDOW_HEADER);
+        headerContainer.add(headerBar);
 
-	windowController.getMoveDragController().makeDraggable(this,
-		headerContainer);
+        windowController.getMoveDragController().makeDraggable(this,
+                headerContainer);
 
-	rootPanel.addClickHandler(new ClickHandler() {
-	    @Override
-	    public void onClick(ClickEvent event) {
-		// TODO fix bug: window not to front
-		// deactivated because of list box issue
-		// // force our panel to the top of our z-index context
-		// AbsolutePanel boundaryPanel = windowController
-		// .getBoundaryPanel();
-		// WidgetLocation location = new
-		// WidgetLocation(WindowPanel.this,
-		// boundaryPanel);
-		// boundaryPanel.add(WindowPanel.this, location.getLeft(),
-		// location.getTop());
-	    }
-	});
+        rootPanel.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                // TODO fix bug: window not to front
+                // deactivated because of list box issue
+                // // force our panel to the top of our z-index context
+                // AbsolutePanel boundaryPanel = windowController
+                // .getBoundaryPanel();
+                // WidgetLocation location = new
+                // WidgetLocation(WindowPanel.this,
+                // boundaryPanel);
+                // boundaryPanel.add(WindowPanel.this, location.getLeft(),
+                // location.getTop());
+            }
+        });
 
-	grid = new Grid(4, 3);
-	grid.setBorderWidth(0);
-	grid.setCellSpacing(0);
-	grid.setCellPadding(0);
-	rootPanel.add(grid);
+        grid = new Grid(4, 3);
+        grid.setBorderWidth(0);
+        grid.setCellSpacing(0);
+        grid.setCellPadding(0);
+        rootPanel.add(grid);
 
-	setupCell(0, 0, NORTH_WEST);
-	northWidget = setupCell(0, 1, NORTH);
-	setupCell(0, 2, NORTH_EAST);
+        setupCell(0, 0, NORTH_WEST);
+        northWidget = setupCell(0, 1, NORTH);
+        setupCell(0, 2, NORTH_EAST);
 
-	westTopWidget = setupCell(1, 0, WEST);
-	grid.setWidget(1, 1, headerContainer);
-	eastTopWidget = setupCell(1, 2, EAST);
+        westTopWidget = setupCell(1, 0, WEST);
+        grid.setWidget(1, 1, headerContainer);
+        eastTopWidget = setupCell(1, 2, EAST);
 
-	westWidget = setupCell(2, 0, WEST);
-	grid.setWidget(2, 1, contentWidget);
-	eastWidget = setupCell(2, 2, EAST);
+        westWidget = setupCell(2, 0, WEST);
+        grid.setWidget(2, 1, contentWidget);
+        eastWidget = setupCell(2, 2, EAST);
 
-	setupCell(3, 0, SOUTH_WEST);
-	southWidget = setupCell(3, 1, SOUTH);
-	setupCell(3, 2, SOUTH_EAST);
+        setupCell(3, 0, SOUTH_WEST);
+        southWidget = setupCell(3, 1, SOUTH);
+        setupCell(3, 2, SOUTH_EAST);
     }
 
     private void initShowEvent() {
-	NEffect showEffect = createShowEffect();
-	showEffect.addEffectCompletedHandler(new EffectCompletedHandler() {
-	    @Override
-	    public void onEffectCompleted(EffectCompletedEvent event) {
-		removeEffects();
-	    }
-	});
-	addEffect(showEffect);
+        NEffect showEffect = createShowEffect();
+        showEffect.addEffectCompletedHandler(new EffectCompletedHandler() {
+            @Override
+            public void onEffectCompleted(EffectCompletedEvent event) {
+                removeEffects();
+            }
+        });
+        addEffect(showEffect);
     }
 
     public void moveBy(int right, int down) {
-	AbsolutePanel parent = (AbsolutePanel) getParent();
-	Location location = new WidgetLocation(this, parent);
-	int left = location.getLeft() + right;
-	int top = location.getTop() + down;
-	parent.setWidgetPosition(this, left, top);
+        AbsolutePanel parent = (AbsolutePanel) getParent();
+        Location location = new WidgetLocation(this, parent);
+        int left = location.getLeft() + right;
+        int top = location.getTop() + down;
+        parent.setWidgetPosition(this, left, top);
     }
 
     @Override
     protected void onDetach() {
-	windowController.getMoveDragController().makeNotDraggable(this);
+        windowController.getMoveDragController().makeNotDraggable(this);
 
-	for (Widget w : removeFromDragControllerOnDispose) {
-	    windowController.getResizeDragController().makeNotDraggable(w);
-	}
+        for (Widget w : removeFromDragControllerOnDispose) {
+            windowController.getResizeDragController().makeNotDraggable(w);
+        }
 
-	// DragController#unregisterDropController
+        // DragController#unregisterDropController
 
-	super.onDetach();
+        super.onDetach();
     }
 
     @Override
     public void onLoad() {
-	super.onLoad();
-	updateToContentSize();
-	playEffects();
+        super.onLoad();
+        updateToContentSize();
+        playEffects();
     }
 
     public void setAbsoluteSize(int offsetWidth, int offsetHeight) {
-	setPixelSize(offsetWidth, offsetHeight);
+        setPixelSize(offsetWidth, offsetHeight);
 
-	int headerHeight = headerContainer.getOffsetHeight();
-	int contentOffsetWidth = offsetWidth - 2 * BORDER_THICKNESS
-		- WINDOW_BORDER_FROM_CSS;
-	int contentOffsetHeight = offsetHeight - 2 * BORDER_THICKNESS
-		- headerHeight - WINDOW_BORDER_FROM_CSS;
+        int headerHeight = headerContainer.getOffsetHeight();
+        int contentOffsetWidth = offsetWidth - 2 * BORDER_THICKNESS
+                - WINDOW_BORDER_FROM_CSS;
+        int contentOffsetHeight = offsetHeight - 2 * BORDER_THICKNESS
+                - headerHeight - WINDOW_BORDER_FROM_CSS;
 
-	contentWidget.setPixelSize(contentOffsetWidth, contentOffsetHeight);
-	contentWidth = contentOffsetWidth;
-	contentHeight = contentOffsetHeight;
+        contentWidget.setPixelSize(contentOffsetWidth, contentOffsetHeight);
+        contentWidth = contentOffsetWidth;
+        contentHeight = contentOffsetHeight;
 
-	setBorderWidths(contentOffsetWidth, contentOffsetHeight, headerHeight);
+        setBorderWidths(contentOffsetWidth, contentOffsetHeight, headerHeight);
     }
 
     private void setBorderWidths(int contentOffsetWidth,
-	    int contentOffsetHeight, int headerHeight) {
-	headerContainer.setPixelSize(contentOffsetWidth - 4, headerWidget
-		.getOffsetHeight()); // subtract header padding from CSS
-	// file
+            int contentOffsetHeight, int headerHeight) {
+        headerContainer.setPixelSize(contentOffsetWidth - 4,
+                headerWidget.getOffsetHeight()); // subtract header padding from
+                                                 // CSS
+        // file
 
-	northWidget.setPixelSize(contentOffsetWidth, BORDER_THICKNESS);
-	southWidget.setPixelSize(contentOffsetWidth, BORDER_THICKNESS);
-	westTopWidget.setPixelSize(BORDER_THICKNESS, headerHeight);
-	westWidget.setPixelSize(BORDER_THICKNESS, contentOffsetHeight);
-	eastTopWidget.setPixelSize(BORDER_THICKNESS, headerHeight);
-	eastWidget.setPixelSize(BORDER_THICKNESS, contentOffsetHeight);
+        northWidget.setPixelSize(contentOffsetWidth, BORDER_THICKNESS);
+        southWidget.setPixelSize(contentOffsetWidth, BORDER_THICKNESS);
+        westTopWidget.setPixelSize(BORDER_THICKNESS, headerHeight);
+        westWidget.setPixelSize(BORDER_THICKNESS, contentOffsetHeight);
+        eastTopWidget.setPixelSize(BORDER_THICKNESS, headerHeight);
+        eastWidget.setPixelSize(BORDER_THICKNESS, contentOffsetHeight);
     }
 
     public void setContentSize(int width, int height) {
-	// Log.debug("WindowPanel.setContentSize(" + width + "," + height +
-	// ")");
+        // Log.debug("WindowPanel.setContentSize(" + width + "," + height +
+        // ")");
 
-	contentWidget.setPixelSize(width, height);
-	contentWidth = width;
-	contentHeight = height;
+        contentWidget.setPixelSize(width, height);
+        contentWidth = width;
+        contentHeight = height;
 
-	// use offset for adjusting other widgets as it includes margin +
-	// padding
-	int contentOffsetWidth = contentWidget.getOffsetWidth();
-	int contentOffsetHeight = contentWidget.getOffsetHeight();
-	int headerHeight = headerContainer.getOffsetHeight();
+        // use offset for adjusting other widgets as it includes margin +
+        // padding
+        int contentOffsetWidth = contentWidget.getOffsetWidth();
+        int contentOffsetHeight = contentWidget.getOffsetHeight();
+        int headerHeight = headerContainer.getOffsetHeight();
 
-	setBorderWidths(contentOffsetWidth, contentOffsetHeight, headerHeight);
+        setBorderWidths(contentOffsetWidth, contentOffsetHeight, headerHeight);
 
-	int maxInnerWidth = contentOffsetWidth;
+        int maxInnerWidth = contentOffsetWidth;
 
-	// header wider than content?
-	if (headerContainer.getOffsetWidth() > maxInnerWidth) {
-	    maxInnerWidth = headerContainer.getOffsetWidth();
-	}
+        // header wider than content?
+        if (headerContainer.getOffsetWidth() > maxInnerWidth) {
+            maxInnerWidth = headerContainer.getOffsetWidth();
+        }
 
-	setPixelSize(maxInnerWidth + 2 * BORDER_THICKNESS
-		+ WINDOW_BORDER_FROM_CSS, contentOffsetHeight
-		+ headerWidget.getOffsetHeight() + 2 * BORDER_THICKNESS
-		+ WINDOW_BORDER_FROM_CSS);
+        setPixelSize(maxInnerWidth + 2 * BORDER_THICKNESS
+                + WINDOW_BORDER_FROM_CSS,
+                contentOffsetHeight + headerWidget.getOffsetHeight() + 2
+                        * BORDER_THICKNESS + WINDOW_BORDER_FROM_CSS);
 
-	assert contentHeight == height;
-	assert contentWidth == width;
+        assert contentHeight == height;
+        assert contentWidth == width;
     }
 
     public void setLocation(int x, int y) {
-	AbsolutePanel parent = (AbsolutePanel) getParent();
-	parent.setWidgetPosition(this, x, y);
+        AbsolutePanel parent = (AbsolutePanel) getParent();
+        parent.setWidgetPosition(this, x, y);
 
-	assert x == new WidgetLocation(this, getParent()).getLeft();
-	assert y == new WidgetLocation(this, getParent()).getTop();
+        assert x == new WidgetLocation(this, getParent()).getLeft();
+        assert y == new WidgetLocation(this, getParent()).getTop();
     }
 
     private Widget setupCell(int row, int col, DirectionConstant direction) {
-	final FocusPanel widget = new FocusPanel();
-	widget.setPixelSize(BORDER_THICKNESS, BORDER_THICKNESS);
-	grid.setWidget(row, col, widget);
-	windowController.getResizeDragController().makeDraggable(widget,
-		direction);
-	removeFromDragControllerOnDispose.add(widget);
-	grid.getCellFormatter().addStyleName(
-		row,
-		col,
-		CSS_WINDOW_RESIZE_EDGE + " window-resize-"
-			+ direction.directionLetters);
-	return widget;
+        final FocusPanel widget = new FocusPanel();
+        widget.setPixelSize(BORDER_THICKNESS, BORDER_THICKNESS);
+        grid.setWidget(row, col, widget);
+        windowController.getResizeDragController().makeDraggable(widget,
+                direction);
+        removeFromDragControllerOnDispose.add(widget);
+        grid.getCellFormatter().addStyleName(
+                row,
+                col,
+                CSS_WINDOW_RESIZE_EDGE + " window-resize-"
+                        + direction.directionLetters);
+        return widget;
     }
 
     public void setViewContent(WindowContent viewContent) {
-	this.viewContent = viewContent;
+        this.viewContent = viewContent;
     }
 
     public void setZIndex(final int zIndex) {
-	// Bugfix: need to set zIndex manually because of timeline/firefox issue
-	DOM.setIntStyleAttribute(getElement(), CSS.Z_INDEX, zIndex);
+        // Bugfix: need to set zIndex manually because of timeline/firefox issue
+        DOM.setIntStyleAttribute(getElement(), CSS.Z_INDEX, zIndex);
     }
 
     public void updateToContentSize() {
-	int offsetHeight = contentWidget.getOffsetHeight();
-	if (offsetHeight != 0) {
-	    // check for desktop size limitations
-	    int newHeight = Math.min(offsetHeight, getParent()
-		    .getOffsetHeight()
-		    - headerContainer.getOffsetHeight()
-		    - (2 * BORDER_THICKNESS) - 2 // additional border
-		    - 20 // FIXME bottom offset
-		    - (getAbsoluteTop() - getParent().getAbsoluteTop()));
+        int offsetHeight = contentWidget.getOffsetHeight();
+        if (offsetHeight != 0) {
+            // check for desktop size limitations
+            int newHeight = Math.min(offsetHeight, getParent()
+                    .getOffsetHeight()
+                    - headerContainer.getOffsetHeight()
+                    - (2 * BORDER_THICKNESS) - 2 // additional border
+                    - 20 // FIXME bottom offset
+                    - (getAbsoluteTop() - getParent().getAbsoluteTop()));
 
-	    setContentSize(contentWidget.getOffsetWidth(), newHeight);
-	}
+            setContentSize(contentWidget.getOffsetWidth(), newHeight);
+        }
     }
 }

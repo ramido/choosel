@@ -20,7 +20,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 public interface HasLabel {
 
     HandlerRegistration addLabelChangedEventHandler(
-	    LabelChangedEventHandler eventHandler);
+            LabelChangedEventHandler eventHandler);
 
     String getLabel();
 

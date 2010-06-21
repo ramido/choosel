@@ -30,7 +30,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 public class GraphViewContentDisplayFactory implements
-	ViewContentDisplayFactory {
+        ViewContentDisplayFactory {
 
     @Inject
     private ArcStyleProvider arcStyleProvider;
@@ -66,10 +66,10 @@ public class GraphViewContentDisplayFactory implements
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-	return new GraphViewContentDisplay(
-		new GraphViewContentDisplay.DefaultDisplay(), hoverModel,
-		popupManagerFactory, detailsWidgetHelper, commandManager,
-		resourceManager, dragEnablerFactory, resourceCategorizer,
-		arcStyleProvider, registry);
+        return new GraphViewContentDisplay(
+                new GraphViewContentDisplay.DefaultDisplay(), hoverModel,
+                popupManagerFactory, detailsWidgetHelper, commandManager,
+                resourceManager, dragEnablerFactory, resourceCategorizer,
+                arcStyleProvider, registry);
     }
 }

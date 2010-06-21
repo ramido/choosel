@@ -53,39 +53,39 @@ public class DetailsWidgetHelperTest {
     @Mock
     private ResourceSet resourceSet;
 
-    @Test
-    public void doNotSetResourceSetLabel() {
-	underTest.createDetailsWidget(createResources(1), resolver);
-
-	verify(resourceSet, never()).setLabel(any(String.class));
-    }
-
     @Ignore("reactivate once DefaultDetailsWidgetHelper is fixed")
     @Test
     public void createNewPresenterInCreateDetailsWidget() {
-	underTest.createDetailsWidget(createResources(1), resolver);
-	underTest.createDetailsWidget(createResources(2), resolver);
+        underTest.createDetailsWidget(createResources(1), resolver);
+        underTest.createDetailsWidget(createResources(2), resolver);
 
-	verify(avatarFactory, times(2)).createAvatar(eq(resourceSet));
+        verify(avatarFactory, times(2)).createAvatar(eq(resourceSet));
+    }
+
+    @Test
+    public void doNotSetResourceSetLabel() {
+        underTest.createDetailsWidget(createResources(1), resolver);
+
+        verify(resourceSet, never()).setLabel(any(String.class));
     }
 
     @Before
     public void setUp() throws Exception {
-	MockitoGWTBridge.setUp();
-	MockitoAnnotations.initMocks(this);
+        MockitoGWTBridge.setUp();
+        MockitoAnnotations.initMocks(this);
 
-	underTest = new DefaultDetailsWidgetHelper(resourceSetFactory,
-		avatarFactory, null);
+        underTest = new DefaultDetailsWidgetHelper(resourceSetFactory,
+                avatarFactory, null);
 
-	when(avatarFactory.createAvatar(any(ResourceSet.class))).thenReturn(
-		avatar);
-	when(resolver.getValue(any(ResourceSet.class))).thenReturn("");
-	when(resourceSetFactory.createResourceSet()).thenReturn(resourceSet);
+        when(avatarFactory.createAvatar(any(ResourceSet.class))).thenReturn(
+                avatar);
+        when(resolver.getValue(any(ResourceSet.class))).thenReturn("");
+        when(resourceSetFactory.createResourceSet()).thenReturn(resourceSet);
     }
 
     @After
     public void tearDown() {
-	MockitoGWTBridge.tearDown();
+        MockitoGWTBridge.tearDown();
     }
 
 }

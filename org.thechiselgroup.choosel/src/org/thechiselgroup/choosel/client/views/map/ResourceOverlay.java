@@ -47,78 +47,78 @@ public class ResourceOverlay extends Overlay {
     private MapPane pane;
 
     public ResourceOverlay(LatLng latLng, Point offset, String iconUrl) {
-	this.latLng = latLng;
-	this.offset = offset;
-	this.initialIconURl = iconUrl;
-	this.image = new Image(iconUrl);
+        this.latLng = latLng;
+        this.offset = offset;
+        this.initialIconURl = iconUrl;
+        this.image = new Image(iconUrl);
     }
 
     public HandlerRegistration addClickHandler(ClickHandler handler) {
-	return image.addClickHandler(handler);
+        return image.addClickHandler(handler);
     }
 
     public HandlerRegistration addMouseDownHandler(MouseDownHandler handler) {
-	return image.addMouseDownHandler(handler);
+        return image.addMouseDownHandler(handler);
     }
 
     public HandlerRegistration addMouseMoveHandler(MouseMoveHandler handler) {
-	return image.addMouseMoveHandler(handler);
+        return image.addMouseMoveHandler(handler);
     }
 
     public HandlerRegistration addMouseOutHandler(MouseOutHandler handler) {
-	return image.addMouseOutHandler(handler);
+        return image.addMouseOutHandler(handler);
     }
 
     public HandlerRegistration addMouseOverHandler(MouseOverHandler handler) {
-	return image.addMouseOverHandler(handler);
+        return image.addMouseOverHandler(handler);
     }
 
     public HandlerRegistration addMouseUpHandler(MouseUpHandler handler) {
-	return image.addMouseUpHandler(handler);
+        return image.addMouseUpHandler(handler);
     }
 
     @Override
     protected final Overlay copy() {
-	return new ResourceOverlay(latLng, offset, initialIconURl);
+        return new ResourceOverlay(latLng, offset, initialIconURl);
     }
 
     @Override
     protected final void initialize(MapWidget map) {
-	this.map = map;
+        this.map = map;
 
-	pane = map.getPane(MapPaneType.MARKER_PANE);
-	pane.add(image);
+        pane = map.getPane(MapPaneType.MARKER_PANE);
+        pane.add(image);
 
-	updatePosition();
+        updatePosition();
     }
 
     @Override
     protected final void redraw(boolean force) {
-	if (!force) {
-	    return;
-	}
+        if (!force) {
+            return;
+        }
 
-	updatePosition();
+        updatePosition();
     }
 
     @Override
     protected final void remove() {
-	image.removeFromParent();
+        image.removeFromParent();
     }
 
     public void setIconURL(String iconURL) {
-	assert iconURL != null;
-	image.setUrl(iconURL);
+        assert iconURL != null;
+        image.setUrl(iconURL);
     }
 
     public void setZIndex(int zIndex) {
-	ZIndex.setZIndex(image.getElement(), zIndex);
+        ZIndex.setZIndex(image.getElement(), zIndex);
     }
 
     private void updatePosition() {
-	Point locationPoint = map.convertLatLngToDivPixel(latLng);
-	pane.setWidgetPosition(image, locationPoint.getX() + offset.getX(),
-		locationPoint.getY() + offset.getY());
+        Point locationPoint = map.convertLatLngToDivPixel(latLng);
+        pane.setWidgetPosition(image, locationPoint.getX() + offset.getX(),
+                locationPoint.getY() + offset.getY());
     }
 
 }

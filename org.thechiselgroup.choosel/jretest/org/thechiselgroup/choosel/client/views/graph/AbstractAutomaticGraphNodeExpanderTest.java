@@ -42,35 +42,35 @@ public class AbstractAutomaticGraphNodeExpanderTest {
 
     @Before
     public void setUp() {
-	MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.initMocks(this);
 
-	underTest = new AbstractAutomaticGraphNodeExpander() {
-	    @Override
-	    public void expand(Resource resource,
-		    GraphNodeExpansionCallback expansionCallback) {
-	    }
-	};
+        underTest = new AbstractAutomaticGraphNodeExpander() {
+            @Override
+            public void expand(Resource resource,
+                    GraphNodeExpansionCallback expansionCallback) {
+            }
+        };
     }
 
     @Test
     public void showArcsDisplaysArcsFromCurrentResourcesToNewlyAddedResource() {
-	Resource newResource = ResourcesTestHelper.createResource(1);
-	Resource currentResource = ResourcesTestHelper.createResource(2);
+        Resource newResource = ResourcesTestHelper.createResource(1);
+        Resource currentResource = ResourcesTestHelper.createResource(2);
 
-	UriList currentUriList = new UriList();
-	currentUriList.add(newResource.getUri());
-	currentResource.putValue(PROPERTY, currentUriList);
+        UriList currentUriList = new UriList();
+        currentUriList.add(newResource.getUri());
+        currentResource.putValue(PROPERTY, currentUriList);
 
-	newResource.putValue(PROPERTY, new UriList());
+        newResource.putValue(PROPERTY, new UriList());
 
-	when(expansionCallback.getCallback()).thenReturn(callback);
-	when(callback.getAllResources()).thenReturn(
-		ResourcesTestHelper.toResourceSet(currentResource));
+        when(expansionCallback.getCallback()).thenReturn(callback);
+        when(callback.getAllResources()).thenReturn(
+                ResourcesTestHelper.toResourceSet(currentResource));
 
-	underTest.showArcs(newResource, expansionCallback, PROPERTY, "arcType",
-		false);
+        underTest.showArcs(newResource, expansionCallback, PROPERTY, "arcType",
+                false);
 
-	verify(expansionCallback, times(1)).showArc("arcType",
-		currentResource.getUri(), newResource.getUri());
+        verify(expansionCallback, times(1)).showArc("arcType",
+                currentResource.getUri(), newResource.getUri());
     }
 }

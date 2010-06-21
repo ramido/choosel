@@ -20,24 +20,24 @@ import org.thechiselgroup.choosel.client.command.CommandManager;
 public class DesktopWindowController extends AbstractWindowController {
 
     public DesktopWindowController(DefaultDesktop desktopPanel,
-	    CommandManager commandManager) {
+            CommandManager commandManager) {
 
-	super(desktopPanel, commandManager);
+        super(desktopPanel, commandManager);
 
-    }
-
-    protected DefaultDesktop getDesktopPanel() {
-	return (DefaultDesktop) getBoundaryPanel();
-    }
-
-    @Override
-    public void close(WindowPanel window) {
-	getDesktopPanel().removeWindow(window);
     }
 
     @Override
     public void bringToFront(WindowPanel window) {
-	getDesktopPanel().bringToFront(window);
+        getDesktopPanel().bringToFront(window);
+    }
+
+    @Override
+    public void close(WindowPanel window) {
+        getDesktopPanel().removeWindow(window);
+    }
+
+    protected DefaultDesktop getDesktopPanel() {
+        return (DefaultDesktop) getBoundaryPanel();
     }
 
 }

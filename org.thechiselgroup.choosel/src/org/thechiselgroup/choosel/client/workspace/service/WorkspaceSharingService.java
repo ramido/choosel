@@ -26,6 +26,6 @@ public interface WorkspaceSharingService extends RemoteService {
 
     // TODO url should be determined on the server
     void shareWorkspace(WorkspaceDTO workspaceDTO, String emailAddress)
-	    throws ServiceException;
+            throws ServiceException;
 
 }

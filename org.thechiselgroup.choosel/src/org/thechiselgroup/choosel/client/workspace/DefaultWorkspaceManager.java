@@ -37,58 +37,58 @@ public class DefaultWorkspaceManager implements WorkspaceManager {
 
     @Inject
     public DefaultWorkspaceManager(Desktop desktop,
-	    CommandManager commandManager) {
+            CommandManager commandManager) {
 
-	assert desktop != null;
-	assert commandManager != null;
+        assert desktop != null;
+        assert commandManager != null;
 
-	this.commandManager = commandManager;
-	this.desktop = desktop;
+        this.commandManager = commandManager;
+        this.desktop = desktop;
     }
 
     @Override
     public HandlerRegistration addSwitchedWorkspaceEventHandler(
-	    WorkspaceSwitchedEventHandler h) {
+            WorkspaceSwitchedEventHandler h) {
 
-	return handlerManager.addHandler(WorkspaceSwitchedEvent.TYPE, h);
+        return handlerManager.addHandler(WorkspaceSwitchedEvent.TYPE, h);
     }
 
     @Override
     public void createNewWorkspace() {
-	Workspace workspace = new Workspace();
-	workspace.setName("Untitled Workspace");
-	workspace.setSavingState(WorkspaceSavingState.NOT_SAVED);
+        Workspace workspace = new Workspace();
+        workspace.setName("Untitled Workspace");
+        workspace.setSavingState(WorkspaceSavingState.NOT_SAVED);
 
-	// TODO is this the right way?? workspace should have window handles...
-	// and restore/clear should take place in set workspace
-	desktop.clearWindows();
+        // TODO is this the right way?? workspace should have window handles...
+        // and restore/clear should take place in set workspace
+        desktop.clearWindows();
 
-	setWorkspace(workspace);
+        setWorkspace(workspace);
     }
 
     @Override
     public Workspace getWorkspace() {
-	if (workspace == null) {
-	    createNewWorkspace();
-	}
+        if (workspace == null) {
+            createNewWorkspace();
+        }
 
-	return workspace;
+        return workspace;
     }
 
     @Override
     public void setWorkspace(Workspace workspace) {
-	assert workspace != null;
+        assert workspace != null;
 
-	if ((workspace.getId() != null)
-		&& (workspace.getId().equals(this.workspace.getId()))) {
-	    return;
-	}
+        if ((workspace.getId() != null)
+                && (workspace.getId().equals(this.workspace.getId()))) {
+            return;
+        }
 
-	this.workspace = workspace;
+        this.workspace = workspace;
 
-	commandManager.clear();
+        commandManager.clear();
 
-	handlerManager.fireEvent(new WorkspaceSwitchedEvent(workspace));
+        handlerManager.fireEvent(new WorkspaceSwitchedEvent(workspace));
     }
 
 }

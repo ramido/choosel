@@ -22,18 +22,18 @@ public abstract class AbstractWindowContent implements WindowContent {
     private String label;
 
     public AbstractWindowContent(String label, String contentType) {
-	this.label = label;
-	this.contentType = contentType;
+        this.label = label;
+        this.contentType = contentType;
     }
 
     @Override
     public String getContentType() {
-	return contentType;
+        return contentType;
     }
 
     @Override
     public String getLabel() {
-	return label;
+        return label;
     }
 
     @Override
@@ -42,7 +42,7 @@ public abstract class AbstractWindowContent implements WindowContent {
 
     @Override
     public void setLabel(String label) {
-	this.label = label;
+        this.label = label;
     }
 
 }

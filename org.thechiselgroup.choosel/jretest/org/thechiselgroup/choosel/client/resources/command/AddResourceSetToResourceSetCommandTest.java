@@ -15,15 +15,15 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources.command;
 
-import static org.junit.Assert.*;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.*;
+import static org.junit.Assert.assertEquals;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResource;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResources;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.command.AddResourceSetToResourceSetCommand;
 
 public class AddResourceSetToResourceSetCommandTest {
 
@@ -34,60 +34,60 @@ public class AddResourceSetToResourceSetCommandTest {
     private AddResourceSetToResourceSetCommand command;
 
     @Test
+    public void removeOnlyAdditionalResourcesFromTargetSetOnUndo() {
+        setUpCommand(createResources(1, 2, 3), createResources(1));
+
+        command.execute();
+        command.undo();
+
+        assertEquals(1, targetSet.size());
+        assertEquals(true, targetSet.contains(createResource(1)));
+    }
+
+    @Test
     public void resourceAddedToTargetSetOnExecute() {
-	setUpCommand(createResources(1, 2, 3), createResources());
+        setUpCommand(createResources(1, 2, 3), createResources());
 
-	command.execute();
+        command.execute();
 
-	assertEquals(true, targetSet.containsAll(sourceSet));
+        assertEquals(true, targetSet.containsAll(sourceSet));
     }
 
     @Test
     public void resourceAddedToTargetSetOnExecuteAfterUndo() {
-	setUpCommand(createResources(1, 2, 3), createResources());
+        setUpCommand(createResources(1, 2, 3), createResources());
 
-	command.execute();
-	command.undo();
-	command.execute();
+        command.execute();
+        command.undo();
+        command.execute();
 
-	assertEquals(true, targetSet.containsAll(sourceSet));
+        assertEquals(true, targetSet.containsAll(sourceSet));
     }
 
     @Test
     public void resourceRemovedFromTargetSetOnUndo() {
-	setUpCommand(createResources(1, 2, 3), createResources());
+        setUpCommand(createResources(1, 2, 3), createResources());
 
-	command.execute();
-	command.undo();
+        command.execute();
+        command.undo();
 
-	assertEquals(true, targetSet.isEmpty());
-    }
-
-    @Test
-    public void removeOnlyAdditionalResourcesFromTargetSetOnUndo() {
-	setUpCommand(createResources(1, 2, 3), createResources(1));
-
-	command.execute();
-	command.undo();
-
-	assertEquals(1, targetSet.size());
-	assertEquals(true, targetSet.contains(createResource(1)));
-    }
-
-    private void setUpCommand(DefaultResourceSet sourceSet,
-	    DefaultResourceSet targetSet) {
-
-	this.sourceSet = sourceSet;
-	this.targetSet = targetSet;
-
-	this.command = new AddResourceSetToResourceSetCommand(sourceSet,
-		targetSet);
+        assertEquals(true, targetSet.isEmpty());
     }
 
     @Before
     public void setUp() {
-	MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.initMocks(this);
 
+    }
+
+    private void setUpCommand(DefaultResourceSet sourceSet,
+            DefaultResourceSet targetSet) {
+
+        this.sourceSet = sourceSet;
+        this.targetSet = targetSet;
+
+        this.command = new AddResourceSetToResourceSetCommand(sourceSet,
+                targetSet);
     }
 
 }

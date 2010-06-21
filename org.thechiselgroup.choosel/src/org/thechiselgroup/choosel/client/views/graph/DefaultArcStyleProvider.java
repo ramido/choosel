@@ -21,12 +21,12 @@ public class DefaultArcStyleProvider implements ArcStyleProvider {
 
     @Override
     public String getArcColor(String arcType) {
-	return "#AFC6E5";
+        return "#AFC6E5";
     }
 
     @Override
     public String getArcStyle(String arcType) {
-	return GraphDisplay.ARC_STYLE_SOLID;
+        return GraphDisplay.ARC_STYLE_SOLID;
     }
 
 }

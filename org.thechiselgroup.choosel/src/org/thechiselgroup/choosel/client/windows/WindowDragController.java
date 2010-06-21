@@ -41,50 +41,50 @@ public abstract class WindowDragController extends AbstractDragController {
     protected final CommandManager commandManager;
 
     public WindowDragController(WindowController controller,
-	    CommandManager commandManager) {
+            CommandManager commandManager) {
 
-	super(controller.getBoundaryPanel());
+        super(controller.getBoundaryPanel());
 
-	this.controller = controller;
-	this.commandManager = commandManager;
+        this.controller = controller;
+        this.commandManager = commandManager;
 
-	setBehaviorConstrainedToBoundaryPanel(true);
-	setBehaviorMultipleSelection(false);
+        setBehaviorConstrainedToBoundaryPanel(true);
+        setBehaviorMultipleSelection(false);
     }
 
     protected void bringToFront(WindowPanel window) {
-	controller.bringToFront(window);
+        controller.bringToFront(window);
     }
 
     @Override
     public final void dragMove() {
-	int desiredDraggableX = Math.max(0, Math.min(context.desiredDraggableX
-		- desktopOffsetX, desktopWidth
-		- context.draggable.getOffsetWidth()));
-	int desiredDraggableY = Math.max(0, Math.min(context.desiredDraggableY
-		- desktopOffsetY, desktopHeight
-		- context.draggable.getOffsetHeight()));
+        int desiredDraggableX = Math.max(0, Math.min(context.desiredDraggableX
+                - desktopOffsetX,
+                desktopWidth - context.draggable.getOffsetWidth()));
+        int desiredDraggableY = Math.max(0, Math.min(context.desiredDraggableY
+                - desktopOffsetY,
+                desktopHeight - context.draggable.getOffsetHeight()));
 
-	dragMove(desiredDraggableX, desiredDraggableY);
+        dragMove(desiredDraggableX, desiredDraggableY);
     }
 
     protected abstract void dragMove(int desiredDraggableX,
-	    int desiredDraggableY);
+            int desiredDraggableY);
 
     @Override
     public void dragStart() {
-	super.dragStart();
+        super.dragStart();
 
-	AbsolutePanel desktop = context.boundaryPanel;
-	Element desktopElement = desktop.getElement();
-	desktopWidth = DOMUtil.getClientWidth(desktopElement);
-	desktopHeight = DOMUtil.getClientHeight(desktopElement);
+        AbsolutePanel desktop = context.boundaryPanel;
+        Element desktopElement = desktop.getElement();
+        desktopWidth = DOMUtil.getClientWidth(desktopElement);
+        desktopHeight = DOMUtil.getClientHeight(desktopElement);
 
-	Location desktopLocation = new WidgetLocation(desktop, null);
-	desktopOffsetX = desktopLocation.getLeft()
-		+ DOMUtil.getBorderLeft(desktopElement);
-	desktopOffsetY = desktopLocation.getTop()
-		+ DOMUtil.getBorderTop(desktopElement);
+        Location desktopLocation = new WidgetLocation(desktop, null);
+        desktopOffsetX = desktopLocation.getLeft()
+                + DOMUtil.getBorderLeft(desktopElement);
+        desktopOffsetY = desktopLocation.getTop()
+                + DOMUtil.getBorderTop(desktopElement);
     }
 
 }

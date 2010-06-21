@@ -21,7 +21,7 @@ import org.thechiselgroup.choosel.client.util.HasDescription;
 import org.thechiselgroup.choosel.client.views.View;
 
 public class RemoveSelectionSetFromViewCommand implements UndoableCommand,
-	HasDescription {
+        HasDescription {
 
     private ResourceSet resourceSet;
 
@@ -32,56 +32,56 @@ public class RemoveSelectionSetFromViewCommand implements UndoableCommand,
     private boolean wasSelected = false;
 
     public RemoveSelectionSetFromViewCommand(View view, ResourceSet resourceSet) {
-	this(view, resourceSet, "Remove selection set '"
-		+ resourceSet.getLabel() + "' from view");
+        this(view, resourceSet, "Remove selection set '"
+                + resourceSet.getLabel() + "' from view");
     }
 
     public RemoveSelectionSetFromViewCommand(View view,
-	    ResourceSet resourceSet, String description) {
+            ResourceSet resourceSet, String description) {
 
-	assert view != null;
-	assert resourceSet != null;
-	assert resourceSet.hasLabel();
-	assert description != null;
+        assert view != null;
+        assert resourceSet != null;
+        assert resourceSet.hasLabel();
+        assert description != null;
 
-	this.description = description;
-	this.view = view;
-	this.resourceSet = resourceSet;
+        this.description = description;
+        this.view = view;
+        this.resourceSet = resourceSet;
     }
 
     @Override
     public void execute() {
-	assert view.containsSelectionSet(resourceSet);
-	if (resourceSet.equals(view.getSelection())) {
-	    view.setSelection(null);
-	    wasSelected = true;
-	}
-	view.removeSelectionSet(resourceSet);
-	assert !view.containsSelectionSet(resourceSet);
+        assert view.containsSelectionSet(resourceSet);
+        if (resourceSet.equals(view.getSelection())) {
+            view.setSelection(null);
+            wasSelected = true;
+        }
+        view.removeSelectionSet(resourceSet);
+        assert !view.containsSelectionSet(resourceSet);
     }
 
     // TODO add view name / label once available
     @Override
     public String getDescription() {
-	return description;
+        return description;
     }
 
     public ResourceSet getResourceSet() {
-	return resourceSet;
+        return resourceSet;
     }
 
     public View getView() {
-	return view;
+        return view;
     }
 
     @Override
     public void undo() {
-	assert !view.containsSelectionSet(resourceSet);
-	view.addSelectionSet(resourceSet);
-	if (wasSelected) {
-	    view.setSelection(resourceSet);
-	}
-	assert view.containsSelectionSet(resourceSet);
+        assert !view.containsSelectionSet(resourceSet);
+        view.addSelectionSet(resourceSet);
+        if (wasSelected) {
+            view.setSelection(resourceSet);
+        }
+        assert view.containsSelectionSet(resourceSet);
     }
 
 }

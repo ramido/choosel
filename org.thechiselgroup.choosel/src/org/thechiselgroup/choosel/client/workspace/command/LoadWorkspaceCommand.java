@@ -31,32 +31,32 @@ public class LoadWorkspaceCommand implements AsyncCommand, HasDescription {
     private WorkspacePersistenceManager persistenceManager;
 
     public LoadWorkspaceCommand(Long workspaceId, String workspaceName,
-	    WorkspacePersistenceManager persistenceManager) {
+            WorkspacePersistenceManager persistenceManager) {
 
-	this.workspaceId = workspaceId;
-	this.workspaceName = workspaceName;
-	this.persistenceManager = persistenceManager;
-    }
-
-    @Override
-    public String getDescription() {
-	return "Loading workspace '" + workspaceName + "'";
+        this.workspaceId = workspaceId;
+        this.workspaceName = workspaceName;
+        this.persistenceManager = persistenceManager;
     }
 
     @Override
     public void execute(final AsyncCallback<Void> callback) {
-	persistenceManager.loadWorkspace(workspaceId,
-		new AsyncCallback<Workspace>() {
-		    @Override
-		    public void onFailure(Throwable caught) {
-			callback.onFailure(caught);
-		    }
+        persistenceManager.loadWorkspace(workspaceId,
+                new AsyncCallback<Workspace>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        callback.onFailure(caught);
+                    }
 
-		    @Override
-		    public void onSuccess(Workspace workspace) {
-			callback.onSuccess(null);
-		    }
-		});
+                    @Override
+                    public void onSuccess(Workspace workspace) {
+                        callback.onSuccess(null);
+                    }
+                });
+    }
+
+    @Override
+    public String getDescription() {
+        return "Loading workspace '" + workspaceName + "'";
     }
 
 }

@@ -22,16 +22,16 @@ public class NodeMenuEntry {
     private GraphNodeExpander expander;
 
     public NodeMenuEntry(String label, GraphNodeExpander expander) {
-	this.label = label;
-	this.expander = expander;
-    }
-
-    public String getLabel() {
-	return label;
+        this.label = label;
+        this.expander = expander;
     }
 
     public GraphNodeExpander getExpander() {
-	return expander;
+        return expander;
+    }
+
+    public String getLabel() {
+        return label;
     }
 
 }

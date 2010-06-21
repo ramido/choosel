@@ -15,7 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources.ui.configuration;
 
-import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.*;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_SET;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.HOVER_MODEL;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +44,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 public class ResourceSetsDragAvatarFactoryProvider implements
-	ResourceSetAvatarFactoryProvider {
+        ResourceSetAvatarFactoryProvider {
 
     private final ResourceSetAvatarDragController dragController;
 
@@ -61,54 +62,54 @@ public class ResourceSetsDragAvatarFactoryProvider implements
 
     @Inject
     public ResourceSetsDragAvatarFactoryProvider(
-	    ResourceSetAvatarDragController dragController,
-	    @Named(HOVER_MODEL) ResourceSet hoverModel,
-	    @Named(HOVER_MODEL) ResourceSetContainer setHoverModel,
-	    @Named(AVATAR_FACTORY_SET) ResourceSetAvatarDropTargetManager dropTargetManager,
-	    ViewAccessor viewAccessor, PopupManagerFactory popupManagerFactory,
-	    CommandManager commandManager) {
+            ResourceSetAvatarDragController dragController,
+            @Named(HOVER_MODEL) ResourceSet hoverModel,
+            @Named(HOVER_MODEL) ResourceSetContainer setHoverModel,
+            @Named(AVATAR_FACTORY_SET) ResourceSetAvatarDropTargetManager dropTargetManager,
+            ViewAccessor viewAccessor, PopupManagerFactory popupManagerFactory,
+            CommandManager commandManager) {
 
-	this.dragController = dragController;
-	this.hoverModel = hoverModel;
-	this.setHoverModel = setHoverModel;
-	this.dropTargetManager = dropTargetManager;
-	this.viewAccessor = viewAccessor;
-	this.popupManagerFactory = popupManagerFactory;
-	this.commandManager = commandManager;
+        this.dragController = dragController;
+        this.hoverModel = hoverModel;
+        this.setHoverModel = setHoverModel;
+        this.dropTargetManager = dropTargetManager;
+        this.viewAccessor = viewAccessor;
+        this.popupManagerFactory = popupManagerFactory;
+        this.commandManager = commandManager;
 
     }
 
     @Override
     public ResourceSetAvatarFactory get() {
-	ResourceSetAvatarFactory defaultFactory = new DefaultResourceSetAvatarFactory(
-		"avatar-resourceSet", ResourceSetAvatarType.SET);
+        ResourceSetAvatarFactory defaultFactory = new DefaultResourceSetAvatarFactory(
+                "avatar-resourceSet", ResourceSetAvatarType.SET);
 
-	ResourceSetAvatarFactory updateFactory = new UpdateResourceSetAvatarLabelFactory(
-		defaultFactory);
+        ResourceSetAvatarFactory updateFactory = new UpdateResourceSetAvatarLabelFactory(
+                defaultFactory);
 
-	ResourceSetAvatarFactory dragFactory = new DragEnableResourceSetAvatarFactory(
-		updateFactory, dragController);
+        ResourceSetAvatarFactory dragFactory = new DragEnableResourceSetAvatarFactory(
+                updateFactory, dragController);
 
-	ResourceSetAvatarFactory dropTargetFactory = new DropTargetResourceSetAvatarFactory(
-		dragFactory, dropTargetManager);
+        ResourceSetAvatarFactory dropTargetFactory = new DropTargetResourceSetAvatarFactory(
+                dragFactory, dropTargetManager);
 
-	HighlightingResourceSetAvatarFactory highlightingFactory = new HighlightingResourceSetAvatarFactory(
-		dropTargetFactory, hoverModel, setHoverModel, dragController);
+        HighlightingResourceSetAvatarFactory highlightingFactory = new HighlightingResourceSetAvatarFactory(
+                dropTargetFactory, hoverModel, setHoverModel, dragController);
 
-	List<Action> actions = new ArrayList<Action>();
-	actions.add(new RemoveSetAction(commandManager));
+        List<Action> actions = new ArrayList<Action>();
+        actions.add(new RemoveSetAction(commandManager));
 
-	return new PopupResourceSetAvatarFactory(highlightingFactory,
-		viewAccessor, popupManagerFactory, actions, "User-defined set",
-		"<p><b>Rename</b> by clicking on the label "
-			+ "at the top of this popup and "
-			+ "changing the text.</p>"
-			+ "<p><b>Drag</b> to add to other views as a set "
-			+ "(by dropping on view content) "
-			+ "or as single elements " + "(by dropping on 'All'), "
-			+ "to merge with other user-defined sets "
-			+ "(by dropping on these sets)"
-			+ " or to select resources "
-			+ "(by dropping on a selection).</p>", true);
+        return new PopupResourceSetAvatarFactory(highlightingFactory,
+                viewAccessor, popupManagerFactory, actions, "User-defined set",
+                "<p><b>Rename</b> by clicking on the label "
+                        + "at the top of this popup and "
+                        + "changing the text.</p>"
+                        + "<p><b>Drag</b> to add to other views as a set "
+                        + "(by dropping on view content) "
+                        + "or as single elements " + "(by dropping on 'All'), "
+                        + "to merge with other user-defined sets "
+                        + "(by dropping on these sets)"
+                        + " or to select resources "
+                        + "(by dropping on a selection).</p>", true);
     }
 }

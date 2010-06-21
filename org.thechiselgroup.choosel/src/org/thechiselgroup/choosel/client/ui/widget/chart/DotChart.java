@@ -2,6 +2,7 @@ package org.thechiselgroup.choosel.client.ui.widget.chart;
 
 public class DotChart extends ChartWidget {
 
+    // @formatter:off
     @Override
     public native Chart drawChart(int width, int height) /*-{
         var chart = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chart,
@@ -10,7 +11,7 @@ public class DotChart extends ChartWidget {
         s,
         isBrushed = new Array(),
         selectBoxAlpha = .42;
-        
+
         var selectBox = chart.add($wnd.pv.Panel)
             .data([{x:0, y:0, dx:0, dy:0}])
             .events("all")
@@ -24,7 +25,7 @@ public class DotChart extends ChartWidget {
             .top(function(d) {return d.y;})
             .width(function(d) {return d.dx;})
             .height(function(d) {return d.dy;})
-//	    .event("mouseout", fadeOut)
+        //	    .event("mouseout", fadeOut)
             .fillStyle("rgba(193,217,241,"+selectBoxAlpha+")")
             .strokeStyle("rgba(0,0,0,"+selectBoxAlpha+")")
             .lineWidth(.5);
@@ -123,7 +124,7 @@ public class DotChart extends ChartWidget {
                 }
             }
         }
-            
+
         function fadeOut() {
             fade = setInterval(function() {
             	selectBoxAlpha = selectBoxAlpha - .01;
@@ -138,10 +139,10 @@ public class DotChart extends ChartWidget {
             }, 100); 
         }
 
-	function isInSelectBox(d,i) {
-	    return (i * width / val.length >= d.x) && (i * width / val.length <= d.x + d.dx)
+        function isInSelectBox(d,i) {
+        return (i * width / val.length >= d.x) && (i * width / val.length <= d.x + d.dx)
                 && (height - (val[i] * height / 10) >= d.y) && (height - (val[i] * height / 10) <= d.y + d.dy);
-	}
+        }
 
         function removeBoxes(d) {
             plusBox.visible(false);
@@ -171,11 +172,12 @@ public class DotChart extends ChartWidget {
 
         function updatePlus(d,i) {
             update(d);
-    	    thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onBrushEvent(IZ)(i,true);
-       	    isBrushed[i] = true;
+            thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onBrushEvent(IZ)(i,true);
+            isBrushed[i] = true;
         }
 
         return dot;
     }-*/;
+    // @formatter:off        
 
 }

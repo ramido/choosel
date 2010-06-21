@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.test;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -40,33 +40,33 @@ import com.google.gwt.dev.About;
 public class MockitoGWTBridge extends GWTBridge {
 
     private static void setGwtBridge(GWTBridge bridge) {
-	Class<GWT> gwtClass = GWT.class;
-	Class<?>[] paramTypes = new Class[] { GWTBridge.class };
-	Method setBridgeMethod = null;
-	try {
-	    setBridgeMethod = gwtClass.getDeclaredMethod("setBridge",
-		    paramTypes);
-	} catch (NoSuchMethodException e) {
-	    throw new RuntimeException(e);
-	}
-	setBridgeMethod.setAccessible(true);
-	try {
-	    setBridgeMethod.invoke(gwtClass, new Object[] { bridge });
-	} catch (IllegalAccessException e) {
-	    throw new RuntimeException(e);
-	} catch (InvocationTargetException e) {
-	    throw new RuntimeException(e);
-	}
+        Class<GWT> gwtClass = GWT.class;
+        Class<?>[] paramTypes = new Class[] { GWTBridge.class };
+        Method setBridgeMethod = null;
+        try {
+            setBridgeMethod = gwtClass.getDeclaredMethod("setBridge",
+                    paramTypes);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+        setBridgeMethod.setAccessible(true);
+        try {
+            setBridgeMethod.invoke(gwtClass, new Object[] { bridge });
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static MockitoGWTBridge setUp() {
-	MockitoGWTBridge bridge = new MockitoGWTBridge();
-	setGwtBridge(bridge);
-	return bridge;
+        MockitoGWTBridge bridge = new MockitoGWTBridge();
+        setGwtBridge(bridge);
+        return bridge;
     }
 
     public static void tearDown() {
-	setGwtBridge(null);
+        setGwtBridge(null);
     }
 
     private Map<Class<?>, List<Object>> createdMocks = new HashMap<Class<?>, List<Object>>();
@@ -76,28 +76,28 @@ public class MockitoGWTBridge extends GWTBridge {
      */
     @Override
     public <T> T create(Class<?> classLiteral) {
-	Object mock = mock(classLiteral);
-	saveMock(classLiteral, mock);
-	return (T) mock;
+        Object mock = mock(classLiteral);
+        saveMock(classLiteral, mock);
+        return (T) mock;
     }
 
     public <T> T getCreatedMock(Class<T> classLiteral) {
-	List<Object> list = getMockList(classLiteral);
-	return (T) (list.isEmpty() ? null : list.get(0));
+        List<Object> list = getMockList(classLiteral);
+        return (T) (list.isEmpty() ? null : list.get(0));
 
     }
 
     public <T> List<T> getCreatedMocks(Class<T> classLiteral) {
-	return (List<T>) getMockList(classLiteral);
+        return (List<T>) getMockList(classLiteral);
     }
 
     private List<Object> getMockList(Class<?> classLiteral) {
-	if (!createdMocks.containsKey(classLiteral)) {
-	    createdMocks.put(classLiteral, new ArrayList<Object>());
-	}
+        if (!createdMocks.containsKey(classLiteral)) {
+            createdMocks.put(classLiteral, new ArrayList<Object>());
+        }
 
-	List<Object> list = createdMocks.get(classLiteral);
-	return list;
+        List<Object> list = createdMocks.get(classLiteral);
+        return list;
     }
 
     /**
@@ -105,7 +105,7 @@ public class MockitoGWTBridge extends GWTBridge {
      */
     @Override
     public String getVersion() {
-	return About.getGwtVersionNum();
+        return About.getGwtVersionNum();
     }
 
     /**
@@ -113,7 +113,7 @@ public class MockitoGWTBridge extends GWTBridge {
      */
     @Override
     public boolean isClient() {
-	return false;
+        return false;
     }
 
     /**
@@ -122,11 +122,11 @@ public class MockitoGWTBridge extends GWTBridge {
      */
     @Override
     public void log(String message, Throwable e) {
-	System.out.println(message);
-	e.printStackTrace();
+        System.out.println(message);
+        e.printStackTrace();
     }
 
     private void saveMock(Class<?> classLiteral, Object mock) {
-	getMockList(classLiteral).add(mock);
+        getMockList(classLiteral).add(mock);
     }
 }

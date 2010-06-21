@@ -28,24 +28,24 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class FeedbackDialog extends AbstractDialog {
 
+    private class SendFeedbackCommand implements AsyncCommand, HasDescription {
+
+        @Override
+        public void execute(AsyncCallback<Void> callback) {
+            String message = error != null ? error.getMessage() : null;
+            feedbackService.sendFeedback(commentArea.getText(), message,
+                    callback);
+        }
+
+        @Override
+        public String getDescription() {
+            return "Sending feedback...";
+        }
+    }
+
     private static final String CSS_FEEDBACK_COMMENTS = "feedback-comments";
 
     private static final String CSS_FEEDBACK_MESSAGE = "feedback-message";
-
-    private class SendFeedbackCommand implements AsyncCommand, HasDescription {
-
-	@Override
-	public void execute(AsyncCallback<Void> callback) {
-	    String message = error != null ? error.getMessage() : null;
-	    feedbackService.sendFeedback(commentArea.getText(), message,
-		    callback);
-	}
-
-	@Override
-	public String getDescription() {
-	    return "Sending feedback...";
-	}
-    }
 
     private Throwable error;
 
@@ -59,61 +59,61 @@ public class FeedbackDialog extends AbstractDialog {
 
     private FeedbackServiceAsync feedbackService;
 
-    public FeedbackDialog(Throwable error, AsyncCommandExecutor executor,
-	    FeedbackServiceAsync feedbackService) {
-	this("Error occured", error.getMessage() + "<br/></br>"
-		+ "<b>Please describe the circumstances of this error:</b>",
-		error, executor, feedbackService);
-    }
-
     public FeedbackDialog(String title, String message, Throwable error,
-	    AsyncCommandExecutor executor, FeedbackServiceAsync feedbackService) {
+            AsyncCommandExecutor executor, FeedbackServiceAsync feedbackService) {
 
-	assert title != null;
-	assert message != null;
-	assert executor != null;
-	assert feedbackService != null;
+        assert title != null;
+        assert message != null;
+        assert executor != null;
+        assert feedbackService != null;
 
-	this.feedbackService = feedbackService;
-	this.executor = executor;
-	this.title = title;
-	this.message = message;
-	this.error = error;
+        this.feedbackService = feedbackService;
+        this.executor = executor;
+        this.title = title;
+        this.message = message;
+        this.error = error;
     }
 
-    @Override
-    public void okay() {
-	executor.execute(new SendFeedbackCommand());
-    }
-
-    @Override
-    public String getTitle() {
-	return title;
-    }
-
-    @Override
-    public String getOkayButtonLabel() {
-	return "Send";
-    }
-
-    @Override
-    public Widget getContent() {
-	VerticalPanel panel = new VerticalPanel();
-
-	HTML label = new HTML(message);
-	label.addStyleName(CSS_FEEDBACK_MESSAGE);
-	panel.add(label);
-
-	commentArea = new TextArea();
-	commentArea.setStyleName(CSS_FEEDBACK_COMMENTS);
-
-	panel.add(commentArea);
-	panel.setCellWidth(commentArea, "100%");
-
-	return panel;
+    public FeedbackDialog(Throwable error, AsyncCommandExecutor executor,
+            FeedbackServiceAsync feedbackService) {
+        this("Error occured", error.getMessage() + "<br/></br>"
+                + "<b>Please describe the circumstances of this error:</b>",
+                error, executor, feedbackService);
     }
 
     @Override
     public void cancel() {
+    }
+
+    @Override
+    public Widget getContent() {
+        VerticalPanel panel = new VerticalPanel();
+
+        HTML label = new HTML(message);
+        label.addStyleName(CSS_FEEDBACK_MESSAGE);
+        panel.add(label);
+
+        commentArea = new TextArea();
+        commentArea.setStyleName(CSS_FEEDBACK_COMMENTS);
+
+        panel.add(commentArea);
+        panel.setCellWidth(commentArea, "100%");
+
+        return panel;
+    }
+
+    @Override
+    public String getOkayButtonLabel() {
+        return "Send";
+    }
+
+    @Override
+    public String getTitle() {
+        return title;
+    }
+
+    @Override
+    public void okay() {
+        executor.execute(new SendFeedbackCommand());
     }
 }

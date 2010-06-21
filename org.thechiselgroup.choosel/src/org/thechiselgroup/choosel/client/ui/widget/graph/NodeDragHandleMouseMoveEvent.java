@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.client.ui.widget.graph;
 import com.google.gwt.event.shared.GwtEvent;
 
 public class NodeDragHandleMouseMoveEvent extends
-	GwtEvent<NodeDragHandleMouseMoveHandler> {
+        GwtEvent<NodeDragHandleMouseMoveHandler> {
 
     public static final Type<NodeDragHandleMouseMoveHandler> TYPE = new Type<NodeDragHandleMouseMoveHandler>();
 
@@ -29,34 +29,34 @@ public class NodeDragHandleMouseMoveEvent extends
     private final Node node;
 
     public NodeDragHandleMouseMoveEvent(Node node, int mouseX, int mouseY) {
-	assert node != null;
+        assert node != null;
 
-	this.node = node;
-	this.mouseX = mouseX;
-	this.mouseY = mouseY;
+        this.node = node;
+        this.mouseX = mouseX;
+        this.mouseY = mouseY;
 
     }
 
     @Override
     protected void dispatch(NodeDragHandleMouseMoveHandler handler) {
-	handler.onMouseMove(this);
+        handler.onMouseMove(this);
     }
 
     @Override
     public Type<NodeDragHandleMouseMoveHandler> getAssociatedType() {
-	return TYPE;
+        return TYPE;
     }
 
     public int getMouseX() {
-	return mouseX;
+        return mouseX;
     }
 
     public int getMouseY() {
-	return mouseY;
+        return mouseY;
     }
 
     public Node getNode() {
-	return node;
+        return node;
     }
 
 }

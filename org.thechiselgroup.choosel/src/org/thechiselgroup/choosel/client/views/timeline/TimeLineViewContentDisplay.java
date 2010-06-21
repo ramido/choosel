@@ -19,7 +19,6 @@ import java.util.Date;
 
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.persistence.Memento;
-import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
@@ -47,78 +46,78 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
 
     @Inject
     public TimeLineViewContentDisplay(
-	    PopupManagerFactory popupManagerFactory,
-	    DetailsWidgetHelper detailsWidgetHelper,
-	    @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
-	    DragEnablerFactory dragEnablerFactory) {
+            PopupManagerFactory popupManagerFactory,
+            DetailsWidgetHelper detailsWidgetHelper,
+            @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
+            DragEnablerFactory dragEnablerFactory) {
 
-	super(popupManagerFactory, detailsWidgetHelper, hoverModel);
+        super(popupManagerFactory, detailsWidgetHelper, hoverModel);
 
-	this.dragEnablerFactory = dragEnablerFactory;
-    }
-
-    @Override
-    public ResourceItem createResourceItem(Layer layer, ResourceSet resources) {
-	PopupManager popupManager = createPopupManager(layer, resources);
-
-	TimeLineItem timeLineItem = new TimeLineItem(resources, this, popupManager,
-		hoverModel, layer, dragEnablerFactory);
-
-	timelineWidget.addEvent(timeLineItem.getTimeLineEvent());
-
-	return timeLineItem;
-    }
-
-    @Override
-    public String[] getSlotIDs() {
-	return new String[] { SlotResolver.DESCRIPTION_SLOT,
-		SlotResolver.LABEL_SLOT, SlotResolver.COLOR_SLOT,
-		SlotResolver.DATE_SLOT };
+        this.dragEnablerFactory = dragEnablerFactory;
     }
 
     @Override
     public void checkResize() {
-	timelineWidget.layout();
+        timelineWidget.layout();
+    }
+
+    @Override
+    public ResourceItem createResourceItem(Layer layer, ResourceSet resources) {
+        PopupManager popupManager = createPopupManager(layer, resources);
+
+        TimeLineItem timeLineItem = new TimeLineItem(resources, this,
+                popupManager, hoverModel, layer, dragEnablerFactory);
+
+        timelineWidget.addEvent(timeLineItem.getTimeLineEvent());
+
+        return timeLineItem;
     }
 
     @Override
     public Widget createWidget() {
-	timelineWidget = new TimeLineWidget();
+        timelineWidget = new TimeLineWidget();
 
-	timelineWidget.setHeight("100%");
-	timelineWidget.setWidth("100%");
+        timelineWidget.setHeight("100%");
+        timelineWidget.setWidth("100%");
 
-	return timelineWidget;
+        return timelineWidget;
+    }
+
+    @Override
+    public String[] getSlotIDs() {
+        return new String[] { SlotResolver.DESCRIPTION_SLOT,
+                SlotResolver.LABEL_SLOT, SlotResolver.COLOR_SLOT,
+                SlotResolver.DATE_SLOT };
+    }
+
+    public TimeLineWidget getTimeLineWidget() {
+        return timelineWidget;
     }
 
     @Override
     public void removeResourceItem(ResourceItem resourceItem) {
-	timelineWidget.removeEvent(((TimeLineItem) resourceItem)
-		.getTimeLineEvent());
-    }
-
-    public TimeLineWidget getTimeLineWidget() {
-	return timelineWidget;
-    }
-
-    @Override
-    public Memento save() {
-	Memento state = new Memento();
-	state.setValue(MEMENTO_DATE, timelineWidget.getCenterVisibleDate());
-	state.setValue(MEMENTO_ZOOM_PREFIX + 0, timelineWidget.getZoomIndex(0));
-	state.setValue(MEMENTO_ZOOM_PREFIX + 1, timelineWidget.getZoomIndex(1));
-	return state;
+        timelineWidget.removeEvent(((TimeLineItem) resourceItem)
+                .getTimeLineEvent());
     }
 
     @Override
     public void restore(Memento state) {
-	timelineWidget.setZoomIndex(0, (Integer) state
-		.getValue(MEMENTO_ZOOM_PREFIX + 0));
-	timelineWidget.setZoomIndex(1, (Integer) state
-		.getValue(MEMENTO_ZOOM_PREFIX + 1));
+        timelineWidget.setZoomIndex(0,
+                (Integer) state.getValue(MEMENTO_ZOOM_PREFIX + 0));
+        timelineWidget.setZoomIndex(1,
+                (Integer) state.getValue(MEMENTO_ZOOM_PREFIX + 1));
 
-	// set date *AFTER* zoom restored
-	Date date = (Date) state.getValue(MEMENTO_DATE);
-	timelineWidget.setCenterVisibleDate(date);
+        // set date *AFTER* zoom restored
+        Date date = (Date) state.getValue(MEMENTO_DATE);
+        timelineWidget.setCenterVisibleDate(date);
+    }
+
+    @Override
+    public Memento save() {
+        Memento state = new Memento();
+        state.setValue(MEMENTO_DATE, timelineWidget.getCenterVisibleDate());
+        state.setValue(MEMENTO_ZOOM_PREFIX + 0, timelineWidget.getZoomIndex(0));
+        state.setValue(MEMENTO_ZOOM_PREFIX + 1, timelineWidget.getZoomIndex(1));
+        return state;
     }
 }

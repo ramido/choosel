@@ -26,12 +26,12 @@ public class ErrorHandlingAsyncCommandExecutor implements AsyncCommandExecutor {
 
     @Inject
     public ErrorHandlingAsyncCommandExecutor(ErrorHandler errorHandler) {
-	assert errorHandler != null;
-	this.errorHandler = errorHandler;
+        assert errorHandler != null;
+        this.errorHandler = errorHandler;
     }
 
     @Override
     public void execute(AsyncCommand command) {
-	command.execute(new ErrorHandlingAsyncCallback<Void>(errorHandler));
+        command.execute(new ErrorHandlingAsyncCallback<Void>(errorHandler));
     }
 }

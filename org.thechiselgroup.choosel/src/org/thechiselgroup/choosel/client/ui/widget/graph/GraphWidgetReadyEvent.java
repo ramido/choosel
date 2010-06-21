@@ -24,22 +24,22 @@ public class GraphWidgetReadyEvent extends GwtEvent<GraphWidgetReadyHandler> {
     private GraphWidget graphWidget;
 
     public GraphWidgetReadyEvent(GraphWidget graphWidget) {
-	// omitted != null assertion for testing
-	this.graphWidget = graphWidget;
+        // omitted != null assertion for testing
+        this.graphWidget = graphWidget;
     }
 
     @Override
     protected void dispatch(GraphWidgetReadyHandler handler) {
-	handler.onWidgetReady(this);
+        handler.onWidgetReady(this);
     }
 
     @Override
     public Type<GraphWidgetReadyHandler> getAssociatedType() {
-	return TYPE;
+        return TYPE;
     }
 
     public GraphWidget getSWFWidget() {
-	return graphWidget;
+        return graphWidget;
     }
 
 }

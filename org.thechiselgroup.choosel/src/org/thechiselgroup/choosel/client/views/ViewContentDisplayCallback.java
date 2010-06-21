@@ -20,16 +20,16 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
 public interface ViewContentDisplayCallback {
 
-    void switchSelection(ResourceSet resources);
-
-    ResourceItem getResourceItem(Resource resource);
-
-    Resource getResourceByUri(String uri);
-
     boolean containsResourceWithUri(String uri);
+
+    Iterable<Resource> getAllResources();
 
     ResourceSet getAutomaticResourceSet();
 
-    Iterable<Resource> getAllResources();
+    Resource getResourceByUri(String uri);
+
+    ResourceItem getResourceItem(Resource resource);
+
+    void switchSelection(ResourceSet resources);
 
 }

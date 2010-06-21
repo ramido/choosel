@@ -24,7 +24,7 @@ import org.thechiselgroup.choosel.client.util.HasDescription;
 import org.thechiselgroup.choosel.client.views.View;
 
 public class ReplaceSelectionContentsCommand implements UndoableCommand,
-	HasDescription {
+        HasDescription {
 
     private List<Resource> originalTargetResources;
 
@@ -33,53 +33,53 @@ public class ReplaceSelectionContentsCommand implements UndoableCommand,
     private final View view;
 
     public ReplaceSelectionContentsCommand(ResourceSet resources, View view) {
-	assert resources != null;
-	assert view != null;
+        assert resources != null;
+        assert view != null;
 
-	this.resources = resources;
-	this.view = view;
+        this.resources = resources;
+        this.view = view;
     }
 
     @Override
     public void execute() {
-	if (originalTargetResources == null) {
-	    originalTargetResources = getSelection().toList();
-	}
+        if (originalTargetResources == null) {
+            originalTargetResources = getSelection().toList();
+        }
 
-	getSelection().clear();
+        getSelection().clear();
 
-	List<Resource> selectedResourcesFromView = resources.toList();
-	selectedResourcesFromView.retainAll(view.getResources().toList());
+        List<Resource> selectedResourcesFromView = resources.toList();
+        selectedResourcesFromView.retainAll(view.getResources().toList());
 
-	getSelection().addAll(selectedResourcesFromView);
+        getSelection().addAll(selectedResourcesFromView);
 
-	assert getSelection().containsAll(selectedResourcesFromView);
-	assert getSelection().size() == selectedResourcesFromView.size();
+        assert getSelection().containsAll(selectedResourcesFromView);
+        assert getSelection().size() == selectedResourcesFromView.size();
     }
 
     // TODO add view name once available
     @Override
     public String getDescription() {
-	return "Replace selection in view with resources from '"
-		+ resources.getLabel() + "'";
+        return "Replace selection in view with resources from '"
+                + resources.getLabel() + "'";
     }
 
     public ResourceSet getResources() {
-	return resources;
+        return resources;
     }
 
     private ResourceSet getSelection() {
-	return view.getSelection();
+        return view.getSelection();
     }
 
     public View getView() {
-	return view;
+        return view;
     }
 
     @Override
     public void undo() {
-	getSelection().clear();
-	getSelection().addAll(originalTargetResources);
+        getSelection().clear();
+        getSelection().addAll(originalTargetResources);
     }
 
 }

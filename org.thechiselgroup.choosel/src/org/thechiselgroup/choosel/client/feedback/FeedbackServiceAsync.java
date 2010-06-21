@@ -20,6 +20,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public interface FeedbackServiceAsync {
 
     void sendFeedback(String message, String errorMessage,
-	    AsyncCallback<Void> callback);
+            AsyncCallback<Void> callback);
 
 }

@@ -22,26 +22,26 @@ public class DefaultResourceManager implements ResourceManager {
 
     private static class ResourceElement {
 
-	private int allocationCounter = 0;
+        private int allocationCounter = 0;
 
-	private Resource resource;
+        private Resource resource;
 
-	public ResourceElement(Resource resource) {
-	    this.resource = resource;
-	}
+        public ResourceElement(Resource resource) {
+            this.resource = resource;
+        }
 
-	public void allocate() {
-	    allocationCounter++;
-	}
+        public void allocate() {
+            allocationCounter++;
+        }
 
-	public void deallocate() {
-	    assert allocationCounter >= 1;
-	    allocationCounter--;
-	}
+        public void deallocate() {
+            assert allocationCounter >= 1;
+            allocationCounter--;
+        }
 
-	public boolean isUsed() {
-	    return allocationCounter > 0;
-	}
+        public boolean isUsed() {
+            return allocationCounter > 0;
+        }
 
     }
 
@@ -49,59 +49,59 @@ public class DefaultResourceManager implements ResourceManager {
 
     @Override
     public Resource add(Resource resource) {
-	String key = resource.getUri();
+        String key = resource.getUri();
 
-	if (!contains(key)) {
-	    keysToResourceElements.put(key, new ResourceElement(resource));
-	}
+        if (!contains(key)) {
+            keysToResourceElements.put(key, new ResourceElement(resource));
+        }
 
-	return getResourceElement(key).resource;
+        return getResourceElement(key).resource;
     }
 
     @Override
     public Resource allocate(String uri) {
-	ResourceElement resourceElement = getResourceElement(uri);
-	resourceElement.allocate();
-	return resourceElement.resource;
+        ResourceElement resourceElement = getResourceElement(uri);
+        resourceElement.allocate();
+        return resourceElement.resource;
     }
 
     @Override
     public void clear() {
-	keysToResourceElements.clear();
+        keysToResourceElements.clear();
     }
 
     @Override
     public boolean contains(String uri) {
-	return keysToResourceElements.containsKey(uri);
+        return keysToResourceElements.containsKey(uri);
     }
 
     @Override
     public void deallocate(String uri) {
-	assert uri != null;
+        assert uri != null;
 
-	ResourceElement resourceElement = getResourceElement(uri);
+        ResourceElement resourceElement = getResourceElement(uri);
 
-	if (resourceElement == null) {
-	    return;
-	}
+        if (resourceElement == null) {
+            return;
+        }
 
-	resourceElement.deallocate();
-	if (!resourceElement.isUsed()) {
-	    removeResourceElement(uri);
-	}
+        resourceElement.deallocate();
+        if (!resourceElement.isUsed()) {
+            removeResourceElement(uri);
+        }
     }
 
     @Override
     public Resource getByUri(String uri) {
-	return getResourceElement(uri).resource;
+        return getResourceElement(uri).resource;
     }
 
     private ResourceElement getResourceElement(String uri) {
-	return keysToResourceElements.get(uri);
+        return keysToResourceElements.get(uri);
     }
 
     private void removeResourceElement(String uri) {
-	keysToResourceElements.remove(uri);
+        keysToResourceElements.remove(uri);
     }
 
 }

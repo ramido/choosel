@@ -15,9 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources.command;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResources;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +25,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.command.ReplaceSelectionContentsCommand;
 import org.thechiselgroup.choosel.client.views.View;
 
 public class ReplaceSelectionContentsCommandTest {
@@ -41,53 +40,53 @@ public class ReplaceSelectionContentsCommandTest {
 
     @Test
     public void resourcesReplacedOnExecute() {
-	setUpCommand(createResources(1, 2, 3), createResources(4),
-		createResources(1, 2, 3, 4));
+        setUpCommand(createResources(1, 2, 3), createResources(4),
+                createResources(1, 2, 3, 4));
 
-	underTest.execute();
+        underTest.execute();
 
-	assertEquals(true, viewSelection.containsEqualResources(resources));
+        assertEquals(true, viewSelection.containsEqualResources(resources));
     }
 
     @Test
     public void restoreTargetSetOnUndo() {
-	setUpCommand(createResources(1, 2, 3), createResources(4),
-		createResources(1, 2, 3, 4));
+        setUpCommand(createResources(1, 2, 3), createResources(4),
+                createResources(1, 2, 3, 4));
 
-	underTest.execute();
-	underTest.undo();
+        underTest.execute();
+        underTest.undo();
 
-	assertEquals(true, viewSelection
-		.containsEqualResources(createResources(4)));
+        assertEquals(true,
+                viewSelection.containsEqualResources(createResources(4)));
     }
 
     @Test
     public void selectionContainsOnlyElementsFromView() {
-	setUpCommand(createResources(1, 2, 3), createResources(4),
-		createResources(3, 4));
+        setUpCommand(createResources(1, 2, 3), createResources(4),
+                createResources(3, 4));
 
-	underTest.execute();
+        underTest.execute();
 
-	assertEquals(true, viewSelection
-		.containsEqualResources(createResources(3)));
-    }
-
-    private void setUpCommand(DefaultResourceSet resources,
-	    DefaultResourceSet viewSelection, DefaultResourceSet viewResources) {
-
-	this.resources = resources;
-	this.viewSelection = viewSelection;
-
-	when(view.getSelection()).thenReturn(viewSelection);
-	when(view.getResources()).thenReturn(viewResources);
-
-	this.underTest = new ReplaceSelectionContentsCommand(resources, view);
+        assertEquals(true,
+                viewSelection.containsEqualResources(createResources(3)));
     }
 
     @Before
     public void setUp() {
-	MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.initMocks(this);
 
+    }
+
+    private void setUpCommand(DefaultResourceSet resources,
+            DefaultResourceSet viewSelection, DefaultResourceSet viewResources) {
+
+        this.resources = resources;
+        this.viewSelection = viewSelection;
+
+        when(view.getSelection()).thenReturn(viewSelection);
+        when(view.getResources()).thenReturn(viewResources);
+
+        this.underTest = new ReplaceSelectionContentsCommand(resources, view);
     }
 
 }

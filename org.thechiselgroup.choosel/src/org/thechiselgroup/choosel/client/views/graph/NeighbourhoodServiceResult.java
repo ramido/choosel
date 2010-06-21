@@ -36,43 +36,43 @@ public class NeighbourhoodServiceResult implements Serializable {
     private HashSet<Resource> neighbours = new HashSet<Resource>();
 
     private NeighbourhoodServiceResult() {
-	// for GWT serialization
+        // for GWT serialization
     }
 
     public NeighbourhoodServiceResult(Resource resource) {
-	assert resource != null;
-	this.resource = resource;
-    }
-
-    public Relationship addRelationship(Resource source, Resource target) {
-	addNeighbour(source);
-	addNeighbour(target);
-
-	Relationship r = new Relationship(source, target);
-	relationships.add(r);
-	return r;
+        assert resource != null;
+        this.resource = resource;
     }
 
     private void addNeighbour(Resource resource) {
-	assert resource != null;
+        assert resource != null;
 
-	if (resource.equals(this.resource)) {
-	    return;
-	}
+        if (resource.equals(this.resource)) {
+            return;
+        }
 
-	neighbours.add(resource);
+        neighbours.add(resource);
     }
 
-    public List<Relationship> getRelationships() {
-	return relationships;
-    }
+    public Relationship addRelationship(Resource source, Resource target) {
+        addNeighbour(source);
+        addNeighbour(target);
 
-    public Resource getResource() {
-	return resource;
+        Relationship r = new Relationship(source, target);
+        relationships.add(r);
+        return r;
     }
 
     public Set<Resource> getNeighbours() {
-	return neighbours;
+        return neighbours;
+    }
+
+    public List<Relationship> getRelationships() {
+        return relationships;
+    }
+
+    public Resource getResource() {
+        return resource;
     }
 
 }

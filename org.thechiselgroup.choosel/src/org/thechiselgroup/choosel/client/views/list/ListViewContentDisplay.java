@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.persistence.Memento;
-import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
@@ -51,105 +50,105 @@ public class ListViewContentDisplay extends AbstractViewContentDisplay {
 
     public class DefaultDisplay implements Display {
 
-	private List<String> listItems = new ArrayList<String>();
+        private List<String> listItems = new ArrayList<String>();
 
-	@Override
-	public void addItem(ListItem listItem) {
-	    listItem.init();
+        @Override
+        public void addItem(ListItem listItem) {
+            listItem.init();
 
-	    ListItemLabel label = listItem.getLabel();
+            ListItemLabel label = listItem.getLabel();
 
-	    label.addMouseOverHandler(labelEventHandler);
-	    label.addMouseOutHandler(labelEventHandler);
-	    label.addClickHandler(labelEventHandler);
+            label.addMouseOverHandler(labelEventHandler);
+            label.addMouseOutHandler(labelEventHandler);
+            label.addClickHandler(labelEventHandler);
 
-	    // insert at right position to maintain sort..
-	    // TODO cleanup - performance issues
-	    listItems.add(label.getText());
-	    Collections.sort(listItems, String.CASE_INSENSITIVE_ORDER);
-	    int row = listItems.indexOf(label.getText());
-	    table.insertRow(row);
-	    table.setWidget(row, 0, label);
-	}
+            // insert at right position to maintain sort..
+            // TODO cleanup - performance issues
+            listItems.add(label.getText());
+            Collections.sort(listItems, String.CASE_INSENSITIVE_ORDER);
+            int row = listItems.indexOf(label.getText());
+            table.insertRow(row);
+            table.setWidget(row, 0, label);
+        }
 
-	@Override
-	public void addStyleName(ListItem listItem, String cssClass) {
-	    listItem.getLabel().addStyleName(cssClass);
-	}
+        @Override
+        public void addStyleName(ListItem listItem, String cssClass) {
+            listItem.getLabel().addStyleName(cssClass);
+        }
 
-	@Override
-	public void removeIndividualItem(ListItem listItem) {
-	    /*
-	     * whole row needs to be removed, otherwise lots of empty rows
-	     * consume the whitespace
-	     */
-	    for (int i = 0; i < table.getRowCount(); i++) {
-		if (table.getWidget(i, 0).equals(listItem.getLabel())) {
-		    table.removeRow(i);
-		    listItems.remove(i);
-		    return;
-		}
-	    }
-	}
+        @Override
+        public void removeIndividualItem(ListItem listItem) {
+            /*
+             * whole row needs to be removed, otherwise lots of empty rows
+             * consume the whitespace
+             */
+            for (int i = 0; i < table.getRowCount(); i++) {
+                if (table.getWidget(i, 0).equals(listItem.getLabel())) {
+                    table.removeRow(i);
+                    listItems.remove(i);
+                    return;
+                }
+            }
+        }
 
-	@Override
-	public void removeStyleName(ListItem listItem, String cssClass) {
-	    listItem.getLabel().removeStyleName(cssClass);
-	}
+        @Override
+        public void removeStyleName(ListItem listItem, String cssClass) {
+            listItem.getLabel().removeStyleName(cssClass);
+        }
 
     }
 
     public static interface Display {
 
-	void addItem(ListItem listItem);
+        void addItem(ListItem listItem);
 
-	void addStyleName(ListItem listItem, String cssClass);
+        void addStyleName(ListItem listItem, String cssClass);
 
-	void removeIndividualItem(ListItem listItem);
+        void removeIndividualItem(ListItem listItem);
 
-	void removeStyleName(ListItem listItem, String cssClass);
+        void removeStyleName(ListItem listItem, String cssClass);
 
     }
 
     private class LabelEventHandler implements ClickHandler, MouseOutHandler,
-	    MouseOverHandler {
+            MouseOverHandler {
 
-	private final ResourceSet hoverModel;
+        private final ResourceSet hoverModel;
 
-	public LabelEventHandler(ResourceSet hoverModel) {
-	    this.hoverModel = hoverModel;
-	}
+        public LabelEventHandler(ResourceSet hoverModel) {
+            this.hoverModel = hoverModel;
+        }
 
-	private ListItem getListItem(GwtEvent<?> event) {
-	    return ((ListItemLabel) event.getSource()).getListItem();
-	}
+        private ListItem getListItem(GwtEvent<?> event) {
+            return ((ListItemLabel) event.getSource()).getListItem();
+        }
 
-	private ResourceSet getResource(GwtEvent<?> event) {
-	    return getListItem(event).getResourceSet();
-	}
+        private ResourceSet getResource(GwtEvent<?> event) {
+            return getListItem(event).getResourceSet();
+        }
 
-	@Override
-	public void onClick(ClickEvent e) {
-	    getCallback().switchSelection(getResource(e));
-	}
+        @Override
+        public void onClick(ClickEvent e) {
+            getCallback().switchSelection(getResource(e));
+        }
 
-	@Override
-	public void onMouseOut(MouseOutEvent e) {
-	    hoverModel.removeAll(getResource(e));
-	}
+        @Override
+        public void onMouseOut(MouseOutEvent e) {
+            hoverModel.removeAll(getResource(e));
+        }
 
-	@Override
-	public void onMouseOver(MouseOverEvent e) {
-	    hoverModel.addAll(getResource(e));
-	}
+        @Override
+        public void onMouseOver(MouseOverEvent e) {
+            hoverModel.addAll(getResource(e));
+        }
     }
 
     private static class ResizableScrollPanel extends ScrollPanel implements
-	    RequiresResize {
+            RequiresResize {
 
-	private ResizableScrollPanel(Widget child) {
-	    super(child);
-	}
+        private ResizableScrollPanel(Widget child) {
+            super(child);
+        }
 
     }
 
@@ -198,72 +197,73 @@ public class ListViewContentDisplay extends AbstractViewContentDisplay {
 
     @Inject
     public ListViewContentDisplay(
-	    @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
-	    PopupManagerFactory popupManagerFactory, DetailsWidgetHelper detailsWidgetHelper,
-	    ResourceSetAvatarDragController dragController) {
+            @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
+            PopupManagerFactory popupManagerFactory,
+            DetailsWidgetHelper detailsWidgetHelper,
+            ResourceSetAvatarDragController dragController) {
 
-	super(popupManagerFactory, detailsWidgetHelper, hoverModel);
+        super(popupManagerFactory, detailsWidgetHelper, hoverModel);
 
-	this.dragController = dragController;
-	this.display = new DefaultDisplay();
+        this.dragController = dragController;
+        this.display = new DefaultDisplay();
     }
 
     // TODO move into display
     private void addItem(ListItem listItem) {
-	display.addItem(listItem);
+        display.addItem(listItem);
     }
 
     @Override
     public ResourceItem createResourceItem(Layer layer, ResourceSet resources) {
-	PopupManager popupManager = createPopupManager(layer, resources);
-	ListItem listItem = new ListItem(resources, hoverModel, popupManager,
-		display, layer, dragController);
+        PopupManager popupManager = createPopupManager(layer, resources);
+        ListItem listItem = new ListItem(resources, hoverModel, popupManager,
+                display, layer, dragController);
 
-	addItem(listItem);
+        addItem(listItem);
 
-	return listItem;
-    }
-
-    @Override
-    public String[] getSlotIDs() {
-	return new String[] { SlotResolver.DESCRIPTION_SLOT };
+        return listItem;
     }
 
     @Override
     public Widget createWidget() {
-	table = new FlexTable();
+        table = new FlexTable();
 
-	// does not work in hosted mode; fix for hosted mode: empty row
-	// if (!GWT.isScript()) {
-	// int numRows = table.getRowCount();
-	// table.setWidget(numRows, 0, new Label(""));
-	// }
+        // does not work in hosted mode; fix for hosted mode: empty row
+        // if (!GWT.isScript()) {
+        // int numRows = table.getRowCount();
+        // table.setWidget(numRows, 0, new Label(""));
+        // }
 
-	labelEventHandler = new LabelEventHandler(hoverModel);
+        labelEventHandler = new LabelEventHandler(hoverModel);
 
-	scrollPanel = new ResizableScrollPanel(table);
-	scrollPanel.addStyleName(CSS_LIST_VIEW_SCROLLBAR);
+        scrollPanel = new ResizableScrollPanel(table);
+        scrollPanel.addStyleName(CSS_LIST_VIEW_SCROLLBAR);
 
-	return scrollPanel;
+        return scrollPanel;
+    }
+
+    @Override
+    public String[] getSlotIDs() {
+        return new String[] { SlotResolver.DESCRIPTION_SLOT };
     }
 
     // for tests only, TODO marker annotation & processing
     public FlexTable getTable() {
-	return table;
+        return table;
     }
 
     @Override
     public void removeResourceItem(ResourceItem listItem) {
-	display.removeIndividualItem((ListItem) listItem);
-    }
-
-    @Override
-    public Memento save() {
-	return new Memento(); // TODO implement
+        display.removeIndividualItem((ListItem) listItem);
     }
 
     @Override
     public void restore(Memento state) {
-	// TODO implement
+        // TODO implement
+    }
+
+    @Override
+    public Memento save() {
+        return new Memento(); // TODO implement
     }
 }

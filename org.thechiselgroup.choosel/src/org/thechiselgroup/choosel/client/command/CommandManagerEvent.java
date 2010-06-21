@@ -18,25 +18,25 @@ package org.thechiselgroup.choosel.client.command;
 import com.google.gwt.event.shared.GwtEvent;
 
 public abstract class CommandManagerEvent<H extends CommandManagerEventHandler>
-	extends GwtEvent<H> {
+        extends GwtEvent<H> {
 
     private final CommandManager commandManager;
 
     private final UndoableCommand command;
 
     public CommandManagerEvent(CommandManager commandManager,
-	    UndoableCommand command) {
+            UndoableCommand command) {
 
-	this.commandManager = commandManager;
-	this.command = command;
-    }
-
-    public CommandManager getCommandManager() {
-	return commandManager;
+        this.commandManager = commandManager;
+        this.command = command;
     }
 
     public UndoableCommand getCommand() {
-	return command;
+        return command;
+    }
+
+    public CommandManager getCommandManager() {
+        return commandManager;
     }
 
 }

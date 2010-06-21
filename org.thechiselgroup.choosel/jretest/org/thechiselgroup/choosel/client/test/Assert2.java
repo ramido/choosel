@@ -23,18 +23,18 @@ import org.junit.Assert;
 public final class Assert2 {
 
     public static <T> void assertContains(Collection<T> c, T value) {
-	String failureMessage = value + " should be contained in " + c;
-	Assert.assertEquals(failureMessage, true, c.contains(value));
+        String failureMessage = value + " should be contained in " + c;
+        Assert.assertEquals(failureMessage, true, c.contains(value));
     }
 
     public static <T> void assertEquals(List<T> expected, List<T> result) {
-	String failureMessage = "expected: " + expected + ", but was: "
-		+ result;
+        String failureMessage = "expected: " + expected + ", but was: "
+                + result;
 
-	Assert.assertEquals(failureMessage, expected.size(), result.size());
-	for (int i = 0; i < expected.size(); i++) {
-	    Assert.assertEquals(failureMessage, expected.get(i), result.get(i));
-	}
+        Assert.assertEquals(failureMessage, expected.size(), result.size());
+        for (int i = 0; i < expected.size(); i++) {
+            Assert.assertEquals(failureMessage, expected.get(i), result.get(i));
+        }
     }
 
     private Assert2() {

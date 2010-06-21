@@ -15,10 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.model.resources;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResource;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -45,61 +47,61 @@ public class CountingResourceSetTest {
 
     @Test
     public void addedFiredOnceIfAddedTwice() {
-	underTest.addHandler(ResourceAddedEvent.TYPE, addedHandler);
-	underTest.add(resource);
-	underTest.add(resource);
+        underTest.addHandler(ResourceAddedEvent.TYPE, addedHandler);
+        underTest.add(resource);
+        underTest.add(resource);
 
-	verify(addedHandler, times(1)).onResourceAdded(
-		any(ResourceAddedEvent.class));
+        verify(addedHandler, times(1)).onResourceAdded(
+                any(ResourceAddedEvent.class));
     }
 
     @Test
     public void removeFiredOnceIfRemovedTwiceOnceAfterAddedTwice() {
-	underTest.add(resource);
-	underTest.add(resource);
-	underTest.addHandler(ResourceRemovedEvent.TYPE, removeHandler);
-	underTest.remove(resource);
-	underTest.remove(resource);
+        underTest.add(resource);
+        underTest.add(resource);
+        underTest.addHandler(ResourceRemovedEvent.TYPE, removeHandler);
+        underTest.remove(resource);
+        underTest.remove(resource);
 
-	verify(removeHandler, times(1)).onResourceRemoved(
-		any(ResourceRemovedEvent.class));
+        verify(removeHandler, times(1)).onResourceRemoved(
+                any(ResourceRemovedEvent.class));
     }
 
     @Test
     public void removeNotFiredIfOnlyRemovedOnceAfterAddedTwice() {
-	underTest.add(resource);
-	underTest.add(resource);
-	underTest.addHandler(ResourceRemovedEvent.TYPE, removeHandler);
-	underTest.remove(resource);
+        underTest.add(resource);
+        underTest.add(resource);
+        underTest.addHandler(ResourceRemovedEvent.TYPE, removeHandler);
+        underTest.remove(resource);
 
-	verify(removeHandler, never()).onResourceRemoved(
-		any(ResourceRemovedEvent.class));
+        verify(removeHandler, never()).onResourceRemoved(
+                any(ResourceRemovedEvent.class));
     }
 
     @Test
     public void resourceAddedTwiceNotContainedAfter2ndRemove() {
-	underTest.add(resource);
-	underTest.add(resource);
-	underTest.remove(resource);
-	underTest.remove(resource);
+        underTest.add(resource);
+        underTest.add(resource);
+        underTest.remove(resource);
+        underTest.remove(resource);
 
-	assertEquals(false, underTest.contains(resource));
+        assertEquals(false, underTest.contains(resource));
     }
 
     @Test
     public void resourceAddedTwiceStillContainedAfterRemove() {
-	underTest.add(resource);
-	underTest.add(resource);
-	underTest.remove(resource);
+        underTest.add(resource);
+        underTest.add(resource);
+        underTest.remove(resource);
 
-	assertEquals(true, underTest.contains(resource));
+        assertEquals(true, underTest.contains(resource));
     }
 
     @Before
     public void setUp() {
-	MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.initMocks(this);
 
-	resource = createResource(1);
-	underTest = new CountingResourceSet();
+        resource = createResource(1);
+        underTest = new CountingResourceSet();
     }
 }

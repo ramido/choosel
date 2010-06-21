@@ -20,11 +20,11 @@ import org.thechiselgroup.choosel.client.services.ServiceException;
 public class AuthenticationException extends ServiceException {
 
     private AuthenticationException() {
-	// for GWT serialization
+        // for GWT serialization
     }
 
     public AuthenticationException(String message) {
-	super(message);
+        super(message);
     }
 
 }

@@ -30,38 +30,38 @@ public class Authentication implements Serializable {
     private String logoutURL;
 
     public Authentication() {
-	// for GWT serialization
+        // for GWT serialization
     }
 
     public Authentication(String email, boolean isSignedIn, String loginURL,
-	    String logoutURL) {
+            String logoutURL) {
 
-	this.email = email;
-	this.isSignedIn = isSignedIn;
-	this.logoutURL = logoutURL;
-	this.loginURL = loginURL;
+        this.email = email;
+        this.isSignedIn = isSignedIn;
+        this.logoutURL = logoutURL;
+        this.loginURL = loginURL;
     }
 
     public String getEmail() {
-	return email;
+        return email;
     }
 
     public String getLoginURL() {
-	return loginURL;
+        return loginURL;
     }
 
     public String getLogoutURL() {
-	return logoutURL;
+        return logoutURL;
     }
 
     public boolean isSignedIn() {
-	return isSignedIn;
+        return isSignedIn;
     }
 
     @Override
     public String toString() {
-	return "Authentication [email=" + email + ", isSignedIn=" + isSignedIn
-		+ ", loginURL=" + loginURL + ", logoutURL=" + logoutURL + "]";
+        return "Authentication [email=" + email + ", isSignedIn=" + isSignedIn
+                + ", loginURL=" + loginURL + ", logoutURL=" + logoutURL + "]";
     }
 
 }

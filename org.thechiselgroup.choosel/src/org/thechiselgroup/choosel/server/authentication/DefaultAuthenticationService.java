@@ -26,28 +26,28 @@ public class DefaultAuthenticationService implements AuthenticationService {
     private UserService userService;
 
     public DefaultAuthenticationService(UserService userService) {
-	assert userService != null;
-	this.userService = userService;
+        assert userService != null;
+        this.userService = userService;
     }
 
     @Override
     public Authentication getAuthentication(String redirectURL)
-	    throws ServiceException {
+            throws ServiceException {
 
-	assert redirectURL != null;
+        assert redirectURL != null;
 
-	boolean isSignedIn = userService.isUserLoggedIn();
-	String email = null;
-	String logoutURL = null;
-	String loginURL = null;
+        boolean isSignedIn = userService.isUserLoggedIn();
+        String email = null;
+        String logoutURL = null;
+        String loginURL = null;
 
-	if (isSignedIn) {
-	    email = userService.getCurrentUser().getEmail();
-	    logoutURL = userService.createLogoutURL(redirectURL);
-	} else {
-	    loginURL = userService.createLoginURL(redirectURL);
-	}
+        if (isSignedIn) {
+            email = userService.getCurrentUser().getEmail();
+            logoutURL = userService.createLogoutURL(redirectURL);
+        } else {
+            loginURL = userService.createLoginURL(redirectURL);
+        }
 
-	return new Authentication(email, isSignedIn, loginURL, logoutURL);
+        return new Authentication(email, isSignedIn, loginURL, logoutURL);
     }
 }

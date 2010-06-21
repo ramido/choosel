@@ -23,20 +23,21 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 public class TestMouseOverEvent extends MouseOverEvent {
 
     private final int clientY;
+
     private final int clientX;
 
     public TestMouseOverEvent(int clientX, int clientY) {
-	this.clientX = clientX;
-	this.clientY = clientY;
+        this.clientX = clientX;
+        this.clientY = clientY;
     }
 
     @Override
     public int getClientX() {
-	return clientX;
+        return clientX;
     }
 
     @Override
     public int getClientY() {
-	return clientY;
+        return clientY;
     }
 }

@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.model.resources;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -28,29 +28,29 @@ public class DefaultResourceSetTest {
 
     @Test
     public void hasLabelIsFalseWhenLabelNull() {
-	resources.setLabel(null);
+        resources.setLabel(null);
 
-	assertEquals(false, resources.hasLabel());
+        assertEquals(false, resources.hasLabel());
     }
 
     @Test
     public void hasLabelIsTrueWhenLabelText() {
-	resources.setLabel("some text");
+        resources.setLabel("some text");
 
-	assertEquals(true, resources.hasLabel());
+        assertEquals(true, resources.hasLabel());
     }
 
     @Test
     public void returnEmptyStringIfLabelNull() {
-	resources.setLabel(null);
+        resources.setLabel(null);
 
-	assertEquals("", resources.getLabel());
+        assertEquals("", resources.getLabel());
     }
 
     @Before
     public void setUp() {
-	MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.initMocks(this);
 
-	resources = new DefaultResourceSet();
+        resources = new DefaultResourceSet();
     }
 }

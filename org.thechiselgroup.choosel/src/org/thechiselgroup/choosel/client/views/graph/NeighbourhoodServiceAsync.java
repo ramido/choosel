@@ -22,6 +22,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public interface NeighbourhoodServiceAsync {
 
     void getNeighbourhood(Resource concept,
-	    AsyncCallback<NeighbourhoodServiceResult> callback);
+            AsyncCallback<NeighbourhoodServiceResult> callback);
 
 }

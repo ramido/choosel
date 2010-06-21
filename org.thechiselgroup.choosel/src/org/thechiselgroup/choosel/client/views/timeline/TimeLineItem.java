@@ -15,12 +15,11 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.timeline;
 
-import static com.google.gwt.query.client.GQuery.*;
+import static com.google.gwt.query.client.GQuery.$;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.widget.timeline.TimeLineEvent;
@@ -46,27 +45,27 @@ public class TimeLineItem extends IconResourceItem {
     private List<String> elementIDs = new ArrayList<String>();
 
     private final Function mouseClickListener = new Function() {
-	@Override
-	public boolean f(Event e) {
-	    onMouseClick(e);
-	    return true;
-	}
+        @Override
+        public boolean f(Event e) {
+            onMouseClick(e);
+            return true;
+        }
     };
 
     private final Function mouseOutListener = new Function() {
-	@Override
-	public boolean f(Event e) {
-	    onMouseOut(e);
-	    return true;
-	}
+        @Override
+        public boolean f(Event e) {
+            onMouseOut(e);
+            return true;
+        }
     };
 
     private final Function mouseOverListener = new Function() {
-	@Override
-	public boolean f(Event e) {
-	    onMouseOver(e);
-	    return true;
-	}
+        @Override
+        public boolean f(Event e) {
+            onMouseOver(e);
+            return true;
+        }
     };
 
     private TimeLineEvent timeLineEvent;
@@ -75,170 +74,169 @@ public class TimeLineItem extends IconResourceItem {
 
     private DragEnablerFactory dragEnablerFactory;
 
-    public TimeLineItem(ResourceSet resources,
-	    TimeLineViewContentDisplay view, PopupManager popupManager,
-	    ResourceSet hoverModel, Layer layerModel,
-	    DragEnablerFactory dragEnablerFactory) {
+    public TimeLineItem(ResourceSet resources, TimeLineViewContentDisplay view,
+            PopupManager popupManager, ResourceSet hoverModel,
+            Layer layerModel, DragEnablerFactory dragEnablerFactory) {
 
-	super(resources, hoverModel, popupManager, layerModel);
+        super(resources, hoverModel, popupManager, layerModel);
 
-	this.view = view;
-	this.dragEnablerFactory = dragEnablerFactory;
+        this.view = view;
+        this.dragEnablerFactory = dragEnablerFactory;
 
-	String date = (String) getResourceValue(SlotResolver.DATE_SLOT);
+        String date = (String) getResourceValue(SlotResolver.DATE_SLOT);
 
-	timeLineEvent = TimeLineEvent.create(date, null, getDefaultIconURL(),
-		this);
+        timeLineEvent = TimeLineEvent.create(date, null, getDefaultIconURL(),
+                this);
 
     }
 
     private void addCssClass(String cssClass) {
-	for (String elementID : elementIDs) {
-	    if (elementID.startsWith("label")) {
-		// TODO get index of element for similar highlighting on
-		// overview band
-		getGElement(elementID).addClass(cssClass);
-	    }
-	}
+        for (String elementID : elementIDs) {
+            if (elementID.startsWith("label")) {
+                // TODO get index of element for similar highlighting on
+                // overview band
+                getGElement(elementID).addClass(cssClass);
+            }
+        }
     }
 
     private void addToElementIDs(String elementID) {
-	if (!elementIDs.contains(elementID)) {
-	    elementIDs.add(elementID);
-	}
+        if (!elementIDs.contains(elementID)) {
+            elementIDs.add(elementID);
+        }
     }
 
     private void applyIcon(String iconUrl) {
-	getTimeLineEvent().setIcon(iconUrl);
+        getTimeLineEvent().setIcon(iconUrl);
 
-	for (String elementID : elementIDs) {
-	    if (elementID.startsWith("icon")) {
-		// TODO get index of element for similar highlighting on
-		// overview band
-		getGElement(elementID).children().attr("src", iconUrl);
-	    }
-	}
+        for (String elementID : elementIDs) {
+            if (elementID.startsWith("icon")) {
+                // TODO get index of element for similar highlighting on
+                // overview band
+                getGElement(elementID).children().attr("src", iconUrl);
+            }
+        }
     }
 
     private GQuery getGElement(String elementID) {
-	return $("#" + elementID);
+        return $("#" + elementID);
     }
 
     public TimeLineEvent getTimeLineEvent() {
-	return timeLineEvent;
+        return timeLineEvent;
     }
 
     private void onMouseClick(Event e) {
-	view.getCallback().switchSelection(getResourceSet());
+        view.getCallback().switchSelection(getResourceSet());
     }
 
     public void onMouseOut(Event e) {
-	popupManager.onMouseOut(e.getClientX(), e.getClientY());
-	hoverModel.removeAll(getResourceSet());
+        popupManager.onMouseOut(e.getClientX(), e.getClientY());
+        hoverModel.removeAll(getResourceSet());
     }
 
     public void onMouseOver(Event e) {
-	popupManager.onMouseOver(e.getClientX(), e.getClientY());
-	hoverModel.addAll(getResourceSet());
+        popupManager.onMouseOver(e.getClientX(), e.getClientY());
+        hoverModel.addAll(getResourceSet());
     }
 
     public void onPainted(String labelElementID, String iconElementID) {
-	/*
-	 * every time the event is repainted, we need to hook up our listeners
-	 * again
-	 */
-	registerListeners(labelElementID);
-	registerListeners(iconElementID);
+        /*
+         * every time the event is repainted, we need to hook up our listeners
+         * again
+         */
+        registerListeners(labelElementID);
+        registerListeners(iconElementID);
 
-	addToElementIDs(labelElementID);
-	addToElementIDs(iconElementID);
+        addToElementIDs(labelElementID);
+        addToElementIDs(iconElementID);
     }
 
     private void registerListeners(String elementID) {
-	GQuery element = getGElement(elementID);
+        GQuery element = getGElement(elementID);
 
-	element.mouseover(mouseOverListener);
-	element.mouseout(mouseOutListener);
-	element.click(mouseClickListener);
+        element.mouseover(mouseOverListener);
+        element.mouseout(mouseOutListener);
+        element.click(mouseClickListener);
 
-	final DragEnabler enabler = dragEnablerFactory.createDragEnabler(this);
-	element.mouseup(new Function() {
-	    @Override
-	    public boolean f(Event e) {
-		enabler.forwardMouseUp(e);
-		return false;
-	    }
-	});
-	element.mouseout(new Function() {
-	    @Override
-	    public boolean f(Event e) {
-		enabler.forwardMouseOut(e);
-		return false;
-	    }
-	});
-	element.mousemove(new Function() {
-	    @Override
-	    public boolean f(Event e) {
-		enabler.forwardMouseMove(e);
-		return false;
-	    }
-	});
-	element.mousedown(new Function() {
-	    @Override
-	    public boolean f(Event e) {
-		enabler.forwardMouseDownWithTargetElementPosition(e);
-		return false;
-	    }
-	});
+        final DragEnabler enabler = dragEnablerFactory.createDragEnabler(this);
+        element.mouseup(new Function() {
+            @Override
+            public boolean f(Event e) {
+                enabler.forwardMouseUp(e);
+                return false;
+            }
+        });
+        element.mouseout(new Function() {
+            @Override
+            public boolean f(Event e) {
+                enabler.forwardMouseOut(e);
+                return false;
+            }
+        });
+        element.mousemove(new Function() {
+            @Override
+            public boolean f(Event e) {
+                enabler.forwardMouseMove(e);
+                return false;
+            }
+        });
+        element.mousedown(new Function() {
+            @Override
+            public boolean f(Event e) {
+                enabler.forwardMouseDownWithTargetElementPosition(e);
+                return false;
+            }
+        });
     }
 
     private void removeCssClass(String cssClass) {
-	for (String elementID : elementIDs) {
-	    if (elementID.startsWith("label")) {
-		getGElement(elementID).removeClass(cssClass);
-	    }
-	}
+        for (String elementID : elementIDs) {
+            if (elementID.startsWith("label")) {
+                getGElement(elementID).removeClass(cssClass);
+            }
+        }
     }
 
     @Override
     protected void setStatusStyling(Status status) {
-	switch (status) {
-	case HIGHLIGHTED_SELECTED: {
-	    removeCssClass(CSS_GRAYED_OUT_CLASS);
-	    addCssClass(CSS_SELECTED_CLASS);
-	    addCssClass(CSS_HIGHLIGHT_CLASS);
-	    applyIcon(getHighlightIconURL());
-	}
-	    break;
-	case HIGHLIGHTED: {
-	    removeCssClass(CSS_SELECTED_CLASS);
-	    removeCssClass(CSS_GRAYED_OUT_CLASS);
-	    addCssClass(CSS_HIGHLIGHT_CLASS);
-	    applyIcon(getHighlightIconURL());
-	}
-	    break;
-	case DEFAULT: {
-	    removeCssClass(CSS_SELECTED_CLASS);
-	    removeCssClass(CSS_GRAYED_OUT_CLASS);
-	    removeCssClass(CSS_HIGHLIGHT_CLASS);
-	    applyIcon(getDefaultIconURL());
-	}
-	    break;
-	case GRAYED_OUT: {
-	    removeCssClass(CSS_SELECTED_CLASS);
-	    removeCssClass(CSS_HIGHLIGHT_CLASS);
-	    addCssClass(CSS_GRAYED_OUT_CLASS);
-	    applyIcon(getGrayedOutIconURL());
-	}
-	    break;
-	case SELECTED: {
-	    removeCssClass(CSS_GRAYED_OUT_CLASS);
-	    removeCssClass(CSS_HIGHLIGHT_CLASS);
-	    addCssClass(CSS_SELECTED_CLASS);
-	    applyIcon(getSelectedIconURL());
-	}
-	    break;
-	}
+        switch (status) {
+        case HIGHLIGHTED_SELECTED: {
+            removeCssClass(CSS_GRAYED_OUT_CLASS);
+            addCssClass(CSS_SELECTED_CLASS);
+            addCssClass(CSS_HIGHLIGHT_CLASS);
+            applyIcon(getHighlightIconURL());
+        }
+            break;
+        case HIGHLIGHTED: {
+            removeCssClass(CSS_SELECTED_CLASS);
+            removeCssClass(CSS_GRAYED_OUT_CLASS);
+            addCssClass(CSS_HIGHLIGHT_CLASS);
+            applyIcon(getHighlightIconURL());
+        }
+            break;
+        case DEFAULT: {
+            removeCssClass(CSS_SELECTED_CLASS);
+            removeCssClass(CSS_GRAYED_OUT_CLASS);
+            removeCssClass(CSS_HIGHLIGHT_CLASS);
+            applyIcon(getDefaultIconURL());
+        }
+            break;
+        case GRAYED_OUT: {
+            removeCssClass(CSS_SELECTED_CLASS);
+            removeCssClass(CSS_HIGHLIGHT_CLASS);
+            addCssClass(CSS_GRAYED_OUT_CLASS);
+            applyIcon(getGrayedOutIconURL());
+        }
+            break;
+        case SELECTED: {
+            removeCssClass(CSS_GRAYED_OUT_CLASS);
+            removeCssClass(CSS_HIGHLIGHT_CLASS);
+            addCssClass(CSS_SELECTED_CLASS);
+            applyIcon(getSelectedIconURL());
+        }
+            break;
+        }
     }
 
 }

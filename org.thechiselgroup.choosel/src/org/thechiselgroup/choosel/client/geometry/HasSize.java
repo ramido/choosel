@@ -17,8 +17,8 @@ package org.thechiselgroup.choosel.client.geometry;
 
 public interface HasSize {
 
-    int getWidth();
-
     int getHeight();
+
+    int getWidth();
 
 }

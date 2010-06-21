@@ -26,19 +26,19 @@ public class Slot {
     private ResourceSetToValueResolver resolver;
 
     public Slot(String id, ResourceSetToValueResolver resolver) {
-	assert id != null;
-	assert resolver != null;
+        assert id != null;
+        assert resolver != null;
 
-	this.id = id;
-	this.resolver = resolver;
+        this.id = id;
+        this.resolver = resolver;
     }
 
     public String getId() {
-	return id;
+        return id;
     }
 
     public ResourceSetToValueResolver getResolver() {
-	return resolver;
+        return resolver;
     }
 
 }

@@ -31,42 +31,42 @@ import com.google.inject.Inject;
 public class WorkspacePresenter implements Presenter {
 
     public static class DefaultWorkspacePresenterDisplay implements
-	    WorkspacePresenterDisplay {
+            WorkspacePresenterDisplay {
 
-	private TextBox textBox;
+        private TextBox textBox;
 
-	public DefaultWorkspacePresenterDisplay() {
-	    this.textBox = new TextBox();
-	}
+        public DefaultWorkspacePresenterDisplay() {
+            this.textBox = new TextBox();
+        }
 
-	public TextBox getTextBox() {
-	    return textBox;
-	}
+        @Override
+        public HasBlurHandlers getTextBlurHandlers() {
+            return textBox;
+        }
 
-	@Override
-	public HasText getWorkspaceNameText() {
-	    return textBox;
-	}
+        public TextBox getTextBox() {
+            return textBox;
+        }
 
-	@Override
-	public HasBlurHandlers getTextBlurHandlers() {
-	    return textBox;
-	}
+        @Override
+        public HasKeyUpHandlers getTextKeyUpHandlers() {
+            return textBox;
+        }
 
-	@Override
-	public HasKeyUpHandlers getTextKeyUpHandlers() {
-	    return textBox;
-	}
+        @Override
+        public HasText getWorkspaceNameText() {
+            return textBox;
+        }
 
     }
 
     public interface WorkspacePresenterDisplay {
 
-	HasText getWorkspaceNameText();
+        HasBlurHandlers getTextBlurHandlers();
 
-	HasBlurHandlers getTextBlurHandlers();
+        HasKeyUpHandlers getTextKeyUpHandlers();
 
-	HasKeyUpHandlers getTextKeyUpHandlers();
+        HasText getWorkspaceNameText();
 
     }
 
@@ -76,45 +76,44 @@ public class WorkspacePresenter implements Presenter {
 
     @Inject
     public WorkspacePresenter(WorkspaceManager manager,
-	    WorkspacePresenterDisplay display) {
+            WorkspacePresenterDisplay display) {
 
-	this.manager = manager;
-	this.display = display;
+        this.manager = manager;
+        this.display = display;
 
-	String name = manager.getWorkspace().getName();
-	display.getWorkspaceNameText().setText(name);
-    }
-
-    private void updateWorkspaceName() {
-	manager.getWorkspace()
-		.setName(display.getWorkspaceNameText().getText());
+        String name = manager.getWorkspace().getName();
+        display.getWorkspaceNameText().setText(name);
     }
 
     @Override
     public void init() {
-	display.getTextKeyUpHandlers().addKeyUpHandler(new KeyUpHandler() {
+        display.getTextKeyUpHandlers().addKeyUpHandler(new KeyUpHandler() {
 
-	    @Override
-	    public void onKeyUp(KeyUpEvent event) {
-		updateWorkspaceName();
-	    }
+            @Override
+            public void onKeyUp(KeyUpEvent event) {
+                updateWorkspaceName();
+            }
 
-	});
+        });
 
-	display.getTextBlurHandlers().addBlurHandler(new BlurHandler() {
-	    @Override
-	    public void onBlur(BlurEvent event) {
-		updateWorkspaceName();
-	    }
-	});
+        display.getTextBlurHandlers().addBlurHandler(new BlurHandler() {
+            @Override
+            public void onBlur(BlurEvent event) {
+                updateWorkspaceName();
+            }
+        });
 
-	manager
-		.addSwitchedWorkspaceEventHandler(new WorkspaceSwitchedEventHandler() {
-		    @Override
-		    public void onWorkspaceSwitched(WorkspaceSwitchedEvent event) {
-			display.getWorkspaceNameText().setText(
-				event.getWorkspace().getName());
-		    }
-		});
+        manager.addSwitchedWorkspaceEventHandler(new WorkspaceSwitchedEventHandler() {
+            @Override
+            public void onWorkspaceSwitched(WorkspaceSwitchedEvent event) {
+                display.getWorkspaceNameText().setText(
+                        event.getWorkspace().getName());
+            }
+        });
+    }
+
+    private void updateWorkspaceName() {
+        manager.getWorkspace()
+                .setName(display.getWorkspaceNameText().getText());
     }
 }

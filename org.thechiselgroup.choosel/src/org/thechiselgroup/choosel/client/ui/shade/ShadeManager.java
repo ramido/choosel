@@ -15,7 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.shade;
 
-import static com.google.gwt.user.client.DOM.*;
+import static com.google.gwt.user.client.DOM.createDiv;
+import static com.google.gwt.user.client.DOM.setIntStyleAttribute;
+import static com.google.gwt.user.client.DOM.setStyleAttribute;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,15 +49,15 @@ public class ShadeManager implements HasClickHandlers {
 
     private final EventListener eventForwarder = new EventListener() {
 
-	@Override
-	public void onBrowserEvent(Event event) {
-	    switch (event.getTypeInt()) {
-	    case Event.ONCLICK:
-		fireEvent(new ClickEvent() {
-		});
-		break;
-	    }
-	}
+        @Override
+        public void onBrowserEvent(Event event) {
+            switch (event.getTypeInt()) {
+            case Event.ONCLICK:
+                fireEvent(new ClickEvent() {
+                });
+                break;
+            }
+        }
     };
 
     private final HandlerManager handlerManager = new HandlerManager(this);
@@ -70,83 +72,83 @@ public class ShadeManager implements HasClickHandlers {
 
     @Inject
     public ShadeManager() {
-	this(RootPanel.get(), ZIndex.SHADE);
+        this(RootPanel.get(), ZIndex.SHADE);
     }
 
     public ShadeManager(AbsolutePanel panel, int zIndex) {
-	this.panel = panel;
-	this.zIndex = zIndex;
+        this.panel = panel;
+        this.zIndex = zIndex;
     }
 
     @Override
     public HandlerRegistration addClickHandler(ClickHandler handler) {
-	return handlerManager.addHandler(ClickEvent.getType(), handler);
+        return handlerManager.addHandler(ClickEvent.getType(), handler);
     }
 
     private Element createShadeElement(Rectangle r) {
-	Element shadeElement = createDiv();
+        Element shadeElement = createDiv();
 
-	shadeElement.setClassName(ShadeManager.CSS_SHADE);
+        shadeElement.setClassName(ShadeManager.CSS_SHADE);
 
-	setStyleAttribute(shadeElement, CSS.POSITION, CSS.ABSOLUTE);
-	setStyleAttribute(shadeElement, CSS.LEFT, r.getX() + CSS.PX);
-	setStyleAttribute(shadeElement, CSS.TOP, r.getY() + CSS.PX);
-	setStyleAttribute(shadeElement, CSS.HEIGHT, r.getHeight() + CSS.PX);
-	setStyleAttribute(shadeElement, CSS.WIDTH, r.getWidth() + CSS.PX);
-	setIntStyleAttribute(shadeElement, CSS.Z_INDEX, zIndex);
+        setStyleAttribute(shadeElement, CSS.POSITION, CSS.ABSOLUTE);
+        setStyleAttribute(shadeElement, CSS.LEFT, r.getX() + CSS.PX);
+        setStyleAttribute(shadeElement, CSS.TOP, r.getY() + CSS.PX);
+        setStyleAttribute(shadeElement, CSS.HEIGHT, r.getHeight() + CSS.PX);
+        setStyleAttribute(shadeElement, CSS.WIDTH, r.getWidth() + CSS.PX);
+        setIntStyleAttribute(shadeElement, CSS.Z_INDEX, zIndex);
 
-	return shadeElement;
+        return shadeElement;
     }
 
     @Override
     public void fireEvent(GwtEvent<?> event) {
-	handlerManager.fireEvent(event);
+        handlerManager.fireEvent(event);
     }
 
     private void hideShade() {
-	for (Element e : shadedElements) {
-	    panel.getElement().removeChild(e);
-	}
-	shadedElements.clear();
+        for (Element e : shadedElements) {
+            panel.getElement().removeChild(e);
+        }
+        shadedElements.clear();
     }
 
     public RemoveHandle showShade() {
-	return showShade(Collections.EMPTY_LIST);
+        return showShade(Collections.EMPTY_LIST);
     }
 
     public RemoveHandle showShade(List<Rectangle> excludedAreas) {
-	/*
-	 * Toked-based mechanism support acquiring a shade multiple times. The
-	 * shade is removed when all token are released.
-	 */
+        /*
+         * Toked-based mechanism support acquiring a shade multiple times. The
+         * shade is removed when all token are released.
+         */
 
-	if (tokens.isEmpty()) {
-	    List<Rectangle> shadedRectangles = Rectangle.fromWidget(panel)
-		    .removeRectangles(excludedAreas);
+        if (tokens.isEmpty()) {
+            List<Rectangle> shadedRectangles = Rectangle.fromWidget(panel)
+                    .removeRectangles(excludedAreas);
 
-	    for (Rectangle r : shadedRectangles) {
-		shadedElements.add(createShadeElement(r));
-	    }
+            for (Rectangle r : shadedRectangles) {
+                shadedElements.add(createShadeElement(r));
+            }
 
-	    for (Element e : shadedElements) {
-		Event.setEventListener(e, eventForwarder);
-		Event.sinkEvents(e, Event.ONCLICK);
-		panel.getElement().appendChild(e);
-	    }
-	}
+            for (Element e : shadedElements) {
+                Event.setEventListener(e, eventForwarder);
+                Event.sinkEvents(e, Event.ONCLICK);
+                panel.getElement().appendChild(e);
+            }
+        }
 
-	final Object token = new Object();
-	tokens.add(token);
+        final Object token = new Object();
+        tokens.add(token);
 
-	return new RemoveHandle() {
-	    @Override
-	    public void remove() {
-		tokens.remove(token);
-		if (tokens.isEmpty()) {
-		    hideShade();
-		}
-	    }
-	};
+        return new RemoveHandle() {
+            @Override
+            public void remove() {
+                tokens.remove(token);
+                if (tokens.isEmpty()) {
+                    hideShade();
+                }
+            }
+        };
     }
 
 }

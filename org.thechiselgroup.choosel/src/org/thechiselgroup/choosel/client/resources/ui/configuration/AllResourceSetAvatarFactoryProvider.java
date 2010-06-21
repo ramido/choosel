@@ -15,7 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources.ui.configuration;
 
-import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.*;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_ALL_RESOURCES;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.HOVER_MODEL;
 
 import java.util.Collections;
 
@@ -40,39 +41,39 @@ import com.google.inject.name.Named;
 
 //TODO refactor see TypeDragAvatarFactoryProvider for example
 public class AllResourceSetAvatarFactoryProvider extends
-	AbstractResourceSetAvatarFactoryProvider {
+        AbstractResourceSetAvatarFactoryProvider {
 
     @Inject
     public AllResourceSetAvatarFactoryProvider(
-	    ResourceSetAvatarDragController dragController,
-	    @Named(HOVER_MODEL) ResourceSet hoverModel,
-	    @Named(HOVER_MODEL) ResourceSetContainer setHoverModel,
-	    @Named(AVATAR_FACTORY_ALL_RESOURCES) ResourceSetAvatarDropTargetManager dropTargetManager,
-	    ViewAccessor viewAccessor, PopupManagerFactory popupManagerFactory) {
+            ResourceSetAvatarDragController dragController,
+            @Named(HOVER_MODEL) ResourceSet hoverModel,
+            @Named(HOVER_MODEL) ResourceSetContainer setHoverModel,
+            @Named(AVATAR_FACTORY_ALL_RESOURCES) ResourceSetAvatarDropTargetManager dropTargetManager,
+            ViewAccessor viewAccessor, PopupManagerFactory popupManagerFactory) {
 
-	super(
-		new PopupResourceSetAvatarFactory(
-			new HighlightingResourceSetAvatarFactory(
-				new DropTargetResourceSetAvatarFactory(
-					new DragEnableResourceSetAvatarFactory(
-						new FixedLabelResourceSetAvatarFactory(
-							new DisableIfEmptyResourceSetAvatarFactory(
-								new DefaultResourceSetAvatarFactory(
-									"avatar-allResources",
-									ResourceSetAvatarType.ALL)),
-							"All"), dragController),
-					dropTargetManager), hoverModel,
-				setHoverModel, dragController), viewAccessor,
-			popupManagerFactory, Collections.EMPTY_LIST,
-			"All resources in this view",
-			"<p><b>Drag</b> to add all resources "
-				+ "from this view to other views "
-				+ "(by dropping on 'All' set), "
-				+ "to create filtered views containing "
-				+ "all resources from this view "
-				+ "(by dropping on view content) " + "or to"
-				+ " select all resources from "
-				+ "this view (by dropping on selection).</p>",
-			false));
+        super(
+                new PopupResourceSetAvatarFactory(
+                        new HighlightingResourceSetAvatarFactory(
+                                new DropTargetResourceSetAvatarFactory(
+                                        new DragEnableResourceSetAvatarFactory(
+                                                new FixedLabelResourceSetAvatarFactory(
+                                                        new DisableIfEmptyResourceSetAvatarFactory(
+                                                                new DefaultResourceSetAvatarFactory(
+                                                                        "avatar-allResources",
+                                                                        ResourceSetAvatarType.ALL)),
+                                                        "All"), dragController),
+                                        dropTargetManager), hoverModel,
+                                setHoverModel, dragController), viewAccessor,
+                        popupManagerFactory, Collections.EMPTY_LIST,
+                        "All resources in this view",
+                        "<p><b>Drag</b> to add all resources "
+                                + "from this view to other views "
+                                + "(by dropping on 'All' set), "
+                                + "to create filtered views containing "
+                                + "all resources from this view "
+                                + "(by dropping on view content) " + "or to"
+                                + " select all resources from "
+                                + "this view (by dropping on selection).</p>",
+                        false));
     }
 }

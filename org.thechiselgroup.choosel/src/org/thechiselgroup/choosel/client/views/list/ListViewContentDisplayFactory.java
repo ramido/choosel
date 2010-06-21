@@ -47,8 +47,8 @@ public class ListViewContentDisplayFactory implements ViewContentDisplayFactory 
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-	return new ListViewContentDisplay(hoverModel, popupManagerFactory,
-		detailsWidgetHelper, dragController);
+        return new ListViewContentDisplay(hoverModel, popupManagerFactory,
+                detailsWidgetHelper, dragController);
     }
 
 }

@@ -15,24 +15,23 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.widget.graph;
 
-
 public class NodeMouseDoubleClickEvent extends
-	NodeEvent<NodeMouseDoubleClickHandler> {
-
-    public NodeMouseDoubleClickEvent(Node node, int mouseX, int mouseY) {
-	super(node, mouseX, mouseY);
-    }
+        NodeEvent<NodeMouseDoubleClickHandler> {
 
     public static final Type<NodeMouseDoubleClickHandler> TYPE = new Type<NodeMouseDoubleClickHandler>();
 
+    public NodeMouseDoubleClickEvent(Node node, int mouseX, int mouseY) {
+        super(node, mouseX, mouseY);
+    }
+
     @Override
     protected void dispatch(NodeMouseDoubleClickHandler handler) {
-	handler.onMouseDoubleClick(this);
+        handler.onMouseDoubleClick(this);
     }
 
     @Override
     public Type<NodeMouseDoubleClickHandler> getAssociatedType() {
-	return TYPE;
+        return TYPE;
     }
 
 }

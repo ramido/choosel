@@ -34,53 +34,53 @@ public class LoadWorkspaceDialogCommand implements AsyncCommand, HasDescription 
     // TODO clean up & refactor dialog code
     public static class DefaultDetailsDisplay implements DetailsDisplay {
 
-	private DialogManager dialogManager;
+        private DialogManager dialogManager;
 
-	private AsyncCommandExecutor asyncCommandExecutor;
+        private AsyncCommandExecutor asyncCommandExecutor;
 
-	private WorkspacePersistenceManager persistenceManager;
+        private WorkspacePersistenceManager persistenceManager;
 
-	@Inject
-	public DefaultDetailsDisplay(
-		WorkspacePersistenceManager persistenceManager,
-		DialogManager dialogManager,
-		AsyncCommandExecutor asyncCommandExecutor) {
+        @Inject
+        public DefaultDetailsDisplay(
+                WorkspacePersistenceManager persistenceManager,
+                DialogManager dialogManager,
+                AsyncCommandExecutor asyncCommandExecutor) {
 
-	    this.persistenceManager = persistenceManager;
-	    this.dialogManager = dialogManager;
-	    this.asyncCommandExecutor = asyncCommandExecutor;
-	}
+            this.persistenceManager = persistenceManager;
+            this.dialogManager = dialogManager;
+            this.asyncCommandExecutor = asyncCommandExecutor;
+        }
 
-	@Override
-	public void show(final List<WorkspacePreview> workspaces) {
-	    dialogManager.show(new LoadWorkspaceDialog(workspaces,
-		    asyncCommandExecutor, persistenceManager));
-	}
+        @Override
+        public void show(final List<WorkspacePreview> workspaces) {
+            dialogManager.show(new LoadWorkspaceDialog(workspaces,
+                    asyncCommandExecutor, persistenceManager));
+        }
     }
 
     public interface DetailsDisplay {
 
-	void show(List<WorkspacePreview> workspacePreviews);
+        void show(List<WorkspacePreview> workspacePreviews);
 
     }
 
     public static class LoadWorkspacePreviewsCallback extends
-	    ForwardingAsyncCallback<List<WorkspacePreview>> {
+            ForwardingAsyncCallback<List<WorkspacePreview>> {
 
-	private final DetailsDisplay detailsDisplay;
+        private final DetailsDisplay detailsDisplay;
 
-	public LoadWorkspacePreviewsCallback(DetailsDisplay detailsDisplay,
-		AsyncCallback<Void> callback) {
+        public LoadWorkspacePreviewsCallback(DetailsDisplay detailsDisplay,
+                AsyncCallback<Void> callback) {
 
-	    super(callback);
-	    this.detailsDisplay = detailsDisplay;
-	}
+            super(callback);
+            this.detailsDisplay = detailsDisplay;
+        }
 
-	@Override
-	public void onSuccess(List<WorkspacePreview> workspaces) {
-	    detailsDisplay.show(workspaces);
-	    super.onSuccess(workspaces);
-	}
+        @Override
+        public void onSuccess(List<WorkspacePreview> workspaces) {
+            detailsDisplay.show(workspaces);
+            super.onSuccess(workspaces);
+        }
 
     }
 
@@ -90,21 +90,21 @@ public class LoadWorkspaceDialogCommand implements AsyncCommand, HasDescription 
 
     @Inject
     public LoadWorkspaceDialogCommand(DetailsDisplay detailsDisplay,
-	    WorkspacePersistenceManager persistenceManager) {
-	this.detailsDisplay = detailsDisplay;
-	this.persistenceManager = persistenceManager;
+            WorkspacePersistenceManager persistenceManager) {
+        this.detailsDisplay = detailsDisplay;
+        this.persistenceManager = persistenceManager;
     }
 
     @Override
     public void execute(AsyncCallback<Void> callback) {
-	persistenceManager
-		.loadWorkspacePreviews(new LoadWorkspacePreviewsCallback(
-			detailsDisplay, callback));
+        persistenceManager
+                .loadWorkspacePreviews(new LoadWorkspacePreviewsCallback(
+                        detailsDisplay, callback));
     }
 
     @Override
     public String getDescription() {
-	return "Loading workspaces...";
+        return "Loading workspaces...";
     }
 
 }

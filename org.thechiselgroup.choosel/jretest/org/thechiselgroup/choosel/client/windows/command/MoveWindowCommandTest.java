@@ -15,8 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.windows.command;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import org.junit.After;
 import org.junit.Before;
@@ -42,37 +43,37 @@ public class MoveWindowCommandTest {
 
     private int targetY;
 
+    @Before
+    public void setUp() throws Exception {
+        MockitoGWTBridge.setUp();
+        MockitoAnnotations.initMocks(this);
+
+        sourceX = 10;
+        sourceY = 15;
+        targetX = 20;
+        targetY = 25;
+
+        command = new MoveWindowCommand(windowPanel, sourceX, sourceY, targetX,
+                targetY);
+    }
+
     @Test
     public void setWindowLocationOnExecute() {
-	command.execute();
-	verify(windowPanel, times(1)).animateMoveToLocation(eq(targetX),
-		eq(targetY));
+        command.execute();
+        verify(windowPanel, times(1)).animateMoveToLocation(eq(targetX),
+                eq(targetY));
     }
 
     @Test
     public void setWindowLocationOnUndo() {
-	command.undo();
-	verify(windowPanel, times(1)).animateMoveToLocation(eq(sourceX),
-		eq(sourceY));
-    }
-
-    @Before
-    public void setUp() throws Exception {
-	MockitoGWTBridge.setUp();
-	MockitoAnnotations.initMocks(this);
-
-	sourceX = 10;
-	sourceY = 15;
-	targetX = 20;
-	targetY = 25;
-
-	command = new MoveWindowCommand(windowPanel, sourceX, sourceY, targetX,
-		targetY);
+        command.undo();
+        verify(windowPanel, times(1)).animateMoveToLocation(eq(sourceX),
+                eq(sourceY));
     }
 
     @After
     public void tearDown() {
-	MockitoGWTBridge.tearDown();
+        MockitoGWTBridge.tearDown();
     }
 
 }

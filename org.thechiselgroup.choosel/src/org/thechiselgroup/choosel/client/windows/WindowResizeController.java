@@ -31,111 +31,111 @@ public final class WindowResizeController extends WindowDragController {
     private final HashMap<Widget, DirectionConstant> directionMap = new HashMap<Widget, DirectionConstant>();
 
     public WindowResizeController(WindowController controller,
-	    CommandManager commandManager) {
-	super(controller, commandManager);
-    }
-
-    @Override
-    protected void dragMove(int desiredDraggableX, int desiredDraggableY) {
-	int direction = getDirection(context.draggable).directionBits;
-
-	if ((direction & WindowPanel.DIRECTION_NORTH) != 0) {
-	    int delta = getTop() - desiredDraggableY;
-	    if (delta != 0) {
-		int contentHeight = windowPanel.getContentHeight();
-		int newHeight = Math
-			.max(contentHeight + delta, MIN_WIDGET_SIZE);
-		if (newHeight != contentHeight) {
-		    windowPanel.moveBy(0, contentHeight - newHeight);
-		    windowPanel.setContentSize(windowPanel.getContentWidth(),
-			    newHeight);
-		}
-	    }
-	} else if ((direction & WindowPanel.DIRECTION_SOUTH) != 0) {
-	    int delta = desiredDraggableY - getTop();
-
-	    if (delta != 0) {
-		int contentHeight = windowPanel.getContentHeight();
-		int newHeight = Math
-			.max(contentHeight + delta, MIN_WIDGET_SIZE);
-
-		if (newHeight != contentHeight) {
-		    windowPanel.setContentSize(windowPanel.getContentWidth(),
-			    newHeight);
-		}
-	    }
-	}
-	if ((direction & WindowPanel.DIRECTION_WEST) != 0) {
-	    int delta = getLeft() - desiredDraggableX;
-	    if (delta != 0) {
-		int contentWidth = windowPanel.getContentWidth();
-		int newWidth = Math.max(contentWidth + delta, windowPanel
-			.getMinimumWidth());
-
-		if (newWidth != contentWidth) {
-		    windowPanel.moveBy(contentWidth - newWidth, 0);
-
-		    windowPanel.setContentSize(newWidth, windowPanel
-			    .getContentHeight());
-		}
-	    }
-	} else if ((direction & WindowPanel.DIRECTION_EAST) != 0) {
-	    int delta = desiredDraggableX - getLeft();
-	    if (delta != 0) {
-		int contentWidth = windowPanel.getContentWidth();
-		int newWidth = Math.max(contentWidth + delta, windowPanel
-			.getMinimumWidth());
-
-		if (newWidth != contentWidth) {
-		    windowPanel.setContentSize(newWidth, windowPanel
-			    .getContentHeight());
-		}
-	    }
-	}
-    }
-
-    private int getLeft() {
-	return context.draggable.getAbsoluteLeft()
-		- getBoundaryPanel().getAbsoluteLeft();
-    }
-
-    private int getTop() {
-	return context.draggable.getAbsoluteTop()
-		- getBoundaryPanel().getAbsoluteTop();
+            CommandManager commandManager) {
+        super(controller, commandManager);
     }
 
     @Override
     public void dragEnd() {
-	super.dragEnd();
+        super.dragEnd();
 
-	windowPanel.removeStyleName(CSS_WINDOW_TRANSPARENT);
+        windowPanel.removeStyleName(CSS_WINDOW_TRANSPARENT);
+    }
+
+    @Override
+    protected void dragMove(int desiredDraggableX, int desiredDraggableY) {
+        int direction = getDirection(context.draggable).directionBits;
+
+        if ((direction & WindowPanel.DIRECTION_NORTH) != 0) {
+            int delta = getTop() - desiredDraggableY;
+            if (delta != 0) {
+                int contentHeight = windowPanel.getContentHeight();
+                int newHeight = Math
+                        .max(contentHeight + delta, MIN_WIDGET_SIZE);
+                if (newHeight != contentHeight) {
+                    windowPanel.moveBy(0, contentHeight - newHeight);
+                    windowPanel.setContentSize(windowPanel.getContentWidth(),
+                            newHeight);
+                }
+            }
+        } else if ((direction & WindowPanel.DIRECTION_SOUTH) != 0) {
+            int delta = desiredDraggableY - getTop();
+
+            if (delta != 0) {
+                int contentHeight = windowPanel.getContentHeight();
+                int newHeight = Math
+                        .max(contentHeight + delta, MIN_WIDGET_SIZE);
+
+                if (newHeight != contentHeight) {
+                    windowPanel.setContentSize(windowPanel.getContentWidth(),
+                            newHeight);
+                }
+            }
+        }
+        if ((direction & WindowPanel.DIRECTION_WEST) != 0) {
+            int delta = getLeft() - desiredDraggableX;
+            if (delta != 0) {
+                int contentWidth = windowPanel.getContentWidth();
+                int newWidth = Math.max(contentWidth + delta,
+                        windowPanel.getMinimumWidth());
+
+                if (newWidth != contentWidth) {
+                    windowPanel.moveBy(contentWidth - newWidth, 0);
+
+                    windowPanel.setContentSize(newWidth,
+                            windowPanel.getContentHeight());
+                }
+            }
+        } else if ((direction & WindowPanel.DIRECTION_EAST) != 0) {
+            int delta = desiredDraggableX - getLeft();
+            if (delta != 0) {
+                int contentWidth = windowPanel.getContentWidth();
+                int newWidth = Math.max(contentWidth + delta,
+                        windowPanel.getMinimumWidth());
+
+                if (newWidth != contentWidth) {
+                    windowPanel.setContentSize(newWidth,
+                            windowPanel.getContentHeight());
+                }
+            }
+        }
     }
 
     @Override
     public void dragStart() {
-	getWindowPanelFromDraggable();
+        getWindowPanelFromDraggable();
 
-	bringToFront(windowPanel);
-	windowPanel.addStyleName(CSS_WINDOW_TRANSPARENT);
+        bringToFront(windowPanel);
+        windowPanel.addStyleName(CSS_WINDOW_TRANSPARENT);
 
-	super.dragStart();
-    }
-
-    private void getWindowPanelFromDraggable() {
-	Widget draggable = context.draggable;
-	while (!(draggable instanceof WindowPanel) || (draggable == null)) {
-	    draggable = draggable.getParent();
-	}
-	windowPanel = (WindowPanel) draggable;
-    }
-
-    public void makeDraggable(Widget widget,
-	    WindowPanel.DirectionConstant direction) {
-	super.makeDraggable(widget);
-	directionMap.put(widget, direction);
+        super.dragStart();
     }
 
     private DirectionConstant getDirection(Widget draggable) {
-	return directionMap.get(draggable);
+        return directionMap.get(draggable);
+    }
+
+    private int getLeft() {
+        return context.draggable.getAbsoluteLeft()
+                - getBoundaryPanel().getAbsoluteLeft();
+    }
+
+    private int getTop() {
+        return context.draggable.getAbsoluteTop()
+                - getBoundaryPanel().getAbsoluteTop();
+    }
+
+    private void getWindowPanelFromDraggable() {
+        Widget draggable = context.draggable;
+        while (!(draggable instanceof WindowPanel) || (draggable == null)) {
+            draggable = draggable.getParent();
+        }
+        windowPanel = (WindowPanel) draggable;
+    }
+
+    public void makeDraggable(Widget widget,
+            WindowPanel.DirectionConstant direction) {
+        super.makeDraggable(widget);
+        directionMap.put(widget, direction);
     }
 }

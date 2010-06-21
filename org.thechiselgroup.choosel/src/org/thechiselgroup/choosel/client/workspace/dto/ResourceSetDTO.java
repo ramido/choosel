@@ -31,78 +31,78 @@ public class ResourceSetDTO implements Serializable {
     private List<String> resourceIds;
 
     public ResourceSetDTO() {
-	// for GWT
+        // for GWT
     }
 
     @Override
     public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	ResourceSetDTO other = (ResourceSetDTO) obj;
-	if (id != other.id)
-	    return false;
-	if (label == null) {
-	    if (other.label != null)
-		return false;
-	} else if (!label.equals(other.label))
-	    return false;
-	if (resourceIds == null) {
-	    if (other.resourceIds != null)
-		return false;
-	} else if (!resourceIds.equals(other.resourceIds))
-	    return false;
-	return true;
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ResourceSetDTO other = (ResourceSetDTO) obj;
+        if (id != other.id)
+            return false;
+        if (label == null) {
+            if (other.label != null)
+                return false;
+        } else if (!label.equals(other.label))
+            return false;
+        if (resourceIds == null) {
+            if (other.resourceIds != null)
+                return false;
+        } else if (!resourceIds.equals(other.resourceIds))
+            return false;
+        return true;
     }
 
     public int getDelegateSetId() {
-	return delegateSetId;
+        return delegateSetId;
     }
 
     public int getId() {
-	return id;
+        return id;
     }
 
     public String getLabel() {
-	return label;
+        return label;
     }
 
     public List<String> getResourceIds() {
-	return resourceIds;
+        return resourceIds;
     }
 
     @Override
     public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + id;
-	result = prime * result + ((label == null) ? 0 : label.hashCode());
-	result = prime * result
-		+ ((resourceIds == null) ? 0 : resourceIds.hashCode());
-	return result;
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + id;
+        result = prime * result + ((label == null) ? 0 : label.hashCode());
+        result = prime * result
+                + ((resourceIds == null) ? 0 : resourceIds.hashCode());
+        return result;
     }
 
     public boolean isUnmodifiable() {
-	return getDelegateSetId() != -1;
+        return getDelegateSetId() != -1;
     }
 
     public void setDelegateSetId(int delegateSetId) {
-	this.delegateSetId = delegateSetId;
+        this.delegateSetId = delegateSetId;
     }
 
     public void setId(int id) {
-	this.id = id;
+        this.id = id;
     }
 
     public void setLabel(String label) {
-	this.label = label;
+        this.label = label;
     }
 
     public void setResourceIds(List<String> resourceIds) {
-	this.resourceIds = resourceIds;
+        this.resourceIds = resourceIds;
     }
 
 }

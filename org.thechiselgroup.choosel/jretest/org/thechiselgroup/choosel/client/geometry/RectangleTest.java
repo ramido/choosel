@@ -15,14 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.geometry;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.thechiselgroup.choosel.client.geometry.Rectangle;
 
 public class RectangleTest {
 
@@ -30,16 +29,16 @@ public class RectangleTest {
 
     @Test
     public void removeEmptyRectangleSet() {
-	List<Rectangle> result = rectangle
-		.removeRectangles(new ArrayList<Rectangle>());
+        List<Rectangle> result = rectangle
+                .removeRectangles(new ArrayList<Rectangle>());
 
-	assertEquals(1, result.size());
-	assertEquals(rectangle, result.get(0));
+        assertEquals(1, result.size());
+        assertEquals(rectangle, result.get(0));
     }
 
     @Before
     public void setUp() {
-	this.rectangle = new Rectangle(10, 20, 30, 40);
+        this.rectangle = new Rectangle(10, 20, 30, 40);
     }
 
 }

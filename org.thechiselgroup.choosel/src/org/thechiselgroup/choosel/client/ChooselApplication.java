@@ -24,9 +24,9 @@ import org.thechiselgroup.choosel.client.authentication.ui.AuthenticationBasedEn
 import org.thechiselgroup.choosel.client.command.AsyncCommandExecutor;
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.command.ui.CommandManagerPresenter;
+import org.thechiselgroup.choosel.client.command.ui.CommandPresenter.ButtonDisplay;
 import org.thechiselgroup.choosel.client.command.ui.CommandPresenterFactory;
 import org.thechiselgroup.choosel.client.command.ui.DefaultCommandManagerPresenterDisplay;
-import org.thechiselgroup.choosel.client.command.ui.CommandPresenter.ButtonDisplay;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
@@ -135,122 +135,122 @@ public abstract class ChooselApplication {
     private DefaultWorkspacePresenterDisplay workspacePresenterDisplay;
 
     public void addButton(String panelId, String label, ClickHandler handler) {
-	assert panelId != null;
-	assert label != null;
-	assert handler != null;
+        assert panelId != null;
+        assert label != null;
+        assert handler != null;
 
-	Button button = new Button(label);
-	button.addClickHandler(handler);
-	addWidget(panelId, button);
+        Button button = new Button(label);
+        button.addClickHandler(handler);
+        addWidget(panelId, button);
     }
 
     protected void addInfoButton() {
-	addButton(HELP_PANEL, "About", new ClickHandler() {
-	    @Override
-	    public void onClick(ClickEvent event) {
-		dialogManager.show(infoDialog);
-	    }
-	});
+        addButton(HELP_PANEL, "About", new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                dialogManager.show(infoDialog);
+            }
+        });
     }
 
     public void addPanel(String id, String name) {
-	assert id != null;
-	assert name != null;
+        assert id != null;
+        assert name != null;
 
-	HorizontalPanel panel = new HorizontalPanel();
-	panel.setSpacing(2);
-	actionBar.addPanel(name, panel);
-	panels.put(id, panel);
+        HorizontalPanel panel = new HorizontalPanel();
+        panel.setSpacing(2);
+        actionBar.addPanel(name, panel);
+        panels.put(id, panel);
     }
 
     public void addWidget(String panelId, Widget widget) {
-	assert panelId != null;
-	assert panels.containsKey(panelId);
-	assert widget != null;
+        assert panelId != null;
+        assert panels.containsKey(panelId);
+        assert widget != null;
 
-	panels.get(panelId).add(widget);
+        panels.get(panelId).add(widget);
     }
 
     public void addWindowContentButton(String panelId, String label,
-	    final String contentType) {
+            final String contentType) {
 
-	assert panelId != null;
-	assert label != null;
-	assert contentType != null;
-	// TODO assert factory for content type is available
+        assert panelId != null;
+        assert label != null;
+        assert contentType != null;
+        // TODO assert factory for content type is available
 
-	addButton(panelId, label, new ClickHandler() {
-	    @Override
-	    public void onClick(ClickEvent event) {
-		createWindow(contentType);
-	    }
-	});
+        addButton(panelId, label, new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                createWindow(contentType);
+            }
+        });
     }
 
     private DockPanel createMainPanel() {
-	DockPanel mainPanel = new DockPanel();
-	RootPanel.get().add(mainPanel);
-	return mainPanel;
+        DockPanel mainPanel = new DockPanel();
+        RootPanel.get().add(mainPanel);
+        return mainPanel;
     }
 
     protected ResourceSet createResourceSet() {
-	return resourceSetsFactory.createResourceSet();
+        return resourceSetsFactory.createResourceSet();
     }
 
     protected ResourceSetsPresenter createResourceSetsPresenter() {
-	final ResourceSetsPresenter dataSourcesPresenter = new ResourceSetAvatarResourceSetsPresenter(
-		defaultDragAvatarFactory);
-	dataSourcesPresenter.init();
-	return dataSourcesPresenter;
+        final ResourceSetsPresenter dataSourcesPresenter = new ResourceSetAvatarResourceSetsPresenter(
+                defaultDragAvatarFactory);
+        dataSourcesPresenter.init();
+        return dataSourcesPresenter;
     }
 
     protected void createWindow(AbstractWindowContent content) {
-	commandManager.execute(new CreateWindowCommand(desktop, content));
+        commandManager.execute(new CreateWindowCommand(desktop, content));
     }
 
     private void createWindow(String contentType) {
-	commandManager.execute(new CreateWindowCommand(desktop,
-		windowContentProducer.createWindowContent(contentType)));
+        commandManager.execute(new CreateWindowCommand(desktop,
+                windowContentProducer.createWindowContent(contentType)));
     }
 
     public void init() {
-	BrowserDetect.checkBrowser();
+        BrowserDetect.checkBrowser();
 
-	DockPanel mainPanel = createMainPanel();
+        DockPanel mainPanel = createMainPanel();
 
-	initDesktop(mainPanel);
-	initActionBar(mainPanel);
-	initAuthenticationBar();
+        initDesktop(mainPanel);
+        initActionBar(mainPanel);
+        initAuthenticationBar();
 
-	initWorkspacePanel();
-	initCommandManagerPresenter();
+        initWorkspacePanel();
+        initCommandManagerPresenter();
 
-	initCustomActions();
+        initCustomActions();
 
-	loadWorkspaceIfParamSet();
+        loadWorkspaceIfParamSet();
     }
 
     private void initActionBar(DockPanel mainPanel) {
-	mainPanel.add(actionBar.asWidget(), DockPanel.NORTH);
+        mainPanel.add(actionBar.asWidget(), DockPanel.NORTH);
 
-	addPanel(WORKSPACE_PANEL, "Workspace");
-	addPanel(EDIT_PANEL, "Edit");
+        addPanel(WORKSPACE_PANEL, "Workspace");
+        addPanel(EDIT_PANEL, "Edit");
 
-	initCustomPanels();
+        initCustomPanels();
     }
 
     private void initAuthenticationBar() {
-	((VerticalPanel) actionBar.asWidget()).add(authenticationBar);
+        ((VerticalPanel) actionBar.asWidget()).add(authenticationBar);
     }
 
     private void initCommandManagerPresenter() {
-	CommandManagerPresenter presenter = new CommandManagerPresenter(
-		commandManager, commandManagerPresenterDisplay);
+        CommandManagerPresenter presenter = new CommandManagerPresenter(
+                commandManager, commandManagerPresenterDisplay);
 
-	presenter.init();
+        presenter.init();
 
-	addWidget(EDIT_PANEL, commandManagerPresenterDisplay.getUndoButton());
-	addWidget(EDIT_PANEL, commandManagerPresenterDisplay.getRedoButton());
+        addWidget(EDIT_PANEL, commandManagerPresenterDisplay.getUndoButton());
+        addWidget(EDIT_PANEL, commandManagerPresenterDisplay.getRedoButton());
     }
 
     protected abstract void initCustomActions();
@@ -258,76 +258,76 @@ public abstract class ChooselApplication {
     protected abstract void initCustomPanels();
 
     private void initDesktop(DockPanel mainPanel) {
-	// absolute root panel required for drag & drop
-	// into windows on firefox browser
-	desktop.asWidget().setPixelSize(Window.getClientWidth(),
-		Window.getClientHeight() - ActionBar.ACTION_BAR_HEIGHT_PX);
+        // absolute root panel required for drag & drop
+        // into windows on firefox browser
+        desktop.asWidget().setPixelSize(Window.getClientWidth(),
+                Window.getClientHeight() - ActionBar.ACTION_BAR_HEIGHT_PX);
 
-	Window.addResizeHandler(new ResizeHandler() {
-	    @Override
-	    public void onResize(ResizeEvent event) {
-		desktop.asWidget().setPixelSize(event.getWidth(),
-			event.getHeight() - ActionBar.ACTION_BAR_HEIGHT_PX);
-		// TODO windows need to be moved if they are out of the
-		// range
-	    }
-	});
+        Window.addResizeHandler(new ResizeHandler() {
+            @Override
+            public void onResize(ResizeEvent event) {
+                desktop.asWidget().setPixelSize(event.getWidth(),
+                        event.getHeight() - ActionBar.ACTION_BAR_HEIGHT_PX);
+                // TODO windows need to be moved if they are out of the
+                // range
+            }
+        });
 
-	mainPanel.add(desktop.asWidget(), DockPanel.CENTER);
+        mainPanel.add(desktop.asWidget(), DockPanel.CENTER);
     }
 
     private void initWorkspacePanel() {
-	// title area
-	// TODO refactor title area part
-	WorkspacePresenter presenter = new WorkspacePresenter(workspaceManager,
-		workspacePresenterDisplay);
-	presenter.init();
-	// TODO replace with stuff from workspace presenter
-	workspacePresenterDisplay.getTextBox().addStyleName(
-		"actionbar-titleArea-text");
-	actionBar.getActionBarTitleArea().add(
-		workspacePresenterDisplay.getTextBox());
+        // title area
+        // TODO refactor title area part
+        WorkspacePresenter presenter = new WorkspacePresenter(workspaceManager,
+                workspacePresenterDisplay);
+        presenter.init();
+        // TODO replace with stuff from workspace presenter
+        workspacePresenterDisplay.getTextBox().addStyleName(
+                "actionbar-titleArea-text");
+        actionBar.getActionBarTitleArea().add(
+                workspacePresenterDisplay.getTextBox());
 
-	// new workspace
-	ButtonDisplay newButton = commandPresenterFactory.createCommandButton(
-		"New", newWorkspaceCommand);
-	addWidget(WORKSPACE_PANEL, newButton);
+        // new workspace
+        ButtonDisplay newButton = commandPresenterFactory.createCommandButton(
+                "New", newWorkspaceCommand);
+        addWidget(WORKSPACE_PANEL, newButton);
 
-	// load workspace
-	ButtonDisplay loadButton = commandPresenterFactory.createCommandButton(
-		"Load...", loadWorkspaceDialogCommand);
-	addWidget(WORKSPACE_PANEL, loadButton);
-	new AuthenticationBasedEnablingStateWrapper(authenticationManager,
-		loadButton).init();
+        // load workspace
+        ButtonDisplay loadButton = commandPresenterFactory.createCommandButton(
+                "Load...", loadWorkspaceDialogCommand);
+        addWidget(WORKSPACE_PANEL, loadButton);
+        new AuthenticationBasedEnablingStateWrapper(authenticationManager,
+                loadButton).init();
 
-	// save workspace
-	ButtonDisplay saveButton = commandPresenterFactory.createCommandButton(
-		"Save", saveWorkspaceCommand);
-	addWidget(WORKSPACE_PANEL, saveButton);
-	saveButton.setWidth("60px");
-	AuthenticationBasedEnablingStateWrapper authWrapper = new AuthenticationBasedEnablingStateWrapper(
-		authenticationManager, saveButton);
-	authWrapper.init();
-	new SaveButtonUpdater(workspaceManager, saveButton, authWrapper).init();
+        // save workspace
+        ButtonDisplay saveButton = commandPresenterFactory.createCommandButton(
+                "Save", saveWorkspaceCommand);
+        addWidget(WORKSPACE_PANEL, saveButton);
+        saveButton.setWidth("60px");
+        AuthenticationBasedEnablingStateWrapper authWrapper = new AuthenticationBasedEnablingStateWrapper(
+                authenticationManager, saveButton);
+        authWrapper.init();
+        new SaveButtonUpdater(workspaceManager, saveButton, authWrapper).init();
 
-	// share workspace
-	ButtonDisplay shareButton = commandPresenterFactory
-		.createCommandButton("Share", shareWorkspaceCommand);
-	addWidget(WORKSPACE_PANEL, shareButton);
-	new AuthenticationBasedEnablingStateWrapper(authenticationManager,
-		shareButton).init();
+        // share workspace
+        ButtonDisplay shareButton = commandPresenterFactory
+                .createCommandButton("Share", shareWorkspaceCommand);
+        addWidget(WORKSPACE_PANEL, shareButton);
+        new AuthenticationBasedEnablingStateWrapper(authenticationManager,
+                shareButton).init();
     }
 
     private void loadWorkspaceIfParamSet() {
-	// TODO extract constant
-	String workspaceIdParam = Window.Location.getParameter("workspaceId");
-	if (workspaceIdParam != null) {
-	    long workspaceID = Long.parseLong(workspaceIdParam);
+        // TODO extract constant
+        String workspaceIdParam = Window.Location.getParameter("workspaceId");
+        if (workspaceIdParam != null) {
+            long workspaceID = Long.parseLong(workspaceIdParam);
 
-	    LoadWorkspaceCommand loadWorkspaceCommand = new LoadWorkspaceCommand(
-		    workspaceID, "", workspacePersistenceManager);
-	    blockingCommandExecutor.execute(loadWorkspaceCommand);
-	}
+            LoadWorkspaceCommand loadWorkspaceCommand = new LoadWorkspaceCommand(
+                    workspaceID, "", workspacePersistenceManager);
+            blockingCommandExecutor.execute(loadWorkspaceCommand);
+        }
     }
 
 }

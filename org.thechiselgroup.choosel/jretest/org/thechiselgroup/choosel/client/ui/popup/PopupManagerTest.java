@@ -15,8 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.popup;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.isNotNull;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import org.junit.After;
 import org.junit.Before;
@@ -26,9 +27,6 @@ import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.test.DndTestHelpers;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.client.ui.WidgetFactory;
-import org.thechiselgroup.choosel.client.ui.popup.DefaultPopupManager;
-import org.thechiselgroup.choosel.client.ui.popup.PopupClosingEvent;
-import org.thechiselgroup.choosel.client.ui.popup.PopupClosingHandler;
 
 public class PopupManagerTest {
 
@@ -42,28 +40,28 @@ public class PopupManagerTest {
 
     @Test
     public void fireCloseEventWhenClosingPopup() {
-	underTest.addPopupClosingHandler(closingHandler);
-	underTest.hidePopup();
+        underTest.addPopupClosingHandler(closingHandler);
+        underTest.hidePopup();
 
-	verify(closingHandler, times(1)).onPopupClosing(
-		(PopupClosingEvent) isNotNull());
+        verify(closingHandler, times(1)).onPopupClosing(
+                (PopupClosingEvent) isNotNull());
     }
 
     @Before
     public void setUp() throws Exception {
-	MockitoGWTBridge bridge = MockitoGWTBridge.setUp();
-	MockitoAnnotations.initMocks(this);
-	DndTestHelpers.mockDragClientBundle(bridge);
+        MockitoGWTBridge bridge = MockitoGWTBridge.setUp();
+        MockitoAnnotations.initMocks(this);
+        DndTestHelpers.mockDragClientBundle(bridge);
 
-	underTest = new DefaultPopupManager(widgetFactory) {
-	    @Override
-	    protected void setPopupTransparency(int newTransparency) {
-	    };
-	};
+        underTest = new DefaultPopupManager(widgetFactory) {
+            @Override
+            protected void setPopupTransparency(int newTransparency) {
+            };
+        };
     }
 
     @After
     public void tearDown() {
-	MockitoGWTBridge.tearDown();
+        MockitoGWTBridge.tearDown();
     }
 }

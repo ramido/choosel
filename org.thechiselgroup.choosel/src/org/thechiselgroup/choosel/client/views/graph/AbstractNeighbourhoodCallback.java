@@ -27,7 +27,7 @@ import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 
 public abstract class AbstractNeighbourhoodCallback extends
-	ErrorHandlingAsyncCallback<NeighbourhoodServiceResult> {
+        ErrorHandlingAsyncCallback<NeighbourhoodServiceResult> {
 
     protected final ViewContentDisplayCallback contentDisplayCallback;
 
@@ -36,73 +36,73 @@ public abstract class AbstractNeighbourhoodCallback extends
     protected final GraphNodeExpansionCallback expansionCallback;
 
     public AbstractNeighbourhoodCallback(GraphDisplay graph,
-	    ViewContentDisplayCallback contentDisplayCallback,
-	    ErrorHandler errorHandler,
-	    GraphNodeExpansionCallback expansionCallback) {
+            ViewContentDisplayCallback contentDisplayCallback,
+            ErrorHandler errorHandler,
+            GraphNodeExpansionCallback expansionCallback) {
 
-	super(errorHandler);
+        super(errorHandler);
 
-	assert expansionCallback != null;
-	assert graph != null;
-	assert contentDisplayCallback != null;
+        assert expansionCallback != null;
+        assert graph != null;
+        assert contentDisplayCallback != null;
 
-	this.expansionCallback = expansionCallback;
-	this.contentDisplayCallback = contentDisplayCallback;
-	this.graph = graph;
-    }
-
-    protected void addResources(Iterable<Resource> newResources) {
-	for (Resource resource : newResources) {
-	    addResource(resource);
-	}
+        this.expansionCallback = expansionCallback;
+        this.contentDisplayCallback = contentDisplayCallback;
+        this.graph = graph;
     }
 
     protected void addResource(Resource resource) {
-	contentDisplayCallback.getAutomaticResourceSet().add(resource);
+        contentDisplayCallback.getAutomaticResourceSet().add(resource);
     }
 
-    protected boolean viewContainsResource(Resource resource) {
-	return contentDisplayCallback
-		.containsResourceWithUri(resource.getUri());
-    }
-
-    protected Set<Resource> getNewResources(Iterable<Resource> neighbours) {
-	Set<Resource> newResources = new HashSet<Resource>();
-	for (Resource resource : neighbours) {
-	    if (!viewContainsResource(resource)) {
-		newResources.add(resource);
-	    }
-	}
-	return newResources;
-    }
-
-    protected Node getNode(Resource resource) {
-	return graph.getNode(resource.getUri());
-    }
-
-    private void updateUriLists(String property,
-	    List<Relationship> relationships) {
-
-	// FIXME use events on resource instead of hard-coded link?
-	for (Relationship relationship : relationships) {
-	    relationship.getSource().getUriListValue(property).add(
-		    relationship.getTarget().getUri());
-	}
-    }
-
-    protected void updateUriLists(String property,
-	    List<Relationship> relationships, Resource inputResource) {
-	updateUriLists(property, relationships);
-	inputResource.getUriListValue(property).setLoaded(true);
+    protected void addResources(Iterable<Resource> newResources) {
+        for (Resource resource : newResources) {
+            addResource(resource);
+        }
     }
 
     protected boolean contains(Resource resource) {
-	return contentDisplayCallback
-		.containsResourceWithUri(resource.getUri());
+        return contentDisplayCallback
+                .containsResourceWithUri(resource.getUri());
     }
 
     protected boolean containsUri(String resourceUri) {
-	return contentDisplayCallback.containsResourceWithUri(resourceUri);
+        return contentDisplayCallback.containsResourceWithUri(resourceUri);
+    }
+
+    protected Set<Resource> getNewResources(Iterable<Resource> neighbours) {
+        Set<Resource> newResources = new HashSet<Resource>();
+        for (Resource resource : neighbours) {
+            if (!viewContainsResource(resource)) {
+                newResources.add(resource);
+            }
+        }
+        return newResources;
+    }
+
+    protected Node getNode(Resource resource) {
+        return graph.getNode(resource.getUri());
+    }
+
+    private void updateUriLists(String property,
+            List<Relationship> relationships) {
+
+        // FIXME use events on resource instead of hard-coded link?
+        for (Relationship relationship : relationships) {
+            relationship.getSource().getUriListValue(property)
+                    .add(relationship.getTarget().getUri());
+        }
+    }
+
+    protected void updateUriLists(String property,
+            List<Relationship> relationships, Resource inputResource) {
+        updateUriLists(property, relationships);
+        inputResource.getUriListValue(property).setLoaded(true);
+    }
+
+    protected boolean viewContainsResource(Resource resource) {
+        return contentDisplayCallback
+                .containsResourceWithUri(resource.getUri());
     }
 
 }

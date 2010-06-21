@@ -23,24 +23,24 @@ import org.thechiselgroup.choosel.client.util.Disposable;
 // TODO might need view as parameter for a few of those...
 public interface ViewContentDisplay extends WidgetAdaptable, Disposable {
 
+    void checkResize();
+
     ResourceItem createResourceItem(Layer layer, ResourceSet resources);
+
+    void endRestore();
+
+    String[] getSlotIDs();
+
+    void init(ViewContentDisplayCallback callback);
+
+    boolean isReady();
 
     void removeResourceItem(ResourceItem resourceItem);
 
-    void checkResize();
-
-    void init(ViewContentDisplayCallback callback);
+    void restore(Memento state);
 
     Memento save();
 
     void startRestore();
-
-    void endRestore();
-
-    void restore(Memento state);
-
-    boolean isReady();
-
-    String[] getSlotIDs();
 
 }

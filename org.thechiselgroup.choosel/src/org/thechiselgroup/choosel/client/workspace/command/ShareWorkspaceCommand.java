@@ -29,25 +29,25 @@ public class ShareWorkspaceCommand implements AsyncCommand {
 
     @Inject
     public ShareWorkspaceCommand(WorkspacePersistenceManager persistenceManager) {
-	assert persistenceManager != null;
-	this.persistenceManager = persistenceManager;
+        assert persistenceManager != null;
+        this.persistenceManager = persistenceManager;
     }
 
     @Override
     public void execute(AsyncCallback<Void> callback) {
-	String emailAddress = Window.prompt("Enter email address of person who"
-		+ "should be invited to work on this workspace",
-		"example@example.org");
+        String emailAddress = Window.prompt("Enter email address of person who"
+                + "should be invited to work on this workspace",
+                "example@example.org");
 
-	if (emailAddress == null) {
-	    // cancel was pressed
-	    callback.onSuccess(null);
-	    return;
-	}
+        if (emailAddress == null) {
+            // cancel was pressed
+            callback.onSuccess(null);
+            return;
+        }
 
-	// TODO message
-	persistenceManager.shareWorkspace(emailAddress,
-		new ForwardingAsyncCallback<Void>(callback));
+        // TODO message
+        persistenceManager.shareWorkspace(emailAddress,
+                new ForwardingAsyncCallback<Void>(callback));
     }
 
 }

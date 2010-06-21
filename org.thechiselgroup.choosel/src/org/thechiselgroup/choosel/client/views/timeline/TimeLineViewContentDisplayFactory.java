@@ -20,7 +20,6 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
 
@@ -28,7 +27,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 public class TimeLineViewContentDisplayFactory implements
-	ViewContentDisplayFactory {
+        ViewContentDisplayFactory {
 
     @Inject
     private PopupManagerFactory popupManagerFactory;
@@ -49,7 +48,7 @@ public class TimeLineViewContentDisplayFactory implements
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-	return new TimeLineViewContentDisplay(popupManagerFactory,
-		detailsWidgetHelper, hoverModel, dragEnablerFactory);
+        return new TimeLineViewContentDisplay(popupManagerFactory,
+                detailsWidgetHelper, hoverModel, dragEnablerFactory);
     }
 }

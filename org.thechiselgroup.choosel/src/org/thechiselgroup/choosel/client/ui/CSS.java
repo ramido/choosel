@@ -18,19 +18,33 @@ package org.thechiselgroup.choosel.client.ui;
 public interface CSS {
 
     String Z_INDEX = "zIndex";
+
     String RELATIVE = "relative";
+
     String POSITION = "position";
+
     String TOP = "top";
+
     String LEFT = "left";
+
     String PX = "px";
+
     String HEIGHT = "height";
+
     String WIDTH = "width";
+
     String ABSOLUTE = "absolute";
+
     String CURSOR_DEFAULT = "default";
+
     String CURSOR_POINTER = "pointer";
+
     String CURSOR = "cursor";
+
     String MAX_WIDTH = "maxWidth";
+
     public static final String OVERFLOW = "overflow";
+
     public static final String HIDDEN = "hidden";
 
 }

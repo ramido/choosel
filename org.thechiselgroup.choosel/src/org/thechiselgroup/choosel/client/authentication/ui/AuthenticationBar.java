@@ -34,72 +34,72 @@ public class AuthenticationBar extends HTML {
 
     @Inject
     public AuthenticationBar(AuthenticationManager authenticationManager) {
-	assert authenticationManager != null;
+        assert authenticationManager != null;
 
-	this.authenticationManager = authenticationManager;
+        this.authenticationManager = authenticationManager;
 
-	addStyleName(CSS_AUTHENTICATION);
-    }
-
-    private void update(AuthenticationState state) {
-	switch (state) {
-	case UNKNOWN: {
-	    setHTML("Initializing authentication management...");
-	}
-	    break;
-	case WAITING: {
-	    setHTML("Waiting for authentication state...");
-	}
-	    break;
-	case SIGNED_OUT: {
-	    String html = "<span class='warning'>Not signed in"
-		    + " [WARNING: workspace will be lost on sign in]</span>";
-	    html += "<a href='"
-		    + authenticationManager.getAuthentication().getLoginURL()
-		    + "'>Sign in</a>";
-	    setHTML(html);
-	}
-	    break;
-	case SIGNED_IN: {
-	    String html = "<span class='userid'>"
-		    + authenticationManager.getAuthentication().getEmail()
-		    + "</span>";
-	    html += "<a href='"
-		    + authenticationManager.getAuthentication().getLogoutURL()
-		    + "'>Sign out</a>";
-	    setHTML(html);
-	}
-	    break;
-	case FAILED: {
-	    // TODO inform user to report error and reload page
-	    setHTML("<span class='warning'>Not signed in (Error occured: "
-		    + authenticationManager.getFailure().getMessage()
-		    + ")</span>");
-	}
-	    break;
-	}
-    }
-
-    @Override
-    protected void onDetach() {
-	registration.removeHandler();
-	super.onDetach();
+        addStyleName(CSS_AUTHENTICATION);
     }
 
     @Override
     protected void onAttach() {
-	super.onAttach();
+        super.onAttach();
 
-	registration = authenticationManager
-		.addAuthenticationStateChangedEventHandler(new AuthenticationStateChangedEventHandler() {
-		    @Override
-		    public void onAuthenticationStateChanged(
-			    AuthenticationStateChangedEvent event) {
-			AuthenticationBar.this.update(event
-				.getAuthenticationState());
-		    }
-		});
+        registration = authenticationManager
+                .addAuthenticationStateChangedEventHandler(new AuthenticationStateChangedEventHandler() {
+                    @Override
+                    public void onAuthenticationStateChanged(
+                            AuthenticationStateChangedEvent event) {
+                        AuthenticationBar.this.update(event
+                                .getAuthenticationState());
+                    }
+                });
 
-	update(authenticationManager.getAuthenticationState());
+        update(authenticationManager.getAuthenticationState());
+    }
+
+    @Override
+    protected void onDetach() {
+        registration.removeHandler();
+        super.onDetach();
+    }
+
+    private void update(AuthenticationState state) {
+        switch (state) {
+        case UNKNOWN: {
+            setHTML("Initializing authentication management...");
+        }
+            break;
+        case WAITING: {
+            setHTML("Waiting for authentication state...");
+        }
+            break;
+        case SIGNED_OUT: {
+            String html = "<span class='warning'>Not signed in"
+                    + " [WARNING: workspace will be lost on sign in]</span>";
+            html += "<a href='"
+                    + authenticationManager.getAuthentication().getLoginURL()
+                    + "'>Sign in</a>";
+            setHTML(html);
+        }
+            break;
+        case SIGNED_IN: {
+            String html = "<span class='userid'>"
+                    + authenticationManager.getAuthentication().getEmail()
+                    + "</span>";
+            html += "<a href='"
+                    + authenticationManager.getAuthentication().getLogoutURL()
+                    + "'>Sign out</a>";
+            setHTML(html);
+        }
+            break;
+        case FAILED: {
+            // TODO inform user to report error and reload page
+            setHTML("<span class='warning'>Not signed in (Error occured: "
+                    + authenticationManager.getFailure().getMessage()
+                    + ")</span>");
+        }
+            break;
+        }
     }
 }

@@ -25,8 +25,8 @@ import org.thechiselgroup.choosel.client.util.Disposable;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 public class DisableResourceSetAvatarIfEmptyManager implements
-	ResourceAddedEventHandler, ResourceRemovedEventHandler,
-	ResourceSetAvatarResourcesChangedEventHandler, Disposable {
+        ResourceAddedEventHandler, ResourceRemovedEventHandler,
+        ResourceSetAvatarResourcesChangedEventHandler, Disposable {
 
     private HandlerRegistration addedHandlerRegistration;
 
@@ -37,61 +37,61 @@ public class DisableResourceSetAvatarIfEmptyManager implements
     private HandlerRegistration avatarChangeHandlerRegistration;
 
     public DisableResourceSetAvatarIfEmptyManager(ResourceSetAvatar avatar) {
-	assert avatar != null;
-	this.avatar = avatar;
+        assert avatar != null;
+        this.avatar = avatar;
     }
 
     private void deregisterResourceSetHandlers() {
-	addedHandlerRegistration.removeHandler();
-	addedHandlerRegistration = null;
-	removedHandlerRegistration.removeHandler();
-	removedHandlerRegistration = null;
+        addedHandlerRegistration.removeHandler();
+        addedHandlerRegistration = null;
+        removedHandlerRegistration.removeHandler();
+        removedHandlerRegistration = null;
     }
 
     @Override
     public void dispose() {
-	deregisterResourceSetHandlers();
-	avatarChangeHandlerRegistration.removeHandler();
-	avatarChangeHandlerRegistration = null;
+        deregisterResourceSetHandlers();
+        avatarChangeHandlerRegistration.removeHandler();
+        avatarChangeHandlerRegistration = null;
     }
 
     private ResourceSet getResources() {
-	return avatar.getResourceSet();
+        return avatar.getResourceSet();
     }
 
     public void init() {
-	avatarChangeHandlerRegistration = avatar
-		.addResourceChangedHandler(this);
-	registerResourceSetHandlers(getResources());
-	avatar.addDisposable(this);
-	updateAvatarState(getResources());
+        avatarChangeHandlerRegistration = avatar
+                .addResourceChangedHandler(this);
+        registerResourceSetHandlers(getResources());
+        avatar.addDisposable(this);
+        updateAvatarState(getResources());
     }
 
     @Override
     public void onResourceAdded(ResourceAddedEvent e) {
-	updateAvatarState(e.getResourceSet());
+        updateAvatarState(e.getResourceSet());
     }
 
     @Override
     public void onResourceRemoved(ResourceRemovedEvent e) {
-	updateAvatarState(e.getResourceSet());
+        updateAvatarState(e.getResourceSet());
     }
 
     @Override
     public void onResourcesChanged(ResourceSetAvatarResourcesChangedEvent event) {
-	deregisterResourceSetHandlers();
-	registerResourceSetHandlers(event.getNewResources());
-	updateAvatarState(event.getNewResources());
+        deregisterResourceSetHandlers();
+        registerResourceSetHandlers(event.getNewResources());
+        updateAvatarState(event.getNewResources());
     }
 
     private void registerResourceSetHandlers(ResourceSet resourceSet) {
-	addedHandlerRegistration = resourceSet.addHandler(
-		ResourceAddedEvent.TYPE, this);
-	removedHandlerRegistration = resourceSet.addHandler(
-		ResourceRemovedEvent.TYPE, this);
+        addedHandlerRegistration = resourceSet.addHandler(
+                ResourceAddedEvent.TYPE, this);
+        removedHandlerRegistration = resourceSet.addHandler(
+                ResourceRemovedEvent.TYPE, this);
     }
 
     private void updateAvatarState(ResourceSet resources) {
-	avatar.setEnabled(!resources.isEmpty());
+        avatar.setEnabled(!resources.isEmpty());
     }
 }

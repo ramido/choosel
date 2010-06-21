@@ -19,9 +19,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
-import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
+// TODO change by introducing piece that resolves slots per resource item
+// (resource item,slot-->value)
 public class Layer {
 
     private String category;
@@ -33,49 +34,49 @@ public class Layer {
     private Map<String, Slot> slots = new HashMap<String, Slot>();
 
     public Layer() {
-	// TODO Auto-generated constructor stub
+        // TODO Auto-generated constructor stub
     }
 
     public String getCategory() {
-	return category;
+        return category;
     }
 
     public ResourceSetToValueResolver getResolver(String slotID) {
-	return getSlot(slotID).getResolver();
+        return getSlot(slotID).getResolver();
     }
 
     public ResourceSet getResources() {
-	return resources;
+        return resources;
     }
 
     private Slot getSlot(String slotID) {
-	assert slotID != null;
-	assert slots.containsKey(slotID) : "no such slot: " + slotID
-		+ " ( available slots: " + slots.keySet() + " )";
+        assert slotID != null;
+        assert slots.containsKey(slotID) : "no such slot: " + slotID
+                + " ( available slots: " + slots.keySet() + " )";
 
-	return slots.get(slotID);
+        return slots.get(slotID);
     }
 
     public <T> T getValue(String slotID, ResourceSet resources) {
-	assert getResolver(slotID) != null : "no resolver for slot: " + slotID
-		+ " ( available slots: " + slots.keySet() + " )";
+        assert getResolver(slotID) != null : "no resolver for slot: " + slotID
+                + " ( available slots: " + slots.keySet() + " )";
 
-	return (T) getResolver(slotID).getValue(resources);
+        return (T) getResolver(slotID).getValue(resources);
     }
 
     public void initSlots(Slot[] slots) {
-	for (Slot slot : slots) {
-	    this.slots.put(slot.getId(), slot);
-	}
+        for (Slot slot : slots) {
+            this.slots.put(slot.getId(), slot);
+        }
     }
 
     public void setCategory(String category) {
-	this.category = category;
+        this.category = category;
 
     }
 
     public void setResources(ResourceSet resources) {
-	this.resources = resources;
+        this.resources = resources;
     }
 
 }

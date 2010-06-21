@@ -15,7 +15,23 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client;
 
-import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.*;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_ALL_RESOURCES;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_SELECTION;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_SELECTION_DROP;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_SET;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_TYPE;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.DROP_TARGET_MANAGER_VIEW_CONTENT;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.HOVER_MODEL;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.LABEL_PROVIDER_SELECTION_SET;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_BAR;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_CHART;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_DOT;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_GRAPH;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_LIST;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_MAP;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_PIE;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_SCATTER;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_TIMELINE;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,7 +58,7 @@ import com.google.inject.Provider;
 import com.google.inject.name.Named;
 
 public class ChooselWindowContentProducerProvider implements
-	Provider<WindowContentProducer> {
+        Provider<WindowContentProducer> {
 
     private ResourceSetAvatarFactory allResourcesDragAvatarFactory;
 
@@ -72,131 +88,128 @@ public class ChooselWindowContentProducerProvider implements
 
     @Inject
     public ChooselWindowContentProducerProvider(
-	    @Named(AVATAR_FACTORY_SET) ResourceSetAvatarFactory userSetsDragAvatarFactory,
-	    @Named(AVATAR_FACTORY_TYPE) ResourceSetAvatarFactory typesDragAvatarFactory,
-	    @Named(AVATAR_FACTORY_ALL_RESOURCES) ResourceSetAvatarFactory allResourcesDragAvatarFactory,
-	    @Named(AVATAR_FACTORY_SELECTION) ResourceSetAvatarFactory selectionDragAvatarFactory,
-	    @Named(AVATAR_FACTORY_SELECTION_DROP) ResourceSetAvatarFactory dropTargetFactory,
-	    @Named(HOVER_MODEL) ResourceSet hoverModel,
-	    ResourceSetFactory resourceSetFactory,
-	    @Named(LABEL_PROVIDER_SELECTION_SET) LabelProvider selectionModelLabelFactory,
-	    ResourceCategorizer categorizer,
-	    CategoryLabelProvider labelProvider,
-	    @Named(DROP_TARGET_MANAGER_VIEW_CONTENT) ResourceSetAvatarDropTargetManager contentDropTargetManager,
-	    SlotResolver slotResolver) {
+            @Named(AVATAR_FACTORY_SET) ResourceSetAvatarFactory userSetsDragAvatarFactory,
+            @Named(AVATAR_FACTORY_TYPE) ResourceSetAvatarFactory typesDragAvatarFactory,
+            @Named(AVATAR_FACTORY_ALL_RESOURCES) ResourceSetAvatarFactory allResourcesDragAvatarFactory,
+            @Named(AVATAR_FACTORY_SELECTION) ResourceSetAvatarFactory selectionDragAvatarFactory,
+            @Named(AVATAR_FACTORY_SELECTION_DROP) ResourceSetAvatarFactory dropTargetFactory,
+            @Named(HOVER_MODEL) ResourceSet hoverModel,
+            ResourceSetFactory resourceSetFactory,
+            @Named(LABEL_PROVIDER_SELECTION_SET) LabelProvider selectionModelLabelFactory,
+            ResourceCategorizer categorizer,
+            CategoryLabelProvider labelProvider,
+            @Named(DROP_TARGET_MANAGER_VIEW_CONTENT) ResourceSetAvatarDropTargetManager contentDropTargetManager,
+            SlotResolver slotResolver) {
 
-	assert userSetsDragAvatarFactory != null;
-	assert typesDragAvatarFactory != null;
-	assert allResourcesDragAvatarFactory != null;
-	assert selectionDragAvatarFactory != null;
-	assert dropTargetFactory != null;
-	assert contentDropTargetManager != null;
-	assert hoverModel != null;
-	assert resourceSetFactory != null;
-	assert selectionModelLabelFactory != null;
-	assert categorizer != null;
-	assert labelProvider != null;
-	assert slotResolver != null;
+        assert userSetsDragAvatarFactory != null;
+        assert typesDragAvatarFactory != null;
+        assert allResourcesDragAvatarFactory != null;
+        assert selectionDragAvatarFactory != null;
+        assert dropTargetFactory != null;
+        assert contentDropTargetManager != null;
+        assert hoverModel != null;
+        assert resourceSetFactory != null;
+        assert selectionModelLabelFactory != null;
+        assert categorizer != null;
+        assert labelProvider != null;
+        assert slotResolver != null;
 
-	this.userSetsDragAvatarFactory = userSetsDragAvatarFactory;
-	this.typesDragAvatarFactory = typesDragAvatarFactory;
-	this.allResourcesDragAvatarFactory = allResourcesDragAvatarFactory;
-	this.selectionDragAvatarFactory = selectionDragAvatarFactory;
-	this.dropTargetFactory = dropTargetFactory;
-	this.contentDropTargetManager = contentDropTargetManager;
-	this.hoverModel = hoverModel;
-	this.resourceSetFactory = resourceSetFactory;
-	this.selectionModelLabelFactory = selectionModelLabelFactory;
-	this.categorizer = categorizer;
-	this.labelProvider = labelProvider;
-	this.slotResolver = slotResolver;
+        this.userSetsDragAvatarFactory = userSetsDragAvatarFactory;
+        this.typesDragAvatarFactory = typesDragAvatarFactory;
+        this.allResourcesDragAvatarFactory = allResourcesDragAvatarFactory;
+        this.selectionDragAvatarFactory = selectionDragAvatarFactory;
+        this.dropTargetFactory = dropTargetFactory;
+        this.contentDropTargetManager = contentDropTargetManager;
+        this.hoverModel = hoverModel;
+        this.resourceSetFactory = resourceSetFactory;
+        this.selectionModelLabelFactory = selectionModelLabelFactory;
+        this.categorizer = categorizer;
+        this.labelProvider = labelProvider;
+        this.slotResolver = slotResolver;
 
-	windowContentFactories.put("help", new WindowContentFactory() {
-	    @Override
-	    public WindowContent createWindowContent() {
-		return new HelpWindowContent();
-	    }
-	});
+        windowContentFactories.put("help", new WindowContentFactory() {
+            @Override
+            public WindowContent createWindowContent() {
+                return new HelpWindowContent();
+            }
+        });
 
-	windowContentFactories.put("note", new WindowContentFactory() {
-	    @Override
-	    public WindowContent createWindowContent() {
-		return new NoteWindowContent();
-	    }
-	});
+        windowContentFactories.put("note", new WindowContentFactory() {
+            @Override
+            public WindowContent createWindowContent() {
+                return new NoteWindowContent();
+            }
+        });
     }
 
     @Override
     public WindowContentProducer get() {
-	DefaultWindowContentProducer contentProducer = new DefaultWindowContentProducer();
-	for (Map.Entry<String, WindowContentFactory> entry : windowContentFactories
-		.entrySet()) {
-	    contentProducer.register(entry.getKey(), entry.getValue());
-	}
-	return contentProducer;
+        DefaultWindowContentProducer contentProducer = new DefaultWindowContentProducer();
+        for (Map.Entry<String, WindowContentFactory> entry : windowContentFactories
+                .entrySet()) {
+            contentProducer.register(entry.getKey(), entry.getValue());
+        }
+        return contentProducer;
+    }
+
+    @Inject
+    public void registerBar(@Named(TYPE_BAR) ViewContentDisplayFactory factory) {
+        registerViewContentDisplayFactory(TYPE_BAR, factory);
+    }
+
+    @Inject
+    public void registerChart(
+            @Named(TYPE_CHART) ViewContentDisplayFactory factory) {
+        registerViewContentDisplayFactory(TYPE_CHART, factory);
+    }
+
+    @Inject
+    public void registerDot(@Named(TYPE_DOT) ViewContentDisplayFactory factory) {
+        registerViewContentDisplayFactory(TYPE_DOT, factory);
     }
 
     @Inject
     public void registerGraph(
-	    @Named(TYPE_GRAPH) ViewContentDisplayFactory factory) {
-	registerViewContentDisplayFactory(TYPE_GRAPH, factory);
+            @Named(TYPE_GRAPH) ViewContentDisplayFactory factory) {
+        registerViewContentDisplayFactory(TYPE_GRAPH, factory);
     }
 
     @Inject
     public void registerList(@Named(TYPE_LIST) ViewContentDisplayFactory factory) {
-	registerViewContentDisplayFactory(TYPE_LIST, factory);
+        registerViewContentDisplayFactory(TYPE_LIST, factory);
     }
 
     @Inject
     public void registerMap(@Named(TYPE_MAP) ViewContentDisplayFactory factory) {
-	registerViewContentDisplayFactory(TYPE_MAP, factory);
+        registerViewContentDisplayFactory(TYPE_MAP, factory);
     }
 
     @Inject
-    public void registerTimeline(
-	    @Named(TYPE_TIMELINE) ViewContentDisplayFactory factory) {
-	registerViewContentDisplayFactory(TYPE_TIMELINE, factory);
-    }
-    
-    @Inject
-    public void registerChart(
-	    @Named(TYPE_CHART) ViewContentDisplayFactory factory) {
-	registerViewContentDisplayFactory(TYPE_CHART, factory);
-    }
-    
-    @Inject
-    public void registerBar(
-	    @Named(TYPE_BAR) ViewContentDisplayFactory factory) {
-	registerViewContentDisplayFactory(TYPE_BAR, factory);
-    }
-    
-    @Inject
-    public void registerPie(
-	    @Named(TYPE_PIE) ViewContentDisplayFactory factory) {
-	registerViewContentDisplayFactory(TYPE_PIE, factory);
-    }
-    
-    @Inject
-    public void registerDot(
-	    @Named(TYPE_DOT) ViewContentDisplayFactory factory) {
-	registerViewContentDisplayFactory(TYPE_DOT, factory);
+    public void registerPie(@Named(TYPE_PIE) ViewContentDisplayFactory factory) {
+        registerViewContentDisplayFactory(TYPE_PIE, factory);
     }
 
     @Inject
     public void registerScatter(
-	    @Named(TYPE_SCATTER) ViewContentDisplayFactory factory) {
-	registerViewContentDisplayFactory(TYPE_SCATTER, factory);
+            @Named(TYPE_SCATTER) ViewContentDisplayFactory factory) {
+        registerViewContentDisplayFactory(TYPE_SCATTER, factory);
+    }
+
+    @Inject
+    public void registerTimeline(
+            @Named(TYPE_TIMELINE) ViewContentDisplayFactory factory) {
+        registerViewContentDisplayFactory(TYPE_TIMELINE, factory);
     }
 
     private void registerViewContentDisplayFactory(String contentType,
-	    ViewContentDisplayFactory contentDisplayFactory) {
+            ViewContentDisplayFactory contentDisplayFactory) {
 
-	windowContentFactories.put(contentType, new ViewFactory(contentType,
-		contentDisplayFactory, userSetsDragAvatarFactory,
-		typesDragAvatarFactory, allResourcesDragAvatarFactory,
-		selectionDragAvatarFactory, dropTargetFactory, hoverModel,
-		resourceSetFactory, selectionModelLabelFactory, categorizer,
-		labelProvider, contentDropTargetManager, slotResolver));
+        windowContentFactories.put(contentType, new ViewFactory(contentType,
+                contentDisplayFactory, userSetsDragAvatarFactory,
+                typesDragAvatarFactory, allResourcesDragAvatarFactory,
+                selectionDragAvatarFactory, dropTargetFactory, hoverModel,
+                resourceSetFactory, selectionModelLabelFactory, categorizer,
+                labelProvider, contentDropTargetManager, slotResolver));
     }
 
 }

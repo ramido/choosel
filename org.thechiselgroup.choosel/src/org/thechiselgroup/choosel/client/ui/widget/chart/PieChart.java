@@ -2,6 +2,7 @@ package org.thechiselgroup.choosel.client.ui.widget.chart;
 
 public class PieChart extends ChartWidget {
 
+    // @formatter:off
     @Override
     public native Chart drawChart(int width, int height) /*-{
         var val = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::val,
@@ -18,5 +19,6 @@ public class PieChart extends ChartWidget {
 
         return wedge;
     }-*/;
+    // @formatter:on
 
 }

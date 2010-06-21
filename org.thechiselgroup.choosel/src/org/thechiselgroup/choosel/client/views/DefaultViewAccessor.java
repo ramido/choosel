@@ -21,14 +21,14 @@ public class DefaultViewAccessor implements ViewAccessor {
 
     @Override
     public View findView(Widget w) {
-	while (w != null) {
-	    if (w instanceof ViewProvider) {
-		return ((ViewProvider) w).get();
-	    }
-	    w = w.getParent();
-	}
+        while (w != null) {
+            if (w instanceof ViewProvider) {
+                return ((ViewProvider) w).get();
+            }
+            w = w.getParent();
+        }
 
-	return null;
+        return null;
     }
 
 }

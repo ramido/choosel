@@ -32,70 +32,70 @@ public final class ResourcesTestHelper {
     public static final String Y_COORD = "y-coord";
 
     public static DefaultResourceSet createLabeledResources(int... indices) {
-	return createLabeledResources(LABEL, DEFAULT_TYPE, indices);
+        return createLabeledResources(LABEL, DEFAULT_TYPE, indices);
     }
 
     public static DefaultResourceSet createLabeledResources(String type,
-	    int... indices) {
-	return createLabeledResources(LABEL, type, indices);
+            int... indices) {
+        return createLabeledResources(LABEL, type, indices);
     }
 
     public static DefaultResourceSet createLabeledResources(String label,
-	    String type, int... indices) {
+            String type, int... indices) {
 
-	DefaultResourceSet resources = createResources(type, indices);
-	resources.setLabel(label);
-	return resources;
+        DefaultResourceSet resources = createResources(type, indices);
+        resources.setLabel(label);
+        return resources;
     }
 
     public static Resource createResource(int index) {
-	return createResource(DEFAULT_TYPE, index);
+        return createResource(DEFAULT_TYPE, index);
     }
 
     public static Resource createResource(String type, int index) {
-	Resource r = new Resource(type + ":" + index);
-	r.putValue(X_COORD, Math.random()*10);
-	r.putValue(Y_COORD, Math.random()*10);
-	r.putValue(LABEL_KEY, r.getValue(X_COORD) + " " + r.getValue(Y_COORD));
-	return r;
+        Resource r = new Resource(type + ":" + index);
+        r.putValue(X_COORD, Math.random() * 10);
+        r.putValue(Y_COORD, Math.random() * 10);
+        r.putValue(LABEL_KEY, r.getValue(X_COORD) + " " + r.getValue(Y_COORD));
+        return r;
     }
 
     public static DefaultResourceSet createResources(int... indices) {
-	return createResources(DEFAULT_TYPE, indices);
+        return createResources(DEFAULT_TYPE, indices);
     }
 
     public static DefaultResourceSet createResources(String type,
-	    int... indices) {
+            int... indices) {
 
-	DefaultResourceSet resources = new DefaultResourceSet();
-	for (int i : indices) {
-	    resources.add(createResource(type, i));
-	}
-	return resources;
-    }
-
-    public static DefaultResourceSet toResourceSet(ResourceSet... resourceSets) {
-	DefaultResourceSet result = new DefaultResourceSet();
-	for (ResourceSet resources : resourceSets) {
-	    result.addAll(resources);
-	}
-	return result;
-    }
-
-    public static DefaultResourceSet toResourceSet(Resource... resources) {
-	DefaultResourceSet result = new DefaultResourceSet();
-	for (Resource resource : resources) {
-	    result.add(resource);
-	}
-	return result;
+        DefaultResourceSet resources = new DefaultResourceSet();
+        for (int i : indices) {
+            resources.add(createResource(type, i));
+        }
+        return resources;
     }
 
     public static DefaultResourceSet toLabeledResources(
-	    ResourceSet... resourceSets) {
+            ResourceSet... resourceSets) {
 
-	DefaultResourceSet result = toResourceSet(resourceSets);
-	result.setLabel(LABEL);
-	return result;
+        DefaultResourceSet result = toResourceSet(resourceSets);
+        result.setLabel(LABEL);
+        return result;
+    }
+
+    public static DefaultResourceSet toResourceSet(Resource... resources) {
+        DefaultResourceSet result = new DefaultResourceSet();
+        for (Resource resource : resources) {
+            result.add(resource);
+        }
+        return result;
+    }
+
+    public static DefaultResourceSet toResourceSet(ResourceSet... resourceSets) {
+        DefaultResourceSet result = new DefaultResourceSet();
+        for (ResourceSet resources : resourceSets) {
+            result.addAll(resources);
+        }
+        return result;
     }
 
     private ResourcesTestHelper() {

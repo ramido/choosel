@@ -20,10 +20,6 @@ import org.adamtacy.client.ui.effects.transitionsphysics.EaseInOutTransitionPhys
 
 public final class FXUtil {
 
-    private FXUtil() {
-
-    }
-
     public static final EaseInOutTransitionPhysics EASE_OUT = new EaseInOutTransitionPhysics();
 
     public static final double MORPH_DURATION_IN_SECONDS = 0.5;
@@ -31,19 +27,23 @@ public final class FXUtil {
     public static final String OPACITY_MORPH = "opacity";
 
     public static NMorphScalar createOpacityMorph(int start, int end) {
-	NMorphScalar morph = new NMorphScalar(FXUtil.OPACITY_MORPH) {
-	    @Override
-	    public void tearDownEffect() {
-		// do not tear down as this sets original state
-	    };
-	};
+        NMorphScalar morph = new NMorphScalar(FXUtil.OPACITY_MORPH) {
+            @Override
+            public void tearDownEffect() {
+                // do not tear down as this sets original state
+            };
+        };
 
-	morph.setStartValue(Integer.toString(start));
-	morph.setEndValue(Integer.toString(end));
-	morph.setTransitionType(FXUtil.EASE_OUT);
-	morph.setDuration(FXUtil.MORPH_DURATION_IN_SECONDS);
+        morph.setStartValue(Integer.toString(start));
+        morph.setEndValue(Integer.toString(end));
+        morph.setTransitionType(FXUtil.EASE_OUT);
+        morph.setDuration(FXUtil.MORPH_DURATION_IN_SECONDS);
 
-	return morph;
+        return morph;
+    }
+
+    private FXUtil() {
+
     }
 
 }

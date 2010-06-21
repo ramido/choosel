@@ -20,15 +20,15 @@ import java.io.StringWriter;
 
 public final class StackTraceHelper {
 
-    private StackTraceHelper() {
-	// library
+    public static String getStackTraceAsString(Throwable exception) {
+        StringWriter stackTraceWriter = new StringWriter();
+        exception.printStackTrace(new PrintWriter(stackTraceWriter));
+        String stacktrace = stackTraceWriter.toString();
+        return stacktrace;
     }
 
-    public static String getStackTraceAsString(Throwable exception) {
-	StringWriter stackTraceWriter = new StringWriter();
-	exception.printStackTrace(new PrintWriter(stackTraceWriter));
-	String stacktrace = stackTraceWriter.toString();
-	return stacktrace;
+    private StackTraceHelper() {
+        // library
     }
 
 }

@@ -26,9 +26,9 @@ public class ResourceByUriTypeCategorizer implements ResourceCategorizer {
 
     @Override
     public String getCategory(Resource resource) {
-	String uri = resource.getUri();
-	int splitIndex = uri.indexOf(':');
-	return uri.substring(0, splitIndex);
+        String uri = resource.getUri();
+        int splitIndex = uri.indexOf(':');
+        return uri.substring(0, splitIndex);
     }
 
 }

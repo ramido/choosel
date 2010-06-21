@@ -35,42 +35,42 @@ public class DefaultFeedbackService implements FeedbackService {
     private MailService mailService;
 
     public DefaultFeedbackService(UserService userService,
-	    MailService mailService) {
+            MailService mailService) {
 
-	assert userService != null;
-	assert mailService != null;
+        assert userService != null;
+        assert mailService != null;
 
-	this.userService = userService;
-	this.mailService = mailService;
+        this.userService = userService;
+        this.mailService = mailService;
     }
 
     @Override
     public void sendFeedback(String message, String errorMessage)
-	    throws ServiceException {
+            throws ServiceException {
 
-	StringBuffer content = new StringBuffer();
+        StringBuffer content = new StringBuffer();
 
-	String sender;
-	if (userService.isUserLoggedIn()) {
-	    sender = userService.getCurrentUser().getEmail();
-	} else {
-	    sender = ADMIN;
-	}
+        String sender;
+        if (userService.isUserLoggedIn()) {
+            sender = userService.getCurrentUser().getEmail();
+        } else {
+            sender = ADMIN;
+        }
 
-	content.append(message);
+        content.append(message);
 
-	if (errorMessage != null) {
-	    content.append("\n\n");
-	    content.append("Exception: " + errorMessage);
-	}
+        if (errorMessage != null) {
+            content.append("\n\n");
+            content.append("Exception: " + errorMessage);
+        }
 
-	Log.info(content.toString());
+        Log.info(content.toString());
 
-	try {
-	    mailService.send(new Message(sender, ADMIN, "[Bio-Mixer Feedback]",
-		    content.toString()));
-	} catch (IOException e) {
-	    throw new ServiceException(e);
-	}
+        try {
+            mailService.send(new Message(sender, ADMIN, "[Bio-Mixer Feedback]",
+                    content.toString()));
+        } catch (IOException e) {
+            throw new ServiceException(e);
+        }
     }
 }

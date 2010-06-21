@@ -15,10 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources.ui;
 
-
 import com.google.inject.Provider;
 
 public interface ResourceSetAvatarFactoryProvider extends
-	Provider<ResourceSetAvatarFactory> {
+        Provider<ResourceSetAvatarFactory> {
 
 }

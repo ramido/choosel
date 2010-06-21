@@ -28,34 +28,34 @@ public class LabelChangedEvent extends GwtEvent<LabelChangedEventHandler> {
     private final HasLabel source;
 
     public LabelChangedEvent(HasLabel source, String newLabel, String oldLabel) {
-	assert source != null;
+        assert source != null;
 
-	this.source = source;
-	this.newLabel = newLabel;
-	this.oldLabel = oldLabel;
+        this.source = source;
+        this.newLabel = newLabel;
+        this.oldLabel = oldLabel;
     }
 
     @Override
     protected void dispatch(LabelChangedEventHandler handler) {
-	handler.onLabelChanged(this);
+        handler.onLabelChanged(this);
     }
 
     @Override
     public GwtEvent.Type<LabelChangedEventHandler> getAssociatedType() {
-	return TYPE;
+        return TYPE;
     }
 
     public String getNewLabel() {
-	return newLabel;
+        return newLabel;
     }
 
     public String getOldLabel() {
-	return oldLabel;
+        return oldLabel;
     }
 
     @Override
     public HasLabel getSource() {
-	return source;
+        return source;
     }
 
 }

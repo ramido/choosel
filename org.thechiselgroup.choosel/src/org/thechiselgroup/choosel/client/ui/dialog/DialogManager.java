@@ -34,19 +34,18 @@ public class DialogManager {
     private ShadeManager shadeManager;
 
     public DialogManager(AbsolutePanel parentPanel, ShadeManager shadeManager) {
-	this.parentPanel = parentPanel;
-	this.shadeManager = shadeManager;
+        this.parentPanel = parentPanel;
+        this.shadeManager = shadeManager;
     }
 
     @Inject
     public DialogManager(ShadeManager shadeManager) {
-	this(RootPanel.get(), shadeManager);
+        this(RootPanel.get(), shadeManager);
     }
 
     public void show(Dialog dialog) {
-	assert dialog != null;
+        assert dialog != null;
 
-	new DialogController(parentPanel, dialog, shadeManager)
-		.init();
+        new DialogController(parentPanel, dialog, shadeManager).init();
     }
 }

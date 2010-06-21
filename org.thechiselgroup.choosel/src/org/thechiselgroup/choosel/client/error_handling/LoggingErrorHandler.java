@@ -21,6 +21,6 @@ public class LoggingErrorHandler implements ErrorHandler {
 
     @Override
     public void handleError(Throwable error) {
-	Log.error(error.getMessage(), error);
+        Log.error(error.getMessage(), error);
     }
 }

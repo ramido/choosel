@@ -24,7 +24,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.geometry.HasSize;
 import org.thechiselgroup.choosel.client.geometry.Point;
-import org.thechiselgroup.choosel.client.windows.PositionManager;
 
 public class PositionManagerTest {
 
@@ -39,37 +38,37 @@ public class PositionManagerTest {
 
     private PositionManager manager;
 
-    @Before
-    public void setUp() {
-	MockitoAnnotations.initMocks(this);
-
-	manager = new PositionManager(desktop, TEST_HORIZONTAL_STEPS,
-		TEST_VERTICAL_STEPS, TEST_PADDING);
-
-	when(desktop.getWidth()).thenReturn(500);
-	when(desktop.getHeight()).thenReturn(400);
-    }
-
     @Test
     public void firstPosition() {
-	Point location = manager.getNextLocation(200, 200);
+        Point location = manager.getNextLocation(200, 200);
 
-	assertEquals(TEST_PADDING, location.x);
-	assertEquals(TEST_PADDING, location.y);
+        assertEquals(TEST_PADDING, location.x);
+        assertEquals(TEST_PADDING, location.y);
     }
 
     @Test
     public void secondLocation() {
-	manager.getNextLocation(200, 200);
+        manager.getNextLocation(200, 200);
 
-	Point location = manager.getNextLocation(200, 200);
+        Point location = manager.getNextLocation(200, 200);
 
-	assertEquals(TEST_PADDING
-		+ ((500 - 200 - 2 * TEST_PADDING) / TEST_HORIZONTAL_STEPS),
-		location.x);
-	assertEquals(TEST_PADDING
-		+ ((400 - 200 - 2 * TEST_PADDING) / TEST_VERTICAL_STEPS),
-		location.y);
+        assertEquals(TEST_PADDING
+                + ((500 - 200 - 2 * TEST_PADDING) / TEST_HORIZONTAL_STEPS),
+                location.x);
+        assertEquals(TEST_PADDING
+                + ((400 - 200 - 2 * TEST_PADDING) / TEST_VERTICAL_STEPS),
+                location.y);
+    }
+
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+
+        manager = new PositionManager(desktop, TEST_HORIZONTAL_STEPS,
+                TEST_VERTICAL_STEPS, TEST_PADDING);
+
+        when(desktop.getWidth()).thenReturn(500);
+        when(desktop.getHeight()).thenReturn(400);
     }
 
 }

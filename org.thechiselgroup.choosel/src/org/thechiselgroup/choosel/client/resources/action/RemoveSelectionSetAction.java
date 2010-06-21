@@ -27,21 +27,21 @@ public class RemoveSelectionSetAction implements Action {
     private CommandManager commandManager;
 
     public RemoveSelectionSetAction(CommandManager commandManager) {
-	this.commandManager = commandManager;
+        this.commandManager = commandManager;
     }
 
-    @Override
-    public String getLabel() {
-	return "Remove selection set from view";
+    protected UndoableCommand createCommand(ResourceSet resources, View view) {
+        return new RemoveSelectionSetFromViewCommand(view, resources,
+                "Remove set '" + resources.getLabel() + "' from selection");
     }
 
     @Override
     public void execute(ResourceSet resources, View view) {
-	commandManager.execute(createCommand(resources, view));
+        commandManager.execute(createCommand(resources, view));
     }
 
-    protected UndoableCommand createCommand(ResourceSet resources, View view) {
-	return new RemoveSelectionSetFromViewCommand(view, resources,
-		"Remove set '" + resources.getLabel() + "' from selection");
+    @Override
+    public String getLabel() {
+        return "Remove selection set from view";
     }
 }

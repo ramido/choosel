@@ -15,8 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.dnd;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.After;
 import org.junit.Before;
@@ -28,8 +32,6 @@ import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.test.DndTestHelpers;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.client.test.TestUndoableCommandWithDescription;
-import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropCommandFactory;
-import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropController;
 import org.thechiselgroup.choosel.client.ui.popup.DelayedPopup;
 
 import com.allen_sauer.gwt.dnd.client.DragContext;
@@ -38,18 +40,18 @@ import com.google.gwt.user.client.ui.Widget;
 public class ResourceSetAvatarDropControllerTest {
 
     public static class TestDragAvatarDropController extends
-	    ResourceSetAvatarDropController {
+            ResourceSetAvatarDropController {
 
-	private TestDragAvatarDropController(Widget dropTarget,
-		ResourceSetAvatarDropCommandFactory commandFactory,
-		CommandManager commandManager) {
-	    super(dropTarget, commandFactory, commandManager);
-	}
+        private TestDragAvatarDropController(Widget dropTarget,
+                ResourceSetAvatarDropCommandFactory commandFactory,
+                CommandManager commandManager) {
+            super(dropTarget, commandFactory, commandManager);
+        }
 
-	@Override
-	protected DelayedPopup createPopup(DragContext context, String message) {
-	    return null;
-	}
+        @Override
+        protected DelayedPopup createPopup(DragContext context, String message) {
+            return null;
+        }
     }
 
     @Mock
@@ -77,16 +79,16 @@ public class ResourceSetAvatarDropControllerTest {
 
     @Test
     public void addExecutedCommandToCommandManager() {
-	String message = "message";
+        String message = "message";
 
-	when(commandFactory.canDrop(eq(dragAvatar))).thenReturn(true);
-	when(command.getDescription()).thenReturn(message);
+        when(commandFactory.canDrop(eq(dragAvatar))).thenReturn(true);
+        when(command.getDescription()).thenReturn(message);
 
-	dropController.onEnter(dragContext);
+        dropController.onEnter(dragContext);
 
-	verify(dropController, times(1)).createPopup(eq(dragContext),
-		eq(message));
-	verify(popup, times(1)).showDelayed();
+        verify(dropController, times(1)).createPopup(eq(dragContext),
+                eq(message));
+        verify(popup, times(1)).showDelayed();
     }
 
     /**
@@ -96,35 +98,55 @@ public class ResourceSetAvatarDropControllerTest {
      */
     @Test
     public void assumeCanDropWhenAlreadyPreviewing() {
-	when(commandFactory.canDrop(eq(dragAvatar))).thenReturn(true, false);
+        when(commandFactory.canDrop(eq(dragAvatar))).thenReturn(true, false);
 
-	dropController.onEnter(dragContext);
-	dropController.onDrop(dragContext);
+        dropController.onEnter(dragContext);
+        dropController.onDrop(dragContext);
 
-	verify(command, times(1)).execute();
-	verify(commandManager, times(1)).addExecutedCommand(command);
+        verify(command, times(1)).execute();
+        verify(commandManager, times(1)).addExecutedCommand(command);
+    }
+
+    @Test
+    public void hidePopupOnDrop() {
+        when(commandFactory.canDrop(eq(dragAvatar))).thenReturn(true);
+
+        dropController.onEnter(dragContext);
+        dropController.onDrop(dragContext);
+
+        verify(popup, times(1)).hideDelayed();
+    }
+
+    @Test
+    public void hidePopupOnLeave() {
+        when(commandFactory.canDrop(eq(dragAvatar))).thenReturn(true);
+
+        dropController.onEnter(dragContext);
+        dropController.onLeave(dragContext);
+
+        verify(popup, times(1)).hideDelayed();
     }
 
     @Before
     public void setUp() throws Exception {
-	MockitoGWTBridge bridge = MockitoGWTBridge.setUp();
-	MockitoAnnotations.initMocks(this);
-	DndTestHelpers.mockDragClientBundle(bridge);
+        MockitoGWTBridge bridge = MockitoGWTBridge.setUp();
+        MockitoAnnotations.initMocks(this);
+        DndTestHelpers.mockDragClientBundle(bridge);
 
-	dropController = spy(new TestDragAvatarDropController(dropTarget,
-		commandFactory, commandManager));
+        dropController = spy(new TestDragAvatarDropController(dropTarget,
+                commandFactory, commandManager));
 
-	when(
-		dropController.createPopup(any(DragContext.class),
-			any(String.class))).thenReturn(popup);
+        when(
+                dropController.createPopup(any(DragContext.class),
+                        any(String.class))).thenReturn(popup);
 
-	dragContext.draggable = dragAvatar;
-	when(commandFactory.createCommand(eq(dragAvatar))).thenReturn(command);
+        dragContext.draggable = dragAvatar;
+        when(commandFactory.createCommand(eq(dragAvatar))).thenReturn(command);
     }
 
     @After
     public void tearDown() {
-	MockitoGWTBridge.tearDown();
+        MockitoGWTBridge.tearDown();
     }
 
     /**
@@ -134,42 +156,22 @@ public class ResourceSetAvatarDropControllerTest {
      */
     @Test
     public void undoEvenWhenCanDropSwitchedToFalse() {
-	when(commandFactory.canDrop(eq(dragAvatar))).thenReturn(true, false);
+        when(commandFactory.canDrop(eq(dragAvatar))).thenReturn(true, false);
 
-	dropController.onEnter(dragContext);
-	dropController.onLeave(dragContext);
+        dropController.onEnter(dragContext);
+        dropController.onLeave(dragContext);
 
-	verify(command, times(1)).execute();
-	verify(command, times(1)).undo();
+        verify(command, times(1)).execute();
+        verify(command, times(1)).undo();
     }
 
     @Test
     public void useMessageFromCommandInPopup() {
-	when(commandFactory.canDrop(eq(dragAvatar))).thenReturn(true);
+        when(commandFactory.canDrop(eq(dragAvatar))).thenReturn(true);
 
-	dropController.onDrop(dragContext);
+        dropController.onDrop(dragContext);
 
-	verify(command, times(1)).execute();
-	verify(commandManager, times(1)).addExecutedCommand(command);
-    }
-
-    @Test
-    public void hidePopupOnLeave() {
-	when(commandFactory.canDrop(eq(dragAvatar))).thenReturn(true);
-
-	dropController.onEnter(dragContext);
-	dropController.onLeave(dragContext);
-
-	verify(popup, times(1)).hideDelayed();
-    }
-
-    @Test
-    public void hidePopupOnDrop() {
-	when(commandFactory.canDrop(eq(dragAvatar))).thenReturn(true);
-
-	dropController.onEnter(dragContext);
-	dropController.onDrop(dragContext);
-
-	verify(popup, times(1)).hideDelayed();
+        verify(command, times(1)).execute();
+        verify(commandManager, times(1)).addExecutedCommand(command);
     }
 }

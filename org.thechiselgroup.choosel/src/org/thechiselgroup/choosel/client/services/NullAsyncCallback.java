@@ -22,10 +22,10 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class NullAsyncCallback<T> implements AsyncCallback<T> {
     @Override
-    public void onSuccess(T result) {
+    public void onFailure(Throwable caught) {
     }
 
     @Override
-    public void onFailure(Throwable caught) {
+    public void onSuccess(T result) {
     }
 }

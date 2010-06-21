@@ -26,6 +26,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.inject.Inject;
 
 // TODO update & extend (1, many sets added / removed) test case
+// TODO change name
 public class ResourceSplitter extends AbstractResourceContainer {
 
     private final ResourceMultiCategorizer multiCategorizer;
@@ -40,71 +41,71 @@ public class ResourceSplitter extends AbstractResourceContainer {
 
     @Inject
     public ResourceSplitter(ResourceCategorizer categorizer,
-	    ResourceSetFactory resourceSetFactory,
-	    CategoryLabelProvider labelProvider) {
+            ResourceSetFactory resourceSetFactory,
+            CategoryLabelProvider labelProvider) {
 
-	this(new ResourceCategorizerToMultiCategorizerAdapter(categorizer),
-		resourceSetFactory, labelProvider);
+        this(new ResourceCategorizerToMultiCategorizerAdapter(categorizer),
+                resourceSetFactory, labelProvider);
     }
 
     @Inject
     public ResourceSplitter(ResourceMultiCategorizer multiCategorizer,
-	    ResourceSetFactory resourceSetFactory,
-	    CategoryLabelProvider labelProvider) {
+            ResourceSetFactory resourceSetFactory,
+            CategoryLabelProvider labelProvider) {
 
-	this.multiCategorizer = multiCategorizer;
-	this.resourceSetFactory = resourceSetFactory;
-	this.labelProvider = labelProvider;
+        this.multiCategorizer = multiCategorizer;
+        this.resourceSetFactory = resourceSetFactory;
+        this.labelProvider = labelProvider;
 
-	this.eventBus = new HandlerManager(this);
-    }
-
-    public Map<String, ResourceSet> getCategorizedResourceSets() {
-	return new HashMap<String, ResourceSet>(categorizedSets);
+        this.eventBus = new HandlerManager(this);
     }
 
     @Override
     public void add(Resource resource) {
-	for (String category : multiCategorizer.getCategories(resource)) {
-	    ResourceSet resourceSet = getResourceSet(category);
-	    resourceSet.add(resource);
-	}
+        for (String category : multiCategorizer.getCategories(resource)) {
+            ResourceSet resourceSet = getResourceSet(category);
+            resourceSet.add(resource);
+        }
+    }
+
+    public <H extends ResourceCategoryContainerEventHandler> HandlerRegistration addHandler(
+            Type<H> type, H handler) {
+
+        return eventBus.addHandler(type, handler);
+    }
+
+    public Map<String, ResourceSet> getCategorizedResourceSets() {
+        return new HashMap<String, ResourceSet>(categorizedSets);
     }
 
     private ResourceSet getResourceSet(String category) {
-	if (!categorizedSets.containsKey(category)) {
-	    ResourceSet resourceSet = resourceSetFactory.createResourceSet();
+        if (!categorizedSets.containsKey(category)) {
+            ResourceSet resourceSet = resourceSetFactory.createResourceSet();
 
-	    resourceSet.setLabel(labelProvider.getLabel(category));
+            resourceSet.setLabel(labelProvider.getLabel(category));
 
-	    categorizedSets.put(category, resourceSet);
+            categorizedSets.put(category, resourceSet);
 
-	    eventBus.fireEvent(new ResourceCategoryAddedEvent(category,
-		    resourceSet));
-	}
+            eventBus.fireEvent(new ResourceCategoryAddedEvent(category,
+                    resourceSet));
+        }
 
-	return categorizedSets.get(category);
+        return categorizedSets.get(category);
     }
 
     @Override
     public void remove(Resource resource) {
-	for (String category : multiCategorizer.getCategories(resource)) {
-	    ResourceSet resourceSet = getResourceSet(category);
+        for (String category : multiCategorizer.getCategories(resource)) {
+            ResourceSet resourceSet = getResourceSet(category);
 
-	    resourceSet.remove(resource);
+            resourceSet.remove(resource);
 
-	    if (resourceSet.isEmpty()) {
-		categorizedSets.remove(category);
-		eventBus.fireEvent(new ResourceCategoryRemovedEvent(category,
-			resourceSet));
-	    }
-	}
-    }
-
-    public <H extends ResourceCategoryContainerEventHandler> HandlerRegistration addHandler(
-	    Type<H> type, H handler) {
-
-	return eventBus.addHandler(type, handler);
+            if (resourceSet.isEmpty()) {
+                categorizedSets.remove(category);
+                eventBus.fireEvent(new ResourceCategoryRemovedEvent(category,
+                        resourceSet));
+            }
+        }
     }
 
 }

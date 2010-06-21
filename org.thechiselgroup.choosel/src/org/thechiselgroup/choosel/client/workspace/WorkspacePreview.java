@@ -24,22 +24,22 @@ public class WorkspacePreview {
     private String name;
 
     public WorkspacePreview(Long id, String name, boolean currentWorkspace) {
-	super();
-	this.id = id;
-	this.name = name;
-	this.currentWorkspace = currentWorkspace;
+        super();
+        this.id = id;
+        this.name = name;
+        this.currentWorkspace = currentWorkspace;
     }
 
     public Long getId() {
-	return id;
+        return id;
     }
 
     public String getName() {
-	return name;
+        return name;
     }
 
     public boolean isCurrentWorkspace() {
-	return currentWorkspace;
+        return currentWorkspace;
     }
 
 }

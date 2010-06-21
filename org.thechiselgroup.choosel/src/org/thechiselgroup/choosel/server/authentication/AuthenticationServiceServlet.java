@@ -23,31 +23,31 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
-public class AuthenticationServiceServlet extends RemoteServiceServlet implements
-	AuthenticationService {
+public class AuthenticationServiceServlet extends RemoteServiceServlet
+        implements AuthenticationService {
 
     private AuthenticationService service = null;
 
-    private AuthenticationService getServiceDelegate() {
-	if (service == null) {
-	    service = new DefaultAuthenticationService(UserServiceFactory
-		    .getUserService());
-	}
-
-	assert service != null;
-
-	return service;
-    }
-
     @Override
     public Authentication getAuthentication(String moduleBaseURL)
-	    throws ServiceException {
+            throws ServiceException {
 
-	try {
-	    return getServiceDelegate().getAuthentication(moduleBaseURL);
-	} catch (RuntimeException e) {
-	    Log.error("getAuthentication failed", e);
-	    throw new ServiceException(e);
-	}
+        try {
+            return getServiceDelegate().getAuthentication(moduleBaseURL);
+        } catch (RuntimeException e) {
+            Log.error("getAuthentication failed", e);
+            throw new ServiceException(e);
+        }
+    }
+
+    private AuthenticationService getServiceDelegate() {
+        if (service == null) {
+            service = new DefaultAuthenticationService(
+                    UserServiceFactory.getUserService());
+        }
+
+        assert service != null;
+
+        return service;
     }
 }

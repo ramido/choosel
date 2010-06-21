@@ -15,9 +15,15 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources.ui;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResources;
 
 import org.junit.After;
 import org.junit.Before;
@@ -29,9 +35,6 @@ import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetContainer;
 import org.thechiselgroup.choosel.client.resources.UnmodifiableResourceSet;
-import org.thechiselgroup.choosel.client.resources.ui.HighlightingResourceSetAvatarFactory;
-import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
-import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.test.DndTestHelpers;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
@@ -70,160 +73,160 @@ public class HighlightingResourceSetAvatarFactoryTest {
 
     @Test
     public void addDisposeHook() {
-	underTest.createAvatar(createResources(1));
+        underTest.createAvatar(createResources(1));
 
-	ArgumentCaptor<Disposable> argument = ArgumentCaptor
-		.forClass(Disposable.class);
-	verify(avatar, times(1)).addDisposable(argument.capture());
+        ArgumentCaptor<Disposable> argument = ArgumentCaptor
+                .forClass(Disposable.class);
+        verify(avatar, times(1)).addDisposable(argument.capture());
 
-	argument.getValue().dispose();
+        argument.getValue().dispose();
 
-	verify(dragController, times(1)).removeDragHandler(
-		any(DragHandler.class));
-	verify(handlerRegistration, times(2)).removeHandler();
+        verify(dragController, times(1)).removeDragHandler(
+                any(DragHandler.class));
+        verify(handlerRegistration, times(2)).removeHandler();
     }
 
     @Test
     public void highlightIfUnmodifiableWrapperGetsHighlighted() {
-	DefaultResourceSet wrappedSet = createResources(1);
-	UnmodifiableResourceSet unmodifiableWrapper = new UnmodifiableResourceSet(
-		wrappedSet);
+        DefaultResourceSet wrappedSet = createResources(1);
+        UnmodifiableResourceSet unmodifiableWrapper = new UnmodifiableResourceSet(
+                wrappedSet);
 
-	when(avatar.getResourceSet()).thenReturn(wrappedSet);
+        when(avatar.getResourceSet()).thenReturn(wrappedSet);
 
-	underTest.createAvatar(wrappedSet);
+        underTest.createAvatar(wrappedSet);
 
-	setHoverModel.setResourceSet(unmodifiableWrapper);
+        setHoverModel.setResourceSet(unmodifiableWrapper);
 
-	verify(avatar, times(1)).setHover(true);
+        verify(avatar, times(1)).setHover(true);
     }
 
     @Test
     public void highlightUnmodifiableWrapperIfOtherUnmodifiableWrapperGetsHighlighted() {
-	DefaultResourceSet wrappedSet = createResources(1);
-	UnmodifiableResourceSet unmodifiableWrapper1 = new UnmodifiableResourceSet(
-		wrappedSet);
-	UnmodifiableResourceSet unmodifiableWrapper2 = new UnmodifiableResourceSet(
-		wrappedSet);
+        DefaultResourceSet wrappedSet = createResources(1);
+        UnmodifiableResourceSet unmodifiableWrapper1 = new UnmodifiableResourceSet(
+                wrappedSet);
+        UnmodifiableResourceSet unmodifiableWrapper2 = new UnmodifiableResourceSet(
+                wrappedSet);
 
-	when(avatar.getResourceSet()).thenReturn(unmodifiableWrapper1);
+        when(avatar.getResourceSet()).thenReturn(unmodifiableWrapper1);
 
-	underTest.createAvatar(unmodifiableWrapper1);
+        underTest.createAvatar(unmodifiableWrapper1);
 
-	setHoverModel.setResourceSet(unmodifiableWrapper2);
+        setHoverModel.setResourceSet(unmodifiableWrapper2);
 
-	verify(avatar, times(1)).setHover(true);
+        verify(avatar, times(1)).setHover(true);
     }
 
     @Test
     public void highlightUnmodifiableWrappersIfWrappedSetGetsHighlighted() {
-	DefaultResourceSet wrappedSet = createResources(1);
-	UnmodifiableResourceSet unmodifiableWrapper = new UnmodifiableResourceSet(
-		wrappedSet);
+        DefaultResourceSet wrappedSet = createResources(1);
+        UnmodifiableResourceSet unmodifiableWrapper = new UnmodifiableResourceSet(
+                wrappedSet);
 
-	when(avatar.getResourceSet()).thenReturn(unmodifiableWrapper);
+        when(avatar.getResourceSet()).thenReturn(unmodifiableWrapper);
 
-	underTest.createAvatar(unmodifiableWrapper);
+        underTest.createAvatar(unmodifiableWrapper);
 
-	setHoverModel.setResourceSet(wrappedSet);
+        setHoverModel.setResourceSet(wrappedSet);
 
-	verify(avatar, times(1)).setHover(true);
+        verify(avatar, times(1)).setHover(true);
     }
 
     @Test
     public void hoverClearedAtDragStart() {
-	underTest.createAvatar(resources);
+        underTest.createAvatar(resources);
 
-	ArgumentCaptor<DragHandler> argument = ArgumentCaptor
-		.forClass(DragHandler.class);
-	verify(dragController, times(1)).addDragHandler(argument.capture());
+        ArgumentCaptor<DragHandler> argument = ArgumentCaptor
+                .forClass(DragHandler.class);
+        verify(dragController, times(1)).addDragHandler(argument.capture());
 
-	DragHandler dragHandler = argument.getValue();
+        DragHandler dragHandler = argument.getValue();
 
-	dragHandler.onDragStart(mock(DragStartEvent.class));
+        dragHandler.onDragStart(mock(DragStartEvent.class));
 
-	verify(hoverModel, times(1)).removeAll(eq(resources));
-	verify(setHoverModel, times(1)).setResourceSet((ResourceSet) isNull());
+        verify(hoverModel, times(1)).removeAll(eq(resources));
+        verify(setHoverModel, times(1)).setResourceSet((ResourceSet) isNull());
     }
 
     @Test
     public void mouseOutRemovesResourcesFromHover() {
-	underTest.createAvatar(resources);
+        underTest.createAvatar(resources);
 
-	when(avatar.getResourceSet()).thenReturn(resources);
+        when(avatar.getResourceSet()).thenReturn(resources);
 
-	ArgumentCaptor<MouseOutHandler> captor = ArgumentCaptor
-		.forClass(MouseOutHandler.class);
-	verify(avatar, times(1)).addMouseOutHandler(captor.capture());
+        ArgumentCaptor<MouseOutHandler> captor = ArgumentCaptor
+                .forClass(MouseOutHandler.class);
+        verify(avatar, times(1)).addMouseOutHandler(captor.capture());
 
-	MouseOutHandler mouseOutHandler = captor.getValue();
+        MouseOutHandler mouseOutHandler = captor.getValue();
 
-	mouseOutHandler.onMouseOut(mock(MouseOutEvent.class));
+        mouseOutHandler.onMouseOut(mock(MouseOutEvent.class));
 
-	verify(hoverModel, times(1)).removeAll(eq(resources));
-	verify(setHoverModel, times(1)).setResourceSet((ResourceSet) isNull());
+        verify(hoverModel, times(1)).removeAll(eq(resources));
+        verify(setHoverModel, times(1)).setResourceSet((ResourceSet) isNull());
     }
 
     @Test
     public void mouseOverAddsResourcesToHover() {
-	underTest.createAvatar(resources);
+        underTest.createAvatar(resources);
 
-	when(avatar.getResourceSet()).thenReturn(resources);
+        when(avatar.getResourceSet()).thenReturn(resources);
 
-	ArgumentCaptor<MouseOverHandler> captor = ArgumentCaptor
-		.forClass(MouseOverHandler.class);
-	verify(avatar, times(1)).addMouseOverHandler(captor.capture());
+        ArgumentCaptor<MouseOverHandler> captor = ArgumentCaptor
+                .forClass(MouseOverHandler.class);
+        verify(avatar, times(1)).addMouseOverHandler(captor.capture());
 
-	MouseOverHandler mouseOverHandler = captor.getValue();
+        MouseOverHandler mouseOverHandler = captor.getValue();
 
-	mouseOverHandler.onMouseOver(mock(MouseOverEvent.class));
+        mouseOverHandler.onMouseOver(mock(MouseOverEvent.class));
 
-	verify(hoverModel, times(1)).addAll(eq(resources));
-	verify(setHoverModel, times(1)).setResourceSet(eq(resources));
+        verify(hoverModel, times(1)).addAll(eq(resources));
+        verify(setHoverModel, times(1)).setResourceSet(eq(resources));
     }
 
     @Test
     public void setDragAvatarHoverOnResourceSetContainerEvent() {
-	underTest.createAvatar(resources);
-	setHoverModel.setResourceSet(resources);
+        underTest.createAvatar(resources);
+        setHoverModel.setResourceSet(resources);
 
-	verify(avatar, times(1)).setHover(true);
+        verify(avatar, times(1)).setHover(true);
     }
 
     @Test
     public void setDragAvatarHoverOnResourceSetContainerEventToNull() {
-	underTest.createAvatar(resources);
+        underTest.createAvatar(resources);
 
-	setHoverModel.setResourceSet(resources);
-	setHoverModel.setResourceSet(null);
+        setHoverModel.setResourceSet(resources);
+        setHoverModel.setResourceSet(null);
 
-	verify(avatar, times(1)).setHover(false);
+        verify(avatar, times(1)).setHover(false);
     }
 
     @Before
     public void setUp() throws Exception {
-	MockitoGWTBridge bridge = MockitoGWTBridge.setUp();
-	MockitoAnnotations.initMocks(this);
-	DndTestHelpers.mockDragClientBundle(bridge);
+        MockitoGWTBridge bridge = MockitoGWTBridge.setUp();
+        MockitoAnnotations.initMocks(this);
+        DndTestHelpers.mockDragClientBundle(bridge);
 
-	resources = spy(createResources(1));
-	setHoverModel = spy(new ResourceSetContainer());
+        resources = spy(createResources(1));
+        setHoverModel = spy(new ResourceSetContainer());
 
-	underTest = new HighlightingResourceSetAvatarFactory(delegate, hoverModel,
-		setHoverModel, dragController);
+        underTest = new HighlightingResourceSetAvatarFactory(delegate,
+                hoverModel, setHoverModel, dragController);
 
-	when(delegate.createAvatar(any(ResourceSet.class))).thenReturn(avatar);
+        when(delegate.createAvatar(any(ResourceSet.class))).thenReturn(avatar);
 
-	when(avatar.getResourceSet()).thenReturn(resources);
+        when(avatar.getResourceSet()).thenReturn(resources);
 
-	when(avatar.addMouseOutHandler(any(MouseOutHandler.class))).thenReturn(
-		handlerRegistration);
-	when(avatar.addMouseOverHandler(any(MouseOverHandler.class)))
-		.thenReturn(handlerRegistration);
+        when(avatar.addMouseOutHandler(any(MouseOutHandler.class))).thenReturn(
+                handlerRegistration);
+        when(avatar.addMouseOverHandler(any(MouseOverHandler.class)))
+                .thenReturn(handlerRegistration);
     }
 
     @After
     public void tearDown() {
-	MockitoGWTBridge.tearDown();
+        MockitoGWTBridge.tearDown();
     }
 }

@@ -28,7 +28,7 @@ import org.thechiselgroup.choosel.client.util.HasDescription;
  * to the target set.
  */
 public class AddResourceSetToResourceSetCommand implements UndoableCommand,
-	HasDescription {
+        HasDescription {
 
     protected List<Resource> addedResources = null;
 
@@ -37,48 +37,48 @@ public class AddResourceSetToResourceSetCommand implements UndoableCommand,
     protected ResourceSet modifiedSet;
 
     public AddResourceSetToResourceSetCommand(ResourceSet addedSet,
-	    ResourceSet modifiedSet) {
+            ResourceSet modifiedSet) {
 
-	assert addedSet != null;
-	assert modifiedSet != null;
-	assert modifiedSet.isModifiable();
+        assert addedSet != null;
+        assert modifiedSet != null;
+        assert modifiedSet.isModifiable();
 
-	this.addedSet = addedSet;
-	this.modifiedSet = modifiedSet;
+        this.addedSet = addedSet;
+        this.modifiedSet = modifiedSet;
     }
 
     @Override
     public void execute() {
-	if (addedResources == null) {
-	    addedResources = new ArrayList<Resource>();
-	    addedResources.addAll(addedSet.toList());
-	    addedResources.removeAll(modifiedSet.toList());
-	}
+        if (addedResources == null) {
+            addedResources = new ArrayList<Resource>();
+            addedResources.addAll(addedSet.toList());
+            addedResources.removeAll(modifiedSet.toList());
+        }
 
-	modifiedSet.addAll(addedResources);
+        modifiedSet.addAll(addedResources);
 
-	assert modifiedSet.containsAll(addedSet);
+        assert modifiedSet.containsAll(addedSet);
     }
 
     public ResourceSet getAddedSet() {
-	return addedSet;
+        return addedSet;
     }
 
     @Override
     public String getDescription() {
-	return "Add resource set '" + addedSet.getLabel()
-		+ "' to resource set '" + modifiedSet.getLabel() + "'";
+        return "Add resource set '" + addedSet.getLabel()
+                + "' to resource set '" + modifiedSet.getLabel() + "'";
     }
 
     public ResourceSet getModifiedSet() {
-	return modifiedSet;
+        return modifiedSet;
     }
 
     @Override
     public void undo() {
-	assert modifiedSet.containsAll(addedSet);
+        assert modifiedSet.containsAll(addedSet);
 
-	modifiedSet.removeAll(addedResources);
+        modifiedSet.removeAll(addedResources);
     }
 
 }
