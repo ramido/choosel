@@ -25,18 +25,29 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 
 public abstract class ChartWidget extends Widget {
-
+    
     protected Chart chart;
-    
+
     private ArrayList<Object> chartItemArray = new ArrayList<Object>();
-    
+
     private ArrayList<Double> dataArray = new ArrayList<Double>();
-    
+
+    private ArrayList<Double> dataArrayX = new ArrayList<Double>();
+
+    private ArrayList<Double> dataArrayY = new ArrayList<Double>();
+
     private int height = 0;
-    
+
     private int width = 0;
 
-    protected JavaScriptObject val = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArray));
+    protected JavaScriptObject val = ArrayUtils.toJsArray(ArrayUtils
+	    .toDoubleArray(dataArray));
+
+    protected JavaScriptObject valX = ArrayUtils.toJsArray(ArrayUtils
+	    .toDoubleArray(dataArrayX));
+
+    protected JavaScriptObject valY = ArrayUtils.toJsArray(ArrayUtils
+	    .toDoubleArray(dataArrayY));
 
     public ChartWidget() {
 	setElement(DOM.createDiv());
@@ -44,9 +55,19 @@ public abstract class ChartWidget extends Widget {
 
     public void addEvent(ChartItem chartItem) {
 	chartItemArray.add(chartItem);
-	dataArray.add(Double.valueOf(chartItem.getResourceSet().getFirstResource().getValue(
-		"magnitude").toString()));
-	val = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArray));
+	if (chartItem.getResourceSet().getFirstResource().getUri()
+		.startsWith("earthquake")) {
+	    dataArray.add(Double.valueOf(chartItem.getResourceSet()
+		    .getFirstResource().getValue("magnitude").toString()));
+	    val = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArray));
+	} else {
+	    dataArrayX.add(Double.valueOf(chartItem.getResourceSet()
+		    .getFirstResource().getValue("x-coord").toString()));
+	    dataArrayY.add(Double.valueOf(chartItem.getResourceSet()
+		    .getFirstResource().getValue("y-coord").toString()));
+	    valX = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArrayX));
+	    valY = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArrayY));
+	}
 	updateChart();
     }
 
@@ -69,6 +90,20 @@ public abstract class ChartWidget extends Widget {
 	return dataArray;
     }
 
+    protected double getMaxDataValue() {
+	if(dataArray.isEmpty()) return 0;
+	double max = dataArray.get(0);
+        for (int i = 1; i < dataArray.size(); i++) if (dataArray.get(i) > max) max = dataArray.get(i);
+        return max;
+    }
+        
+    protected double getMinDataValue() {
+	if(dataArray.isEmpty()) return 0;
+	double min = dataArray.get(0);
+        for (int i = 1; i < dataArray.size(); i++) if (dataArray.get(i) < min) min = dataArray.get(i);
+        return min;
+    }
+    
     @Override
     protected void onAttach() {
 	super.onAttach();
@@ -77,11 +112,11 @@ public abstract class ChartWidget extends Widget {
 	    updateChart();
     }
 
-    protected void onBrushEvent(int index) {
+    protected void onBrushEvent(int index, boolean isBrushed) {
 	ChartItem chartItem = getChartItem(index);
-	chartItem.onBrushEvent();
+	chartItem.onBrushEvent(isBrushed);
     }
-    
+
     protected void onEvent(int index, Event e) {
 	ChartItem chartItem = getChartItem(index);
 	chartItem.onEvent(e);
@@ -90,31 +125,31 @@ public abstract class ChartWidget extends Widget {
     protected native Chart registerEvents() /*-{
         var chart = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chart,
         thisChart = this;
-        
+
         return chart.event("click",function() 
-            	{thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onEvent(ILcom/google/gwt/user/client/Event;)
-            	    (this.index,$wnd.pv.event);})
+            	{$entry(thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onEvent(ILcom/google/gwt/user/client/Event;)
+            	    (this.index,$wnd.pv.event));})
             .event("mousedown",function() 
-            	{thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onEvent(ILcom/google/gwt/user/client/Event;)
-            	    (this.index,$wnd.pv.event);})
+            	{$entry(thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onEvent(ILcom/google/gwt/user/client/Event;)
+            	    (this.index,$wnd.pv.event));})
             .event("mousemove",function() 
-            	{thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onEvent(ILcom/google/gwt/user/client/Event;)
-            	    (this.index,$wnd.pv.event);})
+            	{$entry(thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onEvent(ILcom/google/gwt/user/client/Event;)
+            	    (this.index,$wnd.pv.event));})
             .event("mouseout",function() 
-            	{thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onEvent(ILcom/google/gwt/user/client/Event;)
-            	    (this.index,$wnd.pv.event);})
+            	{$entry(thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onEvent(ILcom/google/gwt/user/client/Event;)
+            	    (this.index,$wnd.pv.event));})
             .event("mouseover",function() 
-            	{thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onEvent(ILcom/google/gwt/user/client/Event;)
-            	    (this.index,$wnd.pv.event);})
+            	{$entry(thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onEvent(ILcom/google/gwt/user/client/Event;)
+            	    (this.index,$wnd.pv.event));})
             .event("mouseup",function() 
-            	{thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onEvent(ILcom/google/gwt/user/client/Event;)
-            	    (this.index,$wnd.pv.event);});
+            	{$entry(thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onEvent(ILcom/google/gwt/user/client/Event;)
+            	    (this.index,$wnd.pv.event));});
     }-*/;
 
     protected native Chart registerFillStyle() /*-{
         var chart = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chart,
         thisChart = this;
-        
+
         return chart.fillStyle(function() {
             return thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::getChartItem(I)(this.index)
                	    .@org.thechiselgroup.choosel.client.views.chart.ChartItem::getColour()();});
@@ -129,7 +164,7 @@ public abstract class ChartWidget extends Widget {
 
     public native void renderChart() /*-{
         var chart = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chart;
-	chart.root.render();
+        chart.root.render();
     }-*/;
 
     public void resize(int width, int height) {
@@ -141,20 +176,15 @@ public abstract class ChartWidget extends Widget {
     public void setDataArray(ArrayList<Double> dataArray) {
 	this.dataArray = dataArray;
     }
-    
+
     public void updateChart() {
 	chart = Chart.create(getElement(), width, height);
 	chart = drawChart(width, height);
-	if(chartItemArray.size() != 0) {
+	if (chartItemArray.size() != 0) {
 	    chart = registerFillStyle();
 	    chart = registerEvents();
 	}
 	renderChart();
     }
-    
-    protected void setBrushingSelection(int index) {
-	ChartItem chartItem = getChartItem(index);
-	chartItem.setBrushingSelection();
-    }
-    
+
 }

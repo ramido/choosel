@@ -27,6 +27,10 @@ public final class ResourcesTestHelper {
 
     public static final String LABEL_KEY = "label-key";
 
+    public static final String X_COORD = "x-coord";
+
+    public static final String Y_COORD = "y-coord";
+
     public static DefaultResourceSet createLabeledResources(int... indices) {
 	return createLabeledResources(LABEL, DEFAULT_TYPE, indices);
     }
@@ -50,7 +54,9 @@ public final class ResourcesTestHelper {
 
     public static Resource createResource(String type, int index) {
 	Resource r = new Resource(type + ":" + index);
-	r.putValue(LABEL_KEY, index + "-value");
+	r.putValue(X_COORD, Math.random()*10);
+	r.putValue(Y_COORD, Math.random()*10);
+	r.putValue(LABEL_KEY, r.getValue(X_COORD) + " " + r.getValue(Y_COORD));
 	return r;
     }
 

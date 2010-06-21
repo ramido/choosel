@@ -6,10 +6,13 @@ public class DotChart extends ChartWidget {
     public native Chart drawChart(int width, int height) /*-{
         var chart = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chart,
         val = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::val,
-        thisChart = this, s, isBrushed = new Array();
-
+        thisChart = this,
+        s,
+        isBrushed = new Array(),
+        selectBoxAlpha = .42;
+        
         var selectBox = chart.add($wnd.pv.Panel)
-            .data([{x:20, y:20, dx:100, dy:100}])
+            .data([{x:0, y:0, dx:0, dy:0}])
             .events("all")
             .event("mousedown", $wnd.pv.Behavior.select())
             .event("selectstart", removeBoxes)
@@ -21,61 +24,133 @@ public class DotChart extends ChartWidget {
             .top(function(d) {return d.y;})
             .width(function(d) {return d.dx;})
             .height(function(d) {return d.dy;})
-            .fillStyle("rgba(256,256,0,.3)")
-            .strokeStyle("rgba(256,256,0,.6)");
-
-        var dot = chart.add($wnd.pv.Dot)
-            .data(val)
-            .bottom(function(d) {return d * height / 10;})
-            .left(function() {return this.index * width / val.length;})
-            .strokeStyle(null)
-            .fillStyle(function(d) {return (s && ((this.index * width / val.length < s.x1) || (this.index * width / val.length > s.x2)
-                || (height - (d * height / 10) < s.y1) || (height - (d * height / 10) > s.y2)) || !s
-                ? "steelblue" : "rgba(256,256,0,.6)");});
-
-        var plusBox = selectBox.add($wnd.pv.Bar)
-            .visible(false)
-            .left(function(d) {return d.x + d.dx - 30;})
-            .top(function(d) {return d.y + d.dy - 15;})
-            .width(15)
-            .height(15)
-            .fillStyle("rgba(256,256,0,.3)")
-            .strokeStyle("rgba(256,256,0,.6)")
-            .event("mousedown", updatePlus);
-
-        var plus = plusBox.anchor("center").add($wnd.pv.Label)
-            .visible(false)
-            .text("+")
-            .font("bold");
+//	    .event("mouseout", fadeOut)
+            .fillStyle("rgba(193,217,241,"+selectBoxAlpha+")")
+            .strokeStyle("rgba(0,0,0,"+selectBoxAlpha+")")
+            .lineWidth(.5);
 
         var minusBox = selectBox.add($wnd.pv.Bar)
-            .visible(false)
             .left(function(d) {return d.x + d.dx - 15;})
             .top(function(d) {return d.y + d.dy - 15;})
             .width(15)
             .height(15)
-            .fillStyle("rgba(256,256,0,.3)")
-            .strokeStyle("rgba(256,256,0,.6)")
-            .event("mousedown", updateMinus);
+            .strokeStyle("rgba(0,0,0,"+selectBoxAlpha+")")
+            .lineWidth(.5)
+            .event("mousedown", function(d) {
+                var doReturn;
+                for(var i = 0; i < val.length; i++) {
+                    if(isInSelectBox(d,i) && isBrushed[i]) {
+                	updateMinus(d,i);
+                	doReturn = true;
+                    }
+                }
+                if(doReturn == true) {
+                    removeBoxes(d);
+                    return (s = null, chart);
+                }})
+            .event("mouseover", function(d) {
+                for(var i = 0; i < val.length; i++) {
+                    if(isInSelectBox(d,i) && isBrushed[i]) {
+                        return this.fillStyle("FFFFE1");
+                    }
+                }})
+            .event("mouseout", function() {return this.fillStyle("rgba(193,217,241,"+selectBoxAlpha+")");});
 
         var minus = minusBox.anchor("center").add($wnd.pv.Label)
             .visible(false)
             .text("–")
+            .textStyle("rgba(0,0,0,.25)")
             .font("bold");
 
+        var plusBox = selectBox.add($wnd.pv.Bar)
+            .left(function(d) {return d.x + d.dx - 30;})
+            .top(function(d) {return d.y + d.dy - 15;})
+            .width(15)
+            .height(15)
+            .strokeStyle("rgba(0,0,0,.35)")
+            .lineWidth(.5)
+            .event("mousedown", function(d) {
+                var doReturn;
+                for(var i = 0; i < val.length; i++) {
+                    if(isInSelectBox(d,i) && !isBrushed[i]) {
+                	updatePlus(d,i);
+                	doReturn = true;
+                    }
+                }
+                if(doReturn == true) {
+                    removeBoxes(d);
+                    return (s = null, chart);
+                }})
+            .event("mouseover", function(d) {
+                for(var i = 0; i < val.length; i++) {
+                    if(isInSelectBox(d,i) && !isBrushed[i]) {
+                        return this.fillStyle("FFFFE1");
+                    }
+                }})
+            .event("mouseout", function() {return this.fillStyle("rgba(193,217,241,"+selectBoxAlpha+")");});
+
+        var plus = plusBox.anchor("center").add($wnd.pv.Label)
+            .visible(false)
+            .text("+")
+            .textStyle("rgba(0,0,0,.25)")
+            .font("bold");
+
+        var dot = chart.add($wnd.pv.Dot)
+            .data(val)
+            .cursor("pointer")
+            .bottom(function(d) {return d * height / 10;})
+            .left(function() {return this.index * width / val.length;})
+            .strokeStyle("rgba(0,0,0,.35)")
+            .fillStyle(function(d) {return (s && ((this.index * width / val.length < s.x1) || (this.index * width / val.length > s.x2)
+                || (height - (d * height / 10) < s.y1) || (height - (d * height / 10) > s.y2)) || !s
+                ? thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::getChartItem(I)(this.index)
+               	    .@org.thechiselgroup.choosel.client.views.chart.ChartItem::getColour()() : "rgba(256,256,0,.6)");});
+
         function addBoxes(d) {
-            plusBox.visible(true);
-            plus.visible(true);
-            minusBox.visible(true);
-            minus.visible(true);
-            this.render();
+            for(var i = 0; i < val.length; i++) {
+                if(isInSelectBox(d,i)) {
+                    if(!isBrushed[i]) {
+                        plus.textStyle("black");
+                    }
+                    if(isBrushed[i]) {
+                        minus.textStyle("black");
+                    }
+                    plusBox.visible(true);
+            	    plus.visible(true);
+            	    minusBox.visible(true);
+           	    minus.visible(true);
+            	    update(d);
+                }
+            }
         }
+            
+        function fadeOut() {
+            fade = setInterval(function() {
+            	selectBoxAlpha = selectBoxAlpha - .01;
+            	if(selectBoxAlpha <= 0.005) {
+            	    clearInterval(fade);
+            	    fade = null;
+                    return (s = null, chart, selectBoxAlpha = .42);
+            	}
+            	selectBox.fillStyle("rgba(193,217,241,"+selectBoxAlpha+")");
+            	selectBox.strokeStyle("rgba(0,0,0,"+selectBoxAlpha+")");
+            	selectBox.render();
+            }, 100); 
+        }
+
+	function isInSelectBox(d,i) {
+	    return (i * width / val.length >= d.x) && (i * width / val.length <= d.x + d.dx)
+                && (height - (val[i] * height / 10) >= d.y) && (height - (val[i] * height / 10) <= d.y + d.dy);
+	}
 
         function removeBoxes(d) {
             plusBox.visible(false);
             plus.visible(false);
+            plus.textStyle("rgba(0,0,0,.25)");
             minusBox.visible(false);
             minus.visible(false);
+            minus.textStyle("rgba(0,0,0,.25)");
+            update(d);
             this.render();
         }
 
@@ -88,46 +163,19 @@ public class DotChart extends ChartWidget {
             dot.context(null, 0, function() {return this.render();});
         }
 
-        function updatePlus(d) {
-            s = d;
-            s.x1 = d.x;
-            s.x2 = d.x + d.dx;
-            s.y1 = d.y;
-            s.y2 = d.y + d.dy;
-            dot.context(null, 0, function() {return this.render();});
-
-            var i;
-            for(i = 0; i < val.length; i++) {
-                if((i * width / val.length >= s.x1) && (i * width / val.length <= s.x2)
-                && (height - (val[i] * height / 10) >= s.y1) && (height - (val[i] * height / 10) <= s.y2)
-                && isBrushed[i] != true) {
-            	    thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onBrushEvent(I)(i);
-            	    isBrushed[i] = true;
-                }
-            }
+        function updateMinus(d,i) {
+            update(d);
+            thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onBrushEvent(IZ)(i,false);
+            isBrushed[i] = false;
         }
 
-        function updateMinus(d) {
-            s = d;
-            s.x1 = d.x;
-            s.x2 = d.x + d.dx;
-            s.y1 = d.y;
-            s.y2 = d.y + d.dy;
-            dot.context(null, 0, function() {return this.render();});
-
-            var i;
-            for(i = 0; i < val.length; i++) {
-                if((i * width / val.length >= s.x1) && (i * width / val.length <= s.x2)
-                && (height - (val[i] * height / 10) >= s.y1) && (height - (val[i] * height / 10) <= s.y2)
-                && isBrushed[i] == true) {
-            	    thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onBrushEvent(I)(i);
-            	    isBrushed[i] = false;
-                }
-            }
+        function updatePlus(d,i) {
+            update(d);
+    	    thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onBrushEvent(IZ)(i,true);
+       	    isBrushed[i] = true;
         }
 
         return dot;
     }-*/;
-
 
 }
