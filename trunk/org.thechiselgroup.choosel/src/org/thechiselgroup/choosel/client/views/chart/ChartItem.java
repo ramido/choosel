@@ -33,25 +33,7 @@ public class ChartItem extends ResourceItem {
 
     private ChartViewContentDisplay view;
 
-    private BarViewContentDisplay view1;
-
-    private PieViewContentDisplay view2;
-
-    private DotViewContentDisplay view3;
-
-    private ScatterViewContentDisplay view4;
-
     public DragEnabler enabler;
-
-    public ChartItem(ResourceSet resources, BarViewContentDisplay view1,
-            PopupManager popupManager, ResourceSet hoverModel,
-            Layer layerModel, DragEnablerFactory dragEnablerFactory) {
-
-        super(resources, hoverModel, popupManager, layerModel);
-
-        this.view1 = view1;
-        enabler = dragEnablerFactory.createDragEnabler(this);
-    }
 
     public ChartItem(ResourceSet resources, ChartViewContentDisplay view,
             PopupManager popupManager, ResourceSet hoverModel,
@@ -60,36 +42,6 @@ public class ChartItem extends ResourceItem {
         super(resources, hoverModel, popupManager, layerModel);
 
         this.view = view;
-        enabler = dragEnablerFactory.createDragEnabler(this);
-    }
-
-    public ChartItem(ResourceSet resources, DotViewContentDisplay view3,
-            PopupManager popupManager, ResourceSet hoverModel,
-            Layer layerModel, DragEnablerFactory dragEnablerFactory) {
-
-        super(resources, hoverModel, popupManager, layerModel);
-
-        this.view3 = view3;
-        enabler = dragEnablerFactory.createDragEnabler(this);
-    }
-
-    public ChartItem(ResourceSet resources, PieViewContentDisplay view2,
-            PopupManager popupManager, ResourceSet hoverModel,
-            Layer layerModel, DragEnablerFactory dragEnablerFactory) {
-
-        super(resources, hoverModel, popupManager, layerModel);
-
-        this.view2 = view2;
-        enabler = dragEnablerFactory.createDragEnabler(this);
-    }
-
-    public ChartItem(ResourceSet resources, ScatterViewContentDisplay view4,
-            PopupManager popupManager, ResourceSet hoverModel,
-            Layer layerModel, DragEnablerFactory dragEnablerFactory) {
-
-        super(resources, hoverModel, popupManager, layerModel);
-
-        this.view4 = view4;
         enabler = dragEnablerFactory.createDragEnabler(this);
     }
 
@@ -114,18 +66,6 @@ public class ChartItem extends ResourceItem {
         if (view != null) {
             view.getCallback().switchSelection(getResourceSet());
         }
-        if (view1 != null) {
-            view1.getCallback().switchSelection(getResourceSet());
-        }
-        if (view2 != null) {
-            view2.getCallback().switchSelection(getResourceSet());
-        }
-        if (view3 != null) {
-            view3.getCallback().switchSelection(getResourceSet());
-        }
-        if (view4 != null) {
-            view4.getCallback().switchSelection(getResourceSet());
-        }
     }
 
     public void onEvent(Event e) {
@@ -134,18 +74,6 @@ public class ChartItem extends ResourceItem {
             case Event.ONCLICK: {
                 if (view != null) {
                     view.getCallback().switchSelection(getResourceSet());
-                }
-                if (view1 != null) {
-                    view1.getCallback().switchSelection(getResourceSet());
-                }
-                if (view2 != null) {
-                    view2.getCallback().switchSelection(getResourceSet());
-                }
-                if (view3 != null) {
-                    view3.getCallback().switchSelection(getResourceSet());
-                }
-                if (view4 != null) {
-                    view4.getCallback().switchSelection(getResourceSet());
                 }
             }
                 break;
@@ -185,18 +113,6 @@ public class ChartItem extends ResourceItem {
     protected void setStatusStyling(Status status) {
         if (view != null) {
             view.getChartWidget().renderChart();
-        }
-        if (view1 != null) {
-            view1.getChartWidget().renderChart();
-        }
-        if (view2 != null) {
-            view2.getChartWidget().renderChart();
-        }
-        if (view3 != null) {
-            view3.getChartWidget().renderChart();
-        }
-        if (view4 != null) {
-            view4.getChartWidget().renderChart();
         }
     }
 

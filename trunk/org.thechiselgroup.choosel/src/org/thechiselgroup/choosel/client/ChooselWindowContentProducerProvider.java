@@ -24,7 +24,6 @@ import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionCo
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.HOVER_MODEL;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.LABEL_PROVIDER_SELECTION_SET;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_BAR;
-import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_CHART;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_DOT;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_GRAPH;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_LIST;
@@ -155,12 +154,6 @@ public class ChooselWindowContentProducerProvider implements
     @Inject
     public void registerBar(@Named(TYPE_BAR) ViewContentDisplayFactory factory) {
         registerViewContentDisplayFactory(TYPE_BAR, factory);
-    }
-
-    @Inject
-    public void registerChart(
-            @Named(TYPE_CHART) ViewContentDisplayFactory factory) {
-        registerViewContentDisplayFactory(TYPE_CHART, factory);
     }
 
     @Inject
