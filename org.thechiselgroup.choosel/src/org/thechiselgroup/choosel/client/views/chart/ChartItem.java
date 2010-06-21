@@ -22,6 +22,7 @@ import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.Layer;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.user.client.Event;
 
 public class ChartItem extends ResourceItem {
@@ -34,6 +35,7 @@ public class ChartItem extends ResourceItem {
     private BarViewContentDisplay view1;
     private PieViewContentDisplay view2;
     private DotViewContentDisplay view3;
+    private ScatterViewContentDisplay view4;
 
     public DragEnabler enabler;
     
@@ -77,7 +79,19 @@ public class ChartItem extends ResourceItem {
 	enabler = dragEnablerFactory.createDragEnabler(this);
     }
     
-    public void onBrushEvent() {
+    public ChartItem(ResourceSet resources, ScatterViewContentDisplay view4,
+	    PopupManager popupManager, ResourceSet hoverModel,
+	    Layer layerModel, DragEnablerFactory dragEnablerFactory) {
+	
+	super(resources, hoverModel, popupManager, layerModel);
+
+	this.view4 = view4;
+	enabler = dragEnablerFactory.createDragEnabler(this);
+    }
+    
+    public void onBrushEvent(boolean isBrushed) {
+	if((isSelected() && isBrushed) || (!isSelected() && !isBrushed))
+	    return;
 	if(view != null)
 	    view.getCallback().switchSelection(getResourceSet());
 	if(view1 != null)
@@ -86,6 +100,8 @@ public class ChartItem extends ResourceItem {
 	    view2.getCallback().switchSelection(getResourceSet());
 	if(view3 != null)
 	    view3.getCallback().switchSelection(getResourceSet());
+	if(view4 != null)
+	    view4.getCallback().switchSelection(getResourceSet());
     }
     
     public void onEvent(Event e) {
@@ -99,11 +115,14 @@ public class ChartItem extends ResourceItem {
 		view2.getCallback().switchSelection(getResourceSet());
 	    if(view3 != null)
 		view3.getCallback().switchSelection(getResourceSet());
+	    if(view4 != null)
+		view4.getCallback().switchSelection(getResourceSet());
 	}
 	    break;
 	case Event.ONMOUSEMOVE: {
-	    popupManager.onMouseMove(e.getClientX(), e.getClientY());
+	    try {popupManager.onMouseMove(e.getClientX(), e.getClientY());
 	    enabler.forwardMouseMove(e);
+	    } catch(Exception ex) { Log.error(ex.getMessage(), ex); }
 	}
 	    break;
 	case Event.ONMOUSEDOWN: {
@@ -139,6 +158,8 @@ public class ChartItem extends ResourceItem {
 	    view2.getChartWidget().renderChart();
 	if(view3 != null)
 	    view3.getChartWidget().renderChart();
+	if(view4 != null)
+	    view4.getChartWidget().renderChart();
     }
     
     public String getColour() {
@@ -153,17 +174,6 @@ public class ChartItem extends ResourceItem {
 	    return colours[1];
 	}
 	throw new RuntimeException("No colour available");
-    }
-    
-    public void setBrushingSelection() {
-	if(view != null)
-	    view.getCallback().switchSelection(getResourceSet());
-	if(view1 != null)
-	    view1.getCallback().switchSelection(getResourceSet());
-	if(view2 != null)
-	    view2.getCallback().switchSelection(getResourceSet());
-	if(view3 != null)
-	    view3.getCallback().switchSelection(getResourceSet());
     }
 
 }

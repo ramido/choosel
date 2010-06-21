@@ -33,6 +33,8 @@ public interface ChooselInjectionConstants {
 
     String TYPE_DOT = "Dot";
 
+    String TYPE_SCATTER = "Scatter";
+
     String DROP_TARGET_MANAGER_VIEW_CONTENT = "drop-target-manager-view-content";
 
     String HOVER_MODEL = "hoverModel";

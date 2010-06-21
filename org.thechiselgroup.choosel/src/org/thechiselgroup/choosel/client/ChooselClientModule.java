@@ -33,11 +33,13 @@ import org.thechiselgroup.choosel.client.label.MappingCategoryLabelProvider;
 import org.thechiselgroup.choosel.client.label.ResourceSetLabelFactory;
 import org.thechiselgroup.choosel.client.label.SelectionModelLabelFactory;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceManager;
+import org.thechiselgroup.choosel.client.resources.DefaultResourceMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.ManagedResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ResourceByUriTypeCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceManager;
+import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetContainer;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
@@ -81,6 +83,7 @@ import org.thechiselgroup.choosel.client.views.chart.BarViewContentDisplayFactor
 import org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.chart.DotViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.chart.PieViewContentDisplayFactory;
+import org.thechiselgroup.choosel.client.views.chart.ScatterViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.graph.ArcStyleProvider;
 import org.thechiselgroup.choosel.client.views.graph.DefaultArcStyleProvider;
 import org.thechiselgroup.choosel.client.views.graph.DefaultGraphExpansionRegistry;
@@ -215,6 +218,8 @@ public class ChooselClientModule extends AbstractGinModule implements
 		PieViewContentDisplayFactory.class);
 	bindViewContentDisplayFactory(TYPE_DOT,
 		DotViewContentDisplayFactory.class);
+	bindViewContentDisplayFactory(TYPE_SCATTER,
+		ScatterViewContentDisplayFactory.class);
     }
 
     protected void bindViewContentDisplayFactory(
@@ -292,6 +297,7 @@ public class ChooselClientModule extends AbstractGinModule implements
 
 	bind(ResourceCategorizer.class).to(ResourceByUriTypeCategorizer.class)
 		.in(Singleton.class);
+	bind(ResourceMultiCategorizer.class).to(DefaultResourceMultiCategorizer.class).in(Singleton.class);
 	bind(CategoryLabelProvider.class).to(getCategoryLabelProviderClass())
 		.in(Singleton.class);
 

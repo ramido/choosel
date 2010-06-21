@@ -177,9 +177,15 @@ public class ChooselWindowContentProducerProvider implements
     }
     
     @Inject
-    public void registerLine(
+    public void registerDot(
 	    @Named(TYPE_DOT) ViewContentDisplayFactory factory) {
 	registerViewContentDisplayFactory(TYPE_DOT, factory);
+    }
+
+    @Inject
+    public void registerScatter(
+	    @Named(TYPE_SCATTER) ViewContentDisplayFactory factory) {
+	registerViewContentDisplayFactory(TYPE_SCATTER, factory);
     }
 
     private void registerViewContentDisplayFactory(String contentType,

@@ -158,6 +158,7 @@ public class ChooselExampleApplication extends ChooselApplication {
 	addWindowContentButton(VIEWS_PANEL, "Bar", "Bar");
 	addWindowContentButton(VIEWS_PANEL, "Pie", "Pie");
 	addWindowContentButton(VIEWS_PANEL, "Dot", "Dot");
+	addWindowContentButton(VIEWS_PANEL, "Scatter", "Scatter");
     }
 
     @Override

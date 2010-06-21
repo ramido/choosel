@@ -8,7 +8,6 @@ public class DefaultResourceMultiCategorizer implements
 
     @Override
     public Set<String> getCategories(Resource resource) {
-	// TODO Auto-generated method stub
 	Set<String> categories = new HashSet<String>();
 	String description = (String) (resource.getValue("description"));
 
