@@ -19,18 +19,18 @@ public abstract class AbstractResourceContainer implements ResourceContainer {
 
     @Override
     public final void addAll(Iterable<Resource> resources) {
-	assert resources != null;
-	for (Resource resource : resources) {
-	    add(resource);
-	}
+        assert resources != null;
+        for (Resource resource : resources) {
+            add(resource);
+        }
     }
 
     @Override
     public final void removeAll(Iterable<Resource> resources) {
-	assert resources != null;
-	for (Resource resource : resources) {
-	    remove(resource);
-	}
+        assert resources != null;
+        for (Resource resource : resources) {
+            remove(resource);
+        }
     }
 
 }

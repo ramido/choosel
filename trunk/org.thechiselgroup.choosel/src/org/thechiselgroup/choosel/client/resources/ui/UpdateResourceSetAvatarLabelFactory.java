@@ -18,21 +18,21 @@ package org.thechiselgroup.choosel.client.resources.ui;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
 public class UpdateResourceSetAvatarLabelFactory extends
-	DelegatingResourceSetAvatarFactory {
+        DelegatingResourceSetAvatarFactory {
 
     public UpdateResourceSetAvatarLabelFactory(ResourceSetAvatarFactory delegate) {
-	super(delegate);
+        super(delegate);
     }
 
     @Override
     public ResourceSetAvatar createAvatar(ResourceSet resources) {
-	final ResourceSetAvatar avatar = delegate.createAvatar(resources);
+        final ResourceSetAvatar avatar = delegate.createAvatar(resources);
 
-	UpdateResourceSetAvatarWhenLabelChangesManager manager = new UpdateResourceSetAvatarWhenLabelChangesManager(
-		avatar);
-	manager.init();
+        UpdateResourceSetAvatarWhenLabelChangesManager manager = new UpdateResourceSetAvatarWhenLabelChangesManager(
+                avatar);
+        manager.init();
 
-	return avatar;
+        return avatar;
     }
 
 }

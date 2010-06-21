@@ -27,43 +27,44 @@ public abstract class DefaultSlotResolver implements SlotResolver {
 
     @Override
     public ResourceSetToValueResolver createColorSlotResolver(String category,
-	    List<Layer> layers) {
+            List<Layer> layers) {
 
-	String color = COLORS[layers.size()];
-	return new FixedValuePropertyValueResolver(color);
+        String color = COLORS[layers.size()];
+        return new FixedValuePropertyValueResolver(color);
     }
 
     @Override
     public ResourceSetToValueResolver createDateSlotResolver(String type) {
-	return new SimplePropertyValueResolver("date");
+        return new SimplePropertyValueResolver("date");
     }
 
     @Override
-    public ResourceSetToValueResolver createGraphLabelSlotResolver(String category) {
-	return createDescriptionSlotResolver(category);
+    public ResourceSetToValueResolver createGraphLabelSlotResolver(
+            String category) {
+        return createDescriptionSlotResolver(category);
     }
 
     @Override
     public ResourceSetToValueResolver createGraphNodeBackgroundColorResolver(
-	    String category) {
+            String category) {
 
-	return new FixedValuePropertyValueResolver("#DAE5F3");
+        return new FixedValuePropertyValueResolver("#DAE5F3");
     }
 
     @Override
     public ResourceSetToValueResolver createGraphNodeBorderColorResolver(
-	    String category) {
+            String category) {
 
-	return new FixedValuePropertyValueResolver("#AFC6E5");
+        return new FixedValuePropertyValueResolver("#AFC6E5");
     }
 
     @Override
     public ResourceSetToValueResolver createLabelSlotResolver(String category) {
-	return new FixedValuePropertyValueResolver("");
+        return new FixedValuePropertyValueResolver("");
     }
 
     @Override
     public ResourceSetToValueResolver createLocationSlotResolver(String category) {
-	return new SimplePropertyValueResolver("location");
+        return new SimplePropertyValueResolver("location");
     }
 }

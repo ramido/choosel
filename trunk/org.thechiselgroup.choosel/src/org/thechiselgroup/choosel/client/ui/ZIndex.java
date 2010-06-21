@@ -32,12 +32,12 @@ public final class ZIndex {
 
     public static final String Z_INDEX_ATTRIBUTE = "zIndex";
 
-    public static void setZIndex(Element element, int zIndex) {
-	DOM.setIntStyleAttribute(element, Z_INDEX_ATTRIBUTE, zIndex);
+    public static int getZIndex(Element element) {
+        return DOM.getIntStyleAttribute(element, Z_INDEX_ATTRIBUTE);
     }
 
-    public static int getZIndex(Element element) {
-	return DOM.getIntStyleAttribute(element, Z_INDEX_ATTRIBUTE);
+    public static void setZIndex(Element element, int zIndex) {
+        DOM.setIntStyleAttribute(element, Z_INDEX_ATTRIBUTE, zIndex);
     }
 
     private ZIndex() {

@@ -35,73 +35,73 @@ public class DefaultAuthenticationManager implements AuthenticationManager {
 
     @Inject
     public DefaultAuthenticationManager(
-	    AuthenticationServiceAsync authenticationService) {
+            AuthenticationServiceAsync authenticationService) {
 
-	assert authenticationService != null;
+        assert authenticationService != null;
 
-	this.authenticationService = authenticationService;
+        this.authenticationService = authenticationService;
 
-	init();
+        init();
     }
 
     @Override
     public HandlerRegistration addAuthenticationStateChangedEventHandler(
-	    AuthenticationStateChangedEventHandler handler) {
+            AuthenticationStateChangedEventHandler handler) {
 
-	assert handler != null;
+        assert handler != null;
 
-	return this.handlerManager.addHandler(
-		AuthenticationStateChangedEvent.TYPE, handler);
+        return this.handlerManager.addHandler(
+                AuthenticationStateChangedEvent.TYPE, handler);
     }
 
     @Override
     public Authentication getAuthentication() {
-	return authentication;
+        return authentication;
     }
 
     @Override
     public AuthenticationState getAuthenticationState() {
-	return state;
+        return state;
     }
 
     @Override
     public Throwable getFailure() {
-	return failure;
+        return failure;
     }
 
     private void init() {
-	// TODO extract static call to Window.Location.Href
-	authenticationService.getAuthentication(Window.Location.getHref(),
-		new AsyncCallback<Authentication>() {
-		    @Override
-		    public void onFailure(Throwable caught) {
-			failure = caught;
-			setState(AuthenticationState.FAILED);
-		    }
+        // TODO extract static call to Window.Location.Href
+        authenticationService.getAuthentication(Window.Location.getHref(),
+                new AsyncCallback<Authentication>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        failure = caught;
+                        setState(AuthenticationState.FAILED);
+                    }
 
-		    @Override
-		    public void onSuccess(Authentication result) {
-			authentication = result;
+                    @Override
+                    public void onSuccess(Authentication result) {
+                        authentication = result;
 
-			if (result.isSignedIn()) {
-			    setState(AuthenticationState.SIGNED_IN);
-			} else {
-			    setState(AuthenticationState.SIGNED_OUT);
-			}
-		    }
-		});
+                        if (result.isSignedIn()) {
+                            setState(AuthenticationState.SIGNED_IN);
+                        } else {
+                            setState(AuthenticationState.SIGNED_OUT);
+                        }
+                    }
+                });
 
-	setState(AuthenticationState.WAITING);
+        setState(AuthenticationState.WAITING);
     }
 
     private void setState(AuthenticationState newState) {
-	if (newState == this.state) {
-	    return;
-	}
+        if (newState == this.state) {
+            return;
+        }
 
-	this.state = newState;
+        this.state = newState;
 
-	handlerManager.fireEvent(new AuthenticationStateChangedEvent(this,
-		newState));
+        handlerManager.fireEvent(new AuthenticationStateChangedEvent(this,
+                newState));
     }
 }

@@ -24,38 +24,38 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 public class Node {
 
+    private static Node create(JavaScriptObject nativeNode) {
+        return new Node(nativeNode);
+    }
+
     private JavaScriptObject nativeNode;
 
     public Node(JavaScriptObject nativeNode) {
-	this.nativeNode = nativeNode;
+        this.nativeNode = nativeNode;
     }
 
     native List<Node> getNodes(String xpathExpression, List<Node> result) /*-{
-        var nativeNode = this.@org.thechiselgroup.choosel.client.util.xslt.Node::nativeNode;
+                                                                          var nativeNode = this.@org.thechiselgroup.choosel.client.util.xslt.Node::nativeNode;
 
-        var nodes = nativeNode.selectNodes(xpathExpression);
-        for (var i = 0; i < nodes.length; i++) {
-        result.@java.util.List::add(Ljava/lang/Object;)( @org.thechiselgroup.choosel.client.util.xslt.Node::create(Lcom/google/gwt/core/client/JavaScriptObject;)(nodes[i]));
-        }
+                                                                          var nodes = nativeNode.selectNodes(xpathExpression);
+                                                                          for (var i = 0; i < nodes.length; i++) {
+                                                                          result.@java.util.List::add(Ljava/lang/Object;)( @org.thechiselgroup.choosel.client.util.xslt.Node::create(Lcom/google/gwt/core/client/JavaScriptObject;)(nodes[i]));
+                                                                          }
 
-        return result;
-    }-*/;
+                                                                          return result;
+                                                                          }-*/;
 
     native String getValue() /*-{
-        var node = this.@org.thechiselgroup.choosel.client.util.xslt.Node::nativeNode;
-        if ( !node ) {
-        return null;
-        } else if ( node.childNodes.length == 1 ) {
-        return node.childNodes[ 0 ].nodeValue;
-        } else if ( !node.nodeValue ) {
-        return "";
-        } else {
-        return node.nodeValue;
-        }
-    }-*/;
-
-    private static Node create(JavaScriptObject nativeNode) {
-	return new Node(nativeNode);
-    }
+                             var node = this.@org.thechiselgroup.choosel.client.util.xslt.Node::nativeNode;
+                             if ( !node ) {
+                             return null;
+                             } else if ( node.childNodes.length == 1 ) {
+                             return node.childNodes[ 0 ].nodeValue;
+                             } else if ( !node.nodeValue ) {
+                             return "";
+                             } else {
+                             return node.nodeValue;
+                             }
+                             }-*/;
 
 }

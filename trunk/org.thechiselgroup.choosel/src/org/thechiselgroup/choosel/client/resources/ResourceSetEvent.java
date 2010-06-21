@@ -18,23 +18,23 @@ package org.thechiselgroup.choosel.client.resources;
 import com.google.gwt.event.shared.GwtEvent;
 
 public abstract class ResourceSetEvent<H extends ResourceEventHandler> extends
-	GwtEvent<H> {
+        GwtEvent<H> {
 
     private final Resource resource;
 
     private final ResourceSet resourceSet;
 
     public ResourceSetEvent(Resource resource, ResourceSet resourceSet) {
-	this.resource = resource;
-	this.resourceSet = resourceSet;
-    }
-
-    public ResourceSet getResourceSet() {
-	return resourceSet;
+        this.resource = resource;
+        this.resourceSet = resourceSet;
     }
 
     public Resource getResource() {
-	return resource;
+        return resource;
+    }
+
+    public ResourceSet getResourceSet() {
+        return resourceSet;
     }
 
 }

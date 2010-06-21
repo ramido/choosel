@@ -17,18 +17,18 @@ package org.thechiselgroup.choosel.client.resolver;
 
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
-
-public class FixedValuePropertyValueResolver implements ResourceSetToValueResolver {
+public class FixedValuePropertyValueResolver implements
+        ResourceSetToValueResolver {
 
     private String value;
 
     public FixedValuePropertyValueResolver(String value) {
-	this.value = value;
+        this.value = value;
     }
 
     @Override
     public Object getValue(ResourceSet resources) {
-	return value;
+        return value;
     };
 
 }

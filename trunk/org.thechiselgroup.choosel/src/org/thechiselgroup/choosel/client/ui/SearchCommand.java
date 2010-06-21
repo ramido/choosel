@@ -36,28 +36,28 @@ public class SearchCommand implements Command, HasTextParameter {
     private String contentType;
 
     public SearchCommand(CommandManager commandManager, Desktop desktop,
-	    WindowContentProducer viewFactory, String contentType) {
+            WindowContentProducer viewFactory, String contentType) {
 
-	this.commandManager = commandManager;
-	this.desktop = desktop;
-	this.viewFactory = viewFactory;
-	this.contentType = contentType;
+        this.commandManager = commandManager;
+        this.desktop = desktop;
+        this.viewFactory = viewFactory;
+        this.contentType = contentType;
     }
 
     @Override
     public void execute() {
-	WindowContent content = viewFactory.createWindowContent(contentType);
+        WindowContent content = viewFactory.createWindowContent(contentType);
 
-	assert content instanceof HasTextParameter;
+        assert content instanceof HasTextParameter;
 
-	((HasTextParameter) content).initParameter(searchTerm);
+        ((HasTextParameter) content).initParameter(searchTerm);
 
-	commandManager.execute(new CreateWindowCommand(desktop, content));
+        commandManager.execute(new CreateWindowCommand(desktop, content));
     }
 
     @Override
     public void initParameter(String parameter) {
-	this.searchTerm = parameter;
+        this.searchTerm = parameter;
     }
 
 }

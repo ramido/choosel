@@ -48,61 +48,61 @@ public class HighlightingManagerTest {
     private HighlightingManager underTest;
 
     private void doMouseOut() {
-	underTest.onMouseOut(new MouseOutEvent() {
-	});
+        underTest.onMouseOut(new MouseOutEvent() {
+        });
     }
 
     private void doMouseOver() {
-	underTest.onMouseOver(new MouseOverEvent() {
-	});
+        underTest.onMouseOver(new MouseOverEvent() {
+        });
     }
 
     private void doPopupClosing() {
-	underTest.onPopupClosing(new PopupClosingEvent(popupManager));
+        underTest.onPopupClosing(new PopupClosingEvent(popupManager));
     }
 
     @Test
     public void neverRemovedForPopupClosingWithoutMouseOver() {
-	doPopupClosing();
+        doPopupClosing();
 
-	verify(highlightedResources, never()).removeAll(eq(resources));
+        verify(highlightedResources, never()).removeAll(eq(resources));
     }
 
     @Test
     public void removedOnlyOnceForMouseOverMouseOutPopupClosing() {
-	doMouseOver();
-	doMouseOut();
-	doPopupClosing();
+        doMouseOver();
+        doMouseOut();
+        doPopupClosing();
 
-	verify(highlightedResources, times(1)).removeAll(resources);
+        verify(highlightedResources, times(1)).removeAll(resources);
     }
 
     @Test
     public void removedOnlyOnceForMouseOverPopupClosingMouseOut() {
-	doMouseOver();
-	doPopupClosing();
-	doMouseOut();
+        doMouseOver();
+        doPopupClosing();
+        doMouseOut();
 
-	verify(highlightedResources, times(1)).removeAll(eq(resources));
+        verify(highlightedResources, times(1)).removeAll(eq(resources));
     }
 
     @Before
     public void setUp() throws Exception {
-	MockitoGWTBridge.setUp();
-	MockitoAnnotations.initMocks(this);
+        MockitoGWTBridge.setUp();
+        MockitoAnnotations.initMocks(this);
 
-	underTest = new ResourceItem(resources, highlightedResources,
-		popupManager, null) {
+        underTest = new ResourceItem(resources, highlightedResources,
+                popupManager, null) {
 
-	    @Override
-	    protected void setStatusStyling(Status status) {
+            @Override
+            protected void setStatusStyling(Status status) {
 
-	    }
-	}.getHighlightingManager();
+            }
+        }.getHighlightingManager();
     }
 
     @After
     public void tearDown() {
-	MockitoGWTBridge.tearDown();
+        MockitoGWTBridge.tearDown();
     }
 }

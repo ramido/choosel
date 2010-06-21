@@ -15,10 +15,14 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.model.resources;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createLabeledResources;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResource;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -43,93 +47,93 @@ public class CombinedResourceSetTest {
 
     @Test
     public void addResourcesAddsToAllResources() {
-	combinedResources.addResourceSet(resources1);
-	combinedResources.addResourceSet(resources2);
+        combinedResources.addResourceSet(resources1);
+        combinedResources.addResourceSet(resources2);
 
-	assertEquals(5, combinedResources.size());
-	assertTrue(combinedResources.containsAll(resources1));
-	assertTrue(combinedResources.containsAll(resources2));
+        assertEquals(5, combinedResources.size());
+        assertTrue(combinedResources.containsAll(resources1));
+        assertTrue(combinedResources.containsAll(resources2));
     }
 
     @Test
     public void containsResourcesAddedToChildren() {
-	Resource addedResource = createResource(5);
+        Resource addedResource = createResource(5);
 
-	combinedResources.addResourceSet(resources1);
-	resources1.add(addedResource);
+        combinedResources.addResourceSet(resources1);
+        resources1.add(addedResource);
 
-	assertEquals(4, combinedResources.size());
-	assertTrue(combinedResources.containsAll(resources1));
+        assertEquals(4, combinedResources.size());
+        assertTrue(combinedResources.containsAll(resources1));
     }
 
     @Test
     public void doesNotContainResourcesRemovedFromChildren() {
-	Resource removedResource = createResource(1);
+        Resource removedResource = createResource(1);
 
-	combinedResources.addResourceSet(resources1);
-	resources1.remove(removedResource);
+        combinedResources.addResourceSet(resources1);
+        resources1.remove(removedResource);
 
-	assertEquals(2, combinedResources.size());
-	assertTrue(combinedResources.containsAll(resources1));
-	assertFalse(combinedResources.contains(removedResource));
+        assertEquals(2, combinedResources.size());
+        assertTrue(combinedResources.containsAll(resources1));
+        assertFalse(combinedResources.contains(removedResource));
     }
 
     @Test
     public void doesNotRemoveDuplicateResourceOnRemove() {
-	Resource removedResource = createResource(3);
+        Resource removedResource = createResource(3);
 
-	combinedResources.addResourceSet(resources1);
-	combinedResources.addResourceSet(resources2);
-	resources1.remove(removedResource);
+        combinedResources.addResourceSet(resources1);
+        combinedResources.addResourceSet(resources2);
+        resources1.remove(removedResource);
 
-	assertEquals(5, combinedResources.size());
-	assertTrue(combinedResources.containsAll(resources1));
-	assertTrue(combinedResources.containsAll(resources2));
+        assertEquals(5, combinedResources.size());
+        assertTrue(combinedResources.containsAll(resources1));
+        assertTrue(combinedResources.containsAll(resources2));
     }
 
     @Test
     public void fireAddEventsWhenResourceSetAdded() {
-	combinedResources.addHandler(ResourceAddedEvent.TYPE, addedHandler);
-	combinedResources.addResourceSet(resources1);
+        combinedResources.addHandler(ResourceAddedEvent.TYPE, addedHandler);
+        combinedResources.addResourceSet(resources1);
 
-	verify(addedHandler, times(3)).onResourceAdded(
-		any(ResourceAddedEvent.class));
+        verify(addedHandler, times(3)).onResourceAdded(
+                any(ResourceAddedEvent.class));
     }
 
     @Test
     public void noContainmenChangeWhenResourceAddedAfterRemove() {
-	Resource addedResource = createResource(8);
+        Resource addedResource = createResource(8);
 
-	combinedResources.addResourceSet(resources1);
-	combinedResources.removeResourceSet(resources1);
-	resources1.add(addedResource);
+        combinedResources.addResourceSet(resources1);
+        combinedResources.removeResourceSet(resources1);
+        resources1.add(addedResource);
 
-	assertEquals(0, combinedResources.size());
-	assertFalse(combinedResources.contains(addedResource));
+        assertEquals(0, combinedResources.size());
+        assertFalse(combinedResources.contains(addedResource));
     }
 
     @Test
     public void noFailureOnRemoveInvalidResourceSet() {
-	combinedResources.removeResourceSet(resources1);
+        combinedResources.removeResourceSet(resources1);
     }
 
     @Test
     public void removeResourcesDoesNotRemoveDuplicateResource() {
-	combinedResources.addResourceSet(resources1);
-	combinedResources.addResourceSet(resources2);
-	combinedResources.removeResourceSet(resources2);
+        combinedResources.addResourceSet(resources1);
+        combinedResources.addResourceSet(resources2);
+        combinedResources.removeResourceSet(resources2);
 
-	assertEquals(3, combinedResources.size());
-	assertTrue(combinedResources.containsAll(resources1));
+        assertEquals(3, combinedResources.size());
+        assertTrue(combinedResources.containsAll(resources1));
     }
 
     @Before
     public void setUp() {
-	MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.initMocks(this);
 
-	combinedResources = new CombinedResourceSet(new DefaultResourceSet());
+        combinedResources = new CombinedResourceSet(new DefaultResourceSet());
 
-	resources1 = createLabeledResources(1, 2, 3);
-	resources2 = createLabeledResources(3, 4, 5);
+        resources1 = createLabeledResources(1, 2, 3);
+        resources2 = createLabeledResources(3, 4, 5);
     }
 }

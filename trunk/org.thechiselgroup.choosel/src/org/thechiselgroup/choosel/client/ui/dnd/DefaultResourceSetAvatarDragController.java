@@ -50,72 +50,72 @@ import com.google.inject.Inject;
 // (composition when creating drag avatar drag controller while setting
 // up system)
 public class DefaultResourceSetAvatarDragController extends
-	AbstractDragController implements ResourceSetAvatarDragController {
+        AbstractDragController implements ResourceSetAvatarDragController {
 
     /**
      * Area for shade and drop target calculation.
      */
     private static class Area {
 
-	// can be null, TODO introduce different area classes
-	private ResourceSetAvatarDropController dropController;
+        // can be null, TODO introduce different area classes
+        private ResourceSetAvatarDropController dropController;
 
-	private Rectangle r;
+        private Rectangle r;
 
-	private WindowPanel window;
+        private WindowPanel window;
 
-	public Area(Rectangle r, WindowPanel window,
-		ResourceSetAvatarDropController dropController) {
+        public Area(Rectangle r, WindowPanel window,
+                ResourceSetAvatarDropController dropController) {
 
-	    assert r != null;
-	    assert window != null;
+            assert r != null;
+            assert window != null;
 
-	    this.r = r;
-	    this.window = window;
-	    this.dropController = dropController;
-	}
+            this.r = r;
+            this.window = window;
+            this.dropController = dropController;
+        }
 
-	public ResourceSetAvatarDropController getDropController() {
-	    return dropController;
-	}
+        public ResourceSetAvatarDropController getDropController() {
+            return dropController;
+        }
 
-	private Rectangle getPartHiddenBy(Area windowArea) {
-	    return r.intersection(windowArea.r);
-	}
+        private Rectangle getPartHiddenBy(Area windowArea) {
+            return r.intersection(windowArea.r);
+        }
 
-	public Rectangle getRectangle() {
-	    return r;
-	}
+        public Rectangle getRectangle() {
+            return r;
+        }
 
-	public List<Area> getVisibleParts(List<Area> windowAreas) {
-	    List<Rectangle> hiddenParts = new ArrayList<Rectangle>();
+        public List<Area> getVisibleParts(List<Area> windowAreas) {
+            List<Rectangle> hiddenParts = new ArrayList<Rectangle>();
 
-	    for (Area windowArea : windowAreas) {
-		// FIXME potential bug if hidden by multiple windows
-		if (isHiddenBy(windowArea)) {
-		    hiddenParts.add(getPartHiddenBy(windowArea));
-		}
-	    }
+            for (Area windowArea : windowAreas) {
+                // FIXME potential bug if hidden by multiple windows
+                if (isHiddenBy(windowArea)) {
+                    hiddenParts.add(getPartHiddenBy(windowArea));
+                }
+            }
 
-	    List<Rectangle> visibleRectangles = r.removeRectangles(hiddenParts);
-	    List<Area> result = new ArrayList<Area>();
-	    for (Rectangle visibleRectangle : visibleRectangles) {
-		result.add(new Area(visibleRectangle, window, dropController));
-	    }
+            List<Rectangle> visibleRectangles = r.removeRectangles(hiddenParts);
+            List<Area> result = new ArrayList<Area>();
+            for (Rectangle visibleRectangle : visibleRectangles) {
+                result.add(new Area(visibleRectangle, window, dropController));
+            }
 
-	    return result;
-	}
+            return result;
+        }
 
-	private boolean isHiddenBy(Area windowArea) {
-	    return (window != windowArea.window)
-		    && (window.getZIndex() < windowArea.window.getZIndex())
-		    && (r.intersects(windowArea.r));
-	}
+        private boolean isHiddenBy(Area windowArea) {
+            return (window != windowArea.window)
+                    && (window.getZIndex() < windowArea.window.getZIndex())
+                    && (r.intersects(windowArea.r));
+        }
 
-	@Override
-	public String toString() {
-	    return r.toString();
-	}
+        @Override
+        public String toString() {
+            return r.toString();
+        }
 
     }
 
@@ -125,28 +125,27 @@ public class DefaultResourceSetAvatarDragController extends
     private final static int CACHE_TIME_MILLIS = 100;
 
     private static void checkGWTIssue1813(Widget child, AbsolutePanel parent) {
-	if (!GWT.isScript()) {
-	    if (child.getElement().getOffsetParent() != parent.getElement()) {
-		DOMUtil
-			.reportFatalAndThrowRuntimeException("The boundary panel for this drag controller does not appear to have"
-				+ " 'position: relative' CSS applied to it."
-				+ " This may be due to custom CSS in your application, although this"
-				+ " is often caused by using the result of RootPanel.get(\"some-unique-id\") as your boundary"
-				+ " panel, as described in GWT issue 1813"
-				+ " (http://code.google.com/p/google-web-toolkit/issues/detail?id=1813)."
-				+ " Please star / vote for this issue if it has just affected your application."
-				+ " You can often remedy this problem by adding one line of code to your application:"
-				+ " boundaryPanel.getElement().getStyle().setProperty(\"position\", \"relative\");");
-	    }
-	}
+        if (!GWT.isScript()) {
+            if (child.getElement().getOffsetParent() != parent.getElement()) {
+                DOMUtil.reportFatalAndThrowRuntimeException("The boundary panel for this drag controller does not appear to have"
+                        + " 'position: relative' CSS applied to it."
+                        + " This may be due to custom CSS in your application, although this"
+                        + " is often caused by using the result of RootPanel.get(\"some-unique-id\") as your boundary"
+                        + " panel, as described in GWT issue 1813"
+                        + " (http://code.google.com/p/google-web-toolkit/issues/detail?id=1813)."
+                        + " Please star / vote for this issue if it has just affected your application."
+                        + " You can often remedy this problem by adding one line of code to your application:"
+                        + " boundaryPanel.getElement().getStyle().setProperty(\"position\", \"relative\");");
+            }
+        }
     }
 
     private static List<Rectangle> toRectangles(List<Area> areas) {
-	List<Rectangle> rectangles = new ArrayList<Rectangle>();
-	for (Area dropArea : areas) {
-	    rectangles.add(dropArea.getRectangle());
-	}
-	return rectangles;
+        List<Rectangle> rectangles = new ArrayList<Rectangle>();
+        for (Area dropArea : areas) {
+            rectangles.add(dropArea.getRectangle());
+        }
+        return rectangles;
     }
 
     /**
@@ -181,207 +180,213 @@ public class DefaultResourceSetAvatarDragController extends
      */
     @Inject
     public DefaultResourceSetAvatarDragController(Desktop desktop,
-	    ShadeManager shadeManager) {
+            ShadeManager shadeManager) {
 
-	super(desktop.asWidget());
+        super(desktop.asWidget());
 
-	assert shadeManager != null;
+        assert shadeManager != null;
 
-	this.shadeManager = shadeManager;
-	this.desktop = desktop;
-	this.boundaryDropController = new BoundaryDropController(desktop
-		.asWidget(), false);
+        this.shadeManager = shadeManager;
+        this.desktop = desktop;
+        this.boundaryDropController = new BoundaryDropController(
+                desktop.asWidget(), false);
 
-	setBehaviorDragStartSensitivity(2);
+        setBehaviorDragStartSensitivity(2);
     }
 
     private void addDragAvatarDropTargetShadeSpans() {
-	for (ResourceSetAvatarDropController dropController : dropControllers
-		.values()) {
-	    if (canDropOn(dropController)) {
-		Widget dropTarget = dropController.getDropTarget();
-		if (dropTarget instanceof ResourceSetAvatar) {
-		    // inserts element as shaded background
-		    Element e = (Element) dropTarget.getElement()
-			    .getParentNode();
-		    Element shade = DOM.createSpan();
+        for (ResourceSetAvatarDropController dropController : dropControllers
+                .values()) {
+            if (canDropOn(dropController)) {
+                Widget dropTarget = dropController.getDropTarget();
+                if (dropTarget instanceof ResourceSetAvatar) {
+                    // inserts element as shaded background
+                    Element e = (Element) dropTarget.getElement()
+                            .getParentNode();
+                    Element shade = DOM.createSpan();
 
-		    WindowPanel window = getWindow(dropTarget);
+                    WindowPanel window = getWindow(dropTarget);
 
-		    shade.addClassName("shade");
-		    ZIndex.setZIndex(shade, 1);
+                    shade.addClassName("shade");
+                    ZIndex.setZIndex(shade, 1);
 
-		    DOM.setStyleAttribute(shade, CSS.POSITION, CSS.ABSOLUTE);
-		    DOM.setIntStyleAttribute(shade, CSS.LEFT, dropTarget
-			    .getAbsoluteLeft()
-			    - window.getAbsoluteLeft());
-		    DOM.setIntStyleAttribute(shade, CSS.TOP, dropTarget
-			    .getAbsoluteTop()
-			    - window.getAbsoluteTop());
-		    DOM.setIntStyleAttribute(shade, CSS.WIDTH, dropTarget
-			    .getOffsetWidth());
-		    DOM.setIntStyleAttribute(shade, CSS.HEIGHT, dropTarget
-			    .getOffsetHeight());
+                    DOM.setStyleAttribute(shade, CSS.POSITION, CSS.ABSOLUTE);
+                    DOM.setIntStyleAttribute(
+                            shade,
+                            CSS.LEFT,
+                            dropTarget.getAbsoluteLeft()
+                                    - window.getAbsoluteLeft());
+                    DOM.setIntStyleAttribute(
+                            shade,
+                            CSS.TOP,
+                            dropTarget.getAbsoluteTop()
+                                    - window.getAbsoluteTop());
+                    DOM.setIntStyleAttribute(shade, CSS.WIDTH,
+                            dropTarget.getOffsetWidth());
+                    DOM.setIntStyleAttribute(shade, CSS.HEIGHT,
+                            dropTarget.getOffsetHeight());
 
-		    e.appendChild(shade);
+                    e.appendChild(shade);
 
-		    shadeSpans.add(shade);
-		}
-	    }
-	}
+                    shadeSpans.add(shade);
+                }
+            }
+        }
     }
 
     private void addShade() {
-	List<Rectangle> visibleRectangles = toRectangles(visibleDropAreas);
-	shadeRemoveHandle = shadeManager.showShade(visibleRectangles);
+        List<Rectangle> visibleRectangles = toRectangles(visibleDropAreas);
+        shadeRemoveHandle = shadeManager.showShade(visibleRectangles);
     }
 
     private void calculateBoundaryOffset() {
-	assert context.boundaryPanel == getBoundaryPanel();
+        assert context.boundaryPanel == getBoundaryPanel();
 
-	AbsolutePanel boundaryPanel = getBoundaryPanel();
-	Location widgetLocation = new WidgetLocation(boundaryPanel, null);
-	Element boundaryElement = boundaryPanel.getElement();
+        AbsolutePanel boundaryPanel = getBoundaryPanel();
+        Location widgetLocation = new WidgetLocation(boundaryPanel, null);
+        Element boundaryElement = boundaryPanel.getElement();
 
-	int left = widgetLocation.getLeft()
-		+ DOMUtil.getBorderLeft(boundaryElement);
-	int top = widgetLocation.getTop()
-		+ DOMUtil.getBorderTop(boundaryElement);
-	boundaryRectangle = boundaryRectangle.move(left, top);
+        int left = widgetLocation.getLeft()
+                + DOMUtil.getBorderLeft(boundaryElement);
+        int top = widgetLocation.getTop()
+                + DOMUtil.getBorderTop(boundaryElement);
+        boundaryRectangle = boundaryRectangle.move(left, top);
 
     }
 
     private void calculateBoundaryParameters() {
-	calculateBoundaryOffset();
+        calculateBoundaryOffset();
 
-	Element element = getBoundaryPanel().getElement();
+        Element element = getBoundaryPanel().getElement();
 
-	int width = DOMUtil.getClientWidth(element);
-	int height = DOMUtil.getClientHeight(element);
-	boundaryRectangle = boundaryRectangle.resize(width, height);
+        int width = DOMUtil.getClientWidth(element);
+        int height = DOMUtil.getClientHeight(element);
+        boundaryRectangle = boundaryRectangle.resize(width, height);
     }
 
     // TODO change to calculate visible areas with reference to drop controller
     private List<Area> calculateDropAreas() {
-	List<Area> windowAreas = getWindowAreas();
-	List<Area> dropTargetAreas = getDropTargetAreas();
+        List<Area> windowAreas = getWindowAreas();
+        List<Area> dropTargetAreas = getDropTargetAreas();
 
-	List<Area> dropAreas = new ArrayList<Area>();
-	for (Area dropArea : dropTargetAreas) {
-	    dropAreas.addAll(dropArea.getVisibleParts(windowAreas));
-	}
+        List<Area> dropAreas = new ArrayList<Area>();
+        for (Area dropArea : dropTargetAreas) {
+            dropAreas.addAll(dropArea.getVisibleParts(windowAreas));
+        }
 
-	return dropAreas;
+        return dropAreas;
     }
 
     private boolean canDropOn(ResourceSetAvatarDropController dropController) {
-	return dropController.canDrop(context);
+        return dropController.canDrop(context);
     }
 
     private void createMoveablePanel() {
-	WidgetLocation currentDraggableLocation = new WidgetLocation(
-		context.draggable, context.boundaryPanel);
+        WidgetLocation currentDraggableLocation = new WidgetLocation(
+                context.draggable, context.boundaryPanel);
 
-	dragProxy = newDragProxy(context);
-	context.boundaryPanel.add(dragProxy,
-		currentDraggableLocation.getLeft(), currentDraggableLocation
-			.getTop());
-	checkGWTIssue1813(dragProxy, context.boundaryPanel);
-	dragProxy.addStyleName(DragClientBundle.INSTANCE.css().movablePanel());
+        dragProxy = newDragProxy(context);
+        context.boundaryPanel.add(dragProxy,
+                currentDraggableLocation.getLeft(),
+                currentDraggableLocation.getTop());
+        checkGWTIssue1813(dragProxy, context.boundaryPanel);
+        dragProxy.addStyleName(DragClientBundle.INSTANCE.css().movablePanel());
     }
 
     // XXX not safe for multiple simultaneous drags (e.g. multi touch
     // interfaces)
     @Override
     public void dragEnd() {
-	removeDragAvatarDropTargetShadeSpans();
+        removeDragAvatarDropTargetShadeSpans();
 
-	// XXX HACK
-	for (Widget w : invisibleDropTargets) {
-	    w.setVisible(false);
-	}
-	invisibleDropTargets.clear();
+        // XXX HACK
+        for (Widget w : invisibleDropTargets) {
+            w.setVisible(false);
+        }
+        invisibleDropTargets.clear();
 
-	// old code
-	shadeRemoveHandle.remove();
+        // old code
+        shadeRemoveHandle.remove();
 
-	visibleDropAreas = null;
+        visibleDropAreas = null;
 
-	assert context.finalDropController == null == (context.vetoException != null);
+        assert context.finalDropController == null == (context.vetoException != null);
 
-	if (context.vetoException == null) {
-	    context.dropController.onDrop(context);
-	    context.dropController.onLeave(context);
-	    context.dropController = null;
-	}
+        if (context.vetoException == null) {
+            context.dropController.onDrop(context);
+            context.dropController.onLeave(context);
+            context.dropController = null;
+        }
 
-	dragProxy.removeFromParent();
-	dragProxy = null;
+        dragProxy.removeFromParent();
+        dragProxy = null;
 
-	super.dragEnd();
+        super.dragEnd();
     }
 
     @Override
     public void dragMove() {
-	updateCacheAndBoundary();
-	moveProxyElement();
-	updateDropController();
+        updateCacheAndBoundary();
+        moveProxyElement();
+        updateDropController();
     }
 
     // XXX not safe for multiple simultaneous drags (e.g. multi touch
     // interfaces)
     @Override
     public void dragStart() {
-	super.dragStart();
+        super.dragStart();
 
-	lastResetCacheTimeMillis = System.currentTimeMillis();
+        lastResetCacheTimeMillis = System.currentTimeMillis();
 
-	createMoveablePanel();
-	calculateBoundaryParameters();
+        createMoveablePanel();
+        calculateBoundaryParameters();
 
-	// XXX Hack: move to a better location
-	for (ResourceSetAvatarDropController dropController : dropControllers
-		.values()) {
-	    if (canDropOn(dropController)) {
-		Widget dropTarget = dropController.getDropTarget();
-		if (!dropTarget.isVisible()) {
-		    dropTarget.setVisible(true);
-		    invisibleDropTargets.add(dropTarget);
-		}
-	    }
-	}
+        // XXX Hack: move to a better location
+        for (ResourceSetAvatarDropController dropController : dropControllers
+                .values()) {
+            if (canDropOn(dropController)) {
+                Widget dropTarget = dropController.getDropTarget();
+                if (!dropTarget.isVisible()) {
+                    dropTarget.setVisible(true);
+                    invisibleDropTargets.add(dropTarget);
+                }
+            }
+        }
 
-	// old
-	visibleDropAreas = calculateDropAreas();
-	addShade();
-	addDragAvatarDropTargetShadeSpans();
+        // old
+        visibleDropAreas = calculateDropAreas();
+        addShade();
+        addDragAvatarDropTargetShadeSpans();
     }
 
     private ResourceSetAvatar getAvatar(DragContext context) {
-	assert context != null;
-	assert context.draggable != null;
-	assert context.draggable instanceof ResourceSetAvatar;
-	return (ResourceSetAvatar) context.draggable;
+        assert context != null;
+        assert context.draggable != null;
+        assert context.draggable instanceof ResourceSetAvatar;
+        return (ResourceSetAvatar) context.draggable;
     }
 
     private int getDesiredLeft() {
-	int desiredLeft = context.desiredDraggableX - boundaryRectangle.getX();
-	if (getBehaviorConstrainedToBoundaryPanel()) {
-	    desiredLeft = Math.max(0, Math.min(desiredLeft, boundaryRectangle
-		    .getWidth()
-		    - context.draggable.getOffsetWidth()));
-	}
-	return desiredLeft;
+        int desiredLeft = context.desiredDraggableX - boundaryRectangle.getX();
+        if (getBehaviorConstrainedToBoundaryPanel()) {
+            desiredLeft = Math.max(
+                    0,
+                    Math.min(desiredLeft, boundaryRectangle.getWidth()
+                            - context.draggable.getOffsetWidth()));
+        }
+        return desiredLeft;
     }
 
     private int getDesiredTop() {
-	int desiredTop = context.desiredDraggableY - boundaryRectangle.getY();
-	if (getBehaviorConstrainedToBoundaryPanel()) {
-	    desiredTop = Math.max(0, Math.min(desiredTop, boundaryRectangle
-		    .getHeight()
-		    - context.draggable.getOffsetHeight()));
-	}
-	return desiredTop;
+        int desiredTop = context.desiredDraggableY - boundaryRectangle.getY();
+        if (getBehaviorConstrainedToBoundaryPanel()) {
+            desiredTop = Math.max(
+                    0,
+                    Math.min(desiredTop, boundaryRectangle.getHeight()
+                            - context.draggable.getOffsetHeight()));
+        }
+        return desiredTop;
     }
 
     /**
@@ -393,153 +398,153 @@ public class DefaultResourceSetAvatarDragController extends
      *         <code>null</code> if none are applicable
      */
     private DropController getDropControllerForLocation(int x, int y) {
-	// our rectangles/areas have absolute offsets so we are good
-	// since we already calculated the visible ones, we don't need ordering
+        // our rectangles/areas have absolute offsets so we are good
+        // since we already calculated the visible ones, we don't need ordering
 
-	for (Area area : visibleDropAreas) {
-	    if (area.getRectangle().contains(x, y)) {
-		return area.getDropController();
-	    }
-	}
+        for (Area area : visibleDropAreas) {
+            if (area.getRectangle().contains(x, y)) {
+                return area.getDropController();
+            }
+        }
 
-	return boundaryDropController;
+        return boundaryDropController;
     }
 
     private List<Area> getDropTargetAreas() {
-	List<Area> areas = new ArrayList<Area>();
-	for (ResourceSetAvatarDropController dropController : dropControllers
-		.values()) {
-	    if (canDropOn(dropController)) {
-		Widget dropTarget = dropController.getDropTarget();
-		Rectangle rectangle = Rectangle.fromWidget(dropTarget);
-		WindowPanel window = getWindow(dropTarget);
+        List<Area> areas = new ArrayList<Area>();
+        for (ResourceSetAvatarDropController dropController : dropControllers
+                .values()) {
+            if (canDropOn(dropController)) {
+                Widget dropTarget = dropController.getDropTarget();
+                Rectangle rectangle = Rectangle.fromWidget(dropTarget);
+                WindowPanel window = getWindow(dropTarget);
 
-		areas.add(new Area(rectangle, window, dropController));
-	    }
-	}
-	return areas;
+                areas.add(new Area(rectangle, window, dropController));
+            }
+        }
+        return areas;
     }
 
     private WindowPanel getWindow(Widget originalWidget) {
-	assert originalWidget != null;
+        assert originalWidget != null;
 
-	Widget widget = originalWidget;
-	while (widget != null) {
-	    if (widget instanceof WindowPanel) {
-		return (WindowPanel) widget;
-	    }
-	    widget = widget.getParent();
-	}
+        Widget widget = originalWidget;
+        while (widget != null) {
+            if (widget instanceof WindowPanel) {
+                return (WindowPanel) widget;
+            }
+            widget = widget.getParent();
+        }
 
-	throw new RuntimeException("no window found for widget "
-		+ originalWidget);
+        throw new RuntimeException("no window found for widget "
+                + originalWidget);
     }
 
     private List<Area> getWindowAreas() {
-	List<Area> windowAreas = new ArrayList<Area>();
-	List<WindowPanel> windows = desktop.getWindows();
-	for (WindowPanel window : windows) {
-	    Rectangle r = Rectangle.fromWidget(window);
-	    windowAreas.add(new Area(r, window, null));
-	}
-	return windowAreas;
+        List<Area> windowAreas = new ArrayList<Area>();
+        List<WindowPanel> windows = desktop.getWindows();
+        for (WindowPanel window : windows) {
+            Rectangle r = Rectangle.fromWidget(window);
+            windowAreas.add(new Area(r, window, null));
+        }
+        return windowAreas;
     }
 
     private void moveProxyElement() {
-	Style style = dragProxy.getElement().getStyle();
+        Style style = dragProxy.getElement().getStyle();
 
-	style.setPropertyPx(CSS.LEFT, getDesiredLeft());
-	style.setPropertyPx(CSS.TOP, getDesiredTop());
+        style.setPropertyPx(CSS.LEFT, getDesiredLeft());
+        style.setPropertyPx(CSS.TOP, getDesiredTop());
     }
 
     protected Widget newDragProxy(DragContext context) {
-	return getAvatar(context).createProxy();
+        return getAvatar(context).createProxy();
     }
 
     // copied from PickupDragController
     @Override
     public void previewDragEnd() throws VetoDragException {
-	assert context.finalDropController == null;
-	assert context.vetoException == null;
-	try {
-	    try {
-		// may throw VetoDragException
-		context.dropController.onPreviewDrop(context);
-		context.finalDropController = context.dropController;
-	    } finally {
-		// may throw VetoDragException
-		super.previewDragEnd();
-	    }
-	} catch (VetoDragException ex) {
-	    context.finalDropController = null;
-	    throw ex;
-	}
+        assert context.finalDropController == null;
+        assert context.vetoException == null;
+        try {
+            try {
+                // may throw VetoDragException
+                context.dropController.onPreviewDrop(context);
+                context.finalDropController = context.dropController;
+            } finally {
+                // may throw VetoDragException
+                super.previewDragEnd();
+            }
+        } catch (VetoDragException ex) {
+            context.finalDropController = null;
+            throw ex;
+        }
     }
 
     @Override
     public void registerDropController(
-	    ResourceSetAvatarDropController dropController) {
-	dropControllers.put(dropController.getDropTarget(), dropController);
+            ResourceSetAvatarDropController dropController) {
+        dropControllers.put(dropController.getDropTarget(), dropController);
     }
 
     private void removeDragAvatarDropTargetShadeSpans() {
-	for (Element e : shadeSpans) {
-	    e.removeFromParent();
-	}
-	shadeSpans.clear();
+        for (Element e : shadeSpans) {
+            e.removeFromParent();
+        }
+        shadeSpans.clear();
     }
 
     @Override
     public void setDraggable(Widget widget, boolean draggable) {
-	if (draggable) {
-	    makeDraggable(widget);
-	} else {
-	    makeNotDraggable(widget);
-	}
+        if (draggable) {
+            makeDraggable(widget);
+        } else {
+            makeNotDraggable(widget);
+        }
     }
 
     @Override
     public void unregisterDropController(
-	    ResourceSetAvatarDropController dropController) {
+            ResourceSetAvatarDropController dropController) {
 
-	assert dropController != null;
+        assert dropController != null;
 
-	dropControllers.remove(dropController.getDropTarget());
+        dropControllers.remove(dropController.getDropTarget());
     }
 
     @Override
     public void unregisterDropControllerFor(Widget dropTarget) {
-	unregisterDropController(dropControllers.get(dropTarget));
+        unregisterDropController(dropControllers.get(dropTarget));
     }
 
     private void updateCacheAndBoundary() {
-	// may have changed due to scrollIntoView(), developer driven changes
-	// or manual user scrolling
-	long timeMillis = System.currentTimeMillis();
-	if (timeMillis - lastResetCacheTimeMillis >= CACHE_TIME_MILLIS) {
-	    lastResetCacheTimeMillis = timeMillis;
-	    resetCache();
-	    calculateBoundaryOffset();
-	}
+        // may have changed due to scrollIntoView(), developer driven changes
+        // or manual user scrolling
+        long timeMillis = System.currentTimeMillis();
+        if (timeMillis - lastResetCacheTimeMillis >= CACHE_TIME_MILLIS) {
+            lastResetCacheTimeMillis = timeMillis;
+            resetCache();
+            calculateBoundaryOffset();
+        }
     }
 
     private void updateDropController() {
-	DropController newDropController = getDropControllerForLocation(
-		context.mouseX, context.mouseY);
+        DropController newDropController = getDropControllerForLocation(
+                context.mouseX, context.mouseY);
 
-	if (context.dropController != newDropController) {
-	    if (context.dropController != null) {
-		context.dropController.onLeave(context);
-	    }
-	    context.dropController = newDropController;
-	    if (context.dropController != null) {
-		context.dropController.onEnter(context);
-	    }
-	}
+        if (context.dropController != newDropController) {
+            if (context.dropController != null) {
+                context.dropController.onLeave(context);
+            }
+            context.dropController = newDropController;
+            if (context.dropController != null) {
+                context.dropController.onEnter(context);
+            }
+        }
 
-	if (context.dropController != null) {
-	    context.dropController.onMove(context);
-	}
+        if (context.dropController != null) {
+            context.dropController.onMove(context);
+        }
     }
 
 }

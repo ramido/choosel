@@ -32,48 +32,48 @@ public class MoveNodeCommand implements UndoableCommand, HasDescription {
     private final Point targetLocation;
 
     public MoveNodeCommand(GraphDisplay graphDisplay, Node node,
-	    Point sourceLocation, Point targetLocation) {
+            Point sourceLocation, Point targetLocation) {
 
-	assert graphDisplay != null;
-	assert node != null;
-	assert sourceLocation != null;
-	assert targetLocation != null;
+        assert graphDisplay != null;
+        assert node != null;
+        assert sourceLocation != null;
+        assert targetLocation != null;
 
-	this.graphDisplay = graphDisplay;
-	this.node = node;
-	this.sourceLocation = sourceLocation;
-	this.targetLocation = targetLocation;
+        this.graphDisplay = graphDisplay;
+        this.node = node;
+        this.sourceLocation = sourceLocation;
+        this.targetLocation = targetLocation;
     }
 
     @Override
     public void execute() {
-	graphDisplay.animateMoveTo(node, targetLocation);
+        graphDisplay.animateMoveTo(node, targetLocation);
     }
 
     @Override
     public String getDescription() {
-	return "Move node '" + node.getLabel() + "' to " + targetLocation;
+        return "Move node '" + node.getLabel() + "' to " + targetLocation;
     }
 
     public GraphDisplay getGraphDisplay() {
-	return graphDisplay;
+        return graphDisplay;
     }
 
     public Node getNode() {
-	return node;
+        return node;
     }
 
     public Point getSourceLocation() {
-	return sourceLocation;
+        return sourceLocation;
     }
 
     public Point getTargetLocation() {
-	return targetLocation;
+        return targetLocation;
     }
 
     @Override
     public void undo() {
-	graphDisplay.animateMoveTo(node, sourceLocation);
+        graphDisplay.animateMoveTo(node, sourceLocation);
     }
 
 }

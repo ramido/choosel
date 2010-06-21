@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.client.authentication;
 import com.google.gwt.event.shared.GwtEvent;
 
 public class AuthenticationStateChangedEvent extends
-	GwtEvent<AuthenticationStateChangedEventHandler> {
+        GwtEvent<AuthenticationStateChangedEventHandler> {
 
     public static final Type<AuthenticationStateChangedEventHandler> TYPE = new Type<AuthenticationStateChangedEventHandler>();
 
@@ -27,27 +27,27 @@ public class AuthenticationStateChangedEvent extends
     private final AuthenticationState authenticationState;
 
     public AuthenticationStateChangedEvent(AuthenticationManager manager,
-	    AuthenticationState authenticationState) {
-	this.manager = manager;
-	this.authenticationState = authenticationState;
+            AuthenticationState authenticationState) {
+        this.manager = manager;
+        this.authenticationState = authenticationState;
     }
 
     @Override
     protected void dispatch(AuthenticationStateChangedEventHandler handler) {
-	handler.onAuthenticationStateChanged(this);
+        handler.onAuthenticationStateChanged(this);
     }
 
     @Override
     public Type<AuthenticationStateChangedEventHandler> getAssociatedType() {
-	return TYPE;
-    }
-
-    public AuthenticationManager getManager() {
-	return manager;
+        return TYPE;
     }
 
     public AuthenticationState getAuthenticationState() {
-	return authenticationState;
+        return authenticationState;
+    }
+
+    public AuthenticationManager getManager() {
+        return manager;
     }
 
 }

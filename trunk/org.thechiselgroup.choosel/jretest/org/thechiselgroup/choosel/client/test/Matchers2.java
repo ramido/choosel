@@ -23,7 +23,7 @@ import org.mockito.Matchers;
 public final class Matchers2 {
 
     public static <T> T isNotNull(Class<T> clazz) {
-	return clazz.cast(and(any(clazz), Matchers.isNotNull()));
+        return clazz.cast(and(any(clazz), Matchers.isNotNull()));
     }
 
     private Matchers2() {

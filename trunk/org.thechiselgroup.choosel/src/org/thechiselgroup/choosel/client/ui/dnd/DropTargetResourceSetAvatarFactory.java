@@ -21,32 +21,34 @@ import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.util.Disposable;
 
-public class DropTargetResourceSetAvatarFactory extends DelegatingResourceSetAvatarFactory {
+public class DropTargetResourceSetAvatarFactory extends
+        DelegatingResourceSetAvatarFactory {
 
     private final ResourceSetAvatarDropTargetManager dropTargetManager;
 
-    public DropTargetResourceSetAvatarFactory(ResourceSetAvatarFactory delegate,
-	    ResourceSetAvatarDropTargetManager dropTargetManager) {
-	super(delegate);
+    public DropTargetResourceSetAvatarFactory(
+            ResourceSetAvatarFactory delegate,
+            ResourceSetAvatarDropTargetManager dropTargetManager) {
+        super(delegate);
 
-	assert dropTargetManager != null;
+        assert dropTargetManager != null;
 
-	this.dropTargetManager = dropTargetManager;
+        this.dropTargetManager = dropTargetManager;
     }
 
     @Override
     public ResourceSetAvatar createAvatar(ResourceSet resources) {
-	final ResourceSetAvatar avatar = delegate.createAvatar(resources);
+        final ResourceSetAvatar avatar = delegate.createAvatar(resources);
 
-	avatar.addDisposable(new Disposable() {
-	    @Override
-	    public void dispose() {
-		dropTargetManager.disableDropTarget(avatar);
-	    }
-	});
+        avatar.addDisposable(new Disposable() {
+            @Override
+            public void dispose() {
+                dropTargetManager.disableDropTarget(avatar);
+            }
+        });
 
-	dropTargetManager.enableDropTarget(avatar);
+        dropTargetManager.enableDropTarget(avatar);
 
-	return avatar;
+        return avatar;
     }
 }

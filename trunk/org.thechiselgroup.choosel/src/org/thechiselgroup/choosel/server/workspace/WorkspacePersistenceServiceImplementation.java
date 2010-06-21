@@ -43,7 +43,7 @@ import com.google.inject.Inject;
  * ://code.google.com/events/io/2009/sessions/SofterSideofSchemas.html}
  */
 public class WorkspacePersistenceServiceImplementation implements
-	WorkspacePersistenceService {
+        WorkspacePersistenceService {
 
     private WorkspaceSecurityManager permissionManager;
 
@@ -51,152 +51,151 @@ public class WorkspacePersistenceServiceImplementation implements
 
     @Inject
     public WorkspacePersistenceServiceImplementation(
-	    PersistenceManagerFactory pmf,
-	    WorkspaceSecurityManager securityManager) {
+            PersistenceManagerFactory pmf,
+            WorkspaceSecurityManager securityManager) {
 
-	assert securityManager != null;
-	assert pmf != null;
+        assert securityManager != null;
+        assert pmf != null;
 
-	permissionManager = securityManager;
-	this.persistenceManagerFactory = pmf;
+        permissionManager = securityManager;
+        this.persistenceManagerFactory = pmf;
     }
 
     private PersistenceManager createPersistanceManager() {
-	return persistenceManagerFactory.getPersistenceManager();
+        return persistenceManagerFactory.getPersistenceManager();
     }
 
     private PersistentWorkspace createPersistentWorkspace(PersistenceManager pm) {
-	PersistentWorkspace workspace = new PersistentWorkspace();
-	workspace = pm.makePersistent(workspace);
+        PersistentWorkspace workspace = new PersistentWorkspace();
+        workspace = pm.makePersistent(workspace);
 
-	permissionManager
-		.createWorkspacePermissionForCurrentUser(workspace, pm);
+        permissionManager
+                .createWorkspacePermissionForCurrentUser(workspace, pm);
 
-	return workspace;
+        return workspace;
     }
 
     private PersistentWorkspace getPersistentWorkspace(Long workspaceId,
-	    PersistenceManager manager) throws AuthorizationException {
+            PersistenceManager manager) throws AuthorizationException {
 
-	PersistentWorkspace pWorkspace = manager.getObjectById(
-		PersistentWorkspace.class, workspaceId);
+        PersistentWorkspace pWorkspace = manager.getObjectById(
+                PersistentWorkspace.class, workspaceId);
 
-	permissionManager.checkAuthorization(pWorkspace, manager);
+        permissionManager.checkAuthorization(pWorkspace, manager);
 
-	return pWorkspace;
+        return pWorkspace;
     }
 
     private PersistentWorkspace getPersistentWorkspace(WorkspaceDTO dto,
-	    PersistenceManager manager) throws AuthorizationException {
-	return getPersistentWorkspace(dto.getId(), manager);
+            PersistenceManager manager) throws AuthorizationException {
+        return getPersistentWorkspace(dto.getId(), manager);
     }
 
     private Collection<PersistentWorkspace> getPersistentWorkspacesForUser(
-	    PersistenceManager manager) {
+            PersistenceManager manager) {
 
-	Collection<PersistentWorkspacePermission> result = permissionManager
-		.getWorkspacePermissionsForCurrentUser(manager);
-	Collection<PersistentWorkspace> workspaces = new ArrayList<PersistentWorkspace>();
-	for (PersistentWorkspacePermission permission : result) {
-	    workspaces.add(permission.getWorkspace());
-	}
+        Collection<PersistentWorkspacePermission> result = permissionManager
+                .getWorkspacePermissionsForCurrentUser(manager);
+        Collection<PersistentWorkspace> workspaces = new ArrayList<PersistentWorkspace>();
+        for (PersistentWorkspacePermission permission : result) {
+            workspaces.add(permission.getWorkspace());
+        }
 
-	return workspaces;
+        return workspaces;
     }
 
     @Override
     public WorkspaceDTO loadWorkspace(Long id) throws AuthenticationException,
-	    AuthorizationException {
+            AuthorizationException {
 
-	permissionManager.checkAuthenticated();
+        permissionManager.checkAuthenticated();
 
-	PersistenceManager manager = createPersistanceManager();
-	try {
-	    return loadWorkspace(id, manager);
-	} finally {
-	    manager.close();
-	}
+        PersistenceManager manager = createPersistanceManager();
+        try {
+            return loadWorkspace(id, manager);
+        } finally {
+            manager.close();
+        }
     }
 
     private WorkspaceDTO loadWorkspace(Long id, PersistenceManager manager)
-	    throws AuthorizationException {
+            throws AuthorizationException {
 
-	return toWorkspaceDTO(getPersistentWorkspace(id, manager));
+        return toWorkspaceDTO(getPersistentWorkspace(id, manager));
     }
 
     @Override
     public List<WorkspacePreviewDTO> loadWorkspacePreviews()
-	    throws AuthenticationException {
+            throws AuthenticationException {
 
-	permissionManager.checkAuthenticated();
+        permissionManager.checkAuthenticated();
 
-	PersistenceManager manager = createPersistanceManager();
-	try {
-	    return loadWorkspacePreviews(manager);
-	} finally {
-	    manager.close();
-	}
+        PersistenceManager manager = createPersistanceManager();
+        try {
+            return loadWorkspacePreviews(manager);
+        } finally {
+            manager.close();
+        }
     }
 
     private List<WorkspacePreviewDTO> loadWorkspacePreviews(
-	    PersistenceManager manager) {
+            PersistenceManager manager) {
 
-	Collection<PersistentWorkspace> workspaces = getPersistentWorkspacesForUser(manager);
-	List<WorkspacePreviewDTO> result = new ArrayList<WorkspacePreviewDTO>();
-	for (PersistentWorkspace workspace : workspaces) {
-	    result.add(toWorkspaceSDTO(workspace));
-	}
-	return result;
+        Collection<PersistentWorkspace> workspaces = getPersistentWorkspacesForUser(manager);
+        List<WorkspacePreviewDTO> result = new ArrayList<WorkspacePreviewDTO>();
+        for (PersistentWorkspace workspace : workspaces) {
+            result.add(toWorkspaceSDTO(workspace));
+        }
+        return result;
     }
 
     // TODO should be done in a transaction?
     @Override
     public Long saveWorkspace(WorkspaceDTO dto) throws AuthenticationException,
-	    AuthorizationException {
+            AuthorizationException {
 
-	permissionManager.checkAuthenticated();
+        permissionManager.checkAuthenticated();
 
-	PersistenceManager pm = createPersistanceManager();
+        PersistenceManager pm = createPersistanceManager();
 
-	try {
-	    PersistentWorkspace workspace = workspaceExists(dto) ? getPersistentWorkspace(
-		    dto, pm)
-		    : createPersistentWorkspace(pm);
+        try {
+            PersistentWorkspace workspace = workspaceExists(dto) ? getPersistentWorkspace(
+                    dto, pm) : createPersistentWorkspace(pm);
 
-	    updateWorkspaceWithDTO(workspace, dto);
+            updateWorkspaceWithDTO(workspace, dto);
 
-	    return workspace.getId();
-	} finally {
-	    pm.close();
-	}
+            return workspace.getId();
+        } finally {
+            pm.close();
+        }
     }
 
     private WorkspaceDTO toWorkspaceDTO(PersistentWorkspace pWorkspace) {
-	WorkspaceDTO dto = new WorkspaceDTO();
+        WorkspaceDTO dto = new WorkspaceDTO();
 
-	dto.setId(pWorkspace.getId());
-	dto.setName(pWorkspace.getName());
-	dto.setResources(pWorkspace.getResources());
-	dto.setResourceSets(pWorkspace.getResourceSets());
-	dto.setWindows(pWorkspace.getWindows());
+        dto.setId(pWorkspace.getId());
+        dto.setName(pWorkspace.getName());
+        dto.setResources(pWorkspace.getResources());
+        dto.setResourceSets(pWorkspace.getResourceSets());
+        dto.setWindows(pWorkspace.getWindows());
 
-	return dto;
+        return dto;
     }
 
     private WorkspacePreviewDTO toWorkspaceSDTO(PersistentWorkspace workspace) {
-	return new WorkspacePreviewDTO(workspace.getId(), workspace.getName());
+        return new WorkspacePreviewDTO(workspace.getId(), workspace.getName());
     }
 
     private void updateWorkspaceWithDTO(PersistentWorkspace workspace,
-	    WorkspaceDTO dto) {
+            WorkspaceDTO dto) {
 
-	workspace.setName(dto.getName());
-	workspace.setResources(dto.getResources());
-	workspace.setResourceSets(dto.getResourceSets());
-	workspace.setWindows(dto.getWindows());
+        workspace.setName(dto.getName());
+        workspace.setResources(dto.getResources());
+        workspace.setResourceSets(dto.getResourceSets());
+        workspace.setWindows(dto.getWindows());
     }
 
     private boolean workspaceExists(WorkspaceDTO dto) {
-	return dto.getId() != null;
+        return dto.getId() != null;
     }
 }

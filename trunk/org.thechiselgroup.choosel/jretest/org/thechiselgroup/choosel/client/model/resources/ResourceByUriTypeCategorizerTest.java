@@ -15,8 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.model.resources;
 
-import static org.junit.Assert.*;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.*;
+import static org.junit.Assert.assertEquals;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResource;
 
 import org.junit.Before;
 import org.junit.experimental.theories.DataPoints;
@@ -37,14 +37,14 @@ public class ResourceByUriTypeCategorizerTest {
 
     private ResourceByUriTypeCategorizer categorizer;
 
-    @Before
-    public void setUp() {
-	this.categorizer = new ResourceByUriTypeCategorizer();
-    }
-
     @Theory
     public void getCategory(String type, int id) {
-	Resource resource = createResource(type, id);
-	assertEquals(type, categorizer.getCategory(resource));
+        Resource resource = createResource(type, id);
+        assertEquals(type, categorizer.getCategory(resource));
+    }
+
+    @Before
+    public void setUp() {
+        this.categorizer = new ResourceByUriTypeCategorizer();
     }
 }

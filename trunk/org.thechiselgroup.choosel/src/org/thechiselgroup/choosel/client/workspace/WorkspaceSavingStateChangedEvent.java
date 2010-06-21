@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.client.workspace;
 import com.google.gwt.event.shared.GwtEvent;
 
 public class WorkspaceSavingStateChangedEvent extends
-	GwtEvent<WorkspaceSavingStateChangedEventHandler> {
+        GwtEvent<WorkspaceSavingStateChangedEventHandler> {
 
     public static final Type<WorkspaceSavingStateChangedEventHandler> TYPE = new Type<WorkspaceSavingStateChangedEventHandler>();
 
@@ -27,28 +27,28 @@ public class WorkspaceSavingStateChangedEvent extends
     private final Workspace workspace;
 
     public WorkspaceSavingStateChangedEvent(Workspace workspace,
-	    WorkspaceSavingState state) {
+            WorkspaceSavingState state) {
 
-	this.workspace = workspace;
-	this.state = state;
+        this.workspace = workspace;
+        this.state = state;
     }
 
     @Override
     protected void dispatch(WorkspaceSavingStateChangedEventHandler handler) {
-	handler.onWorkspaceSavingStateChanged(this);
+        handler.onWorkspaceSavingStateChanged(this);
     }
 
     @Override
     public Type<WorkspaceSavingStateChangedEventHandler> getAssociatedType() {
-	return TYPE;
+        return TYPE;
     }
 
     public WorkspaceSavingState getState() {
-	return state;
+        return state;
     }
 
     public Workspace getWorkspace() {
-	return workspace;
+        return workspace;
     }
 
 }

@@ -22,11 +22,11 @@ public class AuthorizationException extends ServiceException {
     private static final long serialVersionUID = -4609415348751776954L;
 
     public AuthorizationException() {
-	// for GWT serialization
+        // for GWT serialization
     }
 
     public AuthorizationException(String message) {
-	super(message);
+        super(message);
     }
 
 }

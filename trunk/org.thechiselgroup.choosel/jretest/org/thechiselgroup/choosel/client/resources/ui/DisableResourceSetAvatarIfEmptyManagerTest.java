@@ -15,9 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources.ui;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResource;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResources;
 
 import org.junit.After;
 import org.junit.Before;
@@ -26,10 +30,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
-import org.thechiselgroup.choosel.client.resources.ui.DisableResourceSetAvatarIfEmptyManager;
-import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
-import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourcesChangedEvent;
-import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourcesChangedEventHandler;
 import org.thechiselgroup.choosel.client.test.DndTestHelpers;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
 
@@ -48,71 +48,70 @@ public class DisableResourceSetAvatarIfEmptyManagerTest {
     private DisableResourceSetAvatarIfEmptyManager underTest;
 
     @Test
-    public void updateDragAvatarOnResourcesChange() {
-	underTest.init();
-
-	ArgumentCaptor<ResourceSetAvatarResourcesChangedEventHandler> argument = ArgumentCaptor
-		.forClass(ResourceSetAvatarResourcesChangedEventHandler.class);
-	verify(avatar, times(1)).addResourceChangedHandler(argument.capture());
-
-	argument.getValue().onResourcesChanged(
-		new ResourceSetAvatarResourcesChangedEvent(avatar, createResources(1),
-			resources));
-
-	verify(avatar, times(1)).setEnabled(false);
-    }
-
-    @Test
     public void disabledIfEmptyByDefault() {
-	underTest.init();
+        underTest.init();
 
-	verify(avatar, times(1)).setEnabled(false);
+        verify(avatar, times(1)).setEnabled(false);
     }
 
     @Test
     public void disableIfResourceRemoved() {
-	resources.add(createResource(2));
-	underTest.init();
-	resources.remove(createResource(2));
+        resources.add(createResource(2));
+        underTest.init();
+        resources.remove(createResource(2));
 
-	verify(avatar, times(1)).setEnabled(false);
+        verify(avatar, times(1)).setEnabled(false);
     }
 
     @Test
     public void enabledIfNotEmptyByDefault() {
-	resources.add(createResource(2));
-	underTest.init();
+        resources.add(createResource(2));
+        underTest.init();
 
-	verify(avatar, times(1)).setEnabled(true);
+        verify(avatar, times(1)).setEnabled(true);
     }
 
     @Test
     public void enableIfResourceAdded() {
-	underTest.init();
-	resources.add(createResource(2));
+        underTest.init();
+        resources.add(createResource(2));
 
-	verify(avatar, times(1)).setEnabled(true);
+        verify(avatar, times(1)).setEnabled(true);
     }
 
     @Before
     public void setUp() throws Exception {
-	MockitoGWTBridge bridge = MockitoGWTBridge.setUp();
-	MockitoAnnotations.initMocks(this);
-	DndTestHelpers.mockDragClientBundle(bridge);
+        MockitoGWTBridge bridge = MockitoGWTBridge.setUp();
+        MockitoAnnotations.initMocks(this);
+        DndTestHelpers.mockDragClientBundle(bridge);
 
-	resources = spy(createResources());
+        resources = spy(createResources());
 
-	when(avatar.getResourceSet()).thenReturn(resources);
-	when(
-		avatar
-			.addResourceChangedHandler(any(ResourceSetAvatarResourcesChangedEventHandler.class)))
-		.thenReturn(handlerRegistration);
+        when(avatar.getResourceSet()).thenReturn(resources);
+        when(
+                avatar.addResourceChangedHandler(any(ResourceSetAvatarResourcesChangedEventHandler.class)))
+                .thenReturn(handlerRegistration);
 
-	underTest = new DisableResourceSetAvatarIfEmptyManager(avatar);
+        underTest = new DisableResourceSetAvatarIfEmptyManager(avatar);
     }
 
     @After
     public void tearDown() {
-	MockitoGWTBridge.tearDown();
+        MockitoGWTBridge.tearDown();
+    }
+
+    @Test
+    public void updateDragAvatarOnResourcesChange() {
+        underTest.init();
+
+        ArgumentCaptor<ResourceSetAvatarResourcesChangedEventHandler> argument = ArgumentCaptor
+                .forClass(ResourceSetAvatarResourcesChangedEventHandler.class);
+        verify(avatar, times(1)).addResourceChangedHandler(argument.capture());
+
+        argument.getValue().onResourcesChanged(
+                new ResourceSetAvatarResourcesChangedEvent(avatar,
+                        createResources(1), resources));
+
+        verify(avatar, times(1)).setEnabled(false);
     }
 }

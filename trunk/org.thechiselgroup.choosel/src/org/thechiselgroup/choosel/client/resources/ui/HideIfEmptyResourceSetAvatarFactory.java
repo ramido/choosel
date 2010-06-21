@@ -18,21 +18,21 @@ package org.thechiselgroup.choosel.client.resources.ui;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
 public class HideIfEmptyResourceSetAvatarFactory extends
-	DelegatingResourceSetAvatarFactory {
+        DelegatingResourceSetAvatarFactory {
 
     public HideIfEmptyResourceSetAvatarFactory(ResourceSetAvatarFactory delegate) {
-	super(delegate);
+        super(delegate);
     }
 
     @Override
     public ResourceSetAvatar createAvatar(ResourceSet resources) {
-	final ResourceSetAvatar avatar = delegate.createAvatar(resources);
+        final ResourceSetAvatar avatar = delegate.createAvatar(resources);
 
-	HideResourceSetAvatarIfEmptyManager manager = new HideResourceSetAvatarIfEmptyManager(
-		avatar);
-	manager.init();
+        HideResourceSetAvatarIfEmptyManager manager = new HideResourceSetAvatarIfEmptyManager(
+                avatar);
+        manager.init();
 
-	return avatar;
+        return avatar;
     }
 
 }

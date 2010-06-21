@@ -42,123 +42,123 @@ public class DefaultDesktop extends AbsolutePanel implements Desktop, HasSize {
 
     @Inject
     public DefaultDesktop(CommandManager commandManager) {
-	addStyleName(CSS_DESKTOP);
+        addStyleName(CSS_DESKTOP);
 
-	// TODO extract constants
-	positionManager = new PositionManager(this, 7, 13, 10);
-	windowController = new DesktopWindowController(this, commandManager);
+        // TODO extract constants
+        positionManager = new PositionManager(this, 7, 13, 10);
+        windowController = new DesktopWindowController(this, commandManager);
 
-	initBranding();
+        initBranding();
     }
 
     private void addWindowInternal(WindowPanel window) {
-	windows.add(window);
-	window.setZIndex(ZIndex.DESKTOP_WINDOW_BASE + windows.indexOf(window));
+        windows.add(window);
+        window.setZIndex(ZIndex.DESKTOP_WINDOW_BASE + windows.indexOf(window));
     }
 
     @Override
     public AbsolutePanel asWidget() {
-	return this;
+        return this;
     }
 
     @Override
     public void bringToFront(WindowPanel window) {
-	removeWindowInternal(window);
-	addWindowInternal(window);
+        removeWindowInternal(window);
+        addWindowInternal(window);
     }
 
     @Override
     public void clearWindows() {
-	List<WindowPanel> windows = new ArrayList<WindowPanel>(getWindows());
-	for (WindowPanel w : windows) {
-	    removeWindow(w);
-	}
+        List<WindowPanel> windows = new ArrayList<WindowPanel>(getWindows());
+        for (WindowPanel w : windows) {
+            removeWindow(w);
+        }
     }
 
     private WindowPanel createWindow(String title, Widget widget, int x, int y) {
-	WindowPanel window = new WindowPanel();
+        WindowPanel window = new WindowPanel();
 
-	window.init(windowController, title, widget);
+        window.init(windowController, title, widget);
 
-	addWindowInternal(window);
-	add(window, x, y);
+        addWindowInternal(window);
+        add(window, x, y);
 
-	return window;
+        return window;
     }
 
     // TODO what about views // view factories??
     @Override
     public WindowPanel createWindow(WindowContent content) {
-	content.init();
+        content.init();
 
-	// FIXME better prediction of window size
-	Point point = positionManager.getNextLocation(500, 400);
+        // FIXME better prediction of window size
+        Point point = positionManager.getNextLocation(500, 400);
 
-	WindowPanel window = createWindow(content.getLabel(), content
-		.asWidget(), point.x, point.y);
+        WindowPanel window = createWindow(content.getLabel(),
+                content.asWidget(), point.x, point.y);
 
-	window.setViewContent(content);
+        window.setViewContent(content);
 
-	window.adjustSize(); // required for search view
+        window.adjustSize(); // required for search view
 
-	return window;
+        return window;
     }
 
     @Override
     public WindowPanel createWindow(WindowContent content, int x, int y,
-	    int windowOffsetWidth, int windowOffsetHeight) {
+            int windowOffsetWidth, int windowOffsetHeight) {
 
-	content.init();
+        content.init();
 
-	WindowPanel w = createWindow(content.getLabel(), content.asWidget(), x,
-		y);
-	w.setAbsoluteSize(windowOffsetWidth, windowOffsetHeight);
-	w.setViewContent(content);
+        WindowPanel w = createWindow(content.getLabel(), content.asWidget(), x,
+                y);
+        w.setAbsoluteSize(windowOffsetWidth, windowOffsetHeight);
+        w.setViewContent(content);
 
-	return w;
+        return w;
     }
 
     @Override
     public int getHeight() {
-	return getOffsetHeight();
+        return getOffsetHeight();
     }
 
     @Override
     public int getWidth() {
-	return getOffsetWidth();
+        return getOffsetWidth();
     }
 
     @Override
     public List<WindowPanel> getWindows() {
-	return windows;
+        return windows;
     }
 
     // TODO refactor: extract
     private void initBranding() {
-	Label appTitleLabel = new Label("Bio-Mixer");
-	appTitleLabel.addStyleName("branding-app-title");
-	add(appTitleLabel);
+        Label appTitleLabel = new Label("Bio-Mixer");
+        appTitleLabel.addStyleName("branding-app-title");
+        add(appTitleLabel);
 
-	Label copyRightLabel = new Label(
-		"(C) 2010 The CHISEL Group (www.thechiselgroup.org)");
-	copyRightLabel.addStyleName("branding-copy-right");
-	add(copyRightLabel);
+        Label copyRightLabel = new Label(
+                "(C) 2010 The CHISEL Group (www.thechiselgroup.org)");
+        copyRightLabel.addStyleName("branding-copy-right");
+        add(copyRightLabel);
     }
 
     @Override
     public void removeWindow(WindowPanel window) {
-	removeWindowInternal(window);
-	remove(window);
+        removeWindowInternal(window);
+        remove(window);
     }
 
     private void removeWindowInternal(WindowPanel window) {
-	int index = windows.indexOf(window);
-	windows.remove(window);
+        int index = windows.indexOf(window);
+        windows.remove(window);
 
-	// lower z-index of previously higher windows
-	for (int i = index; i < windows.size(); i++) {
-	    windows.get(i).setZIndex(ZIndex.DESKTOP_WINDOW_BASE + i);
-	}
+        // lower z-index of previously higher windows
+        for (int i = index; i < windows.size(); i++) {
+            windows.get(i).setZIndex(ZIndex.DESKTOP_WINDOW_BASE + i);
+        }
     }
 
 }

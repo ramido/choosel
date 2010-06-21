@@ -23,63 +23,63 @@ import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarType;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
 
 public class ResourceSetPresenterDropCommandFactory implements
-	ResourceSetAvatarDropCommandFactory {
+        ResourceSetAvatarDropCommandFactory {
 
     private ResourceSetAvatar targetDragAvatar;
 
     private final ViewAccessor viewAccessor;
 
-    public ResourceSetPresenterDropCommandFactory(ResourceSetAvatar targetDragAvatar,
-	    ViewAccessor viewAccessor) {
+    public ResourceSetPresenterDropCommandFactory(
+            ResourceSetAvatar targetDragAvatar, ViewAccessor viewAccessor) {
 
-	assert targetDragAvatar != null;
-	assert viewAccessor != null;
+        assert targetDragAvatar != null;
+        assert viewAccessor != null;
 
-	this.viewAccessor = viewAccessor;
-	this.targetDragAvatar = targetDragAvatar;
-    }
-
-    private boolean targetContainsAllResources(ResourceSetAvatar dragAvatar) {
-	return targetDragAvatar.getResourceSet().containsAll(
-		dragAvatar.getResourceSet());
+        this.viewAccessor = viewAccessor;
+        this.targetDragAvatar = targetDragAvatar;
     }
 
     private boolean areDragAvatarFromSameView(ResourceSetAvatar dragAvatar) {
-	assert viewAccessor.findView(targetDragAvatar) != null;
+        assert viewAccessor.findView(targetDragAvatar) != null;
 
-	return viewAccessor.findView(dragAvatar) == viewAccessor
-		.findView(targetDragAvatar);
+        return viewAccessor.findView(dragAvatar) == viewAccessor
+                .findView(targetDragAvatar);
     }
 
     private boolean areResourcesDifferentFromTarget(ResourceSetAvatar dragAvatar) {
-	return dragAvatar.getResourceSet() != targetDragAvatar.getResourceSet();
+        return dragAvatar.getResourceSet() != targetDragAvatar.getResourceSet();
     }
 
     @Override
     public boolean canDrop(ResourceSetAvatar dragAvatar) {
-	assert dragAvatar != null;
-	return isTargetModifiable()
-		&& areResourcesDifferentFromTarget(dragAvatar)
-		&& !targetContainsAllResources(dragAvatar);
+        assert dragAvatar != null;
+        return isTargetModifiable()
+                && areResourcesDifferentFromTarget(dragAvatar)
+                && !targetContainsAllResources(dragAvatar);
     }
 
     @Override
     public UndoableCommand createCommand(ResourceSetAvatar dragAvatar) {
-	assert dragAvatar != null;
+        assert dragAvatar != null;
 
-	if (areDragAvatarFromSameView(dragAvatar)
-		&& (dragAvatar.getType() == ResourceSetAvatarType.SET)) {
+        if (areDragAvatarFromSameView(dragAvatar)
+                && (dragAvatar.getType() == ResourceSetAvatarType.SET)) {
 
-	    return new MergeResourceSetsCommand(dragAvatar.getResourceSet(),
-		    targetDragAvatar.getResourceSet(), viewAccessor
-			    .findView(dragAvatar));
-	}
+            return new MergeResourceSetsCommand(dragAvatar.getResourceSet(),
+                    targetDragAvatar.getResourceSet(),
+                    viewAccessor.findView(dragAvatar));
+        }
 
-	return new AddResourceSetToResourceSetCommand(
-		dragAvatar.getResourceSet(), targetDragAvatar.getResourceSet());
+        return new AddResourceSetToResourceSetCommand(
+                dragAvatar.getResourceSet(), targetDragAvatar.getResourceSet());
     }
 
     private boolean isTargetModifiable() {
-	return targetDragAvatar.getResourceSet().isModifiable();
+        return targetDragAvatar.getResourceSet().isModifiable();
+    }
+
+    private boolean targetContainsAllResources(ResourceSetAvatar dragAvatar) {
+        return targetDragAvatar.getResourceSet().containsAll(
+                dragAvatar.getResourceSet());
     }
 }

@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.windows;
 
-import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.*;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.PROXY;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -25,12 +25,13 @@ public class ProxyWindowContentFactoryResolver {
     private ProxyWindowContentFactory proxyFactory;
 
     @Inject
-    public ProxyWindowContentFactoryResolver(@Named(PROXY) WindowContentProducer proxyFactory) {
-	this.proxyFactory = (ProxyWindowContentFactory) proxyFactory;
+    public ProxyWindowContentFactoryResolver(
+            @Named(PROXY) WindowContentProducer proxyFactory) {
+        this.proxyFactory = (ProxyWindowContentFactory) proxyFactory;
     }
 
     public void setDelegate(WindowContentProducer delegate) {
-	proxyFactory.setDelegate(delegate);
+        proxyFactory.setDelegate(delegate);
     }
 
 }

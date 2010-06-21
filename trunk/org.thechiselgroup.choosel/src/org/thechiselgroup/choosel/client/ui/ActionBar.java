@@ -45,43 +45,43 @@ public class ActionBar implements WidgetAdaptable {
     private VerticalPanel outerWidget;
 
     public ActionBar() {
-	outerWidget = new VerticalPanel();
-	outerWidget.addStyleName(CSS_ACTIONBAR);
-	outerWidget.setSpacing(0);
+        outerWidget = new VerticalPanel();
+        outerWidget.addStyleName(CSS_ACTIONBAR);
+        outerWidget.setSpacing(0);
 
-	actionBarTitleArea = new HorizontalPanel();
-	actionBarTitleArea.addStyleName(CSS_ACTIONBAR_TITLE_AREA);
-	outerWidget.add(actionBarTitleArea);
+        actionBarTitleArea = new HorizontalPanel();
+        actionBarTitleArea.addStyleName(CSS_ACTIONBAR_TITLE_AREA);
+        outerWidget.add(actionBarTitleArea);
 
-	actionBarPanelContainer = new HorizontalPanel();
-	actionBarPanelContainer.addStyleName(CSS_ACTIONBAR_PANELCONTAINER);
-	actionBarPanelContainer.setSpacing(0);
-	outerWidget.add(actionBarPanelContainer);
+        actionBarPanelContainer = new HorizontalPanel();
+        actionBarPanelContainer.addStyleName(CSS_ACTIONBAR_PANELCONTAINER);
+        actionBarPanelContainer.setSpacing(0);
+        outerWidget.add(actionBarPanelContainer);
     }
 
     public void addPanel(String title, Widget contentWidget) {
-	VerticalPanel actionBarPanel = new VerticalPanel();
-	actionBarPanel.addStyleName(CSS_ACTIONBAR_PANEL);
+        VerticalPanel actionBarPanel = new VerticalPanel();
+        actionBarPanel.addStyleName(CSS_ACTIONBAR_PANEL);
 
-	SimplePanel contentPanel = new SimplePanel();
-	contentPanel.add(contentWidget);
-	contentPanel.addStyleName(CSS_ACTIONBAR_PANEL_CONTENT);
-	actionBarPanel.add(contentPanel);
+        SimplePanel contentPanel = new SimplePanel();
+        contentPanel.add(contentWidget);
+        contentPanel.addStyleName(CSS_ACTIONBAR_PANEL_CONTENT);
+        actionBarPanel.add(contentPanel);
 
-	Label header = new Label(title);
-	header.addStyleName(CSS_ACTIONBAR_PANEL_HEADER);
-	actionBarPanel.add(header);
+        Label header = new Label(title);
+        header.addStyleName(CSS_ACTIONBAR_PANEL_HEADER);
+        actionBarPanel.add(header);
 
-	actionBarPanelContainer.add(actionBarPanel);
+        actionBarPanelContainer.add(actionBarPanel);
     }
 
     @Override
     public Widget asWidget() {
-	return outerWidget;
+        return outerWidget;
     }
 
     public HorizontalPanel getActionBarTitleArea() {
-	return actionBarTitleArea;
+        return actionBarTitleArea;
     }
 
 }

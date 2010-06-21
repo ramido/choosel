@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.server.urlfetch;
 
-import static com.google.appengine.api.urlfetch.FetchOptions.Builder.*;
+import static com.google.appengine.api.urlfetch.FetchOptions.Builder.withDeadline;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -41,30 +41,31 @@ public class DefaultDocumentFetchService implements DocumentFetchService {
     private DocumentBuilderFactory domBuilderFactory;
 
     public DefaultDocumentFetchService(URLFetchService fetchService,
-	    DocumentBuilderFactory domBuilderFactory) {
+            DocumentBuilderFactory domBuilderFactory) {
 
-	assert fetchService != null;
-	assert domBuilderFactory != null;
+        assert fetchService != null;
+        assert domBuilderFactory != null;
 
-	this.fetchService = fetchService;
-	this.domBuilderFactory = domBuilderFactory;
+        this.fetchService = fetchService;
+        this.domBuilderFactory = domBuilderFactory;
     }
 
     @Override
     public Document fetchXML(String urlAsString) throws IOException,
-	    SAXException, ParserConfigurationException {
+            SAXException, ParserConfigurationException {
 
-	assert urlAsString != null;
+        assert urlAsString != null;
 
-	HTTPRequest request = new HTTPRequest(new URL(urlAsString), HTTPMethod.GET,
-		withDeadline(TEN_SECONDS).followRedirects().disallowTruncate());
+        HTTPRequest request = new HTTPRequest(new URL(urlAsString),
+                HTTPMethod.GET, withDeadline(TEN_SECONDS).followRedirects()
+                        .disallowTruncate());
 
-	HTTPResponse response = fetchService.fetch(request);
+        HTTPResponse response = fetchService.fetch(request);
 
-	ByteArrayInputStream stream = new ByteArrayInputStream(response
-		.getContent());
+        ByteArrayInputStream stream = new ByteArrayInputStream(
+                response.getContent());
 
-	return domBuilderFactory.newDocumentBuilder().parse(stream);
+        return domBuilderFactory.newDocumentBuilder().parse(stream);
     }
 
 }

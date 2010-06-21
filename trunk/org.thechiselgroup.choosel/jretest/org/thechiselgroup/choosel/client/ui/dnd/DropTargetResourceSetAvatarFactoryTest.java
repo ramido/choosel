@@ -15,9 +15,11 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.dnd;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResources;
 
 import org.junit.After;
 import org.junit.Before;
@@ -30,8 +32,6 @@ import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.test.DndTestHelpers;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
-import org.thechiselgroup.choosel.client.ui.dnd.DropTargetResourceSetAvatarFactory;
-import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropTargetManager;
 import org.thechiselgroup.choosel.client.util.Disposable;
 
 public class DropTargetResourceSetAvatarFactoryTest {
@@ -49,38 +49,39 @@ public class DropTargetResourceSetAvatarFactoryTest {
 
     @Test
     public void addDisposeHook() {
-	underTest.createAvatar(createResources(1));
+        underTest.createAvatar(createResources(1));
 
-	ArgumentCaptor<Disposable> argument = ArgumentCaptor
-		.forClass(Disposable.class);
-	verify(dragAvatar, times(1)).addDisposable(argument.capture());
+        ArgumentCaptor<Disposable> argument = ArgumentCaptor
+                .forClass(Disposable.class);
+        verify(dragAvatar, times(1)).addDisposable(argument.capture());
 
-	argument.getValue().dispose();
+        argument.getValue().dispose();
 
-	verify(dropTargetManager, times(1)).disableDropTarget(dragAvatar);
+        verify(dropTargetManager, times(1)).disableDropTarget(dragAvatar);
     }
 
     @Test
     public void enableDropTarget() {
-	underTest.createAvatar(createResources(1));
+        underTest.createAvatar(createResources(1));
 
-	verify(dropTargetManager, times(1)).enableDropTarget(dragAvatar);
+        verify(dropTargetManager, times(1)).enableDropTarget(dragAvatar);
     }
 
     @Before
     public void setUp() throws Exception {
-	MockitoGWTBridge bridge = MockitoGWTBridge.setUp();
-	MockitoAnnotations.initMocks(this);
-	DndTestHelpers.mockDragClientBundle(bridge);
+        MockitoGWTBridge bridge = MockitoGWTBridge.setUp();
+        MockitoAnnotations.initMocks(this);
+        DndTestHelpers.mockDragClientBundle(bridge);
 
-	underTest = new DropTargetResourceSetAvatarFactory(delegate, dropTargetManager);
+        underTest = new DropTargetResourceSetAvatarFactory(delegate,
+                dropTargetManager);
 
-	when(delegate.createAvatar(any(ResourceSet.class))).thenReturn(
-		dragAvatar);
+        when(delegate.createAvatar(any(ResourceSet.class))).thenReturn(
+                dragAvatar);
     }
 
     @After
     public void tearDown() {
-	MockitoGWTBridge.tearDown();
+        MockitoGWTBridge.tearDown();
     }
 }

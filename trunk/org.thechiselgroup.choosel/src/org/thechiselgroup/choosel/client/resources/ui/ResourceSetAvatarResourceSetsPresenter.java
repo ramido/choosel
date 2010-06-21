@@ -29,7 +29,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 public class ResourceSetAvatarResourceSetsPresenter implements
-	ResourceSetsPresenter {
+        ResourceSetsPresenter {
 
     private ResourceSetAvatarFactory dragAvatarFactory;
 
@@ -39,99 +39,99 @@ public class ResourceSetAvatarResourceSetsPresenter implements
 
     @Inject
     public ResourceSetAvatarResourceSetsPresenter(
-	    ResourceSetAvatarFactory dragAvatarFactory) {
-	assert dragAvatarFactory != null;
+            ResourceSetAvatarFactory dragAvatarFactory) {
+        assert dragAvatarFactory != null;
 
-	this.dragAvatarFactory = dragAvatarFactory;
+        this.dragAvatarFactory = dragAvatarFactory;
     }
 
     @Override
     public void addResourceSet(ResourceSet resources) {
-	assert panel != null;
-	assert !resourceSetsToDragAvatars.containsKey(resources);
+        assert panel != null;
+        assert !resourceSetsToDragAvatars.containsKey(resources);
 
-	ResourceSetAvatar avatar = dragAvatarFactory.createAvatar(resources);
+        ResourceSetAvatar avatar = dragAvatarFactory.createAvatar(resources);
 
-	panel.insert(avatar, resourceSetsToDragAvatars.size());
+        panel.insert(avatar, resourceSetsToDragAvatars.size());
 
-	resourceSetsToDragAvatars.put(resources, avatar);
+        resourceSetsToDragAvatars.put(resources, avatar);
     }
 
     @Override
     public Widget asWidget() {
-	assert panel != null;
-	return panel;
+        assert panel != null;
+        return panel;
     }
 
     @Override
     public void dispose() {
-	if (isDisposed()) {
-	    return;
-	}
+        if (isDisposed()) {
+            return;
+        }
 
-	for (ResourceSetAvatar avatar : new ArrayList<ResourceSetAvatar>(
-		resourceSetsToDragAvatars.values())) {
-	    avatar.dispose();
-	}
+        for (ResourceSetAvatar avatar : new ArrayList<ResourceSetAvatar>(
+                resourceSetsToDragAvatars.values())) {
+            avatar.dispose();
+        }
 
-	resourceSetsToDragAvatars.clear();
-	resourceSetsToDragAvatars = null;
-	panel = null;
+        resourceSetsToDragAvatars.clear();
+        resourceSetsToDragAvatars = null;
+        panel = null;
     }
 
     private ResourceSetAvatar getAvatar(ResourceSet resource) {
-	return resourceSetsToDragAvatars.get(resource);
-    }
-
-    @Override
-    public void init() {
-	panel = GWT.create(HorizontalPanel.class);
-	panel.setSpacing(2);
-	panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-	panel.setVerticalAlignment(HasVerticalAlignment.ALIGN_TOP);
-    }
-
-    private boolean isDisposed() {
-	return resourceSetsToDragAvatars == null;
-    }
-
-    @Override
-    public void removeResourceSet(ResourceSet resources) {
-	assert panel != null;
-	assert resourceSetsToDragAvatars.containsKey(resources);
-
-	ResourceSetAvatar avatar = resourceSetsToDragAvatars.remove(resources);
-	panel.remove(avatar); // needs to take place before dispose
-	avatar.dispose();
-    }
-
-    @Override
-    public void replaceResourceSet(ResourceSet oldResources,
-	    ResourceSet newResources) {
-
-	assert resourceSetsToDragAvatars.containsKey(oldResources);
-	assert !resourceSetsToDragAvatars.containsKey(newResources);
-
-	ResourceSetAvatar avatar = resourceSetsToDragAvatars
-		.remove(oldResources);
-
-	resourceSetsToDragAvatars.put(newResources, avatar);
-
-	avatar.setResourceSet(newResources);
-	avatar.setText(newResources.getLabel());
-
-	assert !resourceSetsToDragAvatars.containsKey(oldResources);
-	assert resourceSetsToDragAvatars.containsKey(newResources);
-    }
-
-    @Override
-    public void setResourceSetEnabled(ResourceSet resource, boolean enabled) {
-	getAvatar(resource).setEnabled(enabled);
+        return resourceSetsToDragAvatars.get(resource);
     }
 
     // XXX HACK TODO remove
     @Override
     public Map<ResourceSet, ResourceSetAvatar> getAvatars() {
-	return resourceSetsToDragAvatars;
+        return resourceSetsToDragAvatars;
+    }
+
+    @Override
+    public void init() {
+        panel = GWT.create(HorizontalPanel.class);
+        panel.setSpacing(2);
+        panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+        panel.setVerticalAlignment(HasVerticalAlignment.ALIGN_TOP);
+    }
+
+    private boolean isDisposed() {
+        return resourceSetsToDragAvatars == null;
+    }
+
+    @Override
+    public void removeResourceSet(ResourceSet resources) {
+        assert panel != null;
+        assert resourceSetsToDragAvatars.containsKey(resources);
+
+        ResourceSetAvatar avatar = resourceSetsToDragAvatars.remove(resources);
+        panel.remove(avatar); // needs to take place before dispose
+        avatar.dispose();
+    }
+
+    @Override
+    public void replaceResourceSet(ResourceSet oldResources,
+            ResourceSet newResources) {
+
+        assert resourceSetsToDragAvatars.containsKey(oldResources);
+        assert !resourceSetsToDragAvatars.containsKey(newResources);
+
+        ResourceSetAvatar avatar = resourceSetsToDragAvatars
+                .remove(oldResources);
+
+        resourceSetsToDragAvatars.put(newResources, avatar);
+
+        avatar.setResourceSet(newResources);
+        avatar.setText(newResources.getLabel());
+
+        assert !resourceSetsToDragAvatars.containsKey(oldResources);
+        assert resourceSetsToDragAvatars.containsKey(newResources);
+    }
+
+    @Override
+    public void setResourceSetEnabled(ResourceSet resource, boolean enabled) {
+        getAvatar(resource).setEnabled(enabled);
     }
 }

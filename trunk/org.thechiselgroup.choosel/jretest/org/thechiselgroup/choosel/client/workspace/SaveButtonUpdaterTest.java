@@ -15,7 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.workspace;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -23,12 +25,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.ui.HasEnabledState;
-import org.thechiselgroup.choosel.client.workspace.SaveButtonUpdater;
-import org.thechiselgroup.choosel.client.workspace.Workspace;
-import org.thechiselgroup.choosel.client.workspace.WorkspaceManager;
-import org.thechiselgroup.choosel.client.workspace.WorkspaceSavingState;
-import org.thechiselgroup.choosel.client.workspace.WorkspaceSwitchedEvent;
-import org.thechiselgroup.choosel.client.workspace.WorkspaceSwitchedEventHandler;
 
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasText;
@@ -36,7 +32,7 @@ import com.google.gwt.user.client.ui.HasText;
 public class SaveButtonUpdaterTest {
 
     private static interface TestButton extends HasText, HasEnabledState,
-	    Focusable {
+            Focusable {
     }
 
     @Mock
@@ -52,116 +48,116 @@ public class SaveButtonUpdaterTest {
     private WorkspaceManager workspaceManager;
 
     @Test
-    public void initNotSavedState() {
-	workspace.setSavingState(WorkspaceSavingState.NOT_SAVED);
-	underTest.init();
+    public void changeStateAfterWorkspaceChange() {
+        workspace.setSavingState(WorkspaceSavingState.NOT_SAVED);
+        underTest.init();
+        workspace2.setSavingState(WorkspaceSavingState.NOT_SAVED);
 
-	verify(button).setEnabled(true);
-	verify(button).setText("Save");
+        switchWorkspace();
+
+        workspace2.setSavingState(WorkspaceSavingState.SAVED);
+
+        verify(button).setEnabled(false);
+        verify(button).setFocus(false);
+        verify(button).setText("Saved");
+    }
+
+    @Test
+    public void initNotSavedState() {
+        workspace.setSavingState(WorkspaceSavingState.NOT_SAVED);
+        underTest.init();
+
+        verify(button).setEnabled(true);
+        verify(button).setText("Save");
     }
 
     @Test
     public void initSavedState() {
-	workspace.setSavingState(WorkspaceSavingState.SAVED);
-	underTest.init();
+        workspace.setSavingState(WorkspaceSavingState.SAVED);
+        underTest.init();
 
-	verify(button).setEnabled(false);
-	verify(button).setFocus(false);
-	verify(button).setText("Saved");
+        verify(button).setEnabled(false);
+        verify(button).setFocus(false);
+        verify(button).setText("Saved");
     }
 
     @Test
     public void initSavingState() {
-	workspace.setSavingState(WorkspaceSavingState.SAVING);
-	underTest.init();
+        workspace.setSavingState(WorkspaceSavingState.SAVING);
+        underTest.init();
 
-	verify(button).setEnabled(false);
-	verify(button).setFocus(false);
-	verify(button).setText("Saving");
+        verify(button).setEnabled(false);
+        verify(button).setFocus(false);
+        verify(button).setText("Saving");
     }
 
     @Before
     public void setUp() {
-	MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.initMocks(this);
 
-	workspace = spy(new Workspace());
-	workspace2 = spy(new Workspace());
+        workspace = spy(new Workspace());
+        workspace2 = spy(new Workspace());
 
-	underTest = new SaveButtonUpdater(workspaceManager, button, button) {
-	    @Override
-	    protected void delayedSwitchToNotSaved() {
-	    }
-	};
+        underTest = new SaveButtonUpdater(workspaceManager, button, button) {
+            @Override
+            protected void delayedSwitchToNotSaved() {
+            }
+        };
 
-	when(workspaceManager.getWorkspace()).thenReturn(workspace);
+        when(workspaceManager.getWorkspace()).thenReturn(workspace);
     }
 
     @Test
     public void switchToSavedState() {
-	workspace.setSavingState(WorkspaceSavingState.NOT_SAVED);
-	underTest.init();
-	workspace.setSavingState(WorkspaceSavingState.SAVED);
+        workspace.setSavingState(WorkspaceSavingState.NOT_SAVED);
+        underTest.init();
+        workspace.setSavingState(WorkspaceSavingState.SAVED);
 
-	verify(button).setEnabled(false);
-	verify(button).setText("Saved");
+        verify(button).setEnabled(false);
+        verify(button).setText("Saved");
     }
 
     @Test
     public void switchToSaveState() {
-	workspace.setSavingState(WorkspaceSavingState.SAVED);
-	underTest.init();
-	workspace.setSavingState(WorkspaceSavingState.NOT_SAVED);
+        workspace.setSavingState(WorkspaceSavingState.SAVED);
+        underTest.init();
+        workspace.setSavingState(WorkspaceSavingState.NOT_SAVED);
 
-	verify(button).setEnabled(true);
-	verify(button).setText("Save");
+        verify(button).setEnabled(true);
+        verify(button).setText("Save");
     }
 
     @Test
     public void switchToSavingState() {
-	workspace.setSavingState(WorkspaceSavingState.NOT_SAVED);
-	underTest.init();
-	workspace.setSavingState(WorkspaceSavingState.SAVING);
+        workspace.setSavingState(WorkspaceSavingState.NOT_SAVED);
+        underTest.init();
+        workspace.setSavingState(WorkspaceSavingState.SAVING);
 
-	verify(button).setFocus(false);
-	verify(button).setEnabled(false);
-	verify(button).setText("Saving");
+        verify(button).setFocus(false);
+        verify(button).setEnabled(false);
+        verify(button).setText("Saving");
     }
 
     private void switchWorkspace() {
-	ArgumentCaptor<WorkspaceSwitchedEventHandler> argument = ArgumentCaptor
-		.forClass(WorkspaceSwitchedEventHandler.class);
-	verify(workspaceManager).addSwitchedWorkspaceEventHandler(
-		argument.capture());
-	argument.getValue().onWorkspaceSwitched(
-		new WorkspaceSwitchedEvent(workspace2));
+        ArgumentCaptor<WorkspaceSwitchedEventHandler> argument = ArgumentCaptor
+                .forClass(WorkspaceSwitchedEventHandler.class);
+        verify(workspaceManager).addSwitchedWorkspaceEventHandler(
+                argument.capture());
+        argument.getValue().onWorkspaceSwitched(
+                new WorkspaceSwitchedEvent(workspace2));
     }
 
     @Test
     public void updateOnWorkspaceChange() {
-	workspace.setSavingState(WorkspaceSavingState.NOT_SAVED);
-	underTest.init();
-	workspace2.setSavingState(WorkspaceSavingState.SAVED);
+        workspace.setSavingState(WorkspaceSavingState.NOT_SAVED);
+        underTest.init();
+        workspace2.setSavingState(WorkspaceSavingState.SAVED);
 
-	switchWorkspace();
+        switchWorkspace();
 
-	verify(button).setEnabled(false);
-	verify(button).setFocus(false);
-	verify(button).setText("Saved");
-    }
-
-    @Test
-    public void changeStateAfterWorkspaceChange() {
-	workspace.setSavingState(WorkspaceSavingState.NOT_SAVED);
-	underTest.init();
-	workspace2.setSavingState(WorkspaceSavingState.NOT_SAVED);
-
-	switchWorkspace();
-
-	workspace2.setSavingState(WorkspaceSavingState.SAVED);
-
-	verify(button).setEnabled(false);
-	verify(button).setFocus(false);
-	verify(button).setText("Saved");
+        verify(button).setEnabled(false);
+        verify(button).setFocus(false);
+        verify(button).setText("Saved");
     }
 
 }

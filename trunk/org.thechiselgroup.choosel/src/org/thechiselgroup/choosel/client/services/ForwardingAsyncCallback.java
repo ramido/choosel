@@ -22,17 +22,17 @@ public class ForwardingAsyncCallback<T> implements AsyncCallback<T> {
     private AsyncCallback<Void> delegate;
 
     public ForwardingAsyncCallback(AsyncCallback<Void> delegate) {
-	assert delegate != null;
-	this.delegate = delegate;
+        assert delegate != null;
+        this.delegate = delegate;
     }
 
     @Override
     public void onFailure(Throwable caught) {
-	delegate.onFailure(caught);
+        delegate.onFailure(caught);
     }
 
     @Override
     public void onSuccess(T result) {
-	delegate.onSuccess(null);
+        delegate.onSuccess(null);
     }
 }

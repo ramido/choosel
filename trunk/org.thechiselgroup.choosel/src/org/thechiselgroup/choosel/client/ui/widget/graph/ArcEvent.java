@@ -27,27 +27,27 @@ public abstract class ArcEvent<T extends EventHandler> extends GwtEvent<T> {
     private final Arc arc;
 
     public ArcEvent(Arc arc, int mouseX, int mouseY) {
-	this.arc = arc;
-	this.mouseX = mouseX;
-	this.mouseY = mouseY;
-    }
-
-    public int getMouseX() {
-	return mouseX;
-    }
-
-    public int getMouseY() {
-	return mouseY;
+        this.arc = arc;
+        this.mouseX = mouseX;
+        this.mouseY = mouseY;
     }
 
     public Arc getArc() {
-	return arc;
+        return arc;
+    }
+
+    public int getMouseX() {
+        return mouseX;
+    }
+
+    public int getMouseY() {
+        return mouseY;
     }
 
     @Override
     public String toString() {
-	return "ArcEvent [arc=" + arc + ", mouseX=" + mouseX + ", mouseY="
-		+ mouseY + "]";
+        return "ArcEvent [arc=" + arc + ", mouseX=" + mouseX + ", mouseY="
+                + mouseY + "]";
     }
 
 }

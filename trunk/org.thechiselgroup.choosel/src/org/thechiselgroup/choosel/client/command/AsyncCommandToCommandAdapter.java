@@ -24,18 +24,18 @@ public class AsyncCommandToCommandAdapter implements Command {
     private AsyncCommandExecutor executor;
 
     public AsyncCommandToCommandAdapter(AsyncCommand command,
-	    AsyncCommandExecutor executor) {
+            AsyncCommandExecutor executor) {
 
-	assert command != null;
-	assert executor != null;
+        assert command != null;
+        assert executor != null;
 
-	this.command = command;
-	this.executor = executor;
+        this.command = command;
+        this.executor = executor;
     }
 
     @Override
     public void execute() {
-	executor.execute(command);
+        executor.execute(command);
     }
 
 }

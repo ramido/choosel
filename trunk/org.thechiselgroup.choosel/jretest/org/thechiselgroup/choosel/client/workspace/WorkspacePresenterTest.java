@@ -15,17 +15,17 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.workspace;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.test.StubbingArgumentCaptor;
-import org.thechiselgroup.choosel.client.workspace.Workspace;
-import org.thechiselgroup.choosel.client.workspace.WorkspaceManager;
-import org.thechiselgroup.choosel.client.workspace.WorkspacePresenter;
 import org.thechiselgroup.choosel.client.workspace.WorkspacePresenter.WorkspacePresenterDisplay;
 
 import com.google.gwt.event.dom.client.BlurEvent;
@@ -64,44 +64,44 @@ public class WorkspacePresenterTest {
 
     @Test
     public void changeWorkspaceNameOnRegularKeyPress() {
-	getTextBlurHandler().onBlur(new BlurEvent() {
-	});
+        getTextBlurHandler().onBlur(new BlurEvent() {
+        });
 
-	verify(textContainer).getText();
-	verify(workspace, times(1)).setName(NEW_WORKSPACE_NAME);
+        verify(textContainer).getText();
+        verify(workspace, times(1)).setName(NEW_WORKSPACE_NAME);
     }
 
     private BlurHandler getTextBlurHandler() {
-	return blurHandlerCaptor.getAs(BlurHandler.class, 0);
+        return blurHandlerCaptor.getAs(BlurHandler.class, 0);
     }
 
     @Test
     public void initialState() {
-	verify(workspaceManager).getWorkspace();
-	verify(textContainer).setText(TEST_WORKSPACE_NAME);
-	verify(display).getTextBlurHandlers();
-	verify(textFieldBlurHandlers).addBlurHandler(any(BlurHandler.class));
+        verify(workspaceManager).getWorkspace();
+        verify(textContainer).setText(TEST_WORKSPACE_NAME);
+        verify(display).getTextBlurHandlers();
+        verify(textFieldBlurHandlers).addBlurHandler(any(BlurHandler.class));
     }
 
     @Before
     public void setUp() {
-	MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.initMocks(this);
 
-	blurHandlerCaptor = new StubbingArgumentCaptor<HandlerRegistration>();
+        blurHandlerCaptor = new StubbingArgumentCaptor<HandlerRegistration>();
 
-	workspace = spy(new Workspace());
-	workspace.setName(TEST_WORKSPACE_NAME);
+        workspace = spy(new Workspace());
+        workspace.setName(TEST_WORKSPACE_NAME);
 
-	when(workspaceManager.getWorkspace()).thenReturn(workspace);
-	when(display.getTextBlurHandlers()).thenReturn(textFieldBlurHandlers);
-	when(display.getWorkspaceNameText()).thenReturn(textContainer);
-	when(display.getTextKeyUpHandlers()).thenReturn(textFieldKeyUpHandlers);
-	when(textContainer.getText()).thenReturn(NEW_WORKSPACE_NAME);
+        when(workspaceManager.getWorkspace()).thenReturn(workspace);
+        when(display.getTextBlurHandlers()).thenReturn(textFieldBlurHandlers);
+        when(display.getWorkspaceNameText()).thenReturn(textContainer);
+        when(display.getTextKeyUpHandlers()).thenReturn(textFieldKeyUpHandlers);
+        when(textContainer.getText()).thenReturn(NEW_WORKSPACE_NAME);
 
-	when(textFieldBlurHandlers.addBlurHandler(any(BlurHandler.class)))
-		.thenAnswer(blurHandlerCaptor);
+        when(textFieldBlurHandlers.addBlurHandler(any(BlurHandler.class)))
+                .thenAnswer(blurHandlerCaptor);
 
-	presenter = new WorkspacePresenter(workspaceManager, display);
-	presenter.init();
+        presenter = new WorkspacePresenter(workspaceManager, display);
+        presenter.init();
     }
 }

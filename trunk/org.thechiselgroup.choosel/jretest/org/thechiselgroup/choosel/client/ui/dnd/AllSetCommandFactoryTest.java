@@ -15,9 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.dnd;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
 
 import org.junit.After;
 import org.junit.Before;
@@ -27,7 +27,6 @@ import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
-import org.thechiselgroup.choosel.client.ui.dnd.AllSetDropCommandFactory;
 import org.thechiselgroup.choosel.client.views.View;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
 
@@ -52,33 +51,33 @@ public class AllSetCommandFactoryTest {
 
     @Test
     public void cannotDropIfAllResourcesAreAlreadyContainedInView() {
-	when(view.containsResources(resources)).thenReturn(true);
-	when(dragAvatar.getResourceSet()).thenReturn(resources);
+        when(view.containsResources(resources)).thenReturn(true);
+        when(dragAvatar.getResourceSet()).thenReturn(resources);
 
-	assertEquals(false, underTest.canDrop(dragAvatar));
+        assertEquals(false, underTest.canDrop(dragAvatar));
     }
 
     @Test
     public void cannotDropIfFromSameView() {
-	when(accessor.findView(eq(dragAvatar))).thenReturn(view);
+        when(accessor.findView(eq(dragAvatar))).thenReturn(view);
 
-	assertEquals(false, underTest.canDrop(dragAvatar));
+        assertEquals(false, underTest.canDrop(dragAvatar));
     }
 
     @Before
     public void setUp() throws Exception {
-	MockitoGWTBridge.setUp();
-	MockitoAnnotations.initMocks(this);
+        MockitoGWTBridge.setUp();
+        MockitoAnnotations.initMocks(this);
 
-	underTest = new AllSetDropCommandFactory(targetDragAvatar, accessor);
+        underTest = new AllSetDropCommandFactory(targetDragAvatar, accessor);
 
-	when(dragAvatar.getResourceSet()).thenReturn(resources);
-	when(accessor.findView(targetDragAvatar)).thenReturn(view);
+        when(dragAvatar.getResourceSet()).thenReturn(resources);
+        when(accessor.findView(targetDragAvatar)).thenReturn(view);
     }
 
     @After
     public void tearDown() {
-	MockitoGWTBridge.tearDown();
+        MockitoGWTBridge.tearDown();
     }
 
 }

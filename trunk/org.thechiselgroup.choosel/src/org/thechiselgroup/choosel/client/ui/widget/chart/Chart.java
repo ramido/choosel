@@ -20,18 +20,19 @@ import com.google.gwt.user.client.Element;
 
 class Chart extends JavaScriptObject {
 
+    // @formatter:off        
     public static native Chart create(Element element, int width, int height) /*-{
-        
         var vis = new $wnd.pv.Panel()
             .canvas(element)
             .width(width)
             .height(height)
             .fillStyle("ffffff");
-          
+
         return vis;
     }-*/;
+    // @formatter:on 
 
     protected Chart() {
     }
 
-}            
+}

@@ -41,31 +41,31 @@ public class MoveWindowCommand implements UndoableCommand, HasDescription {
      * @param targetY
      */
     public MoveWindowCommand(WindowPanel windowPanel, int sourceX, int sourceY,
-	    int targetX, int targetY) {
+            int targetX, int targetY) {
 
-	assert windowPanel != null;
+        assert windowPanel != null;
 
-	this.windowPanel = windowPanel;
-	this.sourceX = sourceX;
-	this.sourceY = sourceY;
-	this.targetX = targetX;
-	this.targetY = targetY;
-    }
-
-    @Override
-    public String getDescription() {
-	return "Move window '" + windowPanel.getTitle() + "' to (" + targetX
-		+ ", " + targetY + ")";
-    }
-
-    @Override
-    public void undo() {
-	windowPanel.animateMoveToLocation(sourceX, sourceY);
+        this.windowPanel = windowPanel;
+        this.sourceX = sourceX;
+        this.sourceY = sourceY;
+        this.targetX = targetX;
+        this.targetY = targetY;
     }
 
     @Override
     public void execute() {
-	windowPanel.animateMoveToLocation(targetX, targetY);
+        windowPanel.animateMoveToLocation(targetX, targetY);
+    }
+
+    @Override
+    public String getDescription() {
+        return "Move window '" + windowPanel.getTitle() + "' to (" + targetX
+                + ", " + targetY + ")";
+    }
+
+    @Override
+    public void undo() {
+        windowPanel.animateMoveToLocation(sourceX, sourceY);
     }
 
 }

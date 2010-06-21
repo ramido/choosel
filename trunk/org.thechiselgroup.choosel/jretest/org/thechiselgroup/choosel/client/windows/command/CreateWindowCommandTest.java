@@ -15,8 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.windows.command;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.After;
 import org.junit.Before;
@@ -44,30 +46,30 @@ public class CreateWindowCommandTest {
 
     @Test
     public void createWindowOnExecute() {
-	command.execute();
-	verify(desktop, times(1)).createWindow(viewContent);
+        command.execute();
+        verify(desktop, times(1)).createWindow(viewContent);
     }
 
     @Test
     public void removeWindowOnUndo() {
-	when(desktop.createWindow(eq(viewContent))).thenReturn(windowPanel);
+        when(desktop.createWindow(eq(viewContent))).thenReturn(windowPanel);
 
-	command.execute();
-	command.undo();
-	verify(desktop, times(1)).removeWindow(windowPanel);
+        command.execute();
+        command.undo();
+        verify(desktop, times(1)).removeWindow(windowPanel);
     }
 
     @Before
     public void setUp() throws Exception {
-	MockitoGWTBridge.setUp();
-	MockitoAnnotations.initMocks(this);
+        MockitoGWTBridge.setUp();
+        MockitoAnnotations.initMocks(this);
 
-	command = new CreateWindowCommand(desktop, viewContent);
+        command = new CreateWindowCommand(desktop, viewContent);
     }
 
     @After
     public void tearDown() {
-	MockitoGWTBridge.tearDown();
+        MockitoGWTBridge.tearDown();
     }
 
 }

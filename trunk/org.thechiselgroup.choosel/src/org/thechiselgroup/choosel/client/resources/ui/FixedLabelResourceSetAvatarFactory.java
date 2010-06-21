@@ -17,21 +17,23 @@ package org.thechiselgroup.choosel.client.resources.ui;
 
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
-public class FixedLabelResourceSetAvatarFactory extends DelegatingResourceSetAvatarFactory {
+public class FixedLabelResourceSetAvatarFactory extends
+        DelegatingResourceSetAvatarFactory {
 
     private String label;
 
-    public FixedLabelResourceSetAvatarFactory(ResourceSetAvatarFactory delegate, String label) {
-	super(delegate);
-	assert label != null;
-	this.label = label;
+    public FixedLabelResourceSetAvatarFactory(
+            ResourceSetAvatarFactory delegate, String label) {
+        super(delegate);
+        assert label != null;
+        this.label = label;
     }
 
     @Override
     public ResourceSetAvatar createAvatar(ResourceSet resources) {
-	ResourceSetAvatar avatar = delegate.createAvatar(resources);
-	avatar.setText(label);
-	return avatar;
+        ResourceSetAvatar avatar = delegate.createAvatar(resources);
+        avatar.setText(label);
+        return avatar;
     }
 
 }

@@ -25,7 +25,7 @@ import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 
 public class NoteWindowContent extends AbstractWindowContent implements
-	Persistable {
+        Persistable {
 
     private static final String CSS_NOTE = "note";
 
@@ -34,30 +34,30 @@ public class NoteWindowContent extends AbstractWindowContent implements
     private TextArea noteArea;
 
     public NoteWindowContent() {
-	super("Note", MEMENTO_NOTE);
-    }
-
-    @Override
-    public void init() {
-	super.init();
-	noteArea = new TextArea();
-	noteArea.addStyleName(CSS_NOTE);
+        super("Note", MEMENTO_NOTE);
     }
 
     @Override
     public Widget asWidget() {
-	return noteArea;
+        return noteArea;
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        noteArea = new TextArea();
+        noteArea.addStyleName(CSS_NOTE);
     }
 
     @Override
     public void restore(Memento state, ResourceSetAccessor accessor) {
-	noteArea.setText((String) state.getValue(MEMENTO_NOTE));
+        noteArea.setText((String) state.getValue(MEMENTO_NOTE));
     }
 
     @Override
     public Memento save(ResourceSetCollector resourceSetCollector) {
-	Memento state = new Memento();
-	state.setValue(MEMENTO_NOTE, noteArea.getValue());
-	return state;
+        Memento state = new Memento();
+        state.setValue(MEMENTO_NOTE, noteArea.getValue());
+        return state;
     }
 }

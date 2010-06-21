@@ -29,40 +29,40 @@ public class ReplaceSelectionCommand implements UndoableCommand, HasDescription 
     private View view;
 
     public ReplaceSelectionCommand(View view, ResourceSet resources) {
-	assert view != null;
-	assert resources != null;
+        assert view != null;
+        assert resources != null;
 
-	this.view = view;
-	this.resources = resources;
+        this.view = view;
+        this.resources = resources;
     }
 
     @Override
     public void execute() {
-	if (originalSelection == null) {
-	    originalSelection = view.getSelection();
-	}
+        if (originalSelection == null) {
+            originalSelection = view.getSelection();
+        }
 
-	view.setSelection(resources);
+        view.setSelection(resources);
     }
 
     @Override
     public String getDescription() {
-	// TODO view label
-	return "Replace selection in '" + view.toString() + "' with '"
-		+ resources.getLabel() + "'";
+        // TODO view label
+        return "Replace selection in '" + view.toString() + "' with '"
+                + resources.getLabel() + "'";
     }
 
     public ResourceSet getResources() {
-	return resources;
+        return resources;
     }
 
     public View getView() {
-	return view;
+        return view;
     }
 
     @Override
     public void undo() {
-	view.setSelection(originalSelection);
+        view.setSelection(originalSelection);
     }
 
 }

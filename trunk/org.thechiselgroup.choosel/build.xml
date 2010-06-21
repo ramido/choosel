@@ -71,5 +71,16 @@
   	
     <mkdir dir="${dist}"/>
   </target>
+	
+  <target name="dnd-library">
+  	<mkdir dir="bin/temp"/>
+    <jar destfile="bin/temp/gwt-dnd-3.0.0-patched.jar">
+      <!-- TODO exclude not working -->
+      <fileset dir="../DragDrop/src"
+      	excludes="com/allen_sauer/gwt/dnd/test/**;com/allen_sauer/gwt/dnd/demo/**" />
+      <fileset dir="../DragDrop/war/WEB-INF/classes" 
+      	excludes="com/allen_sauer/gwt/dnd/test/**;com/allen_sauer/gwt/dnd/demo/**" />
+    </jar>  	
+  </target>
 
 </project>

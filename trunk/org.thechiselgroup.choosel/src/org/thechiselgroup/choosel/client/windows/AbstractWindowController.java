@@ -28,34 +28,34 @@ public abstract class AbstractWindowController implements WindowController {
     protected final WindowResizeController resizeDragController;
 
     public AbstractWindowController(AbsolutePanel boundaryPanel,
-	    CommandManager commandManager) {
+            CommandManager commandManager) {
 
-	assert boundaryPanel != null;
+        assert boundaryPanel != null;
 
-	this.boundaryPanel = boundaryPanel;
+        this.boundaryPanel = boundaryPanel;
 
-	moveController = new WindowMoveController(this, commandManager);
-	resizeDragController = new WindowResizeController(this, commandManager);
-    }
-
-    @Override
-    public AbsolutePanel getBoundaryPanel() {
-	return boundaryPanel;
-    }
-
-    @Override
-    public WindowMoveController getMoveDragController() {
-	return moveController;
-    }
-
-    @Override
-    public WindowResizeController getResizeDragController() {
-	return resizeDragController;
+        moveController = new WindowMoveController(this, commandManager);
+        resizeDragController = new WindowResizeController(this, commandManager);
     }
 
     @Override
     public void bringToFront(WindowPanel window) {
-	// stub, can be overwritten by subclasses
+        // stub, can be overwritten by subclasses
+    }
+
+    @Override
+    public AbsolutePanel getBoundaryPanel() {
+        return boundaryPanel;
+    }
+
+    @Override
+    public WindowMoveController getMoveDragController() {
+        return moveController;
+    }
+
+    @Override
+    public WindowResizeController getResizeDragController() {
+        return resizeDragController;
     }
 
 }

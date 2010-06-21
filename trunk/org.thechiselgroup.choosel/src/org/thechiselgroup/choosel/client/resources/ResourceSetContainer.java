@@ -25,21 +25,21 @@ public class ResourceSetContainer {
     private ResourceSet resources = null;
 
     public HandlerRegistration addResourceSetContainerChangedEventHandler(
-	    ResourceSetContainerChangedEventHandler handler) {
+            ResourceSetContainerChangedEventHandler handler) {
 
-	assert handler != null;
+        assert handler != null;
 
-	return eventBus.addHandler(ResourceSetContainerChangedEvent.TYPE,
-		handler);
+        return eventBus.addHandler(ResourceSetContainerChangedEvent.TYPE,
+                handler);
     }
 
     public void setResourceSet(ResourceSet resources) {
-	if (resources == this.resources) {
-	    return;
-	}
+        if (resources == this.resources) {
+            return;
+        }
 
-	this.resources = resources;
-	eventBus.fireEvent(new ResourceSetContainerChangedEvent(resources));
+        this.resources = resources;
+        eventBus.fireEvent(new ResourceSetContainerChangedEvent(resources));
     }
 
 }

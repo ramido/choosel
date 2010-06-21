@@ -15,8 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.graph;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import org.junit.After;
 import org.junit.Before;
@@ -27,7 +28,6 @@ import org.thechiselgroup.choosel.client.geometry.Point;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
-import org.thechiselgroup.choosel.client.views.graph.MoveNodeCommand;
 
 // TODO might break if redone after window open is redone (thus graphDisplay
 // differs...)
@@ -49,30 +49,30 @@ public class MoveNodeCommandTest {
 
     @Test
     public void setNodeLocationOnExecute() {
-	command.execute();
-	verify(graphDisplay, times(1)).animateMoveTo(eq(node),
-		eq(targetLocation));
+        command.execute();
+        verify(graphDisplay, times(1)).animateMoveTo(eq(node),
+                eq(targetLocation));
     }
 
     @Test
     public void setNodeLocationOnUndo() {
-	command.undo();
-	verify(graphDisplay, times(1)).animateMoveTo(eq(node),
-		eq(sourceLocation));
+        command.undo();
+        verify(graphDisplay, times(1)).animateMoveTo(eq(node),
+                eq(sourceLocation));
     }
 
     @Before
     public void setUp() throws Exception {
-	MockitoGWTBridge.setUp();
-	MockitoAnnotations.initMocks(this);
+        MockitoGWTBridge.setUp();
+        MockitoAnnotations.initMocks(this);
 
-	command = new MoveNodeCommand(graphDisplay, node, sourceLocation,
-		targetLocation);
+        command = new MoveNodeCommand(graphDisplay, node, sourceLocation,
+                targetLocation);
     }
 
     @After
     public void tearDown() {
-	MockitoGWTBridge.tearDown();
+        MockitoGWTBridge.tearDown();
     }
 
 }

@@ -18,16 +18,16 @@ package org.thechiselgroup.choosel.client.ui.dnd;
 import com.google.gwt.user.client.ui.Widget;
 
 public class NullResourceSetAvatarDropTargetManager implements
-	ResourceSetAvatarDropTargetManager {
-
-    @Override
-    public void enableDropTarget(Widget dropTarget) {
-	// do nothing
-    }
+        ResourceSetAvatarDropTargetManager {
 
     @Override
     public void disableDropTarget(Widget dropTarget) {
-	// do nothing
+        // do nothing
+    }
+
+    @Override
+    public void enableDropTarget(Widget dropTarget) {
+        // do nothing
     }
 
 }

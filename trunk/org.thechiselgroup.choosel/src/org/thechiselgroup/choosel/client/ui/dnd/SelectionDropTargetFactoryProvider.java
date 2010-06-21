@@ -27,7 +27,7 @@ import org.thechiselgroup.choosel.client.views.DefaultViewAccessor;
 import com.google.inject.Inject;
 
 public class SelectionDropTargetFactoryProvider implements
-	ResourceSetAvatarFactoryProvider {
+        ResourceSetAvatarFactoryProvider {
 
     private final ResourceSetAvatarDragController dragController;
 
@@ -35,25 +35,25 @@ public class SelectionDropTargetFactoryProvider implements
 
     @Inject
     public SelectionDropTargetFactoryProvider(
-	    ResourceSetAvatarDragController dragController,
-	    CommandManager commandManager) {
+            ResourceSetAvatarDragController dragController,
+            CommandManager commandManager) {
 
-	this.dragController = dragController;
-	this.commandManager = commandManager;
+        this.dragController = dragController;
+        this.commandManager = commandManager;
     }
 
     @Override
     public ResourceSetAvatarFactory get() {
-	ResourceSetAvatarFactory defaultFactory = new DefaultResourceSetAvatarFactory(
-		"avatar-selection", ResourceSetAvatarType.SELECTION);
-	ResourceSetAvatarFactory hidingFactory = new HideIfEmptyResourceSetAvatarFactory(
-		defaultFactory);
-	ResourceSetAvatarFactory disablingFactory = new DisableIfEmptyResourceSetAvatarFactory(
-		hidingFactory);
+        ResourceSetAvatarFactory defaultFactory = new DefaultResourceSetAvatarFactory(
+                "avatar-selection", ResourceSetAvatarType.SELECTION);
+        ResourceSetAvatarFactory hidingFactory = new HideIfEmptyResourceSetAvatarFactory(
+                defaultFactory);
+        ResourceSetAvatarFactory disablingFactory = new DisableIfEmptyResourceSetAvatarFactory(
+                hidingFactory);
 
-	return new DropTargetResourceSetAvatarFactory(disablingFactory,
-		new SelectionDropTargetManager(commandManager, dragController,
-			new DefaultViewAccessor()));
+        return new DropTargetResourceSetAvatarFactory(disablingFactory,
+                new SelectionDropTargetManager(commandManager, dragController,
+                        new DefaultViewAccessor()));
 
     }
 }

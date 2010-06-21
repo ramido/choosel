@@ -16,22 +16,22 @@
 package org.thechiselgroup.choosel.client.ui.widget.graph;
 
 public class ArcMouseDoubleClickEvent extends
-	ArcEvent<ArcMouseDoubleClickHandler> {
-
-    public ArcMouseDoubleClickEvent(Arc arc, int mouseX, int mouseY) {
-	super(arc, mouseX, mouseY);
-    }
+        ArcEvent<ArcMouseDoubleClickHandler> {
 
     public static final Type<ArcMouseDoubleClickHandler> TYPE = new Type<ArcMouseDoubleClickHandler>();
 
+    public ArcMouseDoubleClickEvent(Arc arc, int mouseX, int mouseY) {
+        super(arc, mouseX, mouseY);
+    }
+
     @Override
     protected void dispatch(ArcMouseDoubleClickHandler handler) {
-	handler.onMouseDoubleClick(this);
+        handler.onMouseDoubleClick(this);
     }
 
     @Override
     public Type<ArcMouseDoubleClickHandler> getAssociatedType() {
-	return TYPE;
+        return TYPE;
     }
 
 }

@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.workspace;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -23,8 +23,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.windows.Desktop;
-import org.thechiselgroup.choosel.client.workspace.DefaultWorkspaceManager;
-import org.thechiselgroup.choosel.client.workspace.Workspace;
 
 public class DefaultWorkspaceManagerTest {
 
@@ -36,32 +34,32 @@ public class DefaultWorkspaceManagerTest {
     @Mock
     private Desktop desktop;
 
-    @Before
-    public void setUp() {
-	MockitoAnnotations.initMocks(this);
-
-	underTest = new DefaultWorkspaceManager(desktop, commandManager);
-    }
-
     @Test
     public void clearCommandManagerOnCreateNewWorkspace() {
-	underTest.createNewWorkspace();
+        underTest.createNewWorkspace();
 
-	verify(commandManager).clear();
-    }
-
-    @Test
-    public void clearDesktopOnCreateNewWorkspace() {
-	underTest.createNewWorkspace();
-
-	verify(desktop).clearWindows();
+        verify(commandManager).clear();
     }
 
     @Test
     public void clearCommandManagerOnSetWorkspace() {
-	underTest.setWorkspace(new Workspace());
+        underTest.setWorkspace(new Workspace());
 
-	verify(commandManager).clear();
+        verify(commandManager).clear();
+    }
+
+    @Test
+    public void clearDesktopOnCreateNewWorkspace() {
+        underTest.createNewWorkspace();
+
+        verify(desktop).clearWindows();
+    }
+
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+
+        underTest = new DefaultWorkspaceManager(desktop, commandManager);
     }
 
 }

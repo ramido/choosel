@@ -28,34 +28,34 @@ public class Memento implements Serializable {
     private TreeMap<String, Serializable> values = new TreeMap<String, Serializable>();
 
     public Memento() {
-	// for GWT
+        // for GWT
     }
 
     public void addChild(String key, Memento child) {
-	children.put(key, child);
+        children.put(key, child);
     }
 
     // TODO throw exception (invalid state)
     public Memento getChild(String key) {
-	return getChildren().get(key);
+        return getChildren().get(key);
     }
 
     // TODO immutable
     public SortedMap<String, Memento> getChildren() {
-	return children;
+        return children;
     }
 
     public Serializable getValue(String key) {
-	return values.get(key);
+        return values.get(key);
     }
 
     // TODO immutable
     public SortedMap<String, Serializable> getValues() {
-	return values;
+        return values;
     }
 
     public Object setValue(String key, Serializable value) {
-	return values.put(key, value);
+        return values.put(key, value);
     }
 
 }

@@ -15,10 +15,15 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.graph;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResource;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.toResourceSet;
 
 import org.junit.After;
 import org.junit.Before;
@@ -54,27 +59,27 @@ public class GraphViewContentDisplayTest {
 
     public class TestGraphViewContentDisplay extends GraphViewContentDisplay {
 
-	public TestGraphViewContentDisplay(Display display,
-		ResourceSet hoverModel,
-		PopupManagerFactory popupManagerFactory,
-		DetailsWidgetHelper detailsWidgetHelper,
-		CommandManager commandManager, ResourceManager resourceManager,
-		DragEnablerFactory dragEnablerFactory,
-		ResourceCategorizer resourceCategorizer,
-		ArcStyleProvider arcStyleProvider,
-		GraphExpansionRegistry registry) {
+        public TestGraphViewContentDisplay(Display display,
+                ResourceSet hoverModel,
+                PopupManagerFactory popupManagerFactory,
+                DetailsWidgetHelper detailsWidgetHelper,
+                CommandManager commandManager, ResourceManager resourceManager,
+                DragEnablerFactory dragEnablerFactory,
+                ResourceCategorizer resourceCategorizer,
+                ArcStyleProvider arcStyleProvider,
+                GraphExpansionRegistry registry) {
 
-	    super(display, hoverModel, popupManagerFactory,
-		    detailsWidgetHelper, commandManager, resourceManager,
-		    dragEnablerFactory, resourceCategorizer, arcStyleProvider,
-		    registry);
-	}
+            super(display, hoverModel, popupManagerFactory,
+                    detailsWidgetHelper, commandManager, resourceManager,
+                    dragEnablerFactory, resourceCategorizer, arcStyleProvider,
+                    registry);
+        }
 
-	@Override
-	protected PopupManager createPopupManager(ResourceSet resources,
-		ResourceSetToValueResolver resolver) {
-	    return popupManager;
-	}
+        @Override
+        protected PopupManager createPopupManager(ResourceSet resources,
+                ResourceSetToValueResolver resolver) {
+            return popupManager;
+        }
 
     }
 
@@ -138,80 +143,80 @@ public class GraphViewContentDisplayTest {
      */
     @Test
     public void createNodeMoveCommandWhenNodeDragged() {
-	ArgumentCaptor<NodeDragHandler> argument1 = ArgumentCaptor
-		.forClass(NodeDragHandler.class);
+        ArgumentCaptor<NodeDragHandler> argument1 = ArgumentCaptor
+                .forClass(NodeDragHandler.class);
 
-	verify(display, times(1)).addEventHandler(eq(NodeDragEvent.TYPE),
-		argument1.capture());
+        verify(display, times(1)).addEventHandler(eq(NodeDragEvent.TYPE),
+                argument1.capture());
 
-	NodeDragHandler nodeDragHandler = argument1.getValue();
-	nodeDragHandler.onDrag(new NodeDragEvent(node, sourceLocation.x,
-		sourceLocation.y, targetLocation.x, targetLocation.y));
+        NodeDragHandler nodeDragHandler = argument1.getValue();
+        nodeDragHandler.onDrag(new NodeDragEvent(node, sourceLocation.x,
+                sourceLocation.y, targetLocation.x, targetLocation.y));
 
-	ArgumentCaptor<UndoableCommand> argument2 = ArgumentCaptor
-		.forClass(UndoableCommand.class);
+        ArgumentCaptor<UndoableCommand> argument2 = ArgumentCaptor
+                .forClass(UndoableCommand.class);
 
-	verify(commandManager, times(1))
-		.addExecutedCommand(argument2.capture());
+        verify(commandManager, times(1))
+                .addExecutedCommand(argument2.capture());
 
-	UndoableCommand command = argument2.getValue();
+        UndoableCommand command = argument2.getValue();
 
-	assertEquals(true, command instanceof MoveNodeCommand);
+        assertEquals(true, command instanceof MoveNodeCommand);
 
-	MoveNodeCommand command2 = (MoveNodeCommand) command;
+        MoveNodeCommand command2 = (MoveNodeCommand) command;
 
-	assertEquals(node, command2.getNode());
-	assertEquals(sourceLocation, command2.getSourceLocation());
-	assertEquals(targetLocation, command2.getTargetLocation());
-	assertEquals(display, command2.getGraphDisplay());
+        assertEquals(node, command2.getNode());
+        assertEquals(sourceLocation, command2.getSourceLocation());
+        assertEquals(targetLocation, command2.getTargetLocation());
+        assertEquals(display, command2.getGraphDisplay());
     }
 
     @Test
     public void loadNeighbourhoodWhenAddingConcept() {
-	concept1 = createResource(1);
+        concept1 = createResource(1);
 
-	contentDisplay.createResourceItem(layer, toResourceSet(concept1));
+        contentDisplay.createResourceItem(layer, toResourceSet(concept1));
 
-	verify(automaticExpander, times(1)).expand(eq(concept1),
-		any(GraphNodeExpansionCallback.class));
+        verify(automaticExpander, times(1)).expand(eq(concept1),
+                any(GraphNodeExpansionCallback.class));
     }
 
     @Before
     public void setUp() throws Exception {
-	MockitoGWTBridge.setUp();
-	MockitoAnnotations.initMocks(this);
+        MockitoGWTBridge.setUp();
+        MockitoAnnotations.initMocks(this);
 
-	registry = spy(new GraphExpansionRegistry());
+        registry = spy(new GraphExpansionRegistry());
 
-	sourceLocation = new Point(10, 15);
-	targetLocation = new Point(20, 25);
+        sourceLocation = new Point(10, 15);
+        targetLocation = new Point(20, 25);
 
-	allResources = new DefaultResourceSet();
+        allResources = new DefaultResourceSet();
 
-	when(callback.getAllResources()).thenReturn(allResources);
+        when(callback.getAllResources()).thenReturn(allResources);
 
-	contentDisplay = spy(new TestGraphViewContentDisplay(display,
-		hoverModel, popupManagerFactory, detailsWidgetHelper,
-		commandManager, resourceManager, dragEnablerFactory,
-		resourceCategorizer, arcStyleProvider, registry));
+        contentDisplay = spy(new TestGraphViewContentDisplay(display,
+                hoverModel, popupManagerFactory, detailsWidgetHelper,
+                commandManager, resourceManager, dragEnablerFactory,
+                resourceCategorizer, arcStyleProvider, registry));
 
-	contentDisplay.init(callback);
+        contentDisplay.init(callback);
 
-	when(resourceCategorizer.getCategory(any(Resource.class))).thenReturn(
-		ResourcesTestHelper.DEFAULT_TYPE);
+        when(resourceCategorizer.getCategory(any(Resource.class))).thenReturn(
+                ResourcesTestHelper.DEFAULT_TYPE);
 
-	when(registry.getAutomaticExpander(any(String.class))).thenReturn(
-		automaticExpander);
+        when(registry.getAutomaticExpander(any(String.class))).thenReturn(
+                automaticExpander);
 
-	ArgumentCaptor<GraphWidgetReadyHandler> argument = ArgumentCaptor
-		.forClass(GraphWidgetReadyHandler.class);
-	verify(display).addGraphWidgetReadyHandler(argument.capture());
-	argument.getValue().onWidgetReady(new GraphWidgetReadyEvent(null));
+        ArgumentCaptor<GraphWidgetReadyHandler> argument = ArgumentCaptor
+                .forClass(GraphWidgetReadyHandler.class);
+        verify(display).addGraphWidgetReadyHandler(argument.capture());
+        argument.getValue().onWidgetReady(new GraphWidgetReadyEvent(null));
     }
 
     @After
     public void tearDown() {
-	MockitoGWTBridge.tearDown();
+        MockitoGWTBridge.tearDown();
     }
 
 }

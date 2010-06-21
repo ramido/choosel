@@ -15,19 +15,19 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources.ui;
 
-
 public class AbstractResourceSetAvatarFactoryProvider implements
-	ResourceSetAvatarFactoryProvider {
+        ResourceSetAvatarFactoryProvider {
 
     private ResourceSetAvatarFactory resourceSetAvatarFactory;
 
-    public AbstractResourceSetAvatarFactoryProvider(ResourceSetAvatarFactory resourceSetAvatarFactory) {
-	this.resourceSetAvatarFactory = resourceSetAvatarFactory;
+    public AbstractResourceSetAvatarFactoryProvider(
+            ResourceSetAvatarFactory resourceSetAvatarFactory) {
+        this.resourceSetAvatarFactory = resourceSetAvatarFactory;
     }
 
     @Override
     public ResourceSetAvatarFactory get() {
-	return resourceSetAvatarFactory;
+        return resourceSetAvatarFactory;
     }
 
 }

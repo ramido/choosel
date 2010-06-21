@@ -33,7 +33,7 @@ import com.google.appengine.api.users.UserService;
 
 // TODO extract superclass for PMF
 public class WorkspaceSharingServiceImplementation implements
-	WorkspaceSharingService {
+        WorkspaceSharingService {
 
     public static final String PARAM_PASSWORD = "password";
 
@@ -56,93 +56,93 @@ public class WorkspaceSharingServiceImplementation implements
     private final String baseURL;
 
     public WorkspaceSharingServiceImplementation(
-	    PersistenceManagerFactory persistenceManagerFactory,
-	    WorkspaceSecurityManager workspaceSecurityManager,
-	    UserService userService, MailService mailService,
-	    PasswordGenerator passwordGenerator, String baseURL) {
+            PersistenceManagerFactory persistenceManagerFactory,
+            WorkspaceSecurityManager workspaceSecurityManager,
+            UserService userService, MailService mailService,
+            PasswordGenerator passwordGenerator, String baseURL) {
 
-	assert workspaceSecurityManager != null;
-	assert persistenceManagerFactory != null;
-	assert mailService != null;
-	assert userService != null;
-	assert passwordGenerator != null;
-	assert baseURL != null;
+        assert workspaceSecurityManager != null;
+        assert persistenceManagerFactory != null;
+        assert mailService != null;
+        assert userService != null;
+        assert passwordGenerator != null;
+        assert baseURL != null;
 
-	this.baseURL = baseURL;
-	this.userService = userService;
-	this.mailService = mailService;
-	this.persistenceManagerFactory = persistenceManagerFactory;
-	this.securityManager = workspaceSecurityManager;
-	this.passwordGenerator = passwordGenerator;
+        this.baseURL = baseURL;
+        this.userService = userService;
+        this.mailService = mailService;
+        this.persistenceManagerFactory = persistenceManagerFactory;
+        this.securityManager = workspaceSecurityManager;
+        this.passwordGenerator = passwordGenerator;
     }
 
     private PersistenceManager createPersistanceManager() {
-	return persistenceManagerFactory.getPersistenceManager();
+        return persistenceManagerFactory.getPersistenceManager();
+    }
+
+    public PersistentSharingInvitation createWorkspaceSharingInvitation(
+            PersistentWorkspace workspace, String emailAddress,
+            PersistenceManager manager) {
+
+        assert workspace != null;
+        assert manager != null;
+        assert emailAddress != null;
+
+        PersistentSharingInvitation invitation = new PersistentSharingInvitation();
+        invitation.setWorkspace(workspace);
+        invitation.setSenderUserId(userService.getCurrentUser().getUserId());
+        invitation.setEmail(emailAddress);
+
+        // this gives us 62^12 ~= 3.22E21 passwords - should prevent guessing
+        invitation.setPassword(passwordGenerator
+                .generatePassword(PASSWORD_LENGTH));
+
+        invitation.setInvitationDate(new Date());
+        invitation = manager.makePersistent(invitation);
+
+        return invitation;
     }
 
     @Override
     public void shareWorkspace(WorkspaceDTO workspaceDTO, String emailAddress)
-	    throws ServiceException {
+            throws ServiceException {
 
-	securityManager.checkAuthenticated();
+        securityManager.checkAuthenticated();
 
-	PersistenceManager manager = createPersistanceManager();
-	try {
-	    PersistentWorkspace workspace = manager.getObjectById(
-		    PersistentWorkspace.class, workspaceDTO.getId());
+        PersistenceManager manager = createPersistanceManager();
+        try {
+            PersistentWorkspace workspace = manager.getObjectById(
+                    PersistentWorkspace.class, workspaceDTO.getId());
 
-	    securityManager.checkAuthorization(workspace, manager);
+            securityManager.checkAuthorization(workspace, manager);
 
-	    PersistentSharingInvitation sharingInvitation = createWorkspaceSharingInvitation(
-		    workspace, emailAddress, manager);
+            PersistentSharingInvitation sharingInvitation = createWorkspaceSharingInvitation(
+                    workspace, emailAddress, manager);
 
-	    String sender = userService.getCurrentUser().getEmail();
-	    String to = emailAddress;
-	    String subject = workspaceDTO.getName();
-	    String url = baseURL + "?" + PARAM_WORKSPACE_ID + "="
-		    + workspaceDTO.getId() + "&" + PARAM_INVITATION + "="
-		    + KeyFactory.keyToString(sharingInvitation.getUid()) + "&"
-		    + PARAM_PASSWORD + "=" + sharingInvitation.getPassword();
+            String sender = userService.getCurrentUser().getEmail();
+            String to = emailAddress;
+            String subject = workspaceDTO.getName();
+            String url = baseURL + "?" + PARAM_WORKSPACE_ID + "="
+                    + workspaceDTO.getId() + "&" + PARAM_INVITATION + "="
+                    + KeyFactory.keyToString(sharingInvitation.getUid()) + "&"
+                    + PARAM_PASSWORD + "=" + sharingInvitation.getPassword();
 
-	    String textBody = "I have shared the Bio-Mixer workspace" + " \""
-		    + workspaceDTO.getName() + "\" with you. "
-		    + "You can open it at " + url;
+            String textBody = "I have shared the Bio-Mixer workspace" + " \""
+                    + workspaceDTO.getName() + "\" with you. "
+                    + "You can open it at " + url;
 
-	    Log.info(textBody);
+            Log.info(textBody);
 
-	    try {
-		mailService.send(new MailService.Message(sender, to, subject,
-			textBody));
-	    } catch (IOException e) {
-		Log.error(e.getMessage(), e);
-		throw new ServiceException(
-			"Sending email with share notification failed.");
-	    }
-	} finally {
-	    manager.close();
-	}
-    }
-
-    public PersistentSharingInvitation createWorkspaceSharingInvitation(
-	    PersistentWorkspace workspace, String emailAddress,
-	    PersistenceManager manager) {
-
-	assert workspace != null;
-	assert manager != null;
-	assert emailAddress != null;
-
-	PersistentSharingInvitation invitation = new PersistentSharingInvitation();
-	invitation.setWorkspace(workspace);
-	invitation.setSenderUserId(userService.getCurrentUser().getUserId());
-	invitation.setEmail(emailAddress);
-
-	// this gives us 62^12 ~= 3.22E21 passwords - should prevent guessing
-	invitation.setPassword(passwordGenerator
-		.generatePassword(PASSWORD_LENGTH));
-
-	invitation.setInvitationDate(new Date());
-	invitation = manager.makePersistent(invitation);
-
-	return invitation;
+            try {
+                mailService.send(new MailService.Message(sender, to, subject,
+                        textBody));
+            } catch (IOException e) {
+                Log.error(e.getMessage(), e);
+                throw new ServiceException(
+                        "Sending email with share notification failed.");
+            }
+        } finally {
+            manager.close();
+        }
     }
 }

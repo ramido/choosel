@@ -19,7 +19,6 @@ import java.util.ArrayList;
 
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.persistence.Memento;
-import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
@@ -31,7 +30,6 @@ import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.Layer;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
-import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -41,15 +39,16 @@ public class PieViewContentDisplay extends AbstractViewContentDisplay {
 
     public static interface Display {
 
-	void addItem(ChartItem chartItem);
+        void addItem(ChartItem chartItem);
 
-	void addStyleName(ChartItem chartItem, String cssClass);
+        void addStyleName(ChartItem chartItem, String cssClass);
 
-	void removeIndividualItem(ChartItem chartItem);
+        void removeIndividualItem(ChartItem chartItem);
 
-	void removeStyleName(ChartItem chartItem, String cssClass);
+        void removeStyleName(ChartItem chartItem, String cssClass);
 
     }
+
     private static final String MEMENTO_CHART_DATA_ARRAY = "data-array";
 
     private ChartWidget chartWidget;
@@ -58,68 +57,68 @@ public class PieViewContentDisplay extends AbstractViewContentDisplay {
 
     @Inject
     public PieViewContentDisplay(
-	    PopupManagerFactory popupManagerFactory,
-	    DetailsWidgetHelper detailsWidgetHelper,
-	    @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
-	    DragEnablerFactory dragEnablerFactory) {
+            PopupManagerFactory popupManagerFactory,
+            DetailsWidgetHelper detailsWidgetHelper,
+            @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
+            DragEnablerFactory dragEnablerFactory) {
 
-	super(popupManagerFactory, detailsWidgetHelper, hoverModel);
+        super(popupManagerFactory, detailsWidgetHelper, hoverModel);
 
-	this.dragEnablerFactory = dragEnablerFactory;
+        this.dragEnablerFactory = dragEnablerFactory;
     }
 
     @Override
     public void checkResize() {
-	chartWidget.checkResize();
+        chartWidget.checkResize();
     }
 
     @Override
     public ResourceItem createResourceItem(Layer layer, ResourceSet resources) {
-	PopupManager popupManager = createPopupManager(layer, resources);
+        PopupManager popupManager = createPopupManager(layer, resources);
 
-	ChartItem chartItem = new ChartItem(resources, this, popupManager, hoverModel,
-		layer, dragEnablerFactory);
+        ChartItem chartItem = new ChartItem(resources, this, popupManager,
+                hoverModel, layer, dragEnablerFactory);
 
-	chartWidget.addEvent(chartItem);
+        chartWidget.addEvent(chartItem);
 
-	return chartItem;
+        return chartItem;
     }
 
     @Override
     public Widget createWidget() {
-	
-	chartWidget = new PieChart();
-	return chartWidget;
+
+        chartWidget = new PieChart();
+        return chartWidget;
     }
 
     public ChartWidget getChartWidget() {
-	return chartWidget;
+        return chartWidget;
     }
 
     @Override
     public String[] getSlotIDs() {
-	return new String[] { SlotResolver.DESCRIPTION_SLOT,
-		SlotResolver.LABEL_SLOT, SlotResolver.COLOR_SLOT,
-		SlotResolver.DATE_SLOT };
+        return new String[] { SlotResolver.DESCRIPTION_SLOT,
+                SlotResolver.LABEL_SLOT, SlotResolver.COLOR_SLOT,
+                SlotResolver.DATE_SLOT };
     }
 
     @Override
     public void removeResourceItem(ResourceItem resourceItem) {
-	chartWidget.removeEvent(chartWidget.getDataArray().size() - 1);
+        chartWidget.removeEvent(chartWidget.getDataArray().size() - 1);
     }
 
     @Override
     public void restore(Memento state) {
-	ArrayList<Double> dataArray = (ArrayList<Double>) state
-		.getValue(MEMENTO_CHART_DATA_ARRAY);
-	chartWidget.setDataArray(dataArray);
+        ArrayList<Double> dataArray = (ArrayList<Double>) state
+                .getValue(MEMENTO_CHART_DATA_ARRAY);
+        chartWidget.setDataArray(dataArray);
     }
 
     @Override
     public Memento save() {
-	Memento state = new Memento();
-	state.setValue(MEMENTO_CHART_DATA_ARRAY, chartWidget.getDataArray());
-	return state;
+        Memento state = new Memento();
+        state.setValue(MEMENTO_CHART_DATA_ARRAY, chartWidget.getDataArray());
+        return state;
     }
 
 }

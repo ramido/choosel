@@ -25,7 +25,7 @@ import com.google.gwt.user.client.Element;
 class TimeLine extends JavaScriptObject {
 
     // TODO expose # of bands
-
+    // @formatter:off
     public static native TimeLine create(Element element,
 	    TimeLineEventSource eventSource, String dateAsString) /*-{
         var theme = $wnd.Timeline.ClassicTheme.create();
@@ -52,7 +52,7 @@ class TimeLine extends JavaScriptObject {
         {pixelsPerInterval: 400, unit: $wnd.Timeline.DateTime.MONTH},
         {pixelsPerInterval: 200, unit: $wnd.Timeline.DateTime.MONTH},
         {pixelsPerInterval: 100, unit: $wnd.Timeline.DateTime.MONTH})
-        }),        
+        }),         
         $wnd.Timeline.createBandInfo({
         startsOn: dateAsString,
         width: "20%",
@@ -83,11 +83,12 @@ class TimeLine extends JavaScriptObject {
 
         return $wnd.Timeline.create(element, bandInfos, $wnd.Timeline.HORIZONTAL);
     }-*/;
+    // @formatter:on        
 
     // called from JavaScript
     private static final void onEventPainted(TimeLine timeLine, int bandIndex,
-	    TimeLineEvent event) {
-	timeLine.onEventPainted(bandIndex, event);
+            TimeLineEvent event) {
+        timeLine.onEventPainted(bandIndex, event);
     }
 
     protected TimeLine() {
@@ -97,6 +98,7 @@ class TimeLine extends JavaScriptObject {
      * Replaces the _showBubble function in the event painter with a null
      * functions, thus preventing info bubbles from being shown.
      */
+    // @formatter:off
     public final native void disableBubbles() /*-{
         for (var i = 0; i < this.getBandCount(); i++) {
         var eventPainter = this.getBand(i)._eventPainter;
@@ -104,25 +106,28 @@ class TimeLine extends JavaScriptObject {
         };
         }
     }-*/;
+    // @formatter:on        
 
     /**
      * Returns getCenterVisibleDate() from the main (first) band as GMT String
      * in a form similar to "Fri, 29 Sep 2000 06:23:54 GMT"
      * ("EEE, d MMM yyyy HH:mm:ss Z")
      */
+    // @formatter:off
     public final native String getCenterVisibleDateAsGMTString() /*-{
         // TODO change if bands are not synchronized any more
         return this.getBand(0).getCenterVisibleDate().toGMTString();
     }-*/;
+    // @formatter:on        
 
     public final String getEventElementID(int bandIndex, String elType,
-	    TimeLineEvent event) {
-	/*
-	 * see Timeline.EventUtils.encodeEventElID = function(timeline, band,
-	 * elType, evt)
-	 */
-	return elType + "-tl-" + getTimeLineID() + "-" + bandIndex + "-"
-		+ event.getID();
+            TimeLineEvent event) {
+        /*
+         * see Timeline.EventUtils.encodeEventElID = function(timeline, band,
+         * elType, evt)
+         */
+        return elType + "-tl-" + getTimeLineID() + "-" + bandIndex + "-"
+                + event.getID();
     }
 
     public final native int getTimeLineID() /*-{
@@ -138,45 +143,27 @@ class TimeLine extends JavaScriptObject {
         return this.getBand(bandNumber)._zoomIndex;
     }-*/;
 
-    /**
-     * Sets the zoom index of a band. What time interval the zoom index refers
-     * to depends on the band (defined in
-     * {@link #create(Element, TimeLineEventSource, String)}). WARNING: calling
-     * this function will change the center date of the band, call
-     * {@link #setCenterVisibleDate(String)} afterwards.
-     */
-    public final native void setZoomIndex(int bandNumber, int zoomIndex) /*-{
-        // calculate number of steps because API function is boolean zoom with 
-        // location.
-        var band = this.getBand(bandNumber);
-        var zoomDifference = zoomIndex - this.getBand(bandNumber)._zoomIndex;
-        var zoomIn = zoomDifference < 0;
-        var zoomSteps = Math.abs(zoomDifference);
-        // did not quite work
-        // var centerX = band.dateToPixelOffset(band.getCenterVisibleDate());
-
-        var i = 0;
-        for (i = 0;i < zoomSteps; i = i + 1) {
-        this.getBand(bandNumber).zoom(zoomIn, 0, 0, null);
-        }
-    }-*/;
-
     public final native void layout() /*-{
         this.layout();
     }-*/;
 
     private final void onEventPainted(int bandIndex, final TimeLineEvent event) {
-	String labelElementID = getEventElementID(bandIndex, "label", event);
-	String iconElementID = getEventElementID(bandIndex, "icon", event);
+        String labelElementID = getEventElementID(bandIndex, "label", event);
+        String iconElementID = getEventElementID(bandIndex, "icon", event);
 
-	event.getTimeLineItem().onPainted(labelElementID, iconElementID);
+        event.getTimeLineItem().onPainted(labelElementID, iconElementID);
 
-	// TODO use just one listener instead of one per item (for performance)
-	// 1. get the id of the element
-	// ((Element) e.getCurrentEventTarget().cast()).getId()
-	// 2. resolve timeline event from id
+        // TODO use just one listener instead of one per item (for performance)
+        // 1. get the id of the element
+        // ((Element) e.getCurrentEventTarget().cast()).getId()
+        // 2. resolve timeline event from id
     }
 
+    public final native void paint() /*-{
+        this.paint();
+    }-*/;
+
+    // @formatter:off
     public final native void registerPaintListener() /*-{
         var listener = function(band, operation, event, elements) {
         if ("paintedEvent" == operation) {
@@ -193,6 +180,7 @@ class TimeLine extends JavaScriptObject {
         }
         }
     }-*/;
+    // @formatter:on        
 
     public final native String setCenterVisibleDate(String gmtString) /*-{
         // TODO change if bands are not synchronized any more
@@ -200,8 +188,29 @@ class TimeLine extends JavaScriptObject {
         return this.getBand(0).setCenterVisibleDate(Date.parse(gmtString));
     }-*/;
 
-    public final native void paint() /*-{
-        this.paint();
+    /**
+     * Sets the zoom index of a band. What time interval the zoom index refers
+     * to depends on the band (defined in
+     * {@link #create(Element, TimeLineEventSource, String)}). WARNING: calling
+     * this function will change the center date of the band, call
+     * {@link #setCenterVisibleDate(String)} afterwards.
+     */
+    // @formatter:off    
+    public final native void setZoomIndex(int bandNumber, int zoomIndex) /*-{
+        // calculate number of steps because API function is boolean zoom with 
+        // location.
+        var band = this.getBand(bandNumber);
+        var zoomDifference = zoomIndex - this.getBand(bandNumber)._zoomIndex;
+        var zoomIn = zoomDifference < 0;
+        var zoomSteps = Math.abs(zoomDifference);
+        // did not quite work
+        // var centerX = band.dateToPixelOffset(band.getCenterVisibleDate());
+
+        var i = 0;
+        for (i = 0;i < zoomSteps; i = i + 1) {
+        this.getBand(bandNumber).zoom(zoomIn, 0, 0, null);
+        }
     }-*/;
+    // @formatter:on
 
 }

@@ -21,12 +21,12 @@ public interface ResourceManager {
 
     Resource allocate(String uri);
 
-    void deallocate(String uri);
+    void clear();
 
     boolean contains(String uri);
 
-    Resource getByUri(String uri);
+    void deallocate(String uri);
 
-    void clear();
+    Resource getByUri(String uri);
 
 }

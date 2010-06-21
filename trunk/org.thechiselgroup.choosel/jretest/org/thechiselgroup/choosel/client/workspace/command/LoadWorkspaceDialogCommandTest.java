@@ -15,8 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.workspace.command;
 
-import static org.mockito.Mockito.*;
-import static org.thechiselgroup.choosel.client.test.Matchers2.*;
+import static org.mockito.Mockito.verify;
+import static org.thechiselgroup.choosel.client.test.Matchers2.isNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,6 @@ import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.services.NullAsyncCallback;
 import org.thechiselgroup.choosel.client.workspace.WorkspacePersistenceManager;
 import org.thechiselgroup.choosel.client.workspace.WorkspacePreview;
-import org.thechiselgroup.choosel.client.workspace.command.LoadWorkspaceDialogCommand;
 import org.thechiselgroup.choosel.client.workspace.command.LoadWorkspaceDialogCommand.DetailsDisplay;
 import org.thechiselgroup.choosel.client.workspace.command.LoadWorkspaceDialogCommand.LoadWorkspacePreviewsCallback;
 
@@ -42,30 +41,30 @@ public class LoadWorkspaceDialogCommandTest {
 
     private LoadWorkspaceDialogCommand presenter;
 
-    @Before
-    public void setUp() {
-	MockitoAnnotations.initMocks(this);
-
-	presenter = new LoadWorkspaceDialogCommand(detailsDisplay,
-		persistenceManager);
-    }
-
     @Test
     public void callGetAllWorkspacesOnExecute() {
-	presenter.execute(new NullAsyncCallback<Void>());
+        presenter.execute(new NullAsyncCallback<Void>());
 
-	verify(persistenceManager).loadWorkspacePreviews(
-		isNotNull(LoadWorkspacePreviewsCallback.class));
+        verify(persistenceManager).loadWorkspacePreviews(
+                isNotNull(LoadWorkspacePreviewsCallback.class));
+    }
+
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+
+        presenter = new LoadWorkspaceDialogCommand(detailsDisplay,
+                persistenceManager);
     }
 
     @Test
     public void showDetailsDisplayOnSuccess() {
-	LoadWorkspacePreviewsCallback callback = new LoadWorkspacePreviewsCallback(
-		detailsDisplay, new NullAsyncCallback<Void>());
+        LoadWorkspacePreviewsCallback callback = new LoadWorkspacePreviewsCallback(
+                detailsDisplay, new NullAsyncCallback<Void>());
 
-	List<WorkspacePreview> workspaces = new ArrayList<WorkspacePreview>();
-	callback.onSuccess(workspaces);
+        List<WorkspacePreview> workspaces = new ArrayList<WorkspacePreview>();
+        callback.onSuccess(workspaces);
 
-	verify(detailsDisplay).show(workspaces);
+        verify(detailsDisplay).show(workspaces);
     }
 }

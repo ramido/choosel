@@ -28,11 +28,11 @@ public class LoggingAsyncCommandExecutor implements AsyncCommandExecutor {
 
     @Override
     public void execute(AsyncCommand command) {
-	command.execute(new NullAsyncCallback<Void>() {
-	    @Override
-	    public void onFailure(Throwable caught) {
-		Log.error(caught.getMessage(), caught);
-	    }
-	});
+        command.execute(new NullAsyncCallback<Void>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                Log.error(caught.getMessage(), caught);
+            }
+        });
     }
 }

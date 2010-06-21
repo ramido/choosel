@@ -20,12 +20,12 @@ import org.thechiselgroup.choosel.client.views.ResourceItem;
 public class ViewToIndividualItemEventForwarder {
 
     protected final void onMouseOut(ResourceItem item, int x, int y) {
-	item.getPopupManager().onMouseOut(x, y);
-	item.setHighlighted(false);
+        item.getPopupManager().onMouseOut(x, y);
+        item.setHighlighted(false);
     }
 
     protected final void onMouseOver(ResourceItem item, int x, int y) {
-	item.getPopupManager().onMouseOver(x, y);
-	item.setHighlighted(true);
+        item.getPopupManager().onMouseOver(x, y);
+        item.setHighlighted(true);
     }
 }

@@ -109,243 +109,248 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 
 public class ChooselClientModule extends AbstractGinModule implements
-	ChooselInjectionConstants {
+        ChooselInjectionConstants {
 
     private void bindApplication() {
-	bind(ChooselApplication.class).to(getApplicationClass()).in(
-		Singleton.class);
+        bind(ChooselApplication.class).to(getApplicationClass()).in(
+                Singleton.class);
     }
 
     protected void bindCustomServices() {
     }
 
     private void bindDisplays() {
-	bind(DefaultCommandManagerPresenterDisplay.class);
+        bind(DefaultCommandManagerPresenterDisplay.class);
 
-	bind(WorkspacePresenter.WorkspacePresenterDisplay.class).to(
-		WorkspacePresenter.DefaultWorkspacePresenterDisplay.class);
-	bind(LoadWorkspaceDialogCommand.DetailsDisplay.class).to(
-		LoadWorkspaceDialogCommand.DefaultDetailsDisplay.class);
+        bind(WorkspacePresenter.WorkspacePresenterDisplay.class).to(
+                WorkspacePresenter.DefaultWorkspacePresenterDisplay.class);
+        bind(LoadWorkspaceDialogCommand.DetailsDisplay.class).to(
+                LoadWorkspaceDialogCommand.DefaultDetailsDisplay.class);
     }
 
     private void bindDragAvatarDropTargetManagers() {
-	bind(ResourceSetAvatarDropTargetManager.class).to(
-		NullResourceSetAvatarDropTargetManager.class).in(
-		Singleton.class);
+        bind(ResourceSetAvatarDropTargetManager.class).to(
+                NullResourceSetAvatarDropTargetManager.class).in(
+                Singleton.class);
 
-	bind(ResourceSetAvatarDropTargetManager.class).annotatedWith(
-		Names.named(AVATAR_FACTORY_SELECTION)).to(
-		SelectionDropTargetManager.class).in(Singleton.class);
+        bind(ResourceSetAvatarDropTargetManager.class)
+                .annotatedWith(Names.named(AVATAR_FACTORY_SELECTION))
+                .to(SelectionDropTargetManager.class).in(Singleton.class);
 
-	bind(ResourceSetAvatarDropTargetManager.class).annotatedWith(
-		Names.named(AVATAR_FACTORY_SET)).to(
-		ResourceSetDropTargetManager.class).in(Singleton.class);
+        bind(ResourceSetAvatarDropTargetManager.class)
+                .annotatedWith(Names.named(AVATAR_FACTORY_SET))
+                .to(ResourceSetDropTargetManager.class).in(Singleton.class);
 
-	bind(ResourceSetAvatarDropTargetManager.class).annotatedWith(
-		Names.named(AVATAR_FACTORY_TYPE)).to(
-		NullResourceSetAvatarDropTargetManager.class).in(
-		Singleton.class);
+        bind(ResourceSetAvatarDropTargetManager.class)
+                .annotatedWith(Names.named(AVATAR_FACTORY_TYPE))
+                .to(NullResourceSetAvatarDropTargetManager.class)
+                .in(Singleton.class);
 
-	bind(ResourceSetAvatarDropTargetManager.class).annotatedWith(
-		Names.named(AVATAR_FACTORY_ALL_RESOURCES)).to(
-		AllSetDropTargetManager.class).in(Singleton.class);
+        bind(ResourceSetAvatarDropTargetManager.class)
+                .annotatedWith(Names.named(AVATAR_FACTORY_ALL_RESOURCES))
+                .to(AllSetDropTargetManager.class).in(Singleton.class);
 
-	bind(ResourceSetAvatarDropTargetManager.class).annotatedWith(
-		Names.named(DROP_TARGET_MANAGER_VIEW_CONTENT)).to(
-		ViewDisplayDropTargetManager.class).in(Singleton.class);
+        bind(ResourceSetAvatarDropTargetManager.class)
+                .annotatedWith(Names.named(DROP_TARGET_MANAGER_VIEW_CONTENT))
+                .to(ViewDisplayDropTargetManager.class).in(Singleton.class);
     }
 
     private void bindDragAvatarFactories() {
-	bind(ResourceSetAvatarFactory.class).toProvider(
-		DefaultResourceSetAvatarFactoryProvider.class).in(
-		Singleton.class);
-	bind(ResourceSetAvatarFactory.class).annotatedWith(
-		Names.named(AVATAR_FACTORY_SET)).toProvider(
-		ResourceSetsDragAvatarFactoryProvider.class)
-		.in(Singleton.class);
-	bind(ResourceSetAvatarFactory.class).annotatedWith(
-		Names.named(AVATAR_FACTORY_ALL_RESOURCES)).toProvider(
-		AllResourceSetAvatarFactoryProvider.class).in(Singleton.class);
-	bind(ResourceSetAvatarFactory.class).annotatedWith(
-		Names.named(AVATAR_FACTORY_TYPE)).toProvider(
-		TypeDragAvatarFactoryProvider.class).in(Singleton.class);
-	bind(ResourceSetAvatarFactory.class).annotatedWith(
-		Names.named(AVATAR_FACTORY_SELECTION)).toProvider(
-		SelectionDragAvatarFactoryProvider.class).in(Singleton.class);
-	bind(ResourceSetAvatarFactory.class).annotatedWith(
-		Names.named(AVATAR_FACTORY_SELECTION_DROP)).toProvider(
-		SelectionDropTargetFactoryProvider.class).in(Singleton.class);
+        bind(ResourceSetAvatarFactory.class).toProvider(
+                DefaultResourceSetAvatarFactoryProvider.class).in(
+                Singleton.class);
+        bind(ResourceSetAvatarFactory.class)
+                .annotatedWith(Names.named(AVATAR_FACTORY_SET))
+                .toProvider(ResourceSetsDragAvatarFactoryProvider.class)
+                .in(Singleton.class);
+        bind(ResourceSetAvatarFactory.class)
+                .annotatedWith(Names.named(AVATAR_FACTORY_ALL_RESOURCES))
+                .toProvider(AllResourceSetAvatarFactoryProvider.class)
+                .in(Singleton.class);
+        bind(ResourceSetAvatarFactory.class)
+                .annotatedWith(Names.named(AVATAR_FACTORY_TYPE))
+                .toProvider(TypeDragAvatarFactoryProvider.class)
+                .in(Singleton.class);
+        bind(ResourceSetAvatarFactory.class)
+                .annotatedWith(Names.named(AVATAR_FACTORY_SELECTION))
+                .toProvider(SelectionDragAvatarFactoryProvider.class)
+                .in(Singleton.class);
+        bind(ResourceSetAvatarFactory.class)
+                .annotatedWith(Names.named(AVATAR_FACTORY_SELECTION_DROP))
+                .toProvider(SelectionDropTargetFactoryProvider.class)
+                .in(Singleton.class);
     }
 
     private void bindHoverModel() {
-	/*
-	 * We use a counting resource set, because elements might get removed
-	 * from the set after they have been added again, e.g. when moving the
-	 * mouse from over a resource item with popup to over a resource set and
-	 * the popup removes the resource a bit later.
-	 */
-	bind(ResourceSet.class).annotatedWith(Names.named(HOVER_MODEL)).to(
-		DefaultResourceSet.class).in(Singleton.class); // CountingResourceSet
+        /*
+         * We use a counting resource set, because elements might get removed
+         * from the set after they have been added again, e.g. when moving the
+         * mouse from over a resource item with popup to over a resource set and
+         * the popup removes the resource a bit later.
+         */
+        bind(ResourceSet.class).annotatedWith(Names.named(HOVER_MODEL))
+                .to(DefaultResourceSet.class).in(Singleton.class); // CountingResourceSet
 
-	bind(ResourceSetContainer.class)
-		.annotatedWith(Names.named(HOVER_MODEL)).to(
-			ResourceSetContainer.class).in(Singleton.class);
+        bind(ResourceSetContainer.class)
+                .annotatedWith(Names.named(HOVER_MODEL))
+                .to(ResourceSetContainer.class).in(Singleton.class);
     }
 
     private void bindLabelProviders() {
-	bind(LabelProvider.class).annotatedWith(
-		Names.named(LABEL_PROVIDER_SELECTION_SET)).to(
-		SelectionModelLabelFactory.class).in(Singleton.class);
-	bind(LabelProvider.class).annotatedWith(
-		Names.named(LABEL_PROVIDER_RESOURCE_SET)).to(
-		ResourceSetLabelFactory.class).in(Singleton.class);
+        bind(LabelProvider.class)
+                .annotatedWith(Names.named(LABEL_PROVIDER_SELECTION_SET))
+                .to(SelectionModelLabelFactory.class).in(Singleton.class);
+        bind(LabelProvider.class)
+                .annotatedWith(Names.named(LABEL_PROVIDER_RESOURCE_SET))
+                .to(ResourceSetLabelFactory.class).in(Singleton.class);
     }
 
     protected void bindViewContentDisplayFactories() {
-	bindViewContentDisplayFactory(TYPE_MAP,
-		MapViewContentDisplayFactory.class);
-	bindViewContentDisplayFactory(TYPE_LIST,
-		ListViewContentDisplayFactory.class);
-	bindViewContentDisplayFactory(TYPE_GRAPH,
-		GraphViewContentDisplayFactory.class);
-	bindViewContentDisplayFactory(TYPE_TIMELINE,
-		TimeLineViewContentDisplayFactory.class);
-	bindViewContentDisplayFactory(TYPE_CHART,
-		ChartViewContentDisplayFactory.class);
-	bindViewContentDisplayFactory(TYPE_BAR,
-		BarViewContentDisplayFactory.class);
-	bindViewContentDisplayFactory(TYPE_PIE,
-		PieViewContentDisplayFactory.class);
-	bindViewContentDisplayFactory(TYPE_DOT,
-		DotViewContentDisplayFactory.class);
-	bindViewContentDisplayFactory(TYPE_SCATTER,
-		ScatterViewContentDisplayFactory.class);
+        bindViewContentDisplayFactory(TYPE_MAP,
+                MapViewContentDisplayFactory.class);
+        bindViewContentDisplayFactory(TYPE_LIST,
+                ListViewContentDisplayFactory.class);
+        bindViewContentDisplayFactory(TYPE_GRAPH,
+                GraphViewContentDisplayFactory.class);
+        bindViewContentDisplayFactory(TYPE_TIMELINE,
+                TimeLineViewContentDisplayFactory.class);
+        bindViewContentDisplayFactory(TYPE_CHART,
+                ChartViewContentDisplayFactory.class);
+        bindViewContentDisplayFactory(TYPE_BAR,
+                BarViewContentDisplayFactory.class);
+        bindViewContentDisplayFactory(TYPE_PIE,
+                PieViewContentDisplayFactory.class);
+        bindViewContentDisplayFactory(TYPE_DOT,
+                DotViewContentDisplayFactory.class);
+        bindViewContentDisplayFactory(TYPE_SCATTER,
+                ScatterViewContentDisplayFactory.class);
     }
 
     protected void bindViewContentDisplayFactory(
-	    String type,
-	    Class<? extends ViewContentDisplayFactory> viewContentDisplayFactoryClass) {
-	bind(ViewContentDisplayFactory.class).annotatedWith(Names.named(type))
-		.to(viewContentDisplayFactoryClass).in(Singleton.class);
+            String type,
+            Class<? extends ViewContentDisplayFactory> viewContentDisplayFactoryClass) {
+        bind(ViewContentDisplayFactory.class).annotatedWith(Names.named(type))
+                .to(viewContentDisplayFactoryClass).in(Singleton.class);
     }
 
     @Override
     protected void configure() {
-	bind(CommandManager.class).to(DefaultCommandManager.class).in(
-		Singleton.class);
-	bind(Desktop.class).to(DefaultDesktop.class).in(Singleton.class);
-	bind(ResourceSetAvatarDragController.class).to(
-		DefaultResourceSetAvatarDragController.class).in(
-		Singleton.class);
-	bind(ViewAccessor.class).to(DefaultViewAccessor.class).in(
-		Singleton.class);
-	bind(AuthenticationManager.class)
-		.to(DefaultAuthenticationManager.class).in(Singleton.class);
+        bind(CommandManager.class).to(DefaultCommandManager.class).in(
+                Singleton.class);
+        bind(Desktop.class).to(DefaultDesktop.class).in(Singleton.class);
+        bind(ResourceSetAvatarDragController.class).to(
+                DefaultResourceSetAvatarDragController.class).in(
+                Singleton.class);
+        bind(ViewAccessor.class).to(DefaultViewAccessor.class).in(
+                Singleton.class);
+        bind(AuthenticationManager.class)
+                .to(DefaultAuthenticationManager.class).in(Singleton.class);
 
-	bind(ShadeManager.class).in(Singleton.class);
-	bind(DialogManager.class).in(Singleton.class);
-	bind(ErrorHandler.class).to(FeedbackDialogErrorHandler.class).in(
-		Singleton.class);
-	bind(MessageManager.class).annotatedWith(Names.named(DEFAULT)).to(
-		DefaultMessageManager.class).in(Singleton.class);
-	bind(MessageManager.class).to(ShadeMessageManager.class).in(
-		Singleton.class);
-	bind(AsyncCommandExecutor.class).annotatedWith(Names.named(DEFAULT))
-		.to(ErrorHandlingAsyncCommandExecutor.class)
-		.in(Singleton.class);
-	bind(AsyncCommandExecutor.class).annotatedWith(Names.named(LOG)).to(
-		LoggingAsyncCommandExecutor.class).in(Singleton.class);
-	bind(AsyncCommandExecutor.class).to(
-		MessageBlockingCommandExecutor.class).in(Singleton.class);
-	bind(CommandPresenterFactory.class).in(Singleton.class);
+        bind(ShadeManager.class).in(Singleton.class);
+        bind(DialogManager.class).in(Singleton.class);
+        bind(ErrorHandler.class).to(FeedbackDialogErrorHandler.class).in(
+                Singleton.class);
+        bind(MessageManager.class).annotatedWith(Names.named(DEFAULT))
+                .to(DefaultMessageManager.class).in(Singleton.class);
+        bind(MessageManager.class).to(ShadeMessageManager.class).in(
+                Singleton.class);
+        bind(AsyncCommandExecutor.class).annotatedWith(Names.named(DEFAULT))
+                .to(ErrorHandlingAsyncCommandExecutor.class)
+                .in(Singleton.class);
+        bind(AsyncCommandExecutor.class).annotatedWith(Names.named(LOG))
+                .to(LoggingAsyncCommandExecutor.class).in(Singleton.class);
+        bind(AsyncCommandExecutor.class).to(
+                MessageBlockingCommandExecutor.class).in(Singleton.class);
+        bind(CommandPresenterFactory.class).in(Singleton.class);
 
-	bindViewContentDisplayFactories();
+        bindViewContentDisplayFactories();
 
-	bind(WindowContentProducer.class).toProvider(
-		getContentProducerProviderClass()).in(Singleton.class);
-	bind(WindowContentProducer.class).annotatedWith(Names.named(PROXY)).to(
-		ProxyWindowContentFactory.class).in(Singleton.class);
+        bind(WindowContentProducer.class).toProvider(
+                getContentProducerProviderClass()).in(Singleton.class);
+        bind(WindowContentProducer.class).annotatedWith(Names.named(PROXY))
+                .to(ProxyWindowContentFactory.class).in(Singleton.class);
 
-	bindDragAvatarDropTargetManagers();
-	bindDragAvatarFactories();
+        bindDragAvatarDropTargetManagers();
+        bindDragAvatarFactories();
 
-	bind(DetailsWidgetHelper.class).to(getDetailsWidgetHelperClass()).in(
-		Singleton.class);
+        bind(DetailsWidgetHelper.class).to(getDetailsWidgetHelperClass()).in(
+                Singleton.class);
 
-	bind(HandlerManager.class).toProvider(HandlerManagerProvider.class).in(
-		Singleton.class);
+        bind(HandlerManager.class).toProvider(HandlerManagerProvider.class).in(
+                Singleton.class);
 
-	bind(DragEnablerFactory.class).in(Singleton.class);
+        bind(DragEnablerFactory.class).in(Singleton.class);
 
-	bindLabelProviders();
+        bindLabelProviders();
 
-	bind(SelectionModelLabelFactory.class).in(Singleton.class);
+        bind(SelectionModelLabelFactory.class).in(Singleton.class);
 
-	bind(WorkspaceManager.class).to(DefaultWorkspaceManager.class).in(
-		Singleton.class);
-	bind(WorkspacePersistenceManager.class).to(
-		DefaultWorkspacePersistenceManager.class).in(Singleton.class);
-	bind(PopupManagerFactory.class).to(DefaultPopupManagerFactory.class)
-		.in(Singleton.class);
+        bind(WorkspaceManager.class).to(DefaultWorkspaceManager.class).in(
+                Singleton.class);
+        bind(WorkspacePersistenceManager.class).to(
+                DefaultWorkspacePersistenceManager.class).in(Singleton.class);
+        bind(PopupManagerFactory.class).to(DefaultPopupManagerFactory.class)
+                .in(Singleton.class);
 
-	bind(ResourceManager.class).to(DefaultResourceManager.class).in(
-		Singleton.class);
-	bind(ResourceSetFactory.class).to(ManagedResourceSetFactory.class).in(
-		Singleton.class);
+        bind(ResourceManager.class).to(DefaultResourceManager.class).in(
+                Singleton.class);
+        bind(ResourceSetFactory.class).to(ManagedResourceSetFactory.class).in(
+                Singleton.class);
 
-	bindHoverModel();
+        bindHoverModel();
 
-	bind(ResourceCategorizer.class).to(ResourceByUriTypeCategorizer.class)
-		.in(Singleton.class);
-	bind(ResourceMultiCategorizer.class).to(DefaultResourceMultiCategorizer.class).in(Singleton.class);
-	bind(CategoryLabelProvider.class).to(getCategoryLabelProviderClass())
-		.in(Singleton.class);
+        bind(ResourceCategorizer.class).to(ResourceByUriTypeCategorizer.class)
+                .in(Singleton.class);
+        bind(ResourceMultiCategorizer.class).to(
+                DefaultResourceMultiCategorizer.class).in(Singleton.class);
+        bind(CategoryLabelProvider.class).to(getCategoryLabelProviderClass())
+                .in(Singleton.class);
 
-	bind(ArcStyleProvider.class).to(getArcStyleProviderClass()).in(
-		Singleton.class);
+        bind(ArcStyleProvider.class).to(getArcStyleProviderClass()).in(
+                Singleton.class);
 
-	bind(GraphExpansionRegistry.class).to(getGraphExpansionRegistryClass())
-		.in(Singleton.class);
+        bind(GraphExpansionRegistry.class).to(getGraphExpansionRegistryClass())
+                .in(Singleton.class);
 
-	bindDisplays();
+        bindDisplays();
 
-	bind(DocumentProcessor.class).to(SarissaDocumentProcessor.class).in(
-		Singleton.class);
-	bind(URLFetchService.class).to(FlashURLFetchService.class).in(
-		Singleton.class);
+        bind(DocumentProcessor.class).to(SarissaDocumentProcessor.class).in(
+                Singleton.class);
+        bind(URLFetchService.class).to(FlashURLFetchService.class).in(
+                Singleton.class);
 
-	bind(SlotResolver.class).to(getSlotResolverClass()).in(Singleton.class);
+        bind(SlotResolver.class).to(getSlotResolverClass()).in(Singleton.class);
 
-	bindCustomServices();
+        bindCustomServices();
 
-	bindApplication();
-    }
-
-    protected Class<? extends CategoryLabelProvider> getCategoryLabelProviderClass() {
-	return MappingCategoryLabelProvider.class;
-    }
-
-    protected Class<? extends GraphExpansionRegistry> getGraphExpansionRegistryClass() {
-	return DefaultGraphExpansionRegistry.class;
+        bindApplication();
     }
 
     protected Class<? extends ChooselApplication> getApplicationClass() {
-	return ChooselApplication.class;
+        return ChooselApplication.class;
     }
 
     protected Class<? extends ArcStyleProvider> getArcStyleProviderClass() {
-	return DefaultArcStyleProvider.class;
+        return DefaultArcStyleProvider.class;
+    }
+
+    protected Class<? extends CategoryLabelProvider> getCategoryLabelProviderClass() {
+        return MappingCategoryLabelProvider.class;
     }
 
     protected Class<? extends ChooselWindowContentProducerProvider> getContentProducerProviderClass() {
-	return ChooselWindowContentProducerProvider.class;
+        return ChooselWindowContentProducerProvider.class;
     }
 
     protected Class<? extends DetailsWidgetHelper> getDetailsWidgetHelperClass() {
-	return DefaultDetailsWidgetHelper.class;
+        return DefaultDetailsWidgetHelper.class;
+    }
+
+    protected Class<? extends GraphExpansionRegistry> getGraphExpansionRegistryClass() {
+        return DefaultGraphExpansionRegistry.class;
     }
 
     protected Class<? extends SlotResolver> getSlotResolverClass() {
-	return DefaultSlotResolver.class;
+        return DefaultSlotResolver.class;
     }
 }

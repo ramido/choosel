@@ -49,60 +49,60 @@ public class PersistentSharingInvitation {
 
     @Override
     public boolean equals(Object object) {
-	return uid.equals(object);
+        return uid.equals(object);
     }
 
     public String getEmail() {
-	return email;
+        return email;
     }
 
     public Date getInvitationDate() {
-	return invitationDate;
+        return invitationDate;
     }
 
     public String getPassword() {
-	return password;
+        return password;
     }
 
     public String getSenderUserId() {
-	return senderUserId;
+        return senderUserId;
     }
 
     public Key getUid() {
-	return uid;
+        return uid;
     }
 
     public PersistentWorkspace getWorkspace() {
-	return workspace;
+        return workspace;
     }
 
     @Override
     public int hashCode() {
-	return uid.hashCode();
+        return uid.hashCode();
     }
 
     public void setEmail(String email) {
-	this.email = email;
+        this.email = email;
     }
 
     public void setInvitationDate(Date invitationDate) {
-	this.invitationDate = invitationDate;
+        this.invitationDate = invitationDate;
     }
 
     public void setPassword(String password) {
-	this.password = password;
+        this.password = password;
     }
 
     public void setSenderUserId(String senderUserId) {
-	this.senderUserId = senderUserId;
+        this.senderUserId = senderUserId;
     }
 
     public void setUid(Key uid) {
-	this.uid = uid;
+        this.uid = uid;
     }
 
     public void setWorkspace(PersistentWorkspace workspace) {
-	this.workspace = workspace;
+        this.workspace = workspace;
     }
 
 }

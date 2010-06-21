@@ -21,46 +21,47 @@ import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.views.View;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
 
-public class AllSetDropCommandFactory implements ResourceSetAvatarDropCommandFactory {
+public class AllSetDropCommandFactory implements
+        ResourceSetAvatarDropCommandFactory {
 
     private ResourceSetAvatar targetDragAvatar;
 
     private ViewAccessor viewAccessor;
 
     public AllSetDropCommandFactory(ResourceSetAvatar targetDragAvatar,
-	    ViewAccessor viewAccessor) {
+            ViewAccessor viewAccessor) {
 
-	assert targetDragAvatar != null;
-	assert viewAccessor != null;
+        assert targetDragAvatar != null;
+        assert viewAccessor != null;
 
-	this.viewAccessor = viewAccessor;
-	this.targetDragAvatar = targetDragAvatar;
+        this.viewAccessor = viewAccessor;
+        this.targetDragAvatar = targetDragAvatar;
     }
 
     @Override
     public boolean canDrop(ResourceSetAvatar dragAvatar) {
-	assert dragAvatar != null;
-	return !(isSameFromView(dragAvatar) || targetContainsAllResources(dragAvatar));
+        assert dragAvatar != null;
+        return !(isSameFromView(dragAvatar) || targetContainsAllResources(dragAvatar));
     }
 
     @Override
     public UndoableCommand createCommand(ResourceSetAvatar dragAvatar) {
-	assert dragAvatar != null;
+        assert dragAvatar != null;
 
-	return new AddResourcesToViewCommand(getTargetView(), dragAvatar
-		.getResourceSet());
+        return new AddResourcesToViewCommand(getTargetView(),
+                dragAvatar.getResourceSet());
     }
 
     private View getTargetView() {
-	return viewAccessor.findView(targetDragAvatar);
+        return viewAccessor.findView(targetDragAvatar);
     }
 
     private boolean isSameFromView(ResourceSetAvatar dragAvatar) {
-	return getTargetView() == viewAccessor.findView(dragAvatar);
+        return getTargetView() == viewAccessor.findView(dragAvatar);
     }
 
     private boolean targetContainsAllResources(ResourceSetAvatar dragAvatar) {
-	return getTargetView().containsResources(dragAvatar.getResourceSet());
+        return getTargetView().containsResources(dragAvatar.getResourceSet());
     }
 
 }

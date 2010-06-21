@@ -34,46 +34,46 @@ public class Workspace {
     private WorkspaceSavingState savingState;
 
     public HandlerRegistration addWorkspaceSavingStateChangeHandler(
-	    WorkspaceSavingStateChangedEventHandler handler) {
-	return this.handlerManager.addHandler(
-		WorkspaceSavingStateChangedEvent.TYPE, handler);
+            WorkspaceSavingStateChangedEventHandler handler) {
+        return this.handlerManager.addHandler(
+                WorkspaceSavingStateChangedEvent.TYPE, handler);
     }
 
     public Long getId() {
-	return id;
+        return id;
     }
 
     public String getName() {
-	return name;
+        return name;
     }
 
     public WorkspaceSavingState getSavingState() {
-	return savingState;
+        return savingState;
     }
 
     public boolean isNew() {
-	return id == null;
+        return id == null;
     }
 
     public void setId(Long id) {
-	this.id = id;
+        this.id = id;
     }
 
     public void setName(String name) {
-	this.name = name;
+        this.name = name;
     }
 
     public void setSavingState(WorkspaceSavingState newSavingState) {
-	assert newSavingState != null;
+        assert newSavingState != null;
 
-	if (newSavingState == this.savingState) {
-	    return;
-	}
+        if (newSavingState == this.savingState) {
+            return;
+        }
 
-	this.savingState = newSavingState;
+        this.savingState = newSavingState;
 
-	this.handlerManager.fireEvent(new WorkspaceSavingStateChangedEvent(
-		this, savingState));
+        this.handlerManager.fireEvent(new WorkspaceSavingStateChangedEvent(
+                this, savingState));
     }
 
 }

@@ -27,44 +27,44 @@ public class DefaultHasLabel implements HasLabel {
     private HasLabel eventSource;
 
     public DefaultHasLabel(HasLabel eventSource) {
-	assert eventSource != null;
+        assert eventSource != null;
 
-	this.eventSource = eventSource;
-	this.eventBus = new HandlerManager(eventSource);
-    }
-
-    @Override
-    public String getLabel() {
-	return label == null ? "" : label;
-    }
-
-    @Override
-    public boolean hasLabel() {
-	return label != null;
-    }
-
-    @Override
-    public void setLabel(String newLabel) {
-	if (newLabel == this.label
-		|| (newLabel != null && newLabel.equals(this.label))) {
-	    return;
-	}
-
-	String oldLabel = this.label;
-
-	this.label = newLabel;
-
-	eventBus.fireEvent(new LabelChangedEvent(eventSource, newLabel,
-		oldLabel));
+        this.eventSource = eventSource;
+        this.eventBus = new HandlerManager(eventSource);
     }
 
     @Override
     public HandlerRegistration addLabelChangedEventHandler(
-	    LabelChangedEventHandler eventHandler) {
+            LabelChangedEventHandler eventHandler) {
 
-	assert eventHandler != null;
+        assert eventHandler != null;
 
-	return eventBus.addHandler(LabelChangedEvent.TYPE, eventHandler);
+        return eventBus.addHandler(LabelChangedEvent.TYPE, eventHandler);
+    }
+
+    @Override
+    public String getLabel() {
+        return label == null ? "" : label;
+    }
+
+    @Override
+    public boolean hasLabel() {
+        return label != null;
+    }
+
+    @Override
+    public void setLabel(String newLabel) {
+        if (newLabel == this.label
+                || (newLabel != null && newLabel.equals(this.label))) {
+            return;
+        }
+
+        String oldLabel = this.label;
+
+        this.label = newLabel;
+
+        eventBus.fireEvent(new LabelChangedEvent(eventSource, newLabel,
+                oldLabel));
     }
 
 }

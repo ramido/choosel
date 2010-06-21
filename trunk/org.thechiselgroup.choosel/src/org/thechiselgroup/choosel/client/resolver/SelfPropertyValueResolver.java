@@ -17,11 +17,10 @@ package org.thechiselgroup.choosel.client.resolver;
 
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
-
 public class SelfPropertyValueResolver implements ResourceSetToValueResolver {
 
     @Override
     public Object getValue(ResourceSet resources) {
-	return resources;
+        return resources;
     }
 }

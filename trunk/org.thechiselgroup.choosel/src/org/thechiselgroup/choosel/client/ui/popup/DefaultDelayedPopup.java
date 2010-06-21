@@ -26,7 +26,7 @@ import com.google.gwt.user.client.ui.PopupPanel;
 
 // TODO unify / replace with new popup system
 public class DefaultDelayedPopup extends PopupPanel implements MouseOutHandler,
-	MouseOverHandler, DelayedPopup {
+        MouseOverHandler, DelayedPopup {
 
     public static final String CSS_POPUP = "popups-Popup";
 
@@ -41,71 +41,71 @@ public class DefaultDelayedPopup extends PopupPanel implements MouseOutHandler,
     private int hideDelay;
 
     public DefaultDelayedPopup() {
-	this(400, 200);
+        this(400, 200);
     }
 
     public DefaultDelayedPopup(int showDelay, int hideDelay) {
-	super(true, false);
+        super(true, false);
 
-	this.showDelay = showDelay;
-	this.hideDelay = hideDelay;
+        this.showDelay = showDelay;
+        this.hideDelay = hideDelay;
 
-	hideTimer = new Timer() {
-	    @Override
-	    public void run() {
-		hide();
-	    }
-	};
+        hideTimer = new Timer() {
+            @Override
+            public void run() {
+                hide();
+            }
+        };
 
-	showTimer = new Timer() {
-	    @Override
-	    public void run() {
-		updatePosition();
-		show();
-	    }
-	};
+        showTimer = new Timer() {
+            @Override
+            public void run() {
+                updatePosition();
+                show();
+            }
+        };
 
-	setStyleName(CSS_POPUP);
+        setStyleName(CSS_POPUP);
 
-	ZIndex.setZIndex(getElement(), ZIndex.POPUP);
+        ZIndex.setZIndex(getElement(), ZIndex.POPUP);
 
-	// TODO buggy, should depend on mouse position
-	addStyleName(CSS_ALPHA);
+        // TODO buggy, should depend on mouse position
+        addStyleName(CSS_ALPHA);
     }
 
     @Override
     public void hideDelayed() {
-	showTimer.cancel();
-	hideTimer.schedule(hideDelay);
-    }
-
-    protected void updatePosition() {
-
+        showTimer.cancel();
+        hideTimer.schedule(hideDelay);
     }
 
     @Override
     protected void onLoad() {
-	super.onLoad();
-	addDomHandler(this, MouseOverEvent.getType());
-	addDomHandler(this, MouseOutEvent.getType());
+        super.onLoad();
+        addDomHandler(this, MouseOverEvent.getType());
+        addDomHandler(this, MouseOutEvent.getType());
     }
 
     @Override
     public void onMouseOut(MouseOutEvent event) {
-	hideDelayed();
-	addStyleName(CSS_ALPHA);
+        hideDelayed();
+        addStyleName(CSS_ALPHA);
     }
 
     @Override
     public void onMouseOver(MouseOverEvent event) {
-	hideTimer.cancel();
-	removeStyleName(CSS_ALPHA);
+        hideTimer.cancel();
+        removeStyleName(CSS_ALPHA);
     }
 
     @Override
     public void showDelayed() {
-	hideTimer.cancel();
-	showTimer.schedule(showDelay);
+        hideTimer.cancel();
+        showTimer.schedule(showDelay);
+    }
+
+    protected void updatePosition() {
+
     }
 
 }

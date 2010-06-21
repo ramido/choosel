@@ -15,10 +15,15 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.workspace;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResource;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResources;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,10 +53,6 @@ import org.thechiselgroup.choosel.client.windows.Desktop;
 import org.thechiselgroup.choosel.client.windows.WindowContent;
 import org.thechiselgroup.choosel.client.windows.WindowContentProducer;
 import org.thechiselgroup.choosel.client.windows.WindowPanel;
-import org.thechiselgroup.choosel.client.workspace.DefaultWorkspacePersistenceManager;
-import org.thechiselgroup.choosel.client.workspace.Workspace;
-import org.thechiselgroup.choosel.client.workspace.WorkspaceManager;
-import org.thechiselgroup.choosel.client.workspace.WorkspaceSavingState;
 import org.thechiselgroup.choosel.client.workspace.dto.WorkspaceDTO;
 import org.thechiselgroup.choosel.client.workspace.service.WorkspacePersistenceServiceAsync;
 import org.thechiselgroup.choosel.client.workspace.service.WorkspaceSharingServiceAsync;
@@ -61,7 +62,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public class DefaultWorkspacePersistenceManagerTest {
 
     private static interface TestPersistableWindowContent extends
-	    WindowContent, Persistable {
+            WindowContent, Persistable {
 
     }
 
@@ -107,150 +108,151 @@ public class DefaultWorkspacePersistenceManagerTest {
     @Mock
     private WorkspaceManager workspaceManager;
 
+    @Test
+    public void changeWorkspaceSavingState() {
+        underTest.saveWorkspace(saveCallback);
+
+        verify(workspace).setSavingState(WorkspaceSavingState.SAVING);
+
+        ArgumentCaptor<AsyncCallback> argument = ArgumentCaptor
+                .forClass(AsyncCallback.class);
+        verify(persistenceService, times(1)).saveWorkspace(
+                any(WorkspaceDTO.class), argument.capture());
+        AsyncCallback<Long> callback = argument.getValue();
+
+        Long value = new Long(15);
+        callback.onSuccess(value);
+
+        verify(workspace).setSavingState(WorkspaceSavingState.SAVED);
+    }
+
+    private Workspace doLoad(WorkspaceDTO dto) {
+        return underTest.loadWorkspace(dto);
+    }
+
     private WorkspaceDTO doSave() {
-	underTest.saveWorkspace(saveCallback);
+        underTest.saveWorkspace(saveCallback);
 
-	ArgumentCaptor<WorkspaceDTO> argument = ArgumentCaptor
-		.forClass(WorkspaceDTO.class);
-	verify(persistenceService, times(1)).saveWorkspace(argument.capture(),
-		any(AsyncCallback.class));
+        ArgumentCaptor<WorkspaceDTO> argument = ArgumentCaptor
+                .forClass(WorkspaceDTO.class);
+        verify(persistenceService, times(1)).saveWorkspace(argument.capture(),
+                any(AsyncCallback.class));
 
-	return argument.getValue();
+        return argument.getValue();
     }
 
     @Test
     public void saveAndRestoreUnmodifiableSet() {
-	// use string buffer so its modifiable
-	final StringBuffer id = new StringBuffer();
+        // use string buffer so its modifiable
+        final StringBuffer id = new StringBuffer();
 
-	DefaultResourceSet delegate = createResources(1, 2);
-	final ResourceSet unmodifiableSet = new UnmodifiableResourceSet(
-		delegate);
+        DefaultResourceSet delegate = createResources(1, 2);
+        final ResourceSet unmodifiableSet = new UnmodifiableResourceSet(
+                delegate);
 
-	when(windowContent.save(any(ResourceSetCollector.class))).thenAnswer(
-		new Answer<Memento>() {
-		    @Override
-		    public Memento answer(InvocationOnMock invocation)
-			    throws Throwable {
+        when(windowContent.save(any(ResourceSetCollector.class))).thenAnswer(
+                new Answer<Memento>() {
+                    @Override
+                    public Memento answer(InvocationOnMock invocation)
+                            throws Throwable {
 
-			ResourceSetCollector collector = (ResourceSetCollector) invocation
-				.getArguments()[0];
+                        ResourceSetCollector collector = (ResourceSetCollector) invocation
+                                .getArguments()[0];
 
-			id.append(collector.storeResourceSet(unmodifiableSet));
+                        id.append(collector.storeResourceSet(unmodifiableSet));
 
-			return new Memento();
-		    }
-		});
+                        return new Memento();
+                    }
+                });
 
-	when(resourceManager.getByUri(createResource(1).getUri())).thenReturn(
-		createResource(1));
-	when(resourceManager.getByUri(createResource(2).getUri())).thenReturn(
-		createResource(2));
+        when(resourceManager.getByUri(createResource(1).getUri())).thenReturn(
+                createResource(1));
+        when(resourceManager.getByUri(createResource(2).getUri())).thenReturn(
+                createResource(2));
 
-	WorkspaceDTO dto = doSave();
-	doLoad(dto);
+        WorkspaceDTO dto = doSave();
+        doLoad(dto);
 
-	// check correct restore -- how
-	ArgumentCaptor<ResourceSetAccessor> argument = ArgumentCaptor
-		.forClass(ResourceSetAccessor.class);
-	verify(restoredView, times(1)).restore(any(Memento.class),
-		argument.capture());
+        // check correct restore -- how
+        ArgumentCaptor<ResourceSetAccessor> argument = ArgumentCaptor
+                .forClass(ResourceSetAccessor.class);
+        verify(restoredView, times(1)).restore(any(Memento.class),
+                argument.capture());
 
-	ResourceSet resourceSet = argument.getValue().getResourceSet(
-		Integer.parseInt(id.toString()));
-	assertEquals(true, resourceSet instanceof UnmodifiableResourceSet);
-	assertEquals(true, delegate
-		.containsEqualResources(((DelegatingResourceSet) resourceSet)
-			.getDelegate()));
-    }
-
-    @Test
-    public void useWindowOffsetWidth() {
-	int height = 100;
-	int width = 200;
-
-	when(window.getOffsetWidth()).thenReturn(width);
-	when(window.getOffsetHeight()).thenReturn(height);
-
-	WorkspaceDTO dto = doSave();
-	doLoad(dto);
-
-	verify(desktop).createWindow(eq(restoredView), eq(0), eq(0), eq(width),
-		eq(height));
-    }
-
-    private Workspace doLoad(WorkspaceDTO dto) {
-	return underTest.loadWorkspace(dto);
+        ResourceSet resourceSet = argument.getValue().getResourceSet(
+                Integer.parseInt(id.toString()));
+        assertEquals(true, resourceSet instanceof UnmodifiableResourceSet);
+        assertEquals(
+                true,
+                delegate.containsEqualResources(((DelegatingResourceSet) resourceSet)
+                        .getDelegate()));
     }
 
     @Test
     public void saveWindow() {
-	WorkspaceDTO resultDTO = doSave();
-	assertEquals(1, resultDTO.getWindows().length);
+        WorkspaceDTO resultDTO = doSave();
+        assertEquals(1, resultDTO.getWindows().length);
     }
 
     @Before
     public void setUp() {
-	MockitoGWTBridge.setUp();
-	MockitoAnnotations.initMocks(this);
+        MockitoGWTBridge.setUp();
+        MockitoAnnotations.initMocks(this);
 
-	resourceSetFactory = new DefaultResourceSetFactory();
+        resourceSetFactory = new DefaultResourceSetFactory();
 
-	workspace = spy(new Workspace());
-	workspace.setName(TEST_WORKSPACE_NAME);
+        workspace = spy(new Workspace());
+        workspace.setName(TEST_WORKSPACE_NAME);
 
-	underTest = new DefaultWorkspacePersistenceManager(workspaceManager,
-		desktop, persistenceService, viewFactory, resourceManager,
-		resourceSetFactory, sharingService);
+        underTest = new DefaultWorkspacePersistenceManager(workspaceManager,
+                desktop, persistenceService, viewFactory, resourceManager,
+                resourceSetFactory, sharingService);
 
-	when(workspaceManager.getWorkspace()).thenReturn(workspace);
-	when(window.getViewContent()).thenReturn(windowContent);
-	when(windowContent.getContentType()).thenReturn(CONTENT_TYPE);
-	when(viewFactory.createWindowContent(CONTENT_TYPE)).thenReturn(
-		restoredView);
+        when(workspaceManager.getWorkspace()).thenReturn(workspace);
+        when(window.getViewContent()).thenReturn(windowContent);
+        when(windowContent.getContentType()).thenReturn(CONTENT_TYPE);
+        when(viewFactory.createWindowContent(CONTENT_TYPE)).thenReturn(
+                restoredView);
 
-	windows = new ArrayList<WindowPanel>();
-	windows.add(window);
-	when(desktop.getWindows()).thenReturn(windows);
+        windows = new ArrayList<WindowPanel>();
+        windows.add(window);
+        when(desktop.getWindows()).thenReturn(windows);
     }
 
     @After
     public void tearDown() {
-	MockitoGWTBridge.tearDown();
+        MockitoGWTBridge.tearDown();
     }
 
     @Test
     public void updateIdAfterSave() {
-	underTest.saveWorkspace(saveCallback);
+        underTest.saveWorkspace(saveCallback);
 
-	ArgumentCaptor<AsyncCallback> argument = ArgumentCaptor
-		.forClass(AsyncCallback.class);
-	verify(persistenceService, times(1)).saveWorkspace(
-		any(WorkspaceDTO.class), argument.capture());
-	AsyncCallback<Long> callback = argument.getValue();
+        ArgumentCaptor<AsyncCallback> argument = ArgumentCaptor
+                .forClass(AsyncCallback.class);
+        verify(persistenceService, times(1)).saveWorkspace(
+                any(WorkspaceDTO.class), argument.capture());
+        AsyncCallback<Long> callback = argument.getValue();
 
-	Long value = new Long(15);
-	callback.onSuccess(value);
+        Long value = new Long(15);
+        callback.onSuccess(value);
 
-	assertEquals(value, workspace.getId());
-	assertEquals(false, workspace.isNew());
+        assertEquals(value, workspace.getId());
+        assertEquals(false, workspace.isNew());
     }
 
     @Test
-    public void changeWorkspaceSavingState() {
-	underTest.saveWorkspace(saveCallback);
+    public void useWindowOffsetWidth() {
+        int height = 100;
+        int width = 200;
 
-	verify(workspace).setSavingState(WorkspaceSavingState.SAVING);
+        when(window.getOffsetWidth()).thenReturn(width);
+        when(window.getOffsetHeight()).thenReturn(height);
 
-	ArgumentCaptor<AsyncCallback> argument = ArgumentCaptor
-		.forClass(AsyncCallback.class);
-	verify(persistenceService, times(1)).saveWorkspace(
-		any(WorkspaceDTO.class), argument.capture());
-	AsyncCallback<Long> callback = argument.getValue();
+        WorkspaceDTO dto = doSave();
+        doLoad(dto);
 
-	Long value = new Long(15);
-	callback.onSuccess(value);
-
-	verify(workspace).setSavingState(WorkspaceSavingState.SAVED);
+        verify(desktop).createWindow(eq(restoredView), eq(0), eq(0), eq(width),
+                eq(height));
     }
 }

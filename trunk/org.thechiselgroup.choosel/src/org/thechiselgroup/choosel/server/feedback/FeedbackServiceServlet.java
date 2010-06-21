@@ -24,30 +24,31 @@ import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class FeedbackServiceServlet extends RemoteServiceServlet implements
-	FeedbackService {
+        FeedbackService {
 
     private FeedbackService service = null;
 
     private FeedbackService getServiceDelegate() {
-	if (service == null) {
-	    service = new DefaultFeedbackService(UserServiceFactory
-		    .getUserService(), MailServiceFactory.getMailService());
-	}
+        if (service == null) {
+            service = new DefaultFeedbackService(
+                    UserServiceFactory.getUserService(),
+                    MailServiceFactory.getMailService());
+        }
 
-	assert service != null;
+        assert service != null;
 
-	return service;
+        return service;
     }
 
     @Override
     public void sendFeedback(String message, String errorMessage)
-	    throws ServiceException {
+            throws ServiceException {
 
-	try {
-	    getServiceDelegate().sendFeedback(message, errorMessage);
-	} catch (RuntimeException e) {
-	    Log.error("sendFeedback failed", e);
-	    throw new ServiceException(e);
-	}
+        try {
+            getServiceDelegate().sendFeedback(message, errorMessage);
+        } catch (RuntimeException e) {
+            Log.error("sendFeedback failed", e);
+            throw new ServiceException(e);
+        }
     }
 }

@@ -18,7 +18,6 @@ package org.thechiselgroup.choosel.client.util;
 import java.util.HashSet;
 import java.util.Set;
 
-
 import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
@@ -29,16 +28,16 @@ public class HandlerRegistrationSet implements Disposable {
     private Set<HandlerRegistration> handlerRegistrations = new HashSet<HandlerRegistration>();
 
     public void addHandlerRegistration(HandlerRegistration registration) {
-	assert registration != null;
+        assert registration != null;
 
-	handlerRegistrations.add(registration);
+        handlerRegistrations.add(registration);
     }
 
     @Override
     public void dispose() {
-	for (HandlerRegistration registration : handlerRegistrations) {
-	    registration.removeHandler();
-	}
+        for (HandlerRegistration registration : handlerRegistrations) {
+            registration.removeHandler();
+        }
     }
 
 }

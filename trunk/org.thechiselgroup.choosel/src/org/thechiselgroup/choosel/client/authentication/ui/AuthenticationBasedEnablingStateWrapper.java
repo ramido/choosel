@@ -30,7 +30,7 @@ import com.google.inject.Inject;
  * application.
  */
 public class AuthenticationBasedEnablingStateWrapper implements Disposable,
-	HasEnabledState {
+        HasEnabledState {
 
     private AuthenticationManager authenticationManager;
 
@@ -44,51 +44,51 @@ public class AuthenticationBasedEnablingStateWrapper implements Disposable,
 
     @Inject
     public AuthenticationBasedEnablingStateWrapper(
-	    AuthenticationManager authenticationManager,
-	    HasEnabledState hasEnabledState) {
+            AuthenticationManager authenticationManager,
+            HasEnabledState hasEnabledState) {
 
-	assert authenticationManager != null;
-	assert hasEnabledState != null;
+        assert authenticationManager != null;
+        assert hasEnabledState != null;
 
-	this.authenticationManager = authenticationManager;
-	this.hasEnabledState = hasEnabledState;
+        this.authenticationManager = authenticationManager;
+        this.hasEnabledState = hasEnabledState;
     }
 
     @Override
     public void dispose() {
-	handlerRegistration.removeHandler();
+        handlerRegistration.removeHandler();
     }
 
     public void init() {
-	handlerRegistration = authenticationManager
-		.addAuthenticationStateChangedEventHandler(new AuthenticationStateChangedEventHandler() {
-		    @Override
-		    public void onAuthenticationStateChanged(
-			    AuthenticationStateChangedEvent event) {
-			updateEnabling();
-		    }
-		});
+        handlerRegistration = authenticationManager
+                .addAuthenticationStateChangedEventHandler(new AuthenticationStateChangedEventHandler() {
+                    @Override
+                    public void onAuthenticationStateChanged(
+                            AuthenticationStateChangedEvent event) {
+                        updateEnabling();
+                    }
+                });
 
-	updateEnabling();
+        updateEnabling();
     }
 
     @Override
     public boolean isEnabled() {
-	return outsideEnabled;
+        return outsideEnabled;
     }
 
     @Override
     public void setEnabled(boolean enabled) {
-	this.outsideEnabled = enabled;
-	updateDelegateEnabling();
-    }
-
-    private void updateEnabling() {
-	this.authEnabled = authenticationManager.getAuthenticationState() == AuthenticationState.SIGNED_IN;
-	updateDelegateEnabling();
+        this.outsideEnabled = enabled;
+        updateDelegateEnabling();
     }
 
     private void updateDelegateEnabling() {
-	hasEnabledState.setEnabled(authEnabled && outsideEnabled);
+        hasEnabledState.setEnabled(authEnabled && outsideEnabled);
+    }
+
+    private void updateEnabling() {
+        this.authEnabled = authenticationManager.getAuthenticationState() == AuthenticationState.SIGNED_IN;
+        updateDelegateEnabling();
     }
 }

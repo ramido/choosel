@@ -33,7 +33,7 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 public class DialogController extends AbstractWindowController {
 
     public static enum State {
-	CANCELED, FINISHED, RUNNING
+        CANCELED, FINISHED, RUNNING
     }
 
     private Dialog dialog;
@@ -43,76 +43,76 @@ public class DialogController extends AbstractWindowController {
     private ShadeManager shadeManager;
 
     DialogController(AbsolutePanel boundaryPanel, Dialog dialog,
-	    ShadeManager shadeManager) {
+            ShadeManager shadeManager) {
 
-	super(boundaryPanel, new NullCommandManager());
+        super(boundaryPanel, new NullCommandManager());
 
-	this.dialog = dialog;
-	this.shadeManager = shadeManager;
+        this.dialog = dialog;
+        this.shadeManager = shadeManager;
     }
 
     public void cancelDialog(DialogWindow window) {
-	window.setState(State.CANCELED);
-	window.close();
+        window.setState(State.CANCELED);
+        window.close();
     }
 
     @Override
     public void close(WindowPanel window) {
-	assert window instanceof DialogWindow;
+        assert window instanceof DialogWindow;
 
-	getBoundaryPanel().remove(window);
+        getBoundaryPanel().remove(window);
 
-	State state = ((DialogWindow) window).getState();
-	if (State.CANCELED.equals(state)) {
-	    dialog.cancel();
-	} else if (State.FINISHED.equals(state)) {
-	    dialog.okay();
-	}
+        State state = ((DialogWindow) window).getState();
+        if (State.CANCELED.equals(state)) {
+            dialog.cancel();
+        } else if (State.FINISHED.equals(state)) {
+            dialog.okay();
+        }
 
-	hideShade();
+        hideShade();
     }
 
     public void finishDialog(DialogWindow window) {
-	window.setState(State.FINISHED);
-	window.close();
+        window.setState(State.FINISHED);
+        window.close();
     }
 
     private void hideShade() {
-	shadeHandle.remove();
-    }
-
-    private void showShade() {
-	shadeHandle = shadeManager.showShade();
+        shadeHandle.remove();
     }
 
     public void init() {
-	showShade();
+        showShade();
 
-	final DialogWindow dialogWindow = new DialogWindow();
+        final DialogWindow dialogWindow = new DialogWindow();
 
-	// initialization order important (breaks otherwise)
-	dialogWindow.init(this, dialog);
-	dialog.init(dialogWindow);
+        // initialization order important (breaks otherwise)
+        dialogWindow.init(this, dialog);
+        dialog.init(dialogWindow);
 
-	shadeManager.addClickHandler(new ClickHandler() {
-	    @Override
-	    public void onClick(ClickEvent event) {
-		cancelDialog(dialogWindow);
-	    }
-	});
+        shadeManager.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                cancelDialog(dialogWindow);
+            }
+        });
 
-	getBoundaryPanel().add(dialogWindow);
+        getBoundaryPanel().add(dialogWindow);
 
-	// display centered below action bar
-	// offsets are useless here -- why? -- use content instead (not
-	// exact)
-	Log.debug("windowOffsetWidth: " + dialogWindow.getOffsetWidth());
-	Log.debug("windowContentWidth: " + dialogWindow.getContentWidth());
+        // display centered below action bar
+        // offsets are useless here -- why? -- use content instead (not
+        // exact)
+        Log.debug("windowOffsetWidth: " + dialogWindow.getOffsetWidth());
+        Log.debug("windowContentWidth: " + dialogWindow.getContentWidth());
 
-	int x = (getBoundaryPanel().getOffsetWidth() - dialogWindow
-		.getContentWidth()) / 2;
+        int x = (getBoundaryPanel().getOffsetWidth() - dialogWindow
+                .getContentWidth()) / 2;
 
-	// TODO extract offset (variable)
-	dialogWindow.setLocation(x, ActionBar.ACTION_BAR_HEIGHT_PX + 10);
+        // TODO extract offset (variable)
+        dialogWindow.setLocation(x, ActionBar.ACTION_BAR_HEIGHT_PX + 10);
+    }
+
+    private void showShade() {
+        shadeHandle = shadeManager.showShade();
     }
 }

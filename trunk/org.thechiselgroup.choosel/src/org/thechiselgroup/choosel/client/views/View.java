@@ -36,6 +36,8 @@ public interface View extends WindowContent, Disposable, Persistable {
      */
     void addResourceSet(ResourceSet resourceSet);
 
+    void addSelectionSet(ResourceSet selectionSet);
+
     /**
      * Checks if the resources are displayed in this view.
      */
@@ -46,6 +48,8 @@ public interface View extends WindowContent, Disposable, Persistable {
      * view.
      */
     boolean containsResourceSet(ResourceSet resourceSet);
+
+    boolean containsSelectionSet(ResourceSet resourceSet);
 
     /**
      * Returns an unmodifiable resource set containing all resources displayed
@@ -68,12 +72,8 @@ public interface View extends WindowContent, Disposable, Persistable {
      */
     void removeResourceSet(ResourceSet resourceSet);
 
-    void setSelection(ResourceSet newSelectionModel);
-
     void removeSelectionSet(ResourceSet selectionSet);
 
-    void addSelectionSet(ResourceSet selectionSet);
-
-    boolean containsSelectionSet(ResourceSet resourceSet);
+    void setSelection(ResourceSet newSelectionModel);
 
 }

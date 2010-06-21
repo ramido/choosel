@@ -33,38 +33,38 @@ public class AsyncCommandMessageWrapper implements AsyncCommand {
 
     @Inject
     public AsyncCommandMessageWrapper(MessageManager messageManager,
-	    String message, AsyncCommand delegate) {
+            String message, AsyncCommand delegate) {
 
-	assert delegate != null;
-	assert messageManager != null;
+        assert delegate != null;
+        assert messageManager != null;
 
-	this.messageManager = messageManager;
-	this.message = message;
-	this.delegate = delegate;
+        this.messageManager = messageManager;
+        this.message = message;
+        this.delegate = delegate;
     }
 
     public <T extends AsyncCommand & HasDescription> AsyncCommandMessageWrapper(
-	    MessageManager messageManager, T delegate) {
+            MessageManager messageManager, T delegate) {
 
-	this(messageManager, delegate.getDescription(), delegate);
+        this(messageManager, delegate.getDescription(), delegate);
     }
 
     @Override
     public void execute(AsyncCallback<Void> callback) {
-	final RemoveHandle messageHandle = messageManager.showMessage(message);
+        final RemoveHandle messageHandle = messageManager.showMessage(message);
 
-	delegate.execute(new ForwardingAsyncCallback<Void>(callback) {
-	    @Override
-	    public void onFailure(Throwable caught) {
-		messageHandle.remove();
-		super.onFailure(caught);
-	    }
+        delegate.execute(new ForwardingAsyncCallback<Void>(callback) {
+            @Override
+            public void onFailure(Throwable caught) {
+                messageHandle.remove();
+                super.onFailure(caught);
+            }
 
-	    @Override
-	    public void onSuccess(Void v) {
-		messageHandle.remove();
-		super.onSuccess(v);
-	    }
-	});
+            @Override
+            public void onSuccess(Void v) {
+                messageHandle.remove();
+                super.onSuccess(v);
+            }
+        });
     }
 }

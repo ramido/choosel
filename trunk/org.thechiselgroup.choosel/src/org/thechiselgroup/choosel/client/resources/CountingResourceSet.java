@@ -31,14 +31,14 @@ public class CountingResourceSet extends AbstractImplementingResourceSet {
 
     private static class ResourceElement {
 
-	private int counter;
+        private int counter;
 
-	private Resource resource;
+        private Resource resource;
 
-	public ResourceElement(Resource resource) {
-	    this.resource = resource;
-	    this.counter = 1;
-	}
+        public ResourceElement(Resource resource) {
+            this.resource = resource;
+            this.counter = 1;
+        }
 
     }
 
@@ -46,73 +46,73 @@ public class CountingResourceSet extends AbstractImplementingResourceSet {
 
     @Override
     public void add(Resource resource) {
-	assert resource != null;
+        assert resource != null;
 
-	String uri = resource.getUri();
+        String uri = resource.getUri();
 
-	if (uriToResourceElementMap.containsKey(uri)) {
-	    uriToResourceElementMap.get(uri).counter++;
-	    return;
-	}
+        if (uriToResourceElementMap.containsKey(uri)) {
+            uriToResourceElementMap.get(uri).counter++;
+            return;
+        }
 
-	uriToResourceElementMap.put(uri, new ResourceElement(resource));
-	eventBus.fireEvent(new ResourceAddedEvent(resource, this));
+        uriToResourceElementMap.put(uri, new ResourceElement(resource));
+        eventBus.fireEvent(new ResourceAddedEvent(resource, this));
     }
 
     @Override
     public boolean contains(Resource resource) {
-	return uriToResourceElementMap.containsKey(resource.getUri());
+        return uriToResourceElementMap.containsKey(resource.getUri());
     }
 
     @Override
     public Resource getByUri(String uri) {
-	assert uri != null;
-	assert uriToResourceElementMap.containsKey(uri);
+        assert uri != null;
+        assert uriToResourceElementMap.containsKey(uri);
 
-	return uriToResourceElementMap.get(uri).resource;
-    }
-
-    @Override
-    public List<Resource> toList() {
-	List<Resource> resources = new ArrayList<Resource>();
-
-	for (ResourceElement element : uriToResourceElementMap.values()) {
-	    resources.add(element.resource);
-	}
-
-	return resources;
+        return uriToResourceElementMap.get(uri).resource;
     }
 
     @Override
     public boolean isEmpty() {
-	return uriToResourceElementMap.isEmpty();
+        return uriToResourceElementMap.isEmpty();
     }
 
     @Override
     public Iterator<Resource> iterator() {
-	return toList().iterator();
+        return toList().iterator();
     }
 
     @Override
     public void remove(Resource resource) {
-	assert resource != null;
+        assert resource != null;
 
-	String uri = resource.getUri();
+        String uri = resource.getUri();
 
-	if (!uriToResourceElementMap.containsKey(uri)) {
-	    return;
-	}
+        if (!uriToResourceElementMap.containsKey(uri)) {
+            return;
+        }
 
-	uriToResourceElementMap.get(uri).counter--;
+        uriToResourceElementMap.get(uri).counter--;
 
-	if (uriToResourceElementMap.get(uri).counter == 0) {
-	    uriToResourceElementMap.remove(uri);
-	    eventBus.fireEvent(new ResourceRemovedEvent(resource, this));
-	}
+        if (uriToResourceElementMap.get(uri).counter == 0) {
+            uriToResourceElementMap.remove(uri);
+            eventBus.fireEvent(new ResourceRemovedEvent(resource, this));
+        }
     }
 
     @Override
     public int size() {
-	return uriToResourceElementMap.size();
+        return uriToResourceElementMap.size();
+    }
+
+    @Override
+    public List<Resource> toList() {
+        List<Resource> resources = new ArrayList<Resource>();
+
+        for (ResourceElement element : uriToResourceElementMap.values()) {
+            resources.add(element.resource);
+        }
+
+        return resources;
     }
 }

@@ -27,65 +27,66 @@ import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropCommandFact
 import com.google.gwt.user.client.ui.Widget;
 
 public class ViewDisplayDropCommandFactory implements
-	ResourceSetAvatarDropCommandFactory {
+        ResourceSetAvatarDropCommandFactory {
 
     private final Widget dropTarget;
 
     private final ViewAccessor viewAccessor;
 
     public ViewDisplayDropCommandFactory(Widget dropTarget,
-	    ViewAccessor viewAccessor) {
+            ViewAccessor viewAccessor) {
 
-	assert viewAccessor != null;
-	assert dropTarget != null;
+        assert viewAccessor != null;
+        assert dropTarget != null;
 
-	this.viewAccessor = viewAccessor;
-	this.dropTarget = dropTarget;
+        this.viewAccessor = viewAccessor;
+        this.dropTarget = dropTarget;
     }
 
     @Override
     public boolean canDrop(ResourceSetAvatar dragAvatar) {
-	assert dragAvatar != null;
-	return !(isFromSameView(dragAvatar) || isAlreadyContained(dragAvatar));
-    }
-
-    private boolean isAlreadyContained(ResourceSetAvatar dragAvatar) {
-	ResourceSet resources = dragAvatar.getResourceSet();
-
-	if (!resources.hasLabel() && dragAvatar.getType() == ResourceSetAvatarType.SET) {
-	    return getTargetView().containsResources(resources);
-	}
-
-	return getTargetView().containsResourceSet(resources);
-    }
-
-    private boolean isFromSameView(ResourceSetAvatar dragAvatar) {
-	return getTargetView() == viewAccessor.findView(dragAvatar);
-    }
-
-    private View getTargetView() {
-	return viewAccessor.findView(dropTarget);
+        assert dragAvatar != null;
+        return !(isFromSameView(dragAvatar) || isAlreadyContained(dragAvatar));
     }
 
     @Override
     public UndoableCommand createCommand(ResourceSetAvatar dragAvatar) {
-	assert dragAvatar != null;
+        assert dragAvatar != null;
 
-	ResourceSet addedResources = dragAvatar.getResourceSet();
+        ResourceSet addedResources = dragAvatar.getResourceSet();
 
-	assert addedResources != null;
+        assert addedResources != null;
 
-	if (!addedResources.hasLabel()
-		&& dragAvatar.getType() == ResourceSetAvatarType.SET) {
+        if (!addedResources.hasLabel()
+                && dragAvatar.getType() == ResourceSetAvatarType.SET) {
 
-	    return new AddResourcesToViewCommand(getTargetView(),
-		    addedResources);
-	}
+            return new AddResourcesToViewCommand(getTargetView(),
+                    addedResources);
+        }
 
-	if (dragAvatar.getType() != ResourceSetAvatarType.SET) {
-	    addedResources = new UnmodifiableResourceSet(addedResources);
-	}
+        if (dragAvatar.getType() != ResourceSetAvatarType.SET) {
+            addedResources = new UnmodifiableResourceSet(addedResources);
+        }
 
-	return new AddResourceSetToViewCommand(getTargetView(), addedResources);
+        return new AddResourceSetToViewCommand(getTargetView(), addedResources);
+    }
+
+    private View getTargetView() {
+        return viewAccessor.findView(dropTarget);
+    }
+
+    private boolean isAlreadyContained(ResourceSetAvatar dragAvatar) {
+        ResourceSet resources = dragAvatar.getResourceSet();
+
+        if (!resources.hasLabel()
+                && dragAvatar.getType() == ResourceSetAvatarType.SET) {
+            return getTargetView().containsResources(resources);
+        }
+
+        return getTargetView().containsResourceSet(resources);
+    }
+
+    private boolean isFromSameView(ResourceSetAvatar dragAvatar) {
+        return getTargetView() == viewAccessor.findView(dragAvatar);
     }
 }

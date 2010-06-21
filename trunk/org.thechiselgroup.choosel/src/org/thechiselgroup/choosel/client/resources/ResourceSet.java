@@ -20,15 +20,15 @@ import java.util.List;
 
 import org.thechiselgroup.choosel.client.label.HasLabel;
 
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 public interface ResourceSet extends Iterable<Resource>, ResourceContainer,
-	HasLabel {
+        HasLabel {
 
     // TODO more specific addXXXHandler methods
     <H extends ResourceEventHandler> HandlerRegistration addHandler(
-	    Type<H> type, H handler);
+            Type<H> type, H handler);
 
     void clear();
 
@@ -42,6 +42,11 @@ public interface ResourceSet extends Iterable<Resource>, ResourceContainer,
 
     Resource getByUri(String uri);
 
+    // XXX hack to make changes in resource item work
+    // trace and replace with something more sensible,
+    // especially in the graph
+    Resource getFirstResource();
+
     boolean isEmpty();
 
     boolean isModifiable();
@@ -52,15 +57,10 @@ public interface ResourceSet extends Iterable<Resource>, ResourceContainer,
     int size();
 
     void switchContainment(Resource resource);
-    
+
     void switchContainment(ResourceSet resources);
 
     // FIXME toList should be unmodifiable copy
     List<Resource> toList();
 
-    // XXX hack to make changes in resource item work
-    // trace and replace with something more sensible,
-    // especially in the graph
-    Resource getFirstResource();
-    
 }

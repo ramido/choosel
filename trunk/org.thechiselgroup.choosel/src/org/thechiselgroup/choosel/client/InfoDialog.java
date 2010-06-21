@@ -24,29 +24,29 @@ import com.google.inject.Inject;
 public class InfoDialog extends FeedbackDialog {
 
     private static final String MESSAGE = "<h1>Bio-Mixer</h1>"
-	    + "<i>\"To understand is hard. Once one understands, "
-	    + "action is easy.\"</i>"
-	    + "<p>(C) Copyright 2009, 2010 "
-	    + "The CHISEL Group, University of Victoria<br/>"
-	    + "(<a href=\"http://www.thechiselgroup.org/\" "
-	    + "target=\"_blank\">www.thechiselgroup.org</a>)<p>"
-	    + "<p>Available at: <a href=\"http://bio-mixer.appspot.com\" "
-	    + "target=\"_blank\">bio-mixer.appspot.com</a></p>"
-	    + "<p>User group: <a href=\"http://groups.google.com/group/bio-mixer\" "
-	    + "target=\"_blank\">groups.google.com/group/bio-mixer</a></p>"
-	    + "For more information, visit <a href=\"http://code.google.com/p/bio-mixer/\" "
-	    + "target=\"_blank\">code.google.com/p/bio-mixer/</a></p>"
-	    + "<br/><b>We appreciate your ideas and comments:</b>";
+            + "<i>\"To understand is hard. Once one understands, "
+            + "action is easy.\"</i>"
+            + "<p>(C) Copyright 2009, 2010 "
+            + "The CHISEL Group, University of Victoria<br/>"
+            + "(<a href=\"http://www.thechiselgroup.org/\" "
+            + "target=\"_blank\">www.thechiselgroup.org</a>)<p>"
+            + "<p>Available at: <a href=\"http://bio-mixer.appspot.com\" "
+            + "target=\"_blank\">bio-mixer.appspot.com</a></p>"
+            + "<p>User group: <a href=\"http://groups.google.com/group/bio-mixer\" "
+            + "target=\"_blank\">groups.google.com/group/bio-mixer</a></p>"
+            + "For more information, visit <a href=\"http://code.google.com/p/bio-mixer/\" "
+            + "target=\"_blank\">code.google.com/p/bio-mixer/</a></p>"
+            + "<br/><b>We appreciate your ideas and comments:</b>";
 
     @Inject
     public InfoDialog(AsyncCommandExecutor executor,
-	    FeedbackServiceAsync feedbackService) {
-	super("About Bio-Mixer", MESSAGE, null, executor, feedbackService);
+            FeedbackServiceAsync feedbackService) {
+        super("About Bio-Mixer", MESSAGE, null, executor, feedbackService);
     }
 
     @Override
     public String getOkayButtonLabel() {
-	return "Send feedback";
+        return "Send feedback";
     }
 
 }

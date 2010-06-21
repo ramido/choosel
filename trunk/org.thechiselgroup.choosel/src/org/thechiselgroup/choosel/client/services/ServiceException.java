@@ -15,22 +15,21 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.services;
 
-
 // TODO use more specific exception classes
 public class ServiceException extends Exception {
 
     private static final long serialVersionUID = 1L;
 
     public ServiceException() {
-	// for GWT serialization
+        // for GWT serialization
     }
 
     public ServiceException(Exception e) {
-	super(e);
+        super(e);
     }
 
     public ServiceException(String message) {
-	super(message);
+        super(message);
     }
 
 }

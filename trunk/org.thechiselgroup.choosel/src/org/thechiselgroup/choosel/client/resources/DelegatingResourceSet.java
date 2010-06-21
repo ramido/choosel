@@ -20,91 +20,91 @@ import java.util.List;
 
 import org.thechiselgroup.choosel.client.label.LabelChangedEventHandler;
 
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 public class DelegatingResourceSet extends AbstractResourceSet {
 
     private final ResourceSet delegate;
 
     public DelegatingResourceSet(ResourceSet delegate) {
-	this.delegate = delegate;
+        this.delegate = delegate;
     }
 
     @Override
     public void add(Resource resource) {
-	delegate.add(resource);
+        delegate.add(resource);
     }
 
     @Override
     public <H extends ResourceEventHandler> HandlerRegistration addHandler(
-	    Type<H> type, H handler) {
-	return delegate.addHandler(type, handler);
+            Type<H> type, H handler) {
+        return delegate.addHandler(type, handler);
     }
 
     @Override
     public HandlerRegistration addLabelChangedEventHandler(
-	    LabelChangedEventHandler eventHandler) {
-	return delegate.addLabelChangedEventHandler(eventHandler);
+            LabelChangedEventHandler eventHandler) {
+        return delegate.addLabelChangedEventHandler(eventHandler);
     }
 
     @Override
     public boolean contains(Resource resource) {
-	return delegate.contains(resource);
+        return delegate.contains(resource);
     }
 
     @Override
     public Resource getByUri(String uri) {
-	return delegate.getByUri(uri);
+        return delegate.getByUri(uri);
     }
 
     public ResourceSet getDelegate() {
-	return delegate;
+        return delegate;
     }
 
     @Override
     public String getLabel() {
-	return delegate.getLabel();
+        return delegate.getLabel();
     }
 
     @Override
     public boolean hasLabel() {
-	return delegate.hasLabel();
+        return delegate.hasLabel();
     }
 
     @Override
     public boolean isEmpty() {
-	return delegate.isEmpty();
+        return delegate.isEmpty();
     }
 
     @Override
     public boolean isModifiable() {
-	return delegate.isModifiable();
+        return delegate.isModifiable();
     }
 
     @Override
     public Iterator<Resource> iterator() {
-	return delegate.iterator();
+        return delegate.iterator();
     }
 
     @Override
     public void remove(Resource resource) {
-	delegate.remove(resource);
+        delegate.remove(resource);
     }
 
     @Override
     public void setLabel(String label) {
-	delegate.setLabel(label);
+        delegate.setLabel(label);
     }
 
     @Override
     public int size() {
-	return delegate.size();
+        return delegate.size();
     }
 
     @Override
     public List<Resource> toList() {
-	return delegate.toList();
+        return delegate.toList();
     }
 
 }

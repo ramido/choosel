@@ -22,29 +22,29 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractUriMapBasedResourceSet extends
-	AbstractImplementingResourceSet {
+        AbstractImplementingResourceSet {
 
     protected Map<String, Resource> uriToResource = new HashMap<String, Resource>();
 
     @Override
     public void add(Resource resource) {
-	assert resource != null;
+        assert resource != null;
 
-	if (contains(resource)) {
-	    return;
-	}
-	doAdd(resource);
-	eventBus.fireEvent(new ResourceAddedEvent(resource, this));
+        if (contains(resource)) {
+            return;
+        }
+        doAdd(resource);
+        eventBus.fireEvent(new ResourceAddedEvent(resource, this));
     }
 
     protected Resource addResourceToMap(Resource resource) {
-	return uriToResource.put(resource.getUri(), resource);
+        return uriToResource.put(resource.getUri(), resource);
     }
 
     @Override
     public boolean contains(Resource resource) {
-	assert resource != null;
-	return uriToResource.containsKey(resource.getUri());
+        assert resource != null;
+        return uriToResource.containsKey(resource.getUri());
     }
 
     protected abstract void doAdd(Resource resource);
@@ -53,41 +53,41 @@ public abstract class AbstractUriMapBasedResourceSet extends
 
     @Override
     public Resource getByUri(String uri) {
-	return uriToResource.get(uri);
-    }
-
-    @Override
-    public List<Resource> toList() {
-	return new ArrayList<Resource>(uriToResource.values());
+        return uriToResource.get(uri);
     }
 
     @Override
     public boolean isEmpty() {
-	return uriToResource.isEmpty();
+        return uriToResource.isEmpty();
     }
 
     @Override
     public Iterator<Resource> iterator() {
-	// FIXME should be unmodifiable
-	return uriToResource.values().iterator();
+        // FIXME should be unmodifiable
+        return uriToResource.values().iterator();
     }
 
     @Override
     public void remove(Resource resource) {
-	if (!contains(resource)) {
-	    return;
-	}
-	doRemove(resource);
-	eventBus.fireEvent(new ResourceRemovedEvent(resource, this));
+        if (!contains(resource)) {
+            return;
+        }
+        doRemove(resource);
+        eventBus.fireEvent(new ResourceRemovedEvent(resource, this));
     }
 
     protected void removeResourceFromMap(String key) {
-	uriToResource.remove(key);
+        uriToResource.remove(key);
     }
 
     @Override
     public int size() {
-	return uriToResource.size();
+        return uriToResource.size();
+    }
+
+    @Override
+    public List<Resource> toList() {
+        return new ArrayList<Resource>(uriToResource.values());
     }
 
 }

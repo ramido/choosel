@@ -21,7 +21,7 @@ import org.thechiselgroup.choosel.client.views.ViewAccessor;
 import com.google.gwt.user.client.ui.Widget;
 
 public abstract class AbstractResourceSetAvatarDropTargetManager implements
-	ResourceSetAvatarDropTargetManager {
+        ResourceSetAvatarDropTargetManager {
 
     private CommandManager commandManager;
 
@@ -29,36 +29,38 @@ public abstract class AbstractResourceSetAvatarDropTargetManager implements
 
     private ViewAccessor viewAccessor;
 
-    public AbstractResourceSetAvatarDropTargetManager(CommandManager commandManager,
-	    ResourceSetAvatarDragController dragController, ViewAccessor viewAccessor) {
+    public AbstractResourceSetAvatarDropTargetManager(
+            CommandManager commandManager,
+            ResourceSetAvatarDragController dragController,
+            ViewAccessor viewAccessor) {
 
-	assert commandManager != null;
-	assert dragController != null;
-	assert viewAccessor != null;
+        assert commandManager != null;
+        assert dragController != null;
+        assert viewAccessor != null;
 
-	this.commandManager = commandManager;
-	this.dragController = dragController;
-	this.viewAccessor = viewAccessor;
+        this.commandManager = commandManager;
+        this.dragController = dragController;
+        this.viewAccessor = viewAccessor;
     }
 
     protected abstract ResourceSetAvatarDropCommandFactory createCommandFactory(
-	    Widget dropTarget, ViewAccessor viewAccessor);
+            Widget dropTarget, ViewAccessor viewAccessor);
 
     @Override
     public void disableDropTarget(Widget dropTarget) {
-	assert dropTarget != null;
+        assert dropTarget != null;
 
-	dragController.unregisterDropControllerFor(dropTarget);
+        dragController.unregisterDropControllerFor(dropTarget);
     }
 
     @Override
     public void enableDropTarget(Widget dropTarget) {
-	assert dropTarget != null;
+        assert dropTarget != null;
 
-	ResourceSetAvatarDropController controller = new ResourceSetAvatarDropController(
-		dropTarget, createCommandFactory(dropTarget, viewAccessor),
-		commandManager);
+        ResourceSetAvatarDropController controller = new ResourceSetAvatarDropController(
+                dropTarget, createCommandFactory(dropTarget, viewAccessor),
+                commandManager);
 
-	dragController.registerDropController(controller);
+        dragController.registerDropController(controller);
     }
 }

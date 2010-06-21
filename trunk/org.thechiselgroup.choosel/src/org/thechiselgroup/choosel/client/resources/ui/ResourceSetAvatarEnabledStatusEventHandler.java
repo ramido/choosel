@@ -17,8 +17,10 @@ package org.thechiselgroup.choosel.client.resources.ui;
 
 import com.google.gwt.event.shared.EventHandler;
 
-public interface ResourceSetAvatarEnabledStatusEventHandler extends EventHandler {
+public interface ResourceSetAvatarEnabledStatusEventHandler extends
+        EventHandler {
 
-    void onDragAvatarEnabledStatusChange(ResourceSetAvatarEnabledStatusEvent event);
+    void onDragAvatarEnabledStatusChange(
+            ResourceSetAvatarEnabledStatusEvent event);
 
 }

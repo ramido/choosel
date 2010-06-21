@@ -15,9 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources.ui;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResources;
 
 import org.junit.After;
 import org.junit.Before;
@@ -26,9 +30,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
-import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
-import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
 
 public class ResourceSetAvatarResourceSetsPresenterTest {
@@ -45,57 +46,57 @@ public class ResourceSetAvatarResourceSetsPresenterTest {
 
     @Test
     public void disposeDragAvatarOnDispose() {
-	dragAvatarResourceSetsPresenter.addResourceSet(resources);
-	dragAvatarResourceSetsPresenter.dispose();
+        dragAvatarResourceSetsPresenter.addResourceSet(resources);
+        dragAvatarResourceSetsPresenter.dispose();
 
-	verify(dragAvatar, times(1)).dispose();
+        verify(dragAvatar, times(1)).dispose();
     }
 
     @Test
     public void replaceResourceSetCallsDragAvatar() {
-	String newLabel = "new-label";
-	DefaultResourceSet newResources = createResources(3);
-	newResources.setLabel(newLabel);
+        String newLabel = "new-label";
+        DefaultResourceSet newResources = createResources(3);
+        newResources.setLabel(newLabel);
 
-	dragAvatarResourceSetsPresenter.addResourceSet(resources);
-	dragAvatarResourceSetsPresenter.replaceResourceSet(resources,
-		newResources);
+        dragAvatarResourceSetsPresenter.addResourceSet(resources);
+        dragAvatarResourceSetsPresenter.replaceResourceSet(resources,
+                newResources);
 
-	verify(dragAvatar, times(1)).setResourceSet(eq(newResources));
-	verify(dragAvatar, times(1)).setText(eq(newLabel));
+        verify(dragAvatar, times(1)).setResourceSet(eq(newResources));
+        verify(dragAvatar, times(1)).setText(eq(newLabel));
     }
 
     @Test
     public void setResourceSetEnabledCallsDragAvatar() {
-	dragAvatarResourceSetsPresenter.addResourceSet(resources);
+        dragAvatarResourceSetsPresenter.addResourceSet(resources);
 
-	dragAvatarResourceSetsPresenter.setResourceSetEnabled(resources, false);
-	verify(dragAvatar, times(0)).setEnabled(eq(true));
-	verify(dragAvatar, times(1)).setEnabled(eq(false));
+        dragAvatarResourceSetsPresenter.setResourceSetEnabled(resources, false);
+        verify(dragAvatar, times(0)).setEnabled(eq(true));
+        verify(dragAvatar, times(1)).setEnabled(eq(false));
 
-	dragAvatarResourceSetsPresenter.setResourceSetEnabled(resources, true);
-	verify(dragAvatar, times(1)).setEnabled(eq(true));
-	verify(dragAvatar, times(1)).setEnabled(eq(false));
+        dragAvatarResourceSetsPresenter.setResourceSetEnabled(resources, true);
+        verify(dragAvatar, times(1)).setEnabled(eq(true));
+        verify(dragAvatar, times(1)).setEnabled(eq(false));
     }
 
     @Before
     public void setUp() throws Exception {
-	MockitoGWTBridge.setUp();
-	MockitoAnnotations.initMocks(this);
+        MockitoGWTBridge.setUp();
+        MockitoAnnotations.initMocks(this);
 
-	resources = spy(createResources(1));
+        resources = spy(createResources(1));
 
-	dragAvatarResourceSetsPresenter = new ResourceSetAvatarResourceSetsPresenter(
-		dragAvatarFactory);
+        dragAvatarResourceSetsPresenter = new ResourceSetAvatarResourceSetsPresenter(
+                dragAvatarFactory);
 
-	when(dragAvatarFactory.createAvatar(any(ResourceSet.class)))
-		.thenReturn(dragAvatar);
+        when(dragAvatarFactory.createAvatar(any(ResourceSet.class)))
+                .thenReturn(dragAvatar);
 
-	dragAvatarResourceSetsPresenter.init();
+        dragAvatarResourceSetsPresenter.init();
     }
 
     @After
     public void tearDown() {
-	MockitoGWTBridge.tearDown();
+        MockitoGWTBridge.tearDown();
     }
 }

@@ -28,14 +28,14 @@ public class DragEnablerFactory {
 
     @Inject
     public DragEnablerFactory(Desktop desktop,
-	    ResourceSetAvatarDragController dragController) {
+            ResourceSetAvatarDragController dragController) {
 
-	this.desktop = desktop;
-	this.dragController = dragController;
+        this.desktop = desktop;
+        this.dragController = dragController;
     }
 
     public DragEnabler createDragEnabler(ResourceItem item) {
-	return new DragEnabler(item, desktop, dragController);
+        return new DragEnabler(item, desktop, dragController);
     }
 
 }

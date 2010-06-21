@@ -15,69 +15,68 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
-import java.util.List;
 
 public abstract class AbstractResourceSet extends AbstractResourceContainer
-	implements ResourceSet {
+        implements ResourceSet {
 
     @Override
     public void clear() {
-	for (Resource resource : toList()) {
-	    remove(resource);
-	}
+        for (Resource resource : toList()) {
+            remove(resource);
+        }
     }
 
     @Override
     public final boolean containsAll(Iterable<Resource> resources) {
-	for (Resource resource : resources) {
-	    if (!contains(resource)) {
-		return false;
-	    }
-	}
+        for (Resource resource : resources) {
+            if (!contains(resource)) {
+                return false;
+            }
+        }
 
-	return true;
+        return true;
     }
 
     @Override
     public final boolean containsEqualResources(ResourceSet other) {
-	if (size() != other.size()) {
-	    return false;
-	}
+        if (size() != other.size()) {
+            return false;
+        }
 
-	return containsAll(other);
+        return containsAll(other);
     }
 
     @Override
     public boolean containsResourceWithUri(String uri) {
-	return getByUri(uri) != null;
-    }
-
-    @Override
-    public final void switchContainment(Resource resource) {
-	assert resource != null;
-	
-	if (contains(resource)) {
-	    remove(resource);
-	    assert !contains(resource);
-	} else {
-	    add(resource);
-	    assert contains(resource);
-	}
-    }
-    
-    @Override
-    public void switchContainment(ResourceSet resources) {
-	assert resources != null;
-	
-	for (Resource resource : resources) {
-	    switchContainment(resource);
-	}
+        return getByUri(uri) != null;
     }
 
     @Override
     public Resource getFirstResource() {
-	assert !isEmpty();
-	return toList().get(0);
+        assert !isEmpty();
+        return toList().get(0);
     }
-    
+
+    @Override
+    public final void switchContainment(Resource resource) {
+        assert resource != null;
+
+        if (contains(resource)) {
+            remove(resource);
+            assert !contains(resource);
+        } else {
+            add(resource);
+            assert contains(resource);
+        }
+    }
+
+    @Override
+    public void switchContainment(ResourceSet resources) {
+        assert resources != null;
+
+        for (Resource resource : resources) {
+            switchContainment(resource);
+        }
+    }
+
 }

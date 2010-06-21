@@ -22,25 +22,25 @@ public class DisposableComposite implements Disposable {
 
     private List<Disposable> disposables = new ArrayList<Disposable>();
 
-    @Override
-    public void dispose() {
-	if (isDisposed()) {
-	    return;
-	}
-
-	for (Disposable disposable : disposables) {
-	    disposable.dispose();
-	}
-
-	disposables = null;
+    public boolean addDisposable(Disposable e) {
+        return disposables.add(e);
     }
 
-    public boolean addDisposable(Disposable e) {
-	return disposables.add(e);
+    @Override
+    public void dispose() {
+        if (isDisposed()) {
+            return;
+        }
+
+        for (Disposable disposable : disposables) {
+            disposable.dispose();
+        }
+
+        disposables = null;
     }
 
     private boolean isDisposed() {
-	return disposables == null;
+        return disposables == null;
     }
 
 }

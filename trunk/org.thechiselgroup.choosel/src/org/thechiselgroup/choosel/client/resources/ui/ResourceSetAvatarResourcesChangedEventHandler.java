@@ -17,7 +17,8 @@ package org.thechiselgroup.choosel.client.resources.ui;
 
 import com.google.gwt.event.shared.EventHandler;
 
-public interface ResourceSetAvatarResourcesChangedEventHandler extends EventHandler {
+public interface ResourceSetAvatarResourcesChangedEventHandler extends
+        EventHandler {
 
     void onResourcesChanged(ResourceSetAvatarResourcesChangedEvent event);
 

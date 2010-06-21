@@ -36,48 +36,48 @@ public class DefaultMessageManager implements MessageManager {
 
     @Inject
     public DefaultMessageManager() {
-	parentPanel = RootPanel.get(); // TODO inject
+        parentPanel = RootPanel.get(); // TODO inject
+    }
+
+    public void hideMessage() {
+        assert messageElement != null;
+
+        parentPanel.getElement().removeChild(messageElement);
+        messageElement = null;
     }
 
     // TODO support multiple messages
     @Override
     public RemoveHandle showMessage(final String message) {
-	assert messageElement == null;
+        assert messageElement == null;
 
-	if (message != null) {
-	    // add message box on dialog layer --> div
-	    messageElement = DOM.createDiv();
+        if (message != null) {
+            // add message box on dialog layer --> div
+            messageElement = DOM.createDiv();
 
-	    messageElement.setInnerText(message);
-	    messageElement.addClassName(CSS_DIALOG_MESSAGE);
-	    ZIndex.setZIndex(messageElement, ZIndex.DIALOG);
+            messageElement.setInnerText(message);
+            messageElement.addClassName(CSS_DIALOG_MESSAGE);
+            ZIndex.setZIndex(messageElement, ZIndex.DIALOG);
 
-	    // TODO refactor, see below, code duplication
-	    int x = (parentPanel.getOffsetWidth() - 400) / 2;
+            // TODO refactor, see below, code duplication
+            int x = (parentPanel.getOffsetWidth() - 400) / 2;
 
-	    // TODO extract offset (variable)
-	    DOM.setStyleAttribute(messageElement, CSS.LEFT, x + "px");
-	    DOM.setStyleAttribute(messageElement, CSS.TOP,
-		    (ActionBar.ACTION_BAR_HEIGHT_PX + 10) + "px");
+            // TODO extract offset (variable)
+            DOM.setStyleAttribute(messageElement, CSS.LEFT, x + "px");
+            DOM.setStyleAttribute(messageElement, CSS.TOP,
+                    (ActionBar.ACTION_BAR_HEIGHT_PX + 10) + "px");
 
-	    parentPanel.getElement().appendChild(messageElement);
-	}
+            parentPanel.getElement().appendChild(messageElement);
+        }
 
-	return new RemoveHandle() {
-	    @Override
-	    public void remove() {
-		if (message != null) {
-		    hideMessage();
-		}
-	    }
-	};
-    }
-
-    public void hideMessage() {
-	assert messageElement != null;
-
-	parentPanel.getElement().removeChild(messageElement);
-	messageElement = null;
+        return new RemoveHandle() {
+            @Override
+            public void remove() {
+                if (message != null) {
+                    hideMessage();
+                }
+            }
+        };
     }
 
 }

@@ -43,153 +43,153 @@ public class ResourceSetAvatarDropController extends SimpleDropController {
     private DelayedPopup popup = null;
 
     public ResourceSetAvatarDropController(Widget dropTarget,
-	    ResourceSetAvatarDropCommandFactory commandFactory,
-	    CommandManager commandManager) {
+            ResourceSetAvatarDropCommandFactory commandFactory,
+            CommandManager commandManager) {
 
-	super(dropTarget);
+        super(dropTarget);
 
-	this.commandFactory = commandFactory;
-	this.commandManager = commandManager;
+        this.commandFactory = commandFactory;
+        this.commandManager = commandManager;
     }
 
     // TODO prevent drag source self-drop
     public boolean canDrop(DragContext context) {
-	if (!(context.draggable instanceof ResourceSetAvatar)) {
-	    return false;
-	}
+        if (!(context.draggable instanceof ResourceSetAvatar)) {
+            return false;
+        }
 
-	ResourceSetAvatar avatar = getAvatar(context);
+        ResourceSetAvatar avatar = getAvatar(context);
 
-	// FIXME: create interface on view content displays that checks if
-	// resource set can be displayed, use that interface from drop command
-	// factories
-	if (isConceptToTimelineDrop(avatar, context)) {
-	    return false;
-	}
+        // FIXME: create interface on view content displays that checks if
+        // resource set can be displayed, use that interface from drop command
+        // factories
+        if (isConceptToTimelineDrop(avatar, context)) {
+            return false;
+        }
 
-	return commandFactory.canDrop(avatar);
+        return commandFactory.canDrop(avatar);
+    }
+
+    private UndoableCommand createCommand(final DragContext context) {
+        return commandFactory.createCommand(getAvatar(context));
+    }
+
+    // protected for testing only
+    // TODO move to factory
+    protected DelayedPopup createPopup(final DragContext context, String message) {
+        DefaultDelayedPopup popup = new DefaultDelayedPopup(800, 200) {
+            @Override
+            protected void updatePosition() {
+                setPopupPosition(context.mouseX + 15, context.mouseY + 20);
+            }
+        };
+
+        WidgetUtils.setMaxWidth(popup, 250);
+        popup.setWidget(new HTML(message));
+
+        return popup;
+    }
+
+    private void executeCommand(UndoableCommand command) {
+        command.execute();
+        executedCommand = command;
+    }
+
+    private ResourceSetAvatar getAvatar(DragContext context) {
+        return (ResourceSetAvatar) context.draggable;
+    }
+
+    private boolean hasCommandBeenExecuted() {
+        return executedCommand != null;
+    }
+
+    private void hidePopup() {
+        if (popup != null) {
+            popup.hideDelayed();
+            popup = null;
+        }
     }
 
     // FIXME: create interface on view content displays that checks if
     // resource set can be displayed, use that interface from drop command
     // factories
     private boolean isConceptToTimelineDrop(ResourceSetAvatar avatar,
-	    DragContext context) {
+            DragContext context) {
 
-	// HERE: test if all resources are concepts & target it timeline
-	// REMOVE THIS!
+        // HERE: test if all resources are concepts & target it timeline
+        // REMOVE THIS!
 
-	ResourceSet resourceSet = avatar.getResourceSet();
-	if (resourceSet == null) {
-	    return false;// for test
-	}
+        ResourceSet resourceSet = avatar.getResourceSet();
+        if (resourceSet == null) {
+            return false;// for test
+        }
 
-	for (Resource resource : resourceSet) {
-	    if (!resource.getUri().startsWith("ncbo-concept")) {
-		return false;
-	    }
-	}
+        for (Resource resource : resourceSet) {
+            if (!resource.getUri().startsWith("ncbo-concept")) {
+                return false;
+            }
+        }
 
-	View view = new DefaultViewAccessor().findView(getDropTarget());
-	if (view == null) {
-	    return false;
-	}
+        View view = new DefaultViewAccessor().findView(getDropTarget());
+        if (view == null) {
+            return false;
+        }
 
-	return view.getContentType().equals("Timeline");
-    }
-
-    private UndoableCommand createCommand(final DragContext context) {
-	return commandFactory.createCommand(getAvatar(context));
-    }
-
-    // protected for testing only
-    // TODO move to factory
-    protected DelayedPopup createPopup(final DragContext context, String message) {
-	DefaultDelayedPopup popup = new DefaultDelayedPopup(800, 200) {
-	    @Override
-	    protected void updatePosition() {
-		setPopupPosition(context.mouseX + 15, context.mouseY + 20);
-	    }
-	};
-
-	WidgetUtils.setMaxWidth(popup, 250);
-	popup.setWidget(new HTML(message));
-
-	return popup;
-    }
-
-    private void executeCommand(UndoableCommand command) {
-	command.execute();
-	executedCommand = command;
-    }
-
-    private ResourceSetAvatar getAvatar(DragContext context) {
-	return (ResourceSetAvatar) context.draggable;
-    }
-
-    private boolean hasCommandBeenExecuted() {
-	return executedCommand != null;
-    }
-
-    private void hidePopup() {
-	if (popup != null) {
-	    popup.hideDelayed();
-	    popup = null;
-	}
+        return view.getContentType().equals("Timeline");
     }
 
     // TODO support dragging multiple widgets?
     @Override
     public void onDrop(DragContext context) {
-	if (canDrop(context) || hasCommandBeenExecuted()) {
-	    if (!hasCommandBeenExecuted()) {
-		executeCommand(createCommand(context));
-	    }
+        if (canDrop(context) || hasCommandBeenExecuted()) {
+            if (!hasCommandBeenExecuted()) {
+                executeCommand(createCommand(context));
+            }
 
-	    commandManager.addExecutedCommand(executedCommand);
-	    executedCommand = null; // prevent undo from later onLeave
-	}
+            commandManager.addExecutedCommand(executedCommand);
+            executedCommand = null; // prevent undo from later onLeave
+        }
 
-	hidePopup();
+        hidePopup();
 
-	super.onDrop(context);
+        super.onDrop(context);
     }
 
     @Override
     public void onEnter(final DragContext context) {
-	// TODO support dragging multiple widgets?
-	super.onEnter(context);
+        // TODO support dragging multiple widgets?
+        super.onEnter(context);
 
-	if (canDrop(context)) {
-	    UndoableCommand command = createCommand(context);
+        if (canDrop(context)) {
+            UndoableCommand command = createCommand(context);
 
-	    if (command instanceof HasDescription) {
-		showPopup(context, ((HasDescription) command).getDescription());
-	    }
+            if (command instanceof HasDescription) {
+                showPopup(context, ((HasDescription) command).getDescription());
+            }
 
-	    executeCommand(command);
-	}
+            executeCommand(command);
+        }
     }
 
     // TODO support dragging multiple widgets?
     @Override
     public void onLeave(DragContext context) {
-	undoCommand();
-	hidePopup();
+        undoCommand();
+        hidePopup();
 
-	super.onLeave(context);
+        super.onLeave(context);
     }
 
     // TODO refactor
     private void showPopup(final DragContext context, String message) {
-	this.popup = createPopup(context, message);
-	this.popup.showDelayed();
+        this.popup = createPopup(context, message);
+        this.popup.showDelayed();
     }
 
     private void undoCommand() {
-	if (hasCommandBeenExecuted()) {
-	    executedCommand.undo();
-	    executedCommand = null;
-	}
+        if (hasCommandBeenExecuted()) {
+            executedCommand.undo();
+            executedCommand = null;
+        }
     }
 }

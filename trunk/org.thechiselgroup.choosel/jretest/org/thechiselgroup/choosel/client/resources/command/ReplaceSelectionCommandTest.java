@@ -15,16 +15,17 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources.command;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.*;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResources;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.command.ReplaceSelectionCommand;
 import org.thechiselgroup.choosel.client.views.View;
 
 public class ReplaceSelectionCommandTest {
@@ -40,37 +41,37 @@ public class ReplaceSelectionCommandTest {
 
     @Test
     public void setNewSelectionSetOnExecute() {
-	setUpCommand(createResources(1, 2, 3), createResources());
+        setUpCommand(createResources(1, 2, 3), createResources());
 
-	command.execute();
+        command.execute();
 
-	verify(view, times(1)).setSelection(eq(targetSet));
+        verify(view, times(1)).setSelection(eq(targetSet));
     }
 
     @Test
     public void setOldSelectionSetOnUndo() {
-	setUpCommand(createResources(1, 2, 3), createResources());
+        setUpCommand(createResources(1, 2, 3), createResources());
 
-	command.execute();
-	command.undo();
+        command.execute();
+        command.undo();
 
-	verify(view, times(1)).setSelection(eq(targetSet)); // from execute
-	verify(view, times(1)).setSelection(eq(sourceSet));
-    }
-
-    private void setUpCommand(ResourceSet sourceSet, ResourceSet targetSet) {
-	this.sourceSet = sourceSet;
-	this.targetSet = targetSet;
-
-	this.command = new ReplaceSelectionCommand(view, targetSet);
-
-	when(view.getSelection()).thenReturn(sourceSet);
+        verify(view, times(1)).setSelection(eq(targetSet)); // from execute
+        verify(view, times(1)).setSelection(eq(sourceSet));
     }
 
     @Before
     public void setUp() {
-	MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.initMocks(this);
 
+    }
+
+    private void setUpCommand(ResourceSet sourceSet, ResourceSet targetSet) {
+        this.sourceSet = sourceSet;
+        this.targetSet = targetSet;
+
+        this.command = new ReplaceSelectionCommand(view, targetSet);
+
+        when(view.getSelection()).thenReturn(sourceSet);
     }
 
 }

@@ -20,7 +20,7 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import com.google.gwt.event.shared.GwtEvent;
 
 public class ResourceSetAvatarResourcesChangedEvent extends
-	GwtEvent<ResourceSetAvatarResourcesChangedEventHandler> {
+        GwtEvent<ResourceSetAvatarResourcesChangedEventHandler> {
 
     public static final GwtEvent.Type<ResourceSetAvatarResourcesChangedEventHandler> TYPE = new GwtEvent.Type<ResourceSetAvatarResourcesChangedEventHandler>();
 
@@ -31,33 +31,34 @@ public class ResourceSetAvatarResourcesChangedEvent extends
     private final ResourceSet oldResources;
 
     public ResourceSetAvatarResourcesChangedEvent(ResourceSetAvatar avatar,
-	    ResourceSet newResources, ResourceSet oldResources) {
+            ResourceSet newResources, ResourceSet oldResources) {
 
-	this.avatar = avatar;
-	this.newResources = newResources;
-	this.oldResources = oldResources;
+        this.avatar = avatar;
+        this.newResources = newResources;
+        this.oldResources = oldResources;
     }
 
     @Override
-    protected void dispatch(ResourceSetAvatarResourcesChangedEventHandler handler) {
-	handler.onResourcesChanged(this);
+    protected void dispatch(
+            ResourceSetAvatarResourcesChangedEventHandler handler) {
+        handler.onResourcesChanged(this);
     }
 
     @Override
     public GwtEvent.Type<ResourceSetAvatarResourcesChangedEventHandler> getAssociatedType() {
-	return TYPE;
+        return TYPE;
     }
 
     public ResourceSetAvatar getAvatar() {
-	return avatar;
+        return avatar;
     }
 
     public ResourceSet getNewResources() {
-	return newResources;
+        return newResources;
     }
 
     public ResourceSet getOldResources() {
-	return oldResources;
+        return oldResources;
     }
 
 }

@@ -31,52 +31,52 @@ public class Relationship implements Serializable {
     }
 
     public Relationship(Resource source, Resource target) {
-	this.source = source;
-	this.target = target;
+        this.source = source;
+        this.target = target;
     }
 
     @Override
     public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	Relationship other = (Relationship) obj;
-	if (source == null) {
-	    if (other.source != null)
-		return false;
-	} else if (!source.equals(other.source))
-	    return false;
-	if (target == null) {
-	    if (other.target != null)
-		return false;
-	} else if (!target.equals(other.target))
-	    return false;
-	return true;
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Relationship other = (Relationship) obj;
+        if (source == null) {
+            if (other.source != null)
+                return false;
+        } else if (!source.equals(other.source))
+            return false;
+        if (target == null) {
+            if (other.target != null)
+                return false;
+        } else if (!target.equals(other.target))
+            return false;
+        return true;
     }
 
     public Resource getSource() {
-	return source;
+        return source;
     }
 
     public Resource getTarget() {
-	return target;
+        return target;
     }
 
     @Override
     public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + ((source == null) ? 0 : source.hashCode());
-	result = prime * result + ((target == null) ? 0 : target.hashCode());
-	return result;
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((source == null) ? 0 : source.hashCode());
+        result = prime * result + ((target == null) ? 0 : target.hashCode());
+        return result;
     }
 
     @Override
     public String toString() {
-	return "Relationship [source=" + source + ", target=" + target + "]";
+        return "Relationship [source=" + source + ", target=" + target + "]";
     }
 
 }

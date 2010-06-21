@@ -31,80 +31,80 @@ public class WorkspaceSecurityManager {
     private UserService userService;
 
     public WorkspaceSecurityManager(UserService userService) {
-	assert userService != null;
-	this.userService = userService;
+        assert userService != null;
+        this.userService = userService;
     }
 
     public void checkAuthenticated() throws AuthenticationException {
-	if (!userService.isUserLoggedIn()) {
-	    throw new AuthenticationException(
-		    "Authentication failed: User not signed in.");
-	}
+        if (!userService.isUserLoggedIn()) {
+            throw new AuthenticationException(
+                    "Authentication failed: User not signed in.");
+        }
     }
 
     public void checkAuthorization(PersistentWorkspace workspace,
-	    PersistenceManager manager) throws AuthorizationException {
+            PersistenceManager manager) throws AuthorizationException {
 
-	Collection<PersistentWorkspacePermission> permissions = getWorkspacePermissionsForCurrentUser(
-		workspace, manager);
+        Collection<PersistentWorkspacePermission> permissions = getWorkspacePermissionsForCurrentUser(
+                workspace, manager);
 
-	if (permissions.isEmpty()) {
-	    throw new AuthorizationException(
-		    "User not authorized to access workspace");
-	}
+        if (permissions.isEmpty()) {
+            throw new AuthorizationException(
+                    "User not authorized to access workspace");
+        }
     }
 
     private void createWorkspacePermission(PersistentWorkspace workspace,
-	    String userId, String userName, String userEmail,
-	    PersistenceManager manager) {
+            String userId, String userName, String userEmail,
+            PersistenceManager manager) {
 
-	assert workspace != null;
-	assert manager != null;
-	assert userId != null;
+        assert workspace != null;
+        assert manager != null;
+        assert userId != null;
 
-	PersistentWorkspacePermission permission = new PersistentWorkspacePermission();
-	permission.setWorkspace(workspace);
-	permission.setUserId(userId);
-	permission.setUserEmail(userEmail);
-	permission.setUserName(userName);
-	manager.makePersistent(permission);
+        PersistentWorkspacePermission permission = new PersistentWorkspacePermission();
+        permission.setWorkspace(workspace);
+        permission.setUserId(userId);
+        permission.setUserEmail(userEmail);
+        permission.setUserName(userName);
+        manager.makePersistent(permission);
     }
 
     public void createWorkspacePermissionForCurrentUser(
-	    PersistentWorkspace workspace, PersistenceManager manager) {
+            PersistentWorkspace workspace, PersistenceManager manager) {
 
-	createWorkspacePermission(workspace, getCurrentUser().getUserId(),
-		getCurrentUser().getNickname(), getCurrentUser().getEmail(),
-		manager);
+        createWorkspacePermission(workspace, getCurrentUser().getUserId(),
+                getCurrentUser().getNickname(), getCurrentUser().getEmail(),
+                manager);
     }
 
     private User getCurrentUser() {
-	return userService.getCurrentUser();
+        return userService.getCurrentUser();
     }
 
     public Collection<PersistentWorkspacePermission> getWorkspacePermissionsForCurrentUser(
-	    PersistenceManager manager) {
+            PersistenceManager manager) {
 
-	Query userIdQuery = manager.newQuery(
-		PersistentWorkspacePermission.class, "userId == userIdParam");
-	userIdQuery.declareParameters("String userIdParam");
+        Query userIdQuery = manager.newQuery(
+                PersistentWorkspacePermission.class, "userId == userIdParam");
+        userIdQuery.declareParameters("String userIdParam");
 
-	return (Collection<PersistentWorkspacePermission>) userIdQuery
-		.execute(getCurrentUser().getUserId());
+        return (Collection<PersistentWorkspacePermission>) userIdQuery
+                .execute(getCurrentUser().getUserId());
     }
 
     private Collection<PersistentWorkspacePermission> getWorkspacePermissionsForCurrentUser(
-	    PersistentWorkspace workspace, PersistenceManager manager) {
+            PersistentWorkspace workspace, PersistenceManager manager) {
 
-	Query userIdQuery = manager.newQuery(
-		PersistentWorkspacePermission.class,
-		"workspace == workspaceParam" + " && "
-			+ "userId == userIdParam");
-	userIdQuery.declareParameters("PersistentWorkspace workspaceParam"
-		+ ", " + "String userIdParam");
+        Query userIdQuery = manager.newQuery(
+                PersistentWorkspacePermission.class,
+                "workspace == workspaceParam" + " && "
+                        + "userId == userIdParam");
+        userIdQuery.declareParameters("PersistentWorkspace workspaceParam"
+                + ", " + "String userIdParam");
 
-	return (Collection<PersistentWorkspacePermission>) userIdQuery.execute(
-		workspace, getCurrentUser().getUserId());
+        return (Collection<PersistentWorkspacePermission>) userIdQuery.execute(
+                workspace, getCurrentUser().getUserId());
     }
 
 }

@@ -28,31 +28,31 @@ public class CreateWindowCommand implements UndoableCommand, HasDescription {
     private final WindowContent content;
 
     public CreateWindowCommand(Desktop desktop, WindowContent content) {
-	this.desktop = desktop;
-	this.content = content;
+        this.desktop = desktop;
+        this.content = content;
     }
 
     @Override
     public void execute() {
-	windowPanel = desktop.createWindow(content);
+        windowPanel = desktop.createWindow(content);
     }
 
     @Override
     public String getDescription() {
-	return "Create window '" + content.getLabel() + "'";
+        return "Create window '" + content.getLabel() + "'";
     }
 
     public WindowPanel getWindow() {
-	return windowPanel;
+        return windowPanel;
     }
 
     @Override
     public void undo() {
-	assert windowPanel != null;
+        assert windowPanel != null;
 
-	// FIXME animations missing
+        // FIXME animations missing
 
-	desktop.removeWindow(windowPanel);
+        desktop.removeWindow(windowPanel);
     }
 
 }

@@ -19,22 +19,22 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 public class ManagedResourceSetFactory implements ResourceSetFactory,
-	Provider<ResourceSet> {
+        Provider<ResourceSet> {
 
     private final ResourceManager resourceManager;
 
     @Inject
     public ManagedResourceSetFactory(ResourceManager resourceManager) {
-	this.resourceManager = resourceManager;
+        this.resourceManager = resourceManager;
     }
 
     @Override
     public ResourceSet createResourceSet() {
-	return new ManagedResourceSet(resourceManager);
+        return new ManagedResourceSet(resourceManager);
     }
 
     @Override
     public ResourceSet get() {
-	return createResourceSet();
+        return createResourceSet();
     }
 }

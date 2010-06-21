@@ -23,5 +23,5 @@ import com.google.gwt.user.client.rpc.RemoteService;
 public interface NeighbourhoodService extends RemoteService {
 
     NeighbourhoodServiceResult getNeighbourhood(Resource concept)
-	    throws ServiceException;
+            throws ServiceException;
 }

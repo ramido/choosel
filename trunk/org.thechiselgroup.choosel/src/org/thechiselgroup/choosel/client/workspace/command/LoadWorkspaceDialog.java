@@ -44,11 +44,11 @@ public class LoadWorkspaceDialog extends AbstractDialog {
     private final WorkspacePersistenceManager persistenceManager;
 
     public LoadWorkspaceDialog(List<WorkspacePreview> workspacePreviews,
-	    AsyncCommandExecutor asyncCommandExecutor,
-	    WorkspacePersistenceManager persistenceManager) {
-	this.workspacePreviews = workspacePreviews;
-	this.asyncCommandExecutor = asyncCommandExecutor;
-	this.persistenceManager = persistenceManager;
+            AsyncCommandExecutor asyncCommandExecutor,
+            WorkspacePersistenceManager persistenceManager) {
+        this.workspacePreviews = workspacePreviews;
+        this.asyncCommandExecutor = asyncCommandExecutor;
+        this.persistenceManager = persistenceManager;
     }
 
     @Override
@@ -57,74 +57,74 @@ public class LoadWorkspaceDialog extends AbstractDialog {
 
     @Override
     public Widget getContent() {
-	// TODO extract radio group widget
-	// TODO autogenerate group id
-	String groupId = "group";
+        // TODO extract radio group widget
+        // TODO autogenerate group id
+        String groupId = "group";
 
-	VerticalPanel content = new VerticalPanel();
-	for (WorkspacePreview workspace : workspacePreviews) {
-	    RadioButton radioButton = new RadioButton(groupId, workspace
-		    .getName());
-	    radioButton.setValue(Boolean.FALSE);
-	    buttonsToWorkspaces.put(radioButton, workspace);
+        VerticalPanel content = new VerticalPanel();
+        for (WorkspacePreview workspace : workspacePreviews) {
+            RadioButton radioButton = new RadioButton(groupId,
+                    workspace.getName());
+            radioButton.setValue(Boolean.FALSE);
+            buttonsToWorkspaces.put(radioButton, workspace);
 
-	    // highlight + select current workspace
-	    if (workspace.isCurrentWorkspace()) {
-		radioButton.setText(workspace.getName() + " (current)");
-		radioButton.setValue(Boolean.TRUE);
+            // highlight + select current workspace
+            if (workspace.isCurrentWorkspace()) {
+                radioButton.setText(workspace.getName() + " (current)");
+                radioButton.setValue(Boolean.TRUE);
 
-		setSelectedButton(radioButton);
-	    }
+                setSelectedButton(radioButton);
+            }
 
-	    radioButton
-		    .addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-			@Override
-			public void onValueChange(
-				ValueChangeEvent<Boolean> event) {
-			    if (event.getValue() == Boolean.TRUE) {
-				setSelectedButton((RadioButton) event
-					.getSource());
-			    }
-			}
-		    });
+            radioButton
+                    .addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+                        @Override
+                        public void onValueChange(
+                                ValueChangeEvent<Boolean> event) {
+                            if (event.getValue() == Boolean.TRUE) {
+                                setSelectedButton((RadioButton) event
+                                        .getSource());
+                            }
+                        }
+                    });
 
-	    content.add(radioButton);
-	}
+            content.add(radioButton);
+        }
 
-	return content;
-    }
-
-    private void setSelectedButton(RadioButton radioButton) {
-	assert radioButton != null;
-	selectedButton = radioButton;
-	setOkayButtonEnabled(true);
-    }
-
-    @Override
-    public void init(DialogCallback callback) {
-	super.init(callback);
-	setOkayButtonEnabled(selectedButton != null);
+        return content;
     }
 
     @Override
     public String getOkayButtonLabel() {
-	return "Load";
+        return "Load";
     }
 
     @Override
     public String getTitle() {
-	return "Load Workspace";
+        return "Load Workspace";
+    }
+
+    @Override
+    public void init(DialogCallback callback) {
+        super.init(callback);
+        setOkayButtonEnabled(selectedButton != null);
     }
 
     @Override
     public void okay() {
-	WorkspacePreview workspacePreview = buttonsToWorkspaces
-		.get(selectedButton);
-	LoadWorkspaceCommand loadWorkspaceCommand = new LoadWorkspaceCommand(
-		workspacePreview.getId(), workspacePreview.getName(),
-		persistenceManager);
+        WorkspacePreview workspacePreview = buttonsToWorkspaces
+                .get(selectedButton);
+        LoadWorkspaceCommand loadWorkspaceCommand = new LoadWorkspaceCommand(
+                workspacePreview.getId(), workspacePreview.getName(),
+                persistenceManager);
 
-	asyncCommandExecutor.execute(loadWorkspaceCommand);
+        asyncCommandExecutor.execute(loadWorkspaceCommand);
+    }
+
+    private void setSelectedButton(RadioButton radioButton) {
+        assert radioButton != null;
+        selectedButton = radioButton;
+        setOkayButtonEnabled(true);
     }
 
 }

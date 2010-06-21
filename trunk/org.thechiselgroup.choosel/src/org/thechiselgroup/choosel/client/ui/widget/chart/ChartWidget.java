@@ -25,7 +25,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 
 public abstract class ChartWidget extends Widget {
-    
+
     protected Chart chart;
 
     private ArrayList<Object> chartItemArray = new ArrayList<Object>();
@@ -41,87 +41,102 @@ public abstract class ChartWidget extends Widget {
     private int width = 0;
 
     protected JavaScriptObject val = ArrayUtils.toJsArray(ArrayUtils
-	    .toDoubleArray(dataArray));
+            .toDoubleArray(dataArray));
 
     protected JavaScriptObject valX = ArrayUtils.toJsArray(ArrayUtils
-	    .toDoubleArray(dataArrayX));
+            .toDoubleArray(dataArrayX));
 
     protected JavaScriptObject valY = ArrayUtils.toJsArray(ArrayUtils
-	    .toDoubleArray(dataArrayY));
+            .toDoubleArray(dataArrayY));
 
     public ChartWidget() {
-	setElement(DOM.createDiv());
+        setElement(DOM.createDiv());
     }
 
     public void addEvent(ChartItem chartItem) {
-	chartItemArray.add(chartItem);
-	if (chartItem.getResourceSet().getFirstResource().getUri()
-		.startsWith("earthquake")) {
-	    dataArray.add(Double.valueOf(chartItem.getResourceSet()
-		    .getFirstResource().getValue("magnitude").toString()));
-	    val = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArray));
-	} else {
-	    dataArrayX.add(Double.valueOf(chartItem.getResourceSet()
-		    .getFirstResource().getValue("x-coord").toString()));
-	    dataArrayY.add(Double.valueOf(chartItem.getResourceSet()
-		    .getFirstResource().getValue("y-coord").toString()));
-	    valX = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArrayX));
-	    valY = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArrayY));
-	}
-	updateChart();
+        chartItemArray.add(chartItem);
+        if (chartItem.getResourceSet().getFirstResource().getUri()
+                .startsWith("earthquake")) {
+            dataArray.add(Double.valueOf(chartItem.getResourceSet()
+                    .getFirstResource().getValue("magnitude").toString()));
+            val = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArray));
+        } else {
+            dataArrayX.add(Double.valueOf(chartItem.getResourceSet()
+                    .getFirstResource().getValue("x-coord").toString()));
+            dataArrayY.add(Double.valueOf(chartItem.getResourceSet()
+                    .getFirstResource().getValue("y-coord").toString()));
+            valX = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArrayX));
+            valY = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArrayY));
+        }
+        updateChart();
     }
 
     public void checkResize() {
-	if (chart != null)
-	    resize(getOffsetWidth(), getOffsetHeight());
+        if (chart != null) {
+            resize(getOffsetWidth(), getOffsetHeight());
+        }
     }
 
     protected abstract Chart drawChart(int width, int height);
 
     public JavaScriptObject getChart() {
-	return chart;
+        return chart;
     }
 
     public ChartItem getChartItem(int index) {
-	return (ChartItem) chartItemArray.get(index);
+        return (ChartItem) chartItemArray.get(index);
     }
 
     public ArrayList<Double> getDataArray() {
-	return dataArray;
+        return dataArray;
     }
 
     protected double getMaxDataValue() {
-	if(dataArray.isEmpty()) return 0;
-	double max = dataArray.get(0);
-        for (int i = 1; i < dataArray.size(); i++) if (dataArray.get(i) > max) max = dataArray.get(i);
+        if (dataArray.isEmpty()) {
+            return 0;
+        }
+        double max = dataArray.get(0);
+        for (int i = 1; i < dataArray.size(); i++) {
+            if (dataArray.get(i) > max) {
+                max = dataArray.get(i);
+            }
+        }
         return max;
     }
-        
+
     protected double getMinDataValue() {
-	if(dataArray.isEmpty()) return 0;
-	double min = dataArray.get(0);
-        for (int i = 1; i < dataArray.size(); i++) if (dataArray.get(i) < min) min = dataArray.get(i);
+        if (dataArray.isEmpty()) {
+            return 0;
+        }
+        double min = dataArray.get(0);
+        for (int i = 1; i < dataArray.size(); i++) {
+            if (dataArray.get(i) < min) {
+                min = dataArray.get(i);
+            }
+        }
         return min;
     }
-    
+
     @Override
     protected void onAttach() {
-	super.onAttach();
+        super.onAttach();
 
-	if (chart == null)
-	    updateChart();
+        if (chart == null) {
+            updateChart();
+        }
     }
 
     protected void onBrushEvent(int index, boolean isBrushed) {
-	ChartItem chartItem = getChartItem(index);
-	chartItem.onBrushEvent(isBrushed);
+        ChartItem chartItem = getChartItem(index);
+        chartItem.onBrushEvent(isBrushed);
     }
 
     protected void onEvent(int index, Event e) {
-	ChartItem chartItem = getChartItem(index);
-	chartItem.onEvent(e);
+        ChartItem chartItem = getChartItem(index);
+        chartItem.onEvent(e);
     }
 
+    // @formatter:off
     protected native Chart registerEvents() /*-{
         var chart = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chart,
         thisChart = this;
@@ -145,7 +160,9 @@ public abstract class ChartWidget extends Widget {
             	{$entry(thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onEvent(ILcom/google/gwt/user/client/Event;)
             	    (this.index,$wnd.pv.event));});
     }-*/;
+    // @formatter:on
 
+    // @formatter:off        
     protected native Chart registerFillStyle() /*-{
         var chart = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chart,
         thisChart = this;
@@ -154,37 +171,40 @@ public abstract class ChartWidget extends Widget {
             return thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::getChartItem(I)(this.index)
                	    .@org.thechiselgroup.choosel.client.views.chart.ChartItem::getColour()();});
     }-*/;
+    // @formatter:on        
 
     public void removeEvent(int position) {
-	chartItemArray.remove(position);
-	dataArray.remove(position);
-	val = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArray));
-	updateChart();
+        chartItemArray.remove(position);
+        dataArray.remove(position);
+        val = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArray));
+        updateChart();
     }
 
+    // @formatter:off
     public native void renderChart() /*-{
         var chart = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chart;
         chart.root.render();
     }-*/;
+    // @formatter:on
 
     public void resize(int width, int height) {
-	this.width = width;
-	this.height = height;
-	updateChart();
+        this.width = width;
+        this.height = height;
+        updateChart();
     }
 
     public void setDataArray(ArrayList<Double> dataArray) {
-	this.dataArray = dataArray;
+        this.dataArray = dataArray;
     }
 
     public void updateChart() {
-	chart = Chart.create(getElement(), width, height);
-	chart = drawChart(width, height);
-	if (chartItemArray.size() != 0) {
-	    chart = registerFillStyle();
-	    chart = registerEvents();
-	}
-	renderChart();
+        chart = Chart.create(getElement(), width, height);
+        chart = drawChart(width, height);
+        if (chartItemArray.size() != 0) {
+            chart = registerFillStyle();
+            chart = registerEvents();
+        }
+        renderChart();
     }
 
 }

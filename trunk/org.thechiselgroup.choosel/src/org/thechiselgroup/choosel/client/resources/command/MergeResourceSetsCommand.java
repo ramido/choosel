@@ -19,40 +19,40 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.views.View;
 
 public class MergeResourceSetsCommand extends
-	AddResourceSetToResourceSetCommand {
+        AddResourceSetToResourceSetCommand {
 
     private View view;
 
     public MergeResourceSetsCommand(ResourceSet sourceSet,
-	    ResourceSet targetSet, View view) {
+            ResourceSet targetSet, View view) {
 
-	super(sourceSet, targetSet);
+        super(sourceSet, targetSet);
 
-	assert view != null;
-	this.view = view;
+        assert view != null;
+        this.view = view;
     }
 
     @Override
     public void execute() {
-	super.execute();
+        super.execute();
 
-	view.removeResourceSet(addedSet);
+        view.removeResourceSet(addedSet);
     }
 
     @Override
     public String getDescription() {
-	return "Merge resource set '" + addedSet.getLabel()
-		+ "' into resource set '" + modifiedSet.getLabel() + "'";
+        return "Merge resource set '" + addedSet.getLabel()
+                + "' into resource set '" + modifiedSet.getLabel() + "'";
     }
 
     public View getView() {
-	return view;
+        return view;
     }
 
     @Override
     public void undo() {
-	super.undo();
+        super.undo();
 
-	view.addResourceSet(addedSet);
+        view.addResourceSet(addedSet);
     }
 }

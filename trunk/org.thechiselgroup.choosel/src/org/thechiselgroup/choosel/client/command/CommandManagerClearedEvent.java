@@ -18,22 +18,22 @@ package org.thechiselgroup.choosel.client.command;
 import com.google.gwt.event.shared.GwtEvent;
 
 public class CommandManagerClearedEvent extends
-	CommandManagerEvent<CommandManagerClearedEventHandler> {
+        CommandManagerEvent<CommandManagerClearedEventHandler> {
 
     public static final GwtEvent.Type<CommandManagerClearedEventHandler> TYPE = new GwtEvent.Type<CommandManagerClearedEventHandler>();
 
     public CommandManagerClearedEvent(CommandManager commandManager) {
-	super(commandManager, null);
+        super(commandManager, null);
     }
 
     @Override
     protected void dispatch(CommandManagerClearedEventHandler handler) {
-	handler.onCleared(this);
+        handler.onCleared(this);
     }
 
     @Override
     public GwtEvent.Type<CommandManagerClearedEventHandler> getAssociatedType() {
-	return TYPE;
+        return TYPE;
     }
 
 }

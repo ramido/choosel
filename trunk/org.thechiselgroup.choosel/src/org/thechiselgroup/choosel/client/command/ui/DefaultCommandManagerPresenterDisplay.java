@@ -28,7 +28,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 public class DefaultCommandManagerPresenterDisplay implements
-	CommandManagerPresenterDisplay {
+        CommandManagerPresenterDisplay {
 
     private Button redoButton;
 
@@ -40,75 +40,75 @@ public class DefaultCommandManagerPresenterDisplay implements
 
     @Inject
     public DefaultCommandManagerPresenterDisplay(
-	    PopupManagerFactory popupManagerFactory) {
+            PopupManagerFactory popupManagerFactory) {
 
-	assert popupManagerFactory != null;
+        assert popupManagerFactory != null;
 
-	initUndoButton(popupManagerFactory);
-	initRedoButton(popupManagerFactory);
+        initUndoButton(popupManagerFactory);
+        initRedoButton(popupManagerFactory);
     }
 
     public Button getRedoButton() {
-	return redoButton;
+        return redoButton;
     }
 
     @Override
     public HasClickHandlers getRedoClickHandlers() {
-	return redoButton;
+        return redoButton;
     }
 
     public Button getUndoButton() {
-	return undoButton;
+        return undoButton;
     }
 
     @Override
     public HasClickHandlers getUndoClickHandlers() {
-	return undoButton;
+        return undoButton;
     }
 
     private void initRedoButton(PopupManagerFactory popupManagerFactory) {
-	redoButton = new Button("Redo");
-	redoLabel = new Label();
-	PopupManager popupManager = popupManagerFactory
-		.createPopupManager(new WidgetFactory() {
-		    @Override
-		    public Widget createWidget() {
-			return redoLabel;
-		    }
-		});
-	DefaultPopupManager.linkManagerToSource(popupManager, redoButton);
+        redoButton = new Button("Redo");
+        redoLabel = new Label();
+        PopupManager popupManager = popupManagerFactory
+                .createPopupManager(new WidgetFactory() {
+                    @Override
+                    public Widget createWidget() {
+                        return redoLabel;
+                    }
+                });
+        DefaultPopupManager.linkManagerToSource(popupManager, redoButton);
     }
 
     private void initUndoButton(PopupManagerFactory popupManagerFactory) {
-	undoButton = new Button("Undo");
-	undoLabel = new Label();
-	PopupManager popupManager = popupManagerFactory
-		.createPopupManager(new WidgetFactory() {
-		    @Override
-		    public Widget createWidget() {
-			return undoLabel;
-		    }
-		});
-	DefaultPopupManager.linkManagerToSource(popupManager, undoButton);
+        undoButton = new Button("Undo");
+        undoLabel = new Label();
+        PopupManager popupManager = popupManagerFactory
+                .createPopupManager(new WidgetFactory() {
+                    @Override
+                    public Widget createWidget() {
+                        return undoLabel;
+                    }
+                });
+        DefaultPopupManager.linkManagerToSource(popupManager, undoButton);
     }
 
     @Override
     public void setRedoButtonEnabled(boolean enabled) {
-	redoButton.setEnabled(enabled);
+        redoButton.setEnabled(enabled);
     }
 
     @Override
     public void setRedoCommandDescription(String commandDescription) {
-	redoLabel.setText(commandDescription);
+        redoLabel.setText(commandDescription);
     }
 
     @Override
     public void setUndoButtonEnabled(boolean enabled) {
-	undoButton.setEnabled(enabled);
+        undoButton.setEnabled(enabled);
     }
 
     @Override
     public void setUndoCommandDescription(String commandDescription) {
-	undoLabel.setText(commandDescription);
+        undoLabel.setText(commandDescription);
     }
 }

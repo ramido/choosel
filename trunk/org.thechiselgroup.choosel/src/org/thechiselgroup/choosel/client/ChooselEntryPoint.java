@@ -19,18 +19,6 @@ import com.google.gwt.core.client.EntryPoint;
 
 public abstract class ChooselEntryPoint implements EntryPoint {
 
-    @Override
-    public final void onModuleLoad() {
-	ChooselGinjector injector = createChooselGinjector();
-
-	// TODO what is this for?
-	// resolves initialization cycles
-	injector.getProxyViewFactoryResolver().setDelegate(
-		injector.getViewFactory());
-
-	injector.getApplication().init();
-    }
-
     /**
      * Choosel applications should override to implement their own
      * ChooseGinjector that links their custom configuration module. They need
@@ -41,5 +29,17 @@ public abstract class ChooselEntryPoint implements EntryPoint {
     // {
     // return GWT.create(ChooselGinjector.class);
     // }
+
+    @Override
+    public final void onModuleLoad() {
+        ChooselGinjector injector = createChooselGinjector();
+
+        // TODO what is this for?
+        // resolves initialization cycles
+        injector.getProxyViewFactoryResolver().setDelegate(
+                injector.getViewFactory());
+
+        injector.getApplication().init();
+    }
 
 }

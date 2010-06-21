@@ -15,9 +15,11 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.model.resources;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -40,44 +42,44 @@ public class ResourceSetContainerTest {
     private ResourceSetContainerChangedEventHandler handler;
 
     @Test
-    public void fireResourceSetChangedEventOnSettingResourceSet() {
-	undertest.setResourceSet(resources);
-
-	ArgumentCaptor<ResourceSetContainerChangedEvent> argument = ArgumentCaptor
-		.forClass(ResourceSetContainerChangedEvent.class);
-	verify(handler, times(1)).onResourceSetContainerChanged(
-		argument.capture());
-
-	assertEquals(resources, argument.getValue().getResourceSet());
-    }
-
-    @Test
     public void doNotFireIfNoChangeA() {
-	undertest.setResourceSet(resources);
-	undertest.setResourceSet(resources);
+        undertest.setResourceSet(resources);
+        undertest.setResourceSet(resources);
 
-	ArgumentCaptor<ResourceSetContainerChangedEvent> argument = ArgumentCaptor
-		.forClass(ResourceSetContainerChangedEvent.class);
-	verify(handler, times(1)).onResourceSetContainerChanged(
-		argument.capture());
+        ArgumentCaptor<ResourceSetContainerChangedEvent> argument = ArgumentCaptor
+                .forClass(ResourceSetContainerChangedEvent.class);
+        verify(handler, times(1)).onResourceSetContainerChanged(
+                argument.capture());
 
-	assertEquals(resources, argument.getValue().getResourceSet());
+        assertEquals(resources, argument.getValue().getResourceSet());
     }
 
     @Test
     public void doNotFireIfNoChangeB() {
-	undertest.setResourceSet(null);
+        undertest.setResourceSet(null);
 
-	verify(handler, never()).onResourceSetContainerChanged(
-		any(ResourceSetContainerChangedEvent.class));
+        verify(handler, never()).onResourceSetContainerChanged(
+                any(ResourceSetContainerChangedEvent.class));
+    }
+
+    @Test
+    public void fireResourceSetChangedEventOnSettingResourceSet() {
+        undertest.setResourceSet(resources);
+
+        ArgumentCaptor<ResourceSetContainerChangedEvent> argument = ArgumentCaptor
+                .forClass(ResourceSetContainerChangedEvent.class);
+        verify(handler, times(1)).onResourceSetContainerChanged(
+                argument.capture());
+
+        assertEquals(resources, argument.getValue().getResourceSet());
     }
 
     @Before
     public void setUp() {
-	MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.initMocks(this);
 
-	undertest = new ResourceSetContainer();
+        undertest = new ResourceSetContainer();
 
-	undertest.addResourceSetContainerChangedEventHandler(handler);
+        undertest.addResourceSetContainerChangedEventHandler(handler);
     }
 }

@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.client.resources;
 import com.google.gwt.event.shared.GwtEvent;
 
 public class ResourceCategoryAddedEvent extends
-	GwtEvent<ResourceCategoryAddedEventHandler> {
+        GwtEvent<ResourceCategoryAddedEventHandler> {
 
     public static final GwtEvent.Type<ResourceCategoryAddedEventHandler> TYPE = new GwtEvent.Type<ResourceCategoryAddedEventHandler>();
 
@@ -27,29 +27,29 @@ public class ResourceCategoryAddedEvent extends
     private String category;
 
     public ResourceCategoryAddedEvent(String category, ResourceSet resourceSet) {
-	assert category != null;
-	assert resourceSet != null;
+        assert category != null;
+        assert resourceSet != null;
 
-	this.category = category;
-	this.resourceSet = resourceSet;
+        this.category = category;
+        this.resourceSet = resourceSet;
     }
 
     @Override
     protected void dispatch(ResourceCategoryAddedEventHandler handler) {
-	handler.onResourceCategoryAdded(this);
+        handler.onResourceCategoryAdded(this);
     }
 
     @Override
     public GwtEvent.Type<ResourceCategoryAddedEventHandler> getAssociatedType() {
-	return TYPE;
-    }
-
-    public ResourceSet getResourceSet() {
-	return resourceSet;
+        return TYPE;
     }
 
     public String getCategory() {
-	return category;
+        return category;
+    }
+
+    public ResourceSet getResourceSet() {
+        return resourceSet;
     }
 
 }

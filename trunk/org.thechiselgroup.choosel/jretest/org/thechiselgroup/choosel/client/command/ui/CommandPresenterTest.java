@@ -26,7 +26,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.thechiselgroup.choosel.client.command.ui.CommandPresenter;
 import org.thechiselgroup.choosel.client.command.ui.CommandPresenter.Display;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -46,37 +45,37 @@ public class CommandPresenterTest {
 
     protected ClickHandler clickHandler;
 
-    @Before
-    public void setUp() {
-	MockitoAnnotations.initMocks(this);
+    @Test
+    public void callExecuteOnClick() {
+        clickHandler.onClick(new ClickEvent() {
+        });
 
-	// TODO extract to utility class with reflection
-	when(display.addClickHandler(any(ClickHandler.class))).thenAnswer(
-		new Answer<HandlerRegistration>() {
-		    @Override
-		    public HandlerRegistration answer(
-			    InvocationOnMock invocation) {
-
-			clickHandler = (ClickHandler) invocation.getArguments()[0];
-			return null;
-		    }
-		});
-
-	presenter = new CommandPresenter(display, command);
-	presenter.init();
+        verify(command, times(1)).execute();
     }
 
     @Test
     public void initialState() {
-	verify(display).addClickHandler(any(ClickHandler.class));
+        verify(display).addClickHandler(any(ClickHandler.class));
     }
 
-    @Test
-    public void callExecuteOnClick() {
-	clickHandler.onClick(new ClickEvent() {
-	});
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
 
-	verify(command, times(1)).execute();
+        // TODO extract to utility class with reflection
+        when(display.addClickHandler(any(ClickHandler.class))).thenAnswer(
+                new Answer<HandlerRegistration>() {
+                    @Override
+                    public HandlerRegistration answer(
+                            InvocationOnMock invocation) {
+
+                        clickHandler = (ClickHandler) invocation.getArguments()[0];
+                        return null;
+                    }
+                });
+
+        presenter = new CommandPresenter(display, command);
+        presenter.init();
     }
 
 }

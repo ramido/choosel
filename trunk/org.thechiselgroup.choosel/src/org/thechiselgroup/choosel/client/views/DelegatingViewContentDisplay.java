@@ -25,73 +25,73 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
     private ViewContentDisplay delegate;
 
     public DelegatingViewContentDisplay(ViewContentDisplay delegate) {
-	assert delegate != null;
+        assert delegate != null;
 
-	this.delegate = delegate;
+        this.delegate = delegate;
     }
 
     @Override
     public Widget asWidget() {
-	return delegate.asWidget();
+        return delegate.asWidget();
     }
 
     @Override
     public void checkResize() {
-	delegate.checkResize();
+        delegate.checkResize();
     }
 
     @Override
     public ResourceItem createResourceItem(Layer layer, ResourceSet resources) {
-	return delegate.createResourceItem(layer, resources);
-    }
-
-    @Override
-    public String[] getSlotIDs() {
-	return delegate.getSlotIDs();
+        return delegate.createResourceItem(layer, resources);
     }
 
     @Override
     public void dispose() {
-	delegate.dispose();
+        delegate.dispose();
     }
 
     @Override
     public void endRestore() {
-	delegate.endRestore();
+        delegate.endRestore();
     }
 
     public ViewContentDisplay getDelegate() {
-	return delegate;
+        return delegate;
+    }
+
+    @Override
+    public String[] getSlotIDs() {
+        return delegate.getSlotIDs();
     }
 
     @Override
     public void init(ViewContentDisplayCallback callback) {
-	delegate.init(callback);
+        delegate.init(callback);
     }
 
     @Override
     public boolean isReady() {
-	return delegate.isReady();
+        return delegate.isReady();
     }
 
     @Override
     public void removeResourceItem(ResourceItem resourceItem) {
-	delegate.removeResourceItem(resourceItem);
+        delegate.removeResourceItem(resourceItem);
     }
 
     @Override
     public void restore(Memento state) {
-	delegate.restore(state);
+        delegate.restore(state);
     }
 
     @Override
     public Memento save() {
-	return delegate.save();
+        return delegate.save();
     }
 
     @Override
     public void startRestore() {
-	delegate.startRestore();
+        delegate.startRestore();
     }
 
 }

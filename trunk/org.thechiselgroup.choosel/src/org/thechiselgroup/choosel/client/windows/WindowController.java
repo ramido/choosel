@@ -19,14 +19,14 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 
 public interface WindowController {
 
+    void bringToFront(WindowPanel window);
+
+    void close(WindowPanel window);
+
     AbsolutePanel getBoundaryPanel();
 
     WindowMoveController getMoveDragController();
 
     WindowResizeController getResizeDragController();
-
-    void bringToFront(WindowPanel window);
-
-    void close(WindowPanel window);
 
 }

@@ -27,10 +27,10 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("workspace")
 public interface WorkspacePersistenceService extends RemoteService {
 
-    Long saveWorkspace(WorkspaceDTO workspace) throws ServiceException;
+    WorkspaceDTO loadWorkspace(Long workspaceId) throws ServiceException;
 
     List<WorkspacePreviewDTO> loadWorkspacePreviews() throws ServiceException;
 
-    WorkspaceDTO loadWorkspace(Long workspaceId) throws ServiceException;
+    Long saveWorkspace(WorkspaceDTO workspace) throws ServiceException;
 
 }

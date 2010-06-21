@@ -19,13 +19,13 @@ import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
 
 public interface WindowContent extends WidgetAdaptable {
 
-    void init();
+    String getContentType();
 
     // TODO extend HasLabel
     String getLabel();
 
-    void setLabel(String label);
+    void init();
 
-    String getContentType();
+    void setLabel(String label);
 
 }

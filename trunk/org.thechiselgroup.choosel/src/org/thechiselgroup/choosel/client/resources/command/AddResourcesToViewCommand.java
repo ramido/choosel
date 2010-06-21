@@ -28,7 +28,7 @@ import org.thechiselgroup.choosel.client.views.View;
  * Adds resources to a view.
  */
 public class AddResourcesToViewCommand implements UndoableCommand,
-	HasDescription {
+        HasDescription {
 
     private Iterable<Resource> resources;
 
@@ -37,42 +37,42 @@ public class AddResourcesToViewCommand implements UndoableCommand,
     private List<Resource> addedResources;
 
     public AddResourcesToViewCommand(View view, Iterable<Resource> resources) {
-	assert view != null;
-	assert resources != null;
+        assert view != null;
+        assert resources != null;
 
-	this.view = view;
-	this.resources = resources;
+        this.view = view;
+        this.resources = resources;
     }
 
     @Override
     public void execute() {
-	assert addedResources == null;
+        assert addedResources == null;
 
-	ResourceSet viewResources = view.getResources();
-	addedResources = CollectionUtils.toList(resources);
-	addedResources.removeAll(viewResources.toList());
+        ResourceSet viewResources = view.getResources();
+        addedResources = CollectionUtils.toList(resources);
+        addedResources.removeAll(viewResources.toList());
 
-	view.addResources(addedResources);
+        view.addResources(addedResources);
 
-	assert addedResources != null;
-	assert view.containsResources(resources);
+        assert addedResources != null;
+        assert view.containsResources(resources);
     }
 
     // TODO add view name / label once available
     @Override
     public String getDescription() {
-	return "Add resources to view";
+        return "Add resources to view";
     }
 
     @Override
     public void undo() {
-	assert addedResources != null;
-	assert view.containsResources(resources);
+        assert addedResources != null;
+        assert view.containsResources(resources);
 
-	view.removeResources(addedResources);
-	addedResources = null;
+        view.removeResources(addedResources);
+        addedResources = null;
 
-	assert addedResources == null;
+        assert addedResources == null;
     }
 
 }

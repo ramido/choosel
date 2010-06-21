@@ -23,12 +23,12 @@ public class SelectionModelLabelFactory implements LabelProvider {
     private String prefix;
 
     public SelectionModelLabelFactory() {
-	prefix = "Selection";
+        prefix = "Selection";
     }
 
     @Override
     public String nextLabel() {
-	return prefix + " " + Integer.toString(currentIndex++);
+        return prefix + " " + Integer.toString(currentIndex++);
     }
 
 }

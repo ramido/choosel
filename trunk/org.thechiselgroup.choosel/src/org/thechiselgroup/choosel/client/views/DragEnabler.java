@@ -15,9 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import static com.google.gwt.user.client.DOM.*;
+import static com.google.gwt.user.client.DOM.setIntStyleAttribute;
+import static com.google.gwt.user.client.DOM.setStyleAttribute;
 
-import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarType;
@@ -43,48 +43,48 @@ import com.google.gwt.user.client.ui.Widget;
 public class DragEnabler {
 
     public static class InvisibleResourceSetAvatar extends ResourceSetAvatar
-	    implements DragProxyEventReceiver {
+            implements DragProxyEventReceiver {
 
-	private final PopupManager popupManager;
+        private final PopupManager popupManager;
 
-	private final String text;
+        private final String text;
 
-	public InvisibleResourceSetAvatar(String text, String enabledCSSClass,
-		ResourceSet resources, ResourceSetAvatarType type,
-		Element element, PopupManager popupManager) {
+        public InvisibleResourceSetAvatar(String text, String enabledCSSClass,
+                ResourceSet resources, ResourceSetAvatarType type,
+                Element element, PopupManager popupManager) {
 
-	    super(text, enabledCSSClass, resources, type, element);
-	    this.text = text;
-	    this.popupManager = popupManager;
-	}
+            super(text, enabledCSSClass, resources, type, element);
+            this.text = text;
+            this.popupManager = popupManager;
+        }
 
-	@Override
-	public void addStyleName(String style) {
-	}
+        @Override
+        public void addStyleName(String style) {
+        }
 
-	@Override
-	public Widget createProxy() {
-	    popupManager.hidePopup();
-	    return super.createProxy();
-	}
+        @Override
+        public Widget createProxy() {
+            popupManager.hidePopup();
+            return super.createProxy();
+        }
 
-	@Override
-	public void dragProxyAttached() {
-	}
+        @Override
+        public void dragProxyAttached() {
+        }
 
-	@Override
-	public void dragProxyDetached() {
-	    removeFromParent();
-	}
+        @Override
+        public void dragProxyDetached() {
+            removeFromParent();
+        }
 
-	@Override
-	public String getText() {
-	    return text;
-	}
+        @Override
+        public String getText() {
+            return text;
+        }
 
-	@Override
-	public void setText(String text) {
-	}
+        @Override
+        public void setText(String text) {
+        }
     }
 
     private ResourceItem item;
@@ -96,250 +96,248 @@ public class DragEnabler {
     private ResourceSetAvatarDragController dragController;
 
     public DragEnabler(ResourceItem item, Desktop desktop,
-	    ResourceSetAvatarDragController dragController) {
+            ResourceSetAvatarDragController dragController) {
 
-	assert item != null;
+        assert item != null;
 
-	this.desktop = desktop;
-	this.dragController = dragController;
-	this.item = item;
+        this.desktop = desktop;
+        this.dragController = dragController;
+        this.item = item;
     }
 
     private void createDragWidget(int absoluteLeft, int absoluteTop) {
-	assert panel == null;
+        assert panel == null;
 
-	// add to desktop - need widget container
-	// FIXME use dependency injection
-	AbsolutePanel desktopWidget = desktop.asWidget();
+        // add to desktop - need widget container
+        // FIXME use dependency injection
+        AbsolutePanel desktopWidget = desktop.asWidget();
 
-	int left = absoluteLeft - desktopWidget.getAbsoluteLeft();
-	int top = absoluteTop - desktopWidget.getAbsoluteTop();
+        int left = absoluteLeft - desktopWidget.getAbsoluteLeft();
+        int top = absoluteTop - desktopWidget.getAbsoluteTop();
 
-	Element span = DOM.createSpan();
+        Element span = DOM.createSpan();
 
-	setStyleAttribute(span, CSS.POSITION, CSS.ABSOLUTE);
-	setStyleAttribute(span, CSS.LEFT, "" + left + CSS.PX);
-	setStyleAttribute(span, CSS.TOP, "" + top + CSS.PX);
-	setIntStyleAttribute(span, CSS.Z_INDEX, -1);
+        setStyleAttribute(span, CSS.POSITION, CSS.ABSOLUTE);
+        setStyleAttribute(span, CSS.LEFT, "" + left + CSS.PX);
+        setStyleAttribute(span, CSS.TOP, "" + top + CSS.PX);
+        setIntStyleAttribute(span, CSS.Z_INDEX, -1);
 
-	// FIXME: we are not at the correct part of the widget hierarchy
-	// --> this can cause event forwarding (i.e. to windows) to fail
-	// TODO title
-	final String text = (String) item
-		.getResourceValue(SlotResolver.DESCRIPTION_SLOT);
-	panel = new InvisibleResourceSetAvatar(text, "avatar-resourceSet",
-		item.getResourceSet(), ResourceSetAvatarType.SET, span, item
-			.getPopupManager());
+        // FIXME: we are not at the correct part of the widget hierarchy
+        // --> this can cause event forwarding (i.e. to windows) to fail
+        // TODO title
+        final String text = (String) item
+                .getResourceValue(SlotResolver.DESCRIPTION_SLOT);
+        panel = new InvisibleResourceSetAvatar(text, "avatar-resourceSet",
+                item.getResourceSet(), ResourceSetAvatarType.SET, span,
+                item.getPopupManager());
 
-	span.setClassName("avatar-invisible");
+        span.setClassName("avatar-invisible");
 
-	desktopWidget.add(panel);
+        desktopWidget.add(panel);
 
-	// make it draggable
-	dragController.setDraggable(panel, true);
+        // make it draggable
+        dragController.setDraggable(panel, true);
     }
 
     public void createTransparentDragProxy(final int absoluteLeft,
-	    final int absoluteTop) {
-	createDragWidget(absoluteLeft, absoluteTop);
+            final int absoluteTop) {
+        createDragWidget(absoluteLeft, absoluteTop);
 
-	// TODO remove code duplication
-	AbsolutePanel desktopWidget = desktop.asWidget();
-	int left = absoluteLeft - desktopWidget.getAbsoluteLeft() - 5;
-	int top = absoluteTop - desktopWidget.getAbsoluteTop() - 5;
+        // TODO remove code duplication
+        AbsolutePanel desktopWidget = desktop.asWidget();
+        int left = absoluteLeft - desktopWidget.getAbsoluteLeft() - 5;
+        int top = absoluteTop - desktopWidget.getAbsoluteTop() - 5;
 
-	setStyleAttribute(panel.getElement(), CSS.LEFT, "" + left + CSS.PX);
-	setStyleAttribute(panel.getElement(), CSS.TOP, "" + top + CSS.PX);
-	setStyleAttribute(panel.getElement(), CSS.WIDTH, "" + 10 + CSS.PX);
-	setStyleAttribute(panel.getElement(), CSS.HEIGHT, "" + 10 + CSS.PX);
-	setIntStyleAttribute(panel.getElement(), CSS.Z_INDEX, ZIndex.POPUP - 1);
+        setStyleAttribute(panel.getElement(), CSS.LEFT, "" + left + CSS.PX);
+        setStyleAttribute(panel.getElement(), CSS.TOP, "" + top + CSS.PX);
+        setStyleAttribute(panel.getElement(), CSS.WIDTH, "" + 10 + CSS.PX);
+        setStyleAttribute(panel.getElement(), CSS.HEIGHT, "" + 10 + CSS.PX);
+        setIntStyleAttribute(panel.getElement(), CSS.Z_INDEX, ZIndex.POPUP - 1);
 
-	panel.addMouseUpHandler(new MouseUpHandler() {
+        panel.addMouseUpHandler(new MouseUpHandler() {
 
-	    @Override
-	    public void onMouseUp(MouseUpEvent event) {
-		removePanel();
-	    }
+            @Override
+            public void onMouseUp(MouseUpEvent event) {
+                removePanel();
+            }
 
-	});
+        });
 
-	// fake mouse down event on widget
-	MouseDownEvent mouseEvent = new MouseDownEvent() {
-	    @Override
-	    public int getClientX() {
-		return absoluteLeft;
-	    }
+        // fake mouse down event on widget
+        MouseDownEvent mouseEvent = new MouseDownEvent() {
+            @Override
+            public int getClientX() {
+                return absoluteLeft;
+            }
 
-	    @Override
-	    public int getClientY() {
-		return absoluteTop;
-	    }
+            @Override
+            public int getClientY() {
+                return absoluteTop;
+            }
 
-	    @Override
-	    public int getNativeButton() {
-		return NativeEvent.BUTTON_LEFT;
-	    }
+            @Override
+            public int getNativeButton() {
+                return NativeEvent.BUTTON_LEFT;
+            }
 
-	    @Override
-	    public int getRelativeX(com.google.gwt.dom.client.Element target) {
-		return getClientX() - target.getAbsoluteLeft()
-			+ target.getScrollLeft()
-			+ target.getOwnerDocument().getScrollLeft();
-	    }
+            @Override
+            public int getRelativeX(com.google.gwt.dom.client.Element target) {
+                return getClientX() - target.getAbsoluteLeft()
+                        + target.getScrollLeft()
+                        + target.getOwnerDocument().getScrollLeft();
+            }
 
-	    @Override
-	    public int getRelativeY(com.google.gwt.dom.client.Element target) {
-		return getClientY() - target.getAbsoluteTop()
-			+ target.getScrollTop()
-			+ target.getOwnerDocument().getScrollTop();
-	    }
+            @Override
+            public int getRelativeY(com.google.gwt.dom.client.Element target) {
+                return getClientY() - target.getAbsoluteTop()
+                        + target.getScrollTop()
+                        + target.getOwnerDocument().getScrollTop();
+            }
 
-	    @Override
-	    public Object getSource() {
-		return panel;
-	    }
+            @Override
+            public Object getSource() {
+                return panel;
+            }
 
-	    @Override
-	    public boolean isControlKeyDown() {
-		return false;
-	    }
+            @Override
+            public boolean isControlKeyDown() {
+                return false;
+            }
 
-	    @Override
-	    public boolean isMetaKeyDown() {
-		return false;
-	    }
-	};
-	mouseEvent.setRelativeElement(panel.getElement());
-	panel.fireEvent(mouseEvent);
+            @Override
+            public boolean isMetaKeyDown() {
+                return false;
+            }
+        };
+        mouseEvent.setRelativeElement(panel.getElement());
+        panel.fireEvent(mouseEvent);
     }
 
     public void forwardMouseDown(NativeEvent e, int absoluteLeft,
-	    int absoluteTop) {
-	
-	createDragWidget(absoluteLeft, absoluteTop);
-	
-	// fake mouse down event on widget
-	MouseDownEvent mouseEvent = new MouseDownEvent() {
-	    @Override
-	    public Object getSource() {
-		return panel;
-	    }
-	};
-	
-	mouseEvent.setRelativeElement(panel.getElement());
-	mouseEvent.setNativeEvent(e);
+            int absoluteTop) {
 
-	panel.fireEvent(mouseEvent);
+        createDragWidget(absoluteLeft, absoluteTop);
+
+        // fake mouse down event on widget
+        MouseDownEvent mouseEvent = new MouseDownEvent() {
+            @Override
+            public Object getSource() {
+                return panel;
+            }
+        };
+
+        mouseEvent.setRelativeElement(panel.getElement());
+        mouseEvent.setNativeEvent(e);
+
+        panel.fireEvent(mouseEvent);
     }
 
     public void forwardMouseDownWithEventPosition(Event e) {
         forwardMouseDown(e, e.getClientX(), e.getClientY());
     }
-    
-    public void forwardMouseDownWithTargetElementPosition(NativeEvent e) {
-	Element element = e.getCurrentEventTarget().cast();
-	int absoluteLeft = element.getAbsoluteLeft();
-	int absoluteTop = element.getAbsoluteTop();
 
-	forwardMouseDown(e, absoluteLeft, absoluteTop);
+    public void forwardMouseDownWithTargetElementPosition(NativeEvent e) {
+        Element element = e.getCurrentEventTarget().cast();
+        int absoluteLeft = element.getAbsoluteLeft();
+        int absoluteTop = element.getAbsoluteTop();
+
+        forwardMouseDown(e, absoluteLeft, absoluteTop);
     }
 
     public void forwardMouseMove(final int absoluteLeft, final int absoluteTop) {
-	if (panel == null) {
-	    return;
-	}
+        if (panel == null) {
+            return;
+        }
 
-	MouseMoveEvent mouseEvent = new MouseMoveEvent() {
-	    @Override
-	    public int getClientX() {
-		return absoluteLeft;
-	    }
+        MouseMoveEvent mouseEvent = new MouseMoveEvent() {
+            @Override
+            public int getClientX() {
+                return absoluteLeft;
+            }
 
-	    @Override
-	    public int getClientY() {
-		return absoluteTop;
-	    }
+            @Override
+            public int getClientY() {
+                return absoluteTop;
+            }
 
-	    @Override
-	    public int getRelativeX(com.google.gwt.dom.client.Element target) {
-		return getClientX() - target.getAbsoluteLeft()
-			+ target.getScrollLeft()
-			+ target.getOwnerDocument().getScrollLeft();
-	    }
+            @Override
+            public int getRelativeX(com.google.gwt.dom.client.Element target) {
+                return getClientX() - target.getAbsoluteLeft()
+                        + target.getScrollLeft()
+                        + target.getOwnerDocument().getScrollLeft();
+            }
 
-	    @Override
-	    
-	    public int getRelativeY(com.google.gwt.dom.client.Element target) {
-		return getClientY() - target.getAbsoluteTop()
-			+ target.getScrollTop()
-			+ target.getOwnerDocument().getScrollTop();
-	    }
+            @Override
+            public int getRelativeY(com.google.gwt.dom.client.Element target) {
+                return getClientY() - target.getAbsoluteTop()
+                        + target.getScrollTop()
+                        + target.getOwnerDocument().getScrollTop();
+            }
 
-	    @Override
-	    public Object getSource() {
-		return panel;
-	    }
+            @Override
+            public Object getSource() {
+                return panel;
+            }
 
-	};
-	mouseEvent.setRelativeElement(panel.getElement());
-	panel.fireEvent(mouseEvent);
+        };
+        mouseEvent.setRelativeElement(panel.getElement());
+        panel.fireEvent(mouseEvent);
     }
 
     public void forwardMouseMove(NativeEvent e) {
-	if (panel == null) {
-	    return;
-	}
+        if (panel == null) {
+            return;
+        }
 
-	MouseMoveEvent mouseEvent = new MouseMoveEvent() {
-	    @Override
-	    public Object getSource() {
-		return panel;
-	    }
-	};
-	mouseEvent.setRelativeElement(panel.getElement());
-	mouseEvent.setNativeEvent(e);
-	panel.fireEvent(mouseEvent);
+        MouseMoveEvent mouseEvent = new MouseMoveEvent() {
+            @Override
+            public Object getSource() {
+                return panel;
+            }
+        };
+        mouseEvent.setRelativeElement(panel.getElement());
+        mouseEvent.setNativeEvent(e);
+        panel.fireEvent(mouseEvent);
     }
 
     public void forwardMouseOut(NativeEvent e) {
-	if (panel == null) {
-	    return;
-	}
+        if (panel == null) {
+            return;
+        }
 
-	MouseOutEvent mouseEvent = new MouseOutEvent() {
-	    @Override
-	    public Object getSource() {
-		return panel;
-	    }
-	};
-	mouseEvent.setRelativeElement(panel.getElement());
-	mouseEvent.setNativeEvent(e);
-	panel.fireEvent(mouseEvent);
+        MouseOutEvent mouseEvent = new MouseOutEvent() {
+            @Override
+            public Object getSource() {
+                return panel;
+            }
+        };
+        mouseEvent.setRelativeElement(panel.getElement());
+        mouseEvent.setNativeEvent(e);
+        panel.fireEvent(mouseEvent);
     }
 
     public void forwardMouseUp(NativeEvent e) {
-	if (panel == null) {
-	    return;
-	}
+        if (panel == null) {
+            return;
+        }
 
-	
-	MouseUpEvent mouseEvent = new MouseUpEvent() {
-	    @Override
-	    public Object getSource() {
-		return panel;
-	    }
-	};
-	mouseEvent.setRelativeElement(panel.getElement());
-	mouseEvent.setNativeEvent(e);
-	panel.fireEvent(mouseEvent);
+        MouseUpEvent mouseEvent = new MouseUpEvent() {
+            @Override
+            public Object getSource() {
+                return panel;
+            }
+        };
+        mouseEvent.setRelativeElement(panel.getElement());
+        mouseEvent.setNativeEvent(e);
+        panel.fireEvent(mouseEvent);
 
-	removePanel();
+        removePanel();
     }
 
     private void removePanel() {
-	if (panel != null) {
-	    panel.removeFromParent();
-	    panel = null;
-	}
+        if (panel != null) {
+            panel.removeFromParent();
+            panel = null;
+        }
     }
 }

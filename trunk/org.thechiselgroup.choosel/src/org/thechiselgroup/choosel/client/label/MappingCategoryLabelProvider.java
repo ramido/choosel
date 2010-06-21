@@ -22,17 +22,17 @@ public class MappingCategoryLabelProvider implements CategoryLabelProvider {
 
     private final Map<String, String> categoriesToLabels = new HashMap<String, String>();
 
-    public String mapCategoryToLabel(String category, String label) {
-	return categoriesToLabels.put(category, label);
-    }
-
     @Override
     public String getLabel(String category) {
-	if (!categoriesToLabels.containsKey(category)) {
-	    return category;
-	}
+        if (!categoriesToLabels.containsKey(category)) {
+            return category;
+        }
 
-	return categoriesToLabels.get(category);
+        return categoriesToLabels.get(category);
+    }
+
+    public String mapCategoryToLabel(String category, String label) {
+        return categoriesToLabels.put(category, label);
     }
 
 }

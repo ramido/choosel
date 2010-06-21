@@ -16,7 +16,7 @@
 package org.thechiselgroup.choosel.client.command;
 
 public interface CommandManagerClearedEventHandler extends
-	CommandManagerEventHandler {
+        CommandManagerEventHandler {
 
     void onCleared(CommandManagerClearedEvent event);
 

@@ -18,23 +18,23 @@ package org.thechiselgroup.choosel.client.command;
 import com.google.gwt.event.shared.GwtEvent;
 
 public class CommandUndoneEvent extends
-	CommandManagerEvent<CommandUndoneEventHandler> {
+        CommandManagerEvent<CommandUndoneEventHandler> {
 
     public static final GwtEvent.Type<CommandUndoneEventHandler> TYPE = new GwtEvent.Type<CommandUndoneEventHandler>();
 
     public CommandUndoneEvent(CommandManager commandManager,
-	    UndoableCommand command) {
-	super(commandManager, command);
+            UndoableCommand command) {
+        super(commandManager, command);
     }
 
     @Override
     protected void dispatch(CommandUndoneEventHandler handler) {
-	handler.onCommandUndone(this);
+        handler.onCommandUndone(this);
     }
 
     @Override
     public GwtEvent.Type<CommandUndoneEventHandler> getAssociatedType() {
-	return TYPE;
+        return TYPE;
     }
 
 }

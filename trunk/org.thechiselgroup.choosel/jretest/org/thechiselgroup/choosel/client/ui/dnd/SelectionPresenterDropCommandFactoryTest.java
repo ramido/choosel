@@ -15,9 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.dnd;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResources;
 
 import org.junit.After;
 import org.junit.Before;
@@ -28,7 +29,6 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarType;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
-import org.thechiselgroup.choosel.client.ui.dnd.SelectionPresenterDropCommandFactory;
 import org.thechiselgroup.choosel.client.views.View;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
 
@@ -58,39 +58,39 @@ public class SelectionPresenterDropCommandFactoryTest {
 
     @Test
     public void cannotDropIfNoResourcesFromSetAreContainedInView() {
-	viewResources = spy(createResources(3, 4, 5));
-	when(view.getResources()).thenReturn(viewResources);
-	assertEquals(false, dropCommandFactory.canDrop(dragAvatar));
+        viewResources = spy(createResources(3, 4, 5));
+        when(view.getResources()).thenReturn(viewResources);
+        assertEquals(false, dropCommandFactory.canDrop(dragAvatar));
     }
 
     @Test
     public void cannotDropOnSelf() {
-	when(dragAvatar.getResourceSet()).thenReturn(selectionSet);
-	assertEquals(false, dropCommandFactory.canDrop(dragAvatar));
+        when(dragAvatar.getResourceSet()).thenReturn(selectionSet);
+        assertEquals(false, dropCommandFactory.canDrop(dragAvatar));
     }
 
     @Before
     public void setUp() throws Exception {
-	MockitoGWTBridge.setUp();
-	MockitoAnnotations.initMocks(this);
+        MockitoGWTBridge.setUp();
+        MockitoAnnotations.initMocks(this);
 
-	sourceSet = spy(createResources(1, 2));
-	viewResources = spy(createResources(1, 3, 4, 5));
-	selectionSet = spy(createResources(4));
+        sourceSet = spy(createResources(1, 2));
+        viewResources = spy(createResources(1, 3, 4, 5));
+        selectionSet = spy(createResources(4));
 
-	when(dragAvatar.getResourceSet()).thenReturn(sourceSet);
-	when(accessor.findView(dropTarget)).thenReturn(view);
-	when(view.getSelection()).thenReturn(selectionSet);
-	when(selectionSet.isModifiable()).thenReturn(true);
-	when(view.getResources()).thenReturn(viewResources);
-	when(dragAvatar.getType()).thenReturn(ResourceSetAvatarType.SET);
+        when(dragAvatar.getResourceSet()).thenReturn(sourceSet);
+        when(accessor.findView(dropTarget)).thenReturn(view);
+        when(view.getSelection()).thenReturn(selectionSet);
+        when(selectionSet.isModifiable()).thenReturn(true);
+        when(view.getResources()).thenReturn(viewResources);
+        when(dragAvatar.getType()).thenReturn(ResourceSetAvatarType.SET);
 
-	dropCommandFactory = new SelectionPresenterDropCommandFactory(
-		dropTarget, accessor);
+        dropCommandFactory = new SelectionPresenterDropCommandFactory(
+                dropTarget, accessor);
     }
 
     @After
     public void tearDown() {
-	MockitoGWTBridge.tearDown();
+        MockitoGWTBridge.tearDown();
     }
 }

@@ -28,36 +28,36 @@ import org.thechiselgroup.choosel.client.views.ViewAccessor;
 import com.google.gwt.user.client.ui.Widget;
 
 public class SelectionPresenterDropCommandFactory implements
-	ResourceSetAvatarDropCommandFactory {
+        ResourceSetAvatarDropCommandFactory {
 
     // TODO refactor (replace avatar with resource set)
     private class AddSelectionSetCommand implements UndoableCommand,
-	    HasDescription {
-	private final ResourceSetAvatar avatar;
+            HasDescription {
+        private final ResourceSetAvatar avatar;
 
-	private AddSelectionSetCommand(ResourceSetAvatar avatar) {
-	    this.avatar = avatar;
-	}
+        private ResourceSet oldSelection;
 
-	private ResourceSet oldSelection;
+        private AddSelectionSetCommand(ResourceSetAvatar avatar) {
+            this.avatar = avatar;
+        }
 
-	@Override
-	public void execute() {
-	    oldSelection = getView().getSelection();
-	    getView().addSelectionSet(avatar.getResourceSet());
-	    getView().setSelection(avatar.getResourceSet());
-	}
+        @Override
+        public void execute() {
+            oldSelection = getView().getSelection();
+            getView().addSelectionSet(avatar.getResourceSet());
+            getView().setSelection(avatar.getResourceSet());
+        }
 
-	@Override
-	public void undo() {
-	    getView().setSelection(oldSelection);
-	    getView().removeSelectionSet(avatar.getResourceSet());
-	}
+        @Override
+        public String getDescription() {
+            return "add resource set as selection to view";
+        }
 
-	@Override
-	public String getDescription() {
-	    return "add resource set as selection to view";
-	}
+        @Override
+        public void undo() {
+            getView().setSelection(oldSelection);
+            getView().removeSelectionSet(avatar.getResourceSet());
+        }
     }
 
     private Widget dropTarget;
@@ -65,43 +65,43 @@ public class SelectionPresenterDropCommandFactory implements
     private final ViewAccessor viewAccessor;
 
     public SelectionPresenterDropCommandFactory(Widget dropTarget,
-	    ViewAccessor viewAccessor) {
+            ViewAccessor viewAccessor) {
 
-	assert dropTarget != null;
-	assert viewAccessor != null;
+        assert dropTarget != null;
+        assert viewAccessor != null;
 
-	this.viewAccessor = viewAccessor;
-	this.dropTarget = dropTarget;
+        this.viewAccessor = viewAccessor;
+        this.dropTarget = dropTarget;
     }
 
     @Override
     public boolean canDrop(ResourceSetAvatar avatar) {
-	assert avatar != null;
+        assert avatar != null;
 
-	if (!avatar.getResourceSet().hasLabel()) {
-	    return false;
-	}
+        if (!avatar.getResourceSet().hasLabel()) {
+            return false;
+        }
 
-	// TODO extract intersect operation
-	ArrayList<Resource> resources = new ArrayList<Resource>(getView()
-		.getResources().toList());
-	resources.retainAll(avatar.getResourceSet().toList());
-	if (resources.isEmpty()) {
-	    return false;
-	}
+        // TODO extract intersect operation
+        ArrayList<Resource> resources = new ArrayList<Resource>(getView()
+                .getResources().toList());
+        resources.retainAll(avatar.getResourceSet().toList());
+        if (resources.isEmpty()) {
+            return false;
+        }
 
-	return !getView().containsSelectionSet(avatar.getResourceSet());
+        return !getView().containsSelectionSet(avatar.getResourceSet());
     }
 
     @Override
     public UndoableCommand createCommand(final ResourceSetAvatar avatar) {
-	assert avatar != null;
+        assert avatar != null;
 
-	return new AddSelectionSetCommand(avatar);
+        return new AddSelectionSetCommand(avatar);
     }
 
     private View getView() {
-	return viewAccessor.findView(dropTarget);
+        return viewAccessor.findView(dropTarget);
     }
 
 }

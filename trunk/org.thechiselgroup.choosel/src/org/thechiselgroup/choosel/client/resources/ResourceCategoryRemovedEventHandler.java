@@ -15,9 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
-
 public interface ResourceCategoryRemovedEventHandler extends
-	ResourceCategoryContainerEventHandler {
+        ResourceCategoryContainerEventHandler {
 
     void onResourceCategoryRemoved(ResourceCategoryRemovedEvent e);
 

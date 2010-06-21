@@ -25,60 +25,60 @@ import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
 public abstract class AbstractGraphNodeExpander implements GraphNodeExpander {
 
     protected void addResources(GraphNodeExpansionCallback expansionCallback,
-	    List<String> resourceUrisToAdd, Resource resource) {
+            List<String> resourceUrisToAdd, Resource resource) {
 
-	List<String> added = new ArrayList<String>();
-	for (String uri : resourceUrisToAdd) {
-	    if (!expansionCallback.getCallback().containsResourceWithUri(uri)) {
-		Resource r2 = expansionCallback.getResourceManager().getByUri(
-			uri);
-		expansionCallback.getCallback().getAutomaticResourceSet().add(
-			r2);
-		added.add(uri);
-	    }
-	}
+        List<String> added = new ArrayList<String>();
+        for (String uri : resourceUrisToAdd) {
+            if (!expansionCallback.getCallback().containsResourceWithUri(uri)) {
+                Resource r2 = expansionCallback.getResourceManager().getByUri(
+                        uri);
+                expansionCallback.getCallback().getAutomaticResourceSet()
+                        .add(r2);
+                added.add(uri);
+            }
+        }
 
-	// TODO extract + refactor layout (have method layout on node)
-	Node inputNode = expansionCallback.getDisplay().getNode(
-		resource.getUri());
-	Point inputLocation = expansionCallback.getDisplay().getLocation(
-		inputNode);
+        // TODO extract + refactor layout (have method layout on node)
+        Node inputNode = expansionCallback.getDisplay().getNode(
+                resource.getUri());
+        Point inputLocation = expansionCallback.getDisplay().getLocation(
+                inputNode);
 
-	List<Node> nodesToLayout = new ArrayList<Node>();
-	for (String uri : added) {
-	    Node node = expansionCallback.getDisplay().getNode(uri);
-	    expansionCallback.getDisplay().setLocation(node, inputLocation);
-	    nodesToLayout.add(node);
-	}
+        List<Node> nodesToLayout = new ArrayList<Node>();
+        for (String uri : added) {
+            Node node = expansionCallback.getDisplay().getNode(uri);
+            expansionCallback.getDisplay().setLocation(node, inputLocation);
+            nodesToLayout.add(node);
+        }
 
-	expansionCallback.getDisplay().layOutNodes(nodesToLayout);
+        expansionCallback.getDisplay().layOutNodes(nodesToLayout);
     }
 
     protected List<String> calculateUrisToAdd(Resource resource,
-	    String... properties) {
+            String... properties) {
 
-	List<String> resourceUrisToAdd = new ArrayList<String>();
+        List<String> resourceUrisToAdd = new ArrayList<String>();
 
-	for (String property : properties) {
-	    for (String uri : resource.getUriListValue(property)) {
-		resourceUrisToAdd.add(uri);
-	    }
-	}
+        for (String property : properties) {
+            for (String uri : resource.getUriListValue(property)) {
+                resourceUrisToAdd.add(uri);
+            }
+        }
 
-	return resourceUrisToAdd;
+        return resourceUrisToAdd;
     }
 
     protected void showArcs(Resource resource,
-	    GraphNodeExpansionCallback expansionCallback, String property,
-	    String arcType, boolean inverted) {
+            GraphNodeExpansionCallback expansionCallback, String property,
+            String arcType, boolean inverted) {
 
-	for (String uri : resource.getUriListValue(property)) {
-	    if (inverted) {
-		expansionCallback.showArc(arcType, uri, resource.getUri());
-	    } else {
-		expansionCallback.showArc(arcType, resource.getUri(), uri);
-	    }
-	}
+        for (String uri : resource.getUriListValue(property)) {
+            if (inverted) {
+                expansionCallback.showArc(arcType, uri, resource.getUri());
+            } else {
+                expansionCallback.showArc(arcType, resource.getUri(), uri);
+            }
+        }
     }
 
 }

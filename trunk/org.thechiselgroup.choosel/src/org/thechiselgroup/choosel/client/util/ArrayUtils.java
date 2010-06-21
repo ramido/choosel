@@ -21,43 +21,43 @@ import com.google.gwt.core.client.JavaScriptObject;
 public class ArrayUtils {
 
     private native static JavaScriptObject createArray() /*-{
-        return new Array();
-    }-*/;;
+                                                         return new Array();
+                                                         }-*/;;
 
     private native static void pushArray(JavaScriptObject array, double d) /*-{
-        array.push(d);
-    }-*/;;
+                                                                           array.push(d);
+                                                                           }-*/;;
 
     private native static void pushArray(JavaScriptObject array, int i) /*-{
-        array.push(i);
-    }-*/;;
+                                                                        array.push(i);
+                                                                        }-*/;;
 
     private native static void pushArray(JavaScriptObject array, String o) /*-{
-        array.push(o);
-    }-*/;
+                                                                           array.push(o);
+                                                                           }-*/;
 
     public static JavaScriptObject toJsArray(double[] array) {
-	JavaScriptObject result = createArray();
-	for (int i = 0; i < array.length; i++) {
-	    pushArray(result, array[i]);
-	}
-	return result;
+        JavaScriptObject result = createArray();
+        for (int i = 0; i < array.length; i++) {
+            pushArray(result, array[i]);
+        }
+        return result;
     }
 
     public static JavaScriptObject toJsArray(int[] array) {
-	JavaScriptObject result = createArray();
-	for (int i = 0; i < array.length; i++) {
-	    pushArray(result, array[i]);
-	}
-	return result;
+        JavaScriptObject result = createArray();
+        for (int i = 0; i < array.length; i++) {
+            pushArray(result, array[i]);
+        }
+        return result;
     }
 
     public static JavaScriptObject toJsArray(String[] array) {
-	JavaScriptObject result = createArray();
-	for (int i = 0; i < array.length; i++) {
-	    pushArray(result, array[i]);
-	}
-	return result;
+        JavaScriptObject result = createArray();
+        for (int i = 0; i < array.length; i++) {
+            pushArray(result, array[i]);
+        }
+        return result;
     }
 
 }

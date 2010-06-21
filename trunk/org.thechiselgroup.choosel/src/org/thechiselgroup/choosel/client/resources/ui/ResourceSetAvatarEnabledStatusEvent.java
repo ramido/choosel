@@ -15,32 +15,31 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources.ui;
 
-
 import com.google.gwt.event.shared.GwtEvent;
 
 public class ResourceSetAvatarEnabledStatusEvent extends
-	GwtEvent<ResourceSetAvatarEnabledStatusEventHandler> {
+        GwtEvent<ResourceSetAvatarEnabledStatusEventHandler> {
 
     public static final GwtEvent.Type<ResourceSetAvatarEnabledStatusEventHandler> TYPE = new GwtEvent.Type<ResourceSetAvatarEnabledStatusEventHandler>();
 
     private final ResourceSetAvatar avatar;
 
     public ResourceSetAvatarEnabledStatusEvent(ResourceSetAvatar avatar) {
-	this.avatar = avatar;
-    }
-
-    public ResourceSetAvatar getAvatar() {
-	return avatar;
+        this.avatar = avatar;
     }
 
     @Override
     protected void dispatch(ResourceSetAvatarEnabledStatusEventHandler handler) {
-	handler.onDragAvatarEnabledStatusChange(this);
+        handler.onDragAvatarEnabledStatusChange(this);
     }
 
     @Override
     public GwtEvent.Type<ResourceSetAvatarEnabledStatusEventHandler> getAssociatedType() {
-	return TYPE;
+        return TYPE;
+    }
+
+    public ResourceSetAvatar getAvatar() {
+        return avatar;
     }
 
 }

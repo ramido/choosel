@@ -34,65 +34,65 @@ public class Resource implements Serializable {
     }
 
     public Resource(String uri) {
-	assert uri != null;
-	this.uri = uri;
+        assert uri != null;
+        this.uri = uri;
     }
 
     @Override
     public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	Resource other = (Resource) obj;
-	if (uri == null) {
-	    if (other.uri != null)
-		return false;
-	} else if (!uri.equals(other.uri))
-	    return false;
-	return true;
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Resource other = (Resource) obj;
+        if (uri == null) {
+            if (other.uri != null)
+                return false;
+        } else if (!uri.equals(other.uri))
+            return false;
+        return true;
     }
 
     public HashMap<String, Serializable> getProperties() {
-	return properties;
+        return properties;
     }
 
     public String getUri() {
-	return uri;
+        return uri;
     }
 
     public UriList getUriListValue(String key) {
-	UriList result = (UriList) getValue(key);
+        UriList result = (UriList) getValue(key);
 
-	if (result == null) {
-	    result = new UriList();
-	    putValue(key, result);
-	}
+        if (result == null) {
+            result = new UriList();
+            putValue(key, result);
+        }
 
-	return result;
+        return result;
     }
 
     public Object getValue(String key) {
-	return properties.get(key);
+        return properties.get(key);
     }
 
     @Override
     public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + ((uri == null) ? 0 : uri.hashCode());
-	return result;
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((uri == null) ? 0 : uri.hashCode());
+        return result;
     }
 
     public void putValue(String key, Serializable value) {
-	properties.put(key, value);
+        properties.put(key, value);
     }
 
     @Override
     public String toString() {
-	return "Resource [uri=" + uri + "]";
+        return "Resource [uri=" + uri + "]";
     }
 
 }

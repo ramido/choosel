@@ -15,15 +15,15 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources.ui;
 
-
-public abstract class DelegatingResourceSetAvatarFactory implements ResourceSetAvatarFactory {
+public abstract class DelegatingResourceSetAvatarFactory implements
+        ResourceSetAvatarFactory {
 
     protected final ResourceSetAvatarFactory delegate;
 
     public DelegatingResourceSetAvatarFactory(ResourceSetAvatarFactory delegate) {
-	assert delegate != null;
+        assert delegate != null;
 
-	this.delegate = delegate;
+        this.delegate = delegate;
     }
 
 }

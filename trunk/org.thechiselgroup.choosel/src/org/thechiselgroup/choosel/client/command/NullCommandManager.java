@@ -15,8 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.command;
 
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 public class NullCommandManager implements CommandManager {
 
@@ -26,18 +26,18 @@ public class NullCommandManager implements CommandManager {
 
     @Override
     public <H extends CommandManagerEventHandler> HandlerRegistration addHandler(
-	    Type<H> type, H handler) {
-	return null;
+            Type<H> type, H handler) {
+        return null;
     }
 
     @Override
     public boolean canRedo() {
-	return false;
+        return false;
     }
 
     @Override
     public boolean canUndo() {
-	return false;
+        return false;
     }
 
     @Override
@@ -50,12 +50,12 @@ public class NullCommandManager implements CommandManager {
 
     @Override
     public UndoableCommand getRedoCommand() {
-	return null;
+        return null;
     }
 
     @Override
     public UndoableCommand getUndoCommand() {
-	return null;
+        return null;
     }
 
     @Override

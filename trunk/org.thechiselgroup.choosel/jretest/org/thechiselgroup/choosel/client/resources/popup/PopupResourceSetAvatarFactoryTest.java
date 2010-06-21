@@ -15,9 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources.popup;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResources;
 
 import java.util.Collections;
 import java.util.List;
@@ -69,71 +72,71 @@ public class PopupResourceSetAvatarFactoryTest {
 
     @Test
     public void disablePopupManagerIfAvatarGetsDisabled() {
-	when(avatar.isEnabled()).thenReturn(true);
-	underTest.createAvatar(createResources(1));
+        when(avatar.isEnabled()).thenReturn(true);
+        underTest.createAvatar(createResources(1));
 
-	ArgumentCaptor<ResourceSetAvatarEnabledStatusEventHandler> argument = ArgumentCaptor
-		.forClass(ResourceSetAvatarEnabledStatusEventHandler.class);
-	verify(avatar, times(1)).addEnabledStatusHandler(argument.capture());
+        ArgumentCaptor<ResourceSetAvatarEnabledStatusEventHandler> argument = ArgumentCaptor
+                .forClass(ResourceSetAvatarEnabledStatusEventHandler.class);
+        verify(avatar, times(1)).addEnabledStatusHandler(argument.capture());
 
-	when(avatar.isEnabled()).thenReturn(false);
-	argument.getValue().onDragAvatarEnabledStatusChange(
-		new ResourceSetAvatarEnabledStatusEvent(avatar));
+        when(avatar.isEnabled()).thenReturn(false);
+        argument.getValue().onDragAvatarEnabledStatusChange(
+                new ResourceSetAvatarEnabledStatusEvent(avatar));
 
-	verify(popupManager, times(1)).setEnabled(false);
+        verify(popupManager, times(1)).setEnabled(false);
     }
 
     @Test
     public void disablePopupManagerIfAvatarIsDisabled() {
-	when(avatar.isEnabled()).thenReturn(false);
-	underTest.createAvatar(createResources(1));
+        when(avatar.isEnabled()).thenReturn(false);
+        underTest.createAvatar(createResources(1));
 
-	verify(popupManager, times(1)).setEnabled(false);
+        verify(popupManager, times(1)).setEnabled(false);
     }
 
     @Test
     public void enablePopupManagerIfAvatarIsEnabled() {
-	when(avatar.isEnabled()).thenReturn(true);
-	underTest.createAvatar(createResources(1));
+        when(avatar.isEnabled()).thenReturn(true);
+        underTest.createAvatar(createResources(1));
 
-	verify(popupManager, times(1)).setEnabled(true);
+        verify(popupManager, times(1)).setEnabled(true);
     }
 
     @Before
     public void setUp() throws Exception {
-	MockitoGWTBridge bridge = MockitoGWTBridge.setUp();
-	MockitoAnnotations.initMocks(this);
-	DndTestHelpers.mockDragClientBundle(bridge);
+        MockitoGWTBridge bridge = MockitoGWTBridge.setUp();
+        MockitoAnnotations.initMocks(this);
+        DndTestHelpers.mockDragClientBundle(bridge);
 
-	resources = spy(createResources(1));
+        resources = spy(createResources(1));
 
-	List<Action> actions = Collections.emptyList();
-	underTest = new PopupResourceSetAvatarFactory(delegate, viewAccessor,
-		popupManagerFactory, actions, "", "", false);
+        List<Action> actions = Collections.emptyList();
+        underTest = new PopupResourceSetAvatarFactory(delegate, viewAccessor,
+                popupManagerFactory, actions, "", "", false);
 
-	when(popupManagerFactory.createPopupManager(any(WidgetFactory.class)))
-		.thenReturn(popupManager);
-	when(delegate.createAvatar(any(ResourceSet.class))).thenReturn(avatar);
-	when(avatar.getResourceSet()).thenReturn(resources);
-	when(avatar.getText()).thenReturn("");
+        when(popupManagerFactory.createPopupManager(any(WidgetFactory.class)))
+                .thenReturn(popupManager);
+        when(delegate.createAvatar(any(ResourceSet.class))).thenReturn(avatar);
+        when(avatar.getResourceSet()).thenReturn(resources);
+        when(avatar.getText()).thenReturn("");
     }
 
     @Test
     public void showPopupOnMouseOver() {
-	underTest.createAvatar(createResources(1));
-	when(avatar.isEnabled()).thenReturn(true);
+        underTest.createAvatar(createResources(1));
+        when(avatar.isEnabled()).thenReturn(true);
 
-	ArgumentCaptor<MouseOverHandler> argument = ArgumentCaptor
-		.forClass(MouseOverHandler.class);
-	verify(avatar, times(1)).addMouseOverHandler(argument.capture());
+        ArgumentCaptor<MouseOverHandler> argument = ArgumentCaptor
+                .forClass(MouseOverHandler.class);
+        verify(avatar, times(1)).addMouseOverHandler(argument.capture());
 
-	argument.getValue().onMouseOver(new TestMouseOverEvent(0, 0));
+        argument.getValue().onMouseOver(new TestMouseOverEvent(0, 0));
 
-	verify(popupManager, times(1)).onMouseOver(0, 0);
+        verify(popupManager, times(1)).onMouseOver(0, 0);
     }
 
     @After
     public void tearDown() {
-	MockitoGWTBridge.tearDown();
+        MockitoGWTBridge.tearDown();
     }
 }

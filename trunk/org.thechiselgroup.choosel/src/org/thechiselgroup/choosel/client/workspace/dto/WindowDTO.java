@@ -39,59 +39,59 @@ public class WindowDTO implements Serializable {
     private int y;
 
     public String getContentType() {
-	return contentType;
+        return contentType;
     }
 
     public int getHeight() {
-	return height;
+        return height;
     }
 
     public String getTitle() {
-	return title;
+        return title;
     }
 
     public Memento getViewState() {
-	return viewState;
+        return viewState;
     }
 
     public int getWidth() {
-	return width;
+        return width;
     }
 
     public int getX() {
-	return x;
+        return x;
     }
 
     public int getY() {
-	return y;
+        return y;
     }
 
     public void setContentType(String contentType) {
-	this.contentType = contentType;
+        this.contentType = contentType;
     }
 
     public void setHeight(int height) {
-	this.height = height;
+        this.height = height;
     }
 
     public void setTitle(String title) {
-	this.title = title;
+        this.title = title;
     }
 
     public void setViewState(Memento viewState) {
-	this.viewState = viewState;
+        this.viewState = viewState;
     }
 
     public void setWidth(int width) {
-	this.width = width;
+        this.width = width;
     }
 
     public void setX(int x) {
-	this.x = x;
+        this.x = x;
     }
 
     public void setY(int y) {
-	this.y = y;
+        this.y = y;
     }
 
 }

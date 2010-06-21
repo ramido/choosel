@@ -15,9 +15,11 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.dnd;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import org.junit.After;
 import org.junit.Before;
@@ -28,10 +30,6 @@ import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.test.DndTestHelpers;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
-import org.thechiselgroup.choosel.client.ui.dnd.AbstractResourceSetAvatarDropTargetManager;
-import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
-import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropCommandFactory;
-import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropController;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -39,19 +37,19 @@ import com.google.gwt.user.client.ui.Widget;
 public class AbstractResourceSetAvatarDropTargetManagerTest {
 
     public static class TestDragAvatarDropTargetManager extends
-	    AbstractResourceSetAvatarDropTargetManager {
-	public TestDragAvatarDropTargetManager(CommandManager commandManager,
-		ResourceSetAvatarDragController dragController,
-		ViewAccessor viewAccessor) {
+            AbstractResourceSetAvatarDropTargetManager {
+        public TestDragAvatarDropTargetManager(CommandManager commandManager,
+                ResourceSetAvatarDragController dragController,
+                ViewAccessor viewAccessor) {
 
-	    super(commandManager, dragController, viewAccessor);
-	}
+            super(commandManager, dragController, viewAccessor);
+        }
 
-	@Override
-	protected ResourceSetAvatarDropCommandFactory createCommandFactory(
-		Widget widget, ViewAccessor viewAccessor) {
-	    return null;
-	}
+        @Override
+        protected ResourceSetAvatarDropCommandFactory createCommandFactory(
+                Widget widget, ViewAccessor viewAccessor) {
+            return null;
+        }
     }
 
     private AbstractResourceSetAvatarDropTargetManager manager;
@@ -69,38 +67,38 @@ public class AbstractResourceSetAvatarDropTargetManagerTest {
     private Widget widget;
 
     @Test
-    public void registerDropController() {
-	manager.enableDropTarget(widget);
-
-	ArgumentCaptor<ResourceSetAvatarDropController> captor = ArgumentCaptor
-		.forClass(ResourceSetAvatarDropController.class);
-
-	verify(dragController, times(1)).registerDropController(
-		captor.capture());
-
-	assertEquals(widget, captor.getValue().getDropTarget());
+    public void disposeRemovesDropController() {
+        manager.disableDropTarget(widget);
+        verify(dragController, times(1))
+                .unregisterDropControllerFor(eq(widget));
     }
 
     @Test
-    public void disposeRemovesDropController() {
-	manager.disableDropTarget(widget);
-	verify(dragController, times(1))
-		.unregisterDropControllerFor(eq(widget));
+    public void registerDropController() {
+        manager.enableDropTarget(widget);
+
+        ArgumentCaptor<ResourceSetAvatarDropController> captor = ArgumentCaptor
+                .forClass(ResourceSetAvatarDropController.class);
+
+        verify(dragController, times(1)).registerDropController(
+                captor.capture());
+
+        assertEquals(widget, captor.getValue().getDropTarget());
     }
 
     @Before
     public void setUp() throws Exception {
-	MockitoGWTBridge bridge = MockitoGWTBridge.setUp();
-	MockitoAnnotations.initMocks(this);
-	DndTestHelpers.mockDragClientBundle(bridge);
+        MockitoGWTBridge bridge = MockitoGWTBridge.setUp();
+        MockitoAnnotations.initMocks(this);
+        DndTestHelpers.mockDragClientBundle(bridge);
 
-	manager = spy(new TestDragAvatarDropTargetManager(commandManager,
-		dragController, viewAccessor));
+        manager = spy(new TestDragAvatarDropTargetManager(commandManager,
+                dragController, viewAccessor));
     }
 
     @After
     public void tearDown() {
-	MockitoGWTBridge.tearDown();
+        MockitoGWTBridge.tearDown();
     }
 
 }

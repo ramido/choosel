@@ -29,7 +29,7 @@ import org.thechiselgroup.choosel.client.views.View;
  * set.
  */
 public class AddResourceSetToViewCommand implements UndoableCommand,
-	HasDescription {
+        HasDescription {
 
     private ResourceSet resourceSet;
 
@@ -40,63 +40,63 @@ public class AddResourceSetToViewCommand implements UndoableCommand,
     private String description;
 
     public AddResourceSetToViewCommand(View view, ResourceSet resourceSet) {
-	this(view, resourceSet, "Add resource set '" + resourceSet.getLabel()
-		+ "' to view");
+        this(view, resourceSet, "Add resource set '" + resourceSet.getLabel()
+                + "' to view");
     }
 
     public AddResourceSetToViewCommand(View view, ResourceSet resourceSet,
-	    String description) {
+            String description) {
 
-	assert view != null;
-	assert resourceSet != null;
-	assert resourceSet.hasLabel();
-	assert description != null;
+        assert view != null;
+        assert resourceSet != null;
+        assert resourceSet.hasLabel();
+        assert description != null;
 
-	this.description = description;
-	this.view = view;
-	this.resourceSet = resourceSet;
+        this.description = description;
+        this.view = view;
+        this.resourceSet = resourceSet;
     }
 
     @Override
     public void execute() {
-	assert !view.containsResourceSet(resourceSet);
-	assert alreadyContainedResources == null;
+        assert !view.containsResourceSet(resourceSet);
+        assert alreadyContainedResources == null;
 
-	alreadyContainedResources = new ArrayList<Resource>();
-	alreadyContainedResources.addAll(resourceSet.toList());
-	alreadyContainedResources.retainAll(view.getResources().toList());
+        alreadyContainedResources = new ArrayList<Resource>();
+        alreadyContainedResources.addAll(resourceSet.toList());
+        alreadyContainedResources.retainAll(view.getResources().toList());
 
-	view.addResourceSet(resourceSet);
+        view.addResourceSet(resourceSet);
 
-	assert view.containsResourceSet(resourceSet);
-	assert alreadyContainedResources != null;
+        assert view.containsResourceSet(resourceSet);
+        assert alreadyContainedResources != null;
     }
 
     // TODO add view name / label once available
     @Override
     public String getDescription() {
-	return description;
+        return description;
     }
 
     public ResourceSet getResourceSet() {
-	return resourceSet;
+        return resourceSet;
     }
 
     public View getView() {
-	return view;
+        return view;
     }
 
     @Override
     public void undo() {
-	assert view.containsResourceSet(resourceSet);
-	assert alreadyContainedResources != null;
+        assert view.containsResourceSet(resourceSet);
+        assert alreadyContainedResources != null;
 
-	view.removeResourceSet(resourceSet);
-	view.addResources(alreadyContainedResources);
-	alreadyContainedResources = null;
+        view.removeResourceSet(resourceSet);
+        view.addResources(alreadyContainedResources);
+        alreadyContainedResources = null;
 
-	assert !view.containsResourceSet(resourceSet);
-	assert alreadyContainedResources == null;
+        assert !view.containsResourceSet(resourceSet);
+        assert alreadyContainedResources == null;
     }
 
 }

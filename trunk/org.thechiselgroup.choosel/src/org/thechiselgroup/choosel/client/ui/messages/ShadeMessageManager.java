@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.messages;
 
-import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.*;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.DEFAULT;
 
 import org.thechiselgroup.choosel.client.ui.shade.ShadeManager;
 import org.thechiselgroup.choosel.client.util.RemoveHandle;
@@ -31,28 +31,28 @@ public class ShadeMessageManager implements MessageManager {
 
     @Inject
     public ShadeMessageManager(@Named(DEFAULT) MessageManager delegate,
-	    ShadeManager shadeManager) {
+            ShadeManager shadeManager) {
 
-	assert delegate != null;
-	assert shadeManager != null;
+        assert delegate != null;
+        assert shadeManager != null;
 
-	this.delegate = delegate;
-	this.shadeManager = shadeManager;
+        this.delegate = delegate;
+        this.shadeManager = shadeManager;
     }
 
     @Override
     public RemoveHandle showMessage(String message) {
-	final RemoveHandle shadeHandle = shadeManager.showShade();
-	final RemoveHandle messageHandle = delegate.showMessage(message);
+        final RemoveHandle shadeHandle = shadeManager.showShade();
+        final RemoveHandle messageHandle = delegate.showMessage(message);
 
-	return new RemoveHandle() {
+        return new RemoveHandle() {
 
-	    @Override
-	    public void remove() {
-		messageHandle.remove();
-		shadeHandle.remove();
-	    }
-	};
+            @Override
+            public void remove() {
+                messageHandle.remove();
+                shadeHandle.remove();
+            }
+        };
     }
 
 }

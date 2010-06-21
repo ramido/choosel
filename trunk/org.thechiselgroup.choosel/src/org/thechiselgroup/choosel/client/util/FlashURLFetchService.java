@@ -35,131 +35,131 @@ import com.google.gwt.user.client.ui.RootPanel;
 public class FlashURLFetchService extends SWFWidget implements URLFetchService {
 
     private static enum Status {
-	INITIALIZING, NOT_INITIALIZED, READY
+        INITIALIZING, NOT_INITIALIZED, READY
     }
 
     public static final String SWF_FILE = GWT.getModuleBaseURL()
-	    + "swf/FlexProxy.swf";
+            + "swf/FlexProxy.swf";
 
     private static Map<String, FlashURLFetchService> widgets = new HashMap<String, FlashURLFetchService>();
 
     static {
-	try {
-	    exportStaticMethods();
-	} catch (Exception ex) {
-	    Log.error(ex.getMessage(), ex);
-	}
+        try {
+            exportStaticMethods();
+        } catch (Exception ex) {
+            Log.error(ex.getMessage(), ex);
+        }
     }
 
     public static void _callback(String swfID, String content, String url,
-	    String error) {
-	widgets.get(swfID).callback(content, url, error);
+            String error) {
+        widgets.get(swfID).callback(content, url, error);
     }
 
     public static void _onLoad(String swfID) {
-	try {
-	    widgets.get(swfID).onWidgetReady();
-	} catch (Exception ex) {
-	    Log.error(ex.getMessage(), ex);
-	}
+        try {
+            widgets.get(swfID).onWidgetReady();
+        } catch (Exception ex) {
+            Log.error(ex.getMessage(), ex);
+        }
     }
 
     private static native void _requestURL(String swfID, String url) /*-{
-        $doc.getElementById(swfID).call(url, "_flexproxy_callback");
-    }-*/;
+                                                                     $doc.getElementById(swfID).call(url, "_flexproxy_callback");
+                                                                     }-*/;
 
     private static native void exportStaticMethods() /*-{
-        $wnd._flexproxy_loaded=$entry(
-        @org.thechiselgroup.choosel.client.util.FlashURLFetchService::_onLoad(Ljava/lang/String;));
-        $wnd._flexproxy_callback=$entry(
-        @org.thechiselgroup.choosel.client.util.FlashURLFetchService::_callback(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;));
-    }-*/;
+                                                     $wnd._flexproxy_loaded=$entry(
+                                                     @org.thechiselgroup.choosel.client.util.FlashURLFetchService::_onLoad(Ljava/lang/String;));
+                                                     $wnd._flexproxy_callback=$entry(
+                                                     @org.thechiselgroup.choosel.client.util.FlashURLFetchService::_callback(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;));
+                                                     }-*/;
 
     private Map<String, List<AsyncCallback<String>>> requests = new HashMap<String, List<AsyncCallback<String>>>();
 
     private Status status = Status.NOT_INITIALIZED;
 
     public FlashURLFetchService() {
-	super(SWF_FILE, 1, 1);
+        super(SWF_FILE, 1, 1);
 
-	addAttribute("wmode", "transparent");
+        addAttribute("wmode", "transparent");
 
-	// TODO extract superclass
-	// hack around IE / FF differences with Flash embedding
-	addFlashVar(GraphWidget.FLASH_VAR_SWFID, getSwfId());
+        // TODO extract superclass
+        // hack around IE / FF differences with Flash embedding
+        addFlashVar(GraphWidget.FLASH_VAR_SWFID, getSwfId());
     }
 
     private void addUrlCallback(String url, AsyncCallback<String> callback) {
-	if (!requests.containsKey(url)) {
-	    requests.put(url, new ArrayList<AsyncCallback<String>>());
-	}
+        if (!requests.containsKey(url)) {
+            requests.put(url, new ArrayList<AsyncCallback<String>>());
+        }
 
-	requests.get(url).add(callback);
+        requests.get(url).add(callback);
     }
 
     private void callback(String content, String url, String error) {
-	List<AsyncCallback<String>> callbacks = requests.remove(url);
+        List<AsyncCallback<String>> callbacks = requests.remove(url);
 
-	assert callbacks != null;
+        assert callbacks != null;
 
-	if (error != null) {
-	    for (AsyncCallback<String> callback : callbacks) {
-		callback.onFailure(new Exception(error));
-	    }
-	} else {
-	    for (AsyncCallback<String> callback : callbacks) {
-		callback.onSuccess(content);
-	    }
-	}
+        if (error != null) {
+            for (AsyncCallback<String> callback : callbacks) {
+                callback.onFailure(new Exception(error));
+            }
+        } else {
+            for (AsyncCallback<String> callback : callbacks) {
+                callback.onSuccess(content);
+            }
+        }
     }
 
     @Override
     public void fetchURL(String url, AsyncCallback<String> callback) {
-	addUrlCallback(url, callback);
+        addUrlCallback(url, callback);
 
-	switch (status) {
-	case NOT_INITIALIZED: {
-	    init();
-	}
-	    break;
-	case INITIALIZING: {
-	}
-	    break;
-	case READY: {
-	    if (requests.get(url).size() == 1) {
-		requestURL(url);
-	    }
-	}
-	    break;
-	}
+        switch (status) {
+        case NOT_INITIALIZED: {
+            init();
+        }
+            break;
+        case INITIALIZING: {
+        }
+            break;
+        case READY: {
+            if (requests.get(url).size() == 1) {
+                requestURL(url);
+            }
+        }
+            break;
+        }
     }
 
     private void init() {
-	RootPanel.get().add(this);
-	status = Status.INITIALIZING;
+        RootPanel.get().add(this);
+        status = Status.INITIALIZING;
     }
 
     @Override
     protected void onLoad() {
-	super.onLoad();
-	FlashURLFetchService.widgets.put(getSwfId(), this);
+        super.onLoad();
+        FlashURLFetchService.widgets.put(getSwfId(), this);
     }
 
     @Override
     protected void onUnload() {
-	FlashURLFetchService.widgets.remove(getSwfId());
-	super.onUnload();
+        FlashURLFetchService.widgets.remove(getSwfId());
+        super.onUnload();
     }
 
     public void onWidgetReady() {
-	status = Status.READY;
+        status = Status.READY;
 
-	for (String url : requests.keySet()) {
-	    requestURL(url);
-	}
+        for (String url : requests.keySet()) {
+            requestURL(url);
+        }
     }
 
     private void requestURL(String url) {
-	_requestURL(getSwfId(), url);
+        _requestURL(getSwfId(), url);
     }
 }

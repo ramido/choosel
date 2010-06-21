@@ -18,7 +18,6 @@
  */
 package org.thechiselgroup.choosel.client.workspace.command;
 
-
 import org.thechiselgroup.choosel.client.workspace.WorkspaceManager;
 
 import com.google.gwt.user.client.Command;
@@ -30,11 +29,11 @@ public class NewWorkspaceCommand implements Command {
 
     @Inject
     public NewWorkspaceCommand(WorkspaceManager workspaceManager) {
-	this.workspaceManager = workspaceManager;
+        this.workspaceManager = workspaceManager;
     }
 
     @Override
     public void execute() {
-	workspaceManager.createNewWorkspace();
+        workspaceManager.createNewWorkspace();
     }
 }

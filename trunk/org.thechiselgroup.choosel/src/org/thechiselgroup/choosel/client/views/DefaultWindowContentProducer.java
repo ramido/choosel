@@ -28,18 +28,18 @@ public class DefaultWindowContentProducer implements WindowContentProducer {
 
     @Override
     public WindowContent createWindowContent(String contentType) {
-	assert contentType != null;
-	assert windowContentFactories.containsKey(contentType);
+        assert contentType != null;
+        assert windowContentFactories.containsKey(contentType);
 
-	return windowContentFactories.get(contentType).createWindowContent();
+        return windowContentFactories.get(contentType).createWindowContent();
     }
 
     public void register(String contentType,
-	    WindowContentFactory windowContentFactory) {
+            WindowContentFactory windowContentFactory) {
 
-	assert contentType != null;
-	assert windowContentFactory != null;
+        assert contentType != null;
+        assert windowContentFactory != null;
 
-	windowContentFactories.put(contentType, windowContentFactory);
+        windowContentFactories.put(contentType, windowContentFactory);
     }
 }

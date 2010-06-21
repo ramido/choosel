@@ -17,129 +17,132 @@ import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
 
 public class ResourceItemTest {
 
+    public static Resource createResource(String type, int index) {
+        Resource r = new Resource(type + ":" + index);
+        r.putValue("testlabelkey", index + "-value");
+        return r;
+    }
+
     @Mock
     private PopupManager popupManager;
+
     @Mock
     private Layer layer;
+
     @Mock
     private ResourceSet hoverModel;
+
     @Mock
     private ResourceSet resources;
 
     private ResourceItem underTest;
 
-    @Before
-    public void setUp() {
-	MockitoAnnotations.initMocks(this);
-
-	underTest = spy(new ResourceItem(resources, hoverModel, popupManager,
-		layer));
-    }
-
     @Test
     public void isHighlightedIsFalseAfterInit() {
-	assertEquals(false, underTest.isHighlighted());
+        assertEquals(false, underTest.isHighlighted());
     }
 
     @Test
     public void isSelectIsFalseAfterInit() {
-	assertEquals(false, underTest.isSelected());
+        assertEquals(false, underTest.isSelected());
     }
-
-    @Test
-    public void statusIsHighlightedSelected() {
-	underTest.setHighlighted(true);
-	underTest.setSelected(true);
-
-	assertEquals(Status.HIGHLIGHTED_SELECTED, underTest.calculateStatus());
-    }
-
-    @Test
-    public void statusisHighlighted() {
-	underTest.setHighlighted(true);
-	underTest.setSelected(false);
-	assertEquals(Status.HIGHLIGHTED, underTest.calculateStatus());
-    }
-
-    @Test
-    public void statusisSelected() {
-	underTest.setSelected(true);
-	assertEquals(Status.SELECTED, underTest.calculateStatus());
-    }
-
-    @Test
-    public void statusisDefault() {
-	underTest.setSelected(false);
-	assertEquals(Status.DEFAULT, underTest.calculateStatus());
-    }
-
-    @Test
-    public void statusVsGrayIsHighlighted() {
-	underTest.setHighlighted(true);
-	assertEquals(Status.HIGHLIGHTED, underTest
-		.calculateStatusNormalVsGraySelection());
-    }
-
-    @Test
-    public void statusVsGrayIsDefaultHighlightTrue() {
-	underTest.setSelectionStatusVisible(true);
-	underTest.setSelected(true);
-	assertEquals(Status.DEFAULT, underTest
-		.calculateStatusNormalVsGraySelection());
-    }
-
-    @Test
-    public void statusVsGreyIsGrayedOut() {
-	underTest.setSelected(false);
-	underTest.setSelectionStatusVisible(true);
-	assertEquals(Status.GRAYED_OUT, underTest
-		.calculateStatusNormalVsGraySelection());
-    }
-
-    @Test
-    public void statusVsGrayDefaultAllFalse() {
-	underTest.setSelected(false);
-	underTest.setSelectionStatusVisible(false);
-	assertEquals(Status.DEFAULT, underTest
-		.calculateStatusNormalVsGraySelection());
-    }
-
-//    @Test
-//    public void setHighlightedAddsResourceCalled() {
-//	underTest.setHightlighted(true);
-//	verify(hoverModel).add(underTest.getResource());
-//    }
-//
-//    @Test
-//    public void setHighlightedRemovedResourceCalled() {
-//	underTest.setHightlighted(true);
-//	verify(hoverModel, never()).remove(underTest.getResource());
-//	underTest.setHightlighted(false);
-//	verify(hoverModel, times(1)).remove(underTest.getResource());
-//    }
 
     @Test
     public void setHightlightedUpdateStylingCalled() {
-	underTest.setHighlighted(true);
-	verify(underTest, times(1)).updateStyling();
-    }
-
-    @Test
-    public void setSelectedWithoutChangeNeverCallsUpdateStyling() {
-	underTest.setSelected(false);
-	verify(underTest, never()).updateStyling();
+        underTest.setHighlighted(true);
+        verify(underTest, times(1)).updateStyling();
     }
 
     @Test
     public void setSelectedWithChangeCallsUpdateStyling() {
-	underTest.setSelected(true);
-	verify(underTest, times(1)).updateStyling();
+        underTest.setSelected(true);
+        verify(underTest, times(1)).updateStyling();
     }
 
-    public static Resource createResource(String type, int index) {
-	Resource r = new Resource(type + ":" + index);
-	r.putValue("testlabelkey", index + "-value");
-	return r;
+    @Test
+    public void setSelectedWithoutChangeNeverCallsUpdateStyling() {
+        underTest.setSelected(false);
+        verify(underTest, never()).updateStyling();
+    }
+
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+
+        underTest = spy(new ResourceItem(resources, hoverModel, popupManager,
+                layer));
+    }
+
+    @Test
+    public void statusisDefault() {
+        underTest.setSelected(false);
+        assertEquals(Status.DEFAULT, underTest.calculateStatus());
+    }
+
+    @Test
+    public void statusisHighlighted() {
+        underTest.setHighlighted(true);
+        underTest.setSelected(false);
+        assertEquals(Status.HIGHLIGHTED, underTest.calculateStatus());
+    }
+
+    @Test
+    public void statusIsHighlightedSelected() {
+        underTest.setHighlighted(true);
+        underTest.setSelected(true);
+
+        assertEquals(Status.HIGHLIGHTED_SELECTED, underTest.calculateStatus());
+    }
+
+    @Test
+    public void statusisSelected() {
+        underTest.setSelected(true);
+        assertEquals(Status.SELECTED, underTest.calculateStatus());
+    }
+
+    // @Test
+    // public void setHighlightedAddsResourceCalled() {
+    // underTest.setHightlighted(true);
+    // verify(hoverModel).add(underTest.getResource());
+    // }
+    //
+    // @Test
+    // public void setHighlightedRemovedResourceCalled() {
+    // underTest.setHightlighted(true);
+    // verify(hoverModel, never()).remove(underTest.getResource());
+    // underTest.setHightlighted(false);
+    // verify(hoverModel, times(1)).remove(underTest.getResource());
+    // }
+
+    @Test
+    public void statusVsGrayDefaultAllFalse() {
+        underTest.setSelected(false);
+        underTest.setSelectionStatusVisible(false);
+        assertEquals(Status.DEFAULT,
+                underTest.calculateStatusNormalVsGraySelection());
+    }
+
+    @Test
+    public void statusVsGrayIsDefaultHighlightTrue() {
+        underTest.setSelectionStatusVisible(true);
+        underTest.setSelected(true);
+        assertEquals(Status.DEFAULT,
+                underTest.calculateStatusNormalVsGraySelection());
+    }
+
+    @Test
+    public void statusVsGrayIsHighlighted() {
+        underTest.setHighlighted(true);
+        assertEquals(Status.HIGHLIGHTED,
+                underTest.calculateStatusNormalVsGraySelection());
+    }
+
+    @Test
+    public void statusVsGreyIsGrayedOut() {
+        underTest.setSelected(false);
+        underTest.setSelectionStatusVisible(true);
+        assertEquals(Status.GRAYED_OUT,
+                underTest.calculateStatusNormalVsGraySelection());
     }
 
 }

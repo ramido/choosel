@@ -29,21 +29,21 @@ import com.google.gwt.user.client.ui.Widget;
 // TODO refactor: undoable command only
 public class CommandPresenter implements WidgetAdaptable, Presenter {
 
-    public interface Display extends HasClickHandlers, WidgetAdaptable {
+    public static class ButtonDisplay extends Button implements Display,
+            HasEnabledState {
+
+        public ButtonDisplay(String label) {
+            setText(label);
+        }
+
+        @Override
+        public Widget asWidget() {
+            return this;
+        }
 
     }
 
-    public static class ButtonDisplay extends Button implements Display,
-	    HasEnabledState {
-
-	public ButtonDisplay(String label) {
-	    setText(label);
-	}
-
-	@Override
-	public Widget asWidget() {
-	    return this;
-	}
+    public interface Display extends HasClickHandlers, WidgetAdaptable {
 
     }
 
@@ -52,26 +52,26 @@ public class CommandPresenter implements WidgetAdaptable, Presenter {
     private final Command command;
 
     public CommandPresenter(Display display, Command command) {
-	assert display != null;
-	assert command != null;
+        assert display != null;
+        assert command != null;
 
-	this.display = display;
-	this.command = command;
+        this.display = display;
+        this.command = command;
     }
 
     @Override
     public Widget asWidget() {
-	return display.asWidget();
+        return display.asWidget();
     }
 
     @Override
     public void init() {
-	display.addClickHandler(new ClickHandler() {
-	    @Override
-	    public void onClick(ClickEvent event) {
-		command.execute();
-	    }
-	});
+        display.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                command.execute();
+            }
+        });
     }
 
 }

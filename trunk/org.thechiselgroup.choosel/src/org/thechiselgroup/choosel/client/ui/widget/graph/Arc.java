@@ -26,26 +26,26 @@ public class Arc {
     private String type;
 
     public Arc(String id, String sourceNodeId, String targetNodeId, String type) {
-	this.id = id;
-	this.sourceNodeId = sourceNodeId;
-	this.targetNodeId = targetNodeId;
-	this.type = type;
+        this.id = id;
+        this.sourceNodeId = sourceNodeId;
+        this.targetNodeId = targetNodeId;
+        this.type = type;
     }
 
     public String getId() {
-	return id;
+        return id;
     }
 
     public String getSourceNodeId() {
-	return sourceNodeId;
+        return sourceNodeId;
     }
 
     public String getTargetNodeId() {
-	return targetNodeId;
+        return targetNodeId;
     }
 
     public String getType() {
-	return type;
+        return type;
     }
 
 }

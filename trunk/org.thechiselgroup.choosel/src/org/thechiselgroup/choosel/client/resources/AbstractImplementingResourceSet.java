@@ -19,12 +19,12 @@ import org.thechiselgroup.choosel.client.label.DefaultHasLabel;
 import org.thechiselgroup.choosel.client.label.HasLabel;
 import org.thechiselgroup.choosel.client.label.LabelChangedEventHandler;
 
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.event.shared.GwtEvent.Type;
 
 public abstract class AbstractImplementingResourceSet extends
-	AbstractResourceSet {
+        AbstractResourceSet {
 
     // TODO move label support into separate class
 
@@ -33,44 +33,44 @@ public abstract class AbstractImplementingResourceSet extends
     private HasLabel labelDelegate;
 
     public AbstractImplementingResourceSet() {
-	this.eventBus = new HandlerManager(this);
-	this.labelDelegate = new DefaultHasLabel(this);
+        this.eventBus = new HandlerManager(this);
+        this.labelDelegate = new DefaultHasLabel(this);
     }
 
     @Override
     public <H extends ResourceEventHandler> HandlerRegistration addHandler(
-	    Type<H> type, H handler) {
-	return eventBus.addHandler(type, handler);
+            Type<H> type, H handler) {
+        return eventBus.addHandler(type, handler);
     }
 
     @Override
     public HandlerRegistration addLabelChangedEventHandler(
-	    LabelChangedEventHandler eventHandler) {
-	return labelDelegate.addLabelChangedEventHandler(eventHandler);
+            LabelChangedEventHandler eventHandler) {
+        return labelDelegate.addLabelChangedEventHandler(eventHandler);
     }
 
     public int getHandlerCount(Type<?> type) {
-	return eventBus.getHandlerCount(type);
+        return eventBus.getHandlerCount(type);
     }
 
     @Override
     public String getLabel() {
-	return labelDelegate.getLabel();
+        return labelDelegate.getLabel();
     }
 
     @Override
     public boolean hasLabel() {
-	return labelDelegate.hasLabel();
+        return labelDelegate.hasLabel();
     }
 
     @Override
     public boolean isModifiable() {
-	return true;
+        return true;
     }
 
     @Override
     public void setLabel(String label) {
-	labelDelegate.setLabel(label);
+        labelDelegate.setLabel(label);
     }
 
 }

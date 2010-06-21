@@ -42,35 +42,35 @@ public class PersistentHttpResult {
     private String url;
 
     public Date getFetchDate() {
-	return fetchDate;
+        return fetchDate;
     }
 
     public Blob getResult() {
-	return result;
+        return result;
     }
 
     public Long getUid() {
-	return uid;
+        return uid;
     }
 
     public String getUrl() {
-	return url;
+        return url;
     }
 
     public void setFetchDate(Date fetchDate) {
-	this.fetchDate = fetchDate;
+        this.fetchDate = fetchDate;
     }
 
     public void setResult(Blob result) {
-	this.result = result;
+        this.result = result;
     }
 
     public void setUid(Long uid) {
-	this.uid = uid;
+        this.uid = uid;
     }
 
     public void setUrl(String url) {
-	this.url = url;
+        this.url = url;
     }
 
 }

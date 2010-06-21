@@ -38,93 +38,93 @@ public class SaveButtonUpdater implements Disposable {
     private Focusable focusable;
 
     public <T extends HasText & Focusable> SaveButtonUpdater(
-	    WorkspaceManager workspaceManager, T button,
-	    HasEnabledState hasEnabledState) {
+            WorkspaceManager workspaceManager, T button,
+            HasEnabledState hasEnabledState) {
 
-	this.workspaceManager = workspaceManager;
-	this.hasText = button;
-	this.hasEnabledState = hasEnabledState;
-	this.focusable = button;
+        this.workspaceManager = workspaceManager;
+        this.hasText = button;
+        this.hasEnabledState = hasEnabledState;
+        this.focusable = button;
+    }
+
+    protected void delayedSwitchToNotSaved() {
+        // we use timers for now to switch back to not_saved, once
+        // everything
+        // is done within commands, we can use those to set the state of the
+        // button
+        new Timer() {
+            @Override
+            public void run() {
+                workspaceManager.getWorkspace().setSavingState(
+                        WorkspaceSavingState.NOT_SAVED);
+            }
+        }.schedule(2000);
     }
 
     @Override
     public void dispose() {
-	workspaceSwitchedHandler.removeHandler();
-	savingStateHandlerRegistration.removeHandler();
+        workspaceSwitchedHandler.removeHandler();
+        savingStateHandlerRegistration.removeHandler();
     }
 
     public void init() {
-	registerWorkspaceSwitchedHandler();
-	setWorkspace(workspaceManager.getWorkspace());
+        registerWorkspaceSwitchedHandler();
+        setWorkspace(workspaceManager.getWorkspace());
     }
 
     private void registerWorkspaceSavingStateHandler(Workspace workspace) {
-	savingStateHandlerRegistration = workspace
-		.addWorkspaceSavingStateChangeHandler(new WorkspaceSavingStateChangedEventHandler() {
-		    @Override
-		    public void onWorkspaceSavingStateChanged(
-			    WorkspaceSavingStateChangedEvent event) {
-			update(event.getState());
-		    }
-		});
+        savingStateHandlerRegistration = workspace
+                .addWorkspaceSavingStateChangeHandler(new WorkspaceSavingStateChangedEventHandler() {
+                    @Override
+                    public void onWorkspaceSavingStateChanged(
+                            WorkspaceSavingStateChangedEvent event) {
+                        update(event.getState());
+                    }
+                });
     }
 
     private void registerWorkspaceSwitchedHandler() {
-	workspaceSwitchedHandler = workspaceManager
-		.addSwitchedWorkspaceEventHandler(new WorkspaceSwitchedEventHandler() {
-		    @Override
-		    public void onWorkspaceSwitched(WorkspaceSwitchedEvent event) {
-			setWorkspace(event.getWorkspace());
-		    }
-		});
+        workspaceSwitchedHandler = workspaceManager
+                .addSwitchedWorkspaceEventHandler(new WorkspaceSwitchedEventHandler() {
+                    @Override
+                    public void onWorkspaceSwitched(WorkspaceSwitchedEvent event) {
+                        setWorkspace(event.getWorkspace());
+                    }
+                });
     }
 
     private void setWorkspace(Workspace workspace) {
-	registerWorkspaceSavingStateHandler(workspace);
-	update(workspace.getSavingState());
+        registerWorkspaceSavingStateHandler(workspace);
+        update(workspace.getSavingState());
     }
 
     private void update(String label, boolean enabled) {
-	hasText.setText(label);
-	hasEnabledState.setEnabled(enabled);
+        hasText.setText(label);
+        hasEnabledState.setEnabled(enabled);
 
-	if (!enabled) {
-	    focusable.setFocus(false);
-	}
+        if (!enabled) {
+            focusable.setFocus(false);
+        }
     }
 
     private void update(WorkspaceSavingState state) {
-	assert state != null;
+        assert state != null;
 
-	switch (state) {
-	case NOT_SAVED: {
-	    update("Save", true);
-	}
-	    break;
-	case SAVED: {
-	    update("Saved", false);
-	    delayedSwitchToNotSaved();
-	}
-	    break;
-	case SAVING: {
-	    update("Saving", false);
-	}
-	    break;
-	}
-    }
-
-    protected void delayedSwitchToNotSaved() {
-	// we use timers for now to switch back to not_saved, once
-	// everything
-	// is done within commands, we can use those to set the state of the
-	// button
-	new Timer() {
-	    @Override
-	    public void run() {
-		workspaceManager.getWorkspace().setSavingState(
-			WorkspaceSavingState.NOT_SAVED);
-	    }
-	}.schedule(2000);
+        switch (state) {
+        case NOT_SAVED: {
+            update("Save", true);
+        }
+            break;
+        case SAVED: {
+            update("Saved", false);
+            delayedSwitchToNotSaved();
+        }
+            break;
+        case SAVING: {
+            update("Saving", false);
+        }
+            break;
+        }
     }
 
 }

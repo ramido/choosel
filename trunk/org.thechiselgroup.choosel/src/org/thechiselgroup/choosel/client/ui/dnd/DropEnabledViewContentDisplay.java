@@ -24,28 +24,28 @@ public class DropEnabledViewContentDisplay extends DelegatingViewContentDisplay 
     private ResourceSetAvatarDropTargetManager dropTargetManager;
 
     public DropEnabledViewContentDisplay(ViewContentDisplay delegate,
-	    ResourceSetAvatarDropTargetManager dropTargetManager) {
+            ResourceSetAvatarDropTargetManager dropTargetManager) {
 
-	super(delegate);
+        super(delegate);
 
-	assert dropTargetManager != null;
+        assert dropTargetManager != null;
 
-	this.dropTargetManager = dropTargetManager;
+        this.dropTargetManager = dropTargetManager;
     }
 
     @Override
     public void dispose() {
-	dropTargetManager.disableDropTarget(asWidget());
-	dropTargetManager = null;
+        dropTargetManager.disableDropTarget(asWidget());
+        dropTargetManager = null;
 
-	super.dispose();
+        super.dispose();
     }
 
     @Override
     public void init(ViewContentDisplayCallback callback) {
-	super.init(callback);
+        super.init(callback);
 
-	dropTargetManager.enableDropTarget(asWidget());
+        dropTargetManager.enableDropTarget(asWidget());
     }
 
 }

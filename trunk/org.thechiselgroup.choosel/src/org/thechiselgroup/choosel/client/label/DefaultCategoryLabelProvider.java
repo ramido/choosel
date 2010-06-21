@@ -19,6 +19,6 @@ public class DefaultCategoryLabelProvider implements CategoryLabelProvider {
 
     @Override
     public String getLabel(String category) {
-	return category;
+        return category;
     }
 }

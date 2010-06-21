@@ -18,120 +18,120 @@ package org.thechiselgroup.choosel.client.resources;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.event.shared.GwtEvent.Type;
 
 public class CombinedResourceSet extends DelegatingResourceSet {
 
     static class ResourceSetElement {
 
-	private HandlerRegistration addHandlerRegistration;
+        private HandlerRegistration addHandlerRegistration;
 
-	private HandlerRegistration removeHandlerRegistration;
+        private HandlerRegistration removeHandlerRegistration;
 
-	private ResourceSet resourceSet;
+        private ResourceSet resourceSet;
 
-	public ResourceSetElement(ResourceSet resourceSet) {
-	    this.resourceSet = resourceSet;
-	}
+        public ResourceSetElement(ResourceSet resourceSet) {
+            this.resourceSet = resourceSet;
+        }
 
-	public void removeHandlers() {
-	    addHandlerRegistration.removeHandler();
-	    removeHandlerRegistration.removeHandler();
-	}
+        public void removeHandlers() {
+            addHandlerRegistration.removeHandler();
+            removeHandlerRegistration.removeHandler();
+        }
 
     }
 
     private List<ResourceSetElement> containedResourceSets = new ArrayList<ResourceSetElement>();
 
     private ResourceAddedEventHandler resourceAddedHandler = new ResourceAddedEventHandler() {
-	@Override
-	public void onResourceAdded(ResourceAddedEvent e) {
-	    add(e.getResource());
-	}
+        @Override
+        public void onResourceAdded(ResourceAddedEvent e) {
+            add(e.getResource());
+        }
     };
 
     private ResourceRemovedEventHandler resourceRemovedHandler = new ResourceRemovedEventHandler() {
-	@Override
-	public void onResourceRemoved(ResourceRemovedEvent e) {
-	    // test that not contained in other resources
-	    for (ResourceSetElement resourceSetElement : containedResourceSets) {
-		if (resourceSetElement.resourceSet.contains(e.getResource())) {
-		    return;
-		}
-	    }
+        @Override
+        public void onResourceRemoved(ResourceRemovedEvent e) {
+            // test that not contained in other resources
+            for (ResourceSetElement resourceSetElement : containedResourceSets) {
+                if (resourceSetElement.resourceSet.contains(e.getResource())) {
+                    return;
+                }
+            }
 
-	    remove(e.getResource());
-	}
+            remove(e.getResource());
+        }
     };
 
     private final HandlerManager setEventBus;
 
-    public List<ResourceSet> getResourceSets() {
-	List<ResourceSet> resourceSets = new ArrayList<ResourceSet>();
-
-	for (ResourceSetElement element : containedResourceSets) {
-	    resourceSets.add(element.resourceSet);
-	}
-
-	return resourceSets;
-    }
-
     public CombinedResourceSet(ResourceSet delegate) {
-	super(delegate);
+        super(delegate);
 
-	this.setEventBus = new HandlerManager(this);
+        this.setEventBus = new HandlerManager(this);
     }
 
     public void addResourceSet(ResourceSet resourceSet) {
-	if (containsResourceSet(resourceSet)) {
-	    return;
-	}
+        if (containsResourceSet(resourceSet)) {
+            return;
+        }
 
-	ResourceSetElement resourceSetElement = new ResourceSetElement(
-		resourceSet);
-	containedResourceSets.add(resourceSetElement);
-	addAll(resourceSet);
+        ResourceSetElement resourceSetElement = new ResourceSetElement(
+                resourceSet);
+        containedResourceSets.add(resourceSetElement);
+        addAll(resourceSet);
 
-	resourceSetElement.addHandlerRegistration = resourceSet.addHandler(
-		ResourceAddedEvent.TYPE, resourceAddedHandler);
-	resourceSetElement.removeHandlerRegistration = resourceSet.addHandler(
-		ResourceRemovedEvent.TYPE, resourceRemovedHandler);
+        resourceSetElement.addHandlerRegistration = resourceSet.addHandler(
+                ResourceAddedEvent.TYPE, resourceAddedHandler);
+        resourceSetElement.removeHandlerRegistration = resourceSet.addHandler(
+                ResourceRemovedEvent.TYPE, resourceRemovedHandler);
 
-	setEventBus.fireEvent(new ResourceSetAddedEvent(resourceSet));
+        setEventBus.fireEvent(new ResourceSetAddedEvent(resourceSet));
     }
 
     public <H extends ResourceSetEventHandler> HandlerRegistration addSetEventsHandler(
-	    Type<H> type, H handler) {
-	return setEventBus.addHandler(type, handler);
+            Type<H> type, H handler) {
+        return setEventBus.addHandler(type, handler);
     }
 
     @Override
     public void clear() {
-	List<ResourceSetElement> toRemove = new ArrayList<ResourceSetElement>(
-		containedResourceSets);
+        List<ResourceSetElement> toRemove = new ArrayList<ResourceSetElement>(
+                containedResourceSets);
 
-	for (ResourceSetElement resourceSetElement : toRemove) {
-	    removeResourceSet(resourceSetElement.resourceSet);
-	}
+        for (ResourceSetElement resourceSetElement : toRemove) {
+            removeResourceSet(resourceSetElement.resourceSet);
+        }
 
-	assert toList().isEmpty();
+        assert toList().isEmpty();
     }
 
     // TODO specify behavior in javadoc
     public boolean containsResourceSet(ResourceSet resourceSet) {
-	assert resourceSet != null;
-	return getResourceSetElement(resourceSet) != null;
+        assert resourceSet != null;
+        return getResourceSetElement(resourceSet) != null;
     }
 
     private ResourceSetElement getResourceSetElement(ResourceSet resources) {
-	for (ResourceSetElement resourceSetElement : containedResourceSets) {
-	    if (resourceSetElement.resourceSet.equals(resources)) {
-		return resourceSetElement;
-	    }
-	}
-	return null;
+        for (ResourceSetElement resourceSetElement : containedResourceSets) {
+            if (resourceSetElement.resourceSet.equals(resources)) {
+                return resourceSetElement;
+            }
+        }
+        return null;
+    }
+
+    public List<ResourceSet> getResourceSets() {
+        List<ResourceSet> resourceSets = new ArrayList<ResourceSet>();
+
+        for (ResourceSetElement element : containedResourceSets) {
+            resourceSets.add(element.resourceSet);
+        }
+
+        return resourceSets;
     }
 
     /**
@@ -141,27 +141,27 @@ public class CombinedResourceSet extends DelegatingResourceSet {
      */
     @Override
     public boolean isModifiable() {
-	return false;
+        return false;
     }
 
     public void removeResourceSet(ResourceSet resourceSet) {
-	ResourceSetElement resourceSetElement = getResourceSetElement(resourceSet);
+        ResourceSetElement resourceSetElement = getResourceSetElement(resourceSet);
 
-	if (resourceSetElement == null) {
-	    return;
-	}
+        if (resourceSetElement == null) {
+            return;
+        }
 
-	containedResourceSets.remove(resourceSetElement);
-	resourceSetElement.removeHandlers();
+        containedResourceSets.remove(resourceSetElement);
+        resourceSetElement.removeHandlers();
 
-	List<Resource> toRemove = new ArrayList<Resource>(resourceSet.toList());
-	for (ResourceSetElement rse : containedResourceSets) {
-	    toRemove.removeAll(rse.resourceSet.toList());
-	}
+        List<Resource> toRemove = new ArrayList<Resource>(resourceSet.toList());
+        for (ResourceSetElement rse : containedResourceSets) {
+            toRemove.removeAll(rse.resourceSet.toList());
+        }
 
-	removeAll(toRemove);
+        removeAll(toRemove);
 
-	setEventBus.fireEvent(new ResourceSetRemovedEvent(resourceSet));
+        setEventBus.fireEvent(new ResourceSetRemovedEvent(resourceSet));
     }
 
 }

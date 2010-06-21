@@ -19,11 +19,11 @@ import com.google.gwt.user.client.ui.Widget;
 
 public interface ResourceSetAvatarDropTargetManager {
 
-    void enableDropTarget(Widget dropTarget);
-
     /**
      * Should be called when the widget gets detached from the DOM tree.
      */
     void disableDropTarget(Widget dropTarget);
+
+    void enableDropTarget(Widget dropTarget);
 
 }

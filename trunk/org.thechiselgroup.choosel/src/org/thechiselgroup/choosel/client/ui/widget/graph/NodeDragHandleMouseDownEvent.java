@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.client.ui.widget.graph;
 import com.google.gwt.event.shared.GwtEvent;
 
 public class NodeDragHandleMouseDownEvent extends
-	GwtEvent<NodeDragHandleMouseDownHandler> {
+        GwtEvent<NodeDragHandleMouseDownHandler> {
 
     public static final Type<NodeDragHandleMouseDownHandler> TYPE = new Type<NodeDragHandleMouseDownHandler>();
 
@@ -29,40 +29,40 @@ public class NodeDragHandleMouseDownEvent extends
     private final Node node;
 
     public NodeDragHandleMouseDownEvent(Node node, int mouseX, int mouseY) {
-	assert node != null;
+        assert node != null;
 
-	this.node = node;
-	this.mouseX = mouseX;
-	this.mouseY = mouseY;
+        this.node = node;
+        this.mouseX = mouseX;
+        this.mouseY = mouseY;
 
     }
 
     @Override
     protected void dispatch(NodeDragHandleMouseDownHandler handler) {
-	handler.onMouseDown(this);
+        handler.onMouseDown(this);
     }
 
     @Override
     public Type<NodeDragHandleMouseDownHandler> getAssociatedType() {
-	return TYPE;
+        return TYPE;
     }
 
     public int getMouseX() {
-	return mouseX;
+        return mouseX;
     }
 
     public int getMouseY() {
-	return mouseY;
+        return mouseY;
     }
 
     public Node getNode() {
-	return node;
+        return node;
     }
 
     @Override
     public String toString() {
-	return "NodeDragHandleMouseDownEvent [mouseX=" + mouseX + ", mouseY="
-		+ mouseY + ", node=" + node + "]";
+        return "NodeDragHandleMouseDownEvent [mouseX=" + mouseX + ", mouseY="
+                + mouseY + ", node=" + node + "]";
     }
 
 }

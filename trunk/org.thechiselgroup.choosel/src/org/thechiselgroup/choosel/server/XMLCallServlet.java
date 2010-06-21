@@ -53,91 +53,91 @@ public abstract class XMLCallServlet extends RemoteServiceServlet {
 
     protected DocumentFetchService documentFetchService;
 
-    public Number evaluateNumber(String expressionKey, Node node)
-	    throws XPathExpressionException {
+    protected abstract Resource analyzeNode(Node node, String label)
+            throws Exception;
 
-	return (Number) expressions.get(expressionKey).evaluate(node,
-		XPathConstants.NUMBER);
+    public Set<Resource> analyzeXML(String url, String label)
+            throws ServiceException {
+
+        try {
+            Set<Resource> resources = new HashSet<Resource>();
+
+            NodeList nodes = getSetExpressionNodes(url);
+            for (int i = 0; i < nodes.getLength(); i++) {
+                resources.add(analyzeNode(nodes.item(i), label));
+            }
+
+            return resources;
+
+        } catch (Exception e) {
+            Log.error(e.getMessage(), e);
+            throw new ServiceException(e.getMessage());
+        }
+
+    }
+
+    public Number evaluateNumber(String expressionKey, Node node)
+            throws XPathExpressionException {
+
+        return (Number) expressions.get(expressionKey).evaluate(node,
+                XPathConstants.NUMBER);
     }
 
     public String evaluateString(String expressionKey, Node node)
-	    throws XPathExpressionException {
+            throws XPathExpressionException {
 
-	return (String) expressions.get(expressionKey).evaluate(node,
-		XPathConstants.STRING);
+        return (String) expressions.get(expressionKey).evaluate(node,
+                XPathConstants.STRING);
     }
 
-    public void registerExpression(String key, String expression)
-	    throws ServletException {
+    protected NodeList getSetExpressionNodes(String url) throws SAXException,
+            IOException, XPathExpressionException, ParserConfigurationException {
 
-	try {
-	    expressions.put(key, xpath.compile(expression));
-	} catch (XPathExpressionException e) {
-	    throw new ServletException(e);
-	}
+        Document document = documentFetchService.fetchXML(url);
+        return (NodeList) setExpression.evaluate(document,
+                XPathConstants.NODESET);
     }
 
     @Override
     public void init(ServletConfig config) throws ServletException {
-	super.init(config);
+        super.init(config);
 
-	// FIXME: workaround for app engine issue 1255
-	// http://code.google.com/p/googleappengine/issues/detail?id=1255
-	// XPathFactory factory = XPathFactory.newInstance();
-	XPathFactory factory = new org.apache.xpath.jaxp.XPathFactoryImpl();
+        // FIXME: workaround for app engine issue 1255
+        // http://code.google.com/p/googleappengine/issues/detail?id=1255
+        // XPathFactory factory = XPathFactory.newInstance();
+        XPathFactory factory = new org.apache.xpath.jaxp.XPathFactoryImpl();
 
-	xpath = factory.newXPath();
+        xpath = factory.newXPath();
 
-	DocumentBuilderFactory domBuilderFactory = DocumentBuilderFactory
-		.newInstance();
-	domBuilderFactory.setNamespaceAware(true);
+        DocumentBuilderFactory domBuilderFactory = DocumentBuilderFactory
+                .newInstance();
+        domBuilderFactory.setNamespaceAware(true);
 
-	// TODO use regular fetch service for production
-	// urlFetchServiceFacade = new DefaultDocumentFetchService(
-	// URLFetchServiceFactory.getURLFetchService(), domBuilderFactory);
-	documentFetchService = new CachedDocumentFetchService(
-		URLFetchServiceFactory.getURLFetchService(), PMF.get(),
-		domBuilderFactory);
+        // TODO use regular fetch service for production
+        // urlFetchServiceFacade = new DefaultDocumentFetchService(
+        // URLFetchServiceFactory.getURLFetchService(), domBuilderFactory);
+        documentFetchService = new CachedDocumentFetchService(
+                URLFetchServiceFactory.getURLFetchService(), PMF.get(),
+                domBuilderFactory);
+    }
+
+    public void registerExpression(String key, String expression)
+            throws ServletException {
+
+        try {
+            expressions.put(key, xpath.compile(expression));
+        } catch (XPathExpressionException e) {
+            throw new ServletException(e);
+        }
     }
 
     protected void setupSetExpression(String setExpression)
-	    throws ServletException {
-	try {
-	    this.setExpression = xpath.compile(setExpression);
-	} catch (XPathExpressionException e) {
-	    throw new ServletException(e);
-	}
+            throws ServletException {
+        try {
+            this.setExpression = xpath.compile(setExpression);
+        } catch (XPathExpressionException e) {
+            throw new ServletException(e);
+        }
     }
-
-    public Set<Resource> analyzeXML(String url, String label)
-	    throws ServiceException {
-
-	try {
-	    Set<Resource> resources = new HashSet<Resource>();
-
-	    NodeList nodes = getSetExpressionNodes(url);
-	    for (int i = 0; i < nodes.getLength(); i++) {
-		resources.add(analyzeNode(nodes.item(i), label));
-	    }
-
-	    return resources;
-
-	} catch (Exception e) {
-	    Log.error(e.getMessage(), e);
-	    throw new ServiceException(e.getMessage());
-	}
-
-    }
-
-    protected NodeList getSetExpressionNodes(String url) throws SAXException,
-	    IOException, XPathExpressionException, ParserConfigurationException {
-
-	Document document = documentFetchService.fetchXML(url);
-	return (NodeList) setExpression.evaluate(document,
-		XPathConstants.NODESET);
-    }
-
-    protected abstract Resource analyzeNode(Node node, String label)
-	    throws Exception;
 
 }

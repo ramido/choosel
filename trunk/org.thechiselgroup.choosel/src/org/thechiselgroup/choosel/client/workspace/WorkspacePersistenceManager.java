@@ -21,11 +21,11 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface WorkspacePersistenceManager {
 
+    void loadWorkspace(Long workspaceID, AsyncCallback<Workspace> callback);
+
     void loadWorkspacePreviews(AsyncCallback<List<WorkspacePreview>> callback);
 
     void saveWorkspace(AsyncCallback<Void> callback);
-
-    void loadWorkspace(Long workspaceID, AsyncCallback<Workspace> callback);
 
     void shareWorkspace(String emailAddress, AsyncCallback<Void> callback);
 

@@ -15,17 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.test;
 
-import static org.mockito.Mockito.*;
-
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import com.allen_sauer.gwt.dnd.client.util.DragClientBundle;
 import com.allen_sauer.gwt.dnd.client.util.DragClientBundle.DragCssResource;
 
 public final class DndTestHelpers {
-
-    private DndTestHelpers() {
-
-    }
 
     public static void mockDragClientBundle(MockitoGWTBridge bridge) {
         /*
@@ -34,11 +30,15 @@ public final class DndTestHelpers {
          */
         mock(DragClientBundle.class); // call to trigger class loading
         DragClientBundle clientBundle = bridge
-        	.getCreatedMock(DragClientBundle.class);
+                .getCreatedMock(DragClientBundle.class);
         if (clientBundle != null) {
             DragCssResource cssResource = mock(DragClientBundle.DragCssResource.class);
             when(clientBundle.css()).thenReturn(cssResource);
         }
+    }
+
+    private DndTestHelpers() {
+
     }
 
 }

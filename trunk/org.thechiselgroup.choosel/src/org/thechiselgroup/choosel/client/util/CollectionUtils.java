@@ -22,24 +22,24 @@ import java.util.Set;
 
 public final class CollectionUtils {
 
-    private CollectionUtils() {
-
-    }
-
     public static <T> List<T> toList(Iterable<T> iterable) {
-	List<T> result = new ArrayList<T>();
-	for (T t : iterable) {
-	    result.add(t);
-	}
-	return result;
+        List<T> result = new ArrayList<T>();
+        for (T t : iterable) {
+            result.add(t);
+        }
+        return result;
     }
 
     public static <T> Set<T> toSet(T... ts) {
-	Set<T> set = new HashSet<T>();
-	for (T t : ts) {
-	    set.add(t);
-	}
-	return set;
+        Set<T> set = new HashSet<T>();
+        for (T t : ts) {
+            set.add(t);
+        }
+        return set;
+    }
+
+    private CollectionUtils() {
+
     }
 
 }

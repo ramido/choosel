@@ -24,38 +24,38 @@ public final class WindowMoveController extends WindowDragController {
     private WidgetLocation originalLocation;
 
     public WindowMoveController(WindowController controller,
-	    CommandManager commandManager) {
+            CommandManager commandManager) {
 
-	super(controller, commandManager);
-    }
-
-    @Override
-    protected void dragMove(int desiredDraggableX, int desiredDraggableY) {
-	windowPanel.setLocation(desiredDraggableX, desiredDraggableY);
+        super(controller, commandManager);
     }
 
     @Override
     public void dragEnd() {
-	WidgetLocation currentLocation = new WidgetLocation(windowPanel,
-		getBoundaryPanel());
+        WidgetLocation currentLocation = new WidgetLocation(windowPanel,
+                getBoundaryPanel());
 
-	commandManager.addExecutedCommand(new MoveWindowCommand(windowPanel,
-		originalLocation.getLeft(), originalLocation.getTop(),
-		currentLocation.getLeft(), currentLocation.getTop()));
+        commandManager.addExecutedCommand(new MoveWindowCommand(windowPanel,
+                originalLocation.getLeft(), originalLocation.getTop(),
+                currentLocation.getLeft(), currentLocation.getTop()));
 
-	super.dragEnd();
+        super.dragEnd();
+    }
+
+    @Override
+    protected void dragMove(int desiredDraggableX, int desiredDraggableY) {
+        windowPanel.setLocation(desiredDraggableX, desiredDraggableY);
     }
 
     // TODO command should also switch back to old zIndex
     @Override
     public void dragStart() {
-	windowPanel = (WindowPanel) context.draggable;
+        windowPanel = (WindowPanel) context.draggable;
 
-	originalLocation = new WidgetLocation(windowPanel, getBoundaryPanel());
+        originalLocation = new WidgetLocation(windowPanel, getBoundaryPanel());
 
-	bringToFront(windowPanel);
+        bringToFront(windowPanel);
 
-	super.dragStart();
+        super.dragStart();
 
     }
 }

@@ -34,17 +34,17 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class ResourceSetAvatarPopupWidgetFactory implements WidgetFactory {
 
-    public static interface ResourceSetAvatarPopupWidgetFactoryAction {
+    public static interface HeaderUpdatedEventHandler {
 
-	void execute();
-
-	String getLabel();
+        void headerLabelChanged(String newLabel);
 
     }
 
-    public static interface HeaderUpdatedEventHandler {
+    public static interface ResourceSetAvatarPopupWidgetFactoryAction {
 
-	void headerLabelChanged(String newLabel);
+        void execute();
+
+        String getLabel();
 
     }
 
@@ -73,93 +73,93 @@ public class ResourceSetAvatarPopupWidgetFactory implements WidgetFactory {
      *            changes.
      */
     public ResourceSetAvatarPopupWidgetFactory(String headerText,
-	    String subHeaderText,
-	    List<ResourceSetAvatarPopupWidgetFactoryAction> actions,
-	    String infoMessage, HeaderUpdatedEventHandler headerUpdatedHandler) {
+            String subHeaderText,
+            List<ResourceSetAvatarPopupWidgetFactoryAction> actions,
+            String infoMessage, HeaderUpdatedEventHandler headerUpdatedHandler) {
 
-	assert headerText != null;
-	assert subHeaderText != null;
-	assert actions != null;
-	assert infoMessage != null;
+        assert headerText != null;
+        assert subHeaderText != null;
+        assert actions != null;
+        assert infoMessage != null;
 
-	this.subHeaderText = subHeaderText;
-	this.headerText = headerText;
-	this.actions = actions;
-	this.infoMessage = infoMessage;
-	this.headerUpdatedHandler = headerUpdatedHandler;
+        this.subHeaderText = subHeaderText;
+        this.headerText = headerText;
+        this.actions = actions;
+        this.infoMessage = infoMessage;
+        this.headerUpdatedHandler = headerUpdatedHandler;
     }
 
     private void addActionsPanel(VerticalPanel panel) {
-	if (!actions.isEmpty()) {
-	    VerticalPanel actionPanel = new VerticalPanel();
-	    actionPanel.addStyleName(CSS_POPUP_ACTION);
+        if (!actions.isEmpty()) {
+            VerticalPanel actionPanel = new VerticalPanel();
+            actionPanel.addStyleName(CSS_POPUP_ACTION);
 
-	    for (ResourceSetAvatarPopupWidgetFactoryAction action : actions) {
-		actionPanel.add(createActionButton(action));
-	    }
+            for (ResourceSetAvatarPopupWidgetFactoryAction action : actions) {
+                actionPanel.add(createActionButton(action));
+            }
 
-	    panel.add(actionPanel);
-	}
+            panel.add(actionPanel);
+        }
     }
 
     private void addHeader(VerticalPanel panel) {
-	if (headerUpdatedHandler == null) {
-	    Label header = new Label(headerText);
-	    header.addStyleName(CSS_POPUP_CONTENT_HEADER);
-	    panel.add(header);
-	} else {
-	    final TextBox header = new TextBox();
-	    header.setText(headerText);
-	    header.setMaxLength(20); // TODO change to resizable text box
-	    header.addStyleName(CSS_POPUP_CONTENT_HEADER);
-	    header.addKeyUpHandler(new KeyUpHandler() {
-		@Override
-		public void onKeyUp(KeyUpEvent event) {
-		    headerUpdatedHandler.headerLabelChanged(header.getText());
-		}
-	    });
-	    header.addBlurHandler(new BlurHandler() {
-		@Override
-		public void onBlur(BlurEvent event) {
-		    headerUpdatedHandler.headerLabelChanged(header.getText());
-		}
-	    });
-	    panel.add(header);
-	}
+        if (headerUpdatedHandler == null) {
+            Label header = new Label(headerText);
+            header.addStyleName(CSS_POPUP_CONTENT_HEADER);
+            panel.add(header);
+        } else {
+            final TextBox header = new TextBox();
+            header.setText(headerText);
+            header.setMaxLength(20); // TODO change to resizable text box
+            header.addStyleName(CSS_POPUP_CONTENT_HEADER);
+            header.addKeyUpHandler(new KeyUpHandler() {
+                @Override
+                public void onKeyUp(KeyUpEvent event) {
+                    headerUpdatedHandler.headerLabelChanged(header.getText());
+                }
+            });
+            header.addBlurHandler(new BlurHandler() {
+                @Override
+                public void onBlur(BlurEvent event) {
+                    headerUpdatedHandler.headerLabelChanged(header.getText());
+                }
+            });
+            panel.add(header);
+        }
 
-	Label subheader = new Label(subHeaderText);
-	subheader.addStyleName(CSS_POPUP_CONTENT_SUBHEADER);
-	panel.add(subheader);
+        Label subheader = new Label(subHeaderText);
+        subheader.addStyleName(CSS_POPUP_CONTENT_SUBHEADER);
+        panel.add(subheader);
     }
 
     private void addInfoText(VerticalPanel panel) {
-	HTML infotext = new HTML(infoMessage);
-	infotext.addStyleName(CSS_POPUP_CONTENT_INFO);
-	panel.add(infotext);
+        HTML infotext = new HTML(infoMessage);
+        infotext.addStyleName(CSS_POPUP_CONTENT_INFO);
+        panel.add(infotext);
     }
 
     private Button createActionButton(
-	    final ResourceSetAvatarPopupWidgetFactoryAction action) {
-	Button actionButton = new Button(action.getLabel());
-	actionButton.addStyleName(CSS_POPUP_ACTION);
-	actionButton.addClickHandler(new ClickHandler() {
-	    @Override
-	    public void onClick(ClickEvent event) {
-		action.execute();
-	    }
-	});
-	return actionButton;
+            final ResourceSetAvatarPopupWidgetFactoryAction action) {
+        Button actionButton = new Button(action.getLabel());
+        actionButton.addStyleName(CSS_POPUP_ACTION);
+        actionButton.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                action.execute();
+            }
+        });
+        return actionButton;
     }
 
     // TODO extract into default widget class
     @Override
     public Widget createWidget() {
-	VerticalPanel panel = new VerticalPanel();
+        VerticalPanel panel = new VerticalPanel();
 
-	addHeader(panel);
-	addActionsPanel(panel);
-	addInfoText(panel);
+        addHeader(panel);
+        addActionsPanel(panel);
+        addInfoText(panel);
 
-	return panel;
+        return panel;
     }
 }

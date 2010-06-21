@@ -17,9 +17,9 @@ package org.thechiselgroup.choosel.client.command;
 
 import java.util.LinkedList;
 
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.event.shared.GwtEvent.Type;
 
 public class DefaultCommandManager implements CommandManager {
 
@@ -30,93 +30,93 @@ public class DefaultCommandManager implements CommandManager {
     private LinkedList<UndoableCommand> undoneCommands = new LinkedList<UndoableCommand>();
 
     public DefaultCommandManager() {
-	this.eventBus = new HandlerManager(this);
+        this.eventBus = new HandlerManager(this);
     }
 
     @Override
     public void addExecutedCommand(UndoableCommand command) {
-	assert command != null;
+        assert command != null;
 
-	executedCommands.add(command);
-	undoneCommands.clear();
-	fireEvent(new CommandAddedEvent(this, command));
+        executedCommands.add(command);
+        undoneCommands.clear();
+        fireEvent(new CommandAddedEvent(this, command));
 
-	assert canUndo();
-	assert !canRedo();
+        assert canUndo();
+        assert !canRedo();
     }
 
     @Override
     public <H extends CommandManagerEventHandler> HandlerRegistration addHandler(
-	    Type<H> type, H handler) {
-	return eventBus.addHandler(type, handler);
+            Type<H> type, H handler) {
+        return eventBus.addHandler(type, handler);
     }
 
     @Override
     public boolean canRedo() {
-	return !undoneCommands.isEmpty();
+        return !undoneCommands.isEmpty();
     }
 
     @Override
     public boolean canUndo() {
-	return !executedCommands.isEmpty();
+        return !executedCommands.isEmpty();
     }
 
     @Override
     public void clear() {
-	undoneCommands.clear();
-	executedCommands.clear();
-	fireEvent(new CommandManagerClearedEvent(this));
+        undoneCommands.clear();
+        executedCommands.clear();
+        fireEvent(new CommandManagerClearedEvent(this));
     }
 
     @Override
     public void execute(UndoableCommand command) {
-	assert command != null;
+        assert command != null;
 
-	command.execute();
-	addExecutedCommand(command);
+        command.execute();
+        addExecutedCommand(command);
 
-	assert canUndo();
-	assert !canRedo();
+        assert canUndo();
+        assert !canRedo();
     }
 
     private void fireEvent(CommandManagerEvent<?> event) {
-	eventBus.fireEvent(event);
+        eventBus.fireEvent(event);
     }
 
     @Override
     public UndoableCommand getRedoCommand() {
-	assert canRedo();
-	return undoneCommands.getLast();
+        assert canRedo();
+        return undoneCommands.getLast();
     }
 
     @Override
     public UndoableCommand getUndoCommand() {
-	assert canUndo();
-	return executedCommands.getLast();
+        assert canUndo();
+        return executedCommands.getLast();
     }
 
     @Override
     public void redo() {
-	assert canRedo();
+        assert canRedo();
 
-	UndoableCommand command = undoneCommands.removeLast();
-	command.execute();
-	executedCommands.add(command);
-	fireEvent(new CommandRedoneEvent(this, command));
+        UndoableCommand command = undoneCommands.removeLast();
+        command.execute();
+        executedCommands.add(command);
+        fireEvent(new CommandRedoneEvent(this, command));
 
-	assert canUndo();
+        assert canUndo();
     }
 
     @Override
     public void undo() {
-	assert canUndo();
+        assert canUndo();
 
-	UndoableCommand command = executedCommands.removeLast();
-	command.undo();
-	undoneCommands.add(command);
-	fireEvent(new CommandUndoneEvent(this, command));
+        UndoableCommand command = executedCommands.removeLast();
+        command.undo();
+        undoneCommands.add(command);
+        fireEvent(new CommandUndoneEvent(this, command));
 
-	assert canRedo();
+        assert canRedo();
     }
 
 }

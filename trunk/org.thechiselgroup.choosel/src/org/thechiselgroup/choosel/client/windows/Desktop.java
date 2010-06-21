@@ -22,16 +22,16 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 // TODO use window model instead of window
 public interface Desktop {
 
-    WindowPanel createWindow(WindowContent content);
-
-    WindowPanel createWindow(WindowContent content, int x, int y,
-	    int windowOffsetWidth, int windowOffsetHeight);
-
     AbsolutePanel asWidget();
 
     void bringToFront(WindowPanel window);
 
     void clearWindows();
+
+    WindowPanel createWindow(WindowContent content);
+
+    WindowPanel createWindow(WindowContent content, int x, int y,
+            int windowOffsetWidth, int windowOffsetHeight);
 
     List<WindowPanel> getWindows();
 

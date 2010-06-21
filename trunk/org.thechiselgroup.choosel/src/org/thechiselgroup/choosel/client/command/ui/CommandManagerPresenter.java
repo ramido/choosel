@@ -35,43 +35,43 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 public class CommandManagerPresenter implements Presenter {
 
     private class CommandManagerHandler implements CommandAddedEventHandler,
-	    CommandRedoneEventHandler, CommandUndoneEventHandler,
-	    CommandManagerClearedEventHandler {
+            CommandRedoneEventHandler, CommandUndoneEventHandler,
+            CommandManagerClearedEventHandler {
 
-	@Override
-	public void onCommandAdded(CommandAddedEvent event) {
-	    updateButtonState();
-	}
+        @Override
+        public void onCleared(CommandManagerClearedEvent event) {
+            updateButtonState();
+        }
 
-	@Override
-	public void onCommandRedone(CommandRedoneEvent commandRedoneEvent) {
-	    updateButtonState();
-	}
+        @Override
+        public void onCommandAdded(CommandAddedEvent event) {
+            updateButtonState();
+        }
 
-	@Override
-	public void onCommandUndone(CommandUndoneEvent commandUndoneEvent) {
-	    updateButtonState();
-	}
+        @Override
+        public void onCommandRedone(CommandRedoneEvent commandRedoneEvent) {
+            updateButtonState();
+        }
 
-	@Override
-	public void onCleared(CommandManagerClearedEvent event) {
-	    updateButtonState();
-	}
+        @Override
+        public void onCommandUndone(CommandUndoneEvent commandUndoneEvent) {
+            updateButtonState();
+        }
     }
 
     public static interface CommandManagerPresenterDisplay {
 
-	HasClickHandlers getRedoClickHandlers();
+        HasClickHandlers getRedoClickHandlers();
 
-	HasClickHandlers getUndoClickHandlers();
+        HasClickHandlers getUndoClickHandlers();
 
-	void setRedoButtonEnabled(boolean enabled);
+        void setRedoButtonEnabled(boolean enabled);
 
-	void setRedoCommandDescription(String commandDescription);
+        void setRedoCommandDescription(String commandDescription);
 
-	void setUndoButtonEnabled(boolean enabled);
+        void setUndoButtonEnabled(boolean enabled);
 
-	void setUndoCommandDescription(String commandDescription);
+        void setUndoCommandDescription(String commandDescription);
 
     }
 
@@ -82,81 +82,81 @@ public class CommandManagerPresenter implements Presenter {
     private final CommandManagerPresenterDisplay display;
 
     public CommandManagerPresenter(CommandManager commandManager,
-	    CommandManagerPresenterDisplay display) {
+            CommandManagerPresenterDisplay display) {
 
-	this.commandManager = commandManager;
-	this.display = display;
+        this.commandManager = commandManager;
+        this.display = display;
     }
 
     public CommandManagerPresenterDisplay getDisplay() {
-	return display;
+        return display;
     }
 
     private String getRedoCommandDescription() {
-	if (!commandManager.canRedo()) {
-	    return "";
-	}
+        if (!commandManager.canRedo()) {
+            return "";
+        }
 
-	UndoableCommand redoCommand = commandManager.getRedoCommand();
+        UndoableCommand redoCommand = commandManager.getRedoCommand();
 
-	if (!(redoCommand instanceof HasDescription)) {
-	    return "";
-	}
+        if (!(redoCommand instanceof HasDescription)) {
+            return "";
+        }
 
-	return ((HasDescription) redoCommand).getDescription();
+        return ((HasDescription) redoCommand).getDescription();
     }
 
     private String getUndoCommandDescription() {
-	if (!commandManager.canUndo()) {
-	    return "";
-	}
+        if (!commandManager.canUndo()) {
+            return "";
+        }
 
-	UndoableCommand undoCommand = commandManager.getUndoCommand();
+        UndoableCommand undoCommand = commandManager.getUndoCommand();
 
-	if (!(undoCommand instanceof HasDescription)) {
-	    return "";
-	}
+        if (!(undoCommand instanceof HasDescription)) {
+            return "";
+        }
 
-	return ((HasDescription) undoCommand).getDescription();
+        return ((HasDescription) undoCommand).getDescription();
     }
 
     @Override
     public void init() {
-	updateButtonState();
+        updateButtonState();
 
-	display.getUndoClickHandlers().addClickHandler(new ClickHandler() {
-	    @Override
-	    public void onClick(ClickEvent event) {
-		assert commandManager.canUndo();
-		commandManager.undo();
-	    }
-	});
+        display.getUndoClickHandlers().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                assert commandManager.canUndo();
+                commandManager.undo();
+            }
+        });
 
-	display.getRedoClickHandlers().addClickHandler(new ClickHandler() {
-	    @Override
-	    public void onClick(ClickEvent event) {
-		assert commandManager.canRedo();
-		commandManager.redo();
-	    }
-	});
+        display.getRedoClickHandlers().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                assert commandManager.canRedo();
+                commandManager.redo();
+            }
+        });
 
-	commandManagerHandler = new CommandManagerHandler();
+        commandManagerHandler = new CommandManagerHandler();
 
-	commandManager.addHandler(CommandRedoneEvent.TYPE,
-		commandManagerHandler);
-	commandManager.addHandler(CommandUndoneEvent.TYPE,
-		commandManagerHandler);
-	commandManager
-		.addHandler(CommandAddedEvent.TYPE, commandManagerHandler);
-	commandManager.addHandler(CommandManagerClearedEvent.TYPE,
-		commandManagerHandler);
+        commandManager.addHandler(CommandRedoneEvent.TYPE,
+                commandManagerHandler);
+        commandManager.addHandler(CommandUndoneEvent.TYPE,
+                commandManagerHandler);
+        commandManager
+                .addHandler(CommandAddedEvent.TYPE, commandManagerHandler);
+        commandManager.addHandler(CommandManagerClearedEvent.TYPE,
+                commandManagerHandler);
     }
 
     private void updateButtonState() {
-	display.setUndoButtonEnabled(commandManager.canUndo());
-	display.setUndoCommandDescription(getUndoCommandDescription());
+        display.setUndoButtonEnabled(commandManager.canUndo());
+        display.setUndoCommandDescription(getUndoCommandDescription());
 
-	display.setRedoButtonEnabled(commandManager.canRedo());
-	display.setRedoCommandDescription(getRedoCommandDescription());
+        display.setRedoButtonEnabled(commandManager.canRedo());
+        display.setRedoCommandDescription(getRedoCommandDescription());
     }
 }

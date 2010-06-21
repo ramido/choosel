@@ -57,215 +57,215 @@ public class ResourceSetAvatar extends Label implements Disposable {
     private final ResourceSetAvatarType type;
 
     public ResourceSetAvatar(String text, String enabledCSSClass,
-	    ResourceSet resources, ResourceSetAvatarType type) {
+            ResourceSet resources, ResourceSetAvatarType type) {
 
-	assert enabledCSSClass != null;
-	assert resources != null;
-	assert type != null;
+        assert enabledCSSClass != null;
+        assert resources != null;
+        assert type != null;
 
-	this.resourceSet = resources;
-	this.enabledCSSClass = enabledCSSClass;
-	this.type = type;
+        this.resourceSet = resources;
+        this.enabledCSSClass = enabledCSSClass;
+        this.type = type;
 
-	addStyleName(CSS_CLASS);
-	setText(text);
-	updateState();
+        addStyleName(CSS_CLASS);
+        setText(text);
+        updateState();
     }
 
     protected ResourceSetAvatar(String text, String enabledCSSClass,
-	    ResourceSet resources, ResourceSetAvatarType type, Element element) {
+            ResourceSet resources, ResourceSetAvatarType type, Element element) {
 
-	super(element);
+        super(element);
 
-	assert resources != null;
-	assert enabledCSSClass != null;
-	assert type != null;
+        assert resources != null;
+        assert enabledCSSClass != null;
+        assert type != null;
 
-	this.resourceSet = resources;
-	this.enabledCSSClass = enabledCSSClass;
-	this.type = type;
+        this.resourceSet = resources;
+        this.enabledCSSClass = enabledCSSClass;
+        this.type = type;
 
-	addStyleName(CSS_CLASS);
-	setText(text);
-    }
-
-    // XXX HACK clean up
-    public void setEnabledCSSClass(String enabledCSSClass) {
-	if (isEnabled()) {
-	    removeStyleName(this.enabledCSSClass);
-	    addStyleName(enabledCSSClass);
-	}
-	this.enabledCSSClass = enabledCSSClass;
+        addStyleName(CSS_CLASS);
+        setText(text);
     }
 
     public void addDisposable(Disposable disposable) {
-	this.disposables.addDisposable(disposable);
+        this.disposables.addDisposable(disposable);
     }
 
     public HandlerRegistration addEnabledStatusHandler(
-	    ResourceSetAvatarEnabledStatusEventHandler handler) {
-	return addHandler(handler, ResourceSetAvatarEnabledStatusEvent.TYPE);
+            ResourceSetAvatarEnabledStatusEventHandler handler) {
+        return addHandler(handler, ResourceSetAvatarEnabledStatusEvent.TYPE);
     }
 
     public HandlerRegistration addResourceChangedHandler(
-	    ResourceSetAvatarResourcesChangedEventHandler handler) {
-	return addHandler(handler, ResourceSetAvatarResourcesChangedEvent.TYPE);
+            ResourceSetAvatarResourcesChangedEventHandler handler) {
+        return addHandler(handler, ResourceSetAvatarResourcesChangedEvent.TYPE);
     }
 
     public Widget createProxy() {
-	ResourceSetAvatar clone = new ResourceSetAvatar(getText(),
-		enabledCSSClass, resourceSet, type);
+        ResourceSetAvatar clone = new ResourceSetAvatar(getText(),
+                enabledCSSClass, resourceSet, type);
 
-	clone.addStyleName(getEnabledCSSClass());
-	clone.addStyleName(CSS_DND_PROXY_ALPHA);
-	clone.originalAvatar = this;
+        clone.addStyleName(getEnabledCSSClass());
+        clone.addStyleName(CSS_DND_PROXY_ALPHA);
+        clone.originalAvatar = this;
 
-	ZIndex.setZIndex(clone.getElement(), ZIndex.DRAG_AVATAR);
+        ZIndex.setZIndex(clone.getElement(), ZIndex.DRAG_AVATAR);
 
-	this.latestProxy = clone;
-	return this.latestProxy;
+        this.latestProxy = clone;
+        return this.latestProxy;
     }
 
     @Override
     public void dispose() {
-	if (isDisposed()) {
-	    return;
-	}
+        if (isDisposed()) {
+            return;
+        }
 
-	// disposables might rely on dragController etc, dispose them afterwards
-	disposables.dispose();
-	disposables = null;
+        // disposables might rely on dragController etc, dispose them afterwards
+        disposables.dispose();
+        disposables = null;
 
-	originalAvatar = null;
-	latestProxy = null;
-	// we do not clear the resources on purpose, sometimes they are used
-	// after dispose
+        originalAvatar = null;
+        latestProxy = null;
+        // we do not clear the resources on purpose, sometimes they are used
+        // after dispose
     }
 
     public String getDisabledCSSClass() {
-	return CSS_AVATAR_DISABLED;
+        return CSS_AVATAR_DISABLED;
     }
 
     public final String getEnabledCSSClass() {
-	return enabledCSSClass;
+        return enabledCSSClass;
     }
 
     public ResourceSet getResourceSet() {
-	return this.resourceSet;
+        return this.resourceSet;
     }
 
     public ResourceSetAvatarType getType() {
-	return type;
+        return type;
     }
 
     private boolean isDisposed() {
-	return disposables == null;
+        return disposables == null;
     }
 
     public boolean isEnabled() {
-	return enabled;
+        return enabled;
     }
 
     private boolean isProxy() {
-	return originalAvatar != null;
+        return originalAvatar != null;
     }
 
     @Override
     protected void onAttach() {
-	super.onAttach();
+        super.onAttach();
 
-	/*
-	 * Workaround for the problem that mouseout/over events do not get
-	 * triggered if a HTML element is created below the cursor. Events would
-	 * be hard to implement in this case, because the parent might not know
-	 * about the child (e.g. window might not know about some widget created
-	 * inside presenters).
-	 */
-	if (isProxy()) {
-	    Widget w = originalAvatar;
-	    while (w != null) {
-		if (w instanceof DragProxyEventReceiver) {
-		    ((DragProxyEventReceiver) w).dragProxyAttached();
-		}
-		w = w.getParent();
-	    }
-	}
+        /*
+         * Workaround for the problem that mouseout/over events do not get
+         * triggered if a HTML element is created below the cursor. Events would
+         * be hard to implement in this case, because the parent might not know
+         * about the child (e.g. window might not know about some widget created
+         * inside presenters).
+         */
+        if (isProxy()) {
+            Widget w = originalAvatar;
+            while (w != null) {
+                if (w instanceof DragProxyEventReceiver) {
+                    ((DragProxyEventReceiver) w).dragProxyAttached();
+                }
+                w = w.getParent();
+            }
+        }
     }
 
     @Override
     protected void onDetach() {
-	super.onDetach();
+        super.onDetach();
 
-	/*
-	 * Workaround for the problem that mouseout/over events do not get
-	 * triggered if a HTML element is created below the cursor. Events would
-	 * be hard to implement in this case, because the parent might not know
-	 * about the child (e.g. window might not know about some widget created
-	 * inside presenters).
-	 */
-	if (isProxy()) {
-	    Widget w = originalAvatar;
-	    while (w != null) {
-		if (w instanceof DragProxyEventReceiver) {
-		    ((DragProxyEventReceiver) w).dragProxyDetached();
-		}
-		w = w.getParent();
-	    }
-	}
+        /*
+         * Workaround for the problem that mouseout/over events do not get
+         * triggered if a HTML element is created below the cursor. Events would
+         * be hard to implement in this case, because the parent might not know
+         * about the child (e.g. window might not know about some widget created
+         * inside presenters).
+         */
+        if (isProxy()) {
+            Widget w = originalAvatar;
+            while (w != null) {
+                if (w instanceof DragProxyEventReceiver) {
+                    ((DragProxyEventReceiver) w).dragProxyDetached();
+                }
+                w = w.getParent();
+            }
+        }
     }
 
     public void setEnabled(boolean enabled) {
-	if (isEnabled() == enabled) {
-	    return;
-	}
+        if (isEnabled() == enabled) {
+            return;
+        }
 
-	this.enabled = enabled;
+        this.enabled = enabled;
 
-	updateState();
+        updateState();
 
-	fireEvent(new ResourceSetAvatarEnabledStatusEvent(this));
+        fireEvent(new ResourceSetAvatarEnabledStatusEvent(this));
+    }
+
+    // XXX HACK clean up
+    public void setEnabledCSSClass(String enabledCSSClass) {
+        if (isEnabled()) {
+            removeStyleName(this.enabledCSSClass);
+            addStyleName(enabledCSSClass);
+        }
+        this.enabledCSSClass = enabledCSSClass;
     }
 
     // TODO move this functionality into highlighting drag avatar factory
     public void setHover(boolean showHover) {
-	if (this.showHover == showHover) {
-	    return;
-	}
+        if (this.showHover == showHover) {
+            return;
+        }
 
-	if (showHover) {
-	    addStyleName(CSS_HOVER);
-	    removeStyleName(getEnabledCSSClass());
-	} else {
-	    removeStyleName(CSS_HOVER);
-	    addStyleName(getEnabledCSSClass());
-	}
+        if (showHover) {
+            addStyleName(CSS_HOVER);
+            removeStyleName(getEnabledCSSClass());
+        } else {
+            removeStyleName(CSS_HOVER);
+            addStyleName(getEnabledCSSClass());
+        }
 
-	this.showHover = showHover;
+        this.showHover = showHover;
     }
 
     public void setResourceSet(ResourceSet newResourceSet) {
-	if (newResourceSet == this.resourceSet) {
-	    return;
-	}
+        if (newResourceSet == this.resourceSet) {
+            return;
+        }
 
-	ResourceSet oldResources = this.resourceSet;
+        ResourceSet oldResources = this.resourceSet;
 
-	this.resourceSet = newResourceSet;
+        this.resourceSet = newResourceSet;
 
-	fireEvent(new ResourceSetAvatarResourcesChangedEvent(this,
-		newResourceSet, oldResources));
+        fireEvent(new ResourceSetAvatarResourcesChangedEvent(this,
+                newResourceSet, oldResources));
     }
 
     protected void updateState() {
-	if (isEnabled()) {
-	    getElement().getStyle().setProperty(CSS.CURSOR, CSS.CURSOR_POINTER);
-	    addStyleName(getEnabledCSSClass());
-	    removeStyleName(getDisabledCSSClass());
-	} else {
-	    getElement().getStyle().setProperty(CSS.CURSOR, CSS.CURSOR_DEFAULT);
-	    addStyleName(getDisabledCSSClass());
-	    removeStyleName(getEnabledCSSClass());
-	}
+        if (isEnabled()) {
+            getElement().getStyle().setProperty(CSS.CURSOR, CSS.CURSOR_POINTER);
+            addStyleName(getEnabledCSSClass());
+            removeStyleName(getDisabledCSSClass());
+        } else {
+            getElement().getStyle().setProperty(CSS.CURSOR, CSS.CURSOR_DEFAULT);
+            addStyleName(getDisabledCSSClass());
+            removeStyleName(getEnabledCSSClass());
+        }
     }
 
 }

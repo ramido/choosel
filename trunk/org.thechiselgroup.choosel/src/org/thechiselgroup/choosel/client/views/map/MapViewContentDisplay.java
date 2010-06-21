@@ -67,171 +67,169 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
 
     @Inject
     public MapViewContentDisplay(
-	    PopupManagerFactory popupManagerFactory,
-	    DetailsWidgetHelper detailsWidgetHelper,
-	    @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
-	    DragEnablerFactory dragEnablerFactory) {
+            PopupManagerFactory popupManagerFactory,
+            DetailsWidgetHelper detailsWidgetHelper,
+            @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
+            DragEnablerFactory dragEnablerFactory) {
 
-	super(popupManagerFactory, detailsWidgetHelper, hoverModel);
+        super(popupManagerFactory, detailsWidgetHelper, hoverModel);
 
-	this.dragEnablerFactory = dragEnablerFactory;
+        this.dragEnablerFactory = dragEnablerFactory;
     }
 
     @Override
     public void checkResize() {
-	map.checkResize();
+        map.checkResize();
     }
 
     // TODO test
     @Override
     public ResourceItem createResourceItem(Layer layer, ResourceSet resources) {
-	// TODO iterate over path
-	// TODO resolve sets
-	// TODO separate resolvers for latitude and longitude
+        // TODO iterate over path
+        // TODO resolve sets
+        // TODO separate resolvers for latitude and longitude
 
-	Resource location = (Resource) layer.getValue(
-		SlotResolver.LOCATION_SLOT, resources);
+        Resource location = (Resource) layer.getValue(
+                SlotResolver.LOCATION_SLOT, resources);
 
-	double latitude = toDouble(location.getValue(LATITUDE));
-	double longitude = toDouble(location.getValue(LONGITUDE));
+        double latitude = toDouble(location.getValue(LATITUDE));
+        double longitude = toDouble(location.getValue(LONGITUDE));
 
-	LatLng latLng = LatLng.newInstance(latitude, longitude);
+        LatLng latLng = LatLng.newInstance(latitude, longitude);
 
-	PopupManager popupManager = createPopupManager(layer, resources);
+        PopupManager popupManager = createPopupManager(layer, resources);
 
-	MapItem mapItem = new MapItem(latLng, resources, hoverModel,
-		popupManager, layer, getCallback(), dragEnablerFactory);
+        MapItem mapItem = new MapItem(latLng, resources, hoverModel,
+                popupManager, layer, getCallback(), dragEnablerFactory);
 
-	map.addOverlay(mapItem.getOverlay());
+        map.addOverlay(mapItem.getOverlay());
 
-	return mapItem;
-    }
-
-    // TODO move to library class
-    private double toDouble(Object value) {
-	assert value != null;
-
-	if (value instanceof Number) {
-	    return ((Number) value).doubleValue();
-	}
-
-	if (value instanceof String) {
-	    return Double.parseDouble((String) value);
-	}
-
-	throw new IllegalArgumentException("" + value
-		+ " could not be converted to double");
-    }
-
-    @Override
-    public String[] getSlotIDs() {
-	return new String[] { SlotResolver.DESCRIPTION_SLOT,
-		SlotResolver.LABEL_SLOT, SlotResolver.COLOR_SLOT,
-		SlotResolver.LOCATION_SLOT };
+        return mapItem;
     }
 
     @Override
     public Widget createWidget() {
-	map = new MapWidget();
+        map = new MapWidget();
 
-	DOM.setStyleAttribute(map.getElement(), CSS.OVERFLOW, CSS.HIDDEN);
+        DOM.setStyleAttribute(map.getElement(), CSS.OVERFLOW, CSS.HIDDEN);
 
-	map.setWidth("100%");
-	map.setHeight("100%");
+        map.setWidth("100%");
+        map.setHeight("100%");
 
-	map.addControl(new SmallMapControl());
-	map.addControl(new MenuMapTypeControl());
+        map.addControl(new SmallMapControl());
+        map.addControl(new MenuMapTypeControl());
 
-	map.addMapType(MapType.getPhysicalMap());
-	map.setCurrentMapType(MapType.getHybridMap());
-	map.setScrollWheelZoomEnabled(true);
+        map.addMapType(MapType.getPhysicalMap());
+        map.setCurrentMapType(MapType.getHybridMap());
+        map.setScrollWheelZoomEnabled(true);
 
-	return map;
+        return map;
+    }
+
+    @Override
+    public String[] getSlotIDs() {
+        return new String[] { SlotResolver.DESCRIPTION_SLOT,
+                SlotResolver.LABEL_SLOT, SlotResolver.COLOR_SLOT,
+                SlotResolver.LOCATION_SLOT };
     }
 
     @Override
     public void removeResourceItem(ResourceItem resourceItem) {
-	map.removeOverlay(((MapItem) resourceItem).getOverlay());
+        map.removeOverlay(((MapItem) resourceItem).getOverlay());
     }
 
     @Override
     public void restore(Memento state) {
-	restoreMapType(state);
-	restoreCenterPosition(state);
-	restoreZoomLevel(state);
+        restoreMapType(state);
+        restoreCenterPosition(state);
+        restoreZoomLevel(state);
     }
 
     private void restoreCenterPosition(Memento state) {
-	double centerLatitude = Double.parseDouble((String) state
-		.getValue(MEMENTO_CENTER_LATITUDE));
-	double centerLongitude = Double.parseDouble((String) state
-		.getValue(MEMENTO_CENTER_LONGITUDE));
-	map.setCenter(LatLng.newInstance(centerLatitude, centerLongitude));
+        double centerLatitude = Double.parseDouble((String) state
+                .getValue(MEMENTO_CENTER_LATITUDE));
+        double centerLongitude = Double.parseDouble((String) state
+                .getValue(MEMENTO_CENTER_LONGITUDE));
+        map.setCenter(LatLng.newInstance(centerLatitude, centerLongitude));
     }
 
     private void restoreMapType(Memento state) {
-	String mapTypeID = (String) state.getValue(MEMENTO_MAP_TYPE);
-	if (MEMENTO_MAP_TYPE_NORMAL.equals(mapTypeID)) {
-	    map.setCurrentMapType(MapType.getNormalMap());
-	} else if (MEMENTO_MAP_TYPE_SATELLITE.equals(mapTypeID)) {
-	    map.setCurrentMapType(MapType.getSatelliteMap());
-	} else if (MEMENTO_MAP_TYPE_PHYSICAL.equals(mapTypeID)) {
-	    map.setCurrentMapType(MapType.getPhysicalMap());
-	} else if (MEMENTO_MAP_TYPE_HYBRID.equals(mapTypeID)) {
-	    map.setCurrentMapType(MapType.getHybridMap());
-	} else {
-	    throw new RuntimeException(
-		    "map type persistence not supported for type " + mapTypeID);
-	}
+        String mapTypeID = (String) state.getValue(MEMENTO_MAP_TYPE);
+        if (MEMENTO_MAP_TYPE_NORMAL.equals(mapTypeID)) {
+            map.setCurrentMapType(MapType.getNormalMap());
+        } else if (MEMENTO_MAP_TYPE_SATELLITE.equals(mapTypeID)) {
+            map.setCurrentMapType(MapType.getSatelliteMap());
+        } else if (MEMENTO_MAP_TYPE_PHYSICAL.equals(mapTypeID)) {
+            map.setCurrentMapType(MapType.getPhysicalMap());
+        } else if (MEMENTO_MAP_TYPE_HYBRID.equals(mapTypeID)) {
+            map.setCurrentMapType(MapType.getHybridMap());
+        } else {
+            throw new RuntimeException(
+                    "map type persistence not supported for type " + mapTypeID);
+        }
     }
 
     private void restoreZoomLevel(Memento state) {
-	int zoomLevel = Integer.parseInt((String) state
-		.getValue(MEMENTO_ZOOM_LEVEL));
-	map.setZoomLevel(zoomLevel);
+        int zoomLevel = Integer.parseInt((String) state
+                .getValue(MEMENTO_ZOOM_LEVEL));
+        map.setZoomLevel(zoomLevel);
     }
 
     @Override
     public Memento save() {
-	Memento state = new Memento();
+        Memento state = new Memento();
 
-	saveCenterPosition(state);
-	saveZoomLevel(state);
-	saveMapType(state);
+        saveCenterPosition(state);
+        saveZoomLevel(state);
+        saveMapType(state);
 
-	return state;
+        return state;
     }
 
     private void saveCenterPosition(Memento state) {
-	LatLng center = map.getCenter();
-	state.setValue(MEMENTO_CENTER_LONGITUDE, Double.toString(center
-		.getLongitude()));
-	state.setValue(MEMENTO_CENTER_LATITUDE, Double.toString(center
-		.getLatitude()));
+        LatLng center = map.getCenter();
+        state.setValue(MEMENTO_CENTER_LONGITUDE,
+                Double.toString(center.getLongitude()));
+        state.setValue(MEMENTO_CENTER_LATITUDE,
+                Double.toString(center.getLatitude()));
     }
 
     private void saveMapType(Memento state) {
-	String mapTypeID;
-	MapType mapType = map.getCurrentMapType();
-	if (MapType.getNormalMap().equals(mapType)) {
-	    mapTypeID = MEMENTO_MAP_TYPE_NORMAL;
-	} else if (MapType.getSatelliteMap().equals(mapType)) {
-	    mapTypeID = MEMENTO_MAP_TYPE_SATELLITE;
-	} else if (MapType.getPhysicalMap().equals(mapType)) {
-	    mapTypeID = MEMENTO_MAP_TYPE_PHYSICAL;
-	} else if (MapType.getHybridMap().equals(mapType)) {
-	    mapTypeID = MEMENTO_MAP_TYPE_HYBRID;
-	} else {
-	    throw new RuntimeException(
-		    "map type persistence not supported for type "
-			    + mapType.getName(false));
-	}
-	state.setValue(MEMENTO_MAP_TYPE, mapTypeID);
+        String mapTypeID;
+        MapType mapType = map.getCurrentMapType();
+        if (MapType.getNormalMap().equals(mapType)) {
+            mapTypeID = MEMENTO_MAP_TYPE_NORMAL;
+        } else if (MapType.getSatelliteMap().equals(mapType)) {
+            mapTypeID = MEMENTO_MAP_TYPE_SATELLITE;
+        } else if (MapType.getPhysicalMap().equals(mapType)) {
+            mapTypeID = MEMENTO_MAP_TYPE_PHYSICAL;
+        } else if (MapType.getHybridMap().equals(mapType)) {
+            mapTypeID = MEMENTO_MAP_TYPE_HYBRID;
+        } else {
+            throw new RuntimeException(
+                    "map type persistence not supported for type "
+                            + mapType.getName(false));
+        }
+        state.setValue(MEMENTO_MAP_TYPE, mapTypeID);
     }
 
     private void saveZoomLevel(Memento state) {
-	state
-		.setValue(MEMENTO_ZOOM_LEVEL, Integer.toString(map
-			.getZoomLevel()));
+        state.setValue(MEMENTO_ZOOM_LEVEL, Integer.toString(map.getZoomLevel()));
+    }
+
+    // TODO move to library class
+    private double toDouble(Object value) {
+        assert value != null;
+
+        if (value instanceof Number) {
+            return ((Number) value).doubleValue();
+        }
+
+        if (value instanceof String) {
+            return Double.parseDouble((String) value);
+        }
+
+        throw new IllegalArgumentException("" + value
+                + " could not be converted to double");
     }
 }

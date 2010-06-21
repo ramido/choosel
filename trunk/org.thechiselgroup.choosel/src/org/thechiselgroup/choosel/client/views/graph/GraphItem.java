@@ -15,9 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.graph;
 
-import static org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay.*;
+import static org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay.NODE_BACKGROUND_COLOR;
+import static org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay.NODE_BORDER_COLOR;
+import static org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay.NODE_FONT_COLOR;
+import static org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay.NODE_FONT_WEIGHT;
+import static org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay.NODE_FONT_WEIGHT_BOLD;
+import static org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay.NODE_FONT_WEIGHT_NORMAL;
 
-import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
@@ -54,75 +58,76 @@ public class GraphItem extends ResourceItem {
     private Node node;
 
     public GraphItem(ResourceSet resources, ResourceSet hoverModel,
-	    PopupManager popupManager, String label, String category,
-	    GraphViewContentDisplay.Display display, Layer Layer) {
+            PopupManager popupManager, String label, String category,
+            GraphViewContentDisplay.Display display, Layer Layer) {
 
-	super(resources, hoverModel, popupManager, Layer);
+        super(resources, hoverModel, popupManager, Layer);
 
-	assert label != null;
-	assert category != null;
-	assert display != null;
+        assert label != null;
+        assert category != null;
+        assert display != null;
 
-	this.node = new Node(resources.getFirstResource().getUri(), label, category);
-	this.display = display;
+        this.node = new Node(resources.getFirstResource().getUri(), label,
+                category);
+        this.display = display;
 
-	updateStyling();
+        updateStyling();
     }
 
     public Node getNode() {
-	return node;
+        return node;
     }
 
     public void setDefaultColors(String backgroundColor, String borderColor) {
-	this.defaultBorderColor = borderColor;
-	this.defaultBackgroundColor = backgroundColor;
-	updateStyling();
+        this.defaultBorderColor = borderColor;
+        this.defaultBackgroundColor = backgroundColor;
+        updateStyling();
     }
 
     @Override
     protected void setStatusStyling(Status status) {
-	switch (status) {
-	case HIGHLIGHTED_SELECTED: {
-	    display.setNodeStyle(node, NODE_BACKGROUND_COLOR, YELLOW_1);
-	    display.setNodeStyle(node, NODE_BORDER_COLOR, ORANGE);
-	    display.setNodeStyle(node, NODE_FONT_COLOR, ORANGE);
-	    display.setNodeStyle(node, NODE_FONT_WEIGHT, NODE_FONT_WEIGHT_BOLD);
-	}
-	    break;
-	case HIGHLIGHTED: {
-	    display.setNodeStyle(node, NODE_BACKGROUND_COLOR, YELLOW_1);
-	    display.setNodeStyle(node, NODE_BORDER_COLOR, YELLOW_2);
-	    display.setNodeStyle(node, NODE_FONT_COLOR, BLACK);
-	    display.setNodeStyle(node, NODE_FONT_WEIGHT,
-		    NODE_FONT_WEIGHT_NORMAL);
-	}
-	    break;
-	case DEFAULT: {
-	    display.setNodeStyle(node, NODE_BACKGROUND_COLOR,
-		    defaultBackgroundColor);
-	    display.setNodeStyle(node, NODE_BORDER_COLOR, defaultBorderColor);
-	    display.setNodeStyle(node, NODE_FONT_COLOR, BLACK);
-	    display.setNodeStyle(node, NODE_FONT_WEIGHT,
-		    NODE_FONT_WEIGHT_NORMAL);
-	}
-	    break;
-	case GRAYED_OUT: {
-	    display.setNodeStyle(node, NODE_BACKGROUND_COLOR, GRAY_1);
-	    display.setNodeStyle(node, NODE_BORDER_COLOR, GRAY_2);
-	    display.setNodeStyle(node, NODE_FONT_COLOR, BLACK);
-	    display.setNodeStyle(node, NODE_FONT_WEIGHT,
-		    NODE_FONT_WEIGHT_NORMAL);
-	}
-	    break;
-	case SELECTED: {
-	    display.setNodeStyle(node, NODE_BACKGROUND_COLOR,
-		    defaultBackgroundColor);
-	    display.setNodeStyle(node, NODE_BORDER_COLOR, ORANGE);
-	    display.setNodeStyle(node, NODE_FONT_COLOR, ORANGE);
-	    display.setNodeStyle(node, NODE_FONT_WEIGHT, NODE_FONT_WEIGHT_BOLD);
-	}
-	    break;
-	}
+        switch (status) {
+        case HIGHLIGHTED_SELECTED: {
+            display.setNodeStyle(node, NODE_BACKGROUND_COLOR, YELLOW_1);
+            display.setNodeStyle(node, NODE_BORDER_COLOR, ORANGE);
+            display.setNodeStyle(node, NODE_FONT_COLOR, ORANGE);
+            display.setNodeStyle(node, NODE_FONT_WEIGHT, NODE_FONT_WEIGHT_BOLD);
+        }
+            break;
+        case HIGHLIGHTED: {
+            display.setNodeStyle(node, NODE_BACKGROUND_COLOR, YELLOW_1);
+            display.setNodeStyle(node, NODE_BORDER_COLOR, YELLOW_2);
+            display.setNodeStyle(node, NODE_FONT_COLOR, BLACK);
+            display.setNodeStyle(node, NODE_FONT_WEIGHT,
+                    NODE_FONT_WEIGHT_NORMAL);
+        }
+            break;
+        case DEFAULT: {
+            display.setNodeStyle(node, NODE_BACKGROUND_COLOR,
+                    defaultBackgroundColor);
+            display.setNodeStyle(node, NODE_BORDER_COLOR, defaultBorderColor);
+            display.setNodeStyle(node, NODE_FONT_COLOR, BLACK);
+            display.setNodeStyle(node, NODE_FONT_WEIGHT,
+                    NODE_FONT_WEIGHT_NORMAL);
+        }
+            break;
+        case GRAYED_OUT: {
+            display.setNodeStyle(node, NODE_BACKGROUND_COLOR, GRAY_1);
+            display.setNodeStyle(node, NODE_BORDER_COLOR, GRAY_2);
+            display.setNodeStyle(node, NODE_FONT_COLOR, BLACK);
+            display.setNodeStyle(node, NODE_FONT_WEIGHT,
+                    NODE_FONT_WEIGHT_NORMAL);
+        }
+            break;
+        case SELECTED: {
+            display.setNodeStyle(node, NODE_BACKGROUND_COLOR,
+                    defaultBackgroundColor);
+            display.setNodeStyle(node, NODE_BORDER_COLOR, ORANGE);
+            display.setNodeStyle(node, NODE_FONT_COLOR, ORANGE);
+            display.setNodeStyle(node, NODE_FONT_WEIGHT, NODE_FONT_WEIGHT_BOLD);
+        }
+            break;
+        }
     }
 
 }

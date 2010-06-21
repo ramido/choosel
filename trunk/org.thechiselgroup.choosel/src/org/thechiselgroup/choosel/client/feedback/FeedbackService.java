@@ -24,6 +24,6 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 public interface FeedbackService extends RemoteService {
 
     void sendFeedback(String message, String errorMessage)
-	    throws ServiceException;
+            throws ServiceException;
 
 }

@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.model;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.thechiselgroup.choosel.client.resources.UriList;
@@ -24,12 +24,12 @@ public class UriListTest {
 
     @Test
     public void addingUriTwiceDoesNotChangeList() {
-	UriList uriList = new UriList();
+        UriList uriList = new UriList();
 
-	uriList.add("uri:test");
-	uriList.add("uri:test");
+        uriList.add("uri:test");
+        uriList.add("uri:test");
 
-	assertEquals(1, uriList.size());
+        assertEquals(1, uriList.size());
     }
 
 }

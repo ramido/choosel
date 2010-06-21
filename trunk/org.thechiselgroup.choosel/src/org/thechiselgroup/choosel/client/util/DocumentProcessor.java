@@ -15,13 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.util;
 
-
 public interface DocumentProcessor {
 
-    Object parseDocument(String xmlText) throws Exception;
+    Object[] getNodes(Object node, String xpath);
 
     String getText(Object node, String xpath);
 
-    Object[] getNodes(Object node, String xpath);
+    Object parseDocument(String xmlText) throws Exception;
 
 }

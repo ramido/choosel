@@ -29,7 +29,13 @@ public interface PopupManager {
 
     HandlerRegistration addPopupMouseOverHandler(MouseOverHandler handler);
 
+    int getHideDelay();
+
+    int getShowDelay();
+
     void hidePopup();
+
+    boolean isEnabled();
 
     // mouse down triggers click operations, popup gets hidden
     void onMouseDown(int clientX, int clientY);
@@ -48,16 +54,10 @@ public interface PopupManager {
 
     void onMouseOver(Point pointInBrowserClientArea);
 
-    void setShowDelay(int showDelay);
+    void setEnabled(boolean enabled);
 
     void setHideDelay(int delay);
 
-    int getShowDelay();
-
-    int getHideDelay();
-
-    void setEnabled(boolean enabled);
-
-    boolean isEnabled();
+    void setShowDelay(int showDelay);
 
 }

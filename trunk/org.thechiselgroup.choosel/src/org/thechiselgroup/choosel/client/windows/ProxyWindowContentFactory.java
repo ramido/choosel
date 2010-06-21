@@ -25,15 +25,15 @@ public class ProxyWindowContentFactory implements WindowContentProducer {
 
     @Override
     public WindowContent createWindowContent(String contentType) {
-	return delegate.createWindowContent(contentType);
+        return delegate.createWindowContent(contentType);
     }
 
     public WindowContentProducer getDelegate() {
-	return delegate;
+        return delegate;
     }
 
     public void setDelegate(WindowContentProducer delegate) {
-	this.delegate = delegate;
+        this.delegate = delegate;
     }
 
 }

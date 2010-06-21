@@ -23,17 +23,17 @@ import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
 import org.thechiselgroup.choosel.client.util.Disposable;
 
 public interface ResourceSetsPresenter extends Presenter, Disposable,
-	WidgetAdaptable {
+        WidgetAdaptable {
 
     void addResourceSet(ResourceSet resources);
+
+    // XXX HACK TODO remove
+    Map<ResourceSet, ResourceSetAvatar> getAvatars();
 
     void removeResourceSet(ResourceSet resources);
 
     void replaceResourceSet(ResourceSet oldResources, ResourceSet newResources);
 
     void setResourceSetEnabled(ResourceSet resource, boolean enabled);
-
-    // XXX HACK TODO remove
-    Map<ResourceSet, ResourceSetAvatar> getAvatars();
 
 }

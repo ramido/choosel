@@ -22,8 +22,8 @@ public class HandlerManagerProvider implements Provider<HandlerManager> {
 
     @Override
     public HandlerManager get() {
-	// TODO check what source should be...
-	return new HandlerManager(new Object());
+        // TODO check what source should be...
+        return new HandlerManager(new Object());
     }
 
 }

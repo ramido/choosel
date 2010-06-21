@@ -15,23 +15,22 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.widget.graph;
 
-
 public class NodeMouseOutEvent extends NodeEvent<NodeMouseOutHandler> {
-
-    public NodeMouseOutEvent(Node node, int mouseX, int mouseY) {
-	super(node, mouseX, mouseY);
-    }
 
     public static final Type<NodeMouseOutHandler> TYPE = new Type<NodeMouseOutHandler>();
 
+    public NodeMouseOutEvent(Node node, int mouseX, int mouseY) {
+        super(node, mouseX, mouseY);
+    }
+
     @Override
     protected void dispatch(NodeMouseOutHandler handler) {
-	handler.onMouseOut(this);
+        handler.onMouseOut(this);
     }
 
     @Override
     public Type<NodeMouseOutHandler> getAssociatedType() {
-	return TYPE;
+        return TYPE;
     }
 
 }
