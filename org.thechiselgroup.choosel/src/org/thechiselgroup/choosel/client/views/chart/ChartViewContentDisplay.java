@@ -23,7 +23,6 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
-import org.thechiselgroup.choosel.client.ui.widget.chart.BarChart;
 import org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
@@ -31,11 +30,11 @@ import org.thechiselgroup.choosel.client.views.Layer;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 
-import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-public class ChartViewContentDisplay extends AbstractViewContentDisplay {
+public abstract class ChartViewContentDisplay extends
+        AbstractViewContentDisplay {
 
     public static interface Display {
 
@@ -51,7 +50,7 @@ public class ChartViewContentDisplay extends AbstractViewContentDisplay {
 
     private static final String MEMENTO_CHART_DATA_ARRAY = "data-array";
 
-    private ChartWidget chartWidget;
+    protected ChartWidget chartWidget;
 
     private DragEnablerFactory dragEnablerFactory;
 
@@ -82,12 +81,6 @@ public class ChartViewContentDisplay extends AbstractViewContentDisplay {
         chartWidget.addEvent(chartItem);
 
         return chartItem;
-    }
-
-    @Override
-    public Widget createWidget() {
-        chartWidget = new BarChart();
-        return chartWidget;
     }
 
     public ChartWidget getChartWidget() {

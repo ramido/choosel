@@ -25,8 +25,6 @@ public interface ChooselInjectionConstants {
 
     String TYPE_TIMELINE = "Timeline";
 
-    String TYPE_CHART = "Chart";
-
     String TYPE_BAR = "Bar";
 
     String TYPE_PIE = "Pie";
