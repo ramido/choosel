@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.client.ui.widget.chart;
 
 import java.util.ArrayList;
 
+import org.thechiselgroup.choosel.client.util.ArrayUtils;
 import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
 import com.google.gwt.core.client.JavaScriptObject;
