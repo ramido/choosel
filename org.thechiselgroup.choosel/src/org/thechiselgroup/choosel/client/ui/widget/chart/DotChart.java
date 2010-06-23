@@ -7,10 +7,7 @@ public class DotChart extends ChartWidget {
     public native Chart drawChart(int width, int height) /*-{
         var chart = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chart,
         val = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::val,
-        thisChart = this,
-        s,
-        isBrushed = new Array(),
-        selectBoxAlpha = .42;
+        thisChart = this, fade, s, selectBoxAlpha = .42;
 
         var selectBox = chart.add($wnd.pv.Panel)
             .data([{x:0, y:0, dx:0, dy:0}])
@@ -25,7 +22,7 @@ public class DotChart extends ChartWidget {
             .top(function(d) {return d.y;})
             .width(function(d) {return d.dx;})
             .height(function(d) {return d.dy;})
-        //	    .event("mouseout", fadeOut)
+        //            .event("mouseout", fadeOut)
             .fillStyle("rgba(193,217,241,"+selectBoxAlpha+")")
             .strokeStyle("rgba(0,0,0,"+selectBoxAlpha+")")
             .lineWidth(.5);
@@ -37,21 +34,24 @@ public class DotChart extends ChartWidget {
             .height(15)
             .strokeStyle("rgba(0,0,0,"+selectBoxAlpha+")")
             .lineWidth(.5)
+            .events("all")
             .event("mousedown", function(d) {
                 var doReturn;
-                for(var i = 0; i < val.length; i++) {
-                    if(isInSelectBox(d,i) && isBrushed[i]) {
-                	updateMinus(d,i);
+                for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chartItemArray.@java.util.ArrayList::size()(); i++) {
+                    if(isInSelectBox(d,i) && thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::getChartItem(I)(i)
+                            .@org.thechiselgroup.choosel.client.views.chart.ChartItem::isSelected()()) {
+                	updateMinusPlus(d,i);
                 	doReturn = true;
                     }
                 }
                 if(doReturn == true) {
                     removeBoxes(d);
-                    return (s = null, chart);
+                    return (s = null, chart, removeBoxes(d));
                 }})
             .event("mouseover", function(d) {
-                for(var i = 0; i < val.length; i++) {
-                    if(isInSelectBox(d,i) && isBrushed[i]) {
+                for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chartItemArray.@java.util.ArrayList::size()(); i++) {
+                    if(isInSelectBox(d,i) && thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::getChartItem(I)(i)
+                            .@org.thechiselgroup.choosel.client.views.chart.ChartItem::isSelected()()) {
                         return this.fillStyle("FFFFE1");
                     }
                 }})
@@ -70,11 +70,13 @@ public class DotChart extends ChartWidget {
             .height(15)
             .strokeStyle("rgba(0,0,0,.35)")
             .lineWidth(.5)
+            .events("all")
             .event("mousedown", function(d) {
                 var doReturn;
-                for(var i = 0; i < val.length; i++) {
-                    if(isInSelectBox(d,i) && !isBrushed[i]) {
-                	updatePlus(d,i);
+                for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chartItemArray.@java.util.ArrayList::size()(); i++) {
+                    if(isInSelectBox(d,i) && !thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::getChartItem(I)(i)
+                            .@org.thechiselgroup.choosel.client.views.chart.ChartItem::isSelected()()) {
+                	updateMinusPlus(d,i);
                 	doReturn = true;
                     }
                 }
@@ -83,8 +85,9 @@ public class DotChart extends ChartWidget {
                     return (s = null, chart);
                 }})
             .event("mouseover", function(d) {
-                for(var i = 0; i < val.length; i++) {
-                    if(isInSelectBox(d,i) && !isBrushed[i]) {
+                for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chartItemArray.@java.util.ArrayList::size()(); i++) {
+                    if(isInSelectBox(d,i) && !thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::getChartItem(I)(i)
+                            .@org.thechiselgroup.choosel.client.views.chart.ChartItem::isSelected()()) {
                         return this.fillStyle("FFFFE1");
                     }
                 }})
@@ -101,19 +104,17 @@ public class DotChart extends ChartWidget {
             .cursor("pointer")
             .bottom(function(d) {return d * height / 10;})
             .left(function() {return this.index * width / val.length;})
-            .strokeStyle("rgba(0,0,0,.35)")
-            .fillStyle(function(d) {return (s && ((this.index * width / val.length < s.x1) || (this.index * width / val.length > s.x2)
-                || (height - (d * height / 10) < s.y1) || (height - (d * height / 10) > s.y2)) || !s
-                ? thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::getChartItem(I)(this.index)
-               	    .@org.thechiselgroup.choosel.client.views.chart.ChartItem::getColour()() : "rgba(256,256,0,.6)");});
+            .strokeStyle("rgba(0,0,0,.35)");
 
         function addBoxes(d) {
             for(var i = 0; i < val.length; i++) {
                 if(isInSelectBox(d,i)) {
-                    if(!isBrushed[i]) {
+                    if(!thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::getChartItem(I)(i)
+                            .@org.thechiselgroup.choosel.client.views.chart.ChartItem::isSelected()()) {
                         plus.textStyle("black");
                     }
-                    if(isBrushed[i]) {
+                    if(thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::getChartItem(I)(i)
+                            .@org.thechiselgroup.choosel.client.views.chart.ChartItem::isSelected()()) {
                         minus.textStyle("black");
                     }
                     plusBox.visible(true);
@@ -121,27 +122,26 @@ public class DotChart extends ChartWidget {
             	    minusBox.visible(true);
            	    minus.visible(true);
             	    update(d);
+            	    this.render();
                 }
             }
         }
 
-        function fadeOut() {
-            fade = setInterval(function() {
-            	selectBoxAlpha = selectBoxAlpha - .01;
-            	if(selectBoxAlpha <= 0.005) {
-            	    clearInterval(fade);
-            	    fade = null;
-                    return (s = null, chart, selectBoxAlpha = .42);
-            	}
-            	selectBox.fillStyle("rgba(193,217,241,"+selectBoxAlpha+")");
-            	selectBox.strokeStyle("rgba(0,0,0,"+selectBoxAlpha+")");
-            	selectBox.render();
-            }, 100); 
-        }
+        //        function fadeOut() {
+        //            fade = setInterval(function() {
+        //            	selectBoxAlpha = selectBoxAlpha - .01;
+        //            	if(selectBoxAlpha <= 0.005) {
+        //                    return (s = null, chart, selectBoxAlpha = .42);
+        //            	}
+        //            	selectBox.fillStyle("rgba(193,217,241,"+selectBoxAlpha+")");
+        //            	selectBox.strokeStyle("rgba(0,0,0,"+selectBoxAlpha+")");
+        //            	selectBox.render();
+        //            }, 100); 
+        //        }
 
         function isInSelectBox(d,i) {
-        return (i * width / val.length >= d.x) && (i * width / val.length <= d.x + d.dx)
-                && (height - (val[i] * height / 10) >= d.y) && (height - (val[i] * height / 10) <= d.y + d.dy);
+            return (i * width / val.length >= d.x) && (i * width / val.length <= d.x + d.dx)
+                    && (height - (val[i] * height / 10) >= d.y) && (height - (val[i] * height / 10) <= d.y + d.dy);
         }
 
         function removeBoxes(d) {
@@ -151,8 +151,8 @@ public class DotChart extends ChartWidget {
             minusBox.visible(false);
             minus.visible(false);
             minus.textStyle("rgba(0,0,0,.25)");
+
             update(d);
-            this.render();
         }
 
         function update(d) {
@@ -161,23 +161,27 @@ public class DotChart extends ChartWidget {
             s.x2 = d.x + d.dx;
             s.y1 = d.y;
             s.y2 = d.y + d.dy;
+
+            for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chartItemArray.@java.util.ArrayList::size()(); i++) {
+                if(isInSelectBox(d,i)) {
+                    thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::getChartItem(I)(i)
+                        .@org.thechiselgroup.choosel.client.views.chart.ChartItem::setHighlighted(Z)(true);
+                } else {
+                    thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::getChartItem(I)(i)
+                        .@org.thechiselgroup.choosel.client.views.chart.ChartItem::setHighlighted(Z)(false);
+                }
+            }
+
             dot.context(null, 0, function() {return this.render();});
         }
 
-        function updateMinus(d,i) {
+        function updateMinusPlus(d,i) {
             update(d);
-            thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onBrushEvent(IZ)(i,false);
-            isBrushed[i] = false;
-        }
-
-        function updatePlus(d,i) {
-            update(d);
-            thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onBrushEvent(IZ)(i,true);
-            isBrushed[i] = true;
+            thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onEvent(I)(i);
         }
 
         return dot;
     }-*/;
-    // @formatter:off        
+    // @formatter:on        
 
 }

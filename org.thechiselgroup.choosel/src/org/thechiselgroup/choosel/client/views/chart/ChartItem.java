@@ -59,10 +59,7 @@ public class ChartItem extends ResourceItem {
         throw new RuntimeException("No colour available");
     }
 
-    public void onBrushEvent(boolean isBrushed) {
-        if ((isSelected() && isBrushed) || (!isSelected() && !isBrushed)) {
-            return;
-        }
+    public void onEvent() {
         if (view != null) {
             view.getCallback().switchSelection(getResourceSet());
         }

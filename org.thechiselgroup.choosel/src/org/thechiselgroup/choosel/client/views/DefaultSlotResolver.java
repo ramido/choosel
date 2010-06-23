@@ -67,4 +67,9 @@ public abstract class DefaultSlotResolver implements SlotResolver {
     public ResourceSetToValueResolver createLocationSlotResolver(String category) {
         return new SimplePropertyValueResolver("location");
     }
+
+    @Override
+    public ResourceSetToValueResolver createMagnitudeSlotResolver(String type) {
+        return new SimplePropertyValueResolver("magnitude");
+    }
 }
