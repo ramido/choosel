@@ -378,6 +378,8 @@ public class DefaultView extends AbstractWindowContent implements View {
         } else if (slotID.equals(SlotResolver.GRAPH_NODE_BACKGROUND_COLOR_SLOT)) {
             return slotResolver
                     .createGraphNodeBackgroundColorResolver(category);
+        } else if (slotID.equals(SlotResolver.MAGNITUDE_SLOT)) {
+            return slotResolver.createMagnitudeSlotResolver(category);
         }
 
         throw new IllegalArgumentException("Invalid slot id: " + slotID);

@@ -22,6 +22,8 @@ import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 // TODO create more flexible slot system
 public interface SlotResolver {
 
+    String MAGNITUDE_SLOT = "magnitude";
+
     String COLOR_SLOT = "color";
 
     String DATE_SLOT = "date";
@@ -56,5 +58,7 @@ public interface SlotResolver {
     ResourceSetToValueResolver createLabelSlotResolver(String category);
 
     ResourceSetToValueResolver createLocationSlotResolver(String category);
+
+    ResourceSetToValueResolver createMagnitudeSlotResolver(String category);
 
 }

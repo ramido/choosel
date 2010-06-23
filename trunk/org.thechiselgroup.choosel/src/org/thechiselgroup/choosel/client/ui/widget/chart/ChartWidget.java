@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.client.ui.widget.chart;
 import java.util.ArrayList;
 
 import org.thechiselgroup.choosel.client.util.ArrayUtils;
+import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -56,19 +57,19 @@ public abstract class ChartWidget extends Widget {
 
     public void addEvent(ChartItem chartItem) {
         chartItemArray.add(chartItem);
-        if (chartItem.getResourceSet().getFirstResource().getUri()
-                .startsWith("earthquake")) {
-            dataArray.add(Double.valueOf(chartItem.getResourceSet()
-                    .getFirstResource().getValue("magnitude").toString()));
-            val = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArray));
-        } else {
-            dataArrayX.add(Double.valueOf(chartItem.getResourceSet()
-                    .getFirstResource().getValue("x-coord").toString()));
-            dataArrayY.add(Double.valueOf(chartItem.getResourceSet()
-                    .getFirstResource().getValue("y-coord").toString()));
-            valX = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArrayX));
-            valY = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArrayY));
-        }
+        // if (chartItem.getResourceSet().getFirstResource().getUri()
+        // .startsWith("earthquake")) {
+        dataArray.add(Double.valueOf(chartItem.getResourceValue(
+                SlotResolver.MAGNITUDE_SLOT).toString()));
+        val = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArray));
+        // } else {
+        // dataArrayX.add(Double.valueOf(chartItem.getResourceSet()
+        // .getFirstResource().getValue("x-coord").toString()));
+        // dataArrayY.add(Double.valueOf(chartItem.getResourceSet()
+        // .getFirstResource().getValue("y-coord").toString()));
+        // valX = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArrayX));
+        // valY = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArrayY));
+        // }
         updateChart();
     }
 
@@ -127,9 +128,9 @@ public abstract class ChartWidget extends Widget {
         }
     }
 
-    protected void onBrushEvent(int index, boolean isBrushed) {
+    protected void onEvent(int index) {
         ChartItem chartItem = getChartItem(index);
-        chartItem.onBrushEvent(isBrushed);
+        chartItem.onEvent();
     }
 
     protected void onEvent(int index, Event e) {
