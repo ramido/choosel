@@ -15,7 +15,9 @@ public class PieChart extends ChartWidget {
             .left(width/2)
             .bottom(height/2)
             .outerRadius(function() {return width < height ? width/2 - 20 : height/2 - 20;})
-            .angle(function(d) {return d / sum * 2 * Math.PI;});
+            .angle(function(d) {return d / sum * 2 * Math.PI;})
+            .strokeStyle("white")
+            .lineWidth(.5);
 
         return wedge;
     }-*/;

@@ -57,19 +57,24 @@ public abstract class ChartWidget extends Widget {
 
     public void addEvent(ChartItem chartItem) {
         chartItemArray.add(chartItem);
-        // if (chartItem.getResourceSet().getFirstResource().getUri()
-        // .startsWith("earthquake")) {
-        dataArray.add(Double.valueOf(chartItem.getResourceValue(
-                SlotResolver.MAGNITUDE_SLOT).toString()));
-        val = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArray));
-        // } else {
-        // dataArrayX.add(Double.valueOf(chartItem.getResourceSet()
-        // .getFirstResource().getValue("x-coord").toString()));
-        // dataArrayY.add(Double.valueOf(chartItem.getResourceSet()
-        // .getFirstResource().getValue("y-coord").toString()));
-        // valX = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArrayX));
-        // valY = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArrayY));
+        try {
+            dataArray.add(Double.valueOf(chartItem.getResourceValue(
+                    SlotResolver.MAGNITUDE_SLOT).toString()));
+            val = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArray));
+        } catch (Exception e) {
+        }
+
+        try {
+            dataArrayX.add(Double.valueOf(chartItem.getResourceValue(
+                    SlotResolver.X_COORDINATE_SLOT).toString()));
+            dataArrayY.add(Double.valueOf(chartItem.getResourceValue(
+                    SlotResolver.Y_COORDINATE_SLOT).toString()));
+            valX = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArrayX));
+            valY = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArrayY));
+        } catch (Exception e) {
+        }
         // }
+
         updateChart();
     }
 

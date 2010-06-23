@@ -72,4 +72,14 @@ public abstract class DefaultSlotResolver implements SlotResolver {
     public ResourceSetToValueResolver createMagnitudeSlotResolver(String type) {
         return new SimplePropertyValueResolver("magnitude");
     }
+
+    @Override
+    public ResourceSetToValueResolver createXCoordinateSlotResolver(String type) {
+        return new SimplePropertyValueResolver("x-coord");
+    }
+
+    @Override
+    public ResourceSetToValueResolver createYCoordinateSlotResolver(String type) {
+        return new SimplePropertyValueResolver("y-coord");
+    }
 }

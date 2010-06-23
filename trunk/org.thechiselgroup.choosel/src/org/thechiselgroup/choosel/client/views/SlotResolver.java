@@ -22,8 +22,6 @@ import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 // TODO create more flexible slot system
 public interface SlotResolver {
 
-    String MAGNITUDE_SLOT = "magnitude";
-
     String COLOR_SLOT = "color";
 
     String DATE_SLOT = "date";
@@ -39,6 +37,12 @@ public interface SlotResolver {
     String LABEL_SLOT = "label";
 
     String LOCATION_SLOT = "location";
+
+    String MAGNITUDE_SLOT = "magnitude";
+
+    String X_COORDINATE_SLOT = "x-coord";
+
+    String Y_COORDINATE_SLOT = "y-coord";
 
     ResourceSetToValueResolver createColorSlotResolver(String category,
             List<Layer> layers);
@@ -60,5 +64,9 @@ public interface SlotResolver {
     ResourceSetToValueResolver createLocationSlotResolver(String category);
 
     ResourceSetToValueResolver createMagnitudeSlotResolver(String category);
+
+    ResourceSetToValueResolver createXCoordinateSlotResolver(String category);
+
+    ResourceSetToValueResolver createYCoordinateSlotResolver(String category);
 
 }
