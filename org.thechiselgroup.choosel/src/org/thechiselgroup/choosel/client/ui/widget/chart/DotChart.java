@@ -46,7 +46,7 @@ public class DotChart extends ChartWidget {
                 }
                 if(doReturn == true) {
                     removeBoxes(d);
-                    return (s = null, chart, removeBoxes(d));
+                    return (s = null, chart);
                 }})
             .event("mouseover", function(d) {
                 for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chartItemArray.@java.util.ArrayList::size()(); i++) {
