@@ -7,10 +7,11 @@ public class DotChart extends ChartWidget {
     public native Chart drawChart(int width, int height) /*-{
         var chart = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chart,
         val = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::val,
-        thisChart = this, fade, s, selectBoxAlpha = .42;
+        thisChart = this, fade, s, selectBoxAlpha = .42,
+        selectBoxData = [{x:0, y:0, dx:0, dy:0}], eventToggle = true;
 
         var selectBox = chart.add($wnd.pv.Panel)
-            .data([{x:0, y:0, dx:0, dy:0}])
+            .data(selectBoxData)
             .events("all")
             .event("mousedown", $wnd.pv.Behavior.select())
             .event("selectstart", removeBoxes)
@@ -104,7 +105,8 @@ public class DotChart extends ChartWidget {
             .cursor("pointer")
             .bottom(function(d) {return d * height / 10;})
             .left(function() {return this.index * width / val.length;})
-            .strokeStyle("rgba(0,0,0,.35)");
+            .strokeStyle("rgba(0,0,0,.35)")
+            .events(function() {return (eventToggle ? "all" : "none");});
 
         function addBoxes(d) {
             for(var i = 0; i < val.length; i++) {
@@ -121,6 +123,7 @@ public class DotChart extends ChartWidget {
             	    plus.visible(true);
             	    minusBox.visible(true);
            	    minus.visible(true);
+           	    eventToggle = false;
             	    update(d);
             	    this.render();
                 }
@@ -151,6 +154,10 @@ public class DotChart extends ChartWidget {
             minusBox.visible(false);
             minus.visible(false);
             minus.textStyle("rgba(0,0,0,.25)");
+
+            d.dx = 0;
+            d.dy = 0;
+            eventToggle = true;
 
             update(d);
         }
