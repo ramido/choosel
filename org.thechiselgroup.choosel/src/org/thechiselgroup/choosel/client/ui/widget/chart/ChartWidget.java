@@ -169,7 +169,7 @@ public abstract class ChartWidget extends Widget {
     }-*/;
     // @formatter:on
 
-    // @formatter:off        
+    // @formatter:off
     protected native Chart registerFillStyle() /*-{
         var chart = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chart,
         thisChart = this;
