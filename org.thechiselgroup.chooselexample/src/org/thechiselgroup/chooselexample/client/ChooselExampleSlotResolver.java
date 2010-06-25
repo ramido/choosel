@@ -26,54 +26,70 @@ import org.thechiselgroup.choosel.client.views.DefaultSlotResolver;
 public class ChooselExampleSlotResolver extends DefaultSlotResolver {
 
     @Override
-    public ResourceSetToValueResolver createDescriptionSlotResolver(String category) {
-	// TODO switch based on category -- need category as part of layerModel
-	// TODO resources as part of layerModel
-	// TODO how to do the automatic color assignment?
-	// TODO refactor // extract
-	if ("tsunami".equals(category)) {
-	    return new SimplePropertyValueResolver("date");
-	}
+    public ResourceSetToValueResolver createDescriptionSlotResolver(
+            String category) {
+        // TODO switch based on category -- need category as part of layerModel
+        // TODO resources as part of layerModel
+        // TODO how to do the automatic color assignment?
+        // TODO refactor // extract
+        if ("tsunami".equals(category)) {
+            return new SimplePropertyValueResolver("date");
+        }
 
-	if ("earthquake".equals(category)) {
-	    return new SimplePropertyValueResolver("description");
-	}
+        if ("earthquake".equals(category)) {
+            return new SimplePropertyValueResolver("description");
+        }
 
-	if (ResourcesTestHelper.DEFAULT_TYPE.equals(category)) {
-	    return new SimplePropertyValueResolver(
-		    ResourcesTestHelper.LABEL_KEY);
-	}
+        if ("csv".equals(category)) {
+            return new SimplePropertyValueResolver("value");
+        }
 
-	throw new RuntimeException("failed creating slot mapping");
+        if (ResourcesTestHelper.DEFAULT_TYPE.equals(category)) {
+            return new SimplePropertyValueResolver(
+                    ResourcesTestHelper.LABEL_KEY);
+        }
+
+        throw new RuntimeException("failed creating slot mapping");
     }
 
     @Override
     public ResourceSetToValueResolver createLabelSlotResolver(String category) {
-	Converter<Float, String> converter = new Converter<Float, String>() {
-	    @Override
-	    public String convert(Float value) throws ConversionException {
-		if (value != null) {
-		    int f = (value).intValue();
-		    return "" + f;
-		}
 
-		return "";
-	    }
-	};
+        Converter<Float, String> converter = new Converter<Float, String>() {
+            @Override
+            public String convert(Float value) throws ConversionException {
+                if (value != null) {
+                    int f = (value).intValue();
+                    return "" + f;
+                }
 
-	SimplePropertyValueResolver resolver = new SimplePropertyValueResolver(
-		"magnitude");
+                return "";
+            }
+        };
 
-	return new PropertyValueResolverConverterWrapper(resolver, converter);
+        SimplePropertyValueResolver resolver;
+        if ("csv".equals(category)) {
+            return new SimplePropertyValueResolver("value");
+        } else {
+            resolver = new SimplePropertyValueResolver(
+                    "magnitude");
+        }
+
+        return new PropertyValueResolverConverterWrapper(resolver, converter);
     }
 
     @Override
     public ResourceSetToValueResolver createDateSlotResolver(String type) {
-	return new SimplePropertyValueResolver("date");
+        return new SimplePropertyValueResolver("date");
     }
 
     @Override
     public ResourceSetToValueResolver createLocationSlotResolver(String category) {
-	return new SimplePropertyValueResolver("location");
+        return new SimplePropertyValueResolver("location");
+    }
+
+    @Override
+    public ResourceSetToValueResolver createMagnitudeSlotResolver(String type) {
+            return new SimplePropertyValueResolver("magnitude");
     }
 }

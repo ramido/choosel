@@ -28,6 +28,7 @@ import org.thechiselgroup.choosel.client.test.ResourcesTestHelper;
 import org.thechiselgroup.choosel.client.views.list.ListViewContentDisplay;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 import org.thechiselgroup.choosel.client.windows.CreateWindowCommand;
+import org.thechiselgroup.chooselexample.client.services.CSVFileServiceAsync;
 import org.thechiselgroup.chooselexample.client.services.GeoRSSServiceAsync;
 
 import com.allen_sauer.gwt.log.client.Log;
@@ -75,10 +76,13 @@ public class ChooselExampleApplication extends ChooselApplication {
 
     @Inject
     private GeoRSSServiceAsync geoRssService;
+    
+    @Inject
+    private CSVFileServiceAsync csvFileService;
 
     private void addDataSourcesButton() {
-	Button b = new Button("Tsunami / Earthquake");
-	b.addClickHandler(new ClickHandler() {
+	Button geoRssButton = new Button("Tsunami / Earthquake");
+	geoRssButton.addClickHandler(new ClickHandler() {
 
 	    @Override
 	    public void onClick(ClickEvent event) {
@@ -107,7 +111,36 @@ public class ChooselExampleApplication extends ChooselApplication {
 	    }
 
 	});
-	addWidget(DATA_PANEL, b);
+	
+	Button csvDataButton = new Button("Regression TimeLine Data");
+	csvDataButton.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                final ResourceSetsPresenter dataSourcesPresenter = createResourceSetsPresenter();
+
+                // TODO this type cannot be stored yet
+                createWindow(new AbstractWindowContent("Data Sources", "TODO") {
+                    @Override
+                    public Widget asWidget() {
+                        return dataSourcesPresenter.asWidget();
+                    }
+                });
+
+                try {
+                    csvFileService
+                            .getCSVResources("data/", "regression_timeline_withdates.csv", new DataSourceCallBack(
+                                            "Regression TimeLine Data", dataSourcesPresenter,
+                                            resourceSetsFactory));
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+
+        });
+	addWidget(DATA_PANEL, geoRssButton);
+	addWidget(DATA_PANEL, csvDataButton);
     }
 
     // TODO change into command
