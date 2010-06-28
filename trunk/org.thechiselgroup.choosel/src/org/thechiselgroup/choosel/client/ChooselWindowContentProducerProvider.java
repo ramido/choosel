@@ -30,6 +30,7 @@ import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionCo
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_MAP;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_PIE;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_SCATTER;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_TIME;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_TIMELINE;
 
 import java.util.HashMap;
@@ -186,6 +187,11 @@ public class ChooselWindowContentProducerProvider implements
     public void registerScatter(
             @Named(TYPE_SCATTER) ViewContentDisplayFactory factory) {
         registerViewContentDisplayFactory(TYPE_SCATTER, factory);
+    }
+
+    @Inject
+    public void registerTime(@Named(TYPE_TIME) ViewContentDisplayFactory factory) {
+        registerViewContentDisplayFactory(TYPE_TIME, factory);
     }
 
     @Inject
