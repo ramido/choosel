@@ -40,18 +40,23 @@ public class Resource implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         Resource other = (Resource) obj;
         if (uri == null) {
-            if (other.uri != null)
+            if (other.uri != null) {
                 return false;
-        } else if (!uri.equals(other.uri))
+            }
+        } else if (!uri.equals(other.uri)) {
             return false;
+        }
         return true;
     }
 
@@ -84,6 +89,10 @@ public class Resource implements Serializable {
         int result = 1;
         result = prime * result + ((uri == null) ? 0 : uri.hashCode());
         return result;
+    }
+
+    public boolean isUriList(String key) {
+        return this.getValue(key) instanceof UriList;
     }
 
     public void putValue(String key, Serializable value) {
