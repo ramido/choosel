@@ -32,7 +32,7 @@ import javax.xml.xpath.XPathFactory;
 
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.services.ServiceException;
-import org.thechiselgroup.choosel.server.urlfetch.CachedDocumentFetchService;
+import org.thechiselgroup.choosel.server.urlfetch.DefaultDocumentFetchService;
 import org.thechiselgroup.choosel.server.urlfetch.DocumentFetchService;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -114,11 +114,11 @@ public abstract class XMLCallServlet extends RemoteServiceServlet {
         domBuilderFactory.setNamespaceAware(true);
 
         // TODO use regular fetch service for production
-        // urlFetchServiceFacade = new DefaultDocumentFetchService(
-        // URLFetchServiceFactory.getURLFetchService(), domBuilderFactory);
-        documentFetchService = new CachedDocumentFetchService(
-                URLFetchServiceFactory.getURLFetchService(), PMF.get(),
-                domBuilderFactory);
+        documentFetchService = new DefaultDocumentFetchService(
+                URLFetchServiceFactory.getURLFetchService(), domBuilderFactory);
+        // documentFetchService = new CachedDocumentFetchService(
+        // URLFetchServiceFactory.getURLFetchService(), PMF.get(),
+        // domBuilderFactory);
     }
 
     public void registerExpression(String key, String expression)
