@@ -34,7 +34,7 @@ public abstract class ChartWidget extends Widget {
 
     private ArrayList<Double> dataArray = new ArrayList<Double>();
 
-    private ArrayList<Double> dataArrayX = new ArrayList<Double>();
+    private ArrayList<String> dataArrayX = new ArrayList<String>();
 
     private ArrayList<Double> dataArrayY = new ArrayList<Double>();
 
@@ -46,7 +46,7 @@ public abstract class ChartWidget extends Widget {
             .toDoubleArray(dataArray));
 
     protected JavaScriptObject valX = ArrayUtils.toJsArray(ArrayUtils
-            .toDoubleArray(dataArrayX));
+            .toStringArray(dataArrayX));
 
     protected JavaScriptObject valY = ArrayUtils.toJsArray(ArrayUtils
             .toDoubleArray(dataArrayY));
@@ -64,16 +64,26 @@ public abstract class ChartWidget extends Widget {
         } catch (Exception e) {
         }
 
+        // try {
+        // dataArrayX.add(Double.valueOf(chartItem.getResourceValue(
+        // SlotResolver.X_COORDINATE_SLOT).toString()));
+        // dataArrayY.add(Double.valueOf(chartItem.getResourceValue(
+        // SlotResolver.Y_COORDINATE_SLOT).toString()));
+        // valX = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArrayX));
+        // valY = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArrayY));
+        // } catch (Exception e) {
+        // }
+
         try {
-            dataArrayX.add(Double.valueOf(chartItem.getResourceValue(
-                    SlotResolver.X_COORDINATE_SLOT).toString()));
+            dataArrayX.add(chartItem.getResourceValue(SlotResolver.DATE_SLOT)
+                    .toString());
             dataArrayY.add(Double.valueOf(chartItem.getResourceValue(
-                    SlotResolver.Y_COORDINATE_SLOT).toString()));
-            valX = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArrayX));
+                    SlotResolver.DESCRIPTION_SLOT).toString()));
+            valX = ArrayUtils.toJsArray(ArrayUtils.toStringArray(dataArrayX));
             valY = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArrayY));
         } catch (Exception e) {
+            System.out.println(e);
         }
-        // }
 
         updateChart();
     }
@@ -208,7 +218,7 @@ public abstract class ChartWidget extends Widget {
         chart = Chart.create(getElement(), width, height);
         chart = drawChart(width, height);
         if (chartItemArray.size() != 0) {
-            chart = registerFillStyle();
+            // chart = registerFillStyle();
             chart = registerEvents();
         }
         renderChart();

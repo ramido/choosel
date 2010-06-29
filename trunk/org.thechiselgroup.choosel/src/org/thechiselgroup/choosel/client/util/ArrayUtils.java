@@ -86,4 +86,12 @@ public class ArrayUtils {
         return result;
     }
 
+    public static String[] toStringArray(List<? extends Object> objectList) {
+        String[] stringArray = new String[objectList.size()];
+        for (int i = 0; i < objectList.size(); i++) {
+            stringArray[i] = objectList.get(i).toString();
+        }
+        return stringArray;
+    }
+
 }
