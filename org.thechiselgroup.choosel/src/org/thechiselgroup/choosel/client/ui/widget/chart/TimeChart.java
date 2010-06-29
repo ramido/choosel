@@ -6,20 +6,27 @@ public class TimeChart extends ChartWidget {
     @Override
     public native Chart drawChart(int width, int height) /*-{
         var chart = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chart,
-        val = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::val;
+        valX = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::valX,
+        valY = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::valY;
 
-        var start = new $wnd.Date(1990, 0, 1);
-        var year = 1000 * 60 * 60 * 24 * 365;
-        var data = $wnd.pv.range(0, 20, .02).map(function(x) {
-            return {x: new $wnd.Date(start.getTime() + year * x),
-                    y: (1 + .1 * (Math.sin(x * 2 * Math.PI))
-                        + Math.random() * .1) * Math.pow(1.18, x)
-                        + Math.random() * .1};
-          });
-        var end = data[data.length - 1].x;
+        if(valX.length == 0) return chart;
+
+        var data = $wnd.pv.range(0, $wnd.pv.max([1,valX.length]), 1).map(function(i) {
+            return {x: new $wnd.Date(valX[i].substring(0,4), valX[i].substring(5,7) - 1, valX[i].substring(8,10)),
+            y: valY[i]};
+        });
+
+        function sortByDate(a,b) {
+            return a.x - b.x;
+        }
+
+        data.sort(sortByDate);
+
+        var start = data[0].x;
+        var end = data[data.length - 1].x
 
         var w = width,
-            h1 = height - 55,
+            h1 = height - 60,
             h2 = 30,
             x = $wnd.pv.Scale.linear(start, end).range(0, w),
             y = $wnd.pv.Scale.linear(0, $wnd.pv.max(data, function(d) {return d.y;})).range(0, h2);
@@ -39,10 +46,10 @@ public class TimeChart extends ChartWidget {
                 fy.domain(y.domain());
                 return dd;
               })
-            .top(0)
+            .top(5)
             .left(20)
             .height(h1)
-            .width(w - 20);
+            .width(w - 25);
 
         focus.add($wnd.pv.Rule)
             .data(function() {return fx.ticks();})
@@ -75,7 +82,7 @@ public class TimeChart extends ChartWidget {
             .bottom(12)
             .left(20)
             .height(h2)
-            .width(w - 20);
+            .width(w - 25);
 
         context.add($wnd.pv.Rule)
             .data(x.ticks())
