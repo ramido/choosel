@@ -36,7 +36,7 @@ public abstract class ChartWidget extends Widget {
 
     private ArrayList<String> dataArrayX = new ArrayList<String>();
 
-    private ArrayList<Double> dataArrayY = new ArrayList<Double>();
+    private ArrayList<String> dataArrayY = new ArrayList<String>();
 
     private int height = 0;
 
@@ -49,7 +49,7 @@ public abstract class ChartWidget extends Widget {
             .toStringArray(dataArrayX));
 
     protected JavaScriptObject valY = ArrayUtils.toJsArray(ArrayUtils
-            .toDoubleArray(dataArrayY));
+            .toStringArray(dataArrayY));
 
     public ChartWidget() {
         setElement(DOM.createDiv());
@@ -64,25 +64,24 @@ public abstract class ChartWidget extends Widget {
         } catch (Exception e) {
         }
 
-        // try {
-        // dataArrayX.add(Double.valueOf(chartItem.getResourceValue(
-        // SlotResolver.X_COORDINATE_SLOT).toString()));
-        // dataArrayY.add(Double.valueOf(chartItem.getResourceValue(
-        // SlotResolver.Y_COORDINATE_SLOT).toString()));
-        // valX = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArrayX));
-        // valY = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArrayY));
-        // } catch (Exception e) {
-        // }
+        try {
+            dataArrayX.add(chartItem.getResourceValue(
+                    SlotResolver.X_COORDINATE_SLOT).toString());
+            dataArrayY.add(chartItem.getResourceValue(
+                    SlotResolver.Y_COORDINATE_SLOT).toString());
+            valX = ArrayUtils.toJsArray(ArrayUtils.toStringArray(dataArrayX));
+            valY = ArrayUtils.toJsArray(ArrayUtils.toStringArray(dataArrayY));
+        } catch (Exception e) {
+        }
 
         try {
             dataArrayX.add(chartItem.getResourceValue(SlotResolver.DATE_SLOT)
                     .toString());
-            dataArrayY.add(Double.valueOf(chartItem.getResourceValue(
-                    SlotResolver.DESCRIPTION_SLOT).toString()));
+            dataArrayY.add(chartItem.getResourceValue(
+                    SlotResolver.DESCRIPTION_SLOT).toString());
             valX = ArrayUtils.toJsArray(ArrayUtils.toStringArray(dataArrayX));
-            valY = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArrayY));
+            valY = ArrayUtils.toJsArray(ArrayUtils.toStringArray(dataArrayY));
         } catch (Exception e) {
-            System.out.println(e);
         }
 
         updateChart();
@@ -218,7 +217,7 @@ public abstract class ChartWidget extends Widget {
         chart = Chart.create(getElement(), width, height);
         chart = drawChart(width, height);
         if (chartItemArray.size() != 0) {
-            // chart = registerFillStyle();
+            chart = registerFillStyle();
             chart = registerEvents();
         }
         renderChart();
