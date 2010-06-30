@@ -25,10 +25,10 @@ public class TimeChart extends ChartWidget {
         var start = data[0].x;
         var end = data[data.length - 1].x
 
-        var w = width,
+        var w = width - 25,
             h1 = height - 60,
             h2 = 30,
-            x = $wnd.pv.Scale.linear(start, end).range(0, w),
+            x = $wnd.pv.Scale.linear(start, end).range(0, w - 25),
             y = $wnd.pv.Scale.linear(0, $wnd.pv.max(data, function(d) {return d.y;})).range(0, h2);
 
         var i = {x:200, dx:100},
@@ -49,7 +49,8 @@ public class TimeChart extends ChartWidget {
             .top(5)
             .left(20)
             .height(h1)
-            .width(w - 25);
+            .width(w)
+            .events("none");
 
         focus.add($wnd.pv.Rule)
             .data(function() {return fx.ticks();})
@@ -72,17 +73,24 @@ public class TimeChart extends ChartWidget {
             .left(function(d) {return fx(d.x);})
             .bottom(1)
             .height(function(d) {return fy(d.y);})
-            .fillStyle("lightsteelblue")
+            .fillStyle("lightgreen")
           .anchor("top").add($wnd.pv.Line)
             .fillStyle(null)
-            .strokeStyle("steelblue")
+            .strokeStyle("green")
             .lineWidth(2);
+
+        var dot = focus.add($wnd.pv.Dot)
+            .data(function() {return focus.init();})
+            .left(function(d) {return fx(d.x);})
+            .bottom(function(d) {return fy(d.y);})
+            .fillStyle("steelblue")
+            .size(3);
 
         var context = chart.add($wnd.pv.Panel)
             .bottom(12)
             .left(20)
             .height(h2)
-            .width(w - 25);
+            .width(w);
 
         context.add($wnd.pv.Rule)
             .data(x.ticks())
@@ -99,9 +107,9 @@ public class TimeChart extends ChartWidget {
             .left(function(d) {return x(d.x);})
             .bottom(1)
             .height(function(d) {return y(d.y);})
-            .fillStyle("lightsteelblue")
+            .fillStyle("lightgreen")
           .anchor("top").add($wnd.pv.Line)
-            .strokeStyle("steelblue")
+            .strokeStyle("green")
             .lineWidth(2);
 
         context.add($wnd.pv.Panel)
@@ -118,7 +126,7 @@ public class TimeChart extends ChartWidget {
             .event("mousedown", $wnd.pv.Behavior.drag())
             .event("drag", focus);
 
-        return chart;
+        return dot;
     }-*/;
     // @formatter:on
 
