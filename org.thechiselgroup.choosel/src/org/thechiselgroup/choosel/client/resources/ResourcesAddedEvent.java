@@ -13,41 +13,29 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.util;
+package org.thechiselgroup.choosel.client.resources;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-public final class CollectionUtils {
+import com.google.gwt.event.shared.GwtEvent;
 
-    public static <T> List<T> toList(Iterable<T> iterable) {
-        List<T> result = new ArrayList<T>();
-        for (T t : iterable) {
-            result.add(t);
-        }
-        return result;
+public class ResourcesAddedEvent extends
+        ResourceSetEvent<ResourcesAddedEventHandler> {
+
+    public static final GwtEvent.Type<ResourcesAddedEventHandler> TYPE = new GwtEvent.Type<ResourcesAddedEventHandler>();
+
+    public ResourcesAddedEvent(List<Resource> resources, ResourceSet resourceSet) {
+        super(resourceSet, resources);
     }
 
-    public static <T> List<T> toList(T... ts) {
-        List<T> list = new ArrayList<T>();
-        for (T t : ts) {
-            list.add(t);
-        }
-        return list;
+    @Override
+    protected void dispatch(ResourcesAddedEventHandler handler) {
+        handler.onResourcesAdded(this);
     }
 
-    public static <T> Set<T> toSet(T... ts) {
-        Set<T> set = new HashSet<T>();
-        for (T t : ts) {
-            set.add(t);
-        }
-        return set;
-    }
-
-    private CollectionUtils() {
-
+    @Override
+    public GwtEvent.Type<ResourcesAddedEventHandler> getAssociatedType() {
+        return TYPE;
     }
 
 }

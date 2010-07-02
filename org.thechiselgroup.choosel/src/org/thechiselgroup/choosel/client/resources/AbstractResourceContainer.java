@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.client.resources;
 public abstract class AbstractResourceContainer implements ResourceContainer {
 
     @Override
-    public final void addAll(Iterable<Resource> resources) {
+    public void addAll(Iterable<Resource> resources) {
         assert resources != null;
         for (Resource resource : resources) {
             add(resource);

@@ -21,6 +21,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.thechiselgroup.choosel.client.util.CollectionUtils;
+
 /**
  * Allows adding the same resource multiple times and stores the count. The
  * resource has to be removed the same number of times before being removed from
@@ -56,7 +58,8 @@ public class CountingResourceSet extends AbstractImplementingResourceSet {
         }
 
         uriToResourceElementMap.put(uri, new ResourceElement(resource));
-        eventBus.fireEvent(new ResourceAddedEvent(resource, this));
+        eventBus.fireEvent(new ResourcesAddedEvent(CollectionUtils
+                .toList(resource), this));
     }
 
     @Override

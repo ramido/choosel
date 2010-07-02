@@ -27,8 +27,8 @@ import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.CombinedResourceSet;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
-import org.thechiselgroup.choosel.client.resources.ResourceAddedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourceAddedEventHandler;
+import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceCategoryAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourceCategoryAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceCategoryRemovedEvent;
@@ -137,7 +137,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private ResourceSet selection;
 
-    private ResourceAddedEventHandler selectionAddedHandler;
+    private ResourcesAddedEventHandler selectionAddedHandler;
 
     private ResourceSetsPresenter selectionDropPresenter;
 
@@ -208,18 +208,18 @@ public class DefaultView extends AbstractWindowContent implements View {
         categoriesToLayers.put(layer.getCategory(), layer);
 
         // TODO handler deregistration --> check bug...
-        layer.getResources().addHandler(ResourceAddedEvent.TYPE,
-                new ResourceAddedEventHandler() {
+        layer.getResources().addHandler(ResourcesAddedEvent.TYPE,
+                new ResourcesAddedEventHandler() {
                     @Override
-                    public void onResourceAdded(ResourceAddedEvent e) {
-                        addResource(layer, e.getResource());
+                    public void onResourcesAdded(ResourcesAddedEvent e) {
+                        addResource(layer, e.getChangedResource());
                     }
                 });
         layer.getResources().addHandler(ResourceRemovedEvent.TYPE,
                 new ResourceRemovedEventHandler() {
                     @Override
                     public void onResourceRemoved(ResourceRemovedEvent e) {
-                        removeResource(layer, e.getResource());
+                        removeResource(layer, e.getChangedResource());
                     }
                 });
 
@@ -267,7 +267,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private void addSelectionModelResourceHandlers() {
         selectionResourceAddedHandlerRegistration = this.selection.addHandler(
-                ResourceAddedEvent.TYPE, selectionAddedHandler);
+                ResourcesAddedEvent.TYPE, selectionAddedHandler);
         selectionResourceRemovedHandlerRegistration = this.selection
                 .addHandler(ResourceRemovedEvent.TYPE, selectionRemovedHandler);
     }
@@ -557,10 +557,10 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private void initHoverModelHooks() {
         handlerRegistrations.addHandlerRegistration(hoverModel.addHandler(
-                ResourceAddedEvent.TYPE, new ResourceAddedEventHandler() {
+                ResourcesAddedEvent.TYPE, new ResourcesAddedEventHandler() {
                     @Override
-                    public void onResourceAdded(ResourceAddedEvent e) {
-                        showHover(e.getResource(), true);
+                    public void onResourcesAdded(ResourcesAddedEvent e) {
+                        showHover(e.getChangedResource(), true);
                     }
 
                 }));
@@ -568,7 +568,7 @@ public class DefaultView extends AbstractWindowContent implements View {
                 ResourceRemovedEvent.TYPE, new ResourceRemovedEventHandler() {
                     @Override
                     public void onResourceRemoved(ResourceRemovedEvent e) {
-                        showHover(e.getResource(), false);
+                        showHover(e.getChangedResource(), false);
                     }
                 }));
     }
@@ -663,14 +663,14 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     private void initSelectionModelResourceHandlers() {
-        selectionAddedHandler = new ResourceAddedEventHandler() {
+        selectionAddedHandler = new ResourcesAddedEventHandler() {
             @Override
-            public void onResourceAdded(ResourceAddedEvent e) {
+            public void onResourcesAdded(ResourcesAddedEvent e) {
                 if (selection.size() == 1) {
                     setSelectionStatusVisible(true);
                 }
 
-                updateSelectionStatusDisplay(e.getResource(), true);
+                updateSelectionStatusDisplay(e.getChangedResource(), true);
             }
         };
         selectionRemovedHandler = new ResourceRemovedEventHandler() {
@@ -680,7 +680,7 @@ public class DefaultView extends AbstractWindowContent implements View {
                     setSelectionStatusVisible(false);
                 }
 
-                updateSelectionStatusDisplay(e.getResource(), false);
+                updateSelectionStatusDisplay(e.getChangedResource(), false);
             }
         };
 

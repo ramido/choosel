@@ -49,8 +49,8 @@ import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.Resource;
-import org.thechiselgroup.choosel.client.resources.ResourceAddedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourceAddedEventHandler;
+import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceByUriTypeCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceRemovedEvent;
@@ -197,8 +197,8 @@ public class DefaultViewTest {
     public void addSelectionHandlers() {
         view.setSelection(selection);
 
-        verify(selection, times(1)).addHandler(eq(ResourceAddedEvent.TYPE),
-                any(ResourceAddedEventHandler.class));
+        verify(selection, times(1)).addHandler(eq(ResourcesAddedEvent.TYPE),
+                any(ResourcesAddedEventHandler.class));
         verify(selection, times(1)).addHandler(eq(ResourceRemovedEvent.TYPE),
                 any(ResourceRemovedEventHandler.class));
     }
@@ -423,7 +423,7 @@ public class DefaultViewTest {
         view.addResourceSet(resources);
         view.dispose();
 
-        assertEquals(0, resources.getHandlerCount(ResourceAddedEvent.TYPE));
+        assertEquals(0, resources.getHandlerCount(ResourcesAddedEvent.TYPE));
         assertEquals(0, resources.getHandlerCount(ResourceRemovedEvent.TYPE));
     }
 
@@ -539,8 +539,8 @@ public class DefaultViewTest {
                         any(ResourceEventHandler.class))).thenReturn(
                 selectionHandlerRegistration);
         when(
-                hoverModel.addHandler(eq(ResourceAddedEvent.TYPE),
-                        any(ResourceAddedEventHandler.class))).thenReturn(
+                hoverModel.addHandler(eq(ResourcesAddedEvent.TYPE),
+                        any(ResourcesAddedEventHandler.class))).thenReturn(
                 hoverModelAddHandlerRegistration);
         when(
                 hoverModel.addHandler(eq(ResourceRemovedEvent.TYPE),

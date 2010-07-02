@@ -23,6 +23,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createLabeledResources;
 import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResource;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResources;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -31,19 +32,29 @@ import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.resources.CombinedResourceSet;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
-import org.thechiselgroup.choosel.client.resources.ResourceAddedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourceAddedEventHandler;
+import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
 
 public class CombinedResourceSetTest {
 
     @Mock
-    private ResourceAddedEventHandler addedHandler;
+    private ResourcesAddedEventHandler addedHandler;
 
     private CombinedResourceSet combinedResources;
 
     private DefaultResourceSet resources1;
 
     private DefaultResourceSet resources2;
+
+    @Test
+    public void addMultipleResourcesToContainedResourceSet() {
+        combinedResources.addResourceSet(resources1);
+
+        resources1.addAll(createResources(4, 5));
+
+        assertEquals(true, combinedResources.contains(createResource(4)));
+        assertEquals(true, combinedResources.contains(createResource(5)));
+    }
 
     @Test
     public void addResourcesAddsToAllResources() {
@@ -93,11 +104,11 @@ public class CombinedResourceSetTest {
 
     @Test
     public void fireAddEventsWhenResourceSetAdded() {
-        combinedResources.addHandler(ResourceAddedEvent.TYPE, addedHandler);
+        combinedResources.addHandler(ResourcesAddedEvent.TYPE, addedHandler);
         combinedResources.addResourceSet(resources1);
 
-        verify(addedHandler, times(3)).onResourceAdded(
-                any(ResourceAddedEvent.class));
+        verify(addedHandler, times(3)).onResourcesAdded(
+                any(ResourcesAddedEvent.class));
     }
 
     @Test
