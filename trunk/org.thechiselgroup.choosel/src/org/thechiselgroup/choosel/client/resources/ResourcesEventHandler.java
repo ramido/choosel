@@ -15,8 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
-public interface ResourceAddedEventHandler extends ResourceEventHandler {
+import com.google.gwt.event.shared.EventHandler;
 
-    void onResourceAdded(ResourceAddedEvent e);
+public interface ResourcesEventHandler extends EventHandler {
 
 }

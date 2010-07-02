@@ -21,6 +21,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.thechiselgroup.choosel.client.util.CollectionUtils;
+
 public abstract class AbstractUriMapBasedResourceSet extends
         AbstractImplementingResourceSet {
 
@@ -34,7 +36,23 @@ public abstract class AbstractUriMapBasedResourceSet extends
             return;
         }
         doAdd(resource);
-        eventBus.fireEvent(new ResourceAddedEvent(resource, this));
+        eventBus.fireEvent(new ResourcesAddedEvent(CollectionUtils
+                .toList(resource), this));
+    }
+
+    @Override
+    public void addAll(Iterable<Resource> resources) {
+        assert resources != null;
+
+        List<Resource> addedResources = new ArrayList<Resource>();
+
+        for (Resource resource : resources) {
+            if (!contains(resource)) {
+                doAdd(resource);
+                addedResources.add(resource);
+            }
+        }
+        eventBus.fireEvent(new ResourcesAddedEvent(addedResources, this));
     }
 
     protected Resource addResourceToMap(Resource resource) {

@@ -15,6 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
+import org.thechiselgroup.choosel.client.util.CollectionUtils;
+
 import com.google.gwt.event.shared.GwtEvent;
 
 public class ResourceRemovedEvent extends
@@ -23,7 +25,7 @@ public class ResourceRemovedEvent extends
     public static final GwtEvent.Type<ResourceRemovedEventHandler> TYPE = new GwtEvent.Type<ResourceRemovedEventHandler>();
 
     public ResourceRemovedEvent(Resource resource, ResourceSet resourceSet) {
-        super(resource, resourceSet);
+        super(resourceSet, CollectionUtils.toList(resource));
     }
 
     @Override

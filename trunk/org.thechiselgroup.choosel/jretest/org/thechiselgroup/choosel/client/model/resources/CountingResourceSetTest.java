@@ -28,15 +28,15 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.resources.CountingResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
-import org.thechiselgroup.choosel.client.resources.ResourceAddedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourceAddedEventHandler;
+import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceRemovedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourceRemovedEventHandler;
 
 public class CountingResourceSetTest {
 
     @Mock
-    private ResourceAddedEventHandler addedHandler;
+    private ResourcesAddedEventHandler addedHandler;
 
     @Mock
     private ResourceRemovedEventHandler removeHandler;
@@ -47,12 +47,12 @@ public class CountingResourceSetTest {
 
     @Test
     public void addedFiredOnceIfAddedTwice() {
-        underTest.addHandler(ResourceAddedEvent.TYPE, addedHandler);
+        underTest.addHandler(ResourcesAddedEvent.TYPE, addedHandler);
         underTest.add(resource);
         underTest.add(resource);
 
-        verify(addedHandler, times(1)).onResourceAdded(
-                any(ResourceAddedEvent.class));
+        verify(addedHandler, times(1)).onResourcesAdded(
+                any(ResourcesAddedEvent.class));
     }
 
     @Test

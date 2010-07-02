@@ -28,6 +28,32 @@ public class ArrayUtils {
     }-*/;
     // @formatter:on
 
+    public static double getMaxDataValue(List<? extends Number> objectList) {
+        if (objectList.isEmpty()) {
+            return 0;
+        }
+        double max = (Double) objectList.get(0);
+        for (int i = 1; i < objectList.size(); i++) {
+            if ((Double) objectList.get(i) > max) {
+                max = (Double) objectList.get(i);
+            }
+        }
+        return max;
+    }
+
+    public static double getMinDataValue(List<? extends Number> objectList) {
+        if (objectList.isEmpty()) {
+            return 0;
+        }
+        double min = (Double) objectList.get(0);
+        for (int i = 1; i < objectList.size(); i++) {
+            if ((Double) objectList.get(i) < min) {
+                min = (Double) objectList.get(i);
+            }
+        }
+        return min;
+    }
+
     // @formatter:off
     private native static void pushArray(JavaScriptObject array, double d) /*-{
         array.push(d);

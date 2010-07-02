@@ -19,7 +19,7 @@ import org.thechiselgroup.choosel.client.util.Disposable;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
-public class ResourceEventsForwarder implements ResourceAddedEventHandler,
+public class ResourceEventsForwarder implements ResourcesAddedEventHandler,
         ResourceRemovedEventHandler, Disposable {
 
     private HandlerRegistration addHandlerRegistration;
@@ -44,19 +44,19 @@ public class ResourceEventsForwarder implements ResourceAddedEventHandler,
     }
 
     public void init() {
-        addHandlerRegistration = source.addHandler(ResourceAddedEvent.TYPE,
+        addHandlerRegistration = source.addHandler(ResourcesAddedEvent.TYPE,
                 this);
         removeHandlerRegistration = source.addHandler(
                 ResourceRemovedEvent.TYPE, this);
     }
 
     @Override
-    public void onResourceAdded(ResourceAddedEvent e) {
-        target.add(e.getResource());
+    public void onResourcesAdded(ResourcesAddedEvent e) {
+        target.add(e.getChangedResource());
     }
 
     @Override
     public void onResourceRemoved(ResourceRemovedEvent e) {
-        target.remove(e.getResource());
+        target.remove(e.getChangedResource());
     }
 }

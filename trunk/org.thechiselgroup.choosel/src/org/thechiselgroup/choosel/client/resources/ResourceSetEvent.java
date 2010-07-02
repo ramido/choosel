@@ -15,26 +15,32 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
+import java.util.List;
+
 import com.google.gwt.event.shared.GwtEvent;
 
 public abstract class ResourceSetEvent<H extends ResourceEventHandler> extends
         GwtEvent<H> {
 
-    private final Resource resource;
+    private final List<Resource> changedResources;
 
-    private final ResourceSet resourceSet;
+    private final ResourceSet target;
 
-    public ResourceSetEvent(Resource resource, ResourceSet resourceSet) {
-        this.resource = resource;
-        this.resourceSet = resourceSet;
+    public ResourceSetEvent(ResourceSet target, List<Resource> changedResources) {
+        this.changedResources = changedResources;
+        this.target = target;
     }
 
-    public Resource getResource() {
-        return resource;
+    public Resource getChangedResource() {
+        return changedResources.get(0);
     }
 
-    public ResourceSet getResourceSet() {
-        return resourceSet;
+    public List<Resource> getChangedResources() {
+        return changedResources;
+    }
+
+    public ResourceSet getTarget() {
+        return target;
     }
 
 }
