@@ -26,7 +26,7 @@ public abstract class AbstractResourceContainer implements ResourceContainer {
     }
 
     @Override
-    public final void removeAll(Iterable<Resource> resources) {
+    public void removeAll(Iterable<Resource> resources) {
         assert resources != null;
         for (Resource resource : resources) {
             remove(resource);

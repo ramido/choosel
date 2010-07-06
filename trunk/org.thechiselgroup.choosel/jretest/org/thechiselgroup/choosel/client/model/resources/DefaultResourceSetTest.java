@@ -34,13 +34,20 @@ import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
+import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 
 public class DefaultResourceSetTest {
 
     private DefaultResourceSet resources;
 
+    private DefaultResourceSet resources2 = createResources(1, 2, 3);
+
     @Mock
     private ResourcesAddedEventHandler resourcesAddedHandler;
+
+    @Mock
+    private ResourcesRemovedEventHandler resourcesRemovedHandler;
 
     @Test
     public void addResourcesToDefaultResourceSet() {
@@ -70,13 +77,32 @@ public class DefaultResourceSetTest {
     }
 
     @Test
+    public void fireResourceRemovedEvent() {
+        resources2.addHandler(ResourcesRemovedEvent.TYPE,
+                resourcesRemovedHandler);
+        resources2.remove(createResource(1));
+
+        verify(resourcesRemovedHandler, times(1)).onResourcesRemoved(
+                any(ResourcesRemovedEvent.class));
+    }
+
+    @Test
     public void fireResourcesAddedEvent() {
-        ResourceSet resourceSet = createResources(1, 2, 3);
         resources.addHandler(ResourcesAddedEvent.TYPE, resourcesAddedHandler);
-        resources.addAll(resourceSet);
+        resources.addAll(createResources(1, 2, 3));
 
         verify(resourcesAddedHandler, times(1)).onResourcesAdded(
                 any(ResourcesAddedEvent.class));
+    }
+
+    @Test
+    public void fireResourcesRemovedEvent() {
+        resources2.addHandler(ResourcesRemovedEvent.TYPE,
+                resourcesRemovedHandler);
+        resources2.removeAll(createResources(1, 2, 3));
+
+        verify(resourcesRemovedHandler, times(1)).onResourcesRemoved(
+                any(ResourcesRemovedEvent.class));
     }
 
     @Test
@@ -94,10 +120,29 @@ public class DefaultResourceSetTest {
     }
 
     @Test
+    public void removeResourceFromDefaultResourceSet() {
+        resources2.remove(createResource(1));
+
+        assertEquals(2, resources2.size());
+        assertEquals(false, resources2.contains(createResource(1)));
+        assertEquals(true, resources2.contains(createResource(2)));
+        assertEquals(true, resources2.contains(createResource(3)));
+    }
+
+    @Test
+    public void removeResourcesFromDefaultResourceSet() {
+        resources2.removeAll(createResources(1, 2, 3));
+
+        assertEquals(0, resources2.size());
+        assertEquals(false, resources2.contains(createResource(1)));
+        assertEquals(false, resources2.contains(createResource(2)));
+        assertEquals(false, resources2.contains(createResource(3)));
+    }
+
+    @Test
     public void resourcesAddedEventOnlyAddsResourcesNotContained() {
         Resource containedResource = createResource(1);
         ResourceSet resourceSet = createResources(1, 2, 3);
-        resourceSet.add(containedResource);
 
         resources.add(containedResource);
         resources.addHandler(ResourcesAddedEvent.TYPE, resourcesAddedHandler);
@@ -109,7 +154,32 @@ public class DefaultResourceSetTest {
         verify(resourcesAddedHandler, times(1)).onResourcesAdded(
                 argument.capture());
 
-        List<Resource> eventResources = argument.getValue().getChangedResources();
+        List<Resource> eventResources = argument.getValue()
+                .getChangedResources();
+        assertEquals(2, eventResources.size());
+        assertEquals(false, eventResources.contains(containedResource));
+        assertEquals(true, eventResources.contains(createResource(2)));
+        assertEquals(true, eventResources.contains(createResource(3)));
+    }
+
+    @Test
+    public void resourcesRemovedEventOnlyRemovesResourcesContained() {
+        Resource containedResource = createResource(1);
+        ResourceSet resourceSet = createResources(1, 2, 3);
+
+        resources2.remove(containedResource);
+        resources2.addHandler(ResourcesRemovedEvent.TYPE,
+                resourcesRemovedHandler);
+        resources2.removeAll(resourceSet);
+
+        ArgumentCaptor<ResourcesRemovedEvent> argument = ArgumentCaptor
+                .forClass(ResourcesRemovedEvent.class);
+
+        verify(resourcesRemovedHandler, times(1)).onResourcesRemoved(
+                argument.capture());
+
+        List<Resource> eventResources = argument.getValue()
+                .getChangedResources();
         assertEquals(2, eventResources.size());
         assertEquals(false, eventResources.contains(containedResource));
         assertEquals(true, eventResources.contains(createResource(2)));

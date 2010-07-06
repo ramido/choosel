@@ -99,7 +99,8 @@ public class CountingResourceSet extends AbstractImplementingResourceSet {
 
         if (uriToResourceElementMap.get(uri).counter == 0) {
             uriToResourceElementMap.remove(uri);
-            eventBus.fireEvent(new ResourceRemovedEvent(resource, this));
+            eventBus.fireEvent(new ResourcesRemovedEvent(CollectionUtils
+                    .toList(resource), this));
         }
     }
 

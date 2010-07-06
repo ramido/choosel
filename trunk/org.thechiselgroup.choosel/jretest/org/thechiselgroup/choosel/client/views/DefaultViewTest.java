@@ -53,8 +53,8 @@ import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceByUriTypeCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceEventHandler;
-import org.thechiselgroup.choosel.client.resources.ResourceRemovedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourceRemovedEventHandler;
+import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ResourceSplitter;
@@ -199,8 +199,8 @@ public class DefaultViewTest {
 
         verify(selection, times(1)).addHandler(eq(ResourcesAddedEvent.TYPE),
                 any(ResourcesAddedEventHandler.class));
-        verify(selection, times(1)).addHandler(eq(ResourceRemovedEvent.TYPE),
-                any(ResourceRemovedEventHandler.class));
+        verify(selection, times(1)).addHandler(eq(ResourcesRemovedEvent.TYPE),
+                any(ResourcesRemovedEventHandler.class));
     }
 
     @Test
@@ -424,7 +424,7 @@ public class DefaultViewTest {
         view.dispose();
 
         assertEquals(0, resources.getHandlerCount(ResourcesAddedEvent.TYPE));
-        assertEquals(0, resources.getHandlerCount(ResourceRemovedEvent.TYPE));
+        assertEquals(0, resources.getHandlerCount(ResourcesRemovedEvent.TYPE));
     }
 
     @Test
@@ -543,8 +543,8 @@ public class DefaultViewTest {
                         any(ResourcesAddedEventHandler.class))).thenReturn(
                 hoverModelAddHandlerRegistration);
         when(
-                hoverModel.addHandler(eq(ResourceRemovedEvent.TYPE),
-                        any(ResourceRemovedEventHandler.class))).thenReturn(
+                hoverModel.addHandler(eq(ResourcesRemovedEvent.TYPE),
+                        any(ResourcesRemovedEventHandler.class))).thenReturn(
                 hoverModelRemoveHandlerRegistration);
         when(contentDisplay.isReady()).thenReturn(true);
 
