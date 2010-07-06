@@ -24,6 +24,8 @@ import org.thechiselgroup.choosel.client.geometry.HasSize;
 import org.thechiselgroup.choosel.client.geometry.Point;
 import org.thechiselgroup.choosel.client.ui.ZIndex;
 
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
@@ -49,6 +51,7 @@ public class DefaultDesktop extends AbsolutePanel implements Desktop, HasSize {
         windowController = new DesktopWindowController(this, commandManager);
 
         initBranding();
+        sinkEvents(Event.ONCONTEXTMENU);
     }
 
     private void addWindowInternal(WindowPanel window) {
@@ -143,6 +146,18 @@ public class DefaultDesktop extends AbsolutePanel implements Desktop, HasSize {
                 "(C) 2010 The CHISEL Group (www.thechiselgroup.org)");
         copyRightLabel.addStyleName("branding-copy-right");
         add(copyRightLabel);
+    }
+
+    /**
+     * Prevents the browsers context menu from appearing
+     * on the desktop.
+     */
+    @Override
+    public void onBrowserEvent(Event event) {
+        if (DOM.eventGetType(event) == Event.ONCONTEXTMENU) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
     }
 
     @Override

@@ -28,8 +28,10 @@ import org.thechiselgroup.choosel.client.ui.ZIndex;
 import org.thechiselgroup.choosel.client.ui.dnd.DragProxyEventReceiver;
 import org.thechiselgroup.choosel.client.util.Disposable;
 
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.HasAllMouseHandlers;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseEvent;
@@ -47,18 +49,19 @@ import com.google.gwt.user.client.ui.SimplePanel;
 
 public class DefaultPopupManager implements Opacity, PopupManager {
 
-    private static class HasAllMouseHandlersLink implements MouseOverHandler,
-            MouseOutHandler, MouseMoveHandler, MouseDownHandler {
+    private static class MouseHandlersPopupManagerLink implements
+            MouseOverHandler, MouseOutHandler, MouseMoveHandler,
+            MouseDownHandler {
 
         private final PopupManager manager;
 
-        public HasAllMouseHandlersLink(PopupManager manager) {
+        public MouseHandlersPopupManagerLink(PopupManager manager) {
             this.manager = manager;
         }
 
         @Override
         public void onMouseDown(MouseDownEvent event) {
-            manager.onMouseDown(event.getClientX(), event.getClientY());
+            manager.onMouseDown(event.getNativeEvent());
         }
 
         @Override
@@ -155,6 +158,9 @@ public class DefaultPopupManager implements Opacity, PopupManager {
         public void onSourceMouseOver(DefaultPopupManager manager) {
         }
 
+        public void onSourceRightClick(DefaultPopupManager manager) {
+        }
+
         public void onTimeout(DefaultPopupManager manager) {
         }
 
@@ -169,7 +175,7 @@ public class DefaultPopupManager implements Opacity, PopupManager {
 
         private void hide(DefaultPopupManager manager) {
             manager.setPopupTransparency(OPACITY_OPAQUE);
-        };
+        }
 
         @Override
         public void onPopupMouseOut(DefaultPopupManager manager) {
@@ -178,7 +184,7 @@ public class DefaultPopupManager implements Opacity, PopupManager {
             } else {
                 manager.setState(INACTIVE_STATE);
             }
-        };
+        }
 
     };
 
@@ -186,7 +192,11 @@ public class DefaultPopupManager implements Opacity, PopupManager {
 
     public static final int DEFAULT_HIDE_DELAY = 250;
 
-    public static final int DEFAULT_SHOW_DELAY = 500;
+    /**
+     * Default delay until popup is shown automatically in semi-transparent
+     * state when mouse cursor is over trigger.
+     */
+    public static final int DEFAULT_SHOW_DELAY = 1000;
 
     private final static State DISABLED_STATE = new State() {
 
@@ -250,27 +260,27 @@ public class DefaultPopupManager implements Opacity, PopupManager {
         public void enter(DefaultPopupManager manager) {
             manager.setPopupTransparency(OPACITY_SEMI_TRANSPARENT);
             manager.startTimer(manager.hideDelay);
-        };
+        }
 
         @Override
         public void leave(DefaultPopupManager manager) {
             manager.cancelTimer();
-        };
+        }
 
         @Override
         public void onPopupMouseOver(DefaultPopupManager manager) {
             manager.setState(ACTIVE_STATE);
-        };
+        }
 
         @Override
         public void onSourceMouseOver(DefaultPopupManager manager) {
             manager.setState(SEMITRANSPARENT_STATE);
-        };
+        }
 
         @Override
         public void onTimeout(DefaultPopupManager manager) {
             manager.setState(INACTIVE_STATE);
-        };
+        }
 
     };
 
@@ -297,6 +307,11 @@ public class DefaultPopupManager implements Opacity, PopupManager {
         }
 
         @Override
+        public void onSourceRightClick(DefaultPopupManager manager) {
+            manager.setState(SEMITRANSPARENT_STATE);
+        }
+
+        @Override
         public void onTimeout(DefaultPopupManager manager) {
             manager.setState(SEMITRANSPARENT_STATE);
         }
@@ -311,8 +326,8 @@ public class DefaultPopupManager implements Opacity, PopupManager {
      * @param widgetFactory
      *            Factory that creates the content widget of the popup
      */
-    public static DefaultPopupManager createPopupManager(
-            HasAllMouseHandlers source, WidgetFactory widgetFactory) {
+    public static <T extends HasAllMouseHandlers & HasClickHandlers> DefaultPopupManager createPopupManager(
+            T source, WidgetFactory widgetFactory) {
 
         DefaultPopupManager manager = new DefaultPopupManager(widgetFactory);
         linkManagerToSource(manager, source);
@@ -329,7 +344,8 @@ public class DefaultPopupManager implements Opacity, PopupManager {
     public static Disposable linkManagerToSource(PopupManager manager,
             HasAllMouseHandlers source) {
 
-        HasAllMouseHandlersLink link = new HasAllMouseHandlersLink(manager);
+        MouseHandlersPopupManagerLink link = new MouseHandlersPopupManagerLink(
+                manager);
 
         final HandlerRegistration reg1 = source.addMouseOverHandler(link);
         final HandlerRegistration reg2 = source.addMouseOutHandler(link);
@@ -377,7 +393,7 @@ public class DefaultPopupManager implements Opacity, PopupManager {
         @Override
         public void run() {
             state.onTimeout(DefaultPopupManager.this);
-        };
+        }
     };
 
     private int transparency = OPACITY_TRANSPARENT;
@@ -541,18 +557,24 @@ public class DefaultPopupManager implements Opacity, PopupManager {
     }
 
     @Override
-    public void onMouseDown(int clientX, int clientY) {
-        updateMousePosition(clientX, clientY);
+    public void onMouseDown(NativeEvent event) {
+        assert event != null;
 
-        if (isEnabled()) {
+        updateMousePosition(event.getClientX(), event.getClientY());
+
+        if (!isEnabled()) {
+            return;
+        }
+
+        if (event.getButton() == NativeEvent.BUTTON_RIGHT) {
+            event.stopPropagation();
+            event.preventDefault();
+
+            state.onSourceRightClick(this);
+        } else if (event.getButton() == NativeEvent.BUTTON_LEFT) {
             // mouse down triggers click operations, popup gets hidden
             setState(INACTIVE_STATE);
         }
-    }
-
-    @Override
-    public void onMouseDown(Point pointInClientArea) {
-        onMouseDown(pointInClientArea.x, pointInClientArea.y);
     }
 
     @Override
