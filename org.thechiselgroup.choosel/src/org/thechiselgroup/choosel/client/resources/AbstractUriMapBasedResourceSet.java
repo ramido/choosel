@@ -91,7 +91,23 @@ public abstract class AbstractUriMapBasedResourceSet extends
             return;
         }
         doRemove(resource);
-        eventBus.fireEvent(new ResourceRemovedEvent(resource, this));
+        eventBus.fireEvent(new ResourcesRemovedEvent(CollectionUtils
+                .toList(resource), this));
+    }
+
+    @Override
+    public void removeAll(Iterable<Resource> resources) {
+        assert resources != null;
+
+        List<Resource> removedResources = new ArrayList<Resource>();
+
+        for (Resource resource : resources) {
+            if (contains(resource)) {
+                doRemove(resource);
+                removedResources.add(resource);
+            }
+        }
+        eventBus.fireEvent(new ResourcesRemovedEvent(removedResources, this));
     }
 
     protected void removeResourceFromMap(String key) {

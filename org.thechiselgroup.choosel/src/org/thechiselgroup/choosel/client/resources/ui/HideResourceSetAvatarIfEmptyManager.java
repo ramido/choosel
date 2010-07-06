@@ -17,15 +17,15 @@ package org.thechiselgroup.choosel.client.resources.ui;
 
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
-import org.thechiselgroup.choosel.client.resources.ResourceRemovedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourceRemovedEventHandler;
+import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.util.Disposable;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
 public class HideResourceSetAvatarIfEmptyManager implements
-        ResourcesAddedEventHandler, ResourceRemovedEventHandler,
+        ResourcesAddedEventHandler, ResourcesRemovedEventHandler,
         ResourceSetAvatarResourcesChangedEventHandler, Disposable {
 
     private HandlerRegistration addedHandlerRegistration;
@@ -73,7 +73,7 @@ public class HideResourceSetAvatarIfEmptyManager implements
     }
 
     @Override
-    public void onResourceRemoved(ResourceRemovedEvent e) {
+    public void onResourcesRemoved(ResourcesRemovedEvent e) {
         updateAvatarState(e.getTarget());
     }
 
@@ -88,7 +88,7 @@ public class HideResourceSetAvatarIfEmptyManager implements
         addedHandlerRegistration = resourceSet.addHandler(
                 ResourcesAddedEvent.TYPE, this);
         removedHandlerRegistration = resourceSet.addHandler(
-                ResourceRemovedEvent.TYPE, this);
+                ResourcesRemovedEvent.TYPE, this);
     }
 
     private void updateAvatarState(ResourceSet resources) {

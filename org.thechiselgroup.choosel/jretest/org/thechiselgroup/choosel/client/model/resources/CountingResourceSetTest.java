@@ -30,8 +30,8 @@ import org.thechiselgroup.choosel.client.resources.CountingResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
-import org.thechiselgroup.choosel.client.resources.ResourceRemovedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourceRemovedEventHandler;
+import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 
 public class CountingResourceSetTest {
 
@@ -39,7 +39,7 @@ public class CountingResourceSetTest {
     private ResourcesAddedEventHandler addedHandler;
 
     @Mock
-    private ResourceRemovedEventHandler removeHandler;
+    private ResourcesRemovedEventHandler removeHandler;
 
     private Resource resource;
 
@@ -59,23 +59,23 @@ public class CountingResourceSetTest {
     public void removeFiredOnceIfRemovedTwiceOnceAfterAddedTwice() {
         underTest.add(resource);
         underTest.add(resource);
-        underTest.addHandler(ResourceRemovedEvent.TYPE, removeHandler);
+        underTest.addHandler(ResourcesRemovedEvent.TYPE, removeHandler);
         underTest.remove(resource);
         underTest.remove(resource);
 
-        verify(removeHandler, times(1)).onResourceRemoved(
-                any(ResourceRemovedEvent.class));
+        verify(removeHandler, times(1)).onResourcesRemoved(
+                any(ResourcesRemovedEvent.class));
     }
 
     @Test
     public void removeNotFiredIfOnlyRemovedOnceAfterAddedTwice() {
         underTest.add(resource);
         underTest.add(resource);
-        underTest.addHandler(ResourceRemovedEvent.TYPE, removeHandler);
+        underTest.addHandler(ResourcesRemovedEvent.TYPE, removeHandler);
         underTest.remove(resource);
 
-        verify(removeHandler, never()).onResourceRemoved(
-                any(ResourceRemovedEvent.class));
+        verify(removeHandler, never()).onResourcesRemoved(
+                any(ResourcesRemovedEvent.class));
     }
 
     @Test

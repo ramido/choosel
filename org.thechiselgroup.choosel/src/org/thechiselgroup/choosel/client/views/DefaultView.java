@@ -27,15 +27,11 @@ import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.CombinedResourceSet;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
-import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceCategoryAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourceCategoryAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceCategoryRemovedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourceCategoryRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceEventsForwarder;
-import org.thechiselgroup.choosel.client.resources.ResourceRemovedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourceRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourceSetAddedEventHandler;
@@ -43,6 +39,10 @@ import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ResourceSetRemovedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourceSetRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceSplitter;
+import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
+import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
@@ -145,7 +145,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private ResourceSetsPresenter selectionPresenter;
 
-    private ResourceRemovedEventHandler selectionRemovedHandler;
+    private ResourcesRemovedEventHandler selectionRemovedHandler;
 
     private HandlerRegistration selectionResourceAddedHandlerRegistration;
 
@@ -215,10 +215,10 @@ public class DefaultView extends AbstractWindowContent implements View {
                         addResource(layer, e.getChangedResource());
                     }
                 });
-        layer.getResources().addHandler(ResourceRemovedEvent.TYPE,
-                new ResourceRemovedEventHandler() {
+        layer.getResources().addHandler(ResourcesRemovedEvent.TYPE,
+                new ResourcesRemovedEventHandler() {
                     @Override
-                    public void onResourceRemoved(ResourceRemovedEvent e) {
+                    public void onResourcesRemoved(ResourcesRemovedEvent e) {
                         removeResource(layer, e.getChangedResource());
                     }
                 });
@@ -269,7 +269,7 @@ public class DefaultView extends AbstractWindowContent implements View {
         selectionResourceAddedHandlerRegistration = this.selection.addHandler(
                 ResourcesAddedEvent.TYPE, selectionAddedHandler);
         selectionResourceRemovedHandlerRegistration = this.selection
-                .addHandler(ResourceRemovedEvent.TYPE, selectionRemovedHandler);
+                .addHandler(ResourcesRemovedEvent.TYPE, selectionRemovedHandler);
     }
 
     @Override
@@ -560,15 +560,15 @@ public class DefaultView extends AbstractWindowContent implements View {
                 ResourcesAddedEvent.TYPE, new ResourcesAddedEventHandler() {
                     @Override
                     public void onResourcesAdded(ResourcesAddedEvent e) {
-                        showHover(e.getChangedResource(), true);
+                        showHover(e.getChangedResources(), true);
                     }
 
                 }));
         handlerRegistrations.addHandlerRegistration(hoverModel.addHandler(
-                ResourceRemovedEvent.TYPE, new ResourceRemovedEventHandler() {
+                ResourcesRemovedEvent.TYPE, new ResourcesRemovedEventHandler() {
                     @Override
-                    public void onResourceRemoved(ResourceRemovedEvent e) {
-                        showHover(e.getChangedResource(), false);
+                    public void onResourcesRemoved(ResourcesRemovedEvent e) {
+                        showHover(e.getChangedResources(), false);
                     }
                 }));
     }
@@ -673,9 +673,9 @@ public class DefaultView extends AbstractWindowContent implements View {
                 updateSelectionStatusDisplay(e.getChangedResource(), true);
             }
         };
-        selectionRemovedHandler = new ResourceRemovedEventHandler() {
+        selectionRemovedHandler = new ResourcesRemovedEventHandler() {
             @Override
-            public void onResourceRemoved(ResourceRemovedEvent e) {
+            public void onResourcesRemoved(ResourcesRemovedEvent e) {
                 if (selection.isEmpty()) {
                     setSelectionStatusVisible(false);
                 }
@@ -892,12 +892,14 @@ public class DefaultView extends AbstractWindowContent implements View {
         }
     }
 
-    private void showHover(Resource resource, boolean showHover) {
-        if (!containsResource(resource)) {
-            return;
-        }
+    private void showHover(List<Resource> resources, boolean showHover) {
+        for (Resource resource : resources) {
+            if (!containsResource(resource)) {
+                return;
+            }
 
-        getResource(resource).setHighlighted(showHover);
+            getResource(resource).setHighlighted(showHover);
+        }
     }
 
     private void storeAutomaticResources(

@@ -52,18 +52,24 @@ public class CombinedResourceSet extends DelegatingResourceSet {
         }
     };
 
-    private ResourceRemovedEventHandler resourceRemovedHandler = new ResourceRemovedEventHandler() {
+    private ResourcesRemovedEventHandler resourceRemovedHandler = new ResourcesRemovedEventHandler() {
         @Override
-        public void onResourceRemoved(ResourceRemovedEvent e) {
+        public void onResourcesRemoved(ResourcesRemovedEvent e) {
+            ResourceSet uniqueResources = new DefaultResourceSet();
             // test that not contained in other resources
-            for (ResourceSetElement resourceSetElement : containedResourceSets) {
-                if (resourceSetElement.resourceSet.contains(e
-                        .getChangedResource())) {
-                    return;
+            for (Resource resource : e.getChangedResources()) {
+                boolean isUnique = true;
+                for (ResourceSetElement resourceSetElement : containedResourceSets) {
+                    if (resourceSetElement.resourceSet.contains(resource)) {
+                        isUnique = false;
+                        break;
+                    }
+                }
+                if (isUnique) {
+                    uniqueResources.add(resource);
                 }
             }
-
-            remove(e.getChangedResource());
+            removeAll(uniqueResources);
         }
     };
 
@@ -88,7 +94,7 @@ public class CombinedResourceSet extends DelegatingResourceSet {
         resourceSetElement.addHandlerRegistration = resourceSet.addHandler(
                 ResourcesAddedEvent.TYPE, resourceAddedHandler);
         resourceSetElement.removeHandlerRegistration = resourceSet.addHandler(
-                ResourceRemovedEvent.TYPE, resourceRemovedHandler);
+                ResourcesRemovedEvent.TYPE, resourceRemovedHandler);
 
         setEventBus.fireEvent(new ResourceSetAddedEvent(resourceSet));
     }

@@ -15,27 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
-import org.thechiselgroup.choosel.client.util.CollectionUtils;
+public interface ResourcesRemovedEventHandler extends ResourceEventHandler {
 
-import com.google.gwt.event.shared.GwtEvent;
-
-public class ResourceRemovedEvent extends
-        ResourceSetEvent<ResourceRemovedEventHandler> {
-
-    public static final GwtEvent.Type<ResourceRemovedEventHandler> TYPE = new GwtEvent.Type<ResourceRemovedEventHandler>();
-
-    public ResourceRemovedEvent(Resource resource, ResourceSet resourceSet) {
-        super(resourceSet, CollectionUtils.toList(resource));
-    }
-
-    @Override
-    protected void dispatch(ResourceRemovedEventHandler handler) {
-        handler.onResourceRemoved(this);
-    }
-
-    @Override
-    public GwtEvent.Type<ResourceRemovedEventHandler> getAssociatedType() {
-        return TYPE;
-    }
+    void onResourcesRemoved(ResourcesRemovedEvent e);
 
 }
