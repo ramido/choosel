@@ -80,7 +80,7 @@ public class ChartItem extends ResourceItem {
             }
                 break;
             case Event.ONMOUSEDOWN: {
-                popupManager.onMouseDown(e.getClientX(), e.getClientY());
+                popupManager.onMouseDown(e);
                 enabler.forwardMouseDownWithEventPosition(e);
             }
                 break;

@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.client.ui.popup;
 
 import org.thechiselgroup.choosel.client.geometry.Point;
 
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -37,10 +38,12 @@ public interface PopupManager {
 
     boolean isEnabled();
 
-    // mouse down triggers click operations, popup gets hidden
-    void onMouseDown(int clientX, int clientY);
-
-    void onMouseDown(Point pointInBrowserClientArea);
+    /**
+     * Mouse down triggers either drag-and-drop operations (left mouse button,
+     * popup gets hidden) or context menu operations (right mouse buttons, popup
+     * gets shown)
+     */
+    void onMouseDown(NativeEvent nativeEvent);
 
     void onMouseMove(int clientX, int clientY);
 
