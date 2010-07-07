@@ -42,6 +42,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.label.SelectionModelLabelFactory;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
@@ -67,21 +68,21 @@ public class DefaultViewTest {
 
     public static class TestView extends DefaultView {
 
-        public TestView(SelectionModelLabelFactory selectionModelLabelFactory,
+        public TestView(LabelProvider selectionModelLabelFactory,
                 ResourceSetFactory resourceSetFactory,
-                ResourceSetsPresenter originalSetsPresenter,
-                ResourceSetsPresenter automaticSetPresenter,
+                ResourceSetsPresenter userSetsPresenter,
+                ResourceSetsPresenter allResourcesSetPresenter,
                 ResourceSetsPresenter selectionPresenter,
                 ResourceSetsPresenter selectionDropPresenter,
                 ResourceSplitter resourceSplitter,
                 ViewContentDisplay contentDisplay, String label,
-                String contentType, SlotResolver slotResolver) {
+                String contentType, ResourceItemValueResolver configuration) {
 
             super(selectionModelLabelFactory, resourceSetFactory,
-                    originalSetsPresenter, automaticSetPresenter,
+                    userSetsPresenter, allResourcesSetPresenter,
                     selectionPresenter, selectionDropPresenter,
                     resourceSplitter, contentDisplay, label, contentType,
-                    slotResolver);
+                    configuration);
         }
 
         @Override
@@ -119,10 +120,10 @@ public class DefaultViewTest {
     @Mock
     private ResourceSetsPresenter selectionPresenter;
 
-    @Mock
-    private SlotResolver slotResolver;
-
     private DefaultView view;
+
+    @Mock
+    private ResourceItemValueResolver resourceSetToValueResolver;
 
     @Test
     public void addingUnlabeledSetDoesNotChangeOriginalSetsPresenter() {
@@ -351,7 +352,7 @@ public class DefaultViewTest {
                 new DefaultResourceSetFactory(), originalSetsPresenter,
                 allResourcesSetPresenter, selectionPresenter,
                 selectionDropPresenter, resourceSplitter, contentDisplay, "",
-                "", slotResolver));
+                "", resourceSetToValueResolver));
     }
 
     @Test

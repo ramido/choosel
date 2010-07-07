@@ -27,9 +27,9 @@ public class ResourceItemValueResolver {
 
     private DefaultResourceSetToValueResolverFactory resourceSetResolverFactory;
 
-    public ResourceItemValueResolver(SlotResolver slotResolver) {
-        this.resourceSetResolverFactory = new DefaultResourceSetToValueResolverFactory(
-                slotResolver);
+    public ResourceItemValueResolver(
+            DefaultResourceSetToValueResolverFactory resourceSetResolverFactory) {
+        this.resourceSetResolverFactory = resourceSetResolverFactory;
     }
 
     // TODO search for calls from outside this class and remove
@@ -37,8 +37,8 @@ public class ResourceItemValueResolver {
         assert slotID != null;
 
         if (!slotIDsToValueResolvers.containsKey(slotID)) {
-            slotIDsToValueResolvers.put(slotID,
-                    resourceSetResolverFactory.createResolver(slotID));
+            slotIDsToValueResolvers.put(slotID, resourceSetResolverFactory
+                    .createResolver(slotID));
         }
 
         return slotIDsToValueResolvers.get(slotID);
