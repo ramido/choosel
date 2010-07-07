@@ -15,10 +15,11 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.chart;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.persistence.Memento;
+import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
@@ -47,8 +48,6 @@ public abstract class ChartViewContentDisplay extends
         void removeStyleName(ChartItem chartItem, String cssClass);
 
     }
-
-    private static final String MEMENTO_CHART_DATA_ARRAY = "data-array";
 
     protected ChartWidget chartWidget;
 
@@ -99,21 +98,30 @@ public abstract class ChartViewContentDisplay extends
 
     @Override
     public void removeResourceItem(ResourceItem resourceItem) {
-        chartWidget.removeEvent(chartWidget.getDataArray().size() - 1);
+        chartWidget.removeEvent(resourceItem);
     }
 
     @Override
     public void restore(Memento state) {
-        ArrayList<Double> dataArray = (ArrayList<Double>) state
-                .getValue(MEMENTO_CHART_DATA_ARRAY);
-        chartWidget.setDataArray(dataArray);
     }
 
     @Override
     public Memento save() {
         Memento state = new Memento();
-        state.setValue(MEMENTO_CHART_DATA_ARRAY, chartWidget.getDataArray());
         return state;
     }
 
+    @Override
+    protected void showHover(List<Resource> resources, boolean showHover) {
+        if (resources.isEmpty()) {
+            return;
+        }
+        for (Resource resource : resources) {
+            if (!callback.containsResource(resource)) {
+                return;
+            }
+            callback.getResourceItem(resource).setHighlighted(showHover);
+        }
+        chartWidget.renderChart();
+    }
 }

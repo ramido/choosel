@@ -20,7 +20,6 @@ import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionCo
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_SELECTION_DROP;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_SET;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.DROP_TARGET_MANAGER_VIEW_CONTENT;
-import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.HOVER_MODEL;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.LABEL_PROVIDER_SELECTION_SET;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_BAR;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_DOT;
@@ -38,7 +37,6 @@ import java.util.Map;
 import org.thechiselgroup.choosel.client.label.CategoryLabelProvider;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.ui.HelpWindowContent;
@@ -67,8 +65,6 @@ public class ChooselWindowContentProducerProvider implements
 
     private ResourceSetAvatarFactory dropTargetFactory;
 
-    private ResourceSet hoverModel;
-
     private CategoryLabelProvider labelProvider;
 
     private ResourceSetFactory resourceSetFactory;
@@ -89,7 +85,6 @@ public class ChooselWindowContentProducerProvider implements
             @Named(AVATAR_FACTORY_ALL_RESOURCES) ResourceSetAvatarFactory allResourcesDragAvatarFactory,
             @Named(AVATAR_FACTORY_SELECTION) ResourceSetAvatarFactory selectionDragAvatarFactory,
             @Named(AVATAR_FACTORY_SELECTION_DROP) ResourceSetAvatarFactory dropTargetFactory,
-            @Named(HOVER_MODEL) ResourceSet hoverModel,
             ResourceSetFactory resourceSetFactory,
             @Named(LABEL_PROVIDER_SELECTION_SET) LabelProvider selectionModelLabelFactory,
             ResourceMultiCategorizer categorizer,
@@ -102,7 +97,6 @@ public class ChooselWindowContentProducerProvider implements
         assert selectionDragAvatarFactory != null;
         assert dropTargetFactory != null;
         assert contentDropTargetManager != null;
-        assert hoverModel != null;
         assert resourceSetFactory != null;
         assert selectionModelLabelFactory != null;
         assert categorizer != null;
@@ -114,7 +108,6 @@ public class ChooselWindowContentProducerProvider implements
         this.selectionDragAvatarFactory = selectionDragAvatarFactory;
         this.dropTargetFactory = dropTargetFactory;
         this.contentDropTargetManager = contentDropTargetManager;
-        this.hoverModel = hoverModel;
         this.resourceSetFactory = resourceSetFactory;
         this.selectionModelLabelFactory = selectionModelLabelFactory;
         this.categorizer = categorizer;
@@ -200,7 +193,7 @@ public class ChooselWindowContentProducerProvider implements
         windowContentFactories.put(contentType, new ViewFactory(contentType,
                 contentDisplayFactory, userSetsDragAvatarFactory,
                 allResourcesDragAvatarFactory, selectionDragAvatarFactory,
-                dropTargetFactory, hoverModel, resourceSetFactory,
+                dropTargetFactory, resourceSetFactory,
                 selectionModelLabelFactory, categorizer, labelProvider,
                 contentDropTargetManager, slotResolver));
     }

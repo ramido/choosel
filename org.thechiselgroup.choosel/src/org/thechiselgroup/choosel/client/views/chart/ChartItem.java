@@ -107,11 +107,4 @@ public class ChartItem extends ResourceItem {
         }
     }
 
-    @Override
-    protected void setStatusStyling(Status status) {
-        if (view != null) {
-            view.getChartWidget().renderChart();
-        }
-    }
-
 }

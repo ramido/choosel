@@ -46,7 +46,6 @@ import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccess
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
-import org.thechiselgroup.choosel.client.util.HandlerRegistrationSet;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 
 import com.allen_sauer.gwt.log.client.Log;
@@ -122,10 +121,6 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private ViewContentDisplayCallback contentDisplayCallback;
 
-    private HandlerRegistrationSet handlerRegistrations = new HandlerRegistrationSet();
-
-    private final ResourceSet hoverModel;
-
     private DockPanel mainPanel;
 
     /**
@@ -166,7 +161,6 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     @Inject
     public DefaultView(
-            @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
             @Named(ChooselInjectionConstants.LABEL_PROVIDER_SELECTION_SET) LabelProvider selectionModelLabelFactory,
             ResourceSetFactory resourceSetFactory,
             @Named(ChooselInjectionConstants.AVATAR_FACTORY_SET) ResourceSetsPresenter userSetsPresenter,
@@ -180,7 +174,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         super(label, contentType);
 
         assert slotResolver != null;
-        assert hoverModel != null;
         assert selectionModelLabelFactory != null;
         assert resourceSetFactory != null;
         assert userSetsPresenter != null;
@@ -191,7 +184,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         assert contentDisplay != null;
 
         this.slotResolver = slotResolver;
-        this.hoverModel = hoverModel;
         this.selectionModelLabelFactory = selectionModelLabelFactory;
         this.resourceSetFactory = resourceSetFactory;
         this.userSetsPresenter = userSetsPresenter;
@@ -303,9 +295,6 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         removeSelectionModelResourceHandlers();
 
-        handlerRegistrations.dispose();
-        handlerRegistrations = null;
-
         combinedUserResourceSets.clear();
         combinedUserResourceSets = null;
         allResourcesToSplitterForwarder.dispose();
@@ -372,7 +361,6 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         initPresenterLinks();
         initContentDisplay();
-        initHoverModelHooks();
         initSelectionModelResourceHandlers();
     }
 
@@ -420,6 +408,11 @@ public class DefaultView extends AbstractWindowContent implements View {
         contentDisplayCallback = new ViewContentDisplayCallback() {
 
             @Override
+            public boolean containsResource(Resource resource) {
+                return allResources.containsResourceWithUri(resource.getUri());
+            }
+
+            @Override
             public boolean containsResourceWithUri(String uri) {
                 return allResources.containsResourceWithUri(uri);
             }
@@ -461,24 +454,6 @@ public class DefaultView extends AbstractWindowContent implements View {
             }
         };
         contentDisplay.init(contentDisplayCallback);
-    }
-
-    private void initHoverModelHooks() {
-        handlerRegistrations.addHandlerRegistration(hoverModel.addHandler(
-                ResourcesAddedEvent.TYPE, new ResourcesAddedEventHandler() {
-                    @Override
-                    public void onResourcesAdded(ResourcesAddedEvent e) {
-                        showHover(e.getChangedResources(), true);
-                    }
-
-                }));
-        handlerRegistrations.addHandlerRegistration(hoverModel.addHandler(
-                ResourcesRemovedEvent.TYPE, new ResourcesRemovedEventHandler() {
-                    @Override
-                    public void onResourcesRemoved(ResourcesRemovedEvent e) {
-                        showHover(e.getChangedResources(), false);
-                    }
-                }));
     }
 
     private void initOriginalResourceSetsPresenterUI() {
@@ -774,16 +749,6 @@ public class DefaultView extends AbstractWindowContent implements View {
     private void setSelectionStatusVisible(boolean selectionStatus) {
         for (ResourceItem avatar : categoriesToResourceItems.values()) {
             avatar.setSelectionStatusVisible(selectionStatus);
-        }
-    }
-
-    private void showHover(List<Resource> resources, boolean showHover) {
-        for (Resource resource : resources) {
-            if (!containsResource(resource)) {
-                return;
-            }
-
-            getResource(resource).setHighlighted(showHover);
         }
     }
 
