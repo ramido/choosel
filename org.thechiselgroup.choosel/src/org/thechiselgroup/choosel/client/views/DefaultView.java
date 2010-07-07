@@ -154,8 +154,6 @@ public class DefaultView extends AbstractWindowContent implements View {
     // XXX might not be necessary (use presenter instead?)
     private List<ResourceSet> selectionSets = new ArrayList<ResourceSet>();
 
-    private SlotResolver slotResolver;
-
     private ResourceSetsPresenter userSetsPresenter;
 
     private ResourceItemValueResolver configuration;
@@ -170,11 +168,11 @@ public class DefaultView extends AbstractWindowContent implements View {
             @Named(ChooselInjectionConstants.AVATAR_FACTORY_SELECTION_DROP) ResourceSetsPresenter selectionDropPresenter,
             ResourceSplitter resourceSplitter,
             ViewContentDisplay contentDisplay, String label,
-            String contentType, SlotResolver slotResolver) {
+            String contentType, ResourceItemValueResolver configuration) {
 
         super(label, contentType);
 
-        assert slotResolver != null;
+        assert configuration != null;
         assert selectionModelLabelFactory != null;
         assert resourceSetFactory != null;
         assert userSetsPresenter != null;
@@ -184,7 +182,7 @@ public class DefaultView extends AbstractWindowContent implements View {
         assert resourceSplitter != null;
         assert contentDisplay != null;
 
-        this.slotResolver = slotResolver;
+        this.configuration = configuration;
         this.selectionModelLabelFactory = selectionModelLabelFactory;
         this.resourceSetFactory = resourceSetFactory;
         this.userSetsPresenter = userSetsPresenter;
@@ -328,8 +326,8 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     // protected for tests only
     protected List<ResourceItemValueResolver> getLayers() {
-        return new ArrayList<ResourceItemValueResolver>(
-                categoriesToLayers.values());
+        return new ArrayList<ResourceItemValueResolver>(categoriesToLayers
+                .values());
     }
 
     private List<ResourceItem> getResourceItems(List<Resource> resources) {
@@ -372,8 +370,6 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     @Override
     public void init() {
-        initViewConfiguration();
-
         initResourceCombinator();
         initAutomaticResources();
         initAllResources();
@@ -389,8 +385,8 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     private void initAllResources() {
-        allResources = new CombinedResourceSet(
-                resourceSetFactory.createResourceSet());
+        allResources = new CombinedResourceSet(resourceSetFactory
+                .createResourceSet());
         allResources.setLabel("All"); // TODO add & update view name
         allResources.addResourceSet(automaticResources);
         allResources.addResourceSet(combinedUserResourceSets);
@@ -495,8 +491,8 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     private void initResourceCombinator() {
-        combinedUserResourceSets = new CombinedResourceSet(
-                resourceSetFactory.createResourceSet());
+        combinedUserResourceSets = new CombinedResourceSet(resourceSetFactory
+                .createResourceSet());
 
         combinedUserResourceSets.addSetEventsHandler(
                 ResourceSetAddedEvent.TYPE, new ResourceSetAddedEventHandler() {
@@ -604,12 +600,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         mainPanel.add(contentDisplay.asWidget(), DockPanel.CENTER);
 
         mainPanel.setCellHeight(contentDisplay.asWidget(), "100%");
-    }
-
-    // protected for test case until refactored, return is also for test only
-    // TODO cleanup
-    private void initViewConfiguration() {
-        configuration = new ResourceItemValueResolver(slotResolver);
     }
 
     private void removeResourceItem(String category) {

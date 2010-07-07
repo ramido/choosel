@@ -6,24 +6,26 @@ import java.util.Map;
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resolver.ResourceToValueResolver;
 import org.thechiselgroup.choosel.client.resources.Resource;
-import org.thechiselgroup.choosel.client.resources.ResourceByUriTypeCategorizer;
+import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 
 public abstract class AbstractResourceSetToValueResolver implements
         ResourceSetToValueResolver {
 
     protected Map<String, ResourceToValueResolver> resourceTypeToResourceToValueResolvers = new HashMap<String, ResourceToValueResolver>();
 
-    protected ResourceByUriTypeCategorizer categorizer = new ResourceByUriTypeCategorizer();
+    protected ResourceCategorizer categorizer;
 
     private DefaultResourceToValueResolverFactory factory;
 
     private String slotID;
 
     public AbstractResourceSetToValueResolver(String slotID,
-            DefaultResourceToValueResolverFactory factory) {
+            DefaultResourceToValueResolverFactory factory,
+            ResourceCategorizer categorizer) {
 
         this.slotID = slotID;
         this.factory = factory;
+        this.categorizer = categorizer;
     }
 
     private ResourceToValueResolver getResourceToValueResolver(
@@ -31,8 +33,8 @@ public abstract class AbstractResourceSetToValueResolver implements
 
         if (!resourceTypeToResourceToValueResolvers.containsKey(resourceType)) {
 
-            resourceTypeToResourceToValueResolvers.put(resourceType,
-                    factory.createResolver(slotID, resourceType));
+            resourceTypeToResourceToValueResolvers.put(resourceType, factory
+                    .createResolver(slotID, resourceType));
         }
 
         return resourceTypeToResourceToValueResolvers.get(resourceType);

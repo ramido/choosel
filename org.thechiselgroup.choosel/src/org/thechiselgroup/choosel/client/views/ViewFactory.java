@@ -58,7 +58,7 @@ public class ViewFactory implements WindowContentFactory {
 
     private ViewContentDisplayFactory viewContentDisplayFactory;
 
-    private SlotResolver slotResolver;
+    private DefaultResourceSetToValueResolverFactory resourceSetToValueResolverFactory;
 
     public ViewFactory(
             String contentType,
@@ -72,7 +72,7 @@ public class ViewFactory implements WindowContentFactory {
             ResourceMultiCategorizer categorizer,
             CategoryLabelProvider labelProvider,
             @Named(DROP_TARGET_MANAGER_VIEW_CONTENT) ResourceSetAvatarDropTargetManager contentDropTargetManager,
-            SlotResolver slotResolver) {
+            DefaultResourceSetToValueResolverFactory resourceSetToValueResolverFactory) {
 
         assert contentType != null;
         assert viewContentDisplayFactory != null;
@@ -85,7 +85,7 @@ public class ViewFactory implements WindowContentFactory {
         assert selectionModelLabelFactory != null;
         assert categorizer != null;
         assert labelProvider != null;
-        assert slotResolver != null;
+        assert resourceSetToValueResolverFactory != null;
 
         this.contentType = contentType;
         this.viewContentDisplayFactory = viewContentDisplayFactory;
@@ -97,7 +97,7 @@ public class ViewFactory implements WindowContentFactory {
         this.resourceSetFactory = resourceSetFactory;
         this.selectionModelLabelFactory = selectionModelLabelFactory;
         this.categorizer = categorizer;
-        this.slotResolver = slotResolver;
+        this.resourceSetToValueResolverFactory = resourceSetToValueResolverFactory;
     }
 
     @Override
@@ -109,6 +109,9 @@ public class ViewFactory implements WindowContentFactory {
                 viewContentDisplayFactory.createViewContentDisplay(),
                 contentDropTargetManager);
 
+        ResourceItemValueResolver configuration = new ResourceItemValueResolver(
+                resourceSetToValueResolverFactory);
+
         return new DefaultView(selectionModelLabelFactory, resourceSetFactory,
                 new ResourceSetAvatarResourceSetsPresenter(
                         userSetsDragAvatarFactory),
@@ -118,6 +121,6 @@ public class ViewFactory implements WindowContentFactory {
                         selectionDragAvatarFactory),
                 new ResourceSetAvatarResourceSetsPresenter(dropTargetFactory),
                 resourceSplitter, contentDisplay, contentType, contentType,
-                slotResolver);
+                configuration);
     }
 }
