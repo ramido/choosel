@@ -15,8 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.chooselexample.client;
 
-import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resolver.PropertyValueResolverConverterWrapper;
+import org.thechiselgroup.choosel.client.resolver.ResourceToValueResolver;
 import org.thechiselgroup.choosel.client.resolver.SimplePropertyValueResolver;
 import org.thechiselgroup.choosel.client.test.ResourcesTestHelper;
 import org.thechiselgroup.choosel.client.util.ConversionException;
@@ -26,15 +26,14 @@ import org.thechiselgroup.choosel.client.views.DefaultSlotResolver;
 public class ChooselExampleSlotResolver extends DefaultSlotResolver {
 
     @Override
-    public ResourceSetToValueResolver createDescriptionSlotResolver(
-            String category) {
-        // TODO switch based on category -- need category as part of layerModel
-        // TODO resources as part of layerModel
-        // TODO how to do the automatic color assignment?
-        // TODO refactor // extract
-        if ("tsunami".equals(category)) {
-            return new SimplePropertyValueResolver("date");
-        }
+    public ResourceToValueResolver createDescriptionSlotResolver(String category) {
+	// TODO switch based on category -- need category as part of layerModel
+	// TODO resources as part of layerModel
+	// TODO how to do the automatic color assignment?
+	// TODO refactor // extract
+	if ("tsunami".equals(category)) {
+	    return new SimplePropertyValueResolver("date");
+	}
 
         if ("earthquake".equals(category)) {
             return new SimplePropertyValueResolver("description");
@@ -53,7 +52,7 @@ public class ChooselExampleSlotResolver extends DefaultSlotResolver {
     }
 
     @Override
-    public ResourceSetToValueResolver createLabelSlotResolver(String category) {
+    public ResourceToValueResolver createLabelSlotResolver(String category) {
 
         Converter<Float, String> converter = new Converter<Float, String>() {
             @Override
@@ -79,17 +78,17 @@ public class ChooselExampleSlotResolver extends DefaultSlotResolver {
     }
 
     @Override
-    public ResourceSetToValueResolver createDateSlotResolver(String type) {
+    public ResourceToValueResolver createDateSlotResolver(String type) {
         return new SimplePropertyValueResolver("date");
     }
 
     @Override
-    public ResourceSetToValueResolver createLocationSlotResolver(String category) {
+    public ResourceToValueResolver createLocationSlotResolver(String category) {
         return new SimplePropertyValueResolver("location");
     }
 
     @Override
-    public ResourceSetToValueResolver createMagnitudeSlotResolver(String type) {
+    public ResourceToValueResolver createMagnitudeSlotResolver(String type) {
             return new SimplePropertyValueResolver("magnitude");
     }
 }
