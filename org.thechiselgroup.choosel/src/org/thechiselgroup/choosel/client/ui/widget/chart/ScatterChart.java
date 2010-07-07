@@ -1,20 +1,20 @@
 package org.thechiselgroup.choosel.client.ui.widget.chart;
 
+import org.thechiselgroup.choosel.client.views.SlotResolver;
+
 public class ScatterChart extends ChartWidget {
 
     // @formatter:off
     @Override
     public native Chart drawChart(int width, int height) /*-{
         var chart = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chart,
-        valX = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::valX,
-        valY = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::valY,
+        s,
         thisChart = this,
-        s, val = new Array(),
-        isBrushed = new Array();
+        val = new Array();
 
-        var i;
-        for(i = 0; i < valX.length; i++) {
-            val[i] = {x: valX[i], y: valY[i], isBrushed: false};
+        for(var i = 0; i < this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chartItemArray.@java.util.ArrayList::size()(); i++) {
+            val[i] = {x: this.@org.thechiselgroup.choosel.client.ui.widget.chart.ScatterChart::getSlotValue(II)(i,0),
+                y: this.@org.thechiselgroup.choosel.client.ui.widget.chart.ScatterChart::getSlotValue(II)(i,1)};
         }
 
         var kx = 10,
@@ -47,17 +47,27 @@ public class ScatterChart extends ChartWidget {
             .overflow("hidden")
           .add($wnd.pv.Dot)
             .data(val)
+            .cursor("pointer")
             .left(function(d) {return x(d.x);})
             .top(function(d) {return y(d.y);})
             .radius(function() {return 5 / this.scale;})
             .strokeStyle("rgba(0,0,0,.35)")
-            .fillStyle(function(d) {return (s && ((this.index * width / val.length < s.x1) || (this.index * width / val.length > s.x2)
-                || (height - (d * height / 10) < s.y1) || (height - (d * height / 10) > s.y2)) || !s
-                ? thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::getChartItem(I)(this.index)
-               	    .@org.thechiselgroup.choosel.client.views.chart.ChartItem::getColour()() : "rgba(256,256,0,.6)");});
+            .fillStyle(function() {return thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::getChartItem(I)(this.index)
+               	    .@org.thechiselgroup.choosel.client.views.chart.ChartItem::getColour()();});
 
         return dot;
     }-*/;
     // @formatter:on
+
+    private Object getSlotValue(int i, int coordinate) {
+        if (coordinate == 0) {
+            return getChartItem(i).getResourceValue(
+                    SlotResolver.X_COORDINATE_SLOT);
+        } else if (coordinate == 1) {
+            return getChartItem(i).getResourceValue(
+                    SlotResolver.Y_COORDINATE_SLOT);
+        }
+        return null;
+    }
 
 }

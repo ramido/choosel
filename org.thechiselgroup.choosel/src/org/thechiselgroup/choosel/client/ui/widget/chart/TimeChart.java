@@ -1,35 +1,39 @@
 package org.thechiselgroup.choosel.client.ui.widget.chart;
 
+import java.util.Collections;
+import java.util.Comparator;
+
+import org.thechiselgroup.choosel.client.views.SlotResolver;
+import org.thechiselgroup.choosel.client.views.chart.ChartItem;
+
 public class TimeChart extends ChartWidget {
 
     // @formatter:off
     @Override
     public native Chart drawChart(int width, int height) /*-{
         var chart = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chart,
-        valX = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::valX,
-        valY = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::valY;
+        val = new Array();
 
-        if(valX.length == 0) return chart;
-
-        var data = $wnd.pv.range(0, $wnd.pv.max([1,valX.length]), 1).map(function(i) {
-            return {x: new $wnd.Date(valX[i].substring(0,4), valX[i].substring(5,7) - 1, valX[i].substring(8,10)),
-            y: valY[i]};
-        });
-
-        function sortByDate(a,b) {
-            return a.x - b.x;
+        for(var i = 0; i < this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chartItemArray.@java.util.ArrayList::size()(); i++) {
+            var xCoord = this.@org.thechiselgroup.choosel.client.ui.widget.chart.TimeChart::getSlotValue(II)(i,0);
+            val[i] = {x: new $wnd.Date(xCoord.substring(0,4), xCoord.substring(5,7) - 1, xCoord.substring(8,10)),
+                y: this.@org.thechiselgroup.choosel.client.ui.widget.chart.TimeChart::getSlotValue(II)(i,1)};
         }
 
-        data.sort(sortByDate);
+        this.@org.thechiselgroup.choosel.client.ui.widget.chart.TimeChart::sortArray()();
 
-        var start = data[0].x;
-        var end = data[data.length - 1].x
+        if(val.length == 0) {
+            return chart;
+        }
+
+        var start = val[0].x;
+        var end = val[val.length - 1].x;
 
         var w = width - 25,
             h1 = height - 60,
             h2 = 30,
-            x = $wnd.pv.Scale.linear(start, end).range(0, w - 25),
-            y = $wnd.pv.Scale.linear(0, $wnd.pv.max(data, function(d) {return d.y;})).range(0, h2);
+            x = $wnd.pv.Scale.linear(start, end).range(0, w),
+            y = $wnd.pv.Scale.linear(0, $wnd.pv.max(val, function(d) {return d.y;})).range(0, h2);
 
         var i = {x:200, dx:100},
             fx = $wnd.pv.Scale.linear().range(0, w),
@@ -39,9 +43,9 @@ public class TimeChart extends ChartWidget {
             .def("init", function() {
                 var d1 = x.invert(i.x),
                     d2 = x.invert(i.x + i.dx),
-                    dd = data.slice(
-                        Math.max(0, $wnd.pv.search.index(data, d1, function(d) {return d.x;}) - 1),
-                        $wnd.pv.search.index(data, d2, function(d) {return d.x;}) + 1);
+                    dd = val.slice(
+                        Math.max(0, $wnd.pv.search.index(val, d1, function(d) {return d.x;}) - 1),
+                        $wnd.pv.search.index(val, d2, function(d) {return d.x;}) + 1);
                 fx.domain(d1, d2);
                 fy.domain(y.domain());
                 return dd;
@@ -103,7 +107,7 @@ public class TimeChart extends ChartWidget {
             .bottom(0);
 
         context.add($wnd.pv.Area)
-            .data(data)
+            .data(val)
             .left(function(d) {return x(d.x);})
             .bottom(1)
             .height(function(d) {return y(d.y);})
@@ -129,5 +133,29 @@ public class TimeChart extends ChartWidget {
         return dot;
     }-*/;
     // @formatter:on
+
+    private Object getSlotValue(int i, int slot) {
+        if (slot == 0) {
+            return getChartItem(i).getResourceValue(SlotResolver.DATE_SLOT);
+        } else if (slot == 1) {
+            return getChartItem(i).getResourceValue(
+                    SlotResolver.DESCRIPTION_SLOT);
+        }
+        return null;
+    }
+
+    private void sortArray() {
+        Collections.sort(chartItemArray, new Comparator() {
+
+            @Override
+            public int compare(Object o1, Object o2) {
+                ChartItem c1 = (ChartItem) o1;
+                ChartItem c2 = (ChartItem) o2;
+                return ((String) c1.getResourceValue(SlotResolver.DATE_SLOT))
+                        .compareToIgnoreCase((String) c2
+                                .getResourceValue(SlotResolver.DATE_SLOT));
+            }
+        });
+    }
 
 }

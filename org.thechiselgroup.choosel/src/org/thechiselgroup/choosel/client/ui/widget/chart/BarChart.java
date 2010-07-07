@@ -1,18 +1,34 @@
 package org.thechiselgroup.choosel.client.ui.widget.chart;
 
+import org.thechiselgroup.choosel.client.views.SlotResolver;
+
 public class BarChart extends ChartWidget {
 
     // @formatter:off
     @Override
     public native Chart drawChart(int width, int height) /*-{
         var chart = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chart,
-        val = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::val,
-        max = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::getMaxDataValue()(),
-        min = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::getMinDataValue()(),
-        w = width - 40,
-        h = height - 40,
-        x = $wnd.pv.Scale.linear(max + .5, min - .5).range(w, 0),
-        y = $wnd.pv.Scale.linear(max + .5, min - .5).range(0, h);
+            h = height - 40,
+            w = width - 40,
+            val = new Array(),
+            max,
+            min;
+
+        for(var i = 0; i < this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chartItemArray.@java.util.ArrayList::size()(); i++) {
+            if(max == null && min == null) {
+                max = this.@org.thechiselgroup.choosel.client.ui.widget.chart.BarChart::getSlotValue(I)(i);
+                min = this.@org.thechiselgroup.choosel.client.ui.widget.chart.BarChart::getSlotValue(I)(i);
+            } else {
+                if(max < this.@org.thechiselgroup.choosel.client.ui.widget.chart.BarChart::getSlotValue(I)(i)) {
+                    max = this.@org.thechiselgroup.choosel.client.ui.widget.chart.BarChart::getSlotValue(I)(i);
+                }
+                if(min > this.@org.thechiselgroup.choosel.client.ui.widget.chart.BarChart::getSlotValue(I)(i)) {
+                    min = this.@org.thechiselgroup.choosel.client.ui.widget.chart.BarChart::getSlotValue(I)(i);
+                }
+            }
+
+            val[i] = this.@org.thechiselgroup.choosel.client.ui.widget.chart.BarChart::getSlotValue(I)(i);
+        }
 
         chart.width(w)
             .height(h)
@@ -24,13 +40,17 @@ public class BarChart extends ChartWidget {
         if(val.length == 0) {
             return chart;
         }
+
+        var x = $wnd.pv.Scale.linear(min - .5, max).range(0, w),
+            y = $wnd.pv.Scale.linear(max, min - .5).range(0, h);
+
         if(h / w > 1.5) {
             var bar = chart.add($wnd.pv.Bar)
                 .data(val)
                 .left(0)
                 .bottom(function() {return this.index * h / val.length;})
-                .height(h / val.length - 5)
-                .width(function(d) {return (d - min + .5) * w / (max - min + 1);});
+                .height(h / val.length - 2)
+                .width(function(d) {return (d - min + .5) * w / (max - min + .5);});
 
             chart.add($wnd.pv.Rule)
                 .data(function() {return x.ticks();})
@@ -43,8 +63,8 @@ public class BarChart extends ChartWidget {
                 .data(val)
                 .bottom(0)
                 .left(function() {return this.index * w / val.length;})
-                .width(w / val.length - 5)
-                .height(function(d) {return (d - min + .5) * h / (max - min + 1);});
+                .width(w / val.length - 2)
+                .height(function(d) {return (d - min + .5) * h / (max - min + .5);});
 
             chart.add($wnd.pv.Rule)
                 .data(function() {return y.ticks();})
@@ -58,7 +78,7 @@ public class BarChart extends ChartWidget {
                 .bottom(h/2)
                 .left(w/2)
                 .innerRadius(40)
-                .outerRadius(function(d) {return 45 + (d - min) / (max + .5 - min) * (h > w ? (w/2 - 50) : (h/2 - 50));})
+                .outerRadius(function(d) {return 45 + (d - min) / (max - min + .5) * (h > w ? (w/2 - 50) : (h/2 - 50));})
                 .angle((9 * Math.PI / 5) / val.length)
                 .startAngle(function() {return (9 * Math.PI / 5) * this.index / val.length + 8 * Math.PI / 5;});
 
@@ -69,7 +89,7 @@ public class BarChart extends ChartWidget {
                 .fillStyle(null)
                 .strokeStyle("#ccc")
                 .lineWidth(1)
-                .size(function(d) {return Math.pow((45 + (d - min) / (max + .5 - min) * (h > w ? (w/2 - 50) : (h/2 - 50))), 2);})
+                .size(function(d) {return Math.pow((45 + (d - min) / (max - min + .5) * (h > w ? (w/2 - 50) : (h/2 - 50))), 2);})
               .anchor("top").add($wnd.pv.Label)
                 .textBaseline("middle")
                 .text(function(d) {return d;});
@@ -78,5 +98,9 @@ public class BarChart extends ChartWidget {
         return bar;
     }-*/;
     // @formatter:on
+
+    private Object getSlotValue(int i) {
+        return getChartItem(i).getResourceValue(SlotResolver.MAGNITUDE_SLOT);
+    }
 
 }
