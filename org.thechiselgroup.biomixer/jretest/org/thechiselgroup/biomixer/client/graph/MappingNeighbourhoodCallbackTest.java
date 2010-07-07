@@ -33,6 +33,8 @@ import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
+import org.thechiselgroup.choosel.client.util.CollectionUtils;
+import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 import org.thechiselgroup.choosel.client.views.graph.GraphItem;
 import org.thechiselgroup.choosel.client.views.graph.GraphNodeExpansionCallback;
@@ -147,8 +149,8 @@ public class MappingNeighbourhoodCallbackTest {
 	when(view.getCallback()).thenReturn(callback);
 	when(availableResources.getByUri(any(String.class))).thenReturn(
 		inputConcept);
-	when(callback.getResourceItem(concept2)).thenReturn(concept2GraphItem);
-	when(callback.getResourceItem(mapping)).thenReturn(mappingGraphItem);
+	when(callback.getResourceItems(concept2)).thenReturn(CollectionUtils.toList((ResourceItem)concept2GraphItem));
+	when(callback.getResourceItems(mapping)).thenReturn(CollectionUtils.toList((ResourceItem)mappingGraphItem));
 	when(concept2GraphItem.getNode()).thenReturn(concept2Node);
 	when(mappingGraphItem.getNode()).thenReturn(mappingNode);
 
