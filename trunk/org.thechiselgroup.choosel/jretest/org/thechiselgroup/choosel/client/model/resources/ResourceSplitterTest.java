@@ -201,26 +201,6 @@ public class ResourceSplitterTest {
     }
 
     @Test
-    public void labelProvider() {
-        String label1 = "label1";
-        String label2 = "label2";
-
-        when(labelProvider.getLabel(CATEGORY_1)).thenReturn(label1);
-        when(labelProvider.getLabel(CATEGORY_2)).thenReturn(label2);
-
-        splitter.addAll(resources1);
-        splitter.addAll(resources2);
-
-        Map<String, ResourceSet> result = splitter.getCategorizedResourceSets();
-
-        assertEquals(2, result.size());
-        assertTrue(result.containsKey(CATEGORY_1));
-        assertEquals(label1, result.get(CATEGORY_1).getLabel());
-        assertTrue(result.containsKey(CATEGORY_2));
-        assertEquals(label2, result.get(CATEGORY_2).getLabel());
-    }
-
-    @Test
     public void noResourceSetEventsFiredOnCompleteCategoryRemovalViaRemove() {
         splitter.add(createResource(TEST_CATEGORY, 1));
         ResourceSet categorizedResources = splitter
@@ -268,7 +248,7 @@ public class ResourceSplitterTest {
         labelProvider = spy(new DefaultCategoryLabelProvider());
 
         splitter = new ResourceSplitter(categorizer,
-                new DefaultResourceSetFactory(), labelProvider);
+                new DefaultResourceSetFactory());
 
         resources1 = createResources(TEST_CATEGORY, 1, 2, 3);
         resources2 = createResources(TEST_CATEGORY, 4, 5);

@@ -15,6 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
+import java.util.List;
+
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
@@ -30,7 +32,7 @@ public interface ViewContentDisplayCallback {
 
     Resource getResourceByUri(String uri);
 
-    ResourceItem getResourceItem(Resource resource);
+    List<ResourceItem> getResourceItems(Resource resource);
 
     void switchSelection(ResourceSet resources);
 

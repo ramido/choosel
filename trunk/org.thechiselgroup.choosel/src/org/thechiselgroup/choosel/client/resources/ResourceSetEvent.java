@@ -31,10 +31,6 @@ public abstract class ResourceSetEvent<H extends ResourceEventHandler> extends
         this.target = target;
     }
 
-    public Resource getChangedResource() {
-        return changedResources.get(0);
-    }
-
     public List<Resource> getChangedResources() {
         return changedResources;
     }

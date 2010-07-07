@@ -120,7 +120,12 @@ public abstract class ChartViewContentDisplay extends
             if (!callback.containsResource(resource)) {
                 return;
             }
-            callback.getResourceItem(resource).setHighlighted(showHover);
+
+            List<ResourceItem> resourceItems = callback
+                    .getResourceItems(resource);
+            for (ResourceItem resourceItem : resourceItems) {
+                resourceItem.setHighlighted(showHover);
+            }
         }
         chartWidget.renderChart();
     }

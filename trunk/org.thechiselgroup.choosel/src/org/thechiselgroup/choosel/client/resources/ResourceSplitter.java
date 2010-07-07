@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.thechiselgroup.choosel.client.label.CategoryLabelProvider;
 import org.thechiselgroup.choosel.client.util.SingleItemIterable;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
@@ -40,16 +39,12 @@ public class ResourceSplitter extends AbstractResourceContainer {
 
     private transient HandlerManager eventBus;
 
-    private final CategoryLabelProvider labelProvider;
-
     @Inject
     public ResourceSplitter(ResourceMultiCategorizer multiCategorizer,
-            ResourceSetFactory resourceSetFactory,
-            CategoryLabelProvider labelProvider) {
+            ResourceSetFactory resourceSetFactory) {
 
         this.multiCategorizer = multiCategorizer;
         this.resourceSetFactory = resourceSetFactory;
-        this.labelProvider = labelProvider;
 
         this.eventBus = new HandlerManager(this);
     }
@@ -80,7 +75,6 @@ public class ResourceSplitter extends AbstractResourceContainer {
         } else {
             ResourceSet resourceSet = resourceSetFactory.createResourceSet();
 
-            resourceSet.setLabel(labelProvider.getLabel(category));
             resourceSet.addAll(categoryResources);
 
             categorizedSets.put(category, resourceSet);
