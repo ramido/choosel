@@ -19,6 +19,7 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
 public interface ResourceSetToValueResolver {
 
-    Object getValue(ResourceSet resources);
+    // TODO change --> add category
+    Object resolve(ResourceSet resources, String category);
 
 }

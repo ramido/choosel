@@ -26,8 +26,8 @@ import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.ui.widget.timeline.TimeLineWidget;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.Layer;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -62,11 +62,12 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     @Override
-    public ResourceItem createResourceItem(Layer layer, ResourceSet resources) {
-        PopupManager popupManager = createPopupManager(layer, resources);
+    public ResourceItem createResourceItem(ResourceItemValueResolver resolver,
+            String category, ResourceSet resources) {
+        PopupManager popupManager = createPopupManager(resolver, resources);
 
-        TimeLineItem timeLineItem = new TimeLineItem(resources, this,
-                popupManager, hoverModel, layer, dragEnablerFactory);
+        TimeLineItem timeLineItem = new TimeLineItem(category, resources, this,
+                popupManager, hoverModel, resolver, dragEnablerFactory);
 
         timelineWidget.addEvent(timeLineItem.getTimeLineEvent());
 

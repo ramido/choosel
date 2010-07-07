@@ -19,8 +19,8 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.Layer;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.user.client.Event;
@@ -35,11 +35,12 @@ public class ChartItem extends ResourceItem {
 
     public DragEnabler enabler;
 
-    public ChartItem(ResourceSet resources, ChartViewContentDisplay view,
-            PopupManager popupManager, ResourceSet hoverModel,
-            Layer layerModel, DragEnablerFactory dragEnablerFactory) {
+    public ChartItem(String category, ResourceSet resources,
+            ChartViewContentDisplay view, PopupManager popupManager,
+            ResourceSet hoverModel, ResourceItemValueResolver layerModel,
+            DragEnablerFactory dragEnablerFactory) {
 
-        super(resources, hoverModel, popupManager, layerModel);
+        super(category, resources, hoverModel, popupManager, layerModel);
 
         this.view = view;
         enabler = dragEnablerFactory.createDragEnabler(this);

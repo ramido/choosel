@@ -17,7 +17,7 @@ package org.thechiselgroup.choosel.client.views;
 
 import java.util.List;
 
-import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
+import org.thechiselgroup.choosel.client.resolver.ResourceToValueResolver;
 
 // TODO create more flexible slot system
 public interface SlotResolver {
@@ -38,35 +38,35 @@ public interface SlotResolver {
 
     String LOCATION_SLOT = "location";
 
+    // TODO slots should be view-centric, not data centric
     String MAGNITUDE_SLOT = "magnitude";
 
     String X_COORDINATE_SLOT = "x-coord";
 
     String Y_COORDINATE_SLOT = "y-coord";
 
-    ResourceSetToValueResolver createColorSlotResolver(String category,
-            List<Layer> layers);
+    ResourceToValueResolver createColorSlotResolver(String category,
+            List<ResourceItemValueResolver> layers);
 
-    ResourceSetToValueResolver createDateSlotResolver(String category);
+    ResourceToValueResolver createDateSlotResolver(String category);
 
-    ResourceSetToValueResolver createDescriptionSlotResolver(String category);
+    ResourceToValueResolver createDescriptionSlotResolver(String category);
 
-    ResourceSetToValueResolver createGraphLabelSlotResolver(String category);
+    ResourceToValueResolver createGraphLabelSlotResolver(String category);
 
-    ResourceSetToValueResolver createGraphNodeBackgroundColorResolver(
+    ResourceToValueResolver createGraphNodeBackgroundColorResolver(
             String category);
 
-    ResourceSetToValueResolver createGraphNodeBorderColorResolver(
-            String category);
+    ResourceToValueResolver createGraphNodeBorderColorResolver(String category);
 
-    ResourceSetToValueResolver createLabelSlotResolver(String category);
+    ResourceToValueResolver createLabelSlotResolver(String category);
 
-    ResourceSetToValueResolver createLocationSlotResolver(String category);
+    ResourceToValueResolver createLocationSlotResolver(String category);
 
-    ResourceSetToValueResolver createMagnitudeSlotResolver(String category);
+    ResourceToValueResolver createMagnitudeSlotResolver(String category);
 
-    ResourceSetToValueResolver createXCoordinateSlotResolver(String category);
+    ResourceToValueResolver createXCoordinateSlotResolver(String category);
 
-    ResourceSetToValueResolver createYCoordinateSlotResolver(String category);
+    ResourceToValueResolver createYCoordinateSlotResolver(String category);
 
 }

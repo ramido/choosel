@@ -91,8 +91,8 @@ public class HighlightingManagerTest {
         MockitoGWTBridge.setUp();
         MockitoAnnotations.initMocks(this);
 
-        underTest = new ResourceItem(resources, highlightedResources,
-                popupManager, null) {
+        underTest = new ResourceItem("category", resources,
+                highlightedResources, popupManager, null) {
 
             @Override
             protected void setStatusStyling(Status status) {

@@ -27,8 +27,8 @@ import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
-import org.thechiselgroup.choosel.client.views.Layer;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.list.ListItem.ListItemLabel;
 
@@ -214,10 +214,12 @@ public class ListViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     @Override
-    public ResourceItem createResourceItem(Layer layer, ResourceSet resources) {
-        PopupManager popupManager = createPopupManager(layer, resources);
-        ListItem listItem = new ListItem(resources, hoverModel, popupManager,
-                display, layer, dragController);
+    public ResourceItem createResourceItem(ResourceItemValueResolver resolver,
+            String category, ResourceSet resources) {
+        PopupManager popupManager = createPopupManager(resolver, resources);
+
+        ListItem listItem = new ListItem(category, resources, hoverModel,
+                popupManager, display, resolver, dragController);
 
         addItem(listItem);
 

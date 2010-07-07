@@ -4,7 +4,7 @@ import java.util.Set;
 
 /**
  * Calculates categories for a resource. Each resource is mapped to one or more
- * categories.
+ * categories. The category names have to be unique for this categorizer.
  */
 public interface ResourceMultiCategorizer {
 

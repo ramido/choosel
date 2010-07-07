@@ -16,6 +16,10 @@
 package org.thechiselgroup.choosel.client.views;
 
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
+import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 import org.thechiselgroup.choosel.client.ui.popup.PopupClosingEvent;
 import org.thechiselgroup.choosel.client.ui.popup.PopupClosingHandler;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
@@ -59,34 +63,57 @@ public class ResourceItem {
 
     protected final ResourceSet hoverModel;
 
-    private final Layer layer;
+    private final ResourceItemValueResolver valueResolver;
 
     protected final PopupManager popupManager;
 
+    // TODO update & paint on changes in resources!!!
     private final ResourceSet resources;
 
     private boolean selected;
 
     private boolean selectionStatusVisible;
 
-    public ResourceItem(ResourceSet resources, ResourceSet hoverModel,
-            PopupManager popupManager, Layer layer) {
+    private String category;
 
+    public ResourceItem(String category, ResourceSet resources,
+            ResourceSet hoverModel, PopupManager popupManager,
+            ResourceItemValueResolver valueResolver) {
+
+        assert category != null;
         assert resources != null;
         assert hoverModel != null;
         assert popupManager != null;
-        assert layer != null;
+        assert valueResolver != null;
 
+        this.category = category;
         this.resources = resources;
         this.popupManager = popupManager;
         this.hoverModel = hoverModel;
-        this.layer = layer;
+        this.valueResolver = valueResolver;
 
         highlightingManager = new HighlightingManager();
 
         this.popupManager.addPopupMouseOverHandler(highlightingManager);
         this.popupManager.addPopupMouseOutHandler(highlightingManager);
         this.popupManager.addPopupClosingHandler(highlightingManager);
+
+        resources.addHandler(ResourcesAddedEvent.TYPE,
+                new ResourcesAddedEventHandler() {
+                    @Override
+                    public void onResourcesAdded(ResourcesAddedEvent e) {
+                        updateContent();
+                    }
+                });
+        resources.addHandler(ResourcesRemovedEvent.TYPE,
+                new ResourcesRemovedEventHandler() {
+                    @Override
+                    public void onResourcesRemoved(ResourcesRemovedEvent e) {
+                        updateContent();
+                    }
+                });
+
+        updateContent();
     }
 
     protected Status calculateStatus() {
@@ -135,7 +162,7 @@ public class ResourceItem {
     }
 
     public Object getResourceValue(String slotID) {
-        return layer.getValue(slotID, getResourceSet());
+        return valueResolver.resolve(slotID, category, resources);
     }
 
     public boolean isHighlighted() {
@@ -191,6 +218,13 @@ public class ResourceItem {
      */
     protected void setStatusStyling(Status status) {
 
+    }
+
+    /**
+     * Should be overridden by subclasses to update the content of the visual
+     * representation. Gets called whenever the underlying resource set changes.
+     */
+    protected void updateContent() {
     }
 
     protected void updateStyling() {

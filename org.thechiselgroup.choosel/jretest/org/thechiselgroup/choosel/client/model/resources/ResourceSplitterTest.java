@@ -17,6 +17,9 @@ package org.thechiselgroup.choosel.client.model.resources;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -45,15 +48,16 @@ import org.thechiselgroup.choosel.client.resources.ResourceCategoryRemovedEventH
 import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSplitter;
+import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 
 public class ResourceSplitterTest {
+
+    private static final String TEST_CATEGORY = "test";
 
     public static final String CATEGORY_1 = "category1";
 
     public static final String CATEGORY_2 = "category2";
-
-    @Mock
-    private ResourceCategoryAddedEventHandler addedHandler;
 
     @Mock
     private ResourceCategoryRemovedEventHandler removedHandler;
@@ -103,24 +107,86 @@ public class ResourceSplitterTest {
         assertTrue(result.get(CATEGORY_2).containsEqualResources(resources2));
     }
 
+    /**
+     * Tests that the resource category added event is fired and contains all
+     * resources when fired (and not just later on).
+     */
     @Test
-    public void fireResourceSetCreatedEvents() {
-        splitter.addHandler(ResourceCategoryAddedEvent.TYPE, addedHandler);
+    public void fireResourceCategoryAddedEventOnAdd() {
+        final boolean[] called = { false };
+
+        splitter.addHandler(ResourceCategoryAddedEvent.TYPE,
+                new ResourceCategoryAddedEventHandler() {
+                    @Override
+                    public void onResourceCategoryAdded(
+                            ResourceCategoryAddedEvent e) {
+
+                        assertEquals(CATEGORY_1, e.getCategory());
+                        assertEquals(
+                                true,
+                                e.getResourceSet().containsEqualResources(
+                                        createResources(TEST_CATEGORY, 1)));
+
+                        called[0] = true;
+                    }
+                });
+
+        splitter.add(createResource(TEST_CATEGORY, 1));
+
+        assertEquals(true, called[0]);
+    }
+
+    /**
+     * Tests that the resource category added event is fired and contains the
+     * resource when fired (and not just later on).
+     */
+    @Test
+    public void fireResourceCategoryAddedEventOnAddAll() {
+        final boolean[] called = { false };
+
+        splitter.addHandler(ResourceCategoryAddedEvent.TYPE,
+                new ResourceCategoryAddedEventHandler() {
+                    @Override
+                    public void onResourceCategoryAdded(
+                            ResourceCategoryAddedEvent e) {
+
+                        assertEquals(CATEGORY_1, e.getCategory());
+                        assertEquals(true, e.getResourceSet()
+                                .containsEqualResources(resources1));
+
+                        called[0] = true;
+                    }
+                });
+
         splitter.addAll(resources1);
 
-        ArgumentCaptor<ResourceCategoryAddedEvent> eventCaptor = ArgumentCaptor
-                .forClass(ResourceCategoryAddedEvent.class);
+        assertEquals(true, called[0]);
+    }
 
-        verify(addedHandler, times(1)).onResourceCategoryAdded(
+    // TODO test for add all --> multiple categories
+
+    // TODO test for remove all --> multiple categories
+
+    @Test
+    public void fireResourceCategoryRemovedEventOnRemove() {
+        splitter.addHandler(ResourceCategoryRemovedEvent.TYPE, removedHandler);
+        splitter.add(createResource(TEST_CATEGORY, 1));
+        splitter.remove(createResource(TEST_CATEGORY, 1));
+
+        ArgumentCaptor<ResourceCategoryRemovedEvent> eventCaptor = ArgumentCaptor
+                .forClass(ResourceCategoryRemovedEvent.class);
+        verify(removedHandler, times(1)).onResourceCategoryRemoved(
                 eventCaptor.capture());
-
-        ResourceCategoryAddedEvent event = eventCaptor.getValue();
-        assertTrue(event.getResourceSet().containsEqualResources(resources1));
+        ResourceCategoryRemovedEvent event = eventCaptor.getValue();
         assertEquals(CATEGORY_1, event.getCategory());
+        assertEquals(
+                true,
+                event.getResourceSet().contains(
+                        createResource(TEST_CATEGORY, 1)));
     }
 
     @Test
-    public void fireResourceSetRemoveEvents() {
+    public void fireResourceCategoryRemovedEventOnRemoveAll() {
         splitter.addHandler(ResourceCategoryRemovedEvent.TYPE, removedHandler);
         splitter.addAll(resources1);
         splitter.removeAll(resources1);
@@ -131,6 +197,7 @@ public class ResourceSplitterTest {
                 eventCaptor.capture());
         ResourceCategoryRemovedEvent event = eventCaptor.getValue();
         assertEquals(CATEGORY_1, event.getCategory());
+        assertEquals(true, event.getResourceSet().containsAll(resources1));
     }
 
     @Test
@@ -151,6 +218,34 @@ public class ResourceSplitterTest {
         assertEquals(label1, result.get(CATEGORY_1).getLabel());
         assertTrue(result.containsKey(CATEGORY_2));
         assertEquals(label2, result.get(CATEGORY_2).getLabel());
+    }
+
+    @Test
+    public void noResourceSetEventsFiredOnCompleteCategoryRemovalViaRemove() {
+        splitter.add(createResource(TEST_CATEGORY, 1));
+        ResourceSet categorizedResources = splitter
+                .getCategorizedResourceSets().get(CATEGORY_1);
+        ResourcesRemovedEventHandler resourcesRemovedHandler = mock(ResourcesRemovedEventHandler.class);
+        categorizedResources.addHandler(ResourcesRemovedEvent.TYPE,
+                resourcesRemovedHandler);
+        splitter.remove(createResource(TEST_CATEGORY, 1));
+
+        verify(resourcesRemovedHandler, never()).onResourcesRemoved(
+                any(ResourcesRemovedEvent.class));
+    }
+
+    @Test
+    public void noResourceSetEventsFiredOnCompleteCategoryRemovalViaRemoveAll() {
+        splitter.addAll(resources1);
+        ResourceSet categorizedResources = splitter
+                .getCategorizedResourceSets().get(CATEGORY_1);
+        ResourcesRemovedEventHandler resourcesRemovedHandler = mock(ResourcesRemovedEventHandler.class);
+        categorizedResources.addHandler(ResourcesRemovedEvent.TYPE,
+                resourcesRemovedHandler);
+        splitter.removeAll(resources1);
+
+        verify(resourcesRemovedHandler, never()).onResourcesRemoved(
+                any(ResourcesRemovedEvent.class));
     }
 
     @Test
@@ -175,8 +270,8 @@ public class ResourceSplitterTest {
         splitter = new ResourceSplitter(categorizer,
                 new DefaultResourceSetFactory(), labelProvider);
 
-        resources1 = createResources("test", 1, 2, 3);
-        resources2 = createResources("test", 4, 5);
+        resources1 = createResources(TEST_CATEGORY, 1, 2, 3);
+        resources2 = createResources(TEST_CATEGORY, 4, 5);
 
         when(categorizer.getCategories(resources1.toList().get(0))).thenReturn(
                 toSet(CATEGORY_1));

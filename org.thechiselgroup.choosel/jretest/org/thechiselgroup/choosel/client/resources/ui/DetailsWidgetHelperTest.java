@@ -79,7 +79,8 @@ public class DetailsWidgetHelperTest {
 
         when(avatarFactory.createAvatar(any(ResourceSet.class))).thenReturn(
                 avatar);
-        when(resolver.getValue(any(ResourceSet.class))).thenReturn("");
+        when(resolver.resolve(any(ResourceSet.class), any(String.class)))
+                .thenReturn("");
         when(resourceSetFactory.createResourceSet()).thenReturn(resourceSet);
     }
 

@@ -15,10 +15,11 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resolver;
 
+import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
 public class FixedValuePropertyValueResolver implements
-        ResourceSetToValueResolver {
+        ResourceSetToValueResolver, ResourceToValueResolver {
 
     private String value;
 
@@ -27,8 +28,13 @@ public class FixedValuePropertyValueResolver implements
     }
 
     @Override
-    public Object getValue(ResourceSet resources) {
+    public Object resolve(ResourceSet resources, String category) {
         return value;
-    };
+    }
+
+    @Override
+    public Object resolve(Resource resource) {
+        return value;
+    }
 
 }

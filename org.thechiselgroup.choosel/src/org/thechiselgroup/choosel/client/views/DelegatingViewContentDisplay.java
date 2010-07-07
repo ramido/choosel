@@ -41,8 +41,9 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
     }
 
     @Override
-    public ResourceItem createResourceItem(Layer layer, ResourceSet resources) {
-        return delegate.createResourceItem(layer, resources);
+    public ResourceItem createResourceItem(ResourceItemValueResolver resolver,
+            String category, ResourceSet resources) {
+        return delegate.createResourceItem(resolver, category, resources);
     }
 
     @Override

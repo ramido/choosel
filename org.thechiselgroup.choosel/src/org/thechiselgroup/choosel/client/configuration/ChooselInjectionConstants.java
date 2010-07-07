@@ -51,8 +51,6 @@ public interface ChooselInjectionConstants {
 
     String AVATAR_FACTORY_SET = "default-resource-sets-presenter";
 
-    String AVATAR_FACTORY_TYPE = "type-resource-sets-presenter";
-
     String DEFAULT = "default";
 
     String PROXY = "proxy";

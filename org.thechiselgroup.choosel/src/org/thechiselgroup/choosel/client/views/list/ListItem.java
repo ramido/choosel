@@ -21,8 +21,8 @@ import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarType;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.client.ui.popup.DefaultPopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
-import org.thechiselgroup.choosel.client.views.Layer;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.list.ListViewContentDisplay.Display;
 
@@ -70,11 +70,13 @@ public class ListItem extends ResourceItem {
 
     private ResourceSetAvatarDragController dragController;
 
-    public ListItem(ResourceSet resources, ResourceSet hoverModel,
-            PopupManager popupManager, ListViewContentDisplay.Display display,
-            Layer layerModel, ResourceSetAvatarDragController dragController) {
+    public ListItem(String category, ResourceSet resources,
+            ResourceSet hoverModel, PopupManager popupManager,
+            ListViewContentDisplay.Display display,
+            ResourceItemValueResolver layerModel,
+            ResourceSetAvatarDragController dragController) {
 
-        super(resources, hoverModel, popupManager, layerModel);
+        super(category, resources, hoverModel, popupManager, layerModel);
 
         this.display = display;
         this.dragController = dragController;
@@ -85,13 +87,12 @@ public class ListItem extends ResourceItem {
     }
 
     public void init() {
-        String description = (String) getResourceValue(SlotResolver.DESCRIPTION_SLOT);
-
-        this.label = new ListItemLabel(description, dragController,
-                getResourceSet());
+        this.label = new ListItemLabel("", dragController, getResourceSet());
         this.label.addStyleName(CSS_LIST);
 
         DefaultPopupManager.linkManagerToSource(popupManager, getLabel());
+
+        updateContent();
     }
 
     @Override
@@ -128,6 +129,16 @@ public class ListItem extends ResourceItem {
         }
             break;
         }
+    }
+
+    @Override
+    protected void updateContent() {
+        if (label == null) {
+            return;
+        }
+
+        String description = (String) getResourceValue(SlotResolver.DESCRIPTION_SLOT);
+        this.label.setText(description);
     }
 
 }

@@ -15,16 +15,26 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.test;
 
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResource;
+
 import java.util.Collection;
 import java.util.List;
 
 import org.junit.Assert;
+import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
-public final class Assert2 {
+public final class AdvancedAsserts {
 
     public static <T> void assertContains(Collection<T> c, T value) {
         String failureMessage = value + " should be contained in " + c;
         Assert.assertEquals(failureMessage, true, c.contains(value));
+    }
+
+    public static void assertContainsResource(boolean expected,
+            ResourceSet resourceSet, String resourceType, int resourceId) {
+
+        Assert.assertEquals(expected,
+                resourceSet.contains(createResource(resourceType, resourceId)));
     }
 
     public static <T> void assertEquals(List<T> expected, List<T> result) {
@@ -37,7 +47,7 @@ public final class Assert2 {
         }
     }
 
-    private Assert2() {
+    private AdvancedAsserts() {
     }
 
 }
