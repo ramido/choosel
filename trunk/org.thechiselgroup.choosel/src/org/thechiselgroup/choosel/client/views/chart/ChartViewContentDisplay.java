@@ -98,7 +98,7 @@ public abstract class ChartViewContentDisplay extends
 
     @Override
     public void removeResourceItem(ResourceItem resourceItem) {
-        chartWidget.removeEvent(resourceItem);
+        // chartWidget.removeEvent(resourceItem);
     }
 
     @Override
