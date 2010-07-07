@@ -20,6 +20,8 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
 public interface ViewContentDisplayCallback {
 
+    boolean containsResource(Resource resource);
+
     boolean containsResourceWithUri(String uri);
 
     Iterable<Resource> getAllResources();

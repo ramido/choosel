@@ -48,16 +48,16 @@ import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.Resource;
-import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceByUriTypeCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizerToMultiCategorizerAdapter;
 import org.thechiselgroup.choosel.client.resources.ResourceEventHandler;
-import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ResourceSplitter;
+import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
+import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
 
@@ -68,8 +68,7 @@ public class DefaultViewTest {
 
     public static class TestView extends DefaultView {
 
-        public TestView(ResourceSet hoverModel,
-                SelectionModelLabelFactory selectionModelLabelFactory,
+        public TestView(SelectionModelLabelFactory selectionModelLabelFactory,
                 ResourceSetFactory resourceSetFactory,
                 ResourceSetsPresenter originalSetsPresenter,
                 ResourceSetsPresenter automaticSetPresenter,
@@ -79,7 +78,7 @@ public class DefaultViewTest {
                 ViewContentDisplay contentDisplay, String label,
                 String contentType, SlotResolver slotResolver) {
 
-            super(hoverModel, selectionModelLabelFactory, resourceSetFactory,
+            super(selectionModelLabelFactory, resourceSetFactory,
                     originalSetsPresenter, automaticSetPresenter,
                     selectionPresenter, selectionDropPresenter,
                     resourceSplitter, contentDisplay, label, contentType,
@@ -102,15 +101,6 @@ public class DefaultViewTest {
 
     @Mock
     private ViewContentDisplay contentDisplay;
-
-    @Mock
-    private ResourceSet hoverModel;
-
-    @Mock
-    private HandlerRegistration hoverModelAddHandlerRegistration;
-
-    @Mock
-    private HandlerRegistration hoverModelRemoveHandlerRegistration;
 
     @Mock
     private ResourceSetsPresenter originalSetsPresenter;
@@ -359,7 +349,7 @@ public class DefaultViewTest {
                 new DefaultResourceSetFactory(),
                 new DefaultCategoryLabelProvider());
 
-        view = spy(new TestView(hoverModel, new SelectionModelLabelFactory(),
+        view = spy(new TestView(new SelectionModelLabelFactory(),
                 new DefaultResourceSetFactory(), originalSetsPresenter,
                 allResourcesSetPresenter, selectionPresenter,
                 selectionDropPresenter, resourceSplitter, contentDisplay, "",
@@ -376,14 +366,6 @@ public class DefaultViewTest {
         verify(selectionPresenter, times(1)).dispose();
         verify(originalSetsPresenter, times(1)).dispose();
         verify(selectionHandlerRegistration, times(2)).removeHandler();
-    }
-
-    @Test
-    public void disposeShouldRemoveHoverHooks() {
-        view.dispose();
-
-        verify(hoverModelAddHandlerRegistration, times(1)).removeHandler();
-        verify(hoverModelRemoveHandlerRegistration, times(1)).removeHandler();
     }
 
     @Test
@@ -511,14 +493,6 @@ public class DefaultViewTest {
                 selection.addHandler(any(GwtEvent.Type.class),
                         any(ResourceEventHandler.class))).thenReturn(
                 selectionHandlerRegistration);
-        when(
-                hoverModel.addHandler(eq(ResourcesAddedEvent.TYPE),
-                        any(ResourcesAddedEventHandler.class))).thenReturn(
-                hoverModelAddHandlerRegistration);
-        when(
-                hoverModel.addHandler(eq(ResourcesRemovedEvent.TYPE),
-                        any(ResourcesRemovedEventHandler.class))).thenReturn(
-                hoverModelRemoveHandlerRegistration);
         when(contentDisplay.isReady()).thenReturn(true);
 
         view.init();
