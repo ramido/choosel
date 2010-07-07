@@ -17,10 +17,27 @@ package org.thechiselgroup.choosel.client.util;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 public final class CollectionUtils {
+
+    public static String deliminateIterableStringCollection(
+            Iterable<String> values, String delimeter) {
+        Iterator<String> iterator = values.iterator();
+        String result = "";
+
+        if (!iterator.hasNext()) {
+            return result;
+        }
+        result += iterator.next();
+
+        while (iterator.hasNext()) {
+            result += delimeter + iterator.next();
+        }
+        return result;
+    }
 
     public static <T> List<T> toList(Iterable<T> iterable) {
         List<T> result = new ArrayList<T>();

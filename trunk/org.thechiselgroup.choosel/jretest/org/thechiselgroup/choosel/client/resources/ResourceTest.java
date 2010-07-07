@@ -11,6 +11,26 @@ public class ResourceTest {
 
     private Resource resource;
 
+    // ask lars about following two tests
+    @Test
+    public void getUriListValueReturnsUriListProperty() {
+        UriList uriList = new UriList();
+        uriList.add("uri1");
+        uriList.add("uri2");
+        uriList.add("uri3");
+
+        resource.putValue(propertyKey, uriList);
+        assertEquals(true,
+                resource.getUriListValue(propertyKey) instanceof UriList);
+    }
+
+    @Test
+    public void getUriListValueReturnsUriListStringProperty() {
+        resource.putValue(propertyKey, "x");
+        assertEquals(true,
+                resource.getUriListValue(propertyKey) instanceof UriList);
+    }
+
     @Test
     public void isUriListReturnsFalseIfPropertyIsInt() {
         resource.putValue(propertyKey, 5);

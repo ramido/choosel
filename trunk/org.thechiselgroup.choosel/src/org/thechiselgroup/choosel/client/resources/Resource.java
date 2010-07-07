@@ -68,15 +68,19 @@ public class Resource implements Serializable {
         return uri;
     }
 
+    // return a UriList representation of a resource property
     public UriList getUriListValue(String key) {
-        UriList result = (UriList) getValue(key);
 
-        if (result == null) {
-            result = new UriList();
-            putValue(key, result);
+        if (getValue(key) == null) {
+            return new UriList();
+        } else if (!isUriList(key)) {
+            UriList result = new UriList();
+            result.add((String) getValue(key));
+            return result;
+        } else {
+            UriList result = (UriList) getValue(key);
+            return result;
         }
-
-        return result;
     }
 
     public Object getValue(String key) {
