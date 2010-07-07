@@ -11,7 +11,6 @@ public class ResourceTest {
 
     private Resource resource;
 
-    // ask lars about following two tests
     @Test
     public void getUriListValueReturnsUriListProperty() {
         UriList uriList = new UriList();
@@ -26,7 +25,7 @@ public class ResourceTest {
 
     @Test
     public void getUriListValueReturnsUriListStringProperty() {
-        resource.putValue(propertyKey, "x");
+        resource.putValueAsUriList(propertyKey, "x");
         assertEquals(true,
                 resource.getUriListValue(propertyKey) instanceof UriList);
     }
