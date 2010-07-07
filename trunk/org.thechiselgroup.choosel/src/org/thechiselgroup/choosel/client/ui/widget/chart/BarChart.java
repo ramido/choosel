@@ -9,24 +9,13 @@ public class BarChart extends ChartWidget {
     public native Chart drawChart(int width, int height) /*-{
         var chart = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chart,
             h = height - 40,
-            w = width - 40,
-            val = new Array(),
-            max,
-            min;
+            w = width - 40;
 
+        var max = this.@org.thechiselgroup.choosel.client.ui.widget.chart.BarChart::max()();    
+        var min = this.@org.thechiselgroup.choosel.client.ui.widget.chart.BarChart::min()();
+
+        var val = new Array();
         for(var i = 0; i < this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chartItemArray.@java.util.ArrayList::size()(); i++) {
-            if(max == null && min == null) {
-                max = this.@org.thechiselgroup.choosel.client.ui.widget.chart.BarChart::getSlotValue(I)(i);
-                min = this.@org.thechiselgroup.choosel.client.ui.widget.chart.BarChart::getSlotValue(I)(i);
-            } else {
-                if(max < this.@org.thechiselgroup.choosel.client.ui.widget.chart.BarChart::getSlotValue(I)(i)) {
-                    max = this.@org.thechiselgroup.choosel.client.ui.widget.chart.BarChart::getSlotValue(I)(i);
-                }
-                if(min > this.@org.thechiselgroup.choosel.client.ui.widget.chart.BarChart::getSlotValue(I)(i)) {
-                    min = this.@org.thechiselgroup.choosel.client.ui.widget.chart.BarChart::getSlotValue(I)(i);
-                }
-            }
-
             val[i] = this.@org.thechiselgroup.choosel.client.ui.widget.chart.BarChart::getSlotValue(I)(i);
         }
 
@@ -99,8 +88,40 @@ public class BarChart extends ChartWidget {
     }-*/;
     // @formatter:on
 
+    public double getDoubleSlotValue(int i) {
+        Object value = getSlotValue(i);
+
+        if (value instanceof String) {
+            return Double.parseDouble((String) value);
+        }
+
+        return ((Number) value).doubleValue();
+    }
+
     private Object getSlotValue(int i) {
         return getChartItem(i).getResourceValue(SlotResolver.MAGNITUDE_SLOT);
+    }
+
+    private double max() {
+        double max = Double.MIN_VALUE;
+        for (int i = 0; i < chartItemArray.size(); i++) {
+            double slotValue = getDoubleSlotValue(i);
+            if (max < slotValue) {
+                max = slotValue;
+            }
+        }
+        return max;
+    }
+
+    private double min() {
+        double min = Double.MAX_VALUE;
+        for (int i = 0; i < chartItemArray.size(); i++) {
+            double slotValue = getDoubleSlotValue(i);
+            if (min > slotValue) {
+                min = slotValue;
+            }
+        }
+        return min;
     }
 
 }
