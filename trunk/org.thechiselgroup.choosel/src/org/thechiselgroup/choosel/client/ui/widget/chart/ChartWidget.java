@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+s * Copyright 2009, 2010 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -17,8 +17,7 @@ package org.thechiselgroup.choosel.client.ui.widget.chart;
 
 import java.util.ArrayList;
 
-import org.thechiselgroup.choosel.client.util.ArrayUtils;
-import org.thechiselgroup.choosel.client.views.SlotResolver;
+import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -30,60 +29,20 @@ public abstract class ChartWidget extends Widget {
 
     protected Chart chart;
 
-    private ArrayList<Object> chartItemArray = new ArrayList<Object>();
+    protected ArrayList<Object> chartItemArray = new ArrayList<Object>();
 
-    private ArrayList<Double> dataArray = new ArrayList<Double>();
-
-    private ArrayList<String> dataArrayX = new ArrayList<String>();
-
-    private ArrayList<String> dataArrayY = new ArrayList<String>();
+    protected JavaScriptObject val;
 
     private int height = 0;
 
     private int width = 0;
 
-    protected JavaScriptObject val = ArrayUtils.toJsArray(ArrayUtils
-            .toDoubleArray(dataArray));
-
-    protected JavaScriptObject valX = ArrayUtils.toJsArray(ArrayUtils
-            .toStringArray(dataArrayX));
-
-    protected JavaScriptObject valY = ArrayUtils.toJsArray(ArrayUtils
-            .toStringArray(dataArrayY));
-
     public ChartWidget() {
         setElement(DOM.createDiv());
     }
 
-    public void addEvent(ChartItem chartItem) {
+    public void addChartItem(ChartItem chartItem) {
         chartItemArray.add(chartItem);
-        try {
-            dataArray.add(Double.valueOf(chartItem.getResourceValue(
-                    SlotResolver.MAGNITUDE_SLOT).toString()));
-            val = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArray));
-        } catch (Exception e) {
-        }
-
-        try {
-            dataArrayX.add(chartItem.getResourceValue(
-                    SlotResolver.X_COORDINATE_SLOT).toString());
-            dataArrayY.add(chartItem.getResourceValue(
-                    SlotResolver.Y_COORDINATE_SLOT).toString());
-            valX = ArrayUtils.toJsArray(ArrayUtils.toStringArray(dataArrayX));
-            valY = ArrayUtils.toJsArray(ArrayUtils.toStringArray(dataArrayY));
-        } catch (Exception e) {
-        }
-
-        try {
-            dataArrayX.add(chartItem.getResourceValue(SlotResolver.DATE_SLOT)
-                    .toString());
-            dataArrayY.add(chartItem.getResourceValue(
-                    SlotResolver.DESCRIPTION_SLOT).toString());
-            valX = ArrayUtils.toJsArray(ArrayUtils.toStringArray(dataArrayX));
-            valY = ArrayUtils.toJsArray(ArrayUtils.toStringArray(dataArrayY));
-        } catch (Exception e) {
-        }
-
         updateChart();
     }
 
@@ -95,42 +54,8 @@ public abstract class ChartWidget extends Widget {
 
     protected abstract Chart drawChart(int width, int height);
 
-    public JavaScriptObject getChart() {
-        return chart;
-    }
-
     public ChartItem getChartItem(int index) {
         return (ChartItem) chartItemArray.get(index);
-    }
-
-    public ArrayList<Double> getDataArray() {
-        return dataArray;
-    }
-
-    protected double getMaxDataValue() {
-        if (dataArray.isEmpty()) {
-            return 0;
-        }
-        double max = dataArray.get(0);
-        for (int i = 1; i < dataArray.size(); i++) {
-            if (dataArray.get(i) > max) {
-                max = dataArray.get(i);
-            }
-        }
-        return max;
-    }
-
-    protected double getMinDataValue() {
-        if (dataArray.isEmpty()) {
-            return 0;
-        }
-        double min = dataArray.get(0);
-        for (int i = 1; i < dataArray.size(); i++) {
-            if (dataArray.get(i) < min) {
-                min = dataArray.get(i);
-            }
-        }
-        return min;
     }
 
     @Override
@@ -155,26 +80,15 @@ public abstract class ChartWidget extends Widget {
     // @formatter:off
     protected native Chart registerEvents() /*-{
         var chart = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chart,
-        thisChart = this;
+        thisChart = this,
+        events = ["click","mousedown","mousemove","mouseout","mouseover","mouseup"];
 
-        return chart.event("click",function() 
-            	{$entry(thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onEvent(ILcom/google/gwt/user/client/Event;)
-            	    (this.index,$wnd.pv.event));})
-            .event("mousedown",function() 
-            	{$entry(thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onEvent(ILcom/google/gwt/user/client/Event;)
-            	    (this.index,$wnd.pv.event));})
-            .event("mousemove",function() 
-            	{$entry(thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onEvent(ILcom/google/gwt/user/client/Event;)
-            	    (this.index,$wnd.pv.event));})
-            .event("mouseout",function() 
-            	{$entry(thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onEvent(ILcom/google/gwt/user/client/Event;)
-            	    (this.index,$wnd.pv.event));})
-            .event("mouseover",function() 
-            	{$entry(thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onEvent(ILcom/google/gwt/user/client/Event;)
-            	    (this.index,$wnd.pv.event));})
-            .event("mouseup",function() 
+        for(x in events) { 
+            chart.event(events[x],function() 
             	{$entry(thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onEvent(ILcom/google/gwt/user/client/Event;)
             	    (this.index,$wnd.pv.event));});
+        }
+        return chart;
     }-*/;
     // @formatter:on
 
@@ -187,12 +101,15 @@ public abstract class ChartWidget extends Widget {
             return thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::getChartItem(I)(this.index)
                	    .@org.thechiselgroup.choosel.client.views.chart.ChartItem::getColour()();});
     }-*/;
-    // @formatter:on        
+    // @formatter:on
 
-    public void removeEvent(int position) {
+    public void removeChartItem(int position) {
         chartItemArray.remove(position);
-        dataArray.remove(position);
-        val = ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArray));
+        updateChart();
+    }
+
+    public void removeChartItem(ResourceItem chartItem) {
+        chartItemArray.remove(chartItem);
         updateChart();
     }
 
@@ -207,10 +124,6 @@ public abstract class ChartWidget extends Widget {
         this.width = width;
         this.height = height;
         updateChart();
-    }
-
-    public void setDataArray(ArrayList<Double> dataArray) {
-        this.dataArray = dataArray;
     }
 
     public void updateChart() {
