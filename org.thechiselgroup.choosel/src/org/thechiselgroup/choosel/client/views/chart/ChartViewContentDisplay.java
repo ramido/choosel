@@ -79,7 +79,7 @@ public abstract class ChartViewContentDisplay extends
         ChartItem chartItem = new ChartItem(category, resources, this,
                 popupManager, hoverModel, resolver, dragEnablerFactory);
 
-        chartWidget.addEvent(chartItem);
+        chartWidget.addChartItem(chartItem);
 
         return chartItem;
     }
@@ -97,8 +97,8 @@ public abstract class ChartViewContentDisplay extends
     }
 
     @Override
-    public void removeResourceItem(ResourceItem resourceItem) {
-        // chartWidget.removeEvent(resourceItem);
+    public void removeResourceItem(ResourceItem chartItem) {
+        chartWidget.removeChartItem(chartItem);
     }
 
     @Override
