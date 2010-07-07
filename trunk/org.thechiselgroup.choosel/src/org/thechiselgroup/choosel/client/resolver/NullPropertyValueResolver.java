@@ -3,11 +3,12 @@
  */
 package org.thechiselgroup.choosel.client.resolver;
 
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.resources.Resource;
 
-public class NullPropertyValueResolver implements ResourceSetToValueResolver {
+public class NullPropertyValueResolver implements ResourceToValueResolver {
+
     @Override
-    public Object getValue(ResourceSet resources) {
+    public Object resolve(Resource resource) {
         return null;
     }
 }

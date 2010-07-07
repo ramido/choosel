@@ -15,6 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resolver;
 
+import org.thechiselgroup.choosel.client.resources.Resource;
+
 public interface ResourceToValueResolver {
+
+    Object resolve(Resource resource);
 
 }

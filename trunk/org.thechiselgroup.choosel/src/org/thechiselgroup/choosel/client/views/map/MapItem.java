@@ -20,7 +20,7 @@ import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.IconResourceItem;
-import org.thechiselgroup.choosel.client.views.Layer;
+import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -79,12 +79,13 @@ public class MapItem extends IconResourceItem {
 
     private DragEnablerFactory dragEnablerFactory;
 
-    public MapItem(LatLng point, ResourceSet resources, ResourceSet hoverModel,
-            PopupManager popupManager, Layer layerModel,
+    public MapItem(String category, LatLng point, ResourceSet resources,
+            ResourceSet hoverModel, PopupManager popupManager,
+            ResourceItemValueResolver layerModel,
             ViewContentDisplayCallback callback,
             DragEnablerFactory dragEnablerFactory) {
 
-        super(resources, hoverModel, popupManager, layerModel);
+        super(category, resources, hoverModel, popupManager, layerModel);
 
         this.callback = callback;
         this.dragEnablerFactory = dragEnablerFactory;

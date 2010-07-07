@@ -23,7 +23,6 @@ import java.util.Map;
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.persistence.Memento;
-import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.CombinedResourceSet;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
@@ -113,7 +112,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private ResourceSet automaticResources;
 
-    private Map<String, Layer> categoriesToLayers = new HashMap<String, Layer>();
+    private Map<String, ResourceItemValueResolver> categoriesToLayers = new HashMap<String, ResourceItemValueResolver>();
 
     private CombinedResourceSet combinedUserResourceSets;
 
@@ -129,7 +128,12 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private DockPanel mainPanel;
 
-    private Map<Resource, ResourceItem> resourceItems = new HashMap<Resource, ResourceItem>();
+    /**
+     * Maps category names (representing the resource sets that are calculated
+     * by the resource splitter) to the resource items that display the resource
+     * sets in the view.
+     */
+    private Map<String, ResourceItem> categoriesToResourceItems = new HashMap<String, ResourceItem>();
 
     private ResourceSetFactory resourceSetFactory;
 
@@ -156,9 +160,9 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private SlotResolver slotResolver;
 
-    private ResourceSetsPresenter splittedSetsPresenter;
-
     private ResourceSetsPresenter userSetsPresenter;
+
+    private ResourceItemValueResolver configuration;
 
     @Inject
     public DefaultView(
@@ -166,7 +170,6 @@ public class DefaultView extends AbstractWindowContent implements View {
             @Named(ChooselInjectionConstants.LABEL_PROVIDER_SELECTION_SET) LabelProvider selectionModelLabelFactory,
             ResourceSetFactory resourceSetFactory,
             @Named(ChooselInjectionConstants.AVATAR_FACTORY_SET) ResourceSetsPresenter userSetsPresenter,
-            @Named(ChooselInjectionConstants.AVATAR_FACTORY_TYPE) ResourceSetsPresenter splittedSetsPresenter,
             @Named(ChooselInjectionConstants.AVATAR_FACTORY_ALL_RESOURCES) ResourceSetsPresenter allResourcesSetPresenter,
             @Named(ChooselInjectionConstants.AVATAR_FACTORY_SELECTION) ResourceSetsPresenter selectionPresenter,
             @Named(ChooselInjectionConstants.AVATAR_FACTORY_SELECTION_DROP) ResourceSetsPresenter selectionDropPresenter,
@@ -181,7 +184,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         assert selectionModelLabelFactory != null;
         assert resourceSetFactory != null;
         assert userSetsPresenter != null;
-        assert splittedSetsPresenter != null;
         assert allResourcesSetPresenter != null;
         assert selectionPresenter != null;
         assert selectionDropPresenter != null;
@@ -193,61 +195,11 @@ public class DefaultView extends AbstractWindowContent implements View {
         this.selectionModelLabelFactory = selectionModelLabelFactory;
         this.resourceSetFactory = resourceSetFactory;
         this.userSetsPresenter = userSetsPresenter;
-        this.splittedSetsPresenter = splittedSetsPresenter;
         this.allResourcesSetPresenter = allResourcesSetPresenter;
         this.selectionPresenter = selectionPresenter;
         this.selectionDropPresenter = selectionDropPresenter;
         this.resourceSplitter = resourceSplitter;
         this.contentDisplay = contentDisplay;
-    }
-
-    // protected for tests only
-    protected void addLayer(final Layer layer) {
-        assert layer.getCategory() != null;
-
-        categoriesToLayers.put(layer.getCategory(), layer);
-
-        // TODO handler deregistration --> check bug...
-        layer.getResources().addHandler(ResourcesAddedEvent.TYPE,
-                new ResourcesAddedEventHandler() {
-                    @Override
-                    public void onResourcesAdded(ResourcesAddedEvent e) {
-                        addResource(layer, e.getChangedResource());
-                    }
-                });
-        layer.getResources().addHandler(ResourcesRemovedEvent.TYPE,
-                new ResourcesRemovedEventHandler() {
-                    @Override
-                    public void onResourcesRemoved(ResourcesRemovedEvent e) {
-                        removeResource(layer, e.getChangedResource());
-                    }
-                });
-
-        addLayerResources(layer);
-
-        checkResize();
-    }
-
-    private void addLayerResources(Layer layer) {
-        for (Resource resource : layer.getResources()) {
-            addResource(layer, resource);
-        }
-
-        assert resourceItems.keySet()
-                .containsAll(layer.getResources().toList());
-    }
-
-    private void addResource(Layer layer, Resource resource) {
-        // Added when changing resource item to contain resource sets
-        // TODO use factory & dispose + clean up
-        DefaultResourceSet resourceSet = new DefaultResourceSet();
-        resourceSet.add(resource);
-
-        ResourceItem resourceItem = contentDisplay.createResourceItem(layer,
-                resourceSet);
-        resourceItems.put(resource, resourceItem);
-        resourceItem.setSelectionStatusVisible(selection != null
-                && !selection.isEmpty());
     }
 
     @Override
@@ -296,14 +248,14 @@ public class DefaultView extends AbstractWindowContent implements View {
         automaticResources.clear();
         combinedUserResourceSets.clear();
 
-        assert resourceItems.isEmpty();
+        assert categoriesToResourceItems.isEmpty();
         assert resourceSplitter.getCategorizedResourceSets().isEmpty();
         assert categoriesToLayers.isEmpty() : "layers found: "
                 + categoriesToLayers;
     }
 
     private boolean containsResource(Resource resource) {
-        return resourceItems.containsKey(resource);
+        return categoriesToResourceItems.containsKey(resource);
     }
 
     @Override
@@ -326,67 +278,23 @@ public class DefaultView extends AbstractWindowContent implements View {
         return selectionSets.contains(resourceSet);
     }
 
-    // protected for test case until refactored, return is also for test only
-    // TODO cleanup
-    protected Layer createLayer(String category, ResourceSet resources) {
-        String[] slotIDs = contentDisplay.getSlotIDs();
-        Slot[] slots = new Slot[slotIDs.length];
+    private void createResourceItem(String category, ResourceSet resources) {
+        // Added when changing resource item to contain resource sets
+        // TODO use factory & dispose + clean up
 
-        List<Layer> layers = getLayers();
-        for (int i = 0; i < slots.length; i++) {
-            slots[i] = new Slot(slotIDs[i], createValueResolver(slotIDs[i],
-                    category, layers));
-        }
+        // TODO provide configuration to content display in callback
+        ResourceItem resourceItem = contentDisplay.createResourceItem(
+                configuration, category, resources);
 
-        // TODO create slots automatically
-        // --> need slot resolver here...
+        categoriesToResourceItems.put(category, resourceItem);
 
-        Layer layer = new Layer();
-        layer.initSlots(slots);
-        layer.setCategory(category);
-        layer.setResources(resources);
+        // TODO introduce partial selection
+        resourceItem.setSelectionStatusVisible(selection != null
+                && !selection.isEmpty());
 
-        addLayer(layer);
-
+        // / TODO is this necessary?
         checkResize();
 
-        return layer;
-    }
-
-    // TODO replace list of layers with more generic context
-    protected ResourceSetToValueResolver createValueResolver(String slotID,
-            String category, List<Layer> layers) {
-
-        assert category != null;
-        assert slotID != null;
-
-        // TODO use maps instead, need better slot system
-        if (slotID.equals(SlotResolver.COLOR_SLOT)) {
-            return slotResolver.createColorSlotResolver(category, layers);
-        } else if (slotID.equals(SlotResolver.LABEL_SLOT)) {
-            return slotResolver.createLabelSlotResolver(category);
-        } else if (slotID.equals(SlotResolver.DESCRIPTION_SLOT)) {
-            return slotResolver.createDescriptionSlotResolver(category);
-        } else if (slotID.equals(SlotResolver.DATE_SLOT)) {
-            return slotResolver.createDateSlotResolver(category);
-        } else if (slotID.equals(SlotResolver.LOCATION_SLOT)) {
-            return slotResolver.createLocationSlotResolver(category);
-        } else if (slotID.equals(SlotResolver.GRAPH_LABEL_SLOT)) {
-            return slotResolver.createGraphLabelSlotResolver(category);
-        } else if (slotID.equals(SlotResolver.GRAPH_NODE_BORDER_COLOR_SLOT)) {
-            return slotResolver.createGraphNodeBorderColorResolver(category);
-        } else if (slotID.equals(SlotResolver.GRAPH_NODE_BACKGROUND_COLOR_SLOT)) {
-            return slotResolver
-                    .createGraphNodeBackgroundColorResolver(category);
-        } else if (slotID.equals(SlotResolver.MAGNITUDE_SLOT)) {
-            return slotResolver.createMagnitudeSlotResolver(category);
-        } else if (slotID.equals(SlotResolver.X_COORDINATE_SLOT)) {
-            return slotResolver.createXCoordinateSlotResolver(category);
-        } else if (slotID.equals(SlotResolver.Y_COORDINATE_SLOT)) {
-            return slotResolver.createYCoordinateSlotResolver(category);
-        }
-
-        throw new IllegalArgumentException("Invalid slot id: " + slotID);
     }
 
     @Override
@@ -404,8 +312,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         allResourcesToSplitterForwarder = null;
         contentDisplay.dispose();
         contentDisplay = null;
-        splittedSetsPresenter.dispose();
-        splittedSetsPresenter = null;
         selectionPresenter.dispose();
         selectionPresenter = null;
         userSetsPresenter.dispose();
@@ -431,13 +337,14 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     // protected for tests only
-    protected List<Layer> getLayers() {
-        return new ArrayList<Layer>(categoriesToLayers.values());
+    protected List<ResourceItemValueResolver> getLayers() {
+        return new ArrayList<ResourceItemValueResolver>(
+                categoriesToLayers.values());
     }
 
     private ResourceItem getResource(Resource resource) {
         assert resource != null;
-        return resourceItems.get(resource);
+        return categoriesToResourceItems.get(resource);
     }
 
     @Override
@@ -452,6 +359,8 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     @Override
     public void init() {
+        initViewConfiguration();
+
         initResourceCombinator();
         initAutomaticResources();
         initAllResources();
@@ -502,7 +411,6 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         initCombinedResourcesSetPresenterUI();
         initOriginalResourceSetsPresenterUI();
-        initSplittedResourceSetsPresenterUI();
         initSelectionDropPresenterUI();
         initSelectionDragSourceUI();
     }
@@ -616,11 +524,8 @@ public class DefaultView extends AbstractWindowContent implements View {
                     @Override
                     public void onResourceCategoryAdded(
                             ResourceCategoryAddedEvent e) {
-
-                        // TODO create resource item instead by calling the view
-                        // content display
-                        splittedSetsPresenter.addResourceSet(e.getResourceSet());
-                        createLayer(e.getCategory(), e.getResourceSet());
+                        assert e != null;
+                        createResourceItem(e.getCategory(), e.getResourceSet());
                     }
                 });
         resourceSplitter.addHandler(ResourceCategoryRemovedEvent.TYPE,
@@ -628,11 +533,8 @@ public class DefaultView extends AbstractWindowContent implements View {
                     @Override
                     public void onResourceCategoryRemoved(
                             ResourceCategoryRemovedEvent e) {
-
-                        // TODO remove resource item instead
-                        splittedSetsPresenter.removeResourceSet(e
-                                .getResourceSet());
-                        removeLayer(e.getCategory());
+                        assert e != null;
+                        removeResourceItem(e.getCategory());
                     }
                 });
     }
@@ -688,16 +590,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         // setSelection(newSelectionModel);
     }
 
-    private void initSplittedResourceSetsPresenterUI() {
-        splittedSetsPresenter.init();
-
-        Widget widget = splittedSetsPresenter.asWidget();
-
-        configurationPanel.add(widget, DockPanel.WEST);
-        configurationPanel.setCellHorizontalAlignment(widget,
-                HasAlignment.ALIGN_LEFT);
-    }
-
     // TODO move non-ui stuff to constructor
     protected void initUI() {
         initConfigurationPanelUI();
@@ -715,27 +607,20 @@ public class DefaultView extends AbstractWindowContent implements View {
         mainPanel.setCellHeight(contentDisplay.asWidget(), "100%");
     }
 
-    // protected for test accessibility
-    protected void removeLayer(String category) {
-        assert categoriesToLayers.containsKey(category);
-
-        Layer layer = categoriesToLayers.remove(category);
-
-        for (Resource resource : layer.getResources()) {
-            if (resourceItems.containsKey(resource)) {
-                ResourceItem resourceItem = resourceItems.remove(resource);
-                removeResourceItem(resourceItem);
-            }
-        }
-        assert !categoriesToLayers.containsKey(category);
+    // protected for test case until refactored, return is also for test only
+    // TODO cleanup
+    private void initViewConfiguration() {
+        configuration = new ResourceItemValueResolver(slotResolver);
     }
 
-    private void removeResource(Layer layer, Resource resource) {
-        removeResourceItem(this.resourceItems.remove(resource));
-    }
+    private void removeResourceItem(String category) {
+        assert category != null : "category must not be null";
+        assert categoriesToResourceItems.containsKey(category);
 
-    private void removeResourceItem(ResourceItem resourceItem) {
+        ResourceItem resourceItem = categoriesToResourceItems.remove(category);
         contentDisplay.removeResourceItem(resourceItem);
+
+        assert !categoriesToResourceItems.containsKey(category);
     }
 
     @Override
@@ -887,7 +772,7 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     private void setSelectionStatusVisible(boolean selectionStatus) {
-        for (ResourceItem avatar : resourceItems.values()) {
+        for (ResourceItem avatar : categoriesToResourceItems.values()) {
             avatar.setSelectionStatusVisible(selectionStatus);
         }
     }

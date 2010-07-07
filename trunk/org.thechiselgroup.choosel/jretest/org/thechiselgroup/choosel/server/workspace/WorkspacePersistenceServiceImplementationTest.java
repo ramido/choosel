@@ -34,7 +34,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.services.ServiceException;
-import org.thechiselgroup.choosel.client.test.Assert2;
+import org.thechiselgroup.choosel.client.test.AdvancedAsserts;
 import org.thechiselgroup.choosel.client.workspace.dto.ResourceSetDTO;
 import org.thechiselgroup.choosel.client.workspace.dto.WindowDTO;
 import org.thechiselgroup.choosel.client.workspace.dto.WorkspaceDTO;
@@ -78,7 +78,7 @@ public class WorkspacePersistenceServiceImplementationTest {
 
         List<WorkspacePreviewDTO> expected = new ArrayList<WorkspacePreviewDTO>();
         expected.add(new WorkspacePreviewDTO(ID, NAME));
-        Assert2.assertEquals(expected, result);
+        AdvancedAsserts.assertEquals(expected, result);
     }
 
     // TODO test DTO update

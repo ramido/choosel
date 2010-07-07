@@ -15,9 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resolver;
 
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.resources.Resource;
 
-public class SimplePropertyValueResolver implements ResourceSetToValueResolver {
+public class SimplePropertyValueResolver implements ResourceToValueResolver {
 
     private String propertyName;
 
@@ -31,8 +31,8 @@ public class SimplePropertyValueResolver implements ResourceSetToValueResolver {
     }
 
     @Override
-    public Object getValue(ResourceSet resources) {
-        return resources.getFirstResource().getValue(propertyName);
+    public Object resolve(Resource resource) {
+        return resource.getValue(propertyName);
     }
 
     public void setPropertyName(String propertyName) {

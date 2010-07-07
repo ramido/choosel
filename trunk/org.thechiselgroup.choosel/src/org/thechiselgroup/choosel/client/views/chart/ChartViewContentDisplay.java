@@ -26,8 +26,8 @@ import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.Layer;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 
 import com.google.inject.Inject;
@@ -72,11 +72,13 @@ public abstract class ChartViewContentDisplay extends
     }
 
     @Override
-    public ResourceItem createResourceItem(Layer layer, ResourceSet resources) {
-        PopupManager popupManager = createPopupManager(layer, resources);
+    public ResourceItem createResourceItem(ResourceItemValueResolver resolver,
+            String category, ResourceSet resources) {
 
-        ChartItem chartItem = new ChartItem(resources, this, popupManager,
-                hoverModel, layer, dragEnablerFactory);
+        PopupManager popupManager = createPopupManager(resolver, resources);
+
+        ChartItem chartItem = new ChartItem(category, resources, this,
+                popupManager, hoverModel, resolver, dragEnablerFactory);
 
         chartWidget.addEvent(chartItem);
 

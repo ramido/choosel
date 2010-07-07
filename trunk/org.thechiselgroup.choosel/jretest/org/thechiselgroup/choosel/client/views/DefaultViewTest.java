@@ -27,6 +27,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.thechiselgroup.choosel.client.test.AdvancedAsserts.assertContainsResource;
 import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createLabeledResources;
 import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResource;
 import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResources;
@@ -44,14 +45,13 @@ import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.label.DefaultCategoryLabelProvider;
 import org.thechiselgroup.choosel.client.label.SelectionModelLabelFactory;
 import org.thechiselgroup.choosel.client.persistence.Memento;
-import org.thechiselgroup.choosel.client.resolver.NullPropertyValueResolver;
-import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceByUriTypeCategorizer;
+import org.thechiselgroup.choosel.client.resources.ResourceCategorizerToMultiCategorizerAdapter;
 import org.thechiselgroup.choosel.client.resources.ResourceEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
@@ -72,7 +72,6 @@ public class DefaultViewTest {
                 SelectionModelLabelFactory selectionModelLabelFactory,
                 ResourceSetFactory resourceSetFactory,
                 ResourceSetsPresenter originalSetsPresenter,
-                ResourceSetsPresenter splittedSetsPresenter,
                 ResourceSetsPresenter automaticSetPresenter,
                 ResourceSetsPresenter selectionPresenter,
                 ResourceSetsPresenter selectionDropPresenter,
@@ -81,17 +80,10 @@ public class DefaultViewTest {
                 String contentType, SlotResolver slotResolver) {
 
             super(hoverModel, selectionModelLabelFactory, resourceSetFactory,
-                    originalSetsPresenter, splittedSetsPresenter,
-                    automaticSetPresenter, selectionPresenter,
-                    selectionDropPresenter, resourceSplitter, contentDisplay,
-                    label, contentType, slotResolver);
-        }
-
-        @Override
-        protected ResourceSetToValueResolver createValueResolver(String slotID,
-                String category, List<Layer> layers) {
-
-            return new NullPropertyValueResolver();
+                    originalSetsPresenter, automaticSetPresenter,
+                    selectionPresenter, selectionDropPresenter,
+                    resourceSplitter, contentDisplay, label, contentType,
+                    slotResolver);
         }
 
         @Override
@@ -140,9 +132,6 @@ public class DefaultViewTest {
 
     @Mock
     private SlotResolver slotResolver;
-
-    @Mock
-    private ResourceSetsPresenter splittedSetsPresenter;
 
     private DefaultView view;
 
@@ -271,47 +260,6 @@ public class DefaultViewTest {
     }
 
     @Test
-    public void callSplittedSetsPresenterOnLabeledResourcesRemoved() {
-        DefaultResourceSet resources1 = createLabeledResources(CATEGORY_1, 1,
-                3, 4);
-        DefaultResourceSet resources2 = createLabeledResources(CATEGORY_2, 4, 2);
-        DefaultResourceSet resources = toLabeledResources(resources1,
-                resources2);
-
-        view.addResourceSet(resources);
-        resources.removeAll(resources2);
-
-        verify(splittedSetsPresenter, times(1)).removeResourceSet(
-                any(ResourceSet.class));
-    }
-
-    @Test
-    public void callSplittedSetsPresenterOnResourcesAdded() {
-        DefaultResourceSet resources1 = createResources(CATEGORY_1, 1, 3, 4);
-        DefaultResourceSet resources2 = createResources(CATEGORY_2, 4, 2);
-        DefaultResourceSet resources = toResourceSet(resources1, resources2);
-
-        view.addResourceSet(resources);
-
-        ArgumentCaptor<ResourceSet> captor = ArgumentCaptor
-                .forClass(ResourceSet.class);
-
-        verify(splittedSetsPresenter, times(2))
-                .addResourceSet(captor.capture());
-
-        List<ResourceSet> result = captor.getAllValues();
-        for (ResourceSet resultSet : result) {
-            if (resultSet.size() == 3) {
-                assertTrue(resultSet.containsEqualResources(resources1));
-            } else if (resultSet.size() == 2) {
-                assertTrue(resultSet.containsEqualResources(resources2));
-            } else {
-                fail("invalid result set " + resultSet);
-            }
-        }
-    }
-
-    @Test
     public void categorizeLabeledResources() {
         DefaultResourceSet resources1 = createLabeledResources(CATEGORY_1, 1,
                 3, 4);
@@ -347,28 +295,50 @@ public class DefaultViewTest {
     }
 
     @Test
-    public void createLayersOnResourcesAdded() {
+    public void createResourceItemsOnResourcesAdded() {
         DefaultResourceSet resources1 = createResources(CATEGORY_1, 1, 3, 4);
         DefaultResourceSet resources2 = createResources(CATEGORY_2, 4, 2);
         DefaultResourceSet resources = toResourceSet(resources1, resources2);
 
         view.addResourceSet(resources);
 
-        verify(view, times(2)).createLayer(any(String.class),
-                any(ResourceSet.class));
+        ArgumentCaptor<ResourceSet> argument = ArgumentCaptor
+                .forClass(ResourceSet.class);
+        verify(contentDisplay, times(2)).createResourceItem(
+                any(ResourceItemValueResolver.class), any(String.class),
+                argument.capture());
+
+        List<ResourceSet> values = argument.getAllValues();
+
+        assertEquals(2, values.size());
+        for (int i = 0; i < 2; i++) {
+            ResourceSet resourceSet = values.get(i);
+
+            if (resourceSet.size() == 3) {
+                assertContainsResource(true, resourceSet, CATEGORY_1, 1);
+                assertContainsResource(true, resourceSet, CATEGORY_1, 3);
+                assertContainsResource(true, resourceSet, CATEGORY_1, 4);
+            } else if (resourceSet.size() == 2) {
+                assertContainsResource(true, resourceSet, CATEGORY_2, 4);
+                assertContainsResource(true, resourceSet, CATEGORY_2, 2);
+            } else {
+                fail("invalid resource set " + resourceSet);
+            }
+        }
     }
 
     @Test
     public void createResourceItemsWhenLabeledResourcesAreAdded() {
-        ResourceSet resources = createLabeledResources(1);
+        ResourceSet resources = createLabeledResources(CATEGORY_1, 1);
 
         view.addResourceSet(resources);
 
-        resources.add(createResource(2));
+        resources.add(createResource(CATEGORY_2, 2));
 
         ArgumentCaptor<ResourceSet> captor = ArgumentCaptor
                 .forClass(ResourceSet.class);
-        verify(contentDisplay, times(2)).createResourceItem(any(Layer.class),
+        verify(contentDisplay, times(2)).createResourceItem(
+                any(ResourceItemValueResolver.class), any(String.class),
                 captor.capture());
 
         List<ResourceSet> capturedResourceSets = captor.getAllValues();
@@ -384,15 +354,16 @@ public class DefaultViewTest {
 
     private void createView() {
         ResourceSplitter resourceSplitter = new ResourceSplitter(
-                new ResourceByUriTypeCategorizer(),
+                new ResourceCategorizerToMultiCategorizerAdapter(
+                        new ResourceByUriTypeCategorizer()),
                 new DefaultResourceSetFactory(),
                 new DefaultCategoryLabelProvider());
 
         view = spy(new TestView(hoverModel, new SelectionModelLabelFactory(),
                 new DefaultResourceSetFactory(), originalSetsPresenter,
-                splittedSetsPresenter, allResourcesSetPresenter,
-                selectionPresenter, selectionDropPresenter, resourceSplitter,
-                contentDisplay, "", "", slotResolver));
+                allResourcesSetPresenter, selectionPresenter,
+                selectionDropPresenter, resourceSplitter, contentDisplay, "",
+                "", slotResolver));
     }
 
     @Test
@@ -404,7 +375,6 @@ public class DefaultViewTest {
         verify(contentDisplay, times(1)).dispose();
         verify(selectionPresenter, times(1)).dispose();
         verify(originalSetsPresenter, times(1)).dispose();
-        verify(splittedSetsPresenter, times(1)).dispose();
         verify(selectionHandlerRegistration, times(2)).removeHandler();
     }
 
@@ -481,7 +451,8 @@ public class DefaultViewTest {
         view.addResourceSet(resources);
         view.removeResourceSet(resources);
 
-        verify(view, times(2)).removeLayer(any(String.class));
+        verify(contentDisplay, times(2)).removeResourceItem(
+                any(ResourceItem.class));
     }
 
     @Test
@@ -528,8 +499,10 @@ public class DefaultViewTest {
         createView();
 
         when(
-                contentDisplay.createResourceItem(any(Layer.class),
-                        any(ResourceSet.class))).thenReturn(resourceItem);
+                contentDisplay.createResourceItem(
+                        any(ResourceItemValueResolver.class),
+                        any(String.class), any(ResourceSet.class))).thenReturn(
+                resourceItem);
 
         when(contentDisplay.getSlotIDs()).thenReturn(new String[] { SLOT_ID },
                 new String[] {});

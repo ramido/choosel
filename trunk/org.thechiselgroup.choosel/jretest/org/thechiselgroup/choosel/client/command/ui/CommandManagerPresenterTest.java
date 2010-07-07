@@ -196,7 +196,8 @@ public class CommandManagerPresenterTest {
         commandManagerPresenter = new CommandManagerPresenter(commandManager,
                 display);
 
-        when(resolver.getValue(any(ResourceSet.class))).thenReturn("");
+        when(resolver.resolve(any(ResourceSet.class), any(String.class)))
+                .thenReturn("");
         when(display.getUndoClickHandlers()).thenReturn(undoClickHandlers);
         when(display.getRedoClickHandlers()).thenReturn(redoClickHandlers);
         when(command.getDescription()).thenReturn(COMMAND_DESCRIPTION);

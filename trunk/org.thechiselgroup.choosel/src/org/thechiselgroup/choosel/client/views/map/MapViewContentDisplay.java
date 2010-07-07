@@ -25,8 +25,8 @@ import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.Layer;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 
 import com.google.gwt.maps.client.MapType;
@@ -84,23 +84,24 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
 
     // TODO test
     @Override
-    public ResourceItem createResourceItem(Layer layer, ResourceSet resources) {
+    public ResourceItem createResourceItem(ResourceItemValueResolver resolver,
+            String category, ResourceSet resources) {
         // TODO iterate over path
         // TODO resolve sets
         // TODO separate resolvers for latitude and longitude
 
-        Resource location = (Resource) layer.getValue(
-                SlotResolver.LOCATION_SLOT, resources);
+        Resource location = (Resource) resolver.resolve(
+                SlotResolver.LOCATION_SLOT, category, resources);
 
         double latitude = toDouble(location.getValue(LATITUDE));
         double longitude = toDouble(location.getValue(LONGITUDE));
 
         LatLng latLng = LatLng.newInstance(latitude, longitude);
 
-        PopupManager popupManager = createPopupManager(layer, resources);
+        PopupManager popupManager = createPopupManager(resolver, resources);
 
-        MapItem mapItem = new MapItem(latLng, resources, hoverModel,
-                popupManager, layer, getCallback(), dragEnablerFactory);
+        MapItem mapItem = new MapItem(category, latLng, resources, hoverModel,
+                popupManager, resolver, getCallback(), dragEnablerFactory);
 
         map.addOverlay(mapItem.getOverlay());
 

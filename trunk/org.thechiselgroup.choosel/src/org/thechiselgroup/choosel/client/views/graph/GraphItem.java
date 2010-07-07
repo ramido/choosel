@@ -25,8 +25,8 @@ import static org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay.NOD
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
-import org.thechiselgroup.choosel.client.views.Layer;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay.Display;
 
 public class GraphItem extends ResourceItem {
@@ -57,11 +57,13 @@ public class GraphItem extends ResourceItem {
 
     private Node node;
 
-    public GraphItem(ResourceSet resources, ResourceSet hoverModel,
-            PopupManager popupManager, String label, String category,
-            GraphViewContentDisplay.Display display, Layer Layer) {
+    // TODO figure fix categoryX
+    public GraphItem(String categoryX, ResourceSet resources,
+            ResourceSet hoverModel, PopupManager popupManager, String label,
+            String category, GraphViewContentDisplay.Display display,
+            ResourceItemValueResolver Layer) {
 
-        super(resources, hoverModel, popupManager, Layer);
+        super(categoryX, resources, hoverModel, popupManager, Layer);
 
         assert label != null;
         assert category != null;

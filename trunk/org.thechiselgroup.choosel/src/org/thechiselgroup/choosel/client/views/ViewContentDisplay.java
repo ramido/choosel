@@ -25,7 +25,8 @@ public interface ViewContentDisplay extends WidgetAdaptable, Disposable {
 
     void checkResize();
 
-    ResourceItem createResourceItem(Layer layer, ResourceSet resources);
+    ResourceItem createResourceItem(ResourceItemValueResolver resolver,
+            String category, ResourceSet resources);
 
     void endRestore();
 

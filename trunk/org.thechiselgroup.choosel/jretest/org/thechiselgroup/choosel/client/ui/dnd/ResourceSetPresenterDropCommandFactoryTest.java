@@ -122,23 +122,6 @@ public class ResourceSetPresenterDropCommandFactoryTest {
     }
 
     @Test
-    public void createAddResourceSetToResourceSetCommandWhenAvatarsFromSameViewButSourceTypeIsType() {
-        when(targetSet.isModifiable()).thenReturn(true);
-        when(accessor.findView(dragAvatar)).thenReturn(view);
-        when(dragAvatar.getType()).thenReturn(ResourceSetAvatarType.TYPE);
-
-        UndoableCommand result = dropCommandFactory.createCommand(dragAvatar);
-
-        assertNotNull(result);
-        assertEquals(true, !(result instanceof MergeResourceSetsCommand));
-
-        AddResourceSetToResourceSetCommand result2 = (AddResourceSetToResourceSetCommand) result;
-
-        assertEquals(sourceSet, result2.getAddedSet());
-        assertEquals(targetSet, result2.getModifiedSet());
-    }
-
-    @Test
     public void createMergeResourceCommandWhenAvatarsFromSameViewAndSourceypeIsSet() {
         when(targetSet.isModifiable()).thenReturn(true);
         when(accessor.findView(dragAvatar)).thenReturn(view);

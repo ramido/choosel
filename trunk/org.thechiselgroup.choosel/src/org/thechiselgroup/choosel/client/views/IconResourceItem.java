@@ -29,10 +29,11 @@ public abstract class IconResourceItem extends ResourceItem {
 
     private String selectedIconURL;
 
-    public IconResourceItem(ResourceSet resources, ResourceSet hoverModel,
-            PopupManager popupManager, Layer layerModel) {
+    public IconResourceItem(String category, ResourceSet resources,
+            ResourceSet hoverModel, PopupManager popupManager,
+            ResourceItemValueResolver layerModel) {
 
-        super(resources, hoverModel, popupManager, layerModel);
+        super(category, resources, hoverModel, popupManager, layerModel);
         initIconURLs();
     }
 

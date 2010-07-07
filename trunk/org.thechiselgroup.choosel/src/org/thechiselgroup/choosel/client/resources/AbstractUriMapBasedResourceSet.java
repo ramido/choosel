@@ -124,4 +124,9 @@ public abstract class AbstractUriMapBasedResourceSet extends
         return new ArrayList<Resource>(uriToResource.values());
     }
 
+    @Override
+    public String toString() {
+        return uriToResource.values().toString();
+    }
+
 }

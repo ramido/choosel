@@ -62,10 +62,12 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
     public void checkResize() {
     }
 
-    protected PopupManager createPopupManager(Layer layer, ResourceSet resource) {
+    protected PopupManager createPopupManager(ResourceItemValueResolver layer,
+            ResourceSet resource) {
 
+        // TODO mah
         return createPopupManager(resource,
-                layer.getResolver(SlotResolver.DESCRIPTION_SLOT));
+                layer.getResourceSetResolver(SlotResolver.DESCRIPTION_SLOT));
     }
 
     protected PopupManager createPopupManager(final ResourceSet resources,

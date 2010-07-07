@@ -33,9 +33,9 @@ import org.thechiselgroup.choosel.client.label.MappingCategoryLabelProvider;
 import org.thechiselgroup.choosel.client.label.ResourceSetLabelFactory;
 import org.thechiselgroup.choosel.client.label.SelectionModelLabelFactory;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceManager;
-import org.thechiselgroup.choosel.client.resources.DefaultResourceMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.ManagedResourceSetFactory;
+import org.thechiselgroup.choosel.client.resources.ResourceByUriMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceByUriTypeCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceManager;
@@ -49,7 +49,6 @@ import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.configuration.AllResourceSetAvatarFactoryProvider;
 import org.thechiselgroup.choosel.client.resources.ui.configuration.DefaultResourceSetAvatarFactoryProvider;
 import org.thechiselgroup.choosel.client.resources.ui.configuration.ResourceSetsDragAvatarFactoryProvider;
-import org.thechiselgroup.choosel.client.resources.ui.configuration.TypeDragAvatarFactoryProvider;
 import org.thechiselgroup.choosel.client.ui.dialog.DialogManager;
 import org.thechiselgroup.choosel.client.ui.dnd.AllSetDropTargetManager;
 import org.thechiselgroup.choosel.client.ui.dnd.DefaultResourceSetAvatarDragController;
@@ -142,11 +141,6 @@ public class ChooselClientModule extends AbstractGinModule implements
                 .to(ResourceSetDropTargetManager.class).in(Singleton.class);
 
         bind(ResourceSetAvatarDropTargetManager.class)
-                .annotatedWith(Names.named(AVATAR_FACTORY_TYPE))
-                .to(NullResourceSetAvatarDropTargetManager.class)
-                .in(Singleton.class);
-
-        bind(ResourceSetAvatarDropTargetManager.class)
                 .annotatedWith(Names.named(AVATAR_FACTORY_ALL_RESOURCES))
                 .to(AllSetDropTargetManager.class).in(Singleton.class);
 
@@ -166,10 +160,6 @@ public class ChooselClientModule extends AbstractGinModule implements
         bind(ResourceSetAvatarFactory.class)
                 .annotatedWith(Names.named(AVATAR_FACTORY_ALL_RESOURCES))
                 .toProvider(AllResourceSetAvatarFactoryProvider.class)
-                .in(Singleton.class);
-        bind(ResourceSetAvatarFactory.class)
-                .annotatedWith(Names.named(AVATAR_FACTORY_TYPE))
-                .toProvider(TypeDragAvatarFactoryProvider.class)
                 .in(Singleton.class);
         bind(ResourceSetAvatarFactory.class)
                 .annotatedWith(Names.named(AVATAR_FACTORY_SELECTION))
@@ -301,8 +291,11 @@ public class ChooselClientModule extends AbstractGinModule implements
 
         bind(ResourceCategorizer.class).to(getResourceCategorizerClass()).in(
                 Singleton.class);
+        // TODO please re-enable me?
+        // bind(ResourceMultiCategorizer.class).to(
+        // ResourceByUriTypeMultiCategorizer.class).in(Singleton.class);
         bind(ResourceMultiCategorizer.class).to(
-                DefaultResourceMultiCategorizer.class).in(Singleton.class);
+                ResourceByUriMultiCategorizer.class).in(Singleton.class);
         bind(CategoryLabelProvider.class).to(getCategoryLabelProviderClass())
                 .in(Singleton.class);
 

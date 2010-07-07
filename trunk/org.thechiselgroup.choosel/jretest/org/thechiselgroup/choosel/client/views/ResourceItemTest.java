@@ -17,6 +17,8 @@ import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
 
 public class ResourceItemTest {
 
+    private static final String RESOURCE_ITEM_CATEGORY = "resourceItemCategory";
+
     public static Resource createResource(String type, int index) {
         Resource r = new Resource(type + ":" + index);
         r.putValue("testlabelkey", index + "-value");
@@ -27,7 +29,7 @@ public class ResourceItemTest {
     private PopupManager popupManager;
 
     @Mock
-    private Layer layer;
+    private ResourceItemValueResolver layer;
 
     @Mock
     private ResourceSet hoverModel;
@@ -48,7 +50,7 @@ public class ResourceItemTest {
     }
 
     @Test
-    public void setHightlightedUpdateStylingCalled() {
+    public void setHighlightedUpdateStylingCalled() {
         underTest.setHighlighted(true);
         verify(underTest, times(1)).updateStyling();
     }
@@ -69,18 +71,18 @@ public class ResourceItemTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        underTest = spy(new ResourceItem(resources, hoverModel, popupManager,
-                layer));
+        underTest = spy(new ResourceItem(RESOURCE_ITEM_CATEGORY, resources,
+                hoverModel, popupManager, layer));
     }
 
     @Test
-    public void statusisDefault() {
+    public void statusIsDefault() {
         underTest.setSelected(false);
         assertEquals(Status.DEFAULT, underTest.calculateStatus());
     }
 
     @Test
-    public void statusisHighlighted() {
+    public void statusIsHighlighted() {
         underTest.setHighlighted(true);
         underTest.setSelected(false);
         assertEquals(Status.HIGHLIGHTED, underTest.calculateStatus());
@@ -95,24 +97,10 @@ public class ResourceItemTest {
     }
 
     @Test
-    public void statusisSelected() {
+    public void statusIsSelected() {
         underTest.setSelected(true);
         assertEquals(Status.SELECTED, underTest.calculateStatus());
     }
-
-    // @Test
-    // public void setHighlightedAddsResourceCalled() {
-    // underTest.setHightlighted(true);
-    // verify(hoverModel).add(underTest.getResource());
-    // }
-    //
-    // @Test
-    // public void setHighlightedRemovedResourceCalled() {
-    // underTest.setHightlighted(true);
-    // verify(hoverModel, never()).remove(underTest.getResource());
-    // underTest.setHightlighted(false);
-    // verify(hoverModel, times(1)).remove(underTest.getResource());
-    // }
 
     @Test
     public void statusVsGrayDefaultAllFalse() {

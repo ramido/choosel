@@ -18,6 +18,6 @@ package org.thechiselgroup.choosel.client.resources.ui;
 // TODO add styling to drag avatar type
 public enum ResourceSetAvatarType {
 
-    SELECTION, SET, TYPE, ALL
+    SELECTION, SET, ALL
 
 }

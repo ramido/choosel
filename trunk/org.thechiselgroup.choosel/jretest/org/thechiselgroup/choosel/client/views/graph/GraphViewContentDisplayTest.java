@@ -51,7 +51,7 @@ import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeDragEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeDragHandler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.Layer;
+import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay.Display;
 
@@ -83,6 +83,8 @@ public class GraphViewContentDisplayTest {
 
     }
 
+    private static final String RESOURCE_ITEM_CATEGORY = "resourceItemCategory";
+
     private ResourceSet allResources;
 
     @Mock
@@ -111,7 +113,7 @@ public class GraphViewContentDisplayTest {
     private ResourceSet hoverModel;
 
     @Mock
-    private Layer layer;
+    private ResourceItemValueResolver layer;
 
     @Mock
     private Node node;
@@ -175,7 +177,8 @@ public class GraphViewContentDisplayTest {
     public void loadNeighbourhoodWhenAddingConcept() {
         concept1 = createResource(1);
 
-        contentDisplay.createResourceItem(layer, toResourceSet(concept1));
+        contentDisplay.createResourceItem(layer, RESOURCE_ITEM_CATEGORY,
+                toResourceSet(concept1));
 
         verify(automaticExpander, times(1)).expand(eq(concept1),
                 any(GraphNodeExpansionCallback.class));

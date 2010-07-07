@@ -15,10 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.thechiselgroup.choosel.client.label.CategoryLabelProvider;
+import org.thechiselgroup.choosel.client.util.SingleItemIterable;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerManager;
@@ -40,15 +43,6 @@ public class ResourceSplitter extends AbstractResourceContainer {
     private final CategoryLabelProvider labelProvider;
 
     @Inject
-    public ResourceSplitter(ResourceCategorizer categorizer,
-            ResourceSetFactory resourceSetFactory,
-            CategoryLabelProvider labelProvider) {
-
-        this(new ResourceCategorizerToMultiCategorizerAdapter(categorizer),
-                resourceSetFactory, labelProvider);
-    }
-
-    @Inject
     public ResourceSplitter(ResourceMultiCategorizer multiCategorizer,
             ResourceSetFactory resourceSetFactory,
             CategoryLabelProvider labelProvider) {
@@ -62,9 +56,37 @@ public class ResourceSplitter extends AbstractResourceContainer {
 
     @Override
     public void add(Resource resource) {
-        for (String category : multiCategorizer.getCategories(resource)) {
-            ResourceSet resourceSet = getResourceSet(category);
-            resourceSet.add(resource);
+        addAll(new SingleItemIterable<Resource>(resource));
+    }
+
+    @Override
+    public void addAll(Iterable<Resource> resources) {
+        assert resources != null;
+
+        Map<String, List<Resource>> resourcesPerCategory = categorize(resources);
+
+        for (Map.Entry<String, List<Resource>> entry : resourcesPerCategory
+                .entrySet()) {
+            addCategoryResources(entry.getKey(), entry.getValue());
+        }
+    }
+
+    private void addCategoryResources(String category,
+            List<Resource> categoryResources) {
+
+        // TODO test this condition as well
+        if (categorizedSets.containsKey(category)) {
+            categorizedSets.get(category).addAll(categoryResources);
+        } else {
+            ResourceSet resourceSet = resourceSetFactory.createResourceSet();
+
+            resourceSet.setLabel(labelProvider.getLabel(category));
+            resourceSet.addAll(categoryResources);
+
+            categorizedSets.put(category, resourceSet);
+
+            eventBus.fireEvent(new ResourceCategoryAddedEvent(category,
+                    resourceSet));
         }
     }
 
@@ -74,38 +96,56 @@ public class ResourceSplitter extends AbstractResourceContainer {
         return eventBus.addHandler(type, handler);
     }
 
+    private Map<String, List<Resource>> categorize(Iterable<Resource> resources) {
+        Map<String, List<Resource>> resourcesPerCategory = new HashMap<String, List<Resource>>();
+        for (Resource resource : resources) {
+            for (String category : multiCategorizer.getCategories(resource)) {
+                if (!resourcesPerCategory.containsKey(category)) {
+                    resourcesPerCategory.put(category,
+                            new ArrayList<Resource>());
+                }
+
+                resourcesPerCategory.get(category).add(resource);
+            }
+        }
+        return resourcesPerCategory;
+    }
+
     public Map<String, ResourceSet> getCategorizedResourceSets() {
         return new HashMap<String, ResourceSet>(categorizedSets);
     }
 
-    private ResourceSet getResourceSet(String category) {
-        if (!categorizedSets.containsKey(category)) {
-            ResourceSet resourceSet = resourceSetFactory.createResourceSet();
-
-            resourceSet.setLabel(labelProvider.getLabel(category));
-
-            categorizedSets.put(category, resourceSet);
-
-            eventBus.fireEvent(new ResourceCategoryAddedEvent(category,
-                    resourceSet));
-        }
-
-        return categorizedSets.get(category);
+    @Override
+    public void remove(Resource resource) {
+        removeAll(new SingleItemIterable<Resource>(resource));
     }
 
     @Override
-    public void remove(Resource resource) {
-        for (String category : multiCategorizer.getCategories(resource)) {
-            ResourceSet resourceSet = getResourceSet(category);
+    public void removeAll(Iterable<Resource> resources) {
+        assert resources != null;
 
-            resourceSet.remove(resource);
+        Map<String, List<Resource>> resourcesPerCategory = categorize(resources);
 
-            if (resourceSet.isEmpty()) {
-                categorizedSets.remove(category);
-                eventBus.fireEvent(new ResourceCategoryRemovedEvent(category,
-                        resourceSet));
-            }
+        for (Map.Entry<String, List<Resource>> entry : resourcesPerCategory
+                .entrySet()) {
+
+            removeCategoryResources(entry.getKey(), entry.getValue());
         }
     }
 
+    public void removeCategoryResources(String category,
+            List<Resource> resourcesToRemove) {
+
+        ResourceSet storedCategoryResources = categorizedSets.get(category);
+
+        if (storedCategoryResources.size() == resourcesToRemove.size()
+                && storedCategoryResources.containsAll(resourcesToRemove)) {
+
+            categorizedSets.remove(category);
+            eventBus.fireEvent(new ResourceCategoryRemovedEvent(category,
+                    storedCategoryResources));
+        } else {
+            storedCategoryResources.removeAll(resourcesToRemove);
+        }
+    }
 }

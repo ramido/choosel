@@ -26,7 +26,7 @@ import org.thechiselgroup.choosel.client.ui.widget.timeline.TimeLineEvent;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.IconResourceItem;
-import org.thechiselgroup.choosel.client.views.Layer;
+import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 
 import com.google.gwt.query.client.Function;
@@ -74,11 +74,12 @@ public class TimeLineItem extends IconResourceItem {
 
     private DragEnablerFactory dragEnablerFactory;
 
-    public TimeLineItem(ResourceSet resources, TimeLineViewContentDisplay view,
-            PopupManager popupManager, ResourceSet hoverModel,
-            Layer layerModel, DragEnablerFactory dragEnablerFactory) {
+    public TimeLineItem(String category, ResourceSet resources,
+            TimeLineViewContentDisplay view, PopupManager popupManager,
+            ResourceSet hoverModel, ResourceItemValueResolver layerModel,
+            DragEnablerFactory dragEnablerFactory) {
 
-        super(resources, hoverModel, popupManager, layerModel);
+        super(category, resources, hoverModel, popupManager, layerModel);
 
         this.view = view;
         this.dragEnablerFactory = dragEnablerFactory;

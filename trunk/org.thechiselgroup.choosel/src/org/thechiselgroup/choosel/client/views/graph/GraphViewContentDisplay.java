@@ -57,8 +57,8 @@ import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseOverHandler;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.Layer;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 
@@ -218,23 +218,29 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     public void checkResize() {
     }
 
+    // TODO fix categoryX
     @Override
-    public GraphItem createResourceItem(Layer layer, ResourceSet resources) {
-        assert layer != null;
+    public GraphItem createResourceItem(ResourceItemValueResolver resolver,
+            String categoryX, ResourceSet resources) {
+
+        assert resolver != null;
         assert resources != null;
 
-        String label = layer.getValue(SlotResolver.GRAPH_LABEL_SLOT, resources);
+        String label = (String) resolver.resolve(SlotResolver.GRAPH_LABEL_SLOT,
+                categoryX, resources);
         String category = getCategory(resources.getFirstResource());
-        String backgroundColor = layer.getValue(
-                SlotResolver.GRAPH_NODE_BACKGROUND_COLOR_SLOT, resources);
-        String borderColor = layer.getValue(
-                SlotResolver.GRAPH_NODE_BORDER_COLOR_SLOT, resources);
+        String backgroundColor = (String) resolver.resolve(
+                SlotResolver.GRAPH_NODE_BACKGROUND_COLOR_SLOT, categoryX,
+                resources);
+        String borderColor = (String) resolver
+                .resolve(SlotResolver.GRAPH_NODE_BORDER_COLOR_SLOT, categoryX,
+                        resources);
 
         PopupManager popupManager = createPopupManager(resources,
-                layer.getResolver(SlotResolver.DESCRIPTION_SLOT));
+                resolver.getResourceSetResolver(SlotResolver.DESCRIPTION_SLOT));
 
-        GraphItem item = new GraphItem(resources, hoverModel, popupManager,
-                label, category, display, layer);
+        GraphItem item = new GraphItem(categoryX, resources, hoverModel,
+                popupManager, label, category, display, resolver);
 
         nodeIdToGraphItemMap.put(item.getNode().getId(), item);
 
