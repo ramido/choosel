@@ -27,6 +27,8 @@ public interface ChooselInjectionConstants {
 
     String TYPE_BAR = "Bar";
 
+    String TYPE_TAG_CLOUD = "TagCloud";
+
     String TYPE_PIE = "Pie";
 
     String TYPE_DOT = "Dot";
