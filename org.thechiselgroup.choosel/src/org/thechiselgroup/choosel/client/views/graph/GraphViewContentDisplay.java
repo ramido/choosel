@@ -402,14 +402,15 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     public void restore(Memento state) {
         Iterable<Resource> allResources = getCallback().getAllResources();
         for (Resource resource : allResources) {
-            GraphItem item = (GraphItem) getCallback()
-                    .getResourceItem(resource);
-            Memento nodeMemento = state.getChild(resource.getUri());
-            Point location = new Point(
-                    (Integer) nodeMemento.getValue(MEMENTO_X),
-                    (Integer) nodeMemento.getValue(MEMENTO_Y));
-
-            display.setLocation(item.getNode(), location);
+            // XXX broken
+            // GraphItem item = (GraphItem) getCallback()
+            // .getResourceItem(resource);
+            // Memento nodeMemento = state.getChild(resource.getUri());
+            // Point location = new Point(
+            // (Integer) nodeMemento.getValue(MEMENTO_X),
+            // (Integer) nodeMemento.getValue(MEMENTO_Y));
+            //
+            // display.setLocation(item.getNode(), location);
         }
     }
 
@@ -418,15 +419,16 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         Memento state = new Memento();
         Iterable<Resource> allResources = getCallback().getAllResources();
         for (Resource resource : allResources) {
-            GraphItem item = (GraphItem) getCallback()
-                    .getResourceItem(resource);
-            Point location = display.getLocation(item.getNode());
-
-            Memento nodeMemento = new Memento();
-            nodeMemento.setValue(MEMENTO_X, location.x);
-            nodeMemento.setValue(MEMENTO_Y, location.y);
-
-            state.addChild(resource.getUri(), nodeMemento);
+            // XXX broken
+            // GraphItem item = (GraphItem) getCallback()
+            // .getResourceItem(resource);
+            // Point location = display.getLocation(item.getNode());
+            //
+            // Memento nodeMemento = new Memento();
+            // nodeMemento.setValue(MEMENTO_X, location.x);
+            // nodeMemento.setValue(MEMENTO_Y, location.y);
+            //
+            // state.addChild(resource.getUri(), nodeMemento);
         }
         return state;
     }

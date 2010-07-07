@@ -42,7 +42,6 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.client.label.DefaultCategoryLabelProvider;
 import org.thechiselgroup.choosel.client.label.SelectionModelLabelFactory;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
@@ -346,8 +345,7 @@ public class DefaultViewTest {
         ResourceSplitter resourceSplitter = new ResourceSplitter(
                 new ResourceCategorizerToMultiCategorizerAdapter(
                         new ResourceByUriTypeCategorizer()),
-                new DefaultResourceSetFactory(),
-                new DefaultCategoryLabelProvider());
+                new DefaultResourceSetFactory());
 
         view = spy(new TestView(new SelectionModelLabelFactory(),
                 new DefaultResourceSetFactory(), originalSetsPresenter,

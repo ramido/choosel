@@ -25,9 +25,7 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetContainer;
 import org.thechiselgroup.choosel.client.resources.action.RemoveSelectionSetAction;
 import org.thechiselgroup.choosel.client.resources.ui.DefaultResourceSetAvatarFactory;
-import org.thechiselgroup.choosel.client.resources.ui.DelegatingResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.HighlightingResourceSetAvatarFactory;
-import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactoryProvider;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarType;
@@ -35,11 +33,8 @@ import org.thechiselgroup.choosel.client.resources.ui.UpdateResourceSetAvatarLab
 import org.thechiselgroup.choosel.client.resources.ui.popup.PopupResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.popup.PopupResourceSetAvatarFactory.Action;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
-import org.thechiselgroup.choosel.client.views.View;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
@@ -88,29 +83,8 @@ public class SelectionDragAvatarFactoryProvider implements
         ResourceSetAvatarFactory highlightingFactory = new HighlightingResourceSetAvatarFactory(
                 dragEnableFactory, hoverModel, setHoverModel, dragController);
 
-        // XXX refactor
-        ResourceSetAvatarFactory clickFactory = new DelegatingResourceSetAvatarFactory(
-                highlightingFactory) {
-            @Override
-            public ResourceSetAvatar createAvatar(ResourceSet resources) {
-                final ResourceSetAvatar avatar = delegate
-                        .createAvatar(resources);
-
-                avatar.addClickHandler(new ClickHandler() {
-                    @Override
-                    public void onClick(ClickEvent event) {
-                        View v = viewAccessor.findView(avatar);
-                        if (avatar.getResourceSet().equals(v.getSelection())) {
-                            v.setSelection(null);
-                        } else {
-                            v.setSelection(avatar.getResourceSet());
-                        }
-                    }
-                });
-
-                return avatar;
-            }
-        };
+        ResourceSetAvatarFactory clickFactory = new SelectionResourceSetAvatarFactory(
+                highlightingFactory, viewAccessor);
 
         List<Action> actions = new ArrayList<Action>();
         actions.add(new RemoveSelectionSetAction(commandManager));

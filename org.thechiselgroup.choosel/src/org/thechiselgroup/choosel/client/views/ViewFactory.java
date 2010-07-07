@@ -44,8 +44,6 @@ public class ViewFactory implements WindowContentFactory {
 
     private ResourceSetAvatarDropTargetManager contentDropTargetManager;
 
-    private CategoryLabelProvider labelProvider;
-
     private ResourceSetFactory resourceSetFactory;
 
     private ResourceSetAvatarFactory selectionDragAvatarFactory;
@@ -99,14 +97,13 @@ public class ViewFactory implements WindowContentFactory {
         this.resourceSetFactory = resourceSetFactory;
         this.selectionModelLabelFactory = selectionModelLabelFactory;
         this.categorizer = categorizer;
-        this.labelProvider = labelProvider;
         this.slotResolver = slotResolver;
     }
 
     @Override
     public WindowContent createWindowContent() {
         ResourceSplitter resourceSplitter = new ResourceSplitter(categorizer,
-                resourceSetFactory, labelProvider);
+                resourceSetFactory);
 
         ViewContentDisplay contentDisplay = new DropEnabledViewContentDisplay(
                 viewContentDisplayFactory.createViewContentDisplay(),

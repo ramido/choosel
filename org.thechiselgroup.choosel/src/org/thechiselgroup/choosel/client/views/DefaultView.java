@@ -111,6 +111,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private ResourceSet automaticResources;
 
+    // TODO why do we need this???
     private Map<String, ResourceItemValueResolver> categoriesToLayers = new HashMap<String, ResourceItemValueResolver>();
 
     private CombinedResourceSet combinedUserResourceSets;
@@ -247,7 +248,7 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     private boolean containsResource(Resource resource) {
-        return categoriesToResourceItems.containsKey(resource);
+        return allResources.contains(resource);
     }
 
     @Override
@@ -331,9 +332,32 @@ public class DefaultView extends AbstractWindowContent implements View {
                 categoriesToLayers.values());
     }
 
-    private ResourceItem getResource(Resource resource) {
+    private List<ResourceItem> getResourceItems(List<Resource> resources) {
+        assert resources != null;
+
+        List<ResourceItem> result = new ArrayList<ResourceItem>();
+        for (Resource resource : resources) {
+            List<ResourceItem> items = getResourceItems(resource);
+            items.removeAll(result);
+            result.addAll(items);
+        }
+
+        return result;
+    }
+
+    private List<ResourceItem> getResourceItems(Resource resource) {
         assert resource != null;
-        return categoriesToResourceItems.get(resource);
+
+        // TODO PERFORMANCE introduce field map: Resource --> List<ResourceItem>
+        // such a map would need to be updated
+        List<ResourceItem> result = new ArrayList<ResourceItem>();
+        for (ResourceItem resourceItem : categoriesToResourceItems.values()) {
+            if (resourceItem.getResourceSet().contains(resource)) {
+                result.add(resourceItem);
+            }
+        }
+
+        return result;
     }
 
     @Override
@@ -433,8 +457,8 @@ public class DefaultView extends AbstractWindowContent implements View {
             }
 
             @Override
-            public ResourceItem getResourceItem(Resource resource) {
-                return getResource(resource);
+            public List<ResourceItem> getResourceItems(Resource resource) {
+                return DefaultView.this.getResourceItems(resource);
             }
 
             @Override
@@ -547,7 +571,7 @@ public class DefaultView extends AbstractWindowContent implements View {
                     setSelectionStatusVisible(true);
                 }
 
-                updateSelectionStatusDisplay(e.getChangedResource(), true);
+                updateSelectionStatusDisplay(e.getChangedResources(), true);
             }
         };
         selectionRemovedHandler = new ResourcesRemovedEventHandler() {
@@ -557,7 +581,7 @@ public class DefaultView extends AbstractWindowContent implements View {
                     setSelectionStatusVisible(false);
                 }
 
-                updateSelectionStatusDisplay(e.getChangedResource(), false);
+                updateSelectionStatusDisplay(e.getChangedResources(), false);
             }
         };
 
@@ -807,22 +831,27 @@ public class DefaultView extends AbstractWindowContent implements View {
         }
     }
 
-    private void updateSelectionStatusDisplay(Resource i, boolean selected) {
-        ResourceItem avatar = getResource(i);
+    private void updateSelectionStatusDisplay(List<Resource> resources,
+            boolean selected) {
 
-        // check if individual available in this view
-        if (avatar != null) {
-            avatar.setSelected(selected);
+        List<ResourceItem> resourceItems = getResourceItems(resources);
+        for (ResourceItem resourceItem : resourceItems) {
+            resourceItem.setSelected(selected);
         }
-
     }
 
+    // TODO is this method really required or can we use
+    // updateSelectionStatusDisplay instead?
     private void updateSelectionStatusDisplayForResources(boolean selected) {
-        for (Resource i : this.selection.toList()) {
-            if (containsResource(i)) {
-                updateSelectionStatusDisplay(i, selected);
+        List<Resource> resourcesToUpdate = new ArrayList<Resource>();
+        // XXX for some reason .toList is required - find out why
+        for (Resource resource : selection.toList()) {
+            if (containsResource(resource)) {
+                resourcesToUpdate.add(resource);
             }
         }
+
+        updateSelectionStatusDisplay(resourcesToUpdate, selected);
     }
 
 }

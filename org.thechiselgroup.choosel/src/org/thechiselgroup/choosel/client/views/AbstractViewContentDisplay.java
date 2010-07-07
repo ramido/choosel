@@ -165,7 +165,11 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
                 return;
             }
 
-            callback.getResourceItem(resource).setHighlighted(showHover);
+            List<ResourceItem> resourceItems = callback
+                    .getResourceItems(resource);
+            for (ResourceItem resourceItem : resourceItems) {
+                resourceItem.setHighlighted(showHover);
+            }
         }
     }
 
