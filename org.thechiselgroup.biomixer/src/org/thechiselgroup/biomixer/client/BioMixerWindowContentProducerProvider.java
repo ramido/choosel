@@ -22,6 +22,7 @@ import org.thechiselgroup.choosel.client.ChooselWindowContentProducerProvider;
 import org.thechiselgroup.choosel.client.label.CategoryLabelProvider;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
+import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
@@ -42,19 +43,18 @@ public class BioMixerWindowContentProducerProvider extends
     @Inject
     public BioMixerWindowContentProducerProvider(
 	    @Named(AVATAR_FACTORY_SET) ResourceSetAvatarFactory userSetsDragAvatarFactory,
-	    @Named(AVATAR_FACTORY_TYPE) ResourceSetAvatarFactory typesDragAvatarFactory,
 	    @Named(AVATAR_FACTORY_ALL_RESOURCES) ResourceSetAvatarFactory allResourcesDragAvatarFactory,
 	    @Named(AVATAR_FACTORY_SELECTION) ResourceSetAvatarFactory selectionDragAvatarFactory,
 	    @Named(AVATAR_FACTORY_SELECTION_DROP) ResourceSetAvatarFactory dropTargetFactory,
 	    @Named(HOVER_MODEL) ResourceSet hoverModel,
 	    ResourceSetFactory resourceSetFactory,
 	    @Named(LABEL_PROVIDER_SELECTION_SET) LabelProvider selectionModelLabelFactory,
-	    ResourceCategorizer categorizer,
+	    ResourceMultiCategorizer categorizer,
 	    CategoryLabelProvider labelProvider,
 	    @Named(DROP_TARGET_MANAGER_VIEW_CONTENT) ResourceSetAvatarDropTargetManager contentDropTargetManager,
 	    SlotResolver slotResolver) {
 
-	super(userSetsDragAvatarFactory, typesDragAvatarFactory,
+	super(userSetsDragAvatarFactory,
 		allResourcesDragAvatarFactory, selectionDragAvatarFactory,
 		dropTargetFactory, hoverModel, resourceSetFactory,
 		selectionModelLabelFactory, categorizer, labelProvider,

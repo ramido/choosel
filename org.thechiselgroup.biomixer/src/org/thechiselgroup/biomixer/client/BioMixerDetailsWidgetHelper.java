@@ -91,7 +91,7 @@ public class BioMixerDetailsWidgetHelper extends DetailsWidgetHelper {
 		} else {
 			verticalPanel.add(avatarFactory.createAvatar(resourceSet));
 
-			String value = resolver.getValue(resourceSet).toString();
+			String value = resolver.resolve(resourceSet, "").toString();
 			HTML html = GWT.create(HTML.class);
 			html.setHTML(value);
 			verticalPanel.add(html);
