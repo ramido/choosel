@@ -93,6 +93,11 @@ public class DefaultResourceManager implements ResourceManager {
 
     @Override
     public Resource getByUri(String uri) {
+        ResourceElement resourceElement = getResourceElement(uri);
+        //TODO make sure that this check does not break anything
+        if (resourceElement == null) {
+            return null;
+        }
         return getResourceElement(uri).resource;
     }
 

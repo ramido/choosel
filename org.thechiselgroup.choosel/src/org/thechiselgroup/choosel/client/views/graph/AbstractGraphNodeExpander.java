@@ -32,8 +32,8 @@ public abstract class AbstractGraphNodeExpander implements GraphNodeExpander {
             if (!expansionCallback.getCallback().containsResourceWithUri(uri)) {
                 Resource r2 = expansionCallback.getResourceManager().getByUri(
                         uri);
-                expansionCallback.getCallback().getAutomaticResourceSet()
-                        .add(r2);
+                expansionCallback.getCallback().getAutomaticResourceSet().add(
+                        r2);
                 added.add(uri);
             }
         }
@@ -54,14 +54,22 @@ public abstract class AbstractGraphNodeExpander implements GraphNodeExpander {
         expansionCallback.getDisplay().layOutNodes(nodesToLayout);
     }
 
+    // TODO do not ask for a uri list
     protected List<String> calculateUrisToAdd(Resource resource,
             String... properties) {
 
         List<String> resourceUrisToAdd = new ArrayList<String>();
 
         for (String property : properties) {
-            for (String uri : resource.getUriListValue(property)) {
-                resourceUrisToAdd.add(uri);
+
+            if (resource.isUriList(property)) {
+                for (String uri : resource.getUriListValue(property)) {
+                    resourceUrisToAdd.add(uri);
+                }
+            }
+
+            else {
+                resourceUrisToAdd.add((String) resource.getValue(property));
             }
         }
 
