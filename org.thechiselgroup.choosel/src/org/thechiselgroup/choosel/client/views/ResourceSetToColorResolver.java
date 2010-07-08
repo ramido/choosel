@@ -5,19 +5,21 @@ import java.util.Map;
 
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.Resource;
-import org.thechiselgroup.choosel.client.resources.ResourceByUriTypeCategorizer;
+import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
-public class ResourceSetToColorResolver implements
-        ResourceSetToValueResolver {
+public class ResourceSetToColorResolver implements ResourceSetToValueResolver {
 
-    // TODO this could be variable!
-    private ResourceByUriTypeCategorizer categorizer = new ResourceByUriTypeCategorizer();
+    private ResourceCategorizer categorizer;
 
     private Map<String, String> resourceTypeToColor = new HashMap<String, String>();
 
-    private static final String[] COLORS = new String[] { "#6495ed",
-            "#b22222" };
+    private static final String[] COLORS = new String[] { "#6495ed", "#b22222",
+            "#A9C0B1" };
+
+    public ResourceSetToColorResolver(ResourceCategorizer categorizer) {
+        this.categorizer = categorizer;
+    }
 
     @Override
     public Object resolve(ResourceSet resources, String category) {
