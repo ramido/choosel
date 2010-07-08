@@ -49,14 +49,15 @@ public class DefaultResourceSetToValueResolverFactory {
                     resourceResolverFactory, resourceByTypeCategorizer);
         }
 
-        // if (SlotResolver.GRAPH_NODE_BORDER_COLOR_SLOT.equals(slotID)) {
-        // return slotResolver.createGraphNodeBorderColorResolver(category);
-        // }
+        if (SlotResolver.GRAPH_NODE_BORDER_COLOR_SLOT.equals(slotID)) {
+            return new ResourceSetToFirstResourcePropertyResolver(slotID,
+                    resourceResolverFactory, resourceByTypeCategorizer);
+        }
 
-        // if (SlotResolver.GRAPH_NODE_BACKGROUND_COLOR_SLOT.equals(slotID)) {
-        // return slotResolver
-        // .createGraphNodeBackgroundColorResolver(category);
-        // }
+        if (SlotResolver.GRAPH_NODE_BACKGROUND_COLOR_SLOT.equals(slotID)) {
+            return new ResourceSetToFirstResourcePropertyResolver(slotID,
+                    resourceResolverFactory, resourceByTypeCategorizer);
+        }
 
         if (slotID.equals(SlotResolver.MAGNITUDE_SLOT)) {
             return new ResourceSetToSumResolver(slotID,
