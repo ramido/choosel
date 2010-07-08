@@ -17,11 +17,14 @@ public class ScatterChart extends ChartWidget {
                 y: this.@org.thechiselgroup.choosel.client.ui.widget.chart.ScatterChart::getSlotValue(II)(i,1)};
         }
 
-        var min = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ScatterChart::min(I)(0) - 0.5;
-        var max = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ScatterChart::max(I)(0) + 0.5;
+        var minX = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ScatterChart::min(I)(0) - 0.5;
+        var maxX = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ScatterChart::max(I)(0) + 0.5;
 
-        var x = $wnd.pv.Scale.linear(min, max).range(0, width - 40),
-            y = $wnd.pv.Scale.linear(max, min).range(0, height - 40);
+        var minY = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ScatterChart::min(I)(1) - 0.5;
+        var maxY = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ScatterChart::max(I)(1) + 0.5;
+
+        var x = $wnd.pv.Scale.linear(minX, maxX).range(0, width - 40),
+            y = $wnd.pv.Scale.linear(maxY, minY).range(0, height - 40);
 
         chart.width(width - 40)
             .height(height - 40)
