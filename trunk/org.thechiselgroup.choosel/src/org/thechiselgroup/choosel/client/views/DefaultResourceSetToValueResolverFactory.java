@@ -26,7 +26,7 @@ public class DefaultResourceSetToValueResolverFactory {
         }
 
         if (SlotResolver.COLOR_SLOT.equals(slotID)) {
-            return new ResourceSetToColorResolver();
+            return new ResourceSetToColorResolver(resourceByTypeCategorizer);
         }
 
         if (SlotResolver.LABEL_SLOT.equals(slotID)) {
