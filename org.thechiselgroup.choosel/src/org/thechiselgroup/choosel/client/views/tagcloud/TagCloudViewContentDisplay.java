@@ -39,7 +39,8 @@ import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -58,6 +59,11 @@ public class TagCloudViewContentDisplay extends AbstractViewContentDisplay {
 
             ItemLabel label = listItem.getLabel();
 
+            // TODO extract constants
+            DOM.setStyleAttribute(label.getElement(), "display", "inline");
+            DOM.setStyleAttribute(label.getElement(), "whiteSpace", "nowrap");
+            DOM.setStyleAttribute(label.getElement(), "cssFloat", "left");
+
             label.addMouseOverHandler(labelEventHandler);
             label.addMouseOutHandler(labelEventHandler);
             label.addClickHandler(labelEventHandler);
@@ -67,8 +73,7 @@ public class TagCloudViewContentDisplay extends AbstractViewContentDisplay {
             listItems.add(label.getText());
             Collections.sort(listItems, String.CASE_INSENSITIVE_ORDER);
             int row = listItems.indexOf(label.getText());
-            table.insertRow(row);
-            table.setWidget(row, 0, label);
+            table.insert(label, row);
         }
 
         @Override
@@ -82,9 +87,9 @@ public class TagCloudViewContentDisplay extends AbstractViewContentDisplay {
              * whole row needs to be removed, otherwise lots of empty rows
              * consume the whitespace
              */
-            for (int i = 0; i < table.getRowCount(); i++) {
-                if (table.getWidget(i, 0).equals(listItem.getLabel())) {
-                    table.removeRow(i);
+            for (int i = 0; i < table.getWidgetCount(); i++) {
+                if (table.getWidget(i).equals(listItem.getLabel())) {
+                    table.remove(i);
                     listItems.remove(i);
                     return;
                 }
@@ -160,40 +165,11 @@ public class TagCloudViewContentDisplay extends AbstractViewContentDisplay {
 
     private ResourceSetAvatarDragController dragController;
 
-    // private HorizontalPanel createDescriptionPanel(final ListLayer layer) {
-    // HorizontalPanel descriptionPanel = new HorizontalPanel();
-    //
-    // final ListBox dropBox = new ListBox(false);
-    // List<String> listTypes = layer.getDataProvider().getIndividuals()
-    // .getStringPaths();
-    //
-    // for (String listType : listTypes) {
-    // dropBox.addItem(listType);
-    // }
-    // dropBox.setSelectedIndex(0);
-    //
-    // descriptionPanel.setSpacing(2);
-    // descriptionPanel.add(new Label("Description: "));
-    // descriptionPanel.add(dropBox);
-    //
-    // dropBox.addChangeHandler(new ChangeHandler() {
-    //
-    // @Override
-    // public void onChange(ChangeEvent event) {
-    // String value = dropBox.getValue(dropBox.getSelectedIndex());
-    //
-    // layer.setDescriptionPath(new String[] { value });
-    // }
-    // });
-    //
-    // return descriptionPanel;
-    // }
-
     private LabelEventHandler labelEventHandler;
 
     private ScrollPanel scrollPanel;
 
-    private FlexTable table;
+    private FlowPanel table;
 
     @Inject
     public TagCloudViewContentDisplay(
@@ -228,7 +204,7 @@ public class TagCloudViewContentDisplay extends AbstractViewContentDisplay {
 
     @Override
     public Widget createWidget() {
-        table = new FlexTable();
+        table = new FlowPanel();
 
         // does not work in hosted mode; fix for hosted mode: empty row
         // if (!GWT.isScript()) {
@@ -250,7 +226,7 @@ public class TagCloudViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     // for tests only, TODO marker annotation & processing
-    public FlexTable getTable() {
+    public FlowPanel getTable() {
         return table;
     }
 
