@@ -193,6 +193,7 @@ public class ChooselExampleApplication extends ChooselApplication {
 	addWindowContentButton(VIEWS_PANEL, "Dot", "Dot");
 	addWindowContentButton(VIEWS_PANEL, "Scatter", "Scatter");
 	addWindowContentButton(VIEWS_PANEL, "Time", "Time");
+	addWindowContentButton(VIEWS_PANEL, "Tag Cloud", "TagCloud");
     }
 
     @Override
