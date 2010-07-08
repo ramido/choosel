@@ -16,11 +16,17 @@ public class TimeChart extends ChartWidget {
 
         for(var i = 0; i < this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chartItemArray.@java.util.ArrayList::size()(); i++) {
             var xCoord = this.@org.thechiselgroup.choosel.client.ui.widget.chart.TimeChart::getSlotValue(II)(i,0);
-            val[i] = {x: new $wnd.Date(xCoord.substring(0,4), xCoord.substring(5,7) - 1, xCoord.substring(8,10)),
+            val[i] = {x: new $wnd.Date(xCoord),
                 y: this.@org.thechiselgroup.choosel.client.ui.widget.chart.TimeChart::getSlotValue(II)(i,1)};
         }
 
-        this.@org.thechiselgroup.choosel.client.ui.widget.chart.TimeChart::sortArray()();
+        function sortByDate(a,b) {
+            return a.x - b.x; 
+        }
+
+        val.sort(sortByDate);
+
+        //        this.@org.thechiselgroup.choosel.client.ui.widget.chart.TimeChart::sortArray()();
 
         if(val.length == 0) {
             return chart;
@@ -138,8 +144,8 @@ public class TimeChart extends ChartWidget {
         if (slot == 0) {
             return getChartItem(i).getResourceValue(SlotResolver.DATE_SLOT);
         } else if (slot == 1) {
-            return getChartItem(i).getResourceValue(
-                    SlotResolver.DESCRIPTION_SLOT);
+            return getChartItem(i)
+                    .getResourceValue(SlotResolver.MAGNITUDE_SLOT);
         }
         return null;
     }
