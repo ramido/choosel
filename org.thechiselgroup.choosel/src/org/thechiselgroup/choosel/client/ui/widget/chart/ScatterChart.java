@@ -17,10 +17,11 @@ public class ScatterChart extends ChartWidget {
                 y: this.@org.thechiselgroup.choosel.client.ui.widget.chart.ScatterChart::getSlotValue(II)(i,1)};
         }
 
-        var kx = 10,
-            ky = 10,
-            x = $wnd.pv.Scale.linear(0, kx).range(0, width - 40),
-            y = $wnd.pv.Scale.linear(ky, 0).range(0, height - 40);
+        var min = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ScatterChart::min(I)(0) - 0.5;
+        var max = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ScatterChart::max(I)(0) + 0.5;
+
+        var x = $wnd.pv.Scale.linear(min, max).range(0, width - 40),
+            y = $wnd.pv.Scale.linear(max, min).range(0, height - 40);
 
         chart.width(width - 40)
             .height(height - 40)
@@ -59,7 +60,17 @@ public class ScatterChart extends ChartWidget {
     }-*/;
     // @formatter:on
 
-    private Object getSlotValue(int i, int coordinate) {
+    public double getDoubleSlotValue(int i, int coordinate) {
+        Object value = getSlotValue(i, coordinate);
+
+        if (value instanceof String) {
+            return Double.parseDouble((String) value);
+        }
+
+        return ((Number) value).doubleValue();
+    }
+
+    protected Object getSlotValue(int i, int coordinate) {
         if (coordinate == 0) {
             return getChartItem(i).getResourceValue(
                     SlotResolver.X_COORDINATE_SLOT);
@@ -68,6 +79,34 @@ public class ScatterChart extends ChartWidget {
                     SlotResolver.Y_COORDINATE_SLOT);
         }
         return null;
+    }
+
+    private double max(int coordinate) {
+        double max = Double.MIN_VALUE;
+        if (chartItemArray.size() == 0) {
+            return 0;
+        }
+        for (int i = 0; i < chartItemArray.size(); i++) {
+            double slotValue = getDoubleSlotValue(i, coordinate);
+            if (max < slotValue) {
+                max = slotValue;
+            }
+        }
+        return max;
+    }
+
+    private double min(int coordinate) {
+        double min = Double.MAX_VALUE;
+        if (chartItemArray.size() == 0) {
+            return 0;
+        }
+        for (int i = 0; i < chartItemArray.size(); i++) {
+            double slotValue = getDoubleSlotValue(i, coordinate);
+            if (min > slotValue) {
+                min = slotValue;
+            }
+        }
+        return min;
     }
 
 }
