@@ -17,7 +17,13 @@ public class ResourceSetToSumResolver extends
     public Object resolve(ResourceSet resources, String category) {
         double sum = 0d;
         for (Resource resource : resources) {
-            sum += ((Number) resolve(resource)).doubleValue();
+            Object value = resolve(resource);
+
+            if (value instanceof String) {
+                value = Double.parseDouble((String) value);
+            }
+
+            sum += ((Number) value).doubleValue();
         }
 
         return Double.toString(sum);
