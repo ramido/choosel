@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.popup;
 
+import org.thechiselgroup.choosel.client.ui.CSS;
 import org.thechiselgroup.choosel.client.ui.ZIndex;
 
 import com.google.gwt.event.dom.client.MouseOutEvent;
@@ -67,9 +68,10 @@ public class DefaultDelayedPopup extends PopupPanel implements MouseOutHandler,
 
         setStyleName(CSS_POPUP);
 
-        ZIndex.setZIndex(getElement(), ZIndex.POPUP);
+        CSS.setZIndex(getElement(), ZIndex.POPUP);
 
-        // TODO buggy, should depend on mouse position
+        // TODO buggy, should depend on mouse position because popup might
+        // show up below cursor and then it should not be semi-transparent
         addStyleName(CSS_ALPHA);
     }
 

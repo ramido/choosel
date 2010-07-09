@@ -111,7 +111,7 @@ public class ResourceSetAvatar extends Label implements Disposable {
         clone.addStyleName(CSS_DND_PROXY_ALPHA);
         clone.originalAvatar = this;
 
-        ZIndex.setZIndex(clone.getElement(), ZIndex.DRAG_AVATAR);
+        CSS.setZIndex(clone.getElement(), ZIndex.DRAG_AVATAR);
 
         this.latestProxy = clone;
         return this.latestProxy;

@@ -118,8 +118,8 @@ public class ShadeManager implements HasClickHandlers {
 
     public RemoveHandle showShade(List<Rectangle> excludedAreas) {
         /*
-         * Toked-based mechanism support acquiring a shade multiple times. The
-         * shade is removed when all token are released.
+         * Token-based mechanism that supports acquiring a shade multiple times.
+         * The shade is removed when all token are released.
          */
 
         if (tokens.isEmpty()) {

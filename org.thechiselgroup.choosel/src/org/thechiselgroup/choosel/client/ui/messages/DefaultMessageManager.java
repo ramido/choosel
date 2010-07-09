@@ -57,7 +57,7 @@ public class DefaultMessageManager implements MessageManager {
 
             messageElement.setInnerText(message);
             messageElement.addClassName(CSS_DIALOG_MESSAGE);
-            ZIndex.setZIndex(messageElement, ZIndex.DIALOG);
+            CSS.setZIndex(messageElement, ZIndex.DIALOG);
 
             // TODO refactor, see below, code duplication
             int x = (parentPanel.getOffsetWidth() - 400) / 2;

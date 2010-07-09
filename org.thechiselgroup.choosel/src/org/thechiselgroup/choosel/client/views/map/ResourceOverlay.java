@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.map;
 
-import org.thechiselgroup.choosel.client.ui.ZIndex;
+import org.thechiselgroup.choosel.client.ui.CSS;
 
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownHandler;
@@ -112,7 +112,7 @@ public class ResourceOverlay extends Overlay {
     }
 
     public void setZIndex(int zIndex) {
-        ZIndex.setZIndex(image.getElement(), zIndex);
+        CSS.setZIndex(image.getElement(), zIndex);
     }
 
     private void updatePosition() {

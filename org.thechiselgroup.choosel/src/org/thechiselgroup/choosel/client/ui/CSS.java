@@ -15,36 +15,61 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui;
 
-public interface CSS {
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 
-    String Z_INDEX = "zIndex";
+public final class CSS {
 
-    String RELATIVE = "relative";
+    public static final String Z_INDEX = "zIndex";
 
-    String POSITION = "position";
+    public static final String RELATIVE = "relative";
 
-    String TOP = "top";
+    public static final String POSITION = "position";
 
-    String LEFT = "left";
+    public static final String TOP = "top";
 
-    String PX = "px";
+    public static final String LEFT = "left";
 
-    String HEIGHT = "height";
+    public static final String PX = "px";
 
-    String WIDTH = "width";
+    public static final String HEIGHT = "height";
 
-    String ABSOLUTE = "absolute";
+    public static final String WIDTH = "width";
 
-    String CURSOR_DEFAULT = "default";
+    public static final String ABSOLUTE = "absolute";
 
-    String CURSOR_POINTER = "pointer";
+    public static final String CURSOR_DEFAULT = "default";
 
-    String CURSOR = "cursor";
+    public static final String CURSOR_POINTER = "pointer";
 
-    String MAX_WIDTH = "maxWidth";
+    public static final String CURSOR = "cursor";
+
+    public static final String MAX_WIDTH = "maxWidth";
 
     public static final String OVERFLOW = "overflow";
 
     public static final String HIDDEN = "hidden";
+
+    public static int getZIndex(Element element) {
+        return DOM.getIntStyleAttribute(element, Z_INDEX);
+    }
+
+    public static void setAbsoluteBounds(Element element, int left, int top,
+            int width, int height) {
+
+        DOM.setStyleAttribute(element, POSITION, ABSOLUTE);
+        DOM.setIntStyleAttribute(element, LEFT, left);
+        DOM.setIntStyleAttribute(element, TOP, top);
+        DOM.setIntStyleAttribute(element, WIDTH, width);
+        DOM.setIntStyleAttribute(element, HEIGHT, height);
+    }
+
+    public static void setZIndex(Element element, int zIndex) {
+        DOM.setIntStyleAttribute(element, Z_INDEX, zIndex);
+    }
+
+    private CSS() {
+        // library
+    }
 
 }
