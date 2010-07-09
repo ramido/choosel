@@ -15,8 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui;
 
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 
 public final class ZIndex {
 
@@ -29,16 +27,6 @@ public final class ZIndex {
     public static final int POPUP = 1400;
 
     public static final int SHADE = 1275;
-
-    public static final String Z_INDEX_ATTRIBUTE = "zIndex";
-
-    public static int getZIndex(Element element) {
-        return DOM.getIntStyleAttribute(element, Z_INDEX_ATTRIBUTE);
-    }
-
-    public static void setZIndex(Element element, int zIndex) {
-        DOM.setIntStyleAttribute(element, Z_INDEX_ATTRIBUTE, zIndex);
-    }
 
     private ZIndex() {
 

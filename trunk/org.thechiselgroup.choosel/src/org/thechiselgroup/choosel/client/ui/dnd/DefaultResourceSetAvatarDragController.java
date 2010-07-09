@@ -23,8 +23,8 @@ import java.util.Map;
 import org.thechiselgroup.choosel.client.geometry.Rectangle;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.ui.CSS;
-import org.thechiselgroup.choosel.client.ui.ZIndex;
 import org.thechiselgroup.choosel.client.ui.shade.ShadeManager;
+import org.thechiselgroup.choosel.client.util.MathUtils;
 import org.thechiselgroup.choosel.client.util.RemoveHandle;
 import org.thechiselgroup.choosel.client.windows.Desktop;
 import org.thechiselgroup.choosel.client.windows.WindowPanel;
@@ -49,6 +49,9 @@ import com.google.inject.Inject;
 // TODO move area calculation to preview package & use delegation instead
 // (composition when creating drag avatar drag controller while setting
 // up system)
+/*
+ * This class is not safe for multiple simultaneous drags (e.g. multi touch interfaces)
+ */
 public class DefaultResourceSetAvatarDragController extends
         AbstractDragController implements ResourceSetAvatarDragController {
 
@@ -119,6 +122,11 @@ public class DefaultResourceSetAvatarDragController extends
 
     }
 
+    // TODO document // move??
+    private static final int CSS_SHADE_Z_INDEX = 1;
+
+    private static final String CSS_SHADE_CLASS = "shade";
+
     /**
      * TODO Decide if 100ms is a good number
      */
@@ -161,7 +169,7 @@ public class DefaultResourceSetAvatarDragController extends
 
     private Map<Widget, ResourceSetAvatarDropController> dropControllers = new HashMap<Widget, ResourceSetAvatarDropController>();
 
-    private List<Widget> invisibleDropTargets = new ArrayList<Widget>();
+    private List<Widget> temporaryDropTargets = new ArrayList<Widget>();
 
     private long lastResetCacheTimeMillis;
 
@@ -169,9 +177,10 @@ public class DefaultResourceSetAvatarDragController extends
 
     private RemoveHandle shadeRemoveHandle;
 
-    // used as shade background for drag avatar drop targets with rounded
-    // corners
-    private List<Element> shadeSpans = new ArrayList<Element>();
+    /**
+     * shade background elements for drop targets with rounded corners
+     */
+    private List<Element> shadeElements = new ArrayList<Element>();
 
     private List<Area> visibleDropAreas;
 
@@ -194,51 +203,17 @@ public class DefaultResourceSetAvatarDragController extends
         setBehaviorDragStartSensitivity(2);
     }
 
-    private void addDragAvatarDropTargetShadeSpans() {
-        for (ResourceSetAvatarDropController dropController : dropControllers
-                .values()) {
-            if (canDropOn(dropController)) {
-                Widget dropTarget = dropController.getDropTarget();
-                if (dropTarget instanceof ResourceSetAvatar) {
-                    // inserts element as shaded background
-                    Element e = (Element) dropTarget.getElement()
-                            .getParentNode();
-                    Element shade = DOM.createSpan();
-
-                    WindowPanel window = getWindow(dropTarget);
-
-                    shade.addClassName("shade");
-                    ZIndex.setZIndex(shade, 1);
-
-                    DOM.setStyleAttribute(shade, CSS.POSITION, CSS.ABSOLUTE);
-                    DOM.setIntStyleAttribute(
-                            shade,
-                            CSS.LEFT,
-                            dropTarget.getAbsoluteLeft()
-                                    - window.getAbsoluteLeft());
-                    DOM.setIntStyleAttribute(
-                            shade,
-                            CSS.TOP,
-                            dropTarget.getAbsoluteTop()
-                                    - window.getAbsoluteTop());
-                    DOM.setIntStyleAttribute(shade, CSS.WIDTH,
-                            dropTarget.getOffsetWidth());
-                    DOM.setIntStyleAttribute(shade, CSS.HEIGHT,
-                            dropTarget.getOffsetHeight());
-
-                    e.appendChild(shade);
-
-                    shadeSpans.add(shade);
-                }
-            }
-        }
-    }
-
     private void addShade() {
         List<Rectangle> visibleRectangles = toRectangles(visibleDropAreas);
         shadeRemoveHandle = shadeManager.showShade(visibleRectangles);
+
+        insertShadeBehindRoundedDropTargets();
     }
 
+    /*
+     * This code is from the dnd library and needs TODO refactoring. There are
+     * several possible side effects that need to be checked.
+     */
     private void calculateBoundaryOffset() {
         assert context.boundaryPanel == getBoundaryPanel();
 
@@ -265,7 +240,7 @@ public class DefaultResourceSetAvatarDragController extends
     }
 
     // TODO change to calculate visible areas with reference to drop controller
-    private List<Area> calculateDropAreas() {
+    private void calculateDropAreas() {
         List<Area> windowAreas = getWindowAreas();
         List<Area> dropTargetAreas = getDropTargetAreas();
 
@@ -274,52 +249,62 @@ public class DefaultResourceSetAvatarDragController extends
             dropAreas.addAll(dropArea.getVisibleParts(windowAreas));
         }
 
-        return dropAreas;
+        visibleDropAreas = dropAreas;
+    }
+
+    /**
+     * Calculates which of the hidden drop targets are relevant to this drop
+     * operation and stores them as temporary drop targets.
+     */
+    public void calculateTemporaryDropTargets() {
+        for (ResourceSetAvatarDropController dropController : getAvailableDropControllers()) {
+            Widget dropTarget = dropController.getDropTarget();
+            if (!dropTarget.isVisible()) {
+                temporaryDropTargets.add(dropTarget);
+            }
+        }
     }
 
     private boolean canDropOn(ResourceSetAvatarDropController dropController) {
         return dropController.canDrop(context);
     }
 
-    private void createMoveablePanel() {
-        WidgetLocation currentDraggableLocation = new WidgetLocation(
-                context.draggable, context.boundaryPanel);
-
-        dragProxy = newDragProxy(context);
-        context.boundaryPanel.add(dragProxy,
-                currentDraggableLocation.getLeft(),
-                currentDraggableLocation.getTop());
-        checkGWTIssue1813(dragProxy, context.boundaryPanel);
-        dragProxy.addStyleName(DragClientBundle.INSTANCE.css().movablePanel());
+    public void clearDropAreas() {
+        visibleDropAreas = null;
     }
 
-    // XXX not safe for multiple simultaneous drags (e.g. multi touch
-    // interfaces)
+    public void clearTemporaryDropTargets() {
+        temporaryDropTargets.clear();
+    }
+
+    /**
+     * Creates a shade element that has bounds of drop target element, but an
+     * absolute location, and is positioned behind the drop target.
+     */
+    public Element createShadeElement(Widget dropTarget) {
+        Element shade = DOM.createSpan();
+
+        shade.addClassName(CSS_SHADE_CLASS);
+
+        CSS.setZIndex(shade, CSS_SHADE_Z_INDEX);
+
+        WindowPanel window = getWindow(dropTarget);
+        CSS.setAbsoluteBounds(shade,
+                dropTarget.getAbsoluteLeft() - window.getAbsoluteLeft(),
+                dropTarget.getAbsoluteTop() - window.getAbsoluteTop(),
+                dropTarget.getOffsetWidth(), dropTarget.getOffsetHeight());
+
+        return shade;
+    }
+
     @Override
     public void dragEnd() {
-        removeDragAvatarDropTargetShadeSpans();
-
-        // XXX HACK
-        for (Widget w : invisibleDropTargets) {
-            w.setVisible(false);
-        }
-        invisibleDropTargets.clear();
-
-        // old code
-        shadeRemoveHandle.remove();
-
-        visibleDropAreas = null;
-
-        assert context.finalDropController == null == (context.vetoException != null);
-
-        if (context.vetoException == null) {
-            context.dropController.onDrop(context);
-            context.dropController.onLeave(context);
-            context.dropController = null;
-        }
-
-        dragProxy.removeFromParent();
-        dragProxy = null;
+        removeShade();
+        setTemporaryDropTargetsVisible(false);
+        clearTemporaryDropTargets();
+        clearDropAreas();
+        notifyDropControllerOnDragEnd();
+        removeDragProxy();
 
         super.dragEnd();
     }
@@ -327,37 +312,32 @@ public class DefaultResourceSetAvatarDragController extends
     @Override
     public void dragMove() {
         updateCacheAndBoundary();
-        moveProxyElement();
+        moveDragProxy();
         updateDropController();
     }
 
-    // XXX not safe for multiple simultaneous drags (e.g. multi touch
-    // interfaces)
     @Override
     public void dragStart() {
         super.dragStart();
 
-        lastResetCacheTimeMillis = System.currentTimeMillis();
-
-        createMoveablePanel();
+        updateLastCacheResetTime();
+        initDragProxy();
         calculateBoundaryParameters();
+        calculateTemporaryDropTargets();
+        setTemporaryDropTargetsVisible(true);
+        calculateDropAreas();
+        addShade();
+    }
 
-        // XXX Hack: move to a better location
+    private List<ResourceSetAvatarDropController> getAvailableDropControllers() {
+        List<ResourceSetAvatarDropController> availableControllers = new ArrayList<ResourceSetAvatarDropController>();
         for (ResourceSetAvatarDropController dropController : dropControllers
                 .values()) {
             if (canDropOn(dropController)) {
-                Widget dropTarget = dropController.getDropTarget();
-                if (!dropTarget.isVisible()) {
-                    dropTarget.setVisible(true);
-                    invisibleDropTargets.add(dropTarget);
-                }
+                availableControllers.add(dropController);
             }
         }
-
-        // old
-        visibleDropAreas = calculateDropAreas();
-        addShade();
-        addDragAvatarDropTargetShadeSpans();
+        return availableControllers;
     }
 
     private ResourceSetAvatar getAvatar(DragContext context) {
@@ -370,10 +350,11 @@ public class DefaultResourceSetAvatarDragController extends
     private int getDesiredLeft() {
         int desiredLeft = context.desiredDraggableX - boundaryRectangle.getX();
         if (getBehaviorConstrainedToBoundaryPanel()) {
-            desiredLeft = Math.max(
+            desiredLeft = MathUtils.restrictToInterval(
                     0,
-                    Math.min(desiredLeft, boundaryRectangle.getWidth()
-                            - context.draggable.getOffsetWidth()));
+                    desiredLeft,
+                    boundaryRectangle.getWidth()
+                            - context.draggable.getOffsetWidth());
         }
         return desiredLeft;
     }
@@ -381,10 +362,11 @@ public class DefaultResourceSetAvatarDragController extends
     private int getDesiredTop() {
         int desiredTop = context.desiredDraggableY - boundaryRectangle.getY();
         if (getBehaviorConstrainedToBoundaryPanel()) {
-            desiredTop = Math.max(
+            desiredTop = MathUtils.restrictToInterval(
                     0,
-                    Math.min(desiredTop, boundaryRectangle.getHeight()
-                            - context.draggable.getOffsetHeight()));
+                    desiredTop,
+                    boundaryRectangle.getHeight()
+                            - context.draggable.getOffsetHeight());
         }
         return desiredTop;
     }
@@ -412,15 +394,12 @@ public class DefaultResourceSetAvatarDragController extends
 
     private List<Area> getDropTargetAreas() {
         List<Area> areas = new ArrayList<Area>();
-        for (ResourceSetAvatarDropController dropController : dropControllers
-                .values()) {
-            if (canDropOn(dropController)) {
-                Widget dropTarget = dropController.getDropTarget();
-                Rectangle rectangle = Rectangle.fromWidget(dropTarget);
-                WindowPanel window = getWindow(dropTarget);
+        for (ResourceSetAvatarDropController dropController : getAvailableDropControllers()) {
+            Widget dropTarget = dropController.getDropTarget();
+            Rectangle rectangle = Rectangle.fromWidget(dropTarget);
+            WindowPanel window = getWindow(dropTarget);
 
-                areas.add(new Area(rectangle, window, dropController));
-            }
+            areas.add(new Area(rectangle, window, dropController));
         }
         return areas;
     }
@@ -450,7 +429,47 @@ public class DefaultResourceSetAvatarDragController extends
         return windowAreas;
     }
 
-    private void moveProxyElement() {
+    // TODO might need a more generic implementation at some point
+    private boolean hasRoundedCorners(Widget dropTarget) {
+        return dropTarget instanceof ResourceSetAvatar;
+    }
+
+    /**
+     * Creates the visual representation of the object that is being dragged.
+     * This representation is used to indicate what is being dragged to the user
+     * during the drag operation.
+     */
+    private void initDragProxy() {
+        WidgetLocation currentDraggableLocation = new WidgetLocation(
+                context.draggable, context.boundaryPanel);
+
+        dragProxy = newDragProxy(context);
+        context.boundaryPanel.add(dragProxy,
+                currentDraggableLocation.getLeft(),
+                currentDraggableLocation.getTop());
+        checkGWTIssue1813(dragProxy, context.boundaryPanel);
+        dragProxy.addStyleName(DragClientBundle.INSTANCE.css().movablePanel());
+    }
+
+    /**
+     * Inserts a shade element behind resource set avatars that are available
+     * drop targets, because they have rounded corners and the area outside of
+     * those corners needs to be shaded.
+     */
+    private void insertShadeBehindRoundedDropTargets() {
+        for (ResourceSetAvatarDropController dropController : getAvailableDropControllers()) {
+            Widget dropTarget = dropController.getDropTarget();
+            if (hasRoundedCorners(dropTarget)) {
+                Element shade = createShadeElement(dropTarget);
+
+                ((Element) dropTarget.getElement().getParentNode())
+                        .appendChild(shade);
+                shadeElements.add(shade);
+            }
+        }
+    }
+
+    private void moveDragProxy() {
         Style style = dragProxy.getElement().getStyle();
 
         style.setPropertyPx(CSS.LEFT, getDesiredLeft());
@@ -459,6 +478,15 @@ public class DefaultResourceSetAvatarDragController extends
 
     protected Widget newDragProxy(DragContext context) {
         return getAvatar(context).createProxy();
+    }
+
+    public void notifyDropControllerOnDragEnd() {
+        assert (context.finalDropController == null) != (context.vetoException == null);
+        if (context.vetoException == null) {
+            context.dropController.onDrop(context);
+            context.dropController.onLeave(context);
+            context.dropController = null;
+        }
     }
 
     // copied from PickupDragController
@@ -487,11 +515,17 @@ public class DefaultResourceSetAvatarDragController extends
         dropControllers.put(dropController.getDropTarget(), dropController);
     }
 
-    private void removeDragAvatarDropTargetShadeSpans() {
-        for (Element e : shadeSpans) {
-            e.removeFromParent();
+    public void removeDragProxy() {
+        dragProxy.removeFromParent();
+        dragProxy = null;
+    }
+
+    private void removeShade() {
+        for (Element shadeElement : shadeElements) {
+            shadeElement.removeFromParent();
         }
-        shadeSpans.clear();
+        shadeElements.clear();
+        shadeRemoveHandle.remove();
     }
 
     @Override
@@ -500,6 +534,12 @@ public class DefaultResourceSetAvatarDragController extends
             makeDraggable(widget);
         } else {
             makeNotDraggable(widget);
+        }
+    }
+
+    public void setTemporaryDropTargetsVisible(boolean visible) {
+        for (Widget w : temporaryDropTargets) {
+            w.setVisible(visible);
         }
     }
 
@@ -520,9 +560,8 @@ public class DefaultResourceSetAvatarDragController extends
     private void updateCacheAndBoundary() {
         // may have changed due to scrollIntoView(), developer driven changes
         // or manual user scrolling
-        long timeMillis = System.currentTimeMillis();
-        if (timeMillis - lastResetCacheTimeMillis >= CACHE_TIME_MILLIS) {
-            lastResetCacheTimeMillis = timeMillis;
+    	if (System.currentTimeMillis() - lastResetCacheTimeMillis >= CACHE_TIME_MILLIS) {
+            updateLastCacheResetTime();
             resetCache();
             calculateBoundaryOffset();
         }
@@ -545,6 +584,10 @@ public class DefaultResourceSetAvatarDragController extends
         if (context.dropController != null) {
             context.dropController.onMove(context);
         }
+    }
+
+    private void updateLastCacheResetTime() {
+        lastResetCacheTimeMillis = System.currentTimeMillis();
     }
 
 }
