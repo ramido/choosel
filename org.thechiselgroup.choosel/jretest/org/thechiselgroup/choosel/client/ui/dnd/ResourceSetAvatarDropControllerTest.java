@@ -28,11 +28,15 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.command.CommandManager;
+import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.test.DndTestHelpers;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
+import org.thechiselgroup.choosel.client.test.ResourcesTestHelper;
 import org.thechiselgroup.choosel.client.test.TestUndoableCommandWithDescription;
 import org.thechiselgroup.choosel.client.ui.popup.DelayedPopup;
+import org.thechiselgroup.choosel.client.views.View;
+import org.thechiselgroup.choosel.client.views.ViewAccessor;
 
 import com.allen_sauer.gwt.dnd.client.DragContext;
 import com.google.gwt.user.client.ui.Widget;
@@ -44,8 +48,8 @@ public class ResourceSetAvatarDropControllerTest {
 
         private TestDragAvatarDropController(Widget dropTarget,
                 ResourceSetAvatarDropCommandFactory commandFactory,
-                CommandManager commandManager) {
-            super(dropTarget, commandFactory, commandManager);
+                CommandManager commandManager, ViewAccessor viewAccessor) {
+            super(dropTarget, commandFactory, commandManager, viewAccessor);
         }
 
         @Override
@@ -69,13 +73,19 @@ public class ResourceSetAvatarDropControllerTest {
     @Mock
     private DragContext dragContext;
 
-    private ResourceSetAvatarDropController dropController;
+    private ResourceSetAvatarDropController underTest;
+
+    @Mock
+    private ViewAccessor viewAccessor;
 
     @Mock
     private Widget dropTarget;
 
     @Mock
     private DelayedPopup popup;
+
+    @Mock
+    private View view;
 
     @Test
     public void addExecutedCommandToCommandManager() {
@@ -84,10 +94,9 @@ public class ResourceSetAvatarDropControllerTest {
         when(commandFactory.canDrop(eq(dragAvatar))).thenReturn(true);
         when(command.getDescription()).thenReturn(message);
 
-        dropController.onEnter(dragContext);
+        underTest.onEnter(dragContext);
 
-        verify(dropController, times(1)).createPopup(eq(dragContext),
-                eq(message));
+        verify(underTest, times(1)).createPopup(eq(dragContext), eq(message));
         verify(popup, times(1)).showDelayed();
     }
 
@@ -100,19 +109,39 @@ public class ResourceSetAvatarDropControllerTest {
     public void assumeCanDropWhenAlreadyPreviewing() {
         when(commandFactory.canDrop(eq(dragAvatar))).thenReturn(true, false);
 
-        dropController.onEnter(dragContext);
-        dropController.onDrop(dragContext);
+        underTest.onEnter(dragContext);
+        underTest.onDrop(dragContext);
 
         verify(command, times(1)).execute();
         verify(commandManager, times(1)).addExecutedCommand(command);
+    }
+
+    /*
+     * TODO Next step: extract the behavior into an interface as specific in
+     * issue #16
+     */
+    @Test
+    public void cannotDropWhenViewAndResourceSetIncompatible() {
+        when(commandFactory.canDrop(eq(dragAvatar))).thenReturn(true);
+        when(viewAccessor.findView(any(Widget.class))).thenReturn(view);
+        when(view.getContentType()).thenReturn("Timeline"); // TODO change
+        // TODO the other thing
+
+        ResourceSet resources = ResourcesTestHelper.createResources(
+                "ncbo-concept", 1);// TODO change
+        when(dragAvatar.getResourceSet()).thenReturn(resources);
+
+        underTest.onEnter(dragContext);
+
+        verify(command, times(0)).execute();
     }
 
     @Test
     public void hidePopupOnDrop() {
         when(commandFactory.canDrop(eq(dragAvatar))).thenReturn(true);
 
-        dropController.onEnter(dragContext);
-        dropController.onDrop(dragContext);
+        underTest.onEnter(dragContext);
+        underTest.onDrop(dragContext);
 
         verify(popup, times(1)).hideDelayed();
     }
@@ -121,8 +150,8 @@ public class ResourceSetAvatarDropControllerTest {
     public void hidePopupOnLeave() {
         when(commandFactory.canDrop(eq(dragAvatar))).thenReturn(true);
 
-        dropController.onEnter(dragContext);
-        dropController.onLeave(dragContext);
+        underTest.onEnter(dragContext);
+        underTest.onLeave(dragContext);
 
         verify(popup, times(1)).hideDelayed();
     }
@@ -133,12 +162,11 @@ public class ResourceSetAvatarDropControllerTest {
         MockitoAnnotations.initMocks(this);
         DndTestHelpers.mockDragClientBundle(bridge);
 
-        dropController = spy(new TestDragAvatarDropController(dropTarget,
-                commandFactory, commandManager));
+        underTest = spy(new TestDragAvatarDropController(dropTarget,
+                commandFactory, commandManager, viewAccessor));
 
-        when(
-                dropController.createPopup(any(DragContext.class),
-                        any(String.class))).thenReturn(popup);
+        when(underTest.createPopup(any(DragContext.class), any(String.class)))
+                .thenReturn(popup);
 
         dragContext.draggable = dragAvatar;
         when(commandFactory.createCommand(eq(dragAvatar))).thenReturn(command);
@@ -158,8 +186,8 @@ public class ResourceSetAvatarDropControllerTest {
     public void undoEvenWhenCanDropSwitchedToFalse() {
         when(commandFactory.canDrop(eq(dragAvatar))).thenReturn(true, false);
 
-        dropController.onEnter(dragContext);
-        dropController.onLeave(dragContext);
+        underTest.onEnter(dragContext);
+        underTest.onLeave(dragContext);
 
         verify(command, times(1)).execute();
         verify(command, times(1)).undo();
@@ -169,7 +197,7 @@ public class ResourceSetAvatarDropControllerTest {
     public void useMessageFromCommandInPopup() {
         when(commandFactory.canDrop(eq(dragAvatar))).thenReturn(true);
 
-        dropController.onDrop(dragContext);
+        underTest.onDrop(dragContext);
 
         verify(command, times(1)).execute();
         verify(commandManager, times(1)).addExecutedCommand(command);
