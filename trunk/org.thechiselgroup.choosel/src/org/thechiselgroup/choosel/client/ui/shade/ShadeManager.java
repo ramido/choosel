@@ -124,7 +124,7 @@ public class ShadeManager implements HasClickHandlers {
 
         if (tokens.isEmpty()) {
             List<Rectangle> shadedRectangles = Rectangle.fromWidget(panel)
-                    .removeRectangles(excludedAreas);
+                    .calculateRemainder(excludedAreas);
 
             for (Rectangle r : shadedRectangles) {
                 shadedElements.add(createShadeElement(r));
