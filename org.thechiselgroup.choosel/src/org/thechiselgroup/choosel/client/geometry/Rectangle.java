@@ -79,6 +79,22 @@ public final class Rectangle {
     }
 
     /**
+     * Returns the rectangles that represent the remainder of this rectangle
+     * after removing the intersect of this rectangle with the union of the
+     * other rectangles. This rectangle remains unchanged.
+     */
+    public List<Rectangle> calculateRemainder(List<Rectangle> rectangles) {
+        int[] xCoords = calculateXCoordinates(rectangles);
+        int[] yCoords = calculateYCoordinates(rectangles);
+
+        List<Rectangle> grid = calculateGrid(xCoords, yCoords);
+
+        removeHiddenAreas(rectangles, grid);
+
+        return grid;
+    }
+
+    /**
      * calculates the set of x coordinates.
      */
     private int[] calculateXCoordinates(List<Rectangle> overlayingAreas) {
@@ -156,21 +172,28 @@ public final class Rectangle {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         Rectangle other = (Rectangle) obj;
-        if (height != other.height)
+        if (height != other.height) {
             return false;
-        if (width != other.width)
+        }
+        if (width != other.width) {
             return false;
-        if (x != other.x)
+        }
+        if (x != other.x) {
             return false;
-        if (y != other.y)
+        }
+        if (y != other.y) {
             return false;
+        }
         return true;
     }
 
@@ -254,17 +277,6 @@ public final class Rectangle {
             }
 
         }
-    }
-
-    public List<Rectangle> removeRectangles(List<Rectangle> rectangles) {
-        int[] xCoords = calculateXCoordinates(rectangles);
-        int[] yCoords = calculateYCoordinates(rectangles);
-
-        List<Rectangle> grid = calculateGrid(xCoords, yCoords);
-
-        removeHiddenAreas(rectangles, grid);
-
-        return grid;
     }
 
     /**

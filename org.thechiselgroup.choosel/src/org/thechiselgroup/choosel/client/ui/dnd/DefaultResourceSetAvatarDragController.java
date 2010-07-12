@@ -55,73 +55,6 @@ import com.google.inject.Inject;
 public class DefaultResourceSetAvatarDragController extends
         AbstractDragController implements ResourceSetAvatarDragController {
 
-    /**
-     * Area for shade and drop target calculation.
-     */
-    private static class Area {
-
-        // can be null, TODO introduce different area classes
-        private ResourceSetAvatarDropController dropController;
-
-        private Rectangle r;
-
-        private WindowPanel window;
-
-        public Area(Rectangle r, WindowPanel window,
-                ResourceSetAvatarDropController dropController) {
-
-            assert r != null;
-            assert window != null;
-
-            this.r = r;
-            this.window = window;
-            this.dropController = dropController;
-        }
-
-        public ResourceSetAvatarDropController getDropController() {
-            return dropController;
-        }
-
-        private Rectangle getPartHiddenBy(Area windowArea) {
-            return r.intersection(windowArea.r);
-        }
-
-        public Rectangle getRectangle() {
-            return r;
-        }
-
-        public List<Area> getVisibleParts(List<Area> windowAreas) {
-            List<Rectangle> hiddenParts = new ArrayList<Rectangle>();
-
-            for (Area windowArea : windowAreas) {
-                // FIXME potential bug if hidden by multiple windows
-                if (isHiddenBy(windowArea)) {
-                    hiddenParts.add(getPartHiddenBy(windowArea));
-                }
-            }
-
-            List<Rectangle> visibleRectangles = r.removeRectangles(hiddenParts);
-            List<Area> result = new ArrayList<Area>();
-            for (Rectangle visibleRectangle : visibleRectangles) {
-                result.add(new Area(visibleRectangle, window, dropController));
-            }
-
-            return result;
-        }
-
-        private boolean isHiddenBy(Area windowArea) {
-            return (window != windowArea.window)
-                    && (window.getZIndex() < windowArea.window.getZIndex())
-                    && (r.intersects(windowArea.r));
-        }
-
-        @Override
-        public String toString() {
-            return r.toString();
-        }
-
-    }
-
     // TODO document // move??
     private static final int CSS_SHADE_Z_INDEX = 1;
 
@@ -560,7 +493,7 @@ public class DefaultResourceSetAvatarDragController extends
     private void updateCacheAndBoundary() {
         // may have changed due to scrollIntoView(), developer driven changes
         // or manual user scrolling
-    	if (System.currentTimeMillis() - lastResetCacheTimeMillis >= CACHE_TIME_MILLIS) {
+        if (System.currentTimeMillis() - lastResetCacheTimeMillis >= CACHE_TIME_MILLIS) {
             updateLastCacheResetTime();
             resetCache();
             calculateBoundaryOffset();

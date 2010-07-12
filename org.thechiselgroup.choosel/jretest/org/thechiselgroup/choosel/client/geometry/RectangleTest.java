@@ -30,7 +30,7 @@ public class RectangleTest {
     @Test
     public void removeEmptyRectangleSet() {
         List<Rectangle> result = rectangle
-                .removeRectangles(new ArrayList<Rectangle>());
+                .calculateRemainder(new ArrayList<Rectangle>());
 
         assertEquals(1, result.size());
         assertEquals(rectangle, result.get(0));
