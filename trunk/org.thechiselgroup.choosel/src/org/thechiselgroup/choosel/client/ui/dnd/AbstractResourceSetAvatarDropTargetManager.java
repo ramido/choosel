@@ -59,7 +59,7 @@ public abstract class AbstractResourceSetAvatarDropTargetManager implements
 
         ResourceSetAvatarDropController controller = new ResourceSetAvatarDropController(
                 dropTarget, createCommandFactory(dropTarget, viewAccessor),
-                commandManager);
+                commandManager, viewAccessor);
 
         dragController.registerDropController(controller);
     }

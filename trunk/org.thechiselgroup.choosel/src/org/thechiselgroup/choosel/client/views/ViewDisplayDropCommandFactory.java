@@ -46,7 +46,7 @@ public class ViewDisplayDropCommandFactory implements
     @Override
     public boolean canDrop(ResourceSetAvatar dragAvatar) {
         assert dragAvatar != null;
-        return !(isFromSameView(dragAvatar) || isAlreadyContained(dragAvatar));
+        return !isFromSameView(dragAvatar) && !isAlreadyContained(dragAvatar);
     }
 
     @Override

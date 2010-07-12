@@ -27,7 +27,6 @@ import org.thechiselgroup.choosel.client.fx.FXUtil;
 import org.thechiselgroup.choosel.client.fx.Opacity;
 import org.thechiselgroup.choosel.client.ui.CSS;
 import org.thechiselgroup.choosel.client.ui.WidgetFactory;
-import org.thechiselgroup.choosel.client.ui.WidgetUtils;
 import org.thechiselgroup.choosel.client.ui.dnd.DragProxyEventReceiver;
 import org.thechiselgroup.choosel.client.ui.popup.DefaultPopupManager;
 
@@ -213,7 +212,7 @@ public class WindowPanel extends NEffectPanel implements
             public void tearDownEffect() {
                 // do not super.tearDownEffects as this resets to original state
                 // reset root panel position as this is affected by move
-                WidgetUtils.setPosition(rootPanel, 0, 0);
+                CSS.setPosition(rootPanel, 0, 0);
             };
         };
 

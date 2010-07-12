@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.client.ui;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.Widget;
 
 public final class CSS {
 
@@ -58,10 +59,26 @@ public final class CSS {
             int width, int height) {
 
         DOM.setStyleAttribute(element, POSITION, ABSOLUTE);
-        DOM.setIntStyleAttribute(element, LEFT, left);
-        DOM.setIntStyleAttribute(element, TOP, top);
-        DOM.setIntStyleAttribute(element, WIDTH, width);
-        DOM.setIntStyleAttribute(element, HEIGHT, height);
+        setPosition(element, left, top);
+        DOM.setStyleAttribute(element, WIDTH, width + PX);
+        DOM.setStyleAttribute(element, HEIGHT, height + PX);
+    }
+
+    private static void setMaxWidth(Element element, int maxWidth) {
+        DOM.setStyleAttribute(element, MAX_WIDTH, maxWidth + PX);
+    }
+
+    public static void setMaxWidth(Widget widget, int maxWidth) {
+        setMaxWidth(widget.getElement(), maxWidth);
+    }
+
+    private static void setPosition(Element element, int left, int top) {
+        DOM.setStyleAttribute(element, LEFT, left + PX);
+        DOM.setStyleAttribute(element, TOP, top + PX);
+    }
+
+    public static void setPosition(Widget widget, int left, int top) {
+        setPosition(widget.getElement(), left, top);
     }
 
     public static void setZIndex(Element element, int zIndex) {
