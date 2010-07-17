@@ -32,6 +32,7 @@ public abstract class AbstractGraphNodeExpander implements GraphNodeExpander {
             if (!expansionCallback.getCallback().containsResourceWithUri(uri)) {
                 Resource r2 = expansionCallback.getResourceManager().getByUri(
                         uri);
+                assert r2 != null;
                 expansionCallback.getCallback().getAutomaticResourceSet().add(
                         r2);
                 added.add(uri);
