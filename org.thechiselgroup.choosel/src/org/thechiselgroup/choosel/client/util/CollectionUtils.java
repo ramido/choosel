@@ -39,6 +39,23 @@ public final class CollectionUtils {
         return result;
     }
 
+    /**
+     * splits a string on a delimiter and converts the resulting array to a List
+     */
+    public static List<String> splitStringToList(String str, String delimeter) {
+        List<String> results = new ArrayList<String>();
+
+        if (str == null) {
+            return results;
+        }
+
+        String[] arr = str.split(delimeter);
+        for (int i = 0; i < arr.length; i++) {
+            results.add(arr[i].trim());
+        }
+        return results;
+    }
+
     public static <T> List<T> toList(Iterable<T> iterable) {
         List<T> result = new ArrayList<T>();
         for (T t : iterable) {
