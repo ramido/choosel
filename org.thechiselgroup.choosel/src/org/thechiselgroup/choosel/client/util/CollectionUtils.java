@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.client.util;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -42,17 +43,16 @@ public final class CollectionUtils {
     /**
      * splits a string on a delimiter and converts the resulting array to a List
      */
-    public static List<String> splitStringToList(String str, String delimeter) {
+    public static List<String> splitStringToList(String input, String delimeter) {
+        if (input == null) {
+            return Collections.emptyList();
+        }
+
         List<String> results = new ArrayList<String>();
-
-        if (str == null) {
-            return results;
+        for (String value : input.split(delimeter)) {
+            results.add(value.trim());
         }
 
-        String[] arr = str.split(delimeter);
-        for (int i = 0; i < arr.length; i++) {
-            results.add(arr[i].trim());
-        }
         return results;
     }
 
