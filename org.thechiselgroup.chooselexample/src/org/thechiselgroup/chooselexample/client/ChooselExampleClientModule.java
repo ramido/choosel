@@ -17,45 +17,51 @@ package org.thechiselgroup.chooselexample.client;
 
 import org.thechiselgroup.choosel.client.ChooselApplication;
 import org.thechiselgroup.choosel.client.ChooselClientModule;
+import org.thechiselgroup.choosel.client.ui.dnd.DropTargetCapabilityChecker;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 
 public class ChooselExampleClientModule extends ChooselClientModule {
 
-    @Override
-    protected void bindCustomServices() {
-    }
+	@Override
+	protected void bindCustomServices() {
+	}
 
-    @Override
-    protected Class<? extends ChooselApplication> getApplicationClass() {
-	return ChooselExampleApplication.class;
-    }
+	@Override
+	protected Class<? extends ChooselApplication> getApplicationClass() {
+		return ChooselExampleApplication.class;
+	}
 
-    // @Override
-    // protected Class<? extends CategoryLabelProvider>
-    // getCategoryLabelProviderClass() {
-    // return BioMixerMappingCategoryLabelProvider.class;
-    // }
-    //
-    // @Override
-    // protected Class<? extends ChooselWindowContentProducerProvider>
-    // getContentProducerProviderClass() {
-    // return BioMixerWindowContentProducerProvider.class;
-    // }
-    //
-    // @Override
-    // protected Class<? extends DetailsWidgetHelper>
-    // getDetailsWidgetHelperClass() {
-    // return BioMixerDetailsWidgetHelper.class;
-    // }
-    //
-    // @Override
-    // protected Class<? extends GraphExpansionRegistry>
-    // getGraphExpansionRegistryClass() {
-    // return BioMixerGraphExpansionRegistry.class;
-    // }
+	// @Override
+	// protected Class<? extends CategoryLabelProvider>
+	// getCategoryLabelProviderClass() {
+	// return BioMixerMappingCategoryLabelProvider.class;
+	// }
+	//
+	// @Override
+	// protected Class<? extends ChooselWindowContentProducerProvider>
+	// getContentProducerProviderClass() {
+	// return BioMixerWindowContentProducerProvider.class;
+	// }
+	//
+	// @Override
+	// protected Class<? extends DetailsWidgetHelper>
+	// getDetailsWidgetHelperClass() {
+	// return BioMixerDetailsWidgetHelper.class;
+	// }
+	//
+	// @Override
+	// protected Class<? extends GraphExpansionRegistry>
+	// getGraphExpansionRegistryClass() {
+	// return BioMixerGraphExpansionRegistry.class;
+	// }
 
-    @Override
-    protected Class<? extends SlotResolver> getSlotResolverClass() {
-	return ChooselExampleSlotResolver.class;
-    }
+	@Override
+	protected Class<? extends SlotResolver> getSlotResolverClass() {
+		return ChooselExampleSlotResolver.class;
+	}
+
+	@Override
+	protected Class<? extends DropTargetCapabilityChecker> getDropTargetCapabilityCheckerClass() {
+		return ChooselExampleDropTargetCapabilityChecker.class;
+	}
 }

@@ -28,6 +28,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.command.CommandManager;
+import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.test.DndTestHelpers;
@@ -48,8 +49,11 @@ public class ResourceSetAvatarDropControllerTest {
 
         private TestDragAvatarDropController(Widget dropTarget,
                 ResourceSetAvatarDropCommandFactory commandFactory,
-                CommandManager commandManager, ViewAccessor viewAccessor) {
-            super(dropTarget, commandFactory, commandManager, viewAccessor);
+                CommandManager commandManager, ViewAccessor viewAccessor,
+                DropTargetCapabilityChecker capabilityChecker,
+                ResourceCategorizer resourceTypeCategorizer) {
+            super(dropTarget, commandFactory, commandManager, viewAccessor,
+                    capabilityChecker, resourceTypeCategorizer);
         }
 
         @Override
@@ -57,6 +61,12 @@ public class ResourceSetAvatarDropControllerTest {
             return null;
         }
     }
+
+    private static final String INVALID_RESOURCE_TYPE = "invalid_type";
+
+    private static final String VALID_RESOURCE_TYPE = "valid_type";
+
+    private static final String VIEW_ID = "viewId";
 
     @Mock
     private TestUndoableCommandWithDescription command;
@@ -79,6 +89,12 @@ public class ResourceSetAvatarDropControllerTest {
     private ViewAccessor viewAccessor;
 
     @Mock
+    private DropTargetCapabilityChecker capabilityChecker;
+
+    @Mock
+    private ResourceCategorizer resourceTypeCategorizer;
+
+    @Mock
     private Widget dropTarget;
 
     @Mock
@@ -86,6 +102,8 @@ public class ResourceSetAvatarDropControllerTest {
 
     @Mock
     private View view;
+
+    private ResourceSet resources;
 
     @Test
     public void addExecutedCommandToCommandManager() {
@@ -116,24 +134,21 @@ public class ResourceSetAvatarDropControllerTest {
         verify(commandManager, times(1)).addExecutedCommand(command);
     }
 
-    /*
-     * TODO Next step: extract the behavior into an interface as specific in
-     * issue #16
-     */
+    @Test
+    public void cannotDropWhenViewAndMixedResourceSetIncompatible() {
+        testDropTargetValidation(false, VALID_RESOURCE_TYPE,
+                INVALID_RESOURCE_TYPE);
+    }
+
+    @Test
+    public void cannotDropWhenViewAndResourceSetCompatible() {
+        testDropTargetValidation(true, VALID_RESOURCE_TYPE, VALID_RESOURCE_TYPE);
+    }
+
     @Test
     public void cannotDropWhenViewAndResourceSetIncompatible() {
-        when(commandFactory.canDrop(eq(dragAvatar))).thenReturn(true);
-        when(viewAccessor.findView(any(Widget.class))).thenReturn(view);
-        when(view.getContentType()).thenReturn("Timeline"); // TODO change
-        // TODO the other thing
-
-        ResourceSet resources = ResourcesTestHelper.createResources(
-                "ncbo-concept", 1);// TODO change
-        when(dragAvatar.getResourceSet()).thenReturn(resources);
-
-        underTest.onEnter(dragContext);
-
-        verify(command, times(0)).execute();
+        testDropTargetValidation(false, INVALID_RESOURCE_TYPE,
+                INVALID_RESOURCE_TYPE);
     }
 
     @Test
@@ -163,18 +178,44 @@ public class ResourceSetAvatarDropControllerTest {
         DndTestHelpers.mockDragClientBundle(bridge);
 
         underTest = spy(new TestDragAvatarDropController(dropTarget,
-                commandFactory, commandManager, viewAccessor));
+                commandFactory, commandManager, viewAccessor,
+                capabilityChecker, resourceTypeCategorizer));
 
         when(underTest.createPopup(any(DragContext.class), any(String.class)))
                 .thenReturn(popup);
 
         dragContext.draggable = dragAvatar;
         when(commandFactory.createCommand(eq(dragAvatar))).thenReturn(command);
+        when(capabilityChecker.isValidDrop(any(String.class), any(String.class)))
+                .thenReturn(true);
+        when(viewAccessor.findView(any(Widget.class))).thenReturn(view);
+        when(view.getContentType()).thenReturn(VIEW_ID);
+        resources = ResourcesTestHelper.createResources(1, 2);
+        when(dragAvatar.getResourceSet()).thenReturn(resources);
     }
 
     @After
     public void tearDown() {
         MockitoGWTBridge.tearDown();
+    }
+
+    private void testDropTargetValidation(boolean expectedExecution,
+            String resource1type, String resource2type) {
+
+        when(commandFactory.canDrop(eq(dragAvatar))).thenReturn(true);
+        when(capabilityChecker.isValidDrop(VIEW_ID, INVALID_RESOURCE_TYPE))
+                .thenReturn(false);
+        when(capabilityChecker.isValidDrop(VIEW_ID, VALID_RESOURCE_TYPE))
+                .thenReturn(true);
+
+        when(resourceTypeCategorizer.getCategory(resources.toList().get(0)))
+                .thenReturn(resource1type);
+        when(resourceTypeCategorizer.getCategory(resources.toList().get(1)))
+                .thenReturn(resource2type);
+
+        underTest.onEnter(dragContext);
+
+        verify(command, times(expectedExecution ? 1 : 0)).execute();
     }
 
     /**

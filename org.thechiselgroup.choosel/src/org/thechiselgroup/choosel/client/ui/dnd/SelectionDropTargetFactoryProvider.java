@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.client.ui.dnd;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
+import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ui.DefaultResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.DisableIfEmptyResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.HideIfEmptyResourceSetAvatarFactory;
@@ -33,13 +34,21 @@ public class SelectionDropTargetFactoryProvider implements
 
     private final CommandManager commandManager;
 
+    private final DropTargetCapabilityChecker capabilityChecker;
+
+    private final ResourceCategorizer categorizer;
+
     @Inject
     public SelectionDropTargetFactoryProvider(
             ResourceSetAvatarDragController dragController,
-            CommandManager commandManager) {
+            CommandManager commandManager,
+            DropTargetCapabilityChecker capabilityChecker,
+            ResourceCategorizer categorizer) {
 
         this.dragController = dragController;
         this.commandManager = commandManager;
+        this.capabilityChecker = capabilityChecker;
+        this.categorizer = categorizer;
     }
 
     @Override
@@ -53,7 +62,8 @@ public class SelectionDropTargetFactoryProvider implements
 
         return new DropTargetResourceSetAvatarFactory(disablingFactory,
                 new SelectionDropTargetManager(commandManager, dragController,
-                        new DefaultViewAccessor()));
+                        new DefaultViewAccessor(), capabilityChecker,
+                        categorizer));
 
     }
 }

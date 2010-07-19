@@ -28,6 +28,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.command.CommandManager;
+import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.test.DndTestHelpers;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
@@ -40,9 +41,12 @@ public class AbstractResourceSetAvatarDropTargetManagerTest {
             AbstractResourceSetAvatarDropTargetManager {
         public TestDragAvatarDropTargetManager(CommandManager commandManager,
                 ResourceSetAvatarDragController dragController,
-                ViewAccessor viewAccessor) {
+                ViewAccessor viewAccessor,
+                DropTargetCapabilityChecker capabilityChecker,
+                ResourceCategorizer categorizer) {
 
-            super(commandManager, dragController, viewAccessor);
+            super(commandManager, dragController, viewAccessor,
+                    capabilityChecker, categorizer);
         }
 
         @Override
@@ -52,7 +56,7 @@ public class AbstractResourceSetAvatarDropTargetManagerTest {
         }
     }
 
-    private AbstractResourceSetAvatarDropTargetManager manager;
+    private AbstractResourceSetAvatarDropTargetManager underTest;
 
     @Mock
     private ResourceSetAvatarDragController dragController;
@@ -66,16 +70,22 @@ public class AbstractResourceSetAvatarDropTargetManagerTest {
     @Mock
     private Widget widget;
 
+    @Mock
+    private DropTargetCapabilityChecker capabilityChecker;
+
+    @Mock
+    private ResourceCategorizer categorizer;
+
     @Test
     public void disposeRemovesDropController() {
-        manager.disableDropTarget(widget);
+        underTest.disableDropTarget(widget);
         verify(dragController, times(1))
                 .unregisterDropControllerFor(eq(widget));
     }
 
     @Test
     public void registerDropController() {
-        manager.enableDropTarget(widget);
+        underTest.enableDropTarget(widget);
 
         ArgumentCaptor<ResourceSetAvatarDropController> captor = ArgumentCaptor
                 .forClass(ResourceSetAvatarDropController.class);
@@ -92,8 +102,8 @@ public class AbstractResourceSetAvatarDropTargetManagerTest {
         MockitoAnnotations.initMocks(this);
         DndTestHelpers.mockDragClientBundle(bridge);
 
-        manager = spy(new TestDragAvatarDropTargetManager(commandManager,
-                dragController, viewAccessor));
+        underTest = spy(new TestDragAvatarDropTargetManager(commandManager,
+                dragController, viewAccessor, capabilityChecker, categorizer));
     }
 
     @After
