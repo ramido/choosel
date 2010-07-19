@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.client.ui.dnd;
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.command.UndoableCommand;
 import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.ui.CSS;
@@ -54,15 +55,23 @@ public class ResourceSetAvatarDropController extends SimpleDropController {
 
     private ViewAccessor viewAccessor;
 
+    private final DropTargetCapabilityChecker capabilityChecker;
+
+    private ResourceCategorizer resourceTypeCategorizer;
+
     public ResourceSetAvatarDropController(Widget dropTarget,
             ResourceSetAvatarDropCommandFactory commandFactory,
-            CommandManager commandManager, ViewAccessor viewAccessor) {
+            CommandManager commandManager, ViewAccessor viewAccessor,
+            DropTargetCapabilityChecker capabilityChecker,
+            ResourceCategorizer resourceTypeCategorizer) {
 
         super(dropTarget);
 
         this.commandFactory = commandFactory;
         this.commandManager = commandManager;
         this.viewAccessor = viewAccessor;
+        this.capabilityChecker = capabilityChecker;
+        this.resourceTypeCategorizer = resourceTypeCategorizer;
     }
 
     // TODO prevent drag source self-drop
@@ -73,19 +82,13 @@ public class ResourceSetAvatarDropController extends SimpleDropController {
 
         ResourceSetAvatar avatar = getAvatar(context);
 
-        // FIXME: create interface on view content displays that checks if
-        // resource set can be displayed, use that interface from drop command
-        // factories
         /*
-         * we need the automatic visualization algorithm that takes the current
-         * configuration and the new data and gives us a ranked list of possible
-         * configurations. If that list is empty, we cannot drop.
+         * TODO we need the automatic visualization algorithm that takes the
+         * current configuration and the new data and gives us a ranked list of
+         * possible configurations. If that list is empty, we cannot drop.
          */
-        if (isConceptToTimelineDrop(avatar, context)) {
-            return false;
-        }
 
-        return commandFactory.canDrop(avatar);
+        return isValidDrop(avatar) && commandFactory.canDrop(avatar);
     }
 
     private UndoableCommand createCommand(final DragContext context) {
@@ -131,32 +134,21 @@ public class ResourceSetAvatarDropController extends SimpleDropController {
         }
     }
 
-    // FIXME: create interface on view content displays that checks if
-    // resource set can be displayed, use that interface from drop command
-    // factories
-    private boolean isConceptToTimelineDrop(ResourceSetAvatar avatar,
-            DragContext context) {
-
-        // HERE: test if all resources are concepts & target it timeline
-        // REMOVE THIS!
-
+    private boolean isValidDrop(ResourceSetAvatar avatar) {
         ResourceSet resourceSet = avatar.getResourceSet();
-        if (resourceSet == null) {
-            return false;// for test
-        }
+        View view = viewAccessor.findView(getDropTarget());
 
+        // TODO potential refactoring: change the drop target capability checker
+        // interface such that it does the check for a resource set instead of a
+        // single resource
         for (Resource resource : resourceSet) {
-            if (!resource.getUri().startsWith("ncbo-concept")) {
+            String resourceType = resourceTypeCategorizer.getCategory(resource);
+            if (!capabilityChecker.isValidDrop(view.getContentType(),
+                    resourceType)) {
                 return false;
             }
         }
-
-        View view = viewAccessor.findView(getDropTarget());
-        if (view == null) {
-            return false;
-        }
-
-        return view.getContentType().equals("Timeline");
+        return true;
     }
 
     // TODO support dragging multiple widgets?

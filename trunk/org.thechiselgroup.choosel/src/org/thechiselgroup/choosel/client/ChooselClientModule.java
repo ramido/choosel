@@ -50,8 +50,10 @@ import org.thechiselgroup.choosel.client.resources.ui.configuration.AllResourceS
 import org.thechiselgroup.choosel.client.resources.ui.configuration.DefaultResourceSetAvatarFactoryProvider;
 import org.thechiselgroup.choosel.client.resources.ui.configuration.ResourceSetsDragAvatarFactoryProvider;
 import org.thechiselgroup.choosel.client.ui.dialog.DialogManager;
+import org.thechiselgroup.choosel.client.ui.dnd.BlacklistDropTargetCapabilityChecker;
 import org.thechiselgroup.choosel.client.ui.dnd.AllSetDropTargetManager;
 import org.thechiselgroup.choosel.client.ui.dnd.DefaultResourceSetAvatarDragController;
+import org.thechiselgroup.choosel.client.ui.dnd.DropTargetCapabilityChecker;
 import org.thechiselgroup.choosel.client.ui.dnd.NullResourceSetAvatarDropTargetManager;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropTargetManager;
@@ -301,6 +303,8 @@ public class ChooselClientModule extends AbstractGinModule implements
                 ResourceByUriMultiCategorizer.class).in(Singleton.class);
         bind(CategoryLabelProvider.class).to(getCategoryLabelProviderClass())
                 .in(Singleton.class);
+        bind(DropTargetCapabilityChecker.class).to(
+                getDropTargetCapabilityCheckerClass()).in(Singleton.class);
 
         bind(ArcStyleProvider.class).to(getArcStyleProviderClass()).in(
                 Singleton.class);
@@ -340,6 +344,10 @@ public class ChooselClientModule extends AbstractGinModule implements
 
     protected Class<? extends DetailsWidgetHelper> getDetailsWidgetHelperClass() {
         return DefaultDetailsWidgetHelper.class;
+    }
+
+    protected Class<? extends DropTargetCapabilityChecker> getDropTargetCapabilityCheckerClass() {
+        return BlacklistDropTargetCapabilityChecker.class;
     }
 
     protected Class<? extends GraphExpansionRegistry> getGraphExpansionRegistryClass() {
