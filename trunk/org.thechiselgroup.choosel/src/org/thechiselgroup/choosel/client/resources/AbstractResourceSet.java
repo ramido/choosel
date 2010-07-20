@@ -15,12 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
-
 public abstract class AbstractResourceSet extends AbstractResourceContainer
         implements ResourceSet {
 
     @Override
     public void clear() {
+        // TODO fix: this fires several events
         for (Resource resource : toList()) {
             remove(resource);
         }
@@ -72,6 +72,7 @@ public abstract class AbstractResourceSet extends AbstractResourceContainer
 
     @Override
     public void switchContainment(ResourceSet resources) {
+        // TODO fix: this fires several events
         assert resources != null;
 
         for (Resource resource : resources) {
