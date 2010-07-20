@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.client.resources;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.captureOnResourcesAdded;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.verifyOnResourcesAdded;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createLabeledResources;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
@@ -103,7 +103,7 @@ public class CombinedResourceSetTest {
         combinedResources.addHandler(ResourcesAddedEvent.TYPE, addedHandler);
         combinedResources.addResourceSet(resources1);
 
-        ArgumentCaptor<ResourcesAddedEvent> argument = captureOnResourcesAdded(
+        ArgumentCaptor<ResourcesAddedEvent> argument = verifyOnResourcesAdded(
                 1, addedHandler);
 
         // TODO use list comparison from advanced asserts

@@ -21,8 +21,8 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.thechiselgroup.choosel.client.test.AdvancedAsserts.assertContentEquals;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.captureOnResourcesAdded;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.captureOnResourcesRemoved;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.verifyOnResourcesAdded;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.verifyOnResourcesRemoved;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
 
 import org.junit.Before;
@@ -57,8 +57,8 @@ public class SwitchingResourceSetTest {
     @Test
     public void doNotFireResourcesRemovedEventOnResourcesRemovedFromFormerDelegate() {
         underTest.setDelegate(resourceSets[0]);
-        underTest.addHandler(ResourcesAddedEvent.TYPE, resourcesAddedHandler);
         underTest.setDelegate(resourceSets[1]);
+        underTest.addHandler(ResourcesAddedEvent.TYPE, resourcesAddedHandler);
 
         resourceSets[0].removeAll(createResources(1, 2));
 
@@ -73,11 +73,11 @@ public class SwitchingResourceSetTest {
 
         resourceSets[0].addAll(createResources(3, 4));
 
-        ResourcesAddedEvent firedEvent = captureOnResourcesAdded(1,
+        ResourcesAddedEvent firedEvent = verifyOnResourcesAdded(1,
                 resourcesAddedHandler).getValue();
 
-        assertContentEquals(createResources(3, 4).toList(),
-                firedEvent.getAddedResources());
+        assertContentEquals(createResources(3, 4).toList(), firedEvent
+                .getAddedResources());
         assertSame(underTest, firedEvent.getTarget());
     }
 
@@ -89,11 +89,11 @@ public class SwitchingResourceSetTest {
 
         resourceSets[1].addAll(createResources(4, 5));
 
-        ResourcesAddedEvent firedEvent = captureOnResourcesAdded(1,
+        ResourcesAddedEvent firedEvent = verifyOnResourcesAdded(1,
                 resourcesAddedHandler).getValue();
 
-        assertContentEquals(createResources(4, 5).toList(),
-                firedEvent.getAddedResources());
+        assertContentEquals(createResources(4, 5).toList(), firedEvent
+                .getAddedResources());
         assertSame(underTest, firedEvent.getTarget());
     }
 
@@ -106,18 +106,18 @@ public class SwitchingResourceSetTest {
 
         underTest.setDelegate(resourceSets[3]);
 
-        ResourcesAddedEvent addedEvent = captureOnResourcesAdded(1,
+        ResourcesAddedEvent addedEvent = verifyOnResourcesAdded(1,
                 resourcesAddedHandler).getValue();
 
-        assertContentEquals(createResources(4, 5).toList(),
-                addedEvent.getAddedResources());
+        assertContentEquals(createResources(4, 5).toList(), addedEvent
+                .getAddedResources());
         assertSame(underTest, addedEvent.getTarget());
 
-        ResourcesRemovedEvent removedEvent = captureOnResourcesRemoved(1,
+        ResourcesRemovedEvent removedEvent = verifyOnResourcesRemoved(1,
                 resourcesRemovedHandler).getValue();
 
-        assertContentEquals(createResources(1, 2).toList(),
-                removedEvent.getRemovedResources());
+        assertContentEquals(createResources(1, 2).toList(), removedEvent
+                .getRemovedResources());
         assertSame(underTest, removedEvent.getTarget());
     }
 
@@ -129,11 +129,11 @@ public class SwitchingResourceSetTest {
 
         resourceSets[0].removeAll(createResources(1, 2));
 
-        ResourcesRemovedEvent firedEvent = captureOnResourcesRemoved(1,
+        ResourcesRemovedEvent firedEvent = verifyOnResourcesRemoved(1,
                 resourcesRemovedHandler).getValue();
 
-        assertContentEquals(createResources(1, 2).toList(),
-                firedEvent.getRemovedResources());
+        assertContentEquals(createResources(1, 2).toList(), firedEvent
+                .getRemovedResources());
         assertSame(underTest, firedEvent.getTarget());
     }
 
@@ -146,11 +146,11 @@ public class SwitchingResourceSetTest {
 
         resourceSets[1].removeAll(createResources(2, 3));
 
-        ResourcesRemovedEvent firedEvent = captureOnResourcesRemoved(1,
+        ResourcesRemovedEvent firedEvent = verifyOnResourcesRemoved(1,
                 resourcesRemovedHandler).getValue();
 
-        assertContentEquals(createResources(2, 3).toList(),
-                firedEvent.getRemovedResources());
+        assertContentEquals(createResources(2, 3).toList(), firedEvent
+                .getRemovedResources());
         assertSame(underTest, firedEvent.getTarget());
     }
 
