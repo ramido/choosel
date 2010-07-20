@@ -18,8 +18,7 @@ package org.thechiselgroup.choosel.client.resources;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.captureOnResourcesAdded;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createLabeledResources;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
@@ -104,12 +103,10 @@ public class CombinedResourceSetTest {
         combinedResources.addHandler(ResourcesAddedEvent.TYPE, addedHandler);
         combinedResources.addResourceSet(resources1);
 
-        ArgumentCaptor<ResourcesAddedEvent> argument = ArgumentCaptor
-                .forClass(ResourcesAddedEvent.class);
+        ArgumentCaptor<ResourcesAddedEvent> argument = captureOnResourcesAdded(
+                1, addedHandler);
 
-        verify(addedHandler, times(1)).onResourcesAdded(argument.capture());
-
-        // TODO extract list comparison
+        // TODO use list comparison from advanced asserts
         List<Resource> eventResources = argument.getValue().getAddedResources();
         assertEquals(3, eventResources.size());
     }
