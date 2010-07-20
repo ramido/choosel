@@ -326,8 +326,8 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     // protected for tests only
     protected List<ResourceItemValueResolver> getLayers() {
-        return new ArrayList<ResourceItemValueResolver>(categoriesToLayers
-                .values());
+        return new ArrayList<ResourceItemValueResolver>(
+                categoriesToLayers.values());
     }
 
     private List<ResourceItem> getResourceItems(List<Resource> resources) {
@@ -385,8 +385,8 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     private void initAllResources() {
-        allResources = new CombinedResourceSet(resourceSetFactory
-                .createResourceSet());
+        allResources = new CombinedResourceSet(
+                resourceSetFactory.createResourceSet());
         allResources.setLabel("All"); // TODO add & update view name
         allResources.addResourceSet(automaticResources);
         allResources.addResourceSet(combinedUserResourceSets);
@@ -491,8 +491,8 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     private void initResourceCombinator() {
-        combinedUserResourceSets = new CombinedResourceSet(resourceSetFactory
-                .createResourceSet());
+        combinedUserResourceSets = new CombinedResourceSet(
+                resourceSetFactory.createResourceSet());
 
         combinedUserResourceSets.addSetEventsHandler(
                 ResourceSetAddedEvent.TYPE, new ResourceSetAddedEventHandler() {
@@ -567,7 +567,7 @@ public class DefaultView extends AbstractWindowContent implements View {
                     setSelectionStatusVisible(true);
                 }
 
-                updateSelectionStatusDisplay(e.getChangedResources(), true);
+                updateSelectionStatusDisplay(e.getAddedResources(), true);
             }
         };
         selectionRemovedHandler = new ResourcesRemovedEventHandler() {
@@ -577,7 +577,7 @@ public class DefaultView extends AbstractWindowContent implements View {
                     setSelectionStatusVisible(false);
                 }
 
-                updateSelectionStatusDisplay(e.getChangedResources(), false);
+                updateSelectionStatusDisplay(e.getRemovedResources(), false);
             }
         };
 

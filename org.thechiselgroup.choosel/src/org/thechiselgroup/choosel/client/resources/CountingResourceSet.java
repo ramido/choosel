@@ -58,8 +58,8 @@ public class CountingResourceSet extends AbstractImplementingResourceSet {
         }
 
         uriToResourceElementMap.put(uri, new ResourceElement(resource));
-        eventBus.fireEvent(new ResourcesAddedEvent(CollectionUtils
-                .toList(resource), this));
+        eventBus.fireEvent(new ResourcesAddedEvent(this, CollectionUtils
+                        .toList(resource)));
     }
 
     @Override
@@ -99,8 +99,8 @@ public class CountingResourceSet extends AbstractImplementingResourceSet {
 
         if (uriToResourceElementMap.get(uri).counter == 0) {
             uriToResourceElementMap.remove(uri);
-            eventBus.fireEvent(new ResourcesRemovedEvent(CollectionUtils
-                    .toList(resource), this));
+            eventBus.fireEvent(new ResourcesRemovedEvent(this, CollectionUtils
+                            .toList(resource)));
         }
     }
 

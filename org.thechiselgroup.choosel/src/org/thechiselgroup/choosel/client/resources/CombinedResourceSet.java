@@ -48,7 +48,7 @@ public class CombinedResourceSet extends DelegatingResourceSet {
     private ResourcesAddedEventHandler resourceAddedHandler = new ResourcesAddedEventHandler() {
         @Override
         public void onResourcesAdded(ResourcesAddedEvent e) {
-            addAll(e.getChangedResources());
+            addAll(e.getAddedResources());
         }
     };
 
@@ -57,7 +57,7 @@ public class CombinedResourceSet extends DelegatingResourceSet {
         public void onResourcesRemoved(ResourcesRemovedEvent e) {
             ResourceSet uniqueResources = new DefaultResourceSet();
             // test that not contained in other resources
-            for (Resource resource : e.getChangedResources()) {
+            for (Resource resource : e.getRemovedResources()) {
                 boolean isUnique = true;
                 for (ResourceSetElement resourceSetElement : containedResourceSets) {
                     if (resourceSetElement.resourceSet.contains(resource)) {
