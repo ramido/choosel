@@ -15,29 +15,35 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.test;
 
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResource;
-
 import java.util.Collection;
 import java.util.List;
 
 import org.junit.Assert;
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
 public final class AdvancedAsserts {
 
     public static <T> void assertContains(Collection<T> c, T value) {
-        String failureMessage = value + " should be contained in " + c;
+        assertContains(value + " should be contained in " + c, c, value);
+    }
+
+    public static <T> void assertContains(String failureMessage,
+            Collection<T> c, T value) {
         Assert.assertEquals(failureMessage, true, c.contains(value));
     }
 
-    public static void assertContainsResource(boolean expected,
-            ResourceSet resourceSet, String resourceType, int resourceId) {
+    public static <T> void assertContentEquals(Collection<T> expected,
+            Collection<T> result) {
 
-        Assert.assertEquals(expected,
-                resourceSet.contains(createResource(resourceType, resourceId)));
+        String failureMessage = "expected: " + expected + ", but was: "
+                + result;
+
+        Assert.assertEquals(failureMessage, expected.size(), result.size());
+        for (T expectedValue : expected) {
+            assertContains(failureMessage, result, expectedValue);
+        }
     }
 
-    public static <T> void assertEquals(List<T> expected, List<T> result) {
+    public static <T> void assertSortedEquals(List<T> expected, List<T> result) {
         String failureMessage = "expected: " + expected + ", but was: "
                 + result;
 

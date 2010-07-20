@@ -78,7 +78,7 @@ public class WorkspacePersistenceServiceImplementationTest {
 
         List<WorkspacePreviewDTO> expected = new ArrayList<WorkspacePreviewDTO>();
         expected.add(new WorkspacePreviewDTO(ID, NAME));
-        AdvancedAsserts.assertEquals(expected, result);
+        AdvancedAsserts.assertSortedEquals(expected, result);
     }
 
     // TODO test DTO update

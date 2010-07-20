@@ -27,12 +27,11 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.client.test.AdvancedAsserts.assertContainsResource;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createLabeledResources;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResource;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResources;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.toLabeledResources;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.toResourceSet;
+import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createLabeledResources;
+import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
+import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
+import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.toLabeledResources;
+import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.toResourceSet;
 
 import java.util.List;
 import java.util.Map;
@@ -60,6 +59,7 @@ import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
+import org.thechiselgroup.choosel.client.test.ResourcesTestHelper;
 
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -305,12 +305,17 @@ public class DefaultViewTest {
             ResourceSet resourceSet = values.get(i);
 
             if (resourceSet.size() == 3) {
-                assertContainsResource(true, resourceSet, CATEGORY_1, 1);
-                assertContainsResource(true, resourceSet, CATEGORY_1, 3);
-                assertContainsResource(true, resourceSet, CATEGORY_1, 4);
+                ResourcesTestHelper.assertContainsResource(true, resourceSet,
+                        CATEGORY_1, 1);
+                ResourcesTestHelper.assertContainsResource(true, resourceSet,
+                        CATEGORY_1, 3);
+                ResourcesTestHelper.assertContainsResource(true, resourceSet,
+                        CATEGORY_1, 4);
             } else if (resourceSet.size() == 2) {
-                assertContainsResource(true, resourceSet, CATEGORY_2, 4);
-                assertContainsResource(true, resourceSet, CATEGORY_2, 2);
+                ResourcesTestHelper.assertContainsResource(true, resourceSet,
+                        CATEGORY_2, 4);
+                ResourcesTestHelper.assertContainsResource(true, resourceSet,
+                        CATEGORY_2, 2);
             } else {
                 fail("invalid resource set " + resourceSet);
             }

@@ -18,7 +18,7 @@ package org.thechiselgroup.biomixer.client.graph;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.*;
+import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.*;
 
 import org.junit.After;
 import org.junit.Before;

@@ -16,7 +16,7 @@
 package org.thechiselgroup.choosel.client.resources;
 
 import static org.junit.Assert.assertEquals;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResource;
+import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
 
 import org.junit.Before;
 import org.junit.experimental.theories.DataPoints;
