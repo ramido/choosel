@@ -23,7 +23,7 @@ import org.thechiselgroup.choosel.client.label.LabelChangedEventHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
 
-public class DelegatingResourceSet extends AbstractResourceSet {
+public class DelegatingResourceSet implements ResourceSet {
 
     private final ResourceSet delegate;
 
@@ -34,6 +34,11 @@ public class DelegatingResourceSet extends AbstractResourceSet {
     @Override
     public void add(Resource resource) {
         delegate.add(resource);
+    }
+
+    @Override
+    public void addAll(Iterable<Resource> resources) {
+        delegate.addAll(resources);
     }
 
     @Override
@@ -49,8 +54,28 @@ public class DelegatingResourceSet extends AbstractResourceSet {
     }
 
     @Override
+    public void clear() {
+        delegate.clear();
+    }
+
+    @Override
     public boolean contains(Resource resource) {
         return delegate.contains(resource);
+    }
+
+    @Override
+    public boolean containsAll(Iterable<Resource> resources) {
+        return delegate.containsAll(resources);
+    }
+
+    @Override
+    public boolean containsEqualResources(ResourceSet other) {
+        return delegate.containsEqualResources(other);
+    }
+
+    @Override
+    public boolean containsResourceWithUri(String uri) {
+        return delegate.containsResourceWithUri(uri);
     }
 
     @Override
@@ -60,6 +85,11 @@ public class DelegatingResourceSet extends AbstractResourceSet {
 
     public ResourceSet getDelegate() {
         return delegate;
+    }
+
+    @Override
+    public Resource getFirstResource() {
+        return delegate.getFirstResource();
     }
 
     @Override
@@ -93,6 +123,11 @@ public class DelegatingResourceSet extends AbstractResourceSet {
     }
 
     @Override
+    public void removeAll(Iterable<Resource> resources) {
+        delegate.removeAll(resources);
+    }
+
+    @Override
     public void setLabel(String label) {
         delegate.setLabel(label);
     }
@@ -100,6 +135,16 @@ public class DelegatingResourceSet extends AbstractResourceSet {
     @Override
     public int size() {
         return delegate.size();
+    }
+
+    @Override
+    public void switchContainment(Resource resource) {
+        delegate.switchContainment(resource);
+    }
+
+    @Override
+    public void switchContainment(ResourceSet resources) {
+        delegate.switchContainment(resources);
     }
 
     @Override

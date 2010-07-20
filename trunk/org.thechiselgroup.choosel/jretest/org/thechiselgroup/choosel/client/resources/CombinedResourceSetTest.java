@@ -18,22 +18,19 @@ package org.thechiselgroup.choosel.client.resources;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createLabeledResources;
 import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResource;
 import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResources;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.client.resources.CombinedResourceSet;
-import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
-import org.thechiselgroup.choosel.client.resources.Resource;
-import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
 
 public class CombinedResourceSetTest {
 
@@ -107,8 +104,14 @@ public class CombinedResourceSetTest {
         combinedResources.addHandler(ResourcesAddedEvent.TYPE, addedHandler);
         combinedResources.addResourceSet(resources1);
 
-        verify(addedHandler, times(3)).onResourcesAdded(
-                any(ResourcesAddedEvent.class));
+        ArgumentCaptor<ResourcesAddedEvent> argument = ArgumentCaptor
+                .forClass(ResourcesAddedEvent.class);
+
+        verify(addedHandler, times(1)).onResourcesAdded(argument.capture());
+
+        // TODO extract list comparison
+        List<Resource> eventResources = argument.getValue().getAddedResources();
+        assertEquals(3, eventResources.size());
     }
 
     @Test
