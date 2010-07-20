@@ -18,9 +18,9 @@ package org.thechiselgroup.choosel.client.resources;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.event.shared.GwtEvent.Type;
 
 /**
  * <p>
@@ -61,7 +61,7 @@ public class SwitchingResourceSet extends DelegatingResourceSet {
     private HandlerRegistration resourcesRemovedFromDelegateHandlerRegistration;
 
     public SwitchingResourceSet() {
-        super(null);
+        super(NullResourceSet.NULL_RESOURCE_SET);
         this.eventBus = new HandlerManager(this);
     }
 
@@ -82,21 +82,20 @@ public class SwitchingResourceSet extends DelegatingResourceSet {
     private void fireResourceChanges(ResourceSet newDelegate,
             ResourceSet oldDelegate) {
 
-        if (oldDelegate != null) {
-            List<Resource> removedResources = new ArrayList<Resource>();
-            removedResources.addAll(oldDelegate.toList());
-            if (newDelegate != null) {
-                removedResources.removeAll(newDelegate.toList());
-            }
+        assert oldDelegate != null;
+        assert newDelegate != null;
+
+        List<Resource> removedResources = new ArrayList<Resource>();
+        removedResources.addAll(oldDelegate.toList());
+        removedResources.removeAll(newDelegate.toList());
+        if (!removedResources.isEmpty()) {
             fireResourcesRemoved(removedResources);
         }
 
-        if (newDelegate != null) {
-            List<Resource> addedResources = new ArrayList<Resource>();
-            addedResources.addAll(newDelegate.toList());
-            if (oldDelegate != null) {
-                addedResources.removeAll(oldDelegate.toList());
-            }
+        List<Resource> addedResources = new ArrayList<Resource>();
+        addedResources.addAll(newDelegate.toList());
+        addedResources.removeAll(oldDelegate.toList());
+        if (!addedResources.isEmpty()) {
             fireResourcesAdded(addedResources);
         }
     }
@@ -118,7 +117,7 @@ public class SwitchingResourceSet extends DelegatingResourceSet {
     }
 
     public boolean hasDelegate() {
-        return this.delegate != null;
+        return !NullResourceSet.isNullResourceSet(delegate);
     }
 
     private void removeEventHandlersFromDelegate() {
@@ -132,9 +131,12 @@ public class SwitchingResourceSet extends DelegatingResourceSet {
     }
 
     public void setDelegate(ResourceSet newDelegate) {
+        if (newDelegate == null) {
+            newDelegate = NullResourceSet.NULL_RESOURCE_SET;
+        }
+
         removeEventHandlersFromDelegate();
 
-        // TODO calculate event & fire
         ResourceSet oldDelegate = this.delegate;
         this.delegate = newDelegate;
 
