@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.model.resources;
+package org.thechiselgroup.choosel.client.resources;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
