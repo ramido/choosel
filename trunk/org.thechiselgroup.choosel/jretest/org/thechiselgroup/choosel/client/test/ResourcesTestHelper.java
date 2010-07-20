@@ -36,7 +36,7 @@ public final class ResourcesTestHelper {
                 resourceSet.contains(createResource(resourceType, resourceId)));
     }
 
-    public static ArgumentCaptor<ResourcesAddedEvent> captureOnResourcesAdded(
+    public static ArgumentCaptor<ResourcesAddedEvent> verifyOnResourcesAdded(
             int expectedInvocationCount,
             ResourcesAddedEventHandler resourcesAddedHandler) {
 
@@ -49,7 +49,7 @@ public final class ResourcesTestHelper {
         return argument;
     }
 
-    public static ArgumentCaptor<ResourcesRemovedEvent> captureOnResourcesRemoved(
+    public static ArgumentCaptor<ResourcesRemovedEvent> verifyOnResourcesRemoved(
             int expectedInvocationCount,
             ResourcesRemovedEventHandler resourcesRemovedHandler) {
 
