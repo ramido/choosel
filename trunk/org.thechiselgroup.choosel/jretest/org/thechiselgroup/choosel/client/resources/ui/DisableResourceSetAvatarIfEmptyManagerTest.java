@@ -20,8 +20,8 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResource;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResources;
+import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
+import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
 
 import org.junit.After;
 import org.junit.Before;

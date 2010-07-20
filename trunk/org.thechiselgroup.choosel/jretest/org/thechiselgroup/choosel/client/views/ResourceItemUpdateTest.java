@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.test.ResourcesTestHelper;
+import org.thechiselgroup.choosel.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 
 public class ResourceItemUpdateTest {
@@ -53,16 +53,16 @@ public class ResourceItemUpdateTest {
     @Test
     public void updateResourceItemWhenResourcesAreAddedToUnderlyingResourceSet() {
         updateCalled = 0;
-        resources.add(ResourcesTestHelper.createResource(1));
+        resources.add(TestResourceSetFactory.createResource(1));
 
         assertEquals(1, updateCalled);
     }
 
     @Test
     public void updateResourceItemWhenResourcesAreRemovedFromUnderlyingResourceSet() {
-        resources.add(ResourcesTestHelper.createResource(1));
+        resources.add(TestResourceSetFactory.createResource(1));
         updateCalled = 0;
-        resources.remove(ResourcesTestHelper.createResource(1));
+        resources.remove(TestResourceSetFactory.createResource(1));
 
         assertEquals(1, updateCalled);
     }

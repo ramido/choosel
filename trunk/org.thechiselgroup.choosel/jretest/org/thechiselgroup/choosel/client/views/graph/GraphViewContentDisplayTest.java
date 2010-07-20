@@ -22,8 +22,8 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResource;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.toResourceSet;
+import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
+import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.toResourceSet;
 
 import org.junit.After;
 import org.junit.Before;
@@ -42,7 +42,7 @@ import org.thechiselgroup.choosel.client.resources.ResourceManager;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
-import org.thechiselgroup.choosel.client.test.ResourcesTestHelper;
+import org.thechiselgroup.choosel.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidgetReadyEvent;
@@ -206,7 +206,7 @@ public class GraphViewContentDisplayTest {
         contentDisplay.init(callback);
 
         when(resourceCategorizer.getCategory(any(Resource.class))).thenReturn(
-                ResourcesTestHelper.DEFAULT_TYPE);
+                TestResourceSetFactory.DEFAULT_TYPE);
 
         when(registry.getAutomaticExpander(any(String.class))).thenReturn(
                 automaticExpander);

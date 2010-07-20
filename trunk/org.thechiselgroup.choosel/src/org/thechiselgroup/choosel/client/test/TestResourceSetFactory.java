@@ -19,7 +19,7 @@ import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
-public final class ResourcesTestHelper {
+public final class TestResourceSetFactory {
 
     public static final String DEFAULT_TYPE = "type";
 
@@ -98,7 +98,7 @@ public final class ResourcesTestHelper {
         return result;
     }
 
-    private ResourcesTestHelper() {
+    private TestResourceSetFactory() {
     }
 
 }

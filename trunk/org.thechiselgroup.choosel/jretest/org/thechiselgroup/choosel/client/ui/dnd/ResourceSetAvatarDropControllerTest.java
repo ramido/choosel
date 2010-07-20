@@ -33,7 +33,7 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.test.DndTestHelpers;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
-import org.thechiselgroup.choosel.client.test.ResourcesTestHelper;
+import org.thechiselgroup.choosel.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.client.test.TestUndoableCommandWithDescription;
 import org.thechiselgroup.choosel.client.ui.popup.DelayedPopup;
 import org.thechiselgroup.choosel.client.views.View;
@@ -190,7 +190,7 @@ public class ResourceSetAvatarDropControllerTest {
                 .thenReturn(true);
         when(viewAccessor.findView(any(Widget.class))).thenReturn(view);
         when(view.getContentType()).thenReturn(VIEW_ID);
-        resources = ResourcesTestHelper.createResources(1, 2);
+        resources = TestResourceSetFactory.createResources(1, 2);
         when(dragAvatar.getResourceSet()).thenReturn(resources);
     }
 

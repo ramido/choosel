@@ -17,7 +17,7 @@ package org.thechiselgroup.choosel.client.resources.command;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResources;
+import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
 
 import org.junit.Before;
 import org.junit.Test;

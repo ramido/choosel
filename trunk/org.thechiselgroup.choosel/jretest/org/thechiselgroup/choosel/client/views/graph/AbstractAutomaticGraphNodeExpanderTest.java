@@ -25,7 +25,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.UriList;
-import org.thechiselgroup.choosel.client.test.ResourcesTestHelper;
+import org.thechiselgroup.choosel.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 
 public class AbstractAutomaticGraphNodeExpanderTest {
@@ -54,8 +54,8 @@ public class AbstractAutomaticGraphNodeExpanderTest {
 
     @Test
     public void showArcsDisplaysArcsFromCurrentResourcesToNewlyAddedResource() {
-        Resource newResource = ResourcesTestHelper.createResource(1);
-        Resource currentResource = ResourcesTestHelper.createResource(2);
+        Resource newResource = TestResourceSetFactory.createResource(1);
+        Resource currentResource = TestResourceSetFactory.createResource(2);
 
         UriList currentUriList = new UriList();
         currentUriList.add(newResource.getUri());
@@ -65,7 +65,7 @@ public class AbstractAutomaticGraphNodeExpanderTest {
 
         when(expansionCallback.getCallback()).thenReturn(callback);
         when(callback.getAllResources()).thenReturn(
-                ResourcesTestHelper.toResourceSet(currentResource));
+                TestResourceSetFactory.toResourceSet(currentResource));
 
         underTest.showArcs(newResource, expansionCallback, PROPERTY, "arcType",
                 false);
