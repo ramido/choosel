@@ -21,7 +21,8 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.windows.WindowContent;
 
-public interface View extends WindowContent, Disposable, Persistable {
+public interface View extends WindowContent, Disposable, Persistable,
+        SelectionModel {
 
     // TODO Type mapping operations
 
@@ -36,28 +37,21 @@ public interface View extends WindowContent, Disposable, Persistable {
      */
     void addResourceSet(ResourceSet resourceSet);
 
-    void addSelectionSet(ResourceSet selectionSet);
-
     /**
      * Checks if the resources are displayed in this view.
      */
     boolean containsResources(Iterable<Resource> resources);
 
     /**
-     * Checks if this labelled resource set is explicitly displayed in this
-     * view.
+     * Checks if this labeled resource set is explicitly displayed in this view.
      */
     boolean containsResourceSet(ResourceSet resourceSet);
-
-    boolean containsSelectionSet(ResourceSet resourceSet);
 
     /**
      * Returns an unmodifiable resource set containing all resources displayed
      * in this view.
      */
     ResourceSet getResources();
-
-    ResourceSet getSelection();
 
     /**
      * Removes resources that are <b>not</b> contained in any explicitly added
@@ -71,9 +65,5 @@ public interface View extends WindowContent, Disposable, Persistable {
      * a label.
      */
     void removeResourceSet(ResourceSet resourceSet);
-
-    void removeSelectionSet(ResourceSet selectionSet);
-
-    void setSelection(ResourceSet newSelectionModel);
 
 }
