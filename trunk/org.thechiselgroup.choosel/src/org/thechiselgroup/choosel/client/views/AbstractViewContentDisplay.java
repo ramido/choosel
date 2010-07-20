@@ -137,7 +137,7 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
                 ResourcesAddedEvent.TYPE, new ResourcesAddedEventHandler() {
                     @Override
                     public void onResourcesAdded(ResourcesAddedEvent e) {
-                        showHover(e.getChangedResources(), true);
+                        showHover(e.getAddedResources(), true);
                     }
 
                 }));
@@ -145,7 +145,7 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
                 ResourcesRemovedEvent.TYPE, new ResourcesRemovedEventHandler() {
                     @Override
                     public void onResourcesRemoved(ResourcesRemovedEvent e) {
-                        showHover(e.getChangedResources(), false);
+                        showHover(e.getRemovedResources(), false);
                     }
                 }));
     }

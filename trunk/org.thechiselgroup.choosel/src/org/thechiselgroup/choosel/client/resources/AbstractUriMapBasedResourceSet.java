@@ -36,8 +36,8 @@ public abstract class AbstractUriMapBasedResourceSet extends
             return;
         }
         doAdd(resource);
-        eventBus.fireEvent(new ResourcesAddedEvent(CollectionUtils
-                .toList(resource), this));
+        eventBus.fireEvent(new ResourcesAddedEvent(this, CollectionUtils
+                        .toList(resource)));
     }
 
     @Override
@@ -52,7 +52,7 @@ public abstract class AbstractUriMapBasedResourceSet extends
                 addedResources.add(resource);
             }
         }
-        eventBus.fireEvent(new ResourcesAddedEvent(addedResources, this));
+        eventBus.fireEvent(new ResourcesAddedEvent(this, addedResources));
     }
 
     protected Resource addResourceToMap(Resource resource) {
@@ -91,8 +91,8 @@ public abstract class AbstractUriMapBasedResourceSet extends
             return;
         }
         doRemove(resource);
-        eventBus.fireEvent(new ResourcesRemovedEvent(CollectionUtils
-                .toList(resource), this));
+        eventBus.fireEvent(new ResourcesRemovedEvent(this, CollectionUtils
+                        .toList(resource)));
     }
 
     @Override
@@ -107,7 +107,7 @@ public abstract class AbstractUriMapBasedResourceSet extends
                 removedResources.add(resource);
             }
         }
-        eventBus.fireEvent(new ResourcesRemovedEvent(removedResources, this));
+        eventBus.fireEvent(new ResourcesRemovedEvent(this, removedResources));
     }
 
     protected void removeResourceFromMap(String key) {

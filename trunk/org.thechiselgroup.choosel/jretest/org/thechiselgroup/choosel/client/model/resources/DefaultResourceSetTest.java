@@ -154,8 +154,7 @@ public class DefaultResourceSetTest {
         verify(resourcesAddedHandler, times(1)).onResourcesAdded(
                 argument.capture());
 
-        List<Resource> eventResources = argument.getValue()
-                .getChangedResources();
+        List<Resource> eventResources = argument.getValue().getAddedResources();
         assertEquals(2, eventResources.size());
         assertEquals(false, eventResources.contains(containedResource));
         assertEquals(true, eventResources.contains(createResource(2)));
@@ -179,7 +178,7 @@ public class DefaultResourceSetTest {
                 argument.capture());
 
         List<Resource> eventResources = argument.getValue()
-                .getChangedResources();
+                .getRemovedResources();
         assertEquals(2, eventResources.size());
         assertEquals(false, eventResources.contains(containedResource));
         assertEquals(true, eventResources.contains(createResource(2)));

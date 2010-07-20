@@ -24,13 +24,17 @@ public class ResourcesAddedEvent extends
 
     public static final GwtEvent.Type<ResourcesAddedEventHandler> TYPE = new GwtEvent.Type<ResourcesAddedEventHandler>();
 
-    public ResourcesAddedEvent(List<Resource> resources, ResourceSet resourceSet) {
-        super(resourceSet, resources);
+    public ResourcesAddedEvent(ResourceSet target, List<Resource> addedResources) {
+        super(target, addedResources);
     }
 
     @Override
     protected void dispatch(ResourcesAddedEventHandler handler) {
         handler.onResourcesAdded(this);
+    }
+
+    public List<Resource> getAddedResources() {
+        return affectedResources;
     }
 
     @Override

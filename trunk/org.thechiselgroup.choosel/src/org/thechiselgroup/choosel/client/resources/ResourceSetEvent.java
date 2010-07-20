@@ -22,17 +22,13 @@ import com.google.gwt.event.shared.GwtEvent;
 public abstract class ResourceSetEvent<H extends ResourceEventHandler> extends
         GwtEvent<H> {
 
-    private final List<Resource> changedResources;
+    protected final List<Resource> affectedResources;
 
     private final ResourceSet target;
 
-    public ResourceSetEvent(ResourceSet target, List<Resource> changedResources) {
-        this.changedResources = changedResources;
+    public ResourceSetEvent(ResourceSet target, List<Resource> affectedResources) {
+        this.affectedResources = affectedResources;
         this.target = target;
-    }
-
-    public List<Resource> getChangedResources() {
-        return changedResources;
     }
 
     public ResourceSet getTarget() {

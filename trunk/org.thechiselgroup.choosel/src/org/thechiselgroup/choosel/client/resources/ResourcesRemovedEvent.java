@@ -24,9 +24,9 @@ public class ResourcesRemovedEvent extends
 
     public static final GwtEvent.Type<ResourcesRemovedEventHandler> TYPE = new GwtEvent.Type<ResourcesRemovedEventHandler>();
 
-    public ResourcesRemovedEvent(List<Resource> resources,
-            ResourceSet resourceSet) {
-        super(resourceSet, resources);
+    public ResourcesRemovedEvent(ResourceSet target,
+            List<Resource> removedResources) {
+        super(target, removedResources);
     }
 
     @Override
@@ -37,6 +37,10 @@ public class ResourcesRemovedEvent extends
     @Override
     public GwtEvent.Type<ResourcesRemovedEventHandler> getAssociatedType() {
         return TYPE;
+    }
+
+    public List<Resource> getRemovedResources() {
+        return affectedResources;
     }
 
 }

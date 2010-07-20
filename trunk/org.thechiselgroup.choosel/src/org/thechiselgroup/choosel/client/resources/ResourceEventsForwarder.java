@@ -52,11 +52,11 @@ public class ResourceEventsForwarder implements ResourcesAddedEventHandler,
 
     @Override
     public void onResourcesAdded(ResourcesAddedEvent e) {
-        target.addAll(e.getChangedResources());
+        target.addAll(e.getAddedResources());
     }
 
     @Override
     public void onResourcesRemoved(ResourcesRemovedEvent e) {
-        target.removeAll(e.getChangedResources());
+        target.removeAll(e.getRemovedResources());
     }
 }
