@@ -15,10 +15,17 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.test;
 
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
 
 import org.junit.Assert;
+import org.mockito.ArgumentCaptor;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
+import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 
 public final class ResourcesTestHelper {
 
@@ -29,7 +36,32 @@ public final class ResourcesTestHelper {
                 resourceSet.contains(createResource(resourceType, resourceId)));
     }
 
-    private ResourcesTestHelper() {
+    public static ArgumentCaptor<ResourcesAddedEvent> captureOnResourcesAdded(
+            int expectedInvocationCount,
+            ResourcesAddedEventHandler resourcesAddedHandler) {
+
+        ArgumentCaptor<ResourcesAddedEvent> argument = ArgumentCaptor
+                .forClass(ResourcesAddedEvent.class);
+
+        verify(resourcesAddedHandler, times(expectedInvocationCount))
+                .onResourcesAdded(argument.capture());
+
+        return argument;
     }
 
+    public static ArgumentCaptor<ResourcesRemovedEvent> captureOnResourcesRemoved(
+            int expectedInvocationCount,
+            ResourcesRemovedEventHandler resourcesRemovedHandler) {
+
+        ArgumentCaptor<ResourcesRemovedEvent> argument = ArgumentCaptor
+                .forClass(ResourcesRemovedEvent.class);
+
+        verify(resourcesRemovedHandler, times(expectedInvocationCount))
+                .onResourcesRemoved(argument.capture());
+
+        return argument;
+    }
+
+    private ResourcesTestHelper() {
+    }
 }
