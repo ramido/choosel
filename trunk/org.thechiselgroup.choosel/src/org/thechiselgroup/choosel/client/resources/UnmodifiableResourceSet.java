@@ -27,12 +27,27 @@ public class UnmodifiableResourceSet extends DelegatingResourceSet {
     }
 
     @Override
+    public void addAll(Iterable<Resource> resources) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void clear() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public boolean isModifiable() {
         return false;
     }
 
     @Override
     public void remove(Resource i) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void removeAll(Iterable<Resource> resources) {
         throw new UnsupportedOperationException();
     }
 

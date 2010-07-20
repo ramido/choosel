@@ -23,9 +23,10 @@ import org.thechiselgroup.choosel.client.label.LabelChangedEventHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
 
+// TODO support for null delegates
 public class DelegatingResourceSet implements ResourceSet {
 
-    private final ResourceSet delegate;
+    protected ResourceSet delegate;
 
     public DelegatingResourceSet(ResourceSet delegate) {
         this.delegate = delegate;
