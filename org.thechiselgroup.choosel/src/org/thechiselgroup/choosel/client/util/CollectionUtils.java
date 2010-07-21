@@ -26,18 +26,23 @@ public final class CollectionUtils {
 
     public static String deliminateIterableStringCollection(
             Iterable<String> values, String delimeter) {
+
+        assert values != null;
+        assert delimeter != null;
+
         Iterator<String> iterator = values.iterator();
-        String result = "";
 
         if (!iterator.hasNext()) {
-            return result;
+            return "";
         }
-        result += iterator.next();
+
+        StringBuilder result = new StringBuilder();
+        result.append(iterator.next());
 
         while (iterator.hasNext()) {
-            result += delimeter + iterator.next();
+            result.append(delimeter).append(iterator.next());
         }
-        return result;
+        return result.toString();
     }
 
     /**
