@@ -160,8 +160,7 @@ public class WorkspacePersistenceServiceImplementation implements
 
         try {
             PersistentWorkspace workspace = workspaceExists(dto) ? getPersistentWorkspace(
-                    dto, pm)
-                    : createPersistentWorkspace(pm);
+                    dto, pm) : createPersistentWorkspace(pm);
 
             updateWorkspaceWithDTO(workspace, dto);
 

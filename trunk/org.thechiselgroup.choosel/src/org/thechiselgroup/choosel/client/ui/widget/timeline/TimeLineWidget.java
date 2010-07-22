@@ -73,8 +73,8 @@ public class TimeLineWidget extends Widget {
         if (timeLine == null) {
             eventSource = TimeLineEventSource.create();
 
-            timeLine = TimeLine.create(getElement(), eventSource, inputFormat
-                    .format(new Date()));
+            timeLine = TimeLine.create(getElement(), eventSource,
+                    inputFormat.format(new Date()));
 
             timeLine.disableBubbles();
             timeLine.registerPaintListener();

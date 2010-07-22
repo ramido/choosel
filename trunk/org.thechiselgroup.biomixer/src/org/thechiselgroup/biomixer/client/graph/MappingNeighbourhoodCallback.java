@@ -38,101 +38,101 @@ import org.thechiselgroup.choosel.client.views.graph.Relationship;
 // TODO 2 modes of callbacks: show // not show
 public class MappingNeighbourhoodCallback extends AbstractNeighbourhoodCallback {
 
-    public MappingNeighbourhoodCallback(GraphDisplay graph,
-	    ViewContentDisplayCallback contentDisplayCallback,
-	    ErrorHandler errorHandler,
-	    GraphNodeExpansionCallback expansionCallback) {
+	public MappingNeighbourhoodCallback(GraphDisplay graph,
+			ViewContentDisplayCallback contentDisplayCallback,
+			ErrorHandler errorHandler,
+			GraphNodeExpansionCallback expansionCallback) {
 
-	super(graph, contentDisplayCallback, errorHandler, expansionCallback);
-    }
-
-    private void addRelationshipArcs(List<Relationship> displayableRelationships) {
-	for (Relationship relationship : displayableRelationships) {
-	    String sourceId = relationship.getSource().getUri();
-	    String targetId = relationship.getTarget().getUri();
-
-	    expansionCallback.showArc(GraphViewContentDisplay.ARC_TYPE_MAPPING,
-		    sourceId, targetId);
+		super(graph, contentDisplayCallback, errorHandler, expansionCallback);
 	}
-    }
 
-    // filter mappings: check if source & target node are contained
-    private List<Resource> calculateDisplayableMappings(
-	    NeighbourhoodServiceResult result) {
+	private void addRelationshipArcs(List<Relationship> displayableRelationships) {
+		for (Relationship relationship : displayableRelationships) {
+			String sourceId = relationship.getSource().getUri();
+			String targetId = relationship.getTarget().getUri();
 
-	Set<Resource> neighbours = result.getNeighbours();
-	List<Resource> displayableMappings = new ArrayList<Resource>();
-	for (Resource resource : neighbours) {
-	    if (resource.getUri().startsWith(NcboUriHelper.NCBO_MAPPING)) {
-		// we have a mapping --> check if source and target are
-		// contained
-		String sourceUri = (String) resource
-			.getValue(NCBO.MAPPING_SOURCE);
-		String destinationUri = (String) resource
-			.getValue(NCBO.MAPPING_DESTINATION);
-
-		if (containsUri(sourceUri) && containsUri(destinationUri)
-			&& !contains(resource)) {
-		    displayableMappings.add(resource);
+			expansionCallback.showArc(GraphViewContentDisplay.ARC_TYPE_MAPPING,
+					sourceId, targetId);
 		}
-	    }
-	}
-	return displayableMappings;
-    }
-
-    private List<Relationship> calculateDisplayableRelationships(
-	    List<Relationship> relationships) {
-
-	List<Relationship> result = new ArrayList<Relationship>();
-
-	for (Relationship mapping : relationships) {
-	    String destinationUri = mapping.getTarget().getUri();
-	    String sourceUri = mapping.getSource().getUri();
-
-	    if (containsUri(sourceUri) && containsUri(destinationUri)) {
-		result.add(mapping);
-	    }
 	}
 
-	return result;
-    }
+	// filter mappings: check if source & target node are contained
+	private List<Resource> calculateDisplayableMappings(
+			NeighbourhoodServiceResult result) {
 
-    @Override
-    public void onSuccess(NeighbourhoodServiceResult result) {
-	List<Resource> displayableMappings = calculateDisplayableMappings(result);
-	addResources(displayableMappings);
-	addRelationshipArcs(calculateDisplayableRelationships(result
-		.getRelationships()));
-	layoutNodes(displayableMappings);
-    }
+		Set<Resource> neighbours = result.getNeighbours();
+		List<Resource> displayableMappings = new ArrayList<Resource>();
+		for (Resource resource : neighbours) {
+			if (resource.getUri().startsWith(NcboUriHelper.NCBO_MAPPING)) {
+				// we have a mapping --> check if source and target are
+				// contained
+				String sourceUri = (String) resource
+						.getValue(NCBO.MAPPING_SOURCE);
+				String destinationUri = (String) resource
+						.getValue(NCBO.MAPPING_DESTINATION);
 
-    protected void layoutNodes(List<Resource> displayableMappings) {
-	// for displayable mappings: find connected node position, calculate,
-	// intermediate distance, position, layout
-
-	List<Node> nodesToLayout = new ArrayList<Node>();
-	for (Resource resource : displayableMappings) {
-	    Node sourceNode = getRelatedNode(resource, NCBO.MAPPING_SOURCE);
-	    Point sourceLocation = graph.getLocation(sourceNode);
-
-	    Node targetNode = getRelatedNode(resource, NCBO.MAPPING_DESTINATION);
-	    Point targetLocation = graph.getLocation(targetNode);
-
-	    Point intermediateLocation = new Point(
-		    (sourceLocation.x + targetLocation.x) / 2,
-		    (sourceLocation.y + targetLocation.y) / 2);
-
-	    Node node = getNode(resource);
-	    graph.setLocation(node, intermediateLocation);
-	    nodesToLayout.add(node);
+				if (containsUri(sourceUri) && containsUri(destinationUri)
+						&& !contains(resource)) {
+					displayableMappings.add(resource);
+				}
+			}
+		}
+		return displayableMappings;
 	}
 
-	graph.layOutNodes(nodesToLayout);
-    }
+	private List<Relationship> calculateDisplayableRelationships(
+			List<Relationship> relationships) {
 
-    private Node getRelatedNode(Resource resource, String key) {
-	Node sourceNode = getNode(contentDisplayCallback
-		.getResourceByUri((String) resource.getValue(key)));
-	return sourceNode;
-    }
+		List<Relationship> result = new ArrayList<Relationship>();
+
+		for (Relationship mapping : relationships) {
+			String destinationUri = mapping.getTarget().getUri();
+			String sourceUri = mapping.getSource().getUri();
+
+			if (containsUri(sourceUri) && containsUri(destinationUri)) {
+				result.add(mapping);
+			}
+		}
+
+		return result;
+	}
+
+	private Node getRelatedNode(Resource resource, String key) {
+		Node sourceNode = getNode(contentDisplayCallback
+				.getResourceByUri((String) resource.getValue(key)));
+		return sourceNode;
+	}
+
+	protected void layoutNodes(List<Resource> displayableMappings) {
+		// for displayable mappings: find connected node position, calculate,
+		// intermediate distance, position, layout
+
+		List<Node> nodesToLayout = new ArrayList<Node>();
+		for (Resource resource : displayableMappings) {
+			Node sourceNode = getRelatedNode(resource, NCBO.MAPPING_SOURCE);
+			Point sourceLocation = graph.getLocation(sourceNode);
+
+			Node targetNode = getRelatedNode(resource, NCBO.MAPPING_DESTINATION);
+			Point targetLocation = graph.getLocation(targetNode);
+
+			Point intermediateLocation = new Point(
+					(sourceLocation.x + targetLocation.x) / 2,
+					(sourceLocation.y + targetLocation.y) / 2);
+
+			Node node = getNode(resource);
+			graph.setLocation(node, intermediateLocation);
+			nodesToLayout.add(node);
+		}
+
+		graph.layOutNodes(nodesToLayout);
+	}
+
+	@Override
+	public void onSuccess(NeighbourhoodServiceResult result) {
+		List<Resource> displayableMappings = calculateDisplayableMappings(result);
+		addResources(displayableMappings);
+		addRelationshipArcs(calculateDisplayableRelationships(result
+				.getRelationships()));
+		layoutNodes(displayableMappings);
+	}
 }

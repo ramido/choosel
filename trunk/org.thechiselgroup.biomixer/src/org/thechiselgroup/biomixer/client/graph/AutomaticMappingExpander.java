@@ -24,27 +24,25 @@ import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay;
 
 public class AutomaticMappingExpander implements GraphNodeExpander {
 
-    @Override
-    public void expand(Resource mapping,
-	    GraphNodeExpansionCallback expansionCallback) {
+	@Override
+	public void expand(Resource mapping,
+			GraphNodeExpansionCallback expansionCallback) {
 
-	ViewContentDisplayCallback callback = expansionCallback.getCallback();
+		ViewContentDisplayCallback callback = expansionCallback.getCallback();
 
-	String sourceURI = (String) mapping.getValue(NCBO.MAPPING_SOURCE);
+		String sourceURI = (String) mapping.getValue(NCBO.MAPPING_SOURCE);
 
-	if (callback.containsResourceWithUri(sourceURI)) {
-	    expansionCallback.showArc(
-		    GraphViewContentDisplay.ARC_TYPE_MAPPING, sourceURI,
-		    mapping.getUri());
+		if (callback.containsResourceWithUri(sourceURI)) {
+			expansionCallback.showArc(GraphViewContentDisplay.ARC_TYPE_MAPPING,
+					sourceURI, mapping.getUri());
+		}
+
+		String destinationURI = (String) mapping
+				.getValue(NCBO.MAPPING_DESTINATION);
+
+		if (callback.containsResourceWithUri(destinationURI)) {
+			expansionCallback.showArc(GraphViewContentDisplay.ARC_TYPE_MAPPING,
+					mapping.getUri(), destinationURI);
+		}
 	}
-
-	String destinationURI = (String) mapping
-		.getValue(NCBO.MAPPING_DESTINATION);
-
-	if (callback.containsResourceWithUri(destinationURI)) {
-	    expansionCallback.showArc(
-		    GraphViewContentDisplay.ARC_TYPE_MAPPING, mapping.getUri(),
-		    destinationURI);
-	}
-    }
 }

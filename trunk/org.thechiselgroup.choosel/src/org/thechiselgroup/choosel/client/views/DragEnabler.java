@@ -127,9 +127,9 @@ public class DragEnabler {
         // TODO title
         final String text = (String) item
                 .getResourceValue(SlotResolver.DESCRIPTION_SLOT);
-        panel = new InvisibleResourceSetAvatar(text, "avatar-resourceSet", item
-                .getResourceSet(), ResourceSetAvatarType.SET, span, item
-                .getPopupManager());
+        panel = new InvisibleResourceSetAvatar(text, "avatar-resourceSet",
+                item.getResourceSet(), ResourceSetAvatarType.SET, span,
+                item.getPopupManager());
 
         span.setClassName("avatar-invisible");
 

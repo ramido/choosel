@@ -26,7 +26,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("georss")
 public interface GeoRSSService extends RemoteService {
 
-    Set<Resource> getGeoRSS(String url, String className)
-	    throws ServiceException;
+	Set<Resource> getGeoRSS(String url, String className)
+			throws ServiceException;
 
 }

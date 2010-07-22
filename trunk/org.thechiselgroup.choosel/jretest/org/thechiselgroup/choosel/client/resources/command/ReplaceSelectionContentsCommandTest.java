@@ -56,8 +56,8 @@ public class ReplaceSelectionContentsCommandTest {
         underTest.execute();
         underTest.undo();
 
-        assertEquals(true, viewSelection
-                .containsEqualResources(createResources(4)));
+        assertEquals(true,
+                viewSelection.containsEqualResources(createResources(4)));
     }
 
     @Test
@@ -67,8 +67,8 @@ public class ReplaceSelectionContentsCommandTest {
 
         underTest.execute();
 
-        assertEquals(true, viewSelection
-                .containsEqualResources(createResources(3)));
+        assertEquals(true,
+                viewSelection.containsEqualResources(createResources(3)));
     }
 
     @Before

@@ -17,30 +17,30 @@ package org.thechiselgroup.biomixer.client;
 
 public interface NCBO {
 
-    String CONCEPT_ONTOLOGY_VERSION_ID = "ontologyVersionId";
-    String CONCEPT_ONTOLOGY_ID = "ontologyId";
-    String CONCEPT_ONTOLOGY_NAME = "ontologyName";
-    String CONCEPT_NAME = "conceptName";
-    String CONCEPT_SHORT_ID = "conceptIdShort";
-    String CONCEPT_ID = "conceptId";
-    String CONCEPT_CHILD_COUNT = "childCount";
-    String CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS = "neighbours";
+	String CONCEPT_ONTOLOGY_VERSION_ID = "ontologyVersionId";
+	String CONCEPT_ONTOLOGY_ID = "ontologyId";
+	String CONCEPT_ONTOLOGY_NAME = "ontologyName";
+	String CONCEPT_NAME = "conceptName";
+	String CONCEPT_SHORT_ID = "conceptIdShort";
+	String CONCEPT_ID = "conceptId";
+	String CONCEPT_CHILD_COUNT = "childCount";
+	String CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS = "neighbours";
 
-    String MAPPING_ID = "mappingId";
-    String MAPPING_SOURCE = "mappingSource"; // uri
-    String MAPPING_DESTINATION = "mappingDestination"; // uri
-    String MAPPING_CREATION_DATE = "date"; // FIXME use better name once slot
-    // resolver is more flexible
+	String MAPPING_ID = "mappingId";
+	String MAPPING_SOURCE = "mappingSource"; // uri
+	String MAPPING_DESTINATION = "mappingDestination"; // uri
+	String MAPPING_CREATION_DATE = "date"; // FIXME use better name once slot
+	// resolver is more flexible
 
-    String MAPPING_SOURCE_CONCEPT_NAME = "mappingSourceConceptName";
-    String MAPPING_DESTINATION_CONCEPT_NAME = "mappingDestinationConceptName";
-    String MAPPING_SOURCE_ONTOLOGY_NAME = "mappingSourceOntologyName";
-    String MAPPING_DESTINATION_ONTOLOGY_NAME = "mappingDestinationOntologyName";
-    String MAPPING_SOURCE_CONCEPT_ID = "mappingSourceConceptID";
-    String MAPPING_DESTINATION_CONCEPT_ID = "mappingDestinationConceptID";
-    String MAPPING_SOURCE_ONTOLOGY_ID = "mappingSourceOntologyID";
-    String MAPPING_SOURCE_ONTOLOGY_VERSION_ID = "mappingSourceOntologyVersionID";
-    String MAPPING_DESTINATION_ONTOLOGY_ID = "mappingDestinationOntologyID";
-    String MAPPING_DESTINATION_ONTOLOGY_VERSION_ID = "mappingDestinationOntologyVersionID";
+	String MAPPING_SOURCE_CONCEPT_NAME = "mappingSourceConceptName";
+	String MAPPING_DESTINATION_CONCEPT_NAME = "mappingDestinationConceptName";
+	String MAPPING_SOURCE_ONTOLOGY_NAME = "mappingSourceOntologyName";
+	String MAPPING_DESTINATION_ONTOLOGY_NAME = "mappingDestinationOntologyName";
+	String MAPPING_SOURCE_CONCEPT_ID = "mappingSourceConceptID";
+	String MAPPING_DESTINATION_CONCEPT_ID = "mappingDestinationConceptID";
+	String MAPPING_SOURCE_ONTOLOGY_ID = "mappingSourceOntologyID";
+	String MAPPING_SOURCE_ONTOLOGY_VERSION_ID = "mappingSourceOntologyVersionID";
+	String MAPPING_DESTINATION_ONTOLOGY_ID = "mappingDestinationOntologyID";
+	String MAPPING_DESTINATION_ONTOLOGY_VERSION_ID = "mappingDestinationOntologyVersionID";
 
 }

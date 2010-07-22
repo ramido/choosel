@@ -110,8 +110,9 @@ public class ResourceSplitterTest {
                             ResourceCategoryAddedEvent e) {
 
                         assertEquals(CATEGORY_1, e.getCategory());
-                        assertEquals(true, e.getResourceSet()
-                                .containsEqualResources(
+                        assertEquals(
+                                true,
+                                e.getResourceSet().containsEqualResources(
                                         createResources(TEST_CATEGORY, 1)));
 
                         called[0] = true;
@@ -166,8 +167,10 @@ public class ResourceSplitterTest {
                 eventCaptor.capture());
         ResourceCategoryRemovedEvent event = eventCaptor.getValue();
         assertEquals(CATEGORY_1, event.getCategory());
-        assertEquals(true, event.getResourceSet().contains(
-                createResource(TEST_CATEGORY, 1)));
+        assertEquals(
+                true,
+                event.getResourceSet().contains(
+                        createResource(TEST_CATEGORY, 1)));
     }
 
     @Test

@@ -189,10 +189,10 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
 
     private void saveCenterPosition(Memento state) {
         LatLng center = map.getCenter();
-        state.setValue(MEMENTO_CENTER_LONGITUDE, Double.toString(center
-                .getLongitude()));
-        state.setValue(MEMENTO_CENTER_LATITUDE, Double.toString(center
-                .getLatitude()));
+        state.setValue(MEMENTO_CENTER_LONGITUDE,
+                Double.toString(center.getLongitude()));
+        state.setValue(MEMENTO_CENTER_LATITUDE,
+                Double.toString(center.getLatitude()));
     }
 
     private void saveMapType(Memento state) {
@@ -215,9 +215,7 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     private void saveZoomLevel(Memento state) {
-        state
-                .setValue(MEMENTO_ZOOM_LEVEL, Integer.toString(map
-                        .getZoomLevel()));
+        state.setValue(MEMENTO_ZOOM_LEVEL, Integer.toString(map.getZoomLevel()));
     }
 
     // TODO move to library class

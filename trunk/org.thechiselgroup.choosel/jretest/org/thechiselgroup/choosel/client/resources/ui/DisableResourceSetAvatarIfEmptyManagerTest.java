@@ -89,8 +89,7 @@ public class DisableResourceSetAvatarIfEmptyManagerTest {
 
         when(avatar.getResourceSet()).thenReturn(resources);
         when(
-                avatar
-                        .addResourceChangedHandler(any(ResourceSetAvatarResourcesChangedEventHandler.class)))
+                avatar.addResourceChangedHandler(any(ResourceSetAvatarResourcesChangedEventHandler.class)))
                 .thenReturn(handlerRegistration);
 
         underTest = new DisableResourceSetAvatarIfEmptyManager(avatar);

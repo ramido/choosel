@@ -26,6 +26,6 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("ncbo_concept_search")
 public interface NCBOConceptSearchService extends RemoteService {
 
-    Set<Resource> searchConcepts(String queryText) throws ServiceException;
+	Set<Resource> searchConcepts(String queryText) throws ServiceException;
 
 }

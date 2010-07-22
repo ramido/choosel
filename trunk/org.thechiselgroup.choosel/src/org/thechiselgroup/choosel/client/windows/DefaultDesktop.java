@@ -97,8 +97,8 @@ public class DefaultDesktop extends AbsolutePanel implements Desktop, HasSize {
         // FIXME better prediction of window size
         Point point = positionManager.getNextLocation(500, 400);
 
-        WindowPanel window = createWindow(content.getLabel(), content
-                .asWidget(), point.x, point.y);
+        WindowPanel window = createWindow(content.getLabel(),
+                content.asWidget(), point.x, point.y);
 
         window.setViewContent(content);
 

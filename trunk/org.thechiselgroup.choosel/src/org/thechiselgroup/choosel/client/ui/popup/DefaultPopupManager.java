@@ -439,9 +439,7 @@ public class DefaultPopupManager implements Opacity, PopupManager {
         style.setProperty(CSS.POSITION, CSS.ABSOLUTE);
         style.setProperty(CSS.Z_INDEX, Integer.toString(ZIndex.POPUP));
         style.setPropertyPx(CSS.LEFT, mouseXInClientArea + POPUP_OFFSET_X);
-        style
-                .setPropertyPx(CSS.TOP, mouseYInBrowserClientArea
-                        + POPUP_OFFSET_Y);
+        style.setPropertyPx(CSS.TOP, mouseYInBrowserClientArea + POPUP_OFFSET_Y);
 
         getRootPanel().add(popup);
     }

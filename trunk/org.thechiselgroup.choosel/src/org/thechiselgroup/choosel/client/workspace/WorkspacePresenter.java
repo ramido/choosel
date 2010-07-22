@@ -103,14 +103,13 @@ public class WorkspacePresenter implements Presenter {
             }
         });
 
-        manager
-                .addSwitchedWorkspaceEventHandler(new WorkspaceSwitchedEventHandler() {
-                    @Override
-                    public void onWorkspaceSwitched(WorkspaceSwitchedEvent event) {
-                        display.getWorkspaceNameText().setText(
-                                event.getWorkspace().getName());
-                    }
-                });
+        manager.addSwitchedWorkspaceEventHandler(new WorkspaceSwitchedEventHandler() {
+            @Override
+            public void onWorkspaceSwitched(WorkspaceSwitchedEvent event) {
+                display.getWorkspaceNameText().setText(
+                        event.getWorkspace().getName());
+            }
+        });
     }
 
     private void updateWorkspaceName() {

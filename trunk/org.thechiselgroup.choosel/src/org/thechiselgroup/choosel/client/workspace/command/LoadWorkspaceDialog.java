@@ -63,8 +63,8 @@ public class LoadWorkspaceDialog extends AbstractDialog {
 
         VerticalPanel content = new VerticalPanel();
         for (WorkspacePreview workspace : workspacePreviews) {
-            RadioButton radioButton = new RadioButton(groupId, workspace
-                    .getName());
+            RadioButton radioButton = new RadioButton(groupId,
+                    workspace.getName());
             radioButton.setValue(Boolean.FALSE);
             buttonsToWorkspaces.put(radioButton, workspace);
 

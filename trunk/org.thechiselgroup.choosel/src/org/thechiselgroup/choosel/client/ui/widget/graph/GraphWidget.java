@@ -30,8 +30,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.shared.EventHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
@@ -303,8 +303,8 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
     @Override
     public void addArc(Arc arc) {
         arcsByID.put(arc.getId(), arc);
-        _addArc(getSwfId(), arc.getId(), arc.getSourceNodeId(), arc
-                .getTargetNodeId(), arc.getType());
+        _addArc(getSwfId(), arc.getId(), arc.getSourceNodeId(),
+                arc.getTargetNodeId(), arc.getType());
     }
 
     @Override
@@ -419,8 +419,8 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
             return;
         }
 
-        _runLayout(getSwfId(), LAYOUT_NAME, ArrayUtils
-                .toJsArray(toNodeIdArray(nodes)));
+        _runLayout(getSwfId(), LAYOUT_NAME,
+                ArrayUtils.toJsArray(toNodeIdArray(nodes)));
     }
 
     private void onArcMouseClick(String arcID, int mouseX, int mouseY) {

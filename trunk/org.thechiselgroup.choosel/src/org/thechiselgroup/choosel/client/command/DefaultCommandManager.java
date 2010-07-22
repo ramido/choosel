@@ -17,9 +17,9 @@ package org.thechiselgroup.choosel.client.command;
 
 import java.util.LinkedList;
 
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.event.shared.GwtEvent.Type;
 
 public class DefaultCommandManager implements CommandManager {
 

@@ -48,8 +48,8 @@ public class AllSetDropCommandFactory implements
     public UndoableCommand createCommand(ResourceSetAvatar dragAvatar) {
         assert dragAvatar != null;
 
-        return new AddResourcesToViewCommand(getTargetView(), dragAvatar
-                .getResourceSet());
+        return new AddResourcesToViewCommand(getTargetView(),
+                dragAvatar.getResourceSet());
     }
 
     private View getTargetView() {

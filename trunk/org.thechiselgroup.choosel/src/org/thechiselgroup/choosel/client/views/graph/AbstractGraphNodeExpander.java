@@ -33,8 +33,8 @@ public abstract class AbstractGraphNodeExpander implements GraphNodeExpander {
                 Resource r2 = expansionCallback.getResourceManager().getByUri(
                         uri);
                 assert r2 != null;
-                expansionCallback.getCallback().getAutomaticResourceSet().add(
-                        r2);
+                expansionCallback.getCallback().getAutomaticResourceSet()
+                        .add(r2);
                 added.add(uri);
             }
         }
