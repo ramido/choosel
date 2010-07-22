@@ -91,6 +91,9 @@ public class GraphViewContentDisplayTest {
     private ArcStyleProvider arcStyleProvider;
 
     @Mock
+    private GraphNodeExpander automaticExpander;
+
+    @Mock
     private ViewContentDisplayCallback callback;
 
     @Mock
@@ -135,9 +138,6 @@ public class GraphViewContentDisplayTest {
     private Point sourceLocation;
 
     private Point targetLocation;
-
-    @Mock
-    private GraphNodeExpander automaticExpander;
 
     /*
      * Test case: node drag event gets fired, test that correct move command is

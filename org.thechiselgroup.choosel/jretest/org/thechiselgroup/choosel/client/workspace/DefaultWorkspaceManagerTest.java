@@ -26,13 +26,13 @@ import org.thechiselgroup.choosel.client.windows.Desktop;
 
 public class DefaultWorkspaceManagerTest {
 
-    private DefaultWorkspaceManager underTest;
-
     @Mock
     private CommandManager commandManager;
 
     @Mock
     private Desktop desktop;
+
+    private DefaultWorkspaceManager underTest;
 
     @Test
     public void clearCommandManagerOnCreateNewWorkspace() {

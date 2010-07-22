@@ -27,63 +27,64 @@ class TimeLine extends JavaScriptObject {
     // TODO expose # of bands
     // @formatter:off
     public static native TimeLine create(Element element,
-	    TimeLineEventSource eventSource, String dateAsString) /*-{
-        var theme = $wnd.Timeline.ClassicTheme.create();
-        theme.event.bubble.width = 350;
-        theme.event.bubble.height = 300;
+            TimeLineEventSource eventSource, String dateAsString) /*-{
+           var theme = $wnd.Timeline.ClassicTheme.create();
+           theme.event.bubble.width = 350;
+           theme.event.bubble.height = 300;
 
-        var bandInfos = [
-        $wnd.Timeline.createBandInfo({
-        startsOn: dateAsString,
-        width: "80%",
-        intervalUnit: $wnd.Timeline.DateTime.DAY,
-        intervalPixels: 50,
-        eventSource: eventSource,
-        zoomIndex: 7,
-        zoomSteps: new Array(
-        {pixelsPerInterval: 280, unit: $wnd.Timeline.DateTime.HOUR},
-        {pixelsPerInterval: 140, unit: $wnd.Timeline.DateTime.HOUR},
-        {pixelsPerInterval: 70, unit: $wnd.Timeline.DateTime.HOUR},
-        {pixelsPerInterval: 35, unit: $wnd.Timeline.DateTime.HOUR},
-        {pixelsPerInterval: 400, unit: $wnd.Timeline.DateTime.DAY},
-        {pixelsPerInterval: 200, unit: $wnd.Timeline.DateTime.DAY},
-        {pixelsPerInterval: 100, unit: $wnd.Timeline.DateTime.DAY},
-        {pixelsPerInterval: 50, unit: $wnd.Timeline.DateTime.DAY},
-        {pixelsPerInterval: 400, unit: $wnd.Timeline.DateTime.MONTH},
-        {pixelsPerInterval: 200, unit: $wnd.Timeline.DateTime.MONTH},
-        {pixelsPerInterval: 100, unit: $wnd.Timeline.DateTime.MONTH})
-        }),         
-        $wnd.Timeline.createBandInfo({
-        startsOn: dateAsString,
-        width: "20%",
-        intervalUnit: $wnd.Timeline.DateTime.MONTH,
-        intervalPixels: 200,
-        showEventText: false,
-        trackHeight: 0.5,
-        trackGap: 0.2,
-        eventSource: eventSource,
-        overview: true,
-        zoomIndex: 1,
-        zoomSteps: new Array(
-        {pixelsPerInterval: 400, unit: $wnd.Timeline.DateTime.MONTH},
-        {pixelsPerInterval: 200, unit: $wnd.Timeline.DateTime.MONTH},
-        {pixelsPerInterval: 100, unit: $wnd.Timeline.DateTime.MONTH},
-        {pixelsPerInterval: 400, unit: $wnd.Timeline.DateTime.YEAR},
-        {pixelsPerInterval: 200, unit: $wnd.Timeline.DateTime.YEAR},
-        {pixelsPerInterval: 100, unit: $wnd.Timeline.DateTime.YEAR},
-        {pixelsPerInterval: 50, unit: $wnd.Timeline.DateTime.YEAR},
-        {pixelsPerInterval: 400, unit: $wnd.Timeline.DateTime.DECADE},
-        {pixelsPerInterval: 200, unit: $wnd.Timeline.DateTime.DECADE})
-        })
-        ];
+           var bandInfos = [
+           $wnd.Timeline.createBandInfo({
+           startsOn: dateAsString,
+           width: "80%",
+           intervalUnit: $wnd.Timeline.DateTime.DAY,
+           intervalPixels: 50,
+           eventSource: eventSource,
+           zoomIndex: 7,
+           zoomSteps: new Array(
+           {pixelsPerInterval: 280, unit: $wnd.Timeline.DateTime.HOUR},
+           {pixelsPerInterval: 140, unit: $wnd.Timeline.DateTime.HOUR},
+           {pixelsPerInterval: 70, unit: $wnd.Timeline.DateTime.HOUR},
+           {pixelsPerInterval: 35, unit: $wnd.Timeline.DateTime.HOUR},
+           {pixelsPerInterval: 400, unit: $wnd.Timeline.DateTime.DAY},
+           {pixelsPerInterval: 200, unit: $wnd.Timeline.DateTime.DAY},
+           {pixelsPerInterval: 100, unit: $wnd.Timeline.DateTime.DAY},
+           {pixelsPerInterval: 50, unit: $wnd.Timeline.DateTime.DAY},
+           {pixelsPerInterval: 400, unit: $wnd.Timeline.DateTime.MONTH},
+           {pixelsPerInterval: 200, unit: $wnd.Timeline.DateTime.MONTH},
+           {pixelsPerInterval: 100, unit: $wnd.Timeline.DateTime.MONTH})
+           }),         
+           $wnd.Timeline.createBandInfo({
+           startsOn: dateAsString,
+           width: "20%",
+           intervalUnit: $wnd.Timeline.DateTime.MONTH,
+           intervalPixels: 200,
+           showEventText: false,
+           trackHeight: 0.5,
+           trackGap: 0.2,
+           eventSource: eventSource,
+           overview: true,
+           zoomIndex: 1,
+           zoomSteps: new Array(
+           {pixelsPerInterval: 400, unit: $wnd.Timeline.DateTime.MONTH},
+           {pixelsPerInterval: 200, unit: $wnd.Timeline.DateTime.MONTH},
+           {pixelsPerInterval: 100, unit: $wnd.Timeline.DateTime.MONTH},
+           {pixelsPerInterval: 400, unit: $wnd.Timeline.DateTime.YEAR},
+           {pixelsPerInterval: 200, unit: $wnd.Timeline.DateTime.YEAR},
+           {pixelsPerInterval: 100, unit: $wnd.Timeline.DateTime.YEAR},
+           {pixelsPerInterval: 50, unit: $wnd.Timeline.DateTime.YEAR},
+           {pixelsPerInterval: 400, unit: $wnd.Timeline.DateTime.DECADE},
+           {pixelsPerInterval: 200, unit: $wnd.Timeline.DateTime.DECADE})
+           })
+           ];
 
 
-        bandInfos[1].syncWith = 0;
-        bandInfos[1].highlight = true;
+           bandInfos[1].syncWith = 0;
+           bandInfos[1].highlight = true;
 
-        return $wnd.Timeline.create(element, bandInfos, $wnd.Timeline.HORIZONTAL);
-    }-*/;
-    // @formatter:on        
+           return $wnd.Timeline.create(element, bandInfos, $wnd.Timeline.HORIZONTAL);
+       }-*/;
+
+    // @formatter:on
 
     // called from JavaScript
     private static final void onEventPainted(TimeLine timeLine, int bandIndex,
@@ -100,13 +101,14 @@ class TimeLine extends JavaScriptObject {
      */
     // @formatter:off
     public final native void disableBubbles() /*-{
-        for (var i = 0; i < this.getBandCount(); i++) {
-        var eventPainter = this.getBand(i)._eventPainter;
-        eventPainter._showBubble = function(x, y, evt) {
-        };
-        }
-    }-*/;
-    // @formatter:on        
+           for (var i = 0; i < this.getBandCount(); i++) {
+           var eventPainter = this.getBand(i)._eventPainter;
+           eventPainter._showBubble = function(x, y, evt) {
+           };
+           }
+       }-*/;
+
+    // @formatter:on
 
     /**
      * Returns getCenterVisibleDate() from the main (first) band as GMT String
@@ -115,10 +117,11 @@ class TimeLine extends JavaScriptObject {
      */
     // @formatter:off
     public final native String getCenterVisibleDateAsGMTString() /*-{
-        // TODO change if bands are not synchronized any more
-        return this.getBand(0).getCenterVisibleDate().toGMTString();
-    }-*/;
-    // @formatter:on        
+           // TODO change if bands are not synchronized any more
+           return this.getBand(0).getCenterVisibleDate().toGMTString();
+       }-*/;
+
+    // @formatter:on
 
     public final String getEventElementID(int bandIndex, String elType,
             TimeLineEvent event) {
@@ -131,8 +134,8 @@ class TimeLine extends JavaScriptObject {
     }
 
     public final native int getTimeLineID() /*-{
-        return this.timelineID;
-    }-*/;
+           return this.timelineID;
+       }-*/;
 
     /**
      * Returns the zoom index of a band. What time interval the zoom index
@@ -140,12 +143,12 @@ class TimeLine extends JavaScriptObject {
      * {@link #create(Element, TimeLineEventSource, String)}).
      */
     public final native int getZoomIndex(int bandNumber) /*-{
-        return this.getBand(bandNumber)._zoomIndex;
-    }-*/;
+           return this.getBand(bandNumber)._zoomIndex;
+       }-*/;
 
     public final native void layout() /*-{
-        this.layout();
-    }-*/;
+           this.layout();
+       }-*/;
 
     private final void onEventPainted(int bandIndex, final TimeLineEvent event) {
         String labelElementID = getEventElementID(bandIndex, "label", event);
@@ -160,33 +163,34 @@ class TimeLine extends JavaScriptObject {
     }
 
     public final native void paint() /*-{
-        this.paint();
-    }-*/;
+           this.paint();
+       }-*/;
 
     // @formatter:off
     public final native void registerPaintListener() /*-{
-        var listener = function(band, operation, event, elements) {
-        if ("paintedEvent" == operation) {
-        var bandIndex = band.getIndex();
-        var timeline = band.getTimeline();
+           var listener = function(band, operation, event, elements) {
+           if ("paintedEvent" == operation) {
+           var bandIndex = band.getIndex();
+           var timeline = band.getTimeline();
 
-        @org.thechiselgroup.choosel.client.ui.widget.timeline.TimeLine::onEventPainted(Lorg/thechiselgroup/choosel/client/ui/widget/timeline/TimeLine;ILorg/thechiselgroup/choosel/client/ui/widget/timeline/TimeLineEvent;)(timeline, bandIndex, event);
-        }
-        };
-        for (var i = 0; i < this.getBandCount(); i++) {
-        var eventPainter = this.getBand(i)._eventPainter;
-        if (eventPainter.addEventPaintListener) {
-        eventPainter.addEventPaintListener(listener);
-        }
-        }
-    }-*/;
-    // @formatter:on        
+           @org.thechiselgroup.choosel.client.ui.widget.timeline.TimeLine::onEventPainted(Lorg/thechiselgroup/choosel/client/ui/widget/timeline/TimeLine;ILorg/thechiselgroup/choosel/client/ui/widget/timeline/TimeLineEvent;)(timeline, bandIndex, event);
+           }
+           };
+           for (var i = 0; i < this.getBandCount(); i++) {
+           var eventPainter = this.getBand(i)._eventPainter;
+           if (eventPainter.addEventPaintListener) {
+           eventPainter.addEventPaintListener(listener);
+           }
+           }
+       }-*/;
+
+    // @formatter:on
 
     public final native String setCenterVisibleDate(String gmtString) /*-{
-        // TODO change if bands are not synchronized any more
-        // TODO parse date ?!?
-        return this.getBand(0).setCenterVisibleDate(Date.parse(gmtString));
-    }-*/;
+           // TODO change if bands are not synchronized any more
+           // TODO parse date ?!?
+           return this.getBand(0).setCenterVisibleDate(Date.parse(gmtString));
+       }-*/;
 
     /**
      * Sets the zoom index of a band. What time interval the zoom index refers
@@ -195,22 +199,22 @@ class TimeLine extends JavaScriptObject {
      * this function will change the center date of the band, call
      * {@link #setCenterVisibleDate(String)} afterwards.
      */
-    // @formatter:off    
+    // @formatter:off
     public final native void setZoomIndex(int bandNumber, int zoomIndex) /*-{
-        // calculate number of steps because API function is boolean zoom with 
-        // location.
-        var band = this.getBand(bandNumber);
-        var zoomDifference = zoomIndex - this.getBand(bandNumber)._zoomIndex;
-        var zoomIn = zoomDifference < 0;
-        var zoomSteps = Math.abs(zoomDifference);
-        // did not quite work
-        // var centerX = band.dateToPixelOffset(band.getCenterVisibleDate());
+           // calculate number of steps because API function is boolean zoom with 
+           // location.
+           var band = this.getBand(bandNumber);
+           var zoomDifference = zoomIndex - this.getBand(bandNumber)._zoomIndex;
+           var zoomIn = zoomDifference < 0;
+           var zoomSteps = Math.abs(zoomDifference);
+           // did not quite work
+           // var centerX = band.dateToPixelOffset(band.getCenterVisibleDate());
 
-        var i = 0;
-        for (i = 0;i < zoomSteps; i = i + 1) {
-        this.getBand(bandNumber).zoom(zoomIn, 0, 0, null);
-        }
-    }-*/;
+           var i = 0;
+           for (i = 0;i < zoomSteps; i = i + 1) {
+           this.getBand(bandNumber).zoom(zoomIn, 0, 0, null);
+           }
+       }-*/;
     // @formatter:on
 
 }

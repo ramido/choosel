@@ -57,6 +57,9 @@ public class HighlightingResourceSetAvatarFactoryTest {
     private ResourceSetAvatarFactory delegate;
 
     @Mock
+    private ResourceSetAvatarDragController dragController;
+
+    @Mock
     private HandlerRegistration handlerRegistration;
 
     @Mock
@@ -67,9 +70,6 @@ public class HighlightingResourceSetAvatarFactoryTest {
     private ResourceSetContainer setHoverModel;
 
     private HighlightingResourceSetAvatarFactory underTest;
-
-    @Mock
-    private ResourceSetAvatarDragController dragController;
 
     @Test
     public void addDisposeHook() {

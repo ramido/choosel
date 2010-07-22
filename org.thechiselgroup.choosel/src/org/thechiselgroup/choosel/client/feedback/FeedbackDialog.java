@@ -47,17 +47,17 @@ public class FeedbackDialog extends AbstractDialog {
 
     private static final String CSS_FEEDBACK_MESSAGE = "feedback-message";
 
+    private TextArea commentArea;
+
     private Throwable error;
+
+    private AsyncCommandExecutor executor;
+
+    private FeedbackServiceAsync feedbackService;
 
     private String message;
 
     private String title;
-
-    private AsyncCommandExecutor executor;
-
-    private TextArea commentArea;
-
-    private FeedbackServiceAsync feedbackService;
 
     public FeedbackDialog(String title, String message, Throwable error,
             AsyncCommandExecutor executor, FeedbackServiceAsync feedbackService) {

@@ -26,20 +26,16 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.ResourceSetContainer;
-import org.thechiselgroup.choosel.client.resources.ResourceSetContainerChangedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourceSetContainerChangedEventHandler;
 
 public class ResourceSetContainerTest {
 
-    private ResourceSetContainer undertest;
+    @Mock
+    private ResourceSetContainerChangedEventHandler handler;
 
     @Mock
     private ResourceSet resources;
 
-    @Mock
-    private ResourceSetContainerChangedEventHandler handler;
+    private ResourceSetContainer undertest;
 
     @Test
     public void doNotFireIfNoChangeA() {

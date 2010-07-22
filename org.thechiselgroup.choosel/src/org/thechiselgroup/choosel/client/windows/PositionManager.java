@@ -22,13 +22,13 @@ public class PositionManager {
 
     private HasSize desktop;
 
-    private int invocationCounter = 0;
+    private final int horizontalSteps;
 
-    private final int verticalSteps;
+    private int invocationCounter = 0;
 
     private final int padding;
 
-    private final int horizontalSteps;
+    private final int verticalSteps;
 
     public PositionManager(HasSize desktop, int horizontalSteps,
             int verticalSteps, int padding) {

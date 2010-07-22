@@ -35,15 +35,17 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class ResourceSetAvatarDropController extends SimpleDropController {
 
+    private static final int MAX_POPUP_WIDTH = 250;
+
     private static final int POPUP_HIDE_DELAY = 200;
 
     private static final int POPUP_SHOW_DELAY = 800;
 
-    private static final int POPUP_Y_OFFSET = 20;
-
     private static final int POPUP_X_OFFSET = 15;
 
-    private static final int MAX_POPUP_WIDTH = 250;
+    private static final int POPUP_Y_OFFSET = 20;
+
+    private final DropTargetCapabilityChecker capabilityChecker;
 
     private ResourceSetAvatarDropCommandFactory commandFactory;
 
@@ -53,11 +55,9 @@ public class ResourceSetAvatarDropController extends SimpleDropController {
 
     private DelayedPopup popup = null;
 
-    private ViewAccessor viewAccessor;
-
-    private final DropTargetCapabilityChecker capabilityChecker;
-
     private ResourceCategorizer resourceTypeCategorizer;
+
+    private ViewAccessor viewAccessor;
 
     public ResourceSetAvatarDropController(Widget dropTarget,
             ResourceSetAvatarDropCommandFactory commandFactory,

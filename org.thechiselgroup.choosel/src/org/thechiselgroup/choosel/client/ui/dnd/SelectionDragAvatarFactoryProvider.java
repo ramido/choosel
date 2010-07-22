@@ -41,17 +41,17 @@ import com.google.inject.name.Named;
 public class SelectionDragAvatarFactoryProvider implements
         ResourceSetAvatarFactoryProvider {
 
+    private final CommandManager commandManager;
+
     private final ResourceSetAvatarDragController dragController;
-
-    private final PopupManagerFactory popupManagerFactory;
-
-    private final ViewAccessor viewAccessor;
-
-    private final ResourceSetContainer setHoverModel;
 
     private final ResourceSet hoverModel;
 
-    private final CommandManager commandManager;
+    private final PopupManagerFactory popupManagerFactory;
+
+    private final ResourceSetContainer setHoverModel;
+
+    private final ViewAccessor viewAccessor;
 
     @Inject
     public SelectionDragAvatarFactoryProvider(

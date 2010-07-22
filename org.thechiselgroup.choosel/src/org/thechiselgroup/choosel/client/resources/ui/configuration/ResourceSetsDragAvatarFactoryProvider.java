@@ -46,6 +46,8 @@ import com.google.inject.name.Named;
 public class ResourceSetsDragAvatarFactoryProvider implements
         ResourceSetAvatarFactoryProvider {
 
+    private CommandManager commandManager;
+
     private final ResourceSetAvatarDragController dragController;
 
     private final ResourceSetAvatarDropTargetManager dropTargetManager;
@@ -57,8 +59,6 @@ public class ResourceSetsDragAvatarFactoryProvider implements
     private final ResourceSetContainer setHoverModel;
 
     private final ViewAccessor viewAccessor;
-
-    private CommandManager commandManager;
 
     @Inject
     public ResourceSetsDragAvatarFactoryProvider(

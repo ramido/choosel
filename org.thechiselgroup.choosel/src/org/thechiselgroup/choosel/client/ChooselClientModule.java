@@ -35,6 +35,7 @@ import org.thechiselgroup.choosel.client.label.SelectionModelLabelFactory;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceManager;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.ManagedResourceSetFactory;
+import org.thechiselgroup.choosel.client.resources.ResourceByPropertyMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceByUriMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceByUriTypeCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
@@ -50,8 +51,8 @@ import org.thechiselgroup.choosel.client.resources.ui.configuration.AllResourceS
 import org.thechiselgroup.choosel.client.resources.ui.configuration.DefaultResourceSetAvatarFactoryProvider;
 import org.thechiselgroup.choosel.client.resources.ui.configuration.ResourceSetsDragAvatarFactoryProvider;
 import org.thechiselgroup.choosel.client.ui.dialog.DialogManager;
-import org.thechiselgroup.choosel.client.ui.dnd.BlacklistDropTargetCapabilityChecker;
 import org.thechiselgroup.choosel.client.ui.dnd.AllSetDropTargetManager;
+import org.thechiselgroup.choosel.client.ui.dnd.BlacklistDropTargetCapabilityChecker;
 import org.thechiselgroup.choosel.client.ui.dnd.DefaultResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.client.ui.dnd.DropTargetCapabilityChecker;
 import org.thechiselgroup.choosel.client.ui.dnd.NullResourceSetAvatarDropTargetManager;
@@ -135,43 +136,40 @@ public class ChooselClientModule extends AbstractGinModule implements
                 NullResourceSetAvatarDropTargetManager.class).in(
                 Singleton.class);
 
-        bind(ResourceSetAvatarDropTargetManager.class)
-                .annotatedWith(Names.named(AVATAR_FACTORY_SELECTION))
-                .to(SelectionDropTargetManager.class).in(Singleton.class);
+        bind(ResourceSetAvatarDropTargetManager.class).annotatedWith(
+                Names.named(AVATAR_FACTORY_SELECTION)).to(
+                SelectionDropTargetManager.class).in(Singleton.class);
 
-        bind(ResourceSetAvatarDropTargetManager.class)
-                .annotatedWith(Names.named(AVATAR_FACTORY_SET))
-                .to(ResourceSetDropTargetManager.class).in(Singleton.class);
+        bind(ResourceSetAvatarDropTargetManager.class).annotatedWith(
+                Names.named(AVATAR_FACTORY_SET)).to(
+                ResourceSetDropTargetManager.class).in(Singleton.class);
 
-        bind(ResourceSetAvatarDropTargetManager.class)
-                .annotatedWith(Names.named(AVATAR_FACTORY_ALL_RESOURCES))
-                .to(AllSetDropTargetManager.class).in(Singleton.class);
+        bind(ResourceSetAvatarDropTargetManager.class).annotatedWith(
+                Names.named(AVATAR_FACTORY_ALL_RESOURCES)).to(
+                AllSetDropTargetManager.class).in(Singleton.class);
 
-        bind(ResourceSetAvatarDropTargetManager.class)
-                .annotatedWith(Names.named(DROP_TARGET_MANAGER_VIEW_CONTENT))
-                .to(ViewDisplayDropTargetManager.class).in(Singleton.class);
+        bind(ResourceSetAvatarDropTargetManager.class).annotatedWith(
+                Names.named(DROP_TARGET_MANAGER_VIEW_CONTENT)).to(
+                ViewDisplayDropTargetManager.class).in(Singleton.class);
     }
 
     private void bindDragAvatarFactories() {
         bind(ResourceSetAvatarFactory.class).toProvider(
                 DefaultResourceSetAvatarFactoryProvider.class).in(
                 Singleton.class);
-        bind(ResourceSetAvatarFactory.class)
-                .annotatedWith(Names.named(AVATAR_FACTORY_SET))
-                .toProvider(ResourceSetsDragAvatarFactoryProvider.class)
+        bind(ResourceSetAvatarFactory.class).annotatedWith(
+                Names.named(AVATAR_FACTORY_SET)).toProvider(
+                ResourceSetsDragAvatarFactoryProvider.class)
                 .in(Singleton.class);
-        bind(ResourceSetAvatarFactory.class)
-                .annotatedWith(Names.named(AVATAR_FACTORY_ALL_RESOURCES))
-                .toProvider(AllResourceSetAvatarFactoryProvider.class)
-                .in(Singleton.class);
-        bind(ResourceSetAvatarFactory.class)
-                .annotatedWith(Names.named(AVATAR_FACTORY_SELECTION))
-                .toProvider(SelectionDragAvatarFactoryProvider.class)
-                .in(Singleton.class);
-        bind(ResourceSetAvatarFactory.class)
-                .annotatedWith(Names.named(AVATAR_FACTORY_SELECTION_DROP))
-                .toProvider(SelectionDropTargetFactoryProvider.class)
-                .in(Singleton.class);
+        bind(ResourceSetAvatarFactory.class).annotatedWith(
+                Names.named(AVATAR_FACTORY_ALL_RESOURCES)).toProvider(
+                AllResourceSetAvatarFactoryProvider.class).in(Singleton.class);
+        bind(ResourceSetAvatarFactory.class).annotatedWith(
+                Names.named(AVATAR_FACTORY_SELECTION)).toProvider(
+                SelectionDragAvatarFactoryProvider.class).in(Singleton.class);
+        bind(ResourceSetAvatarFactory.class).annotatedWith(
+                Names.named(AVATAR_FACTORY_SELECTION_DROP)).toProvider(
+                SelectionDropTargetFactoryProvider.class).in(Singleton.class);
     }
 
     private void bindHoverModel() {
@@ -181,21 +179,21 @@ public class ChooselClientModule extends AbstractGinModule implements
          * mouse from over a resource item with popup to over a resource set and
          * the popup removes the resource a bit later.
          */
-        bind(ResourceSet.class).annotatedWith(Names.named(HOVER_MODEL))
-                .to(DefaultResourceSet.class).in(Singleton.class); // CountingResourceSet
+        bind(ResourceSet.class).annotatedWith(Names.named(HOVER_MODEL)).to(
+                DefaultResourceSet.class).in(Singleton.class); // CountingResourceSet
 
         bind(ResourceSetContainer.class)
-                .annotatedWith(Names.named(HOVER_MODEL))
-                .to(ResourceSetContainer.class).in(Singleton.class);
+                .annotatedWith(Names.named(HOVER_MODEL)).to(
+                        ResourceSetContainer.class).in(Singleton.class);
     }
 
     private void bindLabelProviders() {
-        bind(LabelProvider.class)
-                .annotatedWith(Names.named(LABEL_PROVIDER_SELECTION_SET))
-                .to(SelectionModelLabelFactory.class).in(Singleton.class);
-        bind(LabelProvider.class)
-                .annotatedWith(Names.named(LABEL_PROVIDER_RESOURCE_SET))
-                .to(ResourceSetLabelFactory.class).in(Singleton.class);
+        bind(LabelProvider.class).annotatedWith(
+                Names.named(LABEL_PROVIDER_SELECTION_SET)).to(
+                SelectionModelLabelFactory.class).in(Singleton.class);
+        bind(LabelProvider.class).annotatedWith(
+                Names.named(LABEL_PROVIDER_RESOURCE_SET)).to(
+                ResourceSetLabelFactory.class).in(Singleton.class);
     }
 
     protected void bindViewContentDisplayFactories() {
@@ -245,15 +243,15 @@ public class ChooselClientModule extends AbstractGinModule implements
         bind(DialogManager.class).in(Singleton.class);
         bind(ErrorHandler.class).to(FeedbackDialogErrorHandler.class).in(
                 Singleton.class);
-        bind(MessageManager.class).annotatedWith(Names.named(DEFAULT))
-                .to(DefaultMessageManager.class).in(Singleton.class);
+        bind(MessageManager.class).annotatedWith(Names.named(DEFAULT)).to(
+                DefaultMessageManager.class).in(Singleton.class);
         bind(MessageManager.class).to(ShadeMessageManager.class).in(
                 Singleton.class);
         bind(AsyncCommandExecutor.class).annotatedWith(Names.named(DEFAULT))
                 .to(ErrorHandlingAsyncCommandExecutor.class)
                 .in(Singleton.class);
-        bind(AsyncCommandExecutor.class).annotatedWith(Names.named(LOG))
-                .to(LoggingAsyncCommandExecutor.class).in(Singleton.class);
+        bind(AsyncCommandExecutor.class).annotatedWith(Names.named(LOG)).to(
+                LoggingAsyncCommandExecutor.class).in(Singleton.class);
         bind(AsyncCommandExecutor.class).to(
                 MessageBlockingCommandExecutor.class).in(Singleton.class);
         bind(CommandPresenterFactory.class).in(Singleton.class);
@@ -262,8 +260,8 @@ public class ChooselClientModule extends AbstractGinModule implements
 
         bind(WindowContentProducer.class).toProvider(
                 getContentProducerProviderClass()).in(Singleton.class);
-        bind(WindowContentProducer.class).annotatedWith(Names.named(PROXY))
-                .to(ProxyWindowContentFactory.class).in(Singleton.class);
+        bind(WindowContentProducer.class).annotatedWith(Names.named(PROXY)).to(
+                ProxyWindowContentFactory.class).in(Singleton.class);
 
         bindDragAvatarDropTargetManagers();
         bindDragAvatarFactories();
@@ -299,6 +297,9 @@ public class ChooselClientModule extends AbstractGinModule implements
         // TODO please re-enable me?
         // bind(ResourceMultiCategorizer.class).to(
         // ResourceByUriTypeMultiCategorizer.class).in(Singleton.class);
+        bind(ResourceMultiCategorizer.class).annotatedWith(
+                Names.named(RESOURCE_BY_DESCRIPTION_CATEGORIZER)).to(
+                ResourceByPropertyMultiCategorizer.class).in(Singleton.class);
         bind(ResourceMultiCategorizer.class).to(
                 ResourceByUriMultiCategorizer.class).in(Singleton.class);
         bind(CategoryLabelProvider.class).to(getCategoryLabelProviderClass())

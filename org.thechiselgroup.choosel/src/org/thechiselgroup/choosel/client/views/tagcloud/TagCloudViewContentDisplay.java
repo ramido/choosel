@@ -51,18 +51,36 @@ public class TagCloudViewContentDisplay extends AbstractViewContentDisplay {
 
     public class DefaultDisplay implements Display {
 
-        private List<String> listItems = new ArrayList<String>();
+        private static final int MIN_TAG_FONT_SIZE = 10;
+
+        private static final int NUM_BOUNDARIES = 10;
+
+        private static final int TAG_FONT_STEP_SIZE = 2;
+
+        private static final int MAX_LINE_HEIGHT = MIN_TAG_FONT_SIZE
+                + NUM_BOUNDARIES * TAG_FONT_STEP_SIZE;
+
+        private SimpleTagCloudBinBoundaryDefiner boundaryDefiner = new SimpleTagCloudBinBoundaryDefiner();
+
+        private List<ItemLabel> itemLabels = new ArrayList<ItemLabel>();
+
+        private List<String> tagCloudItems = new ArrayList<String>();
 
         @Override
-        public void addItem(TagCloudItem listItem) {
-            listItem.init();
+        public void addItem(TagCloudItem tagCloudItem) {
 
-            ItemLabel label = listItem.getLabel();
+            tagCloudItem.init();
 
-            // TODO extract constants
+            ItemLabel label = tagCloudItem.getLabel();
+
+            itemLabels.add(label);
+            updateTagSizes();
+
             DOM.setStyleAttribute(label.getElement(), "display", "inline");
             DOM.setStyleAttribute(label.getElement(), "whiteSpace", "nowrap");
             DOM.setStyleAttribute(label.getElement(), "cssFloat", "left");
+            DOM.setStyleAttribute(label.getElement(), "lineHeight", ""
+                    + MAX_LINE_HEIGHT + "px");
 
             label.addMouseOverHandler(labelEventHandler);
             label.addMouseOutHandler(labelEventHandler);
@@ -70,48 +88,85 @@ public class TagCloudViewContentDisplay extends AbstractViewContentDisplay {
 
             // insert at right position to maintain sort..
             // TODO cleanup - performance issues
-            listItems.add(label.getText());
-            Collections.sort(listItems, String.CASE_INSENSITIVE_ORDER);
-            int row = listItems.indexOf(label.getText());
+            tagCloudItems.add(label.getText());
+            Collections.sort(tagCloudItems, String.CASE_INSENSITIVE_ORDER);
+            int row = tagCloudItems.indexOf(label.getText());
             table.insert(label, row);
+
         }
 
         @Override
-        public void addStyleName(TagCloudItem listItem, String cssClass) {
-            listItem.getLabel().addStyleName(cssClass);
+        public void addStyleName(TagCloudItem tagCloudItem, String cssClass) {
+            tagCloudItem.getLabel().addStyleName(cssClass);
+        }
+
+        private double calculateTagFontSize(List<Double> boundaries,
+                ItemLabel itemLabel) {
+            double fontSize = MIN_TAG_FONT_SIZE;
+
+            for (Double boundary : boundaries) {
+                if (itemLabel.getTagCount() < boundary) {
+                    break;
+                }
+                fontSize += TAG_FONT_STEP_SIZE;
+            }
+            return fontSize;
+        }
+
+        private List<Integer> getTagSizesList() {
+            List<Integer> tagNumbers = new ArrayList<Integer>();
+
+            for (ItemLabel itemLabel : itemLabels) {
+                tagNumbers.add(itemLabel.getTagCount());
+            }
+            return tagNumbers;
         }
 
         @Override
-        public void removeIndividualItem(TagCloudItem listItem) {
+        public void removeIndividualItem(TagCloudItem tagCloudItem) {
             /*
              * whole row needs to be removed, otherwise lots of empty rows
              * consume the whitespace
              */
             for (int i = 0; i < table.getWidgetCount(); i++) {
-                if (table.getWidget(i).equals(listItem.getLabel())) {
+                if (table.getWidget(i).equals(tagCloudItem.getLabel())) {
                     table.remove(i);
-                    listItems.remove(i);
+                    tagCloudItems.remove(i);
                     return;
                 }
             }
         }
 
         @Override
-        public void removeStyleName(TagCloudItem listItem, String cssClass) {
-            listItem.getLabel().removeStyleName(cssClass);
+        public void removeStyleName(TagCloudItem tagCloudItem, String cssClass) {
+            tagCloudItem.getLabel().removeStyleName(cssClass);
         }
 
+        private void updateTagSizes() {
+
+            List<Integer> tagNumbers = getTagSizesList();
+
+            List<Double> boundaries = boundaryDefiner.createBinBoundaries(
+                    tagNumbers, NUM_BOUNDARIES);
+
+            for (ItemLabel itemLabel : itemLabels) {
+                double fontSize = calculateTagFontSize(boundaries, itemLabel);
+                // TODO extract constants
+                DOM.setStyleAttribute(itemLabel.getElement(), "fontSize",
+                        fontSize + "px");
+            }
+        }
     }
 
     public static interface Display {
 
-        void addItem(TagCloudItem listItem);
+        void addItem(TagCloudItem tagCloudItem);
 
-        void addStyleName(TagCloudItem listItem, String cssClass);
+        void addStyleName(TagCloudItem tagCloudItem, String cssClass);
 
-        void removeIndividualItem(TagCloudItem listItem);
+        void removeIndividualItem(TagCloudItem tagCloudItem);
 
-        void removeStyleName(TagCloudItem listItem, String cssClass);
+        void removeStyleName(TagCloudItem tagCloudItem, String cssClass);
 
     }
 
@@ -124,12 +179,12 @@ public class TagCloudViewContentDisplay extends AbstractViewContentDisplay {
             this.hoverModel = hoverModel;
         }
 
-        private TagCloudItem getListItem(GwtEvent<?> event) {
-            return ((ItemLabel) event.getSource()).getTagCloudItem();
+        private ResourceSet getResource(GwtEvent<?> event) {
+            return getTagCloudItem(event).getResourceSet();
         }
 
-        private ResourceSet getResource(GwtEvent<?> event) {
-            return getListItem(event).getResourceSet();
+        private TagCloudItem getTagCloudItem(GwtEvent<?> event) {
+            return ((ItemLabel) event.getSource()).getTagCloudItem();
         }
 
         @Override
@@ -185,8 +240,8 @@ public class TagCloudViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     // TODO move into display
-    private void addItem(TagCloudItem listItem) {
-        display.addItem(listItem);
+    private void addItem(TagCloudItem tagCloudItem) {
+        display.addItem(tagCloudItem);
     }
 
     @Override
@@ -194,12 +249,12 @@ public class TagCloudViewContentDisplay extends AbstractViewContentDisplay {
             String category, ResourceSet resources) {
         PopupManager popupManager = createPopupManager(resolver, resources);
 
-        TagCloudItem listItem = new TagCloudItem(category, resources,
+        TagCloudItem tagCloudItem = new TagCloudItem(category, resources,
                 hoverModel, popupManager, display, resolver, dragController);
 
-        addItem(listItem);
+        addItem(tagCloudItem);
 
-        return listItem;
+        return tagCloudItem;
     }
 
     @Override
@@ -222,7 +277,8 @@ public class TagCloudViewContentDisplay extends AbstractViewContentDisplay {
 
     @Override
     public String[] getSlotIDs() {
-        return new String[] { SlotResolver.DESCRIPTION_SLOT };
+        return new String[] { SlotResolver.DESCRIPTION_SLOT,
+                SlotResolver.MAGNITUDE_SLOT };
     }
 
     // for tests only, TODO marker annotation & processing
@@ -231,8 +287,8 @@ public class TagCloudViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     @Override
-    public void removeResourceItem(ResourceItem listItem) {
-        display.removeIndividualItem((TagCloudItem) listItem);
+    public void removeResourceItem(ResourceItem tagCloudItem) {
+        display.removeIndividualItem((TagCloudItem) tagCloudItem);
     }
 
     @Override

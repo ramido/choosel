@@ -47,9 +47,9 @@ public class CommandPresenter implements WidgetAdaptable, Presenter {
 
     }
 
-    private final Display display;
-
     private final Command command;
+
+    private final Display display;
 
     public CommandPresenter(Display display, Command command) {
         assert display != null;

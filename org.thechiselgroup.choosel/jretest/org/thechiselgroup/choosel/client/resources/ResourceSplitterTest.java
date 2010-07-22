@@ -38,26 +38,19 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.label.CategoryLabelProvider;
 import org.thechiselgroup.choosel.client.label.DefaultCategoryLabelProvider;
-import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
-import org.thechiselgroup.choosel.client.resources.DefaultResourceSetFactory;
-import org.thechiselgroup.choosel.client.resources.Resource;
-import org.thechiselgroup.choosel.client.resources.ResourceCategoryAddedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourceCategoryAddedEventHandler;
-import org.thechiselgroup.choosel.client.resources.ResourceCategoryRemovedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourceCategoryRemovedEventHandler;
-import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.ResourceSplitter;
-import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 
 public class ResourceSplitterTest {
-
-    private static final String TEST_CATEGORY = "test";
 
     public static final String CATEGORY_1 = "category1";
 
     public static final String CATEGORY_2 = "category2";
+
+    private static final String TEST_CATEGORY = "test";
+
+    @Mock
+    private ResourceMultiCategorizer categorizer;
+
+    private CategoryLabelProvider labelProvider;
 
     @Mock
     private ResourceCategoryRemovedEventHandler removedHandler;
@@ -67,11 +60,6 @@ public class ResourceSplitterTest {
     private DefaultResourceSet resources2;
 
     private ResourceSplitter splitter;
-
-    private CategoryLabelProvider labelProvider;
-
-    @Mock
-    private ResourceMultiCategorizer categorizer;
 
     @Test
     public void addResourceWithMultipleCategoriesCreatesMultipleCategories() {
@@ -122,9 +110,8 @@ public class ResourceSplitterTest {
                             ResourceCategoryAddedEvent e) {
 
                         assertEquals(CATEGORY_1, e.getCategory());
-                        assertEquals(
-                                true,
-                                e.getResourceSet().containsEqualResources(
+                        assertEquals(true, e.getResourceSet()
+                                .containsEqualResources(
                                         createResources(TEST_CATEGORY, 1)));
 
                         called[0] = true;
@@ -179,10 +166,8 @@ public class ResourceSplitterTest {
                 eventCaptor.capture());
         ResourceCategoryRemovedEvent event = eventCaptor.getValue();
         assertEquals(CATEGORY_1, event.getCategory());
-        assertEquals(
-                true,
-                event.getResourceSet().contains(
-                        createResource(TEST_CATEGORY, 1)));
+        assertEquals(true, event.getResourceSet().contains(
+                createResource(TEST_CATEGORY, 1)));
     }
 
     @Test

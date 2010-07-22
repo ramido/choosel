@@ -15,8 +15,8 @@ public class SelectionResourceSetAvatarFactory extends
 
     private ViewAccessor viewAccessor;
 
-    public SelectionResourceSetAvatarFactory(
-            ResourceSetAvatarFactory delegate, ViewAccessor viewAccessor) {
+    public SelectionResourceSetAvatarFactory(ResourceSetAvatarFactory delegate,
+            ViewAccessor viewAccessor) {
         super(delegate);
         this.viewAccessor = viewAccessor;
     }

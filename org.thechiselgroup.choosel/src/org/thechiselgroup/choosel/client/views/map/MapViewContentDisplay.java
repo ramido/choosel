@@ -41,9 +41,9 @@ import com.google.inject.name.Named;
 
 public class MapViewContentDisplay extends AbstractViewContentDisplay {
 
-    public static final String LONGITUDE = "longitude";
-
     public static final String LATITUDE = "latitude";
+
+    public static final String LONGITUDE = "longitude";
 
     private static final String MEMENTO_CENTER_LATITUDE = "center-latitude";
 
@@ -61,9 +61,9 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
 
     private static final String MEMENTO_ZOOM_LEVEL = "zoom-level";
 
-    private MapWidget map;
-
     private DragEnablerFactory dragEnablerFactory;
+
+    private MapWidget map;
 
     @Inject
     public MapViewContentDisplay(
@@ -189,10 +189,10 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
 
     private void saveCenterPosition(Memento state) {
         LatLng center = map.getCenter();
-        state.setValue(MEMENTO_CENTER_LONGITUDE,
-                Double.toString(center.getLongitude()));
-        state.setValue(MEMENTO_CENTER_LATITUDE,
-                Double.toString(center.getLatitude()));
+        state.setValue(MEMENTO_CENTER_LONGITUDE, Double.toString(center
+                .getLongitude()));
+        state.setValue(MEMENTO_CENTER_LATITUDE, Double.toString(center
+                .getLatitude()));
     }
 
     private void saveMapType(Memento state) {
@@ -215,7 +215,9 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     private void saveZoomLevel(Memento state) {
-        state.setValue(MEMENTO_ZOOM_LEVEL, Integer.toString(map.getZoomLevel()));
+        state
+                .setValue(MEMENTO_ZOOM_LEVEL, Integer.toString(map
+                        .getZoomLevel()));
     }
 
     // TODO move to library class

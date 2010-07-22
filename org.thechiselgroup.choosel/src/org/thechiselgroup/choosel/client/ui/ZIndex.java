@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui;
 
-
 public final class ZIndex {
 
     public static final int DESKTOP_WINDOW_BASE = 1200;

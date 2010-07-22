@@ -21,11 +21,11 @@ import org.thechiselgroup.choosel.client.util.HasDescription;
 // TODO store position
 public class CreateWindowCommand implements UndoableCommand, HasDescription {
 
+    private final WindowContent content;
+
     private Desktop desktop;
 
     private WindowPanel windowPanel;
-
-    private final WindowContent content;
 
     public CreateWindowCommand(Desktop desktop, WindowContent content) {
         this.desktop = desktop;

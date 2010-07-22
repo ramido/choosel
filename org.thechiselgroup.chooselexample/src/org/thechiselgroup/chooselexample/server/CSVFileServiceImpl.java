@@ -2,8 +2,12 @@ package org.thechiselgroup.chooselexample.server;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.servlet.ServletContext;
 
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.chooselexample.client.services.CSVFileService;
@@ -18,8 +22,16 @@ public class CSVFileServiceImpl extends RemoteServiceServlet implements
     public Set<Resource> getCSVResources(String filePath, String fileName)
             throws Exception {
 
-        BufferedReader in = new BufferedReader(new FileReader(filePath
-                + fileName));
+        ServletContext servletContext = this.getServletContext();
+        InputStream resourceAsStream = servletContext.getResourceAsStream(filePath+fileName);
+        
+        if(resourceAsStream == null) {
+            throw new Exception("File cannot be found.  Please ensure that the file is in the data folder");
+        }
+        
+        InputStreamReader reader = new InputStreamReader(resourceAsStream);
+        
+        BufferedReader in = new BufferedReader(reader);
         int count = 1;
 
         try {

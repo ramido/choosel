@@ -57,13 +57,13 @@ public class ResourceItem {
 
     }
 
+    private String category;
+
     private boolean highlighted = false;
 
     private HighlightingManager highlightingManager;
 
     protected final ResourceSet hoverModel;
-
-    private final ResourceItemValueResolver valueResolver;
 
     protected final PopupManager popupManager;
 
@@ -74,7 +74,7 @@ public class ResourceItem {
 
     private boolean selectionStatusVisible;
 
-    private String category;
+    private final ResourceItemValueResolver valueResolver;
 
     public ResourceItem(String category, ResourceSet resources,
             ResourceSet hoverModel, PopupManager popupManager,

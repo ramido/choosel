@@ -26,13 +26,13 @@ public class ResourceItemTest {
     }
 
     @Mock
-    private PopupManager popupManager;
+    private ResourceSet hoverModel;
 
     @Mock
     private ResourceItemValueResolver layer;
 
     @Mock
-    private ResourceSet hoverModel;
+    private PopupManager popupManager;
 
     @Mock
     private ResourceSet resources;
@@ -106,31 +106,31 @@ public class ResourceItemTest {
     public void statusVsGrayDefaultAllFalse() {
         underTest.setSelected(false);
         underTest.setSelectionStatusVisible(false);
-        assertEquals(Status.DEFAULT,
-                underTest.calculateStatusNormalVsGraySelection());
+        assertEquals(Status.DEFAULT, underTest
+                .calculateStatusNormalVsGraySelection());
     }
 
     @Test
     public void statusVsGrayIsDefaultHighlightTrue() {
         underTest.setSelectionStatusVisible(true);
         underTest.setSelected(true);
-        assertEquals(Status.DEFAULT,
-                underTest.calculateStatusNormalVsGraySelection());
+        assertEquals(Status.DEFAULT, underTest
+                .calculateStatusNormalVsGraySelection());
     }
 
     @Test
     public void statusVsGrayIsHighlighted() {
         underTest.setHighlighted(true);
-        assertEquals(Status.HIGHLIGHTED,
-                underTest.calculateStatusNormalVsGraySelection());
+        assertEquals(Status.HIGHLIGHTED, underTest
+                .calculateStatusNormalVsGraySelection());
     }
 
     @Test
     public void statusVsGreyIsGrayedOut() {
         underTest.setSelected(false);
         underTest.setSelectionStatusVisible(true);
-        assertEquals(Status.GRAYED_OUT,
-                underTest.calculateStatusNormalVsGraySelection());
+        assertEquals(Status.GRAYED_OUT, underTest
+                .calculateStatusNormalVsGraySelection());
     }
 
 }

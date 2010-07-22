@@ -31,9 +31,9 @@ public abstract class AbstractNeighbourhoodCallback extends
 
     protected final ViewContentDisplayCallback contentDisplayCallback;
 
-    protected final GraphDisplay graph;
-
     protected final GraphNodeExpansionCallback expansionCallback;
+
+    protected final GraphDisplay graph;
 
     public AbstractNeighbourhoodCallback(GraphDisplay graph,
             ViewContentDisplayCallback contentDisplayCallback,
@@ -89,8 +89,8 @@ public abstract class AbstractNeighbourhoodCallback extends
 
         // FIXME use events on resource instead of hard-coded link?
         for (Relationship relationship : relationships) {
-            relationship.getSource().getUriListValue(property)
-                    .add(relationship.getTarget().getUri());
+            relationship.getSource().getUriListValue(property).add(
+                    relationship.getTarget().getUri());
         }
     }
 

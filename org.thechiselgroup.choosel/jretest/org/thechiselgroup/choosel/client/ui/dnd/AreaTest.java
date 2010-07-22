@@ -34,13 +34,13 @@ import org.thechiselgroup.choosel.client.windows.WindowPanel;
 public class AreaTest {
 
     @Mock
-    private WindowPanel window;
-
-    @Mock
     private WindowPanel otherWindow1;
 
     @Mock
     private WindowPanel otherWindow2;
+
+    @Mock
+    private WindowPanel window;
 
     @Test
     public void getVisiblePartsDoesNotReturnSameAreaTwice() {

@@ -42,8 +42,8 @@ public class AuthenticationServiceServlet extends RemoteServiceServlet
 
     private AuthenticationService getServiceDelegate() {
         if (service == null) {
-            service = new DefaultAuthenticationService(
-                    UserServiceFactory.getUserService());
+            service = new DefaultAuthenticationService(UserServiceFactory
+                    .getUserService());
         }
 
         assert service != null;

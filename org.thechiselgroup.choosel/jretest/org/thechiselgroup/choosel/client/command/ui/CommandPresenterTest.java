@@ -35,15 +35,15 @@ import com.google.gwt.user.client.Command;
 
 public class CommandPresenterTest {
 
-    @Mock
-    private Display display;
+    protected ClickHandler clickHandler;
 
     @Mock
     private Command command;
 
-    private CommandPresenter presenter;
+    @Mock
+    private Display display;
 
-    protected ClickHandler clickHandler;
+    private CommandPresenter presenter;
 
     @Test
     public void callExecuteOnClick() {

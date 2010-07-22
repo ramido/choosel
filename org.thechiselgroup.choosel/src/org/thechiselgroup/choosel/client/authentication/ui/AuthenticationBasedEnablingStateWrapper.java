@@ -32,15 +32,15 @@ import com.google.inject.Inject;
 public class AuthenticationBasedEnablingStateWrapper implements Disposable,
         HasEnabledState {
 
-    private AuthenticationManager authenticationManager;
+    private boolean authEnabled;
 
-    private boolean outsideEnabled = true;
+    private AuthenticationManager authenticationManager;
 
     private HandlerRegistration handlerRegistration;
 
     private HasEnabledState hasEnabledState;
 
-    private boolean authEnabled;
+    private boolean outsideEnabled = true;
 
     @Inject
     public AuthenticationBasedEnablingStateWrapper(

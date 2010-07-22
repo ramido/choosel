@@ -47,20 +47,20 @@ public class WorkspacePersistenceServiceImplementationTest {
 
     private static final String NAME = "aa";
 
-    private WorkspacePersistenceService service;
-
-    @Mock
-    private PersistenceManagerFactory pmf;
-
     @Mock
     private PersistenceManager manager;
 
     private PersistentWorkspace persistentWorkspace;
 
-    private WorkspaceDTO[] workspaceDTOs;
+    @Mock
+    private PersistenceManagerFactory pmf;
 
     @Mock
     private WorkspaceSecurityManager securityManager;
+
+    private WorkspacePersistenceService service;
+
+    private WorkspaceDTO[] workspaceDTOs;
 
     @Test
     public void getAllWorkspaces() throws ServiceException {

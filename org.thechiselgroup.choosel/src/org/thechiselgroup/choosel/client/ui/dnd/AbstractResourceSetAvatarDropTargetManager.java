@@ -24,15 +24,15 @@ import com.google.gwt.user.client.ui.Widget;
 public abstract class AbstractResourceSetAvatarDropTargetManager implements
         ResourceSetAvatarDropTargetManager {
 
+    private DropTargetCapabilityChecker capabilityChecker;
+
+    private ResourceCategorizer categorizer;
+
     private CommandManager commandManager;
 
     private ResourceSetAvatarDragController dragController;
 
     private ViewAccessor viewAccessor;
-
-    private DropTargetCapabilityChecker capabilityChecker;
-
-    private ResourceCategorizer categorizer;
 
     public AbstractResourceSetAvatarDropTargetManager(
             CommandManager commandManager,

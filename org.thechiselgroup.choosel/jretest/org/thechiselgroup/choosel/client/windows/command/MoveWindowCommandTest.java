@@ -32,9 +32,6 @@ public class MoveWindowCommandTest {
 
     private MoveWindowCommand command;
 
-    @Mock
-    private WindowPanel windowPanel;
-
     private int sourceX;
 
     private int sourceY;
@@ -42,6 +39,9 @@ public class MoveWindowCommandTest {
     private int targetX;
 
     private int targetY;
+
+    @Mock
+    private WindowPanel windowPanel;
 
     @Before
     public void setUp() throws Exception {

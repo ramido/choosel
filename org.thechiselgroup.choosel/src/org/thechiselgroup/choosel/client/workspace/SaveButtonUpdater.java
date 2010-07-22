@@ -25,6 +25,8 @@ import com.google.gwt.user.client.ui.HasText;
 
 public class SaveButtonUpdater implements Disposable {
 
+    private Focusable focusable;
+
     private HasEnabledState hasEnabledState;
 
     private HasText hasText;
@@ -34,8 +36,6 @@ public class SaveButtonUpdater implements Disposable {
     private WorkspaceManager workspaceManager;
 
     private HandlerRegistration workspaceSwitchedHandler;
-
-    private Focusable focusable;
 
     public <T extends HasText & Focusable> SaveButtonUpdater(
             WorkspaceManager workspaceManager, T button,

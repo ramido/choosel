@@ -20,11 +20,11 @@ import com.google.gwt.event.shared.GwtEvent;
 
 public abstract class ArcEvent<T extends EventHandler> extends GwtEvent<T> {
 
+    private final Arc arc;
+
     private final int mouseX;
 
     private final int mouseY;
-
-    private final Arc arc;
 
     public ArcEvent(Arc arc, int mouseX, int mouseY) {
         this.arc = arc;

@@ -31,12 +31,12 @@ import org.thechiselgroup.choosel.client.ui.WidgetFactory;
 public class PopupManagerTest {
 
     @Mock
-    private WidgetFactory widgetFactory;
+    private PopupClosingHandler closingHandler;
 
     private DefaultPopupManager underTest;
 
     @Mock
-    private PopupClosingHandler closingHandler;
+    private WidgetFactory widgetFactory;
 
     @Test
     public void fireCloseEventWhenClosingPopup() {

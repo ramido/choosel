@@ -27,11 +27,11 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
 public class AddResourceSetToResourceSetCommandTest {
 
+    private AddResourceSetToResourceSetCommand command;
+
     private ResourceSet sourceSet;
 
     private ResourceSet targetSet;
-
-    private AddResourceSetToResourceSetCommand command;
 
     @Test
     public void removeOnlyAdditionalResourcesFromTargetSetOnUndo() {

@@ -30,11 +30,11 @@ import org.thechiselgroup.choosel.client.views.View;
 public class AddResourcesToViewCommand implements UndoableCommand,
         HasDescription {
 
+    private List<Resource> addedResources;
+
     private Iterable<Resource> resources;
 
     private View view;
-
-    private List<Resource> addedResources;
 
     public AddResourcesToViewCommand(View view, Iterable<Resource> resources) {
         assert view != null;

@@ -24,31 +24,34 @@ public class ArrayUtils {
 
     // @formatter:off
     private native static JavaScriptObject createArray() /*-{
-        return new Array();
-    }-*/;
+           return new Array();
+       }-*/;
+
     // @formatter:on
 
-    public static double getMaxDataValue(List<? extends Number> objectList) {
+    // XXX using .doubleValue could be a problem at some point
+    public static <T extends Number> T getMaxDataValue(List<T> objectList) {
         if (objectList.isEmpty()) {
-            return 0;
+            throw new IllegalArgumentException("Number List was empty.");
         }
-        double max = (Double) objectList.get(0);
+        T max = objectList.get(0);
         for (int i = 1; i < objectList.size(); i++) {
-            if ((Double) objectList.get(i) > max) {
-                max = (Double) objectList.get(i);
+            if (objectList.get(i).doubleValue() > max.doubleValue()) {
+                max = objectList.get(i);
             }
         }
         return max;
     }
 
-    public static double getMinDataValue(List<? extends Number> objectList) {
+    // XXX using .doubleValue could be a problem at some point
+    public static <T extends Number> T getMinDataValue(List<T> objectList) {
         if (objectList.isEmpty()) {
-            return 0;
+            throw new IllegalArgumentException("Number List was empty.");
         }
-        double min = (Double) objectList.get(0);
+        T min = objectList.get(0);
         for (int i = 1; i < objectList.size(); i++) {
-            if ((Double) objectList.get(i) < min) {
-                min = (Double) objectList.get(i);
+            if (objectList.get(i).doubleValue() < min.doubleValue()) {
+                min = objectList.get(i);
             }
         }
         return min;
@@ -56,20 +59,23 @@ public class ArrayUtils {
 
     // @formatter:off
     private native static void pushArray(JavaScriptObject array, double d) /*-{
-        array.push(d);
-    }-*/;
+           array.push(d);
+       }-*/;
+
     // @formatter:on
 
     // @formatter:off
     private native static void pushArray(JavaScriptObject array, int i) /*-{
-        array.push(i);
-    }-*/;
+           array.push(i);
+       }-*/;
+
     // @formatter:on
 
     // @formatter:off
     private native static void pushArray(JavaScriptObject array, String o) /*-{
-        array.push(o);
-    }-*/;
+           array.push(o);
+       }-*/;
+
     // @formatter:on
 
     public static double[] toDoubleArray(List<? extends Number> numberList) {

@@ -27,13 +27,13 @@ import com.google.inject.Inject;
  */
 public class DefaultWorkspaceManager implements WorkspaceManager {
 
-    private HandlerManager handlerManager = new HandlerManager(this);
-
-    private Workspace workspace;
+    private final CommandManager commandManager;
 
     private final Desktop desktop;
 
-    private final CommandManager commandManager;
+    private HandlerManager handlerManager = new HandlerManager(this);
+
+    private Workspace workspace;
 
     @Inject
     public DefaultWorkspaceManager(Desktop desktop,

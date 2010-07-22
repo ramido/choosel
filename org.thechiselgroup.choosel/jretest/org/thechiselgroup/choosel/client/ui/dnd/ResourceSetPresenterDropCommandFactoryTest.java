@@ -46,10 +46,10 @@ public class ResourceSetPresenterDropCommandFactoryTest {
     private ResourceSetPresenterDropCommandFactory dropCommandFactory;
 
     @Mock
-    private ResourceSetAvatar targetDragAvatar;
+    private ResourceSet sourceSet;
 
     @Mock
-    private ResourceSet sourceSet;
+    private ResourceSetAvatar targetDragAvatar;
 
     @Mock
     private ResourceSet targetSet;

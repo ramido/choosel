@@ -37,13 +37,13 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 public class HighlightingManagerTest {
 
     @Mock
+    private ResourceSet highlightedResources;
+
+    @Mock
     private PopupManager popupManager;
 
     @Mock
     private ResourceSet resources;
-
-    @Mock
-    private ResourceSet highlightedResources;
 
     private HighlightingManager underTest;
 

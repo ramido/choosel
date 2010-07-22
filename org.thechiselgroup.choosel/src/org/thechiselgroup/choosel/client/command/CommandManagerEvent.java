@@ -20,9 +20,9 @@ import com.google.gwt.event.shared.GwtEvent;
 public abstract class CommandManagerEvent<H extends CommandManagerEventHandler>
         extends GwtEvent<H> {
 
-    private final CommandManager commandManager;
-
     private final UndoableCommand command;
+
+    private final CommandManager commandManager;
 
     public CommandManagerEvent(CommandManager commandManager,
             UndoableCommand command) {

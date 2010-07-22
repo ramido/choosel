@@ -20,8 +20,8 @@ import java.util.List;
 
 import org.thechiselgroup.choosel.client.label.HasLabel;
 
-import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.event.shared.GwtEvent.Type;
 
 public interface ResourceSet extends Iterable<Resource>, ResourceContainer,
         HasLabel {

@@ -41,10 +41,10 @@ public class WorkspacePresenterTest {
 
     private static final String TEST_WORKSPACE_NAME = "test-workspace-name";
 
+    private StubbingArgumentCaptor<HandlerRegistration> blurHandlerCaptor;
+
     @Mock
     private WorkspacePresenterDisplay display;
-
-    private StubbingArgumentCaptor<HandlerRegistration> blurHandlerCaptor;
 
     private WorkspacePresenter presenter;
 
@@ -54,13 +54,13 @@ public class WorkspacePresenterTest {
     @Mock
     private HasBlurHandlers textFieldBlurHandlers;
 
+    @Mock
+    private HasKeyUpHandlers textFieldKeyUpHandlers;
+
     private Workspace workspace;
 
     @Mock
     private WorkspaceManager workspaceManager;
-
-    @Mock
-    private HasKeyUpHandlers textFieldKeyUpHandlers;
 
     @Test
     public void changeWorkspaceNameOnRegularKeyPress() {

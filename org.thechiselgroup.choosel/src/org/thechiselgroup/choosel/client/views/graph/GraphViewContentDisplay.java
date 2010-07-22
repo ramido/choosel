@@ -145,14 +145,14 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
         @Override
         public void onMouseOut(NodeMouseOutEvent event) {
-            onMouseOut(getGraphItem(event), event.getMouseX(),
-                    event.getMouseY());
+            onMouseOut(getGraphItem(event), event.getMouseX(), event
+                    .getMouseY());
         }
 
         @Override
         public void onMouseOver(NodeMouseOverEvent event) {
-            onMouseOver(getGraphItem(event), event.getMouseX(),
-                    event.getMouseY());
+            onMouseOver(getGraphItem(event), event.getMouseX(), event
+                    .getMouseY());
         }
 
     }
@@ -236,8 +236,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
                 .resolve(SlotResolver.GRAPH_NODE_BORDER_COLOR_SLOT, categoryX,
                         resources);
 
-        PopupManager popupManager = createPopupManager(resources,
-                resolver.getResourceSetResolver(SlotResolver.DESCRIPTION_SLOT));
+        PopupManager popupManager = createPopupManager(resources, resolver
+                .getResourceSetResolver(SlotResolver.DESCRIPTION_SLOT));
 
         GraphItem item = new GraphItem(categoryX, resources, hoverModel,
                 popupManager, label, category, display, resolver);
@@ -449,9 +449,9 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
         display.addArc(arc);
 
-        display.setArcStyle(arc, GraphDisplay.ARC_COLOR,
-                arcStyleProvider.getArcColor(arcType));
-        display.setArcStyle(arc, GraphDisplay.ARC_STYLE,
-                arcStyleProvider.getArcStyle(arcType));
+        display.setArcStyle(arc, GraphDisplay.ARC_COLOR, arcStyleProvider
+                .getArcColor(arcType));
+        display.setArcStyle(arc, GraphDisplay.ARC_STYLE, arcStyleProvider
+                .getArcStyle(arcType));
     }
 }

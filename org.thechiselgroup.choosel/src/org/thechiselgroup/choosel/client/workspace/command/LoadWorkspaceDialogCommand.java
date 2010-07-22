@@ -34,9 +34,9 @@ public class LoadWorkspaceDialogCommand implements AsyncCommand, HasDescription 
     // TODO clean up & refactor dialog code
     public static class DefaultDetailsDisplay implements DetailsDisplay {
 
-        private DialogManager dialogManager;
-
         private AsyncCommandExecutor asyncCommandExecutor;
+
+        private DialogManager dialogManager;
 
         private WorkspacePersistenceManager persistenceManager;
 

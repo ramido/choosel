@@ -36,7 +36,8 @@ import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
 
 public class DetailsWidgetHelperTest {
 
-    private DetailsWidgetHelper underTest;
+    @Mock
+    private ResourceSetAvatar avatar;
 
     @Mock
     private ResourceSetAvatarFactory avatarFactory;
@@ -45,13 +46,12 @@ public class DetailsWidgetHelperTest {
     private ResourceSetToValueResolver resolver;
 
     @Mock
+    private ResourceSet resourceSet;
+
+    @Mock
     private ResourceSetFactory resourceSetFactory;
 
-    @Mock
-    private ResourceSetAvatar avatar;
-
-    @Mock
-    private ResourceSet resourceSet;
+    private DetailsWidgetHelper underTest;
 
     @Ignore("reactivate once DefaultDetailsWidgetHelper is fixed")
     @Test

@@ -20,24 +20,24 @@ import com.google.gwt.core.client.JavaScriptObject;
 public class TimeLineEventSource extends JavaScriptObject {
 
     public static native TimeLineEventSource create() /*-{
-        return new $wnd.Timeline.DefaultEventSource();
-    }-*/;
+           return new $wnd.Timeline.DefaultEventSource();
+       }-*/;
 
     protected TimeLineEventSource() {
     }
 
     public final native void addEvent(TimeLineEvent event) /*-{
-        this.add(event);
-    }-*/;
+           this.add(event);
+       }-*/;
 
     public final native void removeEvent(TimeLineEvent event) /*-{
-        // the event index class does not support remove, so we hack it in...
-        this._events._events.remove(event);
-        delete this._events._idToEvent[event.getID()];
-        this._events._indexed = false;
+           // the event index class does not support remove, so we hack it in...
+           this._events._events.remove(event);
+           delete this._events._idToEvent[event.getID()];
+           this._events._indexed = false;
 
-        // XXX event source has no remove method, not sure which event to fire
-        this._fire("onAddMany", []);
-    }-*/;
+           // XXX event source has no remove method, not sure which event to fire
+           this._fire("onAddMany", []);
+       }-*/;
 
 }

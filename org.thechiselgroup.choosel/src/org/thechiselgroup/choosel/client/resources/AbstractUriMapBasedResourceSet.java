@@ -37,7 +37,7 @@ public abstract class AbstractUriMapBasedResourceSet extends
         }
         doAdd(resource);
         eventBus.fireEvent(new ResourcesAddedEvent(this, CollectionUtils
-                        .toList(resource)));
+                .toList(resource)));
     }
 
     @Override
@@ -92,7 +92,7 @@ public abstract class AbstractUriMapBasedResourceSet extends
         }
         doRemove(resource);
         eventBus.fireEvent(new ResourcesRemovedEvent(this, CollectionUtils
-                        .toList(resource)));
+                .toList(resource)));
     }
 
     @Override

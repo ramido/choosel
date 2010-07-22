@@ -20,8 +20,6 @@ import org.thechiselgroup.choosel.client.util.HasDescription;
 
 public class MoveWindowCommand implements UndoableCommand, HasDescription {
 
-    private final WindowPanel windowPanel;
-
     private final int sourceX;
 
     private final int sourceY;
@@ -29,6 +27,8 @@ public class MoveWindowCommand implements UndoableCommand, HasDescription {
     private final int targetX;
 
     private final int targetY;
+
+    private final WindowPanel windowPanel;
 
     /**
      * Constructor with both locations for use from drag controller that moves

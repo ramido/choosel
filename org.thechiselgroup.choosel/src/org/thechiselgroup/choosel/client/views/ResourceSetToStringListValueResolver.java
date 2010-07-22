@@ -1,8 +1,12 @@
 package org.thechiselgroup.choosel.client.views;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.util.CollectionUtils;
 
 public class ResourceSetToStringListValueResolver extends
         AbstractResourceSetToValueResolver {
@@ -24,16 +28,13 @@ public class ResourceSetToStringListValueResolver extends
         }
 
         String result = "{ ";
-        boolean first = true;
+
+        List<String> values = new ArrayList<String>();
         for (Resource resource : resources) {
-            if (!first) {
-                result += ", ";
-            }
-
-            result += resolve(resource);
-
-            first = false;
+            values.add((String) resolve(resource));
         }
+        result += CollectionUtils.deliminateIterableStringCollection(values,
+                ", ");
         result += " }";
 
         return result;

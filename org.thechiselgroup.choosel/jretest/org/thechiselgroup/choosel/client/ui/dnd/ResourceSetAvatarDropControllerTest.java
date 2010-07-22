@@ -69,6 +69,9 @@ public class ResourceSetAvatarDropControllerTest {
     private static final String VIEW_ID = "viewId";
 
     @Mock
+    private DropTargetCapabilityChecker capabilityChecker;
+
+    @Mock
     private TestUndoableCommandWithDescription command;
 
     @Mock
@@ -83,27 +86,24 @@ public class ResourceSetAvatarDropControllerTest {
     @Mock
     private DragContext dragContext;
 
-    private ResourceSetAvatarDropController underTest;
-
-    @Mock
-    private ViewAccessor viewAccessor;
-
-    @Mock
-    private DropTargetCapabilityChecker capabilityChecker;
-
-    @Mock
-    private ResourceCategorizer resourceTypeCategorizer;
-
     @Mock
     private Widget dropTarget;
 
     @Mock
     private DelayedPopup popup;
 
+    private ResourceSet resources;
+
+    @Mock
+    private ResourceCategorizer resourceTypeCategorizer;
+
+    private ResourceSetAvatarDropController underTest;
+
     @Mock
     private View view;
 
-    private ResourceSet resources;
+    @Mock
+    private ViewAccessor viewAccessor;
 
     @Test
     public void addExecutedCommandToCommandManager() {
@@ -186,8 +186,9 @@ public class ResourceSetAvatarDropControllerTest {
 
         dragContext.draggable = dragAvatar;
         when(commandFactory.createCommand(eq(dragAvatar))).thenReturn(command);
-        when(capabilityChecker.isValidDrop(any(String.class), any(String.class)))
-                .thenReturn(true);
+        when(
+                capabilityChecker.isValidDrop(any(String.class),
+                        any(String.class))).thenReturn(true);
         when(viewAccessor.findView(any(Widget.class))).thenReturn(view);
         when(view.getContentType()).thenReturn(VIEW_ID);
         resources = TestResourceSetFactory.createResources(1, 2);

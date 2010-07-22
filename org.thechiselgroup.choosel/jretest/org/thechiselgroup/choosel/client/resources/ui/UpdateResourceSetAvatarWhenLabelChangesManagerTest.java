@@ -58,7 +58,8 @@ public class UpdateResourceSetAvatarWhenLabelChangesManagerTest {
 
         when(avatar.getResourceSet()).thenReturn(resources);
         when(
-                avatar.addResourceChangedHandler(any(ResourceSetAvatarResourcesChangedEventHandler.class)))
+                avatar
+                        .addResourceChangedHandler(any(ResourceSetAvatarResourcesChangedEventHandler.class)))
                 .thenReturn(handlerRegistration);
 
         underTest = new UpdateResourceSetAvatarWhenLabelChangesManager(avatar);

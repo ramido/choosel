@@ -36,13 +36,13 @@ public class CreateWindowCommandTest {
     private CreateWindowCommand command;
 
     @Mock
+    private Desktop desktop;
+
+    @Mock
     private WindowContent viewContent;
 
     @Mock
     private WindowPanel windowPanel;
-
-    @Mock
-    private Desktop desktop;
 
     @Test
     public void createWindowOnExecute() {

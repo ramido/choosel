@@ -21,9 +21,9 @@ import org.thechiselgroup.choosel.client.util.Converter;
 public class PropertyValueResolverConverterWrapper implements
         ResourceToValueResolver {
 
-    private ResourceToValueResolver delegate;
-
     private Converter converter;
+
+    private ResourceToValueResolver delegate;
 
     public PropertyValueResolverConverterWrapper(
             ResourceToValueResolver delegate, Converter converter) {

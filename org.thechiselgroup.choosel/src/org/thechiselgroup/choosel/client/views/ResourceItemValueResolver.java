@@ -23,9 +23,9 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
 public class ResourceItemValueResolver {
 
-    private Map<String, ResourceSetToValueResolver> slotIDsToValueResolvers = new HashMap<String, ResourceSetToValueResolver>();
-
     private DefaultResourceSetToValueResolverFactory resourceSetResolverFactory;
+
+    private Map<String, ResourceSetToValueResolver> slotIDsToValueResolvers = new HashMap<String, ResourceSetToValueResolver>();
 
     public ResourceItemValueResolver(
             DefaultResourceSetToValueResolverFactory resourceSetResolverFactory) {

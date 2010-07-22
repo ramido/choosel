@@ -22,9 +22,9 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 
 public class TestMouseOverEvent extends MouseOverEvent {
 
-    private final int clientY;
-
     private final int clientX;
+
+    private final int clientY;
 
     public TestMouseOverEvent(int clientX, int clientY) {
         this.clientX = clientX;

@@ -26,7 +26,9 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 
 public abstract class WindowDragController extends AbstractDragController {
 
-    private int desktopWidth;
+    protected final CommandManager commandManager;
+
+    private final WindowController controller;
 
     private int desktopHeight;
 
@@ -34,11 +36,9 @@ public abstract class WindowDragController extends AbstractDragController {
 
     private int desktopOffsetY;
 
+    private int desktopWidth;
+
     protected WindowPanel windowPanel = null;
-
-    private final WindowController controller;
-
-    protected final CommandManager commandManager;
 
     public WindowDragController(WindowController controller,
             CommandManager commandManager) {
@@ -59,11 +59,11 @@ public abstract class WindowDragController extends AbstractDragController {
     @Override
     public final void dragMove() {
         int desiredDraggableX = Math.max(0, Math.min(context.desiredDraggableX
-                - desktopOffsetX,
-                desktopWidth - context.draggable.getOffsetWidth()));
+                - desktopOffsetX, desktopWidth
+                - context.draggable.getOffsetWidth()));
         int desiredDraggableY = Math.max(0, Math.min(context.desiredDraggableY
-                - desktopOffsetY,
-                desktopHeight - context.draggable.getOffsetHeight()));
+                - desktopOffsetY, desktopHeight
+                - context.draggable.getOffsetHeight()));
 
         dragMove(desiredDraggableX, desiredDraggableY);
     }

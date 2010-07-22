@@ -45,13 +45,13 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public abstract class XMLCallServlet extends RemoteServiceServlet {
 
-    protected XPath xpath;
-
-    private XPathExpression setExpression;
+    protected DocumentFetchService documentFetchService;
 
     private HashMap<String, XPathExpression> expressions = new HashMap<String, XPathExpression>();
 
-    protected DocumentFetchService documentFetchService;
+    private XPathExpression setExpression;
+
+    protected XPath xpath;
 
     protected abstract Resource analyzeNode(Node node, String label)
             throws Exception;

@@ -4,8 +4,7 @@ import java.util.Set;
 
 import org.thechiselgroup.choosel.client.util.CollectionUtils;
 
-public class ResourceByUriMultiCategorizer implements
-        ResourceMultiCategorizer {
+public class ResourceByUriMultiCategorizer implements ResourceMultiCategorizer {
 
     @Override
     public Set<String> getCategories(Resource resource) {

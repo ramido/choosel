@@ -34,10 +34,10 @@ import org.thechiselgroup.choosel.client.workspace.command.LoadWorkspaceDialogCo
 public class LoadWorkspaceDialogCommandTest {
 
     @Mock
-    private WorkspacePersistenceManager persistenceManager;
+    private DetailsDisplay detailsDisplay;
 
     @Mock
-    private DetailsDisplay detailsDisplay;
+    private WorkspacePersistenceManager persistenceManager;
 
     private LoadWorkspaceDialogCommand presenter;
 

@@ -22,9 +22,9 @@ public class AuthenticationStateChangedEvent extends
 
     public static final Type<AuthenticationStateChangedEventHandler> TYPE = new Type<AuthenticationStateChangedEventHandler>();
 
-    private final AuthenticationManager manager;
-
     private final AuthenticationState authenticationState;
+
+    private final AuthenticationManager manager;
 
     public AuthenticationStateChangedEvent(AuthenticationManager manager,
             AuthenticationState authenticationState) {

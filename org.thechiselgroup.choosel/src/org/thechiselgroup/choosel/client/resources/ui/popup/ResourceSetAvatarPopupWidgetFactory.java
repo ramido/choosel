@@ -60,11 +60,11 @@ public class ResourceSetAvatarPopupWidgetFactory implements WidgetFactory {
 
     private String headerText;
 
+    private final HeaderUpdatedEventHandler headerUpdatedHandler;
+
     private String infoMessage;
 
     private final String subHeaderText;
-
-    private final HeaderUpdatedEventHandler headerUpdatedHandler;
 
     /**
      * @param headerUpdatedHandler

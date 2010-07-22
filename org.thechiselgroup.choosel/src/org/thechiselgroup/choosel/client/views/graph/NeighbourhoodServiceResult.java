@@ -27,13 +27,13 @@ public class NeighbourhoodServiceResult implements Serializable {
 
     private static final long serialVersionUID = 3287669903192891528L;
 
+    // use HashSet instead of Set for GWT serialization
+    private HashSet<Resource> neighbours = new HashSet<Resource>();
+
     // use ArrayList instead of set List GWT serialization
     private ArrayList<Relationship> relationships = new ArrayList<Relationship>();
 
     private Resource resource;
-
-    // use HashSet instead of Set for GWT serialization
-    private HashSet<Resource> neighbours = new HashSet<Resource>();
 
     private NeighbourhoodServiceResult() {
         // for GWT serialization
