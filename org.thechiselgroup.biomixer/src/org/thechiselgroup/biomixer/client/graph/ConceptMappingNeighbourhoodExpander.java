@@ -23,26 +23,26 @@ import org.thechiselgroup.choosel.client.views.graph.NeighbourhoodServiceAsync;
 
 public class ConceptMappingNeighbourhoodExpander implements GraphNodeExpander {
 
-    private ErrorHandler errorHandler;
+	private ErrorHandler errorHandler;
 
-    private NeighbourhoodServiceAsync neighbourhoodService;
+	private NeighbourhoodServiceAsync neighbourhoodService;
 
-    public ConceptMappingNeighbourhoodExpander(
-	    NeighbourhoodServiceAsync neighbourhoodService,
-	    ErrorHandler errorHandler) {
+	public ConceptMappingNeighbourhoodExpander(
+			NeighbourhoodServiceAsync neighbourhoodService,
+			ErrorHandler errorHandler) {
 
-	this.neighbourhoodService = neighbourhoodService;
-	this.errorHandler = errorHandler;
-    }
+		this.neighbourhoodService = neighbourhoodService;
+		this.errorHandler = errorHandler;
+	}
 
-    @Override
-    public void expand(Resource resource,
-	    GraphNodeExpansionCallback expansionCallback) {
+	@Override
+	public void expand(Resource resource,
+			GraphNodeExpansionCallback expansionCallback) {
 
-	neighbourhoodService.getNeighbourhood(resource,
-		new MappingNeighbourhoodCallback2(expansionCallback
-			.getDisplay(), expansionCallback
-			.getCallback(), errorHandler,
-			expansionCallback));
-    }
+		neighbourhoodService.getNeighbourhood(
+				resource,
+				new MappingNeighbourhoodCallback2(expansionCallback
+						.getDisplay(), expansionCallback.getCallback(),
+						errorHandler, expansionCallback));
+	}
 }

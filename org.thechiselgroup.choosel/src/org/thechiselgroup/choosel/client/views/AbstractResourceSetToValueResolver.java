@@ -33,8 +33,8 @@ public abstract class AbstractResourceSetToValueResolver implements
 
         if (!resourceTypeToResourceToValueResolvers.containsKey(resourceType)) {
 
-            resourceTypeToResourceToValueResolvers.put(resourceType, factory
-                    .createResolver(slotID, resourceType));
+            resourceTypeToResourceToValueResolvers.put(resourceType,
+                    factory.createResolver(slotID, resourceType));
         }
 
         return resourceTypeToResourceToValueResolvers.get(resourceType);

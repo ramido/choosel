@@ -25,25 +25,25 @@ import com.google.inject.name.Named;
 
 public class BioMixerGraphExpansionRegistry extends GraphExpansionRegistry {
 
-    @Inject
-    public BioMixerGraphExpansionRegistry(
-	    @Named("mapping") NeighbourhoodServiceAsync mappingNeighbourhoodService,
-	    @Named("concept") NeighbourhoodServiceAsync conceptNeighbourhoodService,
-	    ErrorHandler errorHandler) {
+	@Inject
+	public BioMixerGraphExpansionRegistry(
+			@Named("mapping") NeighbourhoodServiceAsync mappingNeighbourhoodService,
+			@Named("concept") NeighbourhoodServiceAsync conceptNeighbourhoodService,
+			ErrorHandler errorHandler) {
 
-	putAutomaticExpander(NcboUriHelper.NCBO_CONCEPT,
-		new AutomaticConceptExpander(mappingNeighbourhoodService,
-			errorHandler));
-	putAutomaticExpander(NcboUriHelper.NCBO_MAPPING,
-		new AutomaticMappingExpander());
+		putAutomaticExpander(NcboUriHelper.NCBO_CONCEPT,
+				new AutomaticConceptExpander(mappingNeighbourhoodService,
+						errorHandler));
+		putAutomaticExpander(NcboUriHelper.NCBO_MAPPING,
+				new AutomaticMappingExpander());
 
-	putNodeMenuEntry(NcboUriHelper.NCBO_CONCEPT, "Concepts",
-		new ConceptConceptNeighbourhoodExpander(
-			conceptNeighbourhoodService, errorHandler));
-	putNodeMenuEntry(NcboUriHelper.NCBO_CONCEPT, "Mappings",
-		new ConceptMappingNeighbourhoodExpander(
-			mappingNeighbourhoodService, errorHandler));
-	putNodeMenuEntry(NcboUriHelper.NCBO_MAPPING, "Concepts",
-		new MappingExpander());
-    }
+		putNodeMenuEntry(NcboUriHelper.NCBO_CONCEPT, "Concepts",
+				new ConceptConceptNeighbourhoodExpander(
+						conceptNeighbourhoodService, errorHandler));
+		putNodeMenuEntry(NcboUriHelper.NCBO_CONCEPT, "Mappings",
+				new ConceptMappingNeighbourhoodExpander(
+						mappingNeighbourhoodService, errorHandler));
+		putNodeMenuEntry(NcboUriHelper.NCBO_MAPPING, "Concepts",
+				new MappingExpander());
+	}
 }

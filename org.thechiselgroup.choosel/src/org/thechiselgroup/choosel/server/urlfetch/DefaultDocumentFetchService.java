@@ -62,8 +62,8 @@ public class DefaultDocumentFetchService implements DocumentFetchService {
 
         HTTPResponse response = fetchService.fetch(request);
 
-        ByteArrayInputStream stream = new ByteArrayInputStream(response
-                .getContent());
+        ByteArrayInputStream stream = new ByteArrayInputStream(
+                response.getContent());
 
         return domBuilderFactory.newDocumentBuilder().parse(stream);
     }

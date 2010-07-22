@@ -37,142 +37,142 @@ import org.w3c.dom.Node;
 @SuppressWarnings("serial")
 public class GeoRSSServiceImpl extends XMLCallServlet implements GeoRSSService {
 
-    @Override
-    public void init(ServletConfig config) throws ServletException {
-	super.init(config);
+	@Override
+	protected Resource analyzeNode(Node node, String label) throws Exception {
+		Resource resource = null;
 
-	xpath.setNamespaceContext(new NamespaceContext() {
+		if ("earthquake".equalsIgnoreCase(label)) {
+			String link = evaluateString("link", node);
+			link = link.substring(0, link.length() - 2);
+			resource = new Resource("earthquake:"
+					+ link.substring(link.lastIndexOf("/")));
 
-	    public String getNamespaceURI(String prefix) {
-		if (prefix == null)
-		    throw new NullPointerException("Null prefix");
+			long milliseconds = evaluateNumber("seconds", node).longValue() * 1000;
+			String titleString = evaluateString("title", node);
+			int firstSplitIndex = titleString.indexOf('-');
+			float magnitude = Float.parseFloat(titleString.substring(0,
+					firstSplitIndex).trim());
+			String locationDescription = titleString.substring(
+					firstSplitIndex + 1).trim();
 
-		if ("georss".equals(prefix)) {
-		    return "http://www.georss.org/georss";
+			resource.putValue("date", new Date(milliseconds).toString());
+			resource.putValue("description", titleString);
+			resource.putValue("magnitude", magnitude);
+			resource.putValue("details", evaluateString("description", node));
+			resource.putValue("locationDescription", locationDescription);
+		} else if ("tsunami".equalsIgnoreCase(label)) {
+			resource = new Resource("tsunami:" + evaluateString("guid", node));
+
+			String descriptionString = evaluateString("description", node);
+			String[] split = descriptionString.split("\n");
+
+			extractEarthquakeIssuedAt(resource, split);
+			extractEarthquakeFromTsunami(resource, split);
+			extractTsunamiEvaluation(resource, descriptionString);
 		}
-		if ("geo".equals(prefix)) {
-		    return "http://www.w3.org/2003/01/geo/wgs84_pos#";
-		}
-		if ("eq".equals(prefix)) {
-		    return "http://earthquake.usgs.gov/rss/1.0/";
-		}
-		if ("xml".equals(prefix)) {
-		    return XMLConstants.XML_NS_URI;
-		}
-		return XMLConstants.NULL_NS_URI;
-	    }
 
-	    // This method isn't necessary for XPath processing.
-	    public String getPrefix(String uri) {
-		throw new UnsupportedOperationException();
-	    }
+		resource.putValue("location", parseLocation(node));
 
-	    // This method isn't necessary for XPath processing either.
-	    public Iterator getPrefixes(String uri) {
-		throw new UnsupportedOperationException();
-	    }
-
-	});
-
-	setupSetExpression("//rss/channel/item");
-
-	registerExpression("latitude", "geo:lat/text()");
-	registerExpression("longitude", "geo:long/text()");
-	registerExpression("title", "title/text()");
-	registerExpression("seconds", "eq:seconds/text()");
-	registerExpression("description", "description/text()");
-	registerExpression("guid", "guid/text()");
-	registerExpression("link", "link/text()");
-    }
-
-    @Override
-    protected Resource analyzeNode(Node node, String label) throws Exception {
-	Resource resource = null;
-
-	if ("earthquake".equalsIgnoreCase(label)) {
-	    String link = evaluateString("link", node);
-	    link = link.substring(0, link.length() - 2);
-	    resource = new Resource("earthquake:"
-		    + link.substring(link.lastIndexOf("/")));
-
-	    long milliseconds = evaluateNumber("seconds", node).longValue() * 1000;
-	    String titleString = evaluateString("title", node);
-	    int firstSplitIndex = titleString.indexOf('-');
-	    float magnitude = Float.parseFloat(titleString.substring(0,
-		    firstSplitIndex).trim());
-	    String locationDescription = titleString.substring(
-		    firstSplitIndex + 1).trim();
-
-	    resource.putValue("date", new Date(milliseconds).toString());
-	    resource.putValue("description", titleString);
-	    resource.putValue("magnitude", magnitude);
-	    resource.putValue("details", evaluateString("description", node));
-	    resource.putValue("locationDescription", locationDescription);
-	} else if ("tsunami".equalsIgnoreCase(label)) {
-	    resource = new Resource("tsunami:" + evaluateString("guid", node));
-
-	    String descriptionString = evaluateString("description", node);
-	    String[] split = descriptionString.split("\n");
-
-	    extractEarthquakeIssuedAt(resource, split);
-	    extractEarthquakeFromTsunami(resource, split);
-	    extractTsunamiEvaluation(resource, descriptionString);
+		return resource;
 	}
 
-	resource.putValue("location", parseLocation(node));
+	private void extractEarthquakeFromTsunami(Resource r, String[] split) {
+		String earthquake = split[20] + "<br/>" + split[21] + "<br/>"
+				+ split[22] + "<br/>" + split[23] + "<br/>" + split[24];
 
-	return resource;
-    }
-
-    private void extractEarthquakeIssuedAt(Resource feedEntry, String[] split)
-	    throws ParseException {
-	String issuedAtLine = split[3];
-	String issuedAt = issuedAtLine.substring(10, issuedAtLine.length());
-	SimpleDateFormat format = new SimpleDateFormat("kkmm'Z' dd MMM yyyy");
-	format.setTimeZone(TimeZone.getTimeZone("UTC")); // assume UTC...
-	feedEntry.putValue("date", format.parse(issuedAt).toString());
-    }
-
-    private void extractTsunamiEvaluation(Resource r, String descriptionString) {
-	int i1 = descriptionString.indexOf("EVALUATION");
-	String d2 = descriptionString.substring(i1);
-	String[] s2 = d2.split("\n");
-	String evaluation = "";
-	for (int i = 1; i < s2.length; i++) {
-	    if (!(s2[i].length() == 0 || s2[i].charAt(0) == ' ')) {
-		break;
-	    }
-	    evaluation += s2[i].toLowerCase() + "<br>";
+		r.putValue("related earthquake description", earthquake);
 	}
 
-	r.putValue("evaluation", evaluation);
-    }
+	private void extractEarthquakeIssuedAt(Resource feedEntry, String[] split)
+			throws ParseException {
+		String issuedAtLine = split[3];
+		String issuedAt = issuedAtLine.substring(10, issuedAtLine.length());
+		SimpleDateFormat format = new SimpleDateFormat("kkmm'Z' dd MMM yyyy");
+		format.setTimeZone(TimeZone.getTimeZone("UTC")); // assume UTC...
+		feedEntry.putValue("date", format.parse(issuedAt).toString());
+	}
 
-    private void extractEarthquakeFromTsunami(Resource r, String[] split) {
-	String earthquake = split[20] + "<br/>" + split[21] + "<br/>"
-		+ split[22] + "<br/>" + split[23] + "<br/>" + split[24];
+	private void extractTsunamiEvaluation(Resource r, String descriptionString) {
+		int i1 = descriptionString.indexOf("EVALUATION");
+		String d2 = descriptionString.substring(i1);
+		String[] s2 = d2.split("\n");
+		String evaluation = "";
+		for (int i = 1; i < s2.length; i++) {
+			if (!(s2[i].length() == 0 || s2[i].charAt(0) == ' ')) {
+				break;
+			}
+			evaluation += s2[i].toLowerCase() + "<br>";
+		}
 
-	r.putValue("related earthquake description", earthquake);
-    }
+		r.putValue("evaluation", evaluation);
+	}
 
-    private Resource parseLocation(Node node) throws XPathExpressionException {
+	@Override
+	public Set<Resource> getGeoRSS(String url, String label)
+			throws ServiceException {
+		return analyzeXML(url, label);
+	}
 
-	float latitude = evaluateNumber("latitude", node).floatValue();
-	float longitude = evaluateNumber("longitude", node).floatValue();
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
 
-	Resource location = new Resource("location:" + latitude + "/"
-		+ longitude);
+		xpath.setNamespaceContext(new NamespaceContext() {
 
-	location.putValue("latitude", latitude);
-	location.putValue("longitude", longitude);
+			public String getNamespaceURI(String prefix) {
+				if (prefix == null)
+					throw new NullPointerException("Null prefix");
 
-	return location;
-    }
+				if ("georss".equals(prefix)) {
+					return "http://www.georss.org/georss";
+				}
+				if ("geo".equals(prefix)) {
+					return "http://www.w3.org/2003/01/geo/wgs84_pos#";
+				}
+				if ("eq".equals(prefix)) {
+					return "http://earthquake.usgs.gov/rss/1.0/";
+				}
+				if ("xml".equals(prefix)) {
+					return XMLConstants.XML_NS_URI;
+				}
+				return XMLConstants.NULL_NS_URI;
+			}
 
-    @Override
-    public Set<Resource> getGeoRSS(String url, String label)
-	    throws ServiceException {
-	return analyzeXML(url, label);
-    }
+			// This method isn't necessary for XPath processing.
+			public String getPrefix(String uri) {
+				throw new UnsupportedOperationException();
+			}
+
+			// This method isn't necessary for XPath processing either.
+			public Iterator getPrefixes(String uri) {
+				throw new UnsupportedOperationException();
+			}
+
+		});
+
+		setupSetExpression("//rss/channel/item");
+
+		registerExpression("latitude", "geo:lat/text()");
+		registerExpression("longitude", "geo:long/text()");
+		registerExpression("title", "title/text()");
+		registerExpression("seconds", "eq:seconds/text()");
+		registerExpression("description", "description/text()");
+		registerExpression("guid", "guid/text()");
+		registerExpression("link", "link/text()");
+	}
+
+	private Resource parseLocation(Node node) throws XPathExpressionException {
+
+		float latitude = evaluateNumber("latitude", node).floatValue();
+		float longitude = evaluateNumber("longitude", node).floatValue();
+
+		Resource location = new Resource("location:" + latitude + "/"
+				+ longitude);
+
+		location.putValue("latitude", latitude);
+		location.putValue("longitude", longitude);
+
+		return location;
+	}
 
 }

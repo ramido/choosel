@@ -23,29 +23,30 @@ import org.thechiselgroup.choosel.client.views.graph.NeighbourhoodServiceAsync;
 
 public class ConceptConceptNeighbourhoodExpander implements GraphNodeExpander {
 
-    private NeighbourhoodServiceAsync neighbourhoodService;
+	private NeighbourhoodServiceAsync neighbourhoodService;
 
-    private ErrorHandler errorHandler;
+	private ErrorHandler errorHandler;
 
-    public ConceptConceptNeighbourhoodExpander(
-	    NeighbourhoodServiceAsync neighbourhoodService,
-	    ErrorHandler errorHandler) {
+	public ConceptConceptNeighbourhoodExpander(
+			NeighbourhoodServiceAsync neighbourhoodService,
+			ErrorHandler errorHandler) {
 
-	this.neighbourhoodService = neighbourhoodService;
-	this.errorHandler = errorHandler;
-    }
+		this.neighbourhoodService = neighbourhoodService;
+		this.errorHandler = errorHandler;
+	}
 
-    @Override
-    public void expand(Resource resource,
-	    GraphNodeExpansionCallback expansionCallback) {
+	@Override
+	public void expand(Resource resource,
+			GraphNodeExpansionCallback expansionCallback) {
 
-	// TODO reuse methods exposed by expansionCallback within
-	// ConceptNeighbourhoodCallback
-	neighbourhoodService.getNeighbourhood(resource,
-		new ConceptNeighbourhoodCallback(
-			expansionCallback.getDisplay(), expansionCallback
-				.getCallback(),
-			expansionCallback.getResourceManager(), errorHandler,
-			expansionCallback));
-    }
+		// TODO reuse methods exposed by expansionCallback within
+		// ConceptNeighbourhoodCallback
+		neighbourhoodService.getNeighbourhood(
+				resource,
+				new ConceptNeighbourhoodCallback(
+						expansionCallback.getDisplay(), expansionCallback
+								.getCallback(), expansionCallback
+								.getResourceManager(), errorHandler,
+						expansionCallback));
+	}
 }

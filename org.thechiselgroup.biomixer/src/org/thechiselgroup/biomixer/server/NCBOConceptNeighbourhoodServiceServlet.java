@@ -42,188 +42,188 @@ import com.allen_sauer.gwt.log.client.Log;
 // TODO convert to service & clean up
 @SuppressWarnings("serial")
 public class NCBOConceptNeighbourhoodServiceServlet extends XMLCallServlet
-	implements NCBOConceptNeighbourhoodService {
+		implements NCBOConceptNeighbourhoodService {
 
-    private static final String REVERSED_DATA_KEY = "reversed";
+	private static final String REVERSED_DATA_KEY = "reversed";
 
-    private static final String REVERSE_PREFIX = "[R]";
+	private static final String REVERSE_PREFIX = "[R]";
 
-    private static final String WEB_SERVICE = "http://rest.bioontology.org/bioportal/concepts/";
+	private static final String WEB_SERVICE = "http://rest.bioontology.org/bioportal/concepts/";
 
-    @Override
-    public void init(ServletConfig config) throws ServletException {
-	super.init(config);
+	@Override
+	protected Resource analyzeNode(Node node, String label) throws Exception {
+		// TODO
+		throw new Exception("remove this method");
+	}
 
-	setupSetExpression("//success/data/classBean/relations/entry");
+	// TODO refactor in superclass, pull up
+	private void analyzeXML(String url, Resource concept,
+			NeighbourhoodServiceResult result) throws ServiceException {
 
-	registerExpression(NCBO.CONCEPT_ID, "fullId/text()");
-	registerExpression(NCBO.CONCEPT_SHORT_ID, "id/text()");
-	registerExpression(NCBO.CONCEPT_NAME, "label/text()");
+		Log.debug("calling " + url.toString());
 
-	// TODO might not be precise enough, sibling of entry/string/text() =
-	// "ChildCount"
-	registerExpression(NCBO.CONCEPT_CHILD_COUNT,
-		"relations/entry/int/text()");
-    }
+		try {
+			NodeList nodes = getSetExpressionNodes(url);
 
-    // TODO refactor in superclass, pull up
-    private void analyzeXML(String url, Resource concept,
-	    NeighbourhoodServiceResult result) throws ServiceException {
+			List<Node> processLater = new ArrayList<Node>();
+			List<String> subclassOrSuperclassConceptIds = new ArrayList<String>();
 
-	Log.debug("calling " + url.toString());
+			for (int i = 0; i < nodes.getLength(); i++) {
+				Node node = nodes.item(i);
 
-	try {
-	    NodeList nodes = getSetExpressionNodes(url);
+				// (1) test list/classbean size
+				XPathExpression pathExpression = xpath
+						.compile("list/classBean");
+				NodeList relationships = (NodeList) pathExpression.evaluate(
+						node, XPathConstants.NODESET);
 
-	    List<Node> processLater = new ArrayList<Node>();
-	    List<String> subclassOrSuperclassConceptIds = new ArrayList<String>();
+				if (relationships.getLength() == 0) {
+					continue;
+				}
 
-	    for (int i = 0; i < nodes.getLength(); i++) {
-		Node node = nodes.item(i);
+				// (2) name, check for inverted
+				XPathExpression nameExpression = xpath.compile("string/text()");
+				String name = (String) nameExpression.evaluate(node,
+						XPathConstants.STRING);
+				boolean reversed = name.startsWith(REVERSE_PREFIX);
+				if (reversed) {
+					name = name.substring(REVERSE_PREFIX.length());
+				}
 
-		// (1) test list/classbean size
-		XPathExpression pathExpression = xpath
-			.compile("list/classBean");
-		NodeList relationships = (NodeList) pathExpression.evaluate(
-			node, XPathConstants.NODESET);
+				for (int j = 0; j < relationships.getLength(); j++) {
+					Node r = relationships.item(j);
 
-		if (relationships.getLength() == 0) {
-		    continue;
+					r.setUserData(REVERSED_DATA_KEY, Boolean.valueOf(reversed),
+							null);
+
+					if (!("SubClass".equals(name) || "SuperClass".equals(name))) {
+						processLater.add(r);
+						continue;
+					}
+
+					String conceptId = process(r, "SuperClass".equals(name),
+							concept, result);
+
+					subclassOrSuperclassConceptIds.add(conceptId);
+				}
+
+			}
+
+			for (Node n : processLater) {
+				if (subclassOrSuperclassConceptIds.contains(getConceptId(n))) {
+					continue;
+				}
+
+				process(n,
+						((Boolean) n.getUserData(REVERSED_DATA_KEY))
+								.booleanValue(), concept, result);
+			}
+		} catch (Exception e) {
+			throw new ServiceException(e.getMessage());
+		}
+	}
+
+	private String constructURL(String conceptId, String ontologyVersionId)
+			throws UnsupportedEncodingException {
+
+		return WEB_SERVICE + URLEncoder.encode(ontologyVersionId, "UTF-8")
+				+ "?conceptid=" + URLEncoder.encode(conceptId, "UTF-8")
+				+ "&email=example@example.org";
+	}
+
+	private String getConceptId(Node r) throws XPathExpressionException {
+		return evaluateString(NCBO.CONCEPT_ID, r);
+	}
+
+	private String getLatestOntologyVersionId(String ontologyId)
+			throws ServiceException {
+
+		String urlAsString = "http://rest.bioontology.org"
+				+ "/bioportal/virtual/ontology/" + ontologyId
+				+ "?email=example@example.org";
+
+		try {
+			Document document = documentFetchService.fetchXML(urlAsString);
+			XPathExpression pathExpression = xpath
+					.compile("//success/data/ontologyBean/id/text()");
+			return (String) pathExpression.evaluate(document,
+					XPathConstants.STRING);
+		} catch (Exception e) {
+			throw new ServiceException(e.getMessage());
 		}
 
-		// (2) name, check for inverted
-		XPathExpression nameExpression = xpath.compile("string/text()");
-		String name = (String) nameExpression.evaluate(node,
-			XPathConstants.STRING);
-		boolean reversed = name.startsWith(REVERSE_PREFIX);
+	}
+
+	// TODO need to generalize beyond ontology ids: need keys
+	@Override
+	public NeighbourhoodServiceResult getNeighbourhood(Resource concept)
+			throws ServiceException {
+
+		String conceptId = (String) concept.getValue(NCBO.CONCEPT_SHORT_ID);
+		String ontologyId = (String) concept.getValue(NCBO.CONCEPT_ONTOLOGY_ID);
+
+		try {
+			String latestOntologyVersionId = getLatestOntologyVersionId(ontologyId);
+
+			String url = constructURL(conceptId, latestOntologyVersionId);
+			NeighbourhoodServiceResult result = new NeighbourhoodServiceResult(
+					concept);
+
+			analyzeXML(url, concept, result);
+
+			return result;
+		} catch (UnsupportedEncodingException e) {
+			throw new ServiceException(e.getMessage());
+		}
+	}
+
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+
+		setupSetExpression("//success/data/classBean/relations/entry");
+
+		registerExpression(NCBO.CONCEPT_ID, "fullId/text()");
+		registerExpression(NCBO.CONCEPT_SHORT_ID, "id/text()");
+		registerExpression(NCBO.CONCEPT_NAME, "label/text()");
+
+		// TODO might not be precise enough, sibling of entry/string/text() =
+		// "ChildCount"
+		registerExpression(NCBO.CONCEPT_CHILD_COUNT,
+				"relations/entry/int/text()");
+	}
+
+	private String process(Node r, boolean reversed, Resource sourceConcept,
+			NeighbourhoodServiceResult result) throws XPathExpressionException {
+
+		String ontologyId = (String) sourceConcept
+				.getValue(NCBO.CONCEPT_ONTOLOGY_ID);
+		String ontologyName = (String) sourceConcept
+				.getValue(NCBO.CONCEPT_ONTOLOGY_NAME);
+
+		String conceptId = getConceptId(r);
+		String conceptShortId = evaluateString(NCBO.CONCEPT_SHORT_ID, r);
+		String label = evaluateString(NCBO.CONCEPT_NAME, r);
+		int childCount = evaluateNumber(NCBO.CONCEPT_CHILD_COUNT, r).intValue();
+
+		// retrieve & create concept + relationship
+		Resource concept = new Resource(NcboUriHelper.toConceptURI(ontologyId,
+				conceptShortId));
+
+		concept.putValue(NCBO.CONCEPT_ID, conceptId);
+		concept.putValue(NCBO.CONCEPT_SHORT_ID, conceptShortId);
+		concept.putValue(NCBO.CONCEPT_NAME, label);
+		concept.putValue(NCBO.CONCEPT_ONTOLOGY_ID, ontologyId);
+		concept.putValue(NCBO.CONCEPT_CHILD_COUNT, Integer.valueOf(childCount));
+		concept.putValue(NCBO.CONCEPT_ONTOLOGY_NAME, ontologyName);
+
 		if (reversed) {
-		    name = name.substring(REVERSE_PREFIX.length());
+			result.addRelationship(concept, sourceConcept);
+		} else {
+			result.addRelationship(sourceConcept, concept);
 		}
 
-		for (int j = 0; j < relationships.getLength(); j++) {
-		    Node r = relationships.item(j);
-
-		    r.setUserData(REVERSED_DATA_KEY, Boolean.valueOf(reversed),
-			    null);
-
-		    if (!("SubClass".equals(name) || "SuperClass".equals(name))) {
-			processLater.add(r);
-			continue;
-		    }
-
-		    String conceptId = process(r, "SuperClass".equals(name),
-			    concept, result);
-
-		    subclassOrSuperclassConceptIds.add(conceptId);
-		}
-
-	    }
-
-	    for (Node n : processLater) {
-		if (subclassOrSuperclassConceptIds.contains(getConceptId(n))) {
-		    continue;
-		}
-
-		process(n, ((Boolean) n.getUserData(REVERSED_DATA_KEY))
-			.booleanValue(), concept, result);
-	    }
-	} catch (Exception e) {
-	    throw new ServiceException(e.getMessage());
+		return conceptId;
 	}
-    }
-
-    private String process(Node r, boolean reversed, Resource sourceConcept,
-	    NeighbourhoodServiceResult result) throws XPathExpressionException {
-
-	String ontologyId = (String) sourceConcept
-		.getValue(NCBO.CONCEPT_ONTOLOGY_ID);
-	String ontologyName = (String) sourceConcept
-		.getValue(NCBO.CONCEPT_ONTOLOGY_NAME);
-
-	String conceptId = getConceptId(r);
-	String conceptShortId = evaluateString(NCBO.CONCEPT_SHORT_ID, r);
-	String label = evaluateString(NCBO.CONCEPT_NAME, r);
-	int childCount = evaluateNumber(NCBO.CONCEPT_CHILD_COUNT, r).intValue();
-
-	// retrieve & create concept + relationship
-	Resource concept = new Resource(NcboUriHelper.toConceptURI(ontologyId,
-		conceptShortId));
-
-	concept.putValue(NCBO.CONCEPT_ID, conceptId);
-	concept.putValue(NCBO.CONCEPT_SHORT_ID, conceptShortId);
-	concept.putValue(NCBO.CONCEPT_NAME, label);
-	concept.putValue(NCBO.CONCEPT_ONTOLOGY_ID, ontologyId);
-	concept.putValue(NCBO.CONCEPT_CHILD_COUNT, Integer.valueOf(childCount));
-	concept.putValue(NCBO.CONCEPT_ONTOLOGY_NAME, ontologyName);
-
-	if (reversed) {
-	    result.addRelationship(concept, sourceConcept);
-	} else {
-	    result.addRelationship(sourceConcept, concept);
-	}
-
-	return conceptId;
-    }
-
-    private String getConceptId(Node r) throws XPathExpressionException {
-	return evaluateString(NCBO.CONCEPT_ID, r);
-    }
-
-    @Override
-    protected Resource analyzeNode(Node node, String label) throws Exception {
-	// TODO
-	throw new Exception("remove this method");
-    }
-
-    // TODO need to generalize beyond ontology ids: need keys
-    @Override
-    public NeighbourhoodServiceResult getNeighbourhood(Resource concept)
-	    throws ServiceException {
-
-	String conceptId = (String) concept.getValue(NCBO.CONCEPT_SHORT_ID);
-	String ontologyId = (String) concept.getValue(NCBO.CONCEPT_ONTOLOGY_ID);
-
-	try {
-	    String latestOntologyVersionId = getLatestOntologyVersionId(ontologyId);
-
-	    String url = constructURL(conceptId, latestOntologyVersionId);
-	    NeighbourhoodServiceResult result = new NeighbourhoodServiceResult(
-		    concept);
-
-	    analyzeXML(url, concept, result);
-
-	    return result;
-	} catch (UnsupportedEncodingException e) {
-	    throw new ServiceException(e.getMessage());
-	}
-    }
-
-    private String getLatestOntologyVersionId(String ontologyId)
-	    throws ServiceException {
-
-	String urlAsString = "http://rest.bioontology.org"
-		+ "/bioportal/virtual/ontology/" + ontologyId
-		+ "?email=example@example.org";
-
-	try {
-	    Document document = documentFetchService
-		    .fetchXML(urlAsString);
-	    XPathExpression pathExpression = xpath
-		    .compile("//success/data/ontologyBean/id/text()");
-	    return (String) pathExpression.evaluate(document,
-		    XPathConstants.STRING);
-	} catch (Exception e) {
-	    throw new ServiceException(e.getMessage());
-	}
-
-    }
-
-    private String constructURL(String conceptId, String ontologyVersionId)
-	    throws UnsupportedEncodingException {
-
-	return WEB_SERVICE + URLEncoder.encode(ontologyVersionId, "UTF-8")
-		+ "?conceptid=" + URLEncoder.encode(conceptId, "UTF-8")
-		+ "&email=example@example.org";
-    }
 
 }

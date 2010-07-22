@@ -32,8 +32,8 @@ public class ResourceSetToColorResolver implements ResourceSetToValueResolver {
         String resourceType = categorizer.getCategory(resource);
 
         if (!resourceTypeToColor.containsKey(resourceType)) {
-            resourceTypeToColor.put(resourceType, COLORS[resourceTypeToColor
-                    .size()]);
+            resourceTypeToColor.put(resourceType,
+                    COLORS[resourceTypeToColor.size()]);
         }
 
         return resourceTypeToColor.get(resourceType);

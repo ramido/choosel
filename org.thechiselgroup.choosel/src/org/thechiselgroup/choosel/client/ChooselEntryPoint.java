@@ -26,6 +26,7 @@ public abstract class ChooselEntryPoint implements EntryPoint {
      * requires GWT.create to be called with a class literal.
      */
     protected abstract ChooselGinjector createChooselGinjector();
+
     // {
     // return GWT.create(ChooselGinjector.class);
     // }

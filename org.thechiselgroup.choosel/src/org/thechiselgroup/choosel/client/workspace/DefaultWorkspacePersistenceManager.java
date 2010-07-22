@@ -305,26 +305,25 @@ public class DefaultWorkspacePersistenceManager implements
 
         assert callback != null;
 
-        service
-                .loadWorkspacePreviews(new AsyncCallback<List<WorkspacePreviewDTO>>() {
+        service.loadWorkspacePreviews(new AsyncCallback<List<WorkspacePreviewDTO>>() {
 
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        callback.onFailure(caught);
-                    }
+            @Override
+            public void onFailure(Throwable caught) {
+                callback.onFailure(caught);
+            }
 
-                    @Override
-                    public void onSuccess(List<WorkspacePreviewDTO> result) {
-                        List<WorkspacePreview> previews = new ArrayList<WorkspacePreview>();
-                        for (WorkspacePreviewDTO dto : result) {
-                            previews.add(new WorkspacePreview(dto.getId(), dto
-                                    .getName(), dto.getId().equals(
-                                    workspaceManager.getWorkspace().getId())));
-                        }
+            @Override
+            public void onSuccess(List<WorkspacePreviewDTO> result) {
+                List<WorkspacePreview> previews = new ArrayList<WorkspacePreview>();
+                for (WorkspacePreviewDTO dto : result) {
+                    previews.add(new WorkspacePreview(dto.getId(), dto
+                            .getName(), dto.getId().equals(
+                            workspaceManager.getWorkspace().getId())));
+                }
 
-                        callback.onSuccess(previews);
-                    }
-                });
+                callback.onSuccess(previews);
+            }
+        });
     }
 
     private void restoreResources(WorkspaceDTO dto) {

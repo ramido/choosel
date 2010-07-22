@@ -17,20 +17,20 @@ package org.thechiselgroup.biomixer.client;
 
 public final class NcboUriHelper {
 
-    public static final String NCBO_CONCEPT = "ncbo-concept";
+	public static final String NCBO_CONCEPT = "ncbo-concept";
 
-    public static final String NCBO_MAPPING = "ncbo-mapping";
+	public static final String NCBO_MAPPING = "ncbo-mapping";
 
-    private NcboUriHelper() {
+	public static String toConceptURI(String ontologyId, String conceptShortId) {
+		return NCBO_CONCEPT + ":" + ontologyId + "/" + conceptShortId;
+	}
 
-    }
+	public static String toMappingURI(String mappingId) {
+		return NCBO_MAPPING + ":" + mappingId;
+	}
 
-    public static String toConceptURI(String ontologyId, String conceptShortId) {
-	return NCBO_CONCEPT + ":" + ontologyId + "/" + conceptShortId;
-    }
+	private NcboUriHelper() {
 
-    public static String toMappingURI(String mappingId) {
-	return NCBO_MAPPING + ":" + mappingId;
-    }
+	}
 
 }

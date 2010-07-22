@@ -59,11 +59,11 @@ public abstract class WindowDragController extends AbstractDragController {
     @Override
     public final void dragMove() {
         int desiredDraggableX = Math.max(0, Math.min(context.desiredDraggableX
-                - desktopOffsetX, desktopWidth
-                - context.draggable.getOffsetWidth()));
+                - desktopOffsetX,
+                desktopWidth - context.draggable.getOffsetWidth()));
         int desiredDraggableY = Math.max(0, Math.min(context.desiredDraggableY
-                - desktopOffsetY, desktopHeight
-                - context.draggable.getOffsetHeight()));
+                - desktopOffsetY,
+                desktopHeight - context.draggable.getOffsetHeight()));
 
         dragMove(desiredDraggableX, desiredDraggableY);
     }

@@ -33,44 +33,45 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 // TODO check if there is an aspect-oriented solution to this logging
 public class NCBOMappingNeighbourhoodServiceServlet extends
-	RemoteServiceServlet implements NCBOMappingNeighbourhoodService {
+		RemoteServiceServlet implements NCBOMappingNeighbourhoodService {
 
-    private NCBOMappingNeighbourhoodService serviceDelegate = null;
+	private NCBOMappingNeighbourhoodService serviceDelegate = null;
 
-    private DocumentBuilderFactory domFactory;
+	private DocumentBuilderFactory domFactory;
 
-    @Override
-    public void init(ServletConfig config) throws ServletException {
-	super.init(config);
+	@Override
+	public NeighbourhoodServiceResult getNeighbourhood(Resource concept)
+			throws ServiceException {
 
-	try {
-	    domFactory = DocumentBuilderFactory.newInstance();
-	    domFactory.setNamespaceAware(true);
+		Log.debug("NCBOMappingServiceServlet.getMappings - "
+				+ concept.getValue(NCBO.CONCEPT_SHORT_ID));
 
-	    // TODO use regular fetch service for production
-	    serviceDelegate = new NCBOMappingNeighbourhoodServiceImplementation(
-		    new CachedDocumentFetchService(URLFetchServiceFactory
-			    .getURLFetchService(), PMF.get(),
-			    DocumentBuilderFactory.newInstance()));
-	} catch (Exception e) {
-	    throw new ServletException(e);
+		try {
+			return serviceDelegate.getNeighbourhood(concept);
+		} catch (RuntimeException e) {
+			Log.error(
+					"NCBOMappingServiceServlet.getMappings failed: "
+							+ e.getMessage(), e);
+			throw new ServiceException(e.getMessage());
+		}
 	}
 
-    }
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
 
-    @Override
-    public NeighbourhoodServiceResult getNeighbourhood(Resource concept)
-	    throws ServiceException {
+		try {
+			domFactory = DocumentBuilderFactory.newInstance();
+			domFactory.setNamespaceAware(true);
 
-	Log.debug("NCBOMappingServiceServlet.getMappings - "
-		+ concept.getValue(NCBO.CONCEPT_SHORT_ID));
+			// TODO use regular fetch service for production
+			serviceDelegate = new NCBOMappingNeighbourhoodServiceImplementation(
+					new CachedDocumentFetchService(
+							URLFetchServiceFactory.getURLFetchService(),
+							PMF.get(), DocumentBuilderFactory.newInstance()));
+		} catch (Exception e) {
+			throw new ServletException(e);
+		}
 
-	try {
-	    return serviceDelegate.getNeighbourhood(concept);
-	} catch (RuntimeException e) {
-	    Log.error("NCBOMappingServiceServlet.getMappings failed: "
-		    + e.getMessage(), e);
-	    throw new ServiceException(e.getMessage());
 	}
-    }
 }

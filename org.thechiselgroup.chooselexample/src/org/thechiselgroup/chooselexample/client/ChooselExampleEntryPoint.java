@@ -22,9 +22,9 @@ import com.google.gwt.core.client.GWT;
 
 public class ChooselExampleEntryPoint extends ChooselEntryPoint {
 
-    @Override
-    protected ChooselGinjector createChooselGinjector() {
-	return GWT.create(ChooselExampleGinjector.class);
-    }
+	@Override
+	protected ChooselGinjector createChooselGinjector() {
+		return GWT.create(ChooselExampleGinjector.class);
+	}
 
 }

@@ -20,25 +20,25 @@ import org.thechiselgroup.choosel.client.util.URLFetchService;
 
 public abstract class AbstractXMLWebResourceService {
 
-    /*
-     * Implementation node: written so it is as independent of the execution
-     * environment (client vs server) as possible.
-     */
+	/*
+	 * Implementation node: written so it is as independent of the execution
+	 * environment (client vs server) as possible.
+	 */
 
-    protected DocumentProcessor documentProcessor;
+	protected DocumentProcessor documentProcessor;
 
-    protected URLFetchService urlFetchService;
+	protected URLFetchService urlFetchService;
 
-    public AbstractXMLWebResourceService(DocumentProcessor documentProcessor,
-	    URLFetchService urlFetchService) {
+	public AbstractXMLWebResourceService(DocumentProcessor documentProcessor,
+			URLFetchService urlFetchService) {
 
-	this.documentProcessor = documentProcessor;
-	this.urlFetchService = urlFetchService;
-    }
+		this.documentProcessor = documentProcessor;
+		this.urlFetchService = urlFetchService;
+	}
 
-    // TODO use client / server independent interface for this
-    protected native String encode(String queryText) /*-{
-        return escape(queryText);
-    }-*/;
+	// TODO use client / server independent interface for this
+	protected native String encode(String queryText) /*-{
+														return escape(queryText);
+														}-*/;
 
 }

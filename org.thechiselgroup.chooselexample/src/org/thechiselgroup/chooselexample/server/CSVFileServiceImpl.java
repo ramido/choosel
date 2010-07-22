@@ -1,7 +1,6 @@
 package org.thechiselgroup.chooselexample.server;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashSet;
@@ -16,49 +15,52 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 @SuppressWarnings("serial")
 public class CSVFileServiceImpl extends RemoteServiceServlet implements
-        CSVFileService {
+		CSVFileService {
 
-    @Override
-    public Set<Resource> getCSVResources(String filePath, String fileName)
-            throws Exception {
+	@Override
+	public Set<Resource> getCSVResources(String filePath, String fileName)
+			throws Exception {
 
-        ServletContext servletContext = this.getServletContext();
-        InputStream resourceAsStream = servletContext.getResourceAsStream(filePath+fileName);
-        
-        if(resourceAsStream == null) {
-            throw new Exception("File cannot be found.  Please ensure that the file is in the data folder");
-        }
-        
-        InputStreamReader reader = new InputStreamReader(resourceAsStream);
-        
-        BufferedReader in = new BufferedReader(reader);
-        int count = 1;
+		ServletContext servletContext = this.getServletContext();
+		InputStream resourceAsStream = servletContext
+				.getResourceAsStream(filePath + fileName);
 
-        try {
-            String[] fieldNames = in.readLine().trim().split(",");
-            Set<Resource> resources = new HashSet<Resource>();
+		if (resourceAsStream == null) {
+			throw new Exception(
+					"File cannot be found.  Please ensure that the file is in the data folder");
+		}
 
-            String line = in.readLine();
-            while (line != null) {
-                String[] fieldValues = line.trim().split(",");
+		InputStreamReader reader = new InputStreamReader(resourceAsStream);
 
-                // TODO maybe should be if else
-                assert (fieldNames.length == fieldValues.length);
+		BufferedReader in = new BufferedReader(reader);
+		int count = 1;
 
-                Resource resource = new Resource("csv:" + count++);
-                for (int i = 0; i < fieldValues.length; i++) {
-                    
-                    resource.putValue(fieldNames[i].trim(), fieldValues[i].trim());
-                }
+		try {
+			String[] fieldNames = in.readLine().trim().split(",");
+			Set<Resource> resources = new HashSet<Resource>();
 
-                resources.add(resource);
-                line = in.readLine();
-            }
+			String line = in.readLine();
+			while (line != null) {
+				String[] fieldValues = line.trim().split(",");
 
-            return resources;
-        } finally {
-            in.close();
-        }
-    }
+				// TODO maybe should be if else
+				assert (fieldNames.length == fieldValues.length);
+
+				Resource resource = new Resource("csv:" + count++);
+				for (int i = 0; i < fieldValues.length; i++) {
+
+					resource.putValue(fieldNames[i].trim(),
+							fieldValues[i].trim());
+				}
+
+				resources.add(resource);
+				line = in.readLine();
+			}
+
+			return resources;
+		} finally {
+			in.close();
+		}
+	}
 
 }

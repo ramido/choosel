@@ -134,8 +134,8 @@ class TimeLine extends JavaScriptObject {
     }
 
     public final native int getTimeLineID() /*-{
-           return this.timelineID;
-       }-*/;
+                                            return this.timelineID;
+                                            }-*/;
 
     /**
      * Returns the zoom index of a band. What time interval the zoom index
@@ -143,12 +143,12 @@ class TimeLine extends JavaScriptObject {
      * {@link #create(Element, TimeLineEventSource, String)}).
      */
     public final native int getZoomIndex(int bandNumber) /*-{
-           return this.getBand(bandNumber)._zoomIndex;
-       }-*/;
+                                                         return this.getBand(bandNumber)._zoomIndex;
+                                                         }-*/;
 
     public final native void layout() /*-{
-           this.layout();
-       }-*/;
+                                      this.layout();
+                                      }-*/;
 
     private final void onEventPainted(int bandIndex, final TimeLineEvent event) {
         String labelElementID = getEventElementID(bandIndex, "label", event);
@@ -163,8 +163,8 @@ class TimeLine extends JavaScriptObject {
     }
 
     public final native void paint() /*-{
-           this.paint();
-       }-*/;
+                                     this.paint();
+                                     }-*/;
 
     // @formatter:off
     public final native void registerPaintListener() /*-{
@@ -187,10 +187,10 @@ class TimeLine extends JavaScriptObject {
     // @formatter:on
 
     public final native String setCenterVisibleDate(String gmtString) /*-{
-           // TODO change if bands are not synchronized any more
-           // TODO parse date ?!?
-           return this.getBand(0).setCenterVisibleDate(Date.parse(gmtString));
-       }-*/;
+                                                                      // TODO change if bands are not synchronized any more
+                                                                      // TODO parse date ?!?
+                                                                      return this.getBand(0).setCenterVisibleDate(Date.parse(gmtString));
+                                                                      }-*/;
 
     /**
      * Sets the zoom index of a band. What time interval the zoom index refers

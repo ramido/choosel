@@ -80,8 +80,8 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
             ResourceSet resource) {
 
         // TODO mah
-        return createPopupManager(resource, layer
-                .getResourceSetResolver(SlotResolver.DESCRIPTION_SLOT));
+        return createPopupManager(resource,
+                layer.getResourceSetResolver(SlotResolver.DESCRIPTION_SLOT));
     }
 
     protected PopupManager createPopupManager(final ResourceSet resources,

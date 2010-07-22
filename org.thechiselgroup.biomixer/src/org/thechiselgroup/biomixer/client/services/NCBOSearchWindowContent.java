@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.biomixer.client.services;
 
-import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.*;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.PROXY;
 
 import java.util.Set;
 
@@ -43,178 +43,178 @@ import com.google.inject.name.Named;
 
 //TODO create generic resource search service interface
 public class NCBOSearchWindowContent extends AbstractWindowContent implements
-	HasTextParameter, Persistable {
+		HasTextParameter, Persistable {
 
-    private static class ViewContentDeckpanel extends DeckPanel {
+	private static class ViewContentDeckpanel extends DeckPanel {
 
-	@Override
-	public int getOffsetHeight() {
-	    // HACK: no padding / margin / border allowed
-	    return getWidget(getVisibleWidget()).getOffsetHeight();
-	}
+		@Override
+		public int getOffsetHeight() {
+			// HACK: no padding / margin / border allowed
+			return getWidget(getVisibleWidget()).getOffsetHeight();
+		}
 
-	@Override
-	public int getOffsetWidth() {
-	    // HACK: no padding / margin / border allowed
-	    return getWidget(getVisibleWidget()).getOffsetWidth();
-	}
+		@Override
+		public int getOffsetWidth() {
+			// HACK: no padding / margin / border allowed
+			return getWidget(getVisibleWidget()).getOffsetWidth();
+		}
 
-	@Override
-	public void setPixelSize(int width, int height) {
-	    getWidget(getVisibleWidget()).setPixelSize(width, height);
-	    super.setPixelSize(width, height);
-	}
+		@Override
+		public void setPixelSize(int width, int height) {
+			getWidget(getVisibleWidget()).setPixelSize(width, height);
+			super.setPixelSize(width, height);
+		}
 
-	public void updateWindowSize() {
-	    Widget w = this;
-	    while (w != null && !(w instanceof WindowPanel)) {
-		w = w.getParent();
-	    }
-
-	    if (w == null) {
-		return;
-	    }
-
-	    ((WindowPanel) w).updateToContentSize();
-	}
-
-    }
-
-    private static final String MEMENTO_HEIGHT = "height";
-
-    private static final String MEMENTO_INDEX = "index";
-
-    private static final String MEMENTO_LABEL = "label";
-
-    private static final String MEMENTO_SEARCH_TERM = "searchTerm";
-
-    private static final String MEMENTO_VIEW = "view";
-
-    private static final String MEMENTO_WIDTH = "width";
-
-    private ViewContentDeckpanel deckPanel;
-
-    private Label infoLabel;
-
-    private ResourceSetFactory resourceSetFactory;
-
-    private View resultView;
-
-    private NCBOConceptSearchServiceAsync searchService;
-
-    private String searchTerm;
-
-    private WindowContentProducer viewFactory;
-
-    @Inject
-    public NCBOSearchWindowContent(ResourceSetFactory resourceSetFactory,
-	    NCBOConceptSearchServiceAsync searchService,
-	    @Named(PROXY) WindowContentProducer viewFactory) {
-
-	/*
-	 * In WindowContent implementations, the proxy view factory should be
-	 * used to prevent cycles during the initialization.
-	 */
-
-	super("", "ncbo-search");
-
-	this.resourceSetFactory = resourceSetFactory;
-	this.searchService = searchService;
-	this.viewFactory = viewFactory;
-    }
-
-    @Override
-    public Widget asWidget() {
-	return deckPanel;
-    }
-
-    @Override
-    public void init() {
-	resultView = (View) viewFactory
-		.createWindowContent(ListViewContentDisplay.TYPE);
-	infoLabel = new Label("Searching...");
-	infoLabel.addStyleName("infoLabel");
-	deckPanel = new ViewContentDeckpanel();
-
-	resultView.init();
-	deckPanel.add(resultView.asWidget());
-	deckPanel.add(infoLabel);
-	deckPanel.showWidget(1);
-
-	if (searchTerm == null) {
-	    // this is the case if we restore from mememento
-	    // TODO find better solution
-	    return;
-	}
-
-	searchService.searchConcepts(searchTerm,
-		new AsyncCallback<Set<Resource>>() {
-		    // TODO better failure handling
-		    @Override
-		    public void onFailure(Throwable caught) {
-			Log.error(caught.getMessage(), caught);
-
-			infoLabel.setText("Search failed: "
-				+ caught.getMessage());
-			deckPanel.updateWindowSize();
-		    }
-
-		    @Override
-		    public void onSuccess(Set<Resource> result) {
-			if (result.isEmpty()) {
-			    infoLabel
-				    .setText("No concepts found for search term '"
-					    + searchTerm + "'");
-			    deckPanel.updateWindowSize();
-			    return;
+		public void updateWindowSize() {
+			Widget w = this;
+			while (w != null && !(w instanceof WindowPanel)) {
+				w = w.getParent();
 			}
 
-			// TODO add convenience method to
-			// resourceSetFactory
-			ResourceSet resourceSet = resourceSetFactory
-				.createResourceSet();
+			if (w == null) {
+				return;
+			}
 
-			resourceSet.addAll(result);
-			resultView.addResourceSet(resourceSet);
+			((WindowPanel) w).updateToContentSize();
+		}
 
-			deckPanel.showWidget(0);
-			deckPanel.updateWindowSize();
-		    }
+	}
 
-		});
-    }
+	private static final String MEMENTO_HEIGHT = "height";
 
-    public void initParameter(String searchTerm) {
-	setSearchTerm(searchTerm);
-    }
+	private static final String MEMENTO_INDEX = "index";
 
-    @Override
-    public void restore(Memento state, ResourceSetAccessor accessor) {
-	infoLabel.setText((String) state.getValue(MEMENTO_LABEL));
-	setSearchTerm((String) state.getValue(MEMENTO_SEARCH_TERM));
-	resultView.restore(state.getChild(MEMENTO_VIEW), accessor);
-	deckPanel.showWidget((Integer) state.getValue(MEMENTO_INDEX));
-	deckPanel.setPixelSize((Integer) state.getValue(MEMENTO_WIDTH),
-		(Integer) state.getValue(MEMENTO_HEIGHT));
-    }
+	private static final String MEMENTO_LABEL = "label";
 
-    @Override
-    public Memento save(ResourceSetCollector resourceSetCollector) {
-	Memento state = new Memento();
+	private static final String MEMENTO_SEARCH_TERM = "searchTerm";
 
-	state.setValue(MEMENTO_INDEX, deckPanel.getVisibleWidget());
-	state.setValue(MEMENTO_WIDTH, deckPanel.getOffsetWidth());
-	state.setValue(MEMENTO_HEIGHT, deckPanel.getOffsetHeight());
-	state.setValue(MEMENTO_SEARCH_TERM, searchTerm);
-	state.addChild(MEMENTO_VIEW, resultView.save(resourceSetCollector));
-	state.setValue(MEMENTO_LABEL, infoLabel.getText());
+	private static final String MEMENTO_VIEW = "view";
 
-	return state;
-    }
+	private static final String MEMENTO_WIDTH = "width";
 
-    private void setSearchTerm(String searchTerm) {
-	assert searchTerm != null;
-	this.searchTerm = searchTerm;
-	setLabel("Search results for '" + searchTerm + "'");
-    }
+	private ViewContentDeckpanel deckPanel;
+
+	private Label infoLabel;
+
+	private ResourceSetFactory resourceSetFactory;
+
+	private View resultView;
+
+	private NCBOConceptSearchServiceAsync searchService;
+
+	private String searchTerm;
+
+	private WindowContentProducer viewFactory;
+
+	@Inject
+	public NCBOSearchWindowContent(ResourceSetFactory resourceSetFactory,
+			NCBOConceptSearchServiceAsync searchService,
+			@Named(PROXY) WindowContentProducer viewFactory) {
+
+		/*
+		 * In WindowContent implementations, the proxy view factory should be
+		 * used to prevent cycles during the initialization.
+		 */
+
+		super("", "ncbo-search");
+
+		this.resourceSetFactory = resourceSetFactory;
+		this.searchService = searchService;
+		this.viewFactory = viewFactory;
+	}
+
+	@Override
+	public Widget asWidget() {
+		return deckPanel;
+	}
+
+	@Override
+	public void init() {
+		resultView = (View) viewFactory
+				.createWindowContent(ListViewContentDisplay.TYPE);
+		infoLabel = new Label("Searching...");
+		infoLabel.addStyleName("infoLabel");
+		deckPanel = new ViewContentDeckpanel();
+
+		resultView.init();
+		deckPanel.add(resultView.asWidget());
+		deckPanel.add(infoLabel);
+		deckPanel.showWidget(1);
+
+		if (searchTerm == null) {
+			// this is the case if we restore from mememento
+			// TODO find better solution
+			return;
+		}
+
+		searchService.searchConcepts(searchTerm,
+				new AsyncCallback<Set<Resource>>() {
+					// TODO better failure handling
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.error(caught.getMessage(), caught);
+
+						infoLabel.setText("Search failed: "
+								+ caught.getMessage());
+						deckPanel.updateWindowSize();
+					}
+
+					@Override
+					public void onSuccess(Set<Resource> result) {
+						if (result.isEmpty()) {
+							infoLabel
+									.setText("No concepts found for search term '"
+											+ searchTerm + "'");
+							deckPanel.updateWindowSize();
+							return;
+						}
+
+						// TODO add convenience method to
+						// resourceSetFactory
+						ResourceSet resourceSet = resourceSetFactory
+								.createResourceSet();
+
+						resourceSet.addAll(result);
+						resultView.addResourceSet(resourceSet);
+
+						deckPanel.showWidget(0);
+						deckPanel.updateWindowSize();
+					}
+
+				});
+	}
+
+	public void initParameter(String searchTerm) {
+		setSearchTerm(searchTerm);
+	}
+
+	@Override
+	public void restore(Memento state, ResourceSetAccessor accessor) {
+		infoLabel.setText((String) state.getValue(MEMENTO_LABEL));
+		setSearchTerm((String) state.getValue(MEMENTO_SEARCH_TERM));
+		resultView.restore(state.getChild(MEMENTO_VIEW), accessor);
+		deckPanel.showWidget((Integer) state.getValue(MEMENTO_INDEX));
+		deckPanel.setPixelSize((Integer) state.getValue(MEMENTO_WIDTH),
+				(Integer) state.getValue(MEMENTO_HEIGHT));
+	}
+
+	@Override
+	public Memento save(ResourceSetCollector resourceSetCollector) {
+		Memento state = new Memento();
+
+		state.setValue(MEMENTO_INDEX, deckPanel.getVisibleWidget());
+		state.setValue(MEMENTO_WIDTH, deckPanel.getOffsetWidth());
+		state.setValue(MEMENTO_HEIGHT, deckPanel.getOffsetHeight());
+		state.setValue(MEMENTO_SEARCH_TERM, searchTerm);
+		state.addChild(MEMENTO_VIEW, resultView.save(resourceSetCollector));
+		state.setValue(MEMENTO_LABEL, infoLabel.getText());
+
+		return state;
+	}
+
+	private void setSearchTerm(String searchTerm) {
+		assert searchTerm != null;
+		this.searchTerm = searchTerm;
+		setLabel("Search results for '" + searchTerm + "'");
+	}
 }

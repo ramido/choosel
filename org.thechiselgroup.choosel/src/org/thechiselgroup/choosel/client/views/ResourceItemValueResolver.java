@@ -37,8 +37,8 @@ public class ResourceItemValueResolver {
         assert slotID != null;
 
         if (!slotIDsToValueResolvers.containsKey(slotID)) {
-            slotIDsToValueResolvers.put(slotID, resourceSetResolverFactory
-                    .createResolver(slotID));
+            slotIDsToValueResolvers.put(slotID,
+                    resourceSetResolverFactory.createResolver(slotID));
         }
 
         return slotIDsToValueResolvers.get(slotID);

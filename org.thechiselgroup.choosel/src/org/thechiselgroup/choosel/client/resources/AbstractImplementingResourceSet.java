@@ -19,9 +19,9 @@ import org.thechiselgroup.choosel.client.label.DefaultHasLabel;
 import org.thechiselgroup.choosel.client.label.HasLabel;
 import org.thechiselgroup.choosel.client.label.LabelChangedEventHandler;
 
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.event.shared.GwtEvent.Type;
 
 public abstract class AbstractImplementingResourceSet extends
         AbstractResourceSet {

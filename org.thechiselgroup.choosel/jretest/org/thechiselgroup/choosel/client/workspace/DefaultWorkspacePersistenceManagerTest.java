@@ -182,8 +182,9 @@ public class DefaultWorkspacePersistenceManagerTest {
         ResourceSet resourceSet = argument.getValue().getResourceSet(
                 Integer.parseInt(id.toString()));
         assertEquals(true, resourceSet instanceof UnmodifiableResourceSet);
-        assertEquals(true, delegate
-                .containsEqualResources(((DelegatingResourceSet) resourceSet)
+        assertEquals(
+                true,
+                delegate.containsEqualResources(((DelegatingResourceSet) resourceSet)
                         .getDelegate()));
     }
 

@@ -7,5 +7,6 @@ import org.thechiselgroup.choosel.client.resources.Resource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface CSVFileServiceAsync {
-    void getCSVResources(String filePath, String fileName, AsyncCallback<Set<Resource>> callback) throws Exception;
+	void getCSVResources(String filePath, String fileName,
+			AsyncCallback<Set<Resource>> callback) throws Exception;
 }

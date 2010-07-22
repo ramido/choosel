@@ -24,39 +24,39 @@ import com.google.inject.Inject;
 
 public class BioMixerApplication extends ChooselApplication {
 
-    public static final String NCBO_SEARCH = "ncbo-search";
+	public static final String NCBO_SEARCH = "ncbo-search";
 
-    @Inject
-    private NCBOConceptSearchCommand ncboConceptSearchCommand;
+	@Inject
+	private NCBOConceptSearchCommand ncboConceptSearchCommand;
 
-    @Override
-    protected void initCustomActions() {
-	initNCBOSearchField();
+	@Override
+	protected void initCustomActions() {
+		initNCBOSearchField();
 
-	addWindowContentButton(VIEWS_PANEL, "Note", "note");
-	addWindowContentButton(VIEWS_PANEL, "List", ListViewContentDisplay.TYPE);
-	addWindowContentButton(VIEWS_PANEL, "Timeline", "Timeline");
-	addWindowContentButton(VIEWS_PANEL, "Graph", "Graph");
+		addWindowContentButton(VIEWS_PANEL, "Note", "note");
+		addWindowContentButton(VIEWS_PANEL, "List", ListViewContentDisplay.TYPE);
+		addWindowContentButton(VIEWS_PANEL, "Timeline", "Timeline");
+		addWindowContentButton(VIEWS_PANEL, "Graph", "Graph");
 
-	addWindowContentButton(HELP_PANEL, "?", "help");
-	addInfoButton();
-    }
+		addWindowContentButton(HELP_PANEL, "?", "help");
+		addInfoButton();
+	}
 
-    @Override
-    protected void initCustomPanels() {
-	addPanel(VIEWS_PANEL, "Views");
-	addPanel(NCBO_SEARCH, "NCBO Concept Search");
-	addPanel(HELP_PANEL, "Help");
-    }
+	@Override
+	protected void initCustomPanels() {
+		addPanel(VIEWS_PANEL, "Views");
+		addPanel(NCBO_SEARCH, "NCBO Concept Search");
+		addPanel(HELP_PANEL, "Help");
+	}
 
-    private void initNCBOSearchField() {
-	TextCommandPresenter presenter = new TextCommandPresenter(
-		ncboConceptSearchCommand, "Search");
+	private void initNCBOSearchField() {
+		TextCommandPresenter presenter = new TextCommandPresenter(
+				ncboConceptSearchCommand, "Search");
 
-	presenter.init();
+		presenter.init();
 
-	addWidget(NCBO_SEARCH, presenter.getTextBox());
-	addWidget(NCBO_SEARCH, presenter.getExecuteButton());
-    }
+		addWidget(NCBO_SEARCH, presenter.getTextBox());
+		addWidget(NCBO_SEARCH, presenter.getExecuteButton());
+	}
 
 }

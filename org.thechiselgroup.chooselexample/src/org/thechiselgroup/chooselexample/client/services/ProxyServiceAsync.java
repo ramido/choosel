@@ -20,6 +20,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 //TODO move to choosel framework
 public interface ProxyServiceAsync {
 
-    void fetchURL(String url, AsyncCallback<String> callback);
+	void fetchURL(String url, AsyncCallback<String> callback);
 
 }

@@ -57,15 +57,15 @@ public class TimeLineEvent extends JavaScriptObject {
     }
 
     public final native String getID() /*-{
-           return this.getID();
-       }-*/;
+                                       return this.getID();
+                                       }-*/;
 
     public final native TimeLineItem getTimeLineItem() /*-{
-           return this.getProperty('timeLineItem');
-       }-*/;
+                                                       return this.getProperty('timeLineItem');
+                                                       }-*/;
 
     public final native void setIcon(String url) /*-{
-           this._icon = url;
-       }-*/;
+                                                 this._icon = url;
+                                                 }-*/;
 
 }

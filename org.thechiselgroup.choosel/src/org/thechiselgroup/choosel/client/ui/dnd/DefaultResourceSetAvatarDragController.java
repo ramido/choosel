@@ -68,16 +68,15 @@ public class DefaultResourceSetAvatarDragController extends
     private static void checkGWTIssue1813(Widget child, AbsolutePanel parent) {
         if (!GWT.isScript()) {
             if (child.getElement().getOffsetParent() != parent.getElement()) {
-                DOMUtil
-                        .reportFatalAndThrowRuntimeException("The boundary panel for this drag controller does not appear to have"
-                                + " 'position: relative' CSS applied to it."
-                                + " This may be due to custom CSS in your application, although this"
-                                + " is often caused by using the result of RootPanel.get(\"some-unique-id\") as your boundary"
-                                + " panel, as described in GWT issue 1813"
-                                + " (http://code.google.com/p/google-web-toolkit/issues/detail?id=1813)."
-                                + " Please star / vote for this issue if it has just affected your application."
-                                + " You can often remedy this problem by adding one line of code to your application:"
-                                + " boundaryPanel.getElement().getStyle().setProperty(\"position\", \"relative\");");
+                DOMUtil.reportFatalAndThrowRuntimeException("The boundary panel for this drag controller does not appear to have"
+                        + " 'position: relative' CSS applied to it."
+                        + " This may be due to custom CSS in your application, although this"
+                        + " is often caused by using the result of RootPanel.get(\"some-unique-id\") as your boundary"
+                        + " panel, as described in GWT issue 1813"
+                        + " (http://code.google.com/p/google-web-toolkit/issues/detail?id=1813)."
+                        + " Please star / vote for this issue if it has just affected your application."
+                        + " You can often remedy this problem by adding one line of code to your application:"
+                        + " boundaryPanel.getElement().getStyle().setProperty(\"position\", \"relative\");");
             }
         }
     }
@@ -131,8 +130,8 @@ public class DefaultResourceSetAvatarDragController extends
 
         this.shadeManager = shadeManager;
         this.desktop = desktop;
-        this.boundaryDropController = new BoundaryDropController(desktop
-                .asWidget(), false);
+        this.boundaryDropController = new BoundaryDropController(
+                desktop.asWidget(), false);
 
         setBehaviorDragStartSensitivity(2);
     }
@@ -223,10 +222,10 @@ public class DefaultResourceSetAvatarDragController extends
         CSS.setZIndex(shade, CSS_SHADE_Z_INDEX);
 
         WindowPanel window = getWindow(dropTarget);
-        CSS.setAbsoluteBounds(shade, dropTarget.getAbsoluteLeft()
-                - window.getAbsoluteLeft(), dropTarget.getAbsoluteTop()
-                - window.getAbsoluteTop(), dropTarget.getOffsetWidth(),
-                dropTarget.getOffsetHeight());
+        CSS.setAbsoluteBounds(shade,
+                dropTarget.getAbsoluteLeft() - window.getAbsoluteLeft(),
+                dropTarget.getAbsoluteTop() - window.getAbsoluteTop(),
+                dropTarget.getOffsetWidth(), dropTarget.getOffsetHeight());
 
         return shade;
     }
@@ -284,7 +283,9 @@ public class DefaultResourceSetAvatarDragController extends
     private int getDesiredLeft() {
         int desiredLeft = context.desiredDraggableX - boundaryRectangle.getX();
         if (getBehaviorConstrainedToBoundaryPanel()) {
-            desiredLeft = MathUtils.restrictToInterval(0, desiredLeft,
+            desiredLeft = MathUtils.restrictToInterval(
+                    0,
+                    desiredLeft,
                     boundaryRectangle.getWidth()
                             - context.draggable.getOffsetWidth());
         }
@@ -294,7 +295,9 @@ public class DefaultResourceSetAvatarDragController extends
     private int getDesiredTop() {
         int desiredTop = context.desiredDraggableY - boundaryRectangle.getY();
         if (getBehaviorConstrainedToBoundaryPanel()) {
-            desiredTop = MathUtils.restrictToInterval(0, desiredTop,
+            desiredTop = MathUtils.restrictToInterval(
+                    0,
+                    desiredTop,
                     boundaryRectangle.getHeight()
                             - context.draggable.getOffsetHeight());
         }
@@ -375,8 +378,8 @@ public class DefaultResourceSetAvatarDragController extends
 
         dragProxy = newDragProxy(context);
         context.boundaryPanel.add(dragProxy,
-                currentDraggableLocation.getLeft(), currentDraggableLocation
-                        .getTop());
+                currentDraggableLocation.getLeft(),
+                currentDraggableLocation.getTop());
         checkGWTIssue1813(dragProxy, context.boundaryPanel);
         dragProxy.addStyleName(DragClientBundle.INSTANCE.css().movablePanel());
     }

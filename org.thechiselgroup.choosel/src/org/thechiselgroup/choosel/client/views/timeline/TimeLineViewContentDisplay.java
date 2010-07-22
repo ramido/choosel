@@ -103,10 +103,10 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
 
     @Override
     public void restore(Memento state) {
-        timelineWidget.setZoomIndex(0, (Integer) state
-                .getValue(MEMENTO_ZOOM_PREFIX + 0));
-        timelineWidget.setZoomIndex(1, (Integer) state
-                .getValue(MEMENTO_ZOOM_PREFIX + 1));
+        timelineWidget.setZoomIndex(0,
+                (Integer) state.getValue(MEMENTO_ZOOM_PREFIX + 0));
+        timelineWidget.setZoomIndex(1,
+                (Integer) state.getValue(MEMENTO_ZOOM_PREFIX + 1));
 
         // set date *AFTER* zoom restored
         Date date = (Date) state.getValue(MEMENTO_DATE);

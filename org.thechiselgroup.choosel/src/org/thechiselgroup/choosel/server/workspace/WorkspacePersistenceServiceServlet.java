@@ -37,8 +37,8 @@ public class WorkspacePersistenceServiceServlet extends RemoteServiceServlet
     private WorkspacePersistenceService getServiceDelegate() {
         if (service == null) {
             service = new WorkspacePersistenceServiceImplementation(PMF.get(),
-                    new WorkspaceSecurityManager(UserServiceFactory
-                            .getUserService()));
+                    new WorkspaceSecurityManager(
+                            UserServiceFactory.getUserService()));
         }
 
         return service;
@@ -56,12 +56,14 @@ public class WorkspacePersistenceServiceServlet extends RemoteServiceServlet
         try {
             return getServiceDelegate().loadWorkspace(id);
         } catch (ServiceException e) {
-            Log.error("loadWorkspace failed: "
-                    + StackTraceHelper.getStackTraceAsString(e), e);
+            Log.error(
+                    "loadWorkspace failed: "
+                            + StackTraceHelper.getStackTraceAsString(e), e);
             throw e;
         } catch (Exception e) {
-            Log.error("loadWorkspace failed: "
-                    + StackTraceHelper.getStackTraceAsString(e), e);
+            Log.error(
+                    "loadWorkspace failed: "
+                            + StackTraceHelper.getStackTraceAsString(e), e);
             throw new ServiceException(e);
         } finally {
             if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {
@@ -86,20 +88,20 @@ public class WorkspacePersistenceServiceServlet extends RemoteServiceServlet
         try {
             return getServiceDelegate().loadWorkspacePreviews();
         } catch (ServiceException e) {
-            Log.error("loadWorkspacePreviews failed: "
-                    + StackTraceHelper.getStackTraceAsString(e), e);
+            Log.error(
+                    "loadWorkspacePreviews failed: "
+                            + StackTraceHelper.getStackTraceAsString(e), e);
             throw e;
         } catch (Exception e) {
-            Log.error("loadWorkspacePreviews failed: "
-                    + StackTraceHelper.getStackTraceAsString(e), e);
+            Log.error(
+                    "loadWorkspacePreviews failed: "
+                            + StackTraceHelper.getStackTraceAsString(e), e);
             throw new ServiceException(e);
         } finally {
             if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {
-                Log
-                        .debug("WorkspacePersistenceServiceServlet.loadWorkspacePreviews"
-                                + " completed in "
-                                + (System.currentTimeMillis() - startTime)
-                                + " ms");
+                Log.debug("WorkspacePersistenceServiceServlet.loadWorkspacePreviews"
+                        + " completed in "
+                        + (System.currentTimeMillis() - startTime) + " ms");
             }
         }
     }
@@ -118,12 +120,14 @@ public class WorkspacePersistenceServiceServlet extends RemoteServiceServlet
         try {
             return getServiceDelegate().saveWorkspace(workspace);
         } catch (ServiceException e) {
-            Log.error("saveWorkspace failed: "
-                    + StackTraceHelper.getStackTraceAsString(e), e);
+            Log.error(
+                    "saveWorkspace failed: "
+                            + StackTraceHelper.getStackTraceAsString(e), e);
             throw e;
         } catch (Exception e) {
-            Log.error("saveWorkspace failed: "
-                    + StackTraceHelper.getStackTraceAsString(e), e);
+            Log.error(
+                    "saveWorkspace failed: "
+                            + StackTraceHelper.getStackTraceAsString(e), e);
             throw new ServiceException(e);
         } finally {
             if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {

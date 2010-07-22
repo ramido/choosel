@@ -56,12 +56,12 @@ public class ChooselExampleClientModule extends ChooselClientModule {
 	// }
 
 	@Override
-	protected Class<? extends SlotResolver> getSlotResolverClass() {
-		return ChooselExampleSlotResolver.class;
+	protected Class<? extends DropTargetCapabilityChecker> getDropTargetCapabilityCheckerClass() {
+		return ChooselExampleDropTargetCapabilityChecker.class;
 	}
 
 	@Override
-	protected Class<? extends DropTargetCapabilityChecker> getDropTargetCapabilityCheckerClass() {
-		return ChooselExampleDropTargetCapabilityChecker.class;
+	protected Class<? extends SlotResolver> getSlotResolverClass() {
+		return ChooselExampleSlotResolver.class;
 	}
 }

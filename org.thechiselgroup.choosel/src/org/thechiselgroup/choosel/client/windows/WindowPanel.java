@@ -539,8 +539,8 @@ public class WindowPanel extends NEffectPanel implements
 
     private void setBorderWidths(int contentOffsetWidth,
             int contentOffsetHeight, int headerHeight) {
-        headerContainer.setPixelSize(contentOffsetWidth - 4, headerWidget
-                .getOffsetHeight()); // subtract header padding from
+        headerContainer.setPixelSize(contentOffsetWidth - 4,
+                headerWidget.getOffsetHeight()); // subtract header padding from
         // CSS
         // file
 
@@ -576,9 +576,9 @@ public class WindowPanel extends NEffectPanel implements
         }
 
         setPixelSize(maxInnerWidth + 2 * BORDER_THICKNESS
-                + WINDOW_BORDER_FROM_CSS, contentOffsetHeight
-                + headerWidget.getOffsetHeight() + 2 * BORDER_THICKNESS
-                + WINDOW_BORDER_FROM_CSS);
+                + WINDOW_BORDER_FROM_CSS,
+                contentOffsetHeight + headerWidget.getOffsetHeight() + 2
+                        * BORDER_THICKNESS + WINDOW_BORDER_FROM_CSS);
 
         assert contentHeight == height;
         assert contentWidth == width;

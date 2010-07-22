@@ -23,7 +23,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface GeoRSSServiceAsync {
 
-    void getGeoRSS(String url, String className,
-	    AsyncCallback<Set<Resource>> callback);
+	void getGeoRSS(String url, String className,
+			AsyncCallback<Set<Resource>> callback);
 
 }

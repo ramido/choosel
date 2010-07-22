@@ -76,26 +76,26 @@ public final class WindowResizeController extends WindowDragController {
             int delta = getLeft() - desiredDraggableX;
             if (delta != 0) {
                 int contentWidth = windowPanel.getContentWidth();
-                int newWidth = Math.max(contentWidth + delta, windowPanel
-                        .getMinimumWidth());
+                int newWidth = Math.max(contentWidth + delta,
+                        windowPanel.getMinimumWidth());
 
                 if (newWidth != contentWidth) {
                     windowPanel.moveBy(contentWidth - newWidth, 0);
 
-                    windowPanel.setContentSize(newWidth, windowPanel
-                            .getContentHeight());
+                    windowPanel.setContentSize(newWidth,
+                            windowPanel.getContentHeight());
                 }
             }
         } else if ((direction & WindowPanel.DIRECTION_EAST) != 0) {
             int delta = desiredDraggableX - getLeft();
             if (delta != 0) {
                 int contentWidth = windowPanel.getContentWidth();
-                int newWidth = Math.max(contentWidth + delta, windowPanel
-                        .getMinimumWidth());
+                int newWidth = Math.max(contentWidth + delta,
+                        windowPanel.getMinimumWidth());
 
                 if (newWidth != contentWidth) {
-                    windowPanel.setContentSize(newWidth, windowPanel
-                            .getContentHeight());
+                    windowPanel.setContentSize(newWidth,
+                            windowPanel.getContentHeight());
                 }
             }
         }

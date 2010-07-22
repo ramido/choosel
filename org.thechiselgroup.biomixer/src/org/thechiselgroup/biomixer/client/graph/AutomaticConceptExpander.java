@@ -27,100 +27,101 @@ import org.thechiselgroup.choosel.client.views.graph.NeighbourhoodServiceAsync;
 
 public class AutomaticConceptExpander implements GraphNodeExpander {
 
-    private NeighbourhoodServiceAsync mappingNeighbourhoodService;
+	private NeighbourhoodServiceAsync mappingNeighbourhoodService;
 
-    private ErrorHandler errorHandler;
+	private ErrorHandler errorHandler;
 
-    public AutomaticConceptExpander(
-	    NeighbourhoodServiceAsync mappingNeighbourhoodService,
-	    ErrorHandler errorHandler) {
+	public AutomaticConceptExpander(
+			NeighbourhoodServiceAsync mappingNeighbourhoodService,
+			ErrorHandler errorHandler) {
 
-	this.mappingNeighbourhoodService = mappingNeighbourhoodService;
-	this.errorHandler = errorHandler;
-    }
-
-    @Override
-    public void expand(Resource resource,
-	    GraphNodeExpansionCallback expansionCallback) {
-
-	if (!expansionCallback.isRestoring()) {
-	    // only look automatically for mappings if not restoring
-	    expandMappingNeighbourhood(resource, expansionCallback);
+		this.mappingNeighbourhoodService = mappingNeighbourhoodService;
+		this.errorHandler = errorHandler;
 	}
 
-	addArcsToRelatedConcepts(resource, expansionCallback);
-	addMappingArcsToConcept(resource, expansionCallback);
-    }
+	private void addArcsToRelatedConcepts(Resource concept,
+			GraphNodeExpansionCallback expansionCallback) {
 
-    protected void expandMappingNeighbourhood(Resource resource,
-	    GraphNodeExpansionCallback expansionCallback) {
-
-	mappingNeighbourhoodService
-		.getNeighbourhood(resource,
-			new MappingNeighbourhoodCallback(expansionCallback
-				.getDisplay(), expansionCallback.getCallback(),
-				errorHandler, expansionCallback));
-    }
-
-    private void addArcsToRelatedConcepts(Resource concept,
-	    GraphNodeExpansionCallback expansionCallback) {
-
-	// search neighbourhood uri list for neighbours
-	UriList neighbours = concept
-		.getUriListValue(NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS);
-	for (String uri : neighbours) {
-	    if (expansionCallback.getCallback().containsResourceWithUri(uri)) {
-		expansionCallback.showArc(
-			NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS,
-			concept.getUri(), uri);
-	    }
-	}
-
-	// get all concepts and see if the new concept is contained
-	// in the uri
-	// list
-	for (Resource resource : expansionCallback.getCallback()
-		.getAllResources()) {
-	    if (NcboUriHelper.NCBO_CONCEPT.equals(expansionCallback
-		    .getCategory(resource))) {
-
-		UriList neighbours2 = resource
-			.getUriListValue(NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS);
-		if (neighbours2.contains(concept.getUri())) {
-		    expansionCallback.showArc(
-			    NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS,
-			    resource.getUri(), concept.getUri());
-		}
-	    }
-	}
-    }
-
-    private void addMappingArcsToConcept(Resource concept,
-	    GraphNodeExpansionCallback expansionCallback) {
-
-	for (Resource resource2 : expansionCallback.getCallback()
-		.getAllResources()) {
-
-	    if (NcboUriHelper.NCBO_MAPPING.equals(expansionCallback
-		    .getCategory(resource2))) {
-		String sourceURI = (String) resource2
-			.getValue(NCBO.MAPPING_SOURCE);
-
-		if (concept.getUri().equals(sourceURI)) {
-		    expansionCallback.showArc(
-			    GraphViewContentDisplay.ARC_TYPE_MAPPING,
-			    sourceURI, resource2.getUri());
+		// search neighbourhood uri list for neighbours
+		UriList neighbours = concept
+				.getUriListValue(NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS);
+		for (String uri : neighbours) {
+			if (expansionCallback.getCallback().containsResourceWithUri(uri)) {
+				expansionCallback.showArc(
+						NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS,
+						concept.getUri(), uri);
+			}
 		}
 
-		String destinationURI = (String) resource2
-			.getValue(NCBO.MAPPING_DESTINATION);
+		// get all concepts and see if the new concept is contained
+		// in the uri
+		// list
+		for (Resource resource : expansionCallback.getCallback()
+				.getAllResources()) {
+			if (NcboUriHelper.NCBO_CONCEPT.equals(expansionCallback
+					.getCategory(resource))) {
 
-		if (concept.getUri().equals(destinationURI)) {
-		    expansionCallback.showArc(
-			    GraphViewContentDisplay.ARC_TYPE_MAPPING, resource2
-				    .getUri(), destinationURI);
+				UriList neighbours2 = resource
+						.getUriListValue(NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS);
+				if (neighbours2.contains(concept.getUri())) {
+					expansionCallback.showArc(
+							NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS,
+							resource.getUri(), concept.getUri());
+				}
+			}
 		}
-	    }
 	}
-    }
+
+	private void addMappingArcsToConcept(Resource concept,
+			GraphNodeExpansionCallback expansionCallback) {
+
+		for (Resource resource2 : expansionCallback.getCallback()
+				.getAllResources()) {
+
+			if (NcboUriHelper.NCBO_MAPPING.equals(expansionCallback
+					.getCategory(resource2))) {
+				String sourceURI = (String) resource2
+						.getValue(NCBO.MAPPING_SOURCE);
+
+				if (concept.getUri().equals(sourceURI)) {
+					expansionCallback.showArc(
+							GraphViewContentDisplay.ARC_TYPE_MAPPING,
+							sourceURI, resource2.getUri());
+				}
+
+				String destinationURI = (String) resource2
+						.getValue(NCBO.MAPPING_DESTINATION);
+
+				if (concept.getUri().equals(destinationURI)) {
+					expansionCallback.showArc(
+							GraphViewContentDisplay.ARC_TYPE_MAPPING,
+							resource2.getUri(), destinationURI);
+				}
+			}
+		}
+	}
+
+	@Override
+	public void expand(Resource resource,
+			GraphNodeExpansionCallback expansionCallback) {
+
+		if (!expansionCallback.isRestoring()) {
+			// only look automatically for mappings if not restoring
+			expandMappingNeighbourhood(resource, expansionCallback);
+		}
+
+		addArcsToRelatedConcepts(resource, expansionCallback);
+		addMappingArcsToConcept(resource, expansionCallback);
+	}
+
+	protected void expandMappingNeighbourhood(Resource resource,
+			GraphNodeExpansionCallback expansionCallback) {
+
+		mappingNeighbourhoodService
+				.getNeighbourhood(
+						resource,
+						new MappingNeighbourhoodCallback(expansionCallback
+								.getDisplay(), expansionCallback.getCallback(),
+								errorHandler, expansionCallback));
+	}
 }
