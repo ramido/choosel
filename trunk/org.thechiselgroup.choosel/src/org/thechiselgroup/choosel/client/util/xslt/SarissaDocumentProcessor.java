@@ -25,8 +25,8 @@ import com.google.gwt.core.client.JavaScriptObject;
 public class SarissaDocumentProcessor implements DocumentProcessor {
 
     private static native JavaScriptObject createDOMParser() /*-{
-                                                             return new $wnd.DOMParser();
-                                                             }-*/;
+                                                                return new $wnd.DOMParser();
+                                                                }-*/;
 
     private JavaScriptObject domParser;
 
@@ -35,20 +35,20 @@ public class SarissaDocumentProcessor implements DocumentProcessor {
     }
 
     private native Node doParseDocument(String xmlText) /*-{
-                                                        var doc = this.@org.thechiselgroup.choosel.client.util.xslt.SarissaDocumentProcessor::domParser.parseFromString(xmlText, "text/xml");
+                                                           var doc = this.@org.thechiselgroup.choosel.client.util.xslt.SarissaDocumentProcessor::domParser.parseFromString(xmlText, "text/xml");
 
-                                                        var parseErrorText = $wnd.Sarissa.getParseErrorText(doc);
-                                                        if (parseErrorText != $wnd.Sarissa.PARSED_OK) {
-                                                        throw(new Error(parseErrorText));
-                                                        }
+                                                           var parseErrorText = $wnd.Sarissa.getParseErrorText(doc);
+                                                           if (parseErrorText != $wnd.Sarissa.PARSED_OK) {
+                                                           throw(new Error(parseErrorText));
+                                                           }
 
-                                                        if (doc.setProperty) {
-                                                        doc.setProperty("SelectionNamespaces", "xmlns:xsl='http://www.w3.org/1999/XSL/Transform'");
-                                                        doc.setProperty("SelectionLanguage", "XPath");
-                                                        }
+                                                           if (doc.setProperty) {
+                                                           doc.setProperty("SelectionNamespaces", "xmlns:xsl='http://www.w3.org/1999/XSL/Transform'");
+                                                           doc.setProperty("SelectionLanguage", "XPath");
+                                                           }
 
-                                                        return @org.thechiselgroup.choosel.client.util.xslt.Node::create(Lcom/google/gwt/core/client/JavaScriptObject;)(doc);
-                                                        }-*/;
+                                                           return @org.thechiselgroup.choosel.client.util.xslt.Node::create(Lcom/google/gwt/core/client/JavaScriptObject;)(doc);
+                                                           }-*/;
 
     @Override
     public Object[] getNodes(Object node, String xpath) {

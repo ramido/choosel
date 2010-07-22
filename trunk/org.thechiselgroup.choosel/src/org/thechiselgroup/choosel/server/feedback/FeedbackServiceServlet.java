@@ -30,9 +30,8 @@ public class FeedbackServiceServlet extends RemoteServiceServlet implements
 
     private FeedbackService getServiceDelegate() {
         if (service == null) {
-            service = new DefaultFeedbackService(
-                    UserServiceFactory.getUserService(),
-                    MailServiceFactory.getMailService());
+            service = new DefaultFeedbackService(UserServiceFactory
+                    .getUserService(), MailServiceFactory.getMailService());
         }
 
         assert service != null;

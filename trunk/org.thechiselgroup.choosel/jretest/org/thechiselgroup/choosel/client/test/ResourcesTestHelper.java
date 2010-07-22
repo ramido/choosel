@@ -32,8 +32,8 @@ public final class ResourcesTestHelper {
     public static void assertContainsResource(boolean expected,
             ResourceSet resourceSet, String resourceType, int resourceId) {
 
-        Assert.assertEquals(expected,
-                resourceSet.contains(createResource(resourceType, resourceId)));
+        Assert.assertEquals(expected, resourceSet.contains(createResource(
+                resourceType, resourceId)));
     }
 
     public static ArgumentCaptor<ResourcesAddedEvent> verifyOnResourcesAdded(

@@ -28,11 +28,11 @@ import org.thechiselgroup.choosel.client.views.View;
 public class RemoveResourceSetFromViewCommand implements UndoableCommand,
         HasDescription {
 
+    private String description;
+
     private ResourceSet resourceSet;
 
     protected View view;
-
-    private String description;
 
     public RemoveResourceSetFromViewCommand(View view, ResourceSet resourceSet) {
         this(view, resourceSet, "Remove resource set '"

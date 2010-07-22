@@ -27,13 +27,13 @@ import com.google.gwt.user.client.Event;
 
 public class ChartItem extends ResourceItem {
 
-    public boolean highlighted = false;
-
     protected String[] colours = { "yellow", "orange", "steelblue" };
 
-    private ChartViewContentDisplay view;
-
     public DragEnabler enabler;
+
+    public boolean highlighted = false;
+
+    private ChartViewContentDisplay view;
 
     public ChartItem(String category, ResourceSet resources,
             ChartViewContentDisplay view, PopupManager popupManager,

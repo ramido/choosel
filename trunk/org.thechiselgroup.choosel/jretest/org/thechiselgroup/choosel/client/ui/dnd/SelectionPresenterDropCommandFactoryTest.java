@@ -47,14 +47,14 @@ public class SelectionPresenterDropCommandFactoryTest {
     @Mock
     private Widget dropTarget;
 
-    private ResourceSet sourceSet;
-
     private ResourceSet selectionSet;
 
-    private ResourceSet viewResources;
+    private ResourceSet sourceSet;
 
     @Mock
     private View view;
+
+    private ResourceSet viewResources;
 
     @Test
     public void cannotDropIfNoResourcesFromSetAreContainedInView() {

@@ -23,11 +23,11 @@ import org.thechiselgroup.choosel.client.views.View;
 public class RemoveSelectionSetFromViewCommand implements UndoableCommand,
         HasDescription {
 
+    private String description;
+
     private ResourceSet resourceSet;
 
     protected View view;
-
-    private String description;
 
     private boolean wasSelected = false;
 

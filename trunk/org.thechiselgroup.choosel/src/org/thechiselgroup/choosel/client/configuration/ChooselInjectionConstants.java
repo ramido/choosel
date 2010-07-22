@@ -17,34 +17,6 @@ package org.thechiselgroup.choosel.client.configuration;
 
 public interface ChooselInjectionConstants {
 
-    String TYPE_MAP = "Map";
-
-    String TYPE_LIST = "List";
-
-    String TYPE_GRAPH = "Graph";
-
-    String TYPE_TIMELINE = "Timeline";
-
-    String TYPE_BAR = "Bar";
-
-    String TYPE_TAG_CLOUD = "TagCloud";
-
-    String TYPE_PIE = "Pie";
-
-    String TYPE_DOT = "Dot";
-
-    String TYPE_SCATTER = "Scatter";
-
-    String TYPE_TIME = "Time";
-
-    String DROP_TARGET_MANAGER_VIEW_CONTENT = "drop-target-manager-view-content";
-
-    String HOVER_MODEL = "hoverModel";
-
-    String LABEL_PROVIDER_SELECTION_SET = "label-provider-selection";
-
-    String LABEL_PROVIDER_RESOURCE_SET = "label-provider-resources";
-
     String AVATAR_FACTORY_ALL_RESOURCES = "default-resource-sets-all";
 
     String AVATAR_FACTORY_SELECTION = "selection-resource-sets-presenter";
@@ -55,8 +27,38 @@ public interface ChooselInjectionConstants {
 
     String DEFAULT = "default";
 
-    String PROXY = "proxy";
+    String DROP_TARGET_MANAGER_VIEW_CONTENT = "drop-target-manager-view-content";
+
+    String HOVER_MODEL = "hoverModel";
+
+    String LABEL_PROVIDER_RESOURCE_SET = "label-provider-resources";
+
+    String LABEL_PROVIDER_SELECTION_SET = "label-provider-selection";
 
     String LOG = "log";
+
+    String PROXY = "proxy";
+
+    String RESOURCE_BY_DESCRIPTION_CATEGORIZER = "resource-by-description-categorizer";
+
+    String TYPE_BAR = "Bar";
+
+    String TYPE_DOT = "Dot";
+
+    String TYPE_GRAPH = "Graph";
+
+    String TYPE_LIST = "List";
+
+    String TYPE_MAP = "Map";
+
+    String TYPE_PIE = "Pie";
+
+    String TYPE_SCATTER = "Scatter";
+
+    String TYPE_TAG_CLOUD = "TagCloud";
+
+    String TYPE_TIME = "Time";
+
+    String TYPE_TIMELINE = "Timeline";
 
 }

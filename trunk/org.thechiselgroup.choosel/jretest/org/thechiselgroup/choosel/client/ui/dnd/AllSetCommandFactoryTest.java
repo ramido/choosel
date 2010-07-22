@@ -38,16 +38,16 @@ public class AllSetCommandFactoryTest {
     @Mock
     private ResourceSetAvatar dragAvatar;
 
-    private AllSetDropCommandFactory underTest;
-
     @Mock
-    private View view;
+    private ResourceSet resources;
 
     @Mock
     private ResourceSetAvatar targetDragAvatar;
 
+    private AllSetDropCommandFactory underTest;
+
     @Mock
-    private ResourceSet resources;
+    private View view;
 
     @Test
     public void cannotDropIfAllResourcesAreAlreadyContainedInView() {

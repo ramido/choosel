@@ -31,13 +31,13 @@ import org.thechiselgroup.choosel.client.views.View;
 public class AddResourceSetToViewCommand implements UndoableCommand,
         HasDescription {
 
-    private ResourceSet resourceSet;
-
     private List<Resource> alreadyContainedResources;
 
-    protected View view;
-
     private String description;
+
+    private ResourceSet resourceSet;
+
+    protected View view;
 
     public AddResourceSetToViewCommand(View view, ResourceSet resourceSet) {
         this(view, resourceSet, "Add resource set '" + resourceSet.getLabel()

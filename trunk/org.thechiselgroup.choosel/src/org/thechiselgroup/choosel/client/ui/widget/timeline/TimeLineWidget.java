@@ -23,8 +23,6 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class TimeLineWidget extends Widget {
 
-    private TimeLine timeLine;
-
     private TimeLineEventSource eventSource;
 
     private DateTimeFormat inputFormat = DateTimeFormat
@@ -34,6 +32,8 @@ public class TimeLineWidget extends Widget {
     // wait for fix to switch to "EEE, dd MMM yyyy HH:mm:ss z"
     private DateTimeFormat outputFormat = DateTimeFormat
             .getFormat("dd MMM yyyy HH:mm:ss z");
+
+    private TimeLine timeLine;
 
     public TimeLineWidget() {
         setElement(DOM.createDiv());
@@ -73,8 +73,8 @@ public class TimeLineWidget extends Widget {
         if (timeLine == null) {
             eventSource = TimeLineEventSource.create();
 
-            timeLine = TimeLine.create(getElement(), eventSource,
-                    inputFormat.format(new Date()));
+            timeLine = TimeLine.create(getElement(), eventSource, inputFormat
+                    .format(new Date()));
 
             timeLine.disableBubbles();
             timeLine.registerPaintListener();

@@ -21,35 +21,35 @@ import com.google.gwt.user.client.ui.Widget;
 
 public final class CSS {
 
-    public static final String Z_INDEX = "zIndex";
-
-    public static final String RELATIVE = "relative";
-
-    public static final String POSITION = "position";
-
-    public static final String TOP = "top";
-
-    public static final String LEFT = "left";
-
-    public static final String PX = "px";
-
-    public static final String HEIGHT = "height";
-
-    public static final String WIDTH = "width";
-
     public static final String ABSOLUTE = "absolute";
+
+    public static final String CURSOR = "cursor";
 
     public static final String CURSOR_DEFAULT = "default";
 
     public static final String CURSOR_POINTER = "pointer";
 
-    public static final String CURSOR = "cursor";
+    public static final String HEIGHT = "height";
+
+    public static final String HIDDEN = "hidden";
+
+    public static final String LEFT = "left";
 
     public static final String MAX_WIDTH = "maxWidth";
 
     public static final String OVERFLOW = "overflow";
 
-    public static final String HIDDEN = "hidden";
+    public static final String POSITION = "position";
+
+    public static final String PX = "px";
+
+    public static final String RELATIVE = "relative";
+
+    public static final String TOP = "top";
+
+    public static final String WIDTH = "width";
+
+    public static final String Z_INDEX = "zIndex";
 
     public static int getZIndex(Element element) {
         return DOM.getIntStyleAttribute(element, Z_INDEX);

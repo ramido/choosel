@@ -20,11 +20,11 @@ import com.google.gwt.event.shared.HandlerRegistration;
 
 public class DefaultHasLabel implements HasLabel {
 
-    private String label = null;
-
     private HandlerManager eventBus;
 
     private HasLabel eventSource;
+
+    private String label = null;
 
     public DefaultHasLabel(HasLabel eventSource) {
         assert eventSource != null;

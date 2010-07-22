@@ -25,6 +25,7 @@ import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.test.ResourcesTestHelper;
+import org.thechiselgroup.choosel.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.client.views.list.ListViewContentDisplay;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 import org.thechiselgroup.choosel.client.windows.CreateWindowCommand;
@@ -129,7 +130,7 @@ public class ChooselExampleApplication extends ChooselApplication {
 
                 try {
                     csvFileService
-                            .getCSVResources("data/", "regression_timeline_withdates.csv", new DataSourceCallBack(
+                            .getCSVResources("/data/", "regression_timeline_withdates.csv", new DataSourceCallBack(
                                             "Regression TimeLine Data", dataSourcesPresenter,
                                             resourceSetsFactory));
                 } catch (Exception e) {
@@ -166,7 +167,7 @@ public class ChooselExampleApplication extends ChooselApplication {
 		ResourceSet resourceSet = createResourceSet();
 		resourceSet.setLabel("Test");
 		for(int i = 0; i < 25; i++)
-			resourceSet.add(ResourcesTestHelper.createResource(i));
+			resourceSet.add(TestResourceSetFactory.createResource(i));
 		for (Resource resource : resourceSet) {
 		    resource.putValue("date", new Date().toString());
 		}

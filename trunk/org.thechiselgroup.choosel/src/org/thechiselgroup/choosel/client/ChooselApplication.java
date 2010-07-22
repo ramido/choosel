@@ -24,9 +24,9 @@ import org.thechiselgroup.choosel.client.authentication.ui.AuthenticationBasedEn
 import org.thechiselgroup.choosel.client.command.AsyncCommandExecutor;
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.command.ui.CommandManagerPresenter;
-import org.thechiselgroup.choosel.client.command.ui.CommandPresenter.ButtonDisplay;
 import org.thechiselgroup.choosel.client.command.ui.CommandPresenterFactory;
 import org.thechiselgroup.choosel.client.command.ui.DefaultCommandManagerPresenterDisplay;
+import org.thechiselgroup.choosel.client.command.ui.CommandPresenter.ButtonDisplay;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;

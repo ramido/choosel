@@ -68,8 +68,8 @@ public class PopupResourceSetAvatarFactory extends
 
         @Override
         public void execute() {
-            delegate.execute(avatar.getResourceSet(),
-                    viewAccessor.findView(avatar));
+            delegate.execute(avatar.getResourceSet(), viewAccessor
+                    .findView(avatar));
             popupManager.hidePopup();
         }
 
@@ -89,11 +89,11 @@ public class PopupResourceSetAvatarFactory extends
 
     private final PopupManagerFactory popupManagerFactory;
 
+    private final boolean resourceLabelModifiable;
+
     private String subHeaderText;
 
     private final ViewAccessor viewAccessor;
-
-    private final boolean resourceLabelModifiable;
 
     public PopupResourceSetAvatarFactory(ResourceSetAvatarFactory delegate,
             ViewAccessor viewAccessor, PopupManagerFactory popupManagerFactory,

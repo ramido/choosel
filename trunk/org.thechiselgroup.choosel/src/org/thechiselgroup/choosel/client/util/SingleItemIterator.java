@@ -4,9 +4,9 @@ import java.util.Iterator;
 
 public class SingleItemIterator<T> implements Iterator<T> {
 
-    private T t;
-
     private boolean hasNext = true;
+
+    private T t;
 
     public SingleItemIterator(T t) {
         this.t = t;

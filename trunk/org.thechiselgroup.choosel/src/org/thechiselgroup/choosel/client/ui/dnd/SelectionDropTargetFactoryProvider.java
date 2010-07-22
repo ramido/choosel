@@ -30,13 +30,13 @@ import com.google.inject.Inject;
 public class SelectionDropTargetFactoryProvider implements
         ResourceSetAvatarFactoryProvider {
 
-    private final ResourceSetAvatarDragController dragController;
-
-    private final CommandManager commandManager;
-
     private final DropTargetCapabilityChecker capabilityChecker;
 
     private final ResourceCategorizer categorizer;
+
+    private final CommandManager commandManager;
+
+    private final ResourceSetAvatarDragController dragController;
 
     @Inject
     public SelectionDropTargetFactoryProvider(

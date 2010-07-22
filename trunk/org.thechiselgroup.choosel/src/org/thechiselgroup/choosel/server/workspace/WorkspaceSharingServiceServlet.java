@@ -64,9 +64,9 @@ public class WorkspaceSharingServiceServlet extends RemoteServiceServlet
         if (service == null) {
             service = new WorkspaceSharingServiceImplementation(PMF.get(),
                     new WorkspaceSecurityManager(UserServiceFactory
-                            .getUserService()),
-                    UserServiceFactory.getUserService(),
-                    MailServiceFactory.getMailService(), new PasswordGenerator(
+                            .getUserService()), UserServiceFactory
+                            .getUserService(), MailServiceFactory
+                            .getMailService(), new PasswordGenerator(
                             SecureRandom.getInstance("SHA1PRNG")),
                     constructURL("acceptInvitation"));
         }
@@ -89,14 +89,12 @@ public class WorkspaceSharingServiceServlet extends RemoteServiceServlet
         try {
             getServiceDelegate().shareWorkspace(workspaceDTO, emailAddress);
         } catch (ServiceException e) {
-            Log.error(
-                    "shareWorkspace failed: "
-                            + StackTraceHelper.getStackTraceAsString(e), e);
+            Log.error("shareWorkspace failed: "
+                    + StackTraceHelper.getStackTraceAsString(e), e);
             throw e;
         } catch (Exception e) {
-            Log.error(
-                    "shareWorkspace failed: "
-                            + StackTraceHelper.getStackTraceAsString(e), e);
+            Log.error("shareWorkspace failed: "
+                    + StackTraceHelper.getStackTraceAsString(e), e);
             throw new ServiceException(e);
         } finally {
             if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {

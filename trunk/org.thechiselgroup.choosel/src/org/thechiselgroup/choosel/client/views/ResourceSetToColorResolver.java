@@ -10,12 +10,12 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
 public class ResourceSetToColorResolver implements ResourceSetToValueResolver {
 
+    private static final String[] COLORS = new String[] { "#6495ed", "#b22222",
+            "#A9C0B1" };
+
     private ResourceCategorizer categorizer;
 
     private Map<String, String> resourceTypeToColor = new HashMap<String, String>();
-
-    private static final String[] COLORS = new String[] { "#6495ed", "#b22222",
-            "#A9C0B1" };
 
     public ResourceSetToColorResolver(ResourceCategorizer categorizer) {
         this.categorizer = categorizer;
@@ -32,8 +32,8 @@ public class ResourceSetToColorResolver implements ResourceSetToValueResolver {
         String resourceType = categorizer.getCategory(resource);
 
         if (!resourceTypeToColor.containsKey(resourceType)) {
-            resourceTypeToColor.put(resourceType,
-                    COLORS[resourceTypeToColor.size()]);
+            resourceTypeToColor.put(resourceType, COLORS[resourceTypeToColor
+                    .size()]);
         }
 
         return resourceTypeToColor.get(resourceType);

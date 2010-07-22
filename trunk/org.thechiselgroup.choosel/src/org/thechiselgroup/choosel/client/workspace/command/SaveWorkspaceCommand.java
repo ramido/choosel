@@ -24,9 +24,9 @@ import com.google.inject.Inject;
 
 public class SaveWorkspaceCommand implements Command {
 
-    private final WorkspacePersistenceManager workspacePersistenceManager;
-
     private final ErrorHandler errorHandler;
+
+    private final WorkspacePersistenceManager workspacePersistenceManager;
 
     @Inject
     public SaveWorkspaceCommand(

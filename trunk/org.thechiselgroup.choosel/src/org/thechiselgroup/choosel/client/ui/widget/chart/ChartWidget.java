@@ -31,9 +31,9 @@ public abstract class ChartWidget extends Widget {
 
     protected ArrayList<Object> chartItemArray = new ArrayList<Object>();
 
-    protected JavaScriptObject val;
-
     private int height = 0;
+
+    protected JavaScriptObject val;
 
     private int width = 0;
 
@@ -79,28 +79,30 @@ public abstract class ChartWidget extends Widget {
 
     // @formatter:off
     protected native Chart registerEvents() /*-{
-        var chart = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chart,
-        thisChart = this,
-        events = ["click","mousedown","mousemove","mouseout","mouseover","mouseup"];
+           var chart = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chart,
+           thisChart = this,
+           events = ["click","mousedown","mousemove","mouseout","mouseover","mouseup"];
 
-        for(x in events) { 
-            chart.event(events[x],function() 
-            	{$entry(thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onEvent(ILcom/google/gwt/user/client/Event;)
-            	    (this.index,$wnd.pv.event));});
-        }
-        return chart;
-    }-*/;
+           for(x in events) { 
+               chart.event(events[x],function() 
+               	{$entry(thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::onEvent(ILcom/google/gwt/user/client/Event;)
+               	    (this.index,$wnd.pv.event));});
+           }
+           return chart;
+       }-*/;
+
     // @formatter:on
 
     // @formatter:off
     protected native Chart registerFillStyle() /*-{
-        var chart = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chart,
-        thisChart = this;
+           var chart = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chart,
+           thisChart = this;
 
-        return chart.fillStyle(function() {
-            return thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::getChartItem(I)(this.index)
-               	    .@org.thechiselgroup.choosel.client.views.chart.ChartItem::getColour()();});
-    }-*/;
+           return chart.fillStyle(function() {
+               return thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::getChartItem(I)(this.index)
+                  	    .@org.thechiselgroup.choosel.client.views.chart.ChartItem::getColour()();});
+       }-*/;
+
     // @formatter:on
 
     public void removeChartItem(int position) {
@@ -115,9 +117,10 @@ public abstract class ChartWidget extends Widget {
 
     // @formatter:off
     public native void renderChart() /*-{
-        var chart = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chart;
-        chart.root.render();
-    }-*/;
+           var chart = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chart;
+           chart.root.render();
+       }-*/;
+
     // @formatter:on
 
     public void resize(int width, int height) {

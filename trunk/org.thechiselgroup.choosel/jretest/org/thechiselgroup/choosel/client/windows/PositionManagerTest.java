@@ -27,11 +27,11 @@ import org.thechiselgroup.choosel.client.geometry.Point;
 
 public class PositionManagerTest {
 
-    private static final int TEST_VERTICAL_STEPS = 3;
-
     private static final int TEST_HORIZONTAL_STEPS = 5;
 
     private static final int TEST_PADDING = 5;
+
+    private static final int TEST_VERTICAL_STEPS = 3;
 
     @Mock
     private HasSize desktop;

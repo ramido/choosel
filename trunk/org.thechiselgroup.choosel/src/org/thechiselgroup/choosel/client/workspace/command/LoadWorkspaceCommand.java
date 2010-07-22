@@ -24,11 +24,11 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class LoadWorkspaceCommand implements AsyncCommand, HasDescription {
 
+    private WorkspacePersistenceManager persistenceManager;
+
     private Long workspaceId;
 
     private String workspaceName;
-
-    private WorkspacePersistenceManager persistenceManager;
 
     public LoadWorkspaceCommand(Long workspaceId, String workspaceName,
             WorkspacePersistenceManager persistenceManager) {

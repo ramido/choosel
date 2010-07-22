@@ -66,12 +66,12 @@ public class ResourceSetPresenterDropCommandFactory implements
                 && (dragAvatar.getType() == ResourceSetAvatarType.SET)) {
 
             return new MergeResourceSetsCommand(dragAvatar.getResourceSet(),
-                    targetDragAvatar.getResourceSet(),
-                    viewAccessor.findView(dragAvatar));
+                    targetDragAvatar.getResourceSet(), viewAccessor
+                            .findView(dragAvatar));
         }
 
-        return new AddResourceSetToResourceSetCommand(
-                dragAvatar.getResourceSet(), targetDragAvatar.getResourceSet());
+        return new AddResourceSetToResourceSetCommand(dragAvatar
+                .getResourceSet(), targetDragAvatar.getResourceSet());
     }
 
     private boolean isTargetModifiable() {

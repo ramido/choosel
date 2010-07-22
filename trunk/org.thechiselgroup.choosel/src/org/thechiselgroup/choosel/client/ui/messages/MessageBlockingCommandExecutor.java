@@ -26,9 +26,9 @@ import com.google.inject.name.Named;
 
 public class MessageBlockingCommandExecutor implements AsyncCommandExecutor {
 
-    private MessageManager messageManager;
-
     private AsyncCommandExecutor delegate;
+
+    private MessageManager messageManager;
 
     @Inject
     public MessageBlockingCommandExecutor(MessageManager messageManager,

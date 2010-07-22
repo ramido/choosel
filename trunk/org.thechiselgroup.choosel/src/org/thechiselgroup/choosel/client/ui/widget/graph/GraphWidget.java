@@ -30,8 +30,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.shared.EventHandler;
-import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
@@ -44,12 +44,12 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
         }
 
         public final native double getX() /*-{
-                                          return this.x;
-                                          }-*/;
+                                                 return this.x;
+                                                 }-*/;
 
         public final native double getY() /*-{
-                                          return this.y;
-                                          }-*/;
+                                                 return this.y;
+                                                 }-*/;
 
     }
 
@@ -74,31 +74,31 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
 
     private static native void _addArc(String swfID, String arcId,
             String sourceNodeId, String targetNodeId, String type) /*-{
-                                                                   $doc.getElementById(swfID).addArc(arcId, sourceNodeId, targetNodeId, type);
-                                                                   }-*/;
+                                                                      $doc.getElementById(swfID).addArc(arcId, sourceNodeId, targetNodeId, type);
+                                                                      }-*/;
 
     private static native void _addNode(String swfID, String id, String type,
             String label) /*-{
-                          $doc.getElementById(swfID).addNode(id, type, label);
-                          // $doc.getElementById(swfID).positionUnconnectedNode(id);
-                          }-*/;
+                             $doc.getElementById(swfID).addNode(id, type, label);
+                             // $doc.getElementById(swfID).positionUnconnectedNode(id);
+                             }-*/;
 
     private static native void _addNodeMenuItem(String swfID, String itemId,
             String itemLabel, String nodeType) /*-{
-                                               $doc.getElementById(swfID).addNodeMenuItem("_flexvis_onNodeMenuItemClicked", itemId, itemLabel, nodeType);
-                                               }-*/;
+                                                  $doc.getElementById(swfID).addNodeMenuItem("_flexvis_onNodeMenuItemClicked", itemId, itemLabel, nodeType);
+                                                  }-*/;
 
     private static GraphWidget _getGraphWidgetByID(String swfID) {
         return GraphWidget.widgets.get(swfID);
     }
 
     private static native Location _getNodeLocation(String swfID, String nodeId) /*-{
-                                                                                 return $doc.getElementById(swfID).getNodeLocation(nodeId);
-                                                                                 }-*/;
+                                                                                    return $doc.getElementById(swfID).getNodeLocation(nodeId);
+                                                                                    }-*/;
 
     private static native String _getSelectedNodeID(String swfID) /*-{
-                                                                  return $doc.getElementById(swfID).getSelectedNodeID();
-                                                                  }-*/;
+                                                                     return $doc.getElementById(swfID).getSelectedNodeID();
+                                                                     }-*/;
 
     public static void _log(String message) {
         Log.debug(message);
@@ -181,35 +181,35 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
     }
 
     private static native void _registerFlexHooks(String swfID) /*-{
-                                                                var flexWidget = $doc.getElementById(swfID);
+                                                                   var flexWidget = $doc.getElementById(swfID);
 
-                                                                flexWidget.addNodeMouseOverListener("_flexvis_nodeMouseOver");
-                                                                flexWidget.addNodeMouseOutListener("_flexvis_nodeMouseOut");
-                                                                flexWidget.addNodeMouseClickListener("_flexvis_nodeMouseClick");
-                                                                flexWidget.addNodeMouseDoubleClickListener("_flexvis_nodeMouseDoubleClick");
+                                                                   flexWidget.addNodeMouseOverListener("_flexvis_nodeMouseOver");
+                                                                   flexWidget.addNodeMouseOutListener("_flexvis_nodeMouseOut");
+                                                                   flexWidget.addNodeMouseClickListener("_flexvis_nodeMouseClick");
+                                                                   flexWidget.addNodeMouseDoubleClickListener("_flexvis_nodeMouseDoubleClick");
 
-                                                                flexWidget.addNodeDragHandleMouseDownListener("_flexvis_onNodeDragHandleMouseDown");
-                                                                flexWidget.addNodeDragHandleMouseMoveListener("_flexvis_onNodeDragHandleMouseMove");
+                                                                   flexWidget.addNodeDragHandleMouseDownListener("_flexvis_onNodeDragHandleMouseDown");
+                                                                   flexWidget.addNodeDragHandleMouseMoveListener("_flexvis_onNodeDragHandleMouseMove");
 
-                                                                flexWidget.addArcMouseOverListener("_flexvis_arcMouseOver");
-                                                                flexWidget.addArcMouseOutListener("_flexvis_arcMouseOut");
-                                                                flexWidget.addArcMouseClickListener("_flexvis_arcMouseClick");
-                                                                flexWidget.addArcMouseDoubleClickListener("_flexvis_arcMouseDoubleClick");
+                                                                   flexWidget.addArcMouseOverListener("_flexvis_arcMouseOver");
+                                                                   flexWidget.addArcMouseOutListener("_flexvis_arcMouseOut");
+                                                                   flexWidget.addArcMouseClickListener("_flexvis_arcMouseClick");
+                                                                   flexWidget.addArcMouseDoubleClickListener("_flexvis_arcMouseDoubleClick");
 
-                                                                flexWidget.addNodeDragListener("_flexvis_nodeDrag");
-                                                                }-*/;
+                                                                   flexWidget.addNodeDragListener("_flexvis_nodeDrag");
+                                                                   }-*/;
 
     private static native void _removeArc(String swfID, String arcId) /*-{
-                                                                      $doc.getElementById(swfID).removeArc(arcId);
-                                                                      }-*/;
+                                                                         $doc.getElementById(swfID).removeArc(arcId);
+                                                                         }-*/;
 
     private static native void _removeNode(String swfID, String nodeId) /*-{
-                                                                        $doc.getElementById(swfID).removeNode(nodeId);
-                                                                        }-*/;
+                                                                           $doc.getElementById(swfID).removeNode(nodeId);
+                                                                           }-*/;
 
     private static native void _runLayout(String swfID, String layoutName) /*-{
-                                                                           $doc.getElementById(swfID).runLayout(layoutName);
-                                                                           }-*/;
+                                                                              $doc.getElementById(swfID).runLayout(layoutName);
+                                                                              }-*/;
 
     /**
      * @param nodeIds
@@ -218,23 +218,23 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
      */
     private static native void _runLayout(String swfID, String layoutName,
             JavaScriptObject nodeIds) /*-{
-                                      $doc.getElementById(swfID).runLayout(layoutName, nodeIds);
-                                      }-*/;
+                                         $doc.getElementById(swfID).runLayout(layoutName, nodeIds);
+                                         }-*/;
 
     private static native void _setArcStyle(String swfID, String arcId,
             String styleProp, String styleValue) /*-{
-                                                 $doc.getElementById(swfID).setArcStyle(arcId, styleProp, styleValue);
-                                                 }-*/;
+                                                    $doc.getElementById(swfID).setArcStyle(arcId, styleProp, styleValue);
+                                                    }-*/;
 
     private static native Location _setNodeLocation(String swfID,
             String nodeId, int x, int y) /*-{
-                                         return $doc.getElementById(swfID).setNodeLocation(nodeId, x, y);
-                                         }-*/;
+                                            return $doc.getElementById(swfID).setNodeLocation(nodeId, x, y);
+                                            }-*/;
 
     private static native void _setNodeLocation(String swfID, String nodeId,
             int x, int y, boolean animate) /*-{
-                                           $doc.getElementById(swfID).setNodeLocation(nodeId, x, y, animate);
-                                           }-*/;
+                                              $doc.getElementById(swfID).setNodeLocation(nodeId, x, y, animate);
+                                              }-*/;
 
     /*
      * public function setNodeStyle(nodeID:String, styleProp:String,
@@ -242,44 +242,44 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
      */
     private static native void _setNodeStyle(String swfID, String nodeId,
             String styleProp, String styleValue) /*-{
-                                                 $doc.getElementById(swfID).setNodeStyle(nodeId, styleProp, styleValue);
-                                                 }-*/;
+                                                    $doc.getElementById(swfID).setNodeStyle(nodeId, styleProp, styleValue);
+                                                    }-*/;
 
     private static native void exportStaticMethods() /*-{
-                                                     $wnd._flexvis_loaded=$entry(
-                                                     @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onLoad(Ljava/lang/String;));
+                                                        $wnd._flexvis_loaded=$entry(
+                                                        @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onLoad(Ljava/lang/String;));
 
-                                                     $wnd._flexvis_log=$entry(
-                                                     @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_log(Ljava/lang/String;));
+                                                        $wnd._flexvis_log=$entry(
+                                                        @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_log(Ljava/lang/String;));
 
-                                                     $wnd._flexvis_nodeMouseOver=$entry(
-                                                     @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onNodeMouseOver(Ljava/lang/String;IILjava/lang/String;));
-                                                     $wnd._flexvis_nodeMouseOut=$entry(
-                                                     @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onNodeMouseOut(Ljava/lang/String;IILjava/lang/String;));
-                                                     $wnd._flexvis_nodeMouseClick=$entry(
-                                                     @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onNodeMouseClick(Ljava/lang/String;IILjava/lang/String;));
-                                                     $wnd._flexvis_nodeMouseDoubleClick=$entry(
-                                                     @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onNodeMouseDoubleClick(Ljava/lang/String;IILjava/lang/String;));
+                                                        $wnd._flexvis_nodeMouseOver=$entry(
+                                                        @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onNodeMouseOver(Ljava/lang/String;IILjava/lang/String;));
+                                                        $wnd._flexvis_nodeMouseOut=$entry(
+                                                        @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onNodeMouseOut(Ljava/lang/String;IILjava/lang/String;));
+                                                        $wnd._flexvis_nodeMouseClick=$entry(
+                                                        @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onNodeMouseClick(Ljava/lang/String;IILjava/lang/String;));
+                                                        $wnd._flexvis_nodeMouseDoubleClick=$entry(
+                                                        @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onNodeMouseDoubleClick(Ljava/lang/String;IILjava/lang/String;));
 
-                                                     $wnd._flexvis_arcMouseOver=$entry(
-                                                     @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onArcMouseOver(Ljava/lang/String;IILjava/lang/String;));
-                                                     $wnd._flexvis_arcMouseOut=$entry(
-                                                     @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onArcMouseOut(Ljava/lang/String;IILjava/lang/String;));
-                                                     $wnd._flexvis_arcMouseClick=$entry(
-                                                     @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onArcMouseClick(Ljava/lang/String;IILjava/lang/String;));
-                                                     $wnd._flexvis_arcMouseDoubleClick=$entry(
-                                                     @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onArcMouseDoubleClick(Ljava/lang/String;IILjava/lang/String;));
+                                                        $wnd._flexvis_arcMouseOver=$entry(
+                                                        @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onArcMouseOver(Ljava/lang/String;IILjava/lang/String;));
+                                                        $wnd._flexvis_arcMouseOut=$entry(
+                                                        @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onArcMouseOut(Ljava/lang/String;IILjava/lang/String;));
+                                                        $wnd._flexvis_arcMouseClick=$entry(
+                                                        @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onArcMouseClick(Ljava/lang/String;IILjava/lang/String;));
+                                                        $wnd._flexvis_arcMouseDoubleClick=$entry(
+                                                        @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onArcMouseDoubleClick(Ljava/lang/String;IILjava/lang/String;));
 
-                                                     $wnd._flexvis_onNodeMenuItemClicked=$entry(
-                                                     @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onNodeMenuItemClicked(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IILjava/lang/String;));
-                                                     $wnd._flexvis_onNodeDragHandleMouseDown=$entry(
-                                                     @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onNodeDragHandleMouseDown(Ljava/lang/String;IILjava/lang/String;))
-                                                     $wnd._flexvis_onNodeDragHandleMouseMove=$entry(
-                                                     @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onNodeDragHandleMouseMove(Ljava/lang/String;IILjava/lang/String;))
+                                                        $wnd._flexvis_onNodeMenuItemClicked=$entry(
+                                                        @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onNodeMenuItemClicked(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IILjava/lang/String;));
+                                                        $wnd._flexvis_onNodeDragHandleMouseDown=$entry(
+                                                        @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onNodeDragHandleMouseDown(Ljava/lang/String;IILjava/lang/String;))
+                                                        $wnd._flexvis_onNodeDragHandleMouseMove=$entry(
+                                                        @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onNodeDragHandleMouseMove(Ljava/lang/String;IILjava/lang/String;))
 
-                                                     $wnd._flexvis_nodeDrag=$entry(
-                                                     @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onNodeDrag(Ljava/lang/String;IIIILjava/lang/String;));
-                                                     }-*/;
+                                                        $wnd._flexvis_nodeDrag=$entry(
+                                                        @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onNodeDrag(Ljava/lang/String;IIIILjava/lang/String;));
+                                                        }-*/;
 
     private Map<String, Arc> arcsByID = new HashMap<String, Arc>();
 
@@ -303,8 +303,8 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
     @Override
     public void addArc(Arc arc) {
         arcsByID.put(arc.getId(), arc);
-        _addArc(getSwfId(), arc.getId(), arc.getSourceNodeId(),
-                arc.getTargetNodeId(), arc.getType());
+        _addArc(getSwfId(), arc.getId(), arc.getSourceNodeId(), arc
+                .getTargetNodeId(), arc.getType());
     }
 
     @Override
@@ -419,8 +419,8 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
             return;
         }
 
-        _runLayout(getSwfId(), LAYOUT_NAME,
-                ArrayUtils.toJsArray(toNodeIdArray(nodes)));
+        _runLayout(getSwfId(), LAYOUT_NAME, ArrayUtils
+                .toJsArray(toNodeIdArray(nodes)));
     }
 
     private void onArcMouseClick(String arcID, int mouseX, int mouseY) {

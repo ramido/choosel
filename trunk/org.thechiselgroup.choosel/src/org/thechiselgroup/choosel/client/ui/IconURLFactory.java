@@ -40,8 +40,8 @@ public final class IconURLFactory {
     }
 
     public static native String encodeURI(String text) /*-{
-                                                       return encodeURIComponent(text);
-                                                       }-*/;
+                                                          return encodeURIComponent(text);
+                                                          }-*/;
 
     public static String getFlatIconURL(int width, int height, String label,
             String color) {

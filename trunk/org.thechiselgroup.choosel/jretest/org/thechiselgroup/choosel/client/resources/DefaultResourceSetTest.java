@@ -29,13 +29,6 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
-import org.thechiselgroup.choosel.client.resources.Resource;
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
-import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 
 public class DefaultResourceSetTest {
 

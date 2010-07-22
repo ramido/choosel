@@ -56,25 +56,25 @@ public class AbstractResourceSetAvatarDropTargetManagerTest {
         }
     }
 
-    private AbstractResourceSetAvatarDropTargetManager underTest;
+    @Mock
+    private DropTargetCapabilityChecker capabilityChecker;
+
+    @Mock
+    private ResourceCategorizer categorizer;
+
+    @Mock
+    private CommandManager commandManager;
 
     @Mock
     private ResourceSetAvatarDragController dragController;
 
-    @Mock
-    private CommandManager commandManager;
+    private AbstractResourceSetAvatarDropTargetManager underTest;
 
     @Mock
     private ViewAccessor viewAccessor;
 
     @Mock
     private Widget widget;
-
-    @Mock
-    private DropTargetCapabilityChecker capabilityChecker;
-
-    @Mock
-    private ResourceCategorizer categorizer;
 
     @Test
     public void disposeRemovesDropController() {

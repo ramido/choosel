@@ -21,8 +21,8 @@ import org.thechiselgroup.choosel.client.geometry.Point;
 import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
 
 import com.google.gwt.event.shared.EventHandler;
-import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.event.shared.GwtEvent.Type;
 
 public interface GraphDisplay extends WidgetAdaptable {
 

@@ -109,6 +109,9 @@ public class DefaultViewTest {
     private ResourceItem resourceItem;
 
     @Mock
+    private ResourceItemValueResolver resourceSetToValueResolver;
+
+    @Mock
     private ResourceSet selection;
 
     @Mock
@@ -121,9 +124,6 @@ public class DefaultViewTest {
     private ResourceSetsPresenter selectionPresenter;
 
     private DefaultView view;
-
-    @Mock
-    private ResourceItemValueResolver resourceSetToValueResolver;
 
     @Test
     public void addingUnlabeledSetDoesNotChangeOriginalSetsPresenter() {

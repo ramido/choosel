@@ -16,13 +16,13 @@ public class ResourceItemUpdateTest {
     private static final String RESOURCE_ITEM_CATEGORY = "resourceItemCategory";
 
     @Mock
-    private PopupManager popupManager;
+    private ResourceSet hoverModel;
 
     @Mock
     private ResourceItemValueResolver layer;
 
     @Mock
-    private ResourceSet hoverModel;
+    private PopupManager popupManager;
 
     private ResourceSet resources;
 

@@ -29,6 +29,8 @@ public class TagCloudItem extends ResourceItem {
 
     public class ItemLabel extends ResourceSetAvatar {
 
+        private int tagCount;
+
         public ItemLabel(String text,
                 ResourceSetAvatarDragController dragController,
                 ResourceSet resources) {
@@ -45,6 +47,10 @@ public class TagCloudItem extends ResourceItem {
             return TagCloudItem.this;
         }
 
+        public int getTagCount() {
+            return tagCount;
+        }
+
         @Override
         public void setEnabled(boolean dragEnabled) {
             super.setEnabled(dragEnabled);
@@ -53,6 +59,9 @@ public class TagCloudItem extends ResourceItem {
             removeStyleName("avatar-resourceSet");
         }
 
+        public void setTagCount(int tagCount) {
+            this.tagCount = tagCount;
+        }
     }
 
     private static final String CSS_GRAYED_OUT = "listItemGrayedOut";
@@ -63,11 +72,11 @@ public class TagCloudItem extends ResourceItem {
 
     private static final String CSS_SELECTED = "listItemSelected";
 
-    private ItemLabel label;
-
     private final TagCloudViewContentDisplay.Display display;
 
     private ResourceSetAvatarDragController dragController;
+
+    private ItemLabel label;
 
     public TagCloudItem(String category, ResourceSet resources,
             ResourceSet hoverModel, PopupManager popupManager,
@@ -135,9 +144,11 @@ public class TagCloudItem extends ResourceItem {
         if (label == null) {
             return;
         }
+        String description = (String) getResourceValue(SlotResolver.TAG_LABEL_SLOT);
+        int tagCount = Integer
+                .parseInt((String) getResourceValue(SlotResolver.TAG_SIZE_SLOT));
 
-        String description = (String) getResourceValue(SlotResolver.DESCRIPTION_SLOT);
         this.label.setText(description);
+        this.label.setTagCount(tagCount);
     }
-
 }

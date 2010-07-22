@@ -29,17 +29,17 @@ import com.google.inject.name.Named;
 public class ListViewContentDisplayFactory implements ViewContentDisplayFactory {
 
     @Inject
+    private DetailsWidgetHelper detailsWidgetHelper;
+
+    @Inject
+    private ResourceSetAvatarDragController dragController;
+
+    @Inject
     @Named(ChooselInjectionConstants.HOVER_MODEL)
     private ResourceSet hoverModel;
 
     @Inject
     private PopupManagerFactory popupManagerFactory;
-
-    @Inject
-    private DetailsWidgetHelper detailsWidgetHelper;
-
-    @Inject
-    private ResourceSetAvatarDragController dragController;
 
     @Inject
     public ListViewContentDisplayFactory() {

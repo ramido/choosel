@@ -26,11 +26,11 @@ import org.thechiselgroup.choosel.client.views.View;
 
 public class CreateSetAction implements Action {
 
+    private CommandManager commandManager;
+
     private ResourceSetFactory resourceSetFactory;
 
     private LabelProvider resourceSetLabelFactory;
-
-    private CommandManager commandManager;
 
     public CreateSetAction(ResourceSetFactory resourceSetFactory,
             LabelProvider resourceSetLabelFactory, CommandManager commandManager) {

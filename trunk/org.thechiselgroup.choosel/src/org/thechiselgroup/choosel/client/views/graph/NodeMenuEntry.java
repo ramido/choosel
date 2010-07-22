@@ -17,9 +17,9 @@ package org.thechiselgroup.choosel.client.views.graph;
 
 public class NodeMenuEntry {
 
-    private String label;
-
     private GraphNodeExpander expander;
+
+    private String label;
 
     public NodeMenuEntry(String label, GraphNodeExpander expander) {
         this.label = label;

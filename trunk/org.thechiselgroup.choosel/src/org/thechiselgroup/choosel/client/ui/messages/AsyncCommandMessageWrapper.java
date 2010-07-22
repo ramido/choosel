@@ -25,11 +25,11 @@ import com.google.inject.Inject;
 
 public class AsyncCommandMessageWrapper implements AsyncCommand {
 
-    private MessageManager messageManager;
+    private AsyncCommand delegate;
 
     private String message;
 
-    private AsyncCommand delegate;
+    private MessageManager messageManager;
 
     @Inject
     public AsyncCommandMessageWrapper(MessageManager messageManager,

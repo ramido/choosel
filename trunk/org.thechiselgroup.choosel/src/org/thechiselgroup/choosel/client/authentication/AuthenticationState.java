@@ -17,6 +17,6 @@ package org.thechiselgroup.choosel.client.authentication;
 
 public enum AuthenticationState {
 
-    FAILED, SIGNED_OUT, SIGNED_IN, UNKNOWN, WAITING
+    FAILED, SIGNED_IN, SIGNED_OUT, UNKNOWN, WAITING
 
 }

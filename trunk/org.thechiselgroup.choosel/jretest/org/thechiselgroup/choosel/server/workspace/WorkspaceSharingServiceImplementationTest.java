@@ -29,22 +29,22 @@ public class WorkspaceSharingServiceImplementationTest {
 
     private static final String BASEURL = "BASEURL";
 
-    private WorkspaceSharingServiceImplementation underTest;
-
     @Mock
-    private PersistenceManagerFactory persistenceManagerFactory;
+    private MailService mailService;
 
     @Mock
     private PasswordGenerator passwordGenerator;
 
     @Mock
-    private WorkspaceSecurityManager workspaceSecurityManager;
+    private PersistenceManagerFactory persistenceManagerFactory;
+
+    private WorkspaceSharingServiceImplementation underTest;
 
     @Mock
     private UserService userService;
 
     @Mock
-    private MailService mailService;
+    private WorkspaceSecurityManager workspaceSecurityManager;
 
     @Before
     public void setUp() {

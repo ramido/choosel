@@ -15,10 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.chooselexample.client;
 
+import org.thechiselgroup.choosel.client.resolver.CountSingleResourceValueResolver;
 import org.thechiselgroup.choosel.client.resolver.PropertyValueResolverConverterWrapper;
 import org.thechiselgroup.choosel.client.resolver.ResourceToValueResolver;
 import org.thechiselgroup.choosel.client.resolver.SimplePropertyValueResolver;
+import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.test.ResourcesTestHelper;
+import org.thechiselgroup.choosel.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.client.util.ConversionException;
 import org.thechiselgroup.choosel.client.util.Converter;
 import org.thechiselgroup.choosel.client.views.DefaultSlotResolver;
@@ -43,9 +46,9 @@ public class ChooselExampleSlotResolver extends DefaultSlotResolver {
             return new SimplePropertyValueResolver("value");
         }
 
-        if (ResourcesTestHelper.DEFAULT_TYPE.equals(category)) {
+        if (TestResourceSetFactory.DEFAULT_TYPE.equals(category)) {
             return new SimplePropertyValueResolver(
-                    ResourcesTestHelper.LABEL_KEY);
+                    TestResourceSetFactory.LABEL_KEY);
         }
 
         throw new RuntimeException("failed creating slot mapping");
@@ -90,5 +93,15 @@ public class ChooselExampleSlotResolver extends DefaultSlotResolver {
     @Override
     public ResourceToValueResolver createMagnitudeSlotResolver(String type) {
             return new SimplePropertyValueResolver("magnitude");
+    }
+    
+    @Override
+    public ResourceToValueResolver createTagSizeSlotResolver(String category){
+        return new CountSingleResourceValueResolver();
+    }
+
+    @Override
+    public ResourceToValueResolver createTagLabelSlotResolver(String category) {
+        return new SimplePropertyValueResolver("description");
     }
 }

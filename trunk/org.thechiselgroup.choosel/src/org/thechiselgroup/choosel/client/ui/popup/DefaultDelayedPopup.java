@@ -29,17 +29,17 @@ import com.google.gwt.user.client.ui.PopupPanel;
 public class DefaultDelayedPopup extends PopupPanel implements MouseOutHandler,
         MouseOverHandler, DelayedPopup {
 
-    public static final String CSS_POPUP = "popups-Popup";
-
     public static final String CSS_ALPHA = "popups-Alpha";
 
-    private Timer showTimer;
+    public static final String CSS_POPUP = "popups-Popup";
+
+    private int hideDelay;
 
     private Timer hideTimer;
 
     private int showDelay;
 
-    private int hideDelay;
+    private Timer showTimer;
 
     public DefaultDelayedPopup() {
         this(400, 200);

@@ -21,8 +21,8 @@ import java.util.List;
 
 import org.thechiselgroup.choosel.client.label.LabelChangedEventHandler;
 
-import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.event.shared.GwtEvent.Type;
 
 public final class NullResourceSet implements ResourceSet {
 

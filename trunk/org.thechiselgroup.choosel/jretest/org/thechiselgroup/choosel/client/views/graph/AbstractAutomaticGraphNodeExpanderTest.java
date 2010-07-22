@@ -32,13 +32,13 @@ public class AbstractAutomaticGraphNodeExpanderTest {
 
     private static final String PROPERTY = "property";
 
-    private AbstractAutomaticGraphNodeExpander underTest;
+    @Mock
+    private ViewContentDisplayCallback callback;
 
     @Mock
     private GraphNodeExpansionCallback expansionCallback;
 
-    @Mock
-    private ViewContentDisplayCallback callback;
+    private AbstractAutomaticGraphNodeExpander underTest;
 
     @Before
     public void setUp() {

@@ -87,13 +87,13 @@ public class DragEnabler {
         }
     }
 
-    private ResourceItem item;
-
-    private ResourceSetAvatar panel;
-
     private Desktop desktop;
 
     private ResourceSetAvatarDragController dragController;
+
+    private ResourceItem item;
+
+    private ResourceSetAvatar panel;
 
     public DragEnabler(ResourceItem item, Desktop desktop,
             ResourceSetAvatarDragController dragController) {
@@ -127,9 +127,9 @@ public class DragEnabler {
         // TODO title
         final String text = (String) item
                 .getResourceValue(SlotResolver.DESCRIPTION_SLOT);
-        panel = new InvisibleResourceSetAvatar(text, "avatar-resourceSet",
-                item.getResourceSet(), ResourceSetAvatarType.SET, span,
-                item.getPopupManager());
+        panel = new InvisibleResourceSetAvatar(text, "avatar-resourceSet", item
+                .getResourceSet(), ResourceSetAvatarType.SET, span, item
+                .getPopupManager());
 
         span.setClassName("avatar-invisible");
 

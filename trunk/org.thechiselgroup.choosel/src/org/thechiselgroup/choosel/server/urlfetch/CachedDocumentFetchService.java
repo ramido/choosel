@@ -40,11 +40,11 @@ import com.google.appengine.api.urlfetch.URLFetchService;
 // for the user study - caches results indefinitely 
 public class CachedDocumentFetchService implements DocumentFetchService {
 
+    private DocumentBuilderFactory domBuilderFactory;
+
     private URLFetchService fetchService;
 
     private final PersistenceManagerFactory pmf;
-
-    private DocumentBuilderFactory domBuilderFactory;
 
     public CachedDocumentFetchService(URLFetchService fetchService,
             PersistenceManagerFactory pmf,

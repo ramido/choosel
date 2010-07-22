@@ -27,13 +27,13 @@ public class SearchCommand implements Command, HasTextParameter {
 
     private CommandManager commandManager;
 
+    private String contentType;
+
     private Desktop desktop;
 
     private String searchTerm;
 
     private WindowContentProducer viewFactory;
-
-    private String contentType;
 
     public SearchCommand(CommandManager commandManager, Desktop desktop,
             WindowContentProducer viewFactory, String contentType) {

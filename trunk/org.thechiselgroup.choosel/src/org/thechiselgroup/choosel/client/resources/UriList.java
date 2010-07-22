@@ -23,6 +23,7 @@ public class UriList implements Serializable, Iterable<String> {
 
     private static final long serialVersionUID = -3207445518794182555L;
 
+    // is an ArrayList so that Serialization does not fail
     private ArrayList<String> delegate = new ArrayList<String>();
 
     private boolean isLoaded;
@@ -57,6 +58,11 @@ public class UriList implements Serializable, Iterable<String> {
 
     public int size() {
         return delegate.size();
+    }
+
+    @Override
+    public String toString() {
+        return delegate.toString();
     }
 
 }

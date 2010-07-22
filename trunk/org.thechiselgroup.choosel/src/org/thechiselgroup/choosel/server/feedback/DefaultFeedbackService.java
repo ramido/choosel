@@ -30,9 +30,9 @@ public class DefaultFeedbackService implements FeedbackService {
     // TODO use configuration file
     private static final String ADMIN = "lars.grammel@googlemail.com";
 
-    private UserService userService;
-
     private MailService mailService;
+
+    private UserService userService;
 
     public DefaultFeedbackService(UserService userService,
             MailService mailService) {

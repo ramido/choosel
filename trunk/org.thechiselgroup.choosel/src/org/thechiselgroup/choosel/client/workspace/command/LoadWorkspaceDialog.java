@@ -33,15 +33,15 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class LoadWorkspaceDialog extends AbstractDialog {
 
+    private final AsyncCommandExecutor asyncCommandExecutor;
+
     private Map<RadioButton, WorkspacePreview> buttonsToWorkspaces = new HashMap<RadioButton, WorkspacePreview>();
+
+    private final WorkspacePersistenceManager persistenceManager;
 
     private RadioButton selectedButton;
 
     private List<WorkspacePreview> workspacePreviews;
-
-    private final AsyncCommandExecutor asyncCommandExecutor;
-
-    private final WorkspacePersistenceManager persistenceManager;
 
     public LoadWorkspaceDialog(List<WorkspacePreview> workspacePreviews,
             AsyncCommandExecutor asyncCommandExecutor,
@@ -63,8 +63,8 @@ public class LoadWorkspaceDialog extends AbstractDialog {
 
         VerticalPanel content = new VerticalPanel();
         for (WorkspacePreview workspace : workspacePreviews) {
-            RadioButton radioButton = new RadioButton(groupId,
-                    workspace.getName());
+            RadioButton radioButton = new RadioButton(groupId, workspace
+                    .getName());
             radioButton.setValue(Boolean.FALSE);
             buttonsToWorkspaces.put(radioButton, workspace);
 

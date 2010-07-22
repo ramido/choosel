@@ -5,9 +5,9 @@ import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 
 public class DefaultResourceSetToValueResolverFactory {
 
-    private DefaultResourceToValueResolverFactory resourceResolverFactory;
-
     private ResourceCategorizer resourceByTypeCategorizer;
+
+    private DefaultResourceToValueResolverFactory resourceResolverFactory;
 
     public DefaultResourceSetToValueResolverFactory(SlotResolver slotResolver,
             ResourceCategorizer resourceByTypeCategorizer) {
@@ -72,6 +72,15 @@ public class DefaultResourceSetToValueResolverFactory {
         if (slotID.equals(SlotResolver.Y_COORDINATE_SLOT)) {
             return new ResourceSetToSumResolver(slotID,
                     resourceResolverFactory, resourceByTypeCategorizer);
+        }
+
+        if (slotID.equals(SlotResolver.TAG_LABEL_SLOT)) {
+            return new ResourceSetToFirstResourcePropertyResolver(slotID,
+                    resourceResolverFactory, resourceByTypeCategorizer);
+        }
+
+        if (slotID.equals(SlotResolver.TAG_SIZE_SLOT)) {
+            return new ResourceSetToCountResolver();
         }
 
         return new ResourceSetToCountResolver();

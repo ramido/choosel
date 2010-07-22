@@ -30,11 +30,11 @@ import org.thechiselgroup.choosel.client.views.View;
 
 public class ReplaceSelectionCommandTest {
 
+    private ReplaceSelectionCommand command;
+
     private ResourceSet sourceSet;
 
     private ResourceSet targetSet;
-
-    private ReplaceSelectionCommand command;
 
     @Mock
     private View view;

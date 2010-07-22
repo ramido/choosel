@@ -72,6 +72,8 @@ public class ChooselWindowContentProducerProvider implements
 
     private ResourceSetFactory resourceSetFactory;
 
+    private DefaultResourceSetToValueResolverFactory resourceSetToValueResolverFactory;
+
     private ResourceSetAvatarFactory selectionDragAvatarFactory;
 
     private LabelProvider selectionModelLabelFactory;
@@ -79,8 +81,6 @@ public class ChooselWindowContentProducerProvider implements
     private ResourceSetAvatarFactory userSetsDragAvatarFactory;
 
     protected final Map<String, WindowContentFactory> windowContentFactories = new HashMap<String, WindowContentFactory>();
-
-    private DefaultResourceSetToValueResolverFactory resourceSetToValueResolverFactory;
 
     @Inject
     public ChooselWindowContentProducerProvider(

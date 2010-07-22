@@ -36,9 +36,9 @@ public class DefaultDocumentFetchService implements DocumentFetchService {
 
     private static final double TEN_SECONDS = 10d;
 
-    private URLFetchService fetchService;
-
     private DocumentBuilderFactory domBuilderFactory;
+
+    private URLFetchService fetchService;
 
     public DefaultDocumentFetchService(URLFetchService fetchService,
             DocumentBuilderFactory domBuilderFactory) {
@@ -62,8 +62,8 @@ public class DefaultDocumentFetchService implements DocumentFetchService {
 
         HTTPResponse response = fetchService.fetch(request);
 
-        ByteArrayInputStream stream = new ByteArrayInputStream(
-                response.getContent());
+        ByteArrayInputStream stream = new ByteArrayInputStream(response
+                .getContent());
 
         return domBuilderFactory.newDocumentBuilder().parse(stream);
     }

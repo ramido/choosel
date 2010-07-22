@@ -28,9 +28,9 @@ public class UpdateResourceSetAvatarWhenLabelChangesManager implements
 
     private final ResourceSetAvatar avatar;
 
-    private HandlerRegistration labelChangedHandlerRegistration;
-
     private HandlerRegistration avatarChangeHandlerRegistration;
+
+    private HandlerRegistration labelChangedHandlerRegistration;
 
     public UpdateResourceSetAvatarWhenLabelChangesManager(
             ResourceSetAvatar avatar) {

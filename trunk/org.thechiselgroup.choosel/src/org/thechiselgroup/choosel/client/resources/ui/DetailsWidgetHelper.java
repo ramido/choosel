@@ -29,11 +29,11 @@ import com.google.inject.Inject;
 
 public abstract class DetailsWidgetHelper {
 
-    protected ResourceSetFactory resourceSetFactory;
-
     protected ResourceSetAvatarFactory avatarFactory;
 
     protected ResourceSetAvatarDragController dragController;
+
+    protected ResourceSetFactory resourceSetFactory;
 
     // TODO use dragavatarfactory instead of provider
     @Inject

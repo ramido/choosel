@@ -22,9 +22,9 @@ public class ResourceCategoryAddedEvent extends
 
     public static final GwtEvent.Type<ResourceCategoryAddedEventHandler> TYPE = new GwtEvent.Type<ResourceCategoryAddedEventHandler>();
 
-    private final ResourceSet resourceSet;
-
     private String category;
+
+    private final ResourceSet resourceSet;
 
     public ResourceCategoryAddedEvent(String category, ResourceSet resourceSet) {
         assert category != null;

@@ -64,11 +64,11 @@ public class ListItem extends ResourceItem {
 
     private static final String CSS_SELECTED = "listItemSelected";
 
-    private ListItemLabel label;
-
     private final Display display;
 
     private ResourceSetAvatarDragController dragController;
+
+    private ListItemLabel label;
 
     public ListItem(String category, ResourceSet resources,
             ResourceSet hoverModel, PopupManager popupManager,

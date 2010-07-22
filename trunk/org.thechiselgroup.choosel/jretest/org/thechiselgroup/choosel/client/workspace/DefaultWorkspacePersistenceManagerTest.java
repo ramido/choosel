@@ -93,13 +93,13 @@ public class DefaultWorkspacePersistenceManagerTest {
     private DefaultWorkspacePersistenceManager underTest;
 
     @Mock
-    private TestPersistableWindowContent windowContent;
-
-    @Mock
     private WindowContentProducer viewFactory;
 
     @Mock
     private WindowPanel window;
+
+    @Mock
+    private TestPersistableWindowContent windowContent;
 
     private List<WindowPanel> windows;
 
@@ -182,9 +182,8 @@ public class DefaultWorkspacePersistenceManagerTest {
         ResourceSet resourceSet = argument.getValue().getResourceSet(
                 Integer.parseInt(id.toString()));
         assertEquals(true, resourceSet instanceof UnmodifiableResourceSet);
-        assertEquals(
-                true,
-                delegate.containsEqualResources(((DelegatingResourceSet) resourceSet)
+        assertEquals(true, delegate
+                .containsEqualResources(((DelegatingResourceSet) resourceSet)
                         .getDelegate()));
     }
 

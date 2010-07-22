@@ -24,6 +24,7 @@ import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionCo
 
 import org.thechiselgroup.choosel.client.label.CategoryLabelProvider;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
+import org.thechiselgroup.choosel.client.resources.ResourceByPropertyMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ResourceSplitter;
@@ -31,6 +32,7 @@ import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.ui.dnd.DropEnabledViewContentDisplay;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropTargetManager;
+import org.thechiselgroup.choosel.client.views.tagcloud.TagCloudViewContentDisplay;
 import org.thechiselgroup.choosel.client.windows.WindowContent;
 import org.thechiselgroup.choosel.client.windows.WindowContentFactory;
 
@@ -44,21 +46,21 @@ public class ViewFactory implements WindowContentFactory {
 
     private ResourceSetAvatarDropTargetManager contentDropTargetManager;
 
+    private String contentType;
+
+    private ResourceSetAvatarFactory dropTargetFactory;
+
     private ResourceSetFactory resourceSetFactory;
+
+    private DefaultResourceSetToValueResolverFactory resourceSetToValueResolverFactory;
 
     private ResourceSetAvatarFactory selectionDragAvatarFactory;
 
     private LabelProvider selectionModelLabelFactory;
 
-    private ResourceSetAvatarFactory dropTargetFactory;
-
     private ResourceSetAvatarFactory userSetsDragAvatarFactory;
 
-    private String contentType;
-
     private ViewContentDisplayFactory viewContentDisplayFactory;
-
-    private DefaultResourceSetToValueResolverFactory resourceSetToValueResolverFactory;
 
     public ViewFactory(
             String contentType,
@@ -102,12 +104,19 @@ public class ViewFactory implements WindowContentFactory {
 
     @Override
     public WindowContent createWindowContent() {
-        ResourceSplitter resourceSplitter = new ResourceSplitter(categorizer,
-                resourceSetFactory);
+        ViewContentDisplay viewContentDisplay = viewContentDisplayFactory
+                .createViewContentDisplay();
 
         ViewContentDisplay contentDisplay = new DropEnabledViewContentDisplay(
-                viewContentDisplayFactory.createViewContentDisplay(),
-                contentDropTargetManager);
+                viewContentDisplay, contentDropTargetManager);
+
+        // XXX Hack, this should be in some sort of configuration somewhere
+        if (viewContentDisplay instanceof TagCloudViewContentDisplay) {
+            categorizer = new ResourceByPropertyMultiCategorizer();
+        }
+
+        ResourceSplitter resourceSplitter = new ResourceSplitter(categorizer,
+                resourceSetFactory);
 
         ResourceItemValueResolver configuration = new ResourceItemValueResolver(
                 resourceSetToValueResolverFactory);

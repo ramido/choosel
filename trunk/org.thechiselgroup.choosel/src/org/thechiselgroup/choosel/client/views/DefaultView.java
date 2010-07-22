@@ -114,7 +114,16 @@ public class DefaultView extends AbstractWindowContent implements View {
     // TODO why do we need this???
     private Map<String, ResourceItemValueResolver> categoriesToLayers = new HashMap<String, ResourceItemValueResolver>();
 
+    /**
+     * Maps category names (representing the resource sets that are calculated
+     * by the resource splitter) to the resource items that display the resource
+     * sets in the view.
+     */
+    private Map<String, ResourceItem> categoriesToResourceItems = new HashMap<String, ResourceItem>();
+
     private CombinedResourceSet combinedUserResourceSets;
+
+    private ResourceItemValueResolver configuration;
 
     private DockPanel configurationPanel;
 
@@ -123,13 +132,6 @@ public class DefaultView extends AbstractWindowContent implements View {
     private ViewContentDisplayCallback contentDisplayCallback;
 
     private DockPanel mainPanel;
-
-    /**
-     * Maps category names (representing the resource sets that are calculated
-     * by the resource splitter) to the resource items that display the resource
-     * sets in the view.
-     */
-    private Map<String, ResourceItem> categoriesToResourceItems = new HashMap<String, ResourceItem>();
 
     private ResourceSetFactory resourceSetFactory;
 
@@ -155,8 +157,6 @@ public class DefaultView extends AbstractWindowContent implements View {
     private List<ResourceSet> selectionSets = new ArrayList<ResourceSet>();
 
     private ResourceSetsPresenter userSetsPresenter;
-
-    private ResourceItemValueResolver configuration;
 
     @Inject
     public DefaultView(
@@ -326,8 +326,8 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     // protected for tests only
     protected List<ResourceItemValueResolver> getLayers() {
-        return new ArrayList<ResourceItemValueResolver>(
-                categoriesToLayers.values());
+        return new ArrayList<ResourceItemValueResolver>(categoriesToLayers
+                .values());
     }
 
     private List<ResourceItem> getResourceItems(List<Resource> resources) {
@@ -385,8 +385,8 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     private void initAllResources() {
-        allResources = new CombinedResourceSet(
-                resourceSetFactory.createResourceSet());
+        allResources = new CombinedResourceSet(resourceSetFactory
+                .createResourceSet());
         allResources.setLabel("All"); // TODO add & update view name
         allResources.addResourceSet(automaticResources);
         allResources.addResourceSet(combinedUserResourceSets);
@@ -491,8 +491,8 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     private void initResourceCombinator() {
-        combinedUserResourceSets = new CombinedResourceSet(
-                resourceSetFactory.createResourceSet());
+        combinedUserResourceSets = new CombinedResourceSet(resourceSetFactory
+                .createResourceSet());
 
         combinedUserResourceSets.addSetEventsHandler(
                 ResourceSetAddedEvent.TYPE, new ResourceSetAddedEventHandler() {

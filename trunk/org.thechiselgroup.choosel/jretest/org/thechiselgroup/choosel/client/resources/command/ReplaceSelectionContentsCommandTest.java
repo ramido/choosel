@@ -31,12 +31,12 @@ public class ReplaceSelectionContentsCommandTest {
 
     private ResourceSet resources;
 
-    private ResourceSet viewSelection;
-
     private ReplaceSelectionContentsCommand underTest;
 
     @Mock
     private View view;
+
+    private ResourceSet viewSelection;
 
     @Test
     public void resourcesReplacedOnExecute() {
@@ -56,8 +56,8 @@ public class ReplaceSelectionContentsCommandTest {
         underTest.execute();
         underTest.undo();
 
-        assertEquals(true,
-                viewSelection.containsEqualResources(createResources(4)));
+        assertEquals(true, viewSelection
+                .containsEqualResources(createResources(4)));
     }
 
     @Test
@@ -67,8 +67,8 @@ public class ReplaceSelectionContentsCommandTest {
 
         underTest.execute();
 
-        assertEquals(true,
-                viewSelection.containsEqualResources(createResources(3)));
+        assertEquals(true, viewSelection
+                .containsEqualResources(createResources(3)));
     }
 
     @Before

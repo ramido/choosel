@@ -35,25 +35,25 @@ import com.google.appengine.api.users.UserService;
 public class WorkspaceSharingServiceImplementation implements
         WorkspaceSharingService {
 
-    public static final String PARAM_PASSWORD = "password";
-
     public static final String PARAM_INVITATION = "invitation";
+
+    public static final String PARAM_PASSWORD = "password";
 
     public static final String PARAM_WORKSPACE_ID = "workspaceId";
 
     private static final int PASSWORD_LENGTH = 12;
 
+    private final String baseURL;
+
+    private final MailService mailService;
+
+    private PasswordGenerator passwordGenerator;
+
     private final PersistenceManagerFactory persistenceManagerFactory;
 
     private final WorkspaceSecurityManager securityManager;
 
-    private final MailService mailService;
-
     private UserService userService;
-
-    private PasswordGenerator passwordGenerator;
-
-    private final String baseURL;
 
     public WorkspaceSharingServiceImplementation(
             PersistenceManagerFactory persistenceManagerFactory,

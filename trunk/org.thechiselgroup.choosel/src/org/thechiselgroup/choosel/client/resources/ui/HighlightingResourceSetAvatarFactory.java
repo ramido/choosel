@@ -91,8 +91,8 @@ public class HighlightingResourceSetAvatarFactory extends
                     public void onResourceSetContainerChanged(
                             ResourceSetContainerChangedEvent event) {
 
-                        avatar.setHover(shouldHighlight(avatar,
-                                event.getResourceSet()));
+                        avatar.setHover(shouldHighlight(avatar, event
+                                .getResourceSet()));
                     }
 
                 });

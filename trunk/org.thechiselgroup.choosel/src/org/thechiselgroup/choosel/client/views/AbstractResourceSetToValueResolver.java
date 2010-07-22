@@ -11,11 +11,11 @@ import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 public abstract class AbstractResourceSetToValueResolver implements
         ResourceSetToValueResolver {
 
-    protected Map<String, ResourceToValueResolver> resourceTypeToResourceToValueResolvers = new HashMap<String, ResourceToValueResolver>();
-
     protected ResourceCategorizer categorizer;
 
     private DefaultResourceToValueResolverFactory factory;
+
+    protected Map<String, ResourceToValueResolver> resourceTypeToResourceToValueResolvers = new HashMap<String, ResourceToValueResolver>();
 
     private String slotID;
 

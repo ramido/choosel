@@ -42,6 +42,8 @@ public class TimeLineItem extends IconResourceItem {
 
     private static final String CSS_SELECTED_CLASS = "selected";
 
+    private DragEnablerFactory dragEnablerFactory;
+
     private List<String> elementIDs = new ArrayList<String>();
 
     private final Function mouseClickListener = new Function() {
@@ -71,8 +73,6 @@ public class TimeLineItem extends IconResourceItem {
     private TimeLineEvent timeLineEvent;
 
     private final TimeLineViewContentDisplay view;
-
-    private DragEnablerFactory dragEnablerFactory;
 
     public TimeLineItem(String category, ResourceSet resources,
             TimeLineViewContentDisplay view, PopupManager popupManager,

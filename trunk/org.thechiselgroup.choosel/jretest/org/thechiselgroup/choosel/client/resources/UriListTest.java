@@ -18,7 +18,6 @@ package org.thechiselgroup.choosel.client.resources;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.thechiselgroup.choosel.client.resources.UriList;
 
 public class UriListTest {
 

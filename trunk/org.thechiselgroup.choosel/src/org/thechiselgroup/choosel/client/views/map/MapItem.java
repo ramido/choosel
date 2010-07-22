@@ -73,11 +73,11 @@ public class MapItem extends IconResourceItem {
 
     private final ViewContentDisplayCallback callback;
 
+    private DragEnablerFactory dragEnablerFactory;
+
     private MarkerEventHandler eventHandler;
 
     private ResourceOverlay overlay;
-
-    private DragEnablerFactory dragEnablerFactory;
 
     public MapItem(String category, LatLng point, ResourceSet resources,
             ResourceSet hoverModel, PopupManager popupManager,

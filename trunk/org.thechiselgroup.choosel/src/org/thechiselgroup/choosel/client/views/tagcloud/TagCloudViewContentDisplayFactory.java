@@ -26,7 +26,14 @@ import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-public class TagCloudViewContentDisplayFactory implements ViewContentDisplayFactory {
+public class TagCloudViewContentDisplayFactory implements
+        ViewContentDisplayFactory {
+
+    @Inject
+    private DetailsWidgetHelper detailsWidgetHelper;
+
+    @Inject
+    private ResourceSetAvatarDragController dragController;
 
     @Inject
     @Named(ChooselInjectionConstants.HOVER_MODEL)
@@ -34,12 +41,6 @@ public class TagCloudViewContentDisplayFactory implements ViewContentDisplayFact
 
     @Inject
     private PopupManagerFactory popupManagerFactory;
-
-    @Inject
-    private DetailsWidgetHelper detailsWidgetHelper;
-
-    @Inject
-    private ResourceSetAvatarDragController dragController;
 
     @Inject
     public TagCloudViewContentDisplayFactory() {

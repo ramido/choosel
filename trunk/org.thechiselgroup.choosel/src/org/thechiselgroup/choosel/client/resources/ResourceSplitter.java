@@ -22,22 +22,22 @@ import java.util.Map;
 
 import org.thechiselgroup.choosel.client.util.SingleItemIterable;
 
-import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
 
 // TODO update & extend (1, many sets added / removed) test case
 // TODO change name
 public class ResourceSplitter extends AbstractResourceContainer {
 
-    private final ResourceMultiCategorizer multiCategorizer;
-
     private Map<String, ResourceSet> categorizedSets = new HashMap<String, ResourceSet>();
 
-    private final ResourceSetFactory resourceSetFactory;
-
     private transient HandlerManager eventBus;
+
+    private final ResourceMultiCategorizer multiCategorizer;
+
+    private final ResourceSetFactory resourceSetFactory;
 
     @Inject
     public ResourceSplitter(ResourceMultiCategorizer multiCategorizer,

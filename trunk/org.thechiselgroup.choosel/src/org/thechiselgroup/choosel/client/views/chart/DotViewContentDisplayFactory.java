@@ -29,17 +29,17 @@ import com.google.inject.name.Named;
 public class DotViewContentDisplayFactory implements ViewContentDisplayFactory {
 
     @Inject
-    private PopupManagerFactory popupManagerFactory;
+    private DetailsWidgetHelper detailsWidgetHelper;
 
     @Inject
-    private DetailsWidgetHelper detailsWidgetHelper;
+    private DragEnablerFactory dragEnablerFactory;
 
     @Inject
     @Named(ChooselInjectionConstants.HOVER_MODEL)
     private ResourceSet hoverModel;
 
     @Inject
-    private DragEnablerFactory dragEnablerFactory;
+    private PopupManagerFactory popupManagerFactory;
 
     @Inject
     public DotViewContentDisplayFactory() {
