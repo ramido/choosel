@@ -17,8 +17,6 @@ We recommend using [http://www.eclipse.org Eclipse] for working on Choosel. The 
       * [http://www.polarion.com/products/svn/subversive/download.php Team Providers]
       * Change Setting in Eclipse Preferences: Window/Preferences-->Team/SVN-->SVN Connector-->SVN Connector = SVNKit 1.3.0
    * [http://code.google.com/eclipse/ Google Plugin for Eclipse]
-   * To stay on top of code commits to Choosel, please consider installing the [http://www.junginger.biz/eclipse/rss-view.html Eclipse RSS Plugin] and configure it with the subversion commit feed for Choosel([http://code.google.com/feeds/p/choosel/svnchanges/basic])
-   * If you work on choosel issue tracker items, you might want to consider using the [http://code.google.com/p/googlecode-mylyn-connector/ Mylin-Google Code bridge] to get issue tracker entries into Eclipse/Mylin
 
 = Checking out Choosel and example application from SVN repository =
 
@@ -38,6 +36,5 @@ If you encounter problems setting up choosel with this guide, complain on the [h
 
 = Optional setup =
 
-There is a Mylin task connector for Google Code. It can be used to access the Choosel issue tracker from within Eclipse.
-
-[http://code.google.com/p/googlecode-mylyn-connector/]
+   * To stay on top of code commits to Choosel, please consider installing the [http://www.junginger.biz/eclipse/rss-view.html Eclipse RSS Plugin] and configure it with the subversion commit feed for Choosel([http://code.google.com/feeds/p/choosel/svnchanges/basic])
+   * If you work on choosel issue tracker items, you might want to consider using the [http://code.google.com/p/googlecode-mylyn-connector/ Mylin-Google Code bridge] to get issue tracker entries into Eclipse/Mylin
