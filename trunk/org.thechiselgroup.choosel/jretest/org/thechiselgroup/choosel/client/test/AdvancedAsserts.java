@@ -22,6 +22,15 @@ import org.junit.Assert;
 
 public final class AdvancedAsserts {
 
+    public static void assertArrayEquals(double[] expected, double[] actual,
+            double delta) {
+
+        Assert.assertEquals(expected.length, actual.length);
+        for (int i = 0; i < actual.length; i++) {
+            Assert.assertEquals(expected[i], actual[i], delta);
+        }
+    }
+
     public static <T> void assertContains(Collection<T> c, T value) {
         assertContains(value + " should be contained in " + c, c, value);
     }

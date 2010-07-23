@@ -23,9 +23,11 @@ import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
+import org.thechiselgroup.choosel.client.ui.CSS;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
+import org.thechiselgroup.choosel.client.util.CollectionUtils;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
@@ -39,7 +41,7 @@ import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -51,16 +53,7 @@ public class TagCloudViewContentDisplay extends AbstractViewContentDisplay {
 
     public class DefaultDisplay implements Display {
 
-        private static final int MIN_TAG_FONT_SIZE = 10;
-
-        private static final int NUM_BOUNDARIES = 10;
-
-        private static final int TAG_FONT_STEP_SIZE = 2;
-
-        private static final int MAX_LINE_HEIGHT = MIN_TAG_FONT_SIZE
-                + NUM_BOUNDARIES * TAG_FONT_STEP_SIZE;
-
-        private SimpleTagCloudBinBoundaryDefiner boundaryDefiner = new SimpleTagCloudBinBoundaryDefiner();
+        private static final int MAX_FONT_SIZE = 26;
 
         private List<ItemLabel> itemLabels = new ArrayList<ItemLabel>();
 
@@ -68,7 +61,6 @@ public class TagCloudViewContentDisplay extends AbstractViewContentDisplay {
 
         @Override
         public void addItem(TagCloudItem tagCloudItem) {
-
             tagCloudItem.init();
 
             ItemLabel label = tagCloudItem.getLabel();
@@ -76,11 +68,11 @@ public class TagCloudViewContentDisplay extends AbstractViewContentDisplay {
             itemLabels.add(label);
             updateTagSizes();
 
-            DOM.setStyleAttribute(label.getElement(), "display", "inline");
-            DOM.setStyleAttribute(label.getElement(), "whiteSpace", "nowrap");
-            DOM.setStyleAttribute(label.getElement(), "cssFloat", "left");
-            DOM.setStyleAttribute(label.getElement(), "lineHeight", ""
-                    + MAX_LINE_HEIGHT + "px");
+            Element element = label.getElement();
+            CSS.setDisplay(element, CSS.INLINE);
+            CSS.setWhitespace(element, CSS.NOWRAP);
+            CSS.setFloat(element, CSS.LEFT);
+            CSS.setLineHeight(element, MAX_FONT_SIZE);
 
             label.addMouseOverHandler(labelEventHandler);
             label.addMouseOutHandler(labelEventHandler);
@@ -100,24 +92,10 @@ public class TagCloudViewContentDisplay extends AbstractViewContentDisplay {
             tagCloudItem.getLabel().addStyleName(cssClass);
         }
 
-        private double calculateTagFontSize(List<Double> boundaries,
-                ItemLabel itemLabel) {
-            double fontSize = MIN_TAG_FONT_SIZE;
-
-            for (Double boundary : boundaries) {
-                if (itemLabel.getTagCount() < boundary) {
-                    break;
-                }
-                fontSize += TAG_FONT_STEP_SIZE;
-            }
-            return fontSize;
-        }
-
-        private List<Integer> getTagSizesList() {
-            List<Integer> tagNumbers = new ArrayList<Integer>();
-
+        private List<Double> getTagSizesList() {
+            List<Double> tagNumbers = new ArrayList<Double>();
             for (ItemLabel itemLabel : itemLabels) {
-                tagNumbers.add(itemLabel.getTagCount());
+                tagNumbers.add(new Double(itemLabel.getTagCount()));
             }
             return tagNumbers;
         }
@@ -143,17 +121,13 @@ public class TagCloudViewContentDisplay extends AbstractViewContentDisplay {
         }
 
         private void updateTagSizes() {
-
-            List<Integer> tagNumbers = getTagSizesList();
-
-            List<Double> boundaries = boundaryDefiner.createBinBoundaries(
-                    tagNumbers, NUM_BOUNDARIES);
+            List<Double> tagNumbers = getTagSizesList();
 
             for (ItemLabel itemLabel : itemLabels) {
-                double fontSize = calculateTagFontSize(boundaries, itemLabel);
-                // TODO extract constants
-                DOM.setStyleAttribute(itemLabel.getElement(), "fontSize",
-                        fontSize + "px");
+                String fontSize = groupValueMapper.getGroupValue(
+                        itemLabel.getTagCount(), tagNumbers);
+
+                CSS.setFontSize(itemLabel.getElement(), fontSize);
             }
         }
     }
@@ -226,6 +200,8 @@ public class TagCloudViewContentDisplay extends AbstractViewContentDisplay {
 
     private FlowPanel table;
 
+    private DoubleToGroupValueMapper<String> groupValueMapper;
+
     @Inject
     public TagCloudViewContentDisplay(
             @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
@@ -237,6 +213,10 @@ public class TagCloudViewContentDisplay extends AbstractViewContentDisplay {
 
         this.dragController = dragController;
         this.display = new DefaultDisplay();
+
+        this.groupValueMapper = new DoubleToGroupValueMapper<String>(
+                new EquidistantBinBoundaryCalculator(), CollectionUtils.toList(
+                        "10px", "14px", "18px", "22px", "26px"));
     }
 
     // TODO move into display

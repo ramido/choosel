@@ -15,11 +15,28 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui;
 
-import com.google.gwt.user.client.DOM;
+import static com.google.gwt.user.client.DOM.getIntStyleAttribute;
+import static com.google.gwt.user.client.DOM.setIntStyleAttribute;
+import static com.google.gwt.user.client.DOM.setStyleAttribute;
+
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 
 public final class CSS {
+
+    public static final String FLOAT = "cssFloat";
+
+    public static final String LINE_HEIGHT = "lineHeight";
+
+    public static final String WHITE_SPACE = "whiteSpace";
+
+    public static final String NOWRAP = "nowrap";
+
+    public static final String INLINE = "inline";
+
+    public static final String DISPLAY = "display";
+
+    public static final String FONT_SIZE = "fontSize";
 
     public static final String ABSOLUTE = "absolute";
 
@@ -52,37 +69,57 @@ public final class CSS {
     public static final String Z_INDEX = "zIndex";
 
     public static int getZIndex(Element element) {
-        return DOM.getIntStyleAttribute(element, Z_INDEX);
+        return getIntStyleAttribute(element, Z_INDEX);
     }
 
     public static void setAbsoluteBounds(Element element, int left, int top,
             int width, int height) {
 
-        DOM.setStyleAttribute(element, POSITION, ABSOLUTE);
+        setStyleAttribute(element, POSITION, ABSOLUTE);
         setPosition(element, left, top);
-        DOM.setStyleAttribute(element, WIDTH, width + PX);
-        DOM.setStyleAttribute(element, HEIGHT, height + PX);
+        setStyleAttribute(element, WIDTH, width + PX);
+        setStyleAttribute(element, HEIGHT, height + PX);
     }
 
-    private static void setMaxWidth(Element element, int maxWidth) {
-        DOM.setStyleAttribute(element, MAX_WIDTH, maxWidth + PX);
+    public static void setDisplay(Element element, String value) {
+        setStyleAttribute(element, DISPLAY, value);
+    }
+
+    public static void setFloat(Element element, String value) {
+        setStyleAttribute(element, FLOAT, value);
+    }
+
+    public static void setFontSize(Element element, String fontSize) {
+        setStyleAttribute(element, FONT_SIZE, fontSize);
+    }
+
+    public static void setLineHeight(Element element, int lineHeight) {
+        setStyleAttribute(element, LINE_HEIGHT, lineHeight + PX);
+    }
+
+    public static void setMaxWidth(Element element, int maxWidth) {
+        setStyleAttribute(element, MAX_WIDTH, maxWidth + PX);
     }
 
     public static void setMaxWidth(Widget widget, int maxWidth) {
         setMaxWidth(widget.getElement(), maxWidth);
     }
 
-    private static void setPosition(Element element, int left, int top) {
-        DOM.setStyleAttribute(element, LEFT, left + PX);
-        DOM.setStyleAttribute(element, TOP, top + PX);
+    public static void setPosition(Element element, int left, int top) {
+        setStyleAttribute(element, LEFT, left + PX);
+        setStyleAttribute(element, TOP, top + PX);
     }
 
     public static void setPosition(Widget widget, int left, int top) {
         setPosition(widget.getElement(), left, top);
     }
 
+    public static void setWhitespace(Element element, String value) {
+        setStyleAttribute(element, WHITE_SPACE, value);
+    }
+
     public static void setZIndex(Element element, int zIndex) {
-        DOM.setIntStyleAttribute(element, Z_INDEX, zIndex);
+        setIntStyleAttribute(element, Z_INDEX, zIndex);
     }
 
     private CSS() {

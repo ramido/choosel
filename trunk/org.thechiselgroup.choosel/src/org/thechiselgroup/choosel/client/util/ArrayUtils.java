@@ -24,13 +24,16 @@ public class ArrayUtils {
 
     // @formatter:off
     private native static JavaScriptObject createArray() /*-{
-           return new Array();
-       }-*/;
+        return new Array();
+    }-*/;
 
     // @formatter:on
 
     // XXX using .doubleValue could be a problem at some point
-    public static <T extends Number> T getMaxDataValue(List<T> objectList) {
+    // e.g. with long values and precision
+    public static <T extends Number> T max(List<T> objectList) {
+        assert !objectList.isEmpty();
+
         if (objectList.isEmpty()) {
             throw new IllegalArgumentException("Number List was empty.");
         }
@@ -44,7 +47,10 @@ public class ArrayUtils {
     }
 
     // XXX using .doubleValue could be a problem at some point
-    public static <T extends Number> T getMinDataValue(List<T> objectList) {
+    // e.g. with long values and precision
+    public static <T extends Number> T min(List<T> objectList) {
+        assert !objectList.isEmpty();
+
         if (objectList.isEmpty()) {
             throw new IllegalArgumentException("Number List was empty.");
         }
@@ -59,22 +65,22 @@ public class ArrayUtils {
 
     // @formatter:off
     private native static void pushArray(JavaScriptObject array, double d) /*-{
-           array.push(d);
-       }-*/;
+        array.push(d);
+    }-*/;
 
     // @formatter:on
 
     // @formatter:off
     private native static void pushArray(JavaScriptObject array, int i) /*-{
-           array.push(i);
-       }-*/;
+        array.push(i);
+    }-*/;
 
     // @formatter:on
 
     // @formatter:off
     private native static void pushArray(JavaScriptObject array, String o) /*-{
-           array.push(o);
-       }-*/;
+        array.push(o);
+    }-*/;
 
     // @formatter:on
 
