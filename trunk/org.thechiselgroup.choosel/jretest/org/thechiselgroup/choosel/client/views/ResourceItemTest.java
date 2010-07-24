@@ -26,7 +26,7 @@ public class ResourceItemTest {
     }
 
     @Mock
-    private ResourceSet hoverModel;
+    private HoverModel hoverModel;
 
     @Mock
     private ResourceItemValueResolver layer;

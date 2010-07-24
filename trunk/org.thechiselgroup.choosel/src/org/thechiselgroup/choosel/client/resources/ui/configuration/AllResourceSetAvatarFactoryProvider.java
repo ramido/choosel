@@ -16,12 +16,9 @@
 package org.thechiselgroup.choosel.client.resources.ui.configuration;
 
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_ALL_RESOURCES;
-import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.HOVER_MODEL;
 
 import java.util.Collections;
 
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.SwitchingResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.AbstractResourceSetAvatarFactoryProvider;
 import org.thechiselgroup.choosel.client.resources.ui.DefaultResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.DisableIfEmptyResourceSetAvatarFactory;
@@ -34,6 +31,7 @@ import org.thechiselgroup.choosel.client.ui.dnd.DropTargetResourceSetAvatarFacto
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropTargetManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
+import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
 
 import com.google.inject.Inject;
@@ -46,8 +44,7 @@ public class AllResourceSetAvatarFactoryProvider extends
     @Inject
     public AllResourceSetAvatarFactoryProvider(
             ResourceSetAvatarDragController dragController,
-            @Named(HOVER_MODEL) ResourceSet hoverModel,
-            @Named(HOVER_MODEL) SwitchingResourceSet setHoverModel,
+            HoverModel hoverModel,
             @Named(AVATAR_FACTORY_ALL_RESOURCES) ResourceSetAvatarDropTargetManager dropTargetManager,
             ViewAccessor viewAccessor, PopupManagerFactory popupManagerFactory) {
 
@@ -63,7 +60,7 @@ public class AllResourceSetAvatarFactoryProvider extends
                                                                         ResourceSetAvatarType.ALL)),
                                                         "All"), dragController),
                                         dropTargetManager), hoverModel,
-                                setHoverModel, dragController), viewAccessor,
+                                dragController), viewAccessor,
                         popupManagerFactory, Collections.EMPTY_LIST,
                         "All resources in this view",
                         "<p><b>Drag</b> to add all resources "

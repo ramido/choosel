@@ -19,6 +19,7 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
+import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 
@@ -37,7 +38,7 @@ public class ChartItem extends ResourceItem {
 
     public ChartItem(String category, ResourceSet resources,
             ChartViewContentDisplay view, PopupManager popupManager,
-            ResourceSet hoverModel, ResourceItemValueResolver layerModel,
+            HoverModel hoverModel, ResourceItemValueResolver layerModel,
             DragEnablerFactory dragEnablerFactory) {
 
         super(category, resources, hoverModel, popupManager, layerModel);
@@ -87,13 +88,13 @@ public class ChartItem extends ResourceItem {
                 break;
             case Event.ONMOUSEOUT: {
                 popupManager.onMouseOut(e.getClientX(), e.getClientY());
-                hoverModel.removeAll(getResourceSet());
+                hoverModel.removeHighlightedResources(getResourceSet());
                 enabler.forwardMouseOut(e);
             }
                 break;
             case Event.ONMOUSEOVER: {
                 popupManager.onMouseOver(e.getClientX(), e.getClientY());
-                hoverModel.addAll(getResourceSet());
+                hoverModel.addHighlightedResources(getResourceSet());
             }
                 break;
             case Event.ONMOUSEUP: {

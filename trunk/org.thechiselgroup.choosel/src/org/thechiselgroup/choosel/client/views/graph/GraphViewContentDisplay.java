@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
-import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.geometry.Point;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.Resource;
@@ -57,6 +56,7 @@ import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseOverHandler;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
+import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
@@ -66,7 +66,6 @@ import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 // TODO separate out ncbo specific stuff and service calls
 // TODO register listener for double click on node --> change expansion state
@@ -185,9 +184,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     private ResourceManager resourceManager;
 
     @Inject
-    public GraphViewContentDisplay(
-            Display display,
-            @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
+    public GraphViewContentDisplay(Display display, HoverModel hoverModel,
             PopupManagerFactory popupManagerFactory,
             DetailsWidgetHelper detailsWidgetHelper,
             CommandManager commandManager, ResourceManager resourceManager,

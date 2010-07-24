@@ -17,7 +17,6 @@ package org.thechiselgroup.choosel.client.views.chart;
 
 import java.util.List;
 
-import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
@@ -27,12 +26,12 @@ import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
+import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 public abstract class ChartViewContentDisplay extends
         AbstractViewContentDisplay {
@@ -54,10 +53,8 @@ public abstract class ChartViewContentDisplay extends
     private DragEnablerFactory dragEnablerFactory;
 
     @Inject
-    public ChartViewContentDisplay(
-            PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper,
-            @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
+    public ChartViewContentDisplay(PopupManagerFactory popupManagerFactory,
+            DetailsWidgetHelper detailsWidgetHelper, HoverModel hoverModel,
             DragEnablerFactory dragEnablerFactory) {
 
         super(popupManagerFactory, detailsWidgetHelper, hoverModel);

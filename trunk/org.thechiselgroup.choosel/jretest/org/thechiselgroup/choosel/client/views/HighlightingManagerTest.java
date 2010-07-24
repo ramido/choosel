@@ -37,7 +37,7 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 public class HighlightingManagerTest {
 
     @Mock
-    private ResourceSet highlightedResources;
+    private HoverModel hoverModel;
 
     @Mock
     private PopupManager popupManager;
@@ -65,7 +65,7 @@ public class HighlightingManagerTest {
     public void neverRemovedForPopupClosingWithoutMouseOver() {
         doPopupClosing();
 
-        verify(highlightedResources, never()).removeAll(eq(resources));
+        verify(hoverModel, never()).removeHighlightedResources(eq(resources));
     }
 
     @Test
@@ -74,7 +74,7 @@ public class HighlightingManagerTest {
         doMouseOut();
         doPopupClosing();
 
-        verify(highlightedResources, times(1)).removeAll(resources);
+        verify(hoverModel, times(1)).removeHighlightedResources(resources);
     }
 
     @Test
@@ -83,7 +83,7 @@ public class HighlightingManagerTest {
         doPopupClosing();
         doMouseOut();
 
-        verify(highlightedResources, times(1)).removeAll(eq(resources));
+        verify(hoverModel, times(1)).removeHighlightedResources(eq(resources));
     }
 
     @Before
@@ -91,8 +91,8 @@ public class HighlightingManagerTest {
         MockitoGWTBridge.setUp();
         MockitoAnnotations.initMocks(this);
 
-        underTest = new ResourceItem("category", resources,
-                highlightedResources, popupManager, null) {
+        underTest = new ResourceItem("category", resources, hoverModel,
+                popupManager, null) {
 
             @Override
             protected void setStatusStyling(Status status) {

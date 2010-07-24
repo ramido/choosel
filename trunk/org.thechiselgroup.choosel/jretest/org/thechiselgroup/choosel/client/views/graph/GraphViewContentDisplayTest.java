@@ -51,6 +51,7 @@ import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeDragEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeDragHandler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
+import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay.Display;
@@ -60,8 +61,7 @@ public class GraphViewContentDisplayTest {
     public class TestGraphViewContentDisplay extends GraphViewContentDisplay {
 
         public TestGraphViewContentDisplay(Display display,
-                ResourceSet hoverModel,
-                PopupManagerFactory popupManagerFactory,
+                HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
                 DetailsWidgetHelper detailsWidgetHelper,
                 CommandManager commandManager, ResourceManager resourceManager,
                 DragEnablerFactory dragEnablerFactory,
@@ -113,7 +113,7 @@ public class GraphViewContentDisplayTest {
     private DragEnablerFactory dragEnablerFactory;
 
     @Mock
-    private ResourceSet hoverModel;
+    private HoverModel hoverModel;
 
     @Mock
     private ResourceItemValueResolver layer;

@@ -25,6 +25,8 @@ import com.google.gwt.event.shared.HandlerRegistration;
 // TODO support for null delegates?
 public class DelegatingResourceSet implements ResourceSet {
 
+    // TODO support for null delegates?
+
     protected ResourceSet delegate;
 
     public DelegatingResourceSet(ResourceSet delegate) {

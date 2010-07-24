@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.map;
 
-import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
@@ -25,6 +24,7 @@ import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
+import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
@@ -37,7 +37,6 @@ import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 public class MapViewContentDisplay extends AbstractViewContentDisplay {
 
@@ -66,10 +65,8 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
     private MapWidget map;
 
     @Inject
-    public MapViewContentDisplay(
-            PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper,
-            @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
+    public MapViewContentDisplay(PopupManagerFactory popupManagerFactory,
+            DetailsWidgetHelper detailsWidgetHelper, HoverModel hoverModel,
             DragEnablerFactory dragEnablerFactory) {
 
         super(popupManagerFactory, detailsWidgetHelper, hoverModel);

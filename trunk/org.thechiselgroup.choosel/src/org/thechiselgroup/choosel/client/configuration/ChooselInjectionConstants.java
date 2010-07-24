@@ -29,8 +29,6 @@ public interface ChooselInjectionConstants {
 
     String DROP_TARGET_MANAGER_VIEW_CONTENT = "drop-target-manager-view-content";
 
-    String HOVER_MODEL = "hoverModel";
-
     String LABEL_PROVIDER_RESOURCE_SET = "label-provider-resources";
 
     String LABEL_PROVIDER_SELECTION_SET = "label-provider-selection";

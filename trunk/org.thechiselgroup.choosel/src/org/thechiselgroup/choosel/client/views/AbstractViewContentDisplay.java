@@ -17,7 +17,6 @@ package org.thechiselgroup.choosel.client.views;
 
 import java.util.List;
 
-import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
@@ -33,7 +32,6 @@ import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.util.HandlerRegistrationSet;
 
 import com.google.gwt.user.client.ui.Widget;
-import com.google.inject.name.Named;
 
 public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
 
@@ -43,7 +41,7 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
 
     private HandlerRegistrationSet handlerRegistrations = new HandlerRegistrationSet();
 
-    protected ResourceSet hoverModel;
+    protected HoverModel hoverModel;
 
     private PopupManagerFactory popupManagerFactory;
 
@@ -52,8 +50,7 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
     private Widget widget;
 
     public AbstractViewContentDisplay(PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper,
-            @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel) {
+            DetailsWidgetHelper detailsWidgetHelper, HoverModel hoverModel) {
 
         assert popupManagerFactory != null;
         assert hoverModel != null;

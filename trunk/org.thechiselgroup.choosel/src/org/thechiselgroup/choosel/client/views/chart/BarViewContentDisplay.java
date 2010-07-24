@@ -15,24 +15,20 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.chart;
 
-import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.ui.widget.chart.BarChart;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
+import org.thechiselgroup.choosel.client.views.HoverModel;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 public class BarViewContentDisplay extends ChartViewContentDisplay {
 
     @Inject
-    public BarViewContentDisplay(
-            PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper,
-            @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
+    public BarViewContentDisplay(PopupManagerFactory popupManagerFactory,
+            DetailsWidgetHelper detailsWidgetHelper, HoverModel hoverModel,
             DragEnablerFactory dragEnablerFactory) {
 
         super(popupManagerFactory, detailsWidgetHelper, hoverModel,

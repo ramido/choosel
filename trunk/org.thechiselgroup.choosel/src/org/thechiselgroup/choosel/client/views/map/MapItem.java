@@ -19,6 +19,7 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
+import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.IconResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
@@ -52,14 +53,14 @@ public class MapItem extends IconResourceItem {
         public void onMouseOut(MouseOutEvent event) {
             getPopupManager()
                     .onMouseOut(event.getClientX(), event.getClientY());
-            setHighlighted(false);
+            hoverModel.removeHighlightedResources(getResourceSet());
         }
 
         @Override
         public void onMouseOver(MouseOverEvent event) {
             getPopupManager().onMouseOver(event.getClientX(),
                     event.getClientY());
-            setHighlighted(true);
+            hoverModel.addHighlightedResources(getResourceSet());
         }
     }
 
@@ -80,7 +81,7 @@ public class MapItem extends IconResourceItem {
     private ResourceOverlay overlay;
 
     public MapItem(String category, LatLng point, ResourceSet resources,
-            ResourceSet hoverModel, PopupManager popupManager,
+            HoverModel hoverModel, PopupManager popupManager,
             ResourceItemValueResolver layerModel,
             ViewContentDisplayCallback callback,
             DragEnablerFactory dragEnablerFactory) {

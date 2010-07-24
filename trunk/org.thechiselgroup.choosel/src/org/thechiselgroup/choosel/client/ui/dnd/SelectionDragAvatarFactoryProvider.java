@@ -15,14 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.dnd;
 
-import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.HOVER_MODEL;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.SwitchingResourceSet;
 import org.thechiselgroup.choosel.client.resources.action.RemoveSelectionSetAction;
 import org.thechiselgroup.choosel.client.resources.ui.DefaultResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.HighlightingResourceSetAvatarFactory;
@@ -33,10 +29,10 @@ import org.thechiselgroup.choosel.client.resources.ui.UpdateResourceSetAvatarLab
 import org.thechiselgroup.choosel.client.resources.ui.popup.PopupResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.popup.PopupResourceSetAvatarFactory.Action;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
+import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
 
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 public class SelectionDragAvatarFactoryProvider implements
         ResourceSetAvatarFactoryProvider {
@@ -45,25 +41,21 @@ public class SelectionDragAvatarFactoryProvider implements
 
     private final ResourceSetAvatarDragController dragController;
 
-    private final ResourceSet hoverModel;
+    private final HoverModel hoverModel;
 
     private final PopupManagerFactory popupManagerFactory;
-
-    private final SwitchingResourceSet setHoverModel;
 
     private final ViewAccessor viewAccessor;
 
     @Inject
     public SelectionDragAvatarFactoryProvider(
             ResourceSetAvatarDragController dragController,
-            @Named(HOVER_MODEL) ResourceSet hoverModel,
-            @Named(HOVER_MODEL) SwitchingResourceSet setHoverModel,
-            ViewAccessor viewAccessor, PopupManagerFactory popupManagerFactory,
+            HoverModel hoverModel, ViewAccessor viewAccessor,
+            PopupManagerFactory popupManagerFactory,
             CommandManager commandManager) {
 
         this.dragController = dragController;
         this.hoverModel = hoverModel;
-        this.setHoverModel = setHoverModel;
         this.viewAccessor = viewAccessor;
         this.popupManagerFactory = popupManagerFactory;
         this.commandManager = commandManager;
@@ -81,7 +73,7 @@ public class SelectionDragAvatarFactoryProvider implements
                 updateFactory, dragController);
 
         ResourceSetAvatarFactory highlightingFactory = new HighlightingResourceSetAvatarFactory(
-                dragEnableFactory, hoverModel, setHoverModel, dragController);
+                dragEnableFactory, hoverModel, dragController);
 
         ResourceSetAvatarFactory clickFactory = new SelectionResourceSetAvatarFactory(
                 highlightingFactory, viewAccessor);
