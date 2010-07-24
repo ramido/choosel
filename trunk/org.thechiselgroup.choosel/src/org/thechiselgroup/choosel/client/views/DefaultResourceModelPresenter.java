@@ -7,20 +7,22 @@ import org.thechiselgroup.choosel.client.resources.ResourceSetRemovedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourceSetRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
+import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.util.Initializable;
 
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ResourceModelPresenter implements Initializable, WidgetAdaptable {
+public class DefaultResourceModelPresenter implements Initializable, WidgetAdaptable,
+        Disposable {
 
-    private final ResourceSetsPresenter inputResourceSetsPresenter;
+    private ResourceSetsPresenter inputResourceSetsPresenter;
 
-    private final ResourceSetsPresenter allResourcesPresenter;
+    private ResourceSetsPresenter allResourcesPresenter;
 
-    private final ResourceModel resourceModel;
+    private ResourceModel resourceModel;
 
-    public ResourceModelPresenter(ResourceSetsPresenter allResourcesPresenter,
+    public DefaultResourceModelPresenter(ResourceSetsPresenter allResourcesPresenter,
             ResourceSetsPresenter inputResourceSetsPresenter,
             ResourceModel resourceModel) {
 
@@ -35,6 +37,14 @@ public class ResourceModelPresenter implements Initializable, WidgetAdaptable {
         widget.add(allResourcesPresenter.asWidget());
         widget.add(inputResourceSetsPresenter.asWidget());
         return widget;
+    }
+
+    @Override
+    public void dispose() {
+        inputResourceSetsPresenter.dispose();
+        inputResourceSetsPresenter = null;
+        allResourcesPresenter.dispose();
+        allResourcesPresenter = null;
     }
 
     @Override

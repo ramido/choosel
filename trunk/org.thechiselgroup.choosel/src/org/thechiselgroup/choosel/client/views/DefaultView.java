@@ -134,11 +134,9 @@ public class DefaultView extends AbstractWindowContent implements View {
     // XXX might not be necessary (use presenter instead?)
     private List<ResourceSet> selectionSets = new ArrayList<ResourceSet>();
 
-    private ResourceSetsPresenter userSetsPresenter;
-
     private ResourceModel resourceModel;
 
-    private ResourceModelPresenter resourceModelPresenter;
+    private DefaultResourceModelPresenter resourceModelPresenter;
 
     private static final String MEMENTO_RESOURCE_MODEL = "resource-model";
 
@@ -146,38 +144,35 @@ public class DefaultView extends AbstractWindowContent implements View {
     public DefaultView(
             @Named(ChooselInjectionConstants.LABEL_PROVIDER_SELECTION_SET) LabelProvider selectionModelLabelFactory,
             ResourceSetFactory resourceSetFactory,
-            @Named(ChooselInjectionConstants.AVATAR_FACTORY_SET) ResourceSetsPresenter userSetsPresenter,
-            @Named(ChooselInjectionConstants.AVATAR_FACTORY_ALL_RESOURCES) ResourceSetsPresenter allResourcesSetPresenter,
             @Named(ChooselInjectionConstants.AVATAR_FACTORY_SELECTION) ResourceSetsPresenter selectionPresenter,
             @Named(ChooselInjectionConstants.AVATAR_FACTORY_SELECTION_DROP) ResourceSetsPresenter selectionDropPresenter,
             ResourceSplitter resourceSplitter,
             ViewContentDisplay contentDisplay, String label,
-            String contentType, ResourceItemValueResolver configuration) {
+            String contentType, ResourceItemValueResolver configuration,
+            ResourceModel resourceModel,
+            DefaultResourceModelPresenter resourceModelPresenter) {
 
         super(label, contentType);
 
         assert configuration != null;
         assert selectionModelLabelFactory != null;
         assert resourceSetFactory != null;
-        assert userSetsPresenter != null;
-        assert allResourcesSetPresenter != null;
         assert selectionPresenter != null;
         assert selectionDropPresenter != null;
         assert resourceSplitter != null;
         assert contentDisplay != null;
+        assert resourceModel != null;
+        assert resourceModelPresenter != null;
 
         this.configuration = configuration;
         this.selectionModelLabelFactory = selectionModelLabelFactory;
         this.resourceSetFactory = resourceSetFactory;
-        this.userSetsPresenter = userSetsPresenter;
         this.selectionPresenter = selectionPresenter;
         this.selectionDropPresenter = selectionDropPresenter;
         this.resourceSplitter = resourceSplitter;
         this.contentDisplay = contentDisplay;
-
-        this.resourceModel = new DefaultResourceModel(resourceSetFactory);
-        this.resourceModelPresenter = new ResourceModelPresenter(
-                allResourcesSetPresenter, userSetsPresenter, resourceModel);
+        this.resourceModel = resourceModel;
+        this.resourceModelPresenter = resourceModelPresenter;
     }
 
     @Override
@@ -247,8 +242,8 @@ public class DefaultView extends AbstractWindowContent implements View {
         contentDisplay = null;
         selectionPresenter.dispose();
         selectionPresenter = null;
-        userSetsPresenter.dispose();
-        userSetsPresenter = null;
+        resourceModelPresenter.dispose();
+        resourceModelPresenter = null;
         selection.dispose();
         selection = null;
     }

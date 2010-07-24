@@ -121,15 +121,22 @@ public class ViewFactory implements WindowContentFactory {
         ResourceItemValueResolver configuration = new ResourceItemValueResolver(
                 resourceSetToValueResolverFactory);
 
-        return new DefaultView(selectionModelLabelFactory, resourceSetFactory,
-                new ResourceSetAvatarResourceSetsPresenter(
-                        userSetsDragAvatarFactory),
+        ResourceModel resourceModel = new DefaultResourceModel(
+                resourceSetFactory);
+
+        DefaultResourceModelPresenter resourceModelPresenter = new DefaultResourceModelPresenter(
                 new ResourceSetAvatarResourceSetsPresenter(
                         allResourcesDragAvatarFactory),
                 new ResourceSetAvatarResourceSetsPresenter(
+                        userSetsDragAvatarFactory), resourceModel);
+
+        return new DefaultView(selectionModelLabelFactory, resourceSetFactory,
+                new ResourceSetAvatarResourceSetsPresenter(
                         selectionDragAvatarFactory),
                 new ResourceSetAvatarResourceSetsPresenter(dropTargetFactory),
-                resourceSplitter, contentDisplay, contentType, contentType,
-                configuration);
+                resourceSplitter,
+                contentDisplay,
+                contentType, contentType, configuration, resourceModel,
+                resourceModelPresenter);
     }
 }
