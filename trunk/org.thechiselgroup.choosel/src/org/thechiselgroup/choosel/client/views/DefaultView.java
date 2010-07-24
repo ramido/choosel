@@ -56,6 +56,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -338,23 +339,12 @@ public class DefaultView extends AbstractWindowContent implements View {
         allResourcesToSplitterForwarder.init();
     }
 
-    private void initCombinedResourcesSetPresenterUI() {
-        allResourcesSetPresenter.init();
-
-        Widget widget = allResourcesSetPresenter.asWidget();
-
-        configurationPanel.add(widget, DockPanel.WEST);
-        configurationPanel.setCellHorizontalAlignment(widget,
-                HasAlignment.ALIGN_LEFT);
-    }
-
     private void initConfigurationPanelUI() {
         configurationPanel = new DockPanel();
         configurationPanel.setSize("100%", "");
         configurationPanel.setStyleName(CSS_VIEW_CONFIGURATION_PANEL);
 
-        initCombinedResourcesSetPresenterUI();
-        initOriginalResourceSetsPresenterUI();
+        initResourceModelPresenterUI();
         initSelectionDropPresenterUI();
         initSelectionDragSourceUI();
     }
@@ -416,16 +406,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         contentDisplay.init(contentDisplayCallback);
     }
 
-    private void initOriginalResourceSetsPresenterUI() {
-        userSetsPresenter.init();
-
-        Widget widget = userSetsPresenter.asWidget();
-
-        configurationPanel.add(widget, DockPanel.WEST);
-        configurationPanel.setCellHorizontalAlignment(widget,
-                HasAlignment.ALIGN_CENTER);
-    }
-
     private void initPresenterLinks() {
         allResourcesSetPresenter.addResourceSet(resourceModel.getResources());
     }
@@ -448,6 +428,19 @@ public class DefaultView extends AbstractWindowContent implements View {
                         userSetsPresenter.removeResourceSet(resources);
                     }
                 });
+    }
+
+    private void initResourceModelPresenterUI() {
+        allResourcesSetPresenter.init();
+        userSetsPresenter.init();
+
+        HorizontalPanel resourceModelPresenter = new HorizontalPanel();
+        resourceModelPresenter.add(allResourcesSetPresenter.asWidget());
+        resourceModelPresenter.add(userSetsPresenter.asWidget());
+
+        configurationPanel.add(resourceModelPresenter, DockPanel.WEST);
+        configurationPanel.setCellHorizontalAlignment(resourceModelPresenter,
+                HasAlignment.ALIGN_LEFT);
     }
 
     private void initResourceSplitter() {
