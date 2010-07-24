@@ -23,6 +23,7 @@ import java.util.Map;
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.persistence.Memento;
+import org.thechiselgroup.choosel.client.persistence.Persistable;
 import org.thechiselgroup.choosel.client.resources.CombinedResourceSet;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
@@ -47,6 +48,8 @@ import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccess
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
+import org.thechiselgroup.choosel.client.util.Disposable;
+import org.thechiselgroup.choosel.client.util.Initializable;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 
 import com.allen_sauer.gwt.log.client.Log;
@@ -90,13 +93,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private static final String CSS_VIEW_CONFIGURATION_PANEL = "view-configurationPanel";
 
-    static final String MEMENTO_AUTOMATIC_RESOURCES = "automaticResources";
-
     private static final String MEMENTO_CONTENT_DISPLAY = "contentDisplay";
-
-    static final String MEMENTO_RESOURCE_SET_COUNT = "resourceSetCount";
-
-    static final String MEMENTO_RESOURCE_SET_PREFIX = "resourceSet-";
 
     static final String MEMENTO_SELECTION = "selection";
 
@@ -104,13 +101,9 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     static final String MEMENTO_SELECTION_SET_PREFIX = "selectionSet-";
 
-    private CombinedResourceSet allResources;
-
     private final ResourceSetsPresenter allResourcesSetPresenter;
 
     private ResourceEventsForwarder allResourcesToSplitterForwarder;
-
-    private ResourceSet automaticResources;
 
     /**
      * Maps category names (representing the resource sets that are calculated
@@ -119,9 +112,7 @@ public class DefaultView extends AbstractWindowContent implements View {
      */
     private Map<String, ResourceItem> categoriesToResourceItems = new HashMap<String, ResourceItem>();
 
-    private CombinedResourceSet combinedUserResourceSets;
-
-    private ResourceItemValueResolver configuration;
+    private ResourceItemValueResolver configuration;;
 
     private DockPanel configurationPanel;
 
@@ -151,6 +142,10 @@ public class DefaultView extends AbstractWindowContent implements View {
     private List<ResourceSet> selectionSets = new ArrayList<ResourceSet>();
 
     private ResourceSetsPresenter userSetsPresenter;
+
+    private ResourceModel resourceModel;
+
+    private static final String MEMENTO_RESOURCE_MODEL = "resource-model";
 
     @Inject
     public DefaultView(
@@ -189,17 +184,12 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     @Override
     public void addResources(Iterable<Resource> resources) {
-        assert resources != null;
-        automaticResources.addAll(resources);
+        this.resourceModel.addResources(resources);
     }
 
     @Override
-    public void addResourceSet(ResourceSet resources) {
-        if (!resources.hasLabel()) {
-            automaticResources.addAll(resources);
-        } else {
-            combinedUserResourceSets.addResourceSet(resources);
-        }
+    public void addResourceSet(ResourceSet resourceSet) {
+        this.resourceModel.addResourceSet(resourceSet);
     }
 
     @Override
@@ -222,9 +212,9 @@ public class DefaultView extends AbstractWindowContent implements View {
         contentDisplay.checkResize();
     }
 
+    @Override
     public void clear() {
-        automaticResources.clear();
-        combinedUserResourceSets.clear();
+        this.resourceModel.clear();
 
         assert categoriesToResourceItems.isEmpty();
         assert resourceSplitter.getCategorizedResourceSets().isEmpty();
@@ -232,17 +222,12 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     @Override
     public boolean containsResources(Iterable<Resource> resources) {
-        assert resources != null;
-        return allResources.containsAll(resources);
+        return this.resourceModel.containsResources(resources);
     }
 
     @Override
     public boolean containsResourceSet(ResourceSet resourceSet) {
-        assert resourceSet != null;
-        assert resourceSet.hasLabel() : resourceSet.toString()
-                + " has no label";
-
-        return combinedUserResourceSets.containsResourceSet(resourceSet);
+        return this.resourceModel.containsResourceSet(resourceSet);
     }
 
     @Override
@@ -275,8 +260,10 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         removeSelectionModelResourceHandlers();
 
-        combinedUserResourceSets.clear();
-        combinedUserResourceSets = null;
+        if (resourceModel instanceof Disposable) {
+            ((Disposable) resourceModel).dispose();
+        }
+        resourceModel = null;
         allResourcesToSplitterForwarder.dispose();
         allResourcesToSplitterForwarder = null;
         contentDisplay.dispose();
@@ -292,9 +279,8 @@ public class DefaultView extends AbstractWindowContent implements View {
     private void doRestore(Memento state, ResourceSetAccessor accessor) {
         contentDisplay.startRestore();
 
-        // TODO remove user sets, automatic resources
-        addResources(restoreAutomaticResources(state, accessor));
-        restoreUserResourceSets(state, accessor);
+        restoreResourceModel(state, accessor);
+
         restoreSelection(state, accessor);
 
         restoreContentDisplay(state);
@@ -302,8 +288,18 @@ public class DefaultView extends AbstractWindowContent implements View {
         contentDisplay.endRestore();
     }
 
+    @Override
+    public ResourceSet getAutomaticResourceSet() {
+        return resourceModel.getAutomaticResourceSet();
+    }
+
     public Map<String, ResourceSet> getCategorizedResourceSets() {
         return resourceSplitter.getCategorizedResourceSets();
+    }
+
+    @Override
+    public CombinedResourceSet getCombinedUserResourceSets() {
+        return resourceModel.getCombinedUserResourceSets();
     }
 
     private List<ResourceItem> getResourceItems(List<Resource> resources) {
@@ -336,7 +332,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     @Override
     public ResourceSet getResources() {
-        return allResources;
+        return resourceModel.getResources();
     }
 
     @Override
@@ -351,9 +347,12 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     @Override
     public void init() {
+        this.resourceModel = new DefaultResourceModel(resourceSetFactory);
+        if (this.resourceModel instanceof Initializable) {
+            ((Initializable) this.resourceModel).init();
+        }
+
         initResourceCombinator();
-        initAutomaticResources();
-        initAllResources();
         initResourceSplitter();
 
         initAllResourcesToResourceSplitterLink();
@@ -365,22 +364,10 @@ public class DefaultView extends AbstractWindowContent implements View {
         initSelectionModel();
     }
 
-    private void initAllResources() {
-        allResources = new CombinedResourceSet(
-                resourceSetFactory.createResourceSet());
-        allResources.setLabel("All"); // TODO add & update view name
-        allResources.addResourceSet(automaticResources);
-        allResources.addResourceSet(combinedUserResourceSets);
-    }
-
     private void initAllResourcesToResourceSplitterLink() {
         allResourcesToSplitterForwarder = new ResourceEventsForwarder(
-                allResources, resourceSplitter);
+                resourceModel.getResources(), resourceSplitter);
         allResourcesToSplitterForwarder.init();
-    }
-
-    private void initAutomaticResources() {
-        automaticResources = resourceSetFactory.createResourceSet();
     }
 
     private void initCombinedResourcesSetPresenterUI() {
@@ -410,27 +397,29 @@ public class DefaultView extends AbstractWindowContent implements View {
 
             @Override
             public boolean containsResource(Resource resource) {
-                return allResources.containsResourceWithUri(resource.getUri());
+                return resourceModel.getResources().containsResourceWithUri(
+                        resource.getUri());
             }
 
             @Override
             public boolean containsResourceWithUri(String uri) {
-                return allResources.containsResourceWithUri(uri);
+                return resourceModel.getResources()
+                        .containsResourceWithUri(uri);
             }
 
             @Override
             public Iterable<Resource> getAllResources() {
-                return allResources;
+                return resourceModel.getResources();
             }
 
             @Override
             public ResourceSet getAutomaticResourceSet() {
-                return automaticResources;
+                return resourceModel.getAutomaticResourceSet();
             }
 
             @Override
             public Resource getResourceByUri(String uri) {
-                return allResources.getByUri(uri);
+                return resourceModel.getResources().getByUri(uri);
             }
 
             @Override
@@ -470,14 +459,11 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     private void initPresenterLinks() {
-        allResourcesSetPresenter.addResourceSet(allResources);
+        allResourcesSetPresenter.addResourceSet(resourceModel.getResources());
     }
 
     private void initResourceCombinator() {
-        combinedUserResourceSets = new CombinedResourceSet(
-                resourceSetFactory.createResourceSet());
-
-        combinedUserResourceSets.addSetEventsHandler(
+        this.resourceModel.getCombinedUserResourceSets().addSetEventsHandler(
                 ResourceSetAddedEvent.TYPE, new ResourceSetAddedEventHandler() {
                     @Override
                     public void onResourceSetAdded(ResourceSetAddedEvent e) {
@@ -485,7 +471,7 @@ public class DefaultView extends AbstractWindowContent implements View {
                         userSetsPresenter.addResourceSet(resources);
                     }
                 });
-        combinedUserResourceSets.addSetEventsHandler(
+        this.resourceModel.getCombinedUserResourceSets().addSetEventsHandler(
                 ResourceSetRemovedEvent.TYPE,
                 new ResourceSetRemovedEventHandler() {
                     @Override
@@ -603,16 +589,12 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     @Override
     public void removeResources(Iterable<Resource> resources) {
-        assert resources != null;
-        automaticResources.removeAll(resources);
+        this.resourceModel.removeResources(resources);
     }
 
     @Override
     public void removeResourceSet(ResourceSet resourceSet) {
-        assert resourceSet != null;
-        assert resourceSet.hasLabel();
-
-        combinedUserResourceSets.removeResourceSet(resourceSet);
+        this.resourceModel.removeResourceSet(resourceSet);
     }
 
     private void removeSelectionModelResourceHandlers() {
@@ -667,14 +649,20 @@ public class DefaultView extends AbstractWindowContent implements View {
         }
     }
 
-    private ResourceSet restoreAutomaticResources(Memento state,
-            ResourceSetAccessor accessor) {
-        return restoreResourceSet(state, accessor, MEMENTO_AUTOMATIC_RESOURCES);
-    }
-
     private void restoreContentDisplay(Memento state) {
         Memento contentDisplayState = state.getChild(MEMENTO_CONTENT_DISPLAY);
         contentDisplay.restore(contentDisplayState);
+    }
+
+    private void restoreResourceModel(Memento state,
+            ResourceSetAccessor accessor) {
+
+        if (!(this.resourceModel instanceof Persistable)) {
+            return;
+        }
+
+        ((Persistable) this.resourceModel).restore(
+                state.getChild(MEMENTO_RESOURCE_MODEL), accessor);
     }
 
     private ResourceSet restoreResourceSet(Memento state,
@@ -697,23 +685,12 @@ public class DefaultView extends AbstractWindowContent implements View {
         }
     }
 
-    private void restoreUserResourceSets(Memento state,
-            ResourceSetAccessor accessor) {
-        int resourceSetCount = (Integer) state
-                .getValue(MEMENTO_RESOURCE_SET_COUNT);
-        for (int i = 0; i < resourceSetCount; i++) {
-            addResourceSet(restoreResourceSet(state, accessor,
-                    MEMENTO_RESOURCE_SET_PREFIX + i));
-        }
-    }
-
     @Override
     public Memento save(ResourceSetCollector persistanceManager) {
         Memento memento = new Memento();
 
         storeSelection(persistanceManager, memento);
-        storeAutomaticResources(persistanceManager, memento);
-        storeUserResourceSets(persistanceManager, memento);
+        storeResourceModel(persistanceManager, memento);
         storeContentDisplaySettings(memento);
 
         // TODO later: store layer settings
@@ -741,15 +718,19 @@ public class DefaultView extends AbstractWindowContent implements View {
         }
     }
 
-    private void storeAutomaticResources(
-            ResourceSetCollector persistanceManager, Memento memento) {
-
-        storeResourceSet(persistanceManager, memento,
-                MEMENTO_AUTOMATIC_RESOURCES, automaticResources);
-    }
-
     private void storeContentDisplaySettings(Memento memento) {
         memento.addChild(MEMENTO_CONTENT_DISPLAY, contentDisplay.save());
+    }
+
+    private void storeResourceModel(ResourceSetCollector persistanceManager,
+            Memento memento) {
+
+        if (!(this.resourceModel instanceof Persistable)) {
+            return;
+        }
+
+        memento.addChild(MEMENTO_RESOURCE_MODEL,
+                ((Persistable) this.resourceModel).save(persistanceManager));
     }
 
     private void storeResourceSet(ResourceSetCollector persistanceManager,
@@ -769,17 +750,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         if (selection != null) {
             storeResourceSet(persistanceManager, memento, MEMENTO_SELECTION,
                     selection);
-        }
-    }
-
-    private void storeUserResourceSets(ResourceSetCollector persistanceManager,
-            Memento memento) {
-        List<ResourceSet> resourceSets = combinedUserResourceSets
-                .getResourceSets();
-        memento.setValue(MEMENTO_RESOURCE_SET_COUNT, resourceSets.size());
-        for (int i = 0; i < resourceSets.size(); i++) {
-            storeResourceSet(persistanceManager, memento,
-                    MEMENTO_RESOURCE_SET_PREFIX + i, resourceSets.get(i));
         }
     }
 
