@@ -16,18 +16,16 @@
 package org.thechiselgroup.choosel.client.views.graph;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
-import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceManager;
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
+import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
 
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 public class GraphViewContentDisplayFactory implements
         ViewContentDisplayFactory {
@@ -45,8 +43,7 @@ public class GraphViewContentDisplayFactory implements
     private DragEnablerFactory dragEnablerFactory;
 
     @Inject
-    @Named(ChooselInjectionConstants.HOVER_MODEL)
-    private ResourceSet hoverModel;
+    private HoverModel hoverModel;
 
     @Inject
     private PopupManagerFactory popupManagerFactory;

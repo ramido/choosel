@@ -17,7 +17,6 @@ package org.thechiselgroup.choosel.client.views.timeline;
 
 import java.util.Date;
 
-import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
@@ -26,13 +25,13 @@ import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.ui.widget.timeline.TimeLineWidget;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
+import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
 
@@ -45,10 +44,8 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
     private TimeLineWidget timelineWidget;
 
     @Inject
-    public TimeLineViewContentDisplay(
-            PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper,
-            @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
+    public TimeLineViewContentDisplay(PopupManagerFactory popupManagerFactory,
+            DetailsWidgetHelper detailsWidgetHelper, HoverModel hoverModel,
             DragEnablerFactory dragEnablerFactory) {
 
         super(popupManagerFactory, detailsWidgetHelper, hoverModel);

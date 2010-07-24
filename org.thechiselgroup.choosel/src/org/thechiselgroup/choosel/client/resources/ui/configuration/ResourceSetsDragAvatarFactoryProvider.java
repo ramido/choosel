@@ -16,14 +16,11 @@
 package org.thechiselgroup.choosel.client.resources.ui.configuration;
 
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_SET;
-import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.HOVER_MODEL;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.SwitchingResourceSet;
 import org.thechiselgroup.choosel.client.resources.action.RemoveSetAction;
 import org.thechiselgroup.choosel.client.resources.ui.DefaultResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.HighlightingResourceSetAvatarFactory;
@@ -38,6 +35,7 @@ import org.thechiselgroup.choosel.client.ui.dnd.DropTargetResourceSetAvatarFacto
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropTargetManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
+import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
 
 import com.google.inject.Inject;
@@ -52,26 +50,22 @@ public class ResourceSetsDragAvatarFactoryProvider implements
 
     private final ResourceSetAvatarDropTargetManager dropTargetManager;
 
-    private final ResourceSet hoverModel;
+    private final HoverModel hoverModel;
 
     private final PopupManagerFactory popupManagerFactory;
-
-    private final SwitchingResourceSet setHoverModel;
 
     private final ViewAccessor viewAccessor;
 
     @Inject
     public ResourceSetsDragAvatarFactoryProvider(
             ResourceSetAvatarDragController dragController,
-            @Named(HOVER_MODEL) ResourceSet hoverModel,
-            @Named(HOVER_MODEL) SwitchingResourceSet setHoverModel,
+            HoverModel hoverModel,
             @Named(AVATAR_FACTORY_SET) ResourceSetAvatarDropTargetManager dropTargetManager,
             ViewAccessor viewAccessor, PopupManagerFactory popupManagerFactory,
             CommandManager commandManager) {
 
         this.dragController = dragController;
         this.hoverModel = hoverModel;
-        this.setHoverModel = setHoverModel;
         this.dropTargetManager = dropTargetManager;
         this.viewAccessor = viewAccessor;
         this.popupManagerFactory = popupManagerFactory;
@@ -94,7 +88,7 @@ public class ResourceSetsDragAvatarFactoryProvider implements
                 dragFactory, dropTargetManager);
 
         HighlightingResourceSetAvatarFactory highlightingFactory = new HighlightingResourceSetAvatarFactory(
-                dropTargetFactory, hoverModel, setHoverModel, dragController);
+                dropTargetFactory, hoverModel, dragController);
 
         List<Action> actions = new ArrayList<Action>();
         actions.add(new RemoveSetAction(commandManager));

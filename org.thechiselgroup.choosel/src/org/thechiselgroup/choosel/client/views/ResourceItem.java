@@ -34,19 +34,30 @@ public class ResourceItem {
     public class HighlightingManager implements MouseOverHandler,
             MouseOutHandler, PopupClosingHandler {
 
+        private boolean highlighted = false;
+
         @Override
         public void onMouseOut(MouseOutEvent e) {
-            setHighlighted(false);
+            if (highlighted) {
+                hoverModel.removeHighlightedResources(getResourceSet());
+                highlighted = false;
+            }
         }
 
         @Override
         public void onMouseOver(MouseOverEvent e) {
-            setHighlighted(true);
+            if (!highlighted) {
+                hoverModel.addHighlightedResources(getResourceSet());
+                highlighted = true;
+            }
         }
 
         @Override
         public void onPopupClosing(PopupClosingEvent event) {
-            setHighlighted(false);
+            if (highlighted) {
+                hoverModel.removeHighlightedResources(getResourceSet());
+                highlighted = false;
+            }
         }
 
     }
@@ -63,7 +74,7 @@ public class ResourceItem {
 
     private HighlightingManager highlightingManager;
 
-    protected final ResourceSet hoverModel;
+    protected final HoverModel hoverModel;
 
     protected final PopupManager popupManager;
 
@@ -77,7 +88,7 @@ public class ResourceItem {
     private final ResourceItemValueResolver valueResolver;
 
     public ResourceItem(String category, ResourceSet resources,
-            ResourceSet hoverModel, PopupManager popupManager,
+            HoverModel hoverModel, PopupManager popupManager,
             ResourceItemValueResolver valueResolver) {
 
         assert category != null;
@@ -98,20 +109,18 @@ public class ResourceItem {
         this.popupManager.addPopupMouseOutHandler(highlightingManager);
         this.popupManager.addPopupClosingHandler(highlightingManager);
 
-        resources
-                .addEventHandler(new ResourcesAddedEventHandler() {
-                    @Override
-                    public void onResourcesAdded(ResourcesAddedEvent e) {
-                        updateContent();
-                    }
-                });
-        resources
-                .addEventHandler(new ResourcesRemovedEventHandler() {
-                    @Override
-                    public void onResourcesRemoved(ResourcesRemovedEvent e) {
-                        updateContent();
-                    }
-                });
+        resources.addEventHandler(new ResourcesAddedEventHandler() {
+            @Override
+            public void onResourcesAdded(ResourcesAddedEvent e) {
+                updateContent();
+            }
+        });
+        resources.addEventHandler(new ResourcesRemovedEventHandler() {
+            @Override
+            public void onResourcesRemoved(ResourcesRemovedEvent e) {
+                updateContent();
+            }
+        });
 
         updateContent();
     }
@@ -153,6 +162,10 @@ public class ResourceItem {
         return highlightingManager;
     }
 
+    public HoverModel getHoverModel() {
+        return hoverModel;
+    }
+
     public final PopupManager getPopupManager() {
         return popupManager;
     }
@@ -180,12 +193,6 @@ public class ResourceItem {
         }
 
         this.highlighted = highlighted;
-
-        if (highlighted) {
-            hoverModel.addAll(resources);
-        } else {
-            hoverModel.removeAll(resources);
-        }
 
         updateStyling();
     }

@@ -16,7 +16,7 @@ public class ResourceItemUpdateTest {
     private static final String RESOURCE_ITEM_CATEGORY = "resourceItemCategory";
 
     @Mock
-    private ResourceSet hoverModel;
+    private HoverModel hoverModel;
 
     @Mock
     private ResourceItemValueResolver layer;

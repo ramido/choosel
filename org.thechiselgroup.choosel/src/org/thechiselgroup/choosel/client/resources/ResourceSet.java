@@ -15,53 +15,22 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
-import java.util.Iterator;
-import java.util.List;
-
 import org.thechiselgroup.choosel.client.label.HasLabel;
 
-import com.google.gwt.event.shared.HandlerRegistration;
-
-public interface ResourceSet extends Iterable<Resource>, ResourceContainer,
-        HasLabel {
-
-    HandlerRegistration addEventHandler(
-            ResourcesAddedEventHandler handler);
-
-    HandlerRegistration addEventHandler(
-            ResourcesRemovedEventHandler handler);
+public interface ResourceSet extends ResourceContainer, HasLabel,
+        ReadableResourceSet {
 
     void clear();
-
-    boolean contains(Resource resource);
-
-    boolean containsAll(Iterable<Resource> resources);
-
-    boolean containsEqualResources(ResourceSet other);
-
-    boolean containsResourceWithUri(String uri);
-
-    Resource getByUri(String uri);
 
     // XXX hack to make changes in resource item work
     // trace and replace with something more sensible,
     // especially in the graph
     Resource getFirstResource();
 
-    boolean isEmpty();
-
     boolean isModifiable();
-
-    @Override
-    Iterator<Resource> iterator();
-
-    int size();
 
     void switchContainment(Resource resource);
 
     void switchContainment(ResourceSet resources);
-
-    // FIXME toList should be unmodifiable copy
-    List<Resource> toList();
 
 }

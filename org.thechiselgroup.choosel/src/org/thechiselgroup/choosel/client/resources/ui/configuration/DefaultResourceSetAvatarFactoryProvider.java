@@ -15,10 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources.ui.configuration;
 
-import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.HOVER_MODEL;
-
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.SwitchingResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.AbstractResourceSetAvatarFactoryProvider;
 import org.thechiselgroup.choosel.client.resources.ui.DefaultResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.HighlightingResourceSetAvatarFactory;
@@ -28,9 +24,9 @@ import org.thechiselgroup.choosel.client.ui.dnd.DragEnableResourceSetAvatarFacto
 import org.thechiselgroup.choosel.client.ui.dnd.DropTargetResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropTargetManager;
+import org.thechiselgroup.choosel.client.views.HoverModel;
 
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 public class DefaultResourceSetAvatarFactoryProvider extends
         AbstractResourceSetAvatarFactoryProvider {
@@ -38,8 +34,7 @@ public class DefaultResourceSetAvatarFactoryProvider extends
     @Inject
     public DefaultResourceSetAvatarFactoryProvider(
             ResourceSetAvatarDragController dragController,
-            @Named(HOVER_MODEL) ResourceSet hoverModel,
-            @Named(HOVER_MODEL) SwitchingResourceSet setHoverModel,
+            HoverModel hoverModel,
             ResourceSetAvatarDropTargetManager dropTargetManager) {
 
         super(new HighlightingResourceSetAvatarFactory(
@@ -50,6 +45,6 @@ public class DefaultResourceSetAvatarFactoryProvider extends
                                                 "avatar-resourceSet",
                                                 ResourceSetAvatarType.SET)),
                                 dragController), dropTargetManager),
-                hoverModel, setHoverModel, dragController));
+                hoverModel, dragController));
     }
 }

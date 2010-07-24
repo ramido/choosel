@@ -33,7 +33,6 @@ import org.thechiselgroup.choosel.client.label.MappingCategoryLabelProvider;
 import org.thechiselgroup.choosel.client.label.ResourceSetLabelFactory;
 import org.thechiselgroup.choosel.client.label.SelectionModelLabelFactory;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceManager;
-import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.ManagedResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ResourceByPropertyMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceByUriMultiCategorizer;
@@ -41,9 +40,7 @@ import org.thechiselgroup.choosel.client.resources.ResourceByUriTypeCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceManager;
 import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
-import org.thechiselgroup.choosel.client.resources.SwitchingResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DefaultDetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
@@ -78,6 +75,7 @@ import org.thechiselgroup.choosel.client.util.xslt.SarissaDocumentProcessor;
 import org.thechiselgroup.choosel.client.views.DefaultSlotResolver;
 import org.thechiselgroup.choosel.client.views.DefaultViewAccessor;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
+import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
@@ -176,18 +174,7 @@ public class ChooselClientModule extends AbstractGinModule implements
     }
 
     private void bindHoverModel() {
-        /*
-         * We use a counting resource set, because elements might get removed
-         * from the set after they have been added again, e.g. when moving the
-         * mouse from over a resource item with popup to over a resource set and
-         * the popup removes the resource a bit later.
-         */
-        bind(ResourceSet.class).annotatedWith(Names.named(HOVER_MODEL))
-                .to(DefaultResourceSet.class).in(Singleton.class); // CountingResourceSet
-
-        bind(SwitchingResourceSet.class)
-                .annotatedWith(Names.named(HOVER_MODEL))
-                .to(SwitchingResourceSet.class).in(Singleton.class);
+        bind(HoverModel.class).in(Singleton.class);
     }
 
     private void bindLabelProviders() {

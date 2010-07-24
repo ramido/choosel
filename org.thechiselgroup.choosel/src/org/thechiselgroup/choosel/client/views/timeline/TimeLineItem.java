@@ -25,6 +25,7 @@ import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.widget.timeline.TimeLineEvent;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
+import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.IconResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
@@ -76,7 +77,7 @@ public class TimeLineItem extends IconResourceItem {
 
     public TimeLineItem(String category, ResourceSet resources,
             TimeLineViewContentDisplay view, PopupManager popupManager,
-            ResourceSet hoverModel, ResourceItemValueResolver layerModel,
+            HoverModel hoverModel, ResourceItemValueResolver layerModel,
             DragEnablerFactory dragEnablerFactory) {
 
         super(category, resources, hoverModel, popupManager, layerModel);
@@ -133,12 +134,12 @@ public class TimeLineItem extends IconResourceItem {
 
     public void onMouseOut(Event e) {
         popupManager.onMouseOut(e.getClientX(), e.getClientY());
-        hoverModel.removeAll(getResourceSet());
+        hoverModel.removeHighlightedResources(getResourceSet());
     }
 
     public void onMouseOver(Event e) {
         popupManager.onMouseOver(e.getClientX(), e.getClientY());
-        hoverModel.addAll(getResourceSet());
+        hoverModel.addHighlightedResources(getResourceSet());
     }
 
     public void onPainted(String labelElementID, String iconElementID) {

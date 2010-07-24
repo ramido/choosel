@@ -21,6 +21,7 @@ import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarType;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.client.ui.popup.DefaultPopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
+import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
@@ -71,7 +72,7 @@ public class ListItem extends ResourceItem {
     private ListItemLabel label;
 
     public ListItem(String category, ResourceSet resources,
-            ResourceSet hoverModel, PopupManager popupManager,
+            HoverModel hoverModel, PopupManager popupManager,
             ListViewContentDisplay.Display display,
             ResourceItemValueResolver layerModel,
             ResourceSetAvatarDragController dragController) {

@@ -30,7 +30,7 @@ public abstract class IconResourceItem extends ResourceItem {
     private String selectedIconURL;
 
     public IconResourceItem(String category, ResourceSet resources,
-            ResourceSet hoverModel, PopupManager popupManager,
+            HoverModel hoverModel, PopupManager popupManager,
             ResourceItemValueResolver layerModel) {
 
         super(category, resources, hoverModel, popupManager, layerModel);

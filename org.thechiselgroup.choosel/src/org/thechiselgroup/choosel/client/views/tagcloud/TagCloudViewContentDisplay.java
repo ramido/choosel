@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
@@ -29,6 +28,7 @@ import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.util.CollectionUtils;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
+import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
@@ -47,7 +47,6 @@ import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 public class TagCloudViewContentDisplay extends AbstractViewContentDisplay {
 
@@ -147,9 +146,9 @@ public class TagCloudViewContentDisplay extends AbstractViewContentDisplay {
     private class LabelEventHandler implements ClickHandler, MouseOutHandler,
             MouseOverHandler {
 
-        private final ResourceSet hoverModel;
+        private final HoverModel hoverModel;
 
-        public LabelEventHandler(ResourceSet hoverModel) {
+        public LabelEventHandler(HoverModel hoverModel) {
             this.hoverModel = hoverModel;
         }
 
@@ -168,12 +167,12 @@ public class TagCloudViewContentDisplay extends AbstractViewContentDisplay {
 
         @Override
         public void onMouseOut(MouseOutEvent e) {
-            hoverModel.removeAll(getResource(e));
+            hoverModel.removeHighlightedResources(getResource(e));
         }
 
         @Override
         public void onMouseOver(MouseOverEvent e) {
-            hoverModel.addAll(getResource(e));
+            hoverModel.addHighlightedResources(getResource(e));
         }
     }
 
@@ -203,8 +202,7 @@ public class TagCloudViewContentDisplay extends AbstractViewContentDisplay {
     private DoubleToGroupValueMapper<String> groupValueMapper;
 
     @Inject
-    public TagCloudViewContentDisplay(
-            @Named(ChooselInjectionConstants.HOVER_MODEL) ResourceSet hoverModel,
+    public TagCloudViewContentDisplay(HoverModel hoverModel,
             PopupManagerFactory popupManagerFactory,
             DetailsWidgetHelper detailsWidgetHelper,
             ResourceSetAvatarDragController dragController) {
