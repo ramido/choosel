@@ -16,7 +16,6 @@
 package org.thechiselgroup.choosel.client.views;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
@@ -120,7 +119,7 @@ public class DefaultViewTest {
     @Mock
     private ResourceSetsPresenter selectionPresenter;
 
-    private DefaultView view;
+    private DefaultView underTest;
 
     private ViewContentDisplayCallback callback;
 
@@ -130,51 +129,15 @@ public class DefaultViewTest {
         DefaultResourceSet resources = new DefaultResourceSet();
         resources.add(resource);
 
-        view.addResourceSet(resources);
+        underTest.addResourceSet(resources);
 
         verify(originalSetsPresenter, never()).addResourceSet(resources);
-    }
-
-    @Test
-    public void addResourcesAddsToAllResources() {
-        ResourceSet resources1 = createResources("test", 1, 2, 3);
-        ResourceSet resources2 = createResources("test", 3, 4, 5);
-
-        view.addResources(resources1);
-        view.addResources(resources2);
-        ResourceSet allResources = view.getResources();
-
-        assertEquals(5, allResources.size());
-        for (Resource resource : resources1) {
-            assertTrue(allResources.contains(resource));
-        }
-        for (Resource resource : resources2) {
-            assertTrue(allResources.contains(resource));
-        }
-    }
-
-    @Test
-    public void addResourceSetsAddsToAllResources() {
-        ResourceSet resources1 = createResources("test", 1, 2, 3);
-        ResourceSet resources2 = createResources("test", 3, 4, 5);
-
-        view.addResourceSet(resources1);
-        view.addResourceSet(resources2);
-        ResourceSet allResources = view.getResources();
-
-        assertEquals(5, allResources.size());
-        for (Resource resource : resources1) {
-            assertTrue(allResources.contains(resource));
-        }
-        for (Resource resource : resources2) {
-            assertTrue(allResources.contains(resource));
-        }
     }
 
     // TODO this needs to be changed - we should not test the implementation
     @Test
     public void addSelectionHandlers() {
-        view.setSelection(selection);
+        underTest.setSelection(selection);
 
         verify(selection, times(1)).addHandler(eq(ResourcesAddedEvent.TYPE),
                 any(ResourcesAddedEventHandler.class));
@@ -183,32 +146,9 @@ public class DefaultViewTest {
     }
 
     @Test
-    public void addUnlabeledSetContentsToAutomaticResourceSet() {
-        Resource resource = createResource(1);
-        DefaultResourceSet resources = new DefaultResourceSet();
-        resources.add(resource);
-
-        view.addResourceSet(resources);
-
-        ArgumentCaptor<ViewContentDisplayCallback> argument = ArgumentCaptor
-                .forClass(ViewContentDisplayCallback.class);
-        verify(contentDisplay, times(1)).init(argument.capture());
-        ResourceSet automaticResources = argument.getValue()
-                .getAutomaticResourceSet();
-
-        assertNotNull(automaticResources);
-        assertEquals(true, automaticResources.contains(resource));
-    }
-
-    @Test
-    public void allResourcesHasLabel() {
-        assertEquals(true, view.getResources().hasLabel());
-    }
-
-    @Test
     public void allResourcesPresenterContainsSetWithAllResources() {
-        view.addResourceSet(createLabeledResources(1));
-        view.addResources(createResources(2));
+        underTest.addResourceSet(createLabeledResources(1));
+        underTest.addResources(createResources(2));
 
         ArgumentCaptor<ResourceSet> argument = ArgumentCaptor
                 .forClass(ResourceSet.class);
@@ -224,7 +164,7 @@ public class DefaultViewTest {
     public void callOriginalSetsPresenterOnLabeledResourcesAdded() {
         ResourceSet resources = createLabeledResources(1, 2, 3);
 
-        view.addResourceSet(resources);
+        underTest.addResourceSet(resources);
 
         verify(originalSetsPresenter, times(1)).addResourceSet(resources);
     }
@@ -233,8 +173,8 @@ public class DefaultViewTest {
     public void callOriginalSetsPresenterOnLabeledResourcesAddedOnlyOnce() {
         ResourceSet resources = createLabeledResources(1, 2, 3);
 
-        view.addResourceSet(resources);
-        view.addResourceSet(resources);
+        underTest.addResourceSet(resources);
+        underTest.addResourceSet(resources);
 
         verify(originalSetsPresenter, times(1)).addResourceSet(resources);
     }
@@ -243,8 +183,8 @@ public class DefaultViewTest {
     public void callResourceSetsPresenterOnLabeledResourcesRemoved() {
         ResourceSet resources = createLabeledResources(1, 2, 3);
 
-        view.addResourceSet(resources);
-        view.removeResourceSet(resources);
+        underTest.addResourceSet(resources);
+        underTest.removeResourceSet(resources);
 
         verify(originalSetsPresenter, times(1)).removeResourceSet(resources);
     }
@@ -256,8 +196,9 @@ public class DefaultViewTest {
         DefaultResourceSet resources2 = createLabeledResources(CATEGORY_2, 4, 2);
         DefaultResourceSet resources = toResourceSet(resources1, resources2);
 
-        view.addResourceSet(resources);
-        Map<String, ResourceSet> result = view.getCategorizedResourceSets();
+        underTest.addResourceSet(resources);
+        Map<String, ResourceSet> result = underTest
+                .getCategorizedResourceSets();
 
         assertEquals(2, result.size());
         assertTrue(result.containsKey(CATEGORY_1));
@@ -267,30 +208,12 @@ public class DefaultViewTest {
     }
 
     @Test
-    public void containsAddedLabeledResources() {
-        ResourceSet resources = createLabeledResources(1, 2, 3);
-
-        view.addResourceSet(resources);
-
-        assertEquals(true, view.containsResourceSet(resources));
-    }
-
-    @Test
-    public void containsAddedResources() {
-        ResourceSet resources = createResources(1, 2, 3);
-
-        view.addResources(resources);
-
-        assertEquals(true, view.containsResources(resources));
-    }
-
-    @Test
     public void createResourceItemsOnResourcesAdded() {
         DefaultResourceSet resources1 = createResources(CATEGORY_1, 1, 3, 4);
         DefaultResourceSet resources2 = createResources(CATEGORY_2, 4, 2);
         DefaultResourceSet resources = toResourceSet(resources1, resources2);
 
-        view.addResourceSet(resources);
+        underTest.addResourceSet(resources);
 
         ArgumentCaptor<ResourceSet> argument = ArgumentCaptor
                 .forClass(ResourceSet.class);
@@ -326,7 +249,7 @@ public class DefaultViewTest {
     public void createResourceItemsWhenLabeledResourcesAreAdded() {
         ResourceSet resources = createLabeledResources(CATEGORY_1, 1);
 
-        view.addResourceSet(resources);
+        underTest.addResourceSet(resources);
 
         resources.add(createResource(CATEGORY_2, 2));
 
@@ -353,7 +276,7 @@ public class DefaultViewTest {
                         new ResourceByUriTypeCategorizer()),
                 new DefaultResourceSetFactory());
 
-        view = spy(new TestView(new SelectionModelLabelFactory(),
+        underTest = spy(new TestView(new SelectionModelLabelFactory(),
                 new DefaultResourceSetFactory(), originalSetsPresenter,
                 allResourcesSetPresenter, selectionPresenter,
                 selectionDropPresenter, resourceSplitter, contentDisplay, "",
@@ -364,10 +287,10 @@ public class DefaultViewTest {
     public void deselectResourceItemWhenResourceRemovedFromSelection() {
         when(resourceItem.getResourceSet()).thenReturn(createResources(1));
 
-        view.addResources(createResources(1));
+        underTest.addResources(createResources(1));
 
         selection = createResources();
-        view.setSelection(selection);
+        underTest.setSelection(selection);
 
         selection.add(createResource(1));
         selection.remove(createResource(1));
@@ -378,18 +301,18 @@ public class DefaultViewTest {
     @Test
     public void deselectResourceItemWhenSelectionChanges() {
         when(resourceItem.getResourceSet()).thenReturn(createResources(1));
-        view.addResources(createResources(1));
-        view.setSelection(createResources(1));
-        view.setSelection(createResources());
+        underTest.addResources(createResources(1));
+        underTest.setSelection(createResources(1));
+        underTest.setSelection(createResources());
 
         verify(resourceItem, times(1)).setSelected(false);
     }
 
     @Test
     public void dispose() {
-        view.setSelection(selection);
+        underTest.setSelection(selection);
 
-        view.dispose();
+        underTest.dispose();
 
         verify(contentDisplay, times(1)).dispose();
         verify(selectionPresenter, times(1)).dispose();
@@ -398,33 +321,12 @@ public class DefaultViewTest {
     }
 
     @Test
-    public void disposeShouldRemoveResourceHooks() {
-        DefaultResourceSet resources = createResources(3, 4);
-
-        view.addResourceSet(resources);
-        view.dispose();
-
-        assertEquals(0, resources.getHandlerCount(ResourcesAddedEvent.TYPE));
-        assertEquals(0, resources.getHandlerCount(ResourcesRemovedEvent.TYPE));
-    }
-
-    @Test
-    public void doesNotContainResourceSetAfterAddingResources() {
-        ResourceSet resources = createResources(1, 2, 3);
-        resources.setLabel("test");
-
-        view.addResources(resources);
-
-        assertEquals(false, view.containsResourceSet(resources));
-    }
-
-    @Test
     public void doNotCallOriginalSetsPresenterOnAddingUnlabeledResources() {
         Resource resource = createResource(1);
         DefaultResourceSet resources = new DefaultResourceSet();
         resources.add(resource);
 
-        view.addResourceSet(resources);
+        underTest.addResourceSet(resources);
 
         verify(originalSetsPresenter, never()).addResourceSet(
                 any(ResourceSet.class));
@@ -437,61 +339,27 @@ public class DefaultViewTest {
     }
 
     @Test
-    public void removeLabeledResourceSetDoesNotRemoveDuplicateResources() {
-        ResourceSet resources1 = createLabeledResources(1, 2, 3);
-        ResourceSet resources2 = createLabeledResources(3, 4, 5);
-
-        view.addResourceSet(resources1);
-        view.addResourceSet(resources2);
-        view.removeResourceSet(resources2);
-        ResourceSet allResources = view.getResources();
-
-        assertEquals(3, allResources.size());
-        for (Resource resource : resources1) {
-            assertTrue(allResources.contains(resource));
-        }
-    }
-
-    @Test
-    public void removeLayersOnResourceSetRemoved() {
+    public void removeResourceItemsOnResourceSetRemoved() {
         DefaultResourceSet resources1 = createResources(CATEGORY_1, 1, 3, 4);
         DefaultResourceSet resources2 = createResources(CATEGORY_2, 4, 2);
         DefaultResourceSet resources = toLabeledResources(resources1,
                 resources2);
 
-        view.addResourceSet(resources);
-        view.removeResourceSet(resources);
+        underTest.addResourceSet(resources);
+        underTest.removeResourceSet(resources);
 
         verify(contentDisplay, times(2)).removeResourceItem(
                 any(ResourceItem.class));
     }
 
     @Test
-    public void removeResourcesDoesRemoveDuplicateResources() {
-        ResourceSet resources1 = createResources(1, 2, 3);
-        ResourceSet resources2 = createResources(3, 4, 5);
-
-        view.addResources(resources1);
-        view.addResources(resources2);
-        view.removeResources(resources2);
-        ResourceSet allResources = view.getResources();
-
-        assertEquals(2, allResources.size());
-        assertEquals(true, allResources.contains(createResource(1)));
-        assertEquals(true, allResources.contains(createResource(2)));
-        assertEquals(false, allResources.contains(createResource(3)));
-        assertEquals(false, allResources.contains(createResource(4)));
-        assertEquals(false, allResources.contains(createResource(5)));
-    }
-
-    @Test
     public void selectResourceItemWhenResourceAddedToSelection() {
         when(resourceItem.getResourceSet()).thenReturn(createResources(1));
 
-        view.addResources(createResources(1));
+        underTest.addResources(createResources(1));
 
         selection = createResources();
-        view.setSelection(selection);
+        underTest.setSelection(selection);
 
         selection.add(createResource(1));
 
@@ -502,10 +370,10 @@ public class DefaultViewTest {
     public void selectResourceItemWhenSelectionChanges() {
         when(resourceItem.getResourceSet()).thenReturn(createResources(1));
 
-        view.addResources(createResources(1));
+        underTest.addResources(createResources(1));
 
         selection = createResources(1);
-        view.setSelection(selection);
+        underTest.setSelection(selection);
 
         verify(resourceItem, times(1)).setSelected(true);
     }
@@ -532,7 +400,7 @@ public class DefaultViewTest {
 
         when(contentDisplay.isReady()).thenReturn(true);
 
-        view.init();
+        underTest.init();
 
         ArgumentCaptor<ViewContentDisplayCallback> captor = ArgumentCaptor
                 .forClass(ViewContentDisplayCallback.class);
@@ -543,13 +411,13 @@ public class DefaultViewTest {
     @Test
     public void switchSelectionCreatesSelectionIfNoneExists() {
         when(resourceItem.getResourceSet()).thenReturn(createResources(1));
-        view.addResources(createResources(1));
-        view.setSelection(null);
+        underTest.addResources(createResources(1));
+        underTest.setSelection(null);
         callback.switchSelection(createResources(1));
 
-        assertEquals(1, view.getSelectionSets().size());
+        assertEquals(1, underTest.getSelectionSets().size());
         assertEquals(true,
-                view.getSelectionSets().get(0).contains(createResource(1)));
-        assertEquals(true, view.getSelection().contains(createResource(1)));
+                underTest.getSelectionSets().get(0).contains(createResource(1)));
+        assertEquals(true, underTest.getSelection().contains(createResource(1)));
     }
 }
