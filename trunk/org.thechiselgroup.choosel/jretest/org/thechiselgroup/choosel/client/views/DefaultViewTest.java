@@ -125,6 +125,8 @@ public class DefaultViewTest {
 
     private DefaultView view;
 
+    private ViewContentDisplayCallback callback;
+
     @Test
     public void addingUnlabeledSetDoesNotChangeOriginalSetsPresenter() {
         Resource resource = createResource(1);
@@ -172,6 +174,7 @@ public class DefaultViewTest {
         }
     }
 
+    // TODO this needs to be changed - we should not test the implementation
     @Test
     public void addSelectionHandlers() {
         view.setSelection(selection);
@@ -361,6 +364,31 @@ public class DefaultViewTest {
     }
 
     @Test
+    public void deselectResourceItemWhenResourceRemovedFromSelection() {
+        when(resourceItem.getResourceSet()).thenReturn(createResources(1));
+
+        view.addResources(createResources(1));
+
+        selection = createResources();
+        view.setSelection(selection);
+
+        selection.add(createResource(1));
+        selection.remove(createResource(1));
+
+        verify(resourceItem, times(1)).setSelected(false);
+    }
+
+    @Test
+    public void deselectResourceItemWhenSelectionChanges() {
+        when(resourceItem.getResourceSet()).thenReturn(createResources(1));
+        view.addResources(createResources(1));
+        view.setSelection(createResources(1));
+        view.setSelection(createResources());
+
+        verify(resourceItem, times(1)).setSelected(false);
+    }
+
+    @Test
     public void dispose() {
         view.setSelection(selection);
 
@@ -478,6 +506,32 @@ public class DefaultViewTest {
         assertEquals(true, view.getResources().contains(createResource(1)));
     }
 
+    @Test
+    public void selectResourceItemWhenResourceAddedToSelection() {
+        when(resourceItem.getResourceSet()).thenReturn(createResources(1));
+
+        view.addResources(createResources(1));
+
+        selection = createResources();
+        view.setSelection(selection);
+
+        selection.add(createResource(1));
+
+        verify(resourceItem, times(1)).setSelected(true);
+    }
+
+    @Test
+    public void selectResourceItemWhenSelectionChanges() {
+        when(resourceItem.getResourceSet()).thenReturn(createResources(1));
+
+        view.addResources(createResources(1));
+
+        selection = createResources(1);
+        view.setSelection(selection);
+
+        verify(resourceItem, times(1)).setSelected(true);
+    }
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -497,8 +551,27 @@ public class DefaultViewTest {
                 selection.addHandler(any(GwtEvent.Type.class),
                         any(ResourceEventHandler.class))).thenReturn(
                 selectionHandlerRegistration);
+
         when(contentDisplay.isReady()).thenReturn(true);
 
         view.init();
+
+        ArgumentCaptor<ViewContentDisplayCallback> captor = ArgumentCaptor
+                .forClass(ViewContentDisplayCallback.class);
+        verify(contentDisplay).init(captor.capture());
+        callback = captor.getValue();
+    }
+
+    @Test
+    public void switchSelectionCreatesSelectionIfNoneExists() {
+        when(resourceItem.getResourceSet()).thenReturn(createResources(1));
+        view.addResources(createResources(1));
+        view.setSelection(null);
+        callback.switchSelection(createResources(1));
+
+        assertEquals(1, view.getSelectionSets().size());
+        assertEquals(true,
+                view.getSelectionSets().get(0).contains(createResource(1)));
+        assertEquals(true, view.getSelection().contains(createResource(1)));
     }
 }

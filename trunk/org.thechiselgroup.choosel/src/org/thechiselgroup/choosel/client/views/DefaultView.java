@@ -42,6 +42,7 @@ import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
+import org.thechiselgroup.choosel.client.resources.SwitchingResourceSet;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
@@ -137,17 +138,13 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private ResourceSplitter resourceSplitter;
 
-    private ResourceSet selection;
-
-    private ResourcesAddedEventHandler selectionAddedHandler;
+    private SwitchingResourceSet selection;
 
     private ResourceSetsPresenter selectionDropPresenter;
 
     private LabelProvider selectionModelLabelFactory;
 
     private ResourceSetsPresenter selectionPresenter;
-
-    private ResourcesRemovedEventHandler selectionRemovedHandler;
 
     private HandlerRegistration selectionResourceAddedHandlerRegistration;
 
@@ -206,13 +203,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         } else {
             combinedUserResourceSets.addResourceSet(resources);
         }
-    }
-
-    private void addSelectionModelResourceHandlers() {
-        selectionResourceAddedHandlerRegistration = this.selection.addHandler(
-                ResourcesAddedEvent.TYPE, selectionAddedHandler);
-        selectionResourceRemovedHandlerRegistration = this.selection
-                .addHandler(ResourcesRemovedEvent.TYPE, selectionRemovedHandler);
     }
 
     @Override
@@ -304,7 +294,8 @@ public class DefaultView extends AbstractWindowContent implements View {
         selectionPresenter = null;
         userSetsPresenter.dispose();
         userSetsPresenter = null;
-
+        selection.dispose();
+        selection = null;
     }
 
     private void doRestore(Memento state, ResourceSetAccessor accessor) {
@@ -365,7 +356,12 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     @Override
     public ResourceSet getSelection() {
-        return selection;
+        return selection.getDelegate();
+    }
+
+    // for test
+    public List<ResourceSet> getSelectionSets() {
+        return selectionSets;
     }
 
     @Override
@@ -381,7 +377,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         initPresenterLinks();
         initContentDisplay();
-        initSelectionModelResourceHandlers();
+        initSelectionModel();
     }
 
     private void initAllResources() {
@@ -461,7 +457,7 @@ public class DefaultView extends AbstractWindowContent implements View {
             public void switchSelection(ResourceSet resources) {
                 // XXX HACK TODO cleanup --> we create selections when stuff
                 // gets selected...
-                if (selection == null) {
+                if (!selection.hasDelegate()) {
                     ResourceSet set = resourceSetFactory.createResourceSet();
                     set.setLabel(selectionModelLabelFactory.nextLabel());
                     addSelectionSet(set);
@@ -559,30 +555,36 @@ public class DefaultView extends AbstractWindowContent implements View {
                 HasAlignment.ALIGN_RIGHT);
     }
 
-    private void initSelectionModelResourceHandlers() {
-        selectionAddedHandler = new ResourcesAddedEventHandler() {
-            @Override
-            public void onResourcesAdded(ResourcesAddedEvent e) {
-                if (selection.size() == 1) {
-                    setSelectionStatusVisible(true);
-                }
+    private void initSelectionModel() {
+        selection = new SwitchingResourceSet();
 
-                updateSelectionStatusDisplay(e.getAddedResources(), true);
-            }
-        };
-        selectionRemovedHandler = new ResourcesRemovedEventHandler() {
-            @Override
-            public void onResourcesRemoved(ResourcesRemovedEvent e) {
-                if (selection.isEmpty()) {
-                    setSelectionStatusVisible(false);
-                }
+        selectionResourceAddedHandlerRegistration = this.selection.addHandler(
+                ResourcesAddedEvent.TYPE, new ResourcesAddedEventHandler() {
+                    @Override
+                    public void onResourcesAdded(ResourcesAddedEvent e) {
+                        if (e.getTarget().size() == 1) {
+                            setSelectionStatusVisible(true);
+                        }
 
-                updateSelectionStatusDisplay(e.getRemovedResources(), false);
-            }
-        };
+                        updateSelectionStatusDisplay(e.getAddedResources(),
+                                true);
+                    }
+                });
+        selectionResourceRemovedHandlerRegistration = this.selection
+                .addHandler(ResourcesRemovedEvent.TYPE,
+                        new ResourcesRemovedEventHandler() {
+                            @Override
+                            public void onResourcesRemoved(
+                                    ResourcesRemovedEvent e) {
 
-        // newSelectionModel.setLabel(selectionModelLabelFactory.nextLabel());
-        // setSelection(newSelectionModel);
+                                if (e.getTarget().isEmpty()) {
+                                    setSelectionStatusVisible(false);
+                                }
+
+                                updateSelectionStatusDisplay(
+                                        e.getRemovedResources(), false);
+                            }
+                        });
     }
 
     // TODO move non-ui stuff to constructor
@@ -734,27 +736,13 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     @Override
     public void setSelection(ResourceSet newSelectionModel) {
-        // assert newSelectionModel != null;
+        // assert selectionSets.contains(newSelectionModel); TODO why does this
+        // not work?!?
 
-        // old stuff
-        if (this.selection != null) {
-            updateSelectionStatusDisplayForResources(false);
-            removeSelectionModelResourceHandlers();
+        this.selection.setDelegate(newSelectionModel);
 
-            // selectionPresenter.replaceResourceSet(this.selection,
-            // newSelectionModel);
-        } else {
-            // selectionPresenter.addResourceSet(newSelectionModel);
-        }
-
-        this.selection = newSelectionModel;
-
-        setSelectionStatusVisible(selection != null && !selection.isEmpty());
-
-        if (selection != null) {
-            updateSelectionStatusDisplayForResources(true);
-            addSelectionModelResourceHandlers();
-        }
+        // TODO is this still required -- we fire events??
+        setSelectionStatusVisible(!selection.isEmpty());
 
         // XXX HACK
         updateSelectionAvatars();
@@ -813,7 +801,8 @@ public class DefaultView extends AbstractWindowContent implements View {
         Map<ResourceSet, ResourceSetAvatar> avatars = selectionPresenter
                 .getAvatars();
         for (ResourceSetAvatar avatar : avatars.values()) {
-            if (avatar.getResourceSet().equals(selection)) {
+            // TODO test
+            if (avatar.getResourceSet().equals(selection.getDelegate())) {
                 avatar.setEnabledCSSClass("avatar-selection");
             } else {
                 avatar.setEnabledCSSClass("avatar-resourceSet");
@@ -828,20 +817,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         for (ResourceItem resourceItem : resourceItems) {
             resourceItem.setSelected(selected);
         }
-    }
-
-    // TODO is this method really required or can we use
-    // updateSelectionStatusDisplay instead?
-    private void updateSelectionStatusDisplayForResources(boolean selected) {
-        List<Resource> resourcesToUpdate = new ArrayList<Resource>();
-        // XXX for some reason .toList is required - find out why
-        for (Resource resource : selection.toList()) {
-            if (containsResource(resource)) {
-                resourcesToUpdate.add(resource);
-            }
-        }
-
-        updateSelectionStatusDisplay(resourcesToUpdate, selected);
     }
 
 }
