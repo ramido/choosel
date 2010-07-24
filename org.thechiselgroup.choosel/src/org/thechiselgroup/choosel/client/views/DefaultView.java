@@ -24,7 +24,6 @@ import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants
 import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.persistence.Persistable;
-import org.thechiselgroup.choosel.client.resources.CombinedResourceSet;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceCategoryAddedEvent;
@@ -112,7 +111,7 @@ public class DefaultView extends AbstractWindowContent implements View {
      */
     private Map<String, ResourceItem> categoriesToResourceItems = new HashMap<String, ResourceItem>();
 
-    private ResourceItemValueResolver configuration;;
+    private ResourceItemValueResolver configuration;
 
     private DockPanel configurationPanel;
 
@@ -183,16 +182,6 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     @Override
-    public void addResources(Iterable<Resource> resources) {
-        this.resourceModel.addResources(resources);
-    }
-
-    @Override
-    public void addResourceSet(ResourceSet resourceSet) {
-        this.resourceModel.addResourceSet(resourceSet);
-    }
-
-    @Override
     public void addSelectionSet(ResourceSet selectionSet) {
         assert selectionSet != null;
 
@@ -212,22 +201,11 @@ public class DefaultView extends AbstractWindowContent implements View {
         contentDisplay.checkResize();
     }
 
-    @Override
     public void clear() {
         this.resourceModel.clear();
 
         assert categoriesToResourceItems.isEmpty();
         assert resourceSplitter.getCategorizedResourceSets().isEmpty();
-    }
-
-    @Override
-    public boolean containsResources(Iterable<Resource> resources) {
-        return this.resourceModel.containsResources(resources);
-    }
-
-    @Override
-    public boolean containsResourceSet(ResourceSet resourceSet) {
-        return this.resourceModel.containsResourceSet(resourceSet);
     }
 
     @Override
@@ -288,18 +266,8 @@ public class DefaultView extends AbstractWindowContent implements View {
         contentDisplay.endRestore();
     }
 
-    @Override
-    public ResourceSet getAutomaticResourceSet() {
-        return resourceModel.getAutomaticResourceSet();
-    }
-
     public Map<String, ResourceSet> getCategorizedResourceSets() {
         return resourceSplitter.getCategorizedResourceSets();
-    }
-
-    @Override
-    public CombinedResourceSet getCombinedUserResourceSets() {
-        return resourceModel.getCombinedUserResourceSets();
     }
 
     private List<ResourceItem> getResourceItems(List<Resource> resources) {
@@ -331,8 +299,8 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     @Override
-    public ResourceSet getResources() {
-        return resourceModel.getResources();
+    public ResourceModel getResourceModel() {
+        return resourceModel;
     }
 
     @Override
@@ -585,16 +553,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         contentDisplay.removeResourceItem(resourceItem);
 
         assert !categoriesToResourceItems.containsKey(category);
-    }
-
-    @Override
-    public void removeResources(Iterable<Resource> resources) {
-        this.resourceModel.removeResources(resources);
-    }
-
-    @Override
-    public void removeResourceSet(ResourceSet resourceSet) {
-        this.resourceModel.removeResourceSet(resourceSet);
     }
 
     private void removeSelectionModelResourceHandlers() {

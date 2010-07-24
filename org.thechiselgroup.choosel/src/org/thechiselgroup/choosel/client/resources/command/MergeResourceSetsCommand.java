@@ -16,27 +16,27 @@
 package org.thechiselgroup.choosel.client.resources.command;
 
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.views.View;
+import org.thechiselgroup.choosel.client.views.ResourceModel;
 
 public class MergeResourceSetsCommand extends
         AddResourceSetToResourceSetCommand {
 
-    private View view;
+    private ResourceModel resourceModel;
 
     public MergeResourceSetsCommand(ResourceSet sourceSet,
-            ResourceSet targetSet, View view) {
+            ResourceSet targetSet, ResourceModel resourceModel) {
 
         super(sourceSet, targetSet);
 
-        assert view != null;
-        this.view = view;
+        assert resourceModel != null;
+        this.resourceModel = resourceModel;
     }
 
     @Override
     public void execute() {
         super.execute();
 
-        view.removeResourceSet(addedSet);
+        resourceModel.removeResourceSet(addedSet);
     }
 
     @Override
@@ -45,14 +45,14 @@ public class MergeResourceSetsCommand extends
                 + "' into resource set '" + modifiedSet.getLabel() + "'";
     }
 
-    public View getView() {
-        return view;
+    public ResourceModel getResourceModel() {
+        return resourceModel;
     }
 
     @Override
     public void undo() {
         super.undo();
 
-        view.addResourceSet(addedSet);
+        resourceModel.addResourceSet(addedSet);
     }
 }

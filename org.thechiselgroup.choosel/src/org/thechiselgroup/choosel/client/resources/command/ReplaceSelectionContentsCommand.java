@@ -49,7 +49,8 @@ public class ReplaceSelectionContentsCommand implements UndoableCommand,
         getSelection().clear();
 
         List<Resource> selectedResourcesFromView = resources.toList();
-        selectedResourcesFromView.retainAll(view.getResources().toList());
+        selectedResourcesFromView.retainAll(view.getResourceModel()
+                .getResources().toList());
 
         getSelection().addAll(selectedResourcesFromView);
 

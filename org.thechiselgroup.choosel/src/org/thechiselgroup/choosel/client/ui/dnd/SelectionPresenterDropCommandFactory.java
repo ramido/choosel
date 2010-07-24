@@ -84,7 +84,7 @@ public class SelectionPresenterDropCommandFactory implements
 
         // TODO extract intersect operation
         ArrayList<Resource> resources = new ArrayList<Resource>(getView()
-                .getResources().toList());
+                .getResourceModel().getResources().toList());
         resources.retainAll(avatar.getResourceSet().toList());
         if (resources.isEmpty()) {
             return false;

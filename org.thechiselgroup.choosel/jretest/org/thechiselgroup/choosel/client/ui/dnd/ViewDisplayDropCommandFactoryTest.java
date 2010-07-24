@@ -28,10 +28,11 @@ import org.thechiselgroup.choosel.client.command.UndoableCommand;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.command.AddResourceSetToViewCommand;
-import org.thechiselgroup.choosel.client.resources.command.AddResourcesToViewCommand;
+import org.thechiselgroup.choosel.client.resources.command.AddResourcesToResourceModelCommand;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarType;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
+import org.thechiselgroup.choosel.client.views.ResourceModel;
 import org.thechiselgroup.choosel.client.views.View;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
 import org.thechiselgroup.choosel.client.views.ViewDisplayDropCommandFactory;
@@ -55,6 +56,9 @@ public class ViewDisplayDropCommandFactoryTest {
 
     @Mock
     private View view;
+
+    @Mock
+    private ResourceModel resourceModel;
 
     @Test
     public void addedSetForAllIsUnmodifiable() {
@@ -80,14 +84,16 @@ public class ViewDisplayDropCommandFactoryTest {
 
     @Test
     public void cannotDropIfResourcesAlreadyContained() {
-        when(view.containsResourceSet(resources)).thenReturn(true);
+        when(view.getResourceModel().containsResourceSet(resources))
+                .thenReturn(true);
 
         assertEquals(false, underTest.canDrop(dragAvatar));
     }
 
     @Test
     public void cannotDropIfResourcesAlreadyContainedForUnlabeledSet() {
-        when(view.containsResources(resources)).thenReturn(true);
+        when(view.getResourceModel().containsResources(resources)).thenReturn(
+                true);
         when(dragAvatar.getType()).thenReturn(ResourceSetAvatarType.SET);
         resources.setLabel(null);
 
@@ -113,6 +119,7 @@ public class ViewDisplayDropCommandFactoryTest {
 
         when(accessor.findView(eq(dropTarget))).thenReturn(view);
         when(dragAvatar.getResourceSet()).thenReturn(resources);
+        when(view.getResourceModel()).thenReturn(resourceModel);
     }
 
     @After
@@ -139,6 +146,6 @@ public class ViewDisplayDropCommandFactoryTest {
 
         UndoableCommand result = underTest.createCommand(dragAvatar);
 
-        assertEquals(true, result instanceof AddResourcesToViewCommand);
+        assertEquals(true, result instanceof AddResourcesToResourceModelCommand);
     }
 }

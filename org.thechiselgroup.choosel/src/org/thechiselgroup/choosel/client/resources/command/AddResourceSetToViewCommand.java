@@ -22,11 +22,11 @@ import org.thechiselgroup.choosel.client.command.UndoableCommand;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.util.HasDescription;
-import org.thechiselgroup.choosel.client.views.View;
+import org.thechiselgroup.choosel.client.views.ResourceModel;
 
 /**
- * Adds a labelled resource set to a view as an explicitly displayed resource
- * set.
+ * Adds a labeled resource set to a resource model as an explicitly displayed
+ * resource set.
  */
 public class AddResourceSetToViewCommand implements UndoableCommand,
         HasDescription {
@@ -37,38 +37,41 @@ public class AddResourceSetToViewCommand implements UndoableCommand,
 
     private ResourceSet resourceSet;
 
-    protected View view;
+    protected ResourceModel resourceModel;
 
-    public AddResourceSetToViewCommand(View view, ResourceSet resourceSet) {
-        this(view, resourceSet, "Add resource set '" + resourceSet.getLabel()
-                + "' to view");
+    public AddResourceSetToViewCommand(ResourceModel resourceModel,
+            ResourceSet resourceSet) {
+
+        this(resourceModel, resourceSet, "Add resource set '"
+                + resourceSet.getLabel() + "' to resource model");
     }
 
-    public AddResourceSetToViewCommand(View view, ResourceSet resourceSet,
-            String description) {
+    public AddResourceSetToViewCommand(ResourceModel resourceModel,
+            ResourceSet resourceSet, String description) {
 
-        assert view != null;
+        assert resourceModel != null;
         assert resourceSet != null;
         assert resourceSet.hasLabel();
         assert description != null;
 
         this.description = description;
-        this.view = view;
+        this.resourceModel = resourceModel;
         this.resourceSet = resourceSet;
     }
 
     @Override
     public void execute() {
-        assert !view.containsResourceSet(resourceSet);
+        assert !resourceModel.containsResourceSet(resourceSet);
         assert alreadyContainedResources == null;
 
         alreadyContainedResources = new ArrayList<Resource>();
         alreadyContainedResources.addAll(resourceSet.toList());
-        alreadyContainedResources.retainAll(view.getResources().toList());
+        alreadyContainedResources.retainAll(resourceModel.getResources()
+                .toList());
 
-        view.addResourceSet(resourceSet);
+        resourceModel.addResourceSet(resourceSet);
 
-        assert view.containsResourceSet(resourceSet);
+        assert resourceModel.containsResourceSet(resourceSet);
         assert alreadyContainedResources != null;
     }
 
@@ -78,24 +81,24 @@ public class AddResourceSetToViewCommand implements UndoableCommand,
         return description;
     }
 
+    public ResourceModel getResourceModel() {
+        return resourceModel;
+    }
+
     public ResourceSet getResourceSet() {
         return resourceSet;
     }
 
-    public View getView() {
-        return view;
-    }
-
     @Override
     public void undo() {
-        assert view.containsResourceSet(resourceSet);
+        assert resourceModel.containsResourceSet(resourceSet);
         assert alreadyContainedResources != null;
 
-        view.removeResourceSet(resourceSet);
-        view.addResources(alreadyContainedResources);
+        resourceModel.removeResourceSet(resourceSet);
+        resourceModel.addResources(alreadyContainedResources);
         alreadyContainedResources = null;
 
-        assert !view.containsResourceSet(resourceSet);
+        assert !resourceModel.containsResourceSet(resourceSet);
         assert alreadyContainedResources == null;
     }
 

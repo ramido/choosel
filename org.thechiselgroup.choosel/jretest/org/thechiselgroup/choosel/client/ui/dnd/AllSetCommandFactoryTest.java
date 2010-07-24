@@ -27,6 +27,7 @@ import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
+import org.thechiselgroup.choosel.client.views.ResourceModel;
 import org.thechiselgroup.choosel.client.views.View;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
 
@@ -47,11 +48,14 @@ public class AllSetCommandFactoryTest {
     private AllSetDropCommandFactory underTest;
 
     @Mock
+    private ResourceModel resourceModel;
+
+    @Mock
     private View view;
 
     @Test
     public void cannotDropIfAllResourcesAreAlreadyContainedInView() {
-        when(view.containsResources(resources)).thenReturn(true);
+        when(resourceModel.containsResources(resources)).thenReturn(true);
         when(dragAvatar.getResourceSet()).thenReturn(resources);
 
         assertEquals(false, underTest.canDrop(dragAvatar));
@@ -73,6 +77,7 @@ public class AllSetCommandFactoryTest {
 
         when(dragAvatar.getResourceSet()).thenReturn(resources);
         when(accessor.findView(targetDragAvatar)).thenReturn(view);
+        when(view.getResourceModel()).thenReturn(resourceModel);
     }
 
     @After

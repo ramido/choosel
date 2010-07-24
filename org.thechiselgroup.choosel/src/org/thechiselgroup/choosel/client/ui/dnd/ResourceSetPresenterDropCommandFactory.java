@@ -66,8 +66,8 @@ public class ResourceSetPresenterDropCommandFactory implements
                 && (dragAvatar.getType() == ResourceSetAvatarType.SET)) {
 
             return new MergeResourceSetsCommand(dragAvatar.getResourceSet(),
-                    targetDragAvatar.getResourceSet(),
-                    viewAccessor.findView(dragAvatar));
+                    targetDragAvatar.getResourceSet(), viewAccessor.findView(
+                            dragAvatar).getResourceModel());
         }
 
         return new AddResourceSetToResourceSetCommand(

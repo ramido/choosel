@@ -22,25 +22,26 @@ import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.util.CollectionUtils;
 import org.thechiselgroup.choosel.client.util.HasDescription;
-import org.thechiselgroup.choosel.client.views.View;
+import org.thechiselgroup.choosel.client.views.ResourceModel;
 
 /**
- * Adds resources to a view.
+ * Adds resources to a resource model.
  */
-public class AddResourcesToViewCommand implements UndoableCommand,
+public class AddResourcesToResourceModelCommand implements UndoableCommand,
         HasDescription {
 
     private List<Resource> addedResources;
 
     private Iterable<Resource> resources;
 
-    private View view;
+    private ResourceModel resourceModel;
 
-    public AddResourcesToViewCommand(View view, Iterable<Resource> resources) {
-        assert view != null;
+    public AddResourcesToResourceModelCommand(ResourceModel resourceModel,
+            Iterable<Resource> resources) {
+        assert resourceModel != null;
         assert resources != null;
 
-        this.view = view;
+        this.resourceModel = resourceModel;
         this.resources = resources;
     }
 
@@ -48,14 +49,14 @@ public class AddResourcesToViewCommand implements UndoableCommand,
     public void execute() {
         assert addedResources == null;
 
-        ResourceSet viewResources = view.getResources();
+        ResourceSet viewResources = resourceModel.getResources();
         addedResources = CollectionUtils.toList(resources);
         addedResources.removeAll(viewResources.toList());
 
-        view.addResources(addedResources);
+        resourceModel.addResources(addedResources);
 
         assert addedResources != null;
-        assert view.containsResources(resources);
+        assert resourceModel.containsResources(resources);
     }
 
     // TODO add view name / label once available
@@ -67,9 +68,9 @@ public class AddResourcesToViewCommand implements UndoableCommand,
     @Override
     public void undo() {
         assert addedResources != null;
-        assert view.containsResources(resources);
+        assert resourceModel.containsResources(resources);
 
-        view.removeResources(addedResources);
+        resourceModel.removeResources(addedResources);
         addedResources = null;
 
         assert addedResources == null;

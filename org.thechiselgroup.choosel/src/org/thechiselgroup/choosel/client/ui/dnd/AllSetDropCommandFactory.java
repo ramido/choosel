@@ -16,7 +16,7 @@
 package org.thechiselgroup.choosel.client.ui.dnd;
 
 import org.thechiselgroup.choosel.client.command.UndoableCommand;
-import org.thechiselgroup.choosel.client.resources.command.AddResourcesToViewCommand;
+import org.thechiselgroup.choosel.client.resources.command.AddResourcesToResourceModelCommand;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.views.View;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
@@ -48,8 +48,8 @@ public class AllSetDropCommandFactory implements
     public UndoableCommand createCommand(ResourceSetAvatar dragAvatar) {
         assert dragAvatar != null;
 
-        return new AddResourcesToViewCommand(getTargetView(),
-                dragAvatar.getResourceSet());
+        return new AddResourcesToResourceModelCommand(getTargetView()
+                .getResourceModel(), dragAvatar.getResourceSet());
     }
 
     private View getTargetView() {
@@ -61,7 +61,8 @@ public class AllSetDropCommandFactory implements
     }
 
     private boolean targetContainsAllResources(ResourceSetAvatar dragAvatar) {
-        return getTargetView().containsResources(dragAvatar.getResourceSet());
+        return getTargetView().getResourceModel().containsResources(
+                dragAvatar.getResourceSet());
     }
 
 }
