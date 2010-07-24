@@ -1,5 +1,6 @@
 package org.thechiselgroup.choosel.client.views;
 
+import org.thechiselgroup.choosel.client.resources.CombinedResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
@@ -16,6 +17,8 @@ public interface ResourceModel {
      */
     void addResourceSet(ResourceSet resourceSet);
 
+    void clear();
+
     /**
      * Checks if the resources are displayed in this view.
      */
@@ -25,6 +28,10 @@ public interface ResourceModel {
      * Checks if this labeled resource set is explicitly displayed in this view.
      */
     boolean containsResourceSet(ResourceSet resourceSet);
+
+    ResourceSet getAutomaticResourceSet();
+
+    CombinedResourceSet getCombinedUserResourceSets();
 
     /**
      * Returns an unmodifiable resource set containing all resources displayed

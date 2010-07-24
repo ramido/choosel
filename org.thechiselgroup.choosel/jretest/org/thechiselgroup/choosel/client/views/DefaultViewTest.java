@@ -21,7 +21,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -43,7 +42,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.label.SelectionModelLabelFactory;
-import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.Resource;
@@ -57,7 +55,6 @@ import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
-import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.test.ResourcesTestHelper;
 
@@ -485,25 +482,6 @@ public class DefaultViewTest {
         assertEquals(false, allResources.contains(createResource(3)));
         assertEquals(false, allResources.contains(createResource(4)));
         assertEquals(false, allResources.contains(createResource(5)));
-    }
-
-    @Test
-    public void restoreFromMementoAddsAutomaticResourcesToAllResources() {
-        Memento state = new Memento();
-
-        state.setValue(DefaultView.MEMENTO_AUTOMATIC_RESOURCES, 0);
-        state.setValue(DefaultView.MEMENTO_SELECTION, 1);
-        state.setValue(DefaultView.MEMENTO_RESOURCE_SET_COUNT, 0);
-        state.setValue(DefaultView.MEMENTO_SELECTION_SET_COUNT, 1);
-        state.setValue(DefaultView.MEMENTO_SELECTION_SET_PREFIX + 0, 1);
-
-        ResourceSetAccessor accessor = mock(ResourceSetAccessor.class);
-        when(accessor.getResourceSet(0)).thenReturn(createResources(1));
-        when(accessor.getResourceSet(1)).thenReturn(createResources());
-
-        view.restore(state, accessor);
-
-        assertEquals(true, view.getResources().contains(createResource(1)));
     }
 
     @Test
