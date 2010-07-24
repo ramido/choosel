@@ -45,7 +45,7 @@ public class SwitchingResourceSetTest {
     @Test
     public void doNotFireResourcesAddedEventOnResourcesAddedAfterDispose() {
         underTest.setDelegate(resourceSets[0]);
-        underTest.addHandler(ResourcesAddedEvent.TYPE, resourcesAddedHandler);
+        underTest.addEventHandler(resourcesAddedHandler);
         underTest.dispose();
 
         resourceSets[0].addAll(createResources(3, 4));
@@ -58,7 +58,7 @@ public class SwitchingResourceSetTest {
     public void doNotFireResourcesAddedEventOnResourcesAddedToFormerDelegate() {
         underTest.setDelegate(resourceSets[0]);
         underTest.setDelegate(resourceSets[1]);
-        underTest.addHandler(ResourcesAddedEvent.TYPE, resourcesAddedHandler);
+        underTest.addEventHandler(resourcesAddedHandler);
 
         resourceSets[0].addAll(createResources(3, 4));
 
@@ -69,7 +69,7 @@ public class SwitchingResourceSetTest {
     @Test
     public void doNotFireResourcesAddedIfDelegateChangeDoesNotAddResources() {
         underTest.setDelegate(resourceSets[2]);
-        underTest.addHandler(ResourcesAddedEvent.TYPE, resourcesAddedHandler);
+        underTest.addEventHandler(resourcesAddedHandler);
 
         underTest.setDelegate(resourceSets[0]);
 
@@ -80,8 +80,7 @@ public class SwitchingResourceSetTest {
     @Test
     public void doNotFireResourcesRemovedEventOnResourcesRemovedAfterDispose() {
         underTest.setDelegate(resourceSets[0]);
-        underTest.addHandler(ResourcesRemovedEvent.TYPE,
-                resourcesRemovedHandler);
+        underTest.addEventHandler(resourcesRemovedHandler);
         underTest.dispose();
 
         resourceSets[0].removeAll(createResources(1, 2));
@@ -94,8 +93,7 @@ public class SwitchingResourceSetTest {
     public void doNotFireResourcesRemovedEventOnResourcesRemovedFromFormerDelegate() {
         underTest.setDelegate(resourceSets[0]);
         underTest.setDelegate(resourceSets[1]);
-        underTest.addHandler(ResourcesRemovedEvent.TYPE,
-                resourcesRemovedHandler);
+        underTest.addEventHandler(resourcesRemovedHandler);
 
         resourceSets[0].removeAll(createResources(1, 2));
 
@@ -106,8 +104,7 @@ public class SwitchingResourceSetTest {
     @Test
     public void doNotFireResourcesRemovedIfDelegateChangeDoesNotRemoveResources() {
         underTest.setDelegate(resourceSets[0]);
-        underTest.addHandler(ResourcesRemovedEvent.TYPE,
-                resourcesRemovedHandler);
+        underTest.addEventHandler(resourcesRemovedHandler);
 
         underTest.setDelegate(resourceSets[2]);
 
@@ -118,7 +115,7 @@ public class SwitchingResourceSetTest {
     @Test
     public void fireResourcesAddedEventOnResourcesAddedToDelegate() {
         underTest.setDelegate(resourceSets[0]);
-        underTest.addHandler(ResourcesAddedEvent.TYPE, resourcesAddedHandler);
+        underTest.addEventHandler(resourcesAddedHandler);
 
         resourceSets[0].addAll(createResources(3, 4));
 
@@ -134,7 +131,7 @@ public class SwitchingResourceSetTest {
     public void fireResourcesAddedEventOnResourcesAddedToNewDelegate() {
         underTest.setDelegate(resourceSets[0]);
         underTest.setDelegate(resourceSets[1]);
-        underTest.addHandler(ResourcesAddedEvent.TYPE, resourcesAddedHandler);
+        underTest.addEventHandler(resourcesAddedHandler);
 
         resourceSets[1].addAll(createResources(4, 5));
 
@@ -149,9 +146,8 @@ public class SwitchingResourceSetTest {
     @Test
     public void fireResourcesEventOnDelegateChange() {
         underTest.setDelegate(resourceSets[2]);
-        underTest.addHandler(ResourcesRemovedEvent.TYPE,
-                resourcesRemovedHandler);
-        underTest.addHandler(ResourcesAddedEvent.TYPE, resourcesAddedHandler);
+        underTest.addEventHandler(resourcesRemovedHandler);
+        underTest.addEventHandler(resourcesAddedHandler);
 
         underTest.setDelegate(resourceSets[3]);
 
@@ -173,8 +169,7 @@ public class SwitchingResourceSetTest {
     @Test
     public void fireResourcesRemovedEventOnResourcesRemovedFromDelegate() {
         underTest.setDelegate(resourceSets[0]);
-        underTest.addHandler(ResourcesRemovedEvent.TYPE,
-                resourcesRemovedHandler);
+        underTest.addEventHandler(resourcesRemovedHandler);
 
         resourceSets[0].removeAll(createResources(1, 2));
 
@@ -190,8 +185,7 @@ public class SwitchingResourceSetTest {
     public void fireResourcesRemovedEventOnResourcesRemovedFromNewDelegate() {
         underTest.setDelegate(resourceSets[0]);
         underTest.setDelegate(resourceSets[1]);
-        underTest.addHandler(ResourcesRemovedEvent.TYPE,
-                resourcesRemovedHandler);
+        underTest.addEventHandler(resourcesRemovedHandler);
 
         resourceSets[1].removeAll(createResources(2, 3));
 

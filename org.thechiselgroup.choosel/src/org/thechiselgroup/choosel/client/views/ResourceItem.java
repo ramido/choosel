@@ -98,15 +98,15 @@ public class ResourceItem {
         this.popupManager.addPopupMouseOutHandler(highlightingManager);
         this.popupManager.addPopupClosingHandler(highlightingManager);
 
-        resources.addHandler(ResourcesAddedEvent.TYPE,
-                new ResourcesAddedEventHandler() {
+        resources
+                .addEventHandler(new ResourcesAddedEventHandler() {
                     @Override
                     public void onResourcesAdded(ResourcesAddedEvent e) {
                         updateContent();
                     }
                 });
-        resources.addHandler(ResourcesRemovedEvent.TYPE,
-                new ResourcesRemovedEventHandler() {
+        resources
+                .addEventHandler(new ResourcesRemovedEventHandler() {
                     @Override
                     public void onResourcesRemoved(ResourcesRemovedEvent e) {
                         updateContent();

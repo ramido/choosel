@@ -91,10 +91,10 @@ public class CombinedResourceSet extends DelegatingResourceSet {
         containedResourceSets.add(resourceSetElement);
         addAll(resourceSet);
 
-        resourceSetElement.addHandlerRegistration = resourceSet.addHandler(
-                ResourcesAddedEvent.TYPE, resourceAddedHandler);
-        resourceSetElement.removeHandlerRegistration = resourceSet.addHandler(
-                ResourcesRemovedEvent.TYPE, resourceRemovedHandler);
+        resourceSetElement.addHandlerRegistration = resourceSet
+                .addEventHandler(resourceAddedHandler);
+        resourceSetElement.removeHandlerRegistration = resourceSet
+                .addEventHandler(resourceRemovedHandler);
 
         setEventBus.fireEvent(new ResourceSetAddedEvent(resourceSet));
     }

@@ -194,8 +194,8 @@ public class ResourceSplitterTest {
         ResourceSet categorizedResources = splitter
                 .getCategorizedResourceSets().get(CATEGORY_1);
         ResourcesRemovedEventHandler resourcesRemovedHandler = mock(ResourcesRemovedEventHandler.class);
-        categorizedResources.addHandler(ResourcesRemovedEvent.TYPE,
-                resourcesRemovedHandler);
+        categorizedResources
+                .addEventHandler(resourcesRemovedHandler);
         splitter.remove(createResource(TEST_CATEGORY, 1));
 
         verify(resourcesRemovedHandler, never()).onResourcesRemoved(
@@ -208,8 +208,8 @@ public class ResourceSplitterTest {
         ResourceSet categorizedResources = splitter
                 .getCategorizedResourceSets().get(CATEGORY_1);
         ResourcesRemovedEventHandler resourcesRemovedHandler = mock(ResourcesRemovedEventHandler.class);
-        categorizedResources.addHandler(ResourcesRemovedEvent.TYPE,
-                resourcesRemovedHandler);
+        categorizedResources
+                .addEventHandler(resourcesRemovedHandler);
         splitter.removeAll(resources1);
 
         verify(resourcesRemovedHandler, never()).onResourcesRemoved(

@@ -100,7 +100,7 @@ public class CombinedResourceSetTest {
 
     @Test
     public void fireAddEventsWhenResourceSetAdded() {
-        combinedResources.addHandler(ResourcesAddedEvent.TYPE, addedHandler);
+        combinedResources.addEventHandler(addedHandler);
         combinedResources.addResourceSet(resources1);
 
         ArgumentCaptor<ResourcesAddedEvent> argument = verifyOnResourcesAdded(

@@ -62,7 +62,7 @@ public class DefaultResourceSetTest {
 
     @Test
     public void fireResourceAddedEvent() {
-        resources.addHandler(ResourcesAddedEvent.TYPE, resourcesAddedHandler);
+        resources.addEventHandler(resourcesAddedHandler);
         resources.add(createResource(1));
 
         verify(resourcesAddedHandler, times(1)).onResourcesAdded(
@@ -71,8 +71,7 @@ public class DefaultResourceSetTest {
 
     @Test
     public void fireResourceRemovedEvent() {
-        resources2.addHandler(ResourcesRemovedEvent.TYPE,
-                resourcesRemovedHandler);
+        resources2.addEventHandler(resourcesRemovedHandler);
         resources2.remove(createResource(1));
 
         verify(resourcesRemovedHandler, times(1)).onResourcesRemoved(
@@ -81,7 +80,7 @@ public class DefaultResourceSetTest {
 
     @Test
     public void fireResourcesAddedEvent() {
-        resources.addHandler(ResourcesAddedEvent.TYPE, resourcesAddedHandler);
+        resources.addEventHandler(resourcesAddedHandler);
         resources.addAll(createResources(1, 2, 3));
 
         verify(resourcesAddedHandler, times(1)).onResourcesAdded(
@@ -90,8 +89,7 @@ public class DefaultResourceSetTest {
 
     @Test
     public void fireResourcesRemovedEvent() {
-        resources2.addHandler(ResourcesRemovedEvent.TYPE,
-                resourcesRemovedHandler);
+        resources2.addEventHandler(resourcesRemovedHandler);
         resources2.removeAll(createResources(1, 2, 3));
 
         verify(resourcesRemovedHandler, times(1)).onResourcesRemoved(
@@ -138,7 +136,7 @@ public class DefaultResourceSetTest {
         ResourceSet resourceSet = createResources(1, 2, 3);
 
         resources.add(containedResource);
-        resources.addHandler(ResourcesAddedEvent.TYPE, resourcesAddedHandler);
+        resources.addEventHandler(resourcesAddedHandler);
         resources.addAll(resourceSet);
 
         ArgumentCaptor<ResourcesAddedEvent> argument = ArgumentCaptor
@@ -160,8 +158,7 @@ public class DefaultResourceSetTest {
         ResourceSet resourceSet = createResources(1, 2, 3);
 
         resources2.remove(containedResource);
-        resources2.addHandler(ResourcesRemovedEvent.TYPE,
-                resourcesRemovedHandler);
+        resources2.addEventHandler(resourcesRemovedHandler);
         resources2.removeAll(resourceSet);
 
         ArgumentCaptor<ResourcesRemovedEvent> argument = ArgumentCaptor

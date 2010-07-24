@@ -20,8 +20,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.thechiselgroup.choosel.client.label.LabelChangedEventHandler;
+import org.thechiselgroup.choosel.client.util.NullHandlerRegistration;
 
-import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 public final class NullResourceSet implements ResourceSet {
@@ -45,23 +45,24 @@ public final class NullResourceSet implements ResourceSet {
     }
 
     @Override
-    public <H extends ResourceEventHandler> HandlerRegistration addHandler(
-            Type<H> type, H handler) {
-        return new HandlerRegistration() {
-            @Override
-            public void removeHandler() {
-            }
-        };
+    public HandlerRegistration addEventHandler(
+            ResourcesAddedEventHandler handler) {
+
+        return NullHandlerRegistration.NULL_HANDLER_REGISTRATION;
+    }
+
+    @Override
+    public HandlerRegistration addEventHandler(
+            ResourcesRemovedEventHandler handler) {
+
+        return NullHandlerRegistration.NULL_HANDLER_REGISTRATION;
     }
 
     @Override
     public HandlerRegistration addLabelChangedEventHandler(
             LabelChangedEventHandler eventHandler) {
-        return new HandlerRegistration() {
-            @Override
-            public void removeHandler() {
-            }
-        };
+
+        return NullHandlerRegistration.NULL_HANDLER_REGISTRATION;
     }
 
     @Override

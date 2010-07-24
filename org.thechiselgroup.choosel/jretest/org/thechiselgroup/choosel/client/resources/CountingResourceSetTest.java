@@ -41,7 +41,7 @@ public class CountingResourceSetTest {
 
     @Test
     public void addedFiredOnceIfAddedTwice() {
-        underTest.addHandler(ResourcesAddedEvent.TYPE, addedHandler);
+        underTest.addEventHandler(addedHandler);
         underTest.add(resource);
         underTest.add(resource);
 
@@ -53,7 +53,7 @@ public class CountingResourceSetTest {
     public void removeFiredOnceIfRemovedTwiceOnceAfterAddedTwice() {
         underTest.add(resource);
         underTest.add(resource);
-        underTest.addHandler(ResourcesRemovedEvent.TYPE, removeHandler);
+        underTest.addEventHandler(removeHandler);
         underTest.remove(resource);
         underTest.remove(resource);
 
@@ -65,7 +65,7 @@ public class CountingResourceSetTest {
     public void removeNotFiredIfOnlyRemovedOnceAfterAddedTwice() {
         underTest.add(resource);
         underTest.add(resource);
-        underTest.addHandler(ResourcesRemovedEvent.TYPE, removeHandler);
+        underTest.addEventHandler(removeHandler);
         underTest.remove(resource);
 
         verify(removeHandler, never()).onResourcesRemoved(

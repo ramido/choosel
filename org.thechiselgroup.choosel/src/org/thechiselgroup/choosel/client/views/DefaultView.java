@@ -455,8 +455,8 @@ public class DefaultView extends AbstractWindowContent implements View {
     private void initSelectionModel() {
         selection = new SwitchingResourceSet();
 
-        selectionResourceAddedHandlerRegistration = this.selection.addHandler(
-                ResourcesAddedEvent.TYPE, new ResourcesAddedEventHandler() {
+        selectionResourceAddedHandlerRegistration = this.selection
+                .addEventHandler(new ResourcesAddedEventHandler() {
                     @Override
                     public void onResourcesAdded(ResourcesAddedEvent e) {
                         if (e.getTarget().size() == 1) {
@@ -468,20 +468,18 @@ public class DefaultView extends AbstractWindowContent implements View {
                     }
                 });
         selectionResourceRemovedHandlerRegistration = this.selection
-                .addHandler(ResourcesRemovedEvent.TYPE,
-                        new ResourcesRemovedEventHandler() {
-                            @Override
-                            public void onResourcesRemoved(
-                                    ResourcesRemovedEvent e) {
+                .addEventHandler(new ResourcesRemovedEventHandler() {
+                    @Override
+                    public void onResourcesRemoved(ResourcesRemovedEvent e) {
 
-                                if (e.getTarget().isEmpty()) {
-                                    setSelectionStatusVisible(false);
-                                }
+                        if (e.getTarget().isEmpty()) {
+                            setSelectionStatusVisible(false);
+                        }
 
-                                updateSelectionStatusDisplay(
-                                        e.getRemovedResources(), false);
-                            }
-                        });
+                        updateSelectionStatusDisplay(e.getRemovedResources(),
+                                false);
+                    }
+                });
     }
 
     // TODO move non-ui stuff to constructor

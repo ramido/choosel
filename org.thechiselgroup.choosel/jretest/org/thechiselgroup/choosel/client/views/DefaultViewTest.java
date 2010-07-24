@@ -19,7 +19,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -44,18 +43,14 @@ import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ResourceByUriTypeCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizerToMultiCategorizerAdapter;
-import org.thechiselgroup.choosel.client.resources.ResourceEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ResourceSplitter;
-import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
-import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.test.ResourcesTestHelper;
 
-import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 public class DefaultViewTest {
@@ -124,9 +119,9 @@ public class DefaultViewTest {
     public void addSelectionHandlers() {
         underTest.setSelection(selection);
 
-        verify(selection, times(1)).addHandler(eq(ResourcesAddedEvent.TYPE),
+        verify(selection, times(1)).addEventHandler(
                 any(ResourcesAddedEventHandler.class));
-        verify(selection, times(1)).addHandler(eq(ResourcesRemovedEvent.TYPE),
+        verify(selection, times(1)).addEventHandler(
                 any(ResourcesRemovedEventHandler.class));
     }
 
@@ -326,10 +321,10 @@ public class DefaultViewTest {
         when(contentDisplay.getSlotIDs()).thenReturn(new String[] { SLOT_ID },
                 new String[] {});
 
-        when(
-                selection.addHandler(any(GwtEvent.Type.class),
-                        any(ResourceEventHandler.class))).thenReturn(
-                selectionHandlerRegistration);
+        when(selection.addEventHandler(any(ResourcesAddedEventHandler.class)))
+                .thenReturn(selectionHandlerRegistration);
+        when(selection.addEventHandler(any(ResourcesRemovedEventHandler.class)))
+                .thenReturn(selectionHandlerRegistration);
 
         when(contentDisplay.isReady()).thenReturn(true);
 

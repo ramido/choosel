@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.thechiselgroup.choosel.client.util.Disposable;
 
-import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 
@@ -68,18 +67,25 @@ public class SwitchingResourceSet extends DelegatingResourceSet implements
         this.eventBus = new HandlerManager(this);
     }
 
-    private void addEventHandlersToDelegate() {
-        resourcesAddedToDelegateHandlerRegistration = delegate.addHandler(
-                ResourcesAddedEvent.TYPE, resourcesAddedToDelegateHandler);
-        resourcesRemovedFromDelegateHandlerRegistration = delegate
-                .addHandler(ResourcesRemovedEvent.TYPE,
-                        resourcesRemovedFromDelegateHandler);
+    @Override
+    public HandlerRegistration addEventHandler(
+            ResourcesAddedEventHandler handler) {
+
+        return eventBus.addHandler(ResourcesAddedEvent.TYPE, handler);
     }
 
     @Override
-    public <H extends ResourceEventHandler> HandlerRegistration addHandler(
-            Type<H> type, H handler) {
-        return eventBus.addHandler(type, handler);
+    public HandlerRegistration addEventHandler(
+            ResourcesRemovedEventHandler handler) {
+
+        return eventBus.addHandler(ResourcesRemovedEvent.TYPE, handler);
+    }
+
+    private void addEventHandlersToDelegate() {
+        resourcesAddedToDelegateHandlerRegistration = delegate
+                .addEventHandler(resourcesAddedToDelegateHandler);
+        resourcesRemovedFromDelegateHandlerRegistration = delegate
+                .addEventHandler(resourcesRemovedFromDelegateHandler);
     }
 
     @Override
