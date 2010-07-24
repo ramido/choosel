@@ -15,31 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
+public interface ResourceSetDelegateChangedEventHandler extends
+        ResourceSetEventHandler {
 
-public class ResourceSetContainer {
-
-    private HandlerManager eventBus = new HandlerManager(this);
-
-    private ResourceSet resources = null;
-
-    public HandlerRegistration addResourceSetContainerChangedEventHandler(
-            ResourceSetContainerChangedEventHandler handler) {
-
-        assert handler != null;
-
-        return eventBus.addHandler(ResourceSetContainerChangedEvent.TYPE,
-                handler);
-    }
-
-    public void setResourceSet(ResourceSet resources) {
-        if (resources == this.resources) {
-            return;
-        }
-
-        this.resources = resources;
-        eventBus.fireEvent(new ResourceSetContainerChangedEvent(resources));
-    }
+    void onResourceSetContainerChanged(ResourceSetDelegateChangedEvent event);
 
 }

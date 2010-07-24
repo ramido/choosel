@@ -17,9 +17,9 @@ package org.thechiselgroup.choosel.client.resources.ui;
 
 import org.thechiselgroup.choosel.client.resources.DelegatingResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.ResourceSetContainer;
-import org.thechiselgroup.choosel.client.resources.ResourceSetContainerChangedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourceSetContainerChangedEventHandler;
+import org.thechiselgroup.choosel.client.resources.ResourceSetDelegateChangedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourceSetDelegateChangedEventHandler;
+import org.thechiselgroup.choosel.client.resources.SwitchingResourceSet;
 import org.thechiselgroup.choosel.client.resources.UnmodifiableResourceSet;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.client.util.Disposable;
@@ -40,11 +40,11 @@ public class HighlightingResourceSetAvatarFactory extends
 
     private ResourceSet hoverModel;
 
-    private ResourceSetContainer setHoverModel;
+    private SwitchingResourceSet setHoverModel;
 
     public HighlightingResourceSetAvatarFactory(
             ResourceSetAvatarFactory delegate, ResourceSet hoverModel,
-            ResourceSetContainer setHoverModel,
+            SwitchingResourceSet setHoverModel,
             ResourceSetAvatarDragController dragController) {
 
         super(delegate);
@@ -64,7 +64,7 @@ public class HighlightingResourceSetAvatarFactory extends
 
     private void addToHover(ResourceSetAvatar avatar) {
         hoverModel.addAll(avatar.getResourceSet());
-        setHoverModel.setResourceSet(avatar.getResourceSet());
+        setHoverModel.setDelegate(avatar.getResourceSet());
     }
 
     @Override
@@ -86,10 +86,10 @@ public class HighlightingResourceSetAvatarFactory extends
                     }
                 });
         final HandlerRegistration containerChangedHandler = setHoverModel
-                .addResourceSetContainerChangedEventHandler(new ResourceSetContainerChangedEventHandler() {
+                .addEventHandler(new ResourceSetDelegateChangedEventHandler() {
                     @Override
                     public void onResourceSetContainerChanged(
-                            ResourceSetContainerChangedEvent event) {
+                            ResourceSetDelegateChangedEvent event) {
 
                         avatar.setHover(shouldHighlight(avatar,
                                 event.getResourceSet()));
@@ -125,7 +125,7 @@ public class HighlightingResourceSetAvatarFactory extends
 
     private void removeFromHover(ResourceSetAvatar avatar) {
         hoverModel.removeAll(avatar.getResourceSet());
-        setHoverModel.setResourceSet(null);
+        setHoverModel.setDelegate(null);
     }
 
     private boolean shouldHighlight(ResourceSetAvatar avatar,

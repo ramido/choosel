@@ -71,13 +71,23 @@ public class SwitchingResourceSet extends DelegatingResourceSet implements
     public HandlerRegistration addEventHandler(
             ResourcesAddedEventHandler handler) {
 
+        assert handler != null;
         return eventBus.addHandler(ResourcesAddedEvent.TYPE, handler);
+    }
+
+    public HandlerRegistration addEventHandler(
+            ResourceSetDelegateChangedEventHandler handler) {
+
+        assert handler != null;
+        return eventBus.addHandler(ResourceSetDelegateChangedEvent.TYPE,
+                handler);
     }
 
     @Override
     public HandlerRegistration addEventHandler(
             ResourcesRemovedEventHandler handler) {
 
+        assert handler != null;
         return eventBus.addHandler(ResourcesRemovedEvent.TYPE, handler);
     }
 
@@ -91,6 +101,10 @@ public class SwitchingResourceSet extends DelegatingResourceSet implements
     @Override
     public void dispose() {
         removeEventHandlersFromDelegate();
+    }
+
+    private void fireDelegateChanged(ResourceSet newDelegate) {
+        eventBus.fireEvent(new ResourceSetDelegateChangedEvent(newDelegate));
     }
 
     private void fireResourceChanges(ResourceSet newDelegate,
@@ -154,11 +168,16 @@ public class SwitchingResourceSet extends DelegatingResourceSet implements
             newDelegate = NullResourceSet.NULL_RESOURCE_SET;
         }
 
+        if (newDelegate == delegate) {
+            return;
+        }
+
         removeEventHandlersFromDelegate();
 
         ResourceSet oldDelegate = this.delegate;
         this.delegate = newDelegate;
 
+        fireDelegateChanged(newDelegate);
         fireResourceChanges(newDelegate, oldDelegate);
 
         addEventHandlersToDelegate();

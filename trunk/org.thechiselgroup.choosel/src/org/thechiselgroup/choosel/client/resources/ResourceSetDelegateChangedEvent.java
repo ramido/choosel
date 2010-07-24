@@ -15,9 +15,31 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
-public interface ResourceSetContainerChangedEventHandler extends
-        ResourceSetEventHandler {
+import com.google.gwt.event.shared.GwtEvent;
 
-    void onResourceSetContainerChanged(ResourceSetContainerChangedEvent event);
+public class ResourceSetDelegateChangedEvent extends
+        GwtEvent<ResourceSetDelegateChangedEventHandler> {
+
+    public static final GwtEvent.Type<ResourceSetDelegateChangedEventHandler> TYPE = new GwtEvent.Type<ResourceSetDelegateChangedEventHandler>();
+
+    private final ResourceSet resourceSet;
+
+    public ResourceSetDelegateChangedEvent(ResourceSet resourceSet) {
+        this.resourceSet = resourceSet;
+    }
+
+    @Override
+    protected void dispatch(ResourceSetDelegateChangedEventHandler handler) {
+        handler.onResourceSetContainerChanged(this);
+    }
+
+    @Override
+    public GwtEvent.Type<ResourceSetDelegateChangedEventHandler> getAssociatedType() {
+        return TYPE;
+    }
+
+    public ResourceSet getResourceSet() {
+        return resourceSet;
+    }
 
 }
