@@ -22,10 +22,10 @@ public class HoverModel extends DelegatingReadableResourceSet {
         highlightedResourceSetContainer = new SwitchingResourceSet();
 
         /*
-         * TODO We could a counting resource set, because elements might get
-         * removed from the set after they have been added again, e.g. when
-         * moving the mouse from over a resource item with popup to over a
-         * resource set and the popup removes the resource a bit later.
+         * We use a counting resource set, because elements might get removed
+         * from the set after they have been added again, e.g. when moving the
+         * mouse from over a resource item with popup to over a resource set and
+         * the popup removes the resource a bit later.
          */
         highlightedSingleResources = new CountingResourceSet();
 
