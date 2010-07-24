@@ -159,7 +159,7 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
     protected void showHover(List<Resource> resources, boolean showHover) {
         for (Resource resource : resources) {
             if (!callback.containsResource(resource)) {
-                return;
+                continue;
             }
 
             List<ResourceItem> resourceItems = callback

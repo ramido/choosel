@@ -113,17 +113,9 @@ public abstract class ChartViewContentDisplay extends
         if (resources.isEmpty()) {
             return;
         }
-        for (Resource resource : resources) {
-            if (!callback.containsResource(resource)) {
-                return;
-            }
 
-            List<ResourceItem> resourceItems = callback
-                    .getResourceItems(resource);
-            for (ResourceItem resourceItem : resourceItems) {
-                resourceItem.setHighlighted(showHover);
-            }
-        }
+        super.showHover(resources, showHover);
+
         chartWidget.renderChart();
     }
 }

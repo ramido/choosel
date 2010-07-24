@@ -187,7 +187,7 @@ public class ResourceItem {
     }
 
     // TODO introduce partial highlighting
-    public final void setHighlighted(boolean highlighted) {
+    public void setHighlighted(boolean highlighted) {
         if (this.highlighted == highlighted) {
             return;
         }
