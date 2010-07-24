@@ -32,11 +32,7 @@ import org.thechiselgroup.choosel.client.resources.ResourceCategoryRemovedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourceCategoryRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceEventsForwarder;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.ResourceSetAddedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourceSetAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
-import org.thechiselgroup.choosel.client.resources.ResourceSetRemovedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourceSetRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceSplitter;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
@@ -56,7 +52,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -145,6 +140,8 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private ResourceModel resourceModel;
 
+    private ResourceModelPresenter resourceModelPresenter;
+
     private static final String MEMENTO_RESOURCE_MODEL = "resource-model";
 
     @Inject
@@ -180,6 +177,10 @@ public class DefaultView extends AbstractWindowContent implements View {
         this.selectionDropPresenter = selectionDropPresenter;
         this.resourceSplitter = resourceSplitter;
         this.contentDisplay = contentDisplay;
+
+        this.resourceModel = new DefaultResourceModel(resourceSetFactory);
+        this.resourceModelPresenter = new ResourceModelPresenter(
+                allResourcesSetPresenter, userSetsPresenter, resourceModel);
     }
 
     @Override
@@ -316,19 +317,18 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     @Override
     public void init() {
-        this.resourceModel = new DefaultResourceModel(resourceSetFactory);
         if (this.resourceModel instanceof Initializable) {
             ((Initializable) this.resourceModel).init();
         }
 
-        initResourceCombinator();
+        resourceModelPresenter.init();
+
         initResourceSplitter();
 
         initAllResourcesToResourceSplitterLink();
 
         initUI();
 
-        initPresenterLinks();
         initContentDisplay();
         initSelectionModel();
     }
@@ -406,40 +406,11 @@ public class DefaultView extends AbstractWindowContent implements View {
         contentDisplay.init(contentDisplayCallback);
     }
 
-    private void initPresenterLinks() {
-        allResourcesSetPresenter.addResourceSet(resourceModel.getResources());
-    }
-
-    private void initResourceCombinator() {
-        this.resourceModel.getCombinedUserResourceSets().addSetEventsHandler(
-                ResourceSetAddedEvent.TYPE, new ResourceSetAddedEventHandler() {
-                    @Override
-                    public void onResourceSetAdded(ResourceSetAddedEvent e) {
-                        ResourceSet resources = e.getResourceSet();
-                        userSetsPresenter.addResourceSet(resources);
-                    }
-                });
-        this.resourceModel.getCombinedUserResourceSets().addSetEventsHandler(
-                ResourceSetRemovedEvent.TYPE,
-                new ResourceSetRemovedEventHandler() {
-                    @Override
-                    public void onResourceSetRemoved(ResourceSetRemovedEvent e) {
-                        ResourceSet resources = e.getResourceSet();
-                        userSetsPresenter.removeResourceSet(resources);
-                    }
-                });
-    }
-
     private void initResourceModelPresenterUI() {
-        allResourcesSetPresenter.init();
-        userSetsPresenter.init();
+        Widget widget = resourceModelPresenter.asWidget();
 
-        HorizontalPanel resourceModelPresenter = new HorizontalPanel();
-        resourceModelPresenter.add(allResourcesSetPresenter.asWidget());
-        resourceModelPresenter.add(userSetsPresenter.asWidget());
-
-        configurationPanel.add(resourceModelPresenter, DockPanel.WEST);
-        configurationPanel.setCellHorizontalAlignment(resourceModelPresenter,
+        configurationPanel.add(widget, DockPanel.WEST);
+        configurationPanel.setCellHorizontalAlignment(widget,
                 HasAlignment.ALIGN_LEFT);
     }
 
