@@ -38,15 +38,24 @@ public abstract class AbstractImplementingResourceSet extends
     }
 
     @Override
-    public <H extends ResourceEventHandler> HandlerRegistration addHandler(
-            Type<H> type, H handler) {
-        return eventBus.addHandler(type, handler);
+    public HandlerRegistration addLabelChangedEventHandler(
+            LabelChangedEventHandler eventHandler) {
+
+        return labelDelegate.addLabelChangedEventHandler(eventHandler);
     }
 
     @Override
-    public HandlerRegistration addLabelChangedEventHandler(
-            LabelChangedEventHandler eventHandler) {
-        return labelDelegate.addLabelChangedEventHandler(eventHandler);
+    public HandlerRegistration addEventHandler(
+            ResourcesAddedEventHandler handler) {
+
+        return eventBus.addHandler(ResourcesAddedEvent.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addEventHandler(
+            ResourcesRemovedEventHandler handler) {
+
+        return eventBus.addHandler(ResourcesRemovedEvent.TYPE, handler);
     }
 
     public int getHandlerCount(Type<?> type) {

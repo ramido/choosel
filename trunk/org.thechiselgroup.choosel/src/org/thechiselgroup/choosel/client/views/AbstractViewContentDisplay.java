@@ -133,16 +133,16 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
     }
 
     private void initHoverModelHooks() {
-        handlerRegistrations.addHandlerRegistration(hoverModel.addHandler(
-                ResourcesAddedEvent.TYPE, new ResourcesAddedEventHandler() {
+        handlerRegistrations.addHandlerRegistration(hoverModel
+                .addEventHandler(new ResourcesAddedEventHandler() {
                     @Override
                     public void onResourcesAdded(ResourcesAddedEvent e) {
                         showHover(e.getAddedResources(), true);
                     }
 
                 }));
-        handlerRegistrations.addHandlerRegistration(hoverModel.addHandler(
-                ResourcesRemovedEvent.TYPE, new ResourcesRemovedEventHandler() {
+        handlerRegistrations.addHandlerRegistration(hoverModel
+                .addEventHandler(new ResourcesRemovedEventHandler() {
                     @Override
                     public void onResourcesRemoved(ResourcesRemovedEvent e) {
                         showHover(e.getRemovedResources(), false);

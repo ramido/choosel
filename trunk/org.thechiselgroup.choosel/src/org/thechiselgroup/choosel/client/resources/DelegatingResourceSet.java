@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.thechiselgroup.choosel.client.label.LabelChangedEventHandler;
 
-import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 // TODO support for null delegates
@@ -43,9 +42,15 @@ public class DelegatingResourceSet implements ResourceSet {
     }
 
     @Override
-    public <H extends ResourceEventHandler> HandlerRegistration addHandler(
-            Type<H> type, H handler) {
-        return delegate.addHandler(type, handler);
+    public HandlerRegistration addEventHandler(
+            ResourcesAddedEventHandler handler) {
+        return delegate.addEventHandler(handler);
+    }
+
+    @Override
+    public HandlerRegistration addEventHandler(
+            ResourcesRemovedEventHandler handler) {
+        return delegate.addEventHandler(handler);
     }
 
     @Override

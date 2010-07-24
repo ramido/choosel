@@ -85,10 +85,10 @@ public class HideResourceSetAvatarIfEmptyManager implements
     }
 
     private void registerResourceSetHandlers(ResourceSet resourceSet) {
-        addedHandlerRegistration = resourceSet.addHandler(
-                ResourcesAddedEvent.TYPE, this);
-        removedHandlerRegistration = resourceSet.addHandler(
-                ResourcesRemovedEvent.TYPE, this);
+        addedHandlerRegistration = resourceSet
+                .addEventHandler((ResourcesAddedEventHandler) this);
+        removedHandlerRegistration = resourceSet
+                .addEventHandler((ResourcesRemovedEventHandler) this);
     }
 
     private void updateAvatarState(ResourceSet resources) {

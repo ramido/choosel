@@ -44,10 +44,10 @@ public class ResourceEventsForwarder implements ResourcesAddedEventHandler,
     }
 
     public void init() {
-        addHandlerRegistration = source.addHandler(ResourcesAddedEvent.TYPE,
-                this);
-        removeHandlerRegistration = source.addHandler(
-                ResourcesRemovedEvent.TYPE, this);
+        addHandlerRegistration = source
+                .addEventHandler((ResourcesAddedEventHandler) this);
+        removeHandlerRegistration = source
+                .addEventHandler((ResourcesRemovedEventHandler) this);
     }
 
     @Override

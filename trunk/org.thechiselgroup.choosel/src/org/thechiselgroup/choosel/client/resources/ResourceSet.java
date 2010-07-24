@@ -20,15 +20,16 @@ import java.util.List;
 
 import org.thechiselgroup.choosel.client.label.HasLabel;
 
-import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 public interface ResourceSet extends Iterable<Resource>, ResourceContainer,
         HasLabel {
 
-    // TODO more specific addXXXHandler methods
-    <H extends ResourceEventHandler> HandlerRegistration addHandler(
-            Type<H> type, H handler);
+    HandlerRegistration addEventHandler(
+            ResourcesAddedEventHandler handler);
+
+    HandlerRegistration addEventHandler(
+            ResourcesRemovedEventHandler handler);
 
     void clear();
 
