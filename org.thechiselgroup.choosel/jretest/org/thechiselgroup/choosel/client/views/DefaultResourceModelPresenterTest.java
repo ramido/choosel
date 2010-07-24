@@ -35,7 +35,7 @@ import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
 
-public class ResourceModelPresenterTest {
+public class DefaultResourceModelPresenterTest {
 
     @Mock
     private ResourceSetsPresenter allResourcesPresenter;
@@ -45,7 +45,7 @@ public class ResourceModelPresenterTest {
 
     private DefaultResourceModel resourceModel;
 
-    private ResourceModelPresenter underTest;
+    private DefaultResourceModelPresenter underTest;
 
     @Test
     public void addingUnlabeledSetDoesNotChangeOriginalSetsPresenter() {
@@ -121,7 +121,7 @@ public class ResourceModelPresenterTest {
 
         resourceModel = new DefaultResourceModel(
                 new DefaultResourceSetFactory());
-        underTest = new ResourceModelPresenter(allResourcesPresenter,
+        underTest = new DefaultResourceModelPresenter(allResourcesPresenter,
                 inputResourceSetsPresenter, resourceModel);
 
         resourceModel.init();

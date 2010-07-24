@@ -64,19 +64,18 @@ public class DefaultViewTest {
 
         public TestView(LabelProvider selectionModelLabelFactory,
                 ResourceSetFactory resourceSetFactory,
-                ResourceSetsPresenter userSetsPresenter,
-                ResourceSetsPresenter allResourcesSetPresenter,
                 ResourceSetsPresenter selectionPresenter,
                 ResourceSetsPresenter selectionDropPresenter,
                 ResourceSplitter resourceSplitter,
                 ViewContentDisplay contentDisplay, String label,
-                String contentType, ResourceItemValueResolver configuration) {
+                String contentType, ResourceItemValueResolver configuration,
+                ResourceModel resourceModel,
+                DefaultResourceModelPresenter resourceModelPresenter) {
 
             super(selectionModelLabelFactory, resourceSetFactory,
-                    userSetsPresenter, allResourcesSetPresenter,
                     selectionPresenter, selectionDropPresenter,
                     resourceSplitter, contentDisplay, label, contentType,
-                    configuration);
+                    configuration, resourceModel, resourceModelPresenter);
         }
 
         @Override
@@ -214,16 +213,25 @@ public class DefaultViewTest {
     }
 
     private void createView() {
+        DefaultResourceSetFactory resourceSetFactory = new DefaultResourceSetFactory();
+
         ResourceSplitter resourceSplitter = new ResourceSplitter(
                 new ResourceCategorizerToMultiCategorizerAdapter(
-                        new ResourceByUriTypeCategorizer()),
-                new DefaultResourceSetFactory());
+                        new ResourceByUriTypeCategorizer()), resourceSetFactory);
+
+        ResourceModel resourceModel = new DefaultResourceModel(
+                resourceSetFactory);
+
+        // TODO change test case such that the all resource stuff is not
+        // required any more
+        DefaultResourceModelPresenter resourceModelPresenter = new DefaultResourceModelPresenter(
+                allResourcesSetPresenter, originalSetsPresenter, resourceModel);
 
         underTest = spy(new TestView(new SelectionModelLabelFactory(),
-                new DefaultResourceSetFactory(), originalSetsPresenter,
-                allResourcesSetPresenter, selectionPresenter,
-                selectionDropPresenter, resourceSplitter, contentDisplay, "",
-                "", resourceSetToValueResolver));
+                resourceSetFactory, selectionPresenter, selectionDropPresenter,
+                resourceSplitter, contentDisplay, "", "",
+                resourceSetToValueResolver, resourceModel,
+                resourceModelPresenter));
     }
 
     @Test
