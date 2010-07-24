@@ -6,15 +6,11 @@ import org.thechiselgroup.choosel.client.resources.ResourceSetAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceSetRemovedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourceSetRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
-import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
-import org.thechiselgroup.choosel.client.util.Disposable;
-import org.thechiselgroup.choosel.client.util.Initializable;
 
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class DefaultResourceModelPresenter implements Initializable, WidgetAdaptable,
-        Disposable {
+public class DefaultResourceModelPresenter implements ResourceModelPresenter {
 
     private ResourceSetsPresenter inputResourceSetsPresenter;
 
@@ -22,7 +18,8 @@ public class DefaultResourceModelPresenter implements Initializable, WidgetAdapt
 
     private ResourceModel resourceModel;
 
-    public DefaultResourceModelPresenter(ResourceSetsPresenter allResourcesPresenter,
+    public DefaultResourceModelPresenter(
+            ResourceSetsPresenter allResourcesPresenter,
             ResourceSetsPresenter inputResourceSetsPresenter,
             ResourceModel resourceModel) {
 

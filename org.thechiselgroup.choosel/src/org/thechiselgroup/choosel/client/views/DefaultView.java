@@ -136,7 +136,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private ResourceModel resourceModel;
 
-    private DefaultResourceModelPresenter resourceModelPresenter;
+    private ResourceModelPresenter resourceModelPresenter;
 
     private static final String MEMENTO_RESOURCE_MODEL = "resource-model";
 
@@ -150,7 +150,7 @@ public class DefaultView extends AbstractWindowContent implements View {
             ViewContentDisplay contentDisplay, String label,
             String contentType, ResourceItemValueResolver configuration,
             ResourceModel resourceModel,
-            DefaultResourceModelPresenter resourceModelPresenter) {
+            ResourceModelPresenter resourceModelPresenter) {
 
         super(label, contentType);
 
