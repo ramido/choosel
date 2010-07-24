@@ -18,6 +18,8 @@ package org.thechiselgroup.choosel.client.resources;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.thechiselgroup.choosel.client.util.Disposable;
+
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -38,7 +40,8 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * @author Lars Grammel
  */
 // TODO separate labeling concept from resource set
-public class SwitchingResourceSet extends DelegatingResourceSet {
+public class SwitchingResourceSet extends DelegatingResourceSet implements
+        Disposable {
 
     protected transient HandlerManager eventBus;
 
@@ -79,24 +82,34 @@ public class SwitchingResourceSet extends DelegatingResourceSet {
         return eventBus.addHandler(type, handler);
     }
 
+    @Override
+    public void dispose() {
+        removeEventHandlersFromDelegate();
+    }
+
     private void fireResourceChanges(ResourceSet newDelegate,
             ResourceSet oldDelegate) {
 
+        /*
+         * the add event is fire before the remove event such that the
+         * intermediate state does not include an empty set in some cases.
+         */
+
         assert oldDelegate != null;
         assert newDelegate != null;
-
-        List<Resource> removedResources = new ArrayList<Resource>();
-        removedResources.addAll(oldDelegate.toList());
-        removedResources.removeAll(newDelegate.toList());
-        if (!removedResources.isEmpty()) {
-            fireResourcesRemoved(removedResources);
-        }
 
         List<Resource> addedResources = new ArrayList<Resource>();
         addedResources.addAll(newDelegate.toList());
         addedResources.removeAll(oldDelegate.toList());
         if (!addedResources.isEmpty()) {
             fireResourcesAdded(addedResources);
+        }
+
+        List<Resource> removedResources = new ArrayList<Resource>();
+        removedResources.addAll(oldDelegate.toList());
+        removedResources.removeAll(newDelegate.toList());
+        if (!removedResources.isEmpty()) {
+            fireResourcesRemoved(removedResources);
         }
     }
 

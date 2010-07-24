@@ -43,6 +43,18 @@ public class SwitchingResourceSetTest {
     private ResourcesRemovedEventHandler resourcesRemovedHandler;
 
     @Test
+    public void doNotFireResourcesAddedEventOnResourcesAddedAfterDispose() {
+        underTest.setDelegate(resourceSets[0]);
+        underTest.addHandler(ResourcesAddedEvent.TYPE, resourcesAddedHandler);
+        underTest.dispose();
+
+        resourceSets[0].addAll(createResources(3, 4));
+
+        verify(resourcesAddedHandler, times(0)).onResourcesAdded(
+                any(ResourcesAddedEvent.class));
+    }
+
+    @Test
     public void doNotFireResourcesAddedEventOnResourcesAddedToFormerDelegate() {
         underTest.setDelegate(resourceSets[0]);
         underTest.setDelegate(resourceSets[1]);
@@ -63,6 +75,19 @@ public class SwitchingResourceSetTest {
 
         verify(resourcesAddedHandler, times(0)).onResourcesAdded(
                 any(ResourcesAddedEvent.class));
+    }
+
+    @Test
+    public void doNotFireResourcesRemovedEventOnResourcesRemovedAfterDispose() {
+        underTest.setDelegate(resourceSets[0]);
+        underTest.addHandler(ResourcesRemovedEvent.TYPE,
+                resourcesRemovedHandler);
+        underTest.dispose();
+
+        resourceSets[0].removeAll(createResources(1, 2));
+
+        verify(resourcesRemovedHandler, times(0)).onResourcesRemoved(
+                any(ResourcesRemovedEvent.class));
     }
 
     @Test
@@ -191,6 +216,26 @@ public class SwitchingResourceSetTest {
         underTest.setDelegate(resourceSets[1]);
 
         assertEquals(resourceSets[1], underTest.getDelegate());
+    }
+
+    @Test
+    public void hasDelegateAfterSettingDelegate() {
+        underTest.setDelegate(resourceSets[0]);
+
+        assertEquals(true, underTest.hasDelegate());
+    }
+
+    @Test
+    public void hasNoDelegateIfSetToNull() {
+        underTest.setDelegate(resourceSets[0]);
+        underTest.setDelegate(null);
+
+        assertEquals(false, underTest.hasDelegate());
+    }
+
+    @Test
+    public void hasNoDelegateInitially() {
+        assertEquals(false, underTest.hasDelegate());
     }
 
     @Before
