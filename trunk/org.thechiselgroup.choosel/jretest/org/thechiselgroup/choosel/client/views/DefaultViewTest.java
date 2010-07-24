@@ -70,7 +70,7 @@ public class DefaultViewTest {
                 ViewContentDisplay contentDisplay, String label,
                 String contentType, ResourceItemValueResolver configuration,
                 ResourceModel resourceModel,
-                DefaultResourceModelPresenter resourceModelPresenter) {
+                ResourceModelPresenter resourceModelPresenter) {
 
             super(selectionModelLabelFactory, resourceSetFactory,
                     selectionPresenter, selectionDropPresenter,
@@ -90,13 +90,7 @@ public class DefaultViewTest {
     private static final String SLOT_ID = "slot-id";
 
     @Mock
-    private ResourceSetsPresenter allResourcesSetPresenter;
-
-    @Mock
     private ViewContentDisplay contentDisplay;
-
-    @Mock
-    private ResourceSetsPresenter originalSetsPresenter;
 
     @Mock
     private ResourceItem resourceItem;
@@ -119,6 +113,11 @@ public class DefaultViewTest {
     private DefaultView underTest;
 
     private ViewContentDisplayCallback callback;
+
+    private ResourceModel resourceModel;
+
+    @Mock
+    private ResourceModelPresenter resourceModelPresenter;
 
     // TODO this needs to be changed - we should not test the implementation
     @Test
@@ -215,17 +214,12 @@ public class DefaultViewTest {
     private void createView() {
         DefaultResourceSetFactory resourceSetFactory = new DefaultResourceSetFactory();
 
+        // TODO replace with mock
+        resourceModel = new DefaultResourceModel(resourceSetFactory);
+
         ResourceSplitter resourceSplitter = new ResourceSplitter(
                 new ResourceCategorizerToMultiCategorizerAdapter(
                         new ResourceByUriTypeCategorizer()), resourceSetFactory);
-
-        ResourceModel resourceModel = new DefaultResourceModel(
-                resourceSetFactory);
-
-        // TODO change test case such that the all resource stuff is not
-        // required any more
-        DefaultResourceModelPresenter resourceModelPresenter = new DefaultResourceModelPresenter(
-                allResourcesSetPresenter, originalSetsPresenter, resourceModel);
 
         underTest = spy(new TestView(new SelectionModelLabelFactory(),
                 resourceSetFactory, selectionPresenter, selectionDropPresenter,
@@ -267,7 +261,7 @@ public class DefaultViewTest {
 
         verify(contentDisplay, times(1)).dispose();
         verify(selectionPresenter, times(1)).dispose();
-        verify(originalSetsPresenter, times(1)).dispose();
+        verify(resourceModelPresenter, times(1)).dispose();
         verify(selectionHandlerRegistration, times(2)).removeHandler();
     }
 
