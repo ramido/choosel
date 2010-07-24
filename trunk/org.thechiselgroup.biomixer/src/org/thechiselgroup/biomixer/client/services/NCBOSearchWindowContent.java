@@ -175,7 +175,8 @@ public class NCBOSearchWindowContent extends AbstractWindowContent implements
 								.createResourceSet();
 
 						resourceSet.addAll(result);
-						resultView.addResourceSet(resourceSet);
+						resultView.getResourceModel().addResourceSet(
+								resourceSet);
 
 						deckPanel.showWidget(0);
 						deckPanel.updateWindowSize();

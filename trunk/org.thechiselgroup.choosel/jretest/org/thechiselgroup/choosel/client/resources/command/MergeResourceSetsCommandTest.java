@@ -28,7 +28,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.views.View;
+import org.thechiselgroup.choosel.client.views.ResourceModel;
 
 public class MergeResourceSetsCommandTest {
 
@@ -39,7 +39,7 @@ public class MergeResourceSetsCommandTest {
     private ResourceSet targetSet;
 
     @Mock
-    private View view;
+    private ResourceModel resourceModel;
 
     @Test
     public void addSourceSetToViewOnUndo() {
@@ -48,7 +48,7 @@ public class MergeResourceSetsCommandTest {
         command.execute();
         command.undo();
 
-        verify(view, times(1)).addResourceSet(eq(sourceSet));
+        verify(resourceModel, times(1)).addResourceSet(eq(sourceSet));
     }
 
     @Test
@@ -68,7 +68,7 @@ public class MergeResourceSetsCommandTest {
 
         command.execute();
 
-        verify(view, times(1)).removeResourceSet(eq(sourceSet));
+        verify(resourceModel, times(1)).removeResourceSet(eq(sourceSet));
     }
 
     @Test
@@ -113,7 +113,8 @@ public class MergeResourceSetsCommandTest {
         this.sourceSet = sourceSet;
         this.targetSet = targetSet;
 
-        this.command = new MergeResourceSetsCommand(sourceSet, targetSet, view);
+        this.command = new MergeResourceSetsCommand(sourceSet, targetSet,
+                resourceModel);
     }
 
 }

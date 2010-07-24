@@ -34,33 +34,33 @@ import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.client.util.CollectionUtils;
-import org.thechiselgroup.choosel.client.views.View;
+import org.thechiselgroup.choosel.client.views.ResourceModel;
 
-public class AddResourceToViewCommandTest {
+public class AddResourcesToResourceModelCommandTest {
 
     private ResourceSet resources;
 
     @Mock
-    private View view;
+    private ResourceModel resourceModel;
 
     @Test
     public void executeAddsResourceToView() {
         resources = createResources(1, 2);
 
         ResourceSet viewResources = createResources();
-        when(view.getResources()).thenReturn(viewResources);
-        when(view.containsResources(resources)).thenReturn(true);
+        when(resourceModel.getResources()).thenReturn(viewResources);
+        when(resourceModel.containsResources(resources)).thenReturn(true);
         // TODO need more specific condition for containsResources
 
-        AddResourcesToViewCommand underTest = new AddResourcesToViewCommand(
-                view, resources);
+        AddResourcesToResourceModelCommand underTest = new AddResourcesToResourceModelCommand(
+                resourceModel, resources);
 
         underTest.execute();
 
         ArgumentCaptor<Iterable> argument = ArgumentCaptor
                 .forClass(Iterable.class);
 
-        verify(view, times(1)).addResources(argument.capture());
+        verify(resourceModel, times(1)).addResources(argument.capture());
         List<Resource> result = CollectionUtils.toList(argument.getValue());
         assertEquals(2, result.size());
         assertEquals(true, resources.containsAll(result));
@@ -82,12 +82,12 @@ public class AddResourceToViewCommandTest {
         resources = createResources(1, 2);
 
         ResourceSet viewResources = createResources(1);
-        when(view.getResources()).thenReturn(viewResources);
-        when(view.containsResources(resources)).thenReturn(true);
+        when(resourceModel.getResources()).thenReturn(viewResources);
+        when(resourceModel.containsResources(resources)).thenReturn(true);
         // TODO need more specific condition for containsResources
 
-        AddResourcesToViewCommand underTest = new AddResourcesToViewCommand(
-                view, resources);
+        AddResourcesToResourceModelCommand underTest = new AddResourcesToResourceModelCommand(
+                resourceModel, resources);
 
         underTest.execute();
         underTest.undo();
@@ -95,7 +95,7 @@ public class AddResourceToViewCommandTest {
         ArgumentCaptor<Iterable> argument = ArgumentCaptor
                 .forClass(Iterable.class);
 
-        verify(view, times(1)).removeResources(argument.capture());
+        verify(resourceModel, times(1)).removeResources(argument.capture());
         List<Resource> result = CollectionUtils.toList(argument.getValue());
         assertEquals(1, result.size());
         assertEquals(true, resources.contains(createResource(2)));

@@ -18,45 +18,46 @@ package org.thechiselgroup.choosel.client.resources.command;
 import org.thechiselgroup.choosel.client.command.UndoableCommand;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.util.HasDescription;
-import org.thechiselgroup.choosel.client.views.View;
+import org.thechiselgroup.choosel.client.views.ResourceModel;
 
 /**
- * Removes a labelled resource set from a view as an explicitly displayed
+ * Removes a labeled resource set from a view as an explicitly displayed
  * resource set, and removes all resources from this set from the view if they
  * are not explicitly contained in another user set for this view.
  */
-public class RemoveResourceSetFromViewCommand implements UndoableCommand,
+public class RemoveResourceSetFromResourceModelCommand implements UndoableCommand,
         HasDescription {
 
     private String description;
 
     private ResourceSet resourceSet;
 
-    protected View view;
+    protected ResourceModel resourceModel;
 
-    public RemoveResourceSetFromViewCommand(View view, ResourceSet resourceSet) {
-        this(view, resourceSet, "Remove resource set '"
+    public RemoveResourceSetFromResourceModelCommand(ResourceModel resourceModel,
+            ResourceSet resourceSet) {
+        this(resourceModel, resourceSet, "Remove resource set '"
                 + resourceSet.getLabel() + "' from view");
     }
 
-    public RemoveResourceSetFromViewCommand(View view, ResourceSet resourceSet,
-            String description) {
+    public RemoveResourceSetFromResourceModelCommand(ResourceModel resourceModel,
+            ResourceSet resourceSet, String description) {
 
-        assert view != null;
+        assert resourceModel != null;
         assert resourceSet != null;
         assert resourceSet.hasLabel();
         assert description != null;
 
         this.description = description;
-        this.view = view;
+        this.resourceModel = resourceModel;
         this.resourceSet = resourceSet;
     }
 
     @Override
     public void execute() {
-        assert view.containsResourceSet(resourceSet);
-        view.removeResourceSet(resourceSet);
-        assert !view.containsResourceSet(resourceSet);
+        assert resourceModel.containsResourceSet(resourceSet);
+        resourceModel.removeResourceSet(resourceSet);
+        assert !resourceModel.containsResourceSet(resourceSet);
     }
 
     // TODO add view name / label once available
@@ -65,19 +66,19 @@ public class RemoveResourceSetFromViewCommand implements UndoableCommand,
         return description;
     }
 
+    public ResourceModel getResourceModel() {
+        return resourceModel;
+    }
+
     public ResourceSet getResourceSet() {
         return resourceSet;
     }
 
-    public View getView() {
-        return view;
-    }
-
     @Override
     public void undo() {
-        assert !view.containsResourceSet(resourceSet);
-        view.addResourceSet(resourceSet);
-        assert view.containsResourceSet(resourceSet);
+        assert !resourceModel.containsResourceSet(resourceSet);
+        resourceModel.addResourceSet(resourceSet);
+        assert resourceModel.containsResourceSet(resourceSet);
     }
 
 }

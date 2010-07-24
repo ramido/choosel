@@ -20,8 +20,10 @@ import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.windows.WindowContent;
 
 public interface View extends WindowContent, Disposable, Persistable,
-        SelectionModel, ResourceModel {
+        SelectionModel {
 
     // TODO Type mapping operations
+
+    ResourceModel getResourceModel();
 
 }

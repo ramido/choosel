@@ -129,7 +129,7 @@ public class DefaultViewTest {
         DefaultResourceSet resources = new DefaultResourceSet();
         resources.add(resource);
 
-        underTest.addResourceSet(resources);
+        underTest.getResourceModel().addResourceSet(resources);
 
         verify(originalSetsPresenter, never()).addResourceSet(resources);
     }
@@ -147,8 +147,8 @@ public class DefaultViewTest {
 
     @Test
     public void allResourcesPresenterContainsSetWithAllResources() {
-        underTest.addResourceSet(createLabeledResources(1));
-        underTest.addResources(createResources(2));
+        underTest.getResourceModel().addResourceSet(createLabeledResources(1));
+        underTest.getResourceModel().addResources(createResources(2));
 
         ArgumentCaptor<ResourceSet> argument = ArgumentCaptor
                 .forClass(ResourceSet.class);
@@ -164,7 +164,7 @@ public class DefaultViewTest {
     public void callOriginalSetsPresenterOnLabeledResourcesAdded() {
         ResourceSet resources = createLabeledResources(1, 2, 3);
 
-        underTest.addResourceSet(resources);
+        underTest.getResourceModel().addResourceSet(resources);
 
         verify(originalSetsPresenter, times(1)).addResourceSet(resources);
     }
@@ -173,8 +173,8 @@ public class DefaultViewTest {
     public void callOriginalSetsPresenterOnLabeledResourcesAddedOnlyOnce() {
         ResourceSet resources = createLabeledResources(1, 2, 3);
 
-        underTest.addResourceSet(resources);
-        underTest.addResourceSet(resources);
+        underTest.getResourceModel().addResourceSet(resources);
+        underTest.getResourceModel().addResourceSet(resources);
 
         verify(originalSetsPresenter, times(1)).addResourceSet(resources);
     }
@@ -183,8 +183,8 @@ public class DefaultViewTest {
     public void callResourceSetsPresenterOnLabeledResourcesRemoved() {
         ResourceSet resources = createLabeledResources(1, 2, 3);
 
-        underTest.addResourceSet(resources);
-        underTest.removeResourceSet(resources);
+        underTest.getResourceModel().addResourceSet(resources);
+        underTest.getResourceModel().removeResourceSet(resources);
 
         verify(originalSetsPresenter, times(1)).removeResourceSet(resources);
     }
@@ -196,7 +196,7 @@ public class DefaultViewTest {
         DefaultResourceSet resources2 = createLabeledResources(CATEGORY_2, 4, 2);
         DefaultResourceSet resources = toResourceSet(resources1, resources2);
 
-        underTest.addResourceSet(resources);
+        underTest.getResourceModel().addResourceSet(resources);
         Map<String, ResourceSet> result = underTest
                 .getCategorizedResourceSets();
 
@@ -213,7 +213,7 @@ public class DefaultViewTest {
         DefaultResourceSet resources2 = createResources(CATEGORY_2, 4, 2);
         DefaultResourceSet resources = toResourceSet(resources1, resources2);
 
-        underTest.addResourceSet(resources);
+        underTest.getResourceModel().addResourceSet(resources);
 
         ArgumentCaptor<ResourceSet> argument = ArgumentCaptor
                 .forClass(ResourceSet.class);
@@ -249,7 +249,7 @@ public class DefaultViewTest {
     public void createResourceItemsWhenLabeledResourcesAreAdded() {
         ResourceSet resources = createLabeledResources(CATEGORY_1, 1);
 
-        underTest.addResourceSet(resources);
+        underTest.getResourceModel().addResourceSet(resources);
 
         resources.add(createResource(CATEGORY_2, 2));
 
@@ -287,7 +287,7 @@ public class DefaultViewTest {
     public void deselectResourceItemWhenResourceRemovedFromSelection() {
         when(resourceItem.getResourceSet()).thenReturn(createResources(1));
 
-        underTest.addResources(createResources(1));
+        underTest.getResourceModel().addResources(createResources(1));
 
         selection = createResources();
         underTest.setSelection(selection);
@@ -301,7 +301,7 @@ public class DefaultViewTest {
     @Test
     public void deselectResourceItemWhenSelectionChanges() {
         when(resourceItem.getResourceSet()).thenReturn(createResources(1));
-        underTest.addResources(createResources(1));
+        underTest.getResourceModel().addResources(createResources(1));
         underTest.setSelection(createResources(1));
         underTest.setSelection(createResources());
 
@@ -326,7 +326,7 @@ public class DefaultViewTest {
         DefaultResourceSet resources = new DefaultResourceSet();
         resources.add(resource);
 
-        underTest.addResourceSet(resources);
+        underTest.getResourceModel().addResourceSet(resources);
 
         verify(originalSetsPresenter, never()).addResourceSet(
                 any(ResourceSet.class));
@@ -345,8 +345,8 @@ public class DefaultViewTest {
         DefaultResourceSet resources = toLabeledResources(resources1,
                 resources2);
 
-        underTest.addResourceSet(resources);
-        underTest.removeResourceSet(resources);
+        underTest.getResourceModel().addResourceSet(resources);
+        underTest.getResourceModel().removeResourceSet(resources);
 
         verify(contentDisplay, times(2)).removeResourceItem(
                 any(ResourceItem.class));
@@ -356,7 +356,7 @@ public class DefaultViewTest {
     public void selectResourceItemWhenResourceAddedToSelection() {
         when(resourceItem.getResourceSet()).thenReturn(createResources(1));
 
-        underTest.addResources(createResources(1));
+        underTest.getResourceModel().addResources(createResources(1));
 
         selection = createResources();
         underTest.setSelection(selection);
@@ -370,7 +370,7 @@ public class DefaultViewTest {
     public void selectResourceItemWhenSelectionChanges() {
         when(resourceItem.getResourceSet()).thenReturn(createResources(1));
 
-        underTest.addResources(createResources(1));
+        underTest.getResourceModel().addResources(createResources(1));
 
         selection = createResources(1);
         underTest.setSelection(selection);
@@ -411,7 +411,7 @@ public class DefaultViewTest {
     @Test
     public void switchSelectionCreatesSelectionIfNoneExists() {
         when(resourceItem.getResourceSet()).thenReturn(createResources(1));
-        underTest.addResources(createResources(1));
+        underTest.getResourceModel().addResources(createResources(1));
         underTest.setSelection(null);
         callback.switchSelection(createResources(1));
 

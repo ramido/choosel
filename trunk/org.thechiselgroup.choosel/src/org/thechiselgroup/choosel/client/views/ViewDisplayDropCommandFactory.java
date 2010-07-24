@@ -19,7 +19,7 @@ import org.thechiselgroup.choosel.client.command.UndoableCommand;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.UnmodifiableResourceSet;
 import org.thechiselgroup.choosel.client.resources.command.AddResourceSetToViewCommand;
-import org.thechiselgroup.choosel.client.resources.command.AddResourcesToViewCommand;
+import org.thechiselgroup.choosel.client.resources.command.AddResourcesToResourceModelCommand;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarType;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropCommandFactory;
@@ -60,7 +60,7 @@ public class ViewDisplayDropCommandFactory implements
         if (!addedResources.hasLabel()
                 && dragAvatar.getType() == ResourceSetAvatarType.SET) {
 
-            return new AddResourcesToViewCommand(getTargetView(),
+            return new AddResourcesToResourceModelCommand(getResourceModel(),
                     addedResources);
         }
 
@@ -68,7 +68,12 @@ public class ViewDisplayDropCommandFactory implements
             addedResources = new UnmodifiableResourceSet(addedResources);
         }
 
-        return new AddResourceSetToViewCommand(getTargetView(), addedResources);
+        return new AddResourceSetToViewCommand(getResourceModel(),
+                addedResources);
+    }
+
+    private ResourceModel getResourceModel() {
+        return getTargetView().getResourceModel();
     }
 
     private View getTargetView() {
@@ -80,10 +85,10 @@ public class ViewDisplayDropCommandFactory implements
 
         if (!resources.hasLabel()
                 && dragAvatar.getType() == ResourceSetAvatarType.SET) {
-            return getTargetView().containsResources(resources);
+            return getResourceModel().containsResources(resources);
         }
 
-        return getTargetView().containsResourceSet(resources);
+        return getResourceModel().containsResourceSet(resources);
     }
 
     private boolean isFromSameView(ResourceSetAvatar dragAvatar) {

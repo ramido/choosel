@@ -32,6 +32,7 @@ import org.thechiselgroup.choosel.client.resources.command.MergeResourceSetsComm
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarType;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
+import org.thechiselgroup.choosel.client.views.ResourceModel;
 import org.thechiselgroup.choosel.client.views.View;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
 
@@ -56,6 +57,9 @@ public class ResourceSetPresenterDropCommandFactoryTest {
 
     @Mock
     private View view;
+
+    @Mock
+    private ResourceModel resourceModel;
 
     @Test
     public void canDropByDefault() {
@@ -122,7 +126,7 @@ public class ResourceSetPresenterDropCommandFactoryTest {
     }
 
     @Test
-    public void createMergeResourceCommandWhenAvatarsFromSameViewAndSourceypeIsSet() {
+    public void createMergeResourceCommandWhenAvatarsFromSameViewAndSourceTypeIsSet() {
         when(targetSet.isModifiable()).thenReturn(true);
         when(accessor.findView(dragAvatar)).thenReturn(view);
         when(dragAvatar.getType()).thenReturn(ResourceSetAvatarType.SET);
@@ -136,7 +140,7 @@ public class ResourceSetPresenterDropCommandFactoryTest {
 
         assertEquals(sourceSet, result2.getAddedSet());
         assertEquals(targetSet, result2.getModifiedSet());
-        assertEquals(view, result2.getView());
+        assertEquals(resourceModel, result2.getResourceModel());
     }
 
     @Before
@@ -147,6 +151,7 @@ public class ResourceSetPresenterDropCommandFactoryTest {
         when(targetDragAvatar.getResourceSet()).thenReturn(targetSet);
         when(dragAvatar.getResourceSet()).thenReturn(sourceSet);
         when(accessor.findView(targetDragAvatar)).thenReturn(view);
+        when(view.getResourceModel()).thenReturn(resourceModel);
 
         dropCommandFactory = new ResourceSetPresenterDropCommandFactory(
                 targetDragAvatar, accessor);

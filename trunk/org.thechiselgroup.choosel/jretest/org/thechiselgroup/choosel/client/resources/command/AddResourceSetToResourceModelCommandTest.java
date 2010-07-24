@@ -33,32 +33,32 @@ import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.util.CollectionUtils;
-import org.thechiselgroup.choosel.client.views.View;
+import org.thechiselgroup.choosel.client.views.ResourceModel;
 
-public class AddResourceSetToViewCommandTest {
+public class AddResourceSetToResourceModelCommandTest {
 
     private ResourceSet resources;
 
     private AddResourceSetToViewCommand underTest;
 
     @Mock
-    private View view;
+    private ResourceModel resourceModel;
 
     @Test
     public void addAlreadyContainedResourcesOnUndo() {
         ResourceSet viewResources = createResources(1);
-        when(view.getResources()).thenReturn(viewResources);
+        when(resourceModel.getResources()).thenReturn(viewResources);
 
         setUpCommand(createLabeledResources(1, 2));
-        when(view.containsResourceSet(resources)).thenReturn(false, true, true,
-                false); // for assertions to work in command
+        when(resourceModel.containsResourceSet(resources)).thenReturn(false,
+                true, true, false); // for assertions to work in command
 
         underTest.execute();
         underTest.undo();
 
         ArgumentCaptor<Iterable> argument = ArgumentCaptor
                 .forClass(Iterable.class);
-        verify(view, times(1)).addResources(argument.capture());
+        verify(resourceModel, times(1)).addResources(argument.capture());
         List<Resource> list = CollectionUtils.toList(argument.getValue());
 
         assertEquals(true, list.contains(createResource(1)));
@@ -71,7 +71,8 @@ public class AddResourceSetToViewCommandTest {
 
     private void setUpCommand(ResourceSet resources) {
         this.resources = resources;
-        this.underTest = new AddResourceSetToViewCommand(view, resources);
+        this.underTest = new AddResourceSetToViewCommand(resourceModel,
+                resources);
     }
 
 }

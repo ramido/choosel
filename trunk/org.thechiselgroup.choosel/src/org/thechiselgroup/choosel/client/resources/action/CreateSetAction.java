@@ -40,13 +40,16 @@ public class CreateSetAction implements Action {
         this.commandManager = commandManager;
     }
 
-    protected UndoableCommand createCommand(ResourceSet resources, View view) {
+    protected UndoableCommand createCommand(ResourceSet resources,
+            final View view) {
+
         final ResourceSet newResources = resourceSetFactory.createResourceSet();
         newResources.setLabel(resourceSetLabelFactory.nextLabel());
         newResources.addAll(resources);
 
-        return new AddResourceSetToViewCommand(view, newResources,
-                "Create set '" + newResources.getLabel() + "' from selection") {
+        return new AddResourceSetToViewCommand(view.getResourceModel(),
+                newResources, "Create set '" + newResources.getLabel()
+                        + "' from selection") {
 
             @Override
             public void execute() {
