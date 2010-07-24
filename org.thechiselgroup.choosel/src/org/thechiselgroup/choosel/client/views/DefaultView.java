@@ -96,8 +96,6 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     static final String MEMENTO_SELECTION_SET_PREFIX = "selectionSet-";
 
-    private final ResourceSetsPresenter allResourcesSetPresenter;
-
     private ResourceEventsForwarder allResourcesToSplitterForwarder;
 
     /**
@@ -172,7 +170,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         this.selectionModelLabelFactory = selectionModelLabelFactory;
         this.resourceSetFactory = resourceSetFactory;
         this.userSetsPresenter = userSetsPresenter;
-        this.allResourcesSetPresenter = allResourcesSetPresenter;
         this.selectionPresenter = selectionPresenter;
         this.selectionDropPresenter = selectionDropPresenter;
         this.resourceSplitter = resourceSplitter;
