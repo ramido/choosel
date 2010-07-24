@@ -20,7 +20,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -43,7 +42,6 @@ import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.label.SelectionModelLabelFactory;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSetFactory;
-import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceByUriTypeCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizerToMultiCategorizerAdapter;
 import org.thechiselgroup.choosel.client.resources.ResourceEventHandler;
@@ -123,17 +121,6 @@ public class DefaultViewTest {
 
     private ViewContentDisplayCallback callback;
 
-    @Test
-    public void addingUnlabeledSetDoesNotChangeOriginalSetsPresenter() {
-        Resource resource = createResource(1);
-        DefaultResourceSet resources = new DefaultResourceSet();
-        resources.add(resource);
-
-        underTest.getResourceModel().addResourceSet(resources);
-
-        verify(originalSetsPresenter, never()).addResourceSet(resources);
-    }
-
     // TODO this needs to be changed - we should not test the implementation
     @Test
     public void addSelectionHandlers() {
@@ -143,50 +130,6 @@ public class DefaultViewTest {
                 any(ResourcesAddedEventHandler.class));
         verify(selection, times(1)).addHandler(eq(ResourcesRemovedEvent.TYPE),
                 any(ResourcesRemovedEventHandler.class));
-    }
-
-    @Test
-    public void allResourcesPresenterContainsSetWithAllResources() {
-        underTest.getResourceModel().addResourceSet(createLabeledResources(1));
-        underTest.getResourceModel().addResources(createResources(2));
-
-        ArgumentCaptor<ResourceSet> argument = ArgumentCaptor
-                .forClass(ResourceSet.class);
-        verify(allResourcesSetPresenter, times(1)).addResourceSet(
-                argument.capture());
-
-        assertEquals(true, argument.getValue().contains(createResource(1)));
-        assertEquals(true, argument.getValue().contains(createResource(2)));
-        assertEquals(2, argument.getValue().size());
-    }
-
-    @Test
-    public void callOriginalSetsPresenterOnLabeledResourcesAdded() {
-        ResourceSet resources = createLabeledResources(1, 2, 3);
-
-        underTest.getResourceModel().addResourceSet(resources);
-
-        verify(originalSetsPresenter, times(1)).addResourceSet(resources);
-    }
-
-    @Test
-    public void callOriginalSetsPresenterOnLabeledResourcesAddedOnlyOnce() {
-        ResourceSet resources = createLabeledResources(1, 2, 3);
-
-        underTest.getResourceModel().addResourceSet(resources);
-        underTest.getResourceModel().addResourceSet(resources);
-
-        verify(originalSetsPresenter, times(1)).addResourceSet(resources);
-    }
-
-    @Test
-    public void callResourceSetsPresenterOnLabeledResourcesRemoved() {
-        ResourceSet resources = createLabeledResources(1, 2, 3);
-
-        underTest.getResourceModel().addResourceSet(resources);
-        underTest.getResourceModel().removeResourceSet(resources);
-
-        verify(originalSetsPresenter, times(1)).removeResourceSet(resources);
     }
 
     @Test
@@ -318,18 +261,6 @@ public class DefaultViewTest {
         verify(selectionPresenter, times(1)).dispose();
         verify(originalSetsPresenter, times(1)).dispose();
         verify(selectionHandlerRegistration, times(2)).removeHandler();
-    }
-
-    @Test
-    public void doNotCallOriginalSetsPresenterOnAddingUnlabeledResources() {
-        Resource resource = createResource(1);
-        DefaultResourceSet resources = new DefaultResourceSet();
-        resources.add(resource);
-
-        underTest.getResourceModel().addResourceSet(resources);
-
-        verify(originalSetsPresenter, never()).addResourceSet(
-                any(ResourceSet.class));
     }
 
     @Test
