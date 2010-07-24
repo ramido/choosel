@@ -112,9 +112,6 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private ResourceSet automaticResources;
 
-    // TODO why do we need this???
-    private Map<String, ResourceItemValueResolver> categoriesToLayers = new HashMap<String, ResourceItemValueResolver>();
-
     /**
      * Maps category names (representing the resource sets that are calculated
      * by the resource splitter) to the resource items that display the resource
@@ -231,12 +228,6 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         assert categoriesToResourceItems.isEmpty();
         assert resourceSplitter.getCategorizedResourceSets().isEmpty();
-        assert categoriesToLayers.isEmpty() : "layers found: "
-                + categoriesToLayers;
-    }
-
-    private boolean containsResource(Resource resource) {
-        return allResources.contains(resource);
     }
 
     @Override
@@ -313,12 +304,6 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     public Map<String, ResourceSet> getCategorizedResourceSets() {
         return resourceSplitter.getCategorizedResourceSets();
-    }
-
-    // protected for tests only
-    protected List<ResourceItemValueResolver> getLayers() {
-        return new ArrayList<ResourceItemValueResolver>(
-                categoriesToLayers.values());
     }
 
     private List<ResourceItem> getResourceItems(List<Resource> resources) {
@@ -453,6 +438,8 @@ public class DefaultView extends AbstractWindowContent implements View {
                 return DefaultView.this.getResourceItems(resource);
             }
 
+            // TODO this means that we need a wrapper around resource set
+            // to make this happen
             @Override
             public void switchSelection(ResourceSet resources) {
                 // XXX HACK TODO cleanup --> we create selections when stuff
