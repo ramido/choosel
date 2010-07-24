@@ -33,7 +33,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.ResourceSetContainer;
+import org.thechiselgroup.choosel.client.resources.SwitchingResourceSet;
 import org.thechiselgroup.choosel.client.resources.UnmodifiableResourceSet;
 import org.thechiselgroup.choosel.client.test.DndTestHelpers;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
@@ -67,7 +67,7 @@ public class HighlightingResourceSetAvatarFactoryTest {
 
     private DefaultResourceSet resources;
 
-    private ResourceSetContainer setHoverModel;
+    private SwitchingResourceSet setHoverModel;
 
     private HighlightingResourceSetAvatarFactory underTest;
 
@@ -96,7 +96,7 @@ public class HighlightingResourceSetAvatarFactoryTest {
 
         underTest.createAvatar(wrappedSet);
 
-        setHoverModel.setResourceSet(unmodifiableWrapper);
+        setHoverModel.setDelegate(unmodifiableWrapper);
 
         verify(avatar, times(1)).setHover(true);
     }
@@ -113,7 +113,7 @@ public class HighlightingResourceSetAvatarFactoryTest {
 
         underTest.createAvatar(unmodifiableWrapper1);
 
-        setHoverModel.setResourceSet(unmodifiableWrapper2);
+        setHoverModel.setDelegate(unmodifiableWrapper2);
 
         verify(avatar, times(1)).setHover(true);
     }
@@ -128,7 +128,7 @@ public class HighlightingResourceSetAvatarFactoryTest {
 
         underTest.createAvatar(unmodifiableWrapper);
 
-        setHoverModel.setResourceSet(wrappedSet);
+        setHoverModel.setDelegate(wrappedSet);
 
         verify(avatar, times(1)).setHover(true);
     }
@@ -146,7 +146,7 @@ public class HighlightingResourceSetAvatarFactoryTest {
         dragHandler.onDragStart(mock(DragStartEvent.class));
 
         verify(hoverModel, times(1)).removeAll(eq(resources));
-        verify(setHoverModel, times(1)).setResourceSet((ResourceSet) isNull());
+        verify(setHoverModel, times(1)).setDelegate(((ResourceSet) isNull()));
     }
 
     @Test
@@ -164,7 +164,7 @@ public class HighlightingResourceSetAvatarFactoryTest {
         mouseOutHandler.onMouseOut(mock(MouseOutEvent.class));
 
         verify(hoverModel, times(1)).removeAll(eq(resources));
-        verify(setHoverModel, times(1)).setResourceSet((ResourceSet) isNull());
+        verify(setHoverModel, times(1)).setDelegate(((ResourceSet) isNull()));
     }
 
     @Test
@@ -182,13 +182,13 @@ public class HighlightingResourceSetAvatarFactoryTest {
         mouseOverHandler.onMouseOver(mock(MouseOverEvent.class));
 
         verify(hoverModel, times(1)).addAll(eq(resources));
-        verify(setHoverModel, times(1)).setResourceSet(eq(resources));
+        verify(setHoverModel, times(1)).setDelegate(eq(resources));
     }
 
     @Test
     public void setDragAvatarHoverOnResourceSetContainerEvent() {
         underTest.createAvatar(resources);
-        setHoverModel.setResourceSet(resources);
+        setHoverModel.setDelegate(resources);
 
         verify(avatar, times(1)).setHover(true);
     }
@@ -197,8 +197,8 @@ public class HighlightingResourceSetAvatarFactoryTest {
     public void setDragAvatarHoverOnResourceSetContainerEventToNull() {
         underTest.createAvatar(resources);
 
-        setHoverModel.setResourceSet(resources);
-        setHoverModel.setResourceSet(null);
+        setHoverModel.setDelegate(resources);
+        setHoverModel.setDelegate(null);
 
         verify(avatar, times(1)).setHover(false);
     }
@@ -210,7 +210,7 @@ public class HighlightingResourceSetAvatarFactoryTest {
         DndTestHelpers.mockDragClientBundle(bridge);
 
         resources = spy(createResources(1));
-        setHoverModel = spy(new ResourceSetContainer());
+        setHoverModel = spy(new SwitchingResourceSet());
 
         underTest = new HighlightingResourceSetAvatarFactory(delegate,
                 hoverModel, setHoverModel, dragController);

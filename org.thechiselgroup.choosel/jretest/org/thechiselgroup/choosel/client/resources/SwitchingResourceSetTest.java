@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.client.resources;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.thechiselgroup.choosel.client.test.AdvancedAsserts.assertContentEquals;
@@ -27,10 +28,14 @@ import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.crea
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 public class SwitchingResourceSetTest {
+
+    @Mock
+    private ResourceSetDelegateChangedEventHandler delegateChangedHandler;
 
     private SwitchingResourceSet underTest;
 
@@ -41,6 +46,29 @@ public class SwitchingResourceSetTest {
 
     @Mock
     private ResourcesRemovedEventHandler resourcesRemovedHandler;
+
+    @Test
+    public void doNotFireDelegateChangeIfSameDelegateIsSet() {
+        underTest.addEventHandler(delegateChangedHandler);
+        underTest.setDelegate(resourceSets[0]);
+        underTest.setDelegate(resourceSets[0]);
+
+        ArgumentCaptor<ResourceSetDelegateChangedEvent> argument = ArgumentCaptor
+                .forClass(ResourceSetDelegateChangedEvent.class);
+        verify(delegateChangedHandler, times(1)).onResourceSetContainerChanged(
+                argument.capture());
+
+        assertEquals(resourceSets[0], argument.getValue().getResourceSet());
+    }
+
+    @Test
+    public void doNotFireDelegateChangeIfSameNullDelegateIsSet() {
+        underTest.addEventHandler(delegateChangedHandler);
+        underTest.setDelegate(null);
+
+        verify(delegateChangedHandler, never()).onResourceSetContainerChanged(
+                any(ResourceSetDelegateChangedEvent.class));
+    }
 
     @Test
     public void doNotFireResourcesAddedEventOnResourcesAddedAfterDispose() {
@@ -110,6 +138,19 @@ public class SwitchingResourceSetTest {
 
         verify(resourcesRemovedHandler, times(0)).onResourcesRemoved(
                 any(ResourcesRemovedEvent.class));
+    }
+
+    @Test
+    public void fireDelegateChangedEventWhenDelegateChanges() {
+        underTest.addEventHandler(delegateChangedHandler);
+        underTest.setDelegate(resourceSets[0]);
+
+        ArgumentCaptor<ResourceSetDelegateChangedEvent> argument = ArgumentCaptor
+                .forClass(ResourceSetDelegateChangedEvent.class);
+        verify(delegateChangedHandler, times(1)).onResourceSetContainerChanged(
+                argument.capture());
+
+        assertEquals(resourceSets[0], argument.getValue().getResourceSet());
     }
 
     @Test

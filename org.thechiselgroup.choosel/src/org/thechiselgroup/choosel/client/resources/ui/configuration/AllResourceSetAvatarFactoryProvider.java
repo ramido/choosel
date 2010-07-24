@@ -21,7 +21,7 @@ import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionCo
 import java.util.Collections;
 
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.ResourceSetContainer;
+import org.thechiselgroup.choosel.client.resources.SwitchingResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.AbstractResourceSetAvatarFactoryProvider;
 import org.thechiselgroup.choosel.client.resources.ui.DefaultResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.DisableIfEmptyResourceSetAvatarFactory;
@@ -47,7 +47,7 @@ public class AllResourceSetAvatarFactoryProvider extends
     public AllResourceSetAvatarFactoryProvider(
             ResourceSetAvatarDragController dragController,
             @Named(HOVER_MODEL) ResourceSet hoverModel,
-            @Named(HOVER_MODEL) ResourceSetContainer setHoverModel,
+            @Named(HOVER_MODEL) SwitchingResourceSet setHoverModel,
             @Named(AVATAR_FACTORY_ALL_RESOURCES) ResourceSetAvatarDropTargetManager dropTargetManager,
             ViewAccessor viewAccessor, PopupManagerFactory popupManagerFactory) {
 

@@ -42,8 +42,8 @@ import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceManager;
 import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.ResourceSetContainer;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
+import org.thechiselgroup.choosel.client.resources.SwitchingResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DefaultDetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
@@ -185,9 +185,9 @@ public class ChooselClientModule extends AbstractGinModule implements
         bind(ResourceSet.class).annotatedWith(Names.named(HOVER_MODEL))
                 .to(DefaultResourceSet.class).in(Singleton.class); // CountingResourceSet
 
-        bind(ResourceSetContainer.class)
+        bind(SwitchingResourceSet.class)
                 .annotatedWith(Names.named(HOVER_MODEL))
-                .to(ResourceSetContainer.class).in(Singleton.class);
+                .to(SwitchingResourceSet.class).in(Singleton.class);
     }
 
     private void bindLabelProviders() {

@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.ResourceSetContainer;
+import org.thechiselgroup.choosel.client.resources.SwitchingResourceSet;
 import org.thechiselgroup.choosel.client.resources.action.RemoveSelectionSetAction;
 import org.thechiselgroup.choosel.client.resources.ui.DefaultResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.HighlightingResourceSetAvatarFactory;
@@ -49,7 +49,7 @@ public class SelectionDragAvatarFactoryProvider implements
 
     private final PopupManagerFactory popupManagerFactory;
 
-    private final ResourceSetContainer setHoverModel;
+    private final SwitchingResourceSet setHoverModel;
 
     private final ViewAccessor viewAccessor;
 
@@ -57,7 +57,7 @@ public class SelectionDragAvatarFactoryProvider implements
     public SelectionDragAvatarFactoryProvider(
             ResourceSetAvatarDragController dragController,
             @Named(HOVER_MODEL) ResourceSet hoverModel,
-            @Named(HOVER_MODEL) ResourceSetContainer setHoverModel,
+            @Named(HOVER_MODEL) SwitchingResourceSet setHoverModel,
             ViewAccessor viewAccessor, PopupManagerFactory popupManagerFactory,
             CommandManager commandManager) {
 

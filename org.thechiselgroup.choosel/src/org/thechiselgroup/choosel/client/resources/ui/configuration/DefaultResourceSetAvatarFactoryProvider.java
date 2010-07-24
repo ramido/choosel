@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.client.resources.ui.configuration;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.HOVER_MODEL;
 
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.ResourceSetContainer;
+import org.thechiselgroup.choosel.client.resources.SwitchingResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.AbstractResourceSetAvatarFactoryProvider;
 import org.thechiselgroup.choosel.client.resources.ui.DefaultResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.HighlightingResourceSetAvatarFactory;
@@ -39,7 +39,7 @@ public class DefaultResourceSetAvatarFactoryProvider extends
     public DefaultResourceSetAvatarFactoryProvider(
             ResourceSetAvatarDragController dragController,
             @Named(HOVER_MODEL) ResourceSet hoverModel,
-            @Named(HOVER_MODEL) ResourceSetContainer setHoverModel,
+            @Named(HOVER_MODEL) SwitchingResourceSet setHoverModel,
             ResourceSetAvatarDropTargetManager dropTargetManager) {
 
         super(new HighlightingResourceSetAvatarFactory(
