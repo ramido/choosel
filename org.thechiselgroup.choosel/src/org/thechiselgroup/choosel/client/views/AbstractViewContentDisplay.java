@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.client.views;
 
 import java.util.List;
+import java.util.Set;
 
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.Resource;
@@ -172,6 +173,13 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
     @Override
     public void startRestore() {
         restoring = true;
+    }
+
+    @Override
+    public void update(Set<ResourceItem> addedResourceItems,
+            Set<ResourceItem> updatedResourceItems,
+            Set<ResourceItem> removedResourceItems) {
+
     }
 
 }

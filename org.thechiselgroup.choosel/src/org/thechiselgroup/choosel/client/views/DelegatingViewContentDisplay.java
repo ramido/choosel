@@ -15,6 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
+import java.util.Set;
+
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
@@ -93,6 +95,14 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
     @Override
     public void startRestore() {
         delegate.startRestore();
+    }
+
+    @Override
+    public void update(Set<ResourceItem> addedResourceItems,
+            Set<ResourceItem> updatedResourceItems,
+            Set<ResourceItem> removedResourceItems) {
+        delegate.update(addedResourceItems, updatedResourceItems,
+                removedResourceItems);
     }
 
 }
