@@ -54,6 +54,7 @@ public class ResourceSplitter extends AbstractResourceContainer {
         addAll(new SingleItemIterable<Resource>(resource));
     }
 
+    // TODO we need to optimize this into a single event
     @Override
     public void addAll(Iterable<Resource> resources) {
         assert resources != null;
@@ -119,6 +120,7 @@ public class ResourceSplitter extends AbstractResourceContainer {
         removeAll(new SingleItemIterable<Resource>(resource));
     }
 
+    // TODO we need to optimize this into a single event
     @Override
     public void removeAll(Iterable<Resource> resources) {
         assert resources != null;

@@ -31,7 +31,7 @@ import org.thechiselgroup.choosel.client.resources.ResourceCategoryAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourceCategoryAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceCategoryRemovedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourceCategoryRemovedEventHandler;
-import org.thechiselgroup.choosel.client.resources.ResourceEventsForwarder;
+import org.thechiselgroup.choosel.client.resources.ResourceSetEventForwarder;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ResourceSplitter;
@@ -97,7 +97,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     static final String MEMENTO_SELECTION_SET_PREFIX = "selectionSet-";
 
-    private ResourceEventsForwarder allResourcesToSplitterForwarder;
+    private ResourceSetEventForwarder allResourcesToSplitterForwarder;
 
     /**
      * Maps category names (representing the resource sets that are calculated
@@ -327,7 +327,7 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     private void initAllResourcesToResourceSplitterLink() {
-        allResourcesToSplitterForwarder = new ResourceEventsForwarder(
+        allResourcesToSplitterForwarder = new ResourceSetEventForwarder(
                 resourceModel.getResources(), resourceSplitter);
         allResourcesToSplitterForwarder.init();
     }
