@@ -21,11 +21,11 @@ public class ViewToIndividualItemEventForwarder {
 
     protected final void onMouseOut(ResourceItem item, int x, int y) {
         item.getPopupManager().onMouseOut(x, y);
-        item.getHoverModel().removeHighlightedResources(item.getResourceSet());
+        item.getHighlightingManager().setHighlighting(false);
     }
 
     protected final void onMouseOver(ResourceItem item, int x, int y) {
         item.getPopupManager().onMouseOver(x, y);
-        item.getHoverModel().addHighlightedResources(item.getResourceSet());
+        item.getHighlightingManager().setHighlighting(true);
     }
 }

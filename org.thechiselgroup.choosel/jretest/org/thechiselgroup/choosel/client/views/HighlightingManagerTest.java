@@ -27,11 +27,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
-import org.thechiselgroup.choosel.client.ui.popup.PopupClosingEvent;
-import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
-
-import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOverEvent;
 
 public class HighlightingManagerTest {
 
@@ -39,50 +34,24 @@ public class HighlightingManagerTest {
     private HoverModel hoverModel;
 
     @Mock
-    private PopupManager popupManager;
-
-    @Mock
     private ResourceSet resources;
 
     private HighlightingManager underTest;
 
-    private void doMouseOut() {
-        underTest.onMouseOut(new MouseOutEvent() {
-        });
-    }
-
-    private void doMouseOver() {
-        underTest.onMouseOver(new MouseOverEvent() {
-        });
-    }
-
-    private void doPopupClosing() {
-        underTest.onPopupClosing(new PopupClosingEvent(popupManager));
-    }
-
     @Test
-    public void neverRemovedForPopupClosingWithoutMouseOver() {
-        doPopupClosing();
+    public void neverRemovedWhenJustSetToFalse() {
+        underTest.setHighlighting(false);
 
         verify(hoverModel, never()).removeHighlightedResources(eq(resources));
     }
 
     @Test
-    public void removedOnlyOnceForMouseOverMouseOutPopupClosing() {
-        doMouseOver();
-        doMouseOut();
-        doPopupClosing();
+    public void removedOnlyOnce() {
+        underTest.setHighlighting(true);
+        underTest.setHighlighting(false);
+        underTest.setHighlighting(false);
 
         verify(hoverModel, times(1)).removeHighlightedResources(resources);
-    }
-
-    @Test
-    public void removedOnlyOnceForMouseOverPopupClosingMouseOut() {
-        doMouseOver();
-        doPopupClosing();
-        doMouseOut();
-
-        verify(hoverModel, times(1)).removeHighlightedResources(eq(resources));
     }
 
     @Before
