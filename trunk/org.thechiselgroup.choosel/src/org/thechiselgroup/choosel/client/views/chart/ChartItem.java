@@ -88,13 +88,14 @@ public class ChartItem extends ResourceItem {
                 break;
             case Event.ONMOUSEOUT: {
                 popupManager.onMouseOut(e.getClientX(), e.getClientY());
-                hoverModel.removeHighlightedResources(getResourceSet());
+                getHighlightingManager().setHighlighting(false);
                 enabler.forwardMouseOut(e);
             }
                 break;
             case Event.ONMOUSEOVER: {
                 popupManager.onMouseOver(e.getClientX(), e.getClientY());
-                hoverModel.addHighlightedResources(getResourceSet());
+                getHighlightingManager().setHighlighting(true);
+
             }
                 break;
             case Event.ONMOUSEUP: {

@@ -1,16 +1,33 @@
+/*******************************************************************************
+ * Copyright 2009, 2010 Lars Grammel 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at 
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0 
+ *     
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ * See the License for the specific language governing permissions and 
+ * limitations under the License.  
+ *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.ui.popup.PopupClosingEvent;
-import org.thechiselgroup.choosel.client.ui.popup.PopupClosingHandler;
 
-import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOutHandler;
-import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseOverHandler;
-
-public class HighlightingManager implements MouseOverHandler, MouseOutHandler,
-        PopupClosingHandler {
+/**
+ * Manages the highlighting state of a single user interface resource (i.e. if
+ * the resource is currently triggering highlighting or not). This is required
+ * because we use a counting resource set and every highlighting trigger needs
+ * to always remove the highlighting appropriately.
+ * 
+ * @see http://code.google.com/p/choosel/issues/detail?id=30
+ * 
+ * @author Lars Grammel
+ */
+public class HighlightingManager {
 
     private boolean highlighted = false;
 
@@ -19,26 +36,14 @@ public class HighlightingManager implements MouseOverHandler, MouseOutHandler,
     private HoverModel hoverModel;
 
     public HighlightingManager(HoverModel hoverModel, ResourceSet resources) {
+        assert hoverModel != null;
+        assert resources != null;
+
         this.hoverModel = hoverModel;
         this.resources = resources;
     }
 
-    @Override
-    public void onMouseOut(MouseOutEvent e) {
-        setHighlighting(false);
-    }
-
-    @Override
-    public void onMouseOver(MouseOverEvent e) {
-        setHighlighting(true);
-    }
-
-    @Override
-    public void onPopupClosing(PopupClosingEvent event) {
-        setHighlighting(false);
-    }
-
-    private void setHighlighting(boolean shouldHighlight) {
+    public void setHighlighting(boolean shouldHighlight) {
         if (shouldHighlight == highlighted) {
             return;
         }

@@ -20,7 +20,14 @@ import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
+import org.thechiselgroup.choosel.client.ui.popup.PopupClosingEvent;
+import org.thechiselgroup.choosel.client.ui.popup.PopupClosingHandler;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
+
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
 
 public class ResourceItem {
 
@@ -47,6 +54,8 @@ public class ResourceItem {
 
     private final ResourceItemValueResolver valueResolver;
 
+    private HighlightingManager highlightingManager;
+
     public ResourceItem(String category, ResourceSet resources,
             HoverModel hoverModel, PopupManager popupManager,
             ResourceItemValueResolver valueResolver) {
@@ -62,6 +71,9 @@ public class ResourceItem {
         this.popupManager = popupManager;
         this.hoverModel = hoverModel;
         this.valueResolver = valueResolver;
+
+        this.highlightingManager = new HighlightingManager(hoverModel,
+                resources);
 
         initPopupHighlighting(resources, hoverModel);
 
@@ -113,6 +125,15 @@ public class ResourceItem {
         return Status.DEFAULT;
     }
 
+    /**
+     * @return highlighting manager that manages the hightlighting for this
+     *         visual representation of the resource item. For the popup, there
+     *         is a separate highlighting manager.
+     */
+    public HighlightingManager getHighlightingManager() {
+        return highlightingManager;
+    }
+
     public HoverModel getHoverModel() {
         return hoverModel;
     }
@@ -132,12 +153,27 @@ public class ResourceItem {
     private void initPopupHighlighting(ResourceSet resources,
             HoverModel hoverModel) {
 
-        HighlightingManager highlightingManager = new HighlightingManager(
+        final HighlightingManager highlightingManager = new HighlightingManager(
                 hoverModel, resources);
 
-        popupManager.addPopupMouseOverHandler(highlightingManager);
-        popupManager.addPopupMouseOutHandler(highlightingManager);
-        popupManager.addPopupClosingHandler(highlightingManager);
+        popupManager.addPopupMouseOverHandler(new MouseOverHandler() {
+            @Override
+            public void onMouseOver(MouseOverEvent e) {
+                highlightingManager.setHighlighting(true);
+            }
+        });
+        popupManager.addPopupMouseOutHandler(new MouseOutHandler() {
+            @Override
+            public void onMouseOut(MouseOutEvent event) {
+                highlightingManager.setHighlighting(false);
+            }
+        });
+        popupManager.addPopupClosingHandler(new PopupClosingHandler() {
+            @Override
+            public void onPopupClosing(PopupClosingEvent event) {
+                highlightingManager.setHighlighting(false);
+            }
+        });
     }
 
     public boolean isHighlighted() {

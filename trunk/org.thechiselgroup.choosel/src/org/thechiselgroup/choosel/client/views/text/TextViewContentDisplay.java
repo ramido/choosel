@@ -32,7 +32,7 @@ import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
-import org.thechiselgroup.choosel.client.views.text.TextItem.ItemLabel;
+import org.thechiselgroup.choosel.client.views.text.TextItem.TextItemLabel;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -54,7 +54,7 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
         private static final int MAX_FONT_SIZE = 26;
 
-        private List<ItemLabel> itemLabels = new ArrayList<ItemLabel>();
+        private List<TextItemLabel> itemLabels = new ArrayList<TextItemLabel>();
 
         private List<String> tagCloudItems = new ArrayList<String>();
 
@@ -62,7 +62,7 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
         public void addItem(TextItem tagCloudItem) {
             tagCloudItem.init();
 
-            ItemLabel label = tagCloudItem.getLabel();
+            TextItemLabel label = tagCloudItem.getLabel();
 
             itemLabels.add(label);
             updateTagSizes();
@@ -95,7 +95,7 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
         private List<Double> getTagSizesList() {
             List<Double> tagNumbers = new ArrayList<Double>();
-            for (ItemLabel itemLabel : itemLabels) {
+            for (TextItemLabel itemLabel : itemLabels) {
                 tagNumbers.add(new Double(itemLabel.getTagCount()));
             }
             return tagNumbers;
@@ -124,7 +124,7 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
         private void updateTagSizes() {
             List<Double> tagNumbers = getTagSizesList();
 
-            for (ItemLabel itemLabel : itemLabels) {
+            for (TextItemLabel itemLabel : itemLabels) {
                 String fontSize = groupValueMapper.getGroupValue(
                         itemLabel.getTagCount(), tagNumbers);
 
@@ -150,18 +150,12 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
     private class LabelEventHandler implements ClickHandler, MouseOutHandler,
             MouseOverHandler {
 
-        private final HoverModel hoverModel;
-
-        public LabelEventHandler(HoverModel hoverModel) {
-            this.hoverModel = hoverModel;
-        }
-
         private ResourceSet getResource(GwtEvent<?> event) {
             return getTagCloudItem(event).getResourceSet();
         }
 
         private TextItem getTagCloudItem(GwtEvent<?> event) {
-            return ((ItemLabel) event.getSource()).getTagCloudItem();
+            return ((TextItemLabel) event.getSource()).getTagCloudItem();
         }
 
         @Override
@@ -171,12 +165,12 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
         @Override
         public void onMouseOut(MouseOutEvent e) {
-            hoverModel.removeHighlightedResources(getResource(e));
+            getTagCloudItem(e).getHighlightingManager().setHighlighting(false);
         }
 
         @Override
         public void onMouseOver(MouseOverEvent e) {
-            hoverModel.addHighlightedResources(getResource(e));
+            getTagCloudItem(e).getHighlightingManager().setHighlighting(true);
         }
     }
 
@@ -228,8 +222,8 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
         PopupManager popupManager = createPopupManager(resolver, resources);
 
-        TextItem tagCloudItem = new TextItem(category, resources,
-                hoverModel, popupManager, display, resolver, dragController);
+        TextItem tagCloudItem = new TextItem(category, resources, hoverModel,
+                popupManager, display, resolver, dragController);
 
         display.addItem(tagCloudItem);
 
@@ -240,7 +234,7 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
     public Widget createWidget() {
         itemPanel = new FlowPanel();
 
-        labelEventHandler = new LabelEventHandler(hoverModel);
+        labelEventHandler = new LabelEventHandler();
 
         scrollPanel = new ResizableScrollPanel(itemPanel);
         scrollPanel.addStyleName(CSS_LIST_VIEW_SCROLLBAR);

@@ -28,11 +28,11 @@ import org.thechiselgroup.choosel.client.views.SlotResolver;
 
 public class TextItem extends ResourceItem {
 
-    public class ItemLabel extends ResourceSetAvatar {
+    public class TextItemLabel extends ResourceSetAvatar {
 
         private int tagCount;
 
-        public ItemLabel(String text,
+        public TextItemLabel(String text,
                 ResourceSetAvatarDragController dragController,
                 ResourceSet resources) {
 
@@ -77,7 +77,7 @@ public class TextItem extends ResourceItem {
 
     private ResourceSetAvatarDragController dragController;
 
-    private ItemLabel label;
+    private TextItemLabel label;
 
     public TextItem(String category, ResourceSet resources,
             HoverModel hoverModel, PopupManager popupManager,
@@ -91,12 +91,12 @@ public class TextItem extends ResourceItem {
         this.dragController = dragController;
     }
 
-    public ItemLabel getLabel() {
+    public TextItemLabel getLabel() {
         return label;
     }
 
     public void init() {
-        this.label = new ItemLabel("", dragController, getResourceSet());
+        this.label = new TextItemLabel("", dragController, getResourceSet());
         this.label.addStyleName(CSS_LIST);
 
         DefaultPopupManager.linkManagerToSource(popupManager, getLabel());

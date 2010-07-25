@@ -134,12 +134,12 @@ public class TimeLineItem extends IconResourceItem {
 
     public void onMouseOut(Event e) {
         popupManager.onMouseOut(e.getClientX(), e.getClientY());
-        hoverModel.removeHighlightedResources(getResourceSet());
+        getHighlightingManager().setHighlighting(false);
     }
 
     public void onMouseOver(Event e) {
         popupManager.onMouseOver(e.getClientX(), e.getClientY());
-        hoverModel.addHighlightedResources(getResourceSet());
+        getHighlightingManager().setHighlighting(true);
     }
 
     public void onPainted(String labelElementID, String iconElementID) {
