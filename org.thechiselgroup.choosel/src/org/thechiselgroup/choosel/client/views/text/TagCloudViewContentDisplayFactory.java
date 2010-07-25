@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.views.tagcloud;
+package org.thechiselgroup.choosel.client.views.text;
 
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
@@ -45,8 +45,8 @@ public class TagCloudViewContentDisplayFactory implements
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-        return new TagCloudViewContentDisplay(hoverModel, popupManagerFactory,
-                detailsWidgetHelper, dragController);
+        return new TextViewContentDisplay(hoverModel, popupManagerFactory,
+                detailsWidgetHelper, dragController, true);
     }
 
 }

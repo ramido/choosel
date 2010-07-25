@@ -24,6 +24,7 @@ import org.thechiselgroup.choosel.client.geometry.HasSize;
 import org.thechiselgroup.choosel.client.geometry.Point;
 import org.thechiselgroup.choosel.client.ui.ZIndex;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.AbsolutePanel;
@@ -51,7 +52,7 @@ public class DefaultDesktop extends AbsolutePanel implements Desktop, HasSize {
         windowController = new DesktopWindowController(this, commandManager);
 
         initBranding();
-        sinkEvents(Event.ONCONTEXTMENU);
+        disableContextMenu();
     }
 
     private void addWindowInternal(WindowPanel window) {
@@ -119,6 +120,16 @@ public class DefaultDesktop extends AbsolutePanel implements Desktop, HasSize {
         w.setViewContent(content);
 
         return w;
+    }
+
+    private void disableContextMenu() {
+        /*
+         * only disable the context menu in compiled code (not in development
+         * environment)
+         */
+        if (GWT.isScript()) {
+            sinkEvents(Event.ONCONTEXTMENU);
+        }
     }
 
     @Override

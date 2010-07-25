@@ -74,12 +74,12 @@ public class DefaultResourceSetToValueResolverFactory {
                     resourceResolverFactory, resourceByTypeCategorizer);
         }
 
-        if (slotID.equals(SlotResolver.TAG_LABEL_SLOT)) {
-            return new ResourceSetToFirstResourcePropertyResolver(slotID,
-                    resourceResolverFactory, resourceByTypeCategorizer);
-        }
+        // if (slotID.equals(SlotResolver.TAG_LABEL_SLOT)) {
+        // return new ResourceSetToFirstResourcePropertyResolver(slotID,
+        // resourceResolverFactory, resourceByTypeCategorizer);
+        // }
 
-        if (slotID.equals(SlotResolver.TAG_SIZE_SLOT)) {
+        if (slotID.equals(SlotResolver.FONT_SIZE_SLOT)) {
             return new ResourceSetToCountResolver();
         }
 

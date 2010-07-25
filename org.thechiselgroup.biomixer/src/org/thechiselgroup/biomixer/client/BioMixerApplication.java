@@ -17,8 +17,8 @@ package org.thechiselgroup.biomixer.client;
 
 import org.thechiselgroup.biomixer.client.services.NCBOConceptSearchCommand;
 import org.thechiselgroup.choosel.client.ChooselApplication;
+import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.ui.TextCommandPresenter;
-import org.thechiselgroup.choosel.client.views.list.ListViewContentDisplay;
 
 import com.google.inject.Inject;
 
@@ -34,7 +34,7 @@ public class BioMixerApplication extends ChooselApplication {
 		initNCBOSearchField();
 
 		addWindowContentButton(VIEWS_PANEL, "Note", "note");
-		addWindowContentButton(VIEWS_PANEL, "List", ListViewContentDisplay.TYPE);
+		addWindowContentButton(VIEWS_PANEL, "List", ChooselInjectionConstants.TYPE_LIST);
 		addWindowContentButton(VIEWS_PANEL, "Timeline", "Timeline");
 		addWindowContentButton(VIEWS_PANEL, "Graph", "Graph");
 

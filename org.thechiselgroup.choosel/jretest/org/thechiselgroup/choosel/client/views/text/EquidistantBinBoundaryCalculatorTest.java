@@ -1,4 +1,4 @@
-package org.thechiselgroup.choosel.client.views.tagcloud;
+package org.thechiselgroup.choosel.client.views.text;
 
 import static org.junit.Assert.assertArrayEquals;
 
@@ -8,6 +8,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.thechiselgroup.choosel.client.util.CollectionUtils;
+import org.thechiselgroup.choosel.client.views.text.EquidistantBinBoundaryCalculator;
 
 public class EquidistantBinBoundaryCalculatorTest {
 

@@ -1,4 +1,4 @@
-package org.thechiselgroup.choosel.client.views.tagcloud;
+package org.thechiselgroup.choosel.client.views.text;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
@@ -11,6 +11,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.util.CollectionUtils;
+import org.thechiselgroup.choosel.client.views.text.BinBoundaryCalculator;
+import org.thechiselgroup.choosel.client.views.text.DoubleToGroupValueMapper;
 
 public class DoubleToGroupValueMapperTest {
 

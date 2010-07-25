@@ -69,6 +69,9 @@ public class ResourceSplitter extends AbstractResourceContainer {
     private void addCategoryResources(String category,
             List<Resource> categoryResources) {
 
+        assert category != null;
+        assert categoryResources != null;
+
         // TODO test this condition as well
         if (categorizedSets.containsKey(category)) {
             categorizedSets.get(category).addAll(categoryResources);
@@ -94,6 +97,8 @@ public class ResourceSplitter extends AbstractResourceContainer {
         Map<String, List<Resource>> resourcesPerCategory = new HashMap<String, List<Resource>>();
         for (Resource resource : resources) {
             for (String category : multiCategorizer.getCategories(resource)) {
+                assert category != null;
+
                 if (!resourcesPerCategory.containsKey(category)) {
                     resourcesPerCategory.put(category,
                             new ArrayList<Resource>());
