@@ -31,8 +31,8 @@ import org.thechiselgroup.choosel.client.resources.ResourceCategoryAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourceCategoryAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceCategoryRemovedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourceCategoryRemovedEventHandler;
-import org.thechiselgroup.choosel.client.resources.ResourceSetEventForwarder;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.resources.ResourceSetEventForwarder;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ResourceSplitter;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
@@ -555,6 +555,7 @@ public class DefaultView extends AbstractWindowContent implements View {
     public void restore(final Memento state, final ResourceSetAccessor accessor) {
         // wait for content to be ready (needed for graph view swf loading on
         // restore)
+        // XXX this might be the cause for issue 25
         if (contentDisplay.isReady()) {
             doRestore(state, accessor);
         } else {
