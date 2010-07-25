@@ -19,13 +19,13 @@ import java.util.Date;
 import java.util.Set;
 
 import org.thechiselgroup.choosel.client.ChooselApplication;
+import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.test.TestResourceSetFactory;
-import org.thechiselgroup.choosel.client.views.list.ListViewContentDisplay;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 import org.thechiselgroup.choosel.client.windows.CreateWindowCommand;
 import org.thechiselgroup.chooselexample.client.services.CSVFileServiceAsync;
@@ -185,7 +185,7 @@ public class ChooselExampleApplication extends ChooselApplication {
 		addTestDataSourceButton();
 
 		addWindowContentButton(VIEWS_PANEL, "Note", "note");
-		addWindowContentButton(VIEWS_PANEL, "List", ListViewContentDisplay.TYPE);
+		addWindowContentButton(VIEWS_PANEL, "List", ChooselInjectionConstants.TYPE_LIST);
 		addWindowContentButton(VIEWS_PANEL, "Map", "Map");
 		addWindowContentButton(VIEWS_PANEL, "Timeline", "Timeline");
 		addWindowContentButton(VIEWS_PANEL, "Bar", "Bar");

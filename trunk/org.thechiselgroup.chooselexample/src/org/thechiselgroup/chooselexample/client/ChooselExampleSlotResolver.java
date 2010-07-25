@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.chooselexample.client;
 
-import org.thechiselgroup.choosel.client.resolver.CountSingleResourceValueResolver;
+import org.thechiselgroup.choosel.client.resolver.FixedValuePropertyValueResolver;
 import org.thechiselgroup.choosel.client.resolver.PropertyValueResolverConverterWrapper;
 import org.thechiselgroup.choosel.client.resolver.ResourceToValueResolver;
 import org.thechiselgroup.choosel.client.resolver.SimplePropertyValueResolver;
@@ -93,12 +93,7 @@ public class ChooselExampleSlotResolver extends DefaultSlotResolver {
 	}
 
 	@Override
-	public ResourceToValueResolver createTagLabelSlotResolver(String category) {
-		return new SimplePropertyValueResolver("description");
-	}
-
-	@Override
-	public ResourceToValueResolver createTagSizeSlotResolver(String category) {
-		return new CountSingleResourceValueResolver();
+	public ResourceToValueResolver createFontSizeSlotResolver(String category) {
+		return new FixedValuePropertyValueResolver(new Integer(1));
 	}
 }

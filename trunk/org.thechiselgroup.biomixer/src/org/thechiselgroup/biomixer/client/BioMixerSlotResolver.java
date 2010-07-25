@@ -106,15 +106,8 @@ public class BioMixerSlotResolver extends DefaultSlotResolver {
 	}
 
 	@Override
-	public ResourceToValueResolver createTagLabelSlotResolver(String category) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ResourceToValueResolver createTagSizeSlotResolver(String category) {
-		// TODO Auto-generated method stub
-		return null;
+	public ResourceToValueResolver createFontSizeSlotResolver(String category) {
+		return new FixedValuePropertyValueResolver(new Integer(1));
 	}
 
 }

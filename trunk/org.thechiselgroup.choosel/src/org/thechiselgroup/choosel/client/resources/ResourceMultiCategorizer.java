@@ -8,6 +8,10 @@ import java.util.Set;
  */
 public interface ResourceMultiCategorizer {
 
+    /**
+     * @return set of category identifiers. Must *not* include <code>null</code>
+     *         .
+     */
     Set<String> getCategories(Resource resource);
 
 }

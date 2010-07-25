@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.views.tagcloud;
+package org.thechiselgroup.choosel.client.views.text;
 
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
@@ -26,7 +26,7 @@ import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 
-public class TagCloudItem extends ResourceItem {
+public class TextItem extends ResourceItem {
 
     public class ItemLabel extends ResourceSetAvatar {
 
@@ -44,8 +44,8 @@ public class TagCloudItem extends ResourceItem {
             dragController.setDraggable(this, true);
         }
 
-        public TagCloudItem getTagCloudItem() {
-            return TagCloudItem.this;
+        public TextItem getTagCloudItem() {
+            return TextItem.this;
         }
 
         public int getTagCount() {
@@ -73,15 +73,15 @@ public class TagCloudItem extends ResourceItem {
 
     private static final String CSS_SELECTED = "listItemSelected";
 
-    private final TagCloudViewContentDisplay.Display display;
+    private final TextViewContentDisplay.Display display;
 
     private ResourceSetAvatarDragController dragController;
 
     private ItemLabel label;
 
-    public TagCloudItem(String category, ResourceSet resources,
+    public TextItem(String category, ResourceSet resources,
             HoverModel hoverModel, PopupManager popupManager,
-            TagCloudViewContentDisplay.Display display,
+            TextViewContentDisplay.Display display,
             ResourceItemValueResolver layerModel,
             ResourceSetAvatarDragController dragController) {
 
@@ -145,9 +145,9 @@ public class TagCloudItem extends ResourceItem {
         if (label == null) {
             return;
         }
-        String description = (String) getResourceValue(SlotResolver.TAG_LABEL_SLOT);
+        String description = (String) getResourceValue(SlotResolver.DESCRIPTION_SLOT);
         int tagCount = Integer
-                .parseInt((String) getResourceValue(SlotResolver.TAG_SIZE_SLOT));
+                .parseInt((String) getResourceValue(SlotResolver.FONT_SIZE_SLOT));
 
         this.label.setText(description);
         this.label.setTagCount(tagCount);

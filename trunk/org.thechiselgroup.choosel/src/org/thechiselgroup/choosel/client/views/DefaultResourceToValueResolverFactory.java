@@ -69,12 +69,8 @@ public class DefaultResourceToValueResolverFactory {
             return slotResolver.createYCoordinateSlotResolver(category);
         }
 
-        if (slotID.equals(SlotResolver.TAG_LABEL_SLOT)) {
-            return slotResolver.createTagLabelSlotResolver(category);
-        }
-
-        if (slotID.equals(SlotResolver.TAG_SIZE_SLOT)) {
-            return slotResolver.createTagSizeSlotResolver(category);
+        if (slotID.equals(SlotResolver.FONT_SIZE_SLOT)) {
+            return slotResolver.createFontSizeSlotResolver(category);
         }
 
         throw new IllegalArgumentException("Invalid slot id: " + slotID);

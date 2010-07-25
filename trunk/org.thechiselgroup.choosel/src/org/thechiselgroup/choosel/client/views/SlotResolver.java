@@ -41,9 +41,7 @@ public interface SlotResolver {
     // TODO slots should be view-centric, not data centric
     String MAGNITUDE_SLOT = "magnitude";
 
-    String TAG_LABEL_SLOT = "tag-label";
-
-    String TAG_SIZE_SLOT = "tag-size";
+    String FONT_SIZE_SLOT = "font-size";
 
     String X_COORDINATE_SLOT = "x-coord";
 
@@ -55,6 +53,8 @@ public interface SlotResolver {
     ResourceToValueResolver createDateSlotResolver(String category);
 
     ResourceToValueResolver createDescriptionSlotResolver(String category);
+
+    ResourceToValueResolver createFontSizeSlotResolver(String category);
 
     ResourceToValueResolver createGraphLabelSlotResolver(String category);
 
@@ -68,10 +68,6 @@ public interface SlotResolver {
     ResourceToValueResolver createLocationSlotResolver(String category);
 
     ResourceToValueResolver createMagnitudeSlotResolver(String category);
-
-    ResourceToValueResolver createTagLabelSlotResolver(String category);
-
-    ResourceToValueResolver createTagSizeSlotResolver(String category);
 
     ResourceToValueResolver createXCoordinateSlotResolver(String category);
 

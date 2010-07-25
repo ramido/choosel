@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.views.list;
+package org.thechiselgroup.choosel.client.views.text;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,15 +22,17 @@ import java.util.List;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
+import org.thechiselgroup.choosel.client.ui.CSS;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
+import org.thechiselgroup.choosel.client.util.CollectionUtils;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
-import org.thechiselgroup.choosel.client.views.list.ListItem.ListItemLabel;
+import org.thechiselgroup.choosel.client.views.text.TextItem.ItemLabel;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -39,23 +41,40 @@ import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-public class ListViewContentDisplay extends AbstractViewContentDisplay {
+public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
     public class DefaultDisplay implements Display {
 
-        private List<String> listItems = new ArrayList<String>();
+        private static final int MAX_FONT_SIZE = 26;
+
+        private List<ItemLabel> itemLabels = new ArrayList<ItemLabel>();
+
+        private List<String> tagCloudItems = new ArrayList<String>();
 
         @Override
-        public void addItem(ListItem listItem) {
-            listItem.init();
+        public void addItem(TextItem tagCloudItem) {
+            tagCloudItem.init();
 
-            ListItemLabel label = listItem.getLabel();
+            ItemLabel label = tagCloudItem.getLabel();
+
+            itemLabels.add(label);
+            updateTagSizes();
+
+            Element element = label.getElement();
+
+            if (tagCloud) {
+                CSS.setDisplay(element, CSS.INLINE);
+                CSS.setWhitespace(element, CSS.NOWRAP);
+                CSS.setFloat(element, CSS.LEFT);
+                CSS.setLineHeight(element, MAX_FONT_SIZE);
+            }
 
             label.addMouseOverHandler(labelEventHandler);
             label.addMouseOutHandler(labelEventHandler);
@@ -63,49 +82,68 @@ public class ListViewContentDisplay extends AbstractViewContentDisplay {
 
             // insert at right position to maintain sort..
             // TODO cleanup - performance issues
-            listItems.add(label.getText());
-            Collections.sort(listItems, String.CASE_INSENSITIVE_ORDER);
-            int row = listItems.indexOf(label.getText());
-            table.insertRow(row);
-            table.setWidget(row, 0, label);
+            tagCloudItems.add(label.getText());
+            Collections.sort(tagCloudItems, String.CASE_INSENSITIVE_ORDER);
+            int row = tagCloudItems.indexOf(label.getText());
+            itemPanel.insert(label, row);
         }
 
         @Override
-        public void addStyleName(ListItem listItem, String cssClass) {
-            listItem.getLabel().addStyleName(cssClass);
+        public void addStyleName(TextItem tagCloudItem, String cssClass) {
+            tagCloudItem.getLabel().addStyleName(cssClass);
+        }
+
+        private List<Double> getTagSizesList() {
+            List<Double> tagNumbers = new ArrayList<Double>();
+            for (ItemLabel itemLabel : itemLabels) {
+                tagNumbers.add(new Double(itemLabel.getTagCount()));
+            }
+            return tagNumbers;
         }
 
         @Override
-        public void removeIndividualItem(ListItem listItem) {
+        public void removeIndividualItem(TextItem tagCloudItem) {
             /*
              * whole row needs to be removed, otherwise lots of empty rows
              * consume the whitespace
              */
-            for (int i = 0; i < table.getRowCount(); i++) {
-                if (table.getWidget(i, 0).equals(listItem.getLabel())) {
-                    table.removeRow(i);
-                    listItems.remove(i);
+            for (int i = 0; i < itemPanel.getWidgetCount(); i++) {
+                if (itemPanel.getWidget(i).equals(tagCloudItem.getLabel())) {
+                    itemPanel.remove(i);
+                    tagCloudItems.remove(i);
                     return;
                 }
             }
         }
 
         @Override
-        public void removeStyleName(ListItem listItem, String cssClass) {
-            listItem.getLabel().removeStyleName(cssClass);
+        public void removeStyleName(TextItem tagCloudItem, String cssClass) {
+            tagCloudItem.getLabel().removeStyleName(cssClass);
         }
 
+        private void updateTagSizes() {
+            List<Double> tagNumbers = getTagSizesList();
+
+            for (ItemLabel itemLabel : itemLabels) {
+                String fontSize = groupValueMapper.getGroupValue(
+                        itemLabel.getTagCount(), tagNumbers);
+
+                if (tagCloud) {
+                    CSS.setFontSize(itemLabel.getElement(), fontSize);
+                }
+            }
+        }
     }
 
     public static interface Display {
 
-        void addItem(ListItem listItem);
+        void addItem(TextItem tagCloudItem);
 
-        void addStyleName(ListItem listItem, String cssClass);
+        void addStyleName(TextItem tagCloudItem, String cssClass);
 
-        void removeIndividualItem(ListItem listItem);
+        void removeIndividualItem(TextItem tagCloudItem);
 
-        void removeStyleName(ListItem listItem, String cssClass);
+        void removeStyleName(TextItem tagCloudItem, String cssClass);
 
     }
 
@@ -118,12 +156,12 @@ public class ListViewContentDisplay extends AbstractViewContentDisplay {
             this.hoverModel = hoverModel;
         }
 
-        private ListItem getListItem(GwtEvent<?> event) {
-            return ((ListItemLabel) event.getSource()).getListItem();
+        private ResourceSet getResource(GwtEvent<?> event) {
+            return getTagCloudItem(event).getResourceSet();
         }
 
-        private ResourceSet getResource(GwtEvent<?> event) {
-            return getListItem(event).getResourceSet();
+        private TextItem getTagCloudItem(GwtEvent<?> event) {
+            return ((ItemLabel) event.getSource()).getTagCloudItem();
         }
 
         @Override
@@ -151,64 +189,37 @@ public class ListViewContentDisplay extends AbstractViewContentDisplay {
 
     }
 
-    private static final String CSS_LIST_VIEW_SCROLLBAR = "listViewScrollbar";
-
-    public static final String TYPE = "List";
+    public static final String CSS_LIST_VIEW_SCROLLBAR = "listViewScrollbar";
 
     private final Display display;
 
     private ResourceSetAvatarDragController dragController;
 
-    // private HorizontalPanel createDescriptionPanel(final ListLayer layer) {
-    // HorizontalPanel descriptionPanel = new HorizontalPanel();
-    //
-    // final ListBox dropBox = new ListBox(false);
-    // List<String> listTypes = layer.getDataProvider().getIndividuals()
-    // .getStringPaths();
-    //
-    // for (String listType : listTypes) {
-    // dropBox.addItem(listType);
-    // }
-    // dropBox.setSelectedIndex(0);
-    //
-    // descriptionPanel.setSpacing(2);
-    // descriptionPanel.add(new Label("Description: "));
-    // descriptionPanel.add(dropBox);
-    //
-    // dropBox.addChangeHandler(new ChangeHandler() {
-    //
-    // @Override
-    // public void onChange(ChangeEvent event) {
-    // String value = dropBox.getValue(dropBox.getSelectedIndex());
-    //
-    // layer.setDescriptionPath(new String[] { value });
-    // }
-    // });
-    //
-    // return descriptionPanel;
-    // }
-
     private LabelEventHandler labelEventHandler;
 
     private ScrollPanel scrollPanel;
 
-    private FlexTable table;
+    private FlowPanel itemPanel;
+
+    private DoubleToGroupValueMapper<String> groupValueMapper;
+
+    private final boolean tagCloud;
 
     @Inject
-    public ListViewContentDisplay(HoverModel hoverModel,
+    public TextViewContentDisplay(HoverModel hoverModel,
             PopupManagerFactory popupManagerFactory,
             DetailsWidgetHelper detailsWidgetHelper,
-            ResourceSetAvatarDragController dragController) {
+            ResourceSetAvatarDragController dragController, boolean tagCloud) {
 
         super(popupManagerFactory, detailsWidgetHelper, hoverModel);
 
         this.dragController = dragController;
+        this.tagCloud = tagCloud;
         this.display = new DefaultDisplay();
-    }
 
-    // TODO move into display
-    private void addItem(ListItem listItem) {
-        display.addItem(listItem);
+        this.groupValueMapper = new DoubleToGroupValueMapper<String>(
+                new EquidistantBinBoundaryCalculator(), CollectionUtils.toList(
+                        "10px", "14px", "18px", "22px", "26px"));
     }
 
     @Override
@@ -217,27 +228,21 @@ public class ListViewContentDisplay extends AbstractViewContentDisplay {
 
         PopupManager popupManager = createPopupManager(resolver, resources);
 
-        ListItem listItem = new ListItem(category, resources, hoverModel,
-                popupManager, display, resolver, dragController);
+        TextItem tagCloudItem = new TextItem(category, resources,
+                hoverModel, popupManager, display, resolver, dragController);
 
-        addItem(listItem);
+        display.addItem(tagCloudItem);
 
-        return listItem;
+        return tagCloudItem;
     }
 
     @Override
     public Widget createWidget() {
-        table = new FlexTable();
-
-        // does not work in hosted mode; fix for hosted mode: empty row
-        // if (!GWT.isScript()) {
-        // int numRows = table.getRowCount();
-        // table.setWidget(numRows, 0, new Label(""));
-        // }
+        itemPanel = new FlowPanel();
 
         labelEventHandler = new LabelEventHandler(hoverModel);
 
-        scrollPanel = new ResizableScrollPanel(table);
+        scrollPanel = new ResizableScrollPanel(itemPanel);
         scrollPanel.addStyleName(CSS_LIST_VIEW_SCROLLBAR);
 
         return scrollPanel;
@@ -245,17 +250,18 @@ public class ListViewContentDisplay extends AbstractViewContentDisplay {
 
     @Override
     public String[] getSlotIDs() {
-        return new String[] { SlotResolver.DESCRIPTION_SLOT };
+        // TODO introduce font size slot?
+        return new String[] { SlotResolver.DESCRIPTION_SLOT,
+                SlotResolver.MAGNITUDE_SLOT };
     }
 
-    // for tests only, TODO marker annotation & processing
-    public FlexTable getTable() {
-        return table;
+    public boolean isTagCloud() {
+        return tagCloud;
     }
 
     @Override
-    public void removeResourceItem(ResourceItem listItem) {
-        display.removeIndividualItem((ListItem) listItem);
+    public void removeResourceItem(ResourceItem tagCloudItem) {
+        display.removeIndividualItem((TextItem) tagCloudItem);
     }
 
     @Override

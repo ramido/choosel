@@ -32,7 +32,7 @@ import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.ui.dnd.DropEnabledViewContentDisplay;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropTargetManager;
-import org.thechiselgroup.choosel.client.views.tagcloud.TagCloudViewContentDisplay;
+import org.thechiselgroup.choosel.client.views.text.TextViewContentDisplay;
 import org.thechiselgroup.choosel.client.windows.WindowContent;
 import org.thechiselgroup.choosel.client.windows.WindowContentFactory;
 
@@ -111,8 +111,14 @@ public class ViewFactory implements WindowContentFactory {
                 viewContentDisplay, contentDropTargetManager);
 
         // XXX Hack, this should be in some sort of configuration somewhere
-        if (viewContentDisplay instanceof TagCloudViewContentDisplay) {
-            categorizer = new ResourceByPropertyMultiCategorizer();
+        if (viewContentDisplay instanceof TextViewContentDisplay) {
+            TextViewContentDisplay d = (TextViewContentDisplay) viewContentDisplay;
+
+            if (d.isTagCloud()) {
+                // XXX "tagContent" is from work item explorer
+                categorizer = new ResourceByPropertyMultiCategorizer(
+                        "tagContent");
+            }
         }
 
         ResourceSplitter resourceSplitter = new ResourceSplitter(categorizer,
@@ -134,9 +140,7 @@ public class ViewFactory implements WindowContentFactory {
                 new ResourceSetAvatarResourceSetsPresenter(
                         selectionDragAvatarFactory),
                 new ResourceSetAvatarResourceSetsPresenter(dropTargetFactory),
-                resourceSplitter,
-                contentDisplay,
-                contentType, contentType, configuration, resourceModel,
-                resourceModelPresenter);
+                resourceSplitter, contentDisplay, contentType, contentType,
+                configuration, resourceModel, resourceModelPresenter);
     }
 }

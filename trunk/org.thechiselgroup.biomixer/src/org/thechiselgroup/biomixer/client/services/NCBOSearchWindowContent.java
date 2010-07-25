@@ -19,6 +19,7 @@ import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionCo
 
 import java.util.Set;
 
+import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.persistence.Persistable;
 import org.thechiselgroup.choosel.client.resources.Resource;
@@ -28,7 +29,6 @@ import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccess
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.client.ui.HasTextParameter;
 import org.thechiselgroup.choosel.client.views.View;
-import org.thechiselgroup.choosel.client.views.list.ListViewContentDisplay;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 import org.thechiselgroup.choosel.client.windows.WindowContentProducer;
 import org.thechiselgroup.choosel.client.windows.WindowPanel;
@@ -131,7 +131,7 @@ public class NCBOSearchWindowContent extends AbstractWindowContent implements
 	@Override
 	public void init() {
 		resultView = (View) viewFactory
-				.createWindowContent(ListViewContentDisplay.TYPE);
+				.createWindowContent(ChooselInjectionConstants.TYPE_LIST);
 		infoLabel = new Label("Searching...");
 		infoLabel.addStyleName("infoLabel");
 		deckPanel = new ViewContentDeckpanel();

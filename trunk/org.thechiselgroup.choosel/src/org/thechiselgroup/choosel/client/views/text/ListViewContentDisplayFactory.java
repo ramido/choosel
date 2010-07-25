@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.views.list;
+package org.thechiselgroup.choosel.client.views.text;
 
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
@@ -44,8 +44,8 @@ public class ListViewContentDisplayFactory implements ViewContentDisplayFactory 
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-        return new ListViewContentDisplay(hoverModel, popupManagerFactory,
-                detailsWidgetHelper, dragController);
+        return new TextViewContentDisplay(hoverModel, popupManagerFactory,
+                detailsWidgetHelper, dragController, false);
     }
 
 }

@@ -1,4 +1,4 @@
-package org.thechiselgroup.choosel.client.views.tagcloud;
+package org.thechiselgroup.choosel.client.views.text;
 
 import java.util.List;
 

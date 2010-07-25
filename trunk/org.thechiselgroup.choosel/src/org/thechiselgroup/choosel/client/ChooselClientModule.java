@@ -34,7 +34,6 @@ import org.thechiselgroup.choosel.client.label.ResourceSetLabelFactory;
 import org.thechiselgroup.choosel.client.label.SelectionModelLabelFactory;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceManager;
 import org.thechiselgroup.choosel.client.resources.ManagedResourceSetFactory;
-import org.thechiselgroup.choosel.client.resources.ResourceByPropertyMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceByUriMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceByUriTypeCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
@@ -89,9 +88,9 @@ import org.thechiselgroup.choosel.client.views.graph.DefaultArcStyleProvider;
 import org.thechiselgroup.choosel.client.views.graph.DefaultGraphExpansionRegistry;
 import org.thechiselgroup.choosel.client.views.graph.GraphExpansionRegistry;
 import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplayFactory;
-import org.thechiselgroup.choosel.client.views.list.ListViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.map.MapViewContentDisplayFactory;
-import org.thechiselgroup.choosel.client.views.tagcloud.TagCloudViewContentDisplayFactory;
+import org.thechiselgroup.choosel.client.views.text.ListViewContentDisplayFactory;
+import org.thechiselgroup.choosel.client.views.text.TagCloudViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.timeline.TimeLineViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.windows.DefaultDesktop;
 import org.thechiselgroup.choosel.client.windows.Desktop;
@@ -287,10 +286,6 @@ public class ChooselClientModule extends AbstractGinModule implements
         // TODO please re-enable me?
         // bind(ResourceMultiCategorizer.class).to(
         // ResourceByUriTypeMultiCategorizer.class).in(Singleton.class);
-        bind(ResourceMultiCategorizer.class)
-                .annotatedWith(Names.named(RESOURCE_BY_DESCRIPTION_CATEGORIZER))
-                .to(ResourceByPropertyMultiCategorizer.class)
-                .in(Singleton.class);
         bind(ResourceMultiCategorizer.class).to(
                 ResourceByUriMultiCategorizer.class).in(Singleton.class);
         bind(CategoryLabelProvider.class).to(getCategoryLabelProviderClass())
