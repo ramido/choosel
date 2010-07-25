@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import static com.google.gwt.user.client.DOM.setIntStyleAttribute;
 import static com.google.gwt.user.client.DOM.setStyleAttribute;
 
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
@@ -117,10 +116,9 @@ public class DragEnabler {
 
         Element span = DOM.createSpan();
 
-        setStyleAttribute(span, CSS.POSITION, CSS.ABSOLUTE);
-        setStyleAttribute(span, CSS.LEFT, "" + left + CSS.PX);
-        setStyleAttribute(span, CSS.TOP, "" + top + CSS.PX);
-        setIntStyleAttribute(span, CSS.Z_INDEX, -1);
+        CSS.setPosition(span, CSS.ABSOLUTE);
+        CSS.setLocation(span, left, top);
+        CSS.setZIndex(span, -1);
 
         // FIXME: we are not at the correct part of the widget hierarchy
         // --> this can cause event forwarding (i.e. to windows) to fail
@@ -148,11 +146,11 @@ public class DragEnabler {
         int left = absoluteLeft - desktopWidget.getAbsoluteLeft() - 5;
         int top = absoluteTop - desktopWidget.getAbsoluteTop() - 5;
 
-        setStyleAttribute(panel.getElement(), CSS.LEFT, "" + left + CSS.PX);
-        setStyleAttribute(panel.getElement(), CSS.TOP, "" + top + CSS.PX);
-        setStyleAttribute(panel.getElement(), CSS.WIDTH, "" + 10 + CSS.PX);
-        setStyleAttribute(panel.getElement(), CSS.HEIGHT, "" + 10 + CSS.PX);
-        setIntStyleAttribute(panel.getElement(), CSS.Z_INDEX, ZIndex.POPUP - 1);
+        Element element = panel.getElement();
+
+        CSS.setLocation(element, left, top);
+        CSS.setSize(element, 10, 10);
+        CSS.setZIndex(element, ZIndex.POPUP - 1);
 
         panel.addMouseUpHandler(new MouseUpHandler() {
 
@@ -209,7 +207,7 @@ public class DragEnabler {
                 return false;
             }
         };
-        mouseEvent.setRelativeElement(panel.getElement());
+        mouseEvent.setRelativeElement(element);
         panel.fireEvent(mouseEvent);
     }
 

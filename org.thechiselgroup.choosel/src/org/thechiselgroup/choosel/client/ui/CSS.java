@@ -75,10 +75,9 @@ public final class CSS {
     public static void setAbsoluteBounds(Element element, int left, int top,
             int width, int height) {
 
-        setStyleAttribute(element, POSITION, ABSOLUTE);
-        setPosition(element, left, top);
-        setStyleAttribute(element, WIDTH, width + PX);
-        setStyleAttribute(element, HEIGHT, height + PX);
+        setPosition(element, ABSOLUTE);
+        setLocation(element, left, top);
+        setSize(element, width, height);
     }
 
     public static void setDisplay(Element element, String value) {
@@ -97,6 +96,15 @@ public final class CSS {
         setStyleAttribute(element, LINE_HEIGHT, lineHeight + PX);
     }
 
+    public static void setLocation(Element element, int left, int top) {
+        setStyleAttribute(element, LEFT, left + PX);
+        setStyleAttribute(element, TOP, top + PX);
+    }
+
+    public static void setLocation(Widget widget, int left, int top) {
+        setLocation(widget.getElement(), left, top);
+    }
+
     public static void setMaxWidth(Element element, int maxWidth) {
         setStyleAttribute(element, MAX_WIDTH, maxWidth + PX);
     }
@@ -105,13 +113,13 @@ public final class CSS {
         setMaxWidth(widget.getElement(), maxWidth);
     }
 
-    public static void setPosition(Element element, int left, int top) {
-        setStyleAttribute(element, LEFT, left + PX);
-        setStyleAttribute(element, TOP, top + PX);
+    public static void setPosition(Element element, String position) {
+        setStyleAttribute(element, POSITION, position);
     }
 
-    public static void setPosition(Widget widget, int left, int top) {
-        setPosition(widget.getElement(), left, top);
+    public static void setSize(Element element, int width, int height) {
+        setStyleAttribute(element, WIDTH, width + PX);
+        setStyleAttribute(element, HEIGHT, height + PX);
     }
 
     public static void setWhitespace(Element element, String value) {
