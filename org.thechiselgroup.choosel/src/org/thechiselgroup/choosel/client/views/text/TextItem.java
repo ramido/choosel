@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.client.views.text;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarType;
+import org.thechiselgroup.choosel.client.ui.dnd.DragProxyEventReceiver;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.client.ui.popup.DefaultPopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
@@ -28,7 +29,8 @@ import org.thechiselgroup.choosel.client.views.SlotResolver;
 
 public class TextItem extends ResourceItem {
 
-    public class TextItemLabel extends ResourceSetAvatar {
+    public class TextItemLabel extends ResourceSetAvatar implements
+            DragProxyEventReceiver {
 
         private int tagCount;
 
@@ -42,6 +44,21 @@ public class TextItem extends ResourceItem {
             removeStyleName(CSS_CLASS);
             setEnabled(true);
             dragController.setDraggable(this, true);
+        }
+
+        /*
+         * Implements DragProxyEventReceiver to remove highlighting from
+         * resource items when drag operation starts.
+         * 
+         * @see issue 29
+         */
+        @Override
+        public void dragProxyAttached() {
+            getHighlightingManager().setHighlighting(false);
+        }
+
+        @Override
+        public void dragProxyDetached() {
         }
 
         public TextItem getTagCloudItem() {
