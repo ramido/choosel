@@ -72,23 +72,9 @@ public class ResourceItem {
         this.hoverModel = hoverModel;
         this.valueResolver = valueResolver;
 
-        this.highlightingManager = new HighlightingManager(hoverModel,
-                resources);
-
-        initPopupHighlighting(resources, hoverModel);
-
-        resources.addEventHandler(new ResourcesAddedEventHandler() {
-            @Override
-            public void onResourcesAdded(ResourcesAddedEvent e) {
-                updateContent();
-            }
-        });
-        resources.addEventHandler(new ResourcesRemovedEventHandler() {
-            @Override
-            public void onResourcesRemoved(ResourcesRemovedEvent e) {
-                updateContent();
-            }
-        });
+        initHighlighting();
+        initPopupHighlighting();
+        initResourceEventHandling(resources);
 
         updateContent();
     }
@@ -134,10 +120,6 @@ public class ResourceItem {
         return highlightingManager;
     }
 
-    public HoverModel getHoverModel() {
-        return hoverModel;
-    }
-
     public final PopupManager getPopupManager() {
         return popupManager;
     }
@@ -150,9 +132,12 @@ public class ResourceItem {
         return valueResolver.resolve(slotID, category, resources);
     }
 
-    private void initPopupHighlighting(ResourceSet resources,
-            HoverModel hoverModel) {
+    private void initHighlighting() {
+        this.highlightingManager = new HighlightingManager(hoverModel,
+                resources);
+    }
 
+    private void initPopupHighlighting() {
         final HighlightingManager highlightingManager = new HighlightingManager(
                 hoverModel, resources);
 
@@ -172,6 +157,21 @@ public class ResourceItem {
             @Override
             public void onPopupClosing(PopupClosingEvent event) {
                 highlightingManager.setHighlighting(false);
+            }
+        });
+    }
+
+    private void initResourceEventHandling(ResourceSet resources) {
+        resources.addEventHandler(new ResourcesAddedEventHandler() {
+            @Override
+            public void onResourcesAdded(ResourcesAddedEvent e) {
+                updateContent();
+            }
+        });
+        resources.addEventHandler(new ResourcesRemovedEventHandler() {
+            @Override
+            public void onResourcesRemoved(ResourcesRemovedEvent e) {
+                updateContent();
             }
         });
     }
