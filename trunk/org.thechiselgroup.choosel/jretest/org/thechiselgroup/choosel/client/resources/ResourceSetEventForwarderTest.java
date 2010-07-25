@@ -15,7 +15,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.util.CollectionUtils;
 
-public class ResourceEventsForwarderTest {
+public class ResourceSetEventForwarderTest {
 
     private ResourceSet source;
 
@@ -26,7 +26,7 @@ public class ResourceEventsForwarderTest {
 
     @Test
     public void addAllResourcesOnEventFired() {
-        ResourceEventsForwarder underTest = new ResourceEventsForwarder(source,
+        ResourceSetEventForwarder underTest = new ResourceSetEventForwarder(source,
                 target);
 
         underTest.init();
@@ -48,7 +48,7 @@ public class ResourceEventsForwarderTest {
     // TODO check again
     @Test
     public void removeAllResourcesOnEventFired() {
-        ResourceEventsForwarder underTest = new ResourceEventsForwarder(
+        ResourceSetEventForwarder underTest = new ResourceSetEventForwarder(
                 source2, target);
 
         underTest.init();
