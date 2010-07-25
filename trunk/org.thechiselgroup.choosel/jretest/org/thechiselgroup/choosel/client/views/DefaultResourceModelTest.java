@@ -186,7 +186,6 @@ public class DefaultResourceModelTest {
         MockitoAnnotations.initMocks(this);
 
         underTest = new DefaultResourceModel(new DefaultResourceSetFactory());
-        underTest.init();
     }
 
 }

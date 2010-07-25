@@ -11,10 +11,9 @@ import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.client.util.Disposable;
-import org.thechiselgroup.choosel.client.util.Initializable;
 
 public class DefaultResourceModel implements ResourceModel, Disposable,
-        Persistable, Initializable {
+        Persistable {
 
     private CombinedResourceSet allResources;
 
@@ -32,7 +31,12 @@ public class DefaultResourceModel implements ResourceModel, Disposable,
 
     public DefaultResourceModel(ResourceSetFactory resourceSetFactory) {
         assert resourceSetFactory != null;
+
         this.resourceSetFactory = resourceSetFactory;
+
+        initResourceCombinator();
+        initAutomaticResources();
+        initAllResources();
     }
 
     @Override
@@ -90,13 +94,6 @@ public class DefaultResourceModel implements ResourceModel, Disposable,
     @Override
     public ResourceSet getResources() {
         return allResources;
-    }
-
-    @Override
-    public void init() {
-        initResourceCombinator();
-        initAutomaticResources();
-        initAllResources();
     }
 
     private void initAllResources() {

@@ -124,7 +124,6 @@ public class DefaultResourceModelPresenterTest {
         underTest = new DefaultResourceModelPresenter(allResourcesPresenter,
                 inputResourceSetsPresenter, resourceModel);
 
-        resourceModel.init();
         underTest.init();
     }
 
