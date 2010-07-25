@@ -212,7 +212,7 @@ public class WindowPanel extends NEffectPanel implements
             public void tearDownEffect() {
                 // do not super.tearDownEffects as this resets to original state
                 // reset root panel position as this is affected by move
-                CSS.setPosition(rootPanel, 0, 0);
+                CSS.setLocation(rootPanel, 0, 0);
             };
         };
 
