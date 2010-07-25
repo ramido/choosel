@@ -29,7 +29,6 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.client.ui.popup.PopupClosingEvent;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
-import org.thechiselgroup.choosel.client.views.ResourceItem.HighlightingManager;
 
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOverEvent;
@@ -91,14 +90,7 @@ public class HighlightingManagerTest {
         MockitoGWTBridge.setUp();
         MockitoAnnotations.initMocks(this);
 
-        underTest = new ResourceItem("category", resources, hoverModel,
-                popupManager, null) {
-
-            @Override
-            protected void setStatusStyling(Status status) {
-
-            }
-        }.getHighlightingManager();
+        underTest = new HighlightingManager(hoverModel, resources);
     }
 
     @After
