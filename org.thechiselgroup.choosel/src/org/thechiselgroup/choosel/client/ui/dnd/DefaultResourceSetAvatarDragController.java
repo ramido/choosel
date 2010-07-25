@@ -99,7 +99,7 @@ public class DefaultResourceSetAvatarDragController extends
 
     private Desktop desktop;
 
-    private Widget dragProxy;
+    private ResourceSetAvatar dragProxy;
 
     private Map<Widget, ResourceSetAvatarDropController> dropControllers = new HashMap<Widget, ResourceSetAvatarDropController>();
 
@@ -383,7 +383,9 @@ public class DefaultResourceSetAvatarDragController extends
         WidgetLocation currentDraggableLocation = new WidgetLocation(
                 context.draggable, context.boundaryPanel);
 
-        dragProxy = newDragProxy(context);
+        dragProxy = getAvatar(context).createProxy();
+        dragProxy.setHover(true);
+
         context.boundaryPanel.add(dragProxy,
                 currentDraggableLocation.getLeft(),
                 currentDraggableLocation.getTop());
@@ -414,10 +416,6 @@ public class DefaultResourceSetAvatarDragController extends
 
         style.setPropertyPx(CSS.LEFT, getDesiredLeft());
         style.setPropertyPx(CSS.TOP, getDesiredTop());
-    }
-
-    protected Widget newDragProxy(DragContext context) {
-        return getAvatar(context).createProxy();
     }
 
     private void notifyDropControllerOnDragEnd() {
