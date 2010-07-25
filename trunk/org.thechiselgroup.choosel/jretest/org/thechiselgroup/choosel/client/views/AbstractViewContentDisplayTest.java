@@ -90,6 +90,7 @@ public class AbstractViewContentDisplayTest {
             public Memento save() {
                 return null;
             }
+
         };
 
         underTest.init(callback);

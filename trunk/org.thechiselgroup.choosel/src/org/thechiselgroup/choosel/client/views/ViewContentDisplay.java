@@ -15,12 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
+import java.util.Set;
+
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
 import org.thechiselgroup.choosel.client.util.Disposable;
 
-// TODO might need view as parameter for a few of those...
 public interface ViewContentDisplay extends WidgetAdaptable, Disposable {
 
     void checkResize();
@@ -30,6 +31,10 @@ public interface ViewContentDisplay extends WidgetAdaptable, Disposable {
 
     void endRestore();
 
+    /**
+     * @return identifiers of the visualization slots (retinal properties etc)
+     *         that are supported by this view content display.
+     */
     String[] getSlotIDs();
 
     void init(ViewContentDisplayCallback callback);
@@ -43,5 +48,23 @@ public interface ViewContentDisplay extends WidgetAdaptable, Disposable {
     Memento save();
 
     void startRestore();
+
+    /**
+     * Updates the view content display.
+     * 
+     * @param addedResourceItems
+     *            ResourceItems that have been added to the view. Is never
+     *            <code>null</code>.
+     * @param updatedResourceItems
+     *            ResourceItems which have changed (status, data, etc.) such
+     *            that their representation needs to be updated. Is never
+     *            <code>null</code>.
+     * @param removedResourceItems
+     *            ResourceItems that have been removed from the view. Is never
+     *            <code>null</code>.
+     */
+    void update(Set<ResourceItem> addedResourceItems,
+            Set<ResourceItem> updatedResourceItems,
+            Set<ResourceItem> removedResourceItems);
 
 }
