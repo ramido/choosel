@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.thechiselgroup.choosel.client.resources.Resource;
@@ -25,6 +26,8 @@ public interface ViewContentDisplayCallback {
     boolean containsResource(Resource resource);
 
     boolean containsResourceWithUri(String uri);
+
+    Collection<ResourceItem> getAllResourceItems();
 
     Iterable<Resource> getAllResources();
 

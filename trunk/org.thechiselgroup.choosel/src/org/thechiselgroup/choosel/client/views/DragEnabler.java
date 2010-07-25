@@ -15,16 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import static com.google.gwt.user.client.DOM.setStyleAttribute;
-
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarType;
 import org.thechiselgroup.choosel.client.ui.CSS;
 import org.thechiselgroup.choosel.client.ui.ZIndex;
 import org.thechiselgroup.choosel.client.ui.dnd.DragProxyEventReceiver;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
-import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.windows.Desktop;
 
 import com.google.gwt.dom.client.NativeEvent;
@@ -44,17 +40,18 @@ public class DragEnabler {
     public static class InvisibleResourceSetAvatar extends ResourceSetAvatar
             implements DragProxyEventReceiver {
 
-        private final PopupManager popupManager;
+        private final ResourceItem item;
 
-        private final String text;
+        private String text;
 
-        public InvisibleResourceSetAvatar(String text, String enabledCSSClass,
-                ResourceSet resources, ResourceSetAvatarType type,
-                Element element, PopupManager popupManager) {
+        public InvisibleResourceSetAvatar(ResourceItem item, String text,
+                String enabledCSSClass, ResourceSetAvatarType type,
+                Element element) {
 
-            super(text, enabledCSSClass, resources, type, element);
+            super(text, enabledCSSClass, item.getResourceSet(), type, element);
+
             this.text = text;
-            this.popupManager = popupManager;
+            this.item = item;
         }
 
         @Override
@@ -63,12 +60,16 @@ public class DragEnabler {
 
         @Override
         public Widget createProxy() {
-            popupManager.hidePopup();
+            item.getPopupManager().hidePopup();
             return super.createProxy();
         }
 
+        /**
+         * @see http://code.google.com/p/choosel/issues/detail?id=29
+         */
         @Override
         public void dragProxyAttached() {
+            item.getHighlightingManager().setHighlighting(false);
         }
 
         @Override
@@ -125,9 +126,8 @@ public class DragEnabler {
         // TODO title
         final String text = (String) item
                 .getResourceValue(SlotResolver.DESCRIPTION_SLOT);
-        panel = new InvisibleResourceSetAvatar(text, "avatar-resourceSet",
-                item.getResourceSet(), ResourceSetAvatarType.SET, span,
-                item.getPopupManager());
+        panel = new InvisibleResourceSetAvatar(item, text,
+                "avatar-resourceSet", ResourceSetAvatarType.SET, span);
 
         span.setClassName("avatar-invisible");
 

@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.client.views;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +44,6 @@ import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccess
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
-import org.thechiselgroup.choosel.client.ui.dnd.DragProxyEventReceiver;
 import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.util.Initializable;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
@@ -60,24 +60,7 @@ import com.google.inject.name.Named;
 
 public class DefaultView extends AbstractWindowContent implements View {
 
-    private class MainPanel extends DockPanel implements ViewProvider,
-            DragProxyEventReceiver {
-
-        /*
-         * Implements DragProxyEventReceiver to remove highlighting from
-         * resource items when drag operation starts.
-         * 
-         * @see issue 29
-         */
-
-        @Override
-        public void dragProxyAttached() {
-            removeResourceItemHighlighting();
-        }
-
-        @Override
-        public void dragProxyDetached() {
-        }
+    private class MainPanel extends DockPanel implements ViewProvider {
 
         /**
          * Enables finding this view by searching the widget hierarchy.
@@ -376,6 +359,11 @@ public class DefaultView extends AbstractWindowContent implements View {
             }
 
             @Override
+            public Collection<ResourceItem> getAllResourceItems() {
+                return categoriesToResourceItems.values();
+            }
+
+            @Override
             public Iterable<Resource> getAllResources() {
                 return resourceModel.getResources();
             }
@@ -525,18 +513,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         contentDisplay.removeResourceItem(resourceItem);
 
         assert !categoriesToResourceItems.containsKey(category);
-    }
-
-    /**
-     * Removes the highlighting from the resource items. This is triggered when
-     * a drag operation is started.
-     * 
-     * @see http://code.google.com/p/choosel/issues/detail?id=29
-     */
-    private void removeResourceItemHighlighting() {
-        for (ResourceItem resourceItem : categoriesToResourceItems.values()) {
-            resourceItem.getHighlightingManager().setHighlighting(false);
-        }
     }
 
     private void removeSelectionModelResourceHandlers() {
