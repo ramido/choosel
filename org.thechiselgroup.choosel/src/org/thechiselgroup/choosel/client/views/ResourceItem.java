@@ -20,47 +20,9 @@ import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
-import org.thechiselgroup.choosel.client.ui.popup.PopupClosingEvent;
-import org.thechiselgroup.choosel.client.ui.popup.PopupClosingHandler;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 
-import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOutHandler;
-import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseOverHandler;
-
 public class ResourceItem {
-
-    public class HighlightingManager implements MouseOverHandler,
-            MouseOutHandler, PopupClosingHandler {
-
-        private boolean highlighted = false;
-
-        @Override
-        public void onMouseOut(MouseOutEvent e) {
-            if (highlighted) {
-                hoverModel.removeHighlightedResources(getResourceSet());
-                highlighted = false;
-            }
-        }
-
-        @Override
-        public void onMouseOver(MouseOverEvent e) {
-            if (!highlighted) {
-                hoverModel.addHighlightedResources(getResourceSet());
-                highlighted = true;
-            }
-        }
-
-        @Override
-        public void onPopupClosing(PopupClosingEvent event) {
-            if (highlighted) {
-                hoverModel.removeHighlightedResources(getResourceSet());
-                highlighted = false;
-            }
-        }
-
-    }
 
     public static enum Status {
 
@@ -71,8 +33,6 @@ public class ResourceItem {
     private String category;
 
     private boolean highlighted = false;
-
-    private HighlightingManager highlightingManager;
 
     protected final HoverModel hoverModel;
 
@@ -103,11 +63,7 @@ public class ResourceItem {
         this.hoverModel = hoverModel;
         this.valueResolver = valueResolver;
 
-        highlightingManager = new HighlightingManager();
-
-        this.popupManager.addPopupMouseOverHandler(highlightingManager);
-        this.popupManager.addPopupMouseOutHandler(highlightingManager);
-        this.popupManager.addPopupClosingHandler(highlightingManager);
+        initPopupHighlighting(resources, hoverModel);
 
         resources.addEventHandler(new ResourcesAddedEventHandler() {
             @Override
@@ -157,11 +113,6 @@ public class ResourceItem {
         return Status.DEFAULT;
     }
 
-    // for test only
-    HighlightingManager getHighlightingManager() {
-        return highlightingManager;
-    }
-
     public HoverModel getHoverModel() {
         return hoverModel;
     }
@@ -176,6 +127,17 @@ public class ResourceItem {
 
     public Object getResourceValue(String slotID) {
         return valueResolver.resolve(slotID, category, resources);
+    }
+
+    private void initPopupHighlighting(ResourceSet resources,
+            HoverModel hoverModel) {
+
+        HighlightingManager highlightingManager = new HighlightingManager(
+                hoverModel, resources);
+
+        popupManager.addPopupMouseOverHandler(highlightingManager);
+        popupManager.addPopupMouseOutHandler(highlightingManager);
+        popupManager.addPopupClosingHandler(highlightingManager);
     }
 
     public boolean isHighlighted() {
