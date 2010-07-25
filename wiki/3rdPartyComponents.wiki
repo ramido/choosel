@@ -164,7 +164,7 @@ Client-side XSLT Processor
 
 ==Protovis==
 
-JavaScript Visualization Library
+!JavaScript Visualization Library
 
 *Version*: 3.2
 
