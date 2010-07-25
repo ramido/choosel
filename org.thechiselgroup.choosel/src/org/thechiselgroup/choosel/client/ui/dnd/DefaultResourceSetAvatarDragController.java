@@ -26,6 +26,7 @@ import org.thechiselgroup.choosel.client.ui.CSS;
 import org.thechiselgroup.choosel.client.ui.shade.ShadeManager;
 import org.thechiselgroup.choosel.client.util.MathUtils;
 import org.thechiselgroup.choosel.client.util.RemoveHandle;
+import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.windows.Desktop;
 import org.thechiselgroup.choosel.client.windows.WindowPanel;
 
@@ -117,17 +118,21 @@ public class DefaultResourceSetAvatarDragController extends
 
     private List<Area> visibleDropAreas;
 
+    private HoverModel hoverModel;
+
     /**
      * Constructor for dependency injection --> TODO change to @Named tags
      */
     @Inject
     public DefaultResourceSetAvatarDragController(Desktop desktop,
-            ShadeManager shadeManager) {
+            ShadeManager shadeManager, HoverModel hoverModel) {
 
         super(desktop.asWidget());
 
+        assert hoverModel != null;
         assert shadeManager != null;
 
+        this.hoverModel = hoverModel;
         this.shadeManager = shadeManager;
         this.desktop = desktop;
         this.boundaryDropController = new BoundaryDropController(
@@ -189,7 +194,7 @@ public class DefaultResourceSetAvatarDragController extends
      * Calculates which of the hidden drop targets are relevant to this drop
      * operation and stores them as temporary drop targets.
      */
-    public void calculateTemporaryDropTargets() {
+    private void calculateTemporaryDropTargets() {
         for (ResourceSetAvatarDropController dropController : getAvailableDropControllers()) {
             Widget dropTarget = dropController.getDropTarget();
             if (!dropTarget.isVisible()) {
@@ -202,11 +207,11 @@ public class DefaultResourceSetAvatarDragController extends
         return dropController.canDrop(context);
     }
 
-    public void clearDropAreas() {
+    private void clearDropAreas() {
         visibleDropAreas = null;
     }
 
-    public void clearTemporaryDropTargets() {
+    private void clearTemporaryDropTargets() {
         temporaryDropTargets.clear();
     }
 
@@ -214,7 +219,7 @@ public class DefaultResourceSetAvatarDragController extends
      * Creates a shade element that has bounds of drop target element, but an
      * absolute location, and is positioned behind the drop target.
      */
-    public Element createShadeElement(Widget dropTarget) {
+    private Element createShadeElement(Widget dropTarget) {
         Element shade = DOM.createSpan();
 
         shade.addClassName(CSS_SHADE_CLASS);
@@ -232,6 +237,7 @@ public class DefaultResourceSetAvatarDragController extends
 
     @Override
     public void dragEnd() {
+        setResourceSetHighlighted(false);
         removeShade();
         setTemporaryDropTargetsVisible(false);
         clearTemporaryDropTargets();
@@ -260,6 +266,7 @@ public class DefaultResourceSetAvatarDragController extends
         setTemporaryDropTargetsVisible(true);
         calculateDropAreas();
         addShade();
+        setResourceSetHighlighted(true);
     }
 
     private List<ResourceSetAvatarDropController> getAvailableDropControllers() {
@@ -413,7 +420,7 @@ public class DefaultResourceSetAvatarDragController extends
         return getAvatar(context).createProxy();
     }
 
-    public void notifyDropControllerOnDragEnd() {
+    private void notifyDropControllerOnDragEnd() {
         assert (context.finalDropController == null) != (context.vetoException == null);
         if (context.vetoException == null) {
             context.dropController.onDrop(context);
@@ -448,7 +455,7 @@ public class DefaultResourceSetAvatarDragController extends
         dropControllers.put(dropController.getDropTarget(), dropController);
     }
 
-    public void removeDragProxy() {
+    private void removeDragProxy() {
         dragProxy.removeFromParent();
         dragProxy = null;
     }
@@ -470,7 +477,12 @@ public class DefaultResourceSetAvatarDragController extends
         }
     }
 
-    public void setTemporaryDropTargetsVisible(boolean visible) {
+    private void setResourceSetHighlighted(boolean highlighted) {
+        hoverModel.setHighlightedResourceSet(highlighted ? getAvatar(context)
+                .getResourceSet() : null);
+    }
+
+    private void setTemporaryDropTargetsVisible(boolean visible) {
         for (Widget w : temporaryDropTargets) {
             w.setVisible(visible);
         }
