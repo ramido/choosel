@@ -33,7 +33,6 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.Widget;
 
 public class DragEnabler {
 
@@ -59,7 +58,7 @@ public class DragEnabler {
         }
 
         @Override
-        public Widget createProxy() {
+        public ResourceSetAvatar createProxy() {
             item.getPopupManager().hidePopup();
             return super.createProxy();
         }

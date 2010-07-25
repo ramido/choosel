@@ -43,7 +43,7 @@ public class ResourceSetAvatar extends Label implements Disposable {
 
     private String enabledCSSClass;
 
-    private Widget latestProxy = null;
+    private ResourceSetAvatar latestProxy = null;
 
     /**
      * For proxies, this points to the original avatar.
@@ -103,7 +103,7 @@ public class ResourceSetAvatar extends Label implements Disposable {
         return addHandler(handler, ResourceSetAvatarResourcesChangedEvent.TYPE);
     }
 
-    public Widget createProxy() {
+    public ResourceSetAvatar createProxy() {
         ResourceSetAvatar clone = new ResourceSetAvatar(getText(),
                 enabledCSSClass, resourceSet, type);
 
