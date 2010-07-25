@@ -37,7 +37,7 @@ If you encounter problems setting up choosel with this guide, complain on the [h
 = Optional setup =
 
    * To stay on top of code commits to Choosel, please consider installing the [http://www.junginger.biz/eclipse/rss-view.html Eclipse RSS Plugin] and configure it with the [http://code.google.com/feeds/p/choosel/svnchanges/basic subversion commit feed for Choosel]. You might also want to add the feed for [http://code.google.com/feeds/p/choosel/issueupdates/basic issue tracker updates].
-   * If you work on choosel issue tracker items, you might want to consider using the [http://code.google.com/p/googlecode-mylyn-connector/ Mylin-Google Code bridge] to get issue tracker entries into Eclipse/Mylin
+   * If you work on choosel issue tracker items, you might want to consider using the [http://code.google.com/p/googlecode-mylyn-connector/ Mylin-Google Code bridge] to get issue tracker entries into Eclipse/Mylin.
    * If you use Eclipse 3.6 abbreviated package names (Preferences-->Java/Appearance), the following abbreviations might be useful for you: 
 {{{
 org.thechiselgroup.choosel.client=[client]
