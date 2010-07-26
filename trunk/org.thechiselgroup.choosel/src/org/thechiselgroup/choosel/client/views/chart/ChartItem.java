@@ -28,13 +28,11 @@ import com.google.gwt.user.client.Event;
 
 public class ChartItem extends ResourceItem {
 
-    protected String[] colours = { "yellow", "orange", "steelblue" };
-
-    public DragEnabler enabler;
-
-    public boolean highlighted = false;
+    private String[] colours = { "yellow", "orange", "steelblue" };
 
     private ChartViewContentDisplay view;
+
+    private DragEnabler enabler;
 
     public ChartItem(String category, ResourceSet resources,
             ChartViewContentDisplay view, PopupManager popupManager,
@@ -59,12 +57,6 @@ public class ChartItem extends ResourceItem {
             return colours[1];
         }
         throw new RuntimeException("No colour available");
-    }
-
-    public void onEvent() {
-        if (view != null) {
-            view.getCallback().switchSelection(getResourceSet());
-        }
     }
 
     public void onEvent(Event e) {
