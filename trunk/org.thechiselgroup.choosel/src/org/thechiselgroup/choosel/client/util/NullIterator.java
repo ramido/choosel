@@ -13,11 +13,38 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.resources;
+package org.thechiselgroup.choosel.client.util;
 
-public interface ResourceCategoryRemovedEventHandler extends
-        ResourceCategoryContainerEventHandler {
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-    void onResourceCategoryRemoved(ResourceCategoryRemovedEvent e);
+public final class NullIterator<T> implements Iterator<T> {
+
+    @SuppressWarnings("rawtypes")
+    private static NullIterator NULL_ITERATOR = new NullIterator();
+
+    @SuppressWarnings("unchecked")
+    public static <T> Iterator<T> nullIterator() {
+        return NULL_ITERATOR;
+    }
+
+    private NullIterator() {
+
+    }
+
+    @Override
+    public boolean hasNext() {
+        return false;
+    }
+
+    @Override
+    public T next() {
+        throw new NoSuchElementException();
+    }
+
+    @Override
+    public void remove() {
+        throw new UnsupportedOperationException();
+    }
 
 }

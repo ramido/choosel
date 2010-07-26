@@ -15,9 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
-public interface ResourceCategoryAddedEventHandler extends
+public interface ResourceCategoriesChangedHandler extends
         ResourceCategoryContainerEventHandler {
 
-    void onResourceCategoryAdded(ResourceCategoryAddedEvent e);
+    void onResourceCategoriesChanged(ResourceCategoriesChangedEvent e);
 
 }

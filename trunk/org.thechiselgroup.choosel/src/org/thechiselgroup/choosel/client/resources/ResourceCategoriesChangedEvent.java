@@ -15,40 +15,36 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
+import java.util.Set;
+
 import com.google.gwt.event.shared.GwtEvent;
 
-public class ResourceCategoryRemovedEvent extends
-        GwtEvent<ResourceCategoryRemovedEventHandler> {
+public class ResourceCategoriesChangedEvent extends
+        GwtEvent<ResourceCategoriesChangedHandler> {
 
-    public static final GwtEvent.Type<ResourceCategoryRemovedEventHandler> TYPE = new GwtEvent.Type<ResourceCategoryRemovedEventHandler>();
+    public static final GwtEvent.Type<ResourceCategoriesChangedHandler> TYPE = new GwtEvent.Type<ResourceCategoriesChangedHandler>();
 
-    private String category;
+    private final Set<ResourceCategoryChange> changes;
 
-    private final ResourceSet resourceSet;
+    public ResourceCategoriesChangedEvent(Set<ResourceCategoryChange> changes) {
+        assert changes != null;
+        assert !changes.isEmpty();
 
-    public ResourceCategoryRemovedEvent(String category, ResourceSet resourceSet) {
-        assert category != null;
-
-        this.resourceSet = resourceSet;
-        this.category = category;
+        this.changes = changes;
     }
 
     @Override
-    protected void dispatch(ResourceCategoryRemovedEventHandler handler) {
-        handler.onResourceCategoryRemoved(this);
+    protected void dispatch(ResourceCategoriesChangedHandler handler) {
+        handler.onResourceCategoriesChanged(this);
     }
 
     @Override
-    public GwtEvent.Type<ResourceCategoryRemovedEventHandler> getAssociatedType() {
+    public GwtEvent.Type<ResourceCategoriesChangedHandler> getAssociatedType() {
         return TYPE;
     }
 
-    public String getCategory() {
-        return category;
-    }
-
-    public ResourceSet getResourceSet() {
-        return resourceSet;
+    public Set<ResourceCategoryChange> getChanges() {
+        return changes;
     }
 
 }

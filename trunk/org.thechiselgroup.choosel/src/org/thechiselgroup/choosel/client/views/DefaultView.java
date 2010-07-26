@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
@@ -27,10 +28,9 @@ import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.persistence.Persistable;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
-import org.thechiselgroup.choosel.client.resources.ResourceCategoryAddedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourceCategoryAddedEventHandler;
-import org.thechiselgroup.choosel.client.resources.ResourceCategoryRemovedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourceCategoryRemovedEventHandler;
+import org.thechiselgroup.choosel.client.resources.ResourceCategoriesChangedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourceCategoriesChangedHandler;
+import org.thechiselgroup.choosel.client.resources.ResourceCategoryChange;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetEventForwarder;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
@@ -413,24 +413,16 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     private void initResourceSplitter() {
-        resourceSplitter.addHandler(ResourceCategoryAddedEvent.TYPE,
-                new ResourceCategoryAddedEventHandler() {
-                    @Override
-                    public void onResourceCategoryAdded(
-                            ResourceCategoryAddedEvent e) {
-                        assert e != null;
-                        createResourceItem(e.getCategory(), e.getResourceSet());
-                    }
-                });
-        resourceSplitter.addHandler(ResourceCategoryRemovedEvent.TYPE,
-                new ResourceCategoryRemovedEventHandler() {
-                    @Override
-                    public void onResourceCategoryRemoved(
-                            ResourceCategoryRemovedEvent e) {
-                        assert e != null;
-                        removeResourceItem(e.getCategory());
-                    }
-                });
+        resourceSplitter.addHandler(new ResourceCategoriesChangedHandler() {
+
+            @Override
+            public void onResourceCategoriesChanged(
+                    ResourceCategoriesChangedEvent e) {
+
+                assert e != null;
+                updateResourceItemsOnModelChange(e.getChanges());
+            }
+        });
     }
 
     private void initSelectionDragSourceUI() {
@@ -669,6 +661,33 @@ public class DefaultView extends AbstractWindowContent implements View {
         if (selection != null) {
             storeResourceSet(persistanceManager, memento, MEMENTO_SELECTION,
                     selection);
+        }
+    }
+
+    // TODO use viewContentDisplay.update to perform single update
+    private void updateResourceItemsOnModelChange(
+            Set<ResourceCategoryChange> changes) {
+
+        assert changes != null;
+        assert !changes.isEmpty();
+
+        for (ResourceCategoryChange change : changes) {
+            switch (change.getDelta()) {
+            case ADD: {
+                createResourceItem(change.getCategory(),
+                        change.getResourceSet());
+
+            }
+                break;
+            case REMOVE: {
+                removeResourceItem(change.getCategory());
+            }
+                break;
+            case UPDATE: {
+
+            }
+                break;
+            }
         }
     }
 
