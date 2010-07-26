@@ -17,12 +17,14 @@ package org.thechiselgroup.choosel.client.resources;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.thechiselgroup.choosel.client.util.Delta;
 import org.thechiselgroup.choosel.client.util.SingleItemIterable;
 
-import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.inject.Inject;
@@ -54,44 +56,53 @@ public class ResourceSplitter extends AbstractResourceContainer {
         addAll(new SingleItemIterable<Resource>(resource));
     }
 
-    // TODO we need to optimize this into a single event
     @Override
     public void addAll(Iterable<Resource> resources) {
         assert resources != null;
 
+        Set<ResourceCategoryChange> changes = new HashSet<ResourceCategoryChange>();
         Map<String, List<Resource>> resourcesPerCategory = categorize(resources);
 
         for (Map.Entry<String, List<Resource>> entry : resourcesPerCategory
                 .entrySet()) {
-            addCategoryResources(entry.getKey(), entry.getValue());
+            addCategoryResources(entry.getKey(), entry.getValue(), changes);
+        }
+
+        if (!changes.isEmpty()) {
+            eventBus.fireEvent(new ResourceCategoriesChangedEvent(changes));
         }
     }
 
     private void addCategoryResources(String category,
-            List<Resource> categoryResources) {
+            List<Resource> categoryResources,
+            Set<ResourceCategoryChange> changes) {
 
         assert category != null;
         assert categoryResources != null;
 
-        // TODO test this condition as well
         if (categorizedSets.containsKey(category)) {
-            categorizedSets.get(category).addAll(categoryResources);
+            ResourceSet resourceSet = categorizedSets.get(category);
+
+            resourceSet.addAll(categoryResources);
+
+            changes.add(new ResourceCategoryChange(Delta.UPDATE, category,
+                    resourceSet));
         } else {
             ResourceSet resourceSet = resourceSetFactory.createResourceSet();
-
             resourceSet.addAll(categoryResources);
 
             categorizedSets.put(category, resourceSet);
 
-            eventBus.fireEvent(new ResourceCategoryAddedEvent(category,
+            changes.add(new ResourceCategoryChange(Delta.ADD, category,
                     resourceSet));
         }
     }
 
-    public <H extends ResourceCategoryContainerEventHandler> HandlerRegistration addHandler(
-            Type<H> type, H handler) {
-
-        return eventBus.addHandler(type, handler);
+    public HandlerRegistration addHandler(
+            ResourceCategoriesChangedHandler handler) {
+        assert handler != null;
+        return eventBus
+                .addHandler(ResourceCategoriesChangedEvent.TYPE, handler);
     }
 
     private Map<String, List<Resource>> categorize(Iterable<Resource> resources) {
@@ -120,22 +131,26 @@ public class ResourceSplitter extends AbstractResourceContainer {
         removeAll(new SingleItemIterable<Resource>(resource));
     }
 
-    // TODO we need to optimize this into a single event
     @Override
     public void removeAll(Iterable<Resource> resources) {
         assert resources != null;
 
+        Set<ResourceCategoryChange> changes = new HashSet<ResourceCategoryChange>();
         Map<String, List<Resource>> resourcesPerCategory = categorize(resources);
-
         for (Map.Entry<String, List<Resource>> entry : resourcesPerCategory
                 .entrySet()) {
 
-            removeCategoryResources(entry.getKey(), entry.getValue());
+            removeCategoryResources(entry.getKey(), entry.getValue(), changes);
+        }
+
+        if (!changes.isEmpty()) {
+            eventBus.fireEvent(new ResourceCategoriesChangedEvent(changes));
         }
     }
 
-    public void removeCategoryResources(String category,
-            List<Resource> resourcesToRemove) {
+    private void removeCategoryResources(String category,
+            List<Resource> resourcesToRemove,
+            Set<ResourceCategoryChange> changes) {
 
         ResourceSet storedCategoryResources = categorizedSets.get(category);
 
@@ -143,10 +158,13 @@ public class ResourceSplitter extends AbstractResourceContainer {
                 && storedCategoryResources.containsAll(resourcesToRemove)) {
 
             categorizedSets.remove(category);
-            eventBus.fireEvent(new ResourceCategoryRemovedEvent(category,
+            changes.add(new ResourceCategoryChange(Delta.REMOVE, category,
                     storedCategoryResources));
+
         } else {
             storedCategoryResources.removeAll(resourcesToRemove);
+            changes.add(new ResourceCategoryChange(Delta.UPDATE, category,
+                    storedCategoryResources));
         }
     }
 }
