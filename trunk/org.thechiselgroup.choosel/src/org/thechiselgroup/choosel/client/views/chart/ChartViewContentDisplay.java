@@ -84,6 +84,7 @@ public abstract class ChartViewContentDisplay extends
         return chartWidget;
     }
 
+    // TODO push down: the actual chart needs to decide which slots are used
     @Override
     public String[] getSlotIDs() {
         return new String[] { SlotResolver.DESCRIPTION_SLOT,
