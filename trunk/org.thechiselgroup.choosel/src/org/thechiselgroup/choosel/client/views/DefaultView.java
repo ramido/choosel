@@ -253,6 +253,8 @@ public class DefaultView extends AbstractWindowContent implements View {
         contentDisplay = null;
         selectionPresenter.dispose();
         selectionPresenter = null;
+        selectionDropPresenter.dispose();
+        selectionDropPresenter = null;
         resourceModelPresenter.dispose();
         resourceModelPresenter = null;
         selection.dispose();

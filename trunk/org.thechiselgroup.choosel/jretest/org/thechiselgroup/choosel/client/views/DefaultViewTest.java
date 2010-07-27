@@ -259,14 +259,34 @@ public class DefaultViewTest {
     }
 
     @Test
-    public void dispose() {
+    public void disposeContentDisplay() {
+        underTest.dispose();
+
+        verify(resourceModelPresenter, times(1)).dispose();
+        verify(contentDisplay, times(1)).dispose();
+    }
+
+    @Test
+    public void disposeResourceModelPresenter() {
+        underTest.dispose();
+
+        verify(resourceModelPresenter, times(1)).dispose();
+    }
+
+    @Test
+    public void disposeSelectionDropPresenter() {
+        underTest.dispose();
+
+        verify(selectionDropPresenter, times(1)).dispose();
+    }
+
+    @Test
+    public void disposeSelectionLinks() {
         underTest.setSelection(selection);
 
         underTest.dispose();
 
-        verify(contentDisplay, times(1)).dispose();
         verify(selectionPresenter, times(1)).dispose();
-        verify(resourceModelPresenter, times(1)).dispose();
         verify(selectionHandlerRegistration, times(2)).removeHandler();
     }
 
