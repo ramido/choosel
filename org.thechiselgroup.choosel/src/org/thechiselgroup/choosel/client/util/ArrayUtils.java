@@ -23,10 +23,13 @@ import com.google.gwt.core.client.JavaScriptObject;
 public class ArrayUtils {
 
     // @formatter:off
-    private native static JavaScriptObject createArray() /*-{
+    public native static JavaScriptObject createArray() /*-{
         return new Array();
     }-*/;
 
+    public native static int length(JavaScriptObject array) /*-{
+        return array.length;
+    }-*/;
     // @formatter:on
 
     // XXX using .doubleValue could be a problem at some point
@@ -64,22 +67,29 @@ public class ArrayUtils {
     }
 
     // @formatter:off
-    private native static void pushArray(JavaScriptObject array, double d) /*-{
+    public native static void pushArray(JavaScriptObject array, double d) /*-{
         array.push(d);
     }-*/;
 
-    // @formatter:on
 
-    // @formatter:off
-    private native static void pushArray(JavaScriptObject array, int i) /*-{
+    public native static void pushArray(JavaScriptObject array, int i) /*-{
         array.push(i);
     }-*/;
-
-    // @formatter:on
-
-    // @formatter:off
-    private native static void pushArray(JavaScriptObject array, String o) /*-{
+    
+    
+    public native static void pushArray(JavaScriptObject array, Object o) /*-{
         array.push(o);
+    }-*/;
+    
+    public native static void pushArray(JavaScriptObject array, String o) /*-{
+        array.push(o);
+    }-*/; 
+    
+    public native static void remove(Object o, JavaScriptObject array) /*-{
+        var index = array.indexOf(o);
+        if (index != -1) {
+            array.splice(index, 1);
+        }
     }-*/;
 
     // @formatter:on
@@ -109,6 +119,14 @@ public class ArrayUtils {
     }
 
     public static JavaScriptObject toJsArray(int[] array) {
+        JavaScriptObject result = createArray();
+        for (int i = 0; i < array.length; i++) {
+            pushArray(result, array[i]);
+        }
+        return result;
+    }
+
+    public static JavaScriptObject toJsArray(Object[] array) {
         JavaScriptObject result = createArray();
         for (int i = 0; i < array.length; i++) {
             pushArray(result, array[i]);

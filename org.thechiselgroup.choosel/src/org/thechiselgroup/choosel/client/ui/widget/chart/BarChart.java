@@ -1,35 +1,41 @@
 package org.thechiselgroup.choosel.client.ui.widget.chart;
 
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Bar;
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDouble;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionObject;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionString;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Scale;
 import org.thechiselgroup.choosel.client.util.ArrayUtils;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
+import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
 public class BarChart extends ChartWidget {
 
     private Bar bar;
 
-    private ProtovisFunctionDouble barHeight = new ProtovisFunctionDouble() {
+    private ProtovisFunctionObject barHeight = new ProtovisFunctionObject() {
         @Override
-        public double f(String value, int index) {
-            return ((Double.parseDouble(value) - minValue + 0.5) * h / (maxValue
-                    - minValue + 1));
+        public double f(Object value, int index) {
+            ChartItem chartItem = (ChartItem) value;
+
+            double resolvedValue = Double.parseDouble((String) chartItem
+                    .getResourceItem().getResourceValue(
+                            SlotResolver.MAGNITUDE_SLOT));
+
+            return ((resolvedValue - minValue + 0.5) * h / (maxValue - minValue + 1));
         }
     };
 
-    private ProtovisFunctionDouble barLeft = new ProtovisFunctionDouble() {
+    private ProtovisFunctionObject barLeft = new ProtovisFunctionObject() {
         @Override
-        public double f(String value, int index) {
+        public double f(Object value, int index) {
             return index * w / chartItemArray.size();
         }
     };
 
-    private ProtovisFunctionDouble barWidth = new ProtovisFunctionDouble() {
+    private ProtovisFunctionObject barWidth = new ProtovisFunctionObject() {
         @Override
-        public double f(String value, int index) {
-            return w / chartItemArray.size() - 2;
+        public double f(Object value, int index) {
+            return w / chartItemArray.size() - 5;
         }
     };
 
@@ -51,9 +57,9 @@ public class BarChart extends ChartWidget {
     protected double w;
 
     private void drawBar() {
-        bar = chart.add(Bar.createBar()).data(getJsDataArray(dataArray))
-                .bottom(barBottom).height(barHeight).left(barLeft)
-                .width(barWidth).fillStyle(barFillStyle);
+        bar = chart.add(Bar.createBar()).data(jsChartItems).bottom(barBottom)
+                .height(barHeight).left(barLeft).width(barWidth)
+                .fillStyle(barFillStyle).strokeStyle("steelblue");
     }
 
     @SuppressWarnings("unchecked")
@@ -61,8 +67,8 @@ public class BarChart extends ChartWidget {
     public Bar drawChart() {
         setChartVariables();
         setChartParameters();
-        drawBar();
         drawScales(Scale.linear(maxValue + 0.5, minValue - 0.5).range(0, h));
+        drawBar();
 
         return bar;
     }

@@ -35,18 +35,6 @@ import com.google.inject.Inject;
 public abstract class ChartViewContentDisplay extends
         AbstractViewContentDisplay {
 
-    public static interface Display {
-
-        void addItem(ChartItem chartItem);
-
-        void addStyleName(ChartItem chartItem, String cssClass);
-
-        void removeIndividualItem(ChartItem chartItem);
-
-        void removeStyleName(ChartItem chartItem, String cssClass);
-
-    }
-
     protected ChartWidget chartWidget;
 
     private DragEnablerFactory dragEnablerFactory;
@@ -72,16 +60,12 @@ public abstract class ChartViewContentDisplay extends
 
         PopupManager popupManager = createPopupManager(resolver, resources);
 
-        ChartItem chartItem = new ChartItem(category, resources, this,
-                popupManager, hoverModel, resolver, dragEnablerFactory);
+        ResourceItem resourceItem = new ResourceItem(category, resources,
+                hoverModel, popupManager, resolver);
 
-        chartWidget.addChartItem(chartItem);
+        // TODO link resource item to chart item
 
-        return chartItem;
-    }
-
-    public ChartWidget getChartWidget() {
-        return chartWidget;
+        return resourceItem;
     }
 
     // TODO push down: the actual chart needs to decide which slots are used
@@ -95,7 +79,6 @@ public abstract class ChartViewContentDisplay extends
 
     @Override
     public void removeResourceItem(ResourceItem chartItem) {
-        chartWidget.removeChartItem(chartItem);
     }
 
     @Override
@@ -113,9 +96,28 @@ public abstract class ChartViewContentDisplay extends
             Set<ResourceItem> updatedResourceItems,
             Set<ResourceItem> removedResourceItems) {
 
+        for (ResourceItem resourceItem : addedResourceItems) {
+            ChartItem chartItem = new ChartItem(this, dragEnablerFactory,
+                    resourceItem);
+            chartWidget.addChartItem(chartItem);
+            resourceItem.setDisplayObject(chartItem);
+        }
+
+        for (ResourceItem resourceItem : removedResourceItems) {
+            ChartItem chartItem = (ChartItem) resourceItem.getDisplayObject();
+            resourceItem.setDisplayObject(null); // TODO remove once dispose is
+                                                 // in place
+            chartWidget.removeChartItem(chartItem);
+        }
+
         super.update(addedResourceItems, updatedResourceItems,
                 removedResourceItems);
-        chartWidget.renderChart();
-    }
 
+        // TODO needs improvement, can updates cause structural changes?
+        if (!addedResourceItems.isEmpty() || !removedResourceItems.isEmpty()) {
+            chartWidget.updateChart();
+        } else {
+            chartWidget.renderChart();
+        }
+    }
 }

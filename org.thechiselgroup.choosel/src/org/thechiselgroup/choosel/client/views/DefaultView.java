@@ -48,9 +48,11 @@ import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccess
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
+import org.thechiselgroup.choosel.client.ui.dnd.DropEnabledViewContentDisplay;
 import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.util.HandlerRegistrationSet;
 import org.thechiselgroup.choosel.client.util.Initializable;
+import org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 
 import com.allen_sauer.gwt.log.client.Log;
@@ -727,6 +729,55 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         assert changes != null;
         assert !changes.isEmpty();
+
+        // XXX hack
+        if (contentDisplay instanceof DropEnabledViewContentDisplay
+                && ((DropEnabledViewContentDisplay) contentDisplay)
+                        .getDelegate() instanceof ChartViewContentDisplay) {
+            Set<ResourceItem> addedResourceItems = new HashSet<ResourceItem>();
+            Set<ResourceItem> removedResourceItems = new HashSet<ResourceItem>();
+
+            for (ResourceCategoryChange change : changes) {
+                switch (change.getDelta()) {
+                case ADD: {
+                    // HACK
+                    ResourceItem resourceItem = contentDisplay
+                            .createResourceItem(configuration,
+                                    change.getCategory(),
+                                    change.getResourceSet(), hoverModel);
+
+                    categoriesToResourceItems.put(change.getCategory(),
+                            resourceItem);
+
+                    // TODO introduce partial selection
+                    resourceItem.setSelectionStatusVisible(selection != null
+                            && !selection.isEmpty());
+
+                    addedResourceItems.add(resourceItem);
+
+                }
+                    break;
+                case REMOVE: {
+                    ResourceItem resourceItem = categoriesToResourceItems
+                            .get(change.getCategory());
+                    removeResourceItem(change.getCategory());
+                    removedResourceItems.add(resourceItem);
+                }
+                    break;
+                case UPDATE: {
+
+                }
+                    break;
+                }
+            }
+
+            contentDisplay
+                    .update(addedResourceItems,
+                            Collections.<ResourceItem> emptySet(),
+                            removedResourceItems);
+
+            return;
+        }
 
         for (ResourceCategoryChange change : changes) {
             switch (change.getDelta()) {
