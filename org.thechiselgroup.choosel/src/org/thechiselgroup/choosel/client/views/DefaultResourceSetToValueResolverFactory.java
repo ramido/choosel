@@ -20,9 +20,14 @@ public class DefaultResourceSetToValueResolverFactory {
         assert slotID != null;
 
         // TODO need default aggregate resolvers for the different slots
+        // e.g. for the tag cloud vs list
         if (SlotResolver.DESCRIPTION_SLOT.equals(slotID)) {
-            return new ResourceSetToStringListValueResolver(slotID,
+            return new ResourceSetToFirstResourcePropertyResolver(slotID,
                     resourceResolverFactory, resourceByTypeCategorizer);
+            // TODO the default resolver // configuration depends on
+            // the view content display or not?!?
+            // return new ResourceSetToStringListValueResolver(slotID,
+            // resourceResolverFactory, resourceByTypeCategorizer);
         }
 
         if (SlotResolver.COLOR_SLOT.equals(slotID)) {
@@ -73,11 +78,6 @@ public class DefaultResourceSetToValueResolverFactory {
             return new ResourceSetToSumResolver(slotID,
                     resourceResolverFactory, resourceByTypeCategorizer);
         }
-
-        // if (slotID.equals(SlotResolver.TAG_LABEL_SLOT)) {
-        // return new ResourceSetToFirstResourcePropertyResolver(slotID,
-        // resourceResolverFactory, resourceByTypeCategorizer);
-        // }
 
         if (slotID.equals(SlotResolver.FONT_SIZE_SLOT)) {
             return new ResourceSetToCountResolver();
