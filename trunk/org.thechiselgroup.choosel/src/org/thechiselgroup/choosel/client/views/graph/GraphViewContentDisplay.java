@@ -184,7 +184,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     private ResourceManager resourceManager;
 
     @Inject
-    public GraphViewContentDisplay(Display display, HoverModel hoverModel,
+    public GraphViewContentDisplay(Display display,
             PopupManagerFactory popupManagerFactory,
             DetailsWidgetHelper detailsWidgetHelper,
             CommandManager commandManager, ResourceManager resourceManager,
@@ -192,7 +192,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
             ResourceCategorizer resourceCategorizer,
             ArcStyleProvider arcStyleProvider, GraphExpansionRegistry registry) {
 
-        super(popupManagerFactory, detailsWidgetHelper, hoverModel);
+        super(popupManagerFactory, detailsWidgetHelper);
 
         assert display != null;
         assert commandManager != null;
@@ -218,7 +218,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     // TODO fix categoryX
     @Override
     public GraphItem createResourceItem(ResourceItemValueResolver resolver,
-            String categoryX, ResourceSet resources) {
+            String categoryX, ResourceSet resources, HoverModel hoverModel) {
 
         assert resolver != null;
         assert resources != null;

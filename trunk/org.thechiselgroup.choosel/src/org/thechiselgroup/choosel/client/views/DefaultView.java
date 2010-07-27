@@ -45,7 +45,9 @@ import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollec
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.util.Disposable;
+import org.thechiselgroup.choosel.client.util.HandlerRegistrationSet;
 import org.thechiselgroup.choosel.client.util.Initializable;
+import org.thechiselgroup.choosel.client.util.SingleItemIterable;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 
 import com.allen_sauer.gwt.log.client.Log;
@@ -114,6 +116,8 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private ViewContentDisplayCallback contentDisplayCallback;
 
+    private HoverModel hoverModel;
+
     private DockPanel mainPanel;
 
     private ResourceSetFactory resourceSetFactory;
@@ -141,6 +145,8 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private static final String MEMENTO_RESOURCE_MODEL = "resource-model";
 
+    private HandlerRegistrationSet handlerRegistrations = new HandlerRegistrationSet();
+
     @Inject
     public DefaultView(
             @Named(ChooselInjectionConstants.LABEL_PROVIDER_SELECTION_SET) LabelProvider selectionModelLabelFactory,
@@ -151,7 +157,7 @@ public class DefaultView extends AbstractWindowContent implements View {
             ViewContentDisplay contentDisplay, String label,
             String contentType, ResourceItemValueResolver configuration,
             ResourceModel resourceModel,
-            ResourceModelPresenter resourceModelPresenter) {
+            ResourceModelPresenter resourceModelPresenter, HoverModel hoverModel) {
 
         super(label, contentType);
 
@@ -164,6 +170,7 @@ public class DefaultView extends AbstractWindowContent implements View {
         assert contentDisplay != null;
         assert resourceModel != null;
         assert resourceModelPresenter != null;
+        assert hoverModel != null;
 
         this.configuration = configuration;
         this.selectionModelLabelFactory = selectionModelLabelFactory;
@@ -174,6 +181,7 @@ public class DefaultView extends AbstractWindowContent implements View {
         this.contentDisplay = contentDisplay;
         this.resourceModel = resourceModel;
         this.resourceModelPresenter = resourceModelPresenter;
+        this.hoverModel = hoverModel;
     }
 
     @Override
@@ -214,7 +222,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         // TODO provide configuration to content display in callback
         ResourceItem resourceItem = contentDisplay.createResourceItem(
-                configuration, category, resources);
+                configuration, category, resources, hoverModel);
 
         categoriesToResourceItems.put(category, resourceItem);
 
@@ -224,7 +232,6 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         // / TODO is this necessary?
         checkResize();
-
     }
 
     @Override
@@ -247,6 +254,10 @@ public class DefaultView extends AbstractWindowContent implements View {
         resourceModelPresenter = null;
         selection.dispose();
         selection = null;
+        hoverModel = null;
+
+        handlerRegistrations.dispose();
+        handlerRegistrations = null;
     }
 
     private void doRestore(Memento state, ResourceSetAccessor accessor) {
@@ -317,8 +328,8 @@ public class DefaultView extends AbstractWindowContent implements View {
         resourceModelPresenter.init();
 
         initResourceSplitter();
-
         initAllResourcesToResourceSplitterLink();
+        initHoverModelHooks();
 
         initUI();
 
@@ -402,6 +413,24 @@ public class DefaultView extends AbstractWindowContent implements View {
             }
         };
         contentDisplay.init(contentDisplayCallback);
+    }
+
+    private void initHoverModelHooks() {
+        handlerRegistrations.addHandlerRegistration(hoverModel
+                .addEventHandler(new ResourcesAddedEventHandler() {
+                    @Override
+                    public void onResourcesAdded(ResourcesAddedEvent e) {
+                        showHover(e.getAddedResources(), true);
+                    }
+
+                }));
+        handlerRegistrations.addHandlerRegistration(hoverModel
+                .addEventHandler(new ResourcesRemovedEventHandler() {
+                    @Override
+                    public void onResourcesRemoved(ResourcesRemovedEvent e) {
+                        showHover(e.getRemovedResources(), false);
+                    }
+                }));
     }
 
     private void initResourceModelPresenterUI() {
@@ -627,6 +656,25 @@ public class DefaultView extends AbstractWindowContent implements View {
         for (ResourceItem avatar : categoriesToResourceItems.values()) {
             avatar.setSelectionStatusVisible(selectionStatus);
         }
+    }
+
+    private void showHover(List<Resource> resources, boolean showHover) {
+        // TODO improved filtering
+        for (Resource resource : resources) {
+            // TODO replace with some retain operation with view resources
+            if (!resourceModel
+                    .containsResources(new SingleItemIterable<Resource>(
+                            resource))) {
+                continue;
+            }
+
+            List<ResourceItem> resourceItems = getResourceItems(resource);
+            for (ResourceItem resourceItem : resourceItems) {
+                resourceItem.setHighlighted(showHover);
+            }
+        }
+
+        // TODO call update
     }
 
     private void storeContentDisplaySettings(Memento memento) {

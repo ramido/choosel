@@ -66,10 +66,10 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
 
     @Inject
     public MapViewContentDisplay(PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper, HoverModel hoverModel,
+            DetailsWidgetHelper detailsWidgetHelper,
             DragEnablerFactory dragEnablerFactory) {
 
-        super(popupManagerFactory, detailsWidgetHelper, hoverModel);
+        super(popupManagerFactory, detailsWidgetHelper);
 
         this.dragEnablerFactory = dragEnablerFactory;
     }
@@ -82,7 +82,7 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
     // TODO test
     @Override
     public ResourceItem createResourceItem(ResourceItemValueResolver resolver,
-            String category, ResourceSet resources) {
+            String category, ResourceSet resources, HoverModel hoverModel) {
         // TODO iterate over path
         // TODO resolve sets
         // TODO separate resolvers for latitude and longitude

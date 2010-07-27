@@ -62,6 +62,8 @@ public class ViewFactory implements WindowContentFactory {
 
     private ViewContentDisplayFactory viewContentDisplayFactory;
 
+    private HoverModel hoverModel;
+
     public ViewFactory(
             String contentType,
             ViewContentDisplayFactory viewContentDisplayFactory,
@@ -74,7 +76,8 @@ public class ViewFactory implements WindowContentFactory {
             ResourceMultiCategorizer categorizer,
             CategoryLabelProvider labelProvider,
             @Named(DROP_TARGET_MANAGER_VIEW_CONTENT) ResourceSetAvatarDropTargetManager contentDropTargetManager,
-            DefaultResourceSetToValueResolverFactory resourceSetToValueResolverFactory) {
+            DefaultResourceSetToValueResolverFactory resourceSetToValueResolverFactory,
+            HoverModel hoverModel) {
 
         assert contentType != null;
         assert viewContentDisplayFactory != null;
@@ -88,7 +91,9 @@ public class ViewFactory implements WindowContentFactory {
         assert categorizer != null;
         assert labelProvider != null;
         assert resourceSetToValueResolverFactory != null;
+        assert hoverModel != null;
 
+        this.hoverModel = hoverModel;
         this.contentType = contentType;
         this.viewContentDisplayFactory = viewContentDisplayFactory;
         this.userSetsDragAvatarFactory = userSetsDragAvatarFactory;
@@ -141,6 +146,7 @@ public class ViewFactory implements WindowContentFactory {
                         selectionDragAvatarFactory),
                 new ResourceSetAvatarResourceSetsPresenter(dropTargetFactory),
                 resourceSplitter, contentDisplay, contentType, contentType,
-                configuration, resourceModel, resourceModelPresenter);
+                configuration, resourceModel, resourceModelPresenter,
+                hoverModel);
     }
 }

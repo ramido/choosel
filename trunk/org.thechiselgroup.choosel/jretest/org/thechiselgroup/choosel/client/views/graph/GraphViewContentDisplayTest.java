@@ -61,7 +61,7 @@ public class GraphViewContentDisplayTest {
     public class TestGraphViewContentDisplay extends GraphViewContentDisplay {
 
         public TestGraphViewContentDisplay(Display display,
-                HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
+                PopupManagerFactory popupManagerFactory,
                 DetailsWidgetHelper detailsWidgetHelper,
                 CommandManager commandManager, ResourceManager resourceManager,
                 DragEnablerFactory dragEnablerFactory,
@@ -69,10 +69,9 @@ public class GraphViewContentDisplayTest {
                 ArcStyleProvider arcStyleProvider,
                 GraphExpansionRegistry registry) {
 
-            super(display, hoverModel, popupManagerFactory,
-                    detailsWidgetHelper, commandManager, resourceManager,
-                    dragEnablerFactory, resourceCategorizer, arcStyleProvider,
-                    registry);
+            super(display, popupManagerFactory, detailsWidgetHelper,
+                    commandManager, resourceManager, dragEnablerFactory,
+                    resourceCategorizer, arcStyleProvider, registry);
         }
 
         @Override
@@ -178,7 +177,7 @@ public class GraphViewContentDisplayTest {
         concept1 = createResource(1);
 
         contentDisplay.createResourceItem(layer, RESOURCE_ITEM_CATEGORY,
-                toResourceSet(concept1));
+                toResourceSet(concept1), hoverModel);
 
         verify(automaticExpander, times(1)).expand(eq(concept1),
                 any(GraphNodeExpansionCallback.class));
@@ -199,9 +198,9 @@ public class GraphViewContentDisplayTest {
         when(callback.getAllResources()).thenReturn(allResources);
 
         contentDisplay = spy(new TestGraphViewContentDisplay(display,
-                hoverModel, popupManagerFactory, detailsWidgetHelper,
-                commandManager, resourceManager, dragEnablerFactory,
-                resourceCategorizer, arcStyleProvider, registry));
+                popupManagerFactory, detailsWidgetHelper, commandManager,
+                resourceManager, dragEnablerFactory, resourceCategorizer,
+                arcStyleProvider, registry));
 
         contentDisplay.init(callback);
 

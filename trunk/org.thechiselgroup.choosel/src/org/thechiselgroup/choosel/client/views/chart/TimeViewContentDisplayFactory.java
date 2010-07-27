@@ -18,7 +18,6 @@ package org.thechiselgroup.choosel.client.views.chart;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
 
@@ -33,9 +32,6 @@ public class TimeViewContentDisplayFactory implements ViewContentDisplayFactory 
     private DragEnablerFactory dragEnablerFactory;
 
     @Inject
-    private HoverModel hoverModel;
-
-    @Inject
     private PopupManagerFactory popupManagerFactory;
 
     @Inject
@@ -45,6 +41,6 @@ public class TimeViewContentDisplayFactory implements ViewContentDisplayFactory 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
         return new TimeViewContentDisplay(popupManagerFactory,
-                detailsWidgetHelper, hoverModel, dragEnablerFactory);
+                detailsWidgetHelper, dragEnablerFactory);
     }
 }

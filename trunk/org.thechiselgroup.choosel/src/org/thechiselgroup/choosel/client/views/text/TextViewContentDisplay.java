@@ -200,12 +200,11 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
     private final boolean tagCloud;
 
     @Inject
-    public TextViewContentDisplay(HoverModel hoverModel,
-            PopupManagerFactory popupManagerFactory,
+    public TextViewContentDisplay(PopupManagerFactory popupManagerFactory,
             DetailsWidgetHelper detailsWidgetHelper,
             ResourceSetAvatarDragController dragController, boolean tagCloud) {
 
-        super(popupManagerFactory, detailsWidgetHelper, hoverModel);
+        super(popupManagerFactory, detailsWidgetHelper);
 
         this.dragController = dragController;
         this.tagCloud = tagCloud;
@@ -218,7 +217,7 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
     @Override
     public ResourceItem createResourceItem(ResourceItemValueResolver resolver,
-            String category, ResourceSet resources) {
+            String category, ResourceSet resources, HoverModel hoverModel) {
 
         PopupManager popupManager = createPopupManager(resolver, resources);
 
