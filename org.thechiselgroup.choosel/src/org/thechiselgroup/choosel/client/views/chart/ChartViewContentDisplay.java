@@ -15,6 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.chart;
 
+import java.util.Set;
+
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
@@ -105,15 +107,14 @@ public abstract class ChartViewContentDisplay extends
         return state;
     }
 
-    // XXX issue 33: broken
-    // @Override
-    // protected void showHover(List<Resource> resources, boolean showHover) {
-    // if (resources.isEmpty()) {
-    // return;
-    // }
-    //
-    // super.showHover(resources, showHover);
-    //
-    // chartWidget.renderChart();
-    // }
+    @Override
+    public void update(Set<ResourceItem> addedResourceItems,
+            Set<ResourceItem> updatedResourceItems,
+            Set<ResourceItem> removedResourceItems) {
+
+        super.update(addedResourceItems, updatedResourceItems,
+                removedResourceItems);
+        chartWidget.renderChart();
+    }
+
 }

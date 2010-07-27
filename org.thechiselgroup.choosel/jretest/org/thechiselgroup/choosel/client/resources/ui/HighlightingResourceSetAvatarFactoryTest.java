@@ -31,7 +31,6 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.UnmodifiableResourceSet;
 import org.thechiselgroup.choosel.client.test.DndTestHelpers;
@@ -64,7 +63,7 @@ public class HighlightingResourceSetAvatarFactoryTest {
 
     private HoverModel hoverModel;
 
-    private DefaultResourceSet resources;
+    private ResourceSet resources;
 
     private HighlightingResourceSetAvatarFactory underTest;
 
@@ -85,7 +84,7 @@ public class HighlightingResourceSetAvatarFactoryTest {
 
     @Test
     public void highlightIfUnmodifiableWrapperGetsHighlighted() {
-        DefaultResourceSet wrappedSet = createResources(1);
+        ResourceSet wrappedSet = createResources(1);
         UnmodifiableResourceSet unmodifiableWrapper = new UnmodifiableResourceSet(
                 wrappedSet);
 
@@ -100,7 +99,7 @@ public class HighlightingResourceSetAvatarFactoryTest {
 
     @Test
     public void highlightUnmodifiableWrapperIfOtherUnmodifiableWrapperGetsHighlighted() {
-        DefaultResourceSet wrappedSet = createResources(1);
+        ResourceSet wrappedSet = createResources(1);
         UnmodifiableResourceSet unmodifiableWrapper1 = new UnmodifiableResourceSet(
                 wrappedSet);
         UnmodifiableResourceSet unmodifiableWrapper2 = new UnmodifiableResourceSet(
@@ -117,7 +116,7 @@ public class HighlightingResourceSetAvatarFactoryTest {
 
     @Test
     public void highlightUnmodifiableWrappersIfWrappedSetGetsHighlighted() {
-        DefaultResourceSet wrappedSet = createResources(1);
+        ResourceSet wrappedSet = createResources(1);
         UnmodifiableResourceSet unmodifiableWrapper = new UnmodifiableResourceSet(
                 wrappedSet);
 

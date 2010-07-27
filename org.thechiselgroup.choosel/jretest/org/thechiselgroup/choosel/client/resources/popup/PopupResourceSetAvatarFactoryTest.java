@@ -31,7 +31,6 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarEnabledStatusEvent;
@@ -63,7 +62,7 @@ public class PopupResourceSetAvatarFactoryTest {
     @Mock
     private PopupManagerFactory popupManagerFactory;
 
-    private DefaultResourceSet resources;
+    private ResourceSet resources;
 
     private PopupResourceSetAvatarFactory underTest;
 

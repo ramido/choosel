@@ -38,26 +38,22 @@ public class Resource implements Serializable {
         this.uri = uri;
     }
 
+    /**
+     * Equals is just based on the <code>uri</code>. In Choosel there should be
+     * just one resource per uri.
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
-        if (obj == null) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
+
         Resource other = (Resource) obj;
-        if (uri == null) {
-            if (other.uri != null) {
-                return false;
-            }
-        } else if (!uri.equals(other.uri)) {
-            return false;
-        }
-        return true;
+
+        return uri.equals(other.uri);
     }
 
     public HashMap<String, Serializable> getProperties() {
@@ -84,12 +80,12 @@ public class Resource implements Serializable {
         return properties.get(key);
     }
 
+    /**
+     * @return hash code of uri
+     */
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((uri == null) ? 0 : uri.hashCode());
-        return result;
+        return uri.hashCode();
     }
 
     public boolean isUriList(String key) {

@@ -31,19 +31,19 @@ public final class TestResourceSetFactory {
 
     public static final String Y_COORD = "y-coord";
 
-    public static DefaultResourceSet createLabeledResources(int... indices) {
+    public static ResourceSet createLabeledResources(int... indices) {
         return createLabeledResources(LABEL, DEFAULT_TYPE, indices);
     }
 
-    public static DefaultResourceSet createLabeledResources(String type,
+    public static ResourceSet createLabeledResources(String type,
             int... indices) {
         return createLabeledResources(LABEL, type, indices);
     }
 
-    public static DefaultResourceSet createLabeledResources(String label,
-            String type, int... indices) {
+    public static ResourceSet createLabeledResources(String label, String type,
+            int... indices) {
 
-        DefaultResourceSet resources = createResources(type, indices);
+        ResourceSet resources = createResources(type, indices);
         resources.setLabel(label);
         return resources;
     }
@@ -60,12 +60,11 @@ public final class TestResourceSetFactory {
         return r;
     }
 
-    public static DefaultResourceSet createResources(int... indices) {
+    public static ResourceSet createResources(int... indices) {
         return createResources(DEFAULT_TYPE, indices);
     }
 
-    public static DefaultResourceSet createResources(String type,
-            int... indices) {
+    public static ResourceSet createResources(String type, int... indices) {
 
         DefaultResourceSet resources = new DefaultResourceSet();
         for (int i : indices) {
@@ -74,15 +73,14 @@ public final class TestResourceSetFactory {
         return resources;
     }
 
-    public static DefaultResourceSet toLabeledResources(
-            ResourceSet... resourceSets) {
+    public static ResourceSet toLabeledResources(ResourceSet... resourceSets) {
 
-        DefaultResourceSet result = toResourceSet(resourceSets);
+        ResourceSet result = toResourceSet(resourceSets);
         result.setLabel(LABEL);
         return result;
     }
 
-    public static DefaultResourceSet toResourceSet(Resource... resources) {
+    public static ResourceSet toResourceSet(Resource... resources) {
         DefaultResourceSet result = new DefaultResourceSet();
         for (Resource resource : resources) {
             result.add(resource);
@@ -90,7 +88,7 @@ public final class TestResourceSetFactory {
         return result;
     }
 
-    public static DefaultResourceSet toResourceSet(ResourceSet... resourceSets) {
+    public static ResourceSet toResourceSet(ResourceSet... resourceSets) {
         DefaultResourceSet result = new DefaultResourceSet();
         for (ResourceSet resources : resourceSets) {
             result.addAll(resources);

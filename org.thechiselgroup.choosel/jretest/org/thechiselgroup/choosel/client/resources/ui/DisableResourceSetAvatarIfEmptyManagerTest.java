@@ -29,7 +29,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
+import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.test.DndTestHelpers;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
 
@@ -43,7 +43,7 @@ public class DisableResourceSetAvatarIfEmptyManagerTest {
     @Mock
     private HandlerRegistration handlerRegistration;
 
-    private DefaultResourceSet resources;
+    private ResourceSet resources;
 
     private DisableResourceSetAvatarIfEmptyManager underTest;
 

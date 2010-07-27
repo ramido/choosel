@@ -38,7 +38,6 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.persistence.Persistable;
-import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.DelegatingResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceManager;
@@ -146,7 +145,7 @@ public class DefaultWorkspacePersistenceManagerTest {
         // use string buffer so its modifiable
         final StringBuffer id = new StringBuffer();
 
-        DefaultResourceSet delegate = createResources(1, 2);
+        ResourceSet delegate = createResources(1, 2);
         final ResourceSet unmodifiableSet = new UnmodifiableResourceSet(
                 delegate);
 

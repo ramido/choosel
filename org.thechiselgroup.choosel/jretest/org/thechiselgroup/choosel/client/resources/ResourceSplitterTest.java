@@ -54,9 +54,9 @@ public class ResourceSplitterTest {
     @Mock
     private ResourceCategoriesChangedHandler changeHandler;
 
-    private DefaultResourceSet resources1;
+    private ResourceSet resources1;
 
-    private DefaultResourceSet resources2;
+    private ResourceSet resources2;
 
     private ResourceSplitter splitter;
 

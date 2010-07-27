@@ -20,18 +20,23 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.thechiselgroup.choosel.client.test.AdvancedAsserts.assertContentEquals;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createLabeledResources;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.toLabeledResources;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.toResourceSet;
+import static org.thechiselgroup.choosel.client.util.CollectionUtils.toSet;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -40,7 +45,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.label.SelectionModelLabelFactory;
-import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceByUriTypeCategorizer;
@@ -133,10 +137,9 @@ public class DefaultViewTest {
 
     @Test
     public void categorizeLabeledResources() {
-        DefaultResourceSet resources1 = createLabeledResources(CATEGORY_1, 1,
-                3, 4);
-        DefaultResourceSet resources2 = createLabeledResources(CATEGORY_2, 4, 2);
-        DefaultResourceSet resources = toResourceSet(resources1, resources2);
+        ResourceSet resources1 = createLabeledResources(CATEGORY_1, 1, 3, 4);
+        ResourceSet resources2 = createLabeledResources(CATEGORY_2, 4, 2);
+        ResourceSet resources = toResourceSet(resources1, resources2);
 
         underTest.getResourceModel().addResourceSet(resources);
         Map<String, ResourceSet> result = underTest
@@ -150,26 +153,10 @@ public class DefaultViewTest {
     }
 
     @Test
-    public void correctHoverShownIfOneHoveredResourceIsNotContainedInView() {
-        Resource resource1 = createResource(1);
-        Resource resource2 = createResource(2);
-
-        resourceModel.addResourceSet(toResourceSet(resource2));
-
-        when(resourceItem.getResourceSet())
-                .thenReturn(toResourceSet(resource2));
-
-        hoverModel
-                .setHighlightedResourceSet(toResourceSet(resource1, resource2));
-
-        verify(resourceItem, times(1)).setHighlighted(true);
-    }
-
-    @Test
     public void createResourceItemsOnResourcesAdded() {
-        DefaultResourceSet resources1 = createResources(CATEGORY_1, 1, 3, 4);
-        DefaultResourceSet resources2 = createResources(CATEGORY_2, 4, 2);
-        DefaultResourceSet resources = toResourceSet(resources1, resources2);
+        ResourceSet resources1 = createResources(CATEGORY_1, 1, 3, 4);
+        ResourceSet resources2 = createResources(CATEGORY_2, 4, 2);
+        ResourceSet resources = toResourceSet(resources1, resources2);
 
         underTest.getResourceModel().addResourceSet(resources);
 
@@ -291,16 +278,53 @@ public class DefaultViewTest {
 
     @Test
     public void removeResourceItemsOnResourceSetRemoved() {
-        DefaultResourceSet resources1 = createResources(CATEGORY_1, 1, 3, 4);
-        DefaultResourceSet resources2 = createResources(CATEGORY_2, 4, 2);
-        DefaultResourceSet resources = toLabeledResources(resources1,
-                resources2);
+        ResourceSet resources1 = createResources(CATEGORY_1, 1, 3, 4);
+        ResourceSet resources2 = createResources(CATEGORY_2, 4, 2);
+        ResourceSet resources = toLabeledResources(resources1, resources2);
 
         underTest.getResourceModel().addResourceSet(resources);
         underTest.getResourceModel().removeResourceSet(resources);
 
         verify(contentDisplay, times(2)).removeResourceItem(
                 any(ResourceItem.class));
+    }
+
+    @Test
+    public void resourceItemGetsHighlightedOnlyOnceWhenSeveralResourcesFromItemAddedToHoverModel() {
+        ResourceSet resources = createResources(1, 2);
+        resourceModel.addResourceSet(resources);
+        when(resourceItem.getResourceSet()).thenReturn(resources);
+
+        hoverModel.setHighlightedResourceSet(resources);
+
+        verify(resourceItem, times(1)).setHighlighted(true);
+    }
+
+    @Test
+    public void resourceItemGetsHighlightedWhenHoverModelContainsAdditionalResources() {
+        ResourceSet highlightedResources = createResources(1);
+        when(resourceItem.getResourceSet()).thenReturn(highlightedResources);
+        resourceModel.addResourceSet(highlightedResources);
+
+        hoverModel.setHighlightedResourceSet(highlightedResources);
+
+        verify(resourceItem, times(1)).setHighlighted(true);
+    }
+
+    @Test
+    public void resourceItemGetsHighlightedWhenResourcesAddedToHoverModel() {
+        Resource resource2 = createResource(2);
+        Resource resource1 = createResource(1);
+
+        resourceModel.addResourceSet(toResourceSet(resource2));
+
+        when(resourceItem.getResourceSet())
+                .thenReturn(toResourceSet(resource2));
+
+        hoverModel
+                .setHighlightedResourceSet(toResourceSet(resource1, resource2));
+
+        verify(resourceItem, times(1)).setHighlighted(true);
     }
 
     @Test
@@ -370,5 +394,36 @@ public class DefaultViewTest {
         assertEquals(true,
                 underTest.getSelectionSets().get(0).contains(createResource(1)));
         assertEquals(true, underTest.getSelection().contains(createResource(1)));
+    }
+
+    @Test
+    public void updateCalledOnHoverModelChange() {
+        ResourceSet highlightedResources = createResources(1);
+        when(resourceItem.getResourceSet()).thenReturn(highlightedResources);
+        resourceModel.addResourceSet(highlightedResources);
+
+        hoverModel.setHighlightedResourceSet(highlightedResources);
+
+        ArgumentCaptor<Set> argument = ArgumentCaptor.forClass(Set.class);
+        verify(contentDisplay, times(1)).update(
+                eq(Collections.<ResourceItem> emptySet()), argument.capture(),
+                eq(Collections.<ResourceItem> emptySet()));
+        Set<ResourceItem> updatedResourceItems = argument.getValue();
+
+        assertContentEquals(toSet(resourceItem), updatedResourceItems);
+    }
+
+    @Test
+    public void updateNeverCalledOnHoverModelChangeThatDoesNotAffectViewResources() {
+        ResourceSet highlightedResources = createResources(1);
+        ResourceSet containedResources = createResources(2);
+        when(resourceItem.getResourceSet()).thenReturn(containedResources);
+        resourceModel.addResourceSet(containedResources);
+
+        hoverModel.setHighlightedResourceSet(highlightedResources);
+
+        verify(contentDisplay, never()).update(
+                eq(Collections.<ResourceItem> emptySet()), any(Set.class),
+                eq(Collections.<ResourceItem> emptySet()));
     }
 }

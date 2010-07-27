@@ -28,7 +28,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
 
@@ -42,7 +41,7 @@ public class ResourceSetAvatarResourceSetsPresenterTest {
 
     private ResourceSetAvatarResourceSetsPresenter dragAvatarResourceSetsPresenter;
 
-    private DefaultResourceSet resources;
+    private ResourceSet resources;
 
     @Test
     public void disposeDragAvatarOnDispose() {
@@ -55,7 +54,7 @@ public class ResourceSetAvatarResourceSetsPresenterTest {
     @Test
     public void replaceResourceSetCallsDragAvatar() {
         String newLabel = "new-label";
-        DefaultResourceSet newResources = createResources(3);
+        ResourceSet newResources = createResources(3);
         newResources.setLabel(newLabel);
 
         dragAvatarResourceSetsPresenter.addResourceSet(resources);

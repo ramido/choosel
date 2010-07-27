@@ -191,8 +191,6 @@ public class ResourceItem {
         }
 
         this.highlighted = highlighted;
-
-        updateStyling();
     }
 
     public void setSelected(boolean selected) {

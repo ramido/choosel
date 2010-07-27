@@ -26,7 +26,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.views.ResourceModel;
 
@@ -107,9 +106,7 @@ public class MergeResourceSetsCommandTest {
 
     }
 
-    private void setUpCommand(DefaultResourceSet sourceSet,
-            DefaultResourceSet targetSet) {
-
+    private void setUpCommand(ResourceSet sourceSet, ResourceSet targetSet) {
         this.sourceSet = sourceSet;
         this.targetSet = targetSet;
 

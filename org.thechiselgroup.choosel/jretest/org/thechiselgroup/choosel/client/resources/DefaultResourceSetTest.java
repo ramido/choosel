@@ -32,9 +32,9 @@ import org.mockito.MockitoAnnotations;
 
 public class DefaultResourceSetTest {
 
-    private DefaultResourceSet resources;
+    private ResourceSet resources;
 
-    private DefaultResourceSet resources2 = createResources(1, 2, 3);
+    private ResourceSet resources2 = createResources(1, 2, 3);
 
     @Mock
     private ResourcesAddedEventHandler resourcesAddedHandler;

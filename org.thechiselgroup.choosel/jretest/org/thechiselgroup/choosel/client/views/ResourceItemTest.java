@@ -50,9 +50,9 @@ public class ResourceItemTest {
     }
 
     @Test
-    public void setHighlightedUpdateStylingCalled() {
+    public void setHighlightedNeverCallsUpdateStyling() {
         underTest.setHighlighted(true);
-        verify(underTest, times(1)).updateStyling();
+        verify(underTest, never()).updateStyling();
     }
 
     @Test

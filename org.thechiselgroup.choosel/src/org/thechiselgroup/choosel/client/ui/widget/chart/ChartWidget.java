@@ -16,6 +16,7 @@ s * Copyright 2009, 2010 Lars Grammel
 package org.thechiselgroup.choosel.client.ui.widget.chart;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Label;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark;
@@ -89,6 +90,10 @@ public abstract class ChartWidget extends Widget {
     }
 
     public ChartItem getChartItem(int index) {
+        assert 0 <= index;
+        assert index < chartItemArray.size();
+        assert chartItemArray != null;
+
         return (ChartItem) chartItemArray.get(index);
     }
 
@@ -100,7 +105,7 @@ public abstract class ChartWidget extends Widget {
         return dataArray;
     }
 
-    protected JavaScriptObject getJsDataArray(ArrayList<Double> dataArray) {
+    protected JavaScriptObject getJsDataArray(List<Double> dataArray) {
         return ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArray));
     }
 
@@ -148,10 +153,16 @@ public abstract class ChartWidget extends Widget {
     }
 
     private void updateChart() {
+        // XXX why is this assigned two times?
         chart = Panel.createWindowPanel().canvas(getElement()).height(height)
                 .width(width).fillStyle("white");
+        // XXX hack - is there a better way to prevent drawing chart without
+        // data?
+        // if (dataArray != null) {
         chart = drawChart();
+        // XXX how often are event listeners assigned? are they removed?
         registerEventHandlers();
         renderChart();
+        // }
     }
 }

@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.client.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -75,6 +76,12 @@ public final class CollectionUtils {
             list.add(t);
         }
         return list;
+    }
+
+    public static <T> Set<T> toSet(Collection<T> collection) {
+        Set<T> set = new HashSet<T>();
+        set.addAll(collection);
+        return set;
     }
 
     public static <T> Set<T> toSet(T... ts) {
