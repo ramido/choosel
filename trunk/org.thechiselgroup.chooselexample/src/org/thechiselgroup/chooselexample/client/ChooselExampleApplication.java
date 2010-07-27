@@ -34,6 +34,7 @@ import org.thechiselgroup.chooselexample.client.services.GeoRSSServiceAsync;
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Widget;
@@ -169,6 +170,7 @@ public class ChooselExampleApplication extends ChooselApplication {
 					resourceSet.add(TestResourceSetFactory.createResource(i));
 				for (Resource resource : resourceSet) {
 					resource.putValue("date", new Date().toString());
+					resource.putValue("tagContent", "test" + Random.nextInt(5));
 				}
 
 				dataSourcesPresenter.addResourceSet(resourceSet);
@@ -185,7 +187,8 @@ public class ChooselExampleApplication extends ChooselApplication {
 		addTestDataSourceButton();
 
 		addWindowContentButton(VIEWS_PANEL, "Note", "note");
-		addWindowContentButton(VIEWS_PANEL, "List", ChooselInjectionConstants.TYPE_LIST);
+		addWindowContentButton(VIEWS_PANEL, "List",
+				ChooselInjectionConstants.TYPE_LIST);
 		addWindowContentButton(VIEWS_PANEL, "Map", "Map");
 		addWindowContentButton(VIEWS_PANEL, "Timeline", "Timeline");
 		addWindowContentButton(VIEWS_PANEL, "Bar", "Bar");
