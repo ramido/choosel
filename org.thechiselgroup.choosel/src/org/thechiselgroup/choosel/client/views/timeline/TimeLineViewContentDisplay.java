@@ -45,10 +45,10 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
 
     @Inject
     public TimeLineViewContentDisplay(PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper, HoverModel hoverModel,
+            DetailsWidgetHelper detailsWidgetHelper,
             DragEnablerFactory dragEnablerFactory) {
 
-        super(popupManagerFactory, detailsWidgetHelper, hoverModel);
+        super(popupManagerFactory, detailsWidgetHelper);
 
         this.dragEnablerFactory = dragEnablerFactory;
     }
@@ -60,7 +60,7 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
 
     @Override
     public ResourceItem createResourceItem(ResourceItemValueResolver resolver,
-            String category, ResourceSet resources) {
+            String category, ResourceSet resources, HoverModel hoverModel) {
         PopupManager popupManager = createPopupManager(resolver, resources);
 
         TimeLineItem timeLineItem = new TimeLineItem(category, resources, this,

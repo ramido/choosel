@@ -15,10 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.chart;
 
-import java.util.List;
-
 import org.thechiselgroup.choosel.client.persistence.Memento;
-import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
@@ -54,10 +51,10 @@ public abstract class ChartViewContentDisplay extends
 
     @Inject
     public ChartViewContentDisplay(PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper, HoverModel hoverModel,
+            DetailsWidgetHelper detailsWidgetHelper,
             DragEnablerFactory dragEnablerFactory) {
 
-        super(popupManagerFactory, detailsWidgetHelper, hoverModel);
+        super(popupManagerFactory, detailsWidgetHelper);
 
         this.dragEnablerFactory = dragEnablerFactory;
     }
@@ -69,7 +66,7 @@ public abstract class ChartViewContentDisplay extends
 
     @Override
     public ResourceItem createResourceItem(ResourceItemValueResolver resolver,
-            String category, ResourceSet resources) {
+            String category, ResourceSet resources, HoverModel hoverModel) {
 
         PopupManager popupManager = createPopupManager(resolver, resources);
 
@@ -108,14 +105,15 @@ public abstract class ChartViewContentDisplay extends
         return state;
     }
 
-    @Override
-    protected void showHover(List<Resource> resources, boolean showHover) {
-        if (resources.isEmpty()) {
-            return;
-        }
-
-        super.showHover(resources, showHover);
-
-        chartWidget.renderChart();
-    }
+    // XXX issue 33: broken
+    // @Override
+    // protected void showHover(List<Resource> resources, boolean showHover) {
+    // if (resources.isEmpty()) {
+    // return;
+    // }
+    //
+    // super.showHover(resources, showHover);
+    //
+    // chartWidget.renderChart();
+    // }
 }

@@ -15,22 +15,15 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import java.util.List;
 import java.util.Set;
 
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
-import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
-import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.WidgetFactory;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.util.Disposable;
-import org.thechiselgroup.choosel.client.util.HandlerRegistrationSet;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -40,10 +33,6 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
 
     private DetailsWidgetHelper detailsWidgetHelper;
 
-    private HandlerRegistrationSet handlerRegistrations = new HandlerRegistrationSet();
-
-    protected HoverModel hoverModel;
-
     private PopupManagerFactory popupManagerFactory;
 
     private boolean restoring = false;
@@ -51,14 +40,12 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
     private Widget widget;
 
     public AbstractViewContentDisplay(PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper, HoverModel hoverModel) {
+            DetailsWidgetHelper detailsWidgetHelper) {
 
         assert popupManagerFactory != null;
-        assert hoverModel != null;
 
         this.popupManagerFactory = popupManagerFactory;
         this.detailsWidgetHelper = detailsWidgetHelper;
-        this.hoverModel = hoverModel;
     }
 
     @Override
@@ -101,11 +88,7 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
     public void dispose() {
         callback = null;
         detailsWidgetHelper = null;
-        hoverModel = null;
         popupManagerFactory = null;
-
-        handlerRegistrations.dispose();
-        handlerRegistrations = null;
 
         if (widget instanceof Disposable) {
             ((Disposable) widget).dispose();
@@ -125,26 +108,6 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
     @Override
     public void init(ViewContentDisplayCallback callback) {
         this.callback = callback;
-
-        initHoverModelHooks();
-    }
-
-    private void initHoverModelHooks() {
-        handlerRegistrations.addHandlerRegistration(hoverModel
-                .addEventHandler(new ResourcesAddedEventHandler() {
-                    @Override
-                    public void onResourcesAdded(ResourcesAddedEvent e) {
-                        showHover(e.getAddedResources(), true);
-                    }
-
-                }));
-        handlerRegistrations.addHandlerRegistration(hoverModel
-                .addEventHandler(new ResourcesRemovedEventHandler() {
-                    @Override
-                    public void onResourcesRemoved(ResourcesRemovedEvent e) {
-                        showHover(e.getRemovedResources(), false);
-                    }
-                }));
     }
 
     @Override
@@ -154,20 +117,6 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
 
     public boolean isRestoring() {
         return restoring;
-    }
-
-    protected void showHover(List<Resource> resources, boolean showHover) {
-        for (Resource resource : resources) {
-            if (!callback.containsResource(resource)) {
-                continue;
-            }
-
-            List<ResourceItem> resourceItems = callback
-                    .getResourceItems(resource);
-            for (ResourceItem resourceItem : resourceItems) {
-                resourceItem.setHighlighted(showHover);
-            }
-        }
     }
 
     @Override

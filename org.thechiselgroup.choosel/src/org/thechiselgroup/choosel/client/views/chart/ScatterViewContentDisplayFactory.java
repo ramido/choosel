@@ -18,7 +18,6 @@ package org.thechiselgroup.choosel.client.views.chart;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
 
@@ -34,9 +33,6 @@ public class ScatterViewContentDisplayFactory implements
     private DragEnablerFactory dragEnablerFactory;
 
     @Inject
-    private HoverModel hoverModel;
-
-    @Inject
     private PopupManagerFactory popupManagerFactory;
 
     @Inject
@@ -46,6 +42,6 @@ public class ScatterViewContentDisplayFactory implements
     @Override
     public ViewContentDisplay createViewContentDisplay() {
         return new ScatterViewContentDisplay(popupManagerFactory,
-                detailsWidgetHelper, hoverModel, dragEnablerFactory);
+                detailsWidgetHelper, dragEnablerFactory);
     }
 }

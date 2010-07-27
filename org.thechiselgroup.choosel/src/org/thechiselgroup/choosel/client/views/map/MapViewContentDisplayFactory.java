@@ -18,7 +18,6 @@ package org.thechiselgroup.choosel.client.views.map;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
 
@@ -33,9 +32,6 @@ public class MapViewContentDisplayFactory implements ViewContentDisplayFactory {
     private DragEnablerFactory dragEnablerFactory;
 
     @Inject
-    private HoverModel hoverModel;
-
-    @Inject
     private PopupManagerFactory popupManagerFactory;
 
     @Inject
@@ -45,7 +41,7 @@ public class MapViewContentDisplayFactory implements ViewContentDisplayFactory {
     @Override
     public ViewContentDisplay createViewContentDisplay() {
         return new MapViewContentDisplay(popupManagerFactory,
-                detailsWidgetHelper, hoverModel, dragEnablerFactory);
+                detailsWidgetHelper, dragEnablerFactory);
     }
 
 }

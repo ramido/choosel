@@ -46,6 +46,7 @@ import org.thechiselgroup.choosel.client.ui.NoteWindowContent;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropTargetManager;
 import org.thechiselgroup.choosel.client.views.DefaultResourceSetToValueResolverFactory;
 import org.thechiselgroup.choosel.client.views.DefaultWindowContentProducer;
+import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.ViewFactory;
@@ -82,6 +83,8 @@ public class ChooselWindowContentProducerProvider implements
 
     protected final Map<String, WindowContentFactory> windowContentFactories = new HashMap<String, WindowContentFactory>();
 
+    private HoverModel hoverModel;
+
     @Inject
     public ChooselWindowContentProducerProvider(
             @Named(AVATAR_FACTORY_SET) ResourceSetAvatarFactory userSetsDragAvatarFactory,
@@ -94,7 +97,7 @@ public class ChooselWindowContentProducerProvider implements
             CategoryLabelProvider labelProvider,
             @Named(DROP_TARGET_MANAGER_VIEW_CONTENT) ResourceSetAvatarDropTargetManager contentDropTargetManager,
             SlotResolver slotResolver,
-            ResourceCategorizer resourceByTypeCategorizer) {
+            ResourceCategorizer resourceByTypeCategorizer, HoverModel hoverModel) {
 
         assert userSetsDragAvatarFactory != null;
         assert allResourcesDragAvatarFactory != null;
@@ -106,6 +109,7 @@ public class ChooselWindowContentProducerProvider implements
         assert categorizer != null;
         assert labelProvider != null;
         assert slotResolver != null;
+        assert hoverModel != null;
 
         this.userSetsDragAvatarFactory = userSetsDragAvatarFactory;
         this.allResourcesDragAvatarFactory = allResourcesDragAvatarFactory;
@@ -116,6 +120,7 @@ public class ChooselWindowContentProducerProvider implements
         this.selectionModelLabelFactory = selectionModelLabelFactory;
         this.categorizer = categorizer;
         this.labelProvider = labelProvider;
+        this.hoverModel = hoverModel;
 
         this.resourceSetToValueResolverFactory = new DefaultResourceSetToValueResolverFactory(
                 slotResolver, resourceByTypeCategorizer);
@@ -207,7 +212,8 @@ public class ChooselWindowContentProducerProvider implements
                 allResourcesDragAvatarFactory, selectionDragAvatarFactory,
                 dropTargetFactory, resourceSetFactory,
                 selectionModelLabelFactory, categorizer, labelProvider,
-                contentDropTargetManager, resourceSetToValueResolverFactory));
+                contentDropTargetManager, resourceSetToValueResolverFactory,
+                hoverModel));
     }
 
 }

@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -41,6 +42,7 @@ import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.label.SelectionModelLabelFactory;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSetFactory;
+import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceByUriTypeCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizerToMultiCategorizerAdapter;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
@@ -65,12 +67,14 @@ public class DefaultViewTest {
                 ViewContentDisplay contentDisplay, String label,
                 String contentType, ResourceItemValueResolver configuration,
                 ResourceModel resourceModel,
-                ResourceModelPresenter resourceModelPresenter) {
+                ResourceModelPresenter resourceModelPresenter,
+                HoverModel hoverModel) {
 
             super(selectionModelLabelFactory, resourceSetFactory,
                     selectionPresenter, selectionDropPresenter,
                     resourceSplitter, contentDisplay, label, contentType,
-                    configuration, resourceModel, resourceModelPresenter);
+                    configuration, resourceModel, resourceModelPresenter,
+                    hoverModel);
         }
 
         @Override
@@ -114,6 +118,8 @@ public class DefaultViewTest {
     @Mock
     private ResourceModelPresenter resourceModelPresenter;
 
+    private HoverModel hoverModel;
+
     // TODO this needs to be changed - we should not test the implementation
     @Test
     public void addSelectionHandlers() {
@@ -144,6 +150,22 @@ public class DefaultViewTest {
     }
 
     @Test
+    public void correctHoverShownIfOneHoveredResourceIsNotContainedInView() {
+        Resource resource1 = createResource(1);
+        Resource resource2 = createResource(2);
+
+        resourceModel.addResourceSet(toResourceSet(resource2));
+
+        when(resourceItem.getResourceSet())
+                .thenReturn(toResourceSet(resource2));
+
+        hoverModel
+                .setHighlightedResourceSet(toResourceSet(resource1, resource2));
+
+        verify(resourceItem, times(1)).setHighlighted(true);
+    }
+
+    @Test
     public void createResourceItemsOnResourcesAdded() {
         DefaultResourceSet resources1 = createResources(CATEGORY_1, 1, 3, 4);
         DefaultResourceSet resources2 = createResources(CATEGORY_2, 4, 2);
@@ -155,7 +177,7 @@ public class DefaultViewTest {
                 .forClass(ResourceSet.class);
         verify(contentDisplay, times(2)).createResourceItem(
                 any(ResourceItemValueResolver.class), any(String.class),
-                argument.capture());
+                argument.capture(), eq(hoverModel));
 
         List<ResourceSet> values = argument.getAllValues();
 
@@ -193,7 +215,7 @@ public class DefaultViewTest {
                 .forClass(ResourceSet.class);
         verify(contentDisplay, times(2)).createResourceItem(
                 any(ResourceItemValueResolver.class), any(String.class),
-                captor.capture());
+                captor.capture(), eq(hoverModel));
 
         List<ResourceSet> capturedResourceSets = captor.getAllValues();
         for (ResourceSet capturedResourceSet : capturedResourceSets) {
@@ -211,6 +233,7 @@ public class DefaultViewTest {
 
         // TODO replace with mock
         resourceModel = new DefaultResourceModel(resourceSetFactory);
+        hoverModel = new HoverModel();
 
         ResourceSplitter resourceSplitter = new ResourceSplitter(
                 new ResourceCategorizerToMultiCategorizerAdapter(
@@ -220,7 +243,7 @@ public class DefaultViewTest {
                 resourceSetFactory, selectionPresenter, selectionDropPresenter,
                 resourceSplitter, contentDisplay, "", "",
                 resourceSetToValueResolver, resourceModel,
-                resourceModelPresenter));
+                resourceModelPresenter, hoverModel));
     }
 
     @Test
@@ -315,8 +338,8 @@ public class DefaultViewTest {
         when(
                 contentDisplay.createResourceItem(
                         any(ResourceItemValueResolver.class),
-                        any(String.class), any(ResourceSet.class))).thenReturn(
-                resourceItem);
+                        any(String.class), any(ResourceSet.class),
+                        eq(hoverModel))).thenReturn(resourceItem);
 
         when(contentDisplay.getSlotIDs()).thenReturn(new String[] { SLOT_ID },
                 new String[] {});
