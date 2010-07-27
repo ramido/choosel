@@ -10,17 +10,19 @@ public abstract class Mark extends JavaScriptObject {
         return $entry(function(d) 
             {return f.@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDouble::f(Ljava/lang/String;I)(d.toString(),_this.index);})
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
+    protected static final native JavaScriptObject getFunctionObject(
+            JavaScriptObject _this, ProtovisFunctionObject f) /*-{
+        return $entry(function(d) 
+            {return f.@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionObject::f(Ljava/lang/Object;I)(d,_this.index);})
+    }-*/;
+    
     protected static final native JavaScriptObject getFunctionString(
             JavaScriptObject _this, ProtovisFunctionString f) /*-{
         return $entry(function(d) 
             {return f.@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionString::f(Ljava/lang/String;I)(d.toString(),_this.index);})
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     protected static final native JavaScriptObject registerEvent(
             JavaScriptObject _this, ProtovisEventHandler handler) /*-{
         return $entry(function() 

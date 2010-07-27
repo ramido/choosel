@@ -26,9 +26,9 @@ import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFuncti
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Rule;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Scale;
 import org.thechiselgroup.choosel.client.util.ArrayUtils;
-import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -40,11 +40,13 @@ public abstract class ChartWidget extends Widget {
 
     protected ArrayList<Object> chartItemArray = new ArrayList<Object>();
 
-    protected double height = 0;
+    protected int height;
 
-    protected double width = 0;
+    protected int width;
 
     protected ArrayList<Double> dataArray;
+
+    protected JavaScriptObject jsChartItems = ArrayUtils.createArray();
 
     protected String[] eventTypes = { "click", "mousedown", "mousemove",
             "mouseout", "mouseover", "mouseup" };
@@ -70,8 +72,11 @@ public abstract class ChartWidget extends Widget {
     }
 
     public void addChartItem(ChartItem chartItem) {
+        ArrayUtils.pushArray(jsChartItems, chartItem);
         chartItemArray.add(chartItem);
-        updateChart();
+        // updateChart();
+
+        assert chartItemArray.size() == ArrayUtils.length(jsChartItems);
     }
 
     public void checkResize() {
@@ -109,9 +114,13 @@ public abstract class ChartWidget extends Widget {
         return ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArray));
     }
 
+    protected JavaScriptObject getJsDataArrayForObject(List<Object> dataArray) {
+        return ArrayUtils.toJsArray(dataArray.toArray());
+    }
+
     private double getSlotValue(int i, String slot) {
-        return Double
-                .valueOf(getChartItem(i).getResourceValue(slot).toString());
+        return Double.valueOf(getChartItem(i).getResourceItem()
+                .getResourceValue(slot).toString());
     }
 
     @Override
@@ -137,28 +146,35 @@ public abstract class ChartWidget extends Widget {
         }
     }
 
-    public void removeChartItem(ResourceItem chartItem) {
+    public void removeChartItem(ChartItem chartItem) {
+        ArrayUtils.remove(chartItem, jsChartItems);
         chartItemArray.remove(chartItem);
-        updateChart();
+        // updateChart();
     }
 
     public void renderChart() {
+        Log.debug("ChartWidget.renderChart() -- " + hashCode());
         chart.render();
     }
 
     private void resize(int width, int height) {
+        if (width == this.width && height == this.height) {
+            return;
+        }
+
         this.width = width;
         this.height = height;
         updateChart();
     }
 
-    private void updateChart() {
+    // re-rendering requires reset?
+    // http://groups.google.com/group/protovis/browse_thread/thread/b9032215a2f5ac25
+    public void updateChart() {
+        Log.debug("ChartWidget.updateChart() -- " + hashCode());
+
         // XXX why is this assigned two times?
         chart = Panel.createWindowPanel().canvas(getElement()).height(height)
                 .width(width).fillStyle("white");
-        // XXX hack - is there a better way to prevent drawing chart without
-        // data?
-        // if (dataArray != null) {
         chart = drawChart();
         // XXX how often are event listeners assigned? are they removed?
         registerEventHandlers();

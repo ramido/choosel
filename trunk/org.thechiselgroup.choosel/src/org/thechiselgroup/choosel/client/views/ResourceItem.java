@@ -56,6 +56,15 @@ public class ResourceItem {
 
     private HighlightingManager highlightingManager;
 
+    /**
+     * The representation of this resource item in the specific display. This is
+     * set by the display to enable fast reference to this display element, and
+     * should be casted into the specific type.
+     * 
+     * TODO dispose
+     */
+    private Object displayObject;
+
     public ResourceItem(String category, ResourceSet resources,
             HoverModel hoverModel, PopupManager popupManager,
             ResourceItemValueResolver valueResolver) {
@@ -79,7 +88,7 @@ public class ResourceItem {
         updateContent();
     }
 
-    protected Status calculateStatus() {
+    public Status calculateStatus() {
         if (isHighlighted() && isSelected()) {
             return Status.HIGHLIGHTED_SELECTED;
         }
@@ -109,6 +118,10 @@ public class ResourceItem {
         }
 
         return Status.DEFAULT;
+    }
+
+    public Object getDisplayObject() {
+        return displayObject;
     }
 
     /**
@@ -182,6 +195,10 @@ public class ResourceItem {
 
     public boolean isSelected() {
         return selected;
+    }
+
+    public void setDisplayObject(Object displayObject) {
+        this.displayObject = displayObject;
     }
 
     // TODO introduce partial highlighting
