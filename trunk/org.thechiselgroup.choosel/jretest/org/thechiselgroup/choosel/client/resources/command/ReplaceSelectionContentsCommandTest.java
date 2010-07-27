@@ -23,7 +23,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.views.ResourceModel;
 import org.thechiselgroup.choosel.client.views.View;
@@ -81,8 +80,8 @@ public class ReplaceSelectionContentsCommandTest {
 
     }
 
-    private void setUpCommand(DefaultResourceSet resources,
-            DefaultResourceSet viewSelection, DefaultResourceSet viewResources) {
+    private void setUpCommand(ResourceSet resources, ResourceSet viewSelection,
+            ResourceSet viewResources) {
 
         this.resources = resources;
         this.viewSelection = viewSelection;

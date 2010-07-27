@@ -1,6 +1,8 @@
 package org.thechiselgroup.choosel.client.views;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.persistence.Persistable;
@@ -154,6 +156,20 @@ public class DefaultResourceModel implements ResourceModel, Disposable,
             addResourceSet(restoreResourceSet(state, accessor,
                     MEMENTO_RESOURCE_SET_PREFIX + i));
         }
+    }
+
+    @Override
+    public Set<Resource> retain(Set<Resource> resources) {
+        assert resources != null;
+
+        Set<Resource> retainedResources = new HashSet<Resource>();
+        // TODO performance: use hash-based retain operation instead
+        for (Resource resource : resources) {
+            if (allResources.contains(resource)) {
+                retainedResources.add(resource);
+            }
+        }
+        return retainedResources;
     }
 
     @Override

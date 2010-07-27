@@ -22,7 +22,6 @@ import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.crea
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
 public class AddResourceSetToResourceSetCommandTest {
@@ -80,9 +79,7 @@ public class AddResourceSetToResourceSetCommandTest {
 
     }
 
-    private void setUpCommand(DefaultResourceSet sourceSet,
-            DefaultResourceSet targetSet) {
-
+    private void setUpCommand(ResourceSet sourceSet, ResourceSet targetSet) {
         this.sourceSet = sourceSet;
         this.targetSet = targetSet;
 

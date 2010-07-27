@@ -15,9 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
+import static org.thechiselgroup.choosel.client.util.CollectionUtils.toSet;
+
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -47,7 +51,6 @@ import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.util.HandlerRegistrationSet;
 import org.thechiselgroup.choosel.client.util.Initializable;
-import org.thechiselgroup.choosel.client.util.SingleItemIterable;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 
 import com.allen_sauer.gwt.log.client.Log;
@@ -276,16 +279,13 @@ public class DefaultView extends AbstractWindowContent implements View {
         return resourceSplitter.getCategorizedResourceSets();
     }
 
-    private List<ResourceItem> getResourceItems(List<Resource> resources) {
+    private Set<ResourceItem> getResourceItems(Iterable<Resource> resources) {
         assert resources != null;
 
-        List<ResourceItem> result = new ArrayList<ResourceItem>();
+        Set<ResourceItem> result = new HashSet<ResourceItem>();
         for (Resource resource : resources) {
-            List<ResourceItem> items = getResourceItems(resource);
-            items.removeAll(result);
-            result.addAll(items);
+            result.addAll(getResourceItems(resource));
         }
-
         return result;
     }
 
@@ -420,7 +420,7 @@ public class DefaultView extends AbstractWindowContent implements View {
                 .addEventHandler(new ResourcesAddedEventHandler() {
                     @Override
                     public void onResourcesAdded(ResourcesAddedEvent e) {
-                        showHover(e.getAddedResources(), true);
+                        updateHighlighting(e.getAddedResources(), true);
                     }
 
                 }));
@@ -428,7 +428,7 @@ public class DefaultView extends AbstractWindowContent implements View {
                 .addEventHandler(new ResourcesRemovedEventHandler() {
                     @Override
                     public void onResourcesRemoved(ResourcesRemovedEvent e) {
-                        showHover(e.getRemovedResources(), false);
+                        updateHighlighting(e.getRemovedResources(), false);
                     }
                 }));
     }
@@ -658,25 +658,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         }
     }
 
-    private void showHover(List<Resource> resources, boolean showHover) {
-        // TODO improved filtering
-        for (Resource resource : resources) {
-            // TODO replace with some retain operation with view resources
-            if (!resourceModel
-                    .containsResources(new SingleItemIterable<Resource>(
-                            resource))) {
-                continue;
-            }
-
-            List<ResourceItem> resourceItems = getResourceItems(resource);
-            for (ResourceItem resourceItem : resourceItems) {
-                resourceItem.setHighlighted(showHover);
-            }
-        }
-
-        // TODO call update
-    }
-
     private void storeContentDisplaySettings(Memento memento) {
         memento.addChild(MEMENTO_CONTENT_DISPLAY, contentDisplay.save());
     }
@@ -710,6 +691,32 @@ public class DefaultView extends AbstractWindowContent implements View {
             storeResourceSet(persistanceManager, memento, MEMENTO_SELECTION,
                     selection);
         }
+    }
+
+    // TODO change into Set<Resource> to enable faster operations (instead of
+    // conversion to set)
+    private void updateHighlighting(List<Resource> affectedResources,
+            boolean highlighted) {
+
+        assert affectedResources != null;
+
+        // TODO remove toSet once set is passed in
+        Set<Resource> affectedResourcesInThisView = resourceModel
+                .retain(toSet(affectedResources));
+
+        if (affectedResourcesInThisView.isEmpty()) {
+            return;
+        }
+
+        Set<ResourceItem> highlightedResourceItems = getResourceItems(affectedResourcesInThisView);
+        for (ResourceItem resourceItem : highlightedResourceItems) {
+            resourceItem.setHighlighted(highlighted);
+        }
+
+        contentDisplay
+                .update(Collections.<ResourceItem> emptySet(),
+                        highlightedResourceItems,
+                        Collections.<ResourceItem> emptySet());
     }
 
     // TODO use viewContentDisplay.update to perform single update
@@ -756,7 +763,7 @@ public class DefaultView extends AbstractWindowContent implements View {
     private void updateSelectionStatusDisplay(List<Resource> resources,
             boolean selected) {
 
-        List<ResourceItem> resourceItems = getResourceItems(resources);
+        Set<ResourceItem> resourceItems = getResourceItems(resources);
         for (ResourceItem resourceItem : resourceItems) {
             resourceItem.setSelected(selected);
         }

@@ -1,5 +1,7 @@
 package org.thechiselgroup.choosel.client.views;
 
+import java.util.Set;
+
 import org.thechiselgroup.choosel.client.resources.CombinedResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
@@ -51,5 +53,11 @@ public interface ResourceModel {
      * a label.
      */
     void removeResourceSet(ResourceSet resourceSet);
+
+    /**
+     * @return new <code>Set</code> that contains only the subset of
+     *         <code>resources</code> that is contained in this resource model
+     */
+    Set<Resource> retain(Set<Resource> resources);
 
 }

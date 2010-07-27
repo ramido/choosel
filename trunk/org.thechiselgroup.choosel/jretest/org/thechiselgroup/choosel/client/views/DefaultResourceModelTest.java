@@ -78,7 +78,7 @@ public class DefaultResourceModelTest {
 
     @Test
     public void addUnlabeledSetContentsToAutomaticResourceSet() {
-        DefaultResourceSet resources = createResources(1);
+        ResourceSet resources = createResources(1);
         assertEquals(false, resources.hasLabel());
 
         underTest.addResourceSet(resources);
@@ -112,7 +112,9 @@ public class DefaultResourceModelTest {
 
     @Test
     public void disposeShouldRemoveResourceHooks() {
-        DefaultResourceSet resources = createResources(3, 4);
+        DefaultResourceSet resources = new DefaultResourceSet();
+        resources.add(createResource(3));
+        resources.add(createResource(4));
 
         underTest.addResourceSet(resources);
         underTest.dispose();
