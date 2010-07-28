@@ -2,6 +2,11 @@ package org.thechiselgroup.choosel.client.ui.widget.chart.protovis;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
+/**
+ * 
+ * @author Bradley Blashko
+ * 
+ */
 public class Rule extends Mark {
 
     // @formatter:off        
@@ -88,7 +93,7 @@ public class Rule extends Mark {
 
     // @formatter:off
     public final native Rule event(String eventType, ProtovisEventHandler handler) /*-{
-        return this.event(eventType, this.@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::registerEvent(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisEventHandler;)(this, handler));
+        return this.event(eventType, @org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::registerEvent(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisEventHandler;)(this, handler));
     }-*/;
     // @formatter:on
 
@@ -188,15 +193,15 @@ public class Rule extends Mark {
     public final native Rule scale(Number scale) /*-{
         return this.scale(scale);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
+    public final native Rule strokeStyle(ProtovisFunctionStringToString f) /*-{
+        return this.strokeStyle(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionStringToString(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionStringToString;)(this,f));
+    }-*/;
+    
     public final native Rule strokeStyle(String strokeStyle) /*-{
         return this.strokeStyle(strokeStyle);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Rule title(String title) /*-{
         return this.title(title);
     }-*/;

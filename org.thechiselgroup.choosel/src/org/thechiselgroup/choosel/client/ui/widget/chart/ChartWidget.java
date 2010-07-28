@@ -18,12 +18,10 @@ package org.thechiselgroup.choosel.client.ui.widget.chart;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Label;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Panel;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventHandler;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionStringToString;
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Rule;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Scale;
 import org.thechiselgroup.choosel.client.util.ArrayUtils;
 import org.thechiselgroup.choosel.client.views.chart.ChartItem;
@@ -33,6 +31,11 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * 
+ * @author Bradley Blashko
+ * 
+ */
 public abstract class ChartWidget extends Widget {
 
     private static final String WHITE = "white";
@@ -100,14 +103,6 @@ public abstract class ChartWidget extends Widget {
      * can be rendered ( jsChartItems.length >= 1 ).
      */
     protected abstract <T extends Mark> T drawChart();
-
-    protected void drawScales(Scale scale) {
-        this.scale = scale;
-        // TODO // should // take // double // with // labelText
-        chart.add(Rule.createRule()).data(scale.ticks())
-                .strokeStyle("lightGray").top(scale).bottom(4.5).anchor("left")
-                .add(Label.createLabel()).text(labelText);
-    }
 
     public ChartItem getChartItem(int index) {
         assert chartItems != null;
@@ -201,7 +196,7 @@ public abstract class ChartWidget extends Widget {
                     .height(height).width(width).fillStyle(WHITE);
         } else {
             chart = Panel.createWindowPanel().canvas(getElement())
-                    .height(height).width(width).fillStyle(WHITE);
+                    .fillStyle(WHITE);
             chart = drawChart();
             registerEventHandlers();
         }

@@ -2,6 +2,11 @@ package org.thechiselgroup.choosel.client.ui.widget.chart.protovis;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
+/**
+ * 
+ * @author Bradley Blashko
+ * 
+ */
 public class Bar extends Mark {
 
     public static native Bar createBar() /*-{
@@ -58,7 +63,7 @@ public class Bar extends Mark {
     }-*/;
 
     public final native Bar event(String eventType, ProtovisEventHandler handler) /*-{
-        return this.event(eventType, this.@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::registerEvent(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisEventHandler;)(this, handler));
+        return this.event(eventType, @org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::registerEvent(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisEventHandler;)(this, handler));
     }-*/;
 
     public final native Bar events(String events) /*-{
@@ -129,8 +134,8 @@ public class Bar extends Mark {
         return this.scale(scale);
     }-*/;
 
-    public final native Bar strokeStyle(ProtovisFunctionDouble f) /*-{
-        return this.fillStyle(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionDouble(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionDouble;)(this,f));
+    public final native Bar strokeStyle(ProtovisFunctionStringToString f) /*-{
+        return this.fillStyle(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionString(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionString;)(this,f));
     }-*/;
 
     public final native Bar strokeStyle(String strokeStyle) /*-{

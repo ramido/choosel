@@ -1,10 +1,18 @@
 package org.thechiselgroup.choosel.client.ui.widget.chart;
 
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Label;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDouble;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Rule;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Scale;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Wedge;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
+/**
+ * 
+ * @author Bradley Blashko
+ * 
+ */
 public class PieChart extends ChartWidget {
 
     private Wedge wedge;
@@ -58,6 +66,14 @@ public class PieChart extends ChartWidget {
         maxValue = dataArray.max();
         w = width - 40;
         h = height - 40;
+    }
+
+    protected void drawScales(Scale scale) {
+        this.scale = scale;
+        // TODO // should // take // double // with // labelText
+        chart.add(Rule.createRule()).data(scale.ticks())
+                .strokeStyle("lightGray").top(scale).bottom(4.5).anchor("left")
+                .add(Label.createLabel()).text(labelText);
     }
 
 }
