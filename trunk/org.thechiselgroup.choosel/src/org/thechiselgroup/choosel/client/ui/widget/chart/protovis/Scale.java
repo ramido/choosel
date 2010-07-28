@@ -2,6 +2,11 @@ package org.thechiselgroup.choosel.client.ui.widget.chart.protovis;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
+/**
+ * 
+ * @author Bradley Blashko
+ * 
+ */
 public class Scale extends JavaScriptObject {
 
     // public final static native Scale createScale() /*-{

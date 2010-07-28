@@ -2,6 +2,11 @@ package org.thechiselgroup.choosel.client.ui.widget.chart.protovis;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
+/**
+ * 
+ * @author Bradley Blashko
+ * 
+ */
 public class Label extends Mark {
 
     // @formatter:off        
@@ -82,7 +87,7 @@ public class Label extends Mark {
 
     // @formatter:off
     public final native Label event(String eventType, ProtovisEventHandler handler) /*-{
-        return this.event(eventType, this.@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::registerEvent(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisEventHandler;)(this, handler));
+        return this.event(eventType, @org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::registerEvent(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisEventHandler;)(this, handler));
     }-*/;
     // @formatter:on
 

@@ -2,6 +2,11 @@ package org.thechiselgroup.choosel.client.ui.widget.chart.protovis;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
+/**
+ * 
+ * @author Bradley Blashko
+ * 
+ */
 public class Area extends Mark {
 
     // @formatter:off        

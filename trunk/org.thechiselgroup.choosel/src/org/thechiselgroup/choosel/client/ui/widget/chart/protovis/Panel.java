@@ -18,6 +18,11 @@ package org.thechiselgroup.choosel.client.ui.widget.chart.protovis;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.Element;
 
+/**
+ * 
+ * @author Bradley Blashko
+ * 
+ */
 public class Panel extends Mark {
 
     public static native Panel createPanel() /*-{
@@ -106,7 +111,7 @@ public class Panel extends Mark {
 
     // @formatter:off
     public final native Panel event(String eventType, ProtovisEventHandler handler) /*-{
-        return this.event(eventType, this.@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::registerEvent(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisEventHandler;)(this, handler));
+        return this.event(eventType, @org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::registerEvent(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisEventHandler;)(this, handler));
     }-*/;
     // @formatter:on
 

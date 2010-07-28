@@ -1,9 +1,12 @@
 package org.thechiselgroup.choosel.client.ui.widget.chart;
 
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Bar;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Label;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDouble;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDoubleWithCache;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionString;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionStringToString;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Rule;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Scale;
 import org.thechiselgroup.choosel.client.util.ArrayUtils;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
@@ -50,21 +53,21 @@ public class BarChart extends ChartWidget {
 
         @Override
         public double f(ChartItem value, int index) {
-            return (slotValues.value(index) + base) * relativeHeight;
+            return (slotValues.value(index) + base) * relativeHeight - 1;
         }
     };
 
     private ProtovisFunctionDouble barLeft = new ProtovisFunctionDouble() {
         @Override
         public double f(ChartItem value, int index) {
-            return (BAR_PADDING / 2) + (index * chartWidth / chartItems.size());
+            return BAR_PADDING + (index * chartWidth / chartItems.size());
         }
     };
 
     private ProtovisFunctionDouble barWidth = new ProtovisFunctionDouble() {
         @Override
         public double f(ChartItem value, int index) {
-            return chartWidth / chartItems.size() - BAR_PADDING;
+            return chartWidth / (chartItems.size() * 2);
         }
     };
 
@@ -72,7 +75,7 @@ public class BarChart extends ChartWidget {
 
     private static final String YELLOW = "yellow";
 
-    private int barBottom = 5;
+    private int barBottom = BORDER_HEIGHT + 1;
 
     private ProtovisFunctionString barFillStyle = new ProtovisFunctionString() {
         @Override
@@ -121,14 +124,32 @@ public class BarChart extends ChartWidget {
 
         SlotValues slotValues = getSlotValues(SlotResolver.MAGNITUDE_SLOT);
 
-        drawScales(Scale.linear(slotValues.max(), 0).range(5, chartHeight));
+        drawScales(Scale.linear(slotValues.max(), 0).range(0, chartHeight));
         drawBar();
 
         return bar;
     }
 
+    protected void drawScales(Scale scale) {
+        this.scale = scale;
+        // TODO // should // take // double // with // labelText
+        chart.add(Rule.createRule())
+                .data(scale.ticks())
+                .top(scale)
+                .strokeStyle(new ProtovisFunctionStringToString() {
+                    @Override
+                    public String f(String value, int index) {
+                        return Double.parseDouble(value) == 0 ? "gray"
+                                : "lightgray";
+                    }
+                }).width(chartWidth).anchor("left").add(Label.createLabel())
+                .text(labelText);
+
+        chart.add(Rule.createRule()).left(0).bottom(BORDER_HEIGHT)
+                .strokeStyle("gray");
+    }
+
     private void setChartParameters() {
-        chart.width(chartWidth).height(chartHeight).left(BORDER_WIDTH)
-                .top(BORDER_HEIGHT);
+        chart.left(BORDER_WIDTH).top(BORDER_HEIGHT);
     }
 }
