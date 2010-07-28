@@ -26,74 +26,80 @@ import org.thechiselgroup.choosel.client.views.DefaultSlotResolver;
 
 public class ChooselExampleSlotResolver extends DefaultSlotResolver {
 
-	@Override
-	public ResourceToValueResolver createDateSlotResolver(String type) {
-		return new SimplePropertyValueResolver("date");
-	}
+    @Override
+    public ResourceToValueResolver createDateSlotResolver(String type) {
+        return new SimplePropertyValueResolver("date");
+    }
 
-	@Override
-	public ResourceToValueResolver createDescriptionSlotResolver(String category) {
-		// TODO switch based on category -- need category as part of layerModel
-		// TODO resources as part of layerModel
-		// TODO how to do the automatic color assignment?
-		// TODO refactor // extract
-		if ("tsunami".equals(category)) {
-			return new SimplePropertyValueResolver("date");
-		}
+    @Override
+    public ResourceToValueResolver createDescriptionSlotResolver(String category) {
+        // TODO switch based on category -- need category as part of layerModel
+        // TODO resources as part of layerModel
+        // TODO how to do the automatic color assignment?
+        // TODO refactor // extract
+        if ("tsunami".equals(category)) {
+            return new SimplePropertyValueResolver("date");
+        }
 
-		if ("earthquake".equals(category)) {
-			return new SimplePropertyValueResolver("description");
-		}
+        if ("earthquake".equals(category)) {
+            return new SimplePropertyValueResolver("description");
+        }
 
-		if ("csv".equals(category)) {
-			return new SimplePropertyValueResolver("value");
-		}
+        if ("csv".equals(category)) {
+            return new SimplePropertyValueResolver("value");
+        }
 
-		if (TestResourceSetFactory.DEFAULT_TYPE.equals(category)) {
-			return new SimplePropertyValueResolver(
-					TestResourceSetFactory.LABEL_KEY);
-		}
+        if ("graphtest".equals(category)) {
+            return new SimplePropertyValueResolver("title");
+        }
 
-		throw new RuntimeException("failed creating slot mapping");
-	}
+        if (TestResourceSetFactory.DEFAULT_TYPE.equals(category)) {
+            return new SimplePropertyValueResolver(
+                    TestResourceSetFactory.LABEL_KEY);
+        }
 
-	@Override
-	public ResourceToValueResolver createLabelSlotResolver(String category) {
+        throw new RuntimeException("failed creating slot mapping");
+    }
 
-		Converter<Float, String> converter = new Converter<Float, String>() {
-			@Override
-			public String convert(Float value) throws ConversionException {
-				if (value != null) {
-					int f = (value).intValue();
-					return "" + f;
-				}
+    @Override
+    public ResourceToValueResolver createLabelSlotResolver(String category) {
 
-				return "";
-			}
-		};
+        Converter<Float, String> converter = new Converter<Float, String>() {
+            @Override
+            public String convert(Float value) throws ConversionException {
+                if (value != null) {
+                    int f = (value).intValue();
+                    return "" + f;
+                }
 
-		SimplePropertyValueResolver resolver;
-		if ("csv".equals(category)) {
-			return new SimplePropertyValueResolver("value");
-		} else {
-			resolver = new SimplePropertyValueResolver("magnitude");
-		}
+                return "";
+            }
+        };
 
-		return new PropertyValueResolverConverterWrapper(resolver, converter);
-	}
+        SimplePropertyValueResolver resolver;
+        if ("csv".equals(category)) {
+            return new SimplePropertyValueResolver("value");
+        } else if ("graphtest".equals(category)) {
+            return new SimplePropertyValueResolver("description");
+        } else {
+            resolver = new SimplePropertyValueResolver("magnitude");
+        }
 
-	@Override
-	public ResourceToValueResolver createLocationSlotResolver(String category) {
-		return new SimplePropertyValueResolver("location");
-	}
+        return new PropertyValueResolverConverterWrapper(resolver, converter);
+    }
 
-	@Override
-	public ResourceToValueResolver createMagnitudeSlotResolver(String type) {
-		return new SimplePropertyValueResolver("magnitude");
-	}
+    @Override
+    public ResourceToValueResolver createLocationSlotResolver(String category) {
+        return new SimplePropertyValueResolver("location");
+    }
 
-	@Override
-	public ResourceToValueResolver createFontSizeSlotResolver(String category) {
-		return new FixedValuePropertyValueResolver(new Integer(1));
-	}
+    @Override
+    public ResourceToValueResolver createMagnitudeSlotResolver(String type) {
+        return new SimplePropertyValueResolver("magnitude");
+    }
+
+    @Override
+    public ResourceToValueResolver createFontSizeSlotResolver(String category) {
+        return new FixedValuePropertyValueResolver(new Integer(1));
+    }
 }
