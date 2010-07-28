@@ -1,89 +1,134 @@
 package org.thechiselgroup.choosel.client.ui.widget.chart;
 
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Bar;
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionObject;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDouble;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDoubleWithCache;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionString;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Scale;
 import org.thechiselgroup.choosel.client.util.ArrayUtils;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
+// TODO bar chart should always start at 0
+// TODO bottom border line
+// TODO right side ticks
 public class BarChart extends ChartWidget {
+
+    private static final int BAR_PADDING = 6;
+
+    private static final String STEELBLUE = "steelblue";
+
+    private static final double SCALE_PADDING = 0.5;
+
+    private static final int BORDER_HEIGHT = 10;
+
+    private static final int BORDER_WIDTH = 20;
 
     private Bar bar;
 
-    private ProtovisFunctionObject barHeight = new ProtovisFunctionObject() {
+    private ProtovisFunctionDoubleWithCache barHeight = new ProtovisFunctionDoubleWithCache() {
+
+        private double relativeHeight;
+
+        private double base;
+
+        private SlotValues slotValues;
+
         @Override
-        public double f(Object value, int index) {
-            ChartItem chartItem = (ChartItem) value;
+        public void beforeRender() {
+            if (chartItems.isEmpty()) {
+                return;
+            }
 
-            double resolvedValue = Double.parseDouble((String) chartItem
-                    .getResourceItem().getResourceValue(
-                            SlotResolver.MAGNITUDE_SLOT));
+            slotValues = getSlotValues(SlotResolver.MAGNITUDE_SLOT);
 
-            return ((resolvedValue - minValue + 0.5) * h / (maxValue - minValue + 1));
+            double scaleLength = slotValues.max();// - 0 + SCALE_PADDING * 2;
+
+            base = 0;// -SCALE_PADDING;
+            relativeHeight = chartHeight / scaleLength;
+        }
+
+        @Override
+        public double f(ChartItem value, int index) {
+            return (slotValues.value(index) + base) * relativeHeight;
         }
     };
 
-    private ProtovisFunctionObject barLeft = new ProtovisFunctionObject() {
+    private ProtovisFunctionDouble barLeft = new ProtovisFunctionDouble() {
         @Override
-        public double f(Object value, int index) {
-            return index * w / chartItemArray.size();
+        public double f(ChartItem value, int index) {
+            return (BAR_PADDING / 2) + (index * chartWidth / chartItems.size());
         }
     };
 
-    private ProtovisFunctionObject barWidth = new ProtovisFunctionObject() {
+    private ProtovisFunctionDouble barWidth = new ProtovisFunctionDouble() {
         @Override
-        public double f(Object value, int index) {
-            return w / chartItemArray.size() - 5;
+        public double f(ChartItem value, int index) {
+            return chartWidth / chartItems.size() - BAR_PADDING;
         }
     };
 
-    private int barBottom = 0;
+    private static final String ORANGE = "orange";
+
+    private static final String YELLOW = "yellow";
+
+    private int barBottom = 5;
 
     private ProtovisFunctionString barFillStyle = new ProtovisFunctionString() {
         @Override
-        public String f(String value, int index) {
-            return getChartItem(index).getColour();
+        public String f(ChartItem value, int index) {
+            switch (value.getResourceItem().calculateStatus()) {
+            case HIGHLIGHTED_SELECTED:
+            case HIGHLIGHTED:
+                return YELLOW;
+            case GRAYED_OUT:
+            case DEFAULT:
+                return STEELBLUE;
+            case SELECTED:
+                return ORANGE;
+            }
+            throw new RuntimeException("No colour available");
         }
     };
 
-    protected double minValue;
+    protected double chartHeight;
 
-    protected double maxValue;
+    protected double chartWidth;
 
-    protected double h;
+    @Override
+    protected void beforeRender() {
+        barHeight.beforeRender();
+    }
 
-    protected double w;
+    private void calculateChartVariables() {
+        chartWidth = width - BORDER_WIDTH * 2;
+        chartHeight = height - BORDER_HEIGHT * 2;
+    }
 
     private void drawBar() {
-        bar = chart.add(Bar.createBar()).data(jsChartItems).bottom(barBottom)
-                .height(barHeight).left(barLeft).width(barWidth)
-                .fillStyle(barFillStyle).strokeStyle("steelblue");
+        bar = chart.add(Bar.createBar()).data(chartItemsJSArray)
+                .bottom(barBottom).height(barHeight).left(barLeft)
+                .width(barWidth).fillStyle(barFillStyle).strokeStyle(STEELBLUE);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public Bar drawChart() {
-        setChartVariables();
+        assert ArrayUtils.length(chartItemsJSArray) >= 1;
+
+        calculateChartVariables();
         setChartParameters();
-        drawScales(Scale.linear(maxValue + 0.5, minValue - 0.5).range(0, h));
+
+        SlotValues slotValues = getSlotValues(SlotResolver.MAGNITUDE_SLOT);
+
+        drawScales(Scale.linear(slotValues.max(), 0).range(5, chartHeight));
         drawBar();
 
         return bar;
     }
 
-    protected void setChartParameters() {
-        chart.width(w).height(h).left(20).top(20);
-    }
-
-    protected void setChartVariables() {
-        dataArray = getDataArray(SlotResolver.MAGNITUDE_SLOT);
-        if (dataArray.size() > 0) {
-            minValue = ArrayUtils.min(dataArray);
-            maxValue = ArrayUtils.max(dataArray);
-        }
-        w = width - 40;
-        h = height - 40;
+    private void setChartParameters() {
+        chart.width(chartWidth).height(chartHeight).left(BORDER_WIDTH)
+                .top(BORDER_HEIGHT);
     }
 }

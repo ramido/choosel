@@ -22,13 +22,12 @@ import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Label;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Panel;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventHandler;
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionString;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionStringToString;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Rule;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Scale;
 import org.thechiselgroup.choosel.client.util.ArrayUtils;
 import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -36,17 +35,17 @@ import com.google.gwt.user.client.ui.Widget;
 
 public abstract class ChartWidget extends Widget {
 
+    private static final String WHITE = "white";
+
     protected Panel chart;
 
-    protected ArrayList<Object> chartItemArray = new ArrayList<Object>();
+    protected List<ChartItem> chartItems = new ArrayList<ChartItem>();
+
+    protected JavaScriptObject chartItemsJSArray = ArrayUtils.createArray();
 
     protected int height;
 
     protected int width;
-
-    protected ArrayList<Double> dataArray;
-
-    protected JavaScriptObject jsChartItems = ArrayUtils.createArray();
 
     protected String[] eventTypes = { "click", "mousedown", "mousemove",
             "mouseout", "mouseover", "mouseup" };
@@ -60,23 +59,34 @@ public abstract class ChartWidget extends Widget {
 
     protected Scale scale;
 
-    protected ProtovisFunctionString labelText = new ProtovisFunctionString() {
+    protected ProtovisFunctionStringToString labelText = new ProtovisFunctionStringToString() {
         @Override
-        public String f(String value, int index) {
-            return scale.tickFormat(value);
+        public String f(String o, int index) {
+            return scale.tickFormat(o.toString());
         }
     };
 
     public ChartWidget() {
         setElement(DOM.createDiv());
+        // TODO extract + move to CSS
+        getElement().getStyle().setProperty("backgroundColor", "white");
     }
 
-    public void addChartItem(ChartItem chartItem) {
-        ArrayUtils.pushArray(jsChartItems, chartItem);
-        chartItemArray.add(chartItem);
-        // updateChart();
+    public void addChartItem(ChartItem resourceItem) {
+        assert chartItems.size() == ArrayUtils.length(chartItemsJSArray);
 
-        assert chartItemArray.size() == ArrayUtils.length(jsChartItems);
+        ArrayUtils.add(resourceItem, chartItemsJSArray);
+        chartItems.add(resourceItem);
+
+        assert chartItems.size() == ArrayUtils.length(chartItemsJSArray);
+    }
+
+    /**
+     * Is called before the chart is rendered. Subclasses can override this
+     * method to recalculate values that are used for all resource item specific
+     * calls from protovis.
+     */
+    protected void beforeRender() {
     }
 
     public void checkResize() {
@@ -85,29 +95,26 @@ public abstract class ChartWidget extends Widget {
         }
     }
 
+    /**
+     * <code>drawChart</code> is only called if there are actual data items that
+     * can be rendered ( jsChartItems.length >= 1 ).
+     */
     protected abstract <T extends Mark> T drawChart();
 
     protected void drawScales(Scale scale) {
         this.scale = scale;
+        // TODO // should // take // double // with // labelText
         chart.add(Rule.createRule()).data(scale.ticks())
-                .strokeStyle("lightgrey").top(scale).anchor("left")
+                .strokeStyle("lightGray").top(scale).bottom(4.5).anchor("left")
                 .add(Label.createLabel()).text(labelText);
     }
 
     public ChartItem getChartItem(int index) {
+        assert chartItems != null;
         assert 0 <= index;
-        assert index < chartItemArray.size();
-        assert chartItemArray != null;
+        assert index < chartItems.size();
 
-        return (ChartItem) chartItemArray.get(index);
-    }
-
-    protected ArrayList<Double> getDataArray(String slot) {
-        ArrayList<Double> dataArray = new ArrayList<Double>();
-        for (int i = 0; i < chartItemArray.size(); i++) {
-            dataArray.add(getSlotValue(i, slot));
-        }
-        return dataArray;
+        return chartItems.get(index);
     }
 
     protected JavaScriptObject getJsDataArray(List<Double> dataArray) {
@@ -118,9 +125,23 @@ public abstract class ChartWidget extends Widget {
         return ArrayUtils.toJsArray(dataArray.toArray());
     }
 
-    private double getSlotValue(int i, String slot) {
-        return Double.valueOf(getChartItem(i).getResourceItem()
-                .getResourceValue(slot).toString());
+    protected SlotValues getSlotValues(String slot) {
+        double[] slotValues = new double[chartItems.size()];
+
+        for (int i = 0; i < chartItems.size(); i++) {
+            Object value = chartItems.get(i).getResourceItem()
+                    .getResourceValue(slot);
+
+            if (value instanceof Double) {
+                slotValues[i] = (Double) value;
+            } else if (value instanceof Number) {
+                slotValues[i] = ((Number) value).doubleValue();
+            } else {
+                slotValues[i] = Double.valueOf(value.toString());
+            }
+        }
+
+        return new SlotValues(slotValues);
     }
 
     @Override
@@ -133,8 +154,9 @@ public abstract class ChartWidget extends Widget {
     }
 
     protected void onEvent(Event e, int index) {
-        ChartItem chartItem = getChartItem(index);
-        chartItem.onEvent(e);
+        getChartItem(index).onEvent(e);
+
+        // TODO remove once selection is fixed
         if (e.getTypeInt() == Event.ONCLICK) {
             renderChart();
         }
@@ -147,13 +169,16 @@ public abstract class ChartWidget extends Widget {
     }
 
     public void removeChartItem(ChartItem chartItem) {
-        ArrayUtils.remove(chartItem, jsChartItems);
-        chartItemArray.remove(chartItem);
-        // updateChart();
+        assert chartItems.size() == ArrayUtils.length(chartItemsJSArray);
+
+        ArrayUtils.remove(chartItem, chartItemsJSArray);
+        chartItems.remove(chartItem);
+
+        assert chartItems.size() == ArrayUtils.length(chartItemsJSArray);
     }
 
     public void renderChart() {
-        Log.debug("ChartWidget.renderChart() -- " + hashCode());
+        beforeRender();
         chart.render();
     }
 
@@ -164,21 +189,24 @@ public abstract class ChartWidget extends Widget {
 
         this.width = width;
         this.height = height;
-        updateChart();
+        updateChart(); // TODO render chart good enough?
     }
 
     // re-rendering requires reset?
+    // see
     // http://groups.google.com/group/protovis/browse_thread/thread/b9032215a2f5ac25
     public void updateChart() {
-        Log.debug("ChartWidget.updateChart() -- " + hashCode());
+        if (ArrayUtils.length(chartItemsJSArray) == 0) {
+            chart = Panel.createWindowPanel().canvas(getElement())
+                    .height(height).width(width).fillStyle(WHITE);
+        } else {
+            chart = Panel.createWindowPanel().canvas(getElement())
+                    .height(height).width(width).fillStyle(WHITE);
+            chart = drawChart();
+            registerEventHandlers();
+        }
 
-        // XXX why is this assigned two times?
-        chart = Panel.createWindowPanel().canvas(getElement()).height(height)
-                .width(width).fillStyle("white");
-        chart = drawChart();
         // XXX how often are event listeners assigned? are they removed?
-        registerEventHandlers();
         renderChart();
-        // }
     }
 }

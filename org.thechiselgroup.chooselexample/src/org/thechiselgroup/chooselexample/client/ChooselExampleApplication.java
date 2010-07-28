@@ -170,6 +170,7 @@ public class ChooselExampleApplication extends ChooselApplication {
 					resourceSet.add(TestResourceSetFactory.createResource(i));
 				for (Resource resource : resourceSet) {
 					resource.putValue("date", new Date().toString());
+					resource.putValue("magnitude", (2 + Random.nextInt(20)));
 					resource.putValue("tagContent", "test" + Random.nextInt(5));
 				}
 

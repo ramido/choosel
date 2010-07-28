@@ -48,11 +48,9 @@ import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccess
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
-import org.thechiselgroup.choosel.client.ui.dnd.DropEnabledViewContentDisplay;
 import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.util.HandlerRegistrationSet;
 import org.thechiselgroup.choosel.client.util.Initializable;
-import org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 
 import com.allen_sauer.gwt.log.client.Log;
@@ -221,7 +219,8 @@ public class DefaultView extends AbstractWindowContent implements View {
         return selectionSets.contains(resourceSet);
     }
 
-    private void createResourceItem(String category, ResourceSet resources) {
+    private ResourceItem createResourceItem(String category,
+            ResourceSet resources) {
         // Added when changing resource item to contain resource sets
         // TODO use factory & dispose + clean up
 
@@ -236,7 +235,9 @@ public class DefaultView extends AbstractWindowContent implements View {
                 && !selection.isEmpty());
 
         // / TODO is this necessary?
-        checkResize();
+        // checkResize();
+
+        return resourceItem;
     }
 
     @Override
@@ -530,7 +531,7 @@ public class DefaultView extends AbstractWindowContent implements View {
         mainPanel.setCellHeight(contentDisplay.asWidget(), "100%");
     }
 
-    private void removeResourceItem(String category) {
+    private ResourceItem removeResourceItem(String category) {
         assert category != null : "category must not be null";
         assert categoriesToResourceItems.containsKey(category);
 
@@ -538,6 +539,8 @@ public class DefaultView extends AbstractWindowContent implements View {
         contentDisplay.removeResourceItem(resourceItem);
 
         assert !categoriesToResourceItems.containsKey(category);
+
+        return resourceItem;
     }
 
     private void removeSelectionModelResourceHandlers() {
@@ -724,79 +727,42 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     // TODO use viewContentDisplay.update to perform single update
+    // TODO test update gets called with the right sets
+    // (a) add
+    // (b) remove
+    // (c) update
+    // (d) add + update
+    // (e) remove + update
     private void updateResourceItemsOnModelChange(
             Set<ResourceCategoryChange> changes) {
 
         assert changes != null;
         assert !changes.isEmpty();
 
-        // XXX hack
-        if (contentDisplay instanceof DropEnabledViewContentDisplay
-                && ((DropEnabledViewContentDisplay) contentDisplay)
-                        .getDelegate() instanceof ChartViewContentDisplay) {
-            Set<ResourceItem> addedResourceItems = new HashSet<ResourceItem>();
-            Set<ResourceItem> removedResourceItems = new HashSet<ResourceItem>();
-
-            for (ResourceCategoryChange change : changes) {
-                switch (change.getDelta()) {
-                case ADD: {
-                    // HACK
-                    ResourceItem resourceItem = contentDisplay
-                            .createResourceItem(configuration,
-                                    change.getCategory(),
-                                    change.getResourceSet(), hoverModel);
-
-                    categoriesToResourceItems.put(change.getCategory(),
-                            resourceItem);
-
-                    // TODO introduce partial selection
-                    resourceItem.setSelectionStatusVisible(selection != null
-                            && !selection.isEmpty());
-
-                    addedResourceItems.add(resourceItem);
-
-                }
-                    break;
-                case REMOVE: {
-                    ResourceItem resourceItem = categoriesToResourceItems
-                            .get(change.getCategory());
-                    removeResourceItem(change.getCategory());
-                    removedResourceItems.add(resourceItem);
-                }
-                    break;
-                case UPDATE: {
-
-                }
-                    break;
-                }
-            }
-
-            contentDisplay
-                    .update(addedResourceItems,
-                            Collections.<ResourceItem> emptySet(),
-                            removedResourceItems);
-
-            return;
-        }
+        Set<ResourceItem> addedResourceItems = new HashSet<ResourceItem>();
+        Set<ResourceItem> removedResourceItems = new HashSet<ResourceItem>();
 
         for (ResourceCategoryChange change : changes) {
             switch (change.getDelta()) {
             case ADD: {
-                createResourceItem(change.getCategory(),
-                        change.getResourceSet());
-
+                addedResourceItems.add(createResourceItem(change.getCategory(),
+                        change.getResourceSet()));
             }
                 break;
             case REMOVE: {
-                removeResourceItem(change.getCategory());
+                removedResourceItems.add(removeResourceItem(change
+                        .getCategory()));
             }
                 break;
             case UPDATE: {
-
+                // TODO implement
             }
                 break;
             }
         }
+
+        contentDisplay.update(addedResourceItems,
+                Collections.<ResourceItem> emptySet(), removedResourceItems);
     }
 
     // XXX HACK
