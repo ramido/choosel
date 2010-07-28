@@ -4,8 +4,8 @@ import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Dot;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDouble;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionString;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Scale;
-import org.thechiselgroup.choosel.client.util.ArrayUtils;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
+import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
 public class DotChart extends ChartWidget {
 
@@ -13,16 +13,19 @@ public class DotChart extends ChartWidget {
 
     private ProtovisFunctionDouble dotBottom = new ProtovisFunctionDouble() {
         @Override
-        public double f(String value, int index) {
-            return ((Double.parseDouble(value) - minValue + 0.5) * h / (maxValue
-                    - minValue + 1));
+        public double f(ChartItem value, int index) {
+            double resolvedValue = Double.parseDouble((String) value
+                    .getResourceItem().getResourceValue(
+                            SlotResolver.MAGNITUDE_SLOT));
+
+            return ((resolvedValue - minValue + 0.5) * h / (maxValue - minValue + 1));
         }
     };
 
     private ProtovisFunctionDouble dotLeft = new ProtovisFunctionDouble() {
         @Override
-        public double f(String value, int index) {
-            return index * w / chartItemArray.size();
+        public double f(ChartItem value, int index) {
+            return index * w / chartItems.size();
         }
     };
 
@@ -30,8 +33,8 @@ public class DotChart extends ChartWidget {
 
     private ProtovisFunctionString dotFillStyle = new ProtovisFunctionString() {
         @Override
-        public String f(String value, int index) {
-            return getChartItem(index).getColour();
+        public String f(ChartItem value, int index) {
+            return value.getColour();
         }
     };
 
@@ -46,6 +49,8 @@ public class DotChart extends ChartWidget {
     @SuppressWarnings("unchecked")
     @Override
     public Dot drawChart() {
+        assert chartItems.size() >= 1;
+
         setChartVariables();
         setChartParameters();
         drawScales(Scale.linear(maxValue + 0.5, minValue - 0.5).range(0, h));
@@ -55,7 +60,7 @@ public class DotChart extends ChartWidget {
     }
 
     private void drawDot() {
-        dot = chart.add(Dot.createDot()).data(getJsDataArray(dataArray))
+        dot = chart.add(Dot.createDot()).data(chartItemsJSArray)
                 .cursor("pointer").bottom(dotBottom).left(dotLeft)
                 .strokeStyle(dotStrokeStyle).fillStyle(dotFillStyle);
     }
@@ -65,11 +70,9 @@ public class DotChart extends ChartWidget {
     }
 
     protected void setChartVariables() {
-        dataArray = getDataArray(SlotResolver.MAGNITUDE_SLOT);
-        if (dataArray.size() > 0) {
-            minValue = ArrayUtils.min(dataArray);
-            maxValue = ArrayUtils.max(dataArray);
-        }
+        SlotValues dataArray = getSlotValues(SlotResolver.MAGNITUDE_SLOT);
+        minValue = dataArray.min();
+        maxValue = dataArray.max();
         w = width - 40;
         h = height - 40;
     }

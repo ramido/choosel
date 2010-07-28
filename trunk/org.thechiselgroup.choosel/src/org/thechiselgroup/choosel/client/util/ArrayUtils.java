@@ -22,6 +22,10 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 public class ArrayUtils {
 
+    public native static void add(Object o, JavaScriptObject array) /*-{
+        array.push(o);
+    }-*/;
+
     // @formatter:off
     public native static JavaScriptObject createArray() /*-{
         return new Array();
@@ -31,6 +35,18 @@ public class ArrayUtils {
         return array.length;
     }-*/;
     // @formatter:on
+
+    public static double max(double[] values) {
+        assert values.length > 0;
+
+        double max = values[0];
+        for (int i = 1; i < values.length; i++) {
+            if (values[i] > max) {
+                max = values[i];
+            }
+        }
+        return max;
+    }
 
     // XXX using .doubleValue could be a problem at some point
     // e.g. with long values and precision
@@ -47,6 +63,18 @@ public class ArrayUtils {
             }
         }
         return max;
+    }
+
+    public static double min(double[] values) {
+        assert values.length > 0;
+
+        double min = values[0];
+        for (int i = 1; i < values.length; i++) {
+            if (values[i] < min) {
+                min = values[i];
+            }
+        }
+        return min;
     }
 
     // XXX using .doubleValue could be a problem at some point
@@ -70,15 +98,10 @@ public class ArrayUtils {
     public native static void pushArray(JavaScriptObject array, double d) /*-{
         array.push(d);
     }-*/;
-
-
+    
+    
     public native static void pushArray(JavaScriptObject array, int i) /*-{
         array.push(i);
-    }-*/;
-    
-    
-    public native static void pushArray(JavaScriptObject array, Object o) /*-{
-        array.push(o);
     }-*/;
     
     public native static void pushArray(JavaScriptObject array, String o) /*-{
@@ -129,7 +152,7 @@ public class ArrayUtils {
     public static JavaScriptObject toJsArray(Object[] array) {
         JavaScriptObject result = createArray();
         for (int i = 0; i < array.length; i++) {
-            pushArray(result, array[i]);
+            add(array[i], result);
         }
         return result;
     }

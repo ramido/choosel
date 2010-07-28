@@ -29,6 +29,7 @@ import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 
+// TODO separate out resource item controller
 public class ResourceItem {
 
     public static enum Status {

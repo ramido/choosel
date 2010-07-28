@@ -8,19 +8,19 @@ public abstract class Mark extends JavaScriptObject {
     protected static final native JavaScriptObject getFunctionDouble(
             JavaScriptObject _this, ProtovisFunctionDouble f) /*-{
         return $entry(function(d) 
-            {return f.@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDouble::f(Ljava/lang/String;I)(d.toString(),_this.index);})
-    }-*/;
-
-    protected static final native JavaScriptObject getFunctionObject(
-            JavaScriptObject _this, ProtovisFunctionObject f) /*-{
-        return $entry(function(d) 
-            {return f.@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionObject::f(Ljava/lang/Object;I)(d,_this.index);})
+            {return f.@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDouble::f(Lorg/thechiselgroup/choosel/client/views/chart/ChartItem;I)(d,_this.index);})
     }-*/;
     
     protected static final native JavaScriptObject getFunctionString(
             JavaScriptObject _this, ProtovisFunctionString f) /*-{
         return $entry(function(d) 
-            {return f.@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionString::f(Ljava/lang/String;I)(d.toString(),_this.index);})
+            {return f.@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionString::f(Lorg/thechiselgroup/choosel/client/views/chart/ChartItem;I)(d,_this.index);})
+    }-*/;
+
+    protected static final native JavaScriptObject getFunctionStringToString(
+            JavaScriptObject _this, ProtovisFunctionStringToString f) /*-{
+        return $entry(function(d) 
+            {return f.@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionStringToString::f(Ljava/lang/String;I)(d.toString(),_this.index);})
     }-*/;
 
     protected static final native JavaScriptObject registerEvent(

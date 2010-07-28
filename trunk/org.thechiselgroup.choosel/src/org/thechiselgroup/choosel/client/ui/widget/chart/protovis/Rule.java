@@ -96,15 +96,11 @@ public class Rule extends Mark {
     public final native Rule events(String events) /*-{
         return this.events(events);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Rule height(Number height) /*-{
         return this.height(height);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Rule height(ProtovisFunctionDouble f) /*-{
         return this.height(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionDouble(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionDouble;)(this,f));
     }-*/;
@@ -234,15 +230,11 @@ public class Rule extends Mark {
     public final native Rule visible(boolean visible) /*-{
         return this.visible(visible);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Rule width(Number width) /*-{
         return this.width(width);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Rule width(ProtovisFunctionDouble f) /*-{
         return this.width(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionDouble(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionDouble;)(this,f));
     }-*/;

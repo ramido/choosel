@@ -135,6 +135,7 @@ public class DefaultViewTest {
                 any(ResourcesRemovedEventHandler.class));
     }
 
+    // TODO move to resource splitter test
     @Test
     public void categorizeLabeledResources() {
         ResourceSet resources1 = createLabeledResources(CATEGORY_1, 1, 3, 4);
@@ -152,6 +153,8 @@ public class DefaultViewTest {
         assertTrue(result.get(CATEGORY_2).containsEqualResources(resources2));
     }
 
+    // TODO improve
+    // TODO copy and check if update gets called with the right resource items
     @Test
     public void createResourceItemsOnResourcesAdded() {
         ResourceSet resources1 = createResources(CATEGORY_1, 1, 3, 4);
@@ -190,6 +193,7 @@ public class DefaultViewTest {
         }
     }
 
+    // TODO copy and check if update gets called with the right resource items
     @Test
     public void createResourceItemsWhenLabeledResourcesAreAdded() {
         ResourceSet resources = createLabeledResources(CATEGORY_1, 1);
@@ -296,6 +300,7 @@ public class DefaultViewTest {
                 any(ViewContentDisplayCallback.class));
     }
 
+    // TODO
     @Test
     public void removeResourceItemsOnResourceSetRemoved() {
         ResourceSet resources1 = createResources(CATEGORY_1, 1, 3, 4);

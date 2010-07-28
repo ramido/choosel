@@ -6,7 +6,7 @@ import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Dot;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionString;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Scale;
 import org.thechiselgroup.choosel.client.util.ArrayUtils;
-import org.thechiselgroup.choosel.client.views.SlotResolver;
+import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -26,9 +26,9 @@ public class ScatterChart extends ChartWidget {
 
     private Dot dot;
 
-    private ArrayList<Double> scatterDataX = getDataArray(SlotResolver.X_COORDINATE_SLOT);
+    private ArrayList<Double> scatterDataX = null; // getDataArray(SlotResolver.X_COORDINATE_SLOT);
 
-    private ArrayList<Double> scatterDataY = getDataArray(SlotResolver.Y_COORDINATE_SLOT);
+    private ArrayList<Double> scatterDataY = null; // getDataArray(SlotResolver.Y_COORDINATE_SLOT);
 
     // @formatter:off
     private native JavaScriptObject createCoordinateJsArray(
@@ -83,8 +83,8 @@ public class ScatterChart extends ChartWidget {
                 .radius(3).strokeStyle("rgba(0,0,0,0.35)")
                 .fillStyle(new ProtovisFunctionString() {
                     @Override
-                    public String f(String value, int index) {
-                        return getChartItem(index).getColour();
+                    public String f(ChartItem value, int index) {
+                        return value.getColour();
                     }
                 });
     }

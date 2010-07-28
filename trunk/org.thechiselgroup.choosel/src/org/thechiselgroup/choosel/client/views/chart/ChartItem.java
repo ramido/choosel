@@ -19,18 +19,23 @@ import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.user.client.Event;
 
 public class ChartItem {
 
-    private String[] colours = { "yellow", "orange", "steelblue" };
+    private static final String STEELBLUE = "steelblue";
+
+    private static final String ORANGE = "orange";
+
+    private static final String YELLOW = "yellow";
+
+    private String[] colours = { YELLOW, ORANGE, STEELBLUE };
 
     private ChartViewContentDisplay view;
 
     private DragEnabler enabler;
 
-    private final ResourceItem resourceItem;
+    private ResourceItem resourceItem;
 
     public ChartItem(ChartViewContentDisplay view,
             DragEnablerFactory dragEnablerFactory, ResourceItem resourceItem) {
@@ -60,48 +65,43 @@ public class ChartItem {
 
     // TODO find better way to separate controller
     public void onEvent(Event e) {
-        try {
-            switch (e.getTypeInt()) {
-            case Event.ONCLICK: {
-                if (view != null) {
-                    view.getCallback().switchSelection(
-                            resourceItem.getResourceSet());
-                }
+        switch (e.getTypeInt()) {
+        case Event.ONCLICK: {
+            if (view != null) {
+                view.getCallback().switchSelection(
+                        resourceItem.getResourceSet());
             }
-                break;
-            case Event.ONMOUSEMOVE: {
-                resourceItem.getPopupManager().onMouseMove(e.getClientX(),
-                        e.getClientY());
-                enabler.forwardMouseMove(e);
-            }
-                break;
-            case Event.ONMOUSEDOWN: {
-                resourceItem.getPopupManager().onMouseDown(e);
-                enabler.forwardMouseDownWithEventPosition(e);
-            }
-                break;
-            case Event.ONMOUSEOUT: {
-                resourceItem.getPopupManager().onMouseOut(e.getClientX(),
-                        e.getClientY());
-                resourceItem.getHighlightingManager().setHighlighting(false);
-                enabler.forwardMouseOut(e);
-            }
-                break;
-            case Event.ONMOUSEOVER: {
-                resourceItem.getPopupManager().onMouseOver(e.getClientX(),
-                        e.getClientY());
-                resourceItem.getHighlightingManager().setHighlighting(true);
+        }
+            break;
+        case Event.ONMOUSEMOVE: {
+            resourceItem.getPopupManager().onMouseMove(e.getClientX(),
+                    e.getClientY());
+            enabler.forwardMouseMove(e);
+        }
+            break;
+        case Event.ONMOUSEDOWN: {
+            resourceItem.getPopupManager().onMouseDown(e);
+            enabler.forwardMouseDownWithEventPosition(e);
+        }
+            break;
+        case Event.ONMOUSEOUT: {
+            resourceItem.getPopupManager().onMouseOut(e.getClientX(),
+                    e.getClientY());
+            resourceItem.getHighlightingManager().setHighlighting(false);
+            enabler.forwardMouseOut(e);
+        }
+            break;
+        case Event.ONMOUSEOVER: {
+            resourceItem.getPopupManager().onMouseOver(e.getClientX(),
+                    e.getClientY());
+            resourceItem.getHighlightingManager().setHighlighting(true);
 
-            }
-                break;
-            case Event.ONMOUSEUP: {
-                enabler.forwardMouseUp(e);
-            }
-                break;
-            }
-        } catch (RuntimeException ex) {
-            Log.error(ex.getMessage(), ex);
-            throw ex;
+        }
+            break;
+        case Event.ONMOUSEUP: {
+            enabler.forwardMouseUp(e);
+        }
+            break;
         }
     }
 
