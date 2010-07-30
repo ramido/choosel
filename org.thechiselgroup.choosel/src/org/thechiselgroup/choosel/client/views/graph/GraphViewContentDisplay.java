@@ -17,7 +17,6 @@ package org.thechiselgroup.choosel.client.views.graph;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -352,19 +351,14 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         // space except for first node - if the node is the first node, we put
         // it in the center
         // TODO improve interface to access all resources
-        Iterator<Resource> it = getCallback().getAllResources().iterator();
 
-        if (!it.hasNext()) {
-            return; // for tests
-        }
-
-        it.next(); // there are already some nodes (this one is already added)
-        if (it.hasNext()) {
-            return; // there are already some nodes (this one is already added)
+        assert node != null;
+        assert nodeIdToGraphItemMap.containsKey(node.getId());
+        if (nodeIdToGraphItemMap.size() > 1) {
+            return;
         }
 
         Widget displayWidget = display.asWidget();
-
         if (displayWidget == null) {
             return; // for tests
         }
