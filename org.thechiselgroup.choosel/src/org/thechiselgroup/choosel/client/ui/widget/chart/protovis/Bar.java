@@ -2,6 +2,7 @@ package org.thechiselgroup.choosel.client.ui.widget.chart.protovis;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
+// @formatter:off
 /**
  * 
  * @author Bradley Blashko
@@ -16,7 +17,6 @@ public class Bar extends Mark {
     protected Bar() {
     }
 
-    // @formatter:off
     public final native <T extends Mark> T add(T mark) /*-{
         return this.add(mark);
     }-*/;
@@ -169,6 +169,6 @@ public class Bar extends Mark {
     public final native Bar width(ProtovisFunctionDouble f) /*-{
         return this.width(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionDouble(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionDouble;)(this,f));
     }-*/;
-    // @formatter:on
 
 }
+// @formatter:on

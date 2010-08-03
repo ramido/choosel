@@ -122,7 +122,7 @@ public class Panel extends Mark {
     // @formatter:on
 
     // @formatter:off
-    public final native Panel fillStyle(ProtovisFunctionDouble f) /*-{
+    public final native Panel fillStyle(ProtovisFunctionString f) /*-{
         return this.fillStyle(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionString(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionString;)(this,f));
     }-*/;
     // @formatter:on

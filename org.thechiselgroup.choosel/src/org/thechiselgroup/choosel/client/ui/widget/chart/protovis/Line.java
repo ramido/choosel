@@ -104,7 +104,7 @@ public class Line extends Mark {
     // @formatter:on
 
     // @formatter:off
-    public final native Line fillStyle(ProtovisFunctionDouble f) /*-{
+    public final native Line fillStyle(ProtovisFunctionString f) /*-{
         return this.fillStyle(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionString(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionString;)(this,f));
     }-*/;
     // @formatter:on

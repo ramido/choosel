@@ -17,7 +17,7 @@ package org.thechiselgroup.choosel.client.views.chart;
 
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
-import org.thechiselgroup.choosel.client.ui.widget.chart.TimeChart;
+import org.thechiselgroup.choosel.client.ui.widget.chart.AreaChart;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -35,7 +35,7 @@ public class TimeViewContentDisplay extends ChartViewContentDisplay {
 
     @Override
     public Widget createWidget() {
-        chartWidget = new TimeChart();
+        chartWidget = new AreaChart();
         return chartWidget;
     }
 
