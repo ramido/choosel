@@ -144,7 +144,13 @@ public class ResourceItem {
         return displayObject;
     }
 
+    /**
+     * @return all resources in this resource item that are highlighted.
+     *         Resources that are not contained in this resource item are not
+     *         included in the result.
+     */
     public ResourceSet getHighlightedResources() {
+        assert resources.containsAll(highlightedResources);
         return highlightedResources;
     }
 
