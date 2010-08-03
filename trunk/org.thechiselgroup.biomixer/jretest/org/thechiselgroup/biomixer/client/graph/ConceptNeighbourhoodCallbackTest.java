@@ -36,13 +36,10 @@ import org.thechiselgroup.biomixer.client.NcboUriHelper;
 import org.thechiselgroup.choosel.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.client.geometry.Point;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceManager;
-import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceManager;
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
-import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 import org.thechiselgroup.choosel.client.views.graph.GraphNodeExpansionCallback;
 import org.thechiselgroup.choosel.client.views.graph.NeighbourhoodServiceResult;
 
@@ -59,11 +56,6 @@ public class ConceptNeighbourhoodCallbackTest {
 	private static final String TEST_CONCEPT_ONTOLOGY_ID2 = "ontology_id2";
 
 	private static final String TEST_CONCEPT_SHORT_ID = "shortid";
-
-	private ResourceSet automaticResources;
-
-	@Mock
-	private ViewContentDisplayCallback callback;
 
 	private Resource concept2;
 
@@ -104,7 +96,7 @@ public class ConceptNeighbourhoodCallbackTest {
 	public void addNodesToDataProvider() {
 		neighbourhoodCallback.onSuccess(result);
 
-		verify(automaticResources, times(1)).add(concept2);
+		verify(expansionCallback, times(1)).addAutomaticResource(concept2);
 		verify(graphDisplay, never()).addNode(any(Node.class));
 	}
 
@@ -148,12 +140,12 @@ public class ConceptNeighbourhoodCallbackTest {
 
 	@Test
 	public void doNotAddDuplicatedNodesToDataProvider() {
-		when(callback.containsResourceWithUri(concept2.getUri())).thenReturn(
-				Boolean.TRUE);
+		when(expansionCallback.containsResourceWithUri(concept2.getUri()))
+				.thenReturn(Boolean.TRUE);
 
 		neighbourhoodCallback.onSuccess(result);
 
-		verify(automaticResources, never()).add(concept2);
+		verify(expansionCallback, never()).addAutomaticResource(concept2);
 		verify(graphDisplay, never()).addNode(any(Node.class));
 	}
 
@@ -197,7 +189,6 @@ public class ConceptNeighbourhoodCallbackTest {
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
 
-		automaticResources = spy(new DefaultResourceSet());
 		resourceManager = spy(new DefaultResourceManager());
 
 		inputConceptUri = NcboUriHelper.toConceptURI(TEST_CONCEPT_ONTOLOGY_ID,
@@ -213,8 +204,6 @@ public class ConceptNeighbourhoodCallbackTest {
 		concept2.putValue(NCBO.CONCEPT_SHORT_ID, TEST_CONCEPT_2_SHORT_ID);
 		concept2.putValue(NCBO.CONCEPT_ONTOLOGY_ID, TEST_CONCEPT_ONTOLOGY_ID2);
 
-		when(automaticResources.getByUri(any(String.class))).thenReturn(
-				inputConcept);
 		when(graphDisplay.getNode(concept2Uri)).thenReturn(concept2Node);
 		when(graphDisplay.getNode(inputConceptUri)).thenReturn(inputNode);
 		when(graphDisplay.getLocation(inputNode)).thenReturn(
@@ -229,11 +218,7 @@ public class ConceptNeighbourhoodCallbackTest {
 				inputConcept);
 		when(resourceManager.add(concept2FromResult)).thenReturn(concept2);
 
-		automaticResources.add(inputConcept);
-
-		when(callback.getAutomaticResourceSet()).thenReturn(automaticResources);
-
 		neighbourhoodCallback = new ConceptNeighbourhoodCallback(graphDisplay,
-				callback, resourceManager, errorHandler, expansionCallback);
+				resourceManager, errorHandler, expansionCallback);
 	}
 }

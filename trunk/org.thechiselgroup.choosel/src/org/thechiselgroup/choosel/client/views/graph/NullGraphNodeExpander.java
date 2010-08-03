@@ -15,12 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.graph;
 
-import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.client.views.ResourceItem;
 
 public class NullGraphNodeExpander implements GraphNodeExpander {
 
     @Override
-    public void expand(Resource resource,
+    public void expand(ResourceItem resource,
             GraphNodeExpansionCallback expansionCallback) {
     }
 }

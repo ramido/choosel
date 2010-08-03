@@ -22,6 +22,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
+import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.toResourceSet;
 
 import org.junit.After;
 import org.junit.Before;
@@ -36,16 +37,13 @@ import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
-import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
+import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.graph.GraphNodeExpansionCallback;
 import org.thechiselgroup.choosel.client.views.graph.NeighbourhoodServiceAsync;
 
 public class AutomaticConceptExpanderTest {
 
 	private ResourceSet allResources;
-
-	@Mock
-	private ViewContentDisplayCallback callback;
 
 	private Resource concept1;
 
@@ -62,20 +60,25 @@ public class AutomaticConceptExpanderTest {
 	@Mock
 	private GraphNodeExpansionCallback expansionCallback;
 
+	@Mock
+	private ResourceItem resourceItem;
+
 	@Test
 	public void addNeighbourhoodArcWhenAddingConceptReferedFromCurrentConcepts() {
 		concept1 = createResource(NcboUriHelper.NCBO_CONCEPT, 1);
 		concept2 = createResource(NcboUriHelper.NCBO_CONCEPT, 2);
 		allResources.add(concept1);
 
-		when(callback.containsResourceWithUri(concept1.getUri())).thenReturn(
-				true);
+		when(expansionCallback.containsResourceWithUri(concept1.getUri()))
+				.thenReturn(true);
 
 		concept1.getUriListValue(
 				NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS).add(
 				concept2.getUri());
 
-		underTest.expand(concept2, expansionCallback);
+		when(resourceItem.getResourceSet()).thenReturn(toResourceSet(concept2));
+
+		underTest.expand(resourceItem, expansionCallback);
 
 		ArgumentCaptor<String> sourceArgument = ArgumentCaptor
 				.forClass(String.class);
@@ -93,14 +96,16 @@ public class AutomaticConceptExpanderTest {
 		concept1 = createResource(NcboUriHelper.NCBO_CONCEPT, 1);
 		concept2 = createResource(NcboUriHelper.NCBO_CONCEPT, 2);
 
-		when(callback.containsResourceWithUri(concept1.getUri())).thenReturn(
-				true);
+		when(expansionCallback.containsResourceWithUri(concept1.getUri()))
+				.thenReturn(true);
 
 		concept2.getUriListValue(
 				NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS).add(
 				concept1.getUri());
 
-		underTest.expand(concept2, expansionCallback);
+		when(resourceItem.getResourceSet()).thenReturn(toResourceSet(concept2));
+
+		underTest.expand(resourceItem, expansionCallback);
 
 		ArgumentCaptor<String> sourceArgument = ArgumentCaptor
 				.forClass(String.class);
@@ -123,10 +128,9 @@ public class AutomaticConceptExpanderTest {
 
 		allResources = new DefaultResourceSet();
 
-		when(callback.getAllResources()).thenReturn(allResources);
+		when(expansionCallback.getAllResources()).thenReturn(allResources);
 		when(expansionCallback.getCategory(any(Resource.class))).thenReturn(
 				NcboUriHelper.NCBO_CONCEPT);
-		when(expansionCallback.getCallback()).thenReturn(callback);
 	}
 
 	@After

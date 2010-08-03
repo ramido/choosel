@@ -26,14 +26,11 @@ import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.UriList;
 import org.thechiselgroup.choosel.client.test.TestResourceSetFactory;
-import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
+import org.thechiselgroup.choosel.client.views.ResourceItem;
 
 public class AbstractAutomaticGraphNodeExpanderTest {
 
     private static final String PROPERTY = "property";
-
-    @Mock
-    private ViewContentDisplayCallback callback;
 
     @Mock
     private GraphNodeExpansionCallback expansionCallback;
@@ -46,7 +43,7 @@ public class AbstractAutomaticGraphNodeExpanderTest {
 
         underTest = new AbstractAutomaticGraphNodeExpander() {
             @Override
-            public void expand(Resource resource,
+            public void expand(ResourceItem resourceItem,
                     GraphNodeExpansionCallback expansionCallback) {
             }
         };
@@ -63,8 +60,7 @@ public class AbstractAutomaticGraphNodeExpanderTest {
 
         newResource.putValue(PROPERTY, new UriList());
 
-        when(expansionCallback.getCallback()).thenReturn(callback);
-        when(callback.getAllResources()).thenReturn(
+        when(expansionCallback.getAllResources()).thenReturn(
                 TestResourceSetFactory.toResourceSet(currentResource));
 
         underTest.showArcs(newResource, expansionCallback, PROPERTY, "arcType",

@@ -17,7 +17,7 @@ package org.thechiselgroup.biomixer.client.graph;
 
 import org.thechiselgroup.biomixer.client.NCBO;
 import org.thechiselgroup.choosel.client.resources.Resource;
-import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
+import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.graph.GraphNodeExpander;
 import org.thechiselgroup.choosel.client.views.graph.GraphNodeExpansionCallback;
 import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay;
@@ -25,14 +25,15 @@ import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay;
 public class AutomaticMappingExpander implements GraphNodeExpander {
 
 	@Override
-	public void expand(Resource mapping,
+	public void expand(ResourceItem resourceItem,
 			GraphNodeExpansionCallback expansionCallback) {
 
-		ViewContentDisplayCallback callback = expansionCallback.getCallback();
+		// TODO better resource item handling
+		Resource mapping = resourceItem.getResourceSet().getFirstResource();
 
 		String sourceURI = (String) mapping.getValue(NCBO.MAPPING_SOURCE);
 
-		if (callback.containsResourceWithUri(sourceURI)) {
+		if (expansionCallback.containsResourceWithUri(sourceURI)) {
 			expansionCallback.showArc(GraphViewContentDisplay.ARC_TYPE_MAPPING,
 					sourceURI, mapping.getUri());
 		}
@@ -40,7 +41,7 @@ public class AutomaticMappingExpander implements GraphNodeExpander {
 		String destinationURI = (String) mapping
 				.getValue(NCBO.MAPPING_DESTINATION);
 
-		if (callback.containsResourceWithUri(destinationURI)) {
+		if (expansionCallback.containsResourceWithUri(destinationURI)) {
 			expansionCallback.showArc(GraphViewContentDisplay.ARC_TYPE_MAPPING,
 					mapping.getUri(), destinationURI);
 		}

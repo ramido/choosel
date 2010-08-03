@@ -26,7 +26,6 @@ import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceManager;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
-import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 import org.thechiselgroup.choosel.client.views.graph.AbstractNeighbourhoodCallback;
 import org.thechiselgroup.choosel.client.views.graph.GraphNodeExpansionCallback;
 import org.thechiselgroup.choosel.client.views.graph.NeighbourhoodServiceResult;
@@ -38,11 +37,10 @@ public class ConceptNeighbourhoodCallback extends AbstractNeighbourhoodCallback 
 	private final ResourceManager resourceManager;
 
 	public ConceptNeighbourhoodCallback(GraphDisplay graph,
-			ViewContentDisplayCallback contentDisplayCallback,
 			ResourceManager resourceManager, ErrorHandler errorHandler,
 			GraphNodeExpansionCallback expansionCallback) {
 
-		super(graph, contentDisplayCallback, errorHandler, expansionCallback);
+		super(graph, errorHandler, expansionCallback);
 
 		this.resourceManager = resourceManager;
 	}

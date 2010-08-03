@@ -24,7 +24,6 @@ import org.thechiselgroup.choosel.client.geometry.Point;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
-import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 import org.thechiselgroup.choosel.client.views.graph.AbstractNeighbourhoodCallback;
 import org.thechiselgroup.choosel.client.views.graph.GraphNodeExpansionCallback;
 import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay;
@@ -37,11 +36,10 @@ public class MappingNeighbourhoodCallback2 extends
 		AbstractNeighbourhoodCallback {
 
 	public MappingNeighbourhoodCallback2(GraphDisplay graph,
-			ViewContentDisplayCallback contentDisplayCallback,
 			ErrorHandler errorHandler,
 			GraphNodeExpansionCallback expansionCallback) {
 
-		super(graph, contentDisplayCallback, errorHandler, expansionCallback);
+		super(graph, errorHandler, expansionCallback);
 	}
 
 	private void addRelationshipArcs(List<Relationship> displayableRelationships) {
@@ -60,12 +58,7 @@ public class MappingNeighbourhoodCallback2 extends
 		List<Relationship> result = new ArrayList<Relationship>();
 
 		for (Relationship mapping : relationships) {
-			String destinationUri = mapping.getTarget().getUri();
-			String sourceUri = mapping.getSource().getUri();
-
-			if (contentDisplayCallback.containsResourceWithUri(sourceUri)
-					&& contentDisplayCallback
-							.containsResourceWithUri(destinationUri)) {
+			if (contains(mapping.getTarget()) && contains(mapping.getSource())) {
 				result.add(mapping);
 			}
 		}
@@ -78,7 +71,7 @@ public class MappingNeighbourhoodCallback2 extends
 		List<Resource> newResources = new ArrayList<Resource>();
 		Set<Resource> neighbours = result.getNeighbours();
 		for (Resource resource : neighbours) {
-			if (!viewContainsResource(resource)) {
+			if (!containsUri(resource.getUri())) {
 				newResources.add(resource);
 			}
 		}
