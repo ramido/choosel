@@ -15,6 +15,11 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
+import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
@@ -66,6 +71,8 @@ public class ResourceItem {
      */
     private Object displayObject;
 
+    private ResourceSet highlightedResources;
+
     public ResourceItem(String category, ResourceSet resources,
             HoverModel hoverModel, PopupManager popupManager,
             ResourceItemValueResolver valueResolver) {
@@ -82,11 +89,23 @@ public class ResourceItem {
         this.hoverModel = hoverModel; // TODO separate controller
         this.valueResolver = valueResolver;
 
+        this.highlightedResources = new DefaultResourceSet();
+
         initHighlighting();
         initPopupHighlighting();
         initResourceEventHandling(resources);
 
         updateContent();
+    }
+
+    public void addHighlightedResources(ResourceSet highlightedResources) {
+        assert highlightedResources != null;
+
+        List<Resource> resourcesToAdd = new ArrayList<Resource>();
+        resourcesToAdd.addAll(highlightedResources.toList());
+        resourcesToAdd.retainAll(resources.toList());
+
+        this.highlightedResources.addAll(resourcesToAdd);
     }
 
     public Status calculateStatus() {
@@ -123,6 +142,10 @@ public class ResourceItem {
 
     public Object getDisplayObject() {
         return displayObject;
+    }
+
+    public ResourceSet getHighlightedResources() {
+        return highlightedResources;
     }
 
     /**
@@ -196,6 +219,16 @@ public class ResourceItem {
 
     public boolean isSelected() {
         return selected;
+    }
+
+    public void removeHighlightedResources(ResourceSet highlightedResources) {
+        assert highlightedResources != null;
+
+        List<Resource> resourcesToRemove = new ArrayList<Resource>();
+        resourcesToRemove.addAll(highlightedResources.toList());
+        resourcesToRemove.retainAll(resources.toList());
+
+        this.highlightedResources.removeAll(resourcesToRemove);
     }
 
     public void setDisplayObject(Object displayObject) {
