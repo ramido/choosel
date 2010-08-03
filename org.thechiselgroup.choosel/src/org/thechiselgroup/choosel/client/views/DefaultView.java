@@ -284,6 +284,8 @@ public class DefaultView extends AbstractWindowContent implements View {
         return resourceSplitter.getCategorizedResourceSets();
     }
 
+    // TODO improve algorithm: switch depending on size of resource vs size of
+    // resource items --> change to collection
     private Set<ResourceItem> getResourceItems(Iterable<Resource> resources) {
         assert resources != null;
 
@@ -715,15 +717,20 @@ public class DefaultView extends AbstractWindowContent implements View {
             return;
         }
 
-        Set<ResourceItem> highlightedResourceItems = getResourceItems(affectedResourcesInThisView);
-        for (ResourceItem resourceItem : highlightedResourceItems) {
+        Set<ResourceItem> affectedResourceItems = getResourceItems(affectedResourcesInThisView);
+        for (ResourceItem resourceItem : affectedResourceItems) {
             resourceItem.setHighlighted(highlighted);
+            // --> add / remove highlighted resources
+            // TODO replace with add / remove of resources from item
+            // --> can we have filtered view on hover set instead??
+            // --> problem with the order of update calls
+            // ----> use view-internal hover model instead?
+            // TODO dispose resource items
+            // TODO check that highlighting is right from the beginning
         }
 
-        contentDisplay
-                .update(Collections.<ResourceItem> emptySet(),
-                        highlightedResourceItems,
-                        Collections.<ResourceItem> emptySet());
+        contentDisplay.update(Collections.<ResourceItem> emptySet(),
+                affectedResourceItems, Collections.<ResourceItem> emptySet());
     }
 
     // TODO use viewContentDisplay.update to perform single update
