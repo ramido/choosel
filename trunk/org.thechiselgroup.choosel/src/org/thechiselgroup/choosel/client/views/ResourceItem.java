@@ -79,7 +79,7 @@ public class ResourceItem {
         this.category = category;
         this.resources = resources;
         this.popupManager = popupManager;
-        this.hoverModel = hoverModel;
+        this.hoverModel = hoverModel; // TODO separate controller
         this.valueResolver = valueResolver;
 
         initHighlighting();
