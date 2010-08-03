@@ -5,12 +5,14 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.thechiselgroup.choosel.client.test.AdvancedAsserts.assertContentEquals;
+import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
@@ -18,12 +20,6 @@ import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
 public class ResourceItemTest {
 
     private static final String RESOURCE_ITEM_CATEGORY = "resourceItemCategory";
-
-    public static Resource createResource(String type, int index) {
-        Resource r = new Resource(type + ":" + index);
-        r.putValue("testlabelkey", index + "-value");
-        return r;
-    }
 
     @Mock
     private HoverModel hoverModel;
@@ -34,10 +30,104 @@ public class ResourceItemTest {
     @Mock
     private PopupManager popupManager;
 
-    @Mock
     private ResourceSet resources;
 
     private ResourceItem underTest;
+
+    @Test
+    public void getHighlightedResourcesAfterAddHighlightingNoContainedResource() {
+        resources.addAll(createResources(1, 2, 3, 4));
+        underTest.addHighlightedResources(createResources(5, 6));
+        assertContentEquals(createResources(),
+                underTest.getHighlightedResources());
+    }
+
+    @Test
+    public void getHighlightedResourcesAfterAddHighlightingOneContainedContainedResourceOutOfTwoResources() {
+        resources.addAll(createResources(1, 2, 3, 4));
+        underTest.addHighlightedResources(createResources(1, 5));
+        assertContentEquals(createResources(1),
+                underTest.getHighlightedResources());
+    }
+
+    @Test
+    public void getHighlightedResourcesAfterAddHighlightingOnePlusOneContainedContainedResourceOutOfTwoResources() {
+        resources.addAll(createResources(1, 2, 3, 4));
+        underTest.addHighlightedResources(createResources(1));
+        underTest.addHighlightedResources(createResources(2, 5));
+        assertContentEquals(createResources(1, 2),
+                underTest.getHighlightedResources());
+    }
+
+    @Test
+    public void getHighlightedResourcesAfterAddHighlightingOnePlusTwoContainedResources() {
+        resources.addAll(createResources(1, 2, 3, 4));
+        underTest.addHighlightedResources(createResources(1));
+        underTest.addHighlightedResources(createResources(2, 3));
+        assertContentEquals(createResources(1, 2, 3),
+                underTest.getHighlightedResources());
+    }
+
+    @Test
+    public void getHighlightedResourcesAfterAddHighlightingOnePlusZeroContainedResources() {
+        resources.addAll(createResources(1, 2, 3, 4));
+        underTest.addHighlightedResources(createResources(1));
+        underTest.addHighlightedResources(createResources(5, 6));
+        assertContentEquals(createResources(1),
+                underTest.getHighlightedResources());
+    }
+
+    @Test
+    public void getHighlightedResourcesAfterAddHighlightingTwoContainedResources() {
+        resources.addAll(createResources(1, 2, 3, 4));
+        underTest.addHighlightedResources(createResources(1, 2));
+        assertContentEquals(createResources(1, 2),
+                underTest.getHighlightedResources());
+    }
+
+    @Test
+    public void getHighlightedResourcesAfterRemoveHighlightingNoContainedResource() {
+        resources.addAll(createResources(1, 2, 3, 4));
+        underTest.removeHighlightedResources(createResources(5, 6));
+        assertContentEquals(createResources(),
+                underTest.getHighlightedResources());
+    }
+
+    @Test
+    public void getHighlightedResourcesAfterRemoveHighlightingOneFromOneContainedResource() {
+        resources.addAll(createResources(1, 2, 3, 4));
+        underTest.addHighlightedResources(createResources(1));
+        underTest.removeHighlightedResources(createResources(1, 6));
+        assertContentEquals(createResources(),
+                underTest.getHighlightedResources());
+    }
+
+    @Test
+    public void getHighlightedResourcesAfterRemoveHighlightingOneFromTwoContainedResource() {
+        resources.addAll(createResources(1, 2, 3, 4));
+        underTest.addHighlightedResources(createResources(1, 2));
+        underTest.removeHighlightedResources(createResources(2, 5));
+        assertContentEquals(createResources(1),
+                underTest.getHighlightedResources());
+    }
+
+    @Test
+    public void getHighlightedResourcesAfterRemoveHighlightingTwoFromTwoContainedResource() {
+        resources.addAll(createResources(1, 2, 3, 4));
+        underTest.addHighlightedResources(createResources(1, 2));
+        underTest.removeHighlightedResources(createResources(1, 2));
+        assertContentEquals(createResources(),
+                underTest.getHighlightedResources());
+    }
+
+    @Test
+    public void getHighlightedResourcesAfterRemoveHighlightingZeroFromOneContainedResource() {
+        resources.addAll(createResources(1, 2, 3, 4));
+        underTest.addHighlightedResources(createResources(1));
+        underTest.removeHighlightedResources(createResources(5, 6));
+        assertContentEquals(createResources(1),
+                underTest.getHighlightedResources());
+    }
 
     @Test
     public void isHighlightedIsFalseAfterInit() {
@@ -71,6 +161,7 @@ public class ResourceItemTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
+        resources = new DefaultResourceSet();
         underTest = spy(new ResourceItem(RESOURCE_ITEM_CATEGORY, resources,
                 hoverModel, popupManager, layer));
     }

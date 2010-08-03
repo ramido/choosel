@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.client.resources;
 
 import org.thechiselgroup.choosel.client.label.HasLabel;
 
+// TODO should implement Set<Resource>
 public interface ResourceSet extends ResourceContainer, HasLabel,
         ReadableResourceSet {
 
