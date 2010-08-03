@@ -29,12 +29,11 @@ public abstract class AbstractGraphNodeExpander implements GraphNodeExpander {
 
         List<String> added = new ArrayList<String>();
         for (String uri : resourceUrisToAdd) {
-            if (!expansionCallback.getCallback().containsResourceWithUri(uri)) {
+            if (!expansionCallback.containsResourceWithUri(uri)) {
                 Resource r2 = expansionCallback.getResourceManager().getByUri(
                         uri);
                 assert r2 != null;
-                expansionCallback.getCallback().getAutomaticResourceSet()
-                        .add(r2);
+                expansionCallback.addAutomaticResource(r2);
                 added.add(uri);
             }
         }

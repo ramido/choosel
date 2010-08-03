@@ -17,6 +17,7 @@ package org.thechiselgroup.biomixer.client.graph;
 
 import org.thechiselgroup.choosel.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.graph.GraphNodeExpander;
 import org.thechiselgroup.choosel.client.views.graph.GraphNodeExpansionCallback;
 import org.thechiselgroup.choosel.client.views.graph.NeighbourhoodServiceAsync;
@@ -36,8 +37,10 @@ public class ConceptConceptNeighbourhoodExpander implements GraphNodeExpander {
 	}
 
 	@Override
-	public void expand(Resource resource,
+	public void expand(ResourceItem resourceItem,
 			GraphNodeExpansionCallback expansionCallback) {
+
+		Resource resource = resourceItem.getResourceSet().getFirstResource();
 
 		// TODO reuse methods exposed by expansionCallback within
 		// ConceptNeighbourhoodCallback
@@ -45,7 +48,6 @@ public class ConceptConceptNeighbourhoodExpander implements GraphNodeExpander {
 				resource,
 				new ConceptNeighbourhoodCallback(
 						expansionCallback.getDisplay(), expansionCallback
-								.getCallback(), expansionCallback
 								.getResourceManager(), errorHandler,
 						expansionCallback));
 	}

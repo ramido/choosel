@@ -18,8 +18,7 @@ package org.thechiselgroup.biomixer.client.graph;
 import org.thechiselgroup.biomixer.client.NCBO;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceManager;
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
+import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.graph.GraphNodeExpander;
 import org.thechiselgroup.choosel.client.views.graph.GraphNodeExpansionCallback;
 import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay;
@@ -27,18 +26,16 @@ import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay;
 public class MappingExpander implements GraphNodeExpander {
 
 	@Override
-	public void expand(Resource mapping,
+	public void expand(ResourceItem resourceItem,
 			GraphNodeExpansionCallback expansionCallback) {
 
-		ViewContentDisplayCallback displayCallback = expansionCallback
-				.getCallback();
+		Resource mapping = resourceItem.getResourceSet().getFirstResource();
+
 		ResourceManager resourceManager2 = expansionCallback
 				.getResourceManager();
 
-		ResourceSet automaticSet = displayCallback.getAutomaticResourceSet();
-
 		String sourceUri = (String) mapping.getValue(NCBO.MAPPING_SOURCE);
-		if (!displayCallback.containsResourceWithUri(sourceUri)) {
+		if (!expansionCallback.containsResourceWithUri(sourceUri)) {
 			if (!resourceManager2.contains(sourceUri)) {
 				Resource concept = new Resource(sourceUri);
 
@@ -56,7 +53,7 @@ public class MappingExpander implements GraphNodeExpander {
 
 			Resource concept = resourceManager2.getByUri(sourceUri);
 
-			automaticSet.add(concept);
+			expansionCallback.addAutomaticResource(concept);
 
 			expansionCallback.showArc(GraphViewContentDisplay.ARC_TYPE_MAPPING,
 					sourceUri, mapping.getUri());
@@ -65,7 +62,7 @@ public class MappingExpander implements GraphNodeExpander {
 		String destinationUri = (String) mapping
 				.getValue(NCBO.MAPPING_DESTINATION);
 
-		if (!displayCallback.containsResourceWithUri(destinationUri)) {
+		if (!expansionCallback.containsResourceWithUri(destinationUri)) {
 			if (!resourceManager2.contains(destinationUri)) {
 				Resource concept = new Resource(destinationUri);
 
@@ -83,7 +80,7 @@ public class MappingExpander implements GraphNodeExpander {
 
 			Resource concept = resourceManager2.getByUri(destinationUri);
 
-			automaticSet.add(concept);
+			expansionCallback.addAutomaticResource(concept);
 
 			expansionCallback.showArc(GraphViewContentDisplay.ARC_TYPE_MAPPING,
 					mapping.getUri(), destinationUri);

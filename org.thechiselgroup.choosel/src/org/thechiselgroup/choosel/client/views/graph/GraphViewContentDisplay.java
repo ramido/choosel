@@ -24,6 +24,8 @@ import java.util.Map.Entry;
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.geometry.Point;
 import org.thechiselgroup.choosel.client.persistence.Memento;
+import org.thechiselgroup.choosel.client.resources.CombinedResourceSet;
+import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceManager;
@@ -182,6 +184,9 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
     private ResourceManager resourceManager;
 
+    private CombinedResourceSet nodeResources = new CombinedResourceSet(
+            new DefaultResourceSet());
+
     @Inject
     public GraphViewContentDisplay(Display display,
             PopupManagerFactory popupManagerFactory,
@@ -211,7 +216,17 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     }
 
     @Override
+    public void addAutomaticResource(Resource resource) {
+        getCallback().getAutomaticResourceSet().add(resource);
+    }
+
+    @Override
     public void checkResize() {
+    }
+
+    @Override
+    public boolean containsResourceWithUri(String resourceUri) {
+        return nodeResources.containsResourceWithUri(resourceUri);
     }
 
     // TODO fix categoryX
@@ -252,8 +267,9 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         display.setNodeStyle(item.getNode(), "showArrow", registry
                 .getNodeMenuEntries(category).isEmpty() ? "false" : "true");
 
-        registry.getAutomaticExpander(category).expand(
-                resources.getFirstResource(), this);
+        registry.getAutomaticExpander(category).expand(item, this);
+
+        nodeResources.addResourceSet(resources);
 
         return item;
     }
@@ -262,6 +278,11 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     @Override
     protected Widget createWidget() {
         return display.asWidget();
+    }
+
+    @Override
+    public ResourceSet getAllResources() {
+        return nodeResources;
     }
 
     public String getArcId(String arcType, String sourceId, String targetId) {
@@ -287,8 +308,13 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         return getGraphItem(event.getNode());
     }
 
-    private Resource getResource(Node node) {
-        return getGraphItem(node).getResourceSet().getFirstResource();
+    @Override
+    public Resource getResourceByUri(String value) {
+        return nodeResources.getByUri(value);
+    }
+
+    private ResourceItem getResourceItem(Node node) {
+        return getGraphItem(node);
     }
 
     @Override
@@ -353,6 +379,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         // TODO improve interface to access all resources
 
         assert node != null;
+
         assert nodeIdToGraphItemMap.containsKey(node.getId());
         if (nodeIdToGraphItemMap.size() > 1) {
             return;
@@ -376,7 +403,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
                 new NodeMenuItemClickedHandler() {
                     @Override
                     public void onNodeMenuItemClicked(Node node) {
-                        nodeExpander.expand(getResource(node),
+                        nodeExpander.expand(getResourceItem(node),
                                 GraphViewContentDisplay.this);
                     }
                 }, category);
@@ -384,6 +411,10 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
     @Override
     public void removeResourceItem(ResourceItem resourceItem) {
+        assert resourceItem != null;
+        assert nodeIdToGraphItemMap.containsValue(resourceItem);
+
+        nodeResources.removeResourceSet(resourceItem.getResourceSet());
         nodeIdToGraphItemMap.remove(((GraphItem) resourceItem).getNode()
                 .getId());
         display.removeNode(((GraphItem) resourceItem).getNode());

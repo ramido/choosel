@@ -20,6 +20,7 @@ import org.thechiselgroup.biomixer.client.NcboUriHelper;
 import org.thechiselgroup.choosel.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.UriList;
+import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.graph.GraphNodeExpander;
 import org.thechiselgroup.choosel.client.views.graph.GraphNodeExpansionCallback;
 import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay;
@@ -46,7 +47,7 @@ public class AutomaticConceptExpander implements GraphNodeExpander {
 		UriList neighbours = concept
 				.getUriListValue(NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS);
 		for (String uri : neighbours) {
-			if (expansionCallback.getCallback().containsResourceWithUri(uri)) {
+			if (expansionCallback.containsResourceWithUri(uri)) {
 				expansionCallback.showArc(
 						NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS,
 						concept.getUri(), uri);
@@ -56,8 +57,7 @@ public class AutomaticConceptExpander implements GraphNodeExpander {
 		// get all concepts and see if the new concept is contained
 		// in the uri
 		// list
-		for (Resource resource : expansionCallback.getCallback()
-				.getAllResources()) {
+		for (Resource resource : expansionCallback.getAllResources()) {
 			if (NcboUriHelper.NCBO_CONCEPT.equals(expansionCallback
 					.getCategory(resource))) {
 
@@ -75,8 +75,7 @@ public class AutomaticConceptExpander implements GraphNodeExpander {
 	private void addMappingArcsToConcept(Resource concept,
 			GraphNodeExpansionCallback expansionCallback) {
 
-		for (Resource resource2 : expansionCallback.getCallback()
-				.getAllResources()) {
+		for (Resource resource2 : expansionCallback.getAllResources()) {
 
 			if (NcboUriHelper.NCBO_MAPPING.equals(expansionCallback
 					.getCategory(resource2))) {
@@ -102,8 +101,10 @@ public class AutomaticConceptExpander implements GraphNodeExpander {
 	}
 
 	@Override
-	public void expand(Resource resource,
+	public void expand(ResourceItem item,
 			GraphNodeExpansionCallback expansionCallback) {
+
+		Resource resource = item.getResourceSet().getFirstResource();
 
 		if (!expansionCallback.isRestoring()) {
 			// only look automatically for mappings if not restoring
@@ -117,11 +118,9 @@ public class AutomaticConceptExpander implements GraphNodeExpander {
 	protected void expandMappingNeighbourhood(Resource resource,
 			GraphNodeExpansionCallback expansionCallback) {
 
-		mappingNeighbourhoodService
-				.getNeighbourhood(
-						resource,
-						new MappingNeighbourhoodCallback(expansionCallback
-								.getDisplay(), expansionCallback.getCallback(),
-								errorHandler, expansionCallback));
+		mappingNeighbourhoodService.getNeighbourhood(resource,
+				new MappingNeighbourhoodCallback(
+						expansionCallback.getDisplay(), errorHandler,
+						expansionCallback));
 	}
 }

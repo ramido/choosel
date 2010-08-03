@@ -26,29 +26,30 @@ public abstract class AbstractAutomaticGraphNodeExpander implements
             String arcType, boolean inverted) {
 
         // going through neighbors
-        UriList neighbours = resource.getUriListValue(property);
-        for (String uri : neighbours) {
-            if (expansionCallback.getCallback().containsResourceWithUri(uri)) {
+        UriList resourceNeighbours = resource.getUriListValue(property);
+        for (String neighbourUri : resourceNeighbours) {
+            if (expansionCallback.containsResourceWithUri(neighbourUri)) {
                 if (inverted) {
-                    expansionCallback.showArc(arcType, uri, resource.getUri());
+                    expansionCallback.showArc(arcType, neighbourUri,
+                            resource.getUri());
                 } else {
-                    expansionCallback.showArc(arcType, resource.getUri(), uri);
+                    expansionCallback.showArc(arcType, resource.getUri(),
+                            neighbourUri);
                 }
             }
         }
 
         // going through all existing resource and check if current resource is
         // neighbor
-        for (Resource otherResource : expansionCallback.getCallback()
-                .getAllResources()) {
-
-            UriList otherNeighbours = otherResource.getUriListValue(property);
-            if (otherNeighbours.contains(resource.getUri())) {
+        for (Resource graphResource : expansionCallback.getAllResources()) {
+            UriList graphResourceNeighbours = graphResource
+                    .getUriListValue(property);
+            if (graphResourceNeighbours.contains(resource.getUri())) {
                 if (inverted) {
                     expansionCallback.showArc(arcType, resource.getUri(),
-                            otherResource.getUri());
+                            graphResource.getUri());
                 } else {
-                    expansionCallback.showArc(arcType, otherResource.getUri(),
+                    expansionCallback.showArc(arcType, graphResource.getUri(),
                             resource.getUri());
                 }
             }

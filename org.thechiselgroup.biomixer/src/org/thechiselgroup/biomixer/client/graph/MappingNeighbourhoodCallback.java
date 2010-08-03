@@ -26,7 +26,6 @@ import org.thechiselgroup.choosel.client.geometry.Point;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
-import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 import org.thechiselgroup.choosel.client.views.graph.AbstractNeighbourhoodCallback;
 import org.thechiselgroup.choosel.client.views.graph.GraphNodeExpansionCallback;
 import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay;
@@ -39,11 +38,10 @@ import org.thechiselgroup.choosel.client.views.graph.Relationship;
 public class MappingNeighbourhoodCallback extends AbstractNeighbourhoodCallback {
 
 	public MappingNeighbourhoodCallback(GraphDisplay graph,
-			ViewContentDisplayCallback contentDisplayCallback,
 			ErrorHandler errorHandler,
 			GraphNodeExpansionCallback expansionCallback) {
 
-		super(graph, contentDisplayCallback, errorHandler, expansionCallback);
+		super(graph, errorHandler, expansionCallback);
 	}
 
 	private void addRelationshipArcs(List<Relationship> displayableRelationships) {
@@ -98,9 +96,8 @@ public class MappingNeighbourhoodCallback extends AbstractNeighbourhoodCallback 
 	}
 
 	private Node getRelatedNode(Resource resource, String key) {
-		Node sourceNode = getNode(contentDisplayCallback
-				.getResourceByUri((String) resource.getValue(key)));
-		return sourceNode;
+		return getNode(expansionCallback.getResourceByUri((String) resource
+				.getValue(key)));
 	}
 
 	protected void layoutNodes(List<Resource> displayableMappings) {

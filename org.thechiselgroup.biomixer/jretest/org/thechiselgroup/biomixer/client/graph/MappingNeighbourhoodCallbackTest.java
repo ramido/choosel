@@ -59,9 +59,6 @@ public class MappingNeighbourhoodCallbackTest {
 	private static final String TEST_CONCEPT_SHORT_ID = "shortid";
 
 	@Mock
-	private ViewContentDisplayCallback callback;
-
-	@Mock
 	private Display graphDisplay;
 
 	@Mock
@@ -102,6 +99,9 @@ public class MappingNeighbourhoodCallbackTest {
 
 	@Mock
 	private GraphNodeExpansionCallback expansionCallback;
+
+	@Mock
+	private ViewContentDisplayCallback callback;
 
 	@Test
 	public void addMappingArcs() {
@@ -167,10 +167,8 @@ public class MappingNeighbourhoodCallbackTest {
 		availableResources.add(inputConcept);
 		availableResources.add(concept2);
 
-		when(callback.getAutomaticResourceSet()).thenReturn(availableResources);
-
-		when(callback.containsResourceWithUri(any(String.class))).thenAnswer(
-				new Answer<Boolean>() {
+		when(expansionCallback.containsResourceWithUri(any(String.class)))
+				.thenAnswer(new Answer<Boolean>() {
 					@Override
 					public Boolean answer(InvocationOnMock invocation)
 							throws Throwable {
@@ -180,7 +178,7 @@ public class MappingNeighbourhoodCallbackTest {
 					}
 				});
 
-		underTest = new MappingNeighbourhoodCallback(graphDisplay, callback,
+		underTest = new MappingNeighbourhoodCallback(graphDisplay,
 				errorHandler, expansionCallback);
 	}
 }

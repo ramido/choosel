@@ -15,22 +15,30 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.graph;
 
+import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceManager;
+import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
-import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 
+// TODO use resource items instead of single resources
 public interface GraphNodeExpansionCallback extends ResourceCategorizer {
 
-    ViewContentDisplayCallback getCallback();
+    void addAutomaticResource(Resource resource);
+
+    boolean containsResourceWithUri(String resourceUri);
+
+    ResourceSet getAllResources();
+
+    // String getArcId(String arcType, String sourceId, String targetId);
 
     GraphDisplay getDisplay();
+
+    Resource getResourceByUri(String value);
 
     ResourceManager getResourceManager();
 
     boolean isRestoring();
-
-    // String getArcId(String arcType, String sourceId, String targetId);
 
     /**
      * Displays the specified arc. If the arc is already displayed, nothing

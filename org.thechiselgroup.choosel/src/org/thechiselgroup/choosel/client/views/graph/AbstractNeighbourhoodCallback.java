@@ -24,19 +24,15 @@ import org.thechiselgroup.choosel.client.error_handling.ErrorHandlingAsyncCallba
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
-import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 
 public abstract class AbstractNeighbourhoodCallback extends
         ErrorHandlingAsyncCallback<NeighbourhoodServiceResult> {
-
-    protected final ViewContentDisplayCallback contentDisplayCallback;
 
     protected final GraphNodeExpansionCallback expansionCallback;
 
     protected final GraphDisplay graph;
 
     public AbstractNeighbourhoodCallback(GraphDisplay graph,
-            ViewContentDisplayCallback contentDisplayCallback,
             ErrorHandler errorHandler,
             GraphNodeExpansionCallback expansionCallback) {
 
@@ -44,15 +40,13 @@ public abstract class AbstractNeighbourhoodCallback extends
 
         assert expansionCallback != null;
         assert graph != null;
-        assert contentDisplayCallback != null;
 
         this.expansionCallback = expansionCallback;
-        this.contentDisplayCallback = contentDisplayCallback;
         this.graph = graph;
     }
 
     protected void addResource(Resource resource) {
-        contentDisplayCallback.getAutomaticResourceSet().add(resource);
+        expansionCallback.addAutomaticResource(resource);
     }
 
     protected void addResources(Iterable<Resource> newResources) {
@@ -62,18 +56,17 @@ public abstract class AbstractNeighbourhoodCallback extends
     }
 
     protected boolean contains(Resource resource) {
-        return contentDisplayCallback
-                .containsResourceWithUri(resource.getUri());
+        return containsUri(resource.getUri());
     }
 
     protected boolean containsUri(String resourceUri) {
-        return contentDisplayCallback.containsResourceWithUri(resourceUri);
+        return expansionCallback.containsResourceWithUri(resourceUri);
     }
 
     protected Set<Resource> getNewResources(Iterable<Resource> neighbours) {
         Set<Resource> newResources = new HashSet<Resource>();
         for (Resource resource : neighbours) {
-            if (!viewContainsResource(resource)) {
+            if (!contains(resource)) {
                 newResources.add(resource);
             }
         }
@@ -98,11 +91,6 @@ public abstract class AbstractNeighbourhoodCallback extends
             List<Relationship> relationships, Resource inputResource) {
         updateUriLists(property, relationships);
         inputResource.getUriListValue(property).setLoaded(true);
-    }
-
-    protected boolean viewContainsResource(Resource resource) {
-        return contentDisplayCallback
-                .containsResourceWithUri(resource.getUri());
     }
 
 }

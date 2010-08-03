@@ -22,7 +22,9 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.thechiselgroup.choosel.client.test.AdvancedAsserts.assertContentEquals;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
+import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.toResourceSet;
 
 import org.junit.After;
@@ -52,6 +54,7 @@ import org.thechiselgroup.choosel.client.ui.widget.graph.NodeDragEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeDragHandler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.HoverModel;
+import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay.Display;
@@ -98,9 +101,7 @@ public class GraphViewContentDisplayTest {
     @Mock
     private CommandManager commandManager;
 
-    private Resource concept1;
-
-    private GraphViewContentDisplay contentDisplay;
+    private GraphViewContentDisplay underTest;
 
     @Mock
     private DetailsWidgetHelper detailsWidgetHelper;
@@ -138,6 +139,18 @@ public class GraphViewContentDisplayTest {
 
     private Point targetLocation;
 
+    @Test
+    public void addResourceItemToAllResource() {
+        ResourceSet resourceSet = createResources(1);
+
+        underTest.createResourceItem(layer, RESOURCE_ITEM_CATEGORY,
+                resourceSet, hoverModel);
+
+        resourceSet.add(createResource(2));
+
+        assertContentEquals(resourceSet, underTest.getAllResources());
+    }
+
     /*
      * Test case: node drag event gets fired, test that correct move command is
      * added to the command manager
@@ -174,13 +187,31 @@ public class GraphViewContentDisplayTest {
 
     @Test
     public void loadNeighbourhoodWhenAddingConcept() {
-        concept1 = createResource(1);
+        Resource concept1 = createResource(1);
 
-        contentDisplay.createResourceItem(layer, RESOURCE_ITEM_CATEGORY,
+        underTest.createResourceItem(layer, RESOURCE_ITEM_CATEGORY,
                 toResourceSet(concept1), hoverModel);
 
-        verify(automaticExpander, times(1)).expand(eq(concept1),
+        ArgumentCaptor<ResourceItem> argument = ArgumentCaptor
+                .forClass(ResourceItem.class);
+        verify(automaticExpander, times(1)).expand(argument.capture(),
                 any(GraphNodeExpansionCallback.class));
+
+        ResourceItem resourceItem = argument.getValue();
+        assertEquals(1, resourceItem.getResourceSet().size());
+        assertEquals(concept1, resourceItem.getResourceSet().getFirstResource());
+    }
+
+    @Test
+    public void removeResourceItemFromAllResource() {
+        ResourceSet resourceSet = createResources(1);
+
+        GraphItem resourceItem = underTest.createResourceItem(layer,
+                RESOURCE_ITEM_CATEGORY, resourceSet, hoverModel);
+
+        underTest.removeResourceItem(resourceItem);
+
+        assertContentEquals(createResources(), underTest.getAllResources());
     }
 
     @Before
@@ -197,12 +228,12 @@ public class GraphViewContentDisplayTest {
 
         when(callback.getAllResources()).thenReturn(allResources);
 
-        contentDisplay = spy(new TestGraphViewContentDisplay(display,
+        underTest = spy(new TestGraphViewContentDisplay(display,
                 popupManagerFactory, detailsWidgetHelper, commandManager,
                 resourceManager, dragEnablerFactory, resourceCategorizer,
                 arcStyleProvider, registry));
 
-        contentDisplay.init(callback);
+        underTest.init(callback);
 
         when(resourceCategorizer.getCategory(any(Resource.class))).thenReturn(
                 TestResourceSetFactory.DEFAULT_TYPE);

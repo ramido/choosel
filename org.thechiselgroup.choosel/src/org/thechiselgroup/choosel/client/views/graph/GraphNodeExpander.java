@@ -15,10 +15,16 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.graph;
 
-import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.client.views.ResourceItem;
 
+/**
+ * Expands a graph node.
+ * 
+ * @author Lars Grammel
+ */
 public interface GraphNodeExpander {
 
-    void expand(Resource resource, GraphNodeExpansionCallback expansionCallback);
+    void expand(ResourceItem resourceItem,
+            GraphNodeExpansionCallback expansionCallback);
 
 }
