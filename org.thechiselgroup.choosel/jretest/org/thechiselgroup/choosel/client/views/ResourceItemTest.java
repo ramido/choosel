@@ -141,7 +141,8 @@ public class ResourceItemTest {
 
     @Test
     public void setHighlightedNeverCallsUpdateStyling() {
-        underTest.setHighlighted(true);
+        resources.addAll(createResources(1));
+        underTest.addHighlightedResources(createResources(1));
         verify(underTest, never()).updateStyling();
     }
 
@@ -174,23 +175,51 @@ public class ResourceItemTest {
 
     @Test
     public void statusIsHighlighted() {
-        underTest.setHighlighted(true);
+        resources.addAll(createResources(1));
+        underTest.addHighlightedResources(createResources(1));
         underTest.setSelected(false);
         assertEquals(Status.HIGHLIGHTED, underTest.calculateStatus());
     }
 
     @Test
     public void statusIsHighlightedSelected() {
-        underTest.setHighlighted(true);
+        resources.addAll(createResources(1));
+        underTest.addHighlightedResources(createResources(1));
         underTest.setSelected(true);
 
         assertEquals(Status.HIGHLIGHTED_SELECTED, underTest.calculateStatus());
     }
 
     @Test
+    public void statusIsNotHighlightedAfterRemovingHighlightedResources() {
+        resources.addAll(createResources(1));
+        underTest.addHighlightedResources(createResources(1));
+        underTest.removeHighlightedResources(createResources(1));
+        underTest.setSelected(false);
+        assertEquals(Status.DEFAULT, underTest.calculateStatus());
+    }
+
+    @Test
+    public void statusIsNotHighlightedOnEmptyAdd() {
+        resources.addAll(createResources(1));
+        underTest.addHighlightedResources(createResources(2));
+        underTest.setSelected(false);
+        assertEquals(Status.DEFAULT, underTest.calculateStatus());
+    }
+
+    @Test
     public void statusIsSelected() {
         underTest.setSelected(true);
         assertEquals(Status.SELECTED, underTest.calculateStatus());
+    }
+
+    @Test
+    public void statusRemainsHighlightedAfterOneResourceIsRemovedFromHighlight() {
+        resources.addAll(createResources(1, 2));
+        underTest.addHighlightedResources(createResources(1, 2));
+        underTest.removeHighlightedResources(createResources(1));
+        underTest.setSelected(false);
+        assertEquals(Status.HIGHLIGHTED, underTest.calculateStatus());
     }
 
     @Test
@@ -211,7 +240,8 @@ public class ResourceItemTest {
 
     @Test
     public void statusVsGrayIsHighlighted() {
-        underTest.setHighlighted(true);
+        resources.addAll(createResources(1));
+        underTest.addHighlightedResources(createResources(1));
         assertEquals(Status.HIGHLIGHTED,
                 underTest.calculateStatusNormalVsGraySelection());
     }

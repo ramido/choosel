@@ -45,8 +45,6 @@ public class ResourceItem {
 
     private String category;
 
-    private boolean highlighted = false;
-
     protected final HoverModel hoverModel;
 
     protected final PopupManager popupManager;
@@ -220,7 +218,7 @@ public class ResourceItem {
     }
 
     public boolean isHighlighted() {
-        return highlighted;
+        return !highlightedResources.isEmpty();
     }
 
     public boolean isSelected() {
@@ -239,15 +237,6 @@ public class ResourceItem {
 
     public void setDisplayObject(Object displayObject) {
         this.displayObject = displayObject;
-    }
-
-    // TODO introduce partial highlighting
-    public void setHighlighted(boolean highlighted) {
-        if (this.highlighted == highlighted) {
-            return;
-        }
-
-        this.highlighted = highlighted;
     }
 
     public void setSelected(boolean selected) {
