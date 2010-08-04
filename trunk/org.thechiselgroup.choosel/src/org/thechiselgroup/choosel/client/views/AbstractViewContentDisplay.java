@@ -129,6 +129,10 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
             Set<ResourceItem> updatedResourceItems,
             Set<ResourceItem> removedResourceItems) {
 
+        for (ResourceItem addedItem : addedResourceItems) {
+            addedItem.updateStyling();
+        }
+
         for (ResourceItem updatedItem : updatedResourceItems) {
             updatedItem.updateStyling();
         }
