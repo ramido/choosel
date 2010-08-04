@@ -33,43 +33,17 @@ import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 // TODO right side ticks
 public class BarChart extends ChartWidget {
 
-    private static final int BAR_PADDING = 6;
-
-    private static final double SCALE_PADDING = 0.5;
+    private static final int BAR_PADDING = 25;
 
     private static final int BORDER_HEIGHT = 10;
 
     private static final int BORDER_WIDTH = 20;
 
+    private double[] barCounts = new double[5];
+
+    private double[] highlightedBarCounts = new double[5];
+
     private Bar bar;
-
-    private ProtovisFunctionDoubleWithCache barHeight = new ProtovisFunctionDoubleWithCache() {
-
-        private double relativeHeight;
-
-        private double base;
-
-        private SlotValues slotValues;
-
-        @Override
-        public void beforeRender() {
-            if (chartItems.isEmpty()) {
-                return;
-            }
-
-            slotValues = getSlotValues(SlotResolver.MAGNITUDE_SLOT);
-
-            double scaleLength = slotValues.max();// - 0 + SCALE_PADDING * 2;
-
-            base = 0;// -SCALE_PADDING;
-            relativeHeight = chartHeight / scaleLength;
-        }
-
-        @Override
-        public double f(ChartItem value, int index) {
-            return (slotValues.value(index) + base) * relativeHeight - 1;
-        }
-    };
 
     private ProtovisFunctionDouble barLeft = new ProtovisFunctionDouble() {
         @Override
@@ -78,10 +52,69 @@ public class BarChart extends ChartWidget {
         }
     };
 
+    private ProtovisFunctionDoubleWithCache barHeight = new ProtovisFunctionDoubleWithCache() {
+
+        @Override
+        public void beforeRender() {
+            if (chartItems.isEmpty()) {
+                return;
+            }
+
+            highlightedBarCounts = new double[5];
+
+            for (int i = 0; i < chartItems.size(); i++) {
+                highlightedBarCounts[i] = chartItems.get(i).getResourceItem()
+                        .getHighlightedResources().size();
+            }
+
+        }
+
+        @Override
+        public double f(ChartItem value, int index) {
+            return highlightedBarCounts[index] * chartHeight / 10;
+        }
+
+    };
+
+    private ProtovisFunctionDoubleWithCache barHeight2 = new ProtovisFunctionDoubleWithCache() {
+
+        @Override
+        public void beforeRender() {
+            if (chartItems.isEmpty()) {
+                return;
+            }
+
+            barCounts = new double[5];
+
+            for (int i = 0; i < chartItems.size(); i++) {
+                barCounts[i] = Integer.parseInt(chartItems.get(i)
+                        .getResourceItem()
+                        .getResourceValue(SlotResolver.FONT_SIZE_SLOT)
+                        .toString())
+                        - chartItems.get(i).getResourceItem()
+                                .getHighlightedResources().size();
+            }
+
+        }
+
+        @Override
+        public double f(ChartItem value, int index) {
+            return barCounts[index] * chartHeight / 10;
+        }
+
+    };
+
     private ProtovisFunctionDouble barWidth = new ProtovisFunctionDouble() {
         @Override
         public double f(ChartItem value, int index) {
             return chartWidth / (chartItems.size() * 2);
+        }
+    };
+
+    private ProtovisFunctionDouble barBottom2 = new ProtovisFunctionDouble() {
+        @Override
+        public double f(ChartItem value, int index) {
+            return barHeight.f(value, index) + barBottom;
         }
     };
 
@@ -116,6 +149,7 @@ public class BarChart extends ChartWidget {
     @Override
     protected void beforeRender() {
         barHeight.beforeRender();
+        barHeight2.beforeRender();
     }
 
     private void calculateChartVariables() {
@@ -126,7 +160,10 @@ public class BarChart extends ChartWidget {
     private void drawBar() {
         bar = chart.add(Bar.createBar()).data(chartItemsJSArray)
                 .bottom(barBottom).height(barHeight).left(barLeft)
-                .width(barWidth).fillStyle(barFillStyle).strokeStyle(Colors.STEELBLUE);
+                .width(barWidth).fillStyle(YELLOW)
+                .strokeStyle(Colors.STEELBLUE).add(Bar.createBar())
+                .bottom(barBottom2).height(barHeight2)
+                .fillStyle(Colors.STEELBLUE);
     }
 
     @SuppressWarnings("unchecked")
@@ -137,9 +174,10 @@ public class BarChart extends ChartWidget {
         calculateChartVariables();
         setChartParameters();
 
-        SlotValues slotValues = getSlotValues(SlotResolver.MAGNITUDE_SLOT);
+        // SlotValues slotValues = getSlotValues(SlotResolver.DESCRIPTION_SLOT);
 
-        drawScales(Scale.linear(slotValues.max(), 0).range(0, chartHeight));
+        Scale scale = Scale.linear(10, 0).range(0, chartHeight);
+        drawScales(scale);
         drawBar();
 
         return bar;
@@ -147,7 +185,6 @@ public class BarChart extends ChartWidget {
 
     protected void drawScales(Scale scale) {
         this.scale = scale;
-        // TODO // should // take // double // with // labelText
         chart.add(Rule.createRule())
                 .data(scale.ticks())
                 .top(scale)
