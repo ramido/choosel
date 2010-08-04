@@ -60,8 +60,6 @@ public class ResourceItem {
 
     private boolean selected;
 
-    private boolean selectionStatusVisible;
-
     private final ResourceItemValueResolver valueResolver;
 
     private HighlightingManager highlightingManager;
@@ -260,15 +258,6 @@ public class ResourceItem {
         }
 
         this.selected = selected;
-        updateStyling();
-    }
-
-    public void setSelectionStatusVisible(boolean visible) {
-        if (this.selectionStatusVisible == visible) {
-            return;
-        }
-
-        this.selectionStatusVisible = visible;
         updateStyling();
     }
 
