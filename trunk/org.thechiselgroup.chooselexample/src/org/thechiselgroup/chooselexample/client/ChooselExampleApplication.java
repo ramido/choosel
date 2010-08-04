@@ -166,12 +166,14 @@ public class ChooselExampleApplication extends ChooselApplication {
 
                 ResourceSet resourceSet = createResourceSet();
                 resourceSet.setLabel("Test");
-                for (int i = 0; i < 25; i++)
+                for (int i = 0; i < 15; i++)
                     resourceSet.add(TestResourceSetFactory.createResource(i));
                 for (Resource resource : resourceSet) {
                     resource.putValue("date", new Date().toString());
-                    resource.putValue("magnitude", (2 + Random.nextInt(20)));
-                    resource.putValue("tagContent", "test" + Random.nextInt(5));
+                    resource.putValue("magnitude", Random.nextInt(10));
+                    int category = Random.nextInt(5);
+                    resource.putValue("tagContent", "test" + category);
+                    resource.putValue("label", "test" + category);
                 }
 
                 dataSourcesPresenter.addResourceSet(resourceSet);
