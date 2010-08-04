@@ -717,8 +717,19 @@ public class DefaultView extends AbstractWindowContent implements View {
             return;
         }
 
+        // TODO resourceset should inherit set<resource>
+        ResourceSet affectedResourcesInThisView2 = new DefaultResourceSet();
+        affectedResourcesInThisView2.addAll(affectedResourcesInThisView);
+
         Set<ResourceItem> affectedResourceItems = getResourceItems(affectedResourcesInThisView);
         for (ResourceItem resourceItem : affectedResourceItems) {
+            if (highlighted) {
+                resourceItem
+                        .addHighlightedResources(affectedResourcesInThisView2);
+            } else {
+                resourceItem
+                        .removeHighlightedResources(affectedResourcesInThisView2);
+            }
             resourceItem.setHighlighted(highlighted);
             // --> add / remove highlighted resources
             // TODO replace with add / remove of resources from item
