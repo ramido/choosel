@@ -203,6 +203,7 @@ public class TimeLineItem extends IconResourceItem {
     @Override
     protected void setStatusStyling(Status status) {
         switch (status) {
+        case PARTIALLY_HIGHLIGHTED_SELECTED:
         case HIGHLIGHTED_SELECTED: {
             removeCssClass(CSS_GRAYED_OUT_CLASS);
             addCssClass(CSS_SELECTED_CLASS);
@@ -210,6 +211,7 @@ public class TimeLineItem extends IconResourceItem {
             applyIcon(getHighlightIconURL());
         }
             break;
+        case PARTIALLY_HIGHLIGHTED:
         case HIGHLIGHTED: {
             removeCssClass(CSS_SELECTED_CLASS);
             removeCssClass(CSS_GRAYED_OUT_CLASS);

@@ -151,10 +151,9 @@ public class MapItem extends IconResourceItem {
     @Override
     protected void setStatusStyling(Status status) {
         switch (status) {
-        case HIGHLIGHTED_SELECTED: {
-            setHighlightedStyle();
-        }
-            break;
+        case PARTIALLY_HIGHLIGHTED:
+        case PARTIALLY_HIGHLIGHTED_SELECTED:
+        case HIGHLIGHTED_SELECTED:
         case HIGHLIGHTED: {
             setHighlightedStyle();
         }
