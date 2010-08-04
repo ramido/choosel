@@ -82,11 +82,13 @@ public class TextItem extends ResourceItem {
         }
     }
 
-    private static final String CSS_HIGHLIGHTED = "listItemHover";
+    private static final String CSS_HIGHLIGHTED = "textItemHighlighted";
 
-    private static final String CSS_LIST = "listItem";
+    private static final String CSS_PARTIALLY_HIGHLIGHTED = "textItemPartiallyHighlighted";
 
-    private static final String CSS_SELECTED = "listItemSelected";
+    private static final String CSS_LIST = "textItem";
+
+    private static final String CSS_SELECTED = "textItemSelected";
 
     private final TextViewContentDisplay.Display display;
 
@@ -122,14 +124,26 @@ public class TextItem extends ResourceItem {
     @Override
     protected void setStatusStyling(Status status) {
         switch (status) {
-        case PARTIALLY_HIGHLIGHTED_SELECTED:
         case HIGHLIGHTED_SELECTED: {
+            display.removeStyleName(this, CSS_PARTIALLY_HIGHLIGHTED);
             display.addStyleName(this, CSS_SELECTED);
             display.addStyleName(this, CSS_HIGHLIGHTED);
         }
             break;
-        case PARTIALLY_HIGHLIGHTED:
+        case PARTIALLY_HIGHLIGHTED_SELECTED: {
+            display.removeStyleName(this, CSS_HIGHLIGHTED);
+            display.addStyleName(this, CSS_SELECTED);
+            display.addStyleName(this, CSS_PARTIALLY_HIGHLIGHTED);
+        }
+            break;
+        case PARTIALLY_HIGHLIGHTED: {
+            display.removeStyleName(this, CSS_HIGHLIGHTED);
+            display.removeStyleName(this, CSS_SELECTED);
+            display.addStyleName(this, CSS_PARTIALLY_HIGHLIGHTED);
+        }
+            break;
         case HIGHLIGHTED: {
+            display.removeStyleName(this, CSS_PARTIALLY_HIGHLIGHTED);
             display.removeStyleName(this, CSS_SELECTED);
             display.addStyleName(this, CSS_HIGHLIGHTED);
         }
@@ -137,9 +151,11 @@ public class TextItem extends ResourceItem {
         case DEFAULT: {
             display.removeStyleName(this, CSS_SELECTED);
             display.removeStyleName(this, CSS_HIGHLIGHTED);
+            display.removeStyleName(this, CSS_PARTIALLY_HIGHLIGHTED);
         }
             break;
         case SELECTED: {
+            display.removeStyleName(this, CSS_PARTIALLY_HIGHLIGHTED);
             display.removeStyleName(this, CSS_HIGHLIGHTED);
             display.addStyleName(this, CSS_SELECTED);
         }
