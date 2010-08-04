@@ -135,6 +135,22 @@ public class DefaultViewTest {
                 any(ResourcesRemovedEventHandler.class));
     }
 
+    private ResourceSet captureAddHighlightedResources() {
+        ArgumentCaptor<ResourceSet> argument = ArgumentCaptor
+                .forClass(ResourceSet.class);
+        verify(resourceItem, times(1)).addHighlightedResources(
+                argument.capture());
+        return argument.getValue();
+    }
+
+    private ResourceSet captureRemoveHighlightedResources() {
+        ArgumentCaptor<ResourceSet> argument = ArgumentCaptor
+                .forClass(ResourceSet.class);
+        verify(resourceItem, times(1)).removeHighlightedResources(
+                argument.capture());
+        return argument.getValue();
+    }
+
     // TODO move to resource splitter test
     @Test
     public void categorizeLabeledResources() {
@@ -295,6 +311,62 @@ public class DefaultViewTest {
     }
 
     @Test
+    public void highlightedResourcesGetAddedToResourceItemOnlyOnceWhenSeveralResourcesFromItemAddedToHoverModel() {
+        ResourceSet resources = createResources(1, 2);
+
+        resourceModel.addResourceSet(resources);
+        when(resourceItem.getResourceSet()).thenReturn(resources);
+
+        hoverModel.setHighlightedResourceSet(resources);
+
+        ResourceSet actualResources = captureAddHighlightedResources();
+        assertContentEquals(resources, actualResources);
+    }
+
+    @Test
+    public void highlightedResourcesGetAddedToResourceItemWhenHoverModelContainsAdditionalResources() {
+        Resource resource2 = createResource(2);
+        Resource resource1 = createResource(1);
+        ResourceSet viewResources = toResourceSet(resource2);
+        ResourceSet highlightedResources = toResourceSet(resource1, resource2);
+
+        resourceModel.addResourceSet(viewResources);
+        when(resourceItem.getResourceSet()).thenReturn(viewResources);
+
+        hoverModel.setHighlightedResourceSet(highlightedResources);
+
+        ResourceSet actualResources = captureAddHighlightedResources();
+        assertContentEquals(viewResources, actualResources);
+    }
+
+    @Test
+    public void highlightedResourcesGetAddedToResourceItemWhenResourcesAddedToHoverModel() {
+        ResourceSet resources = createResources(1);
+
+        when(resourceItem.getResourceSet()).thenReturn(resources);
+        resourceModel.addResourceSet(resources);
+
+        hoverModel.setHighlightedResourceSet(resources);
+
+        ResourceSet actualResources = captureAddHighlightedResources();
+        assertContentEquals(resources, actualResources);
+    }
+
+    @Test
+    public void highlightedResourcesGetRemovedFromResourceItemWhenResourcesRemovedFromHoverModel() {
+        ResourceSet resources = createResources(1);
+
+        when(resourceItem.getResourceSet()).thenReturn(resources);
+        resourceModel.addResourceSet(resources);
+
+        hoverModel.setHighlightedResourceSet(resources);
+        hoverModel.setHighlightedResourceSet(createResources());
+
+        ResourceSet actualResources = captureRemoveHighlightedResources();
+        assertContentEquals(resources, actualResources);
+    }
+
+    @Test
     public void initializesContentDisplay() {
         verify(contentDisplay, times(1)).init(
                 any(ViewContentDisplayCallback.class));
@@ -312,44 +384,6 @@ public class DefaultViewTest {
 
         verify(contentDisplay, times(2)).removeResourceItem(
                 any(ResourceItem.class));
-    }
-
-    @Test
-    public void resourceItemGetsHighlightedOnlyOnceWhenSeveralResourcesFromItemAddedToHoverModel() {
-        ResourceSet resources = createResources(1, 2);
-        resourceModel.addResourceSet(resources);
-        when(resourceItem.getResourceSet()).thenReturn(resources);
-
-        hoverModel.setHighlightedResourceSet(resources);
-
-        verify(resourceItem, times(1)).setHighlighted(true);
-    }
-
-    @Test
-    public void resourceItemGetsHighlightedWhenHoverModelContainsAdditionalResources() {
-        ResourceSet highlightedResources = createResources(1);
-        when(resourceItem.getResourceSet()).thenReturn(highlightedResources);
-        resourceModel.addResourceSet(highlightedResources);
-
-        hoverModel.setHighlightedResourceSet(highlightedResources);
-
-        verify(resourceItem, times(1)).setHighlighted(true);
-    }
-
-    @Test
-    public void resourceItemGetsHighlightedWhenResourcesAddedToHoverModel() {
-        Resource resource2 = createResource(2);
-        Resource resource1 = createResource(1);
-
-        resourceModel.addResourceSet(toResourceSet(resource2));
-
-        when(resourceItem.getResourceSet())
-                .thenReturn(toResourceSet(resource2));
-
-        hoverModel
-                .setHighlightedResourceSet(toResourceSet(resource1, resource2));
-
-        verify(resourceItem, times(1)).setHighlighted(true);
     }
 
     @Test
