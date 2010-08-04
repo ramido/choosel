@@ -23,13 +23,12 @@ import com.google.gwt.user.client.Event;
 
 public class ChartItem {
 
+    // TODO Move to Colors class
     private static final String STEELBLUE = "steelblue";
 
     private static final String ORANGE = "orange";
 
     private static final String YELLOW = "yellow";
-
-    private String[] colours = { YELLOW, ORANGE, STEELBLUE };
 
     private ChartViewContentDisplay view;
 
@@ -49,12 +48,11 @@ public class ChartItem {
         switch (resourceItem.calculateStatus()) {
         case HIGHLIGHTED_SELECTED:
         case HIGHLIGHTED:
-            return colours[0];
-        case GRAYED_OUT:
+            return YELLOW;
         case DEFAULT:
-            return colours[2];
+            return STEELBLUE;
         case SELECTED:
-            return colours[1];
+            return ORANGE;
         }
         throw new RuntimeException("No colour available");
     }

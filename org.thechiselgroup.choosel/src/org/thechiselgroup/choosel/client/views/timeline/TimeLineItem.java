@@ -224,13 +224,6 @@ public class TimeLineItem extends IconResourceItem {
             applyIcon(getDefaultIconURL());
         }
             break;
-        case GRAYED_OUT: {
-            removeCssClass(CSS_SELECTED_CLASS);
-            removeCssClass(CSS_HIGHLIGHT_CLASS);
-            addCssClass(CSS_GRAYED_OUT_CLASS);
-            applyIcon(getGrayedOutIconURL());
-        }
-            break;
         case SELECTED: {
             removeCssClass(CSS_GRAYED_OUT_CLASS);
             removeCssClass(CSS_HIGHLIGHT_CLASS);

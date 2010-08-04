@@ -114,14 +114,6 @@ public class GraphItem extends ResourceItem {
                     NODE_FONT_WEIGHT_NORMAL);
         }
             break;
-        case GRAYED_OUT: {
-            display.setNodeStyle(node, NODE_BACKGROUND_COLOR, GRAY_1);
-            display.setNodeStyle(node, NODE_BORDER_COLOR, GRAY_2);
-            display.setNodeStyle(node, NODE_FONT_COLOR, BLACK);
-            display.setNodeStyle(node, NODE_FONT_WEIGHT,
-                    NODE_FONT_WEIGHT_NORMAL);
-        }
-            break;
         case SELECTED: {
             display.setNodeStyle(node, NODE_BACKGROUND_COLOR,
                     defaultBackgroundColor);
