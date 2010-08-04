@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.chart;
 
+import org.thechiselgroup.choosel.client.ui.Colors;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
@@ -22,13 +23,6 @@ import org.thechiselgroup.choosel.client.views.ResourceItem;
 import com.google.gwt.user.client.Event;
 
 public class ChartItem {
-
-    // TODO Move to Colors class
-    private static final String STEELBLUE = "steelblue";
-
-    private static final String ORANGE = "orange";
-
-    private static final String YELLOW = "yellow";
 
     private ChartViewContentDisplay view;
 
@@ -50,11 +44,11 @@ public class ChartItem {
         case PARTIALLY_HIGHLIGHTED_SELECTED:
         case HIGHLIGHTED_SELECTED:
         case HIGHLIGHTED:
-            return YELLOW;
+            return Colors.YELLOW;
         case DEFAULT:
-            return STEELBLUE;
+            return Colors.STEELBLUE;
         case SELECTED:
-            return ORANGE;
+            return Colors.ORANGE;
         }
         throw new RuntimeException("No colour available");
     }

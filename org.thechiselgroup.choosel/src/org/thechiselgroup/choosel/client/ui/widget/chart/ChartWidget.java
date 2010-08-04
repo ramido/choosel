@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.client.ui.widget.chart;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.thechiselgroup.choosel.client.ui.Colors;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Panel;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventHandler;
@@ -37,8 +38,6 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  */
 public abstract class ChartWidget extends Widget {
-
-    private static final String WHITE = "white";
 
     protected Panel chart;
 
@@ -193,10 +192,10 @@ public abstract class ChartWidget extends Widget {
     public void updateChart() {
         if (ArrayUtils.length(chartItemsJSArray) == 0) {
             chart = Panel.createWindowPanel().canvas(getElement())
-                    .height(height).width(width).fillStyle(WHITE);
+                    .height(height).width(width).fillStyle(Colors.WHITE);
         } else {
             chart = Panel.createWindowPanel().canvas(getElement())
-                    .fillStyle(WHITE);
+                    .fillStyle(Colors.WHITE);
             chart = drawChart();
             registerEventHandlers();
         }

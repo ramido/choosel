@@ -23,6 +23,7 @@ import static org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay.NOD
 import static org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay.NODE_FONT_WEIGHT_NORMAL;
 
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.ui.Colors;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
 import org.thechiselgroup.choosel.client.views.HoverModel;
@@ -32,27 +33,9 @@ import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay.Dis
 
 public class GraphItem extends ResourceItem {
 
-    private static final String BLACK = "#000000";
+    private String defaultBackgroundColor = Colors.BLUE_3;
 
-    private static final String BLUE_1 = "#AFC6E5";
-
-    private static final String BLUE_2 = "#447595";
-
-    private static final String BLUE_3 = "#DAE5F3";
-
-    public static final String GRAY_1 = "#D4D4D4";
-
-    public static final String GRAY_2 = "#474444";
-
-    public static final String ORANGE = "#E7B076";
-
-    private static final String YELLOW_1 = "#FFFFE1";
-
-    private static final String YELLOW_2 = "#D4D0C8";
-
-    private String defaultBackgroundColor = BLUE_3;
-
-    private String defaultBorderColor = BLUE_1;
+    private String defaultBorderColor = Colors.BLUE_1;
 
     private Display display;
 
@@ -92,17 +75,17 @@ public class GraphItem extends ResourceItem {
         switch (status) {
         case PARTIALLY_HIGHLIGHTED_SELECTED:
         case HIGHLIGHTED_SELECTED: {
-            display.setNodeStyle(node, NODE_BACKGROUND_COLOR, YELLOW_1);
-            display.setNodeStyle(node, NODE_BORDER_COLOR, ORANGE);
-            display.setNodeStyle(node, NODE_FONT_COLOR, ORANGE);
+            display.setNodeStyle(node, NODE_BACKGROUND_COLOR, Colors.YELLOW_1);
+            display.setNodeStyle(node, NODE_BORDER_COLOR, Colors.ORANGE);
+            display.setNodeStyle(node, NODE_FONT_COLOR, Colors.ORANGE);
             display.setNodeStyle(node, NODE_FONT_WEIGHT, NODE_FONT_WEIGHT_BOLD);
         }
             break;
         case PARTIALLY_HIGHLIGHTED:
         case HIGHLIGHTED: {
-            display.setNodeStyle(node, NODE_BACKGROUND_COLOR, YELLOW_1);
-            display.setNodeStyle(node, NODE_BORDER_COLOR, YELLOW_2);
-            display.setNodeStyle(node, NODE_FONT_COLOR, BLACK);
+            display.setNodeStyle(node, NODE_BACKGROUND_COLOR, Colors.YELLOW_1);
+            display.setNodeStyle(node, NODE_BORDER_COLOR, Colors.YELLOW_2);
+            display.setNodeStyle(node, NODE_FONT_COLOR, Colors.BLACK);
             display.setNodeStyle(node, NODE_FONT_WEIGHT,
                     NODE_FONT_WEIGHT_NORMAL);
         }
@@ -111,7 +94,7 @@ public class GraphItem extends ResourceItem {
             display.setNodeStyle(node, NODE_BACKGROUND_COLOR,
                     defaultBackgroundColor);
             display.setNodeStyle(node, NODE_BORDER_COLOR, defaultBorderColor);
-            display.setNodeStyle(node, NODE_FONT_COLOR, BLACK);
+            display.setNodeStyle(node, NODE_FONT_COLOR, Colors.BLACK);
             display.setNodeStyle(node, NODE_FONT_WEIGHT,
                     NODE_FONT_WEIGHT_NORMAL);
         }
@@ -119,8 +102,8 @@ public class GraphItem extends ResourceItem {
         case SELECTED: {
             display.setNodeStyle(node, NODE_BACKGROUND_COLOR,
                     defaultBackgroundColor);
-            display.setNodeStyle(node, NODE_BORDER_COLOR, ORANGE);
-            display.setNodeStyle(node, NODE_FONT_COLOR, ORANGE);
+            display.setNodeStyle(node, NODE_BORDER_COLOR, Colors.ORANGE);
+            display.setNodeStyle(node, NODE_FONT_COLOR, Colors.ORANGE);
             display.setNodeStyle(node, NODE_FONT_WEIGHT, NODE_FONT_WEIGHT_BOLD);
         }
             break;

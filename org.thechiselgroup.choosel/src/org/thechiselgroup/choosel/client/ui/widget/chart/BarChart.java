@@ -1,5 +1,6 @@
 package org.thechiselgroup.choosel.client.ui.widget.chart;
 
+import org.thechiselgroup.choosel.client.ui.Colors;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Bar;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Label;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDouble;
@@ -18,8 +19,6 @@ import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 public class BarChart extends ChartWidget {
 
     private static final int BAR_PADDING = 6;
-
-    private static final String STEELBLUE = "steelblue";
 
     private static final double SCALE_PADDING = 0.5;
 
@@ -87,7 +86,7 @@ public class BarChart extends ChartWidget {
             case HIGHLIGHTED:
                 return YELLOW;
             case DEFAULT:
-                return STEELBLUE;
+                return Colors.STEELBLUE;
             case SELECTED:
                 return ORANGE;
             }
@@ -112,7 +111,7 @@ public class BarChart extends ChartWidget {
     private void drawBar() {
         bar = chart.add(Bar.createBar()).data(chartItemsJSArray)
                 .bottom(barBottom).height(barHeight).left(barLeft)
-                .width(barWidth).fillStyle(barFillStyle).strokeStyle(STEELBLUE);
+                .width(barWidth).fillStyle(barFillStyle).strokeStyle(Colors.STEELBLUE);
     }
 
     @SuppressWarnings("unchecked")
