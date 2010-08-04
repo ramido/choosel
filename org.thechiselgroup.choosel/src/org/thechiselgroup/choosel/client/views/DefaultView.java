@@ -203,6 +203,18 @@ public class DefaultView extends AbstractWindowContent implements View {
         return mainPanel;
     }
 
+    private ResourceSet calculateAffectedResources(
+            List<Resource> affectedResources) {
+        // TODO remove toSet once set is passed in
+        Set<Resource> affectedResourcesInThisView = resourceModel
+                .retain(toSet(affectedResources));
+
+        // TODO ResourceSet should inherit Set<Resource>
+        ResourceSet affectedResourcesInThisView2 = new DefaultResourceSet();
+        affectedResourcesInThisView2.addAll(affectedResourcesInThisView);
+        return affectedResourcesInThisView2;
+    }
+
     private void checkResize() {
         contentDisplay.checkResize();
     }
@@ -221,6 +233,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private ResourceItem createResourceItem(String category,
             ResourceSet resources) {
+
         // Added when changing resource item to contain resource sets
         // TODO use factory & dispose + clean up
 
@@ -233,6 +246,12 @@ public class DefaultView extends AbstractWindowContent implements View {
         // TODO introduce partial selection
         resourceItem.setSelectionStatusVisible(selection != null
                 && !selection.isEmpty());
+
+        ResourceSet affectedResources = calculateAffectedResources(hoverModel
+                .toList());
+        if (!affectedResources.isEmpty()) {
+            resourceItem.addHighlightedResources(affectedResources);
+        }
 
         // / TODO is this necessary?
         // checkResize();
@@ -709,26 +728,20 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         assert affectedResources != null;
 
-        // TODO remove toSet once set is passed in
-        Set<Resource> affectedResourcesInThisView = resourceModel
-                .retain(toSet(affectedResources));
+        ResourceSet affectedResourcesInThisView = calculateAffectedResources(affectedResources);
 
         if (affectedResourcesInThisView.isEmpty()) {
             return;
         }
 
-        // TODO ResourceSet should inherit Set<Resource>
-        ResourceSet affectedResourcesInThisView2 = new DefaultResourceSet();
-        affectedResourcesInThisView2.addAll(affectedResourcesInThisView);
-
         Set<ResourceItem> affectedResourceItems = getResourceItems(affectedResourcesInThisView);
         for (ResourceItem resourceItem : affectedResourceItems) {
             if (highlighted) {
                 resourceItem
-                        .addHighlightedResources(affectedResourcesInThisView2);
+                        .addHighlightedResources(affectedResourcesInThisView);
             } else {
                 resourceItem
-                        .removeHighlightedResources(affectedResourcesInThisView2);
+                        .removeHighlightedResources(affectedResourcesInThisView);
             }
             // TODO replace with add / remove of resources from item
             // --> can we have filtered view on hover set instead??

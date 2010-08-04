@@ -55,7 +55,6 @@ import org.thechiselgroup.choosel.client.resources.ResourceSplitter;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
-import org.thechiselgroup.choosel.client.test.ResourcesTestHelper;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
@@ -177,7 +176,7 @@ public class DefaultViewTest {
         ResourceSet resources2 = createResources(CATEGORY_2, 4, 2);
         ResourceSet resources = toResourceSet(resources1, resources2);
 
-        underTest.getResourceModel().addResourceSet(resources);
+        resourceModel.addResourceSet(resources);
 
         ArgumentCaptor<ResourceSet> argument = ArgumentCaptor
                 .forClass(ResourceSet.class);
@@ -192,17 +191,9 @@ public class DefaultViewTest {
             ResourceSet resourceSet = values.get(i);
 
             if (resourceSet.size() == 3) {
-                ResourcesTestHelper.assertContainsResource(true, resourceSet,
-                        CATEGORY_1, 1);
-                ResourcesTestHelper.assertContainsResource(true, resourceSet,
-                        CATEGORY_1, 3);
-                ResourcesTestHelper.assertContainsResource(true, resourceSet,
-                        CATEGORY_1, 4);
+                assertContentEquals(resources1, resourceSet);
             } else if (resourceSet.size() == 2) {
-                ResourcesTestHelper.assertContainsResource(true, resourceSet,
-                        CATEGORY_2, 4);
-                ResourcesTestHelper.assertContainsResource(true, resourceSet,
-                        CATEGORY_2, 2);
+                assertContentEquals(resources2, resourceSet);
             } else {
                 fail("invalid resource set " + resourceSet);
             }
@@ -308,6 +299,19 @@ public class DefaultViewTest {
 
         verify(selectionPresenter, times(1)).dispose();
         verify(selectionHandlerRegistration, times(2)).removeHandler();
+    }
+
+    @Test
+    public void highlightedResourceSetOnCreatedResourceItems() {
+        ResourceSet resources = createResources(CATEGORY_1, 1, 3, 4);
+
+        when(resourceItem.getResourceSet()).thenReturn(resources);
+        hoverModel.setHighlightedResourceSet(resources);
+
+        resourceModel.addResourceSet(resources);
+
+        ResourceSet realResources = captureAddHighlightedResources();
+        assertContentEquals(resources, realResources);
     }
 
     @Test
