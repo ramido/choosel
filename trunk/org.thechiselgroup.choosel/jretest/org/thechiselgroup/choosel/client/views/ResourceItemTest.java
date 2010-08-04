@@ -15,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
+import org.thechiselgroup.choosel.client.views.ResourceItem.HighlightStatus;
 import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
 
 public class ResourceItemTest {
@@ -130,8 +131,40 @@ public class ResourceItemTest {
     }
 
     @Test
+    public void highlightStatusCompleteWhenTwoOutOfTwoResourcesHighlighted() {
+        resources.addAll(createResources(1, 2));
+        underTest.addHighlightedResources(createResources(1, 2));
+
+        assertEquals(HighlightStatus.COMPLETE, underTest.getHighlightStatus());
+    }
+
+    @Test
+    public void highlightStatusNoneWhenZeroOutOfTwoResourcesHighlighted() {
+        resources.addAll(createResources(1, 2));
+        underTest.addHighlightedResources(createResources());
+
+        assertEquals(HighlightStatus.NONE, underTest.getHighlightStatus());
+    }
+
+    @Test
+    public void highlightStatusNoneWhenZeroOutOfZeroResourcesHighlighted() {
+        resources.addAll(createResources());
+        underTest.addHighlightedResources(createResources());
+
+        assertEquals(HighlightStatus.NONE, underTest.getHighlightStatus());
+    }
+
+    @Test
+    public void highlightStatusPartialWhenOneOutOfTwoResourcesHighlighted() {
+        resources.addAll(createResources(1, 2));
+        underTest.addHighlightedResources(createResources(1));
+
+        assertEquals(HighlightStatus.PARTIAL, underTest.getHighlightStatus());
+    }
+
+    @Test
     public void isHighlightedIsFalseAfterInit() {
-        assertEquals(false, underTest.isHighlighted());
+        assertEquals(HighlightStatus.NONE, underTest.getHighlightStatus());
     }
 
     @Test
@@ -170,7 +203,7 @@ public class ResourceItemTest {
     @Test
     public void statusIsDefault() {
         underTest.setSelected(false);
-        assertEquals(Status.DEFAULT, underTest.calculateStatus());
+        assertEquals(Status.DEFAULT, underTest.getStatus());
     }
 
     @Test
@@ -178,7 +211,7 @@ public class ResourceItemTest {
         resources.addAll(createResources(1));
         underTest.addHighlightedResources(createResources(1));
         underTest.setSelected(false);
-        assertEquals(Status.HIGHLIGHTED, underTest.calculateStatus());
+        assertEquals(Status.HIGHLIGHTED, underTest.getStatus());
     }
 
     @Test
@@ -187,7 +220,7 @@ public class ResourceItemTest {
         underTest.addHighlightedResources(createResources(1));
         underTest.setSelected(true);
 
-        assertEquals(Status.HIGHLIGHTED_SELECTED, underTest.calculateStatus());
+        assertEquals(Status.HIGHLIGHTED_SELECTED, underTest.getStatus());
     }
 
     @Test
@@ -196,7 +229,7 @@ public class ResourceItemTest {
         underTest.addHighlightedResources(createResources(1));
         underTest.removeHighlightedResources(createResources(1));
         underTest.setSelected(false);
-        assertEquals(Status.DEFAULT, underTest.calculateStatus());
+        assertEquals(Status.DEFAULT, underTest.getStatus());
     }
 
     @Test
@@ -204,22 +237,32 @@ public class ResourceItemTest {
         resources.addAll(createResources(1));
         underTest.addHighlightedResources(createResources(2));
         underTest.setSelected(false);
-        assertEquals(Status.DEFAULT, underTest.calculateStatus());
+        assertEquals(Status.DEFAULT, underTest.getStatus());
     }
 
     @Test
     public void statusIsSelected() {
         underTest.setSelected(true);
-        assertEquals(Status.SELECTED, underTest.calculateStatus());
+        assertEquals(Status.SELECTED, underTest.getStatus());
     }
 
     @Test
-    public void statusRemainsHighlightedAfterOneResourceIsRemovedFromHighlight() {
+    public void statusPartiallyHighlightedAfterOneResourceIsRemovedFromHighlight() {
         resources.addAll(createResources(1, 2));
         underTest.addHighlightedResources(createResources(1, 2));
         underTest.removeHighlightedResources(createResources(1));
         underTest.setSelected(false);
-        assertEquals(Status.HIGHLIGHTED, underTest.calculateStatus());
+        assertEquals(Status.PARTIALLY_HIGHLIGHTED, underTest.getStatus());
+    }
+
+    @Test
+    public void statusPartiallyHighlightedSelectedAfterOneResourceIsRemovedFromHighlightAndSelectionIsActive() {
+        resources.addAll(createResources(1, 2));
+        underTest.addHighlightedResources(createResources(1, 2));
+        underTest.removeHighlightedResources(createResources(1));
+        underTest.setSelected(true);
+        assertEquals(Status.PARTIALLY_HIGHLIGHTED_SELECTED,
+                underTest.getStatus());
     }
 
 }

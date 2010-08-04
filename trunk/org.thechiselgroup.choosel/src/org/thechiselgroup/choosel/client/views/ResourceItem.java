@@ -37,9 +37,15 @@ import com.google.gwt.event.dom.client.MouseOverHandler;
 // TODO separate out resource item controller
 public class ResourceItem {
 
+    public static enum HighlightStatus {
+
+        NONE, PARTIAL, COMPLETE
+
+    }
+
     public static enum Status {
 
-        DEFAULT, HIGHLIGHTED, HIGHLIGHTED_SELECTED, SELECTED
+        DEFAULT, HIGHLIGHTED, HIGHLIGHTED_SELECTED, SELECTED, PARTIALLY_HIGHLIGHTED, PARTIALLY_HIGHLIGHTED_SELECTED
 
     }
 
@@ -106,22 +112,6 @@ public class ResourceItem {
         this.highlightedResources.addAll(resourcesToAdd);
     }
 
-    public Status calculateStatus() {
-        if (isHighlighted() && isSelected()) {
-            return Status.HIGHLIGHTED_SELECTED;
-        }
-
-        if (isHighlighted()) {
-            return Status.HIGHLIGHTED;
-        }
-
-        if (isSelected()) {
-            return Status.SELECTED;
-        }
-
-        return Status.DEFAULT;
-    }
-
     public Object getDisplayObject() {
         return displayObject;
     }
@@ -145,6 +135,18 @@ public class ResourceItem {
         return highlightingManager;
     }
 
+    public HighlightStatus getHighlightStatus() {
+        if (highlightedResources.isEmpty()) {
+            return HighlightStatus.NONE;
+        }
+
+        if (highlightedResources.containsEqualResources(resources)) {
+            return HighlightStatus.COMPLETE;
+        }
+
+        return HighlightStatus.PARTIAL;
+    }
+
     public final PopupManager getPopupManager() {
         return popupManager;
     }
@@ -155,6 +157,30 @@ public class ResourceItem {
 
     public Object getResourceValue(String slotID) {
         return valueResolver.resolve(slotID, category, resources);
+    }
+
+    public Status getStatus() {
+        if (getHighlightStatus() == HighlightStatus.COMPLETE && isSelected()) {
+            return Status.HIGHLIGHTED_SELECTED;
+        }
+
+        if (getHighlightStatus() == HighlightStatus.COMPLETE) {
+            return Status.HIGHLIGHTED;
+        }
+
+        if (getHighlightStatus() == HighlightStatus.PARTIAL && isSelected()) {
+            return Status.PARTIALLY_HIGHLIGHTED_SELECTED;
+        }
+
+        if (getHighlightStatus() == HighlightStatus.PARTIAL) {
+            return Status.PARTIALLY_HIGHLIGHTED;
+        }
+
+        if (isSelected()) {
+            return Status.SELECTED;
+        }
+
+        return Status.DEFAULT;
     }
 
     private void initHighlighting() {
@@ -201,10 +227,6 @@ public class ResourceItem {
         });
     }
 
-    public boolean isHighlighted() {
-        return !highlightedResources.isEmpty();
-    }
-
     public boolean isSelected() {
         return selected;
     }
@@ -219,6 +241,15 @@ public class ResourceItem {
         this.highlightedResources.removeAll(resourcesToRemove);
     }
 
+    /**
+     * The display object is an arbitrary objects that can be set by a view
+     * content display. Usually it would the visual representation of this
+     * resource item to facilitate fast lookup operations.
+     * 
+     * @param displayObject
+     * 
+     * @see #getDisplayObject()
+     */
     public void setDisplayObject(Object displayObject) {
         this.displayObject = displayObject;
     }
@@ -261,6 +292,6 @@ public class ResourceItem {
     }
 
     protected void updateStyling() {
-        setStatusStyling(calculateStatus());
+        setStatusStyling(getStatus());
     }
 }

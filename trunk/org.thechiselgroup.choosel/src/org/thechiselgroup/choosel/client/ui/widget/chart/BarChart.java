@@ -80,7 +80,7 @@ public class BarChart extends ChartWidget {
     private ProtovisFunctionString barFillStyle = new ProtovisFunctionString() {
         @Override
         public String f(ChartItem value, int index) {
-            switch (value.getResourceItem().calculateStatus()) {
+            switch (value.getResourceItem().getStatus()) {
             case HIGHLIGHTED_SELECTED:
             case HIGHLIGHTED:
                 return YELLOW;
