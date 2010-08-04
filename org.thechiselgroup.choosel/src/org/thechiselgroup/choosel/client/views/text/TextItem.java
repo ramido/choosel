@@ -122,11 +122,13 @@ public class TextItem extends ResourceItem {
     @Override
     protected void setStatusStyling(Status status) {
         switch (status) {
+        case PARTIALLY_HIGHLIGHTED_SELECTED:
         case HIGHLIGHTED_SELECTED: {
             display.addStyleName(this, CSS_SELECTED);
             display.addStyleName(this, CSS_HIGHLIGHTED);
         }
             break;
+        case PARTIALLY_HIGHLIGHTED:
         case HIGHLIGHTED: {
             display.removeStyleName(this, CSS_SELECTED);
             display.addStyleName(this, CSS_HIGHLIGHTED);

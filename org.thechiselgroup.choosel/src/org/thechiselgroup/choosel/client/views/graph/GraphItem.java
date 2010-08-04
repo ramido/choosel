@@ -90,6 +90,7 @@ public class GraphItem extends ResourceItem {
     @Override
     protected void setStatusStyling(Status status) {
         switch (status) {
+        case PARTIALLY_HIGHLIGHTED_SELECTED:
         case HIGHLIGHTED_SELECTED: {
             display.setNodeStyle(node, NODE_BACKGROUND_COLOR, YELLOW_1);
             display.setNodeStyle(node, NODE_BORDER_COLOR, ORANGE);
@@ -97,6 +98,7 @@ public class GraphItem extends ResourceItem {
             display.setNodeStyle(node, NODE_FONT_WEIGHT, NODE_FONT_WEIGHT_BOLD);
         }
             break;
+        case PARTIALLY_HIGHLIGHTED:
         case HIGHLIGHTED: {
             display.setNodeStyle(node, NODE_BACKGROUND_COLOR, YELLOW_1);
             display.setNodeStyle(node, NODE_BORDER_COLOR, YELLOW_2);

@@ -81,6 +81,8 @@ public class BarChart extends ChartWidget {
         @Override
         public String f(ChartItem value, int index) {
             switch (value.getResourceItem().getStatus()) {
+            case PARTIALLY_HIGHLIGHTED:
+            case PARTIALLY_HIGHLIGHTED_SELECTED:
             case HIGHLIGHTED_SELECTED:
             case HIGHLIGHTED:
                 return YELLOW;

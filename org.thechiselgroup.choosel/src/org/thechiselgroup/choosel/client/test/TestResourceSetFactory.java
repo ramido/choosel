@@ -27,6 +27,10 @@ public final class TestResourceSetFactory {
 
     public static final String LABEL_KEY = "label-key";
 
+    public static final String X_COORD = "x-coord";
+
+    public static final String Y_COORD = "y-coord";
+
     public static ResourceSet createLabeledResources(int... indices) {
         return createLabeledResources(LABEL, DEFAULT_TYPE, indices);
     }
@@ -48,8 +52,14 @@ public final class TestResourceSetFactory {
         return createResource(DEFAULT_TYPE, index);
     }
 
+    /**
+     * Creates test resources with random x, y coords and label.
+     */
     public static Resource createResource(String type, int index) {
         Resource r = new Resource(type + ":" + index);
+        r.putValue(X_COORD, Math.random() * 10);
+        r.putValue(Y_COORD, Math.random() * 10);
+        r.putValue(LABEL_KEY, r.getValue(X_COORD) + " " + r.getValue(Y_COORD));
         return r;
     }
 
