@@ -71,7 +71,7 @@ public class BarChart extends ChartWidget {
 
         @Override
         public double f(ChartItem value, int index) {
-            return highlightedBarCounts[index] * chartHeight / 10;
+            return highlightedBarCounts[index] * chartHeight / maxBarSize;
         }
 
     };
@@ -99,7 +99,7 @@ public class BarChart extends ChartWidget {
 
         @Override
         public double f(ChartItem value, int index) {
-            return barCounts[index] * chartHeight / 10;
+            return barCounts[index] * chartHeight / maxBarSize;
         }
 
     };
@@ -146,6 +146,8 @@ public class BarChart extends ChartWidget {
 
     protected double chartWidth;
 
+    private double maxBarSize = 0;
+
     @Override
     protected void beforeRender() {
         barHeight.beforeRender();
@@ -173,9 +175,17 @@ public class BarChart extends ChartWidget {
         calculateChartVariables();
         setChartParameters();
 
-        // SlotValues slotValues = getSlotValues(SlotResolver.DESCRIPTION_SLOT);
+        barCounts = new double[chartItems.size()];
 
-        Scale scale = Scale.linear(10, 0).range(0, chartHeight);
+        for (int i = 0; i < chartItems.size(); i++) {
+            barCounts[i] = Integer.parseInt(chartItems.get(i).getResourceItem()
+                    .getResourceValue(SlotResolver.FONT_SIZE_SLOT).toString());
+            if (maxBarSize < barCounts[i]) {
+                maxBarSize = barCounts[i];
+            }
+        }
+
+        Scale scale = Scale.linear(maxBarSize, 0).range(0, chartHeight);
         drawScales(scale);
         drawBar();
 
