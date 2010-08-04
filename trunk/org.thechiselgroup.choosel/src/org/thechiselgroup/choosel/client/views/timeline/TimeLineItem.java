@@ -36,8 +36,6 @@ import com.google.gwt.user.client.Event;
 
 public class TimeLineItem extends IconResourceItem {
 
-    private static final String CSS_GRAYED_OUT_CLASS = "grayedOut";
-
     // TODO move, combine with listview
     private static final String CSS_HIGHLIGHT_CLASS = "hover";
 
@@ -205,7 +203,6 @@ public class TimeLineItem extends IconResourceItem {
         switch (status) {
         case PARTIALLY_HIGHLIGHTED_SELECTED:
         case HIGHLIGHTED_SELECTED: {
-            removeCssClass(CSS_GRAYED_OUT_CLASS);
             addCssClass(CSS_SELECTED_CLASS);
             addCssClass(CSS_HIGHLIGHT_CLASS);
             applyIcon(getHighlightIconURL());
@@ -214,20 +211,17 @@ public class TimeLineItem extends IconResourceItem {
         case PARTIALLY_HIGHLIGHTED:
         case HIGHLIGHTED: {
             removeCssClass(CSS_SELECTED_CLASS);
-            removeCssClass(CSS_GRAYED_OUT_CLASS);
             addCssClass(CSS_HIGHLIGHT_CLASS);
             applyIcon(getHighlightIconURL());
         }
             break;
         case DEFAULT: {
             removeCssClass(CSS_SELECTED_CLASS);
-            removeCssClass(CSS_GRAYED_OUT_CLASS);
             removeCssClass(CSS_HIGHLIGHT_CLASS);
             applyIcon(getDefaultIconURL());
         }
             break;
         case SELECTED: {
-            removeCssClass(CSS_GRAYED_OUT_CLASS);
             removeCssClass(CSS_HIGHLIGHT_CLASS);
             addCssClass(CSS_SELECTED_CLASS);
             applyIcon(getSelectedIconURL());
