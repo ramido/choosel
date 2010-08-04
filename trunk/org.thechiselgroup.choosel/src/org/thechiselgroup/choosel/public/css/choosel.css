@@ -195,25 +195,28 @@ button.popup-content-action:active {
     -khtml-opacity:0.5;
 }
 
-.listItem {
+.textItem {
     padding: 2px;
     border: 0px;
+    margin: 2px;
 }
 
-.listItemGrayedOut {
-/**    color: rgb(211, 211, 211); */
-}
-
-.listItemSelected {
+.textItemSelected {
 	color: #E7B076;
 	/** border: 1px solid #7D5F40; */
     font-weight: bold;
 }
 
-.listItemHover {
+.textItemHighlighted {
     padding: 1px;
     border: 1px solid rgb(212, 208, 200);
     background-color: rgb(255, 255, 225);
+}
+
+.textItemPartiallyHighlighted {
+    padding: 1px;
+    border: 1px dashed rgb(212, 208, 200);
+    background-color: rgb(255, 255, 240);
 }
 
 .view-configurationPanel {
