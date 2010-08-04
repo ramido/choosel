@@ -244,8 +244,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         categoriesToResourceItems.put(category, resourceItem);
 
         // TODO introduce partial selection
-        resourceItem.setSelectionStatusVisible(selection != null
-                && !selection.isEmpty());
 
         ResourceSet affectedResources = calculateAffectedResources(hoverModel
                 .toList());
@@ -512,10 +510,6 @@ public class DefaultView extends AbstractWindowContent implements View {
                 .addEventHandler(new ResourcesAddedEventHandler() {
                     @Override
                     public void onResourcesAdded(ResourcesAddedEvent e) {
-                        if (e.getTarget().size() == 1) {
-                            setSelectionStatusVisible(true);
-                        }
-
                         updateSelectionStatusDisplay(e.getAddedResources(),
                                 true);
                     }
@@ -524,11 +518,6 @@ public class DefaultView extends AbstractWindowContent implements View {
                 .addEventHandler(new ResourcesRemovedEventHandler() {
                     @Override
                     public void onResourcesRemoved(ResourcesRemovedEvent e) {
-
-                        if (e.getTarget().isEmpty()) {
-                            setSelectionStatusVisible(false);
-                        }
-
                         updateSelectionStatusDisplay(e.getRemovedResources(),
                                 false);
                     }
@@ -673,17 +662,8 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         this.selection.setDelegate(newSelectionModel);
 
-        // TODO is this still required -- we fire events??
-        setSelectionStatusVisible(!selection.isEmpty());
-
         // XXX HACK
         updateSelectionAvatars();
-    }
-
-    private void setSelectionStatusVisible(boolean selectionStatus) {
-        for (ResourceItem avatar : categoriesToResourceItems.values()) {
-            avatar.setSelectionStatusVisible(selectionStatus);
-        }
     }
 
     private void storeContentDisplaySettings(Memento memento) {
