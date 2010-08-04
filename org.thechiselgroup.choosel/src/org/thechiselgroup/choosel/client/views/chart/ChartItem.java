@@ -45,7 +45,7 @@ public class ChartItem {
     }
 
     public String getColour() {
-        switch (resourceItem.calculateStatus()) {
+        switch (resourceItem.getStatus()) {
         case HIGHLIGHTED_SELECTED:
         case HIGHLIGHTED:
             return YELLOW;
