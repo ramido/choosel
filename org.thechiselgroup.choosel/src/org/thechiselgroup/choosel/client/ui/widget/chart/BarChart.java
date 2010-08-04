@@ -39,9 +39,9 @@ public class BarChart extends ChartWidget {
 
     private static final int BORDER_WIDTH = 20;
 
-    private double[] barCounts = new double[5];
+    private double[] barCounts;
 
-    private double[] highlightedBarCounts = new double[5];
+    private double[] highlightedBarCounts;
 
     private Bar bar;
 
@@ -60,7 +60,7 @@ public class BarChart extends ChartWidget {
                 return;
             }
 
-            highlightedBarCounts = new double[5];
+            highlightedBarCounts = new double[chartItems.size()];
 
             for (int i = 0; i < chartItems.size(); i++) {
                 highlightedBarCounts[i] = chartItems.get(i).getResourceItem()
@@ -84,7 +84,7 @@ public class BarChart extends ChartWidget {
                 return;
             }
 
-            barCounts = new double[5];
+            barCounts = new double[chartItems.size()];
 
             for (int i = 0; i < chartItems.size(); i++) {
                 barCounts[i] = Integer.parseInt(chartItems.get(i)
@@ -160,10 +160,9 @@ public class BarChart extends ChartWidget {
     private void drawBar() {
         bar = chart.add(Bar.createBar()).data(chartItemsJSArray)
                 .bottom(barBottom).height(barHeight).left(barLeft)
-                .width(barWidth).fillStyle(YELLOW)
+                .width(barWidth).fillStyle(barFillStyle)
                 .strokeStyle(Colors.STEELBLUE).add(Bar.createBar())
-                .bottom(barBottom2).height(barHeight2)
-                .fillStyle(Colors.STEELBLUE);
+                .bottom(barBottom2).height(barHeight2);
     }
 
     @SuppressWarnings("unchecked")
