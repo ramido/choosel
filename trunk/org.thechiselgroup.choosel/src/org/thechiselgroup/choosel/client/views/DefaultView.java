@@ -730,7 +730,6 @@ public class DefaultView extends AbstractWindowContent implements View {
                 resourceItem
                         .removeHighlightedResources(affectedResourcesInThisView2);
             }
-            resourceItem.setHighlighted(highlighted);
             // --> add / remove highlighted resources
             // TODO replace with add / remove of resources from item
             // --> can we have filtered view on hover set instead??
