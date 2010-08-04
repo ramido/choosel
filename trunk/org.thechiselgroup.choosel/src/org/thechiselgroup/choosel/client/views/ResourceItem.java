@@ -39,7 +39,7 @@ public class ResourceItem {
 
     public static enum Status {
 
-        DEFAULT, GRAYED_OUT, HIGHLIGHTED, HIGHLIGHTED_SELECTED, SELECTED
+        DEFAULT, HIGHLIGHTED, HIGHLIGHTED_SELECTED, SELECTED
 
     }
 
@@ -117,22 +117,6 @@ public class ResourceItem {
 
         if (isSelected()) {
             return Status.SELECTED;
-        }
-
-        return Status.DEFAULT;
-    }
-
-    protected Status calculateStatusNormalVsGraySelection() {
-        if (isHighlighted()) {
-            return Status.HIGHLIGHTED;
-        }
-
-        if (selectionStatusVisible && isSelected()) {
-            return Status.DEFAULT;
-        }
-
-        if (selectionStatusVisible) {
-            return Status.GRAYED_OUT;
         }
 
         return Status.DEFAULT;

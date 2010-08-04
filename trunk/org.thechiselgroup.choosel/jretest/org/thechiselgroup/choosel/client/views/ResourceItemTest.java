@@ -222,36 +222,4 @@ public class ResourceItemTest {
         assertEquals(Status.HIGHLIGHTED, underTest.calculateStatus());
     }
 
-    @Test
-    public void statusVsGrayDefaultAllFalse() {
-        underTest.setSelected(false);
-        underTest.setSelectionStatusVisible(false);
-        assertEquals(Status.DEFAULT,
-                underTest.calculateStatusNormalVsGraySelection());
-    }
-
-    @Test
-    public void statusVsGrayIsDefaultHighlightTrue() {
-        underTest.setSelectionStatusVisible(true);
-        underTest.setSelected(true);
-        assertEquals(Status.DEFAULT,
-                underTest.calculateStatusNormalVsGraySelection());
-    }
-
-    @Test
-    public void statusVsGrayIsHighlighted() {
-        resources.addAll(createResources(1));
-        underTest.addHighlightedResources(createResources(1));
-        assertEquals(Status.HIGHLIGHTED,
-                underTest.calculateStatusNormalVsGraySelection());
-    }
-
-    @Test
-    public void statusVsGreyIsGrayedOut() {
-        underTest.setSelected(false);
-        underTest.setSelectionStatusVisible(true);
-        assertEquals(Status.GRAYED_OUT,
-                underTest.calculateStatusNormalVsGraySelection());
-    }
-
 }

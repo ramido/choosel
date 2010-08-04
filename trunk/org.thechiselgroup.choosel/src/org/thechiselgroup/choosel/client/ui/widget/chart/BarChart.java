@@ -84,7 +84,6 @@ public class BarChart extends ChartWidget {
             case HIGHLIGHTED_SELECTED:
             case HIGHLIGHTED:
                 return YELLOW;
-            case GRAYED_OUT:
             case DEFAULT:
                 return STEELBLUE;
             case SELECTED:

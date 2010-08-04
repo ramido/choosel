@@ -66,8 +66,6 @@ public class MapItem extends IconResourceItem {
 
     private static final int Z_INDEX_DEFAULT = 5;
 
-    private static final int Z_INDEX_GRAYED_OUT = 1;
-
     private static final int Z_INDEX_HIGHLIGHTED = 20;
 
     private static final int Z_INDEX_SELECTED = 10;
@@ -140,11 +138,6 @@ public class MapItem extends IconResourceItem {
         overlay.setZIndex(Z_INDEX_DEFAULT);
     }
 
-    private void setGrayedOutStyle() {
-        overlay.setIconURL(getGrayedOutIconURL());
-        overlay.setZIndex(Z_INDEX_GRAYED_OUT);
-    }
-
     private void setHighlightedStyle() {
         overlay.setIconURL(getHighlightIconURL());
         overlay.setZIndex(Z_INDEX_HIGHLIGHTED);
@@ -168,10 +161,6 @@ public class MapItem extends IconResourceItem {
             break;
         case DEFAULT: {
             setDefaultStyle();
-        }
-            break;
-        case GRAYED_OUT: {
-            setGrayedOutStyle();
         }
             break;
         case SELECTED: {

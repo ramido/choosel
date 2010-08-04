@@ -717,7 +717,7 @@ public class DefaultView extends AbstractWindowContent implements View {
             return;
         }
 
-        // TODO resourceset should inherit set<resource>
+        // TODO ResourceSet should inherit Set<Resource>
         ResourceSet affectedResourcesInThisView2 = new DefaultResourceSet();
         affectedResourcesInThisView2.addAll(affectedResourcesInThisView);
 
@@ -730,12 +730,11 @@ public class DefaultView extends AbstractWindowContent implements View {
                 resourceItem
                         .removeHighlightedResources(affectedResourcesInThisView2);
             }
-            // --> add / remove highlighted resources
             // TODO replace with add / remove of resources from item
             // --> can we have filtered view on hover set instead??
             // --> problem with the order of update calls
             // ----> use view-internal hover model instead?
-            // TODO dispose resource items
+            // TODO dispose resource items once filtered set is used
             // TODO check that highlighting is right from the beginning
         }
 

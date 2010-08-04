@@ -82,8 +82,6 @@ public class TextItem extends ResourceItem {
         }
     }
 
-    private static final String CSS_GRAYED_OUT = "listItemGrayedOut";
-
     private static final String CSS_HIGHLIGHTED = "listItemHover";
 
     private static final String CSS_LIST = "listItem";
@@ -125,31 +123,21 @@ public class TextItem extends ResourceItem {
     protected void setStatusStyling(Status status) {
         switch (status) {
         case HIGHLIGHTED_SELECTED: {
-            display.removeStyleName(this, CSS_GRAYED_OUT);
             display.addStyleName(this, CSS_SELECTED);
             display.addStyleName(this, CSS_HIGHLIGHTED);
         }
             break;
         case HIGHLIGHTED: {
             display.removeStyleName(this, CSS_SELECTED);
-            display.removeStyleName(this, CSS_GRAYED_OUT);
             display.addStyleName(this, CSS_HIGHLIGHTED);
         }
             break;
         case DEFAULT: {
             display.removeStyleName(this, CSS_SELECTED);
-            display.removeStyleName(this, CSS_GRAYED_OUT);
             display.removeStyleName(this, CSS_HIGHLIGHTED);
-        }
-            break;
-        case GRAYED_OUT: {
-            display.removeStyleName(this, CSS_SELECTED);
-            display.removeStyleName(this, CSS_HIGHLIGHTED);
-            display.addStyleName(this, CSS_GRAYED_OUT);
         }
             break;
         case SELECTED: {
-            display.removeStyleName(this, CSS_GRAYED_OUT);
             display.removeStyleName(this, CSS_HIGHLIGHTED);
             display.addStyleName(this, CSS_SELECTED);
         }
