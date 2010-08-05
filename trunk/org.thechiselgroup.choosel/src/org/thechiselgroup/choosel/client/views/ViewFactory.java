@@ -21,10 +21,16 @@ import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionCo
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_SET;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.DROP_TARGET_MANAGER_VIEW_CONTENT;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.LABEL_PROVIDER_SELECTION_SET;
+import static org.thechiselgroup.choosel.client.util.CollectionUtils.toSet;
+
+import java.util.List;
+import java.util.Set;
 
 import org.thechiselgroup.choosel.client.label.CategoryLabelProvider;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
+import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceByPropertyMultiCategorizer;
+import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ResourceSplitter;
@@ -32,6 +38,7 @@ import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.ui.dnd.DropEnabledViewContentDisplay;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropTargetManager;
+import org.thechiselgroup.choosel.client.util.CollectionUtils;
 import org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.text.TextViewContentDisplay;
 import org.thechiselgroup.choosel.client.windows.WindowContent;
@@ -40,6 +47,12 @@ import org.thechiselgroup.choosel.client.windows.WindowContentFactory;
 import com.google.inject.name.Named;
 
 public class ViewFactory implements WindowContentFactory {
+
+    // XXX hack TODO remove
+    private static List<String> getResourceTagsAsList(Resource workitemResource) {
+        String tagStr = (String) workitemResource.getValue("subject");
+        return CollectionUtils.splitStringToList(tagStr, ",");
+    }
 
     private ResourceSetAvatarFactory allResourcesDragAvatarFactory;
 
@@ -65,6 +78,8 @@ public class ViewFactory implements WindowContentFactory {
 
     private HoverModel hoverModel;
 
+    private ResourceCategorizer resourceByTypeCategorizer;
+
     public ViewFactory(
             String contentType,
             ViewContentDisplayFactory viewContentDisplayFactory,
@@ -78,7 +93,7 @@ public class ViewFactory implements WindowContentFactory {
             CategoryLabelProvider labelProvider,
             @Named(DROP_TARGET_MANAGER_VIEW_CONTENT) ResourceSetAvatarDropTargetManager contentDropTargetManager,
             DefaultResourceSetToValueResolverFactory resourceSetToValueResolverFactory,
-            HoverModel hoverModel) {
+            ResourceCategorizer resourceByTypeCategorizer, HoverModel hoverModel) {
 
         assert contentType != null;
         assert viewContentDisplayFactory != null;
@@ -93,6 +108,7 @@ public class ViewFactory implements WindowContentFactory {
         assert labelProvider != null;
         assert resourceSetToValueResolverFactory != null;
         assert hoverModel != null;
+        assert resourceByTypeCategorizer != null;
 
         this.hoverModel = hoverModel;
         this.contentType = contentType;
@@ -105,6 +121,7 @@ public class ViewFactory implements WindowContentFactory {
         this.resourceSetFactory = resourceSetFactory;
         this.selectionModelLabelFactory = selectionModelLabelFactory;
         this.categorizer = categorizer;
+        this.resourceByTypeCategorizer = resourceByTypeCategorizer;
         this.resourceSetToValueResolverFactory = resourceSetToValueResolverFactory;
     }
 
@@ -122,14 +139,44 @@ public class ViewFactory implements WindowContentFactory {
 
             if (d.isTagCloud()) {
                 // XXX "tagContent" is from work item explorer
-                categorizer = new ResourceByPropertyMultiCategorizer(
+                final ResourceByPropertyMultiCategorizer otherCategorizer = new ResourceByPropertyMultiCategorizer(
                         "tagContent");
+
+                categorizer = new ResourceMultiCategorizer() {
+                    @Override
+                    public Set<String> getCategories(Resource resource) {
+                        String category = resourceByTypeCategorizer
+                                .getCategory(resource);
+
+                        if (category.equals("workitem")) {
+                            return toSet(getResourceTagsAsList(resource));
+                        }
+
+                        return otherCategorizer.getCategories(resource);
+                    }
+                };
             }
         }
 
         if (viewContentDisplay instanceof ChartViewContentDisplay) {
             // XXX "tagContent" is from work item explorer
-            categorizer = new ResourceByPropertyMultiCategorizer("tagContent");
+            // categorizer = new
+            // ResourceByPropertyMultiCategorizer("tagContent");
+
+            categorizer = new ResourceMultiCategorizer() {
+                @Override
+                public Set<String> getCategories(Resource resource) {
+                    String category = resourceByTypeCategorizer
+                            .getCategory(resource);
+
+                    if (category.equals("workitem")) {
+                        // TODO split by iteration
+                        return toSet((String) resource.getValue("priority"));
+                    }
+
+                    return toSet(category);
+                }
+            };
         }
 
         ResourceSplitter resourceSplitter = new ResourceSplitter(categorizer,

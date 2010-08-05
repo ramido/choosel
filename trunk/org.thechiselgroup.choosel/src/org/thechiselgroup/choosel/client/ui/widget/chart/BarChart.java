@@ -162,9 +162,9 @@ public class BarChart extends ChartWidget {
     private void drawBar() {
         bar = chart.add(Bar.createBar()).data(chartItemsJSArray)
                 .bottom(barBottom).height(barHeight).left(barLeft)
-                .width(barWidth).fillStyle(barFillStyle)
+                .width(barWidth).fillStyle("yellow")
                 .strokeStyle(Colors.STEELBLUE).add(Bar.createBar())
-                .bottom(barBottom2).height(barHeight2);
+                .bottom(barBottom2).height(barHeight2).fillStyle("steelblue");
     }
 
     @SuppressWarnings("unchecked")
