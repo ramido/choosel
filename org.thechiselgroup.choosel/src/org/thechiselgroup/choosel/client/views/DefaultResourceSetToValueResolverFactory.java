@@ -15,10 +15,21 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
+import java.util.List;
+
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
+import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
+import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.util.CollectionUtils;
 
 public class DefaultResourceSetToValueResolverFactory {
+
+    // XXX hack TODO remove
+    private static List<String> getResourceTagsAsList(Resource workitemResource) {
+        String tagStr = (String) workitemResource.getValue("subject");
+        return CollectionUtils.splitStringToList(tagStr, ",");
+    }
 
     private ResourceCategorizer resourceByTypeCategorizer;
 
@@ -38,7 +49,25 @@ public class DefaultResourceSetToValueResolverFactory {
         // e.g. for the tag cloud vs list
         if (SlotResolver.DESCRIPTION_SLOT.equals(slotID)) {
             return new ResourceSetToFirstResourcePropertyResolver(slotID,
-                    resourceResolverFactory, resourceByTypeCategorizer);
+                    resourceResolverFactory, resourceByTypeCategorizer) {
+
+                @Override
+                public Object resolve(ResourceSet resources, String category) {
+                    // XXX yet another hack for tag cloud to display tags
+                    for (Resource resource : resources) {
+                        if (resource.getValue("subject") != null) {
+                            List<String> tagsAsList = getResourceTagsAsList(resource);
+
+                            if (tagsAsList.contains(category)) {
+                                return category;
+                            }
+                        }
+                    }
+
+                    return super.resolve(resources, category);
+                }
+
+            };
             // TODO the default resolver // configuration depends on
             // the view content display or not?!?
             // return new ResourceSetToStringListValueResolver(slotID,

@@ -85,6 +85,8 @@ public class ChooselWindowContentProducerProvider implements
 
     private HoverModel hoverModel;
 
+    private final ResourceCategorizer resourceByTypeCategorizer;
+
     @Inject
     public ChooselWindowContentProducerProvider(
             @Named(AVATAR_FACTORY_SET) ResourceSetAvatarFactory userSetsDragAvatarFactory,
@@ -121,6 +123,7 @@ public class ChooselWindowContentProducerProvider implements
         this.categorizer = categorizer;
         this.labelProvider = labelProvider;
         this.hoverModel = hoverModel;
+        this.resourceByTypeCategorizer = resourceByTypeCategorizer;
 
         this.resourceSetToValueResolverFactory = new DefaultResourceSetToValueResolverFactory(
                 slotResolver, resourceByTypeCategorizer);
@@ -213,7 +216,7 @@ public class ChooselWindowContentProducerProvider implements
                 dropTargetFactory, resourceSetFactory,
                 selectionModelLabelFactory, categorizer, labelProvider,
                 contentDropTargetManager, resourceSetToValueResolverFactory,
-                hoverModel));
+                resourceByTypeCategorizer, hoverModel));
     }
 
 }

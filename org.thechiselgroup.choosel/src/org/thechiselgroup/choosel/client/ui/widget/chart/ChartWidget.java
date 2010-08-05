@@ -68,6 +68,10 @@ public abstract class ChartWidget extends Widget {
         }
     };
 
+    private boolean isRendering;
+
+    private boolean isUpdating;
+
     public ChartWidget() {
         setElement(DOM.createDiv());
         // TODO extract + move to CSS
@@ -148,6 +152,10 @@ public abstract class ChartWidget extends Widget {
     }
 
     protected void onEvent(Event e, int index) {
+        if (isUpdating || isRendering) {
+            return;
+        }
+
         getChartItem(index).onEvent(e);
 
         // TODO remove once selection is fixed
@@ -172,8 +180,10 @@ public abstract class ChartWidget extends Widget {
     }
 
     public void renderChart() {
+        isRendering = true;
         beforeRender();
         chart.render();
+        isRendering = false;
     }
 
     private void resize(int width, int height) {
@@ -190,6 +200,7 @@ public abstract class ChartWidget extends Widget {
     // see
     // http://groups.google.com/group/protovis/browse_thread/thread/b9032215a2f5ac25
     public void updateChart() {
+        isUpdating = true;
         if (ArrayUtils.length(chartItemsJSArray) == 0) {
             chart = Panel.createWindowPanel().canvas(getElement())
                     .height(height).width(width).fillStyle(Colors.WHITE);
@@ -197,10 +208,11 @@ public abstract class ChartWidget extends Widget {
             chart = Panel.createWindowPanel().canvas(getElement())
                     .fillStyle(Colors.WHITE);
             chart = drawChart();
-            registerEventHandlers();
+            // registerEventHandlers();
         }
 
         // XXX how often are event listeners assigned? are they removed?
         renderChart();
+        isUpdating = false; // TODO try finally
     }
 }
