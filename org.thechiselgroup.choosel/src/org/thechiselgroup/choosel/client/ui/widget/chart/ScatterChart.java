@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Dot;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Label;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventHandler;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionString;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Rule;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Scale;
@@ -112,6 +113,11 @@ public class ScatterChart extends ChartWidget {
                         return value.getColour();
                     }
                 });
+    }
+
+    @Override
+    protected void registerEventHandler(String eventType,
+            ProtovisEventHandler handler) {
     }
 
 }

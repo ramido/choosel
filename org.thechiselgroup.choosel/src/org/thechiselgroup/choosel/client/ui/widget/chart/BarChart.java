@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.client.ui.widget.chart;
 import org.thechiselgroup.choosel.client.ui.Colors;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Bar;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Label;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventHandler;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDouble;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDoubleWithCache;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionString;
@@ -154,6 +155,10 @@ public class BarChart extends ChartWidget {
         }
     };
 
+    private Bar regularBar;
+
+    private Bar highlightedBar;
+
     @Override
     protected void beforeRender() {
         highlightedBarHeight.beforeRender();
@@ -166,13 +171,13 @@ public class BarChart extends ChartWidget {
     }
 
     private void drawBar() {
-        Bar highlightedBar = chart.add(Bar.createBar())
+        highlightedBar = chart.add(Bar.createBar())
                 .data(ArrayUtils.toJsArray(chartItems))
                 .bottom(highlightedBarBottom).height(highlightedBarHeight)
                 .left(barLeft).width(barWidth).fillStyle(Colors.YELLOW)
                 .strokeStyle(Colors.STEELBLUE);
 
-        Bar regularBar = highlightedBar.add(Bar.createBar())
+        regularBar = highlightedBar.add(Bar.createBar())
                 .bottom(regularBarBottom).height(regularBarHeight)
                 .fillStyle(Colors.STEELBLUE);
     }
@@ -181,8 +186,6 @@ public class BarChart extends ChartWidget {
     @Override
     public void drawChart() {
         assert chartItems.size() >= 1;
-
-        System.out.println(chartItems.size());
 
         calculateChartVariables();
         setChartParameters();
@@ -210,6 +213,20 @@ public class BarChart extends ChartWidget {
 
         chart.add(Rule.createRule()).left(0).bottom(BORDER_HEIGHT)
                 .strokeStyle(AXIS_SCALE_COLOR);
+    }
+
+    @Override
+    protected void registerEventHandler(String eventType,
+            ProtovisEventHandler handler) {
+
+        // XXX this is a problematic solution to the problem that events get
+        // automatically
+        // fired (asynchronously) when the bar heights
+        if (EVENT_TYPE_MOUSEOVER.equals(eventType)) {
+            regularBar.event(eventType, handler);
+        } else {
+            highlightedBar.event(eventType, handler);
+        }
     }
 
     private void setChartParameters() {

@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.client.ui.widget.chart;
 
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Label;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventHandler;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Rule;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Scale;
 
@@ -45,6 +46,11 @@ public class SelectionBox extends ChartWidget {
         chart.add(Rule.createRule()).data(scale.ticks())
                 .strokeStyle("lightGray").top(scale).bottom(4.5).anchor("left")
                 .add(Label.createLabel()).text(labelText);
+    }
+
+    @Override
+    protected void registerEventHandler(String eventType,
+            ProtovisEventHandler handler) {
     }
 
 }
