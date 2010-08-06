@@ -18,7 +18,6 @@ package org.thechiselgroup.choosel.client.ui.widget.chart;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Panel;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventHandler;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionStringToString;
@@ -93,7 +92,7 @@ public abstract class ChartWidget extends Widget {
      * <code>drawChart</code> is only called if there are actual data items that
      * can be rendered ( jsChartItems.length >= 1 ).
      */
-    protected abstract <T extends Mark> T drawChart();
+    protected abstract void drawChart();
 
     public ChartItem getChartItem(int index) {
         assert chartItems != null;
@@ -182,7 +181,7 @@ public abstract class ChartWidget extends Widget {
                     .height(height).width(width);
         } else {
             chart = Panel.createWindowPanel().canvas(getElement());
-            chart = drawChart();
+            drawChart();
             registerEventHandlers();
         }
 

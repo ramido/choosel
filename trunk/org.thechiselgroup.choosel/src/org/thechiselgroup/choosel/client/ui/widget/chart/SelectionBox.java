@@ -16,7 +16,6 @@
 package org.thechiselgroup.choosel.client.ui.widget.chart;
 
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Label;
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Rule;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Scale;
 
@@ -29,13 +28,15 @@ public class SelectionBox extends ChartWidget {
     }-*/;
 
     protected double minValue;
+
     protected double maxValue;
+
     protected double h;
+
     protected double w;
 
     @Override
-    protected <T extends Mark> T drawChart() {
-        return null;
+    protected void drawChart() {
     }
 
     protected void drawScales(Scale scale) {

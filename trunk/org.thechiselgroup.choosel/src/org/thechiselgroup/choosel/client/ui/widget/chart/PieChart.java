@@ -36,8 +36,6 @@ public class PieChart extends ChartWidget {
 
     private double[] highlightedWedgeCounts;
 
-    private Wedge wedge;
-
     private ProtovisFunctionDoubleWithCache wedgeRadius = new ProtovisFunctionDoubleWithCache() {
 
         @Override
@@ -124,12 +122,10 @@ public class PieChart extends ChartWidget {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Wedge drawChart() {
+    public void drawChart() {
         assert chartItems.size() >= 1;
 
         drawWedge();
-
-        return wedge;
     }
 
     private void drawWedge() {
@@ -139,9 +135,8 @@ public class PieChart extends ChartWidget {
                     .getResourceValue(SlotResolver.FONT_SIZE_SLOT).toString());
         }
 
-        wedge = chart.add(Wedge.createWedge())
-                .data(ArrayUtils.toJsArray(chartItems)).left(width / 2)
-                .bottom(height / 2)
+        chart.add(Wedge.createWedge()).data(ArrayUtils.toJsArray(chartItems))
+                .left(width / 2).bottom(height / 2)
                 .outerRadius(Math.min(height, width) / 2 - 5)
                 .angle(new ProtovisFunctionDouble() {
                     @Override

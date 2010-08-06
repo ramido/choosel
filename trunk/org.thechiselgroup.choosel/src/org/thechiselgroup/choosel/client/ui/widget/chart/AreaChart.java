@@ -15,44 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.widget.chart;
 
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Area;
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Panel;
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDouble;
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionString;
-import org.thechiselgroup.choosel.client.util.ArrayUtils;
-import org.thechiselgroup.choosel.client.views.SlotResolver;
-import org.thechiselgroup.choosel.client.views.chart.ChartItem;
-
 public class AreaChart extends ChartWidget {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Area drawChart() {
-        return Panel.createWindowPanel().canvas(getElement()).width(width)
-                .height(height).add(Area.createArea())
-                .data(ArrayUtils.toJsArray(chartItems)).bottom(0)
-                .height(new ProtovisFunctionDouble() {
-                    @Override
-                    public double f(ChartItem value, int index) {
-                        return Double.parseDouble(value.getResourceItem()
-                                .getResourceValue(SlotResolver.MAGNITUDE_SLOT)
-                                .toString()) * 20;
-                    }
-                }).left(new ProtovisFunctionDouble() {
-                    @Override
-                    public double f(ChartItem value, int index) {
-                        return index * 20 + 15;
-                    }
-                }).fillStyle(new ProtovisFunctionString() {
-                    @Override
-                    public String f(ChartItem value, int index) {
-                        return "hsl("
-                                + Double.parseDouble(value
-                                        .getResourceItem()
-                                        .getResourceValue(
-                                                SlotResolver.MAGNITUDE_SLOT)
-                                        .toString()) * 180 + ",50%,50%)";
-                    }
-                });
+    public void drawChart() {
     }
 }
