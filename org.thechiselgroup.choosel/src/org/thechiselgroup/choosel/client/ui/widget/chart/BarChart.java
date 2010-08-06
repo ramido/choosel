@@ -39,11 +39,19 @@ public class BarChart extends ChartWidget {
 
     private static final int BORDER_WIDTH = 20;
 
+    private static final String AXIS_SCALE_COLOR = "gray";
+
+    private static final String GRIDLINE_SCALE_COLOR = "lightgray";
+
     private double[] barCounts;
 
     private double[] highlightedBarCounts;
 
-    private Bar bar;
+    protected double chartHeight;
+
+    protected double chartWidth;
+
+    private double maxBarSize;
 
     private ProtovisFunctionDouble barLeft = new ProtovisFunctionDouble() {
         @Override
@@ -52,7 +60,7 @@ public class BarChart extends ChartWidget {
         }
     };
 
-    private ProtovisFunctionDoubleWithCache barHeight = new ProtovisFunctionDoubleWithCache() {
+    private ProtovisFunctionDoubleWithCache highlightedBarHeight = new ProtovisFunctionDoubleWithCache() {
 
         @Override
         public void beforeRender() {
@@ -76,7 +84,7 @@ public class BarChart extends ChartWidget {
 
     };
 
-    private ProtovisFunctionDoubleWithCache barHeight2 = new ProtovisFunctionDoubleWithCache() {
+    private ProtovisFunctionDoubleWithCache regularBarHeight = new ProtovisFunctionDoubleWithCache() {
 
         @Override
         public void beforeRender() {
@@ -111,14 +119,14 @@ public class BarChart extends ChartWidget {
         }
     };
 
-    private ProtovisFunctionDouble barBottom2 = new ProtovisFunctionDouble() {
+    private ProtovisFunctionDouble regularBarBottom = new ProtovisFunctionDouble() {
         @Override
         public double f(ChartItem value, int index) {
-            return barHeight.f(value, index) + barBottom;
+            return highlightedBarHeight.f(value, index) + highlightedBarBottom;
         }
     };
 
-    private int barBottom = BORDER_HEIGHT + 1;
+    private int highlightedBarBottom = BORDER_HEIGHT + 1;
 
     private ProtovisFunctionString barFillStyle = new ProtovisFunctionString() {
         @Override
@@ -138,16 +146,18 @@ public class BarChart extends ChartWidget {
         }
     };
 
-    protected double chartHeight;
-
-    protected double chartWidth;
-
-    private double maxBarSize = 0;
+    private ProtovisFunctionStringToString scaleStrokeStyle = new ProtovisFunctionStringToString() {
+        @Override
+        public String f(String value, int index) {
+            return Double.parseDouble(value) == 0 ? AXIS_SCALE_COLOR
+                    : GRIDLINE_SCALE_COLOR;
+        }
+    };
 
     @Override
     protected void beforeRender() {
-        barHeight.beforeRender();
-        barHeight2.beforeRender();
+        highlightedBarHeight.beforeRender();
+        regularBarHeight.beforeRender();
     }
 
     private void calculateChartVariables() {
@@ -156,16 +166,20 @@ public class BarChart extends ChartWidget {
     }
 
     private void drawBar() {
-        bar = chart.add(Bar.createBar()).data(ArrayUtils.toJsArray(chartItems))
-                .bottom(barBottom).height(barHeight).left(barLeft)
-                .width(barWidth).fillStyle("yellow")
-                .strokeStyle(Colors.STEELBLUE).add(Bar.createBar())
-                .bottom(barBottom2).height(barHeight2).fillStyle("steelblue");
+        Bar highlightedBar = chart.add(Bar.createBar())
+                .data(ArrayUtils.toJsArray(chartItems))
+                .bottom(highlightedBarBottom).height(highlightedBarHeight)
+                .left(barLeft).width(barWidth).fillStyle(Colors.YELLOW)
+                .strokeStyle(Colors.STEELBLUE);
+
+        Bar regularBar = highlightedBar.add(Bar.createBar())
+                .bottom(regularBarBottom).height(regularBarHeight)
+                .fillStyle(Colors.STEELBLUE);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public Bar drawChart() {
+    public void drawChart() {
         assert chartItems.size() >= 1;
 
         System.out.println(chartItems.size());
@@ -173,39 +187,29 @@ public class BarChart extends ChartWidget {
         calculateChartVariables();
         setChartParameters();
 
-        double[] counts = new double[chartItems.size()];
-
+        maxBarSize = 0;
         for (int i = 0; i < chartItems.size(); i++) {
-            counts[i] = Integer.parseInt(chartItems.get(i).getResourceItem()
+            int currentItem = Integer.parseInt(chartItems.get(i)
+                    .getResourceItem()
                     .getResourceValue(SlotResolver.FONT_SIZE_SLOT).toString());
-            if (maxBarSize < counts[i]) {
-                maxBarSize = counts[i];
+            if (maxBarSize < currentItem) {
+                maxBarSize = currentItem;
             }
         }
 
         Scale scale = Scale.linear(maxBarSize, 0).range(0, chartHeight);
         drawScales(scale);
         drawBar();
-
-        return bar;
     }
 
     protected void drawScales(Scale scale) {
         this.scale = scale;
-        chart.add(Rule.createRule())
-                .data(scale.ticks())
-                .top(scale)
-                .strokeStyle(new ProtovisFunctionStringToString() {
-                    @Override
-                    public String f(String value, int index) {
-                        return Double.parseDouble(value) == 0 ? "gray"
-                                : "lightgray";
-                    }
-                }).width(chartWidth).anchor("left").add(Label.createLabel())
-                .text(labelText);
+        chart.add(Rule.createRule()).data(scale.ticks()).top(scale)
+                .strokeStyle(scaleStrokeStyle).width(chartWidth).anchor("left")
+                .add(Label.createLabel()).text(labelText);
 
         chart.add(Rule.createRule()).left(0).bottom(BORDER_HEIGHT)
-                .strokeStyle("gray");
+                .strokeStyle(AXIS_SCALE_COLOR);
     }
 
     private void setChartParameters() {

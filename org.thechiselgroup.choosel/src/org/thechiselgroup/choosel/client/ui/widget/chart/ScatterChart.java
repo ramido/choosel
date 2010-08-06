@@ -46,8 +46,6 @@ public class ScatterChart extends ChartWidget {
 
     private Scale scaleY;
 
-    private Dot dot;
-
     private ArrayList<Double> scatterDataX = null; // getDataArray(SlotResolver.X_COORDINATE_SLOT);
 
     private ArrayList<Double> scatterDataY = null; // getDataArray(SlotResolver.Y_COORDINATE_SLOT);
@@ -65,7 +63,7 @@ public class ScatterChart extends ChartWidget {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Dot drawChart() {
+    public void drawChart() {
         minValueX = ArrayUtils.min(scatterDataX);
         maxValueX = ArrayUtils.max(scatterDataX);
         minValueY = ArrayUtils.min(scatterDataY);
@@ -79,13 +77,18 @@ public class ScatterChart extends ChartWidget {
 
         drawScatter();
 
-        return dot;
+    }
 
+    protected void drawScales(Scale scale) {
+        this.scale = scale;
+        // TODO // should // take // double // with // labelText
+        chart.add(Rule.createRule()).data(scale.ticks())
+                .strokeStyle("lightGray").top(scale).bottom(4.5).anchor("left")
+                .add(Label.createLabel()).text(labelText);
     }
 
     private void drawScatter() {
-        dot = chart
-                .add(Dot.createDot())
+        chart.add(Dot.createDot())
                 .data(createCoordinateJsArray(getJsDataArray(scatterDataX),
                         getJsDataArray(scatterDataY)))
                 .cursor("pointer")
@@ -109,14 +112,6 @@ public class ScatterChart extends ChartWidget {
                         return value.getColour();
                     }
                 });
-    }
-
-    protected void drawScales(Scale scale) {
-        this.scale = scale;
-        // TODO // should // take // double // with // labelText
-        chart.add(Rule.createRule()).data(scale.ticks())
-                .strokeStyle("lightGray").top(scale).bottom(4.5).anchor("left")
-                .add(Label.createLabel()).text(labelText);
     }
 
 }

@@ -32,8 +32,6 @@ import org.thechiselgroup.choosel.client.views.chart.ChartItem;
  */
 public class DotChart extends ChartWidget {
 
-    private Dot dot;
-
     private ProtovisFunctionDouble dotBottom = new ProtovisFunctionDouble() {
         @Override
         public double f(ChartItem value, int index) {
@@ -71,19 +69,17 @@ public class DotChart extends ChartWidget {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Dot drawChart() {
+    public void drawChart() {
         assert chartItems.size() >= 1;
 
         setChartVariables();
         setChartParameters();
         drawScales(Scale.linear(maxValue + 0.5, minValue - 0.5).range(0, h));
         drawDot();
-
-        return dot;
     }
 
     private void drawDot() {
-        dot = chart.add(Dot.createDot()).data(ArrayUtils.toJsArray(chartItems))
+        chart.add(Dot.createDot()).data(ArrayUtils.toJsArray(chartItems))
                 .cursor("pointer").bottom(dotBottom).left(dotLeft)
                 .strokeStyle(dotStrokeStyle).fillStyle(dotFillStyle);
     }

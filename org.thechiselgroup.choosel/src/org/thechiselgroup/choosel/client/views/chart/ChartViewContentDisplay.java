@@ -114,11 +114,10 @@ public abstract class ChartViewContentDisplay extends
                 removedResourceItems);
 
         // TODO needs improvement, can updates cause structural changes?
-        // if (!addedResourceItems.isEmpty() || !removedResourceItems.isEmpty())
-        // {
-        chartWidget.updateChart();
-        // } else {
-        // chartWidget.renderChart();
-        // }
+        if (!addedResourceItems.isEmpty() || !removedResourceItems.isEmpty()) {
+            chartWidget.updateChart();
+        } else {
+            chartWidget.renderChart();
+        }
     }
 }
