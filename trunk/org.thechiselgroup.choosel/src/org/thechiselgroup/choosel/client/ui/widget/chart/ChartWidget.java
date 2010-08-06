@@ -18,7 +18,6 @@ package org.thechiselgroup.choosel.client.ui.widget.chart;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.thechiselgroup.choosel.client.ui.Colors;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Panel;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventHandler;
@@ -43,8 +42,6 @@ public abstract class ChartWidget extends Widget {
 
     protected List<ChartItem> chartItems = new ArrayList<ChartItem>();
 
-    protected JavaScriptObject chartItemsJSArray = ArrayUtils.createArray();
-
     protected int height;
 
     protected int width;
@@ -68,10 +65,6 @@ public abstract class ChartWidget extends Widget {
         }
     };
 
-    private boolean isRendering;
-
-    private boolean isUpdating;
-
     public ChartWidget() {
         setElement(DOM.createDiv());
         // TODO extract + move to CSS
@@ -79,12 +72,7 @@ public abstract class ChartWidget extends Widget {
     }
 
     public void addChartItem(ChartItem resourceItem) {
-        assert chartItems.size() == ArrayUtils.length(chartItemsJSArray);
-
-        ArrayUtils.add(resourceItem, chartItemsJSArray);
         chartItems.add(resourceItem);
-
-        assert chartItems.size() == ArrayUtils.length(chartItemsJSArray);
     }
 
     /**
@@ -152,10 +140,6 @@ public abstract class ChartWidget extends Widget {
     }
 
     protected void onEvent(Event e, int index) {
-        if (isUpdating || isRendering) {
-            return;
-        }
-
         getChartItem(index).onEvent(e);
 
         // TODO remove once selection is fixed
@@ -171,19 +155,12 @@ public abstract class ChartWidget extends Widget {
     }
 
     public void removeChartItem(ChartItem chartItem) {
-        assert chartItems.size() == ArrayUtils.length(chartItemsJSArray);
-
-        ArrayUtils.remove(chartItem, chartItemsJSArray);
         chartItems.remove(chartItem);
-
-        assert chartItems.size() == ArrayUtils.length(chartItemsJSArray);
     }
 
     public void renderChart() {
-        isRendering = true;
         beforeRender();
         chart.render();
-        isRendering = false;
     }
 
     private void resize(int width, int height) {
@@ -200,19 +177,16 @@ public abstract class ChartWidget extends Widget {
     // see
     // http://groups.google.com/group/protovis/browse_thread/thread/b9032215a2f5ac25
     public void updateChart() {
-        isUpdating = true;
-        if (ArrayUtils.length(chartItemsJSArray) == 0) {
+        if (chartItems.size() == 0) {
             chart = Panel.createWindowPanel().canvas(getElement())
-                    .height(height).width(width).fillStyle(Colors.WHITE);
+                    .height(height).width(width);
         } else {
-            chart = Panel.createWindowPanel().canvas(getElement())
-                    .fillStyle(Colors.WHITE);
+            chart = Panel.createWindowPanel().canvas(getElement());
             chart = drawChart();
-            // registerEventHandlers();
+            registerEventHandlers();
         }
 
         // XXX how often are event listeners assigned? are they removed?
         renderChart();
-        isUpdating = false; // TODO try finally
     }
 }

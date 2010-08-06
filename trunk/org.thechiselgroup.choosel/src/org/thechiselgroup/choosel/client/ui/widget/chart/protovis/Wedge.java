@@ -92,6 +92,14 @@ public class Wedge extends Mark {
     public final native Wedge events(String events) /*-{
         return this.events(events);
     }-*/;
+
+    public final native Wedge fillStyle(ProtovisFunctionString f) /*-{
+        return this.fillStyle(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionString(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionString;)(this,f));
+    }-*/;
+
+    public final native Wedge fillStyle(String colour) /*-{
+        return this.fillStyle(colour);
+    }-*/;
     
     public final native Wedge index(Number index) /*-{
         return this.index(index);

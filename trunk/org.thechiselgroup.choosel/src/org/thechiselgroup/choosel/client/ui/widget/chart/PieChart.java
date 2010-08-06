@@ -15,80 +15,150 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.widget.chart;
 
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Label;
+import org.thechiselgroup.choosel.client.ui.Colors;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDouble;
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Rule;
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Scale;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDoubleWithCache;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionString;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Wedge;
+import org.thechiselgroup.choosel.client.util.ArrayUtils;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
-/**
- * 
- * @author Bradley Blashko
- * 
- */
 public class PieChart extends ChartWidget {
+
+    private static final int WEDGE_PADDING = 25;
+
+    private static final int BORDER_HEIGHT = 10;
+
+    private String[] wedgeColors = { "lightblue", "blue", "steelblue" };
+
+    private double[] wedgeCounts;
+
+    private double[] highlightedWedgeCounts;
 
     private Wedge wedge;
 
+    private ProtovisFunctionDoubleWithCache wedgeRadius = new ProtovisFunctionDoubleWithCache() {
+
+        @Override
+        public void beforeRender() {
+            if (chartItems.isEmpty()) {
+                return;
+            }
+
+            highlightedWedgeCounts = new double[chartItems.size()];
+
+            for (int i = 0; i < chartItems.size(); i++) {
+                highlightedWedgeCounts[i] = chartItems.get(i).getResourceItem()
+                        .getHighlightedResources().size();
+            }
+
+        }
+
+        @Override
+        public double f(ChartItem value, int index) {
+            return highlightedWedgeCounts[index] * chartHeight / maxWedgeSize;
+        }
+
+    };
+
+    private ProtovisFunctionDoubleWithCache wedgeRadius2 = new ProtovisFunctionDoubleWithCache() {
+
+        @Override
+        public void beforeRender() {
+            if (chartItems.isEmpty()) {
+                return;
+            }
+
+            wedgeCounts = new double[chartItems.size()];
+
+            for (int i = 0; i < chartItems.size(); i++) {
+                wedgeCounts[i] = Integer.parseInt(chartItems.get(i)
+                        .getResourceItem()
+                        .getResourceValue(SlotResolver.FONT_SIZE_SLOT)
+                        .toString())
+                        - chartItems.get(i).getResourceItem()
+                                .getHighlightedResources().size();
+            }
+
+        }
+
+        @Override
+        public double f(ChartItem value, int index) {
+            return wedgeCounts[index] * chartHeight / maxWedgeSize;
+        }
+
+    };
+
+    private ProtovisFunctionString wedgeFillStyle = new ProtovisFunctionString() {
+        @Override
+        public String f(ChartItem value, int index) {
+            switch (value.getResourceItem().getStatus()) {
+            case PARTIALLY_HIGHLIGHTED:
+            case PARTIALLY_HIGHLIGHTED_SELECTED:
+            case HIGHLIGHTED_SELECTED:
+            case HIGHLIGHTED:
+                return Colors.YELLOW;
+            case DEFAULT:
+                return Colors.STEELBLUE;
+            case SELECTED:
+                return Colors.ORANGE;
+            }
+            throw new RuntimeException("No colour available");
+        }
+    };
+
+    protected double chartHeight;
+
+    protected double chartWidth;
+
+    private double maxWedgeSize = 0;
+
     private double sum;
 
-    protected double minValue;
-
-    protected double maxValue;
-
-    protected double h;
-
-    protected double w;
+    @Override
+    protected void beforeRender() {
+        wedgeRadius.beforeRender();
+        wedgeRadius2.beforeRender();
+    }
 
     @SuppressWarnings("unchecked")
     @Override
     public Wedge drawChart() {
+        assert chartItems.size() >= 1;
 
-        SlotValues slotValues = getSlotValues(SlotResolver.MAGNITUDE_SLOT);
-
-        sum = 0;
-        for (Double datum : slotValues.values()) {
-            sum += datum;
-        }
-
-        wedge = chart.add(Wedge.createWedge()).data(chartItemsJSArray)
-                .left(width / 2).bottom(height / 2)
-                .outerRadius(width < height ? width / 2 - 5 : height / 2 - 5)
-                .angle(new ProtovisFunctionDouble() {
-                    @Override
-                    public double f(ChartItem value, int index) {
-                        double resolvedValue = Double
-                                .parseDouble((String) value.getResourceItem()
-                                        .getResourceValue(
-                                                SlotResolver.MAGNITUDE_SLOT));
-
-                        return resolvedValue / sum * 2 * Math.PI;
-                    }
-                });
+        drawWedge();
 
         return wedge;
     }
 
-    protected void setChartParameters() {
-        chart.width(w).height(h).left(20).top(20);
-    }
+    private void drawWedge() {
+        sum = 0;
+        for (ChartItem chartItem : chartItems) {
+            sum += Double.parseDouble(chartItem.getResourceItem()
+                    .getResourceValue(SlotResolver.FONT_SIZE_SLOT).toString());
+        }
 
-    protected void setChartVariables() {
-        SlotValues dataArray = getSlotValues(SlotResolver.MAGNITUDE_SLOT);
-        minValue = dataArray.min();
-        maxValue = dataArray.max();
-        w = width - 40;
-        h = height - 40;
-    }
-
-    protected void drawScales(Scale scale) {
-        this.scale = scale;
-        // TODO // should // take // double // with // labelText
-        chart.add(Rule.createRule()).data(scale.ticks())
-                .strokeStyle("lightGray").top(scale).bottom(4.5).anchor("left")
-                .add(Label.createLabel()).text(labelText);
+        wedge = chart.add(Wedge.createWedge())
+                .data(ArrayUtils.toJsArray(chartItems)).left(width / 2)
+                .bottom(height / 2)
+                .outerRadius(Math.min(height, width) / 2 - 5)
+                .angle(new ProtovisFunctionDouble() {
+                    @Override
+                    public double f(ChartItem value, int index) {
+                        System.out.println("a: " + index);
+                        return Double.parseDouble(value.getResourceItem()
+                                .getResourceValue(SlotResolver.FONT_SIZE_SLOT)
+                                .toString())
+                                * 2 * Math.PI / sum;
+                    }
+                }).fillStyle(new ProtovisFunctionString() {
+                    @Override
+                    public String f(ChartItem value, int index) {
+                        System.out.println("b: " + index);
+                        return wedgeColors[index % wedgeColors.length];
+                    }
+                });
     }
 
 }

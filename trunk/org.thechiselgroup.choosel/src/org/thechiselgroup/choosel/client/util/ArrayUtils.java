@@ -149,6 +149,14 @@ public class ArrayUtils {
         return result;
     }
 
+    public static JavaScriptObject toJsArray(List<? extends Object> objectList) {
+        JavaScriptObject result = createArray();
+        for (int i = 0; i < objectList.size(); i++) {
+            add(objectList.get(i), result);
+        }
+        return result;
+    }
+
     public static JavaScriptObject toJsArray(Object[] array) {
         JavaScriptObject result = createArray();
         for (int i = 0; i < array.length; i++) {

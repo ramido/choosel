@@ -21,6 +21,7 @@ import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFuncti
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionString;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Rule;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Scale;
+import org.thechiselgroup.choosel.client.util.ArrayUtils;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
@@ -82,9 +83,17 @@ public class DotChart extends ChartWidget {
     }
 
     private void drawDot() {
-        dot = chart.add(Dot.createDot()).data(chartItemsJSArray)
+        dot = chart.add(Dot.createDot()).data(ArrayUtils.toJsArray(chartItems))
                 .cursor("pointer").bottom(dotBottom).left(dotLeft)
                 .strokeStyle(dotStrokeStyle).fillStyle(dotFillStyle);
+    }
+
+    protected void drawScales(Scale scale) {
+        this.scale = scale;
+        // TODO // should // take // double // with // labelText
+        chart.add(Rule.createRule()).data(scale.ticks())
+                .strokeStyle("lightGray").top(scale).bottom(4.5).anchor("left")
+                .add(Label.createLabel()).text(labelText);
     }
 
     protected void setChartParameters() {
@@ -97,14 +106,6 @@ public class DotChart extends ChartWidget {
         maxValue = dataArray.max();
         w = width - 40;
         h = height - 40;
-    }
-
-    protected void drawScales(Scale scale) {
-        this.scale = scale;
-        // TODO // should // take // double // with // labelText
-        chart.add(Rule.createRule()).data(scale.ticks())
-                .strokeStyle("lightGray").top(scale).bottom(4.5).anchor("left")
-                .add(Label.createLabel()).text(labelText);
     }
 
 }
