@@ -36,6 +36,7 @@ import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ResourceSplitter;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceSetsPresenter;
+import org.thechiselgroup.choosel.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.client.ui.dnd.DropEnabledViewContentDisplay;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropTargetManager;
 import org.thechiselgroup.choosel.client.util.CollectionUtils;
@@ -174,7 +175,13 @@ public class ViewFactory implements WindowContentFactory {
                         return toSet((String) resource.getValue("priority"));
                     }
 
-                    return toSet(category);
+                    if (category.equals(TestResourceSetFactory.DEFAULT_TYPE)) {
+                        // TODO split by iteration
+                        return toSet((String) resource
+                                .getValue(TestResourceSetFactory.LABEL));
+                    }
+
+                    return toSet();
                 }
             };
         }

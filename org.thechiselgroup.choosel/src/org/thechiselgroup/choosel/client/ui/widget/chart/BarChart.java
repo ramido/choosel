@@ -118,10 +118,6 @@ public class BarChart extends ChartWidget {
         }
     };
 
-    private static final String ORANGE = "orange";
-
-    private static final String YELLOW = "yellow";
-
     private int barBottom = BORDER_HEIGHT + 1;
 
     private ProtovisFunctionString barFillStyle = new ProtovisFunctionString() {
@@ -132,11 +128,11 @@ public class BarChart extends ChartWidget {
             case PARTIALLY_HIGHLIGHTED_SELECTED:
             case HIGHLIGHTED_SELECTED:
             case HIGHLIGHTED:
-                return YELLOW;
+                return Colors.YELLOW;
             case DEFAULT:
                 return Colors.STEELBLUE;
             case SELECTED:
-                return ORANGE;
+                return Colors.ORANGE;
             }
             throw new RuntimeException("No colour available");
         }
@@ -160,7 +156,7 @@ public class BarChart extends ChartWidget {
     }
 
     private void drawBar() {
-        bar = chart.add(Bar.createBar()).data(chartItemsJSArray)
+        bar = chart.add(Bar.createBar()).data(ArrayUtils.toJsArray(chartItems))
                 .bottom(barBottom).height(barHeight).left(barLeft)
                 .width(barWidth).fillStyle("yellow")
                 .strokeStyle(Colors.STEELBLUE).add(Bar.createBar())
@@ -170,18 +166,20 @@ public class BarChart extends ChartWidget {
     @SuppressWarnings("unchecked")
     @Override
     public Bar drawChart() {
-        assert ArrayUtils.length(chartItemsJSArray) >= 1;
+        assert chartItems.size() >= 1;
+
+        System.out.println(chartItems.size());
 
         calculateChartVariables();
         setChartParameters();
 
-        barCounts = new double[chartItems.size()];
+        double[] counts = new double[chartItems.size()];
 
         for (int i = 0; i < chartItems.size(); i++) {
-            barCounts[i] = Integer.parseInt(chartItems.get(i).getResourceItem()
+            counts[i] = Integer.parseInt(chartItems.get(i).getResourceItem()
                     .getResourceValue(SlotResolver.FONT_SIZE_SLOT).toString());
-            if (maxBarSize < barCounts[i]) {
-                maxBarSize = barCounts[i];
+            if (maxBarSize < counts[i]) {
+                maxBarSize = counts[i];
             }
         }
 
