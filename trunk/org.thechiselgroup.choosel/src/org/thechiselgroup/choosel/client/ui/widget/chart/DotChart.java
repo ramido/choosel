@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.client.ui.widget.chart;
 
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Dot;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Label;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventHandler;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDouble;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionString;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Rule;
@@ -90,6 +91,11 @@ public class DotChart extends ChartWidget {
         chart.add(Rule.createRule()).data(scale.ticks())
                 .strokeStyle("lightGray").top(scale).bottom(4.5).anchor("left")
                 .add(Label.createLabel()).text(labelText);
+    }
+
+    @Override
+    protected void registerEventHandler(String eventType,
+            ProtovisEventHandler handler) {
     }
 
     protected void setChartParameters() {

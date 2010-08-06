@@ -15,10 +15,17 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.widget.chart;
 
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventHandler;
+
 public class AreaChart extends ChartWidget {
 
     @SuppressWarnings("unchecked")
     @Override
     public void drawChart() {
+    }
+
+    @Override
+    protected void registerEventHandler(String eventType,
+            ProtovisEventHandler handler) {
     }
 }

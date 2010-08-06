@@ -37,6 +37,18 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public abstract class ChartWidget extends Widget {
 
+    public static final String EVENT_TYPE_MOUSEUP = "mouseup";
+
+    public static final String EVENT_TYPE_MOUSEOVER = "mouseover";
+
+    public static final String EVENT_TYPE_MOUSEOUT = "mouseout";
+
+    public static final String EVENT_TYPE_MOUSEMOVE = "mousemove";
+
+    public static final String EVENT_TYPE_MOUSEDOWN = "mousedown";
+
+    public static final String EVENT_TYPE_CLICK = "click";
+
     protected Panel chart;
 
     protected List<ChartItem> chartItems = new ArrayList<ChartItem>();
@@ -45,8 +57,9 @@ public abstract class ChartWidget extends Widget {
 
     protected int width;
 
-    protected String[] eventTypes = { "click", "mousedown", "mousemove",
-            "mouseout", "mouseover", "mouseup" };
+    protected String[] eventTypes = { EVENT_TYPE_CLICK, EVENT_TYPE_MOUSEDOWN,
+            EVENT_TYPE_MOUSEMOVE, EVENT_TYPE_MOUSEOUT, EVENT_TYPE_MOUSEOVER,
+            EVENT_TYPE_MOUSEUP };
 
     private ProtovisEventHandler handler = new ProtovisEventHandler() {
         @Override
@@ -63,6 +76,12 @@ public abstract class ChartWidget extends Widget {
             return scale.tickFormat(o.toString());
         }
     };
+
+    /**
+     * Flags status that chart widget is rendering. While rendering, events are
+     * discarded.
+     */
+    private boolean isRendering;
 
     public ChartWidget() {
         setElement(DOM.createDiv());
@@ -147,9 +166,12 @@ public abstract class ChartWidget extends Widget {
         }
     }
 
+    protected abstract void registerEventHandler(String eventType,
+            ProtovisEventHandler handler);
+
     protected void registerEventHandlers() {
         for (String eventType : eventTypes) {
-            chart.event(eventType, handler);
+            registerEventHandler(eventType, handler);
         }
     }
 
@@ -158,8 +180,16 @@ public abstract class ChartWidget extends Widget {
     }
 
     public void renderChart() {
-        beforeRender();
-        chart.render();
+        // TODO instead of isRendering flag, remove event listeners before
+        // rendering starts and add them again after rendering is finished.
+        try {
+            System.out.println("render");
+            isRendering = true;
+            beforeRender();
+            chart.render();
+        } finally {
+            isRendering = false;
+        }
     }
 
     private void resize(int width, int height) {
