@@ -16,6 +16,8 @@
 package org.thechiselgroup.choosel.client.ui.widget.chart;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Panel;
@@ -23,6 +25,7 @@ import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventH
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionStringToString;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Scale;
 import org.thechiselgroup.choosel.client.util.ArrayUtils;
+import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -36,6 +39,21 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  */
 public abstract class ChartWidget extends Widget {
+
+    public class ChartItemComparator implements Comparator<ChartItem> {
+        @Override
+        public int compare(ChartItem o1, ChartItem o2) {
+            return o1
+                    .getResourceItem()
+                    .getResourceValue(SlotResolver.DESCRIPTION_SLOT)
+                    .toString()
+                    .compareTo(
+                            o2.getResourceItem()
+                                    .getResourceValue(
+                                            SlotResolver.DESCRIPTION_SLOT)
+                                    .toString());
+        }
+    }
 
     public static final String EVENT_TYPE_MOUSEUP = "mouseup";
 
@@ -105,6 +123,17 @@ public abstract class ChartWidget extends Widget {
         if (chart != null) {
             resize(getOffsetWidth(), getOffsetHeight());
         }
+    }
+
+    public int compare(ChartItem o1, ChartItem o2) {
+        return o1
+                .getResourceItem()
+                .getResourceValue(SlotResolver.DESCRIPTION_SLOT)
+                .toString()
+                .compareTo(
+                        o2.getResourceItem()
+                                .getResourceValue(SlotResolver.DESCRIPTION_SLOT)
+                                .toString());
     }
 
     /**
@@ -210,6 +239,7 @@ public abstract class ChartWidget extends Widget {
                     .height(height).width(width);
         } else {
             chart = Panel.createWindowPanel().canvas(getElement());
+            Collections.sort(chartItems, new ChartItemComparator());
             drawChart();
             registerEventHandlers();
         }
