@@ -70,7 +70,7 @@ public abstract class ChartWidget extends Widget {
 
     protected Scale scale;
 
-    protected ProtovisFunctionStringToString labelText = new ProtovisFunctionStringToString() {
+    protected ProtovisFunctionStringToString scaleLabelText = new ProtovisFunctionStringToString() {
         @Override
         public String f(String o, int index) {
             return scale.tickFormat(o.toString());
@@ -183,7 +183,6 @@ public abstract class ChartWidget extends Widget {
         // TODO instead of isRendering flag, remove event listeners before
         // rendering starts and add them again after rendering is finished.
         try {
-            System.out.println("render");
             isRendering = true;
             beforeRender();
             chart.render();
