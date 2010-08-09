@@ -60,12 +60,10 @@ public abstract class ChartViewContentDisplay extends
 
         PopupManager popupManager = createPopupManager(resolver, resources);
 
-        ResourceItem resourceItem = new ResourceItem(category, resources,
-                hoverModel, popupManager, resolver);
+        ChartItem chartItem = new ChartItem(category, resources, this,
+                hoverModel, popupManager, resolver, dragEnablerFactory);
 
-        // TODO link resource item to chart item
-
-        return resourceItem;
+        return chartItem;
     }
 
     // TODO push down: the actual chart needs to decide which slots are used
@@ -97,10 +95,9 @@ public abstract class ChartViewContentDisplay extends
             Set<ResourceItem> removedResourceItems) {
 
         for (ResourceItem resourceItem : addedResourceItems) {
-            ChartItem chartItem = new ChartItem(this, dragEnablerFactory,
-                    resourceItem);
+            ChartItem chartItem = (ChartItem) resourceItem;
             chartWidget.addChartItem(chartItem);
-            resourceItem.setDisplayObject(chartItem);
+            resourceItem.setDisplayObject(resourceItem);
         }
 
         for (ResourceItem resourceItem : removedResourceItems) {
