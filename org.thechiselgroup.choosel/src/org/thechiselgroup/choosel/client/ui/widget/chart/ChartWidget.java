@@ -40,18 +40,15 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public abstract class ChartWidget extends Widget {
 
-    public class ChartItemComparator implements Comparator<ChartItem> {
+    public static class ChartItemComparator implements Comparator<ChartItem> {
         @Override
         public int compare(ChartItem o1, ChartItem o2) {
-            return o1
-                    .getResourceItem()
-                    .getResourceValue(SlotResolver.DESCRIPTION_SLOT)
-                    .toString()
-                    .compareTo(
-                            o2.getResourceItem()
-                                    .getResourceValue(
-                                            SlotResolver.DESCRIPTION_SLOT)
-                                    .toString());
+            return getDescriptionString(o1).compareTo(getDescriptionString(o2));
+        }
+
+        private String getDescriptionString(ChartItem item) {
+            return item.getResourceItem()
+                    .getResourceValue(SlotResolver.DESCRIPTION_SLOT).toString();
         }
     }
 
@@ -123,17 +120,6 @@ public abstract class ChartWidget extends Widget {
         if (chart != null) {
             resize(getOffsetWidth(), getOffsetHeight());
         }
-    }
-
-    public int compare(ChartItem o1, ChartItem o2) {
-        return o1
-                .getResourceItem()
-                .getResourceValue(SlotResolver.DESCRIPTION_SLOT)
-                .toString()
-                .compareTo(
-                        o2.getResourceItem()
-                                .getResourceValue(SlotResolver.DESCRIPTION_SLOT)
-                                .toString());
     }
 
     /**
