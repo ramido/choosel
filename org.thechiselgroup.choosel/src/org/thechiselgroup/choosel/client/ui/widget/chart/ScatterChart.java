@@ -85,7 +85,7 @@ public class ScatterChart extends ChartWidget {
         // TODO // should // take // double // with // labelText
         chart.add(Rule.createRule()).data(scale.ticks())
                 .strokeStyle("lightGray").top(scale).bottom(4.5).anchor("left")
-                .add(Label.createLabel()).text(labelText);
+                .add(Label.createLabel()).text(scaleLabelText);
     }
 
     private void drawScatter() {

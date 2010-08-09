@@ -34,9 +34,7 @@ import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 // TODO right side ticks
 public class BarChart extends ChartWidget {
 
-    private static final int BAR_PADDING = 25;
-
-    private static final int BORDER_HEIGHT = 10;
+    private static final int BORDER_HEIGHT = 20;
 
     private static final int BORDER_WIDTH = 20;
 
@@ -57,7 +55,8 @@ public class BarChart extends ChartWidget {
     private ProtovisFunctionDouble barLeft = new ProtovisFunctionDouble() {
         @Override
         public double f(ChartItem value, int index) {
-            return BAR_PADDING + (index * chartWidth / chartItems.size());
+            return barWidth.f(value, index) / 2 + index * chartWidth
+                    / chartItems.size();
         }
     };
 
@@ -129,24 +128,6 @@ public class BarChart extends ChartWidget {
 
     private int highlightedBarBottom = BORDER_HEIGHT + 1;
 
-    private ProtovisFunctionString barFillStyle = new ProtovisFunctionString() {
-        @Override
-        public String f(ChartItem value, int index) {
-            switch (value.getResourceItem().getStatus()) {
-            case PARTIALLY_HIGHLIGHTED:
-            case PARTIALLY_HIGHLIGHTED_SELECTED:
-            case HIGHLIGHTED_SELECTED:
-            case HIGHLIGHTED:
-                return Colors.YELLOW;
-            case DEFAULT:
-                return Colors.STEELBLUE;
-            case SELECTED:
-                return Colors.ORANGE;
-            }
-            throw new RuntimeException("No colour available");
-        }
-    };
-
     private ProtovisFunctionStringToString scaleStrokeStyle = new ProtovisFunctionStringToString() {
         @Override
         public String f(String value, int index) {
@@ -158,6 +139,53 @@ public class BarChart extends ChartWidget {
     private Bar regularBar;
 
     private Bar highlightedBar;
+
+    private ProtovisFunctionDouble baselineLabelLeft = new ProtovisFunctionDouble() {
+        @Override
+        public double f(ChartItem value, int index) {
+            return barLeft.f(value, index) + barWidth.f(value, index) / 2;
+        }
+    };
+
+    private String baselineLabelTextAlign = "center";
+
+    private int baselineLabelBottom = 5;
+
+    private ProtovisFunctionString baselineLabelText = new ProtovisFunctionString() {
+        @Override
+        public String f(ChartItem value, int index) {
+            return value.getResourceItem()
+                    .getResourceValue(SlotResolver.DESCRIPTION_SLOT).toString();
+        }
+    };
+
+    private ProtovisFunctionString highlightedBarLabelText = new ProtovisFunctionString() {
+        @Override
+        public String f(ChartItem value, int index) {
+            return chartItems.get(index).getResourceItem()
+                    .getHighlightedResources().size() < 1 ? null : Integer
+                    .toString(chartItems.get(index).getResourceItem()
+                            .getHighlightedResources().size());
+        }
+    };
+
+    private ProtovisFunctionString regularBarLabelText = new ProtovisFunctionString() {
+        @Override
+        public String f(ChartItem value, int index) {
+            return Integer.parseInt(chartItems.get(index).getResourceItem()
+                    .getResourceValue(SlotResolver.FONT_SIZE_SLOT).toString())
+                    - chartItems.get(index).getResourceItem()
+                            .getHighlightedResources().size() < 1 ? null
+                    : Integer.toString(Integer.parseInt(chartItems.get(index)
+                            .getResourceItem()
+                            .getResourceValue(SlotResolver.FONT_SIZE_SLOT)
+                            .toString())
+                            - chartItems.get(index).getResourceItem()
+                                    .getHighlightedResources().size());
+        }
+    };
+
+    private String barTextBaseline = "top";
 
     @Override
     protected void beforeRender() {
@@ -177,12 +205,22 @@ public class BarChart extends ChartWidget {
                 .left(barLeft).width(barWidth).fillStyle(Colors.YELLOW)
                 .strokeStyle(Colors.STEELBLUE);
 
+        highlightedBar.anchor("top").add(Label.createLabel())
+                .textBaseline(barTextBaseline).text(highlightedBarLabelText);
+
+        highlightedBar.add(Label.createLabel()).left(baselineLabelLeft)
+                .textAlign(baselineLabelTextAlign).bottom(baselineLabelBottom)
+                .text(baselineLabelText);
+
         regularBar = highlightedBar.add(Bar.createBar())
                 .bottom(regularBarBottom).height(regularBarHeight)
                 .fillStyle(Colors.STEELBLUE);
+
+        regularBar.anchor("top").add(Label.createLabel())
+                .textBaseline(barTextBaseline).text(regularBarLabelText)
+                .textStyle("white");
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void drawChart() {
         assert chartItems.size() >= 1;
@@ -209,10 +247,11 @@ public class BarChart extends ChartWidget {
         this.scale = scale;
         chart.add(Rule.createRule()).data(scale.ticks()).top(scale)
                 .strokeStyle(scaleStrokeStyle).width(chartWidth).anchor("left")
-                .add(Label.createLabel()).text(labelText);
+                .add(Label.createLabel()).text(scaleLabelText);
 
         chart.add(Rule.createRule()).left(0).bottom(BORDER_HEIGHT)
                 .strokeStyle(AXIS_SCALE_COLOR);
+
     }
 
     @Override
