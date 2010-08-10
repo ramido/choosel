@@ -137,18 +137,18 @@ public class MapItem extends IconResourceItem {
     }
 
     public void setDefaultStyle() {
-        overlay.setColor((String) getResourceValue(SlotResolver.COLOR_SLOT));
+        overlay.setBackgroundColor((String) getResourceValue(SlotResolver.COLOR_SLOT));
         // TODO refactor --> common superclass
         overlay.setZIndex(Z_INDEX_DEFAULT);
     }
 
     private void setHighlightedStyle() {
-        overlay.setColor("#FDF49A"); // TODO extract
+        overlay.setBackgroundColor("#FDF49A"); // TODO extract
         overlay.setZIndex(Z_INDEX_HIGHLIGHTED);
     }
 
     private void setSelectedStyle() {
-        overlay.setColor("#E7B076"); // TODO extract
+        overlay.setBackgroundColor("#E7B076"); // TODO extract
         overlay.setZIndex(Z_INDEX_SELECTED);
     }
 
