@@ -25,7 +25,6 @@ import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventH
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionStringToString;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Scale;
 import org.thechiselgroup.choosel.client.util.ArrayUtils;
-import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
@@ -48,8 +47,8 @@ public abstract class ChartWidget extends Widget {
         }
 
         private String getDescriptionString(ChartItem item) {
-            return item.getResourceValue(SlotResolver.DESCRIPTION_SLOT)
-                    .toString();
+            return item.getResourceItem()
+                    .getResourceValue(SlotResolver.DESCRIPTION_SLOT).toString();
         }
     }
 
@@ -105,8 +104,8 @@ public abstract class ChartWidget extends Widget {
         getElement().getStyle().setProperty("backgroundColor", "white");
     }
 
-    public void addChartItem(ChartItem chartItem) {
-        chartItems.add(chartItem);
+    public void addChartItem(ChartItem resourceItem) {
+        chartItems.add(resourceItem);
     }
 
     /**
@@ -129,7 +128,7 @@ public abstract class ChartWidget extends Widget {
      */
     protected abstract void drawChart();
 
-    public ResourceItem getChartItem(int index) {
+    public ChartItem getChartItem(int index) {
         assert chartItems != null;
         assert 0 <= index;
         assert index < chartItems.size();
@@ -149,7 +148,8 @@ public abstract class ChartWidget extends Widget {
         double[] slotValues = new double[chartItems.size()];
 
         for (int i = 0; i < chartItems.size(); i++) {
-            Object value = chartItems.get(i).getResourceValue(slot);
+            Object value = chartItems.get(i).getResourceItem()
+                    .getResourceValue(slot);
 
             if (value instanceof Double) {
                 slotValues[i] = (Double) value;
@@ -173,7 +173,12 @@ public abstract class ChartWidget extends Widget {
     }
 
     protected void onEvent(Event e, int index) {
-        chartItems.get(index).onEvent(e);
+        getChartItem(index).onEvent(e);
+
+        // TODO remove once selection is fixed
+        if (e.getTypeInt() == Event.ONCLICK) {
+            renderChart();
+        }
     }
 
     protected abstract void registerEventHandler(String eventType,
