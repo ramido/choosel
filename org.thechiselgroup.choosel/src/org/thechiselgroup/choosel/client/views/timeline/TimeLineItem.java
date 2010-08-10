@@ -26,7 +26,7 @@ import org.thechiselgroup.choosel.client.ui.widget.timeline.TimeLineEvent;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.HoverModel;
-import org.thechiselgroup.choosel.client.views.IconResourceItem;
+import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 
@@ -34,7 +34,7 @@ import com.google.gwt.query.client.Function;
 import com.google.gwt.query.client.GQuery;
 import com.google.gwt.user.client.Event;
 
-public class TimeLineItem extends IconResourceItem {
+public class TimeLineItem extends ResourceItem {
 
     // TODO move, combine with listview
     private static final String CSS_HIGHLIGHT_CLASS = "hover";
@@ -73,6 +73,9 @@ public class TimeLineItem extends IconResourceItem {
 
     private final TimeLineViewContentDisplay view;
 
+    // XXX hack, remove
+    private String lastColor;
+
     public TimeLineItem(String category, ResourceSet resources,
             TimeLineViewContentDisplay view, PopupManager popupManager,
             HoverModel hoverModel, ResourceItemValueResolver layerModel,
@@ -85,8 +88,7 @@ public class TimeLineItem extends IconResourceItem {
 
         String date = (String) getResourceValue(SlotResolver.DATE_SLOT);
 
-        timeLineEvent = TimeLineEvent.create(date, null, getDefaultIconURL(),
-                this);
+        timeLineEvent = TimeLineEvent.create(date, null, "", this);
 
     }
 
@@ -106,14 +108,12 @@ public class TimeLineItem extends IconResourceItem {
         }
     }
 
-    private void applyIcon(String iconUrl) {
-        getTimeLineEvent().setIcon(iconUrl);
-
+    private void applyIcon(String color) {
+        lastColor = color;
         for (String elementID : elementIDs) {
             if (elementID.startsWith("icon")) {
-                // TODO get index of element for similar highlighting on
-                // overview band
-                getGElement(elementID).children().attr("src", iconUrl);
+                getGElement(elementID).children("div").css("background-color",
+                        color);
             }
         }
     }
@@ -141,6 +141,11 @@ public class TimeLineItem extends IconResourceItem {
     }
 
     public void onPainted(String labelElementID, String iconElementID) {
+        assert labelElementID != null;
+        assert iconElementID != null;
+
+        replaceIconImageWithDiv(iconElementID);
+
         /*
          * every time the event is repainted, we need to hook up our listeners
          * again
@@ -198,6 +203,22 @@ public class TimeLineItem extends IconResourceItem {
         }
     }
 
+    private void replaceIconImageWithDiv(String iconElementID) {
+        GQuery gElement = getGElement(iconElementID);
+        gElement.children("img").remove();
+        GQuery children = gElement.children("div");
+        if (children.length() == 0) {
+            String label = (String) getResourceValue(SlotResolver.LABEL_SLOT);
+            gElement.append("<div class='resourceItemIcon'>" + label + "</div>");
+
+            // XXX hack
+            String color = lastColor != null ? lastColor
+                    : (String) getResourceValue(SlotResolver.COLOR_SLOT);
+
+            gElement.children("div").css("background-color", color);
+        }
+    }
+
     @Override
     protected void setStatusStyling(Status status) {
         switch (status) {
@@ -205,26 +226,26 @@ public class TimeLineItem extends IconResourceItem {
         case HIGHLIGHTED_SELECTED: {
             addCssClass(CSS_SELECTED_CLASS);
             addCssClass(CSS_HIGHLIGHT_CLASS);
-            applyIcon(getHighlightIconURL());
+            applyIcon("#FDF49A");
         }
             break;
         case PARTIALLY_HIGHLIGHTED:
         case HIGHLIGHTED: {
             removeCssClass(CSS_SELECTED_CLASS);
             addCssClass(CSS_HIGHLIGHT_CLASS);
-            applyIcon(getHighlightIconURL());
+            applyIcon("#FDF49A");
         }
             break;
         case DEFAULT: {
             removeCssClass(CSS_SELECTED_CLASS);
             removeCssClass(CSS_HIGHLIGHT_CLASS);
-            applyIcon(getDefaultIconURL());
+            applyIcon((String) getResourceValue(SlotResolver.COLOR_SLOT));
         }
             break;
         case SELECTED: {
             removeCssClass(CSS_HIGHLIGHT_CLASS);
             addCssClass(CSS_SELECTED_CLASS);
-            applyIcon(getSelectedIconURL());
+            applyIcon("#E7B076");
         }
             break;
         }

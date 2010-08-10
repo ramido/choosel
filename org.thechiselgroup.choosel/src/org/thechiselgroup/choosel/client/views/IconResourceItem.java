@@ -23,8 +23,6 @@ public abstract class IconResourceItem extends ResourceItem {
 
     private String defaultIconURL;
 
-    private String grayedOutIconURL;
-
     private String highlightIconURL;
 
     private String selectedIconURL;
@@ -39,10 +37,6 @@ public abstract class IconResourceItem extends ResourceItem {
 
     protected String getDefaultIconURL() {
         return defaultIconURL;
-    }
-
-    protected String getGrayedOutIconURL() {
-        return grayedOutIconURL;
     }
 
     protected String getHighlightIconURL() {
@@ -64,7 +58,6 @@ public abstract class IconResourceItem extends ResourceItem {
         // TODO use CSS, add border
         defaultIconURL = getIconURL((String) getResourceValue(SlotResolver.COLOR_SLOT));
         highlightIconURL = getIconURL("#FDF49A");
-        grayedOutIconURL = getIconURL("#dddddd");
         selectedIconURL = getIconURL("#E7B076");
     }
 
