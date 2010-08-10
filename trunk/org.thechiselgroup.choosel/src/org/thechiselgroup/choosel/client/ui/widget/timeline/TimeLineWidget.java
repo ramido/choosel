@@ -39,8 +39,8 @@ public class TimeLineWidget extends Widget {
         setElement(DOM.createDiv());
     }
 
-    public void addEvent(TimeLineEvent event) {
-        eventSource.addEvent(event);
+    public void addEvents(TimeLineEvent[] events) {
+        eventSource.addEvents(events);
         timeLine.paint();
     }
 
@@ -81,8 +81,8 @@ public class TimeLineWidget extends Widget {
         }
     }
 
-    public void removeEvent(TimeLineEvent event) {
-        eventSource.removeEvent(event);
+    public void removeEvents(TimeLineEvent[] events) {
+        eventSource.removeEvents(events);
         timeLine.paint();
     }
 

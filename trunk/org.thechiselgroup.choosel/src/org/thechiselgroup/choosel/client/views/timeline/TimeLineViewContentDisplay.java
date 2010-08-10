@@ -16,12 +16,14 @@
 package org.thechiselgroup.choosel.client.views.timeline;
 
 import java.util.Date;
+import java.util.Set;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
+import org.thechiselgroup.choosel.client.ui.widget.timeline.TimeLineEvent;
 import org.thechiselgroup.choosel.client.ui.widget.timeline.TimeLineWidget;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
@@ -53,6 +55,10 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
         this.dragEnablerFactory = dragEnablerFactory;
     }
 
+    private void addEventsToTimeline(Set<ResourceItem> addedResourceItems) {
+        timelineWidget.addEvents(getTimeLineEvents(addedResourceItems));
+    }
+
     @Override
     public void checkResize() {
         timelineWidget.layout();
@@ -63,12 +69,8 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
             String category, ResourceSet resources, HoverModel hoverModel) {
         PopupManager popupManager = createPopupManager(resolver, resources);
 
-        TimeLineItem timeLineItem = new TimeLineItem(category, resources, this,
-                popupManager, hoverModel, resolver, dragEnablerFactory);
-
-        timelineWidget.addEvent(timeLineItem.getTimeLineEvent());
-
-        return timeLineItem;
+        return new TimeLineItem(category, resources, this, popupManager,
+                hoverModel, resolver, dragEnablerFactory);
     }
 
     @Override
@@ -88,14 +90,26 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
                 SlotResolver.DATE_SLOT };
     }
 
+    private TimeLineEvent[] getTimeLineEvents(Set<ResourceItem> resourceItems) {
+        TimeLineEvent[] events = new TimeLineEvent[resourceItems.size()];
+        int counter = 0;
+        for (ResourceItem item : resourceItems) {
+            TimeLineItem timelineItem = (TimeLineItem) item;
+            events[counter++] = timelineItem.getTimeLineEvent();
+        }
+        return events;
+    }
+
     public TimeLineWidget getTimeLineWidget() {
         return timelineWidget;
     }
 
+    private void removeEventsFromTimeline(Set<ResourceItem> removedResourceItems) {
+        timelineWidget.removeEvents(getTimeLineEvents(removedResourceItems));
+    }
+
     @Override
     public void removeResourceItem(ResourceItem resourceItem) {
-        timelineWidget.removeEvent(((TimeLineItem) resourceItem)
-                .getTimeLineEvent());
     }
 
     @Override
@@ -117,5 +131,22 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
         state.setValue(MEMENTO_ZOOM_PREFIX + 0, timelineWidget.getZoomIndex(0));
         state.setValue(MEMENTO_ZOOM_PREFIX + 1, timelineWidget.getZoomIndex(1));
         return state;
+    }
+
+    @Override
+    public void update(Set<ResourceItem> addedResourceItems,
+            Set<ResourceItem> updatedResourceItems,
+            Set<ResourceItem> removedResourceItems) {
+
+        super.update(addedResourceItems, updatedResourceItems,
+                removedResourceItems);
+
+        if (!addedResourceItems.isEmpty()) {
+            addEventsToTimeline(addedResourceItems);
+        }
+
+        if (!removedResourceItems.isEmpty()) {
+            removeEventsFromTimeline(removedResourceItems);
+        }
     }
 }

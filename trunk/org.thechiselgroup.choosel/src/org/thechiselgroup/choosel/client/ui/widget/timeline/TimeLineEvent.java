@@ -26,46 +26,46 @@ public class TimeLineEvent extends JavaScriptObject {
     // @formatter:off
     public static native TimeLineEvent create(String date, String text,
             String icon, TimeLineItem timeLineItem) /*-{
-           var parseDateTimeFunction = 
-           $wnd.Timeline.NativeDateUnit.getParser(null);
+        var parseDateTimeFunction = 
+        $wnd.Timeline.NativeDateUnit.getParser(null);
 
-           var jsonEvent = {
-           start: parseDateTimeFunction(date),
-           instant: true,
-           text: text,
-           icon: icon,
-           color: null,                                      
-           textColor: null,
-           classname: null,
-           eventID: null,
-           timeLineItem: timeLineItem 
-           }
+        var jsonEvent = {
+        start: parseDateTimeFunction(date),
+        instant: true,
+        text: text,
+        icon: icon,
+        color: null,                                      
+        textColor: null,
+        classname: null,
+        eventID: null,
+        timeLineItem: timeLineItem 
+        }
 
-           var evt = new $wnd.Timeline.DefaultEventSource.Event(jsonEvent);
+        var evt = new $wnd.Timeline.DefaultEventSource.Event(jsonEvent);
 
-           evt._obj = jsonEvent;
-           evt.getProperty = function(name) {
-           return this._obj[name];
-           };
+        evt._obj = jsonEvent;
+        evt.getProperty = function(name) {
+        return this._obj[name];
+        };
 
-           return evt;
-       }-*/;
+        return evt;
+    }-*/;
 
-    // @formatter:on
 
     protected TimeLineEvent() {
     }
 
     public final native String getID() /*-{
-                                       return this.getID();
-                                       }-*/;
+        return this.getID();
+    }-*/;
 
     public final native TimeLineItem getTimeLineItem() /*-{
-                                                       return this.getProperty('timeLineItem');
-                                                       }-*/;
+        return this.getProperty('timeLineItem');
+    }-*/;
 
     public final native void setIcon(String url) /*-{
-                                                 this._icon = url;
-                                                 }-*/;
+        this._icon = url;
+    }-*/;
+    // @formatter:on
 
 }

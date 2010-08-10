@@ -50,7 +50,8 @@ public interface ViewContentDisplay extends WidgetAdaptable, Disposable {
     void startRestore();
 
     /**
-     * Updates the view content display.
+     * Updates the view content display. There is no overlap between the three
+     * different resource sets (TODO --> use 3 different methods).
      * 
      * @param addedResourceItems
      *            ResourceItems that have been added to the view. Is never
