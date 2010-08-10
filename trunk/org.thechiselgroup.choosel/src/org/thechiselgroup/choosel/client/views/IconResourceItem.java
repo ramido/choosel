@@ -16,49 +16,42 @@
 package org.thechiselgroup.choosel.client.views;
 
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.ui.IconURLFactory;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 
 public abstract class IconResourceItem extends ResourceItem {
 
-    private String defaultIconURL;
+    private String defaultColor;
 
-    private String highlightIconURL;
+    private String highlightColor;
 
-    private String selectedIconURL;
+    private String selectedColor;
 
     public IconResourceItem(String category, ResourceSet resources,
             HoverModel hoverModel, PopupManager popupManager,
             ResourceItemValueResolver layerModel) {
 
         super(category, resources, hoverModel, popupManager, layerModel);
-        initIconURLs();
+        initColors();
     }
 
-    protected String getDefaultIconURL() {
-        return defaultIconURL;
+    protected String getDefaultColor() {
+        return defaultColor;
     }
 
-    protected String getHighlightIconURL() {
-        return highlightIconURL;
+    protected String getHighlightColor() {
+        return highlightColor;
     }
 
-    // TODO enable usage of border color (use different icons)
-    private String getIconURL(String color) {
-        String label = (String) getResourceValue(SlotResolver.LABEL_SLOT);
-        return IconURLFactory.getFlatIconURL(label, color);
+    protected String getSelectedColor() {
+        return selectedColor;
     }
 
-    protected String getSelectedIconURL() {
-        return selectedIconURL;
-    }
-
-    private void initIconURLs() {
+    private void initColors() {
         // TODO move colors to color provider
-        // TODO use CSS, add border
-        defaultIconURL = getIconURL((String) getResourceValue(SlotResolver.COLOR_SLOT));
-        highlightIconURL = getIconURL("#FDF49A");
-        selectedIconURL = getIconURL("#E7B076");
+        // TODO add border (should be automatically calculated based on color)
+        defaultColor = (String) getResourceValue(SlotResolver.COLOR_SLOT);
+        highlightColor = "#FDF49A";
+        selectedColor = "#E7B076";
     }
 
 }

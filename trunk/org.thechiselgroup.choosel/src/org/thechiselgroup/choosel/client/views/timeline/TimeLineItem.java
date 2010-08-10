@@ -26,7 +26,7 @@ import org.thechiselgroup.choosel.client.ui.widget.timeline.TimeLineEvent;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.HoverModel;
-import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.IconResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 
@@ -34,7 +34,9 @@ import com.google.gwt.query.client.Function;
 import com.google.gwt.query.client.GQuery;
 import com.google.gwt.user.client.Event;
 
-public class TimeLineItem extends ResourceItem {
+public class TimeLineItem extends IconResourceItem {
+
+    private static final String CSS_CLASS = "resourceItemIcon";
 
     // TODO move, combine with listview
     private static final String CSS_HIGHLIGHT_CLASS = "hover";
@@ -73,9 +75,6 @@ public class TimeLineItem extends ResourceItem {
 
     private final TimeLineViewContentDisplay view;
 
-    // XXX hack, remove
-    private String lastColor;
-
     public TimeLineItem(String category, ResourceSet resources,
             TimeLineViewContentDisplay view, PopupManager popupManager,
             HoverModel hoverModel, ResourceItemValueResolver layerModel,
@@ -108,14 +107,20 @@ public class TimeLineItem extends ResourceItem {
         }
     }
 
-    private void applyIcon(String color) {
-        lastColor = color;
-        for (String elementID : elementIDs) {
-            if (elementID.startsWith("icon")) {
-                getGElement(elementID).children("div").css("background-color",
-                        color);
-            }
+    private String getColor() {
+        switch (getStatus()) {
+        case PARTIALLY_HIGHLIGHTED_SELECTED:
+        case HIGHLIGHTED_SELECTED:
+        case PARTIALLY_HIGHLIGHTED:
+        case HIGHLIGHTED:
+            return getHighlightColor();
+        case DEFAULT:
+            return getDefaultColor();
+        case SELECTED:
+            return getSelectedColor();
         }
+
+        throw new RuntimeException("this point should never be reached");
     }
 
     private GQuery getGElement(String elementID) {
@@ -209,46 +214,52 @@ public class TimeLineItem extends ResourceItem {
         GQuery children = gElement.children("div");
         if (children.length() == 0) {
             String label = (String) getResourceValue(SlotResolver.LABEL_SLOT);
-            gElement.append("<div class='resourceItemIcon'>" + label + "</div>");
-
-            // XXX hack
-            String color = lastColor != null ? lastColor
-                    : (String) getResourceValue(SlotResolver.COLOR_SLOT);
-
-            gElement.children("div").css("background-color", color);
+            gElement.append("<div class='" + CSS_CLASS + "'>" + label
+                    + "</div>");
+            gElement.children("div").css("background-color", getColor());
         }
     }
 
-    @Override
-    protected void setStatusStyling(Status status) {
+    private void setIconColor(String color) {
+        for (String elementID : elementIDs) {
+            if (elementID.startsWith("icon")) {
+                getGElement(elementID).children("div").css("background-color",
+                        color);
+            }
+        }
+    }
+
+    private void setLabelStyle(Status status) {
         switch (status) {
         case PARTIALLY_HIGHLIGHTED_SELECTED:
         case HIGHLIGHTED_SELECTED: {
             addCssClass(CSS_SELECTED_CLASS);
             addCssClass(CSS_HIGHLIGHT_CLASS);
-            applyIcon("#FDF49A");
         }
             break;
         case PARTIALLY_HIGHLIGHTED:
         case HIGHLIGHTED: {
             removeCssClass(CSS_SELECTED_CLASS);
             addCssClass(CSS_HIGHLIGHT_CLASS);
-            applyIcon("#FDF49A");
         }
             break;
         case DEFAULT: {
             removeCssClass(CSS_SELECTED_CLASS);
             removeCssClass(CSS_HIGHLIGHT_CLASS);
-            applyIcon((String) getResourceValue(SlotResolver.COLOR_SLOT));
         }
             break;
         case SELECTED: {
             removeCssClass(CSS_HIGHLIGHT_CLASS);
             addCssClass(CSS_SELECTED_CLASS);
-            applyIcon("#E7B076");
         }
             break;
         }
+    }
+
+    @Override
+    protected void setStatusStyling(Status status) {
+        setIconColor(getColor());
+        setLabelStyle(status);
     }
 
 }
