@@ -49,6 +49,8 @@ public class ResourceOverlay extends Overlay {
 
     private String text;
 
+    private Point locationPoint;
+
     public ResourceOverlay(LatLng latLng, Point offset, String text) {
         this.latLng = latLng;
         this.offset = offset;
@@ -93,16 +95,24 @@ public class ResourceOverlay extends Overlay {
         pane = map.getPane(MapPaneType.MARKER_PANE);
         pane.add(label);
 
-        updatePosition();
+        updatePosition(map.convertLatLngToDivPixel(latLng));
     }
 
     @Override
     protected final void redraw(boolean force) {
-        if (!force) {
+        /*
+         * We check if the location has changed, because Google Maps allows
+         * infinite panning along the east-west-axis (see issue 38) and requires
+         * an updated widget location in this case, although it will not force
+         * redrawing.
+         */
+        Point newLocationPoint = map.convertLatLngToDivPixel(latLng);
+
+        if (!force && sameLocation(newLocationPoint)) {
             return;
         }
 
-        updatePosition();
+        updatePosition(newLocationPoint);
     }
 
     @Override
@@ -110,17 +120,28 @@ public class ResourceOverlay extends Overlay {
         label.removeFromParent();
     }
 
-    public void setColor(String color) {
+    private boolean sameLocation(Point newLocationPoint) {
+        return locationPoint != null
+                && locationPoint.getX() == newLocationPoint.getX()
+                && locationPoint.getY() == newLocationPoint.getY();
+    }
+
+    public void setBackgroundColor(String color) {
         assert color != null;
         CSS.setBackgroundColor(label, color);
+    }
+
+    public void setBorder(String border) {
+        assert border != null;
+        CSS.setBorder(label, border);
     }
 
     public void setZIndex(int zIndex) {
         CSS.setZIndex(label.getElement(), zIndex);
     }
 
-    private void updatePosition() {
-        Point locationPoint = map.convertLatLngToDivPixel(latLng);
+    private void updatePosition(Point newLocationPoint) {
+        locationPoint = newLocationPoint;
         pane.setWidgetPosition(label, locationPoint.getX() + offset.getX(),
                 locationPoint.getY() + offset.getY());
     }
