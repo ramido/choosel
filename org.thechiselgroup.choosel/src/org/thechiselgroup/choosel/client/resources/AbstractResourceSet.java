@@ -15,8 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
-public abstract class AbstractResourceSet extends AbstractResourceContainer
-        implements ResourceSet {
+public abstract class AbstractResourceSet implements ResourceSet {
 
     @Override
     public void clear() {
