@@ -20,6 +20,8 @@ import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 
 public abstract class IconResourceItem extends ResourceItem {
 
+    protected static final String CSS_RESOURCE_ITEM_ICON = "resourceItemIcon";
+
     private String defaultColor;
 
     private String highlightColor;
