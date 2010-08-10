@@ -51,18 +51,20 @@ public interface ViewContentDisplay extends WidgetAdaptable, Disposable {
 
     /**
      * Updates the view content display. There is no overlap between the three
-     * different resource sets (TODO --> use 3 different methods).
+     * different resource sets (added, updated, and removed resource items). We
+     * use a single method to enable the different view content displays to do a
+     * single refresh of the view instead of multiple operations.
      * 
      * @param addedResourceItems
      *            ResourceItems that have been added to the view. Is never
-     *            <code>null</code>.
+     *            <code>null</code>, but can be an empty set.
      * @param updatedResourceItems
      *            ResourceItems which have changed (status, data, etc.) such
      *            that their representation needs to be updated. Is never
-     *            <code>null</code>.
+     *            <code>null</code>, but can be an empty set.
      * @param removedResourceItems
      *            ResourceItems that have been removed from the view. Is never
-     *            <code>null</code>.
+     *            <code>null</code>, but can be an empty set.
      */
     void update(Set<ResourceItem> addedResourceItems,
             Set<ResourceItem> updatedResourceItems,
