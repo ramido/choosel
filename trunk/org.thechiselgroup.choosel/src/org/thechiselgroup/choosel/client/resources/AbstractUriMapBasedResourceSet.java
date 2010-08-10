@@ -28,6 +28,7 @@ public abstract class AbstractUriMapBasedResourceSet extends
 
     protected Map<String, Resource> uriToResource = new HashMap<String, Resource>();
 
+    // TODO refer to addAll, pull up
     @Override
     public void add(Resource resource) {
         assert resource != null;
@@ -52,6 +53,8 @@ public abstract class AbstractUriMapBasedResourceSet extends
                 addedResources.add(resource);
             }
         }
+
+        // TODO test event is not fire if no changes
         eventBus.fireEvent(new ResourcesAddedEvent(this, addedResources));
     }
 
@@ -85,6 +88,7 @@ public abstract class AbstractUriMapBasedResourceSet extends
         return uriToResource.values().iterator();
     }
 
+    // TODO refer to remove all, pull up
     @Override
     public void remove(Resource resource) {
         if (!contains(resource)) {
@@ -107,6 +111,8 @@ public abstract class AbstractUriMapBasedResourceSet extends
                 removedResources.add(resource);
             }
         }
+
+        // TODO test event is not fire if no changes
         eventBus.fireEvent(new ResourcesRemovedEvent(this, removedResources));
     }
 

@@ -20,7 +20,11 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.thechiselgroup.choosel.client.test.AdvancedAsserts.assertContentEquals;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.verifyOnResourcesAdded;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.verifyOnResourcesRemoved;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
+import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -40,6 +44,29 @@ public class CountingResourceSetTest {
     private CountingResourceSet underTest;
 
     @Test
+    public void addAllFiresEvent() {
+        ResourceSet resources = createResources(1, 2);
+
+        underTest.addEventHandler(addedHandler);
+        underTest.addAll(resources);
+
+        ResourcesAddedEvent event = verifyOnResourcesAdded(1, addedHandler)
+                .getValue();
+        assertContentEquals(resources.toList(), event.getAddedResources());
+    }
+
+    @Test
+    public void addAllWithContainedResourcesDoesNotFireEvent() {
+        ResourceSet containedResources = createResources(1, 2, 3);
+
+        underTest.addAll(containedResources);
+        underTest.addEventHandler(addedHandler);
+        underTest.addAll(containedResources);
+
+        verifyOnResourcesAdded(0, addedHandler);
+    }
+
+    @Test
     public void addedFiredOnceIfAddedTwice() {
         underTest.addEventHandler(addedHandler);
         underTest.add(resource);
@@ -47,6 +74,63 @@ public class CountingResourceSetTest {
 
         verify(addedHandler, times(1)).onResourcesAdded(
                 any(ResourcesAddedEvent.class));
+    }
+
+    @Test
+    public void eventNotFiredOnRemoveAllOfDoubleContainedResources() {
+        ResourceSet resources = createResources(1, 2, 3);
+
+        underTest.addAll(resources);
+        underTest.addAll(resources);
+        underTest.addEventHandler(removeHandler);
+        underTest.removeAll(resources);
+
+        verifyOnResourcesRemoved(0, removeHandler);
+    }
+
+    @Test
+    public void mixedAddAllFiresEventWithNewResources() {
+        ResourceSet containedResources = createResources(1);
+        ResourceSet resources = createResources(1, 2, 3);
+
+        underTest.addAll(containedResources);
+        underTest.addEventHandler(addedHandler);
+        underTest.addAll(resources);
+
+        ResourcesAddedEvent event = verifyOnResourcesAdded(1, addedHandler)
+                .getValue();
+        assertContentEquals(createResources(2, 3).toList(),
+                event.getAddedResources());
+    }
+
+    @Test
+    public void mixedRemoveAllFiresEventWithActuallyRemovedResources() {
+        ResourceSet doubleResources = createResources(1);
+        ResourceSet resources = createResources(1, 2, 3);
+
+        underTest.addAll(resources);
+        underTest.addAll(doubleResources);
+        underTest.addEventHandler(removeHandler);
+        underTest.removeAll(resources);
+
+        ResourcesRemovedEvent event = verifyOnResourcesRemoved(1, removeHandler)
+                .getValue();
+        assertContentEquals(createResources(2, 3).toList(),
+                event.getRemovedResources());
+    }
+
+    // TODO not fire remove if not remove
+    @Test
+    public void removeAllFiresEvent() {
+        ResourceSet resources = createResources(1, 2);
+
+        underTest.addAll(resources);
+        underTest.addEventHandler(removeHandler);
+        underTest.removeAll(resources);
+
+        ResourcesRemovedEvent event = verifyOnResourcesRemoved(1, removeHandler)
+                .getValue();
+        assertContentEquals(resources.toList(), event.getRemovedResources());
     }
 
     @Test

@@ -46,6 +46,7 @@ public class CountingResourceSet extends AbstractImplementingResourceSet {
 
     private Map<String, ResourceElement> uriToResourceElementMap = new HashMap<String, ResourceElement>();
 
+    // TODO refactor --> redirect to addall
     @Override
     public void add(Resource resource) {
         assert resource != null;
@@ -60,6 +61,27 @@ public class CountingResourceSet extends AbstractImplementingResourceSet {
         uriToResourceElementMap.put(uri, new ResourceElement(resource));
         eventBus.fireEvent(new ResourcesAddedEvent(this, CollectionUtils
                 .toList(resource)));
+    }
+
+    @Override
+    public void addAll(Iterable<Resource> resources) {
+        assert resources != null;
+
+        List<Resource> addedResources = new ArrayList<Resource>();
+        for (Resource resource : resources) {
+            String uri = resource.getUri();
+
+            if (uriToResourceElementMap.containsKey(uri)) {
+                uriToResourceElementMap.get(uri).counter++;
+            } else {
+                addedResources.add(resource);
+                uriToResourceElementMap.put(uri, new ResourceElement(resource));
+            }
+        }
+
+        if (!addedResources.isEmpty()) {
+            eventBus.fireEvent(new ResourcesAddedEvent(this, addedResources));
+        }
     }
 
     @Override
@@ -101,6 +123,29 @@ public class CountingResourceSet extends AbstractImplementingResourceSet {
             uriToResourceElementMap.remove(uri);
             eventBus.fireEvent(new ResourcesRemovedEvent(this, CollectionUtils
                     .toList(resource)));
+        }
+    }
+
+    @Override
+    public void removeAll(Iterable<Resource> resources) {
+        assert resources != null;
+
+        List<Resource> removedResources = new ArrayList<Resource>();
+        for (Resource resource : resources) {
+            String uri = resource.getUri();
+
+            if (uriToResourceElementMap.containsKey(uri)) {
+                uriToResourceElementMap.get(uri).counter--;
+
+                if (uriToResourceElementMap.get(uri).counter == 0) {
+                    uriToResourceElementMap.remove(uri);
+                    removedResources.add(resource);
+                }
+            }
+        }
+
+        if (!removedResources.isEmpty()) {
+            eventBus.fireEvent(new ResourcesRemovedEvent(this, removedResources));
         }
     }
 

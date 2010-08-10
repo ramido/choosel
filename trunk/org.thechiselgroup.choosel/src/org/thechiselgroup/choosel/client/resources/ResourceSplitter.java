@@ -31,7 +31,7 @@ import com.google.inject.Inject;
 
 // TODO update & extend (1, many sets added / removed) test case
 // TODO change name
-public class ResourceSplitter extends AbstractResourceContainer {
+public class ResourceSplitter implements ResourceContainer {
 
     private Map<String, ResourceSet> categorizedSets = new HashMap<String, ResourceSet>();
 
