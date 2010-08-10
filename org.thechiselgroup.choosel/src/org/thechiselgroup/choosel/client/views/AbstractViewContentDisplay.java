@@ -61,11 +61,11 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
     public void checkResize() {
     }
 
-    protected PopupManager createPopupManager(ResourceItemValueResolver layer,
-            ResourceSet resource) {
+    protected PopupManager createPopupManager(
+            ResourceItemValueResolver resolver, ResourceSet resources) {
 
-        return createPopupManager(resource,
-                layer.getResourceSetResolver(SlotResolver.DESCRIPTION_SLOT));
+        return createPopupManager(resources,
+                resolver.getResourceSetResolver(SlotResolver.DESCRIPTION_SLOT));
     }
 
     protected PopupManager createPopupManager(final ResourceSet resources,
@@ -80,6 +80,17 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
         };
 
         return popupManagerFactory.createPopupManager(widgetFactory);
+    }
+
+    @Override
+    public ResourceItem createResourceItem(ResourceItemValueResolver resolver,
+            String category, ResourceSet resources, HoverModel hoverModel) {
+
+        assert resolver != null;
+        assert resources != null;
+
+        return new ResourceItem(category, resources, hoverModel,
+                createPopupManager(resolver, resources), resolver);
     }
 
     protected abstract Widget createWidget();

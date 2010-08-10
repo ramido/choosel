@@ -26,6 +26,9 @@ import static org.thechiselgroup.choosel.client.test.AdvancedAsserts.assertConte
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.toResourceSet;
+import static org.thechiselgroup.choosel.client.util.CollectionUtils.toSet;
+
+import java.util.Collections;
 
 import org.junit.After;
 import org.junit.Before;
@@ -143,8 +146,12 @@ public class GraphViewContentDisplayTest {
     public void addResourceItemToAllResource() {
         ResourceSet resourceSet = createResources(1);
 
-        underTest.createResourceItem(layer, RESOURCE_ITEM_CATEGORY,
-                resourceSet, hoverModel);
+        ResourceItem resourceItem = underTest.createResourceItem(layer,
+                RESOURCE_ITEM_CATEGORY, resourceSet, hoverModel);
+
+        underTest.update(toSet(resourceItem),
+                Collections.<ResourceItem> emptySet(),
+                Collections.<ResourceItem> emptySet());
 
         resourceSet.add(createResource(2));
 
@@ -189,25 +196,33 @@ public class GraphViewContentDisplayTest {
     public void loadNeighbourhoodWhenAddingConcept() {
         Resource concept1 = createResource(1);
 
-        underTest.createResourceItem(layer, RESOURCE_ITEM_CATEGORY,
-                toResourceSet(concept1), hoverModel);
+        ResourceItem resourceItem = underTest.createResourceItem(layer,
+                RESOURCE_ITEM_CATEGORY, toResourceSet(concept1), hoverModel);
+
+        underTest.update(toSet(resourceItem),
+                Collections.<ResourceItem> emptySet(),
+                Collections.<ResourceItem> emptySet());
 
         ArgumentCaptor<ResourceItem> argument = ArgumentCaptor
                 .forClass(ResourceItem.class);
         verify(automaticExpander, times(1)).expand(argument.capture(),
                 any(GraphNodeExpansionCallback.class));
 
-        ResourceItem resourceItem = argument.getValue();
-        assertEquals(1, resourceItem.getResourceSet().size());
-        assertEquals(concept1, resourceItem.getResourceSet().getFirstResource());
+        ResourceItem result = argument.getValue();
+        assertEquals(1, result.getResourceSet().size());
+        assertEquals(concept1, result.getResourceSet().getFirstResource());
     }
 
     @Test
     public void removeResourceItemFromAllResource() {
         ResourceSet resourceSet = createResources(1);
 
-        GraphItem resourceItem = underTest.createResourceItem(layer,
+        ResourceItem resourceItem = underTest.createResourceItem(layer,
                 RESOURCE_ITEM_CATEGORY, resourceSet, hoverModel);
+
+        underTest.update(toSet(resourceItem),
+                Collections.<ResourceItem> emptySet(),
+                Collections.<ResourceItem> emptySet());
 
         underTest.removeResourceItem(resourceItem);
 

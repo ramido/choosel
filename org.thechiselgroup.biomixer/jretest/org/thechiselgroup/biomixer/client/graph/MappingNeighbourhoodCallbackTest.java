@@ -62,6 +62,12 @@ public class MappingNeighbourhoodCallbackTest {
 	private Display graphDisplay;
 
 	@Mock
+	private ResourceItem concept2ResourceItem;
+
+	@Mock
+	private ResourceItem mappingResourceItem;
+
+	@Mock
 	private GraphItem concept2GraphItem;
 
 	@Mock
@@ -154,10 +160,14 @@ public class MappingNeighbourhoodCallbackTest {
 		when(availableResources.getByUri(any(String.class))).thenReturn(
 				inputConcept);
 		when(callback.getResourceItems(concept2)).thenReturn(
-				CollectionUtils.toList((ResourceItem) concept2GraphItem));
+				CollectionUtils.toList((ResourceItem) concept2ResourceItem));
 		when(callback.getResourceItems(mapping)).thenReturn(
-				CollectionUtils.toList((ResourceItem) mappingGraphItem));
+				CollectionUtils.toList((ResourceItem) mappingResourceItem));
+		when(concept2ResourceItem.getDisplayObject()).thenReturn(
+				concept2GraphItem);
 		when(concept2GraphItem.getNode()).thenReturn(concept2Node);
+		when(mappingResourceItem.getDisplayObject()).thenReturn(
+				mappingGraphItem);
 		when(mappingGraphItem.getNode()).thenReturn(mappingNode);
 
 		result = new NeighbourhoodServiceResult(inputConcept);

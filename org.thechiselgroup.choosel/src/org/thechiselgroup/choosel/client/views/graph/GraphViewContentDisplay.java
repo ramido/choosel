@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.geometry.Point;
@@ -32,7 +33,6 @@ import org.thechiselgroup.choosel.client.resources.ResourceManager;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
-import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Arc;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
@@ -57,9 +57,7 @@ import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseOverHandler;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
-import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 
@@ -72,7 +70,6 @@ import com.google.inject.Inject;
 // TODO register listener for double click on node --> change expansion state
 public class GraphViewContentDisplay extends AbstractViewContentDisplay
         implements GraphNodeExpansionCallback {
-
     public static class DefaultDisplay extends GraphWidget implements Display {
 
         // TODO why is size needed in the first place??
@@ -128,10 +125,10 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         @Override
         public void onMouseMove(MouseMoveEvent event) {
             // TODO restrict to mouse move for current graph item
-            Collection<GraphItem> values = nodeIdToGraphItemMap.values();
-            for (GraphItem graphItem : values) {
+            Collection<ResourceItem> values = nodeIdToResourceItemMap.values();
+            for (ResourceItem item : values) {
                 // TODO relative to root pane instead of client area
-                graphItem.getPopupManager().onMouseMove(event.getClientX(),
+                item.getPopupManager().onMouseMove(event.getClientX(),
                         event.getClientY());
             }
         }
@@ -162,9 +159,9 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
     private static final String MEMENTO_X = "x";
 
-    // advanced node class: (incoming, outgoing, expanded: state machine)
-
     private static final String MEMENTO_Y = "y";
+
+    // advanced node class: (incoming, outgoing, expanded: state machine)
 
     private ArcStyleProvider arcStyleProvider;
 
@@ -174,7 +171,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
     public DragEnablerFactory dragEnablerFactory;
 
-    private final Map<String, GraphItem> nodeIdToGraphItemMap = new HashMap<String, GraphItem>();
+    private final Map<String, ResourceItem> nodeIdToResourceItemMap = new HashMap<String, ResourceItem>();
 
     private boolean ready = false;
 
@@ -229,49 +226,41 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         return nodeResources.containsResourceWithUri(resourceUri);
     }
 
-    // TODO fix categoryX
-    @Override
-    public GraphItem createResourceItem(ResourceItemValueResolver resolver,
-            String categoryX, ResourceSet resources, HoverModel hoverModel) {
+    private void createDisplayObjectForResourceItem(ResourceItem resourceItem) {
+        String label = (String) resourceItem
+                .getResourceValue(SlotResolver.GRAPH_LABEL_SLOT);
 
-        assert resolver != null;
-        assert resources != null;
+        String category = getCategory(resourceItem.getResourceSet()
+                .getFirstResource());
 
-        String label = (String) resolver.resolve(SlotResolver.GRAPH_LABEL_SLOT,
-                categoryX, resources);
-        String category = getCategory(resources.getFirstResource());
-        String backgroundColor = (String) resolver.resolve(
-                SlotResolver.GRAPH_NODE_BACKGROUND_COLOR_SLOT, categoryX,
-                resources);
-        String borderColor = (String) resolver
-                .resolve(SlotResolver.GRAPH_NODE_BORDER_COLOR_SLOT, categoryX,
-                        resources);
+        String backgroundColor = (String) resourceItem
+                .getResourceValue(SlotResolver.GRAPH_NODE_BACKGROUND_COLOR_SLOT);
 
-        PopupManager popupManager = createPopupManager(resources,
-                resolver.getResourceSetResolver(SlotResolver.DESCRIPTION_SLOT));
+        String borderColor = (String) resourceItem
+                .getResourceValue(SlotResolver.GRAPH_NODE_BORDER_COLOR_SLOT);
 
-        GraphItem item = new GraphItem(categoryX, resources, hoverModel,
-                popupManager, label, category, display, resolver);
+        GraphItem gItem = new GraphItem(resourceItem.getResourceSet(), label,
+                category, display);
 
-        nodeIdToGraphItemMap.put(item.getNode().getId(), item);
+        nodeIdToResourceItemMap.put(gItem.getNode().getId(), resourceItem);
 
-        display.addNode(item.getNode());
-        positionNode(item.getNode());
+        display.addNode(gItem.getNode());
+        positionNode(gItem.getNode());
 
         // needs to be done after node is added to graph
-        item.setDefaultColors(backgroundColor, borderColor);
+        gItem.setDefaultColors(backgroundColor, borderColor);
 
         // TODO remove once new drag and drop mechanism works...
-        display.setNodeStyle(item.getNode(), "showDragImage", "true");
+        display.setNodeStyle(gItem.getNode(), "showDragImage", "true");
 
-        display.setNodeStyle(item.getNode(), "showArrow", registry
+        display.setNodeStyle(gItem.getNode(), "showArrow", registry
                 .getNodeMenuEntries(category).isEmpty() ? "false" : "true");
 
-        registry.getAutomaticExpander(category).expand(item, this);
+        registry.getAutomaticExpander(category).expand(resourceItem, this);
 
-        nodeResources.addResourceSet(resources);
+        nodeResources.addResourceSet(resourceItem.getResourceSet());
 
-        return item;
+        resourceItem.setDisplayObject(gItem);
     }
 
     // TODO encapsulate in display, use dependency injection
@@ -300,11 +289,11 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         return display;
     }
 
-    private GraphItem getGraphItem(Node node) {
-        return nodeIdToGraphItemMap.get(node.getId());
+    private ResourceItem getGraphItem(Node node) {
+        return nodeIdToResourceItemMap.get(node.getId());
     }
 
-    private GraphItem getGraphItem(NodeEvent<?> event) {
+    private ResourceItem getGraphItem(NodeEvent<?> event) {
         return getGraphItem(event.getNode());
     }
 
@@ -380,8 +369,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
         assert node != null;
 
-        assert nodeIdToGraphItemMap.containsKey(node.getId());
-        if (nodeIdToGraphItemMap.size() > 1) {
+        assert nodeIdToResourceItemMap.containsKey(node.getId());
+        if (nodeIdToResourceItemMap.size() > 1) {
             return;
         }
 
@@ -412,12 +401,13 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     @Override
     public void removeResourceItem(ResourceItem resourceItem) {
         assert resourceItem != null;
-        assert nodeIdToGraphItemMap.containsValue(resourceItem);
+        assert nodeIdToResourceItemMap.containsValue(resourceItem);
 
         nodeResources.removeResourceSet(resourceItem.getResourceSet());
-        nodeIdToGraphItemMap.remove(((GraphItem) resourceItem).getNode()
-                .getId());
-        display.removeNode(((GraphItem) resourceItem).getNode());
+        nodeIdToResourceItemMap.remove(((GraphItem) resourceItem
+                .getDisplayObject()).getNode().getId());
+        display.removeNode(((GraphItem) resourceItem.getDisplayObject())
+                .getNode());
     }
 
     @Override
@@ -475,5 +465,25 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
                 arcStyleProvider.getArcColor(arcType));
         display.setArcStyle(arc, GraphDisplay.ARC_STYLE,
                 arcStyleProvider.getArcStyle(arcType));
+    }
+
+    @Override
+    public void update(Set<ResourceItem> addedResourceItems,
+            Set<ResourceItem> updatedResourceItems,
+            Set<ResourceItem> removedResourceItems) {
+
+        for (ResourceItem addedItem : addedResourceItems) {
+            createDisplayObjectForResourceItem(addedItem);
+            updateNode(addedItem);
+        }
+
+        for (ResourceItem updatedItem : updatedResourceItems) {
+            updateNode(updatedItem);
+        }
+    }
+
+    private void updateNode(ResourceItem resourceItem) {
+        ((GraphItem) resourceItem.getDisplayObject()).updateNode(resourceItem
+                .getStatus());
     }
 }
