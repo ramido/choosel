@@ -18,16 +18,12 @@ package org.thechiselgroup.choosel.client.views.chart;
 import java.util.Set;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
-import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
-import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 
 import com.google.inject.Inject;
@@ -52,20 +48,6 @@ public abstract class ChartViewContentDisplay extends
     @Override
     public void checkResize() {
         chartWidget.checkResize();
-    }
-
-    @Override
-    public ResourceItem createResourceItem(ResourceItemValueResolver resolver,
-            String category, ResourceSet resources, HoverModel hoverModel) {
-
-        PopupManager popupManager = createPopupManager(resolver, resources);
-
-        ResourceItem resourceItem = new ResourceItem(category, resources,
-                hoverModel, popupManager, resolver);
-
-        // TODO link resource item to chart item
-
-        return resourceItem;
     }
 
     // TODO push down: the actual chart needs to decide which slots are used

@@ -24,14 +24,11 @@ import static org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay.NOD
 
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.Colors;
-import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
-import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
-import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay.Display;
 
-public class GraphItem extends ResourceItem {
+public class GraphItem {
 
     private String defaultBackgroundColor = Colors.BLUE_3;
 
@@ -41,13 +38,8 @@ public class GraphItem extends ResourceItem {
 
     private Node node;
 
-    // TODO figure fix categoryX
-    public GraphItem(String categoryX, ResourceSet resources,
-            HoverModel hoverModel, PopupManager popupManager, String label,
-            String category, GraphViewContentDisplay.Display display,
-            ResourceItemValueResolver Layer) {
-
-        super(categoryX, resources, hoverModel, popupManager, Layer);
+    public GraphItem(ResourceSet resources, String label, String category,
+            GraphViewContentDisplay.Display display) {
 
         assert label != null;
         assert category != null;
@@ -56,8 +48,6 @@ public class GraphItem extends ResourceItem {
         this.node = new Node(resources.getFirstResource().getUri(), label,
                 category);
         this.display = display;
-
-        updateStyling();
     }
 
     public Node getNode() {
@@ -67,11 +57,9 @@ public class GraphItem extends ResourceItem {
     public void setDefaultColors(String backgroundColor, String borderColor) {
         this.defaultBorderColor = borderColor;
         this.defaultBackgroundColor = backgroundColor;
-        updateStyling();
     }
 
-    @Override
-    protected void setStatusStyling(Status status) {
+    public void updateNode(ResourceItem.Status status) {
         switch (status) {
         case PARTIALLY_HIGHLIGHTED_SELECTED:
         case HIGHLIGHTED_SELECTED: {
