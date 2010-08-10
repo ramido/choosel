@@ -36,8 +36,6 @@ import com.google.gwt.user.client.Event;
 
 public class TimeLineItem extends IconResourceItem {
 
-    private static final String CSS_CLASS = "resourceItemIcon";
-
     // TODO move, combine with listview
     private static final String CSS_HIGHLIGHT_CLASS = "hover";
 
@@ -214,7 +212,7 @@ public class TimeLineItem extends IconResourceItem {
         GQuery children = gElement.children("div");
         if (children.length() == 0) {
             String label = (String) getResourceValue(SlotResolver.LABEL_SLOT);
-            gElement.append("<div class='" + CSS_CLASS + "'>" + label
+            gElement.append("<div class='" + CSS_RESOURCE_ITEM_ICON + "'>" + label
                     + "</div>");
             gElement.children("div").css("background-color", getColor());
         }

@@ -79,9 +79,6 @@ public class MapItem extends IconResourceItem {
 
     private LabelOverlay overlay;
 
-    // TODO use in timeline as well?
-    public static final String CSS_RESOURCE_ITEM_ICON = "resourceItemIcon";
-
     public MapItem(String category, LatLng point, ResourceSet resources,
             HoverModel hoverModel, PopupManager popupManager,
             ResourceItemValueResolver layerModel,
