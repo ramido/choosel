@@ -100,7 +100,7 @@ public class Wedge extends Mark {
     public final native Wedge fillStyle(String colour) /*-{
         return this.fillStyle(colour);
     }-*/;
-    
+
     public final native Wedge index(Number index) /*-{
         return this.index(index);
     }-*/;
@@ -159,6 +159,10 @@ public class Wedge extends Mark {
     
     public final native Wedge scale(Number scale) /*-{
         return this.scale(scale);
+    }-*/;
+    
+    public final native Wedge strokeStyle(String colour) /*-{
+        return this.strokeStyle(colour);
     }-*/;
     
     public final native Wedge title(String title) /*-{
