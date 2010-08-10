@@ -15,29 +15,48 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.widget.timeline;
 
+import org.thechiselgroup.choosel.client.util.ArrayUtils;
+
 import com.google.gwt.core.client.JavaScriptObject;
 
 public class TimeLineEventSource extends JavaScriptObject {
 
+    // @formatter:off
     public static native TimeLineEventSource create() /*-{
-                                                      return new $wnd.Timeline.DefaultEventSource();
-                                                      }-*/;
+        return new $wnd.Timeline.DefaultEventSource();
+    }-*/;
+    // @formatter:on
 
     protected TimeLineEventSource() {
     }
 
-    public final native void addEvent(TimeLineEvent event) /*-{
-                                                           this.add(event);
-                                                           }-*/;
+    // @formatter:off
+    private final native void addEvents(JavaScriptObject events) /*-{
+        this.addMany(events);
+    }-*/;
+    // @formatter:on
 
-    public final native void removeEvent(TimeLineEvent event) /*-{
-                                                              // the event index class does not support remove, so we hack it in...
-                                                              this._events._events.remove(event);
-                                                              delete this._events._idToEvent[event.getID()];
-                                                              this._events._indexed = false;
+    public final void addEvents(TimeLineEvent[] events) {
+        addEvents(ArrayUtils.toJsArray(events));
+    }
 
-                                                              // XXX event source has no remove method, not sure which event to fire
-                                                              this._fire("onAddMany", []);
-                                                              }-*/;
+    // @formatter:off
+    private final native void removeEvents(JavaScriptObject events) /*-{
+        // the event index class does not support remove, so we hack it in...
+        for (var i = 0; i < events.length; i++) {
+            this._events._events.remove(events[i]);
+            delete this._events._idToEvent[events[i].getID()];
+        }
+
+        this._events._indexed = false;
+
+        // XXX event source has no remove method, not sure which event to fire
+        this._fire("onAddMany", []);
+    }-*/;
+    // @formatter:on
+
+    public final void removeEvents(TimeLineEvent[] events) {
+        removeEvents(ArrayUtils.toJsArray(events));
+    }
 
 }
