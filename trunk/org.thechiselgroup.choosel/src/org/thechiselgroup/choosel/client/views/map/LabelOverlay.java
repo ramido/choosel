@@ -32,10 +32,7 @@ import com.google.gwt.maps.client.geom.Point;
 import com.google.gwt.maps.client.overlay.Overlay;
 import com.google.gwt.user.client.ui.Label;
 
-public class ResourceOverlay extends Overlay {
-
-    // TODO use in timeline as well?
-    public static final String CSS_RESOURCE_ITEM_ICON = "resourceItemIcon";
+public class LabelOverlay extends Overlay {
 
     private Label label;
 
@@ -47,16 +44,20 @@ public class ResourceOverlay extends Overlay {
 
     private MapPane pane;
 
-    private String text;
-
     private Point locationPoint;
 
-    public ResourceOverlay(LatLng latLng, Point offset, String text) {
+    public LabelOverlay(LatLng latLng, Point offset, String text,
+            String styleName) {
+
+        assert latLng != null;
+        assert offset != null;
+        assert text != null;
+        assert styleName != null;
+
         this.latLng = latLng;
         this.offset = offset;
-        this.text = text;
         this.label = new Label(text);
-        this.label.addStyleName(CSS_RESOURCE_ITEM_ICON);
+        this.label.setStyleName(styleName);
     }
 
     public HandlerRegistration addClickHandler(ClickHandler handler) {
@@ -85,7 +86,8 @@ public class ResourceOverlay extends Overlay {
 
     @Override
     protected final Overlay copy() {
-        return new ResourceOverlay(latLng, offset, text);
+        return new LabelOverlay(latLng, offset, label.getText(),
+                label.getStyleName());
     }
 
     @Override
@@ -121,6 +123,7 @@ public class ResourceOverlay extends Overlay {
     }
 
     private boolean sameLocation(Point newLocationPoint) {
+        assert newLocationPoint != null;
         return locationPoint != null
                 && locationPoint.getX() == newLocationPoint.getX()
                 && locationPoint.getY() == newLocationPoint.getY();
@@ -141,6 +144,7 @@ public class ResourceOverlay extends Overlay {
     }
 
     private void updatePosition(Point newLocationPoint) {
+        assert newLocationPoint != null;
         locationPoint = newLocationPoint;
         pane.setWidgetPosition(label, locationPoint.getX() + offset.getX(),
                 locationPoint.getY() + offset.getY());

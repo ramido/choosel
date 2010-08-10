@@ -77,7 +77,10 @@ public class MapItem extends IconResourceItem {
 
     private MarkerEventHandler eventHandler;
 
-    private ResourceOverlay overlay;
+    private LabelOverlay overlay;
+
+    // TODO use in timeline as well?
+    public static final String CSS_RESOURCE_ITEM_ICON = "resourceItemIcon";
 
     public MapItem(String category, LatLng point, ResourceSet resources,
             HoverModel hoverModel, PopupManager popupManager,
@@ -91,14 +94,14 @@ public class MapItem extends IconResourceItem {
         this.dragEnablerFactory = dragEnablerFactory;
 
         String label = (String) getResourceValue(SlotResolver.LABEL_SLOT);
-        this.overlay = new ResourceOverlay(point, Point.newInstance(-10, -10),
-                label); // -10 = - (width /2)
+        this.overlay = new LabelOverlay(point, Point.newInstance(-10, -10),
+                label, CSS_RESOURCE_ITEM_ICON); // -10 = - (width /2)
         this.eventHandler = new MarkerEventHandler();
 
         initEventHandlers();
     }
 
-    public ResourceOverlay getOverlay() {
+    public LabelOverlay getOverlay() {
         return overlay;
     }
 
@@ -137,18 +140,17 @@ public class MapItem extends IconResourceItem {
     }
 
     public void setDefaultStyle() {
-        overlay.setBackgroundColor((String) getResourceValue(SlotResolver.COLOR_SLOT));
-        // TODO refactor --> common superclass
+        overlay.setBackgroundColor(getDefaultColor());
         overlay.setZIndex(Z_INDEX_DEFAULT);
     }
 
     private void setHighlightedStyle() {
-        overlay.setBackgroundColor("#FDF49A"); // TODO extract
+        overlay.setBackgroundColor(getHighlightColor());
         overlay.setZIndex(Z_INDEX_HIGHLIGHTED);
     }
 
     private void setSelectedStyle() {
-        overlay.setBackgroundColor("#E7B076"); // TODO extract
+        overlay.setBackgroundColor(getSelectedColor());
         overlay.setZIndex(Z_INDEX_SELECTED);
     }
 
