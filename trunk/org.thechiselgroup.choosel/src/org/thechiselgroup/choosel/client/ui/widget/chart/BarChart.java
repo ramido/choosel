@@ -71,7 +71,7 @@ public class BarChart extends ChartWidget {
             highlightedBarCounts = new double[chartItems.size()];
 
             for (int i = 0; i < chartItems.size(); i++) {
-                highlightedBarCounts[i] = chartItems.get(i)
+                highlightedBarCounts[i] = chartItems.get(i).getResourceItem()
                         .getHighlightedResources().size();
             }
 
@@ -96,9 +96,11 @@ public class BarChart extends ChartWidget {
 
             for (int i = 0; i < chartItems.size(); i++) {
                 barCounts[i] = Integer.parseInt(chartItems.get(i)
+                        .getResourceItem()
                         .getResourceValue(SlotResolver.FONT_SIZE_SLOT)
                         .toString())
-                        - chartItems.get(i).getHighlightedResources().size();
+                        - chartItems.get(i).getResourceItem()
+                                .getHighlightedResources().size();
             }
 
         }
@@ -152,16 +154,17 @@ public class BarChart extends ChartWidget {
     private ProtovisFunctionString baselineLabelText = new ProtovisFunctionString() {
         @Override
         public String f(ChartItem value, int index) {
-            return value.getResourceValue(SlotResolver.DESCRIPTION_SLOT)
-                    .toString();
+            return value.getResourceItem()
+                    .getResourceValue(SlotResolver.DESCRIPTION_SLOT).toString();
         }
     };
 
     private ProtovisFunctionString highlightedBarLabelText = new ProtovisFunctionString() {
         @Override
         public String f(ChartItem value, int index) {
-            return chartItems.get(index).getHighlightedResources().size() < 1 ? null
-                    : Integer.toString(chartItems.get(index)
+            return chartItems.get(index).getResourceItem()
+                    .getHighlightedResources().size() < 1 ? null : Integer
+                    .toString(chartItems.get(index).getResourceItem()
                             .getHighlightedResources().size());
         }
     };
@@ -169,14 +172,16 @@ public class BarChart extends ChartWidget {
     private ProtovisFunctionString regularBarLabelText = new ProtovisFunctionString() {
         @Override
         public String f(ChartItem value, int index) {
-            return Integer.parseInt(chartItems.get(index)
+            return Integer.parseInt(chartItems.get(index).getResourceItem()
                     .getResourceValue(SlotResolver.FONT_SIZE_SLOT).toString())
-                    - chartItems.get(index).getHighlightedResources().size() < 1 ? null
+                    - chartItems.get(index).getResourceItem()
+                            .getHighlightedResources().size() < 1 ? null
                     : Integer.toString(Integer.parseInt(chartItems.get(index)
+                            .getResourceItem()
                             .getResourceValue(SlotResolver.FONT_SIZE_SLOT)
                             .toString())
-                            - chartItems.get(index).getHighlightedResources()
-                                    .size());
+                            - chartItems.get(index).getResourceItem()
+                                    .getHighlightedResources().size());
         }
     };
 
@@ -226,6 +231,7 @@ public class BarChart extends ChartWidget {
         maxBarSize = 0;
         for (int i = 0; i < chartItems.size(); i++) {
             int currentItem = Integer.parseInt(chartItems.get(i)
+                    .getResourceItem()
                     .getResourceValue(SlotResolver.FONT_SIZE_SLOT).toString());
             if (maxBarSize < currentItem) {
                 maxBarSize = currentItem;

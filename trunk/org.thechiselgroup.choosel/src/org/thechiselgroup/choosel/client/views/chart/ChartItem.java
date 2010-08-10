@@ -15,36 +15,31 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.chart;
 
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.Colors;
-import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
-import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 
 import com.google.gwt.user.client.Event;
 
-public class ChartItem extends ResourceItem {
+public class ChartItem {
 
     private ChartViewContentDisplay view;
 
     private DragEnabler enabler;
 
-    public ChartItem(String category, ResourceSet resources,
-            ChartViewContentDisplay view, HoverModel hoverModel,
-            PopupManager popupManager, ResourceItemValueResolver layerModel,
-            DragEnablerFactory dragEnablerFactory) {
+    private ResourceItem resourceItem;
 
-        super(category, resources, hoverModel, popupManager, layerModel);
+    public ChartItem(ChartViewContentDisplay view,
+            DragEnablerFactory dragEnablerFactory, ResourceItem resourceItem) {
 
         this.view = view;
-        this.enabler = dragEnablerFactory.createDragEnabler(this);
+        this.resourceItem = resourceItem;
+        this.enabler = dragEnablerFactory.createDragEnabler(resourceItem);
     }
 
     public String getColour() {
-        switch (getStatus()) {
+        switch (resourceItem.getStatus()) {
         case PARTIALLY_HIGHLIGHTED:
         case PARTIALLY_HIGHLIGHTED_SELECTED:
         case HIGHLIGHTED_SELECTED:
@@ -58,34 +53,43 @@ public class ChartItem extends ResourceItem {
         throw new RuntimeException("No colour available");
     }
 
+    public ResourceItem getResourceItem() {
+        return resourceItem;
+    }
+
     // TODO find better way to separate controller
     public void onEvent(Event e) {
         switch (e.getTypeInt()) {
         case Event.ONCLICK: {
             if (view != null) {
-                view.getCallback().switchSelection(getResourceSet());
+                view.getCallback().switchSelection(
+                        resourceItem.getResourceSet());
             }
         }
             break;
         case Event.ONMOUSEMOVE: {
-            getPopupManager().onMouseMove(e.getClientX(), e.getClientY());
+            resourceItem.getPopupManager().onMouseMove(e.getClientX(),
+                    e.getClientY());
             enabler.forwardMouseMove(e);
         }
             break;
         case Event.ONMOUSEDOWN: {
-            getPopupManager().onMouseDown(e);
+            resourceItem.getPopupManager().onMouseDown(e);
             enabler.forwardMouseDownWithEventPosition(e);
         }
             break;
         case Event.ONMOUSEOUT: {
-            getPopupManager().onMouseOut(e.getClientX(), e.getClientY());
-            getHighlightingManager().setHighlighting(false);
+            resourceItem.getPopupManager().onMouseOut(e.getClientX(),
+                    e.getClientY());
+            resourceItem.getHighlightingManager().setHighlighting(false);
             enabler.forwardMouseOut(e);
         }
             break;
         case Event.ONMOUSEOVER: {
-            getPopupManager().onMouseOver(e.getClientX(), e.getClientY());
-            getHighlightingManager().setHighlighting(true);
+            resourceItem.getPopupManager().onMouseOver(e.getClientX(),
+                    e.getClientY());
+            resourceItem.getHighlightingManager().setHighlighting(true);
+
         }
             break;
         case Event.ONMOUSEUP: {

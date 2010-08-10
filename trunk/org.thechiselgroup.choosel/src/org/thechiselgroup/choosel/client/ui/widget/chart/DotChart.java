@@ -37,7 +37,8 @@ public class DotChart extends ChartWidget {
         @Override
         public double f(ChartItem value, int index) {
             double resolvedValue = Double.parseDouble((String) value
-                    .getResourceValue(SlotResolver.MAGNITUDE_SLOT));
+                    .getResourceItem().getResourceValue(
+                            SlotResolver.MAGNITUDE_SLOT));
 
             return ((resolvedValue - minValue + 0.5) * h / (maxValue - minValue + 1));
         }

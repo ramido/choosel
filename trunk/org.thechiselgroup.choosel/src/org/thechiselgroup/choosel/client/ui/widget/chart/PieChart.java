@@ -22,7 +22,6 @@ import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFuncti
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionString;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Wedge;
 import org.thechiselgroup.choosel.client.util.ArrayUtils;
-import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
@@ -49,7 +48,7 @@ public class PieChart extends ChartWidget {
             highlightedWedgeCounts = new double[chartItems.size()];
 
             for (int i = 0; i < chartItems.size(); i++) {
-                highlightedWedgeCounts[i] = chartItems.get(i)
+                highlightedWedgeCounts[i] = chartItems.get(i).getResourceItem()
                         .getHighlightedResources().size();
             }
 
@@ -74,9 +73,11 @@ public class PieChart extends ChartWidget {
 
             for (int i = 0; i < chartItems.size(); i++) {
                 wedgeCounts[i] = Integer.parseInt(chartItems.get(i)
+                        .getResourceItem()
                         .getResourceValue(SlotResolver.FONT_SIZE_SLOT)
                         .toString())
-                        - chartItems.get(i).getHighlightedResources().size();
+                        - chartItems.get(i).getResourceItem()
+                                .getHighlightedResources().size();
             }
 
         }
@@ -91,7 +92,7 @@ public class PieChart extends ChartWidget {
     private ProtovisFunctionString wedgeFillStyle = new ProtovisFunctionString() {
         @Override
         public String f(ChartItem value, int index) {
-            switch (value.getStatus()) {
+            switch (value.getResourceItem().getStatus()) {
             case PARTIALLY_HIGHLIGHTED:
             case PARTIALLY_HIGHLIGHTED_SELECTED:
             case HIGHLIGHTED_SELECTED:
@@ -130,9 +131,9 @@ public class PieChart extends ChartWidget {
 
     private void drawWedge() {
         sum = 0;
-        for (ResourceItem chartItem : chartItems) {
-            sum += Double.parseDouble(chartItem.getResourceValue(
-                    SlotResolver.FONT_SIZE_SLOT).toString());
+        for (ChartItem chartItem : chartItems) {
+            sum += Double.parseDouble(chartItem.getResourceItem()
+                    .getResourceValue(SlotResolver.FONT_SIZE_SLOT).toString());
         }
 
         chart.add(Wedge.createWedge()).data(ArrayUtils.toJsArray(chartItems))
@@ -142,8 +143,9 @@ public class PieChart extends ChartWidget {
                     @Override
                     public double f(ChartItem value, int index) {
                         System.out.println("a: " + index);
-                        return Double.parseDouble(value.getResourceValue(
-                                SlotResolver.FONT_SIZE_SLOT).toString())
+                        return Double.parseDouble(value.getResourceItem()
+                                .getResourceValue(SlotResolver.FONT_SIZE_SLOT)
+                                .toString())
                                 * 2 * Math.PI / sum;
                     }
                 }).fillStyle(new ProtovisFunctionString() {
