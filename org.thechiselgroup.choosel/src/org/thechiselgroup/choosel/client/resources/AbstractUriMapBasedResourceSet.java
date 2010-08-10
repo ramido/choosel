@@ -28,19 +28,6 @@ public abstract class AbstractUriMapBasedResourceSet extends
 
     protected Map<String, Resource> uriToResource = new HashMap<String, Resource>();
 
-    // TODO refer to addAll, pull up
-    @Override
-    public void add(Resource resource) {
-        assert resource != null;
-
-        if (contains(resource)) {
-            return;
-        }
-        doAdd(resource);
-        eventBus.fireEvent(new ResourcesAddedEvent(this, CollectionUtils
-                .toList(resource)));
-    }
-
     @Override
     public void addAll(Iterable<Resource> resources) {
         assert resources != null;

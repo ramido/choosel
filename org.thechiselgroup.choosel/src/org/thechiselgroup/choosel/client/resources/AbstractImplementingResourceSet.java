@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.client.resources;
 import org.thechiselgroup.choosel.client.label.DefaultHasLabel;
 import org.thechiselgroup.choosel.client.label.HasLabel;
 import org.thechiselgroup.choosel.client.label.LabelChangedEventHandler;
+import org.thechiselgroup.choosel.client.util.SingleItemIterable;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerManager;
@@ -38,10 +39,10 @@ public abstract class AbstractImplementingResourceSet extends
     }
 
     @Override
-    public HandlerRegistration addLabelChangedEventHandler(
-            LabelChangedEventHandler eventHandler) {
+    public void add(Resource resource) {
+        assert resource != null;
 
-        return labelDelegate.addLabelChangedEventHandler(eventHandler);
+        addAll(new SingleItemIterable<Resource>(resource));
     }
 
     @Override
@@ -56,6 +57,13 @@ public abstract class AbstractImplementingResourceSet extends
             ResourcesRemovedEventHandler handler) {
 
         return eventBus.addHandler(ResourcesRemovedEvent.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addLabelChangedEventHandler(
+            LabelChangedEventHandler eventHandler) {
+
+        return labelDelegate.addLabelChangedEventHandler(eventHandler);
     }
 
     public int getHandlerCount(Type<?> type) {
@@ -75,6 +83,13 @@ public abstract class AbstractImplementingResourceSet extends
     @Override
     public boolean isModifiable() {
         return true;
+    }
+
+    @Override
+    public void remove(Resource resource) {
+        assert resource != null;
+
+        removeAll(new SingleItemIterable<Resource>(resource));
     }
 
     @Override

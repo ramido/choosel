@@ -21,8 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.thechiselgroup.choosel.client.util.CollectionUtils;
-
 /**
  * Allows adding the same resource multiple times and stores the count. The
  * resource has to be removed the same number of times before being removed from
@@ -46,23 +44,6 @@ public class CountingResourceSet extends AbstractImplementingResourceSet {
 
     private Map<String, ResourceElement> uriToResourceElementMap = new HashMap<String, ResourceElement>();
 
-    // TODO refactor --> redirect to addall
-    @Override
-    public void add(Resource resource) {
-        assert resource != null;
-
-        String uri = resource.getUri();
-
-        if (uriToResourceElementMap.containsKey(uri)) {
-            uriToResourceElementMap.get(uri).counter++;
-            return;
-        }
-
-        uriToResourceElementMap.put(uri, new ResourceElement(resource));
-        eventBus.fireEvent(new ResourcesAddedEvent(this, CollectionUtils
-                .toList(resource)));
-    }
-
     @Override
     public void addAll(Iterable<Resource> resources) {
         assert resources != null;
@@ -74,8 +55,8 @@ public class CountingResourceSet extends AbstractImplementingResourceSet {
             if (uriToResourceElementMap.containsKey(uri)) {
                 uriToResourceElementMap.get(uri).counter++;
             } else {
-                addedResources.add(resource);
                 uriToResourceElementMap.put(uri, new ResourceElement(resource));
+                addedResources.add(resource);
             }
         }
 
@@ -105,25 +86,6 @@ public class CountingResourceSet extends AbstractImplementingResourceSet {
     @Override
     public Iterator<Resource> iterator() {
         return toList().iterator();
-    }
-
-    @Override
-    public void remove(Resource resource) {
-        assert resource != null;
-
-        String uri = resource.getUri();
-
-        if (!uriToResourceElementMap.containsKey(uri)) {
-            return;
-        }
-
-        uriToResourceElementMap.get(uri).counter--;
-
-        if (uriToResourceElementMap.get(uri).counter == 0) {
-            uriToResourceElementMap.remove(uri);
-            eventBus.fireEvent(new ResourcesRemovedEvent(this, CollectionUtils
-                    .toList(resource)));
-        }
     }
 
     @Override
