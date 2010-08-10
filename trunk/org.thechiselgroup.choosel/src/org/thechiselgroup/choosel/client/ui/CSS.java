@@ -24,6 +24,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 public final class CSS {
 
+    public static final String BACKGROUND_COLOR = "backgroundColor";
+
     public static final String FLOAT = "cssFloat";
 
     public static final String LINE_HEIGHT = "lineHeight";
@@ -78,6 +80,10 @@ public final class CSS {
         setPosition(element, ABSOLUTE);
         setLocation(element, left, top);
         setSize(element, width, height);
+    }
+
+    public static void setBackgroundColor(Widget widget, String color) {
+        setStyleAttribute(widget.getElement(), BACKGROUND_COLOR, color);
     }
 
     public static void setDisplay(Element element, String value) {

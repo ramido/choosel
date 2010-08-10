@@ -30,13 +30,14 @@ import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.geom.Point;
 import com.google.gwt.maps.client.overlay.Overlay;
-import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
 
 public class ResourceOverlay extends Overlay {
 
-    private Image image;
+    // TODO use in timeline as well?
+    public static final String CSS_RESOURCE_ITEM_ICON = "resourceItemIcon";
 
-    private String initialIconURl;
+    private Label label;
 
     private LatLng latLng;
 
@@ -46,40 +47,43 @@ public class ResourceOverlay extends Overlay {
 
     private MapPane pane;
 
-    public ResourceOverlay(LatLng latLng, Point offset, String iconUrl) {
+    private String text;
+
+    public ResourceOverlay(LatLng latLng, Point offset, String text) {
         this.latLng = latLng;
         this.offset = offset;
-        this.initialIconURl = iconUrl;
-        this.image = new Image(iconUrl);
+        this.text = text;
+        this.label = new Label(text);
+        this.label.addStyleName(CSS_RESOURCE_ITEM_ICON);
     }
 
     public HandlerRegistration addClickHandler(ClickHandler handler) {
-        return image.addClickHandler(handler);
+        return label.addClickHandler(handler);
     }
 
     public HandlerRegistration addMouseDownHandler(MouseDownHandler handler) {
-        return image.addMouseDownHandler(handler);
+        return label.addMouseDownHandler(handler);
     }
 
     public HandlerRegistration addMouseMoveHandler(MouseMoveHandler handler) {
-        return image.addMouseMoveHandler(handler);
+        return label.addMouseMoveHandler(handler);
     }
 
     public HandlerRegistration addMouseOutHandler(MouseOutHandler handler) {
-        return image.addMouseOutHandler(handler);
+        return label.addMouseOutHandler(handler);
     }
 
     public HandlerRegistration addMouseOverHandler(MouseOverHandler handler) {
-        return image.addMouseOverHandler(handler);
+        return label.addMouseOverHandler(handler);
     }
 
     public HandlerRegistration addMouseUpHandler(MouseUpHandler handler) {
-        return image.addMouseUpHandler(handler);
+        return label.addMouseUpHandler(handler);
     }
 
     @Override
     protected final Overlay copy() {
-        return new ResourceOverlay(latLng, offset, initialIconURl);
+        return new ResourceOverlay(latLng, offset, text);
     }
 
     @Override
@@ -87,7 +91,7 @@ public class ResourceOverlay extends Overlay {
         this.map = map;
 
         pane = map.getPane(MapPaneType.MARKER_PANE);
-        pane.add(image);
+        pane.add(label);
 
         updatePosition();
     }
@@ -103,21 +107,21 @@ public class ResourceOverlay extends Overlay {
 
     @Override
     protected final void remove() {
-        image.removeFromParent();
+        label.removeFromParent();
     }
 
-    public void setIconURL(String iconURL) {
-        assert iconURL != null;
-        image.setUrl(iconURL);
+    public void setColor(String color) {
+        assert color != null;
+        CSS.setBackgroundColor(label, color);
     }
 
     public void setZIndex(int zIndex) {
-        CSS.setZIndex(image.getElement(), zIndex);
+        CSS.setZIndex(label.getElement(), zIndex);
     }
 
     private void updatePosition() {
         Point locationPoint = map.convertLatLngToDivPixel(latLng);
-        pane.setWidgetPosition(image, locationPoint.getX() + offset.getX(),
+        pane.setWidgetPosition(label, locationPoint.getX() + offset.getX(),
                 locationPoint.getY() + offset.getY());
     }
 

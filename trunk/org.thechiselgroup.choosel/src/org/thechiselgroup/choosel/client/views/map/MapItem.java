@@ -22,6 +22,7 @@ import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.IconResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
+import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -88,8 +89,10 @@ public class MapItem extends IconResourceItem {
 
         this.callback = callback;
         this.dragEnablerFactory = dragEnablerFactory;
+
+        String label = (String) getResourceValue(SlotResolver.LABEL_SLOT);
         this.overlay = new ResourceOverlay(point, Point.newInstance(-10, -10),
-                getDefaultIconURL()); // -10 = - (width /2)
+                label); // -10 = - (width /2)
         this.eventHandler = new MarkerEventHandler();
 
         initEventHandlers();
@@ -134,17 +137,18 @@ public class MapItem extends IconResourceItem {
     }
 
     public void setDefaultStyle() {
-        overlay.setIconURL(getDefaultIconURL());
+        overlay.setColor((String) getResourceValue(SlotResolver.COLOR_SLOT));
+        // TODO refactor --> common superclass
         overlay.setZIndex(Z_INDEX_DEFAULT);
     }
 
     private void setHighlightedStyle() {
-        overlay.setIconURL(getHighlightIconURL());
+        overlay.setColor("#FDF49A"); // TODO extract
         overlay.setZIndex(Z_INDEX_HIGHLIGHTED);
     }
 
     private void setSelectedStyle() {
-        overlay.setIconURL(getSelectedIconURL());
+        overlay.setColor("#E7B076"); // TODO extract
         overlay.setZIndex(Z_INDEX_SELECTED);
     }
 
