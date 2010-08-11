@@ -70,7 +70,7 @@ public final class CSS {
 
     public static final String Z_INDEX = "zIndex";
 
-    public static final String BORDER = "border";
+    public static final String BORDER_COLOR = "borderColor";
 
     public static int getZIndex(Element element) {
         return getIntStyleAttribute(element, Z_INDEX);
@@ -88,8 +88,8 @@ public final class CSS {
         setStyleAttribute(widget.getElement(), BACKGROUND_COLOR, color);
     }
 
-    public static void setBorder(Widget widget, String border) {
-        setStyleAttribute(widget.getElement(), BORDER, border);
+    public static void setBorderColor(Widget widget, String borderColor) {
+        setStyleAttribute(widget.getElement(), BORDER_COLOR, borderColor);
     }
 
     public static void setDisplay(Element element, String value) {

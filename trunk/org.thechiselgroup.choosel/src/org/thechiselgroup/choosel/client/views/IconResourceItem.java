@@ -36,6 +36,22 @@ public abstract class IconResourceItem extends ResourceItem {
         initColors();
     }
 
+    // XXX likely to break, needs refactoring
+    protected String calculateBorderColor(String color) {
+        if ("#FDF49A".equals(color)) {
+            return "rgb(212, 208, 200)"; // highlight
+        } else if ("#E7B076".equals(color)) {
+            return "#7D5F40"; // selection
+        } else if ("#6495ed".equals(color)) {
+            return "rgb(68, 117, 149)"; // first color from default slot
+                                        // resolver
+        } else if ("#b22222".equals(color)) {
+            return "#740B0B"; // 2nd color from default slot resolver
+        } else {
+            return "darkgray"; // default
+        }
+    }
+
     protected String getDefaultColor() {
         return defaultColor;
     }
