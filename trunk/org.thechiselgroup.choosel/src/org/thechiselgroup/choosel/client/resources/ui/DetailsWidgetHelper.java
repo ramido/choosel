@@ -54,7 +54,7 @@ public abstract class DetailsWidgetHelper {
     protected void addRow(Resource resource, VerticalPanel verticalPanel,
             String label, String property, boolean nowrap) {
         Object resourceValue = resource.getValue(property);
-        String value = resourceValue.toString();
+        String value = (resourceValue == null) ? "" : resourceValue.toString();
         HTML html = GWT.create(HTML.class);
         html.setHTML("<span " + (nowrap ? "style='white-space:nowrap;'" : "")
                 + "><b>" + label + ":</b> " + value + " </span>");
