@@ -52,6 +52,11 @@ public class TimeLineWidget extends Widget {
                 .substring(5));
     }
 
+    public final String getEventElementID(int bandIndex, String elementType,
+            TimeLineEvent event) {
+        return timeLine.getEventElementID(bandIndex, elementType, event);
+    }
+
     public TimeLine getTimeLine() {
         return timeLine;
     }

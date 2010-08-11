@@ -123,13 +123,13 @@ class TimeLine extends JavaScriptObject {
 
     // @formatter:on
 
-    public final String getEventElementID(int bandIndex, String elType,
+    public final String getEventElementID(int bandIndex, String elementType,
             TimeLineEvent event) {
         /*
          * see Timeline.EventUtils.encodeEventElID = function(timeline, band,
          * elType, evt)
          */
-        return elType + "-tl-" + getTimeLineID() + "-" + bandIndex + "-"
+        return elementType + "-tl-" + getTimeLineID() + "-" + bandIndex + "-"
                 + event.getID();
     }
 

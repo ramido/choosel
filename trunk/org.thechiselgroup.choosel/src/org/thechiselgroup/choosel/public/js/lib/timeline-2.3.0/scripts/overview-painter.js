@@ -200,6 +200,12 @@ Timeline.OverviewEventPainter.prototype._paintEventTape = function(
     };
 }
 
+
+Timeline.OverviewEventPainter.prototype._encodeEventElID = function(elType, evt) {
+    return Timeline.EventUtils.encodeEventElID(this._timeline, this._band, elType, evt);
+};
+
+
 Timeline.OverviewEventPainter.prototype._paintEventTick = function(
     evt, left, color, opacity, metrics, theme) {
     
@@ -211,6 +217,8 @@ Timeline.OverviewEventPainter.prototype._paintEventTick = function(
 	  tickDiv.className = 'timeline-small-event-icon'
     tickDiv.style.left = left + "px";
     tickDiv.style.top = top + "px";
+    
+    tickDiv.id = this._encodeEventElID('tick', evt);
   //  tickDiv.style.width = width + "px";
   //  tickDiv.style.position = "absolute";
   //  tickDiv.style.height = height + "px";

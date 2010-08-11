@@ -142,6 +142,10 @@ public final class CSS {
         setIntStyleAttribute(element, Z_INDEX, zIndex);
     }
 
+    public static void setZIndex(Widget widget, int zIndex) {
+        setZIndex(widget.getElement(), zIndex);
+    }
+
     private CSS() {
         // library
     }

@@ -140,7 +140,7 @@ public class LabelOverlay extends Overlay {
     }
 
     public void setZIndex(int zIndex) {
-        CSS.setZIndex(label.getElement(), zIndex);
+        CSS.setZIndex(label, zIndex);
     }
 
     private void updatePosition(Point newLocationPoint) {
