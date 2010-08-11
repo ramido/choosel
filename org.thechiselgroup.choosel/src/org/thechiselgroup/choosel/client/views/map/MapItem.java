@@ -138,16 +138,19 @@ public class MapItem extends IconResourceItem {
 
     public void setDefaultStyle() {
         overlay.setBackgroundColor(getDefaultColor());
+        overlay.setBorderColor(calculateBorderColor(getDefaultColor()));
         overlay.setZIndex(Z_INDEX_DEFAULT);
     }
 
     private void setHighlightedStyle() {
         overlay.setBackgroundColor(getHighlightColor());
+        overlay.setBorderColor(calculateBorderColor(getHighlightColor()));
         overlay.setZIndex(Z_INDEX_HIGHLIGHTED);
     }
 
     private void setSelectedStyle() {
         overlay.setBackgroundColor(getSelectedColor());
+        overlay.setBorderColor(calculateBorderColor(getSelectedColor()));
         overlay.setZIndex(Z_INDEX_SELECTED);
     }
 

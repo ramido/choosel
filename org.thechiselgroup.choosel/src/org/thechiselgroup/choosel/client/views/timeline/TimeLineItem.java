@@ -212,17 +212,21 @@ public class TimeLineItem extends IconResourceItem {
         GQuery children = gElement.children("div");
         if (children.length() == 0) {
             String label = (String) getResourceValue(SlotResolver.LABEL_SLOT);
-            gElement.append("<div class='" + CSS_RESOURCE_ITEM_ICON + "'>" + label
-                    + "</div>");
-            gElement.children("div").css("background-color", getColor());
+            gElement.append("<div class='" + CSS_RESOURCE_ITEM_ICON + "'>"
+                    + label + "</div>");
+
+            GQuery div = gElement.children("div");
+            div.css("background-color", getColor());
+            div.css("border-color", calculateBorderColor(getColor()));
         }
     }
 
     private void setIconColor(String color) {
         for (String elementID : elementIDs) {
             if (elementID.startsWith("icon")) {
-                getGElement(elementID).children("div").css("background-color",
-                        color);
+                GQuery div = getGElement(elementID).children("div");
+                div.css("background-color", color);
+                div.css("border-color", calculateBorderColor(color));
             }
         }
     }

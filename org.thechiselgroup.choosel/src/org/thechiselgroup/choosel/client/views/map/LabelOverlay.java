@@ -134,9 +134,9 @@ public class LabelOverlay extends Overlay {
         CSS.setBackgroundColor(label, color);
     }
 
-    public void setBorder(String border) {
-        assert border != null;
-        CSS.setBorder(label, border);
+    public void setBorderColor(String color) {
+        assert color != null;
+        CSS.setBorderColor(label, color);
     }
 
     public void setZIndex(int zIndex) {
