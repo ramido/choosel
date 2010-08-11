@@ -73,7 +73,7 @@ public class GraphViewContentDisplayTest {
                 DragEnablerFactory dragEnablerFactory,
                 ResourceCategorizer resourceCategorizer,
                 ArcStyleProvider arcStyleProvider,
-                GraphExpansionRegistryI registry) {
+                GraphExpansionRegistry registry) {
 
             super(display, popupManagerFactory, detailsWidgetHelper,
                     commandManager, resourceManager, dragEnablerFactory,
@@ -131,7 +131,7 @@ public class GraphViewContentDisplayTest {
     private PopupManagerFactory popupManagerFactory;
 
     @Mock
-    private GraphExpansionRegistryI registry;
+    private GraphExpansionRegistry registry;
 
     @Mock
     private ResourceCategorizer resourceCategorizer;

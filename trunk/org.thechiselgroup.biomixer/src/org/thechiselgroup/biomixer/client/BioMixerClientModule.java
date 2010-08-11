@@ -29,7 +29,7 @@ import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.dnd.DropTargetCapabilityChecker;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.graph.ArcStyleProvider;
-import org.thechiselgroup.choosel.client.views.graph.GraphExpansionRegistry;
+import org.thechiselgroup.choosel.client.views.graph.DefaultGraphExpansionRegistry;
 import org.thechiselgroup.choosel.client.views.graph.NeighbourhoodServiceAsync;
 
 import com.google.inject.Singleton;
@@ -83,7 +83,7 @@ public class BioMixerClientModule extends ChooselClientModule {
 	}
 
 	@Override
-	protected Class<? extends GraphExpansionRegistry> getGraphExpansionRegistryClass() {
+	protected Class<? extends DefaultGraphExpansionRegistry> getGraphExpansionRegistryClass() {
 		return BioMixerGraphExpansionRegistry.class;
 	}
 

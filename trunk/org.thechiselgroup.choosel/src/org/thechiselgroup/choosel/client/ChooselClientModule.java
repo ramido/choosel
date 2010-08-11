@@ -296,8 +296,8 @@ public class ChooselClientModule extends AbstractGinModule implements
         bind(ArcStyleProvider.class).to(getArcStyleProviderClass()).in(
                 Singleton.class);
 
-        bind(GraphExpansionRegistry.class).to(getGraphExpansionRegistryClass())
-                .in(Singleton.class);
+        bind(GraphExpansionRegistry.class)
+                .to(getGraphExpansionRegistryClass()).in(Singleton.class);
 
         bindDisplays();
 

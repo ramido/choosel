@@ -17,13 +17,13 @@ package org.thechiselgroup.biomixer.client.graph;
 
 import org.thechiselgroup.biomixer.client.NcboUriHelper;
 import org.thechiselgroup.choosel.client.error_handling.ErrorHandler;
-import org.thechiselgroup.choosel.client.views.graph.GraphExpansionRegistry;
+import org.thechiselgroup.choosel.client.views.graph.DefaultGraphExpansionRegistry;
 import org.thechiselgroup.choosel.client.views.graph.NeighbourhoodServiceAsync;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-public class BioMixerGraphExpansionRegistry extends GraphExpansionRegistry {
+public class BioMixerGraphExpansionRegistry extends DefaultGraphExpansionRegistry {
 
 	@Inject
 	public BioMixerGraphExpansionRegistry(
