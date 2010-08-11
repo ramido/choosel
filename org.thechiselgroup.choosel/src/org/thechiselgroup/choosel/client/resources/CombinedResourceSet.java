@@ -113,7 +113,7 @@ public class CombinedResourceSet extends DelegatingResourceSet {
             removeResourceSet(resourceSetElement.resourceSet);
         }
 
-        assert toList().isEmpty();
+        assert isEmpty();
     }
 
     // TODO specify behavior in javadoc
@@ -161,9 +161,9 @@ public class CombinedResourceSet extends DelegatingResourceSet {
         containedResourceSets.remove(resourceSetElement);
         resourceSetElement.removeHandlers();
 
-        List<Resource> toRemove = new ArrayList<Resource>(resourceSet.toList());
+        List<Resource> toRemove = new ArrayList<Resource>(resourceSet);
         for (ResourceSetElement rse : containedResourceSets) {
-            toRemove.removeAll(rse.resourceSet.toList());
+            toRemove.removeAll(rse.resourceSet);
         }
 
         removeAll(toRemove);

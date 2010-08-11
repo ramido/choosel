@@ -308,16 +308,16 @@ public class ResourceSplitterTest {
         resources1 = createResources(TEST_CATEGORY, 1, 2, 3);
         resources2 = createResources(TEST_CATEGORY, 4, 5);
 
-        when(categorizer.getCategories(resources1.toList().get(0))).thenReturn(
-                toSet(CATEGORY_1));
-        when(categorizer.getCategories(resources1.toList().get(1))).thenReturn(
-                toSet(CATEGORY_1));
-        when(categorizer.getCategories(resources1.toList().get(2))).thenReturn(
-                toSet(CATEGORY_1));
+        when(categorizer.getCategories(createResource(TEST_CATEGORY, 1)))
+                .thenReturn(toSet(CATEGORY_1));
+        when(categorizer.getCategories(createResource(TEST_CATEGORY, 2)))
+                .thenReturn(toSet(CATEGORY_1));
+        when(categorizer.getCategories(createResource(TEST_CATEGORY, 3)))
+                .thenReturn(toSet(CATEGORY_1));
 
-        when(categorizer.getCategories(resources2.toList().get(0))).thenReturn(
-                toSet(CATEGORY_2));
-        when(categorizer.getCategories(resources2.toList().get(1))).thenReturn(
-                toSet(CATEGORY_2));
+        when(categorizer.getCategories(createResource(TEST_CATEGORY, 4)))
+                .thenReturn(toSet(CATEGORY_2));
+        when(categorizer.getCategories(createResource(TEST_CATEGORY, 5)))
+                .thenReturn(toSet(CATEGORY_2));
     }
 }

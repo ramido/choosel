@@ -104,8 +104,8 @@ public class ResourceItem {
         assert highlightedResources != null;
 
         List<Resource> resourcesToAdd = new ArrayList<Resource>();
-        resourcesToAdd.addAll(highlightedResources.toList());
-        resourcesToAdd.retainAll(resources.toList());
+        resourcesToAdd.addAll(highlightedResources);
+        resourcesToAdd.retainAll(resources);
 
         this.highlightedResources.addAll(resourcesToAdd);
     }
@@ -233,8 +233,8 @@ public class ResourceItem {
         assert highlightedResources != null;
 
         List<Resource> resourcesToRemove = new ArrayList<Resource>();
-        resourcesToRemove.addAll(highlightedResources.toList());
-        resourcesToRemove.retainAll(resources.toList());
+        resourcesToRemove.addAll(highlightedResources);
+        resourcesToRemove.retainAll(resources);
 
         this.highlightedResources.removeAll(resourcesToRemove);
     }

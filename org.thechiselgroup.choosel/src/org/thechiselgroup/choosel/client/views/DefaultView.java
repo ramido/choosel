@@ -15,8 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import static org.thechiselgroup.choosel.client.util.CollectionUtils.toSet;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -205,9 +203,9 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private ResourceSet calculateAffectedResources(
             List<Resource> affectedResources) {
-        // TODO remove toSet once set is passed in
+
         Set<Resource> affectedResourcesInThisView = resourceModel
-                .retain(toSet(affectedResources));
+                .retain(affectedResources);
 
         // TODO ResourceSet should inherit Set<Resource>
         ResourceSet affectedResourcesInThisView2 = new DefaultResourceSet();
@@ -701,8 +699,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         }
     }
 
-    // TODO change into Set<Resource> to enable faster operations (instead of
-    // conversion to set)
     private void updateHighlighting(List<Resource> affectedResources,
             boolean highlighted) {
 

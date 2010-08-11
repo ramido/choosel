@@ -435,6 +435,7 @@ public class DefaultViewTest {
                 .thenReturn(selectionHandlerRegistration);
         when(selection.addEventHandler(any(ResourcesRemovedEventHandler.class)))
                 .thenReturn(selectionHandlerRegistration);
+        when(selection.toArray()).thenReturn(new Object[0]);
 
         when(contentDisplay.isReady()).thenReturn(true);
 

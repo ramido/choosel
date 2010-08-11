@@ -163,7 +163,7 @@ public class SwitchingResourceSetTest {
         ResourcesAddedEvent firedEvent = verifyOnResourcesAdded(1,
                 resourcesAddedHandler).getValue();
 
-        assertContentEquals(createResources(3, 4).toList(),
+        assertContentEquals(createResources(3, 4),
                 firedEvent.getAddedResources());
         assertSame(underTest, firedEvent.getTarget());
     }
@@ -179,7 +179,7 @@ public class SwitchingResourceSetTest {
         ResourcesAddedEvent firedEvent = verifyOnResourcesAdded(1,
                 resourcesAddedHandler).getValue();
 
-        assertContentEquals(createResources(4, 5).toList(),
+        assertContentEquals(createResources(4, 5),
                 firedEvent.getAddedResources());
         assertSame(underTest, firedEvent.getTarget());
     }
@@ -195,14 +195,14 @@ public class SwitchingResourceSetTest {
         ResourcesAddedEvent addedEvent = verifyOnResourcesAdded(1,
                 resourcesAddedHandler).getValue();
 
-        assertContentEquals(createResources(4, 5).toList(),
+        assertContentEquals(createResources(4, 5),
                 addedEvent.getAddedResources());
         assertSame(underTest, addedEvent.getTarget());
 
         ResourcesRemovedEvent removedEvent = verifyOnResourcesRemoved(1,
                 resourcesRemovedHandler).getValue();
 
-        assertContentEquals(createResources(1, 2).toList(),
+        assertContentEquals(createResources(1, 2),
                 removedEvent.getRemovedResources());
         assertSame(underTest, removedEvent.getTarget());
     }
@@ -217,7 +217,7 @@ public class SwitchingResourceSetTest {
         ResourcesRemovedEvent firedEvent = verifyOnResourcesRemoved(1,
                 resourcesRemovedHandler).getValue();
 
-        assertContentEquals(createResources(1, 2).toList(),
+        assertContentEquals(createResources(1, 2),
                 firedEvent.getRemovedResources());
         assertSame(underTest, firedEvent.getTarget());
     }
@@ -233,7 +233,7 @@ public class SwitchingResourceSetTest {
         ResourcesRemovedEvent firedEvent = verifyOnResourcesRemoved(1,
                 resourcesRemovedHandler).getValue();
 
-        assertContentEquals(createResources(2, 3).toList(),
+        assertContentEquals(createResources(2, 3),
                 firedEvent.getRemovedResources());
         assertSame(underTest, firedEvent.getTarget());
     }
