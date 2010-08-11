@@ -119,15 +119,15 @@ public class SwitchingResourceSet extends DelegatingResourceSet implements
         assert newDelegate != null;
 
         List<Resource> addedResources = new ArrayList<Resource>();
-        addedResources.addAll(newDelegate.toList());
-        addedResources.removeAll(oldDelegate.toList());
+        addedResources.addAll(newDelegate);
+        addedResources.removeAll(oldDelegate);
         if (!addedResources.isEmpty()) {
             fireResourcesAdded(addedResources);
         }
 
         List<Resource> removedResources = new ArrayList<Resource>();
-        removedResources.addAll(oldDelegate.toList());
-        removedResources.removeAll(newDelegate.toList());
+        removedResources.addAll(oldDelegate);
+        removedResources.removeAll(newDelegate);
         if (!removedResources.isEmpty()) {
             fireResourcesRemoved(removedResources);
         }

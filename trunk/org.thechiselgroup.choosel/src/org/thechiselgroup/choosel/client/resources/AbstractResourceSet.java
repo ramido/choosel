@@ -51,7 +51,6 @@ public abstract class AbstractResourceSet implements ResourceSet {
         assert resources != null;
 
         List<Resource> addedResources = new ArrayList<Resource>();
-
         for (Resource resource : resources) {
             if (!contains(resource)) {
                 doAdd(resource, addedResources);
@@ -88,10 +87,7 @@ public abstract class AbstractResourceSet implements ResourceSet {
 
     @Override
     public void clear() {
-        // TODO fix: this fires several events
-        for (Resource resource : toList()) {
-            remove(resource);
-        }
+        removeAll(toList());
     }
 
     @Override
@@ -128,7 +124,8 @@ public abstract class AbstractResourceSet implements ResourceSet {
         return getByUri(uri) != null;
     }
 
-    protected abstract void doAdd(Resource resource, List<Resource> resources);
+    protected abstract void doAdd(Resource resource,
+            List<Resource> addedResources);
 
     protected abstract void doRemove(Resource resource,
             List<Resource> removedResources);
@@ -173,7 +170,7 @@ public abstract class AbstractResourceSet implements ResourceSet {
     public boolean removeAll(Collection<?> resources) {
         assert resources != null;
 
-        List<Resource> removedResources = new ArrayList<Resource>();
+        List<Resource> removedResources = new ArrayList();
         for (Object o : resources) {
             if (contains(o)) {
                 assert o instanceof Resource;

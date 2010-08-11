@@ -54,7 +54,7 @@ public class CountingResourceSetTest {
 
         ResourcesAddedEvent event = verifyOnResourcesAdded(1, addedHandler)
                 .getValue();
-        assertContentEquals(resources.toList(), event.getAddedResources());
+        assertContentEquals(resources, event.getAddedResources());
     }
 
     @Test
@@ -101,8 +101,7 @@ public class CountingResourceSetTest {
 
         ResourcesAddedEvent event = verifyOnResourcesAdded(1, addedHandler)
                 .getValue();
-        assertContentEquals(createResources(2, 3).toList(),
-                event.getAddedResources());
+        assertContentEquals(createResources(2, 3), event.getAddedResources());
     }
 
     @Test
@@ -117,8 +116,7 @@ public class CountingResourceSetTest {
 
         ResourcesRemovedEvent event = verifyOnResourcesRemoved(1,
                 removedHandler).getValue();
-        assertContentEquals(createResources(2, 3).toList(),
-                event.getRemovedResources());
+        assertContentEquals(createResources(2, 3), event.getRemovedResources());
     }
 
     @Test
@@ -131,7 +129,7 @@ public class CountingResourceSetTest {
 
         ResourcesRemovedEvent event = verifyOnResourcesRemoved(1,
                 removedHandler).getValue();
-        assertContentEquals(resources.toList(), event.getRemovedResources());
+        assertContentEquals(resources, event.getRemovedResources());
     }
 
     @Test

@@ -51,8 +51,8 @@ public class AddResourceSetToResourceSetCommand implements UndoableCommand,
     public void execute() {
         if (addedResources == null) {
             addedResources = new ArrayList<Resource>();
-            addedResources.addAll(addedSet.toList());
-            addedResources.removeAll(modifiedSet.toList());
+            addedResources.addAll(addedSet);
+            addedResources.removeAll(modifiedSet);
         }
 
         modifiedSet.addAll(addedResources);

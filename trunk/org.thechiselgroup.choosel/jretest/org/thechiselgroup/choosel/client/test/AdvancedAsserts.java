@@ -19,7 +19,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.junit.Assert;
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
 public final class AdvancedAsserts {
 
@@ -51,11 +50,6 @@ public final class AdvancedAsserts {
         for (T expectedValue : expected) {
             assertContains(failureMessage, result, expectedValue);
         }
-    }
-
-    public static <T> void assertContentEquals(ResourceSet expected,
-            ResourceSet result) {
-        assertContentEquals(expected.toList(), result.toList());
     }
 
     public static <T> void assertSortedEquals(List<T> expected, List<T> result) {

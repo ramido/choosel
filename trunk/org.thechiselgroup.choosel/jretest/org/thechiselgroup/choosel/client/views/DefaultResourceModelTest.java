@@ -83,8 +83,7 @@ public class DefaultResourceModelTest {
 
         underTest.addResourceSet(resources);
 
-        assertContains(underTest.getAutomaticResourceSet().toList(),
-                createResource(1));
+        assertContains(underTest.getAutomaticResourceSet(), createResource(1));
     }
 
     @Test

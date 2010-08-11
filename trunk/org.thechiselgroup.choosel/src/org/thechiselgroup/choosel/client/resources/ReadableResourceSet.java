@@ -44,7 +44,9 @@ public interface ReadableResourceSet extends Iterable<Resource> {
 
     int size();
 
-    // FIXME toList should be unmodifiable copy
+    /**
+     * @return Unmodifiable List that contains elements from this resource set.
+     */
     List<Resource> toList();
 
 }

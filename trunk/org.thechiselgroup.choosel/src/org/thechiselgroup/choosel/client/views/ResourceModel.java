@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.client.views;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import org.thechiselgroup.choosel.client.resources.CombinedResourceSet;
@@ -74,6 +75,6 @@ public interface ResourceModel {
      * @return new <code>Set</code> that contains only the subset of
      *         <code>resources</code> that is contained in this resource model
      */
-    Set<Resource> retain(Set<Resource> resources);
+    Set<Resource> retain(List<Resource> resources);
 
 }

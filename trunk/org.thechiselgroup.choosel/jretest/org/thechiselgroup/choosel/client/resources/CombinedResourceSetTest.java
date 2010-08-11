@@ -36,77 +36,74 @@ public class CombinedResourceSetTest {
     @Mock
     private ResourcesAddedEventHandler addedHandler;
 
-    private CombinedResourceSet combinedResources;
-
-    private ResourceSet resources1;
-
-    private ResourceSet resources2;
+    private CombinedResourceSet underTest;
 
     @Test
     public void addMultipleResourcesToContainedResourceSet() {
-        combinedResources.addResourceSet(resources1);
+        ResourceSet resources = createLabeledResources(1, 2, 3);
 
-        resources1.addAll(createResources(4, 5));
+        underTest.addResourceSet(resources);
 
-        assertEquals(true, combinedResources.contains(createResource(4)));
-        assertEquals(true, combinedResources.contains(createResource(5)));
+        resources.addAll(createResources(4, 5));
+
+        assertEquals(true, underTest.contains(createResource(4)));
+        assertEquals(true, underTest.contains(createResource(5)));
     }
 
     @Test
     public void addResourcesAddsToAllResources() {
-        combinedResources.addResourceSet(resources1);
-        combinedResources.addResourceSet(resources2);
+        underTest.addResourceSet(createLabeledResources(1, 2, 3));
+        underTest.addResourceSet(createLabeledResources(3, 4, 5));
 
-        assertEquals(5, combinedResources.size());
-        assertTrue(combinedResources.containsAll(resources1));
-        assertTrue(combinedResources.containsAll(resources2));
+        assertEquals(5, underTest.size());
+        assertTrue(underTest.containsAll(createLabeledResources(1, 2, 3)));
+        assertTrue(underTest.containsAll(createLabeledResources(3, 4, 5)));
     }
 
     @Test
     public void containsResourcesAddedToChildren() {
-        Resource addedResource = createResource(5);
+        ResourceSet resources = createLabeledResources(1, 2, 3);
 
-        combinedResources.addResourceSet(resources1);
-        resources1.add(addedResource);
+        underTest.addResourceSet(resources);
+        resources.add(createResource(5));
 
-        assertEquals(4, combinedResources.size());
-        assertTrue(combinedResources.containsAll(resources1));
+        assertEquals(4, underTest.size());
+        assertTrue(underTest.containsAll(resources));
     }
 
     @Test
     public void doesNotContainResourcesRemovedFromChildren() {
-        Resource removedResource = createResource(1);
+        ResourceSet resources = createLabeledResources(1, 2, 3);
 
-        combinedResources.addResourceSet(resources1);
-        resources1.remove(removedResource);
+        underTest.addResourceSet(resources);
+        resources.remove(createResource(1));
 
-        assertEquals(2, combinedResources.size());
-        assertTrue(combinedResources.containsAll(resources1));
-        assertFalse(combinedResources.contains(removedResource));
+        assertEquals(2, underTest.size());
+        assertTrue(underTest.containsAll(resources));
+        assertFalse(underTest.contains(createResource(1)));
     }
 
     @Test
     public void doesNotRemoveDuplicateResourceOnRemove() {
-        Resource removedResource = createResource(3);
+        ResourceSet resources = createLabeledResources(1, 2, 3);
 
-        combinedResources.addResourceSet(resources1);
-        combinedResources.addResourceSet(resources2);
-        resources1.remove(removedResource);
+        underTest.addResourceSet(resources);
+        underTest.addResourceSet(createLabeledResources(3, 4, 5));
+        resources.remove(createResource(3));
 
-        assertEquals(5, combinedResources.size());
-        assertTrue(combinedResources.containsAll(resources1));
-        assertTrue(combinedResources.containsAll(resources2));
+        assertEquals(5, underTest.size());
+        assertTrue(underTest.containsAll(resources));
+        assertTrue(underTest.containsAll(createLabeledResources(3, 4, 5)));
     }
 
     @Test
     public void fireAddEventsWhenResourceSetAdded() {
-        combinedResources.addEventHandler(addedHandler);
-        combinedResources.addResourceSet(resources1);
+        underTest.addEventHandler(addedHandler);
+        underTest.addResourceSet(createLabeledResources(1, 2, 3));
 
         ArgumentCaptor<ResourcesAddedEvent> argument = verifyOnResourcesAdded(
                 1, addedHandler);
 
-        // TODO use list comparison from advanced asserts
         List<Resource> eventResources = argument.getValue().getAddedResources();
         assertEquals(3, eventResources.size());
     }
@@ -114,37 +111,39 @@ public class CombinedResourceSetTest {
     @Test
     public void noContainmenChangeWhenResourceAddedAfterRemove() {
         Resource addedResource = createResource(8);
+        ResourceSet resources = createLabeledResources(1, 2, 3);
 
-        combinedResources.addResourceSet(resources1);
-        combinedResources.removeResourceSet(resources1);
-        resources1.add(addedResource);
+        underTest.addResourceSet(resources);
+        underTest.removeResourceSet(resources);
+        resources.add(addedResource);
 
-        assertEquals(0, combinedResources.size());
-        assertFalse(combinedResources.contains(addedResource));
+        assertEquals(0, underTest.size());
+        assertFalse(underTest.contains(addedResource));
     }
 
     @Test
     public void noFailureOnRemoveInvalidResourceSet() {
-        combinedResources.removeResourceSet(resources1);
+        ResourceSet resources1 = createLabeledResources(1, 2, 3);
+
+        underTest.removeResourceSet(resources1);
     }
 
     @Test
     public void removeResourcesDoesNotRemoveDuplicateResource() {
-        combinedResources.addResourceSet(resources1);
-        combinedResources.addResourceSet(resources2);
-        combinedResources.removeResourceSet(resources2);
+        ResourceSet resources = createLabeledResources(3, 4, 5);
 
-        assertEquals(3, combinedResources.size());
-        assertTrue(combinedResources.containsAll(resources1));
+        underTest.addResourceSet(createLabeledResources(1, 2, 3));
+        underTest.addResourceSet(resources);
+        underTest.removeResourceSet(resources);
+
+        assertEquals(3, underTest.size());
+        assertTrue(underTest.containsAll(createLabeledResources(1, 2, 3)));
     }
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        combinedResources = new CombinedResourceSet(new DefaultResourceSet());
-
-        resources1 = createLabeledResources(1, 2, 3);
-        resources2 = createLabeledResources(3, 4, 5);
+        underTest = new CombinedResourceSet(new DefaultResourceSet());
     }
 }

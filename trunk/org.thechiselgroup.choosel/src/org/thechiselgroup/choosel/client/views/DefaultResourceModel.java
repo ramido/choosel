@@ -175,7 +175,7 @@ public class DefaultResourceModel implements ResourceModel, Disposable,
     }
 
     @Override
-    public Set<Resource> retain(Set<Resource> resources) {
+    public Set<Resource> retain(List<Resource> resources) {
         assert resources != null;
 
         Set<Resource> retainedResources = new HashSet<Resource>();
