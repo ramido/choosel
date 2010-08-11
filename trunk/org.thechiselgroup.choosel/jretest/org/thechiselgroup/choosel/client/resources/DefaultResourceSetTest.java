@@ -16,9 +16,8 @@
 package org.thechiselgroup.choosel.client.resources;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.verifyOnResourcesAdded;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.verifyOnResourcesRemoved;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
 
@@ -26,166 +25,203 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 public class DefaultResourceSetTest {
 
-    private ResourceSet resources;
-
-    private ResourceSet resources2 = createResources(1, 2, 3);
+    private ResourceSet underTest;
 
     @Mock
-    private ResourcesAddedEventHandler resourcesAddedHandler;
+    private ResourcesAddedEventHandler addedHandler;
 
     @Mock
-    private ResourcesRemovedEventHandler resourcesRemovedHandler;
+    private ResourcesRemovedEventHandler removedHandler;
 
     @Test
-    public void addResourcesToDefaultResourceSet() {
-        resources.addAll(createResources(1, 2, 3));
+    public void addAllFiresResourcesAddedEvent() {
+        underTest.addEventHandler(addedHandler);
+        underTest.addAll(createResources(1, 2, 3));
 
-        assertEquals(3, resources.size());
-        assertEquals(true, resources.contains(createResource(1)));
-        assertEquals(true, resources.contains(createResource(2)));
-        assertEquals(true, resources.contains(createResource(3)));
+        verifyOnResourcesAdded(1, addedHandler);
     }
 
     @Test
-    public void addResourceToDefaultResourceSet() {
-        resources.add(createResource(1));
+    public void addAllWithoutChangesDoesNotFireResourcesAddedEvent() {
+        underTest.addAll(createResources(1, 2, 3));
+        underTest.addEventHandler(addedHandler);
+        underTest.addAll(createResources(1, 2, 3));
 
-        assertEquals(1, resources.size());
-        assertEquals(true, resources.contains(createResource(1)));
+        verifyOnResourcesAdded(0, addedHandler);
     }
 
     @Test
-    public void fireResourceAddedEvent() {
-        resources.addEventHandler(resourcesAddedHandler);
-        resources.add(createResource(1));
+    public void addFiresResourcesAddedEvent() {
+        underTest.addEventHandler(addedHandler);
+        underTest.add(createResource(1));
 
-        verify(resourcesAddedHandler, times(1)).onResourcesAdded(
-                any(ResourcesAddedEvent.class));
+        verifyOnResourcesAdded(1, addedHandler);
     }
 
     @Test
-    public void fireResourceRemovedEvent() {
-        resources2.addEventHandler(resourcesRemovedHandler);
-        resources2.remove(createResource(1));
+    public void addResource() {
+        underTest.add(createResource(1));
 
-        verify(resourcesRemovedHandler, times(1)).onResourcesRemoved(
-                any(ResourcesRemovedEvent.class));
+        assertEquals(1, underTest.size());
+        assertEquals(true, underTest.contains(createResource(1)));
     }
 
     @Test
-    public void fireResourcesAddedEvent() {
-        resources.addEventHandler(resourcesAddedHandler);
-        resources.addAll(createResources(1, 2, 3));
+    public void addResources() {
+        underTest.addAll(createResources(1, 2, 3));
 
-        verify(resourcesAddedHandler, times(1)).onResourcesAdded(
-                any(ResourcesAddedEvent.class));
-    }
-
-    @Test
-    public void fireResourcesRemovedEvent() {
-        resources2.addEventHandler(resourcesRemovedHandler);
-        resources2.removeAll(createResources(1, 2, 3));
-
-        verify(resourcesRemovedHandler, times(1)).onResourcesRemoved(
-                any(ResourcesRemovedEvent.class));
+        assertEquals(3, underTest.size());
+        assertEquals(true, underTest.contains(createResource(1)));
+        assertEquals(true, underTest.contains(createResource(2)));
+        assertEquals(true, underTest.contains(createResource(3)));
     }
 
     @Test
     public void hasLabelIsFalseWhenLabelNull() {
-        resources.setLabel(null);
+        underTest.setLabel(null);
 
-        assertEquals(false, resources.hasLabel());
+        assertEquals(false, underTest.hasLabel());
     }
 
     @Test
     public void hasLabelIsTrueWhenLabelText() {
-        resources.setLabel("some text");
+        underTest.setLabel("some text");
 
-        assertEquals(true, resources.hasLabel());
+        assertEquals(true, underTest.hasLabel());
     }
 
     @Test
-    public void removeResourceFromDefaultResourceSet() {
-        resources2.remove(createResource(1));
+    public void removeAllFiresResourcesRemovedEvent() {
+        underTest.addAll(createResources(1, 2, 3));
+        underTest.addEventHandler(removedHandler);
+        underTest.removeAll(createResources(1, 2, 3));
 
-        assertEquals(2, resources2.size());
-        assertEquals(false, resources2.contains(createResource(1)));
-        assertEquals(true, resources2.contains(createResource(2)));
-        assertEquals(true, resources2.contains(createResource(3)));
+        verifyOnResourcesRemoved(1, removedHandler);
     }
 
     @Test
-    public void removeResourcesFromDefaultResourceSet() {
-        resources2.removeAll(createResources(1, 2, 3));
+    public void removeAllWithoutChangesDoesNotFireResourcesRemovedEvent() {
+        underTest.addEventHandler(removedHandler);
+        underTest.removeAll(createResources(1, 2, 3));
 
-        assertEquals(0, resources2.size());
-        assertEquals(false, resources2.contains(createResource(1)));
-        assertEquals(false, resources2.contains(createResource(2)));
-        assertEquals(false, resources2.contains(createResource(3)));
+        verifyOnResourcesRemoved(0, removedHandler);
     }
 
     @Test
-    public void resourcesAddedEventOnlyAddsResourcesNotContained() {
-        Resource containedResource = createResource(1);
-        ResourceSet resourceSet = createResources(1, 2, 3);
+    public void removeFiresResourcesRemovedEvent() {
+        underTest.addAll(createResources(1, 2, 3));
+        underTest.addEventHandler(removedHandler);
+        underTest.remove(createResource(1));
 
-        resources.add(containedResource);
-        resources.addEventHandler(resourcesAddedHandler);
-        resources.addAll(resourceSet);
-
-        ArgumentCaptor<ResourcesAddedEvent> argument = ArgumentCaptor
-                .forClass(ResourcesAddedEvent.class);
-
-        verify(resourcesAddedHandler, times(1)).onResourcesAdded(
-                argument.capture());
-
-        List<Resource> eventResources = argument.getValue().getAddedResources();
-        assertEquals(2, eventResources.size());
-        assertEquals(false, eventResources.contains(containedResource));
-        assertEquals(true, eventResources.contains(createResource(2)));
-        assertEquals(true, eventResources.contains(createResource(3)));
+        verifyOnResourcesRemoved(1, removedHandler);
     }
 
     @Test
-    public void resourcesRemovedEventOnlyRemovesResourcesContained() {
-        Resource containedResource = createResource(1);
-        ResourceSet resourceSet = createResources(1, 2, 3);
+    public void removeResource() {
+        underTest.addAll(createResources(1, 2, 3));
+        underTest.remove(createResource(1));
 
-        resources2.remove(containedResource);
-        resources2.addEventHandler(resourcesRemovedHandler);
-        resources2.removeAll(resourceSet);
+        assertEquals(2, underTest.size());
+        assertEquals(false, underTest.contains(createResource(1)));
+        assertEquals(true, underTest.contains(createResource(2)));
+        assertEquals(true, underTest.contains(createResource(3)));
+    }
 
-        ArgumentCaptor<ResourcesRemovedEvent> argument = ArgumentCaptor
-                .forClass(ResourcesRemovedEvent.class);
+    @Test
+    public void removeResources() {
+        underTest.addAll(createResources(1, 2, 3));
+        underTest.removeAll(createResources(1, 2, 3));
 
-        verify(resourcesRemovedHandler, times(1)).onResourcesRemoved(
-                argument.capture());
+        assertEquals(0, underTest.size());
+        assertEquals(false, underTest.contains(createResource(1)));
+        assertEquals(false, underTest.contains(createResource(2)));
+        assertEquals(false, underTest.contains(createResource(3)));
+    }
 
-        List<Resource> eventResources = argument.getValue()
-                .getRemovedResources();
-        assertEquals(2, eventResources.size());
-        assertEquals(false, eventResources.contains(containedResource));
-        assertEquals(true, eventResources.contains(createResource(2)));
-        assertEquals(true, eventResources.contains(createResource(3)));
+    @Test
+    public void resourcesAddedEventOnlyContainAddedResources() {
+        underTest.add(createResource(1));
+        underTest.addEventHandler(addedHandler);
+        underTest.addAll(createResources(1, 2, 3));
+
+        List<Resource> addedResources = verifyOnResourcesAdded(1, addedHandler)
+                .getValue().getAddedResources();
+
+        assertEquals(2, addedResources.size());
+        assertEquals(false, addedResources.contains(createResource(1)));
+        assertEquals(true, addedResources.contains(createResource(2)));
+        assertEquals(true, addedResources.contains(createResource(3)));
+    }
+
+    @Test
+    public void resourcesRemovedEventOnlyContainsRemovedResources() {
+        underTest.addAll(createResources(2, 3));
+        underTest.addEventHandler(removedHandler);
+        underTest.removeAll(createResources(1, 2, 3));
+
+        List<Resource> removedResources = verifyOnResourcesRemoved(1,
+                removedHandler).getValue().getRemovedResources();
+
+        assertEquals(2, removedResources.size());
+        assertEquals(false, removedResources.contains(createResource(1)));
+        assertEquals(true, removedResources.contains(createResource(2)));
+        assertEquals(true, removedResources.contains(createResource(3)));
+    }
+
+    @Test
+    public void retainAll() {
+        underTest.addAll(createResources(1, 2, 3, 4));
+        boolean result = underTest.retainAll(createResources(1, 2));
+
+        assertEquals(true, result);
+        assertEquals(2, underTest.size());
+        assertEquals(true, underTest.contains(createResource(1)));
+        assertEquals(true, underTest.contains(createResource(2)));
+        assertEquals(false, underTest.contains(createResource(3)));
+        assertEquals(false, underTest.contains(createResource(4)));
+    }
+
+    @Test
+    public void retainAllFiresResourcesRemovedEvent() {
+        underTest.addAll(createResources(1, 2, 3, 4));
+        underTest.addEventHandler(removedHandler);
+        underTest.retainAll(createResources(1, 2));
+
+        List<Resource> removedResources = verifyOnResourcesRemoved(1,
+                removedHandler).getValue().getRemovedResources();
+
+        assertEquals(2, removedResources.size());
+        assertEquals(false, removedResources.contains(createResource(1)));
+        assertEquals(false, removedResources.contains(createResource(2)));
+        assertEquals(true, removedResources.contains(createResource(3)));
+        assertEquals(true, removedResources.contains(createResource(4)));
+    }
+
+    @Test
+    public void retainAllWithoutChangesDoesNotFireResourcesRemovedEvent() {
+        underTest.addAll(createResources(1, 2));
+        underTest.addEventHandler(removedHandler);
+        underTest.retainAll(createResources(1, 2, 3));
+
+        verifyOnResourcesRemoved(0, removedHandler);
     }
 
     @Test
     public void returnEmptyStringIfLabelNull() {
-        resources.setLabel(null);
+        underTest.setLabel(null);
 
-        assertEquals("", resources.getLabel());
+        assertEquals("", underTest.getLabel());
     }
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        resources = new DefaultResourceSet();
+        this.underTest = new DefaultResourceSet();
     }
 }

@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public interface ReadableResourceSet extends Iterable<Resource> {
 
     boolean contains(Resource resource);
 
-    boolean containsAll(Iterable<Resource> resources);
+    boolean containsAll(Collection<?> resources);
 
     boolean containsEqualResources(ResourceSet other);
 

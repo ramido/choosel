@@ -23,16 +23,14 @@ import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.crea
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
 
-import java.util.List;
+import java.util.Collection;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.util.CollectionUtils;
 import org.thechiselgroup.choosel.client.views.ResourceModel;
 
 public class AddResourceSetToResourceModelCommandTest {
@@ -56,12 +54,11 @@ public class AddResourceSetToResourceModelCommandTest {
         underTest.execute();
         underTest.undo();
 
-        ArgumentCaptor<Iterable> argument = ArgumentCaptor
-                .forClass(Iterable.class);
+        ArgumentCaptor<Collection> argument = ArgumentCaptor
+                .forClass(Collection.class);
         verify(resourceModel, times(1)).addResources(argument.capture());
-        List<Resource> list = CollectionUtils.toList(argument.getValue());
 
-        assertEquals(true, list.contains(createResource(1)));
+        assertEquals(true, argument.getValue().contains(createResource(1)));
     }
 
     @Before

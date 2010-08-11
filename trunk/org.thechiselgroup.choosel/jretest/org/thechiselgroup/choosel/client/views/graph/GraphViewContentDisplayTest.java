@@ -73,7 +73,7 @@ public class GraphViewContentDisplayTest {
                 DragEnablerFactory dragEnablerFactory,
                 ResourceCategorizer resourceCategorizer,
                 ArcStyleProvider arcStyleProvider,
-                GraphExpansionRegistry registry) {
+                GraphExpansionRegistryI registry) {
 
             super(display, popupManagerFactory, detailsWidgetHelper,
                     commandManager, resourceManager, dragEnablerFactory,
@@ -130,7 +130,8 @@ public class GraphViewContentDisplayTest {
     @Mock
     private PopupManagerFactory popupManagerFactory;
 
-    private GraphExpansionRegistry registry;
+    @Mock
+    private GraphExpansionRegistryI registry;
 
     @Mock
     private ResourceCategorizer resourceCategorizer;
@@ -233,8 +234,6 @@ public class GraphViewContentDisplayTest {
     public void setUp() throws Exception {
         MockitoGWTBridge.setUp();
         MockitoAnnotations.initMocks(this);
-
-        registry = spy(new GraphExpansionRegistry());
 
         sourceLocation = new Point(10, 15);
         targetLocation = new Point(20, 25);

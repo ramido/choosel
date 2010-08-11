@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
+
 public class DefaultResourceSet extends AbstractUriMapBasedResourceSet {
 
     public DefaultResourceSet() {

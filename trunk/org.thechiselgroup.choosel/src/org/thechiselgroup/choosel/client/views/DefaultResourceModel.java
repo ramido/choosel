@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -57,7 +58,7 @@ public class DefaultResourceModel implements ResourceModel, Disposable,
     }
 
     @Override
-    public void addResources(Iterable<Resource> resources) {
+    public void addResources(Collection<Resource> resources) {
         assert resources != null;
         automaticResources.addAll(resources);
     }
@@ -78,7 +79,7 @@ public class DefaultResourceModel implements ResourceModel, Disposable,
     }
 
     @Override
-    public boolean containsResources(Iterable<Resource> resources) {
+    public boolean containsResources(Collection<Resource> resources) {
         assert resources != null;
         return allResources.containsAll(resources);
     }
@@ -131,7 +132,7 @@ public class DefaultResourceModel implements ResourceModel, Disposable,
     }
 
     @Override
-    public void removeResources(Iterable<Resource> resources) {
+    public void removeResources(Collection<Resource> resources) {
         assert resources != null;
         automaticResources.removeAll(resources);
     }

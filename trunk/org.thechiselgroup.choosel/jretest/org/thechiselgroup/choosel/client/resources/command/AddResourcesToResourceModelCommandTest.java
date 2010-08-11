@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
 
-import java.util.List;
+import java.util.Collection;
 
 import org.junit.After;
 import org.junit.Before;
@@ -33,7 +33,6 @@ import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
-import org.thechiselgroup.choosel.client.util.CollectionUtils;
 import org.thechiselgroup.choosel.client.views.ResourceModel;
 
 public class AddResourcesToResourceModelCommandTest {
@@ -57,11 +56,11 @@ public class AddResourcesToResourceModelCommandTest {
 
         underTest.execute();
 
-        ArgumentCaptor<Iterable> argument = ArgumentCaptor
-                .forClass(Iterable.class);
+        ArgumentCaptor<Collection> argument = ArgumentCaptor
+                .forClass(Collection.class);
 
         verify(resourceModel, times(1)).addResources(argument.capture());
-        List<Resource> result = CollectionUtils.toList(argument.getValue());
+        Collection<Resource> result = argument.getValue();
         assertEquals(2, result.size());
         assertEquals(true, resources.containsAll(result));
     }
@@ -92,11 +91,11 @@ public class AddResourcesToResourceModelCommandTest {
         underTest.execute();
         underTest.undo();
 
-        ArgumentCaptor<Iterable> argument = ArgumentCaptor
-                .forClass(Iterable.class);
+        ArgumentCaptor<Collection> argument = ArgumentCaptor
+                .forClass(Collection.class);
 
         verify(resourceModel, times(1)).removeResources(argument.capture());
-        List<Resource> result = CollectionUtils.toList(argument.getValue());
+        Collection<Resource> result = argument.getValue();
         assertEquals(1, result.size());
         assertEquals(true, resources.contains(createResource(2)));
     }

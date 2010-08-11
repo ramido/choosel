@@ -23,12 +23,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-public class GraphExpansionRegistry {
+// TODO rename
+public class GraphExpansionRegistry implements GraphExpansionRegistryI {
 
     private Map<String, GraphNodeExpander> automaticExpandersByCategory = new HashMap<String, GraphNodeExpander>();
 
     private Map<String, List<NodeMenuEntry>> menuEntriesByCategory = new HashMap<String, List<NodeMenuEntry>>();
 
+    @Override
     public GraphNodeExpander getAutomaticExpander(String category) {
         assert category != null;
 
@@ -39,6 +41,7 @@ public class GraphExpansionRegistry {
         return automaticExpandersByCategory.get(category);
     }
 
+    @Override
     public List<NodeMenuEntry> getNodeMenuEntries(String category) {
         assert category != null;
 
@@ -49,10 +52,12 @@ public class GraphExpansionRegistry {
         return menuEntriesByCategory.get(category);
     }
 
+    @Override
     public Set<Entry<String, List<NodeMenuEntry>>> getNodeMenuEntriesByCategory() {
         return menuEntriesByCategory.entrySet();
     }
 
+    @Override
     public void putAutomaticExpander(String category, GraphNodeExpander expander) {
         assert category != null;
         assert expander != null;
@@ -60,6 +65,7 @@ public class GraphExpansionRegistry {
         automaticExpandersByCategory.put(category, expander);
     }
 
+    @Override
     public void putNodeMenuEntry(String category, NodeMenuEntry nodeMenuEntry) {
         assert category != null;
         assert nodeMenuEntry != null;
@@ -71,6 +77,7 @@ public class GraphExpansionRegistry {
         menuEntriesByCategory.get(category).add(nodeMenuEntry);
     }
 
+    @Override
     public void putNodeMenuEntry(String category, String label,
             GraphNodeExpander expander) {
 

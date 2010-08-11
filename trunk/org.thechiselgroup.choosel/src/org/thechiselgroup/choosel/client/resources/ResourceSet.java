@@ -15,13 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
+import java.util.Set;
+
 import org.thechiselgroup.choosel.client.label.HasLabel;
 
-// TODO should implement Set<Resource>
-public interface ResourceSet extends ResourceContainer, HasLabel,
-        ReadableResourceSet {
-
-    void clear();
+public interface ResourceSet extends HasLabel, ReadableResourceSet,
+        Set<Resource> {
 
     // XXX hack to make changes in resource item work
     // trace and replace with something more sensible,

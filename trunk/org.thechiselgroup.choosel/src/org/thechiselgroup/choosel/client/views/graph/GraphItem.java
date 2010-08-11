@@ -41,7 +41,6 @@ public class GraphItem {
     public GraphItem(ResourceSet resources, String label, String category,
             GraphViewContentDisplay.Display display) {
 
-        assert label != null;
         assert category != null;
         assert display != null;
 

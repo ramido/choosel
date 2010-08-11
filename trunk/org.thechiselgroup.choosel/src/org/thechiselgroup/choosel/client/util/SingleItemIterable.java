@@ -19,7 +19,7 @@ import java.util.Iterator;
 
 public class SingleItemIterable<T> implements Iterable<T> {
 
-    private final T t;
+    protected final T t;
 
     public SingleItemIterable(T t) {
         this.t = t;

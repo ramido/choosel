@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class DelegatingReadableResourceSet implements ReadableResourceSet {
     }
 
     @Override
-    public boolean containsAll(Iterable<Resource> resources) {
+    public boolean containsAll(Collection<?> resources) {
         return delegate.containsAll(resources);
     }
 

@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -34,13 +35,13 @@ public class DelegatingResourceSet implements ResourceSet {
     }
 
     @Override
-    public void add(Resource resource) {
-        delegate.add(resource);
+    public boolean add(Resource resource) {
+        return delegate.add(resource);
     }
 
     @Override
-    public void addAll(Iterable<Resource> resources) {
-        delegate.addAll(resources);
+    public boolean addAll(Collection<? extends Resource> resources) {
+        return delegate.addAll(resources);
     }
 
     @Override
@@ -67,12 +68,17 @@ public class DelegatingResourceSet implements ResourceSet {
     }
 
     @Override
+    public boolean contains(Object o) {
+        return delegate.contains(o);
+    }
+
+    @Override
     public boolean contains(Resource resource) {
         return delegate.contains(resource);
     }
 
     @Override
-    public boolean containsAll(Iterable<Resource> resources) {
+    public boolean containsAll(Collection<?> resources) {
         return delegate.containsAll(resources);
     }
 
@@ -126,13 +132,18 @@ public class DelegatingResourceSet implements ResourceSet {
     }
 
     @Override
-    public void remove(Resource resource) {
-        delegate.remove(resource);
+    public boolean remove(Object o) {
+        return delegate.remove(o);
     }
 
     @Override
-    public void removeAll(Iterable<Resource> resources) {
-        delegate.removeAll(resources);
+    public boolean removeAll(Collection<?> c) {
+        return delegate.removeAll(c);
+    }
+
+    @Override
+    public boolean retainAll(Collection<?> c) {
+        return delegate.retainAll(c);
     }
 
     @Override
@@ -153,6 +164,16 @@ public class DelegatingResourceSet implements ResourceSet {
     @Override
     public void switchContainment(ResourceSet resources) {
         delegate.switchContainment(resources);
+    }
+
+    @Override
+    public Object[] toArray() {
+        return delegate.toArray();
+    }
+
+    @Override
+    public <T> T[] toArray(T[] a) {
+        return delegate.toArray(a);
     }
 
     @Override
