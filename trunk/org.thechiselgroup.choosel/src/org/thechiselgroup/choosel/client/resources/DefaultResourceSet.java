@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
+import java.util.List;
 
 public class DefaultResourceSet extends AbstractUriMapBasedResourceSet {
 
@@ -22,13 +23,15 @@ public class DefaultResourceSet extends AbstractUriMapBasedResourceSet {
     }
 
     @Override
-    protected void doAdd(Resource resource) {
+    protected void doAdd(Resource resource, List<Resource> addedResources) {
         addResourceToMap(resource);
+        addedResources.add(resource);
     }
 
     @Override
-    protected void doRemove(Resource resource) {
+    protected void doRemove(Resource resource, List<Resource> removedResources) {
         removeResourceFromMap(resource.getUri());
+        removedResources.add(resource);
     }
 
 }

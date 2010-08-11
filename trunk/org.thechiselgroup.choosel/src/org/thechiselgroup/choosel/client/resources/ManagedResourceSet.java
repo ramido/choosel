@@ -15,6 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
+import java.util.List;
+
 import com.google.inject.Inject;
 
 // TODO need dispose
@@ -28,17 +30,19 @@ public class ManagedResourceSet extends AbstractUriMapBasedResourceSet {
     }
 
     @Override
-    protected void doAdd(Resource resource) {
+    protected void doAdd(Resource resource, List<Resource> addedResources) {
         resourceManager.add(resource);
         Resource realResource = resourceManager.allocate(resource.getUri());
         addResourceToMap(realResource);
+        addedResources.add(resource);
     }
 
     @Override
-    public void doRemove(Resource resource) {
+    public void doRemove(Resource resource, List<Resource> removedResources) {
         String key = resource.getUri();
         removeResourceFromMap(key);
         resourceManager.deallocate(key);
+        removedResources.add(resource);
     }
 
 }
