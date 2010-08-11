@@ -219,6 +219,12 @@ Timeline.OverviewEventPainter.prototype._paintEventTick = function(
     tickDiv.style.top = top + "px";
     
     tickDiv.id = this._encodeEventElID('tick', evt);
+    if (evt._tickZIndex) {
+    	tickDiv.style.zIndex = evt._tickZIndex;
+    }
+    if (evt._tickBackgroundColor) {
+    	tickDiv.style.backgroundColor = evt._tickBackgroundColor;
+    }
   //  tickDiv.style.width = width + "px";
   //  tickDiv.style.position = "absolute";
   //  tickDiv.style.height = height + "px";

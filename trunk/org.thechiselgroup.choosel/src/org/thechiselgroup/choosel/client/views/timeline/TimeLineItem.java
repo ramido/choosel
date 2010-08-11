@@ -266,6 +266,8 @@ public class TimeLineItem extends IconResourceItem {
         } else {
             div.css("border-bottom", "0px solid black");
         }
+
+        timeLineEvent.setTickBackgroundColor(color);
     }
 
     private void setTickZIndex(Status status) {
@@ -275,17 +277,21 @@ public class TimeLineItem extends IconResourceItem {
         case PARTIALLY_HIGHLIGHTED:
         case HIGHLIGHTED: {
             getGElement(tickElementID).css("z-index", "" + Z_INDEX_HIGHLIGHTED);
+            timeLineEvent.setTickZIndex("" + Z_INDEX_HIGHLIGHTED);
         }
             break;
         case DEFAULT: {
             getGElement(tickElementID).css("z-index", "" + Z_INDEX_DEFAULT);
+            timeLineEvent.setTickZIndex("" + Z_INDEX_DEFAULT);
         }
             break;
         case SELECTED: {
             getGElement(tickElementID).css("z-index", "" + Z_INDEX_SELECTED);
+            timeLineEvent.setTickZIndex("" + Z_INDEX_SELECTED);
 
         }
             break;
         }
+
     }
 }

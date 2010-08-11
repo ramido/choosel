@@ -63,8 +63,12 @@ public class TimeLineEvent extends JavaScriptObject {
         return this.getProperty('timeLineItem');
     }-*/;
 
-    public final native void setIcon(String url) /*-{
-        this._icon = url;
+    public final native void setTickBackgroundColor(String color) /*-{
+        this._tickBackgroundColor = color;
+    }-*/;
+
+    public final native void setTickZIndex(String zIndex) /*-{
+        this._tickZIndex = zIndex;
     }-*/;
     // @formatter:on
 
