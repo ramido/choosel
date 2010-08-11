@@ -22,8 +22,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+// TODO move label support into separate class
 public abstract class AbstractUriMapBasedResourceSet extends
-        AbstractImplementingResourceSet {
+        AbstractResourceSet {
 
     protected Map<String, Resource> uriToResource = new HashMap<String, Resource>();
 

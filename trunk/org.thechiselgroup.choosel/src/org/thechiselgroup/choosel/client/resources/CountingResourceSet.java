@@ -28,7 +28,7 @@ import java.util.Map;
  * the set. Size and the returned element are not affected by double adding,
  * every resource is counted once for size and returned once in the iterator.
  */
-public class CountingResourceSet extends AbstractImplementingResourceSet {
+public class CountingResourceSet extends AbstractResourceSet {
 
     private static class ResourceElement {
 
