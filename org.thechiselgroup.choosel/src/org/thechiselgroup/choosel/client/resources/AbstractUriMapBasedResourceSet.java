@@ -36,8 +36,7 @@ public abstract class AbstractUriMapBasedResourceSet extends
 
         for (Resource resource : resources) {
             if (!contains(resource)) {
-                doAdd(resource);
-                addedResources.add(resource);
+                doAdd(resource, addedResources);
             }
         }
 
@@ -58,9 +57,10 @@ public abstract class AbstractUriMapBasedResourceSet extends
         return uriToResource.containsKey(resource.getUri());
     }
 
-    protected abstract void doAdd(Resource resource);
+    protected abstract void doAdd(Resource resource, List<Resource> resources);
 
-    protected abstract void doRemove(Resource resource);
+    protected abstract void doRemove(Resource resource,
+            List<Resource> removedResources);
 
     @Override
     public Resource getByUri(String uri) {
@@ -87,8 +87,7 @@ public abstract class AbstractUriMapBasedResourceSet extends
             if (contains(o)) {
                 assert o instanceof Resource;
                 Resource resource = (Resource) o;
-                doRemove(resource);
-                removedResources.add(resource);
+                doRemove(resource, removedResources);
             }
         }
 
@@ -111,8 +110,7 @@ public abstract class AbstractUriMapBasedResourceSet extends
         List<Resource> removedResources = new ArrayList<Resource>();
         for (Resource resource : toList()) {
             if (!resources.contains(resource)) {
-                doRemove(resource);
-                removedResources.add(resource);
+                doRemove(resource, removedResources);
             }
         }
 
