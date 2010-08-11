@@ -15,12 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.chooselexample.client;
 
-import org.thechiselgroup.choosel.client.views.graph.GraphExpansionRegistry;
+import org.thechiselgroup.choosel.client.views.graph.DefaultGraphExpansionRegistry;
 
 import com.google.inject.Inject;
 
 public class ChooselExampleGraphExpansionRegistry extends
-        GraphExpansionRegistry {
+        DefaultGraphExpansionRegistry {
 
     @Inject
     public ChooselExampleGraphExpansionRegistry() {

@@ -15,11 +15,75 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.graph;
 
-public class DefaultGraphExpansionRegistry extends GraphExpansionRegistry {
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
-    /*
-     * only here so gin injection binding works (cannot bind
-     * GraphExpansionRegistry to self)
-     */
+public class DefaultGraphExpansionRegistry implements GraphExpansionRegistry {
 
+    private Map<String, GraphNodeExpander> automaticExpandersByCategory = new HashMap<String, GraphNodeExpander>();
+
+    private Map<String, List<NodeMenuEntry>> menuEntriesByCategory = new HashMap<String, List<NodeMenuEntry>>();
+
+    @Override
+    public GraphNodeExpander getAutomaticExpander(String category) {
+        assert category != null;
+
+        if (!automaticExpandersByCategory.containsKey(category)) {
+            return new NullGraphNodeExpander();
+        }
+
+        return automaticExpandersByCategory.get(category);
+    }
+
+    @Override
+    public List<NodeMenuEntry> getNodeMenuEntries(String category) {
+        assert category != null;
+
+        if (!menuEntriesByCategory.containsKey(category)) {
+            return Collections.emptyList();
+        }
+
+        return menuEntriesByCategory.get(category);
+    }
+
+    @Override
+    public Set<Entry<String, List<NodeMenuEntry>>> getNodeMenuEntriesByCategory() {
+        return menuEntriesByCategory.entrySet();
+    }
+
+    @Override
+    public void putAutomaticExpander(String category, GraphNodeExpander expander) {
+        assert category != null;
+        assert expander != null;
+
+        automaticExpandersByCategory.put(category, expander);
+    }
+
+    @Override
+    public void putNodeMenuEntry(String category, NodeMenuEntry nodeMenuEntry) {
+        assert category != null;
+        assert nodeMenuEntry != null;
+
+        if (!menuEntriesByCategory.containsKey(category)) {
+            menuEntriesByCategory.put(category, new ArrayList<NodeMenuEntry>());
+        }
+
+        menuEntriesByCategory.get(category).add(nodeMenuEntry);
+    }
+
+    @Override
+    public void putNodeMenuEntry(String category, String label,
+            GraphNodeExpander expander) {
+
+        assert category != null;
+        assert label != null;
+        assert expander != null;
+
+        putNodeMenuEntry(category, new NodeMenuEntry(label, expander));
+    }
 }
