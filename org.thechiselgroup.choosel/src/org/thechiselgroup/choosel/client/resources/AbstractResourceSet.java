@@ -15,7 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.thechiselgroup.choosel.client.label.DefaultHasLabel;
 import org.thechiselgroup.choosel.client.label.HasLabel;
@@ -42,6 +44,25 @@ public abstract class AbstractResourceSet implements ResourceSet {
         assert resource != null;
 
         return addAll(new SingleItemCollection<Resource>(resource));
+    }
+
+    @Override
+    public boolean addAll(Collection<? extends Resource> resources) {
+        assert resources != null;
+
+        List<Resource> addedResources = new ArrayList<Resource>();
+
+        for (Resource resource : resources) {
+            if (!contains(resource)) {
+                doAdd(resource, addedResources);
+            }
+        }
+
+        if (!addedResources.isEmpty()) {
+            eventBus.fireEvent(new ResourcesAddedEvent(this, addedResources));
+        }
+
+        return !addedResources.isEmpty();
     }
 
     @Override
@@ -107,6 +128,11 @@ public abstract class AbstractResourceSet implements ResourceSet {
         return getByUri(uri) != null;
     }
 
+    protected abstract void doAdd(Resource resource, List<Resource> resources);
+
+    protected abstract void doRemove(Resource resource,
+            List<Resource> removedResources);
+
     @Override
     public Resource getFirstResource() {
         assert !isEmpty();
@@ -141,6 +167,45 @@ public abstract class AbstractResourceSet implements ResourceSet {
         }
 
         return removeAll(new SingleItemCollection<Resource>((Resource) o));
+    }
+
+    @Override
+    public boolean removeAll(Collection<?> resources) {
+        assert resources != null;
+
+        List<Resource> removedResources = new ArrayList<Resource>();
+        for (Object o : resources) {
+            if (contains(o)) {
+                assert o instanceof Resource;
+                Resource resource = (Resource) o;
+                doRemove(resource, removedResources);
+            }
+        }
+
+        if (!removedResources.isEmpty()) {
+            eventBus.fireEvent(new ResourcesRemovedEvent(this, removedResources));
+        }
+
+        return !removedResources.isEmpty();
+    }
+
+    // TODO implement faster retains if both are default resource sets
+    @Override
+    public boolean retainAll(Collection<?> resources) {
+        assert resources != null;
+
+        List<Resource> removedResources = new ArrayList<Resource>();
+        for (Resource resource : toList()) {
+            if (!resources.contains(resource)) {
+                doRemove(resource, removedResources);
+            }
+        }
+
+        if (!removedResources.isEmpty()) {
+            eventBus.fireEvent(new ResourcesRemovedEvent(this, removedResources));
+        }
+
+        return !removedResources.isEmpty();
     }
 
     @Override
