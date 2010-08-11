@@ -65,12 +65,6 @@ public class MapItem extends IconResourceItem {
         }
     }
 
-    private static final int Z_INDEX_DEFAULT = 5;
-
-    private static final int Z_INDEX_HIGHLIGHTED = 20;
-
-    private static final int Z_INDEX_SELECTED = 10;
-
     private final ViewContentDisplayCallback callback;
 
     private DragEnablerFactory dragEnablerFactory;

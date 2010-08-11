@@ -22,6 +22,12 @@ public abstract class IconResourceItem extends ResourceItem {
 
     protected static final String CSS_RESOURCE_ITEM_ICON = "resourceItemIcon";
 
+    protected static final int Z_INDEX_DEFAULT = 5;
+
+    protected static final int Z_INDEX_HIGHLIGHTED = 20;
+
+    protected static final int Z_INDEX_SELECTED = 10;
+
     private String defaultColor;
 
     private String highlightColor;

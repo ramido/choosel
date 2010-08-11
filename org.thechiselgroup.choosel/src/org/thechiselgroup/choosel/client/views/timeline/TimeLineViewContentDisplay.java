@@ -67,6 +67,7 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
     @Override
     public ResourceItem createResourceItem(ResourceItemValueResolver resolver,
             String category, ResourceSet resources, HoverModel hoverModel) {
+
         PopupManager popupManager = createPopupManager(resolver, resources);
 
         return new TimeLineItem(category, resources, this, popupManager,
@@ -81,6 +82,11 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
         timelineWidget.setWidth("100%");
 
         return timelineWidget;
+    }
+
+    public final String getEventElementID(int bandIndex, String elementType,
+            TimeLineEvent event) {
+        return timelineWidget.getEventElementID(bandIndex, elementType, event);
     }
 
     @Override

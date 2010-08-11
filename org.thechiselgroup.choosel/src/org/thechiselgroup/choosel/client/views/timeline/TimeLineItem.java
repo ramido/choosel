@@ -17,9 +17,6 @@ package org.thechiselgroup.choosel.client.views.timeline;
 
 import static com.google.gwt.query.client.GQuery.$;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.widget.timeline.TimeLineEvent;
@@ -36,14 +33,16 @@ import com.google.gwt.user.client.Event;
 
 public class TimeLineItem extends IconResourceItem {
 
+    private static final int OVERVIEW_BAND_ID = 1;
+
+    private static final String TICK_ELEMENT = "tick";
+
     // TODO move, combine with listview
     private static final String CSS_HIGHLIGHT_CLASS = "hover";
 
     private static final String CSS_SELECTED_CLASS = "selected";
 
     private DragEnablerFactory dragEnablerFactory;
-
-    private List<String> elementIDs = new ArrayList<String>();
 
     private final Function mouseClickListener = new Function() {
         @Override
@@ -73,6 +72,12 @@ public class TimeLineItem extends IconResourceItem {
 
     private final TimeLineViewContentDisplay view;
 
+    private String iconElementID;
+
+    private String labelElementID;
+
+    private String tickElementID;
+
     public TimeLineItem(String category, ResourceSet resources,
             TimeLineViewContentDisplay view, PopupManager popupManager,
             HoverModel hoverModel, ResourceItemValueResolver layerModel,
@@ -86,23 +91,12 @@ public class TimeLineItem extends IconResourceItem {
         String date = (String) getResourceValue(SlotResolver.DATE_SLOT);
 
         timeLineEvent = TimeLineEvent.create(date, null, "", this);
-
+        tickElementID = view.getEventElementID(OVERVIEW_BAND_ID, TICK_ELEMENT,
+                timeLineEvent);
     }
 
-    private void addCssClass(String cssClass) {
-        for (String elementID : elementIDs) {
-            if (elementID.startsWith("label")) {
-                // TODO get index of element for similar highlighting on
-                // overview band
-                getGElement(elementID).addClass(cssClass);
-            }
-        }
-    }
-
-    private void addToElementIDs(String elementID) {
-        if (!elementIDs.contains(elementID)) {
-            elementIDs.add(elementID);
-        }
+    private void addLabelCssClass(String cssClass) {
+        getGElement(labelElementID).addClass(cssClass);
     }
 
     private String getColor() {
@@ -147,8 +141,6 @@ public class TimeLineItem extends IconResourceItem {
         assert labelElementID != null;
         assert iconElementID != null;
 
-        replaceIconImageWithDiv(iconElementID);
-
         /*
          * every time the event is repainted, we need to hook up our listeners
          * again
@@ -156,8 +148,11 @@ public class TimeLineItem extends IconResourceItem {
         registerListeners(labelElementID);
         registerListeners(iconElementID);
 
-        addToElementIDs(labelElementID);
-        addToElementIDs(iconElementID);
+        this.labelElementID = labelElementID;
+        this.iconElementID = iconElementID;
+
+        // fix icon representation
+        replaceIconImageWithDiv(iconElementID);
     }
 
     private void registerListeners(String elementID) {
@@ -198,12 +193,8 @@ public class TimeLineItem extends IconResourceItem {
         });
     }
 
-    private void removeCssClass(String cssClass) {
-        for (String elementID : elementIDs) {
-            if (elementID.startsWith("label")) {
-                getGElement(elementID).removeClass(cssClass);
-            }
-        }
+    private void removeLabelCssClass(String cssClass) {
+        getGElement(labelElementID).removeClass(cssClass);
     }
 
     private void replaceIconImageWithDiv(String iconElementID) {
@@ -222,37 +213,33 @@ public class TimeLineItem extends IconResourceItem {
     }
 
     private void setIconColor(String color) {
-        for (String elementID : elementIDs) {
-            if (elementID.startsWith("icon")) {
-                GQuery div = getGElement(elementID).children("div");
-                div.css("background-color", color);
-                div.css("border-color", calculateBorderColor(color));
-            }
-        }
+        GQuery div = getGElement(iconElementID).children("div");
+        div.css("background-color", color);
+        div.css("border-color", calculateBorderColor(color));
     }
 
     private void setLabelStyle(Status status) {
         switch (status) {
         case PARTIALLY_HIGHLIGHTED_SELECTED:
         case HIGHLIGHTED_SELECTED: {
-            addCssClass(CSS_SELECTED_CLASS);
-            addCssClass(CSS_HIGHLIGHT_CLASS);
+            addLabelCssClass(CSS_SELECTED_CLASS);
+            addLabelCssClass(CSS_HIGHLIGHT_CLASS);
         }
             break;
         case PARTIALLY_HIGHLIGHTED:
         case HIGHLIGHTED: {
-            removeCssClass(CSS_SELECTED_CLASS);
-            addCssClass(CSS_HIGHLIGHT_CLASS);
+            removeLabelCssClass(CSS_SELECTED_CLASS);
+            addLabelCssClass(CSS_HIGHLIGHT_CLASS);
         }
             break;
         case DEFAULT: {
-            removeCssClass(CSS_SELECTED_CLASS);
-            removeCssClass(CSS_HIGHLIGHT_CLASS);
+            removeLabelCssClass(CSS_SELECTED_CLASS);
+            removeLabelCssClass(CSS_HIGHLIGHT_CLASS);
         }
             break;
         case SELECTED: {
-            removeCssClass(CSS_HIGHLIGHT_CLASS);
-            addCssClass(CSS_SELECTED_CLASS);
+            removeLabelCssClass(CSS_HIGHLIGHT_CLASS);
+            addLabelCssClass(CSS_SELECTED_CLASS);
         }
             break;
         }
@@ -261,7 +248,44 @@ public class TimeLineItem extends IconResourceItem {
     @Override
     protected void setStatusStyling(Status status) {
         setIconColor(getColor());
+        setTickColor(getColor());
+        setTickZIndex(status);
         setLabelStyle(status);
     }
 
+    private void setTickColor(String color) {
+        GQuery div = getGElement(tickElementID);
+        div.css("background-color", color);
+
+        /*
+         * TODO refactor: this sets a bottom border on highlighted ticks,
+         * because they are otherwise hard to see
+         */
+        if (getHighlightColor().equals(color)) {
+            div.css("border-bottom", "6px solid " + getDefaultColor());
+        } else {
+            div.css("border-bottom", "0px solid black");
+        }
+    }
+
+    private void setTickZIndex(Status status) {
+        switch (status) {
+        case PARTIALLY_HIGHLIGHTED_SELECTED:
+        case HIGHLIGHTED_SELECTED:
+        case PARTIALLY_HIGHLIGHTED:
+        case HIGHLIGHTED: {
+            getGElement(tickElementID).css("z-index", "" + Z_INDEX_HIGHLIGHTED);
+        }
+            break;
+        case DEFAULT: {
+            getGElement(tickElementID).css("z-index", "" + Z_INDEX_DEFAULT);
+        }
+            break;
+        case SELECTED: {
+            getGElement(tickElementID).css("z-index", "" + Z_INDEX_SELECTED);
+
+        }
+            break;
+        }
+    }
 }
