@@ -73,11 +73,6 @@ public class DelegatingResourceSet implements ResourceSet {
     }
 
     @Override
-    public boolean contains(Resource resource) {
-        return delegate.contains(resource);
-    }
-
-    @Override
     public boolean containsAll(Collection<?> resources) {
         return delegate.containsAll(resources);
     }
