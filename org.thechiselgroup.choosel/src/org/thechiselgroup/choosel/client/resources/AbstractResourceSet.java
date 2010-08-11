@@ -17,7 +17,53 @@ package org.thechiselgroup.choosel.client.resources;
 
 import java.util.Collection;
 
+import org.thechiselgroup.choosel.client.label.DefaultHasLabel;
+import org.thechiselgroup.choosel.client.label.HasLabel;
+import org.thechiselgroup.choosel.client.label.LabelChangedEventHandler;
+import org.thechiselgroup.choosel.client.util.SingleItemCollection;
+
+import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
+
 public abstract class AbstractResourceSet implements ResourceSet {
+
+    protected transient HandlerManager eventBus;
+
+    private HasLabel labelDelegate;
+
+    public AbstractResourceSet() {
+        this.eventBus = new HandlerManager(this);
+        this.labelDelegate = new DefaultHasLabel(this);
+    }
+
+    @Override
+    public boolean add(Resource resource) {
+        assert resource != null;
+
+        return addAll(new SingleItemCollection<Resource>(resource));
+    }
+
+    @Override
+    public HandlerRegistration addEventHandler(
+            ResourcesAddedEventHandler handler) {
+
+        return eventBus.addHandler(ResourcesAddedEvent.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addEventHandler(
+            ResourcesRemovedEventHandler handler) {
+
+        return eventBus.addHandler(ResourcesRemovedEvent.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addLabelChangedEventHandler(
+            LabelChangedEventHandler eventHandler) {
+
+        return labelDelegate.addLabelChangedEventHandler(eventHandler);
+    }
 
     @Override
     public void clear() {
@@ -67,6 +113,41 @@ public abstract class AbstractResourceSet implements ResourceSet {
         return toList().get(0);
     }
 
+    public int getHandlerCount(Type<?> type) {
+        return eventBus.getHandlerCount(type);
+    }
+
+    @Override
+    public String getLabel() {
+        return labelDelegate.getLabel();
+    }
+
+    @Override
+    public boolean hasLabel() {
+        return labelDelegate.hasLabel();
+    }
+
+    @Override
+    public boolean isModifiable() {
+        return true;
+    }
+
+    @Override
+    public boolean remove(Object o) {
+        assert o != null;
+
+        if (!(o instanceof Resource)) {
+            return false;
+        }
+
+        return removeAll(new SingleItemCollection<Resource>((Resource) o));
+    }
+
+    @Override
+    public void setLabel(String label) {
+        labelDelegate.setLabel(label);
+    }
+
     @Override
     public final void switchContainment(Resource resource) {
         assert resource != null;
@@ -88,6 +169,16 @@ public abstract class AbstractResourceSet implements ResourceSet {
         for (Resource resource : resources) {
             switchContainment(resource);
         }
+    }
+
+    @Override
+    public Object[] toArray() {
+        return toList().toArray();
+    }
+
+    @Override
+    public <T> T[] toArray(T[] a) {
+        return toList().toArray(a);
     }
 
 }
