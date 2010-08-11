@@ -45,21 +45,13 @@ public class CountingResourceSet extends AbstractResourceSet {
 
     private Map<String, ResourceElement> uriToResourceElementMap = new HashMap<String, ResourceElement>();
 
-    // TODO refactor / extract to superclass
     @Override
     public boolean addAll(Collection<? extends Resource> resources) {
         assert resources != null;
 
         List<Resource> addedResources = new ArrayList<Resource>();
         for (Resource resource : resources) {
-            String uri = resource.getUri();
-
-            if (uriToResourceElementMap.containsKey(uri)) {
-                uriToResourceElementMap.get(uri).counter++;
-            } else {
-                uriToResourceElementMap.put(uri, new ResourceElement(resource));
-                addedResources.add(resource);
-            }
+            doAdd(resource, addedResources);
         }
 
         if (!addedResources.isEmpty()) {
@@ -72,6 +64,31 @@ public class CountingResourceSet extends AbstractResourceSet {
     @Override
     public boolean contains(Resource resource) {
         return uriToResourceElementMap.containsKey(resource.getUri());
+    }
+
+    @Override
+    protected void doAdd(Resource resource, List<Resource> addedResources) {
+        String uri = resource.getUri();
+
+        if (uriToResourceElementMap.containsKey(uri)) {
+            uriToResourceElementMap.get(uri).counter++;
+        } else {
+            uriToResourceElementMap.put(uri, new ResourceElement(resource));
+            addedResources.add(resource);
+        }
+    }
+
+    @Override
+    protected void doRemove(Resource resource, List<Resource> removedResources) {
+        String uri = resource.getUri();
+        assert uriToResourceElementMap.containsKey(uri);
+
+        uriToResourceElementMap.get(uri).counter--;
+
+        if (uriToResourceElementMap.get(uri).counter == 0) {
+            uriToResourceElementMap.remove(uri);
+            removedResources.add(resource);
+        }
     }
 
     @Override
@@ -90,62 +107,6 @@ public class CountingResourceSet extends AbstractResourceSet {
     @Override
     public Iterator<Resource> iterator() {
         return toList().iterator();
-    }
-
-    // TODO refactor / extract to superclass
-    @Override
-    public boolean removeAll(Collection<?> resources) {
-        assert resources != null;
-
-        List<Resource> removedResources = new ArrayList<Resource>();
-        for (Object o : resources) {
-            if (contains(o)) {
-                assert o instanceof Resource;
-                Resource resource = (Resource) o;
-                String uri = resource.getUri();
-                assert uriToResourceElementMap.containsKey(uri);
-
-                uriToResourceElementMap.get(uri).counter--;
-
-                if (uriToResourceElementMap.get(uri).counter == 0) {
-                    uriToResourceElementMap.remove(uri);
-                    removedResources.add(resource);
-                }
-            }
-        }
-
-        if (!removedResources.isEmpty()) {
-            eventBus.fireEvent(new ResourcesRemovedEvent(this, removedResources));
-        }
-
-        return !removedResources.isEmpty();
-    }
-
-    // TODO refactor / extract to superclass
-    @Override
-    public boolean retainAll(Collection<?> resources) {
-        assert resources != null;
-
-        List<Resource> removedResources = new ArrayList<Resource>();
-        for (Resource resource : toList()) {
-            if (!resources.contains(resource)) {
-                String uri = resource.getUri();
-                assert uriToResourceElementMap.containsKey(uri);
-
-                uriToResourceElementMap.get(uri).counter--;
-
-                if (uriToResourceElementMap.get(uri).counter == 0) {
-                    uriToResourceElementMap.remove(uri);
-                    removedResources.add(resource);
-                }
-            }
-        }
-
-        if (!removedResources.isEmpty()) {
-            eventBus.fireEvent(new ResourcesRemovedEvent(this, removedResources));
-        }
-
-        return !removedResources.isEmpty();
     }
 
     @Override
