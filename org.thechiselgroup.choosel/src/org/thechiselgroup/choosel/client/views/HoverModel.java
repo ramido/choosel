@@ -15,25 +15,29 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
+import java.util.List;
+
 import org.thechiselgroup.choosel.client.resources.CombinedResourceSet;
 import org.thechiselgroup.choosel.client.resources.CountingResourceSet;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
-import org.thechiselgroup.choosel.client.resources.DelegatingReadableResourceSet;
+import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetDelegateChangedEventHandler;
+import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
+import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.SwitchingResourceSet;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
-public class HoverModel extends DelegatingReadableResourceSet {
+public class HoverModel {
 
     private SwitchingResourceSet highlightedResourceSetContainer;
 
     private ResourceSet highlightedSingleResources;
 
-    public HoverModel() {
-        super(new CombinedResourceSet(new DefaultResourceSet()));
+    private CombinedResourceSet combinedHighlightedResources;
 
+    public HoverModel() {
         highlightedResourceSetContainer = new SwitchingResourceSet();
 
         /*
@@ -44,23 +48,30 @@ public class HoverModel extends DelegatingReadableResourceSet {
          */
         highlightedSingleResources = new CountingResourceSet();
 
-        getCombinedResourceSet()
+        combinedHighlightedResources = new CombinedResourceSet(
+                new DefaultResourceSet());
+        combinedHighlightedResources
                 .addResourceSet(highlightedResourceSetContainer);
-        getCombinedResourceSet().addResourceSet(highlightedSingleResources);
+        combinedHighlightedResources.addResourceSet(highlightedSingleResources);
+    }
+
+    public HandlerRegistration addEventHandler(
+            ResourcesAddedEventHandler handler) {
+        return combinedHighlightedResources.addEventHandler(handler);
     }
 
     public HandlerRegistration addEventHandler(
             ResourceSetDelegateChangedEventHandler handler) {
-
         return highlightedResourceSetContainer.addEventHandler(handler);
+    }
+
+    public HandlerRegistration addEventHandler(
+            ResourcesRemovedEventHandler handler) {
+        return combinedHighlightedResources.addEventHandler(handler);
     }
 
     public void addHighlightedResources(ResourceSet resource) {
         highlightedSingleResources.addAll(resource);
-    }
-
-    private CombinedResourceSet getCombinedResourceSet() {
-        return (CombinedResourceSet) delegate;
     }
 
     public void removeHighlightedResources(ResourceSet resources) {
@@ -69,6 +80,10 @@ public class HoverModel extends DelegatingReadableResourceSet {
 
     public void setHighlightedResourceSet(ResourceSet resourceSet) {
         highlightedResourceSetContainer.setDelegate(resourceSet);
+    }
+
+    public List<Resource> toList() {
+        return combinedHighlightedResources.toList();
     }
 
 }

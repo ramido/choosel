@@ -15,12 +15,30 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
+import java.util.List;
 import java.util.Set;
 
 import org.thechiselgroup.choosel.client.label.HasLabel;
 
-public interface ResourceSet extends HasLabel, ReadableResourceSet,
-        Set<Resource> {
+import com.google.gwt.event.shared.HandlerRegistration;
+
+/**
+ * Classes implementing this interface manage sets of resources. They support
+ * event notification on changes, and are more heavy-weight than plain lists.
+ * Thus, simple ArrayLists should be preferred if the additional functionality
+ * (labels, events) are not required.
+ */
+public interface ResourceSet extends HasLabel, Set<Resource> {
+
+    HandlerRegistration addEventHandler(ResourcesAddedEventHandler handler);
+
+    HandlerRegistration addEventHandler(ResourcesRemovedEventHandler handler);
+
+    boolean containsEqualResources(ResourceSet other);
+
+    boolean containsResourceWithUri(String uri);
+
+    Resource getByUri(String uri);
 
     // XXX hack to make changes in resource item work
     // trace and replace with something more sensible,
@@ -33,4 +51,8 @@ public interface ResourceSet extends HasLabel, ReadableResourceSet,
 
     void switchContainment(ResourceSet resources);
 
+    /**
+     * @return Unmodifiable List that contains elements from this resource set.
+     */
+    List<Resource> toList();
 }

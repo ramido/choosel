@@ -79,11 +79,6 @@ public final class NullResourceSet implements ResourceSet {
     }
 
     @Override
-    public boolean contains(Resource resource) {
-        return false;
-    }
-
-    @Override
     public boolean containsAll(Collection<?> resources) {
         return false;
     }

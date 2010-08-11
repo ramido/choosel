@@ -99,6 +99,8 @@ public abstract class AbstractResourceSet implements ResourceSet {
         return contains((Resource) o);
     }
 
+    public abstract boolean contains(Resource resource);
+
     @Override
     public boolean containsAll(Collection<?> resources) {
         for (Object o : resources) {
