@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.client.resources;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -44,8 +45,9 @@ public class CountingResourceSet extends AbstractImplementingResourceSet {
 
     private Map<String, ResourceElement> uriToResourceElementMap = new HashMap<String, ResourceElement>();
 
+    // TODO refactor / extract to superclass
     @Override
-    public void addAll(Iterable<Resource> resources) {
+    public boolean addAll(Collection<? extends Resource> resources) {
         assert resources != null;
 
         List<Resource> addedResources = new ArrayList<Resource>();
@@ -63,6 +65,8 @@ public class CountingResourceSet extends AbstractImplementingResourceSet {
         if (!addedResources.isEmpty()) {
             eventBus.fireEvent(new ResourcesAddedEvent(this, addedResources));
         }
+
+        return !addedResources.isEmpty();
     }
 
     @Override
@@ -88,15 +92,19 @@ public class CountingResourceSet extends AbstractImplementingResourceSet {
         return toList().iterator();
     }
 
+    // TODO refactor / extract to superclass
     @Override
-    public void removeAll(Iterable<Resource> resources) {
+    public boolean removeAll(Collection<?> resources) {
         assert resources != null;
 
         List<Resource> removedResources = new ArrayList<Resource>();
-        for (Resource resource : resources) {
-            String uri = resource.getUri();
+        for (Object o : resources) {
+            if (contains(o)) {
+                assert o instanceof Resource;
+                Resource resource = (Resource) o;
+                String uri = resource.getUri();
+                assert uriToResourceElementMap.containsKey(uri);
 
-            if (uriToResourceElementMap.containsKey(uri)) {
                 uriToResourceElementMap.get(uri).counter--;
 
                 if (uriToResourceElementMap.get(uri).counter == 0) {
@@ -109,6 +117,35 @@ public class CountingResourceSet extends AbstractImplementingResourceSet {
         if (!removedResources.isEmpty()) {
             eventBus.fireEvent(new ResourcesRemovedEvent(this, removedResources));
         }
+
+        return !removedResources.isEmpty();
+    }
+
+    // TODO refactor / extract to superclass
+    @Override
+    public boolean retainAll(Collection<?> resources) {
+        assert resources != null;
+
+        List<Resource> removedResources = new ArrayList<Resource>();
+        for (Resource resource : toList()) {
+            if (!resources.contains(resource)) {
+                String uri = resource.getUri();
+                assert uriToResourceElementMap.containsKey(uri);
+
+                uriToResourceElementMap.get(uri).counter--;
+
+                if (uriToResourceElementMap.get(uri).counter == 0) {
+                    uriToResourceElementMap.remove(uri);
+                    removedResources.add(resource);
+                }
+            }
+        }
+
+        if (!removedResources.isEmpty()) {
+            eventBus.fireEvent(new ResourcesRemovedEvent(this, removedResources));
+        }
+
+        return !removedResources.isEmpty();
     }
 
     @Override

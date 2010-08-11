@@ -15,6 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
+import java.util.Collection;
+
 public abstract class AbstractResourceSet implements ResourceSet {
 
     @Override
@@ -26,9 +28,18 @@ public abstract class AbstractResourceSet implements ResourceSet {
     }
 
     @Override
-    public final boolean containsAll(Iterable<Resource> resources) {
-        for (Resource resource : resources) {
-            if (!contains(resource)) {
+    public boolean contains(Object o) {
+        if (!(o instanceof Resource)) {
+            return false;
+        }
+
+        return contains((Resource) o);
+    }
+
+    @Override
+    public boolean containsAll(Collection<?> resources) {
+        for (Object o : resources) {
+            if (!contains(o)) {
                 return false;
             }
         }

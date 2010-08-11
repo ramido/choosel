@@ -13,23 +13,24 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.resources;
+package org.thechiselgroup.choosel.client.util;
 
 import java.util.Collection;
 
-public class UnmodifiableResourceSet extends DelegatingResourceSet {
+public class SingleItemCollection<T> extends SingleItemIterable<T> implements
+        Collection<T> {
 
-    public UnmodifiableResourceSet(ResourceSet delegate) {
-        super(delegate);
+    public SingleItemCollection(T t) {
+        super(t);
     }
 
     @Override
-    public boolean add(Resource i) {
+    public boolean add(T e) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public boolean addAll(Collection<? extends Resource> resources) {
+    public boolean addAll(Collection<? extends T> c) {
         throw new UnsupportedOperationException();
     }
 
@@ -39,7 +40,17 @@ public class UnmodifiableResourceSet extends DelegatingResourceSet {
     }
 
     @Override
-    public boolean isModifiable() {
+    public boolean contains(Object o) {
+        return t.equals(o);
+    }
+
+    @Override
+    public boolean containsAll(Collection<?> c) {
+        return c.size() == 1 && c.contains(t);
+    }
+
+    @Override
+    public boolean isEmpty() {
         return false;
     }
 
@@ -49,13 +60,29 @@ public class UnmodifiableResourceSet extends DelegatingResourceSet {
     }
 
     @Override
-    public boolean removeAll(Collection<?> resources) {
+    public boolean removeAll(Collection<?> c) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setLabel(String label) {
+    public boolean retainAll(Collection<?> c) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public int size() {
+        return 1;
+    }
+
+    @Override
+    public Object[] toArray() {
+        return new Object[] { t };
+    }
+
+    @SuppressWarnings("hiding")
+    @Override
+    public <T> T[] toArray(T[] a) {
+        return (T[]) toArray();
     }
 
 }

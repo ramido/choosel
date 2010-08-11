@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources.command;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.thechiselgroup.choosel.client.command.UndoableCommand;
@@ -32,12 +33,13 @@ public class AddResourcesToResourceModelCommand implements UndoableCommand,
 
     private List<Resource> addedResources;
 
-    private Iterable<Resource> resources;
+    private Collection<Resource> resources;
 
     private ResourceModel resourceModel;
 
     public AddResourcesToResourceModelCommand(ResourceModel resourceModel,
-            Iterable<Resource> resources) {
+            Collection<Resource> resources) {
+
         assert resourceModel != null;
         assert resources != null;
 

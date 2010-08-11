@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
+import java.util.Collection;
 import java.util.Set;
 
 import org.thechiselgroup.choosel.client.resources.CombinedResourceSet;
@@ -27,7 +28,7 @@ public interface ResourceModel {
      * Add the resources to the contents of this view without displaying the
      * resource set explicitly.
      */
-    void addResources(Iterable<Resource> resources);
+    void addResources(Collection<Resource> resources);
 
     /**
      * Explicit adding of the resource set as a new, displayed resource set.
@@ -39,7 +40,7 @@ public interface ResourceModel {
     /**
      * Checks if the resources are displayed in this view.
      */
-    boolean containsResources(Iterable<Resource> resources);
+    boolean containsResources(Collection<Resource> resources);
 
     /**
      * Checks if this labeled resource set is explicitly displayed in this view.
@@ -60,7 +61,7 @@ public interface ResourceModel {
      * Removes resources that are <b>not</b> contained in any explicitly added
      * resource set.
      */
-    void removeResources(Iterable<Resource> resources);
+    void removeResources(Collection<Resource> resources);
 
     /**
      * Removes a resource set that was explicitly added via

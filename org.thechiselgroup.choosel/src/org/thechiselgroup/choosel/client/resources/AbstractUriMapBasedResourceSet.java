@@ -16,12 +16,11 @@
 package org.thechiselgroup.choosel.client.resources;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import org.thechiselgroup.choosel.client.util.CollectionUtils;
 
 public abstract class AbstractUriMapBasedResourceSet extends
         AbstractImplementingResourceSet {
@@ -29,7 +28,7 @@ public abstract class AbstractUriMapBasedResourceSet extends
     protected Map<String, Resource> uriToResource = new HashMap<String, Resource>();
 
     @Override
-    public void addAll(Iterable<Resource> resources) {
+    public boolean addAll(Collection<? extends Resource> resources) {
         assert resources != null;
 
         List<Resource> addedResources = new ArrayList<Resource>();
@@ -41,8 +40,11 @@ public abstract class AbstractUriMapBasedResourceSet extends
             }
         }
 
-        // TODO test event is not fire if no changes
-        eventBus.fireEvent(new ResourcesAddedEvent(this, addedResources));
+        if (!addedResources.isEmpty()) {
+            eventBus.fireEvent(new ResourcesAddedEvent(this, addedResources));
+        }
+
+        return !addedResources.isEmpty();
     }
 
     protected Resource addResourceToMap(Resource resource) {
@@ -75,36 +77,49 @@ public abstract class AbstractUriMapBasedResourceSet extends
         return uriToResource.values().iterator();
     }
 
-    // TODO refer to remove all, pull up
     @Override
-    public void remove(Resource resource) {
-        if (!contains(resource)) {
-            return;
-        }
-        doRemove(resource);
-        eventBus.fireEvent(new ResourcesRemovedEvent(this, CollectionUtils
-                .toList(resource)));
-    }
-
-    @Override
-    public void removeAll(Iterable<Resource> resources) {
+    public boolean removeAll(Collection<?> resources) {
         assert resources != null;
 
         List<Resource> removedResources = new ArrayList<Resource>();
-
-        for (Resource resource : resources) {
-            if (contains(resource)) {
+        for (Object o : resources) {
+            if (contains(o)) {
+                assert o instanceof Resource;
+                Resource resource = (Resource) o;
                 doRemove(resource);
                 removedResources.add(resource);
             }
         }
 
-        // TODO test event is not fire if no changes
-        eventBus.fireEvent(new ResourcesRemovedEvent(this, removedResources));
+        if (!removedResources.isEmpty()) {
+            eventBus.fireEvent(new ResourcesRemovedEvent(this, removedResources));
+        }
+
+        return !removedResources.isEmpty();
     }
 
     protected void removeResourceFromMap(String key) {
         uriToResource.remove(key);
+    }
+
+    // TODO implement faster retains if both are default resource sets
+    @Override
+    public boolean retainAll(Collection<?> resources) {
+        assert resources != null;
+
+        List<Resource> removedResources = new ArrayList<Resource>();
+        for (Resource resource : toList()) {
+            if (!resources.contains(resource)) {
+                doRemove(resource);
+                removedResources.add(resource);
+            }
+        }
+
+        if (!removedResources.isEmpty()) {
+            eventBus.fireEvent(new ResourcesRemovedEvent(this, removedResources));
+        }
+
+        return !removedResources.isEmpty();
     }
 
     @Override

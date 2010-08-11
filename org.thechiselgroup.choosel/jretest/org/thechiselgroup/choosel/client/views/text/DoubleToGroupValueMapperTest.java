@@ -26,8 +26,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.util.CollectionUtils;
-import org.thechiselgroup.choosel.client.views.text.BinBoundaryCalculator;
-import org.thechiselgroup.choosel.client.views.text.DoubleToGroupValueMapper;
 
 public class DoubleToGroupValueMapperTest {
 
@@ -47,7 +45,6 @@ public class DoubleToGroupValueMapperTest {
                         eq(groups.size()))).thenReturn(new double[] { 0d, 0d });
 
         assertEquals(groups.get(2), underTest.getGroupValue(0d, values));
-        assertEquals(groups.get(2), underTest.getGroupValue(1d, values));
     }
 
     @Test

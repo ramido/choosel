@@ -175,7 +175,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
     private boolean ready = false;
 
-    private GraphExpansionRegistry registry;
+    private GraphExpansionRegistryI registry;
 
     private ResourceCategorizer resourceCategorizer;
 
@@ -191,7 +191,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
             CommandManager commandManager, ResourceManager resourceManager,
             DragEnablerFactory dragEnablerFactory,
             ResourceCategorizer resourceCategorizer,
-            ArcStyleProvider arcStyleProvider, GraphExpansionRegistry registry) {
+            ArcStyleProvider arcStyleProvider, GraphExpansionRegistryI registry) {
 
         super(popupManagerFactory, detailsWidgetHelper);
 

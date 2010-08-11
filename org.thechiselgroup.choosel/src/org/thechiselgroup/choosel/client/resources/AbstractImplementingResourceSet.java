@@ -18,16 +18,15 @@ package org.thechiselgroup.choosel.client.resources;
 import org.thechiselgroup.choosel.client.label.DefaultHasLabel;
 import org.thechiselgroup.choosel.client.label.HasLabel;
 import org.thechiselgroup.choosel.client.label.LabelChangedEventHandler;
-import org.thechiselgroup.choosel.client.util.SingleItemIterable;
+import org.thechiselgroup.choosel.client.util.SingleItemCollection;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 
+// TODO move label support into separate class
 public abstract class AbstractImplementingResourceSet extends
         AbstractResourceSet {
-
-    // TODO move label support into separate class
 
     protected transient HandlerManager eventBus;
 
@@ -39,10 +38,10 @@ public abstract class AbstractImplementingResourceSet extends
     }
 
     @Override
-    public void add(Resource resource) {
+    public boolean add(Resource resource) {
         assert resource != null;
 
-        addAll(new SingleItemIterable<Resource>(resource));
+        return addAll(new SingleItemCollection<Resource>(resource));
     }
 
     @Override
@@ -86,15 +85,29 @@ public abstract class AbstractImplementingResourceSet extends
     }
 
     @Override
-    public void remove(Resource resource) {
-        assert resource != null;
+    public boolean remove(Object o) {
+        assert o != null;
 
-        removeAll(new SingleItemIterable<Resource>(resource));
+        if (!(o instanceof Resource)) {
+            return false;
+        }
+
+        return removeAll(new SingleItemCollection<Resource>((Resource) o));
     }
 
     @Override
     public void setLabel(String label) {
         labelDelegate.setLabel(label);
+    }
+
+    @Override
+    public Object[] toArray() {
+        return toList().toArray();
+    }
+
+    @Override
+    public <T> T[] toArray(T[] a) {
+        return toList().toArray(a);
     }
 
 }
