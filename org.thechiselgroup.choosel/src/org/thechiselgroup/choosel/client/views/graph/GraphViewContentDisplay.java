@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.graph;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -170,6 +171,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     private final Display display;
 
     public DragEnablerFactory dragEnablerFactory;
+
+    private List<Arc> arcList = new ArrayList<Arc>();
 
     private final Map<String, ResourceItem> nodeIdToResourceItemMap = new HashMap<String, ResourceItem>();
 
@@ -406,6 +409,22 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         nodeResources.removeResourceSet(resourceItem.getResourceSet());
         nodeIdToResourceItemMap.remove(((GraphItem) resourceItem
                 .getDisplayObject()).getNode().getId());
+
+        List<Arc> arcRemoveList = new ArrayList<Arc>();
+        for (Arc arc : arcList) {
+            if (arc.getSourceNodeId() == ((GraphItem) resourceItem
+                    .getDisplayObject()).getNode().getId()
+                    || arc.getTargetNodeId() == ((GraphItem) resourceItem
+                            .getDisplayObject()).getNode().getId()) {
+                arcRemoveList.add(arc);
+            }
+        }
+
+        for (Arc arc : arcRemoveList) {
+            display.removeArc(arc);
+            arcList.remove(arc);
+        }
+
         display.removeNode(((GraphItem) resourceItem.getDisplayObject())
                 .getNode());
     }
@@ -460,6 +479,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         Arc arc = new Arc(arcId, sourceId, targetId, arcType);
 
         display.addArc(arc);
+        arcList.add(arc);
 
         display.setArcStyle(arc, GraphDisplay.ARC_COLOR,
                 arcStyleProvider.getArcColor(arcType));
