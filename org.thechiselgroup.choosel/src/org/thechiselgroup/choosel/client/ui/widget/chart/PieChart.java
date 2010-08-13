@@ -23,13 +23,13 @@ import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFuncti
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionString;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Wedge;
 import org.thechiselgroup.choosel.client.util.ArrayUtils;
-import org.thechiselgroup.choosel.client.views.SlotResolver;
+import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
 import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
+// Version of Pie chart with the average of the area 
+// and the radius calculations for proportional highlighting.
+// (i.e. ratio + sqrt(ratio) / 2)
 public class PieChart extends ChartWidget {
-
-    private String[] wedgeColors = { "rgb(0,0,255)", "rgb(30,144,255)",
-            "rgb(135,206,235)", "rgb(70,130,180)" };
 
     private double[] highlightedWedgeCounts;
 
@@ -47,30 +47,27 @@ public class PieChart extends ChartWidget {
             regularWedgeCounts = new double[chartItems.size()];
 
             for (int i = 0; i < chartItems.size(); i++) {
-                highlightedWedgeCounts[i] = chartItems.get(i).getResourceItem()
-                        .getHighlightedResources().size();
-                regularWedgeCounts[i] = Integer.parseInt(chartItems.get(i)
-                        .getResourceItem()
-                        .getResourceValue(SlotResolver.FONT_SIZE_SLOT)
-                        .toString());
+                highlightedWedgeCounts[i] = calculateHighlightedResources(i);
+                regularWedgeCounts[i] = calculateAllResources(i);
             }
 
         }
 
         @Override
-        public double f(ChartItem value, int index) {
-            System.out.println(highlightedWedgeCounts[index]);
-            return highlightedWedgeCounts[index] / regularWedgeCounts[index]
-                    * regularWedgeOuterRadius.f(value, index);
+        public double f(ChartItem value, int i) {
+            return (Math
+                    .sqrt(highlightedWedgeCounts[i] / regularWedgeCounts[i])
+                    * regularWedgeOuterRadius.f(value, i) + highlightedWedgeCounts[i]
+                    / regularWedgeCounts[i]
+                    * regularWedgeOuterRadius.f(value, i)) / 2;
         }
-
     };
 
     private double sum;
 
     private ProtovisFunctionDouble regularWedgeOuterRadius = new ProtovisFunctionDouble() {
         @Override
-        public double f(ChartItem value, int index) {
+        public double f(ChartItem value, int i) {
             return Math.min(height, width) / 2 - 5;
         }
     };
@@ -81,61 +78,56 @@ public class PieChart extends ChartWidget {
 
     private ProtovisFunctionDouble wedgeLeft = new ProtovisFunctionDouble() {
         @Override
-        public double f(ChartItem value, int index) {
+        public double f(ChartItem value, int i) {
             return width / 2;
         }
     };
 
     private ProtovisFunctionDouble wedgeBottom = new ProtovisFunctionDouble() {
         @Override
-        public double f(ChartItem value, int index) {
+        public double f(ChartItem value, int i) {
             return height / 2;
         }
     };
 
     private ProtovisFunctionDouble wedgeAngle = new ProtovisFunctionDouble() {
         @Override
-        public double f(ChartItem value, int index) {
-            return Double.parseDouble(value.getResourceItem()
-                    .getResourceValue(SlotResolver.FONT_SIZE_SLOT).toString())
-                    * 2 * Math.PI / sum;
-        }
-    };
-
-    private ProtovisFunctionString wedgeFillStyle = new ProtovisFunctionString() {
-        @Override
-        public String f(ChartItem value, int index) {
-            return wedgeColors[index % wedgeColors.length];
+        public double f(ChartItem value, int i) {
+            return calculateAllResources(i) * 2 * Math.PI / sum;
         }
     };
 
     private ProtovisFunctionString highlightedWedgeLabelText = new ProtovisFunctionString() {
         @Override
-        public String f(ChartItem value, int index) {
-            return chartItems.get(index).getResourceItem()
-                    .getHighlightedResources().size() < 1 ? null : Integer
-                    .toString(chartItems.get(index).getResourceItem()
-                            .getHighlightedResources().size());
+        public String f(ChartItem value, int i) {
+            return calculateHighlightedResources(i) < 1 ? null : Double
+                    .toString(calculateHighlightedResources(i));
         }
     };
 
     private ProtovisFunctionString regularWedgeLabelText = new ProtovisFunctionString() {
         @Override
-        public String f(ChartItem value, int index) {
-            return Integer.parseInt(chartItems.get(index).getResourceItem()
-                    .getResourceValue(SlotResolver.FONT_SIZE_SLOT).toString())
-                    - chartItems.get(index).getResourceItem()
-                            .getHighlightedResources().size() < 1 ? null
-                    : Integer.toString(Integer.parseInt(chartItems.get(index)
-                            .getResourceItem()
-                            .getResourceValue(SlotResolver.FONT_SIZE_SLOT)
-                            .toString())
-                            - chartItems.get(index).getResourceItem()
-                                    .getHighlightedResources().size());
+        public String f(ChartItem value, int i) {
+            return calculateAllResources(i) - calculateHighlightedResources(i) < 1 ? null
+                    : Double.toString(calculateAllResources(i)
+                            - calculateHighlightedResources(i));
         }
     };
 
-    private String wedgeStrokeStyle = "white";
+    private ProtovisFunctionString fullWedgeLabelText = new ProtovisFunctionString() {
+        @Override
+        public String f(ChartItem value, int i) {
+            return Double.toString(Math.max(calculateAllResources(i),
+                    calculateHighlightedResources(i)));
+        }
+    };
+
+    private ProtovisFunctionString fullWedgeTextStyle = new ProtovisFunctionString() {
+        @Override
+        public String f(ChartItem value, int i) {
+            return calculateHighlightedResources(i) == 0 ? "white" : "black";
+        }
+    };
 
     private String wedgeLabelAnchor = "center";
 
@@ -154,41 +146,54 @@ public class PieChart extends ChartWidget {
     }
 
     private void drawWedge() {
-        sum = wedgeTextAngle;
-        for (ChartItem chartItem : chartItems) {
-            sum += Double.parseDouble(chartItem.getResourceItem()
-                    .getResourceValue(SlotResolver.FONT_SIZE_SLOT).toString());
+        sum = 0;
+        for (int i = 0; i < chartItems.size(); i++) {
+            sum += calculateAllResources(i);
         }
 
-        highlightedWedge = chart.add(Wedge.createWedge())
+        for (ChartItem chartItem : chartItems) {
+            if (chartItem.getResourceItem().getStatus() == Status.PARTIALLY_HIGHLIGHTED
+                    || chartItem.getResourceItem().getStatus() == Status.PARTIALLY_HIGHLIGHTED_SELECTED) {
+
+                regularWedge = chart.add(Wedge.createWedge())
+                        .data(ArrayUtils.toJsArray(chartItems)).left(wedgeLeft)
+                        .bottom(wedgeBottom)
+                        .innerRadius(highlightedWedgeOuterRadius)
+                        .outerRadius(regularWedgeOuterRadius).angle(wedgeAngle)
+                        .fillStyle(Colors.STEELBLUE).strokeStyle("white");
+
+                regularWedge.anchor(wedgeLabelAnchor).add(Label.createLabel())
+                        .textAngle(wedgeTextAngle).text(regularWedgeLabelText)
+                        .textStyle("white");
+
+                highlightedWedge = regularWedge.add(Wedge.createWedge())
+                        .innerRadius(0)
+                        .outerRadius(highlightedWedgeOuterRadius)
+                        .fillStyle(Colors.YELLOW);
+
+                highlightedWedge.anchor(wedgeLabelAnchor)
+                        .add(Label.createLabel()).textAngle(wedgeTextAngle)
+                        .text(highlightedWedgeLabelText);
+                return;
+            }
+        }
+
+        regularWedge = chart.add(Wedge.createWedge())
                 .data(ArrayUtils.toJsArray(chartItems)).left(wedgeLeft)
-                .bottom(wedgeBottom).outerRadius(highlightedWedgeOuterRadius)
-                .angle(wedgeAngle).fillStyle(Colors.YELLOW)
-                .strokeStyle(wedgeStrokeStyle);
-
-        highlightedWedge.anchor(wedgeLabelAnchor).add(Label.createLabel())
-                .textAngle(wedgeTextAngle).text(highlightedWedgeLabelText);
-
-        regularWedge = highlightedWedge.add(Wedge.createWedge())
-                .innerRadius(highlightedWedgeOuterRadius)
-                .outerRadius(regularWedgeOuterRadius).fillStyle(wedgeFillStyle);
+                .bottom(wedgeBottom).outerRadius(regularWedgeOuterRadius)
+                .angle(wedgeAngle).fillStyle(chartFillStyle)
+                .strokeStyle("white");
 
         regularWedge.anchor(wedgeLabelAnchor).add(Label.createLabel())
-                .textAngle(wedgeTextAngle).text(regularWedgeLabelText);
+                .textAngle(wedgeTextAngle).text(fullWedgeLabelText)
+                .textStyle(fullWedgeTextStyle);
+
     }
 
     @Override
     protected void registerEventHandler(String eventType,
             ProtovisEventHandler handler) {
-
-        // XXX this is a problematic solution to the problem that events get
-        // automatically
-        // fired (asynchronously) when the wedge heights
-        if (EVENT_TYPE_MOUSEOVER.equals(eventType)) {
-            regularWedge.event(eventType, handler);
-        } else {
-            highlightedWedge.event(eventType, handler);
-        }
+        regularWedge.event(eventType, handler);
     }
 
 }

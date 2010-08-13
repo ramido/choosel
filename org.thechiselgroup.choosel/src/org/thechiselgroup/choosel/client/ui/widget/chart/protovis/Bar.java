@@ -176,6 +176,10 @@ public class Bar extends Mark {
     public final native Bar visible(boolean visible) /*-{
         return this.visible(visible);
     }-*/;
+    
+    public final native Bar visible(ProtovisFunctionBoolean visible) /*-{
+        return this.visible(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionBoolean(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionBoolean;)(this,f));
+    }-*/;
 
     public final native Bar width(Number width) /*-{
         return this.width(width);

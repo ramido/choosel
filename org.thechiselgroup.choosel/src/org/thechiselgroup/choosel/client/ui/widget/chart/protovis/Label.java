@@ -251,6 +251,12 @@ public class Label extends Mark {
     // @formatter:on
 
     // @formatter:off
+    public final native Label textStyle(ProtovisFunctionString f) /*-{
+        return this.textStyle(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionString(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionString;)(this,f));
+    }-*/;
+    // @formatter:on
+
+    // @formatter:off
     public final native Label textStyle(String textStyle) /*-{
         return this.textStyle(textStyle);
     }-*/;
@@ -283,6 +289,10 @@ public class Label extends Mark {
     // @formatter:off
     public final native Label visible(boolean visible) /*-{
         return this.visible(visible);
+    }-*/;
+    
+    public final native Label visible(ProtovisFunctionBoolean visible) /*-{
+        return this.visible(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionBoolean(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionBoolean;)(this,f));
     }-*/;
     // @formatter:on
 

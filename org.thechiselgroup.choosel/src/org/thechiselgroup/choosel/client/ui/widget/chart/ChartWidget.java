@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Panel;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventHandler;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionString;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionStringToString;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Scale;
 import org.thechiselgroup.choosel.client.util.ArrayUtils;
@@ -42,8 +43,9 @@ public abstract class ChartWidget extends Widget {
 
     public static class ChartItemComparator implements Comparator<ChartItem> {
         @Override
-        public int compare(ChartItem o1, ChartItem o2) {
-            return getDescriptionString(o1).compareTo(getDescriptionString(o2));
+        public int compare(ChartItem item1, ChartItem item2) {
+            return getDescriptionString(item1).compareTo(
+                    getDescriptionString(item2));
         }
 
         private String getDescriptionString(ChartItem item) {
@@ -72,6 +74,8 @@ public abstract class ChartWidget extends Widget {
 
     protected int width;
 
+    public boolean partialHighlightingChange = false;
+
     protected String[] eventTypes = { EVENT_TYPE_CLICK, EVENT_TYPE_MOUSEDOWN,
             EVENT_TYPE_MOUSEMOVE, EVENT_TYPE_MOUSEOUT, EVENT_TYPE_MOUSEOVER,
             EVENT_TYPE_MOUSEUP };
@@ -96,7 +100,14 @@ public abstract class ChartWidget extends Widget {
      * Flags status that chart widget is rendering. While rendering, events are
      * discarded.
      */
-    private boolean isRendering;
+    protected boolean isRendering;
+
+    protected ProtovisFunctionString chartFillStyle = new ProtovisFunctionString() {
+        @Override
+        public String f(ChartItem value, int i) {
+            return value.getColour();
+        }
+    };
 
     public ChartWidget() {
         setElement(DOM.createDiv());
@@ -114,6 +125,16 @@ public abstract class ChartWidget extends Widget {
      * calls from protovis.
      */
     protected void beforeRender() {
+    }
+
+    protected double calculateAllResources(int i) {
+        return Double.parseDouble(chartItems.get(i).getResourceItem()
+                .getResourceValue(SlotResolver.FONT_SIZE_SLOT).toString());
+    }
+
+    protected double calculateHighlightedResources(int i) {
+        return chartItems.get(i).getResourceItem().getHighlightedResources()
+                .size();
     }
 
     public void checkResize() {
@@ -134,6 +155,10 @@ public abstract class ChartWidget extends Widget {
         assert index < chartItems.size();
 
         return chartItems.get(index);
+    }
+
+    public List<ChartItem> getChartItems() {
+        return chartItems;
     }
 
     protected JavaScriptObject getJsDataArray(List<Double> dataArray) {
@@ -198,11 +223,9 @@ public abstract class ChartWidget extends Widget {
         // TODO instead of isRendering flag, remove event listeners before
         // rendering starts and add them again after rendering is finished.
         try {
-            isRendering = true;
             beforeRender();
             chart.render();
         } finally {
-            isRendering = false;
         }
     }
 
