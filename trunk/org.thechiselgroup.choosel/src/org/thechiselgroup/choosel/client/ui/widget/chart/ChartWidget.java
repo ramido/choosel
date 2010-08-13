@@ -76,8 +76,6 @@ public abstract class ChartWidget extends Widget {
 
     protected int width;
 
-    public boolean partialHighlightingChange = false;
-
     protected String[] eventTypes = { EVENT_TYPE_CLICK, EVENT_TYPE_MOUSEDOWN,
             EVENT_TYPE_MOUSEMOVE, EVENT_TYPE_MOUSEOUT, EVENT_TYPE_MOUSEOVER,
             EVENT_TYPE_MOUSEUP };
@@ -199,6 +197,16 @@ public abstract class ChartWidget extends Widget {
         return new SlotValues(slotValues);
     }
 
+    public boolean hasPartiallyHighlightedChartItems() {
+        for (ChartItem chartItem : chartItems) {
+            Status status = chartItem.getResourceItem().getStatus();
+            if ((status == Status.PARTIALLY_HIGHLIGHTED || status == Status.PARTIALLY_HIGHLIGHTED_SELECTED)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     protected void onAttach() {
         super.onAttach();
@@ -234,9 +242,11 @@ public abstract class ChartWidget extends Widget {
         // TODO instead of isRendering flag, remove event listeners before
         // rendering starts and add them again after rendering is finished.
         try {
+            isRendering = true;
             beforeRender();
             chart.render();
         } finally {
+            isRendering = false;
         }
     }
 
