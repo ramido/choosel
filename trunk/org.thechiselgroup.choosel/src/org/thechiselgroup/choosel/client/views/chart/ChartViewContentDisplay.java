@@ -24,6 +24,7 @@ import org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 
 import com.google.inject.Inject;
@@ -57,6 +58,23 @@ public abstract class ChartViewContentDisplay extends
                 SlotResolver.LABEL_SLOT, SlotResolver.COLOR_SLOT,
                 SlotResolver.DATE_SLOT, SlotResolver.MAGNITUDE_SLOT,
                 SlotResolver.X_COORDINATE_SLOT, SlotResolver.Y_COORDINATE_SLOT };
+    }
+
+    // XXX hack
+    private boolean partialHighlightStatusChanged() {
+        for (ChartItem chartItem : chartWidget.getChartItems()) {
+            if ((chartItem.getResourceItem().getStatus() == Status.PARTIALLY_HIGHLIGHTED || chartItem
+                    .getResourceItem().getStatus() == Status.PARTIALLY_HIGHLIGHTED_SELECTED)
+                    && !chartWidget.partialHighlightingChange) {
+                chartWidget.partialHighlightingChange = true;
+                return true;
+            }
+        }
+        if (chartWidget.partialHighlightingChange) {
+            chartWidget.partialHighlightingChange = false;
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -96,7 +114,8 @@ public abstract class ChartViewContentDisplay extends
                 removedResourceItems);
 
         // TODO needs improvement, can updates cause structural changes?
-        if (!addedResourceItems.isEmpty() || !removedResourceItems.isEmpty()) {
+        if (!addedResourceItems.isEmpty() || !removedResourceItems.isEmpty()
+                || partialHighlightStatusChanged()) {
             chartWidget.updateChart();
         } else {
             chartWidget.renderChart();

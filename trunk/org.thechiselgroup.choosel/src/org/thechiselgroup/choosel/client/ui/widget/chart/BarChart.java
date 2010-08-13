@@ -26,11 +26,10 @@ import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFuncti
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Rule;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Scale;
 import org.thechiselgroup.choosel.client.util.ArrayUtils;
+import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
-// TODO bar chart should always start at 0
-// TODO bottom border line
 // TODO right side ticks
 public class BarChart extends ChartWidget {
 
@@ -38,13 +37,15 @@ public class BarChart extends ChartWidget {
 
     private static final int BORDER_WIDTH = 20;
 
-    private static final String AXIS_SCALE_COLOR = "gray";
+    private static final String GRIDLINE_SCALE_COLOR = Colors.GRAY_1;
 
-    private static final String GRIDLINE_SCALE_COLOR = "lightgray";
+    private static final String AXIS_SCALE_COLOR = Colors.GRAY_2;
 
-    private double[] barCounts;
+    private double[] regularBarCounts;
 
     private double[] highlightedBarCounts;
+
+    private double[] barCounts;
 
     protected double chartHeight;
 
@@ -71,8 +72,7 @@ public class BarChart extends ChartWidget {
             highlightedBarCounts = new double[chartItems.size()];
 
             for (int i = 0; i < chartItems.size(); i++) {
-                highlightedBarCounts[i] = chartItems.get(i).getResourceItem()
-                        .getHighlightedResources().size();
+                highlightedBarCounts[i] = calculateHighlightedResources(i);
             }
 
         }
@@ -92,37 +92,56 @@ public class BarChart extends ChartWidget {
                 return;
             }
 
-            barCounts = new double[chartItems.size()];
+            regularBarCounts = new double[chartItems.size()];
 
             for (int i = 0; i < chartItems.size(); i++) {
-                barCounts[i] = Integer.parseInt(chartItems.get(i)
-                        .getResourceItem()
-                        .getResourceValue(SlotResolver.FONT_SIZE_SLOT)
-                        .toString())
-                        - chartItems.get(i).getResourceItem()
-                                .getHighlightedResources().size();
+                regularBarCounts[i] = calculateAllResources(i)
+                        - calculateHighlightedResources(i);
             }
 
         }
 
         @Override
-        public double f(ChartItem value, int index) {
-            return barCounts[index] * chartHeight / maxBarSize;
+        public double f(ChartItem value, int i) {
+            return regularBarCounts[i] * chartHeight / maxBarSize;
+        }
+
+    };
+
+    private ProtovisFunctionDoubleWithCache fullBarHeight = new ProtovisFunctionDoubleWithCache() {
+
+        @Override
+        public void beforeRender() {
+            if (chartItems.isEmpty()) {
+                return;
+            }
+
+            barCounts = new double[chartItems.size()];
+
+            for (int i = 0; i < chartItems.size(); i++) {
+                barCounts[i] = calculateAllResources(i);
+            }
+
+        }
+
+        @Override
+        public double f(ChartItem value, int i) {
+            return barCounts[i] * chartHeight / maxBarSize;
         }
 
     };
 
     private ProtovisFunctionDouble barWidth = new ProtovisFunctionDouble() {
         @Override
-        public double f(ChartItem value, int index) {
+        public double f(ChartItem value, int i) {
             return chartWidth / (chartItems.size() * 2);
         }
     };
 
     private ProtovisFunctionDouble regularBarBottom = new ProtovisFunctionDouble() {
         @Override
-        public double f(ChartItem value, int index) {
-            return highlightedBarHeight.f(value, index) + highlightedBarBottom;
+        public double f(ChartItem value, int i) {
+            return highlightedBarHeight.f(value, i) + highlightedBarBottom;
         }
     };
 
@@ -130,7 +149,7 @@ public class BarChart extends ChartWidget {
 
     private ProtovisFunctionStringToString scaleStrokeStyle = new ProtovisFunctionStringToString() {
         @Override
-        public String f(String value, int index) {
+        public String f(String value, int i) {
             return Double.parseDouble(value) == 0 ? AXIS_SCALE_COLOR
                     : GRIDLINE_SCALE_COLOR;
         }
@@ -142,8 +161,8 @@ public class BarChart extends ChartWidget {
 
     private ProtovisFunctionDouble baselineLabelLeft = new ProtovisFunctionDouble() {
         @Override
-        public double f(ChartItem value, int index) {
-            return barLeft.f(value, index) + barWidth.f(value, index) / 2;
+        public double f(ChartItem value, int i) {
+            return barLeft.f(value, i) + barWidth.f(value, i) / 2;
         }
     };
 
@@ -153,7 +172,7 @@ public class BarChart extends ChartWidget {
 
     private ProtovisFunctionString baselineLabelText = new ProtovisFunctionString() {
         @Override
-        public String f(ChartItem value, int index) {
+        public String f(ChartItem value, int i) {
             return value.getResourceItem()
                     .getResourceValue(SlotResolver.DESCRIPTION_SLOT).toString();
         }
@@ -161,36 +180,43 @@ public class BarChart extends ChartWidget {
 
     private ProtovisFunctionString highlightedBarLabelText = new ProtovisFunctionString() {
         @Override
-        public String f(ChartItem value, int index) {
-            return chartItems.get(index).getResourceItem()
-                    .getHighlightedResources().size() < 1 ? null : Integer
-                    .toString(chartItems.get(index).getResourceItem()
-                            .getHighlightedResources().size());
+        public String f(ChartItem value, int i) {
+            return calculateHighlightedResources(i) < 1 ? null : Double
+                    .toString(calculateHighlightedResources(i));
         }
     };
 
     private ProtovisFunctionString regularBarLabelText = new ProtovisFunctionString() {
         @Override
-        public String f(ChartItem value, int index) {
-            return Integer.parseInt(chartItems.get(index).getResourceItem()
-                    .getResourceValue(SlotResolver.FONT_SIZE_SLOT).toString())
-                    - chartItems.get(index).getResourceItem()
-                            .getHighlightedResources().size() < 1 ? null
-                    : Integer.toString(Integer.parseInt(chartItems.get(index)
-                            .getResourceItem()
-                            .getResourceValue(SlotResolver.FONT_SIZE_SLOT)
-                            .toString())
-                            - chartItems.get(index).getResourceItem()
-                                    .getHighlightedResources().size());
+        public String f(ChartItem value, int i) {
+            return calculateAllResources(i) - calculateHighlightedResources(i) < 1 ? null
+                    : Double.toString(calculateAllResources(i)
+                            - calculateHighlightedResources(i));
+        }
+    };
+
+    private ProtovisFunctionString fullBarLabelText = new ProtovisFunctionString() {
+        @Override
+        public String f(ChartItem value, int i) {
+            return Double.toString(Math.max(calculateAllResources(i),
+                    calculateHighlightedResources(i)));
         }
     };
 
     private String barTextBaseline = "top";
 
+    private ProtovisFunctionString fullBarTextStyle = new ProtovisFunctionString() {
+        @Override
+        public String f(ChartItem value, int i) {
+            return calculateHighlightedResources(i) == 0 ? "white" : "black";
+        }
+    };
+
     @Override
     protected void beforeRender() {
         highlightedBarHeight.beforeRender();
         regularBarHeight.beforeRender();
+        fullBarHeight.beforeRender();
     }
 
     private void calculateChartVariables() {
@@ -199,26 +225,49 @@ public class BarChart extends ChartWidget {
     }
 
     private void drawBar() {
-        highlightedBar = chart.add(Bar.createBar())
+        for (ChartItem chartItem : chartItems) {
+            if (chartItem.getResourceItem().getStatus() == Status.PARTIALLY_HIGHLIGHTED
+                    || chartItem.getResourceItem().getStatus() == Status.PARTIALLY_HIGHLIGHTED_SELECTED) {
+                highlightedBar = chart.add(Bar.createBar())
+                        .data(ArrayUtils.toJsArray(chartItems))
+                        .bottom(highlightedBarBottom)
+                        .height(highlightedBarHeight).left(barLeft)
+                        .width(barWidth).fillStyle(Colors.YELLOW)
+                        .strokeStyle(Colors.STEELBLUE);
+
+                highlightedBar.anchor("top").add(Label.createLabel())
+                        .textBaseline(barTextBaseline)
+                        .text(highlightedBarLabelText);
+
+                highlightedBar.add(Label.createLabel()).left(baselineLabelLeft)
+                        .textAlign(baselineLabelTextAlign)
+                        .bottom(baselineLabelBottom).text(baselineLabelText);
+
+                regularBar = highlightedBar.add(Bar.createBar())
+                        .bottom(regularBarBottom).height(regularBarHeight)
+                        .fillStyle(Colors.STEELBLUE);
+
+                regularBar.anchor("top").add(Label.createLabel())
+                        .textBaseline(barTextBaseline)
+                        .text(regularBarLabelText).textStyle("white");
+                return;
+            }
+        }
+
+        regularBar = chart.add(Bar.createBar())
                 .data(ArrayUtils.toJsArray(chartItems))
-                .bottom(highlightedBarBottom).height(highlightedBarHeight)
-                .left(barLeft).width(barWidth).fillStyle(Colors.YELLOW)
+                .bottom(highlightedBarBottom).height(fullBarHeight)
+                .left(barLeft).width(barWidth).fillStyle(chartFillStyle)
                 .strokeStyle(Colors.STEELBLUE);
 
-        highlightedBar.anchor("top").add(Label.createLabel())
-                .textBaseline(barTextBaseline).text(highlightedBarLabelText);
-
-        highlightedBar.add(Label.createLabel()).left(baselineLabelLeft)
+        regularBar.add(Label.createLabel()).left(baselineLabelLeft)
                 .textAlign(baselineLabelTextAlign).bottom(baselineLabelBottom)
                 .text(baselineLabelText);
 
-        regularBar = highlightedBar.add(Bar.createBar())
-                .bottom(regularBarBottom).height(regularBarHeight)
-                .fillStyle(Colors.STEELBLUE);
-
         regularBar.anchor("top").add(Label.createLabel())
-                .textBaseline(barTextBaseline).text(regularBarLabelText)
-                .textStyle("white");
+                .textBaseline(barTextBaseline).text(fullBarLabelText)
+                .textStyle(fullBarTextStyle);
+
     }
 
     @Override
@@ -251,21 +300,12 @@ public class BarChart extends ChartWidget {
 
         chart.add(Rule.createRule()).left(0).bottom(BORDER_HEIGHT)
                 .strokeStyle(AXIS_SCALE_COLOR);
-
     }
 
     @Override
     protected void registerEventHandler(String eventType,
             ProtovisEventHandler handler) {
-
-        // XXX this is a problematic solution to the problem that events get
-        // automatically
-        // fired (asynchronously) when the bar heights
-        if (EVENT_TYPE_MOUSEOVER.equals(eventType)) {
-            regularBar.event(eventType, handler);
-        } else {
-            highlightedBar.event(eventType, handler);
-        }
+        regularBar.event(eventType, handler);
     }
 
     private void setChartParameters() {

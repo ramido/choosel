@@ -104,7 +104,7 @@ public class Wedge extends Mark {
     public final native Wedge index(Number index) /*-{
         return this.index(index);
     }-*/;
-    
+
     public final native Wedge innerRadius(double innerRadius) /*-{
         return this.innerRadius(innerRadius);
     }-*/;
@@ -159,6 +159,10 @@ public class Wedge extends Mark {
     
     public final native Wedge scale(Number scale) /*-{
         return this.scale(scale);
+    }-*/;
+    
+    public final native Wedge strokeStyle(ProtovisFunctionString f) /*-{
+        return this.strokeStyle(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionString(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionString;)(this,f));
     }-*/;
     
     public final native Wedge strokeStyle(String colour) /*-{
