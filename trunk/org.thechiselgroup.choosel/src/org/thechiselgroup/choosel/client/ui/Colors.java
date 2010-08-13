@@ -19,13 +19,13 @@ public final class Colors {
 
     public static final String ORANGE = "#E7B076";
 
-    public static final String YELLOW = "yellow";
+    public static final String YELLOW = "#FDF49A";
 
     public static final String BLACK = "#000000";
 
     public static final String BLUE_1 = "#AFC6E5";
 
-    private static final String BLUE_2 = "#447595";
+    public static final String BLUE_2 = "#447595";
 
     public static final String BLUE_3 = "#DAE5F3";
 
@@ -37,9 +37,9 @@ public final class Colors {
 
     public static final String YELLOW_2 = "#D4D0C8";
 
-    public static final String WHITE = "white";
+    public static final String WHITE = "#FFFFFF";
 
-    public static final String STEELBLUE = "steelblue";
+    public static final String STEELBLUE = "#6495ED";
 
     private Colors() {
 
