@@ -260,7 +260,7 @@ public class GraphViewContentDisplayTest {
     }
 
     @Test
-    public void removeResourceItemsWithRelationshipRemovesArc1() {
+    public void removeSourceResourceItemRemovesArc() {
         ResourceSet resourceSet1 = createResources(1);
         ResourceSet resourceSet2 = createResources(2);
 
@@ -284,7 +284,7 @@ public class GraphViewContentDisplayTest {
     }
 
     @Test
-    public void removeResourceItemsWithRelationshipRemovesArc2() {
+    public void removeTargetResourceItemRemovesArc() {
         ResourceSet resourceSet1 = createResources(1);
         ResourceSet resourceSet2 = createResources(2);
 

@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.client.views.graph;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -401,32 +402,32 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
                 }, category);
     }
 
+    private void removeNodeArcs(Node node) {
+        assert node != null;
+
+        for (Iterator<Arc> it = arcList.iterator(); it.hasNext();) {
+            Arc arc = it.next();
+
+            if (arc.getSourceNodeId() == node.getId()
+                    || arc.getTargetNodeId() == node.getId()) {
+
+                display.removeArc(arc);
+                it.remove();
+            }
+        }
+    }
+
     @Override
     public void removeResourceItem(ResourceItem resourceItem) {
         assert resourceItem != null;
         assert nodeIdToResourceItemMap.containsValue(resourceItem);
 
+        Node node = ((GraphItem) resourceItem.getDisplayObject()).getNode();
+
         nodeResources.removeResourceSet(resourceItem.getResourceSet());
-        nodeIdToResourceItemMap.remove(((GraphItem) resourceItem
-                .getDisplayObject()).getNode().getId());
-
-        List<Arc> arcRemoveList = new ArrayList<Arc>();
-        for (Arc arc : arcList) {
-            if (arc.getSourceNodeId() == ((GraphItem) resourceItem
-                    .getDisplayObject()).getNode().getId()
-                    || arc.getTargetNodeId() == ((GraphItem) resourceItem
-                            .getDisplayObject()).getNode().getId()) {
-                arcRemoveList.add(arc);
-            }
-        }
-
-        for (Arc arc : arcRemoveList) {
-            display.removeArc(arc);
-            arcList.remove(arc);
-        }
-
-        display.removeNode(((GraphItem) resourceItem.getDisplayObject())
-                .getNode());
+        nodeIdToResourceItemMap.remove(node.getId());
+        removeNodeArcs(node);
+        display.removeNode(node);
     }
 
     @Override
