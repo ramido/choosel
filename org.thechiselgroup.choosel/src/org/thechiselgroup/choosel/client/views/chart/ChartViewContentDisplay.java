@@ -24,7 +24,6 @@ import org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
-import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 
 import com.google.inject.Inject;
@@ -35,6 +34,8 @@ public abstract class ChartViewContentDisplay extends
     protected ChartWidget chartWidget;
 
     private DragEnablerFactory dragEnablerFactory;
+
+    public boolean hadPartiallyHighlightedItemsOnLastUpdate = false;
 
     @Inject
     public ChartViewContentDisplay(PopupManagerFactory popupManagerFactory,
@@ -60,21 +61,11 @@ public abstract class ChartViewContentDisplay extends
                 SlotResolver.X_COORDINATE_SLOT, SlotResolver.Y_COORDINATE_SLOT };
     }
 
-    // XXX hack
-    private boolean partialHighlightStatusChanged() {
-        for (ChartItem chartItem : chartWidget.getChartItems()) {
-            if ((chartItem.getResourceItem().getStatus() == Status.PARTIALLY_HIGHLIGHTED || chartItem
-                    .getResourceItem().getStatus() == Status.PARTIALLY_HIGHLIGHTED_SELECTED)
-                    && !chartWidget.partialHighlightingChange) {
-                chartWidget.partialHighlightingChange = true;
-                return true;
-            }
-        }
-        if (chartWidget.partialHighlightingChange) {
-            chartWidget.partialHighlightingChange = false;
-            return true;
-        }
-        return false;
+    public boolean hasPartialHighlightStatusChanged() {
+        return (!hadPartiallyHighlightedItemsOnLastUpdate && chartWidget
+                .hasPartiallyHighlightedChartItems())
+                || (hadPartiallyHighlightedItemsOnLastUpdate && !chartWidget
+                        .hasPartiallyHighlightedChartItems());
     }
 
     @Override
@@ -115,10 +106,13 @@ public abstract class ChartViewContentDisplay extends
 
         // TODO needs improvement, can updates cause structural changes?
         if (!addedResourceItems.isEmpty() || !removedResourceItems.isEmpty()
-                || partialHighlightStatusChanged()) {
+                || hasPartialHighlightStatusChanged()) {
             chartWidget.updateChart();
         } else {
             chartWidget.renderChart();
         }
+
+        hadPartiallyHighlightedItemsOnLastUpdate = chartWidget
+                .hasPartiallyHighlightedChartItems();
     }
 }
