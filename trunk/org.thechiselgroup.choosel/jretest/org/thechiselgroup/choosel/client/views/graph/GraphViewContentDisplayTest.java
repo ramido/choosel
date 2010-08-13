@@ -50,6 +50,7 @@ import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
+import org.thechiselgroup.choosel.client.ui.widget.graph.Arc;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidgetReadyEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidgetReadyHandler;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
@@ -144,6 +145,33 @@ public class GraphViewContentDisplayTest {
     private Point targetLocation;
 
     @Test
+    public void addResourceItemsWithRelationshipAddsArc() {
+        ResourceSet resourceSet1 = createResources(1);
+        ResourceSet resourceSet2 = createResources(2);
+
+        ResourceItem resourceItem1 = underTest.createResourceItem(layer,
+                RESOURCE_ITEM_CATEGORY, resourceSet1, hoverModel);
+        ResourceItem resourceItem2 = underTest.createResourceItem(layer,
+                RESOURCE_ITEM_CATEGORY, resourceSet2, hoverModel);
+
+        underTest.update(toSet(resourceItem1, resourceItem2),
+                Collections.<ResourceItem> emptySet(),
+                Collections.<ResourceItem> emptySet());
+
+        String arcId = underTest.getArcId("arcType", resourceSet1
+                .getFirstResource().getUri(), resourceSet2.getFirstResource()
+                .getUri());
+
+        underTest.showArc("arcType", resourceSet1.getFirstResource().getUri(),
+                resourceSet2.getFirstResource().getUri());
+
+        ArgumentCaptor<Arc> captor = ArgumentCaptor.forClass(Arc.class);
+
+        verify(display, times(1)).addArc(captor.capture());
+        assertEquals(arcId, captor.getValue().getId());
+    }
+
+    @Test
     public void addResourceItemToAllResource() {
         ResourceSet resourceSet = createResources(1);
 
@@ -228,6 +256,55 @@ public class GraphViewContentDisplayTest {
         underTest.removeResourceItem(resourceItem);
 
         assertContentEquals(createResources(), underTest.getAllResources());
+
+    }
+
+    @Test
+    public void removeResourceItemsWithRelationshipRemovesArc1() {
+        ResourceSet resourceSet1 = createResources(1);
+        ResourceSet resourceSet2 = createResources(2);
+
+        ResourceItem resourceItem1 = underTest.createResourceItem(layer,
+                RESOURCE_ITEM_CATEGORY, resourceSet1, hoverModel);
+        ResourceItem resourceItem2 = underTest.createResourceItem(layer,
+                RESOURCE_ITEM_CATEGORY, resourceSet2, hoverModel);
+
+        underTest.update(toSet(resourceItem1, resourceItem2),
+                Collections.<ResourceItem> emptySet(),
+                Collections.<ResourceItem> emptySet());
+
+        underTest.showArc("arcType", resourceSet1.getFirstResource().getUri(),
+                resourceSet2.getFirstResource().getUri());
+
+        ArgumentCaptor<Arc> captor = ArgumentCaptor.forClass(Arc.class);
+
+        underTest.removeResourceItem(resourceItem1);
+
+        verify(display, times(1)).removeArc(captor.capture());
+    }
+
+    @Test
+    public void removeResourceItemsWithRelationshipRemovesArc2() {
+        ResourceSet resourceSet1 = createResources(1);
+        ResourceSet resourceSet2 = createResources(2);
+
+        ResourceItem resourceItem1 = underTest.createResourceItem(layer,
+                RESOURCE_ITEM_CATEGORY, resourceSet1, hoverModel);
+        ResourceItem resourceItem2 = underTest.createResourceItem(layer,
+                RESOURCE_ITEM_CATEGORY, resourceSet2, hoverModel);
+
+        underTest.update(toSet(resourceItem1, resourceItem2),
+                Collections.<ResourceItem> emptySet(),
+                Collections.<ResourceItem> emptySet());
+
+        underTest.showArc("arcType", resourceSet1.getFirstResource().getUri(),
+                resourceSet2.getFirstResource().getUri());
+
+        ArgumentCaptor<Arc> captor = ArgumentCaptor.forClass(Arc.class);
+
+        underTest.removeResourceItem(resourceItem2);
+
+        verify(display, times(1)).removeArc(captor.capture());
     }
 
     @Before
