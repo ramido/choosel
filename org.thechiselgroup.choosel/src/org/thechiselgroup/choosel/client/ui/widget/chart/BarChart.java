@@ -245,7 +245,7 @@ public class BarChart extends ChartWidget {
 
                 regularBar = highlightedBar.add(Bar.createBar())
                         .bottom(regularBarBottom).height(regularBarHeight)
-                        .fillStyle(Colors.STEELBLUE);
+                        .fillStyle(partialHighlightingChartFillStyle);
 
                 regularBar.anchor("top").add(Label.createLabel())
                         .textBaseline(barTextBaseline)

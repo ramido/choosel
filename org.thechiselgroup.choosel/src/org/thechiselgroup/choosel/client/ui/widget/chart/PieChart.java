@@ -160,7 +160,8 @@ public class PieChart extends ChartWidget {
                         .bottom(wedgeBottom)
                         .innerRadius(highlightedWedgeOuterRadius)
                         .outerRadius(regularWedgeOuterRadius).angle(wedgeAngle)
-                        .fillStyle(Colors.STEELBLUE).strokeStyle("white");
+                        .fillStyle(partialHighlightingChartFillStyle)
+                        .strokeStyle("white");
 
                 regularWedge.anchor(wedgeLabelAnchor).add(Label.createLabel())
                         .textAngle(wedgeTextAngle).text(regularWedgeLabelText)

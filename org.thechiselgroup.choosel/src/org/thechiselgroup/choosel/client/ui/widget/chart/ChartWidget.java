@@ -20,12 +20,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.thechiselgroup.choosel.client.ui.Colors;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Panel;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventHandler;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionString;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionStringToString;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Scale;
 import org.thechiselgroup.choosel.client.util.ArrayUtils;
+import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
@@ -106,6 +108,15 @@ public abstract class ChartWidget extends Widget {
         @Override
         public String f(ChartItem value, int i) {
             return value.getColour();
+        }
+    };
+
+    protected ProtovisFunctionString partialHighlightingChartFillStyle = new ProtovisFunctionString() {
+        @Override
+        public String f(ChartItem value, int i) {
+            return value.getResourceItem().getStatus() == Status.PARTIALLY_HIGHLIGHTED ? Colors.STEELBLUE
+                    : value.getResourceItem().getStatus() == Status.PARTIALLY_HIGHLIGHTED_SELECTED ? Colors.ORANGE
+                            : value.getColour();
         }
     };
 
