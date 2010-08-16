@@ -852,6 +852,9 @@ public class DefaultView extends AbstractWindowContent implements View {
         for (ResourceItem resourceItem : resourceItems) {
             resourceItem.setSelected(selected);
         }
+
+        contentDisplay.update(Collections.<ResourceItem> emptySet(),
+                resourceItems, Collections.<ResourceItem> emptySet());
     }
 
 }
