@@ -57,8 +57,6 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
 
     public static final String FLASH_VAR_SWFID = "swfid";
 
-    private final static String LAYOUT_NAME = "Force Directed Layout";
-
     public static final String SWF_FILE = GWT.getModuleBaseURL()
             + "swf/BasicGraph.swf";
 
@@ -408,21 +406,6 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
         return _getSelectedNodeID(getSwfId());
     }
 
-    @Override
-    public void layOut() {
-        _runLayout(getSwfId(), LAYOUT_NAME);
-    }
-
-    @Override
-    public void layOutNodes(Collection<Node> nodes) {
-        if (nodes.size() == 0) {
-            return;
-        }
-
-        _runLayout(getSwfId(), LAYOUT_NAME,
-                ArrayUtils.toJsArray(toNodeIdArray(nodes)));
-    }
-
     private void onArcMouseClick(String arcID, int mouseX, int mouseY) {
         int x = getAbsoluteLeft() + mouseX;
         int y = getAbsoluteTop() + mouseY;
@@ -540,6 +523,26 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
     public void removeNode(Node node) {
         _removeNode(getSwfId(), node.getId());
         nodesByID.remove(node.getId());
+    }
+
+    @Override
+    public void runLayout() {
+        runLayout(DEFAULT_LAYOUT);
+    }
+
+    @Override
+    public void runLayout(String layout) {
+        _runLayout(getSwfId(), layout);
+    }
+
+    @Override
+    public void runLayoutOnNodes(Collection<Node> nodes) {
+        if (nodes.size() == 0) {
+            return;
+        }
+
+        _runLayout(getSwfId(), DEFAULT_LAYOUT,
+                ArrayUtils.toJsArray(toNodeIdArray(nodes)));
     }
 
     @Override

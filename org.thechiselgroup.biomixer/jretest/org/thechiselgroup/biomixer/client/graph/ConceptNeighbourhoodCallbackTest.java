@@ -166,11 +166,11 @@ public class ConceptNeighbourhoodCallbackTest {
 
 		ArgumentCaptor<Collection> argument = ArgumentCaptor
 				.forClass(Collection.class);
-		verify(graphDisplay, times(1)).layOutNodes(argument.capture());
+		verify(graphDisplay, times(1)).runLayoutOnNodes(argument.capture());
 		assertEquals(1, argument.getValue().size());
 		assertEquals(true, argument.getValue().contains(concept2Node));
 
-		verify(graphDisplay, never()).layOut();
+		verify(graphDisplay, never()).runLayout();
 	}
 
 	@Test

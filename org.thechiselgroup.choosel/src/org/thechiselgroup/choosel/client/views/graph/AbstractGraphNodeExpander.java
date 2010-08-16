@@ -51,7 +51,7 @@ public abstract class AbstractGraphNodeExpander implements GraphNodeExpander {
             nodesToLayout.add(node);
         }
 
-        expansionCallback.getDisplay().layOutNodes(nodesToLayout);
+        expansionCallback.getDisplay().runLayoutOnNodes(nodesToLayout);
     }
 
     // TODO do not ask for a uri list
