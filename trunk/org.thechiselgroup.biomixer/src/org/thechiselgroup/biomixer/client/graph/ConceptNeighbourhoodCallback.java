@@ -69,7 +69,7 @@ public class ConceptNeighbourhoodCallback extends AbstractNeighbourhoodCallback 
 			nodesToLayout.add(node);
 		}
 
-		graph.layOutNodes(nodesToLayout);
+		graph.runLayoutOnNodes(nodesToLayout);
 	}
 
 	@Override

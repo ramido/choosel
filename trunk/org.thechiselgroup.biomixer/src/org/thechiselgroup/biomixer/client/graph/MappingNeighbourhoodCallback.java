@@ -121,7 +121,7 @@ public class MappingNeighbourhoodCallback extends AbstractNeighbourhoodCallback 
 			nodesToLayout.add(node);
 		}
 
-		graph.layOutNodes(nodesToLayout);
+		graph.runLayoutOnNodes(nodesToLayout);
 	}
 
 	@Override

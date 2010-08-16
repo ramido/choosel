@@ -94,7 +94,7 @@ public class MappingNeighbourhoodCallback2 extends
 			nodesToLayout.add(node);
 		}
 
-		graph.layOutNodes(nodesToLayout);
+		graph.runLayoutOnNodes(nodesToLayout);
 	}
 
 	@Override

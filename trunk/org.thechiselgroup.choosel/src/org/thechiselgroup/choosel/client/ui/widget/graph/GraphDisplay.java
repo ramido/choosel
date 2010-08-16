@@ -26,6 +26,8 @@ import com.google.gwt.event.shared.HandlerRegistration;
 
 public interface GraphDisplay extends WidgetAdaptable {
 
+    String DEFAULT_LAYOUT = GraphLayouts.FORCE_DIRECTED_LAYOUT;
+
     String ARC_COLOR = "normalLineColor";
 
     String ARC_STYLE = "normalLineStyle";
@@ -74,13 +76,15 @@ public interface GraphDisplay extends WidgetAdaptable {
 
     Node getNode(String nodeId);
 
-    void layOut();
-
-    void layOutNodes(Collection<Node> nodes);
-
     void removeArc(Arc arc);
 
     void removeNode(Node node);
+
+    void runLayout();
+
+    void runLayout(String layout);
+
+    void runLayoutOnNodes(Collection<Node> nodes);
 
     void setArcStyle(Arc arc, String styleProperty, String styleValue);
 
