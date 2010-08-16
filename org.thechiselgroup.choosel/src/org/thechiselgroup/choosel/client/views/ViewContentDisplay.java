@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
+import java.util.List;
 import java.util.Set;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
@@ -30,6 +31,12 @@ public interface ViewContentDisplay extends WidgetAdaptable, Disposable {
             String category, ResourceSet resources, HoverModel hoverModel);
 
     void endRestore();
+
+    /**
+     * Returns an unmodifiable set of actions that can be executed on this view
+     * content display.
+     */
+    List<ViewContentAction> getActions();
 
     /**
      * @return identifiers of the visualization slots (retinal properties etc)
