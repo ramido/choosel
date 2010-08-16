@@ -468,13 +468,33 @@ public class DefaultViewTest {
 
         hoverModel.setHighlightedResourceSet(highlightedResources);
 
-        ArgumentCaptor<Set> argument = ArgumentCaptor.forClass(Set.class);
-        verify(contentDisplay, times(1)).update(
-                eq(Collections.<ResourceItem> emptySet()), argument.capture(),
-                eq(Collections.<ResourceItem> emptySet()));
-        Set<ResourceItem> updatedResourceItems = argument.getValue();
+        verifyUpdateGetsCalledWithResourceItemAsUpdatedItem();
+    }
 
-        assertContentEquals(toSet(resourceItem), updatedResourceItems);
+    @Test
+    public void updateGetsCalledWhenResourceAddedToSelection() {
+        when(resourceItem.getResourceSet()).thenReturn(createResources(1));
+
+        underTest.getResourceModel().addResources(createResources(1));
+
+        selection = createResources();
+        underTest.setSelection(selection);
+
+        selection.add(createResource(1));
+
+        verifyUpdateGetsCalledWithResourceItemAsUpdatedItem();
+    }
+
+    @Test
+    public void updateGetsCalledWhenSelectionChanges() {
+        when(resourceItem.getResourceSet()).thenReturn(createResources(1));
+
+        underTest.getResourceModel().addResources(createResources(1));
+
+        selection = createResources(1);
+        underTest.setSelection(selection);
+
+        verifyUpdateGetsCalledWithResourceItemAsUpdatedItem();
     }
 
     @Test
@@ -489,5 +509,15 @@ public class DefaultViewTest {
         verify(contentDisplay, never()).update(
                 eq(Collections.<ResourceItem> emptySet()), any(Set.class),
                 eq(Collections.<ResourceItem> emptySet()));
+    }
+
+    private void verifyUpdateGetsCalledWithResourceItemAsUpdatedItem() {
+        ArgumentCaptor<Set> argument = ArgumentCaptor.forClass(Set.class);
+        verify(contentDisplay, times(1)).update(
+                eq(Collections.<ResourceItem> emptySet()), argument.capture(),
+                eq(Collections.<ResourceItem> emptySet()));
+        Set<ResourceItem> updatedResourceItems = argument.getValue();
+
+        assertContentEquals(toSet(resourceItem), updatedResourceItems);
     }
 }
