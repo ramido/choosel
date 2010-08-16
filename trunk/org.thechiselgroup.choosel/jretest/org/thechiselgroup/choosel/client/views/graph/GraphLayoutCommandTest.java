@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.client.views.graph;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.After;
 import org.junit.Before;
@@ -28,12 +29,11 @@ import org.thechiselgroup.choosel.client.geometry.Point;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
+import org.thechiselgroup.choosel.client.util.CollectionUtils;
 
-// TODO might break if redone after window open is redone (thus graphDisplay
-// differs...)
-public class MoveNodeCommandTest {
+public class GraphLayoutCommandTest {
 
-    private MoveNodeCommand underTest;
+    private GraphLayoutCommand underTest;
 
     @Mock
     private GraphDisplay graphDisplay;
@@ -42,23 +42,31 @@ public class MoveNodeCommandTest {
     private Node node;
 
     @Mock
-    private Point sourceLocation;
+    private Node node2;
 
     @Mock
-    private Point targetLocation;
+    private Point location;
+
+    @Mock
+    private Point location2;
+
+    private String layout = "graph-layout";
 
     @Test
-    public void setNodeLocationOnExecute() {
+    public void setGraphLayoutOnExecute() {
         underTest.execute();
-        verify(graphDisplay, times(1)).animateMoveTo(eq(node),
-                eq(targetLocation));
+
+        verify(graphDisplay, times(1)).runLayout(eq(layout));
     }
 
     @Test
-    public void setNodeLocationOnUndo() {
+    public void setLocationCalledOnUndo() {
+        when(graphDisplay.getLocation(node)).thenReturn(location);
+        when(graphDisplay.getLocation(node2)).thenReturn(location2);
+        underTest.execute();
         underTest.undo();
-        verify(graphDisplay, times(1)).animateMoveTo(eq(node),
-                eq(sourceLocation));
+        verify(graphDisplay, times(1)).setLocation(eq(node), eq(location));
+        verify(graphDisplay, times(1)).setLocation(eq(node2), eq(location2));
     }
 
     @Before
@@ -66,13 +74,15 @@ public class MoveNodeCommandTest {
         MockitoGWTBridge.setUp();
         MockitoAnnotations.initMocks(this);
 
-        underTest = new MoveNodeCommand(graphDisplay, node, sourceLocation,
-                targetLocation);
+        when(node.getId()).thenReturn("1");
+        when(node2.getId()).thenReturn("2");
+
+        underTest = new GraphLayoutCommand(graphDisplay, layout,
+                CollectionUtils.toList(node, node2));
     }
 
     @After
     public void tearDown() {
         MockitoGWTBridge.tearDown();
     }
-
 }

@@ -169,7 +169,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
         @Override
         public void execute() {
-            display.runLayout(layout);
+            commandManager.execute(new GraphLayoutCommand(display, layout,
+                    getAllNodes()));
         }
 
         @Override
@@ -316,6 +317,15 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         return actions;
     }
 
+    // default visibility for test case use
+    List<Node> getAllNodes() {
+        List<Node> result = new ArrayList<Node>();
+        for (ResourceItem resourceItem : nodeIdToResourceItemMap.values()) {
+            result.add(getNodeFromResourceItem(resourceItem));
+        }
+        return result;
+    }
+
     @Override
     public ResourceSet getAllResources() {
         return nodeResources;
@@ -342,6 +352,10 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
     private ResourceItem getGraphItem(NodeEvent<?> event) {
         return getGraphItem(event.getNode());
+    }
+
+    private Node getNodeFromResourceItem(ResourceItem resourceItem) {
+        return ((GraphItem) resourceItem.getDisplayObject()).getNode();
     }
 
     @Override
@@ -465,7 +479,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         assert resourceItem != null;
         assert nodeIdToResourceItemMap.containsValue(resourceItem);
 
-        Node node = ((GraphItem) resourceItem.getDisplayObject()).getNode();
+        Node node = getNodeFromResourceItem(resourceItem);
 
         nodeResources.removeResourceSet(resourceItem.getResourceSet());
         nodeIdToResourceItemMap.remove(node.getId());

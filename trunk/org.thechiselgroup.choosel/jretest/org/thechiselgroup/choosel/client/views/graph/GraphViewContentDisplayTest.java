@@ -56,6 +56,7 @@ import org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidgetReadyHandler
 import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeDragEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeDragHandler;
+import org.thechiselgroup.choosel.client.util.CollectionUtils;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
@@ -219,6 +220,24 @@ public class GraphViewContentDisplayTest {
         assertEquals(sourceLocation, command2.getSourceLocation());
         assertEquals(targetLocation, command2.getTargetLocation());
         assertEquals(display, command2.getGraphDisplay());
+    }
+
+    @Test
+    public void getAllNodes() {
+        ResourceItem resourceItem1 = underTest.createResourceItem(layer,
+                RESOURCE_ITEM_CATEGORY, createResources(1), hoverModel);
+        ResourceItem resourceItem2 = underTest.createResourceItem(layer,
+                RESOURCE_ITEM_CATEGORY, createResources(2), hoverModel);
+
+        underTest.update(toSet(resourceItem1, resourceItem2),
+                Collections.<ResourceItem> emptySet(),
+                Collections.<ResourceItem> emptySet());
+
+        Node node1 = ((GraphItem) resourceItem1.getDisplayObject()).getNode();
+        Node node2 = ((GraphItem) resourceItem2.getDisplayObject()).getNode();
+
+        assertContentEquals(CollectionUtils.toList(node1, node2),
+                underTest.getAllNodes());
     }
 
     @Test
