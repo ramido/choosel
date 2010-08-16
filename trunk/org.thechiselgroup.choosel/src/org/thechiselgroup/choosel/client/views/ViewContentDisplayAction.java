@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-public interface ViewContentAction {
+public interface ViewContentDisplayAction {
 
     void execute();
 

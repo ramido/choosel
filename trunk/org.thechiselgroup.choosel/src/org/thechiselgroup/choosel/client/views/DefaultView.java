@@ -46,17 +46,27 @@ import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccess
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
+import org.thechiselgroup.choosel.client.ui.CSS;
+import org.thechiselgroup.choosel.client.ui.WidgetFactory;
+import org.thechiselgroup.choosel.client.ui.popup.DefaultPopupManager;
 import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.util.HandlerRegistrationSet;
 import org.thechiselgroup.choosel.client.util.Initializable;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasAlignment;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RequiresResize;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -147,6 +157,8 @@ public class DefaultView extends AbstractWindowContent implements View {
     private static final String MEMENTO_RESOURCE_MODEL = "resource-model";
 
     private HandlerRegistrationSet handlerRegistrations = new HandlerRegistrationSet();
+
+    private static final String IMAGE_MENU = "images/menu.png";
 
     @Inject
     public DefaultView(
@@ -299,6 +311,10 @@ public class DefaultView extends AbstractWindowContent implements View {
         return resourceSplitter.getCategorizedResourceSets();
     }
 
+    protected String getModuleBase() {
+        return GWT.getModuleBaseURL();
+    }
+
     // TODO improve algorithm: switch depending on size of resource vs size of
     // resource items --> change to collection
     private Set<ResourceItem> getResourceItems(Iterable<Resource> resources) {
@@ -371,6 +387,7 @@ public class DefaultView extends AbstractWindowContent implements View {
         configurationPanel.setStyleName(CSS_VIEW_CONFIGURATION_PANEL);
 
         initResourceModelPresenterUI();
+        initMenu();
         initSelectionDropPresenterUI();
         initSelectionDragSourceUI();
     }
@@ -453,6 +470,50 @@ public class DefaultView extends AbstractWindowContent implements View {
                         updateHighlighting(e.getRemovedResources(), false);
                     }
                 }));
+    }
+
+    private void initMenu() {
+        if (contentDisplay.getActions().isEmpty()) {
+            return;
+        }
+
+        Image image = new Image(getModuleBase() + IMAGE_MENU);
+
+        CSS.setMarginTopPx(image, 3);
+        CSS.setMarginRightPx(image, 4);
+
+        WidgetFactory widgetFactory = new WidgetFactory() {
+            @Override
+            public Widget createWidget() {
+                VerticalPanel panel = new VerticalPanel();
+
+                // TODO change styling of buttons
+                panel.add(new HTML("<b>View Menu</b>"));
+                for (final ViewContentDisplayAction action : contentDisplay
+                        .getActions()) {
+
+                    Button w = new Button(action.getLabel());
+                    w.addClickHandler(new ClickHandler() {
+                        @Override
+                        public void onClick(ClickEvent event) {
+                            action.execute();
+                        }
+                    });
+                    panel.add(w);
+                }
+
+                return panel;
+            }
+        };
+
+        DefaultPopupManager manager = new DefaultPopupManager(widgetFactory);
+        DefaultPopupManager.linkManagerToSource(manager, image);
+        // TODO activate menu on click with left mouse button
+        // TODO change popup menu location
+
+        configurationPanel.add(image, DockPanel.EAST);
+        configurationPanel.setCellHorizontalAlignment(image,
+                HasAlignment.ALIGN_RIGHT);
     }
 
     private void initResourceModelPresenterUI() {

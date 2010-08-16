@@ -24,6 +24,10 @@ import com.google.gwt.user.client.ui.Widget;
 
 public final class CSS {
 
+    public static final String MARGIN_TOP = "marginTop";
+
+    public static final String MARGIN_RIGHT = "marginRight";
+
     public static final String BACKGROUND_COLOR = "backgroundColor";
 
     public static final String FLOAT = "cssFloat";
@@ -115,6 +119,14 @@ public final class CSS {
 
     public static void setLocation(Widget widget, int left, int top) {
         setLocation(widget.getElement(), left, top);
+    }
+
+    public static void setMarginRightPx(Widget widget, int marginPx) {
+        setStyleAttribute(widget.getElement(), MARGIN_RIGHT, marginPx + PX);
+    }
+
+    public static void setMarginTopPx(Widget widget, int marginPx) {
+        setStyleAttribute(widget.getElement(), MARGIN_TOP, marginPx + PX);
     }
 
     public static void setMaxWidth(Element element, int maxWidth) {
