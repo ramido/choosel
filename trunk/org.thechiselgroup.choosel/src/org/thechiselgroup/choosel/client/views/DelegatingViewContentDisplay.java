@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
+import java.util.List;
 import java.util.Set;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
@@ -57,6 +58,11 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
     @Override
     public void endRestore() {
         delegate.endRestore();
+    }
+
+    @Override
+    public List<ViewContentAction> getActions() {
+        return delegate.getActions();
     }
 
     public ViewContentDisplay getDelegate() {

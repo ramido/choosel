@@ -15,6 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
@@ -110,6 +112,11 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
     @Override
     public void endRestore() {
         restoring = false;
+    }
+
+    @Override
+    public List<ViewContentAction> getActions() {
+        return Collections.emptyList();
     }
 
     public ViewContentDisplayCallback getCallback() {
