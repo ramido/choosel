@@ -115,7 +115,7 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
     }
 
     @Override
-    public List<ViewContentAction> getActions() {
+    public List<ViewContentDisplayAction> getActions() {
         return Collections.emptyList();
     }
 

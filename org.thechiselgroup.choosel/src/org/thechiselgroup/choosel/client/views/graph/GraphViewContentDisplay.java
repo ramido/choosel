@@ -38,6 +38,7 @@ import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Arc;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
+import org.thechiselgroup.choosel.client.ui.widget.graph.GraphLayouts;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidgetReadyEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidgetReadyHandler;
@@ -61,6 +62,7 @@ import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
+import org.thechiselgroup.choosel.client.views.ViewContentDisplayAction;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 
 import com.google.gwt.event.dom.client.MouseMoveEvent;
@@ -72,6 +74,7 @@ import com.google.inject.Inject;
 // TODO register listener for double click on node --> change expansion state
 public class GraphViewContentDisplay extends AbstractViewContentDisplay
         implements GraphNodeExpansionCallback {
+
     public static class DefaultDisplay extends GraphWidget implements Display {
 
         // TODO why is size needed in the first place??
@@ -154,6 +157,25 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
                     event.getMouseY());
         }
 
+    }
+
+    public class GraphLayoutAction implements ViewContentDisplayAction {
+
+        private String layout;
+
+        public GraphLayoutAction(String layout) {
+            this.layout = layout;
+        }
+
+        @Override
+        public void execute() {
+            display.runLayout(layout);
+        }
+
+        @Override
+        public String getLabel() {
+            return layout;
+        }
     }
 
     // TODO move to ncbo stuff
@@ -271,6 +293,27 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     @Override
     protected Widget createWidget() {
         return display.asWidget();
+    }
+
+    @Override
+    public List<ViewContentDisplayAction> getActions() {
+        List<ViewContentDisplayAction> actions = new ArrayList<ViewContentDisplayAction>();
+
+        actions.add(new GraphLayoutAction(GraphLayouts.CIRCLE_LAYOUT));
+        actions.add(new GraphLayoutAction(GraphLayouts.HORIZONTAL_TREE_LAYOUT));
+        actions.add(new GraphLayoutAction(GraphLayouts.VERTICAL_TREE_LAYOUT));
+        actions.add(new GraphLayoutAction(GraphLayouts.RADIAL_LAYOUT));
+        actions.add(new GraphLayoutAction(GraphLayouts.SPRING_LAYOUT));
+        actions.add(new GraphLayoutAction(GraphLayouts.INDENTED_TREE_LAYOUT));
+        actions.add(new GraphLayoutAction(GraphLayouts.GRID_LAYOUT_BY_NODE_ID));
+        actions.add(new GraphLayoutAction(GraphLayouts.GRID_LAYOUT_BY_NODE_TYPE));
+        actions.add(new GraphLayoutAction(GraphLayouts.GRID_LAYOUT_ALPHABETICAL));
+        actions.add(new GraphLayoutAction(GraphLayouts.GRID_LAYOUT_BY_ARC_COUNT));
+        actions.add(new GraphLayoutAction(GraphLayouts.HORIZONTAL_LAYOUT));
+        actions.add(new GraphLayoutAction(GraphLayouts.VERTICAL_LAYOUT));
+        actions.add(new GraphLayoutAction(GraphLayouts.FORCE_DIRECTED_LAYOUT));
+
+        return actions;
     }
 
     @Override

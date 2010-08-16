@@ -556,6 +556,9 @@ public class DefaultPopupManager implements Opacity, PopupManager {
         return hideDelay > 0;
     }
 
+    // TODO we need to separate the popup display from the
+    // extended state machine, because there can be different
+    // popup menu models (e.g. triggered on mouse down)
     @Override
     public void onMouseDown(NativeEvent event) {
         assert event != null;
