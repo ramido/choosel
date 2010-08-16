@@ -47,15 +47,16 @@ public final class CollectionUtils {
     }
 
     /**
-     * splits a string on a delimiter and converts the resulting array to a List
+     * splits a string on a regex delimeter and converts the resulting array to
+     * a List
      */
-    public static List<String> splitStringToList(String input, String delimeter) {
+    public static List<String> splitStringToList(String input, String regex) {
         if (input == null) {
             return Collections.emptyList();
         }
 
         List<String> results = new ArrayList<String>();
-        for (String value : input.split(delimeter)) {
+        for (String value : input.split(regex)) {
             results.add(value.trim());
         }
 
