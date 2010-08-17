@@ -40,6 +40,12 @@ import com.google.gwt.core.client.JavaScriptObject;
 public abstract class Mark extends JavaScriptObject {
 
     // @formatter:off
+    public static final native JavaScriptObject getFunction(
+            JavaScriptObject _this, ProtovisFunction f) /*-{
+        return $entry(function(d) 
+        {return f.@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunction::f(Lorg/thechiselgroup/choosel/client/views/chart/ChartItem;I)(d,_this.index);})
+    }-*/;
+
     public static final native JavaScriptObject getFunctionBoolean(
             JavaScriptObject _this, ProtovisFunctionBoolean f) /*-{
         return $entry(function(d) 

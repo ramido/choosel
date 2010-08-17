@@ -39,7 +39,7 @@ public class Rule extends Mark {
         return this.anchor(anchor);
     }-*/;
 
-    public final native Rule bottom(Number bottom) /*-{
+    public final native Rule bottom(double bottom) /*-{
         return this.bottom(bottom);
     }-*/;
 
@@ -51,7 +51,7 @@ public class Rule extends Mark {
         return this.bottom(scale);
     }-*/;
 
-    public final native Rule childIndex(Number childIndex) /*-{
+    public final native Rule childIndex(int childIndex) /*-{
         return this.childIndex(childIndex);
     }-*/;
 
@@ -89,7 +89,7 @@ public class Rule extends Mark {
         return this.events(events);
     }-*/;
 
-    public final native Rule height(Number height) /*-{
+    public final native Rule height(double height) /*-{
         return this.height(height);
     }-*/;
 
@@ -97,7 +97,7 @@ public class Rule extends Mark {
         return this.height(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionDouble(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionDouble;)(this,f));
     }-*/;
 
-    public final native Rule index(Number index) /*-{
+    public final native Rule index(int index) /*-{
         return this.index(index);
     }-*/;
 
@@ -113,7 +113,7 @@ public class Rule extends Mark {
         return this.left(scale);
     }-*/;
 
-    public final native Rule lineWidth(Number lineWidth) /*-{
+    public final native Rule lineWidth(double lineWidth) /*-{
         return this.lineWidth(lineWidth);
     }-*/;
 
@@ -149,7 +149,7 @@ public class Rule extends Mark {
         return this.root(panel);
     }-*/;
 
-    public final native Rule scale(Number scale) /*-{
+    public final native Rule scale(double scale) /*-{
         return this.scale(scale);
     }-*/;
 
@@ -185,7 +185,7 @@ public class Rule extends Mark {
         return this.visible(visible);
     }-*/;
 
-    public final native Rule width(Number width) /*-{
+    public final native Rule width(double width) /*-{
         return this.width(width);
     }-*/;
 

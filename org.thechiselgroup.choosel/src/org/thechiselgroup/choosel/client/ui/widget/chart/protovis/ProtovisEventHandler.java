@@ -24,6 +24,6 @@ import com.google.gwt.user.client.Event;
  */
 public interface ProtovisEventHandler {
 
-    void handleEvent(Event e, int index);
+    void handleEvent(Event e, int i);
 
 }

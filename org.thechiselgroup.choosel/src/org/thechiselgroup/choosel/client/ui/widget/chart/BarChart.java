@@ -181,7 +181,7 @@ public class BarChart extends ChartWidget {
     private ProtovisFunctionString highlightedBarLabelText = new ProtovisFunctionString() {
         @Override
         public String f(ChartItem value, int i) {
-            return calculateHighlightedResources(i) < 1 ? null : Double
+            return calculateHighlightedResources(i) < 1 ? null : Integer
                     .toString(calculateHighlightedResources(i));
         }
     };
@@ -190,7 +190,7 @@ public class BarChart extends ChartWidget {
         @Override
         public String f(ChartItem value, int i) {
             return calculateAllResources(i) - calculateHighlightedResources(i) < 1 ? null
-                    : Double.toString(calculateAllResources(i)
+                    : Integer.toString(calculateAllResources(i)
                             - calculateHighlightedResources(i));
         }
     };
@@ -198,7 +198,7 @@ public class BarChart extends ChartWidget {
     private ProtovisFunctionString fullBarLabelText = new ProtovisFunctionString() {
         @Override
         public String f(ChartItem value, int i) {
-            return Double.toString(Math.max(calculateAllResources(i),
+            return Integer.toString(Math.max(calculateAllResources(i),
                     calculateHighlightedResources(i)));
         }
     };

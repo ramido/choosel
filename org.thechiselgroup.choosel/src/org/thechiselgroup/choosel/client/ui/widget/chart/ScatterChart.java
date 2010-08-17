@@ -15,109 +15,181 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.widget.chart;
 
-import java.util.ArrayList;
-
+import org.thechiselgroup.choosel.client.ui.Colors;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Dot;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Label;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventHandler;
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionString;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDoubleWithCache;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionStringToString;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Rule;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Scale;
 import org.thechiselgroup.choosel.client.util.ArrayUtils;
+import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
-import com.google.gwt.core.client.JavaScriptObject;
-
-/**
- * 
- * @author Bradley Blashko
- * 
- */
+// TODO right side ticks
 public class ScatterChart extends ChartWidget {
 
-    private double minValueX;
+    private static final int BORDER_HEIGHT = 20;
 
-    private double maxValueX;
+    private static final int BORDER_WIDTH = 20;
 
-    private double minValueY;
+    private static final String GRIDLINE_SCALE_COLOR = Colors.GRAY_1;
 
-    private double maxValueY;
+    private static final String AXIS_SCALE_COLOR = Colors.GRAY_2;
+
+    private double[] scatterCountsX;
+
+    private double[] scatterCountsY;
+
+    protected double chartHeight;
+
+    protected double chartWidth;
+
+    private double minY;
+
+    private double maxY;
+
+    private double minX;
+
+    private double maxX;
 
     private Scale scaleX;
 
     private Scale scaleY;
 
-    private ArrayList<Double> scatterDataX = null; // getDataArray(SlotResolver.X_COORDINATE_SLOT);
+    private ProtovisFunctionDoubleWithCache scatterBottom = new ProtovisFunctionDoubleWithCache() {
 
-    private ArrayList<Double> scatterDataY = null; // getDataArray(SlotResolver.Y_COORDINATE_SLOT);
+        @Override
+        public void beforeRender() {
+            if (chartItems.isEmpty()) {
+                return;
+            }
 
-    // @formatter:off
-    private native JavaScriptObject createCoordinateJsArray(
-            JavaScriptObject xCoords, JavaScriptObject yCoords) /*-{
-        var newArray = new Array();
-        for(var i = 0; i < xCoords.length; i++) {
-            newArray[i] = {x: xCoords[i], y: yCoords[i]};
+            scatterCountsY = new double[chartItems.size()];
+
+            for (int i = 0; i < chartItems.size(); i++) {
+                scatterCountsY[i] = calculateAllResources(i);
+            }
+
+            minY = ArrayUtils.min(scatterCountsY) - 1;
+            maxY = ArrayUtils.max(scatterCountsY) + 1;
         }
-        return newArray;
-    }-*/;
-    // @formatter:on
 
-    @SuppressWarnings("unchecked")
+        @Override
+        public double f(ChartItem value, int i) {
+            return (scatterCountsY[i] - minY) * chartHeight / (maxY - minY);
+        }
+    };
+
+    private ProtovisFunctionDoubleWithCache scatterLeft = new ProtovisFunctionDoubleWithCache() {
+
+        @Override
+        public void beforeRender() {
+            if (chartItems.isEmpty()) {
+                return;
+            }
+
+            scatterCountsX = new double[chartItems.size()];
+
+            for (int i = 0; i < chartItems.size(); i++) {
+                scatterCountsX[i] = calculateAllResourcesX(i);
+            }
+
+            minX = ArrayUtils.min(scatterCountsX) - 1;
+            maxX = ArrayUtils.max(scatterCountsX) + 1;
+        }
+
+        @Override
+        public double f(ChartItem value, int i) {
+            return (scatterCountsX[i] - minX) * chartWidth / (maxX - minX);
+        }
+    };
+
+    private String scaleStrokeStyle = GRIDLINE_SCALE_COLOR;
+
+    private Dot scatter;
+
+    protected ProtovisFunctionStringToString scaleLabelTextX = new ProtovisFunctionStringToString() {
+        @Override
+        public String f(String o, int index) {
+            return scaleX.tickFormat(o.toString());
+        }
+    };
+
+    protected ProtovisFunctionStringToString scaleLabelTextY = new ProtovisFunctionStringToString() {
+        @Override
+        public String f(String o, int index) {
+            return scaleY.tickFormat(o.toString());
+        }
+    };
+
     @Override
-    public void drawChart() {
-        minValueX = ArrayUtils.min(scatterDataX);
-        maxValueX = ArrayUtils.max(scatterDataX);
-        minValueY = ArrayUtils.min(scatterDataY);
-        maxValueY = ArrayUtils.max(scatterDataY);
-
-        // w = width - 40;
-        // h = height - 40;
-        //
-        // scaleX = Scale.linear(minValueX - 0.5, maxValueX + 0.5).range(0, w);
-        // scaleY = Scale.linear(maxValueY + 0.5, minValueY - 0.5).range(0, h);
-
-        drawScatter();
-
+    protected void beforeRender() {
+        scatterBottom.beforeRender();
+        scatterLeft.beforeRender();
     }
 
-    protected void drawScales(Scale scale) {
-        this.scale = scale;
-        // TODO // should // take // double // with // labelText
-        chart.add(Rule.createRule()).data(scale.ticks())
-                .strokeStyle("lightGray").top(scale).bottom(4.5).anchor("left")
-                .add(Label.createLabel()).text(scaleLabelText);
+    protected double calculateAllResourcesX(int i) {
+        return Double.parseDouble(chartItems.get(i).getResourceItem()
+                .getResourceValue(SlotResolver.MAGNITUDE_SLOT).toString());
+    }
+
+    private void calculateChartVariables() {
+        chartWidth = width - BORDER_WIDTH * 2;
+        chartHeight = height - BORDER_HEIGHT * 2;
+    }
+
+    @Override
+    public void drawChart() {
+        assert chartItems.size() >= 1;
+
+        calculateChartVariables();
+        setChartParameters();
+
+        beforeRender();
+
+        scaleX = Scale.linear(minX, maxX).range(0, chartWidth);
+        scaleY = Scale.linear(minY, maxY).range(0, chartHeight);
+        drawScales(scaleX, scaleY);
+        drawScatter();
+    }
+
+    protected void drawScales(Scale scaleX, Scale scaleY) {
+        chart.add(Rule.createRule()).data(scaleX.ticks()).bottom(0)
+                .left(scaleX).strokeStyle(scaleStrokeStyle).height(chartHeight)
+                .anchor("bottom").add(Label.createLabel())
+                .text(scaleLabelTextX);
+
+        chart.add(Rule.createRule()).data(scaleY.ticks()).bottom(scaleY)
+                .left(0).strokeStyle(scaleStrokeStyle).width(chartWidth)
+                .anchor("left").add(Label.createLabel()).text(scaleLabelTextY);
+
+        chart.add(Rule.createRule()).height(chartHeight).bottom(0).left(0)
+                .strokeStyle(AXIS_SCALE_COLOR);
+
+        chart.add(Rule.createRule()).width(chartWidth).bottom(0).left(0)
+                .strokeStyle(AXIS_SCALE_COLOR);
     }
 
     private void drawScatter() {
-        chart.add(Dot.createDot())
-                .data(createCoordinateJsArray(getJsDataArray(scatterDataX),
-                        getJsDataArray(scatterDataY)))
-                .cursor("pointer")
-                // .left(new ProtovisFunctionDouble() {
-                // @Override
-                // public double f(String value, int index) {
-                // return scatterDataX.get(index)
-                // / (maxValueX - minValueX + 1) * w;
-                // }
-                // })
-                // .top(new ProtovisFunctionDouble() {
-                // @Override
-                // public double f(String value, int index) {
-                // return scatterDataY.get(index)
-                // / (maxValueY - minValueY + 1) * h;
-                // }
-                .radius(3).strokeStyle("rgba(0,0,0,0.35)")
-                .fillStyle(new ProtovisFunctionString() {
-                    @Override
-                    public String f(ChartItem value, int index) {
-                        return value.getColour();
-                    }
-                });
+        scatter = chart
+                .add(Dot.createDot())
+                .data(ArrayUtils.toJsArray(chartItems))
+                .bottom(scatterBottom)
+                .left(scatterLeft)
+                .size(Math.min(chartHeight, chartWidth)
+                        / (chartItems.size() * 2)).fillStyle(chartFillStyle)
+                .strokeStyle(Colors.STEELBLUE);
     }
 
     @Override
     protected void registerEventHandler(String eventType,
             ProtovisEventHandler handler) {
+        scatter.event(eventType, handler);
     }
 
+    private void setChartParameters() {
+        chart.left(BORDER_WIDTH).bottom(BORDER_HEIGHT);
+    }
 }

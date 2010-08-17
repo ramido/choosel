@@ -13,19 +13,12 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.ui.widget.chart;
+package org.thechiselgroup.choosel.client.ui.widget.chart.protovis;
 
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventHandler;
+import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
-public class AreaChart extends ChartWidget {
+public interface ProtovisFunction {
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public void drawChart() {
-    }
+    void f(ChartItem value, int i);
 
-    @Override
-    protected void registerEventHandler(String eventType,
-            ProtovisEventHandler handler) {
-    }
 }
