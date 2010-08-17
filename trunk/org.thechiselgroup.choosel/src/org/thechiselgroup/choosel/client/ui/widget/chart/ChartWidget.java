@@ -44,6 +44,13 @@ import com.google.gwt.user.client.ui.Widget;
 public abstract class ChartWidget extends Widget {
 
     public static class ChartItemComparator implements Comparator<ChartItem> {
+
+        private String slotType;
+
+        public ChartItemComparator(String slotType) {
+            this.slotType = slotType;
+        }
+
         @Override
         public int compare(ChartItem item1, ChartItem item2) {
             return getDescriptionString(item1).compareTo(
@@ -51,8 +58,7 @@ public abstract class ChartWidget extends Widget {
         }
 
         private String getDescriptionString(ChartItem item) {
-            return item.getResourceItem()
-                    .getResourceValue(SlotResolver.DESCRIPTION_SLOT).toString();
+            return item.getResourceItem().getResourceValue(slotType).toString();
         }
     }
 
@@ -136,12 +142,12 @@ public abstract class ChartWidget extends Widget {
     protected void beforeRender() {
     }
 
-    protected double calculateAllResources(int i) {
-        return Double.parseDouble(chartItems.get(i).getResourceItem()
+    protected int calculateAllResources(int i) {
+        return Integer.parseInt(chartItems.get(i).getResourceItem()
                 .getResourceValue(SlotResolver.FONT_SIZE_SLOT).toString());
     }
 
-    protected double calculateHighlightedResources(int i) {
+    protected int calculateHighlightedResources(int i) {
         return chartItems.get(i).getResourceItem().getHighlightedResources()
                 .size();
     }
@@ -218,11 +224,6 @@ public abstract class ChartWidget extends Widget {
 
     protected void onEvent(Event e, int index) {
         getChartItem(index).onEvent(e);
-
-        // TODO remove once selection is fixed
-        if (e.getTypeInt() == Event.ONCLICK) {
-            renderChart();
-        }
     }
 
     protected abstract void registerEventHandler(String eventType,
@@ -269,7 +270,8 @@ public abstract class ChartWidget extends Widget {
                     .height(height).width(width);
         } else {
             chart = Panel.createWindowPanel().canvas(getElement());
-            Collections.sort(chartItems, new ChartItemComparator());
+            Collections.sort(chartItems, new ChartItemComparator(
+                    SlotResolver.DESCRIPTION_SLOT));
             drawChart();
             registerEventHandlers();
         }

@@ -19,6 +19,6 @@ import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
 public interface ProtovisFunctionBoolean {
 
-    boolean f(ChartItem value, int index);
+    boolean f(ChartItem value, int i);
 
 }

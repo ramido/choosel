@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.widget.chart.protovis;
 
+
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**

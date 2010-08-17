@@ -100,7 +100,7 @@ public class PieChart extends ChartWidget {
     private ProtovisFunctionString highlightedWedgeLabelText = new ProtovisFunctionString() {
         @Override
         public String f(ChartItem value, int i) {
-            return calculateHighlightedResources(i) < 1 ? null : Double
+            return calculateHighlightedResources(i) < 1 ? null : Integer
                     .toString(calculateHighlightedResources(i));
         }
     };
@@ -109,7 +109,7 @@ public class PieChart extends ChartWidget {
         @Override
         public String f(ChartItem value, int i) {
             return calculateAllResources(i) - calculateHighlightedResources(i) < 1 ? null
-                    : Double.toString(calculateAllResources(i)
+                    : Integer.toString(calculateAllResources(i)
                             - calculateHighlightedResources(i));
         }
     };
@@ -117,7 +117,7 @@ public class PieChart extends ChartWidget {
     private ProtovisFunctionString fullWedgeLabelText = new ProtovisFunctionString() {
         @Override
         public String f(ChartItem value, int i) {
-            return Double.toString(Math.max(calculateAllResources(i),
+            return Integer.toString(Math.max(calculateAllResources(i),
                     calculateHighlightedResources(i)));
         }
     };

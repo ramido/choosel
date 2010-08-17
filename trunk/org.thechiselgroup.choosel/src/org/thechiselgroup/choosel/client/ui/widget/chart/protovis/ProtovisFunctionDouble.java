@@ -19,6 +19,6 @@ import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
 public interface ProtovisFunctionDouble {
 
-    double f(ChartItem value, int index);
+    double f(ChartItem value, int i);
 
 }

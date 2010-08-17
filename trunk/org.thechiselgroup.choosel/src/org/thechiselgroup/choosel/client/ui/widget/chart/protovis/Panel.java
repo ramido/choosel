@@ -101,156 +101,110 @@ public class Panel extends Mark {
     public final native Panel def(String name, String constant) /*-{
         return this.def(name, constant);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Panel defaults(Mark mark) /*-{
         return this.defaults(mark);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
+    public final native Panel event(String eventType, Behavior behavior) /*-{
+        return this.event(eventType, behavior);
+    }-*/;
+
     public final native Panel event(String eventType, ProtovisEventHandler handler) /*-{
         return this.event(eventType, @org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::registerEvent(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisEventHandler;)(this, handler));
     }-*/;
-    // @formatter:on
-
-    // @formatter:off
+    
     public final native Panel events(String events) /*-{
         return this.events(events);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Panel fillStyle(ProtovisFunctionString f) /*-{
         return this.fillStyle(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionString(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionString;)(this,f));
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Panel fillStyle(String colour) /*-{
         return this.fillStyle(colour);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Panel height(Number height) /*-{
         return this.height(height);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Panel height(ProtovisFunctionDouble f) /*-{
         return this.height(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionDouble(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionDouble;)(this,f));
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Panel index(Number index) /*-{
         return this.index(index);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Panel left(double left) /*-{
         return this.left(left);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Panel left(ProtovisFunctionDouble f) /*-{
         return this.left(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionDouble(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionDouble;)(this,f));
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Panel parent(Panel panel) /*-{
         return this.parent(panel);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Panel proto(Mark mark) /*-{
         return this.proto(mark);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native void render() /*-{
         return this.render();
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Panel reverse(boolean reverse) /*-{
         return this.reverse(reverse);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Panel right(double right) /*-{
         return this.right(right);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Panel right(ProtovisFunctionDouble f) /*-{
         return this.right(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionDouble(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionDouble;)(this,f));
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Panel root(Panel panel) /*-{
         return this.root(panel);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Panel scale(Number scale) /*-{
         return this.scale(scale);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Panel title(String title) /*-{
         return this.title(title);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Panel top(double top) /*-{
         return this.top(top);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Panel top(ProtovisFunctionDouble f) /*-{
         return this.top(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionDouble(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionDouble;)(this,f));
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Panel type(String type) /*-{
         return this.type(type);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Panel visible(boolean visible) /*-{
         return this.visible(visible);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Panel width(Number width) /*-{
         return this.width(width);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Panel width(ProtovisFunctionDouble f) /*-{
         return this.width(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionDouble(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionDouble;)(this,f));
     }-*/;
-    // @formatter:on
 
 }
+// @formatter:on

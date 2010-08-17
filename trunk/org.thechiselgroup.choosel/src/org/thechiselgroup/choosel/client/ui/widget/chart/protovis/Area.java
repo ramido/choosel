@@ -22,9 +22,9 @@ import com.google.gwt.core.client.JavaScriptObject;
  * @author Bradley Blashko
  * 
  */
+// @formatter:off        
 public class Area extends Mark {
 
-    // @formatter:off        
     public static final native Area createArea() /*-{
         return $wnd.pv.Area;
     }-*/;
