@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.thechiselgroup.choosel.client.util.Delta;
@@ -33,13 +34,16 @@ import com.google.inject.Inject;
 // TODO change name
 public class ResourceSplitter implements ResourceContainer {
 
-    private Map<String, ResourceSet> categorizedSets = new HashMap<String, ResourceSet>();
+    // TODO Are resource sets too heavyweight here?
+    private Map<String, ResourceSet> categorizedResources = new HashMap<String, ResourceSet>();
 
     private transient HandlerManager eventBus;
 
-    private final ResourceMultiCategorizer multiCategorizer;
+    private ResourceMultiCategorizer multiCategorizer;
 
     private final ResourceSetFactory resourceSetFactory;
+
+    private List<Resource> allResources = new ArrayList<Resource>();
 
     @Inject
     public ResourceSplitter(ResourceMultiCategorizer multiCategorizer,
@@ -60,17 +64,11 @@ public class ResourceSplitter implements ResourceContainer {
     public void addAll(Iterable<Resource> resources) {
         assert resources != null;
 
+        addResourcesToAllResources(resources);
+
         Set<ResourceCategoryChange> changes = new HashSet<ResourceCategoryChange>();
-        Map<String, List<Resource>> resourcesPerCategory = categorize(resources);
-
-        for (Map.Entry<String, List<Resource>> entry : resourcesPerCategory
-                .entrySet()) {
-            addCategoryResources(entry.getKey(), entry.getValue(), changes);
-        }
-
-        if (!changes.isEmpty()) {
-            eventBus.fireEvent(new ResourceCategoriesChangedEvent(changes));
-        }
+        addResourcesToCategorization(resources, changes);
+        fireChanges(changes);
     }
 
     private void addCategoryResources(String category,
@@ -80,8 +78,8 @@ public class ResourceSplitter implements ResourceContainer {
         assert category != null;
         assert categoryResources != null;
 
-        if (categorizedSets.containsKey(category)) {
-            ResourceSet resourceSet = categorizedSets.get(category);
+        if (categorizedResources.containsKey(category)) {
+            ResourceSet resourceSet = categorizedResources.get(category);
 
             resourceSet.addAll(categoryResources);
 
@@ -91,7 +89,7 @@ public class ResourceSplitter implements ResourceContainer {
             ResourceSet resourceSet = resourceSetFactory.createResourceSet();
             resourceSet.addAll(categoryResources);
 
-            categorizedSets.put(category, resourceSet);
+            categorizedResources.put(category, resourceSet);
 
             changes.add(new ResourceCategoryChange(Delta.ADD, category,
                     resourceSet));
@@ -103,6 +101,23 @@ public class ResourceSplitter implements ResourceContainer {
         assert handler != null;
         return eventBus
                 .addHandler(ResourceCategoriesChangedEvent.TYPE, handler);
+    }
+
+    private void addResourcesToAllResources(Iterable<Resource> resources) {
+        for (Resource resource : resources) {
+            if (!allResources.contains(resource)) {
+                allResources.add(resource);
+            }
+        }
+    }
+
+    private void addResourcesToCategorization(Iterable<Resource> resources,
+            Set<ResourceCategoryChange> changes) {
+        Map<String, List<Resource>> resourcesPerCategory = categorize(resources);
+        for (Map.Entry<String, List<Resource>> entry : resourcesPerCategory
+                .entrySet()) {
+            addCategoryResources(entry.getKey(), entry.getValue(), changes);
+        }
     }
 
     private Map<String, List<Resource>> categorize(Iterable<Resource> resources) {
@@ -122,8 +137,22 @@ public class ResourceSplitter implements ResourceContainer {
         return resourcesPerCategory;
     }
 
+    private void clearCategories(Set<ResourceCategoryChange> changes) {
+        for (Entry<String, ResourceSet> entry : categorizedResources.entrySet()) {
+            changes.add(new ResourceCategoryChange(Delta.REMOVE,
+                    entry.getKey(), entry.getValue()));
+        }
+        categorizedResources.clear();
+    }
+
+    private void fireChanges(Set<ResourceCategoryChange> changes) {
+        if (!changes.isEmpty()) {
+            eventBus.fireEvent(new ResourceCategoriesChangedEvent(changes));
+        }
+    }
+
     public Map<String, ResourceSet> getCategorizedResourceSets() {
-        return new HashMap<String, ResourceSet>(categorizedSets);
+        return new HashMap<String, ResourceSet>(categorizedResources);
     }
 
     @Override
@@ -131,33 +160,29 @@ public class ResourceSplitter implements ResourceContainer {
         removeAll(new SingleItemIterable<Resource>(resource));
     }
 
+    // TODO change Iterable to Collection
     @Override
     public void removeAll(Iterable<Resource> resources) {
         assert resources != null;
 
+        removeResourcesFromAllResources(resources);
+
         Set<ResourceCategoryChange> changes = new HashSet<ResourceCategoryChange>();
-        Map<String, List<Resource>> resourcesPerCategory = categorize(resources);
-        for (Map.Entry<String, List<Resource>> entry : resourcesPerCategory
-                .entrySet()) {
-
-            removeCategoryResources(entry.getKey(), entry.getValue(), changes);
-        }
-
-        if (!changes.isEmpty()) {
-            eventBus.fireEvent(new ResourceCategoriesChangedEvent(changes));
-        }
+        removeResourcesFromCategorization(resources, changes);
+        fireChanges(changes);
     }
 
     private void removeCategoryResources(String category,
             List<Resource> resourcesToRemove,
             Set<ResourceCategoryChange> changes) {
 
-        ResourceSet storedCategoryResources = categorizedSets.get(category);
+        ResourceSet storedCategoryResources = categorizedResources
+                .get(category);
 
         if (storedCategoryResources.size() == resourcesToRemove.size()
                 && storedCategoryResources.containsAll(resourcesToRemove)) {
 
-            categorizedSets.remove(category);
+            categorizedResources.remove(category);
             changes.add(new ResourceCategoryChange(Delta.REMOVE, category,
                     storedCategoryResources));
 
@@ -166,5 +191,36 @@ public class ResourceSplitter implements ResourceContainer {
             changes.add(new ResourceCategoryChange(Delta.UPDATE, category,
                     storedCategoryResources));
         }
+    }
+
+    private void removeResourcesFromAllResources(Iterable<Resource> resources) {
+        for (Resource resource : resources) {
+            allResources.remove(resource);
+        }
+    }
+
+    private void removeResourcesFromCategorization(
+            Iterable<Resource> resources, Set<ResourceCategoryChange> changes) {
+
+        Map<String, List<Resource>> resourcesPerCategory = categorize(resources);
+        for (Map.Entry<String, List<Resource>> entry : resourcesPerCategory
+                .entrySet()) {
+            removeCategoryResources(entry.getKey(), entry.getValue(), changes);
+        }
+    }
+
+    public void setCategorizer(ResourceMultiCategorizer newCategorizer) {
+        assert newCategorizer != null;
+
+        if (newCategorizer.equals(multiCategorizer)) {
+            return;
+        }
+
+        multiCategorizer = newCategorizer;
+
+        Set<ResourceCategoryChange> changes = new HashSet<ResourceCategoryChange>();
+        clearCategories(changes);
+        addResourcesToCategorization(allResources, changes);
+        fireChanges(changes);
     }
 }

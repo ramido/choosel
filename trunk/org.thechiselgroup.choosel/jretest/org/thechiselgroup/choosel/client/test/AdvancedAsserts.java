@@ -15,8 +15,11 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.test;
 
+import static org.thechiselgroup.choosel.client.util.CollectionUtils.toSet;
+
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Assert;
 
@@ -50,6 +53,12 @@ public final class AdvancedAsserts {
         for (T expectedValue : expected) {
             assertContains(failureMessage, result, expectedValue);
         }
+    }
+
+    public static <S, T> void assertMapKeysEqual(Map<S, T> result,
+            S... expectedKeys) {
+
+        assertContentEquals(toSet(expectedKeys), result.keySet());
     }
 
     public static <T> void assertSortedEquals(List<T> expected, List<T> result) {
