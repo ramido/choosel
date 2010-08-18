@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.client.resources;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.thechiselgroup.choosel.client.util.Delta;
-import org.thechiselgroup.choosel.client.util.SingleItemIterable;
+import org.thechiselgroup.choosel.client.util.SingleItemCollection;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -57,11 +58,11 @@ public class ResourceSplitter implements ResourceContainer {
 
     @Override
     public void add(Resource resource) {
-        addAll(new SingleItemIterable<Resource>(resource));
+        addAll(new SingleItemCollection<Resource>(resource));
     }
 
     @Override
-    public void addAll(Iterable<Resource> resources) {
+    public void addAll(Collection<Resource> resources) {
         assert resources != null;
 
         addResourcesToAllResources(resources);
@@ -103,12 +104,11 @@ public class ResourceSplitter implements ResourceContainer {
                 .addHandler(ResourceCategoriesChangedEvent.TYPE, handler);
     }
 
-    private void addResourcesToAllResources(Iterable<Resource> resources) {
-        for (Resource resource : resources) {
-            if (!allResources.contains(resource)) {
-                allResources.add(resource);
-            }
-        }
+    private void addResourcesToAllResources(Collection<Resource> resources) {
+        List<Resource> newResources = new ArrayList<Resource>();
+        newResources.addAll(resources);
+        newResources.removeAll(allResources);
+        allResources.addAll(newResources);
     }
 
     private void addResourcesToCategorization(Iterable<Resource> resources,
@@ -157,12 +157,11 @@ public class ResourceSplitter implements ResourceContainer {
 
     @Override
     public void remove(Resource resource) {
-        removeAll(new SingleItemIterable<Resource>(resource));
+        removeAll(new SingleItemCollection<Resource>(resource));
     }
 
-    // TODO change Iterable to Collection
     @Override
-    public void removeAll(Iterable<Resource> resources) {
+    public void removeAll(Collection<Resource> resources) {
         assert resources != null;
 
         removeResourcesFromAllResources(resources);
@@ -193,10 +192,8 @@ public class ResourceSplitter implements ResourceContainer {
         }
     }
 
-    private void removeResourcesFromAllResources(Iterable<Resource> resources) {
-        for (Resource resource : resources) {
-            allResources.remove(resource);
-        }
+    private void removeResourcesFromAllResources(Collection<Resource> resources) {
+        allResources.removeAll(resources);
     }
 
     private void removeResourcesFromCategorization(

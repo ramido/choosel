@@ -20,7 +20,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
+import static org.thechiselgroup.choosel.client.util.CollectionUtils.toList;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.junit.Before;
@@ -28,32 +30,28 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.client.util.CollectionUtils;
 
 public class ResourceSetEventForwarderTest {
-
-    private ResourceSet source;
-
-    private ResourceSet source2 = createResources(1, 2, 3);
 
     @Mock
     private ResourceContainer target;
 
     @Test
     public void addAllResourcesOnEventFired() {
-        ResourceSetEventForwarder underTest = new ResourceSetEventForwarder(source,
-                target);
+        ResourceSet source = new DefaultResourceSet();
+        ResourceSetEventForwarder underTest = new ResourceSetEventForwarder(
+                source, target);
 
         underTest.init();
 
         source.addAll(createResources(1, 2));
 
-        ArgumentCaptor<Iterable> argument = ArgumentCaptor
-                .forClass(Iterable.class);
+        ArgumentCaptor<Collection> argument = ArgumentCaptor
+                .forClass(Collection.class);
 
         verify(target, times(1)).addAll(argument.capture());
 
-        List<Resource> result = CollectionUtils.toList(argument.getValue());
+        List<Resource> result = toList(argument.getValue());
 
         assertEquals(2, result.size());
         assertEquals(true, result.contains(createResource(1)));
@@ -63,19 +61,21 @@ public class ResourceSetEventForwarderTest {
     // TODO check again
     @Test
     public void removeAllResourcesOnEventFired() {
+        ResourceSet source = createResources(1, 2, 3);
+
         ResourceSetEventForwarder underTest = new ResourceSetEventForwarder(
-                source2, target);
+                source, target);
 
         underTest.init();
 
-        source2.removeAll(createResources(1, 2));
+        source.removeAll(createResources(1, 2));
 
-        ArgumentCaptor<Iterable> argument = ArgumentCaptor
-                .forClass(Iterable.class);
+        ArgumentCaptor<Collection> argument = ArgumentCaptor
+                .forClass(Collection.class);
 
         verify(target, times(1)).removeAll(argument.capture());
 
-        List<Resource> result = CollectionUtils.toList(argument.getValue());
+        List<Resource> result = toList(argument.getValue());
 
         assertEquals(2, result.size());
         assertEquals(true, result.contains(createResource(1)));
@@ -86,7 +86,7 @@ public class ResourceSetEventForwarderTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        source = new DefaultResourceSet();
+
     }
 
 }
