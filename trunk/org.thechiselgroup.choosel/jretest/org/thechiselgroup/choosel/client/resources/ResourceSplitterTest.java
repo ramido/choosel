@@ -30,6 +30,7 @@ import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.crea
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.toResourceSet;
 import static org.thechiselgroup.choosel.client.util.CollectionUtils.toSet;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -39,7 +40,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.util.Delta;
-import org.thechiselgroup.choosel.client.util.NullIterable;
 
 public class ResourceSplitterTest {
 
@@ -211,7 +211,7 @@ public class ResourceSplitterTest {
     @Test
     public void doNotFireResourceCategoryChangesWhenNothingChangesOnRemove() {
         splitter.addHandler(changeHandler);
-        splitter.removeAll(NullIterable.<Resource> nullIterable());
+        splitter.removeAll(Collections.<Resource> emptyList());
 
         verify(changeHandler, times(0)).onResourceCategoriesChanged(
                 any(ResourceCategoriesChangedEvent.class));
