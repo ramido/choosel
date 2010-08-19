@@ -174,7 +174,7 @@ public class BarChart extends ChartWidget {
         @Override
         public String f(ChartItem value, int i) {
             return value.getResourceItem()
-                    .getResourceValue(SlotResolver.DESCRIPTION_SLOT).toString();
+                    .getResourceValue(SlotResolver.CHART_LABEL_SLOT).toString();
         }
     };
 
@@ -279,9 +279,10 @@ public class BarChart extends ChartWidget {
 
         maxBarSize = 0;
         for (int i = 0; i < chartItems.size(); i++) {
-            int currentItem = Integer.parseInt(chartItems.get(i)
-                    .getResourceItem()
-                    .getResourceValue(SlotResolver.FONT_SIZE_SLOT).toString());
+            int currentItem = Integer
+                    .parseInt(chartItems.get(i).getResourceItem()
+                            .getResourceValue(SlotResolver.CHART_VALUE_SLOT)
+                            .toString());
             if (maxBarSize < currentItem) {
                 maxBarSize = currentItem;
             }

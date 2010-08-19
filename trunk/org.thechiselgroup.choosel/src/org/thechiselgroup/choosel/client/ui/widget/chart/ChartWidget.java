@@ -144,7 +144,7 @@ public abstract class ChartWidget extends Widget {
 
     protected int calculateAllResources(int i) {
         return Integer.parseInt(chartItems.get(i).getResourceItem()
-                .getResourceValue(SlotResolver.FONT_SIZE_SLOT).toString());
+                .getResourceValue(SlotResolver.CHART_VALUE_SLOT).toString());
     }
 
     protected int calculateHighlightedResources(int i) {
@@ -271,7 +271,7 @@ public abstract class ChartWidget extends Widget {
         } else {
             chart = Panel.createWindowPanel().canvas(getElement());
             Collections.sort(chartItems, new ChartItemComparator(
-                    SlotResolver.DESCRIPTION_SLOT));
+                    SlotResolver.CHART_LABEL_SLOT));
             drawChart();
             registerEventHandlers();
         }

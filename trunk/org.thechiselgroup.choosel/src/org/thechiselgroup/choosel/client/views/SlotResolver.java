@@ -22,6 +22,10 @@ import org.thechiselgroup.choosel.client.resolver.ResourceToValueResolver;
 // TODO create more flexible slot system
 public interface SlotResolver {
 
+    String CHART_LABEL_SLOT = "chart-label";
+
+    String CHART_VALUE_SLOT = "chart-value";
+
     String COLOR_SLOT = "color";
 
     String DATE_SLOT = "date";
@@ -46,6 +50,10 @@ public interface SlotResolver {
     String X_COORDINATE_SLOT = "x-coord";
 
     String Y_COORDINATE_SLOT = "y-coord";
+
+    ResourceToValueResolver createChartLabelSlotResolver(String category);
+
+    ResourceToValueResolver createChartValueSlotResolver(String category);
 
     ResourceToValueResolver createColorSlotResolver(String category,
             List<ResourceItemValueResolver> layers);
