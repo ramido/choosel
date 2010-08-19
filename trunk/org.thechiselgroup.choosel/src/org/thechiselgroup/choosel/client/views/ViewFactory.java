@@ -172,7 +172,7 @@ public class ViewFactory implements WindowContentFactory {
 
                     if (category.equals("workitem")) {
                         // TODO split by iteration
-                        return toSet((String) resource.getValue("priority"));
+                        return toSet((String) resource.getValue("type"));
                     }
 
                     if (category.equals(TestResourceSetFactory.DEFAULT_TYPE)) {

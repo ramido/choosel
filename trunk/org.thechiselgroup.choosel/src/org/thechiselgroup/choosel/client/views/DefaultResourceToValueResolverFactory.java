@@ -52,7 +52,7 @@ public class DefaultResourceToValueResolverFactory {
         }
 
         if (SlotResolver.CHART_LABEL_SLOT.equals(slotID)) {
-            return slotResolver.createDescriptionSlotResolver(category);
+            return slotResolver.createChartLabelSlotResolver(category);
         }
 
         if (SlotResolver.DATE_SLOT.equals(slotID)) {
