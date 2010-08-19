@@ -51,6 +51,10 @@ public class DefaultResourceToValueResolverFactory {
             return slotResolver.createDescriptionSlotResolver(category);
         }
 
+        if (SlotResolver.CHART_LABEL_SLOT.equals(slotID)) {
+            return slotResolver.createDescriptionSlotResolver(category);
+        }
+
         if (SlotResolver.DATE_SLOT.equals(slotID)) {
             return slotResolver.createDateSlotResolver(category);
         }
@@ -85,6 +89,10 @@ public class DefaultResourceToValueResolverFactory {
         }
 
         if (slotID.equals(SlotResolver.FONT_SIZE_SLOT)) {
+            return slotResolver.createFontSizeSlotResolver(category);
+        }
+
+        if (slotID.equals(SlotResolver.CHART_VALUE_SLOT)) {
             return slotResolver.createFontSizeSlotResolver(category);
         }
 

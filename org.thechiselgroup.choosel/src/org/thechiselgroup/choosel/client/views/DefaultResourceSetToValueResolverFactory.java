@@ -47,7 +47,8 @@ public class DefaultResourceSetToValueResolverFactory {
 
         // TODO need default aggregate resolvers for the different slots
         // e.g. for the tag cloud vs list
-        if (SlotResolver.DESCRIPTION_SLOT.equals(slotID)) {
+        if (SlotResolver.DESCRIPTION_SLOT.equals(slotID)
+                || SlotResolver.CHART_LABEL_SLOT.equals(slotID)) {
             return new ResourceSetToFirstResourcePropertyResolver(slotID,
                     resourceResolverFactory, resourceByTypeCategorizer) {
 
@@ -124,6 +125,10 @@ public class DefaultResourceSetToValueResolverFactory {
         }
 
         if (slotID.equals(SlotResolver.FONT_SIZE_SLOT)) {
+            return new ResourceSetToCountResolver();
+        }
+
+        if (slotID.equals(SlotResolver.CHART_VALUE_SLOT)) {
             return new ResourceSetToCountResolver();
         }
 
