@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.widget.graph;
 
+
 public class Node {
 
     private String id;

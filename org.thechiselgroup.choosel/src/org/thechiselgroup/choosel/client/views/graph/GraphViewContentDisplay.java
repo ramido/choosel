@@ -301,17 +301,19 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         List<ViewContentDisplayAction> actions = new ArrayList<ViewContentDisplayAction>();
 
         actions.add(new GraphLayoutAction(GraphLayouts.CIRCLE_LAYOUT));
-        actions.add(new GraphLayoutAction(GraphLayouts.HORIZONTAL_TREE_LAYOUT));
-        actions.add(new GraphLayoutAction(GraphLayouts.VERTICAL_TREE_LAYOUT));
-        actions.add(new GraphLayoutAction(GraphLayouts.RADIAL_LAYOUT));
-        actions.add(new GraphLayoutAction(GraphLayouts.SPRING_LAYOUT));
+        // actions.add(new
+        // GraphLayoutAction(GraphLayouts.HORIZONTAL_TREE_LAYOUT));
+        // actions.add(new
+        // GraphLayoutAction(GraphLayouts.VERTICAL_TREE_LAYOUT));
+        // actions.add(new GraphLayoutAction(GraphLayouts.RADIAL_LAYOUT));
+        // actions.add(new GraphLayoutAction(GraphLayouts.SPRING_LAYOUT));
         actions.add(new GraphLayoutAction(GraphLayouts.INDENTED_TREE_LAYOUT));
         actions.add(new GraphLayoutAction(GraphLayouts.GRID_LAYOUT_BY_NODE_ID));
         actions.add(new GraphLayoutAction(GraphLayouts.GRID_LAYOUT_BY_NODE_TYPE));
         actions.add(new GraphLayoutAction(GraphLayouts.GRID_LAYOUT_ALPHABETICAL));
         actions.add(new GraphLayoutAction(GraphLayouts.GRID_LAYOUT_BY_ARC_COUNT));
-        actions.add(new GraphLayoutAction(GraphLayouts.HORIZONTAL_LAYOUT));
-        actions.add(new GraphLayoutAction(GraphLayouts.VERTICAL_LAYOUT));
+        // actions.add(new GraphLayoutAction(GraphLayouts.HORIZONTAL_LAYOUT));
+        // actions.add(new GraphLayoutAction(GraphLayouts.VERTICAL_LAYOUT));
         actions.add(new GraphLayoutAction(GraphLayouts.FORCE_DIRECTED_LAYOUT));
 
         return actions;

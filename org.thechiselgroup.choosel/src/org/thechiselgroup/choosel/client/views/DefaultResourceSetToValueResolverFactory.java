@@ -47,8 +47,7 @@ public class DefaultResourceSetToValueResolverFactory {
 
         // TODO need default aggregate resolvers for the different slots
         // e.g. for the tag cloud vs list
-        if (SlotResolver.DESCRIPTION_SLOT.equals(slotID)
-                || SlotResolver.CHART_LABEL_SLOT.equals(slotID)) {
+        if (SlotResolver.DESCRIPTION_SLOT.equals(slotID)) {
             return new ResourceSetToFirstResourcePropertyResolver(slotID,
                     resourceResolverFactory, resourceByTypeCategorizer) {
 
@@ -67,12 +66,16 @@ public class DefaultResourceSetToValueResolverFactory {
 
                     return super.resolve(resources, category);
                 }
-
             };
             // TODO the default resolver // configuration depends on
             // the view content display or not?!?
             // return new ResourceSetToStringListValueResolver(slotID,
             // resourceResolverFactory, resourceByTypeCategorizer);
+        }
+
+        if (SlotResolver.CHART_LABEL_SLOT.equals(slotID)) {
+            return new ResourceSetToFirstResourcePropertyResolver(slotID,
+                    resourceResolverFactory, resourceByTypeCategorizer);
         }
 
         if (SlotResolver.COLOR_SLOT.equals(slotID)) {
