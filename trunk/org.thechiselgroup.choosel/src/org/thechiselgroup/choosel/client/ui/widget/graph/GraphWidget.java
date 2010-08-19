@@ -75,10 +75,16 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
         $doc.getElementById(swfID).addArc(arcId, sourceNodeId, targetNodeId, type);
     }-*/;
 
+    /*
+     * There is a bug in the JavaScript to Flex conversion for compiled GWT code
+     * that causes the label to appear as [Object object] in the Flex graph if
+     * it is passed in directly. That is why we create a separate JavaScript
+     * String and append the label String passed in from GWT.
+     */
     private static native void _addNode(String swfID, String id, String type,
             String label) /*-{
-        $doc.getElementById(swfID).addNode(id, type, label);
-        // $doc.getElementById(swfID).positionUnconnectedNode(id);
+        var jsLabel = "" + label;
+        $doc.getElementById(swfID).addNode(id, type, jsLabel);
     }-*/;
 
     private static native void _addNodeMenuItem(String swfID, String itemId,
