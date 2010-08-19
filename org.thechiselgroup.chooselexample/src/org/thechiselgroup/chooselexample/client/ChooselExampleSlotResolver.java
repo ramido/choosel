@@ -108,4 +108,14 @@ public class ChooselExampleSlotResolver extends DefaultSlotResolver {
     public ResourceToValueResolver createFontSizeSlotResolver(String category) {
         return new FixedValuePropertyValueResolver(new Integer(1));
     }
+
+	@Override
+	public ResourceToValueResolver createChartLabelSlotResolver(String category) {
+		return createDescriptionSlotResolver(category);
+	}
+
+	@Override
+	public ResourceToValueResolver createChartValueSlotResolver(String category) {
+        return new FixedValuePropertyValueResolver(new Integer(1));
+	}
 }
