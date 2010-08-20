@@ -31,6 +31,7 @@ import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.graph.ArcStyleProvider;
 import org.thechiselgroup.choosel.client.views.graph.DefaultGraphExpansionRegistry;
 import org.thechiselgroup.choosel.client.views.graph.NeighbourhoodServiceAsync;
+import org.thechiselgroup.choosel.client.windows.Branding;
 
 import com.google.inject.Singleton;
 import com.google.inject.name.Names;
@@ -50,6 +51,11 @@ public class BioMixerClientModule extends ChooselClientModule {
 				.annotatedWith(Names.named("mapping"))
 				.to(NCBOMappingNeighbourhoodServiceAsyncClientImplementation.class)
 				.in(Singleton.class);
+	}
+
+	@Override
+	protected Class<? extends Branding> getBrandingClass() {
+		return BioMixerBranding.class;
 	}
 
 	@Override

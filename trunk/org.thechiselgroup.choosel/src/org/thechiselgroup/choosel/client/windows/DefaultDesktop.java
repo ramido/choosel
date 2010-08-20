@@ -43,9 +43,13 @@ public class DefaultDesktop extends AbsolutePanel implements Desktop, HasSize {
 
     private List<WindowPanel> windows = new LinkedList<WindowPanel>();
 
+    private Branding branding;
+
     @Inject
-    public DefaultDesktop(CommandManager commandManager) {
+    public DefaultDesktop(CommandManager commandManager, Branding branding) {
         addStyleName(CSS_DESKTOP);
+
+        this.branding = branding;
 
         // TODO extract constants
         positionManager = new PositionManager(this, 7, 13, 10);
@@ -149,12 +153,11 @@ public class DefaultDesktop extends AbsolutePanel implements Desktop, HasSize {
 
     // TODO refactor: extract
     private void initBranding() {
-        Label appTitleLabel = new Label("Bio-Mixer");
+        Label appTitleLabel = new Label(branding.getApplicationTitle());
         appTitleLabel.addStyleName("branding-app-title");
         add(appTitleLabel);
 
-        Label copyRightLabel = new Label(
-                "(C) 2010 The CHISEL Group (www.thechiselgroup.org)");
+        Label copyRightLabel = new Label(branding.getCopyright());
         copyRightLabel.addStyleName("branding-copy-right");
         add(copyRightLabel);
     }
