@@ -41,154 +41,159 @@ import com.google.inject.Inject;
 
 public class ChooselExampleApplication extends ChooselApplication {
 
-    private static class DataSourceCallBack implements
-            AsyncCallback<Set<Resource>> {
+	private static class DataSourceCallBack implements
+			AsyncCallback<Set<Resource>> {
 
-        private ResourceSetsPresenter dataSourcesPresenter;
+		private ResourceSetsPresenter dataSourcesPresenter;
 
-        private String label;
+		private String label;
 
-        private final ResourceSetFactory resourceSetFactory;
+		private final ResourceSetFactory resourceSetFactory;
 
-        public DataSourceCallBack(String label,
-                ResourceSetsPresenter dataSourcesPresenter,
-                ResourceSetFactory resourceSetsFactory) {
+		public DataSourceCallBack(String label,
+				ResourceSetsPresenter dataSourcesPresenter,
+				ResourceSetFactory resourceSetsFactory) {
 
-            this.label = label;
-            this.dataSourcesPresenter = dataSourcesPresenter;
-            this.resourceSetFactory = resourceSetsFactory;
-        }
+			this.label = label;
+			this.dataSourcesPresenter = dataSourcesPresenter;
+			this.resourceSetFactory = resourceSetsFactory;
+		}
 
-        public void onFailure(Throwable e) {
-            Log.error(e.getMessage(), e);
-        }
+		public void onFailure(Throwable e) {
+			Log.error(e.getMessage(), e);
+		}
 
-        public void onSuccess(Set<Resource> resources) {
-            ResourceSet resourceSet = resourceSetFactory.createResourceSet();
-            resourceSet.addAll(resources);
-            resourceSet.setLabel(label);
+		public void onSuccess(Set<Resource> resources) {
+			ResourceSet resourceSet = resourceSetFactory.createResourceSet();
+			resourceSet.addAll(resources);
+			resourceSet.setLabel(label);
 
-            dataSourcesPresenter.addResourceSet(resourceSet);
-        }
-    }
+			dataSourcesPresenter.addResourceSet(resourceSet);
+		}
+	}
 
-    public static final String DATA_PANEL = "data";
+	public static final String DATA_PANEL = "data";
 
-    @Inject
-    private GeoRSSServiceAsync geoRssService;
+	@Inject
+	private GeoRSSServiceAsync geoRssService;
 
-    private void addDataSourcesButton() {
-        Button geoRssButton = new Button("Tsunami / Earthquake");
-        geoRssButton.addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                final ResourceSetsPresenter dataSourcesPresenter = createResourceSetsPresenter();
-
-                // TODO this type cannot be stored yet
-                createWindow(new AbstractWindowContent("Data Sources", "TODO") {
-                    @Override
-                    public Widget asWidget() {
-                        return dataSourcesPresenter.asWidget();
-                    }
-                });
-
-                geoRssService
-                        .getGeoRSS(
-                                "http://earthquake.usgs.gov/eqcenter/catalogs/shakerss.xml",
-                                "earthquake", new DataSourceCallBack(
-                                        "earthquake", dataSourcesPresenter,
-                                        resourceSetsFactory));
-                geoRssService
-                        .getGeoRSS(
-                                "http://www.prh.noaa.gov/ptwc/feeds/ptwc_rss_pacific.xml",
-                                "tsunami", new DataSourceCallBack("tsunami",
-                                        dataSourcesPresenter,
-                                        resourceSetsFactory));
-            }
-
-        });
-
-        addWidget(DATA_PANEL, geoRssButton);
-    }
-
-    // TODO change into command
-    private void addTestDataSourceButton() {
-        Button b = new Button("Test Data");
-        b.addClickHandler(new ClickHandler() {
+	private void addDataSourcesButton() {
+		Button geoRssButton = new Button("Tsunami / Earthquake");
+		geoRssButton.addClickHandler(new ClickHandler() {
 
 			@Override
-            public void onClick(ClickEvent event) {
-                String title = "TestResources";
-                final ResourceSetsPresenter dataSourcesPresenter = new ResourceSetAvatarResourceSetsPresenter(
-                        defaultDragAvatarFactory);
-                dataSourcesPresenter.init();
+			public void onClick(ClickEvent event) {
+				final ResourceSetsPresenter dataSourcesPresenter = createResourceSetsPresenter();
 
-                commandManager.execute(new CreateWindowCommand(desktop,
-                        new AbstractWindowContent(title, "TODO") {
-                            @Override
-                            public Widget asWidget() {
-                                return dataSourcesPresenter.asWidget();
-                            }
-                        }));
+				// TODO this type cannot be stored yet
+				createWindow(new AbstractWindowContent("Data Sources", "TODO") {
+					@Override
+					public Widget asWidget() {
+						return dataSourcesPresenter.asWidget();
+					}
+				});
 
-                int counter = 0;
-                ResourceSet resourceSet = createResourceSet();
-                resourceSet.setLabel("Test");
-                for (int i = 0; i < 25; i++)
-                    resourceSet.add(TestResourceSetFactory.createResource(i));
-                for (Resource resource : resourceSet) {
-                    resource.putValue("date", new Date(1281991537 + 100000 * (counter++)).toString());
-                    resource.putValue("magnitude", Random.nextInt(10));
-                    int category = Random.nextInt(10);
-                    resource.putValue("tagContent", "test" + category);
-                    resource.putValue("label", "test" + category);
-                }
+				geoRssService
+						.getGeoRSS(
+								"http://earthquake.usgs.gov/eqcenter/catalogs/shakerss.xml",
+								"earthquake", new DataSourceCallBack(
+										"earthquake", dataSourcesPresenter,
+										resourceSetsFactory));
+				geoRssService
+						.getGeoRSS(
+								"http://www.prh.noaa.gov/ptwc/feeds/ptwc_rss_pacific.xml",
+								"tsunami", new DataSourceCallBack("tsunami",
+										dataSourcesPresenter,
+										resourceSetsFactory));
+			}
 
-                dataSourcesPresenter.addResourceSet(resourceSet);
+		});
 
-                ResourceSet graphResourceSet = createResourceSet();
-                graphResourceSet.setLabel("GraphTest");
-                for (int i = 0; i < 25; i++) {
-                    Resource resource = new Resource("graphtest:" + i);
-                    resource.putValue("title", "graphtest:" + i);
-                    if (i > 0) {
-                        resource.putValueAsUriList("parent", "graphtest:"
-                                + (i - 1));
-                    }
-                    graphResourceSet.add(resource);
-                }
+		addWidget(DATA_PANEL, geoRssButton);
+	}
 
-                dataSourcesPresenter.addResourceSet(graphResourceSet);
-            }
+	// TODO change into command
+	private void addTestDataSourceButton() {
+		Button b = new Button("Test Data");
+		b.addClickHandler(new ClickHandler() {
 
-        });
+			@Override
+			public void onClick(ClickEvent event) {
+				String title = "TestResources";
+				final ResourceSetsPresenter dataSourcesPresenter = new ResourceSetAvatarResourceSetsPresenter(
+						defaultDragAvatarFactory);
+				dataSourcesPresenter.init();
 
-        addWidget(DATA_PANEL, b);
-    }
+				commandManager.execute(new CreateWindowCommand(desktop,
+						new AbstractWindowContent(title, "TODO") {
+							@Override
+							public Widget asWidget() {
+								return dataSourcesPresenter.asWidget();
+							}
+						}));
 
-    @Override
-    protected void initCustomActions() {
-        addDataSourcesButton();
-        addTestDataSourceButton();
+				int counter = 0;
+				ResourceSet resourceSet = createResourceSet();
+				resourceSet.setLabel("Test");
+				for (int i = 0; i < 25; i++)
+					resourceSet.add(TestResourceSetFactory.createResource(i));
+				for (Resource resource : resourceSet) {
+					resource.putValue("date", new Date(
+							1281991537 + 100000 * (counter++)).toString());
+					resource.putValue("magnitude", Random.nextInt(10));
+					int category = Random.nextInt(10);
+					resource.putValue("tagContent", "test" + category);
+					resource.putValue("label", "test" + category);
+				}
 
-        addWindowContentButton(VIEWS_PANEL, "Note", "note");
-        addWindowContentButton(VIEWS_PANEL, "List",
-                ChooselInjectionConstants.TYPE_LIST);
-        addWindowContentButton(VIEWS_PANEL, "Map", "Map");
-        addWindowContentButton(VIEWS_PANEL, "Timeline", "Timeline");
-        addWindowContentButton(VIEWS_PANEL, "Bar", "Bar");
-        addWindowContentButton(VIEWS_PANEL, "Pie", "Pie");
-        addWindowContentButton(VIEWS_PANEL, "Dot", "Dot");
-        addWindowContentButton(VIEWS_PANEL, "Scatter", "Scatter");
-        addWindowContentButton(VIEWS_PANEL, "Time", "Time");
-        addWindowContentButton(VIEWS_PANEL, "Tag Cloud", "TagCloud");
-        addWindowContentButton(VIEWS_PANEL, "Graph", "Graph");
-    }
+				dataSourcesPresenter.addResourceSet(resourceSet);
 
-    @Override
-    protected void initCustomPanels() {
-        addPanel(VIEWS_PANEL, "Views");
-        addPanel(DATA_PANEL, "Data Sources");
-    }
+				ResourceSet graphResourceSet = createResourceSet();
+				graphResourceSet.setLabel("GraphTest");
+				for (int i = 0; i < 25; i++) {
+					Resource resource = new Resource("graphtest:" + i);
+					resource.putValue("title", "graphtest:" + i);
+					if (i > 0) {
+						resource.putValueAsUriList("parent", "graphtest:"
+								+ (i - 1));
+					}
+					graphResourceSet.add(resource);
+				}
+
+				dataSourcesPresenter.addResourceSet(graphResourceSet);
+			}
+
+		});
+
+		addWidget(DATA_PANEL, b);
+	}
+
+	@Override
+	protected void initCustomActions() {
+		addDataSourcesButton();
+		// addTestDataSourceButton();
+
+		addWindowContentButton(VIEWS_PANEL, "Note", "note");
+		addWindowContentButton(VIEWS_PANEL, "List",
+				ChooselInjectionConstants.TYPE_LIST);
+		addWindowContentButton(VIEWS_PANEL, "Map", "Map");
+		addWindowContentButton(VIEWS_PANEL, "Timeline", "Timeline");
+		// addWindowContentButton(VIEWS_PANEL, "Bar", "Bar");
+		// addWindowContentButton(VIEWS_PANEL, "Pie", "Pie");
+		// addWindowContentButton(VIEWS_PANEL, "Dot", "Dot");
+		// addWindowContentButton(VIEWS_PANEL, "Scatter", "Scatter");
+		// addWindowContentButton(VIEWS_PANEL, "Time", "Time");
+		// addWindowContentButton(VIEWS_PANEL, "Tag Cloud", "TagCloud");
+		// addWindowContentButton(VIEWS_PANEL, "Graph", "Graph");
+
+		addWindowContentButton(HELP_PANEL, "Help Content", "help");
+		addInfoButton();
+	}
+
+	@Override
+	protected void initCustomPanels() {
+		addPanel(VIEWS_PANEL, "Views");
+		addPanel(DATA_PANEL, "Data Sources");
+		addPanel(HELP_PANEL, "Help");
+	}
 }

@@ -32,7 +32,10 @@ public class SimplePropertyValueResolver implements ResourceToValueResolver {
 
     @Override
     public Object resolve(Resource resource) {
-        return resource.getValue(propertyName).toString();
+        /*
+         * Do not change this to .toString()
+         */
+        return resource.getValue(propertyName);
     }
 
     public void setPropertyName(String propertyName) {

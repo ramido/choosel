@@ -34,50 +34,11 @@ public class DefaultDetailsWidgetHelper extends DetailsWidgetHelper {
         super(resourceSetFactory, dragAvatarFactory, dragController);
     }
 
-    // TODO use dragAvatarFactory (injection)
     @Override
     public Widget createDetailsWidget(ResourceSet resources,
             ResourceSetToValueResolver resolver) {
 
-        VerticalPanel verticalPanel = GWT.create(VerticalPanel.class);
-
-        // / XXX broken in resource item change, reactivate and fix
-        // for (Resource resource : resources) {
-        // // FIXME use generic way to put in custom widgets
-        // if (resource.getUri().startsWith("tsunami")) {
-        // ResourceSetAvatar avatar = new ResourceSetAvatar("Tsunami",
-        // "avatar-resourceSet", resources, ResourceSetAvatarType.SET);
-        // avatar.setEnabled(true);
-        // dragController.setDraggable(avatar, true);
-        // verticalPanel.add(avatar);
-        //
-        // String value = resolver.getValue(resource).toString();
-        // HTML html = GWT.create(HTML.class);
-        // html.setHTML(value);
-        // verticalPanel.add(html);
-        // } else if (resource.getUri().startsWith("earthquake")) {
-        // ResourceSetAvatar avatar = new ResourceSetAvatar("Earthquake",
-        // "avatar-resourceSet", resources, ResourceSetAvatarType.SET);
-        // avatar.setEnabled(true);
-        // dragController.setDraggable(avatar, true);
-        // verticalPanel.add(avatar);
-        //
-        // String value = resolver.getValue(resource).toString();
-        // HTML html = GWT.create(HTML.class);
-        // html.setHTML(value);
-        // verticalPanel.add(html);
-        // } else {
-        // verticalPanel.add(avatarFactory.createAvatar(resources));
-        //
-        // String value = resolver.getValue(resource).toString();
-        // HTML html = GWT.create(HTML.class);
-        // html.setHTML(value);
-        // verticalPanel.add(html);
-        // }
-        // }
-        //
-
-        return verticalPanel;
+        return GWT.<VerticalPanel> create(VerticalPanel.class);
     }
 
 }
