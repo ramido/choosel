@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.chooselexample.client;
 
-import org.thechiselgroup.choosel.client.resolver.FixedValuePropertyValueResolver;
 import org.thechiselgroup.choosel.client.resolver.PropertyValueResolverConverterWrapper;
 import org.thechiselgroup.choosel.client.resolver.ResourceToValueResolver;
 import org.thechiselgroup.choosel.client.resolver.SimplePropertyValueResolver;
@@ -27,95 +26,80 @@ import org.thechiselgroup.choosel.client.views.SlotResolver;
 
 public class ChooselExampleSlotResolver extends DefaultSlotResolver {
 
-    @Override
-    public ResourceToValueResolver createDateSlotResolver(String type) {
-        return new SimplePropertyValueResolver("date");
-    }
-
-    @Override
-    public ResourceToValueResolver createDescriptionSlotResolver(String category) {
-        // TODO switch based on category -- need category as part of layerModel
-        // TODO resources as part of layerModel
-        // TODO how to do the automatic color assignment?
-        // TODO refactor // extract
-        if ("tsunami".equals(category)) {
-            return new SimplePropertyValueResolver("date");
-        }
-
-        if ("earthquake".equals(category)) {
-            return new SimplePropertyValueResolver("description");
-        }
-
-        if ("csv".equals(category)) {
-            return new SimplePropertyValueResolver("value");
-        }
-
-        if ("graphtest".equals(category)) {
-            return new SimplePropertyValueResolver("title");
-        }
-
-//        if (TestResourceSetFactory.DEFAULT_TYPE.equals(category)) {
-//            return new SimplePropertyValueResolver(
-//                    TestResourceSetFactory.LABEL_KEY);
-//        }
-        
-        if (TestResourceSetFactory.DEFAULT_TYPE.equals(category)) {
-            return new SimplePropertyValueResolver(
-                    SlotResolver.LABEL_SLOT);
-        }
-
-        throw new RuntimeException("failed creating slot mapping");
-    }
-
-    @Override
-    public ResourceToValueResolver createLabelSlotResolver(String category) {
-
-        Converter<Float, String> converter = new Converter<Float, String>() {
-            @Override
-            public String convert(Float value) throws ConversionException {
-                if (value != null) {
-                    int f = (value).intValue();
-                    return "" + f;
-                }
-
-                return "";
-            }
-        };
-
-        SimplePropertyValueResolver resolver;
-        if ("csv".equals(category)) {
-            return new SimplePropertyValueResolver("value");
-        } else if ("graphtest".equals(category)) {
-            return new SimplePropertyValueResolver("description");
-        } else {
-            resolver = new SimplePropertyValueResolver("magnitude");
-        }
-
-        return new PropertyValueResolverConverterWrapper(resolver, converter);
-    }
-
-    @Override
-    public ResourceToValueResolver createLocationSlotResolver(String category) {
-        return new SimplePropertyValueResolver("location");
-    }
-
-    @Override
-    public ResourceToValueResolver createMagnitudeSlotResolver(String type) {
-        return new SimplePropertyValueResolver("magnitude");
-    }
-
-    @Override
-    public ResourceToValueResolver createFontSizeSlotResolver(String category) {
-        return new FixedValuePropertyValueResolver(new Integer(1));
-    }
-
 	@Override
-	public ResourceToValueResolver createChartLabelSlotResolver(String category) {
-		return createDescriptionSlotResolver(category);
+	public ResourceToValueResolver createDateSlotResolver(String type) {
+		return new SimplePropertyValueResolver("date");
 	}
 
 	@Override
-	public ResourceToValueResolver createChartValueSlotResolver(String category) {
-        return new FixedValuePropertyValueResolver(new Integer(1));
+	public ResourceToValueResolver createDescriptionSlotResolver(String category) {
+		// TODO switch based on category -- need category as part of layerModel
+		// TODO resources as part of layerModel
+		// TODO how to do the automatic color assignment?
+		// TODO refactor // extract
+		if ("tsunami".equals(category)) {
+			return new SimplePropertyValueResolver("date");
+		}
+
+		if ("earthquake".equals(category)) {
+			return new SimplePropertyValueResolver("description");
+		}
+
+		if ("csv".equals(category)) {
+			return new SimplePropertyValueResolver("value");
+		}
+
+		if ("graphtest".equals(category)) {
+			return new SimplePropertyValueResolver("title");
+		}
+
+		// if (TestResourceSetFactory.DEFAULT_TYPE.equals(category)) {
+		// return new SimplePropertyValueResolver(
+		// TestResourceSetFactory.LABEL_KEY);
+		// }
+
+		if (TestResourceSetFactory.DEFAULT_TYPE.equals(category)) {
+			return new SimplePropertyValueResolver(SlotResolver.LABEL_SLOT);
+		}
+
+		throw new RuntimeException("failed creating slot mapping");
 	}
+
+	@Override
+	public ResourceToValueResolver createLabelSlotResolver(String category) {
+
+		Converter<Float, String> converter = new Converter<Float, String>() {
+			@Override
+			public String convert(Float value) throws ConversionException {
+				if (value != null) {
+					int f = (value).intValue();
+					return "" + f;
+				}
+
+				return "";
+			}
+		};
+
+		SimplePropertyValueResolver resolver;
+		if ("csv".equals(category)) {
+			return new SimplePropertyValueResolver("value");
+		} else if ("graphtest".equals(category)) {
+			return new SimplePropertyValueResolver("description");
+		} else {
+			resolver = new SimplePropertyValueResolver("magnitude");
+		}
+
+		return new PropertyValueResolverConverterWrapper(resolver, converter);
+	}
+
+	@Override
+	public ResourceToValueResolver createLocationSlotResolver(String category) {
+		return new SimplePropertyValueResolver("location");
+	}
+
+	@Override
+	public ResourceToValueResolver createMagnitudeSlotResolver(String type) {
+		return new SimplePropertyValueResolver("magnitude");
+	}
+
 }

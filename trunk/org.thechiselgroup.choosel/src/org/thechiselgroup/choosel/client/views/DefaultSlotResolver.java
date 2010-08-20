@@ -26,6 +26,16 @@ public abstract class DefaultSlotResolver implements SlotResolver {
     // REMOVE, use in resource set resolver fac
     private static final String[] COLORS = new String[] { "#6495ed", "#b22222" };
 
+    @Override
+    public ResourceToValueResolver createChartLabelSlotResolver(String category) {
+        return createDescriptionSlotResolver(category);
+    }
+
+    @Override
+    public ResourceToValueResolver createChartValueSlotResolver(String category) {
+        return new FixedValuePropertyValueResolver(new Integer(1));
+    }
+
     // REMOVE, use in resource set resolver fac
     @Override
     public ResourceToValueResolver createColorSlotResolver(String category,
@@ -38,6 +48,11 @@ public abstract class DefaultSlotResolver implements SlotResolver {
     @Override
     public ResourceToValueResolver createDateSlotResolver(String type) {
         return new SimplePropertyValueResolver("date");
+    }
+
+    @Override
+    public ResourceToValueResolver createFontSizeSlotResolver(String category) {
+        return new FixedValuePropertyValueResolver(new Integer(1));
     }
 
     @Override
