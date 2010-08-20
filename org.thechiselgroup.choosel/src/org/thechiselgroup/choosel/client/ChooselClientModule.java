@@ -92,6 +92,7 @@ import org.thechiselgroup.choosel.client.views.map.MapViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.text.ListViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.text.TagCloudViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.timeline.TimeLineViewContentDisplayFactory;
+import org.thechiselgroup.choosel.client.windows.Branding;
 import org.thechiselgroup.choosel.client.windows.DefaultDesktop;
 import org.thechiselgroup.choosel.client.windows.Desktop;
 import org.thechiselgroup.choosel.client.windows.ProxyWindowContentFactory;
@@ -296,8 +297,8 @@ public class ChooselClientModule extends AbstractGinModule implements
         bind(ArcStyleProvider.class).to(getArcStyleProviderClass()).in(
                 Singleton.class);
 
-        bind(GraphExpansionRegistry.class)
-                .to(getGraphExpansionRegistryClass()).in(Singleton.class);
+        bind(GraphExpansionRegistry.class).to(getGraphExpansionRegistryClass())
+                .in(Singleton.class);
 
         bindDisplays();
 
@@ -307,6 +308,8 @@ public class ChooselClientModule extends AbstractGinModule implements
                 Singleton.class);
 
         bind(SlotResolver.class).to(getSlotResolverClass()).in(Singleton.class);
+
+        bind(Branding.class).to(getBrandingClass()).in(Singleton.class);
 
         bindCustomServices();
 
@@ -319,6 +322,10 @@ public class ChooselClientModule extends AbstractGinModule implements
 
     protected Class<? extends ArcStyleProvider> getArcStyleProviderClass() {
         return DefaultArcStyleProvider.class;
+    }
+
+    protected Class<? extends Branding> getBrandingClass() {
+        return DefaultBranding.class;
     }
 
     protected Class<? extends CategoryLabelProvider> getCategoryLabelProviderClass() {
