@@ -142,12 +142,20 @@ public final class CSS {
     }
 
     public static void setSize(Element element, int width, int height) {
-        setStyleAttribute(element, WIDTH, width + PX);
+        setWidth(element, width);
         setStyleAttribute(element, HEIGHT, height + PX);
     }
 
     public static void setWhitespace(Element element, String value) {
         setStyleAttribute(element, WHITE_SPACE, value);
+    }
+
+    public static void setWidth(Element element, int width) {
+        setStyleAttribute(element, WIDTH, width + PX);
+    }
+
+    public static void setWidth(Widget widget, int width) {
+        setWidth(widget.getElement(), width);
     }
 
     public static void setZIndex(Element element, int zIndex) {
