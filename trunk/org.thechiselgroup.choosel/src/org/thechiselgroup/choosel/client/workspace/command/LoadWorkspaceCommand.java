@@ -33,9 +33,18 @@ public class LoadWorkspaceCommand implements AsyncCommand, HasDescription {
     public LoadWorkspaceCommand(Long workspaceId, String workspaceName,
             WorkspacePersistenceManager persistenceManager) {
 
+        assert workspaceId != null;
+        assert persistenceManager != null;
+
         this.workspaceId = workspaceId;
         this.workspaceName = workspaceName;
         this.persistenceManager = persistenceManager;
+    }
+
+    public LoadWorkspaceCommand(Long workspaceID,
+            WorkspacePersistenceManager persistenceManager) {
+
+        this(workspaceID, null, persistenceManager);
     }
 
     @Override
@@ -56,7 +65,12 @@ public class LoadWorkspaceCommand implements AsyncCommand, HasDescription {
 
     @Override
     public String getDescription() {
-        return "Loading workspace '" + workspaceName + "'";
-    }
+        String result = "Loading workspace";
 
+        if (workspaceName != null) {
+            result += " '" + workspaceName + "'";
+        }
+
+        return result;
+    }
 }
