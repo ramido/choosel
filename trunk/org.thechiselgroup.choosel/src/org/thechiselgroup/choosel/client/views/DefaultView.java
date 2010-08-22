@@ -44,7 +44,6 @@ import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.SwitchingResourceSet;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
-import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.ui.CSS;
 import org.thechiselgroup.choosel.client.ui.WidgetFactory;
@@ -201,11 +200,8 @@ public class DefaultView extends AbstractWindowContent implements View {
     public void addSelectionSet(ResourceSet selectionSet) {
         assert selectionSet != null;
 
-        this.selectionSets.add(selectionSet);
+        selectionSets.add(selectionSet);
         selectionPresenter.addResourceSet(selectionSet);
-
-        // XXX HACK
-        updateSelectionAvatars();
     }
 
     @Override
@@ -716,13 +712,11 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     @Override
     public void setSelection(ResourceSet newSelectionModel) {
-        // assert selectionSets.contains(newSelectionModel); TODO why does this
-        // not work?!?
+        assert newSelectionModel == null
+                || selectionSets.contains(newSelectionModel);
 
-        this.selection.setDelegate(newSelectionModel);
-
-        // XXX HACK
-        updateSelectionAvatars();
+        selection.setDelegate(newSelectionModel);
+        selectionPresenter.setSelectedResourceSet(selection.getDelegate());
     }
 
     private void storeContentDisplaySettings(Memento memento) {
@@ -829,20 +823,6 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         contentDisplay.update(addedResourceItems,
                 Collections.<ResourceItem> emptySet(), removedResourceItems);
-    }
-
-    // XXX HACK
-    private void updateSelectionAvatars() {
-        Map<ResourceSet, ResourceSetAvatar> avatars = selectionPresenter
-                .getAvatars();
-        for (ResourceSetAvatar avatar : avatars.values()) {
-            // TODO test
-            if (avatar.getResourceSet().equals(selection.getDelegate())) {
-                avatar.setEnabledCSSClass("avatar-selection");
-            } else {
-                avatar.setEnabledCSSClass("avatar-resourceSet");
-            }
-        }
     }
 
     private void updateSelectionStatusDisplay(List<Resource> resources,

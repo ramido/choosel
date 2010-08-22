@@ -15,8 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources.ui;
 
-import java.util.Map;
-
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.Presenter;
 import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
@@ -27,13 +25,12 @@ public interface ResourceSetsPresenter extends Presenter, Disposable,
 
     void addResourceSet(ResourceSet resources);
 
-    // XXX HACK TODO remove
-    Map<ResourceSet, ResourceSetAvatar> getAvatars();
-
     void removeResourceSet(ResourceSet resources);
 
     void replaceResourceSet(ResourceSet oldResources, ResourceSet newResources);
 
     void setResourceSetEnabled(ResourceSet resource, boolean enabled);
+
+    void setSelectedResourceSet(ResourceSet resources);
 
 }

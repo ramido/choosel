@@ -31,6 +31,12 @@ import com.google.inject.Inject;
 public class ResourceSetAvatarResourceSetsPresenter implements
         ResourceSetsPresenter {
 
+    // TODO move
+    public static final String AVATAR_RESOURCE_SET = "avatar-resourceSet";
+
+    // TODO move
+    public static final String AVATAR_SELECTION = "avatar-selection";
+
     private ResourceSetAvatarFactory dragAvatarFactory;
 
     private HorizontalPanel panel;
@@ -83,12 +89,6 @@ public class ResourceSetAvatarResourceSetsPresenter implements
         return resourceSetsToDragAvatars.get(resource);
     }
 
-    // XXX HACK TODO remove
-    @Override
-    public Map<ResourceSet, ResourceSetAvatar> getAvatars() {
-        return resourceSetsToDragAvatars;
-    }
-
     @Override
     public void init() {
         panel = GWT.create(HorizontalPanel.class);
@@ -133,5 +133,18 @@ public class ResourceSetAvatarResourceSetsPresenter implements
     @Override
     public void setResourceSetEnabled(ResourceSet resource, boolean enabled) {
         getAvatar(resource).setEnabled(enabled);
+    }
+
+    // TODO test
+    @Override
+    public void setSelectedResourceSet(ResourceSet selectedResourceSet) {
+        for (ResourceSetAvatar avatar : resourceSetsToDragAvatars.values()) {
+            // TODO should be flag on avatar
+            if (avatar.getResourceSet().equals(selectedResourceSet)) {
+                avatar.setEnabledCSSClass(AVATAR_SELECTION);
+            } else {
+                avatar.setEnabledCSSClass(AVATAR_RESOURCE_SET);
+            }
+        }
     }
 }
