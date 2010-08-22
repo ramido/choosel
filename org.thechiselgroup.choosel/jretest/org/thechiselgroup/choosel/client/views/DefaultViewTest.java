@@ -20,6 +20,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -45,6 +46,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.label.SelectionModelLabelFactory;
+import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceByUriTypeCategorizer;
@@ -54,6 +56,7 @@ import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ResourceSplitter;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
+import org.thechiselgroup.choosel.client.resources.persistence.DefaultResourceSetCollector;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
 
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -254,6 +257,12 @@ public class DefaultViewTest {
                 resourceSplitter, contentDisplay, "", "",
                 resourceSetToValueResolver, resourceModel,
                 resourceModelPresenter, hoverModel));
+
+        when(
+                contentDisplay.createResourceItem(
+                        any(ResourceItemValueResolver.class),
+                        any(String.class), any(ResourceSet.class),
+                        eq(hoverModel))).thenReturn(resourceItem);
     }
 
     @Test
@@ -396,7 +405,7 @@ public class DefaultViewTest {
                 any(ViewContentDisplayCallback.class));
     }
 
-    // TODO
+    // TODO test for specific items
     @Test
     public void removeResourceItemsOnResourceSetRemoved() {
         ResourceSet resources1 = createResources(CATEGORY_1, 1, 3, 4);
@@ -414,13 +423,25 @@ public class DefaultViewTest {
      * Issue 58.
      */
     @Test
-    public void restoreSelectedSetColoring() {
-        // TODO
-        // create view
-        // create selection
-        // store view
-        // restore view (on new view ?!?)
-        // test selection
+    public void restoreSelectedResourceSetInSelectionPresenter() {
+        ResourceSet selection1 = createResources(1);
+        DefaultResourceSetCollector resourceSetCollector = new DefaultResourceSetCollector();
+
+        // create view & selection
+        when(resourceItem.getResourceSet()).thenReturn(createResources(1));
+        underTest.getResourceModel().addResources(createResources(1));
+        underTest.addSelectionSet(selection1);
+        underTest.setSelection(selection1);
+
+        // store old view state & restore it on new view
+        Memento memento = underTest.save(resourceSetCollector);
+        selectionPresenter = mock(ResourceSetsPresenter.class);
+        createView();
+        underTest.init();
+        underTest.doRestore(memento, resourceSetCollector);
+
+        // verify
+        verify(selectionPresenter, times(1)).setSelectedResourceSet(selection1);
     }
 
     @Test
@@ -456,12 +477,6 @@ public class DefaultViewTest {
         MockitoAnnotations.initMocks(this);
 
         createView();
-
-        when(
-                contentDisplay.createResourceItem(
-                        any(ResourceItemValueResolver.class),
-                        any(String.class), any(ResourceSet.class),
-                        eq(hoverModel))).thenReturn(resourceItem);
 
         when(contentDisplay.getSlotIDs()).thenReturn(new String[] { SLOT_ID },
                 new String[] {});
@@ -549,7 +564,7 @@ public class DefaultViewTest {
     }
 
     @Test
-    public void updateSelectinoPresenterWhenSelectedSetChanges() {
+    public void updateSelectionPresenterWhenSelectedSetChanges() {
         ResourceSet selection1 = createResources(1);
         ResourceSet selection2 = createResources();
 

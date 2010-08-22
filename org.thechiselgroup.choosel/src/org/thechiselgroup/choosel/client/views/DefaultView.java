@@ -291,13 +291,12 @@ public class DefaultView extends AbstractWindowContent implements View {
         handlerRegistrations = null;
     }
 
-    private void doRestore(Memento state, ResourceSetAccessor accessor) {
+    // protected for test access
+    protected void doRestore(Memento state, ResourceSetAccessor accessor) {
         contentDisplay.startRestore();
 
         restoreResourceModel(state, accessor);
-
         restoreSelection(state, accessor);
-
         restoreContentDisplay(state);
 
         contentDisplay.endRestore();
@@ -561,7 +560,7 @@ public class DefaultView extends AbstractWindowContent implements View {
     private void initSelectionModel() {
         selection = new SwitchingResourceSet();
 
-        selectionResourceAddedHandlerRegistration = this.selection
+        selectionResourceAddedHandlerRegistration = selection
                 .addEventHandler(new ResourcesAddedEventHandler() {
                     @Override
                     public void onResourcesAdded(ResourcesAddedEvent e) {
@@ -569,7 +568,7 @@ public class DefaultView extends AbstractWindowContent implements View {
                                 true);
                     }
                 });
-        selectionResourceRemovedHandlerRegistration = this.selection
+        selectionResourceRemovedHandlerRegistration = selection
                 .addEventHandler(new ResourcesRemovedEventHandler() {
                     @Override
                     public void onResourcesRemoved(ResourcesRemovedEvent e) {
@@ -716,7 +715,7 @@ public class DefaultView extends AbstractWindowContent implements View {
                 || selectionSets.contains(newSelectionModel);
 
         selection.setDelegate(newSelectionModel);
-        selectionPresenter.setSelectedResourceSet(selection.getDelegate());
+        selectionPresenter.setSelectedResourceSet(newSelectionModel);
     }
 
     private void storeContentDisplaySettings(Memento memento) {
@@ -748,9 +747,9 @@ public class DefaultView extends AbstractWindowContent implements View {
                     MEMENTO_SELECTION_SET_PREFIX + i, selectionSets.get(i));
         }
 
-        if (selection != null) {
+        if (selection.hasDelegate()) {
             storeResourceSet(persistanceManager, memento, MEMENTO_SELECTION,
-                    selection);
+                    getSelection());
         }
     }
 
