@@ -24,6 +24,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "true")
 public class PersistentSharingInvitation {
@@ -70,6 +71,10 @@ public class PersistentSharingInvitation {
 
     public Key getUid() {
         return uid;
+    }
+
+    public String getUidAsString() {
+        return KeyFactory.keyToString(uid);
     }
 
     public PersistentWorkspace getWorkspace() {

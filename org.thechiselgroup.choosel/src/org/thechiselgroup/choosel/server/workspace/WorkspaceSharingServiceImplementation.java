@@ -21,13 +21,14 @@ import java.util.Date;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 
+import org.thechiselgroup.choosel.client.authentication.AuthorizationException;
 import org.thechiselgroup.choosel.client.services.ServiceException;
+import org.thechiselgroup.choosel.client.windows.Branding;
 import org.thechiselgroup.choosel.client.workspace.dto.WorkspaceDTO;
 import org.thechiselgroup.choosel.client.workspace.service.WorkspaceSharingService;
 import org.thechiselgroup.choosel.server.util.PasswordGenerator;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.mail.MailService;
 import com.google.appengine.api.users.UserService;
 
@@ -55,11 +56,14 @@ public class WorkspaceSharingServiceImplementation implements
 
     private UserService userService;
 
+    private Branding branding;
+
     public WorkspaceSharingServiceImplementation(
             PersistenceManagerFactory persistenceManagerFactory,
             WorkspaceSecurityManager workspaceSecurityManager,
             UserService userService, MailService mailService,
-            PasswordGenerator passwordGenerator, String baseURL) {
+            PasswordGenerator passwordGenerator, String baseURL,
+            Branding branding) {
 
         assert workspaceSecurityManager != null;
         assert persistenceManagerFactory != null;
@@ -67,6 +71,7 @@ public class WorkspaceSharingServiceImplementation implements
         assert userService != null;
         assert passwordGenerator != null;
         assert baseURL != null;
+        assert branding != null;
 
         this.baseURL = baseURL;
         this.userService = userService;
@@ -74,6 +79,7 @@ public class WorkspaceSharingServiceImplementation implements
         this.persistenceManagerFactory = persistenceManagerFactory;
         this.securityManager = workspaceSecurityManager;
         this.passwordGenerator = passwordGenerator;
+        this.branding = branding;
     }
 
     private PersistenceManager createPersistanceManager() {
@@ -103,11 +109,10 @@ public class WorkspaceSharingServiceImplementation implements
         return invitation;
     }
 
-    @Override
-    public void shareWorkspace(WorkspaceDTO workspaceDTO, String emailAddress)
-            throws ServiceException {
-
-        securityManager.checkAuthenticated();
+    // for test
+    protected PersistentSharingInvitation createWorkspaceSharingInvitation(
+            WorkspaceDTO workspaceDTO, String emailAddress)
+            throws AuthorizationException {
 
         PersistenceManager manager = createPersistanceManager();
         try {
@@ -116,33 +121,52 @@ public class WorkspaceSharingServiceImplementation implements
 
             securityManager.checkAuthorization(workspace, manager);
 
-            PersistentSharingInvitation sharingInvitation = createWorkspaceSharingInvitation(
-                    workspace, emailAddress, manager);
-
-            String sender = userService.getCurrentUser().getEmail();
-            String to = emailAddress;
-            String subject = workspaceDTO.getName();
-            String url = baseURL + "?" + PARAM_WORKSPACE_ID + "="
-                    + workspaceDTO.getId() + "&" + PARAM_INVITATION + "="
-                    + KeyFactory.keyToString(sharingInvitation.getUid()) + "&"
-                    + PARAM_PASSWORD + "=" + sharingInvitation.getPassword();
-
-            String textBody = "I have shared the Bio-Mixer workspace" + " \""
-                    + workspaceDTO.getName() + "\" with you. "
-                    + "You can open it at " + url;
-
-            Log.info(textBody);
-
-            try {
-                mailService.send(new MailService.Message(sender, to, subject,
-                        textBody));
-            } catch (IOException e) {
-                Log.error(e.getMessage(), e);
-                throw new ServiceException(
-                        "Sending email with share notification failed.");
-            }
+            return createWorkspaceSharingInvitation(workspace, emailAddress,
+                    manager);
         } finally {
             manager.close();
         }
+    }
+
+    // for test
+    protected String getEmail() {
+        return userService.getCurrentUser().getEmail();
+    }
+
+    @Override
+    public void shareWorkspace(WorkspaceDTO workspaceDTO, String emailAddress)
+            throws ServiceException {
+
+        securityManager.checkAuthenticated();
+
+        PersistentSharingInvitation sharingInvitation = createWorkspaceSharingInvitation(
+                workspaceDTO, emailAddress);
+
+        String sender = getEmail();
+        String to = emailAddress;
+
+        String subject = branding.getApplicationTitle() + " workspace '"
+                + workspaceDTO.getName() + "'";
+
+        String url = baseURL + "?" + PARAM_WORKSPACE_ID + "="
+                + workspaceDTO.getId() + "&" + PARAM_INVITATION + "="
+                + sharingInvitation.getUidAsString() + "&" + PARAM_PASSWORD
+                + "=" + sharingInvitation.getPassword();
+
+        String textBody = "I have shared the " + "Bio-Mixer"
+                + " workspace" + " \"" + workspaceDTO.getName()
+                + "\" with you. " + "You can open it at " + url;
+
+        Log.info(textBody);
+
+        try {
+            mailService.send(new MailService.Message(sender, to, subject,
+                    textBody));
+        } catch (IOException e) {
+            Log.error(e.getMessage(), e);
+            throw new ServiceException(
+                    "Sending email with share notification failed.");
+        }
+
     }
 }
