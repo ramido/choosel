@@ -20,9 +20,17 @@ import java.util.List;
 
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
-public class DefaultResourceSetCollector implements ResourceSetCollector {
+public class DefaultResourceSetCollector implements ResourceSetCollector,
+        ResourceSetAccessor {
 
     private List<ResourceSet> resourceSets = new ArrayList<ResourceSet>();
+
+    @Override
+    public ResourceSet getResourceSet(int id) {
+        assert 0 <= id;
+        assert id < resourceSets.size();
+        return resourceSets.get(id);
+    }
 
     public List<ResourceSet> getResourceSets() {
         return resourceSets;
