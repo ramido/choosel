@@ -123,9 +123,21 @@ public class DefaultViewTest {
 
     private HoverModel hoverModel;
 
+    @Test
+    public void addResourceSetToSelectionPresenterWhenAddedToSelection() {
+        ResourceSet newSelection = createResources(1);
+
+        when(resourceItem.getResourceSet()).thenReturn(newSelection);
+        underTest.getResourceModel().addResources(newSelection);
+        underTest.addSelectionSet(newSelection);
+
+        verify(selectionPresenter, times(1)).addResourceSet(newSelection);
+    }
+
     // TODO this needs to be changed - we should not test the implementation
     @Test
     public void addSelectionHandlers() {
+        underTest.addSelectionSet(selection);
         underTest.setSelection(selection);
 
         verify(selection, times(1)).addEventHandler(
@@ -251,6 +263,7 @@ public class DefaultViewTest {
         underTest.getResourceModel().addResources(createResources(1));
 
         selection = createResources();
+        underTest.addSelectionSet(selection);
         underTest.setSelection(selection);
 
         selection.add(createResource(1));
@@ -261,10 +274,16 @@ public class DefaultViewTest {
 
     @Test
     public void deselectResourceItemWhenSelectionChanges() {
-        when(resourceItem.getResourceSet()).thenReturn(createResources(1));
-        underTest.getResourceModel().addResources(createResources(1));
-        underTest.setSelection(createResources(1));
-        underTest.setSelection(createResources());
+        ResourceSet resources1 = createResources(1);
+        ResourceSet resource2 = createResources();
+
+        when(resourceItem.getResourceSet()).thenReturn(resources1);
+        underTest.getResourceModel().addResources(resources1);
+        underTest.addSelectionSet(resources1);
+        underTest.addSelectionSet(resource2);
+
+        underTest.setSelection(resources1);
+        underTest.setSelection(resource2);
 
         verify(resourceItem, times(1)).setSelected(false);
     }
@@ -293,6 +312,7 @@ public class DefaultViewTest {
 
     @Test
     public void disposeSelectionLinks() {
+        underTest.addSelectionSet(selection);
         underTest.setSelection(selection);
 
         underTest.dispose();
@@ -390,6 +410,19 @@ public class DefaultViewTest {
                 any(ResourceItem.class));
     }
 
+    /**
+     * Issue 58.
+     */
+    @Test
+    public void restoreSelectedSetColoring() {
+        // TODO
+        // create view
+        // create selection
+        // store view
+        // restore view (on new view ?!?)
+        // test selection
+    }
+
     @Test
     public void selectResourceItemWhenResourceAddedToSelection() {
         when(resourceItem.getResourceSet()).thenReturn(createResources(1));
@@ -397,6 +430,7 @@ public class DefaultViewTest {
         underTest.getResourceModel().addResources(createResources(1));
 
         selection = createResources();
+        underTest.addSelectionSet(selection);
         underTest.setSelection(selection);
 
         selection.add(createResource(1));
@@ -411,6 +445,7 @@ public class DefaultViewTest {
         underTest.getResourceModel().addResources(createResources(1));
 
         selection = createResources(1);
+        underTest.addSelectionSet(selection);
         underTest.setSelection(selection);
 
         verify(resourceItem, times(1)).setSelected(true);
@@ -478,6 +513,7 @@ public class DefaultViewTest {
         underTest.getResourceModel().addResources(createResources(1));
 
         selection = createResources();
+        underTest.addSelectionSet(selection);
         underTest.setSelection(selection);
 
         selection.add(createResource(1));
@@ -492,6 +528,7 @@ public class DefaultViewTest {
         underTest.getResourceModel().addResources(createResources(1));
 
         selection = createResources(1);
+        underTest.addSelectionSet(selection);
         underTest.setSelection(selection);
 
         verifyUpdateGetsCalledWithResourceItemAsUpdatedItem();
@@ -509,6 +546,23 @@ public class DefaultViewTest {
         verify(contentDisplay, never()).update(
                 eq(Collections.<ResourceItem> emptySet()), any(Set.class),
                 eq(Collections.<ResourceItem> emptySet()));
+    }
+
+    @Test
+    public void updateSelectinoPresenterWhenSelectedSetChanges() {
+        ResourceSet selection1 = createResources(1);
+        ResourceSet selection2 = createResources();
+
+        when(resourceItem.getResourceSet()).thenReturn(createResources(1));
+        underTest.getResourceModel().addResources(createResources(1));
+        underTest.addSelectionSet(selection1);
+        underTest.addSelectionSet(selection2);
+
+        underTest.setSelection(selection1);
+        underTest.setSelection(selection2);
+
+        verify(selectionPresenter, times(1)).setSelectedResourceSet(selection1);
+        verify(selectionPresenter, times(1)).setSelectedResourceSet(selection2);
     }
 
     private void verifyUpdateGetsCalledWithResourceItemAsUpdatedItem() {

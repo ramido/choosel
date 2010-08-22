@@ -77,10 +77,6 @@ public class ResourceSetAvatarTest {
         verify(disposable, times(1)).dispose();
     }
 
-    // TODO @Test
-    public void hoverIrrelevantWhenDisabled() {
-    }
-
     @Test
     public void noDoubleStyleWhenHoverCalledTwiceWithFalse() {
         dragAvatar.setHover(true);
