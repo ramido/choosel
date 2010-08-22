@@ -15,14 +15,25 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.server.workspace;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import javax.jdo.PersistenceManagerFactory;
 
 import org.junit.Before;
+import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.thechiselgroup.choosel.client.authentication.AuthorizationException;
+import org.thechiselgroup.choosel.client.windows.Branding;
+import org.thechiselgroup.choosel.client.workspace.dto.WorkspaceDTO;
 import org.thechiselgroup.choosel.server.util.PasswordGenerator;
 
 import com.google.appengine.api.mail.MailService;
+import com.google.appengine.api.mail.MailService.Message;
 import com.google.appengine.api.users.UserService;
 
 public class WorkspaceSharingServiceImplementationTest {
@@ -41,10 +52,36 @@ public class WorkspaceSharingServiceImplementationTest {
     private WorkspaceSharingServiceImplementation underTest;
 
     @Mock
+    private PersistentSharingInvitation invitation;
+
+    @Mock
     private UserService userService;
 
     @Mock
     private WorkspaceSecurityManager workspaceSecurityManager;
+
+    @Mock
+    private Branding branding;
+
+    private String emailAddress = "test@test.com";
+
+    @Test
+    public void emailSubject() throws Exception {
+        WorkspaceDTO workspaceDTO = new WorkspaceDTO(new Long(1), "name");
+        String applicationTitle = "applicationTitle--X";
+
+        when(branding.getApplicationTitle()).thenReturn(applicationTitle);
+
+        underTest.shareWorkspace(workspaceDTO, emailAddress);
+
+        ArgumentCaptor<Message> argument = ArgumentCaptor
+                .forClass(MailService.Message.class);
+        verify(mailService, times(1)).send(argument.capture());
+        Message message = argument.getValue();
+
+        assertEquals(applicationTitle + " workspace '" + workspaceDTO.getName()
+                + "'", message.getSubject());
+    }
 
     @Before
     public void setUp() {
@@ -52,7 +89,20 @@ public class WorkspaceSharingServiceImplementationTest {
 
         underTest = new WorkspaceSharingServiceImplementation(
                 persistenceManagerFactory, workspaceSecurityManager,
-                userService, mailService, passwordGenerator, BASEURL);
-    }
+                userService, mailService, passwordGenerator, BASEURL, branding) {
 
+            @Override
+            protected PersistentSharingInvitation createWorkspaceSharingInvitation(
+                    WorkspaceDTO workspaceDTO, String emailAddress)
+                    throws AuthorizationException {
+                return invitation;
+            }
+
+            @Override
+            protected String getEmail() {
+                return emailAddress;
+            }
+        };
+
+    }
 }

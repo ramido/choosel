@@ -21,6 +21,7 @@ import java.security.SecureRandom;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import org.thechiselgroup.choosel.client.DefaultBranding;
 import org.thechiselgroup.choosel.client.services.ServiceException;
 import org.thechiselgroup.choosel.client.workspace.dto.WorkspaceDTO;
 import org.thechiselgroup.choosel.client.workspace.service.WorkspaceSharingService;
@@ -62,13 +63,14 @@ public class WorkspaceSharingServiceServlet extends RemoteServiceServlet
             throws NoSuchAlgorithmException {
 
         if (service == null) {
+            // TODO inject branding
             service = new WorkspaceSharingServiceImplementation(PMF.get(),
                     new WorkspaceSecurityManager(UserServiceFactory
                             .getUserService()),
                     UserServiceFactory.getUserService(),
                     MailServiceFactory.getMailService(), new PasswordGenerator(
                             SecureRandom.getInstance("SHA1PRNG")),
-                    constructURL("acceptInvitation"));
+                    constructURL("acceptInvitation"), new DefaultBranding());
         }
 
         return service;
