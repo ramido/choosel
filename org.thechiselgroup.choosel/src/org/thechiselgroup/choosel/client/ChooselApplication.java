@@ -64,6 +64,8 @@ import com.google.inject.Inject;
 
 public abstract class ChooselApplication {
 
+    public static final String WORKSPACE_ID = "workspaceId";
+
     public static final String EDIT_PANEL = "edit";
 
     public static final String HELP_PANEL = "help";
@@ -319,13 +321,13 @@ public abstract class ChooselApplication {
     }
 
     private void loadWorkspaceIfParamSet() {
-        // TODO extract constant
-        String workspaceIdParam = Window.Location.getParameter("workspaceId");
+        String workspaceIdParam = Window.Location.getParameter(WORKSPACE_ID);
+
         if (workspaceIdParam != null) {
             long workspaceID = Long.parseLong(workspaceIdParam);
 
             LoadWorkspaceCommand loadWorkspaceCommand = new LoadWorkspaceCommand(
-                    workspaceID, "", workspacePersistenceManager);
+                    workspaceID, workspacePersistenceManager);
             blockingCommandExecutor.execute(loadWorkspaceCommand);
         }
     }

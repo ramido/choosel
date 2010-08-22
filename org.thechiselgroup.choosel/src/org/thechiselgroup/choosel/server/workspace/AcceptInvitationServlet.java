@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.thechiselgroup.choosel.client.ChooselApplication;
 import org.thechiselgroup.choosel.client.authentication.AuthorizationException;
 import org.thechiselgroup.choosel.server.PMF;
 
@@ -116,8 +117,8 @@ public class AcceptInvitationServlet extends HttpServlet {
 
             // redirect to main with load default workspace
             String targetURL = WorkspaceSharingServiceServlet.constructURL(
-                    "index.html?" + PARAM_WORKSPACE_ID + "=" + workspaceUid,
-                    request, getServletContext());
+                    "index.html?" + ChooselApplication.WORKSPACE_ID + "="
+                            + workspaceUid, request, getServletContext());
 
             response.sendRedirect(response.encodeRedirectURL(targetURL));
         } catch (AuthorizationException e) {
