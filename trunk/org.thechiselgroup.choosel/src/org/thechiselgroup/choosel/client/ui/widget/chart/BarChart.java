@@ -388,7 +388,8 @@ public class BarChart extends ChartWidget {
     }
 
     private boolean isVerticalBarChart() {
-        return layout == "Vertical";
+        return layout == "Vertical"
+                || (layout == "Automatic" && chartHeight < chartWidth);
     }
 
     @Override
