@@ -30,6 +30,9 @@ import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
+/* TODO refactor such that the differences between vertical and horizontal bar chart
+ * are extracted and the commonalities are kept.
+ */
 // TODO right side ticks
 public class BarChart extends ChartWidget {
 
@@ -235,6 +238,19 @@ public class BarChart extends ChartWidget {
         chartHeight = height - BORDER_HEIGHT * 2;
     }
 
+    private void calculateMaxBarSize() {
+        maxBarSize = 0;
+        for (int i = 0; i < chartItems.size(); i++) {
+            int currentItem = Integer
+                    .parseInt(chartItems.get(i).getResourceItem()
+                            .getResourceValue(SlotResolver.CHART_VALUE_SLOT)
+                            .toString());
+            if (maxBarSize < currentItem) {
+                maxBarSize = currentItem;
+            }
+        }
+    }
+
     @Override
     public void drawChart() {
         assert chartItems.size() >= 1;
@@ -252,19 +268,6 @@ public class BarChart extends ChartWidget {
             Scale scale = Scale.linear(0, maxBarSize).range(0, chartWidth);
             drawHorizontalBarScales(scale);
             drawHorizontalBarChart();
-        }
-    }
-
-    private void calculateMaxBarSize() {
-        maxBarSize = 0;
-        for (int i = 0; i < chartItems.size(); i++) {
-            int currentItem = Integer
-                    .parseInt(chartItems.get(i).getResourceItem()
-                            .getResourceValue(SlotResolver.CHART_VALUE_SLOT)
-                            .toString());
-            if (maxBarSize < currentItem) {
-                maxBarSize = currentItem;
-            }
         }
     }
 
