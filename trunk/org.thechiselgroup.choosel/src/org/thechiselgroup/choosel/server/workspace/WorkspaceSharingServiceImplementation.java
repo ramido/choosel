@@ -153,9 +153,9 @@ public class WorkspaceSharingServiceImplementation implements
                 + sharingInvitation.getUidAsString() + "&" + PARAM_PASSWORD
                 + "=" + sharingInvitation.getPassword();
 
-        String textBody = "I have shared the " + "Bio-Mixer" + " workspace"
-                + " \"" + workspaceDTO.getName() + "\" with you. "
-                + "You can open it at " + url;
+        String textBody = "I have shared the " + branding.getApplicationTitle()
+                + " workspace" + " \"" + workspaceDTO.getName()
+                + "\" with you. " + "You can open it at " + url;
 
         Log.info(textBody);
 
