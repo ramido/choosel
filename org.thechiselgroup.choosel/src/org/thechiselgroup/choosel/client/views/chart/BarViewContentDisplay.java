@@ -15,15 +15,39 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.chart;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.ui.widget.chart.BarChart;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
+import org.thechiselgroup.choosel.client.views.ViewContentDisplayAction;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 public class BarViewContentDisplay extends ChartViewContentDisplay {
+
+    public class BarLayoutAction implements ViewContentDisplayAction {
+
+        private String layout;
+
+        public BarLayoutAction(String layout) {
+            this.layout = layout;
+        }
+
+        @Override
+        public void execute() {
+            chartWidget.setLayout(layout);
+            chartWidget.updateChart();
+        }
+
+        @Override
+        public String getLabel() {
+            return layout;
+        }
+    }
 
     @Inject
     public BarViewContentDisplay(PopupManagerFactory popupManagerFactory,
@@ -37,6 +61,16 @@ public class BarViewContentDisplay extends ChartViewContentDisplay {
     public Widget createWidget() {
         chartWidget = new BarChart();
         return chartWidget;
+    }
+
+    @Override
+    public List<ViewContentDisplayAction> getActions() {
+        List<ViewContentDisplayAction> actions = new ArrayList<ViewContentDisplayAction>();
+
+        actions.add(new BarLayoutAction("Vertical"));
+        actions.add(new BarLayoutAction("Horizontal"));
+
+        return actions;
     }
 
 }
