@@ -36,6 +36,37 @@ import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 // TODO right side ticks
 public class BarChart extends ChartWidget {
 
+    public static enum LayoutType {
+
+        VERTICAL("Vertical"), HORIZONTAL("Horizontal"), AUTOMATIC("Automatic");
+
+        private String name;
+
+        LayoutType(String name) {
+            this.name = name;
+        }
+
+        private double getBarLengthSpace(int chartHeight, int chartWidth) {
+            return isVerticalBarChart(chartHeight, chartWidth) ? chartHeight
+                    : chartWidth;
+        }
+
+        private double getBarWidthSpace(int chartHeight, int chartWidth) {
+            return isVerticalBarChart(chartHeight, chartWidth) ? chartWidth
+                    : chartHeight;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        private boolean isVerticalBarChart(int chartHeight, int chartWidth) {
+            return this == LayoutType.VERTICAL
+                    || (this == LayoutType.AUTOMATIC && chartHeight < chartWidth);
+        }
+
+    }
+
     private static final int BORDER_HEIGHT = 20;
 
     private static final int BORDER_WIDTH = 20;
@@ -50,20 +81,17 @@ public class BarChart extends ChartWidget {
 
     private double[] barCounts;
 
-    protected double chartHeight;
+    protected int chartHeight;
 
-    protected double chartWidth;
+    protected int chartWidth;
 
     private double maxBarSize;
 
     private ProtovisFunctionDouble barStart = new ProtovisFunctionDouble() {
         @Override
         public double f(ChartItem value, int index) {
-            if (isVerticalBarChart()) {
-                return barWidth.f(value, index) / 2 + index * chartWidth
-                        / chartItems.size();
-            }
-            return barWidth.f(value, index) / 2 + index * chartHeight
+            return barWidth.f(value, index) / 2 + index
+                    * layout.getBarWidthSpace(chartHeight, chartWidth)
                     / chartItems.size();
         }
     };
@@ -87,7 +115,7 @@ public class BarChart extends ChartWidget {
         @Override
         public double f(ChartItem value, int index) {
             return highlightedBarCounts[index]
-                    * (isVerticalBarChart() ? chartHeight : chartWidth)
+                    * layout.getBarLengthSpace(chartHeight, chartWidth)
                     / maxBarSize;
         }
 
@@ -113,7 +141,7 @@ public class BarChart extends ChartWidget {
         @Override
         public double f(ChartItem value, int i) {
             return regularBarCounts[i]
-                    * (isVerticalBarChart() ? chartHeight : chartWidth)
+                    * layout.getBarLengthSpace(chartHeight, chartWidth)
                     / maxBarSize;
         }
 
@@ -138,7 +166,7 @@ public class BarChart extends ChartWidget {
         @Override
         public double f(ChartItem value, int i) {
             return barCounts[i]
-                    * (isVerticalBarChart() ? chartHeight : chartWidth)
+                    * layout.getBarLengthSpace(chartHeight, chartWidth)
                     / maxBarSize;
         }
 
@@ -147,7 +175,7 @@ public class BarChart extends ChartWidget {
     private ProtovisFunctionDouble barWidth = new ProtovisFunctionDouble() {
         @Override
         public double f(ChartItem value, int i) {
-            return (isVerticalBarChart() ? chartWidth : chartHeight)
+            return layout.getBarWidthSpace(chartHeight, chartWidth)
                     / (chartItems.size() * 2);
         }
     };
@@ -226,6 +254,8 @@ public class BarChart extends ChartWidget {
         }
     };
 
+    protected LayoutType layout;
+
     @Override
     protected void beforeRender() {
         highlightedBarLength.beforeRender();
@@ -260,7 +290,7 @@ public class BarChart extends ChartWidget {
 
         calculateMaxBarSize();
 
-        if (isVerticalBarChart()) {
+        if (layout.isVerticalBarChart(chartHeight, chartWidth)) {
             Scale scale = Scale.linear(0, maxBarSize).range(0, chartHeight);
             drawVerticalBarScales(scale);
             drawVerticalBarChart();
@@ -387,11 +417,6 @@ public class BarChart extends ChartWidget {
                 || chartItem.getResourceItem().getStatus() == Status.PARTIALLY_HIGHLIGHTED_SELECTED;
     }
 
-    private boolean isVerticalBarChart() {
-        return layout == "Vertical"
-                || (layout == "Automatic" && chartHeight < chartWidth);
-    }
-
     @Override
     protected void registerEventHandler(String eventType,
             ProtovisEventHandler handler) {
@@ -400,5 +425,9 @@ public class BarChart extends ChartWidget {
 
     private void setChartParameters() {
         chart.left(BORDER_WIDTH).bottom(BORDER_HEIGHT);
+    }
+
+    public void setLayout(LayoutType layout) {
+        this.layout = layout;
     }
 }

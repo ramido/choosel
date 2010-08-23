@@ -82,8 +82,6 @@ public abstract class ChartWidget extends Widget {
 
     protected int width;
 
-    protected String layout;
-
     protected String[] eventTypes = { EVENT_TYPE_CLICK, EVENT_TYPE_MOUSEDOWN,
             EVENT_TYPE_MOUSEMOVE, EVENT_TYPE_MOUSEOUT, EVENT_TYPE_MOUSEOVER,
             EVENT_TYPE_MOUSEUP };
@@ -261,10 +259,6 @@ public abstract class ChartWidget extends Widget {
         this.width = width;
         this.height = height;
         updateChart(); // TODO render chart good enough?
-    }
-
-    public void setLayout(String layout) {
-        this.layout = layout;
     }
 
     // re-rendering requires reset?

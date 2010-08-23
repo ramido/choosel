@@ -21,6 +21,7 @@ import java.util.List;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.ui.widget.chart.BarChart;
+import org.thechiselgroup.choosel.client.ui.widget.chart.BarChart.LayoutType;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayAction;
 
@@ -31,21 +32,21 @@ public class BarViewContentDisplay extends ChartViewContentDisplay {
 
     public class BarLayoutAction implements ViewContentDisplayAction {
 
-        private String layout;
+        private LayoutType layout;
 
-        public BarLayoutAction(String layout) {
+        public BarLayoutAction(LayoutType layout) {
             this.layout = layout;
         }
 
         @Override
         public void execute() {
-            chartWidget.setLayout(layout);
+            ((BarChart) chartWidget).setLayout(layout);
             chartWidget.updateChart();
         }
 
         @Override
         public String getLabel() {
-            return layout;
+            return layout.getName();
         }
     }
 
@@ -67,9 +68,9 @@ public class BarViewContentDisplay extends ChartViewContentDisplay {
     public List<ViewContentDisplayAction> getActions() {
         List<ViewContentDisplayAction> actions = new ArrayList<ViewContentDisplayAction>();
 
-        actions.add(new BarLayoutAction("Vertical"));
-        actions.add(new BarLayoutAction("Horizontal"));
-        actions.add(new BarLayoutAction("Automatic"));
+        for (LayoutType layout : LayoutType.values()) {
+            actions.add(new BarLayoutAction(layout));
+        }
 
         return actions;
     }
