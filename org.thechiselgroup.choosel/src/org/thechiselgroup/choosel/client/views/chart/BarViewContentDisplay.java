@@ -69,6 +69,7 @@ public class BarViewContentDisplay extends ChartViewContentDisplay {
 
         actions.add(new BarLayoutAction("Vertical"));
         actions.add(new BarLayoutAction("Horizontal"));
+        actions.add(new BarLayoutAction("Automatic"));
 
         return actions;
     }
