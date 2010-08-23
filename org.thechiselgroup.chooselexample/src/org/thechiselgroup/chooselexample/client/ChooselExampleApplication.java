@@ -171,20 +171,20 @@ public class ChooselExampleApplication extends ChooselApplication {
 	@Override
 	protected void initCustomActions() {
 		addDataSourcesButton();
-		// addTestDataSourceButton();
+		addTestDataSourceButton();
 
 		addWindowContentButton(VIEWS_PANEL, "Note", "note");
 		addWindowContentButton(VIEWS_PANEL, "List",
 				ChooselInjectionConstants.TYPE_LIST);
 		addWindowContentButton(VIEWS_PANEL, "Map", "Map");
 		addWindowContentButton(VIEWS_PANEL, "Timeline", "Timeline");
-		// addWindowContentButton(VIEWS_PANEL, "Bar", "Bar");
-		// addWindowContentButton(VIEWS_PANEL, "Pie", "Pie");
-		// addWindowContentButton(VIEWS_PANEL, "Dot", "Dot");
-		// addWindowContentButton(VIEWS_PANEL, "Scatter", "Scatter");
-		// addWindowContentButton(VIEWS_PANEL, "Time", "Time");
-		// addWindowContentButton(VIEWS_PANEL, "Tag Cloud", "TagCloud");
-		// addWindowContentButton(VIEWS_PANEL, "Graph", "Graph");
+		addWindowContentButton(VIEWS_PANEL, "Bar", "Bar");
+		addWindowContentButton(VIEWS_PANEL, "Pie", "Pie");
+		addWindowContentButton(VIEWS_PANEL, "Dot", "Dot");
+		addWindowContentButton(VIEWS_PANEL, "Scatter", "Scatter");
+		addWindowContentButton(VIEWS_PANEL, "Time", "Time");
+		addWindowContentButton(VIEWS_PANEL, "Tag Cloud", "TagCloud");
+		addWindowContentButton(VIEWS_PANEL, "Graph", "Graph");
 
 		addWindowContentButton(HELP_PANEL, "Help Content", "help");
 		addInfoButton();
