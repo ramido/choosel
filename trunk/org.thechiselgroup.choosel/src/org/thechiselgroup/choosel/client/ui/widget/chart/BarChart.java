@@ -254,7 +254,9 @@ public class BarChart extends ChartWidget {
         }
     };
 
-    protected LayoutType layout;
+    protected LayoutType layout = LayoutType.HORIZONTAL;
+
+    private static final int HORIZONTAL_BAR_LABEL_EXTRA_MARGIN = 20;
 
     @Override
     protected void beforeRender() {
@@ -264,7 +266,12 @@ public class BarChart extends ChartWidget {
     }
 
     private void calculateChartVariables() {
-        chartWidth = width - BORDER_WIDTH * 2;
+        if (layout.isVerticalBarChart(chartHeight, chartWidth)) {
+            chartWidth = width - BORDER_WIDTH * 2;
+        } else {
+            chartWidth = width - BORDER_WIDTH * 2
+                    - HORIZONTAL_BAR_LABEL_EXTRA_MARGIN;
+        }
         chartHeight = height - BORDER_HEIGHT * 2;
     }
 
@@ -318,7 +325,7 @@ public class BarChart extends ChartWidget {
                         .bottom(baselineLabelStart)
                         .textAlign(baselineLabelTextAlign)
                         .left(baselineLabelLength).text(baselineLabelText)
-                        .textAngle(Math.PI / 2);
+                        .textBaseline("middle");
 
                 regularBar = highlightedBar.add(Bar.createBar())
                         .left(regularBarBase).width(regularBarLength)
@@ -340,7 +347,7 @@ public class BarChart extends ChartWidget {
 
         regularBar.add(Label.createLabel()).bottom(baselineLabelStart)
                 .textAlign(baselineLabelTextAlign).left(baselineLabelLength)
-                .text(baselineLabelText).textAngle(Math.PI / 2);
+                .text(baselineLabelText).textBaseline("middle");
 
         regularBar.anchor("right").add(Label.createLabel())
                 .textBaseline(barTextBaseline).text(fullBarLabelText)
@@ -424,7 +431,12 @@ public class BarChart extends ChartWidget {
     }
 
     private void setChartParameters() {
-        chart.left(BORDER_WIDTH).bottom(BORDER_HEIGHT);
+        if (layout.isVerticalBarChart(chartHeight, chartWidth)) {
+            chart.left(BORDER_WIDTH).bottom(BORDER_HEIGHT);
+        } else {
+            chart.left(BORDER_WIDTH + HORIZONTAL_BAR_LABEL_EXTRA_MARGIN)
+                    .bottom(BORDER_HEIGHT);
+        }
     }
 
     public void setLayout(LayoutType layout) {
