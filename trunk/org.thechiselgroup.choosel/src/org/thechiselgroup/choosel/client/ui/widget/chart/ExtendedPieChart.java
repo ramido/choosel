@@ -16,24 +16,30 @@
 package org.thechiselgroup.choosel.client.ui.widget.chart;
 
 import org.thechiselgroup.choosel.client.ui.Colors;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Dot;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Label;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventHandler;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDouble;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDoubleToDouble;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDoubleWithCache;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionString;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Scale;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Wedge;
 import org.thechiselgroup.choosel.client.util.ArrayUtils;
 import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
+import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
 // Version of Pie chart with the average of the area 
 // and the radius calculations for proportional highlighting.
 // (i.e. ratio + sqrt(ratio) / 2)
-public class PieChart extends ChartWidget {
+public class ExtendedPieChart extends ChartWidget {
 
     private double[] highlightedWedgeCounts;
 
     private double[] regularWedgeCounts;
+
+    private static final int MARGIN_SIZE = 15;
 
     private ProtovisFunctionDoubleWithCache highlightedWedgeOuterRadius = new ProtovisFunctionDoubleWithCache() {
 
@@ -44,10 +50,32 @@ public class PieChart extends ChartWidget {
             }
 
             highlightedWedgeCounts = new double[chartItems.size()];
-            regularWedgeCounts = new double[chartItems.size()];
 
             for (int i = 0; i < chartItems.size(); i++) {
                 highlightedWedgeCounts[i] = calculateHighlightedResources(i);
+            }
+
+        }
+
+        @Override
+        public double f(ChartItem value, int i) {
+            return regularWedgeOuterRadius.f(value, i)
+                    * highlightedWedgeCounts[i] / regularWedgeCounts[i];
+        }
+    };
+
+    private double sum;
+
+    private ProtovisFunctionDoubleWithCache regularWedgeOuterRadius = new ProtovisFunctionDoubleWithCache() {
+        @Override
+        public void beforeRender() {
+            if (chartItems.isEmpty()) {
+                return;
+            }
+
+            regularWedgeCounts = new double[chartItems.size()];
+
+            for (int i = 0; i < chartItems.size(); i++) {
                 regularWedgeCounts[i] = calculateAllResources(i);
             }
 
@@ -55,20 +83,9 @@ public class PieChart extends ChartWidget {
 
         @Override
         public double f(ChartItem value, int i) {
-            return (Math
-                    .sqrt(highlightedWedgeCounts[i] / regularWedgeCounts[i])
-                    * regularWedgeOuterRadius.f(value, i) + highlightedWedgeCounts[i]
-                    / regularWedgeCounts[i]
-                    * regularWedgeOuterRadius.f(value, i)) / 2;
-        }
-    };
-
-    private double sum;
-
-    private ProtovisFunctionDouble regularWedgeOuterRadius = new ProtovisFunctionDouble() {
-        @Override
-        public double f(ChartItem value, int i) {
-            return Math.min(height, width) / 2 - 5;
+            return regularWedgeCounts[i]
+                    * (Math.min(height, width) - MARGIN_SIZE)
+                    / (ArrayUtils.max(regularWedgeCounts) * 2);
         }
     };
 
@@ -93,7 +110,14 @@ public class PieChart extends ChartWidget {
     private ProtovisFunctionDouble wedgeAngle = new ProtovisFunctionDouble() {
         @Override
         public double f(ChartItem value, int i) {
-            return calculateAllResources(i) * 2 * Math.PI / sum;
+            return 2 * Math.PI / chartItems.size();
+        }
+    };
+
+    private ProtovisFunctionDouble wedgeStartAngle = new ProtovisFunctionDouble() {
+        @Override
+        public double f(ChartItem value, int i) {
+            return 2 * Math.PI * i / chartItems.size();
         }
     };
 
@@ -133,16 +157,50 @@ public class PieChart extends ChartWidget {
 
     private int wedgeTextAngle = 0;
 
+    private double maxWedgeSize;
+
     @Override
     protected void beforeRender() {
         highlightedWedgeOuterRadius.beforeRender();
+        regularWedgeOuterRadius.beforeRender();
+    }
+
+    private void calculateMaxWedgeSize() {
+        maxWedgeSize = 0;
+        for (int i = 0; i < chartItems.size(); i++) {
+            int currentItem = Integer
+                    .parseInt(chartItems.get(i).getResourceItem()
+                            .getResourceValue(SlotResolver.CHART_VALUE_SLOT)
+                            .toString());
+            if (maxWedgeSize < currentItem) {
+                maxWedgeSize = currentItem;
+            }
+        }
     }
 
     @Override
     public void drawChart() {
         assert chartItems.size() >= 1;
 
+        calculateMaxWedgeSize();
+
+        drawScale();
         drawWedge();
+    }
+
+    private void drawScale() {
+        Scale scale = Scale.linear(0, maxWedgeSize).range(0,
+                Math.min(height, width) - MARGIN_SIZE);
+
+        chart.add(Dot.createDot()).data(scale.ticks()).left(width / 2)
+                .bottom(height / 2).fillStyle("").strokeStyle(Colors.GRAY_1)
+                .lineWidth(1).radius(new ProtovisFunctionDoubleToDouble() {
+                    @Override
+                    public double f(double value, int i) {
+                        return value * (Math.min(height, width) - MARGIN_SIZE)
+                                / (maxWedgeSize * 2);
+                    }
+                });
     }
 
     private void drawWedge() {
@@ -160,8 +218,8 @@ public class PieChart extends ChartWidget {
                         .bottom(wedgeBottom)
                         .innerRadius(highlightedWedgeOuterRadius)
                         .outerRadius(regularWedgeOuterRadius).angle(wedgeAngle)
-                        .fillStyle(partialHighlightingChartFillStyle)
-                        .strokeStyle(Colors.WHITE);
+                        .fillStyle(Colors.STEELBLUE)
+                        .startAngle(wedgeStartAngle).strokeStyle(Colors.WHITE);
 
                 regularWedge.anchor(wedgeLabelAnchor).add(Label.createLabel())
                         .textAngle(wedgeTextAngle).text(regularWedgeLabelText)
@@ -175,14 +233,16 @@ public class PieChart extends ChartWidget {
                 highlightedWedge.anchor(wedgeLabelAnchor)
                         .add(Label.createLabel()).textAngle(wedgeTextAngle)
                         .text(highlightedWedgeLabelText);
+
                 return;
             }
         }
 
         regularWedge = chart.add(Wedge.createWedge())
                 .data(ArrayUtils.toJsArray(chartItems)).left(wedgeLeft)
-                .bottom(wedgeBottom).outerRadius(regularWedgeOuterRadius)
-                .angle(wedgeAngle).fillStyle(chartFillStyle)
+                .bottom(wedgeBottom).innerRadius(0)
+                .outerRadius(regularWedgeOuterRadius).angle(wedgeAngle)
+                .fillStyle(chartFillStyle).startAngle(wedgeStartAngle)
                 .strokeStyle(Colors.WHITE);
 
         regularWedge.anchor(wedgeLabelAnchor).add(Label.createLabel())
