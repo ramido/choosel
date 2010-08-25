@@ -17,16 +17,16 @@ package org.thechiselgroup.choosel.client.views.chart;
 
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
-import org.thechiselgroup.choosel.client.ui.widget.chart.PieChart;
+import org.thechiselgroup.choosel.client.ui.widget.chart.TimeChart;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-public class PieViewContentDisplay extends ChartViewContentDisplay {
+public class TimeChartViewContentDisplay extends ChartViewContentDisplay {
 
     @Inject
-    public PieViewContentDisplay(PopupManagerFactory popupManagerFactory,
+    public TimeChartViewContentDisplay(PopupManagerFactory popupManagerFactory,
             DetailsWidgetHelper detailsWidgetHelper,
             DragEnablerFactory dragEnablerFactory) {
 
@@ -35,7 +35,7 @@ public class PieViewContentDisplay extends ChartViewContentDisplay {
 
     @Override
     public Widget createWidget() {
-        chartWidget = new PieChart();
+        chartWidget = new TimeChart();
         return chartWidget;
     }
 

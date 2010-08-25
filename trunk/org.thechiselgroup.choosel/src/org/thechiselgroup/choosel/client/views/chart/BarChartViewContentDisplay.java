@@ -30,7 +30,7 @@ import org.thechiselgroup.choosel.client.views.ViewContentDisplayConfiguration;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-public class BarViewContentDisplay extends ChartViewContentDisplay {
+public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
     public class BarLayoutAction implements ViewContentDisplayAction {
 
@@ -55,7 +55,7 @@ public class BarViewContentDisplay extends ChartViewContentDisplay {
     private ChartCategorizer[] categorizers;
 
     @Inject
-    public BarViewContentDisplay(PopupManagerFactory popupManagerFactory,
+    public BarChartViewContentDisplay(PopupManagerFactory popupManagerFactory,
             DetailsWidgetHelper detailsWidgetHelper,
             DragEnablerFactory dragEnablerFactory,
             ResourceCategorizer resourceByTypeCategorizer) {

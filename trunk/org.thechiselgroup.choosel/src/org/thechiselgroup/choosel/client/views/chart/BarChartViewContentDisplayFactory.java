@@ -24,7 +24,7 @@ import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
 
 import com.google.inject.Inject;
 
-public class BarViewContentDisplayFactory implements ViewContentDisplayFactory {
+public class BarChartViewContentDisplayFactory implements ViewContentDisplayFactory {
 
     @Inject
     private DetailsWidgetHelper detailsWidgetHelper;
@@ -39,12 +39,12 @@ public class BarViewContentDisplayFactory implements ViewContentDisplayFactory {
     private ResourceCategorizer resourceByTypeCategorizer;
 
     @Inject
-    public BarViewContentDisplayFactory() {
+    public BarChartViewContentDisplayFactory() {
     }
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-        return new BarViewContentDisplay(popupManagerFactory,
+        return new BarChartViewContentDisplay(popupManagerFactory,
                 detailsWidgetHelper, dragEnablerFactory,
                 resourceByTypeCategorizer);
     }
