@@ -78,11 +78,11 @@ import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
-import org.thechiselgroup.choosel.client.views.chart.BarViewContentDisplayFactory;
-import org.thechiselgroup.choosel.client.views.chart.DotViewContentDisplayFactory;
-import org.thechiselgroup.choosel.client.views.chart.PieViewContentDisplayFactory;
-import org.thechiselgroup.choosel.client.views.chart.ScatterViewContentDisplayFactory;
-import org.thechiselgroup.choosel.client.views.chart.TimeViewContentDisplayFactory;
+import org.thechiselgroup.choosel.client.views.chart.BarChartViewContentDisplayFactory;
+import org.thechiselgroup.choosel.client.views.chart.DotChartViewContentDisplayFactory;
+import org.thechiselgroup.choosel.client.views.chart.PieChartViewContentDisplayFactory;
+import org.thechiselgroup.choosel.client.views.chart.ScatterChartViewContentDisplayFactory;
+import org.thechiselgroup.choosel.client.views.chart.TimeChartViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.graph.ArcStyleProvider;
 import org.thechiselgroup.choosel.client.views.graph.DefaultArcStyleProvider;
 import org.thechiselgroup.choosel.client.views.graph.DefaultGraphExpansionRegistry;
@@ -198,15 +198,15 @@ public class ChooselClientModule extends AbstractGinModule implements
         bindViewContentDisplayFactory(TYPE_TAG_CLOUD,
                 TagCloudViewContentDisplayFactory.class);
         bindViewContentDisplayFactory(TYPE_BAR,
-                BarViewContentDisplayFactory.class);
+                BarChartViewContentDisplayFactory.class);
         bindViewContentDisplayFactory(TYPE_PIE,
-                PieViewContentDisplayFactory.class);
+                PieChartViewContentDisplayFactory.class);
         bindViewContentDisplayFactory(TYPE_DOT,
-                DotViewContentDisplayFactory.class);
+                DotChartViewContentDisplayFactory.class);
         bindViewContentDisplayFactory(TYPE_SCATTER,
-                ScatterViewContentDisplayFactory.class);
+                ScatterChartViewContentDisplayFactory.class);
         bindViewContentDisplayFactory(TYPE_TIME,
-                TimeViewContentDisplayFactory.class);
+                TimeChartViewContentDisplayFactory.class);
     }
 
     protected void bindViewContentDisplayFactory(

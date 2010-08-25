@@ -23,7 +23,8 @@ import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
 
 import com.google.inject.Inject;
 
-public class TimeViewContentDisplayFactory implements ViewContentDisplayFactory {
+public class ScatterChartViewContentDisplayFactory implements
+        ViewContentDisplayFactory {
 
     @Inject
     private DetailsWidgetHelper detailsWidgetHelper;
@@ -35,12 +36,12 @@ public class TimeViewContentDisplayFactory implements ViewContentDisplayFactory 
     private PopupManagerFactory popupManagerFactory;
 
     @Inject
-    public TimeViewContentDisplayFactory() {
+    public ScatterChartViewContentDisplayFactory() {
     }
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-        return new TimeViewContentDisplay(popupManagerFactory,
+        return new ScatterChartViewContentDisplay(popupManagerFactory,
                 detailsWidgetHelper, dragEnablerFactory);
     }
 }

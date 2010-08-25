@@ -17,16 +17,16 @@ package org.thechiselgroup.choosel.client.views.chart;
 
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
-import org.thechiselgroup.choosel.client.ui.widget.chart.TimeChart;
+import org.thechiselgroup.choosel.client.ui.widget.chart.ScatterChart;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-public class TimeViewContentDisplay extends ChartViewContentDisplay {
+public class ScatterChartViewContentDisplay extends ChartViewContentDisplay {
 
     @Inject
-    public TimeViewContentDisplay(PopupManagerFactory popupManagerFactory,
+    public ScatterChartViewContentDisplay(PopupManagerFactory popupManagerFactory,
             DetailsWidgetHelper detailsWidgetHelper,
             DragEnablerFactory dragEnablerFactory) {
 
@@ -35,7 +35,7 @@ public class TimeViewContentDisplay extends ChartViewContentDisplay {
 
     @Override
     public Widget createWidget() {
-        chartWidget = new TimeChart();
+        chartWidget = new ScatterChart();
         return chartWidget;
     }
 

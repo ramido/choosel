@@ -17,26 +17,30 @@ package org.thechiselgroup.choosel.client.views.chart;
 
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
-import org.thechiselgroup.choosel.client.ui.widget.chart.ScatterChart;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
+import org.thechiselgroup.choosel.client.views.ViewContentDisplay;
+import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
 
-import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-public class ScatterViewContentDisplay extends ChartViewContentDisplay {
+public class PieChartViewContentDisplayFactory implements ViewContentDisplayFactory {
 
     @Inject
-    public ScatterViewContentDisplay(PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper,
-            DragEnablerFactory dragEnablerFactory) {
+    private DetailsWidgetHelper detailsWidgetHelper;
 
-        super(popupManagerFactory, detailsWidgetHelper, dragEnablerFactory);
+    @Inject
+    private DragEnablerFactory dragEnablerFactory;
+
+    @Inject
+    private PopupManagerFactory popupManagerFactory;
+
+    @Inject
+    public PieChartViewContentDisplayFactory() {
     }
 
     @Override
-    public Widget createWidget() {
-        chartWidget = new ScatterChart();
-        return chartWidget;
+    public ViewContentDisplay createViewContentDisplay() {
+        return new PieChartViewContentDisplay(popupManagerFactory,
+                detailsWidgetHelper, dragEnablerFactory);
     }
-
 }

@@ -17,26 +17,30 @@ package org.thechiselgroup.choosel.client.views.chart;
 
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
-import org.thechiselgroup.choosel.client.ui.widget.chart.DotChart;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
+import org.thechiselgroup.choosel.client.views.ViewContentDisplay;
+import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
 
-import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-public class DotViewContentDisplay extends ChartViewContentDisplay {
+public class TimeChartViewContentDisplayFactory implements ViewContentDisplayFactory {
 
     @Inject
-    public DotViewContentDisplay(PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper,
-            DragEnablerFactory dragEnablerFactory) {
+    private DetailsWidgetHelper detailsWidgetHelper;
 
-        super(popupManagerFactory, detailsWidgetHelper, dragEnablerFactory);
+    @Inject
+    private DragEnablerFactory dragEnablerFactory;
+
+    @Inject
+    private PopupManagerFactory popupManagerFactory;
+
+    @Inject
+    public TimeChartViewContentDisplayFactory() {
     }
 
     @Override
-    public Widget createWidget() {
-        chartWidget = new DotChart();
-        return chartWidget;
+    public ViewContentDisplay createViewContentDisplay() {
+        return new TimeChartViewContentDisplay(popupManagerFactory,
+                detailsWidgetHelper, dragEnablerFactory);
     }
-
 }
