@@ -28,6 +28,7 @@ import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants
 import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.persistence.Persistable;
+import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceCategoriesChangedEvent;
@@ -471,6 +472,13 @@ public class DefaultView extends AbstractWindowContent implements View {
             @Override
             public List<ResourceItem> getResourceItems(Resource resource) {
                 return DefaultView.this.getResourceItems(resource);
+            }
+
+            @Override
+            public void putResolver(String slotID,
+                    ResourceSetToValueResolver resolver) {
+
+                configuration.put(slotID, resolver);
             }
 
             @Override
