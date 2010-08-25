@@ -71,6 +71,10 @@ public class BarChart extends ChartWidget {
 
     private static final int BORDER_WIDTH = 20;
 
+    private static final String GRIDLINE_SCALE_COLOR = Colors.GRAY_1;
+
+    private static final String AXIS_SCALE_COLOR = Colors.GRAY_2;
+
     private double[] regularBarCounts;
 
     private double[] highlightedBarCounts;
@@ -188,8 +192,8 @@ public class BarChart extends ChartWidget {
     private ProtovisFunctionStringToString scaleStrokeStyle = new ProtovisFunctionStringToString() {
         @Override
         public String f(String value, int i) {
-            return Double.parseDouble(value) == 0 ? Colors.GRAY_2
-                    : Colors.GRAY_1;
+            return Double.parseDouble(value) == 0 ? AXIS_SCALE_COLOR
+                    : GRIDLINE_SCALE_COLOR;
         }
     };
 
@@ -357,7 +361,7 @@ public class BarChart extends ChartWidget {
                 .anchor("bottom").add(Label.createLabel()).text(scaleLabelText);
 
         chart.add(Rule.createRule()).bottom(0).left(0).width(chartWidth)
-                .strokeStyle(Colors.GRAY_2);
+                .strokeStyle(AXIS_SCALE_COLOR);
     }
 
     private void drawVerticalBarChart() {
@@ -412,7 +416,7 @@ public class BarChart extends ChartWidget {
                 .add(Label.createLabel()).text(scaleLabelText);
 
         chart.add(Rule.createRule()).left(0).bottom(0).height(chartHeight)
-                .strokeStyle(Colors.GRAY_2);
+                .strokeStyle(AXIS_SCALE_COLOR);
     }
 
     private boolean isPartiallyHighlighted(ChartItem chartItem) {

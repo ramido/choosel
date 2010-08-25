@@ -18,12 +18,14 @@ package org.thechiselgroup.choosel.client.views.chart;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.ui.widget.chart.BarChart;
 import org.thechiselgroup.choosel.client.ui.widget.chart.BarChart.LayoutType;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayAction;
+import org.thechiselgroup.choosel.client.views.ViewContentDisplayConfiguration;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -50,12 +52,19 @@ public class BarViewContentDisplay extends ChartViewContentDisplay {
         }
     }
 
+    private ChartCategorizer[] categorizers;
+
     @Inject
     public BarViewContentDisplay(PopupManagerFactory popupManagerFactory,
             DetailsWidgetHelper detailsWidgetHelper,
-            DragEnablerFactory dragEnablerFactory) {
+            DragEnablerFactory dragEnablerFactory,
+            ResourceCategorizer resourceByTypeCategorizer) {
 
         super(popupManagerFactory, detailsWidgetHelper, dragEnablerFactory);
+
+        categorizers = new ChartCategorizer[] {
+                new ChartCategorizer(resourceByTypeCategorizer, "type"),
+                new ChartCategorizer(resourceByTypeCategorizer, "severity"), };
     }
 
     @Override
@@ -70,6 +79,27 @@ public class BarViewContentDisplay extends ChartViewContentDisplay {
 
         for (LayoutType layout : LayoutType.values()) {
             actions.add(new BarLayoutAction(layout));
+        }
+
+        return actions;
+    }
+
+    @Override
+    public List<ViewContentDisplayConfiguration> getConfigurations() {
+        List<ViewContentDisplayConfiguration> actions = new ArrayList<ViewContentDisplayConfiguration>();
+
+        for (final ChartCategorizer categorizer : categorizers) {
+            actions.add(new ViewContentDisplayConfiguration() {
+                @Override
+                public void execute() {
+                    getCallback().setCategorizer(categorizer);
+                }
+
+                @Override
+                public String getLabel() {
+                    return categorizer.getPropertyName();
+                }
+            });
         }
 
         return actions;
