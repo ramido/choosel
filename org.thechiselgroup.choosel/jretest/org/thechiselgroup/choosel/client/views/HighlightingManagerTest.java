@@ -38,6 +38,18 @@ public class HighlightingManagerTest {
 
     private HighlightingManager underTest;
 
+    /**
+     * remove highlighting on disposal (issue 65: highlighting remains after
+     * window is closed)
+     */
+    @Test
+    public void dispose() {
+        underTest.setHighlighting(true);
+        underTest.dispose();
+
+        verify(hoverModel, times(1)).removeHighlightedResources(resources);
+    }
+
     @Test
     public void neverRemovedWhenJustSetToFalse() {
         underTest.setHighlighting(false);

@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.client.views;
 
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.util.Disposable;
 
 /**
  * Manages the highlighting state of a single user interface resource (i.e. if
@@ -27,7 +28,7 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
  * 
  * @author Lars Grammel
  */
-public class HighlightingManager {
+public class HighlightingManager implements Disposable {
 
     private boolean highlighted = false;
 
@@ -41,6 +42,11 @@ public class HighlightingManager {
 
         this.hoverModel = hoverModel;
         this.resources = resources;
+    }
+
+    @Override
+    public void dispose() {
+        setHighlighting(false);
     }
 
     public void setHighlighting(boolean shouldHighlight) {

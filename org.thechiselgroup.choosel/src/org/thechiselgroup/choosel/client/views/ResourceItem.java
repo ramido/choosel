@@ -28,6 +28,7 @@ import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 import org.thechiselgroup.choosel.client.ui.popup.PopupClosingEvent;
 import org.thechiselgroup.choosel.client.ui.popup.PopupClosingHandler;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
+import org.thechiselgroup.choosel.client.util.Disposable;
 
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
@@ -35,7 +36,7 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 
 // TODO separate out resource item controller
-public class ResourceItem {
+public class ResourceItem implements Disposable {
 
     public static enum HighlightStatus {
 
@@ -75,6 +76,8 @@ public class ResourceItem {
 
     private ResourceSet highlightedResources;
 
+    private HighlightingManager popupHighlightingManager;
+
     public ResourceItem(String category, ResourceSet resources,
             HoverModel hoverModel, PopupManager popupManager,
             ResourceItemValueResolver valueResolver) {
@@ -108,6 +111,12 @@ public class ResourceItem {
         resourcesToAdd.retainAll(resources);
 
         this.highlightedResources.addAll(resourcesToAdd);
+    }
+
+    @Override
+    public void dispose() {
+        highlightingManager.dispose();
+        popupHighlightingManager.dispose();
     }
 
     public Object getDisplayObject() {
@@ -187,25 +196,25 @@ public class ResourceItem {
     }
 
     private void initPopupHighlighting() {
-        final HighlightingManager highlightingManager = new HighlightingManager(
-                hoverModel, resources);
+        this.popupHighlightingManager = new HighlightingManager(hoverModel,
+                resources);
 
         popupManager.addPopupMouseOverHandler(new MouseOverHandler() {
             @Override
             public void onMouseOver(MouseOverEvent e) {
-                highlightingManager.setHighlighting(true);
+                popupHighlightingManager.setHighlighting(true);
             }
         });
         popupManager.addPopupMouseOutHandler(new MouseOutHandler() {
             @Override
             public void onMouseOut(MouseOutEvent event) {
-                highlightingManager.setHighlighting(false);
+                popupHighlightingManager.setHighlighting(false);
             }
         });
         popupManager.addPopupClosingHandler(new PopupClosingHandler() {
             @Override
             public void onPopupClosing(PopupClosingEvent event) {
-                highlightingManager.setHighlighting(false);
+                popupHighlightingManager.setHighlighting(false);
             }
         });
     }

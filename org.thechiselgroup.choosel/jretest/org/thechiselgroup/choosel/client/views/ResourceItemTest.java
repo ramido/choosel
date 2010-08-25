@@ -23,21 +23,27 @@ import static org.mockito.Mockito.verify;
 import static org.thechiselgroup.choosel.client.test.AdvancedAsserts.assertContentEquals;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
 
+import java.util.Collections;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
+import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.views.ResourceItem.HighlightStatus;
 import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
 
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
+
 public class ResourceItemTest {
 
     private static final String RESOURCE_ITEM_CATEGORY = "resourceItemCategory";
 
-    @Mock
     private HoverModel hoverModel;
 
     @Mock
@@ -49,6 +55,44 @@ public class ResourceItemTest {
     private ResourceSet resources;
 
     private ResourceItem underTest;
+
+    /**
+     * remove highlighting on disposal (issue 65: highlighting remains after
+     * window is closed)
+     */
+    @Test
+    public void disposeRemovesHighlighting() {
+        resources.addAll(createResources(1, 2));
+        underTest.getHighlightingManager().setHighlighting(true);
+        assertContentEquals(createResources(1, 2), hoverModel.toList());
+
+        underTest.dispose();
+
+        assertContentEquals(Collections.<Resource> emptyList(),
+                hoverModel.toList());
+    }
+
+    /**
+     * remove highlighting on disposal (issue 65: highlighting remains after
+     * window is closed)
+     */
+    @Test
+    public void disposeRemovesPopupHighlighting() {
+        resources.addAll(createResources(1, 2));
+        underTest.popupManager.onMouseOver(0, 0);
+        ArgumentCaptor<MouseOverHandler> argument = ArgumentCaptor
+                .forClass(MouseOverHandler.class);
+        verify(popupManager, times(1)).addPopupMouseOverHandler(
+                argument.capture());
+        argument.getValue().onMouseOver(new MouseOverEvent() {
+        });
+        assertContentEquals(createResources(1, 2), hoverModel.toList());
+
+        underTest.dispose();
+
+        assertContentEquals(Collections.<Resource> emptyList(),
+                hoverModel.toList());
+    }
 
     @Test
     public void getHighlightedResourcesAfterAddHighlightingNoContainedResource() {
@@ -210,6 +254,7 @@ public class ResourceItemTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
+        hoverModel = spy(new HoverModel());
         resources = new DefaultResourceSet();
         underTest = spy(new ResourceItem(RESOURCE_ITEM_CATEGORY, resources,
                 hoverModel, popupManager, layer));
