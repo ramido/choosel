@@ -121,8 +121,6 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private ResourceItemValueResolver configuration;
 
-    private DockPanel viewPanel;
-
     private DockPanel configurationPanel;
 
     private ViewContentDisplay contentDisplay;
@@ -427,7 +425,11 @@ public class DefaultView extends AbstractWindowContent implements View {
         configurationPanel.setSize("100%", "");
         configurationPanel.setStyleName(CSS_VIEW_CONFIGURATION_PANEL);
 
+        initResourceModelPresenterUI();
         initConfigurationMenu();
+        initViewMenu();
+        initSelectionDropPresenterUI();
+        initSelectionDragSourceUI();
     }
 
     // TODO eliminate inner class, implement methods in DefaultView & test them
@@ -518,8 +520,9 @@ public class DefaultView extends AbstractWindowContent implements View {
     private void initResourceModelPresenterUI() {
         Widget widget = resourceModelPresenter.asWidget();
 
-        viewPanel.add(widget, DockPanel.WEST);
-        viewPanel.setCellHorizontalAlignment(widget, HasAlignment.ALIGN_LEFT);
+        configurationPanel.add(widget, DockPanel.WEST);
+        configurationPanel.setCellHorizontalAlignment(widget,
+                HasAlignment.ALIGN_LEFT);
     }
 
     private void initResourceSplitter() {
@@ -540,10 +543,11 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         Widget widget = selectionPresenter.asWidget();
 
-        viewPanel.add(widget, DockPanel.EAST);
-        viewPanel.setCellHorizontalAlignment(widget, HasAlignment.ALIGN_RIGHT);
-        viewPanel.setCellWidth(widget, "100%"); // eats up all
-                                                // space
+        configurationPanel.add(widget, DockPanel.EAST);
+        configurationPanel.setCellHorizontalAlignment(widget,
+                HasAlignment.ALIGN_RIGHT);
+        configurationPanel.setCellWidth(widget, "100%"); // eats up all
+        // space
     }
 
     private void initSelectionDropPresenterUI() {
@@ -555,8 +559,9 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         Widget widget = selectionDropPresenter.asWidget();
 
-        viewPanel.add(widget, DockPanel.EAST);
-        viewPanel.setCellHorizontalAlignment(widget, HasAlignment.ALIGN_RIGHT);
+        configurationPanel.add(widget, DockPanel.EAST);
+        configurationPanel.setCellHorizontalAlignment(widget,
+                HasAlignment.ALIGN_RIGHT);
     }
 
     private void initSelectionModel() {
@@ -582,7 +587,6 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     // TODO move non-ui stuff to constructor
     protected void initUI() {
-        initViewPanelUI();
         initConfigurationPanelUI();
 
         mainPanel = new MainPanel();
@@ -592,7 +596,6 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         mainPanel.setSize("500px", "300px");
 
-        mainPanel.add(viewPanel, DockPanel.NORTH);
         mainPanel.add(configurationPanel, DockPanel.NORTH);
         mainPanel.add(contentDisplay.asWidget(), DockPanel.CENTER);
 
@@ -607,7 +610,7 @@ public class DefaultView extends AbstractWindowContent implements View {
         Image image = new Image(getModuleBase() + IMAGE_VIEW_MENU);
 
         CSS.setMarginTopPx(image, 3);
-        CSS.setMarginRightPx(image, 29);
+        CSS.setMarginRightPx(image, 4);
 
         WidgetFactory widgetFactory = new WidgetFactory() {
             @Override
@@ -638,19 +641,9 @@ public class DefaultView extends AbstractWindowContent implements View {
         // TODO activate menu on click with left mouse button
         // TODO change popup menu location
 
-        viewPanel.add(image, DockPanel.EAST);
-        viewPanel.setCellHorizontalAlignment(image, HasAlignment.ALIGN_RIGHT);
-    }
-
-    private void initViewPanelUI() {
-        viewPanel = new DockPanel();
-        viewPanel.setSize("100%", "");
-        viewPanel.setStyleName(CSS_VIEW_CONFIGURATION_PANEL);
-
-        initResourceModelPresenterUI();
-        initViewMenu();
-        initSelectionDropPresenterUI();
-        initSelectionDragSourceUI();
+        configurationPanel.add(image, DockPanel.EAST);
+        configurationPanel.setCellHorizontalAlignment(image,
+                HasAlignment.ALIGN_RIGHT);
     }
 
     private ResourceItem removeResourceItem(String category) {
@@ -689,7 +682,7 @@ public class DefaultView extends AbstractWindowContent implements View {
          * cannot be reduced by dragging - see
          * http://code.google.com/p/google-web-toolkit/issues/detail?id=316
          */
-        int targetHeight = height - viewPanel.getOffsetHeight();
+        int targetHeight = height - configurationPanel.getOffsetHeight();
         contentDisplay.asWidget().setPixelSize(width, targetHeight);
 
         /*
