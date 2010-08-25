@@ -18,12 +18,17 @@ package org.thechiselgroup.choosel.client.views.chart;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
+import org.thechiselgroup.choosel.client.resolver.ResourceToValueResolver;
+import org.thechiselgroup.choosel.client.resolver.SimplePropertyValueResolver;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
+import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.ui.widget.chart.BarChart;
 import org.thechiselgroup.choosel.client.ui.widget.chart.BarChart.LayoutType;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
+import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayAction;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayConfiguration;
 
@@ -92,7 +97,27 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
             actions.add(new ViewContentDisplayConfiguration() {
                 @Override
                 public void execute() {
+                    // XXX This should be done in a better way
+                    final ResourceToValueResolver resolver = new SimplePropertyValueResolver(
+                            categorizer.getPropertyName());
+                    ResourceSetToValueResolver multiCategorizer = new ResourceSetToValueResolver() {
+                        @Override
+                        public Object resolve(ResourceSet resources,
+                                String category) {
+                            return resolver.resolve(resources
+                                    .getFirstResource());
+                        }
+                    };
+
+                    getCallback().putResolver(SlotResolver.CHART_LABEL_SLOT,
+                            multiCategorizer);
+
                     getCallback().setCategorizer(categorizer);
+                    /*
+                     * XXX this is a workaround for a bug - the labels should be
+                     * updated when the resource item changes
+                     */
+                    // chartWidget.updateChart();
                 }
 
                 @Override

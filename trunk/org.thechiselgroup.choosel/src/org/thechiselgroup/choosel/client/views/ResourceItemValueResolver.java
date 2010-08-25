@@ -44,6 +44,11 @@ public class ResourceItemValueResolver {
         return slotIDsToValueResolvers.get(slotID);
     }
 
+    public ResourceSetToValueResolver put(String slotID,
+            ResourceSetToValueResolver resolver) {
+        return slotIDsToValueResolvers.put(slotID, resolver);
+    }
+
     /*
      * TODO add semantic meta-information as parameter, e.g. expected return
      * type or context (semantic description of slot?)

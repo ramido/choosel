@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.client.views;
 import java.util.Collection;
 import java.util.List;
 
+import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
@@ -37,6 +38,8 @@ public interface ViewContentDisplayCallback {
     Resource getResourceByUri(String uri);
 
     List<ResourceItem> getResourceItems(Resource resource);
+
+    void putResolver(String slotID, ResourceSetToValueResolver resolver);
 
     void setCategorizer(ResourceMultiCategorizer categorizer);
 
