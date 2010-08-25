@@ -124,6 +124,11 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
     }
 
     @Override
+    public List<ViewContentDisplayAction> getConfigurations() {
+        return Collections.emptyList();
+    }
+
+    @Override
     public void init(ViewContentDisplayCallback callback) {
         this.callback = callback;
     }
