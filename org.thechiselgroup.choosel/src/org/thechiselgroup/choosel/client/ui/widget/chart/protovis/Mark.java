@@ -58,6 +58,12 @@ public abstract class Mark extends JavaScriptObject {
             {return f.@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDouble::f(Lorg/thechiselgroup/choosel/client/views/chart/ChartItem;I)(d,_this.index);})
     }-*/;
     
+    public static final native JavaScriptObject getFunctionDoubleToDouble(
+            JavaScriptObject _this, ProtovisFunctionDoubleToDouble f) /*-{
+        return $entry(function(d) 
+            {return f.@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDoubleToDouble::f(DI)(d,_this.index);})
+    }-*/;
+    
     public static final native JavaScriptObject getFunctionString(
             JavaScriptObject _this, ProtovisFunctionString f) /*-{
         return $entry(function(d) 

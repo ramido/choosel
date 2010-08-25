@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.widget.chart.protovis;
 
-
 import com.google.gwt.core.client.JavaScriptObject;
 
 // @formatter:off        
@@ -52,7 +51,7 @@ public class Wedge extends Mark {
     public final native Wedge bottom(Number bottom) /*-{
         return this.bottom(bottom);
     }-*/;
-    
+
     public final native Wedge bottom(ProtovisFunctionDouble f) /*-{
         return this.bottom(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionDouble(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionDouble;)(this,f));
     }-*/;
@@ -93,11 +92,11 @@ public class Wedge extends Mark {
     public final native Wedge events(String events) /*-{
         return this.events(events);
     }-*/;
-
+    
     public final native Wedge fillStyle(ProtovisFunctionString f) /*-{
         return this.fillStyle(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionString(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionString;)(this,f));
     }-*/;
-
+    
     public final native Wedge fillStyle(String colour) /*-{
         return this.fillStyle(colour);
     }-*/;
@@ -109,11 +108,11 @@ public class Wedge extends Mark {
     public final native Wedge innerRadius(double innerRadius) /*-{
         return this.innerRadius(innerRadius);
     }-*/;
-    
+
     public final native Wedge innerRadius(ProtovisFunctionDouble f) /*-{
         return this.innerRadius(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionDouble(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionDouble;)(this,f));
     }-*/;
-    
+
     public final native Wedge left(double left) /*-{
         return this.left(left);
     }-*/;
@@ -160,6 +159,14 @@ public class Wedge extends Mark {
     
     public final native Wedge scale(Number scale) /*-{
         return this.scale(scale);
+    }-*/;
+    
+    public final native Wedge startAngle(double startAngle) /*-{
+        return this.startAngle(startAngle);
+    }-*/;
+    
+    public final native Wedge startAngle(ProtovisFunctionDouble f) /*-{
+        return this.startAngle(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionDouble(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionDouble;)(this,f));
     }-*/;
     
     public final native Wedge strokeStyle(ProtovisFunctionString f) /*-{

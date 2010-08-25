@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.widget.chart.protovis;
 
-
 import com.google.gwt.core.client.JavaScriptObject;
 
 //@formatter:off
@@ -102,7 +101,7 @@ public class Dot extends Mark {
         return this.fillStyle(fillStyle);
     }-*/;
 
-    public final native Dot index(Number index) /*-{
+    public final native Dot index(int index) /*-{
         return this.index(index);
     }-*/;
 
@@ -114,7 +113,7 @@ public class Dot extends Mark {
         return this.left(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionDouble(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionDouble;)(this,f));
     }-*/;
 
-    public final native Dot lineWidth(Number lineWidth) /*-{
+    public final native Dot lineWidth(double lineWidth) /*-{
         return this.lineWidth(lineWidth);
     }-*/;
 
@@ -126,8 +125,12 @@ public class Dot extends Mark {
         return this.proto(mark);
     }-*/;
 
-    public final native Dot radius(Number radius) /*-{
+    public final native Dot radius(double radius) /*-{
         return this.radius(radius);
+    }-*/;
+
+    public final native Dot radius(ProtovisFunctionDoubleToDouble f) /*-{
+        return this.radius(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionDoubleToDouble(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionDoubleToDouble;)(this,f));
     }-*/;
 
     public final native void render() /*-{
@@ -150,16 +153,20 @@ public class Dot extends Mark {
         return this.root(panel);
     }-*/;
 
-    public final native Dot scale(Number scale) /*-{
+    public final native Dot scale(double scale) /*-{
         return this.scale(scale);
     }-*/;
 
     public final native Dot shape(String shape) /*-{
         return this.shape(shape);
     }-*/;
-
-    public final native Dot size(Number size) /*-{
+    
+    public final native Dot size(double size) /*-{
         return this.size(size);
+    }-*/;
+    
+    public final native Dot size(ProtovisFunctionDoubleToDouble f) /*-{
+        return this.size(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionDoubleToDouble(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionDoubleToDouble;)(this,f));
     }-*/;
 
     public final native Dot strokeStyle(String strokeStyle) /*-{
