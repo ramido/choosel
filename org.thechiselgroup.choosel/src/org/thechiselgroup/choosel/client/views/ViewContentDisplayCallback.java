@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
 public interface ViewContentDisplayCallback {
@@ -36,6 +37,8 @@ public interface ViewContentDisplayCallback {
     Resource getResourceByUri(String uri);
 
     List<ResourceItem> getResourceItems(Resource resource);
+
+    void setCategorizer(ResourceMultiCategorizer categorizer);
 
     void switchSelection(ResourceSet resources);
 

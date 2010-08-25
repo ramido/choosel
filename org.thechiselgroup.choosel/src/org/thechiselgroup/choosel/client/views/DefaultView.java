@@ -33,6 +33,7 @@ import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceCategoriesChangedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourceCategoriesChangedHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceCategoryChange;
+import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetEventForwarder;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
@@ -394,7 +395,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
                 // TODO change styling of buttons
                 panel.add(new HTML("<b>Configuration Menu</b>"));
-                for (final ViewContentDisplayAction action : contentDisplay
+                for (final ViewContentDisplayConfiguration action : contentDisplay
                         .getConfigurations()) {
 
                     Button w = new Button(action.getLabel());
@@ -468,6 +469,11 @@ public class DefaultView extends AbstractWindowContent implements View {
             @Override
             public List<ResourceItem> getResourceItems(Resource resource) {
                 return DefaultView.this.getResourceItems(resource);
+            }
+
+            @Override
+            public void setCategorizer(ResourceMultiCategorizer categorizer) {
+                resourceSplitter.setCategorizer(categorizer);
             }
 
             // TODO this means that we need a wrapper around resource set

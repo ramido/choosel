@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.chart;
 
+import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
@@ -35,12 +36,16 @@ public class BarViewContentDisplayFactory implements ViewContentDisplayFactory {
     private PopupManagerFactory popupManagerFactory;
 
     @Inject
+    private ResourceCategorizer resourceByTypeCategorizer;
+
+    @Inject
     public BarViewContentDisplayFactory() {
     }
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
         return new BarViewContentDisplay(popupManagerFactory,
-                detailsWidgetHelper, dragEnablerFactory);
+                detailsWidgetHelper, dragEnablerFactory,
+                resourceByTypeCategorizer);
     }
 }

@@ -42,7 +42,7 @@ public interface ViewContentDisplay extends WidgetAdaptable, Disposable {
      * Returns an unmodifiable set of configurations that can be executed on
      * this view content display.
      */
-    List<ViewContentDisplayAction> getConfigurations();
+    List<ViewContentDisplayConfiguration> getConfigurations();
 
     /**
      * @return identifiers of the visualization slots (retinal properties etc)

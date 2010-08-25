@@ -36,10 +36,10 @@ import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ResourceSplitter;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceSetsPresenter;
-import org.thechiselgroup.choosel.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.client.ui.dnd.DropEnabledViewContentDisplay;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropTargetManager;
 import org.thechiselgroup.choosel.client.util.CollectionUtils;
+import org.thechiselgroup.choosel.client.views.chart.ChartCategorizer;
 import org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.text.TextViewContentDisplay;
 import org.thechiselgroup.choosel.client.windows.WindowContent;
@@ -160,30 +160,8 @@ public class ViewFactory implements WindowContentFactory {
         }
 
         if (viewContentDisplay instanceof ChartViewContentDisplay) {
-            // XXX "tagContent" is from work item explorer
-            // categorizer = new
-            // ResourceByPropertyMultiCategorizer("tagContent");
-
-            categorizer = new ResourceMultiCategorizer() {
-                @Override
-                public Set<String> getCategories(Resource resource) {
-                    String category = resourceByTypeCategorizer
-                            .getCategory(resource);
-
-                    if (category.equals("workitem")) {
-                        // TODO split by iteration
-                        return toSet((String) resource.getValue("type"));
-                    }
-
-                    if (category.equals(TestResourceSetFactory.DEFAULT_TYPE)) {
-                        // TODO split by iteration
-                        return toSet((String) resource
-                                .getValue(TestResourceSetFactory.LABEL));
-                    }
-
-                    return toSet();
-                }
-            };
+            categorizer = new ChartCategorizer(resourceByTypeCategorizer,
+                    "type");
         }
 
         ResourceSplitter resourceSplitter = new ResourceSplitter(categorizer,
