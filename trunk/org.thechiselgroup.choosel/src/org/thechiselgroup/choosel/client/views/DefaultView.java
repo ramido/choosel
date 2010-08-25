@@ -225,13 +225,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         contentDisplay.checkResize();
     }
 
-    public void clear() {
-        this.resourceModel.clear();
-
-        assert categoriesToResourceItems.isEmpty();
-        assert resourceSplitter.getCategorizedResourceSets().isEmpty();
-    }
-
     @Override
     public boolean containsSelectionSet(ResourceSet resourceSet) {
         return selectionSets.contains(resourceSet);
@@ -268,6 +261,10 @@ public class DefaultView extends AbstractWindowContent implements View {
         Log.debug("dispose view " + toString());
 
         removeSelectionModelResourceHandlers();
+
+        for (ResourceItem resourceItem : categoriesToResourceItems.values()) {
+            resourceItem.dispose();
+        }
 
         if (resourceModel instanceof Disposable) {
             ((Disposable) resourceModel).dispose();
@@ -601,6 +598,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         ResourceItem resourceItem = categoriesToResourceItems.remove(category);
         contentDisplay.removeResourceItem(resourceItem);
+        resourceItem.dispose();
 
         assert !categoriesToResourceItems.containsKey(category);
 

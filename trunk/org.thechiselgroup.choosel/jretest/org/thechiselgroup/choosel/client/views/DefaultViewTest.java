@@ -306,6 +306,26 @@ public class DefaultViewTest {
     }
 
     @Test
+    public void disposeResourceItemsWhenViewDisposed() {
+        when(resourceItem.getResourceSet()).thenReturn(createResources(1));
+        underTest.getResourceModel().addResources(createResources(1));
+
+        underTest.dispose();
+
+        verify(resourceItem, times(1)).dispose();
+    }
+
+    @Test
+    public void disposeResourceItemWhenResourceItemRemoved() {
+        ResourceSet resources = createLabeledResources(1);
+
+        underTest.getResourceModel().addResourceSet(resources);
+        underTest.getResourceModel().removeResourceSet(resources);
+
+        verify(resourceItem, times(1)).dispose();
+    }
+
+    @Test
     public void disposeResourceModelPresenter() {
         underTest.dispose();
 
