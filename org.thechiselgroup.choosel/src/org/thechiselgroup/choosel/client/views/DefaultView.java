@@ -120,6 +120,8 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private ResourceItemValueResolver configuration;
 
+    private DockPanel viewPanel;
+
     private DockPanel configurationPanel;
 
     private ViewContentDisplay contentDisplay;
@@ -157,7 +159,9 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private HandlerRegistrationSet handlerRegistrations = new HandlerRegistrationSet();
 
-    private static final String IMAGE_MENU = "images/menu.png";
+    private static final String IMAGE_VIEW_MENU = "images/menu.png";
+
+    private static final String IMAGE_CONFIGURATION_MENU = "images/configuration.png";
 
     @Inject
     public DefaultView(
@@ -373,15 +377,56 @@ public class DefaultView extends AbstractWindowContent implements View {
         allResourcesToSplitterForwarder.init();
     }
 
+    private void initConfigurationMenu() {
+        if (contentDisplay.getConfigurations().isEmpty()) {
+            return;
+        }
+
+        Image image = new Image(getModuleBase() + IMAGE_CONFIGURATION_MENU);
+
+        CSS.setMarginTopPx(image, 3);
+        CSS.setMarginRightPx(image, 4);
+
+        WidgetFactory widgetFactory = new WidgetFactory() {
+            @Override
+            public Widget createWidget() {
+                VerticalPanel panel = new VerticalPanel();
+
+                // TODO change styling of buttons
+                panel.add(new HTML("<b>Configuration Menu</b>"));
+                for (final ViewContentDisplayAction action : contentDisplay
+                        .getConfigurations()) {
+
+                    Button w = new Button(action.getLabel());
+                    w.addClickHandler(new ClickHandler() {
+                        @Override
+                        public void onClick(ClickEvent event) {
+                            action.execute();
+                        }
+                    });
+                    panel.add(w);
+                }
+
+                return panel;
+            }
+        };
+
+        DefaultPopupManager manager = new DefaultPopupManager(widgetFactory);
+        DefaultPopupManager.linkManagerToSource(manager, image);
+        // TODO activate menu on click with left mouse button
+        // TODO change popup menu location
+
+        configurationPanel.add(image, DockPanel.EAST);
+        configurationPanel.setCellHorizontalAlignment(image,
+                HasAlignment.ALIGN_RIGHT);
+    }
+
     private void initConfigurationPanelUI() {
         configurationPanel = new DockPanel();
         configurationPanel.setSize("100%", "");
         configurationPanel.setStyleName(CSS_VIEW_CONFIGURATION_PANEL);
 
-        initResourceModelPresenterUI();
-        initMenu();
-        initSelectionDropPresenterUI();
-        initSelectionDragSourceUI();
+        initConfigurationMenu();
     }
 
     // TODO eliminate inner class, implement methods in DefaultView & test them
@@ -464,15 +509,99 @@ public class DefaultView extends AbstractWindowContent implements View {
                 }));
     }
 
-    private void initMenu() {
+    private void initResourceModelPresenterUI() {
+        Widget widget = resourceModelPresenter.asWidget();
+
+        viewPanel.add(widget, DockPanel.WEST);
+        viewPanel.setCellHorizontalAlignment(widget, HasAlignment.ALIGN_LEFT);
+    }
+
+    private void initResourceSplitter() {
+        resourceSplitter.addHandler(new ResourceCategoriesChangedHandler() {
+
+            @Override
+            public void onResourceCategoriesChanged(
+                    ResourceCategoriesChangedEvent e) {
+
+                assert e != null;
+                updateResourceItemsOnModelChange(e.getChanges());
+            }
+        });
+    }
+
+    private void initSelectionDragSourceUI() {
+        selectionPresenter.init();
+
+        Widget widget = selectionPresenter.asWidget();
+
+        viewPanel.add(widget, DockPanel.EAST);
+        viewPanel.setCellHorizontalAlignment(widget, HasAlignment.ALIGN_RIGHT);
+        viewPanel.setCellWidth(widget, "100%"); // eats up all
+                                                // space
+    }
+
+    private void initSelectionDropPresenterUI() {
+        selectionDropPresenter.init();
+
+        DefaultResourceSet resources = new DefaultResourceSet();
+        resources.setLabel("add selection");
+        selectionDropPresenter.addResourceSet(resources);
+
+        Widget widget = selectionDropPresenter.asWidget();
+
+        viewPanel.add(widget, DockPanel.EAST);
+        viewPanel.setCellHorizontalAlignment(widget, HasAlignment.ALIGN_RIGHT);
+    }
+
+    private void initSelectionModel() {
+        selection = new SwitchingResourceSet();
+
+        selectionResourceAddedHandlerRegistration = selection
+                .addEventHandler(new ResourcesAddedEventHandler() {
+                    @Override
+                    public void onResourcesAdded(ResourcesAddedEvent e) {
+                        updateSelectionStatusDisplay(e.getAddedResources(),
+                                true);
+                    }
+                });
+        selectionResourceRemovedHandlerRegistration = selection
+                .addEventHandler(new ResourcesRemovedEventHandler() {
+                    @Override
+                    public void onResourcesRemoved(ResourcesRemovedEvent e) {
+                        updateSelectionStatusDisplay(e.getRemovedResources(),
+                                false);
+                    }
+                });
+    }
+
+    // TODO move non-ui stuff to constructor
+    protected void initUI() {
+        initViewPanelUI();
+        initConfigurationPanelUI();
+
+        mainPanel = new MainPanel();
+
+        mainPanel.setBorderWidth(0);
+        mainPanel.setSpacing(0);
+
+        mainPanel.setSize("500px", "300px");
+
+        mainPanel.add(viewPanel, DockPanel.NORTH);
+        mainPanel.add(configurationPanel, DockPanel.NORTH);
+        mainPanel.add(contentDisplay.asWidget(), DockPanel.CENTER);
+
+        mainPanel.setCellHeight(contentDisplay.asWidget(), "100%");
+    }
+
+    private void initViewMenu() {
         if (contentDisplay.getActions().isEmpty()) {
             return;
         }
 
-        Image image = new Image(getModuleBase() + IMAGE_MENU);
+        Image image = new Image(getModuleBase() + IMAGE_VIEW_MENU);
 
         CSS.setMarginTopPx(image, 3);
-        CSS.setMarginRightPx(image, 4);
+        CSS.setMarginRightPx(image, 29);
 
         WidgetFactory widgetFactory = new WidgetFactory() {
             @Override
@@ -503,93 +632,19 @@ public class DefaultView extends AbstractWindowContent implements View {
         // TODO activate menu on click with left mouse button
         // TODO change popup menu location
 
-        configurationPanel.add(image, DockPanel.EAST);
-        configurationPanel.setCellHorizontalAlignment(image,
-                HasAlignment.ALIGN_RIGHT);
+        viewPanel.add(image, DockPanel.EAST);
+        viewPanel.setCellHorizontalAlignment(image, HasAlignment.ALIGN_RIGHT);
     }
 
-    private void initResourceModelPresenterUI() {
-        Widget widget = resourceModelPresenter.asWidget();
+    private void initViewPanelUI() {
+        viewPanel = new DockPanel();
+        viewPanel.setSize("100%", "");
+        viewPanel.setStyleName(CSS_VIEW_CONFIGURATION_PANEL);
 
-        configurationPanel.add(widget, DockPanel.WEST);
-        configurationPanel.setCellHorizontalAlignment(widget,
-                HasAlignment.ALIGN_LEFT);
-    }
-
-    private void initResourceSplitter() {
-        resourceSplitter.addHandler(new ResourceCategoriesChangedHandler() {
-
-            @Override
-            public void onResourceCategoriesChanged(
-                    ResourceCategoriesChangedEvent e) {
-
-                assert e != null;
-                updateResourceItemsOnModelChange(e.getChanges());
-            }
-        });
-    }
-
-    private void initSelectionDragSourceUI() {
-        selectionPresenter.init();
-
-        Widget widget = selectionPresenter.asWidget();
-
-        configurationPanel.add(widget, DockPanel.EAST);
-        configurationPanel.setCellHorizontalAlignment(widget,
-                HasAlignment.ALIGN_RIGHT);
-        configurationPanel.setCellWidth(widget, "100%"); // eats up all space
-    }
-
-    private void initSelectionDropPresenterUI() {
-        selectionDropPresenter.init();
-
-        DefaultResourceSet resources = new DefaultResourceSet();
-        resources.setLabel("add selection");
-        selectionDropPresenter.addResourceSet(resources);
-
-        Widget widget = selectionDropPresenter.asWidget();
-
-        configurationPanel.add(widget, DockPanel.EAST);
-        configurationPanel.setCellHorizontalAlignment(widget,
-                HasAlignment.ALIGN_RIGHT);
-    }
-
-    private void initSelectionModel() {
-        selection = new SwitchingResourceSet();
-
-        selectionResourceAddedHandlerRegistration = selection
-                .addEventHandler(new ResourcesAddedEventHandler() {
-                    @Override
-                    public void onResourcesAdded(ResourcesAddedEvent e) {
-                        updateSelectionStatusDisplay(e.getAddedResources(),
-                                true);
-                    }
-                });
-        selectionResourceRemovedHandlerRegistration = selection
-                .addEventHandler(new ResourcesRemovedEventHandler() {
-                    @Override
-                    public void onResourcesRemoved(ResourcesRemovedEvent e) {
-                        updateSelectionStatusDisplay(e.getRemovedResources(),
-                                false);
-                    }
-                });
-    }
-
-    // TODO move non-ui stuff to constructor
-    protected void initUI() {
-        initConfigurationPanelUI();
-
-        mainPanel = new MainPanel();
-
-        mainPanel.setBorderWidth(0);
-        mainPanel.setSpacing(0);
-
-        mainPanel.setSize("500px", "300px");
-
-        mainPanel.add(configurationPanel, DockPanel.NORTH);
-        mainPanel.add(contentDisplay.asWidget(), DockPanel.CENTER);
-
-        mainPanel.setCellHeight(contentDisplay.asWidget(), "100%");
+        initResourceModelPresenterUI();
+        initViewMenu();
+        initSelectionDropPresenterUI();
+        initSelectionDragSourceUI();
     }
 
     private ResourceItem removeResourceItem(String category) {
@@ -628,7 +683,7 @@ public class DefaultView extends AbstractWindowContent implements View {
          * cannot be reduced by dragging - see
          * http://code.google.com/p/google-web-toolkit/issues/detail?id=316
          */
-        int targetHeight = height - configurationPanel.getOffsetHeight();
+        int targetHeight = height - viewPanel.getOffsetHeight();
         contentDisplay.asWidget().setPixelSize(width, targetHeight);
 
         /*
