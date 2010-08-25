@@ -1,0 +1,7 @@
+#summary Choosel screencasts
+
+==Screencast - Timeline and Basic Features==
+<wiki:video url="http://www.youtube.com/v/Oz4uV6a7__0" width="517" height="480"/>
+
+==Screencast - [http://bio-mixer.appspot.com Bio-Mixer Application]==
+<wiki:video url="http://www.youtube.com/v/OeVpfx92Oo0" width="517" height="381"/>
