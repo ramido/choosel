@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.client.ui.widget.chart;
 
 import org.thechiselgroup.choosel.client.ui.Colors;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Alignments;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Label;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventHandler;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDouble;
@@ -125,11 +126,12 @@ public class PieChart extends ChartWidget {
     private ProtovisFunctionString fullWedgeTextStyle = new ProtovisFunctionString() {
         @Override
         public String f(ChartItem value, int i) {
-            return calculateHighlightedResources(i) == 0 ? "white" : "black";
+            return calculateHighlightedResources(i) == 0 ? Colors.WHITE
+                    : Colors.BLACK;
         }
     };
 
-    private String wedgeLabelAnchor = "center";
+    private String wedgeLabelAnchor = Alignments.CENTER;
 
     private int wedgeTextAngle = 0;
 

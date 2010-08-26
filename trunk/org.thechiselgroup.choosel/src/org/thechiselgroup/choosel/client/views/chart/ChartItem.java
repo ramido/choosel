@@ -47,6 +47,7 @@ public class ChartItem {
             return Colors.YELLOW;
         case DEFAULT:
             return Colors.STEELBLUE;
+        case PARTIALLY_SELECTED:
         case SELECTED:
             return Colors.ORANGE;
         }
