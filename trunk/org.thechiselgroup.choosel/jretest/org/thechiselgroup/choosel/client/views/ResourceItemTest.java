@@ -369,18 +369,6 @@ public class ResourceItemTest {
         verify(underTest, never()).updateStyling();
     }
 
-    // @Test
-    // public void setSelectedWithChangeCallsUpdateStyling() {
-    // underTest.setSelected(true);
-    // verify(underTest, times(1)).updateStyling();
-    // }
-
-    // @Test
-    // public void setSelectedWithoutChangeNeverCallsUpdateStyling() {
-    // underTest.setSelected(false);
-    // verify(underTest, never()).updateStyling();
-    // }
-
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -401,7 +389,6 @@ public class ResourceItemTest {
     public void statusIsHighlighted() {
         resources.addAll(createResources(1));
         underTest.addHighlightedResources(createResources(1));
-        // underTest.setSelected(false);
         assertEquals(Status.HIGHLIGHTED, underTest.getStatus());
     }
 
@@ -409,7 +396,6 @@ public class ResourceItemTest {
     public void statusIsHighlightedSelected() {
         resources.addAll(createResources(1));
         underTest.addHighlightedResources(createResources(1));
-        // underTest.setSelected(true);
         underTest.addSelectedResources(createResources(1));
         assertEquals(Status.HIGHLIGHTED_SELECTED, underTest.getStatus());
     }
@@ -448,7 +434,6 @@ public class ResourceItemTest {
 
     @Test
     public void statusIsSelected() {
-        // underTest.setSelected(true);
         resources.addAll(createResources(1));
         underTest.addSelectedResources(createResources(1));
         assertEquals(Status.SELECTED, underTest.getStatus());
@@ -459,7 +444,6 @@ public class ResourceItemTest {
         resources.addAll(createResources(1, 2));
         underTest.addHighlightedResources(createResources(1, 2));
         underTest.removeHighlightedResources(createResources(1));
-        // underTest.setSelected(false);
         assertEquals(Status.PARTIALLY_HIGHLIGHTED, underTest.getStatus());
     }
 
@@ -470,7 +454,6 @@ public class ResourceItemTest {
         underTest.removeHighlightedResources(createResources(1));
         underTest.addSelectedResources(createResources(1, 2));
         underTest.removeSelectedResources(createResources(1));
-        // underTest.setSelected(true);
         assertEquals(Status.PARTIALLY_HIGHLIGHTED_SELECTED,
                 underTest.getStatus());
     }
