@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.client.ui.widget.chart;
 
 import org.thechiselgroup.choosel.client.ui.Colors;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Alignments;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Bar;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Label;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventHandler;
@@ -183,11 +184,9 @@ public class BarChart extends ChartWidget {
     private ProtovisFunctionDouble regularBarBase = new ProtovisFunctionDouble() {
         @Override
         public double f(ChartItem value, int i) {
-            return highlightedBarLength.f(value, i) + highlightedBarBase;
+            return highlightedBarLength.f(value, i);
         }
     };
-
-    private int highlightedBarBase = 0;
 
     private ProtovisFunctionStringToString scaleStrokeStyle = new ProtovisFunctionStringToString() {
         @Override
@@ -208,7 +207,7 @@ public class BarChart extends ChartWidget {
         }
     };
 
-    private String baselineLabelTextAlign = "center";
+    private String baselineLabelTextAlign = Alignments.CENTER;
 
     private int baselineLabelLength = -15;
 
@@ -245,18 +244,21 @@ public class BarChart extends ChartWidget {
         }
     };
 
-    private String barTextBaseline = "top";
+    private String barTextBaseline = Alignments.TOP;
 
     private ProtovisFunctionString fullBarTextStyle = new ProtovisFunctionString() {
         @Override
         public String f(ChartItem value, int i) {
-            return calculateHighlightedResources(i) == 0 ? "white" : "black";
+            return calculateHighlightedResources(i) == 0 ? Colors.WHITE
+                    : Colors.BLACK;
         }
     };
 
     protected LayoutType layout = LayoutType.HORIZONTAL;
 
     private static final int HORIZONTAL_BAR_LABEL_EXTRA_MARGIN = 20;
+
+    private double barLineWidth = 1;
 
     @Override
     protected void beforeRender() {
@@ -305,76 +307,79 @@ public class BarChart extends ChartWidget {
             Scale scale = Scale.linear(0, maxBarSize).range(0, chartWidth);
             drawHorizontalBarScales(scale);
             drawHorizontalBarChart();
+
         }
+        chart.add(Rule.createRule()).bottom(0).left(0).width(chartWidth)
+                .strokeStyle(AXIS_SCALE_COLOR).lineWidth(barLineWidth);
+        chart.add(Rule.createRule()).left(0).bottom(0).height(chartHeight)
+                .strokeStyle(AXIS_SCALE_COLOR).lineWidth(barLineWidth);
     }
 
     private void drawHorizontalBarChart() {
         for (ChartItem chartItem : chartItems) {
             if (isPartiallyHighlighted(chartItem)) {
                 highlightedBar = chart.add(Bar.createBar())
-                        .data(ArrayUtils.toJsArray(chartItems))
-                        .left(highlightedBarBase).width(highlightedBarLength)
-                        .bottom(barStart).height(barWidth)
-                        .fillStyle(Colors.YELLOW).strokeStyle(Colors.STEELBLUE);
+                        .data(ArrayUtils.toJsArray(chartItems)).left(1)
+                        .width(highlightedBarLength).bottom(barStart)
+                        .height(barWidth).fillStyle(Colors.YELLOW)
+                        .strokeStyle(Colors.STEELBLUE).lineWidth(barLineWidth);
 
-                highlightedBar.anchor("right").add(Label.createLabel())
-                        .textBaseline(barTextBaseline)
-                        .text(highlightedBarLabelText).textBaseline("middle");
+                highlightedBar.anchor(Alignments.RIGHT)
+                        .add(Label.createLabel()).textBaseline(barTextBaseline)
+                        .text(highlightedBarLabelText)
+                        .textBaseline(Alignments.MIDDLE);
 
                 highlightedBar.add(Label.createLabel())
                         .bottom(baselineLabelStart)
                         .textAlign(baselineLabelTextAlign)
                         .left(baselineLabelLength).text(baselineLabelText)
-                        .textBaseline("middle");
+                        .textBaseline(Alignments.MIDDLE);
 
                 regularBar = highlightedBar.add(Bar.createBar())
                         .left(regularBarBase).width(regularBarLength)
                         .fillStyle(partialHighlightingChartFillStyle);
 
-                regularBar.anchor("right").add(Label.createLabel())
+                regularBar.anchor(Alignments.RIGHT).add(Label.createLabel())
                         .textBaseline(barTextBaseline)
-                        .text(regularBarLabelText).textStyle("white")
-                        .textBaseline("middle");
+                        .text(regularBarLabelText).textStyle(Colors.WHITE)
+                        .textBaseline(Alignments.MIDDLE);
                 return;
             }
         }
 
         regularBar = chart.add(Bar.createBar())
-                .data(ArrayUtils.toJsArray(chartItems))
-                .left(highlightedBarBase).width(fullBarLength).bottom(barStart)
-                .height(barWidth).fillStyle(chartFillStyle)
-                .strokeStyle(Colors.STEELBLUE);
+                .data(ArrayUtils.toJsArray(chartItems)).left(1)
+                .width(fullBarLength).bottom(barStart).height(barWidth)
+                .fillStyle(chartFillStyle).strokeStyle(Colors.STEELBLUE)
+                .lineWidth(barLineWidth);
 
         regularBar.add(Label.createLabel()).bottom(baselineLabelStart)
                 .textAlign(baselineLabelTextAlign).left(baselineLabelLength)
-                .text(baselineLabelText).textBaseline("middle");
+                .text(baselineLabelText).textBaseline(Alignments.MIDDLE);
 
-        regularBar.anchor("right").add(Label.createLabel())
+        regularBar.anchor(Alignments.RIGHT).add(Label.createLabel())
                 .textBaseline(barTextBaseline).text(fullBarLabelText)
-                .textStyle(fullBarTextStyle).textBaseline("middle");
+                .textStyle(fullBarTextStyle).textBaseline(Alignments.MIDDLE);
     }
 
     protected void drawHorizontalBarScales(Scale scale) {
         this.scale = scale;
         chart.add(Rule.createRule()).data(scale.ticks()).left(scale).bottom(0)
                 .strokeStyle(scaleStrokeStyle).height(chartHeight)
-                .anchor("bottom").add(Label.createLabel()).text(scaleLabelText);
-
-        chart.add(Rule.createRule()).bottom(0).left(0).width(chartWidth)
-                .strokeStyle(AXIS_SCALE_COLOR);
+                .anchor(Alignments.BOTTOM).add(Label.createLabel())
+                .text(scaleLabelText);
     }
 
     private void drawVerticalBarChart() {
         for (ChartItem chartItem : chartItems) {
             if (isPartiallyHighlighted(chartItem)) {
                 highlightedBar = chart.add(Bar.createBar())
-                        .data(ArrayUtils.toJsArray(chartItems))
-                        .bottom(highlightedBarBase)
+                        .data(ArrayUtils.toJsArray(chartItems)).bottom(0)
                         .height(highlightedBarLength).left(barStart)
                         .width(barWidth).fillStyle(Colors.YELLOW)
-                        .strokeStyle(Colors.STEELBLUE);
+                        .strokeStyle(Colors.STEELBLUE).lineWidth(barLineWidth);
 
-                highlightedBar.anchor("top").add(Label.createLabel())
+                highlightedBar.anchor(Alignments.TOP).add(Label.createLabel())
                         .textBaseline(barTextBaseline)
                         .text(highlightedBarLabelText);
 
@@ -387,24 +392,24 @@ public class BarChart extends ChartWidget {
                         .bottom(regularBarBase).height(regularBarLength)
                         .fillStyle(partialHighlightingChartFillStyle);
 
-                regularBar.anchor("top").add(Label.createLabel())
+                regularBar.anchor(Alignments.TOP).add(Label.createLabel())
                         .textBaseline(barTextBaseline)
-                        .text(regularBarLabelText).textStyle("white");
+                        .text(regularBarLabelText).textStyle(Colors.WHITE);
                 return;
             }
         }
 
         regularBar = chart.add(Bar.createBar())
-                .data(ArrayUtils.toJsArray(chartItems))
-                .bottom(highlightedBarBase).height(fullBarLength)
-                .left(barStart).width(barWidth).fillStyle(chartFillStyle)
-                .strokeStyle(Colors.STEELBLUE);
+                .data(ArrayUtils.toJsArray(chartItems)).bottom(0)
+                .height(fullBarLength).left(barStart).width(barWidth)
+                .fillStyle(chartFillStyle).strokeStyle(Colors.STEELBLUE)
+                .lineWidth(barLineWidth);
 
         regularBar.add(Label.createLabel()).left(baselineLabelStart)
                 .textAlign(baselineLabelTextAlign).bottom(baselineLabelLength)
                 .text(baselineLabelText);
 
-        regularBar.anchor("top").add(Label.createLabel())
+        regularBar.anchor(Alignments.TOP).add(Label.createLabel())
                 .textBaseline(barTextBaseline).text(fullBarLabelText)
                 .textStyle(fullBarTextStyle);
     }
@@ -412,11 +417,9 @@ public class BarChart extends ChartWidget {
     protected void drawVerticalBarScales(Scale scale) {
         this.scale = scale;
         chart.add(Rule.createRule()).data(scale.ticks()).bottom(scale)
-                .strokeStyle(scaleStrokeStyle).width(chartWidth).anchor("left")
-                .add(Label.createLabel()).text(scaleLabelText);
-
-        chart.add(Rule.createRule()).left(0).bottom(0).height(chartHeight)
-                .strokeStyle(AXIS_SCALE_COLOR);
+                .strokeStyle(scaleStrokeStyle).width(chartWidth)
+                .anchor(Alignments.LEFT).add(Label.createLabel())
+                .text(scaleLabelText);
     }
 
     private boolean isPartiallyHighlighted(ChartItem chartItem) {

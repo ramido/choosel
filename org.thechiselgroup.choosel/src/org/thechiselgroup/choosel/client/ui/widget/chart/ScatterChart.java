@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.client.ui.widget.chart;
 
 import org.thechiselgroup.choosel.client.ui.Colors;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Alignments;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Dot;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Label;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventHandler;
@@ -158,12 +159,13 @@ public class ScatterChart extends ChartWidget {
     protected void drawScales(Scale scaleX, Scale scaleY) {
         chart.add(Rule.createRule()).data(scaleX.ticks()).bottom(0)
                 .left(scaleX).strokeStyle(scaleStrokeStyle).height(chartHeight)
-                .anchor("bottom").add(Label.createLabel())
+                .anchor(Alignments.BOTTOM).add(Label.createLabel())
                 .text(scaleLabelTextX);
 
         chart.add(Rule.createRule()).data(scaleY.ticks()).bottom(scaleY)
                 .left(0).strokeStyle(scaleStrokeStyle).width(chartWidth)
-                .anchor("left").add(Label.createLabel()).text(scaleLabelTextY);
+                .anchor(Alignments.LEFT).add(Label.createLabel())
+                .text(scaleLabelTextY);
 
         chart.add(Rule.createRule()).height(chartHeight).bottom(0).left(0)
                 .strokeStyle(AXIS_SCALE_COLOR);
