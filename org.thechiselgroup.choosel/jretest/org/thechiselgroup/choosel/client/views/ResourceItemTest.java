@@ -35,6 +35,7 @@ import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.views.ResourceItem.HighlightStatus;
+import org.thechiselgroup.choosel.client.views.ResourceItem.SelectStatus;
 import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
 
 import com.google.gwt.event.dom.client.MouseOverEvent;
@@ -190,6 +191,97 @@ public class ResourceItemTest {
     }
 
     @Test
+    public void getSelectedResourcesAfterAddSelectingNoContainedResource() {
+        resources.addAll(createResources(1, 2, 3, 4));
+        underTest.addSelectedResources(createResources(5, 6));
+        assertContentEquals(createResources(), underTest.getSelectedResources());
+    }
+
+    @Test
+    public void getSelectedResourcesAfterAddSelectingOneContainedContainedResourceOutOfTwoResources() {
+        resources.addAll(createResources(1, 2, 3, 4));
+        underTest.addSelectedResources(createResources(1, 5));
+        assertContentEquals(createResources(1),
+                underTest.getSelectedResources());
+    }
+
+    @Test
+    public void getSelectedResourcesAfterAddSelectingOnePlusOneContainedContainedResourceOutOfTwoResources() {
+        resources.addAll(createResources(1, 2, 3, 4));
+        underTest.addSelectedResources(createResources(1));
+        underTest.addSelectedResources(createResources(2, 5));
+        assertContentEquals(createResources(1, 2),
+                underTest.getSelectedResources());
+    }
+
+    @Test
+    public void getSelectedResourcesAfterAddSelectingOnePlusTwoContainedResources() {
+        resources.addAll(createResources(1, 2, 3, 4));
+        underTest.addSelectedResources(createResources(1));
+        underTest.addSelectedResources(createResources(2, 3));
+        assertContentEquals(createResources(1, 2, 3),
+                underTest.getSelectedResources());
+    }
+
+    @Test
+    public void getSelectedResourcesAfterAddSelectingOnePlusZeroContainedResources() {
+        resources.addAll(createResources(1, 2, 3, 4));
+        underTest.addSelectedResources(createResources(1));
+        underTest.addSelectedResources(createResources(5, 6));
+        assertContentEquals(createResources(1),
+                underTest.getSelectedResources());
+    }
+
+    @Test
+    public void getSelectedResourcesAfterAddSelectingTwoContainedResources() {
+        resources.addAll(createResources(1, 2, 3, 4));
+        underTest.addSelectedResources(createResources(1, 2));
+        assertContentEquals(createResources(1, 2),
+                underTest.getSelectedResources());
+    }
+
+    @Test
+    public void getSelectedResourcesAfterRemoveSelectingNoContainedResource() {
+        resources.addAll(createResources(1, 2, 3, 4));
+        underTest.removeSelectedResources(createResources(5, 6));
+        assertContentEquals(createResources(), underTest.getSelectedResources());
+    }
+
+    @Test
+    public void getSelectedResourcesAfterRemoveSelectingOneFromOneContainedResource() {
+        resources.addAll(createResources(1, 2, 3, 4));
+        underTest.addSelectedResources(createResources(1));
+        underTest.removeSelectedResources(createResources(1, 6));
+        assertContentEquals(createResources(), underTest.getSelectedResources());
+    }
+
+    @Test
+    public void getSelectedResourcesAfterRemoveSelectingOneFromTwoContainedResource() {
+        resources.addAll(createResources(1, 2, 3, 4));
+        underTest.addSelectedResources(createResources(1, 2));
+        underTest.removeSelectedResources(createResources(2, 5));
+        assertContentEquals(createResources(1),
+                underTest.getSelectedResources());
+    }
+
+    @Test
+    public void getSelectedResourcesAfterRemoveSelectingTwoFromTwoContainedResource() {
+        resources.addAll(createResources(1, 2, 3, 4));
+        underTest.addSelectedResources(createResources(1, 2));
+        underTest.removeSelectedResources(createResources(1, 2));
+        assertContentEquals(createResources(), underTest.getSelectedResources());
+    }
+
+    @Test
+    public void getSelectedResourcesAfterRemoveSelectingZeroFromOneContainedResource() {
+        resources.addAll(createResources(1, 2, 3, 4));
+        underTest.addSelectedResources(createResources(1));
+        underTest.removeSelectedResources(createResources(5, 6));
+        assertContentEquals(createResources(1),
+                underTest.getSelectedResources());
+    }
+
+    @Test
     public void highlightStatusCompleteWhenTwoOutOfTwoResourcesHighlighted() {
         resources.addAll(createResources(1, 2));
         underTest.addHighlightedResources(createResources(1, 2));
@@ -227,8 +319,41 @@ public class ResourceItemTest {
     }
 
     @Test
-    public void isSelectIsFalseAfterInit() {
-        assertEquals(false, underTest.isSelected());
+    public void isSelectedIsFalseAfterInit() {
+        // assertEquals(false, underTest.isSelected());
+        assertEquals(SelectStatus.NONE, underTest.getSelectStatus());
+    }
+
+    @Test
+    public void selectStatusCompleteWhenTwoOutOfTwoResourcesSelected() {
+        resources.addAll(createResources(1, 2));
+        underTest.addSelectedResources(createResources(1, 2));
+
+        assertEquals(SelectStatus.COMPLETE, underTest.getSelectStatus());
+    }
+
+    @Test
+    public void selectStatusNoneWhenZeroOutOfTwoResourcesSelected() {
+        resources.addAll(createResources(1, 2));
+        underTest.addSelectedResources(createResources());
+
+        assertEquals(SelectStatus.NONE, underTest.getSelectStatus());
+    }
+
+    @Test
+    public void selectStatusNoneWhenZeroOutOfZeroResourcesSelected() {
+        resources.addAll(createResources());
+        underTest.addSelectedResources(createResources());
+
+        assertEquals(SelectStatus.NONE, underTest.getSelectStatus());
+    }
+
+    @Test
+    public void selectStatusPartialWhenOneOutOfTwoResourcesSelected() {
+        resources.addAll(createResources(1, 2));
+        underTest.addSelectedResources(createResources(1));
+
+        assertEquals(SelectStatus.PARTIAL, underTest.getSelectStatus());
     }
 
     @Test
@@ -239,16 +364,23 @@ public class ResourceItemTest {
     }
 
     @Test
-    public void setSelectedWithChangeCallsUpdateStyling() {
-        underTest.setSelected(true);
-        verify(underTest, times(1)).updateStyling();
-    }
-
-    @Test
-    public void setSelectedWithoutChangeNeverCallsUpdateStyling() {
-        underTest.setSelected(false);
+    public void setSelectedNeverCallsUpdateStyling() {
+        resources.addAll(createResources(1));
+        underTest.addSelectedResources(createResources(1));
         verify(underTest, never()).updateStyling();
     }
+
+    // @Test
+    // public void setSelectedWithChangeCallsUpdateStyling() {
+    // underTest.setSelected(true);
+    // verify(underTest, times(1)).updateStyling();
+    // }
+
+    // @Test
+    // public void setSelectedWithoutChangeNeverCallsUpdateStyling() {
+    // underTest.setSelected(false);
+    // verify(underTest, never()).updateStyling();
+    // }
 
     @Before
     public void setUp() {
@@ -270,7 +402,7 @@ public class ResourceItemTest {
     public void statusIsHighlighted() {
         resources.addAll(createResources(1));
         underTest.addHighlightedResources(createResources(1));
-        underTest.setSelected(false);
+        // underTest.setSelected(false);
         assertEquals(Status.HIGHLIGHTED, underTest.getStatus());
     }
 
@@ -278,8 +410,8 @@ public class ResourceItemTest {
     public void statusIsHighlightedSelected() {
         resources.addAll(createResources(1));
         underTest.addHighlightedResources(createResources(1));
-        underTest.setSelected(true);
-
+        // underTest.setSelected(true);
+        underTest.addSelectedResources(createResources(1));
         assertEquals(Status.HIGHLIGHTED_SELECTED, underTest.getStatus());
     }
 
@@ -301,8 +433,25 @@ public class ResourceItemTest {
     }
 
     @Test
+    public void statusIsNotSelectedAfterRemovingSelectedResources() {
+        resources.addAll(createResources(1));
+        underTest.addSelectedResources(createResources(1));
+        underTest.removeSelectedResources(createResources(1));
+        assertEquals(Status.DEFAULT, underTest.getStatus());
+    }
+
+    @Test
+    public void statusIsNotSelectedOnEmptyAdd() {
+        resources.addAll(createResources(1));
+        underTest.addSelectedResources(createResources(2));
+        assertEquals(Status.DEFAULT, underTest.getStatus());
+    }
+
+    @Test
     public void statusIsSelected() {
-        underTest.setSelected(true);
+        // underTest.setSelected(true);
+        resources.addAll(createResources(1));
+        underTest.addSelectedResources(createResources(1));
         assertEquals(Status.SELECTED, underTest.getStatus());
     }
 
@@ -311,18 +460,28 @@ public class ResourceItemTest {
         resources.addAll(createResources(1, 2));
         underTest.addHighlightedResources(createResources(1, 2));
         underTest.removeHighlightedResources(createResources(1));
-        underTest.setSelected(false);
+        // underTest.setSelected(false);
         assertEquals(Status.PARTIALLY_HIGHLIGHTED, underTest.getStatus());
     }
 
     @Test
-    public void statusPartiallyHighlightedSelectedAfterOneResourceIsRemovedFromHighlightAndSelectionIsActive() {
+    public void statusPartiallyHighlightedSelectedAfterOneResourceIsRemovedFromHighlightAndSelection() {
         resources.addAll(createResources(1, 2));
         underTest.addHighlightedResources(createResources(1, 2));
         underTest.removeHighlightedResources(createResources(1));
-        underTest.setSelected(true);
+        underTest.addSelectedResources(createResources(1, 2));
+        underTest.removeSelectedResources(createResources(1));
+        // underTest.setSelected(true);
         assertEquals(Status.PARTIALLY_HIGHLIGHTED_SELECTED,
                 underTest.getStatus());
+    }
+
+    @Test
+    public void statusPartiallySelectedAfterOneResourceIsRemovedFromSelect() {
+        resources.addAll(createResources(1, 2));
+        underTest.addSelectedResources(createResources(1, 2));
+        underTest.removeSelectedResources(createResources(1));
+        assertEquals(Status.PARTIALLY_SELECTED, underTest.getStatus());
     }
 
 }
