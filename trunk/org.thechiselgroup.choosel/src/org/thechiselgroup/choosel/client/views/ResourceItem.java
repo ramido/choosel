@@ -39,21 +39,15 @@ import com.google.gwt.event.dom.client.MouseOverHandler;
 // TODO separate out resource item controller
 public class ResourceItem implements Disposable {
 
-    public static enum HighlightStatus {
-
-        NONE, PARTIAL, COMPLETE
-
-    }
-
-    public static enum SelectStatus {
-
-        NONE, PARTIAL, COMPLETE
-
-    }
-
     public static enum Status {
 
         DEFAULT, HIGHLIGHTED, HIGHLIGHTED_SELECTED, SELECTED, PARTIALLY_HIGHLIGHTED, PARTIALLY_HIGHLIGHTED_SELECTED, PARTIALLY_SELECTED
+
+    }
+
+    public static enum SubsetStatus {
+
+        NONE, PARTIAL, COMPLETE
 
     }
 
@@ -154,7 +148,7 @@ public class ResourceItem implements Disposable {
     }
 
     /**
-     * @return highlighting manager that manages the hightlighting for this
+     * @return highlighting manager that manages the highlighting for this
      *         visual representation of the resource item. For the popup, there
      *         is a separate highlighting manager.
      */
@@ -162,16 +156,8 @@ public class ResourceItem implements Disposable {
         return highlightingManager;
     }
 
-    public HighlightStatus getHighlightStatus() {
-        if (highlightedResources.isEmpty()) {
-            return HighlightStatus.NONE;
-        }
-
-        if (highlightedResources.containsEqualResources(resources)) {
-            return HighlightStatus.COMPLETE;
-        }
-
-        return HighlightStatus.PARTIAL;
+    public SubsetStatus getHighlightStatus() {
+        return getSubsetStatus(highlightedResources);
     }
 
     public final PopupManager getPopupManager() {
@@ -191,46 +177,50 @@ public class ResourceItem implements Disposable {
         return selectedResources;
     }
 
-    public SelectStatus getSelectStatus() {
-        if (selectedResources.isEmpty()) {
-            return SelectStatus.NONE;
-        }
-
-        if (selectedResources.containsEqualResources(resources)) {
-            return SelectStatus.COMPLETE;
-        }
-
-        return SelectStatus.PARTIAL;
+    public SubsetStatus getSelectionStatus() {
+        return getSubsetStatus(selectedResources);
     }
 
     public Status getStatus() {
-        if (getHighlightStatus() == HighlightStatus.COMPLETE
-                && getSelectStatus() == SelectStatus.COMPLETE) {
+        if (getHighlightStatus() == SubsetStatus.COMPLETE
+                && getSelectionStatus() == SubsetStatus.COMPLETE) {
             return Status.HIGHLIGHTED_SELECTED;
         }
 
-        if (getHighlightStatus() == HighlightStatus.COMPLETE) {
+        if (getHighlightStatus() == SubsetStatus.COMPLETE) {
             return Status.HIGHLIGHTED;
         }
 
-        if (getSelectStatus() == SelectStatus.COMPLETE) {
+        if (getSelectionStatus() == SubsetStatus.COMPLETE) {
             return Status.SELECTED;
         }
 
-        if (getHighlightStatus() == HighlightStatus.PARTIAL
-                && getSelectStatus() == SelectStatus.PARTIAL) {
+        if (getHighlightStatus() == SubsetStatus.PARTIAL
+                && getSelectionStatus() == SubsetStatus.PARTIAL) {
             return Status.PARTIALLY_HIGHLIGHTED_SELECTED;
         }
 
-        if (getHighlightStatus() == HighlightStatus.PARTIAL) {
+        if (getHighlightStatus() == SubsetStatus.PARTIAL) {
             return Status.PARTIALLY_HIGHLIGHTED;
         }
 
-        if (getSelectStatus() == SelectStatus.PARTIAL) {
+        if (getSelectionStatus() == SubsetStatus.PARTIAL) {
             return Status.PARTIALLY_SELECTED;
         }
 
         return Status.DEFAULT;
+    }
+
+    private SubsetStatus getSubsetStatus(ResourceSet subset) {
+        if (subset.isEmpty()) {
+            return SubsetStatus.NONE;
+        }
+
+        if (subset.containsEqualResources(resources)) {
+            return SubsetStatus.COMPLETE;
+        }
+
+        return SubsetStatus.PARTIAL;
     }
 
     private void initHighlighting() {
