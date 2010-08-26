@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.client.views;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
@@ -44,9 +45,15 @@ public class ResourceItem implements Disposable {
 
     }
 
+    public static enum SelectStatus {
+
+        NONE, PARTIAL, COMPLETE
+
+    }
+
     public static enum Status {
 
-        DEFAULT, HIGHLIGHTED, HIGHLIGHTED_SELECTED, SELECTED, PARTIALLY_HIGHLIGHTED, PARTIALLY_HIGHLIGHTED_SELECTED
+        DEFAULT, HIGHLIGHTED, HIGHLIGHTED_SELECTED, SELECTED, PARTIALLY_HIGHLIGHTED, PARTIALLY_HIGHLIGHTED_SELECTED, PARTIALLY_SELECTED
 
     }
 
@@ -113,6 +120,11 @@ public class ResourceItem implements Disposable {
         this.highlightedResources.addAll(resourcesToAdd);
     }
 
+    public void addSelectedResources(ResourceSet createResources) {
+        // TODO Auto-generated method stub
+
+    }
+
     @Override
     public void dispose() {
         highlightingManager.dispose();
@@ -164,6 +176,16 @@ public class ResourceItem implements Disposable {
 
     public Object getResourceValue(String slotID) {
         return valueResolver.resolve(slotID, category, resources);
+    }
+
+    public Collection<Resource> getSelectedResources() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public Object[] getSelectStatus() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     public Status getStatus() {
@@ -246,6 +268,11 @@ public class ResourceItem implements Disposable {
         resourcesToRemove.retainAll(resources);
 
         this.highlightedResources.removeAll(resourcesToRemove);
+    }
+
+    public void removeSelectedResources(ResourceSet createResources) {
+        // TODO Auto-generated method stub
+
     }
 
     /**
