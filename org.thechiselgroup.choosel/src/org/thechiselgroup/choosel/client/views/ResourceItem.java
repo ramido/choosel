@@ -83,6 +83,8 @@ public class ResourceItem implements Disposable {
 
     private ResourceSet highlightedResources;
 
+    private ResourceSet selectedResources;
+
     private HighlightingManager popupHighlightingManager;
 
     public ResourceItem(String category, ResourceSet resources,
@@ -102,6 +104,7 @@ public class ResourceItem implements Disposable {
         this.valueResolver = valueResolver;
 
         this.highlightedResources = new DefaultResourceSet();
+        this.selectedResources = new DefaultResourceSet();
 
         initHighlighting();
         initPopupHighlighting();
@@ -111,18 +114,23 @@ public class ResourceItem implements Disposable {
     }
 
     public void addHighlightedResources(ResourceSet highlightedResources) {
-        assert highlightedResources != null;
-
-        List<Resource> resourcesToAdd = new ArrayList<Resource>();
-        resourcesToAdd.addAll(highlightedResources);
-        resourcesToAdd.retainAll(resources);
-
-        this.highlightedResources.addAll(resourcesToAdd);
+        this.highlightedResources
+                .addAll(calculateAffectedResources(highlightedResources));
     }
 
-    public void addSelectedResources(ResourceSet createResources) {
-        // TODO Auto-generated method stub
+    public void addSelectedResources(ResourceSet selectedResources) {
+        this.selectedResources
+                .addAll(calculateAffectedResources(selectedResources));
+    }
 
+    private List<Resource> calculateAffectedResources(ResourceSet resources) {
+        assert resources != null;
+
+        List<Resource> affectedResources = new ArrayList<Resource>();
+        affectedResources.addAll(resources);
+        affectedResources.retainAll(this.resources);
+
+        return affectedResources;
     }
 
     @Override
@@ -179,17 +187,25 @@ public class ResourceItem implements Disposable {
     }
 
     public Collection<Resource> getSelectedResources() {
-        // TODO Auto-generated method stub
-        return null;
+        assert resources.containsAll(selectedResources);
+        return selectedResources;
     }
 
-    public Object[] getSelectStatus() {
-        // TODO Auto-generated method stub
-        return null;
+    public SelectStatus getSelectStatus() {
+        if (selectedResources.isEmpty()) {
+            return SelectStatus.NONE;
+        }
+
+        if (selectedResources.containsEqualResources(resources)) {
+            return SelectStatus.COMPLETE;
+        }
+
+        return SelectStatus.PARTIAL;
     }
 
     public Status getStatus() {
-        if (getHighlightStatus() == HighlightStatus.COMPLETE && isSelected()) {
+        if (getHighlightStatus() == HighlightStatus.COMPLETE
+                && getSelectStatus() == SelectStatus.COMPLETE) {
             return Status.HIGHLIGHTED_SELECTED;
         }
 
@@ -197,7 +213,12 @@ public class ResourceItem implements Disposable {
             return Status.HIGHLIGHTED;
         }
 
-        if (getHighlightStatus() == HighlightStatus.PARTIAL && isSelected()) {
+        if (getSelectStatus() == SelectStatus.COMPLETE) {
+            return Status.SELECTED;
+        }
+
+        if (getHighlightStatus() == HighlightStatus.PARTIAL
+                && getSelectStatus() == SelectStatus.PARTIAL) {
             return Status.PARTIALLY_HIGHLIGHTED_SELECTED;
         }
 
@@ -205,8 +226,8 @@ public class ResourceItem implements Disposable {
             return Status.PARTIALLY_HIGHLIGHTED;
         }
 
-        if (isSelected()) {
-            return Status.SELECTED;
+        if (getSelectStatus() == SelectStatus.PARTIAL) {
+            return Status.PARTIALLY_SELECTED;
         }
 
         return Status.DEFAULT;
@@ -261,18 +282,13 @@ public class ResourceItem implements Disposable {
     }
 
     public void removeHighlightedResources(ResourceSet highlightedResources) {
-        assert highlightedResources != null;
-
-        List<Resource> resourcesToRemove = new ArrayList<Resource>();
-        resourcesToRemove.addAll(highlightedResources);
-        resourcesToRemove.retainAll(resources);
-
-        this.highlightedResources.removeAll(resourcesToRemove);
+        this.highlightedResources
+                .removeAll(calculateAffectedResources(highlightedResources));
     }
 
-    public void removeSelectedResources(ResourceSet createResources) {
-        // TODO Auto-generated method stub
-
+    public void removeSelectedResources(ResourceSet selectedResources) {
+        this.selectedResources
+                .removeAll(calculateAffectedResources(selectedResources));
     }
 
     /**
