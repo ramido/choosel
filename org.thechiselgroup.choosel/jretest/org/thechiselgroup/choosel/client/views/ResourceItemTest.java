@@ -34,9 +34,8 @@ import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
-import org.thechiselgroup.choosel.client.views.ResourceItem.HighlightStatus;
-import org.thechiselgroup.choosel.client.views.ResourceItem.SelectStatus;
 import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
+import org.thechiselgroup.choosel.client.views.ResourceItem.SubsetStatus;
 
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
@@ -286,7 +285,7 @@ public class ResourceItemTest {
         resources.addAll(createResources(1, 2));
         underTest.addHighlightedResources(createResources(1, 2));
 
-        assertEquals(HighlightStatus.COMPLETE, underTest.getHighlightStatus());
+        assertEquals(SubsetStatus.COMPLETE, underTest.getHighlightStatus());
     }
 
     @Test
@@ -294,7 +293,7 @@ public class ResourceItemTest {
         resources.addAll(createResources(1, 2));
         underTest.addHighlightedResources(createResources());
 
-        assertEquals(HighlightStatus.NONE, underTest.getHighlightStatus());
+        assertEquals(SubsetStatus.NONE, underTest.getHighlightStatus());
     }
 
     @Test
@@ -302,7 +301,7 @@ public class ResourceItemTest {
         resources.addAll(createResources());
         underTest.addHighlightedResources(createResources());
 
-        assertEquals(HighlightStatus.NONE, underTest.getHighlightStatus());
+        assertEquals(SubsetStatus.NONE, underTest.getHighlightStatus());
     }
 
     @Test
@@ -310,18 +309,18 @@ public class ResourceItemTest {
         resources.addAll(createResources(1, 2));
         underTest.addHighlightedResources(createResources(1));
 
-        assertEquals(HighlightStatus.PARTIAL, underTest.getHighlightStatus());
+        assertEquals(SubsetStatus.PARTIAL, underTest.getHighlightStatus());
     }
 
     @Test
     public void isHighlightedIsFalseAfterInit() {
-        assertEquals(HighlightStatus.NONE, underTest.getHighlightStatus());
+        assertEquals(SubsetStatus.NONE, underTest.getHighlightStatus());
     }
 
     @Test
     public void isSelectedIsFalseAfterInit() {
         // assertEquals(false, underTest.isSelected());
-        assertEquals(SelectStatus.NONE, underTest.getSelectStatus());
+        assertEquals(SubsetStatus.NONE, underTest.getSelectionStatus());
     }
 
     @Test
@@ -329,7 +328,7 @@ public class ResourceItemTest {
         resources.addAll(createResources(1, 2));
         underTest.addSelectedResources(createResources(1, 2));
 
-        assertEquals(SelectStatus.COMPLETE, underTest.getSelectStatus());
+        assertEquals(SubsetStatus.COMPLETE, underTest.getSelectionStatus());
     }
 
     @Test
@@ -337,7 +336,7 @@ public class ResourceItemTest {
         resources.addAll(createResources(1, 2));
         underTest.addSelectedResources(createResources());
 
-        assertEquals(SelectStatus.NONE, underTest.getSelectStatus());
+        assertEquals(SubsetStatus.NONE, underTest.getSelectionStatus());
     }
 
     @Test
@@ -345,7 +344,7 @@ public class ResourceItemTest {
         resources.addAll(createResources());
         underTest.addSelectedResources(createResources());
 
-        assertEquals(SelectStatus.NONE, underTest.getSelectStatus());
+        assertEquals(SubsetStatus.NONE, underTest.getSelectionStatus());
     }
 
     @Test
@@ -353,7 +352,7 @@ public class ResourceItemTest {
         resources.addAll(createResources(1, 2));
         underTest.addSelectedResources(createResources(1));
 
-        assertEquals(SelectStatus.PARTIAL, underTest.getSelectStatus());
+        assertEquals(SubsetStatus.PARTIAL, underTest.getSelectionStatus());
     }
 
     @Test
