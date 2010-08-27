@@ -49,7 +49,7 @@ public class Panel extends Mark {
     // @formatter:on
 
     // @formatter:off
-    public final native Panel bottom(Number bottom) /*-{
+    public final native Panel bottom(double bottom) /*-{
         return this.bottom(bottom);
     }-*/;
     // @formatter:on
@@ -67,7 +67,7 @@ public class Panel extends Mark {
     // @formatter:on
 
     // @formatter:off
-    public final native Panel childIndex(Number childIndex) /*-{
+    public final native Panel childIndex(int childIndex) /*-{
         return this.childIndex(childIndex);
     }-*/;
     // @formatter:on
@@ -126,7 +126,7 @@ public class Panel extends Mark {
         return this.fillStyle(colour);
     }-*/;
 
-    public final native Panel height(Number height) /*-{
+    public final native Panel height(double height) /*-{
         return this.height(height);
     }-*/;
 
@@ -134,7 +134,7 @@ public class Panel extends Mark {
         return this.height(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionDouble(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionDouble;)(this,f));
     }-*/;
 
-    public final native Panel index(Number index) /*-{
+    public final native Panel index(int index) /*-{
         return this.index(index);
     }-*/;
 
@@ -174,7 +174,7 @@ public class Panel extends Mark {
         return this.root(panel);
     }-*/;
 
-    public final native Panel scale(Number scale) /*-{
+    public final native Panel scale(double scale) /*-{
         return this.scale(scale);
     }-*/;
 
@@ -198,7 +198,7 @@ public class Panel extends Mark {
         return this.visible(visible);
     }-*/;
 
-    public final native Panel width(Number width) /*-{
+    public final native Panel width(double width) /*-{
         return this.width(width);
     }-*/;
 

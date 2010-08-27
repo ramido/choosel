@@ -28,6 +28,13 @@ import org.thechiselgroup.choosel.client.views.SlotResolver;
 
 import com.google.inject.Inject;
 
+/**
+ * An abstract ViewContentDisplay class which any Protovis chart's specific
+ * ViewContentDisplay can extend.
+ * 
+ * @author bblashko
+ * 
+ */
 public abstract class ChartViewContentDisplay extends
         AbstractViewContentDisplay {
 
@@ -53,6 +60,7 @@ public abstract class ChartViewContentDisplay extends
     }
 
     // TODO push down: the actual chart needs to decide which slots are used
+    // TODO currently inaccurate
     @Override
     public String[] getSlotIDs() {
         return new String[] { SlotResolver.DESCRIPTION_SLOT,
@@ -61,6 +69,10 @@ public abstract class ChartViewContentDisplay extends
                 SlotResolver.X_COORDINATE_SLOT, SlotResolver.Y_COORDINATE_SLOT };
     }
 
+    /**
+     * @return whether or not there is one or more newly partially highlighted
+     *         items while there was none before (or vice versa)
+     */
     public boolean hasPartialHighlightStatusChanged() {
         return (!hadPartiallyHighlightedItemsOnLastUpdate && chartWidget
                 .hasPartiallyHighlightedChartItems())
@@ -68,20 +80,28 @@ public abstract class ChartViewContentDisplay extends
                         .hasPartiallyHighlightedChartItems());
     }
 
+    // TODO implement
     @Override
     public void removeResourceItem(ResourceItem chartItem) {
     }
 
+    // TODO implement
     @Override
     public void restore(Memento state) {
     }
 
+    // TODO implement
     @Override
     public Memento save() {
         Memento state = new Memento();
         return state;
     }
 
+    /**
+     * A method that listens for any updates on any resource items relevant to
+     * the chart. Chart only will get rendered or updated (depending on the
+     * situation) once no matter how many resource items are being affected.
+     */
     @Override
     public void update(Set<ResourceItem> addedResourceItems,
             Set<ResourceItem> updatedResourceItems,
@@ -90,20 +110,28 @@ public abstract class ChartViewContentDisplay extends
         for (ResourceItem resourceItem : addedResourceItems) {
             ChartItem chartItem = new ChartItem(this, dragEnablerFactory,
                     resourceItem);
+
             chartWidget.addChartItem(chartItem);
+
             resourceItem.setDisplayObject(chartItem);
         }
 
         for (ResourceItem resourceItem : removedResourceItems) {
             ChartItem chartItem = (ChartItem) resourceItem.getDisplayObject();
-            resourceItem.setDisplayObject(null); // TODO remove once dispose is
-                                                 // in place
+
+            // TODO remove once dispose is in place
+            resourceItem.setDisplayObject(null);
+
             chartWidget.removeChartItem(chartItem);
         }
 
         super.update(addedResourceItems, updatedResourceItems,
                 removedResourceItems);
 
+        /*
+         * The updateChart method only gets called when necessary so as to
+         * minimize program overhead.
+         */
         // TODO needs improvement, can updates cause structural changes?
         if (!addedResourceItems.isEmpty() || !removedResourceItems.isEmpty()
                 || hasPartialHighlightStatusChanged()) {

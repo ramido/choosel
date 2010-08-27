@@ -34,7 +34,7 @@ import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 // Version of Pie chart with the average of the area 
 // and the radius calculations for proportional highlighting.
 // (i.e. ratio + sqrt(ratio) / 2)
-public class ExtendedPieChart extends ChartWidget {
+public class CircularBarChart extends ChartWidget {
 
     private double[] highlightedWedgeCounts;
 
@@ -220,8 +220,7 @@ public class ExtendedPieChart extends ChartWidget {
                         .bottom(wedgeBottom)
                         .innerRadius(highlightedWedgeOuterRadius)
                         .outerRadius(regularWedgeOuterRadius).angle(wedgeAngle)
-                        .fillStyle(Colors.STEELBLUE)
-                        .startAngle(wedgeStartAngle).strokeStyle(Colors.WHITE);
+                        .fillStyle(Colors.STEELBLUE).strokeStyle(Colors.WHITE);
 
                 regularWedge.anchor(wedgeLabelAnchor).add(Label.createLabel())
                         .textAngle(wedgeTextAngle).text(regularWedgeLabelText)
@@ -244,8 +243,7 @@ public class ExtendedPieChart extends ChartWidget {
                 .data(ArrayUtils.toJsArray(chartItems)).left(wedgeLeft)
                 .bottom(wedgeBottom).innerRadius(0)
                 .outerRadius(regularWedgeOuterRadius).angle(wedgeAngle)
-                .fillStyle(chartFillStyle).startAngle(wedgeStartAngle)
-                .strokeStyle(Colors.WHITE);
+                .fillStyle(chartFillStyle).strokeStyle(Colors.WHITE);
 
         regularWedge.anchor(wedgeLabelAnchor).add(Label.createLabel())
                 .textAngle(wedgeTextAngle).text(fullWedgeLabelText)
