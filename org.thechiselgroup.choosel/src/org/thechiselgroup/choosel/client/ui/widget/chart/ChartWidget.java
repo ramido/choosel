@@ -111,6 +111,39 @@ public abstract class ChartWidget extends Widget {
         }
     };
 
+    protected ProtovisFunctionString fullMarkTextStyle = new ProtovisFunctionString() {
+            @Override
+            public String f(ChartItem value, int i) {
+                return calculateHighlightedResources(i) == 0 ? Colors.WHITE
+                        : Colors.BLACK;
+            }
+        };
+
+    protected ProtovisFunctionString fullMarkLabelText = new ProtovisFunctionString() {
+            @Override
+            public String f(ChartItem value, int i) {
+                return Integer.toString(Math.max(calculateAllResources(i),
+                        calculateHighlightedResources(i)));
+            }
+        };
+
+    protected ProtovisFunctionString regularMarkLabelText = new ProtovisFunctionString() {
+            @Override
+            public String f(ChartItem value, int i) {
+                return calculateAllResources(i) - calculateHighlightedResources(i) < 1 ? null
+                        : Integer.toString(calculateAllResources(i)
+                                - calculateHighlightedResources(i));
+            }
+        };
+
+    protected ProtovisFunctionString highlightedMarkLabelText = new ProtovisFunctionString() {
+            @Override
+            public String f(ChartItem value, int i) {
+                return calculateHighlightedResources(i) < 1 ? null : Integer
+                        .toString(calculateHighlightedResources(i));
+            }
+        };
+
     public ChartWidget() {
         setElement(DOM.createDiv());
         // TODO extract + move to CSS
