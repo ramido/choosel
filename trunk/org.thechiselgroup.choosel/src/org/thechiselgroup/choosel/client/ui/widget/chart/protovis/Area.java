@@ -40,7 +40,7 @@ public class Area extends Mark {
         return this.anchor(anchor);
     }-*/;
 
-    public final native Area bottom(Number bottom) /*-{
+    public final native Area bottom(double bottom) /*-{
         return this.bottom(bottom);
     }-*/;
 
@@ -48,7 +48,7 @@ public class Area extends Mark {
         return this.bottom(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionDouble(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionDouble;)(this,f));
     }-*/;
 
-    public final native Area childIndex(Number childIndex) /*-{
+    public final native Area childIndex(int childIndex) /*-{
         return this.childIndex(childIndex);
     }-*/;
 
@@ -97,7 +97,7 @@ public class Area extends Mark {
         return this.font(font);
     }-*/;
 
-    public final native Area height(Number height) /*-{
+    public final native Area height(double height) /*-{
         return this.height(height);
     }-*/;
 
@@ -105,7 +105,7 @@ public class Area extends Mark {
         return this.height(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionDouble(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionDouble;)(this,f));
     }-*/;
 
-    public final native Area index(Number index) /*-{
+    public final native Area index(int index) /*-{
         return this.index(index);
     }-*/;
 
@@ -121,7 +121,7 @@ public class Area extends Mark {
         return this.left(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionDouble(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionDouble;)(this,f));
     }-*/;
 
-    public final native Area lineWidth(Number lineWidth) /*-{
+    public final native Area lineWidth(double lineWidth) /*-{
         return this.lineWidth(lineWidth);
     }-*/;
 
@@ -153,7 +153,7 @@ public class Area extends Mark {
         return this.root(panel);
     }-*/;
 
-    public final native Area scale(Number scale) /*-{
+    public final native Area scale(double scale) /*-{
         return this.scale(scale);
     }-*/;
 
@@ -165,7 +165,7 @@ public class Area extends Mark {
         return this.strokeStyle(strokeStyle);
     }-*/;
 
-    public final native Area tension(Number tension) /*-{
+    public final native Area tension(double tension) /*-{
         return this.tension(tension);
     }-*/;
 
@@ -177,7 +177,7 @@ public class Area extends Mark {
         return this.textAlign(textAlign);
     }-*/;
     
-    public final native Area textAngle(Number textAngle) /*-{
+    public final native Area textAngle(double textAngle) /*-{
         return this.textAngle(textAngle);
     }-*/;
     
@@ -189,7 +189,7 @@ public class Area extends Mark {
         return this.textDecoration(textDecoration);
     }-*/;
     
-    public final native Area textMargin(Number textMargin) /*-{
+    public final native Area textMargin(double textMargin) /*-{
         return this.textMargin(textMargin);
     }-*/;
     
@@ -221,7 +221,7 @@ public class Area extends Mark {
         return this.visible(visible);
     }-*/;
     
-    public final native Area width(Number width) /*-{
+    public final native Area width(double width) /*-{
         return this.width(width);
     }-*/;
     

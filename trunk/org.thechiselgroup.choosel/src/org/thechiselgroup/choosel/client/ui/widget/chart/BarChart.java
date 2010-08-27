@@ -86,8 +86,6 @@ public class BarChart extends ChartWidget {
 
     protected int chartWidth;
 
-    private double maxBarSize;
-
     private ProtovisFunctionDouble barStart = new ProtovisFunctionDouble() {
         @Override
         public double f(ChartItem value, int index) {
@@ -117,7 +115,7 @@ public class BarChart extends ChartWidget {
         public double f(ChartItem value, int index) {
             return highlightedBarCounts[index]
                     * layout.getBarLengthSpace(chartHeight, chartWidth)
-                    / maxBarSize;
+                    / maxChartItem();
         }
 
     };
@@ -143,7 +141,7 @@ public class BarChart extends ChartWidget {
         public double f(ChartItem value, int i) {
             return regularBarCounts[i]
                     * layout.getBarLengthSpace(chartHeight, chartWidth)
-                    / maxBarSize;
+                    / maxChartItem();
         }
 
     };
@@ -168,7 +166,7 @@ public class BarChart extends ChartWidget {
         public double f(ChartItem value, int i) {
             return barCounts[i]
                     * layout.getBarLengthSpace(chartHeight, chartWidth)
-                    / maxBarSize;
+                    / maxChartItem();
         }
 
     };
@@ -184,7 +182,7 @@ public class BarChart extends ChartWidget {
     private ProtovisFunctionDouble regularBarBase = new ProtovisFunctionDouble() {
         @Override
         public double f(ChartItem value, int i) {
-            return highlightedBarLength.f(value, i);
+            return highlightedBarLength.f(value, i) + barLineWidth;
         }
     };
 
@@ -277,19 +275,6 @@ public class BarChart extends ChartWidget {
         chartHeight = height - BORDER_HEIGHT * 2;
     }
 
-    private void calculateMaxBarSize() {
-        maxBarSize = 0;
-        for (int i = 0; i < chartItems.size(); i++) {
-            int currentItem = Integer
-                    .parseInt(chartItems.get(i).getResourceItem()
-                            .getResourceValue(SlotResolver.CHART_VALUE_SLOT)
-                            .toString());
-            if (maxBarSize < currentItem) {
-                maxBarSize = currentItem;
-            }
-        }
-    }
-
     @Override
     public void drawChart() {
         assert chartItems.size() >= 1;
@@ -297,14 +282,12 @@ public class BarChart extends ChartWidget {
         calculateChartVariables();
         setChartParameters();
 
-        calculateMaxBarSize();
-
         if (layout.isVerticalBarChart(chartHeight, chartWidth)) {
-            Scale scale = Scale.linear(0, maxBarSize).range(0, chartHeight);
+            Scale scale = Scale.linear(0, maxChartItem()).range(0, chartHeight);
             drawVerticalBarScales(scale);
             drawVerticalBarChart();
         } else {
-            Scale scale = Scale.linear(0, maxBarSize).range(0, chartWidth);
+            Scale scale = Scale.linear(0, maxChartItem()).range(0, chartWidth);
             drawHorizontalBarScales(scale);
             drawHorizontalBarChart();
 
@@ -319,10 +302,11 @@ public class BarChart extends ChartWidget {
         for (ChartItem chartItem : chartItems) {
             if (isPartiallyHighlighted(chartItem)) {
                 highlightedBar = chart.add(Bar.createBar())
-                        .data(ArrayUtils.toJsArray(chartItems)).left(1)
-                        .width(highlightedBarLength).bottom(barStart)
-                        .height(barWidth).fillStyle(Colors.YELLOW)
-                        .strokeStyle(Colors.STEELBLUE).lineWidth(barLineWidth);
+                        .data(ArrayUtils.toJsArray(chartItems))
+                        .left(barLineWidth).width(highlightedBarLength)
+                        .bottom(barStart).height(barWidth)
+                        .fillStyle(Colors.YELLOW).strokeStyle(Colors.STEELBLUE)
+                        .lineWidth(barLineWidth);
 
                 highlightedBar.anchor(Alignments.RIGHT)
                         .add(Label.createLabel()).textBaseline(barTextBaseline)
@@ -348,7 +332,7 @@ public class BarChart extends ChartWidget {
         }
 
         regularBar = chart.add(Bar.createBar())
-                .data(ArrayUtils.toJsArray(chartItems)).left(1)
+                .data(ArrayUtils.toJsArray(chartItems)).left(barLineWidth)
                 .width(fullBarLength).bottom(barStart).height(barWidth)
                 .fillStyle(chartFillStyle).strokeStyle(Colors.STEELBLUE)
                 .lineWidth(barLineWidth);
@@ -374,10 +358,11 @@ public class BarChart extends ChartWidget {
         for (ChartItem chartItem : chartItems) {
             if (isPartiallyHighlighted(chartItem)) {
                 highlightedBar = chart.add(Bar.createBar())
-                        .data(ArrayUtils.toJsArray(chartItems)).bottom(0)
-                        .height(highlightedBarLength).left(barStart)
-                        .width(barWidth).fillStyle(Colors.YELLOW)
-                        .strokeStyle(Colors.STEELBLUE).lineWidth(barLineWidth);
+                        .data(ArrayUtils.toJsArray(chartItems))
+                        .bottom(barLineWidth).height(highlightedBarLength)
+                        .left(barStart).width(barWidth)
+                        .fillStyle(Colors.YELLOW).strokeStyle(Colors.STEELBLUE)
+                        .lineWidth(barLineWidth - 1);
 
                 highlightedBar.anchor(Alignments.TOP).add(Label.createLabel())
                         .textBaseline(barTextBaseline)
@@ -400,10 +385,10 @@ public class BarChart extends ChartWidget {
         }
 
         regularBar = chart.add(Bar.createBar())
-                .data(ArrayUtils.toJsArray(chartItems)).bottom(0)
-                .height(fullBarLength).left(barStart).width(barWidth)
-                .fillStyle(chartFillStyle).strokeStyle(Colors.STEELBLUE)
-                .lineWidth(barLineWidth);
+                .data(ArrayUtils.toJsArray(chartItems))
+                .bottom(barLineWidth - 1).height(fullBarLength).left(barStart)
+                .width(barWidth).fillStyle(chartFillStyle)
+                .strokeStyle(Colors.STEELBLUE).lineWidth(barLineWidth);
 
         regularBar.add(Label.createLabel()).left(baselineLabelStart)
                 .textAlign(baselineLabelTextAlign).bottom(baselineLabelLength)

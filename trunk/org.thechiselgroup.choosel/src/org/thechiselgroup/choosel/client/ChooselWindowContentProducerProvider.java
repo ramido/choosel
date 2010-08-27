@@ -22,6 +22,7 @@ import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionCo
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.DROP_TARGET_MANAGER_VIEW_CONTENT;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.LABEL_PROVIDER_SELECTION_SET;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_BAR;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_CIRCULAR_BAR;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_DOT;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_GRAPH;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_LIST;
@@ -156,6 +157,12 @@ public class ChooselWindowContentProducerProvider implements
     @Inject
     public void registerBar(@Named(TYPE_BAR) ViewContentDisplayFactory factory) {
         registerViewContentDisplayFactory(TYPE_BAR, factory);
+    }
+
+    @Inject
+    public void registerCircularBar(
+            @Named(TYPE_CIRCULAR_BAR) ViewContentDisplayFactory factory) {
+        registerViewContentDisplayFactory(TYPE_CIRCULAR_BAR, factory);
     }
 
     @Inject

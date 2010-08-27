@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.widget.chart.protovis;
 
-
 import com.google.gwt.core.client.JavaScriptObject;
 
 // @formatter:off
@@ -41,7 +40,7 @@ public class Bar extends Mark {
         return this.anchor(anchor);
     }-*/;
 
-    public final native Bar bottom(Number bottom) /*-{
+    public final native Bar bottom(double bottom) /*-{
         return this.bottom(bottom);
     }-*/;
 
@@ -49,7 +48,7 @@ public class Bar extends Mark {
         return this.bottom(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionDouble(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionDouble;)(this,f));
     }-*/;
 
-    public final native Bar childIndex(Number childIndex) /*-{
+    public final native Bar childIndex(int childIndex) /*-{
         return this.childIndex(childIndex);
     }-*/;
 
@@ -94,7 +93,7 @@ public class Bar extends Mark {
         return this.fillStyle(colour);
     }-*/;
 
-    public final native Bar height(Number height) /*-{
+    public final native Bar height(double height) /*-{
         return this.height(height);
     }-*/;
 
@@ -102,7 +101,7 @@ public class Bar extends Mark {
         return this.height(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionDouble(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionDouble;)(this,f));
     }-*/;
 
-    public final native Bar index(Number index) /*-{
+    public final native Bar index(double index) /*-{
         return this.index(index);
     }-*/;
 
@@ -114,7 +113,7 @@ public class Bar extends Mark {
         return this.left(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionDouble(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionDouble;)(this,f));
     }-*/;
 
-    public final native Bar lineWidth(Number lineWidth) /*-{
+    public final native Bar lineWidth(double lineWidth) /*-{
         return this.lineWidth(lineWidth);
     }-*/;
 
@@ -146,7 +145,7 @@ public class Bar extends Mark {
         return this.root(panel);
     }-*/;
 
-    public final native Bar scale(Number scale) /*-{
+    public final native Bar scale(double scale) /*-{
         return this.scale(scale);
     }-*/;
 
@@ -182,7 +181,7 @@ public class Bar extends Mark {
         return this.visible(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionBoolean(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionBoolean;)(this,f));
     }-*/;
 
-    public final native Bar width(Number width) /*-{
+    public final native Bar width(double width) /*-{
         return this.width(width);
     }-*/;
     

@@ -79,6 +79,7 @@ import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.chart.BarChartViewContentDisplayFactory;
+import org.thechiselgroup.choosel.client.views.chart.CircularBarChartViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.chart.DotChartViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.chart.PieChartViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.chart.ScatterChartViewContentDisplayFactory;
@@ -201,6 +202,8 @@ public class ChooselClientModule extends AbstractGinModule implements
                 BarChartViewContentDisplayFactory.class);
         bindViewContentDisplayFactory(TYPE_PIE,
                 PieChartViewContentDisplayFactory.class);
+        bindViewContentDisplayFactory(TYPE_CIRCULAR_BAR,
+                CircularBarChartViewContentDisplayFactory.class);
         bindViewContentDisplayFactory(TYPE_DOT,
                 DotChartViewContentDisplayFactory.class);
         bindViewContentDisplayFactory(TYPE_SCATTER,

@@ -21,17 +21,16 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.thechiselgroup.choosel.client.ui.Colors;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.EventTypes;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Panel;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventHandler;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionString;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionStringToString;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Scale;
-import org.thechiselgroup.choosel.client.util.ArrayUtils;
 import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
@@ -62,18 +61,6 @@ public abstract class ChartWidget extends Widget {
         }
     }
 
-    public static final String EVENT_TYPE_MOUSEUP = "mouseup";
-
-    public static final String EVENT_TYPE_MOUSEOVER = "mouseover";
-
-    public static final String EVENT_TYPE_MOUSEOUT = "mouseout";
-
-    public static final String EVENT_TYPE_MOUSEMOVE = "mousemove";
-
-    public static final String EVENT_TYPE_MOUSEDOWN = "mousedown";
-
-    public static final String EVENT_TYPE_CLICK = "click";
-
     protected Panel chart;
 
     protected List<ChartItem> chartItems = new ArrayList<ChartItem>();
@@ -82,9 +69,9 @@ public abstract class ChartWidget extends Widget {
 
     protected int width;
 
-    protected String[] eventTypes = { EVENT_TYPE_CLICK, EVENT_TYPE_MOUSEDOWN,
-            EVENT_TYPE_MOUSEMOVE, EVENT_TYPE_MOUSEOUT, EVENT_TYPE_MOUSEOVER,
-            EVENT_TYPE_MOUSEUP };
+    protected String[] eventTypes = { EventTypes.CLICK, EventTypes.MOUSEDOWN,
+            EventTypes.MOUSEMOVE, EventTypes.MOUSEOUT, EventTypes.MOUSEOVER,
+            EventTypes.MOUSEUP };
 
     private ProtovisEventHandler handler = new ProtovisEventHandler() {
         @Override
@@ -127,7 +114,7 @@ public abstract class ChartWidget extends Widget {
     public ChartWidget() {
         setElement(DOM.createDiv());
         // TODO extract + move to CSS
-        getElement().getStyle().setProperty("backgroundColor", "white");
+        getElement().getStyle().setProperty("backgroundColor", Colors.WHITE);
     }
 
     public void addChartItem(ChartItem resourceItem) {
@@ -137,7 +124,7 @@ public abstract class ChartWidget extends Widget {
     /**
      * Is called before the chart is rendered. Subclasses can override this
      * method to recalculate values that are used for all resource item specific
-     * calls from protovis.
+     * calls from Protovis.
      */
     protected void beforeRender() {
     }
@@ -172,18 +159,7 @@ public abstract class ChartWidget extends Widget {
         return chartItems.get(index);
     }
 
-    public List<ChartItem> getChartItems() {
-        return chartItems;
-    }
-
-    protected JavaScriptObject getJsDataArray(List<Double> dataArray) {
-        return ArrayUtils.toJsArray(ArrayUtils.toDoubleArray(dataArray));
-    }
-
-    protected JavaScriptObject getJsDataArrayForObject(List<Object> dataArray) {
-        return ArrayUtils.toJsArray(dataArray.toArray());
-    }
-
+    // XXX not called anywhere
     protected SlotValues getSlotValues(String slot) {
         double[] slotValues = new double[chartItems.size()];
 
@@ -211,6 +187,20 @@ public abstract class ChartWidget extends Widget {
             }
         }
         return false;
+    }
+
+    protected double maxChartItem() {
+        double max = 0;
+        for (int i = 0; i < chartItems.size(); i++) {
+            int currentItem = Integer
+                    .parseInt(chartItems.get(i).getResourceItem()
+                            .getResourceValue(SlotResolver.CHART_VALUE_SLOT)
+                            .toString());
+            if (max < currentItem) {
+                max = currentItem;
+            }
+        }
+        return max;
     }
 
     @Override
@@ -265,11 +255,10 @@ public abstract class ChartWidget extends Widget {
     // see
     // http://groups.google.com/group/protovis/browse_thread/thread/b9032215a2f5ac25
     public void updateChart() {
+        chart = Panel.createWindowPanel().canvas(getElement());
         if (chartItems.size() == 0) {
-            chart = Panel.createWindowPanel().canvas(getElement())
-                    .height(height).width(width);
+            chart.height(height).width(width);
         } else {
-            chart = Panel.createWindowPanel().canvas(getElement());
             Collections.sort(chartItems, new ChartItemComparator(
                     SlotResolver.CHART_LABEL_SLOT));
             drawChart();

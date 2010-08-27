@@ -51,6 +51,8 @@ public interface ChooselInjectionConstants {
 
     String TYPE_PIE = "Pie";
 
+    String TYPE_CIRCULAR_BAR = "Circular Bar";
+
     String TYPE_SCATTER = "Scatter";
 
     String TYPE_TAG_CLOUD = "TagCloud";

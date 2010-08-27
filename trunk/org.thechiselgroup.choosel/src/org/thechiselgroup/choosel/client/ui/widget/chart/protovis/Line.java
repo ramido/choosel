@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.widget.chart.protovis;
 
-
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**
@@ -47,7 +46,7 @@ public class Line extends Mark {
     // @formatter:on
 
     // @formatter:off
-    public final native Line bottom(Number bottom) /*-{
+    public final native Line bottom(double bottom) /*-{
         return this.bottom(bottom);
     }-*/;
     // @formatter:on
@@ -59,7 +58,7 @@ public class Line extends Mark {
     // @formatter:on
 
     // @formatter:off
-    public final native Line childIndex(Number childIndex) /*-{
+    public final native Line childIndex(int childIndex) /*-{
         return this.childIndex(childIndex);
     }-*/;
     // @formatter:on
@@ -102,7 +101,7 @@ public class Line extends Mark {
     // @formatter:on
 
     // @formatter:off
-    public final native Line eccentricity(Number eccentricity) /*-{
+    public final native Line eccentricity(double eccentricity) /*-{
         return this.eccentricity(eccentricity);
     }-*/;
     // @formatter:on
@@ -132,7 +131,7 @@ public class Line extends Mark {
     // @formatter:on
 
     // @formatter:off
-    public final native Line index(Number index) /*-{
+    public final native Line index(int index) /*-{
         return this.index(index);
     }-*/;
     // @formatter:on
@@ -162,7 +161,7 @@ public class Line extends Mark {
     // @formatter:on
 
     // @formatter:off
-    public final native Line lineWidth(Number lineWidth) /*-{
+    public final native Line lineWidth(double lineWidth) /*-{
         return this.lineWidth(lineWidth);
     }-*/;
     // @formatter:on
@@ -210,7 +209,7 @@ public class Line extends Mark {
     // @formatter:on
 
     // @formatter:off
-    public final native Line scale(Number scale) /*-{
+    public final native Line scale(double scale) /*-{
         return this.scale(scale);
     }-*/;
     // @formatter:on
@@ -228,7 +227,7 @@ public class Line extends Mark {
     // @formatter:on
 
     // @formatter:off
-    public final native Line tension(Number tension) /*-{
+    public final native Line tension(double tension) /*-{
         return this.tension(tension);
     }-*/;
     // @formatter:on

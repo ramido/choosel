@@ -48,7 +48,7 @@ public class Dot extends Mark {
         return this.angle(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionDouble(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionDouble;)(this,f));
     }-*/;
 
-    public final native Dot bottom(Number bottom) /*-{
+    public final native Dot bottom(double bottom) /*-{
         return this.bottom(bottom);
     }-*/;
 
@@ -56,7 +56,7 @@ public class Dot extends Mark {
         return this.bottom(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionDouble(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionDouble;)(this,f));
     }-*/;
 
-    public final native Dot childIndex(Number childIndex) /*-{
+    public final native Dot childIndex(int childIndex) /*-{
         return this.childIndex(childIndex);
     }-*/;
 

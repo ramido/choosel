@@ -48,7 +48,7 @@ public class Wedge extends Mark {
         return this.angle(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionDouble(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionDouble;)(this,f));
     }-*/;
     
-    public final native Wedge bottom(Number bottom) /*-{
+    public final native Wedge bottom(double bottom) /*-{
         return this.bottom(bottom);
     }-*/;
 
@@ -56,7 +56,7 @@ public class Wedge extends Mark {
         return this.bottom(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionDouble(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionDouble;)(this,f));
     }-*/;
     
-    public final native Wedge childIndex(Number childIndex) /*-{
+    public final native Wedge childIndex(int childIndex) /*-{
         return this.childIndex(childIndex);
     }-*/;
     
@@ -101,7 +101,7 @@ public class Wedge extends Mark {
         return this.fillStyle(colour);
     }-*/;
 
-    public final native Wedge index(Number index) /*-{
+    public final native Wedge index(int index) /*-{
         return this.index(index);
     }-*/;
 
@@ -157,7 +157,7 @@ public class Wedge extends Mark {
         return this.root(panel);
     }-*/;
     
-    public final native Wedge scale(Number scale) /*-{
+    public final native Wedge scale(double scale) /*-{
         return this.scale(scale);
     }-*/;
     

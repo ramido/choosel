@@ -135,7 +135,7 @@ public class ChooselExampleApplication extends ChooselApplication {
 				int counter = 0;
 				ResourceSet resourceSet = createResourceSet();
 				resourceSet.setLabel("Test");
-				for (int i = 0; i < 25; i++)
+				for (int i = 0; i < 50; i++)
 					resourceSet.add(TestResourceSetFactory.createResource(i));
 				for (Resource resource : resourceSet) {
 					resource.putValue("date", new Date(
@@ -176,15 +176,26 @@ public class ChooselExampleApplication extends ChooselApplication {
 		addWindowContentButton(VIEWS_PANEL, "Note", "note");
 		addWindowContentButton(VIEWS_PANEL, "List",
 				ChooselInjectionConstants.TYPE_LIST);
-		addWindowContentButton(VIEWS_PANEL, "Map", "Map");
-		addWindowContentButton(VIEWS_PANEL, "Timeline", "Timeline");
-		addWindowContentButton(VIEWS_PANEL, "Bar", "Bar");
-		addWindowContentButton(VIEWS_PANEL, "Pie", "Pie");
-		addWindowContentButton(VIEWS_PANEL, "Dot", "Dot");
-		addWindowContentButton(VIEWS_PANEL, "Scatter", "Scatter");
-		addWindowContentButton(VIEWS_PANEL, "Time", "Time");
-		addWindowContentButton(VIEWS_PANEL, "Tag Cloud", "TagCloud");
-		addWindowContentButton(VIEWS_PANEL, "Graph", "Graph");
+		addWindowContentButton(VIEWS_PANEL, "Map", 
+				ChooselInjectionConstants.TYPE_MAP);
+		addWindowContentButton(VIEWS_PANEL, "Timeline", 
+				ChooselInjectionConstants.TYPE_TIMELINE);
+		addWindowContentButton(VIEWS_PANEL, "Bar", 
+				ChooselInjectionConstants.TYPE_BAR);
+		addWindowContentButton(VIEWS_PANEL, "Circular Bar", 
+				ChooselInjectionConstants.TYPE_CIRCULAR_BAR);
+		addWindowContentButton(VIEWS_PANEL, "Pie", 
+				ChooselInjectionConstants.TYPE_PIE);
+		addWindowContentButton(VIEWS_PANEL, "Dot", 
+				ChooselInjectionConstants.TYPE_DOT);
+		addWindowContentButton(VIEWS_PANEL, "Scatter", 
+				ChooselInjectionConstants.TYPE_SCATTER);
+		addWindowContentButton(VIEWS_PANEL, "Time", 
+				ChooselInjectionConstants.TYPE_TIME);
+		addWindowContentButton(VIEWS_PANEL, "Tag Cloud", 
+				ChooselInjectionConstants.TYPE_TAG_CLOUD);
+		addWindowContentButton(VIEWS_PANEL, "Graph", 
+				ChooselInjectionConstants.TYPE_GRAPH);
 
 		addWindowContentButton(HELP_PANEL, "Help Content", "help");
 		addInfoButton();

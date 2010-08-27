@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.widget.chart.protovis;
 
-
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**
@@ -47,7 +46,7 @@ public class Label extends Mark {
     // @formatter:on
 
     // @formatter:off
-    public final native Label bottom(Number bottom) /*-{
+    public final native Label bottom(double bottom) /*-{
         return this.bottom(bottom);
     }-*/;
     // @formatter:on
@@ -59,7 +58,7 @@ public class Label extends Mark {
     // @formatter:on
 
     // @formatter:off
-    public final native Label childIndex(Number childIndex) /*-{
+    public final native Label childIndex(double childIndex) /*-{
         return this.childIndex(childIndex);
     }-*/;
     // @formatter:on
@@ -120,7 +119,7 @@ public class Label extends Mark {
     // @formatter:on
 
     // @formatter:off
-    public final native Label index(Number index) /*-{
+    public final native Label index(int index) /*-{
         return this.index(index);
     }-*/;
     // @formatter:on
@@ -180,7 +179,7 @@ public class Label extends Mark {
     // @formatter:on
 
     // @formatter:off
-    public final native Label scale(Number scale) /*-{
+    public final native Label scale(double scale) /*-{
         return this.scale(scale);
     }-*/;
     // @formatter:on
@@ -216,7 +215,7 @@ public class Label extends Mark {
     // @formatter:on
 
     // @formatter:off
-    public final native Label textAngle(Number textAngle) /*-{
+    public final native Label textAngle(double textAngle) /*-{
         return this.textAngle(textAngle);
     }-*/;
     // @formatter:on
@@ -240,7 +239,7 @@ public class Label extends Mark {
     // @formatter:on
 
     // @formatter:off
-    public final native Label textMargin(Number textMargin) /*-{
+    public final native Label textMargin(double textMargin) /*-{
         return this.textMargin(textMargin);
     }-*/;
     // @formatter:on
