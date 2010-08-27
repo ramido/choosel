@@ -21,10 +21,8 @@ import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Label;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventHandler;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDouble;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDoubleWithCache;
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionString;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Wedge;
 import org.thechiselgroup.choosel.client.util.ArrayUtils;
-import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
 import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
 // Version of Pie chart with the average of the area 
@@ -98,39 +96,6 @@ public class PieChart extends ChartWidget {
         }
     };
 
-    private ProtovisFunctionString highlightedWedgeLabelText = new ProtovisFunctionString() {
-        @Override
-        public String f(ChartItem value, int i) {
-            return calculateHighlightedResources(i) < 1 ? null : Integer
-                    .toString(calculateHighlightedResources(i));
-        }
-    };
-
-    private ProtovisFunctionString regularWedgeLabelText = new ProtovisFunctionString() {
-        @Override
-        public String f(ChartItem value, int i) {
-            return calculateAllResources(i) - calculateHighlightedResources(i) < 1 ? null
-                    : Integer.toString(calculateAllResources(i)
-                            - calculateHighlightedResources(i));
-        }
-    };
-
-    private ProtovisFunctionString fullWedgeLabelText = new ProtovisFunctionString() {
-        @Override
-        public String f(ChartItem value, int i) {
-            return Integer.toString(Math.max(calculateAllResources(i),
-                    calculateHighlightedResources(i)));
-        }
-    };
-
-    private ProtovisFunctionString fullWedgeTextStyle = new ProtovisFunctionString() {
-        @Override
-        public String f(ChartItem value, int i) {
-            return calculateHighlightedResources(i) == 0 ? Colors.WHITE
-                    : Colors.BLACK;
-        }
-    };
-
     private String wedgeLabelAnchor = Alignments.CENTER;
 
     private int wedgeTextAngle = 0;
@@ -138,6 +103,13 @@ public class PieChart extends ChartWidget {
     @Override
     protected void beforeRender() {
         highlightedWedgeOuterRadius.beforeRender();
+    }
+
+    private void calculateAllResourcesSum() {
+        sum = 0;
+        for (int i = 0; i < chartItems.size(); i++) {
+            sum += calculateAllResources(i);
+        }
     }
 
     @Override
@@ -148,37 +120,28 @@ public class PieChart extends ChartWidget {
     }
 
     private void drawWedge() {
-        sum = 0;
-        for (int i = 0; i < chartItems.size(); i++) {
-            sum += calculateAllResources(i);
-        }
+        calculateAllResourcesSum();
 
-        for (ChartItem chartItem : chartItems) {
-            if (chartItem.getResourceItem().getStatus() == Status.PARTIALLY_HIGHLIGHTED
-                    || chartItem.getResourceItem().getStatus() == Status.PARTIALLY_HIGHLIGHTED_SELECTED) {
+        if (hasPartiallyHighlightedChartItems()) {
+            regularWedge = chart.add(Wedge.createWedge())
+                    .data(ArrayUtils.toJsArray(chartItems)).left(wedgeLeft)
+                    .bottom(wedgeBottom)
+                    .innerRadius(highlightedWedgeOuterRadius)
+                    .outerRadius(regularWedgeOuterRadius).angle(wedgeAngle)
+                    .fillStyle(partialHighlightingChartFillStyle)
+                    .strokeStyle(Colors.WHITE);
 
-                regularWedge = chart.add(Wedge.createWedge())
-                        .data(ArrayUtils.toJsArray(chartItems)).left(wedgeLeft)
-                        .bottom(wedgeBottom)
-                        .innerRadius(highlightedWedgeOuterRadius)
-                        .outerRadius(regularWedgeOuterRadius).angle(wedgeAngle)
-                        .fillStyle(partialHighlightingChartFillStyle)
-                        .strokeStyle(Colors.WHITE);
+            regularWedge.anchor(wedgeLabelAnchor).add(Label.createLabel())
+                    .textAngle(wedgeTextAngle).text(regularMarkLabelText)
+                    .textStyle(Colors.WHITE);
 
-                regularWedge.anchor(wedgeLabelAnchor).add(Label.createLabel())
-                        .textAngle(wedgeTextAngle).text(regularWedgeLabelText)
-                        .textStyle(Colors.WHITE);
+            highlightedWedge = regularWedge.add(Wedge.createWedge())
+                    .innerRadius(0).outerRadius(highlightedWedgeOuterRadius)
+                    .fillStyle(Colors.YELLOW);
 
-                highlightedWedge = regularWedge.add(Wedge.createWedge())
-                        .innerRadius(0)
-                        .outerRadius(highlightedWedgeOuterRadius)
-                        .fillStyle(Colors.YELLOW);
-
-                highlightedWedge.anchor(wedgeLabelAnchor)
-                        .add(Label.createLabel()).textAngle(wedgeTextAngle)
-                        .text(highlightedWedgeLabelText);
-                return;
-            }
+            highlightedWedge.anchor(wedgeLabelAnchor).add(Label.createLabel())
+                    .textAngle(wedgeTextAngle).text(highlightedMarkLabelText);
+            return;
         }
 
         regularWedge = chart.add(Wedge.createWedge())
@@ -188,8 +151,8 @@ public class PieChart extends ChartWidget {
                 .strokeStyle(Colors.WHITE);
 
         regularWedge.anchor(wedgeLabelAnchor).add(Label.createLabel())
-                .textAngle(wedgeTextAngle).text(fullWedgeLabelText)
-                .textStyle(fullWedgeTextStyle);
+                .textAngle(wedgeTextAngle).text(fullMarkLabelText)
+                .textStyle(fullMarkTextStyle);
 
     }
 
