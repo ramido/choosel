@@ -195,6 +195,7 @@ public class BarChart extends ChartWidget {
 
     @Override
     protected void beforeRender() {
+        super.beforeRender();
         highlightedBarLength.beforeRender();
         fullBarLength.beforeRender();
     }
@@ -211,7 +212,7 @@ public class BarChart extends ChartWidget {
 
     private double calculateLength(double value) {
         return value * layout.getBarLengthSpace(chartHeight, chartWidth)
-                / maxChartItem();
+                / getMaximumChartItemValue();
     }
 
     @Override
@@ -222,11 +223,13 @@ public class BarChart extends ChartWidget {
         setChartParameters();
 
         if (layout.isVerticalBarChart(chartHeight, chartWidth)) {
-            Scale scale = Scale.linear(0, maxChartItem()).range(0, chartHeight);
+            Scale scale = Scale.linear(0, getMaximumChartItemValue()).range(0,
+                    chartHeight);
             drawVerticalBarScales(scale);
             drawVerticalBarChart();
         } else {
-            Scale scale = Scale.linear(0, maxChartItem()).range(0, chartWidth);
+            Scale scale = Scale.linear(0, getMaximumChartItemValue()).range(0,
+                    chartWidth);
             drawHorizontalBarScales(scale);
             drawHorizontalBarChart();
 

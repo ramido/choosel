@@ -58,7 +58,7 @@ public class DotChart extends ChartWidget {
 
         @Override
         public double f(ChartItem value, int i) {
-            return dotCounts[i] * chartHeight / maxChartItem();
+            return dotCounts[i] * chartHeight / getMaximumChartItemValue();
         }
 
     };
@@ -94,6 +94,7 @@ public class DotChart extends ChartWidget {
 
     @Override
     protected void beforeRender() {
+        super.beforeRender();
         dotBottom.beforeRender();
     }
 
@@ -123,7 +124,8 @@ public class DotChart extends ChartWidget {
         calculateChartVariables();
         setChartParameters();
 
-        Scale scale = Scale.linear(0, maxChartItem()).range(0, chartHeight);
+        Scale scale = Scale.linear(0, getMaximumChartItemValue()).range(0,
+                chartHeight);
         drawScales(scale);
         drawSelectionBox();
         drawDot();
