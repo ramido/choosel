@@ -132,6 +132,7 @@ public class CircularBarChart extends ChartWidget {
 
     @Override
     protected void beforeRender() {
+        super.beforeRender();
         highlightedWedgeOuterRadius.beforeRender();
         regularWedgeOuterRadius.beforeRender();
     }
@@ -152,7 +153,7 @@ public class CircularBarChart extends ChartWidget {
     }
 
     private void drawScale() {
-        Scale scale = Scale.linear(0, maxChartItem()).range(0,
+        Scale scale = Scale.linear(0, getMaximumChartItemValue()).range(0,
                 Math.min(height, width) - MARGIN_SIZE);
 
         chart.add(Dot.createDot()).data(scale.ticks()).left(width / 2)

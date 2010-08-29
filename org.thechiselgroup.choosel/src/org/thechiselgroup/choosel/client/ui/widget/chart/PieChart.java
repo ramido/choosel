@@ -102,6 +102,7 @@ public class PieChart extends ChartWidget {
 
     @Override
     protected void beforeRender() {
+        super.beforeRender();
         highlightedWedgeOuterRadius.beforeRender();
     }
 

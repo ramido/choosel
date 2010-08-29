@@ -112,37 +112,39 @@ public abstract class ChartWidget extends Widget {
     };
 
     protected ProtovisFunctionString fullMarkTextStyle = new ProtovisFunctionString() {
-            @Override
-            public String f(ChartItem value, int i) {
-                return calculateHighlightedResources(i) == 0 ? Colors.WHITE
-                        : Colors.BLACK;
-            }
-        };
+        @Override
+        public String f(ChartItem value, int i) {
+            return calculateHighlightedResources(i) == 0 ? Colors.WHITE
+                    : Colors.BLACK;
+        }
+    };
 
     protected ProtovisFunctionString fullMarkLabelText = new ProtovisFunctionString() {
-            @Override
-            public String f(ChartItem value, int i) {
-                return Integer.toString(Math.max(calculateAllResources(i),
-                        calculateHighlightedResources(i)));
-            }
-        };
+        @Override
+        public String f(ChartItem value, int i) {
+            return Integer.toString(Math.max(calculateAllResources(i),
+                    calculateHighlightedResources(i)));
+        }
+    };
 
     protected ProtovisFunctionString regularMarkLabelText = new ProtovisFunctionString() {
-            @Override
-            public String f(ChartItem value, int i) {
-                return calculateAllResources(i) - calculateHighlightedResources(i) < 1 ? null
-                        : Integer.toString(calculateAllResources(i)
-                                - calculateHighlightedResources(i));
-            }
-        };
+        @Override
+        public String f(ChartItem value, int i) {
+            return calculateAllResources(i) - calculateHighlightedResources(i) < 1 ? null
+                    : Integer.toString(calculateAllResources(i)
+                            - calculateHighlightedResources(i));
+        }
+    };
 
     protected ProtovisFunctionString highlightedMarkLabelText = new ProtovisFunctionString() {
-            @Override
-            public String f(ChartItem value, int i) {
-                return calculateHighlightedResources(i) < 1 ? null : Integer
-                        .toString(calculateHighlightedResources(i));
-            }
-        };
+        @Override
+        public String f(ChartItem value, int i) {
+            return calculateHighlightedResources(i) < 1 ? null : Integer
+                    .toString(calculateHighlightedResources(i));
+        }
+    };
+
+    private int maxChartItemValue;
 
     public ChartWidget() {
         setElement(DOM.createDiv());
@@ -160,6 +162,7 @@ public abstract class ChartWidget extends Widget {
      * calls from Protovis.
      */
     protected void beforeRender() {
+        calculateMaximumChartItemValue();
     }
 
     protected int calculateAllResources(int i) {
@@ -170,6 +173,21 @@ public abstract class ChartWidget extends Widget {
     protected int calculateHighlightedResources(int i) {
         return chartItems.get(i).getResourceItem().getHighlightedResources()
                 .size();
+    }
+
+    // TODO different slots
+    // XXX does not work for negative numbers
+    private void calculateMaximumChartItemValue() {
+        this.maxChartItemValue = 0;
+        for (int i = 0; i < chartItems.size(); i++) {
+            int currentItem = Integer
+                    .parseInt(chartItems.get(i).getResourceItem()
+                            .getResourceValue(SlotResolver.CHART_VALUE_SLOT)
+                            .toString());
+            if (maxChartItemValue < currentItem) {
+                maxChartItemValue = currentItem;
+            }
+        }
     }
 
     public void checkResize() {
@@ -190,6 +208,10 @@ public abstract class ChartWidget extends Widget {
         assert index < chartItems.size();
 
         return chartItems.get(index);
+    }
+
+    protected double getMaximumChartItemValue() {
+        return maxChartItemValue;
     }
 
     // XXX not called anywhere
@@ -220,20 +242,6 @@ public abstract class ChartWidget extends Widget {
             }
         }
         return false;
-    }
-
-    protected double maxChartItem() {
-        double max = 0;
-        for (int i = 0; i < chartItems.size(); i++) {
-            int currentItem = Integer
-                    .parseInt(chartItems.get(i).getResourceItem()
-                            .getResourceValue(SlotResolver.CHART_VALUE_SLOT)
-                            .toString());
-            if (max < currentItem) {
-                max = currentItem;
-            }
-        }
-        return max;
     }
 
     @Override
