@@ -297,7 +297,7 @@ public class BarChart extends ChartWidget {
                     .data(ArrayUtils.toJsArray(chartItems))
                     .bottom(barLineWidth).height(highlightedBarLength)
                     .left(barStart).width(barWidth).fillStyle(Colors.YELLOW)
-                    .strokeStyle(Colors.STEELBLUE).lineWidth(barLineWidth - 1);
+                    .strokeStyle(Colors.STEELBLUE).lineWidth(barLineWidth);
 
             highlightedBar.anchor(Alignments.TOP).add(Label.createLabel())
                     .textBaseline(barTextBaseline)

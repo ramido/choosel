@@ -149,6 +149,22 @@ public class ResourceItem implements Disposable {
         return highlightedResources;
     }
 
+    public Collection<Resource> getHighlightedSelectedResources() {
+        assert resources.containsAll(highlightedResources);
+        assert resources.containsAll(selectedResources);
+
+        ResourceSet highlightedSelectedResources = new DefaultResourceSet();
+
+        for (Resource resource : resources) {
+            if (highlightedResources.contains(resource)
+                    && selectedResources.contains(resource)) {
+                highlightedSelectedResources.add(resource);
+            }
+        }
+
+        return highlightedSelectedResources;
+    }
+
     /**
      * @return highlighting manager that manages the highlighting for this
      *         visual representation of the resource item. For the popup, there
