@@ -105,6 +105,20 @@ public class CircularBarChart extends ChartWidget {
         }
     };
 
+    private ProtovisFunctionDoubleToDouble scaleLeft = new ProtovisFunctionDoubleToDouble() {
+        @Override
+        public double f(double value, int i) {
+            return width / 2;
+        }
+    };
+
+    private ProtovisFunctionDoubleToDouble scaleBottom = new ProtovisFunctionDoubleToDouble() {
+        @Override
+        public double f(double value, int i) {
+            return height / 2;
+        }
+    };
+
     private ProtovisFunctionDouble wedgeAngle = new ProtovisFunctionDouble() {
         @Override
         public double f(ChartItem value, int i) {
@@ -156,8 +170,8 @@ public class CircularBarChart extends ChartWidget {
         Scale scale = Scale.linear(0, getMaximumChartItemValue()).range(0,
                 Math.min(height, width) - MARGIN_SIZE);
 
-        chart.add(Dot.createDot()).data(scale.ticks()).left(width / 2)
-                .bottom(height / 2).fillStyle("").strokeStyle(Colors.GRAY_1)
+        chart.add(Dot.createDot()).data(scale.ticks()).left(scaleLeft)
+                .bottom(scaleBottom).fillStyle("").strokeStyle(Colors.GRAY_1)
                 .lineWidth(scaleLineWidth).radius(scaleRadius);
     }
 
