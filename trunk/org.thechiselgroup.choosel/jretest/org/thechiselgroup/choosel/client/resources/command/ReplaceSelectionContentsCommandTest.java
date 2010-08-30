@@ -25,6 +25,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.views.ResourceModel;
+import org.thechiselgroup.choosel.client.views.SelectionModel;
 import org.thechiselgroup.choosel.client.views.View;
 
 public class ReplaceSelectionContentsCommandTest {
@@ -40,6 +41,9 @@ public class ReplaceSelectionContentsCommandTest {
 
     @Mock
     private ResourceModel resourceModel;
+
+    @Mock
+    private SelectionModel selectionModel;
 
     @Test
     public void resourcesReplacedOnExecute() {
@@ -86,9 +90,10 @@ public class ReplaceSelectionContentsCommandTest {
         this.resources = resources;
         this.viewSelection = viewSelection;
 
-        when(view.getSelection()).thenReturn(viewSelection);
+        when(view.getSelectionModel()).thenReturn(selectionModel);
         when(view.getResourceModel()).thenReturn(resourceModel);
         when(resourceModel.getResources()).thenReturn(viewResources);
+        when(selectionModel.getSelection()).thenReturn(viewSelection);
 
         this.underTest = new ReplaceSelectionContentsCommand(resources, view);
     }

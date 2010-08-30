@@ -15,16 +15,11 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import org.thechiselgroup.choosel.client.persistence.Persistable;
-import org.thechiselgroup.choosel.client.util.Disposable;
-import org.thechiselgroup.choosel.client.windows.WindowContent;
+import org.thechiselgroup.choosel.client.resources.ResourceSetEventHandler;
 
-public interface View extends WindowContent, Disposable, Persistable {
+public interface ResourceSetActivatedEventHandler extends
+        ResourceSetEventHandler {
 
-    // TODO Type mapping operations
-
-    ResourceModel getResourceModel();
-
-    SelectionModel getSelectionModel();
+    void onResourceSetActivated(ResourceSetActivatedEvent e);
 
 }

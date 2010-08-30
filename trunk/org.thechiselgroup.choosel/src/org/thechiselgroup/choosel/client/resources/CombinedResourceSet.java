@@ -18,10 +18,10 @@ package org.thechiselgroup.choosel.client.resources;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 
+// TODO violates LSP --> need for ReadableResourceSet, WriteableResourceSet
 public class CombinedResourceSet extends DelegatingResourceSet {
 
     static class ResourceSetElement {
@@ -73,12 +73,22 @@ public class CombinedResourceSet extends DelegatingResourceSet {
         }
     };
 
-    private final HandlerManager setEventBus;
+    private final HandlerManager eventBus;
 
     public CombinedResourceSet(ResourceSet delegate) {
         super(delegate);
 
-        this.setEventBus = new HandlerManager(this);
+        this.eventBus = new HandlerManager(this);
+    }
+
+    public HandlerRegistration addEventHandler(
+            ResourceSetAddedEventHandler handler) {
+        return eventBus.addHandler(ResourceSetAddedEvent.TYPE, handler);
+    }
+
+    public HandlerRegistration addEventHandler(
+            ResourceSetRemovedEventHandler handler) {
+        return eventBus.addHandler(ResourceSetRemovedEvent.TYPE, handler);
     }
 
     public void addResourceSet(ResourceSet resourceSet) {
@@ -96,12 +106,7 @@ public class CombinedResourceSet extends DelegatingResourceSet {
         resourceSetElement.removeHandlerRegistration = resourceSet
                 .addEventHandler(resourceRemovedHandler);
 
-        setEventBus.fireEvent(new ResourceSetAddedEvent(resourceSet));
-    }
-
-    public <H extends ResourceSetEventHandler> HandlerRegistration addSetEventsHandler(
-            Type<H> type, H handler) {
-        return setEventBus.addHandler(type, handler);
+        eventBus.fireEvent(new ResourceSetAddedEvent(resourceSet));
     }
 
     @Override
@@ -168,7 +173,7 @@ public class CombinedResourceSet extends DelegatingResourceSet {
 
         removeAll(toRemove);
 
-        setEventBus.fireEvent(new ResourceSetRemovedEvent(resourceSet));
+        eventBus.fireEvent(new ResourceSetRemovedEvent(resourceSet));
     }
 
 }

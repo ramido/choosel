@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.views.View;
+import org.thechiselgroup.choosel.client.views.SelectionModel;
 
 public class ReplaceSelectionCommandTest {
 
@@ -37,7 +37,7 @@ public class ReplaceSelectionCommandTest {
     private ResourceSet targetSet;
 
     @Mock
-    private View view;
+    private SelectionModel selectionModel;
 
     @Test
     public void setNewSelectionSetOnExecute() {
@@ -45,7 +45,7 @@ public class ReplaceSelectionCommandTest {
 
         command.execute();
 
-        verify(view, times(1)).setSelection(eq(targetSet));
+        verify(selectionModel, times(1)).setSelection(eq(targetSet));
     }
 
     @Test
@@ -55,8 +55,9 @@ public class ReplaceSelectionCommandTest {
         command.execute();
         command.undo();
 
-        verify(view, times(1)).setSelection(eq(targetSet)); // from execute
-        verify(view, times(1)).setSelection(eq(sourceSet));
+        verify(selectionModel, times(1)).setSelection(eq(targetSet)); // from
+                                                                      // execute
+        verify(selectionModel, times(1)).setSelection(eq(sourceSet));
     }
 
     @Before
@@ -69,9 +70,9 @@ public class ReplaceSelectionCommandTest {
         this.sourceSet = sourceSet;
         this.targetSet = targetSet;
 
-        this.command = new ReplaceSelectionCommand(view, targetSet);
+        this.command = new ReplaceSelectionCommand(selectionModel, targetSet);
 
-        when(view.getSelection()).thenReturn(sourceSet);
+        when(selectionModel.getSelection()).thenReturn(sourceSet);
     }
 
 }

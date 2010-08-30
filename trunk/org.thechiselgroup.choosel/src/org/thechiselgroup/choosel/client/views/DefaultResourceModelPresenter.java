@@ -73,16 +73,15 @@ public class DefaultResourceModelPresenter implements ResourceModelPresenter {
     private void initInputResourceSetsPresenter() {
         inputResourceSetsPresenter.init();
 
-        resourceModel.getCombinedUserResourceSets().addSetEventsHandler(
-                ResourceSetAddedEvent.TYPE, new ResourceSetAddedEventHandler() {
+        resourceModel.getCombinedUserResourceSets().addEventHandler(
+                new ResourceSetAddedEventHandler() {
                     @Override
                     public void onResourceSetAdded(ResourceSetAddedEvent e) {
                         ResourceSet resources = e.getResourceSet();
                         inputResourceSetsPresenter.addResourceSet(resources);
                     }
                 });
-        resourceModel.getCombinedUserResourceSets().addSetEventsHandler(
-                ResourceSetRemovedEvent.TYPE,
+        resourceModel.getCombinedUserResourceSets().addEventHandler(
                 new ResourceSetRemovedEventHandler() {
                     @Override
                     public void onResourceSetRemoved(ResourceSetRemovedEvent e) {

@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.client.resources.command;
 import org.thechiselgroup.choosel.client.command.UndoableCommand;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.util.HasDescription;
-import org.thechiselgroup.choosel.client.views.View;
+import org.thechiselgroup.choosel.client.views.SelectionModel;
 
 public class RemoveSelectionSetFromViewCommand implements UndoableCommand,
         HasDescription {
@@ -27,37 +27,40 @@ public class RemoveSelectionSetFromViewCommand implements UndoableCommand,
 
     private ResourceSet resourceSet;
 
-    protected View view;
+    protected SelectionModel selectionModel;
 
     private boolean wasSelected = false;
 
-    public RemoveSelectionSetFromViewCommand(View view, ResourceSet resourceSet) {
-        this(view, resourceSet, "Remove selection set '"
+    public RemoveSelectionSetFromViewCommand(SelectionModel selectionModel,
+            ResourceSet resourceSet) {
+
+        // XXX need better label
+        this(selectionModel, resourceSet, "Remove selection set '"
                 + resourceSet.getLabel() + "' from view");
     }
 
-    public RemoveSelectionSetFromViewCommand(View view,
+    public RemoveSelectionSetFromViewCommand(SelectionModel selectionModel,
             ResourceSet resourceSet, String description) {
 
-        assert view != null;
+        assert selectionModel != null;
         assert resourceSet != null;
         assert resourceSet.hasLabel();
         assert description != null;
 
         this.description = description;
-        this.view = view;
+        this.selectionModel = selectionModel;
         this.resourceSet = resourceSet;
     }
 
     @Override
     public void execute() {
-        assert view.containsSelectionSet(resourceSet);
-        if (resourceSet.equals(view.getSelection())) {
-            view.setSelection(null);
+        assert selectionModel.containsSelectionSet(resourceSet);
+        if (resourceSet.equals(selectionModel.getSelection())) {
+            selectionModel.setSelection(null);
             wasSelected = true;
         }
-        view.removeSelectionSet(resourceSet);
-        assert !view.containsSelectionSet(resourceSet);
+        selectionModel.removeSelectionSet(resourceSet);
+        assert !selectionModel.containsSelectionSet(resourceSet);
     }
 
     // TODO add view name / label once available
@@ -70,18 +73,18 @@ public class RemoveSelectionSetFromViewCommand implements UndoableCommand,
         return resourceSet;
     }
 
-    public View getView() {
-        return view;
+    public SelectionModel getSelectionModel() {
+        return selectionModel;
     }
 
     @Override
     public void undo() {
-        assert !view.containsSelectionSet(resourceSet);
-        view.addSelectionSet(resourceSet);
+        assert !selectionModel.containsSelectionSet(resourceSet);
+        selectionModel.addSelectionSet(resourceSet);
         if (wasSelected) {
-            view.setSelection(resourceSet);
+            selectionModel.setSelection(resourceSet);
         }
-        assert view.containsSelectionSet(resourceSet);
+        assert selectionModel.containsSelectionSet(resourceSet);
     }
 
 }

@@ -20,6 +20,7 @@ import org.thechiselgroup.choosel.client.command.UndoableCommand;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.command.RemoveSelectionSetFromViewCommand;
 import org.thechiselgroup.choosel.client.resources.ui.popup.PopupResourceSetAvatarFactory.Action;
+import org.thechiselgroup.choosel.client.views.SelectionModel;
 import org.thechiselgroup.choosel.client.views.View;
 
 public class RemoveSelectionSetAction implements Action {
@@ -30,14 +31,17 @@ public class RemoveSelectionSetAction implements Action {
         this.commandManager = commandManager;
     }
 
-    protected UndoableCommand createCommand(ResourceSet resources, View view) {
-        return new RemoveSelectionSetFromViewCommand(view, resources,
+    protected UndoableCommand createCommand(ResourceSet resources,
+            SelectionModel selectionModel) {
+
+        return new RemoveSelectionSetFromViewCommand(selectionModel, resources,
                 "Remove set '" + resources.getLabel() + "' from selection");
     }
 
     @Override
     public void execute(ResourceSet resources, View view) {
-        commandManager.execute(createCommand(resources, view));
+        commandManager.execute(createCommand(resources,
+                view.getSelectionModel()));
     }
 
     @Override

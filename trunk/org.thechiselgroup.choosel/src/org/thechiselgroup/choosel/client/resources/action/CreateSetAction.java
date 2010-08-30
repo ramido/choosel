@@ -53,7 +53,7 @@ public class CreateSetAction implements Action {
 
             @Override
             public void execute() {
-                view.addSelectionSet(newResources);
+                view.getSelectionModel().addSelectionSet(newResources);
             }
         };
     }

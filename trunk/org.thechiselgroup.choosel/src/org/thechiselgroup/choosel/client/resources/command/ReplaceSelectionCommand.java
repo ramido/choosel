@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.client.resources.command;
 import org.thechiselgroup.choosel.client.command.UndoableCommand;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.util.HasDescription;
-import org.thechiselgroup.choosel.client.views.View;
+import org.thechiselgroup.choosel.client.views.SelectionModel;
 
 public class ReplaceSelectionCommand implements UndoableCommand, HasDescription {
 
@@ -26,43 +26,45 @@ public class ReplaceSelectionCommand implements UndoableCommand, HasDescription 
 
     private ResourceSet resources;
 
-    private View view;
+    private SelectionModel selectionModel;
 
-    public ReplaceSelectionCommand(View view, ResourceSet resources) {
-        assert view != null;
+    public ReplaceSelectionCommand(SelectionModel selectionModel,
+            ResourceSet resources) {
+
+        assert selectionModel != null;
         assert resources != null;
 
-        this.view = view;
+        this.selectionModel = selectionModel;
         this.resources = resources;
     }
 
     @Override
     public void execute() {
         if (originalSelection == null) {
-            originalSelection = view.getSelection();
+            originalSelection = selectionModel.getSelection();
         }
 
-        view.setSelection(resources);
+        selectionModel.setSelection(resources);
     }
 
     @Override
     public String getDescription() {
-        // TODO view label
-        return "Replace selection in '" + view.toString() + "' with '"
-                + resources.getLabel() + "'";
+        // XXX label required
+        return "Replace selection in '" + selectionModel.toString()
+                + "' with '" + resources.getLabel() + "'";
     }
 
     public ResourceSet getResources() {
         return resources;
     }
 
-    public View getView() {
-        return view;
+    public SelectionModel getSelectionModel() {
+        return selectionModel;
     }
 
     @Override
     public void undo() {
-        view.setSelection(originalSelection);
+        selectionModel.setSelection(originalSelection);
     }
 
 }
