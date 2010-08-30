@@ -22,6 +22,7 @@ import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.util.HasDescription;
+import org.thechiselgroup.choosel.client.views.SelectionModel;
 import org.thechiselgroup.choosel.client.views.View;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
 
@@ -43,9 +44,9 @@ public class SelectionPresenterDropCommandFactory implements
 
         @Override
         public void execute() {
-            oldSelection = getView().getSelection();
-            getView().addSelectionSet(avatar.getResourceSet());
-            getView().setSelection(avatar.getResourceSet());
+            oldSelection = getSelectionModel().getSelection();
+            getSelectionModel().addSelectionSet(avatar.getResourceSet());
+            getSelectionModel().setSelection(avatar.getResourceSet());
         }
 
         @Override
@@ -55,8 +56,8 @@ public class SelectionPresenterDropCommandFactory implements
 
         @Override
         public void undo() {
-            getView().setSelection(oldSelection);
-            getView().removeSelectionSet(avatar.getResourceSet());
+            getSelectionModel().setSelection(oldSelection);
+            getSelectionModel().removeSelectionSet(avatar.getResourceSet());
         }
     }
 
@@ -90,7 +91,8 @@ public class SelectionPresenterDropCommandFactory implements
             return false;
         }
 
-        return !getView().containsSelectionSet(avatar.getResourceSet());
+        return !getSelectionModel().containsSelectionSet(
+                avatar.getResourceSet());
     }
 
     @Override
@@ -98,6 +100,10 @@ public class SelectionPresenterDropCommandFactory implements
         assert avatar != null;
 
         return new AddSelectionSetCommand(avatar);
+    }
+
+    private SelectionModel getSelectionModel() {
+        return getView().getSelectionModel();
     }
 
     private View getView() {

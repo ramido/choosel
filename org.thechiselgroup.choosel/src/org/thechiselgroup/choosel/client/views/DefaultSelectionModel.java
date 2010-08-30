@@ -21,23 +21,24 @@ import java.util.List;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.persistence.Persistable;
-import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.resources.ResourceSetAddedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourceSetAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
+import org.thechiselgroup.choosel.client.resources.ResourceSetRemovedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourceSetRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.SwitchingResourceSet;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
-import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.util.Disposable;
-import org.thechiselgroup.choosel.client.util.Initializable;
 
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.Widget;
 
 public class DefaultSelectionModel implements SelectionModel, Disposable,
-        Persistable, Initializable {
+        Persistable {
 
     static final String MEMENTO_SELECTION = "selection";
 
@@ -49,35 +50,49 @@ public class DefaultSelectionModel implements SelectionModel, Disposable,
 
     private SwitchingResourceSet selection = new SwitchingResourceSet();
 
-    private ResourceSetsPresenter selectionDropPresenter;
-
     private LabelProvider selectionModelLabelFactory;
-
-    private ResourceSetsPresenter selectionPresenter;
 
     private final ResourceSetFactory resourceSetFactory;
 
-    public DefaultSelectionModel(ResourceSetsPresenter selectionDropPresenter,
-            LabelProvider selectionModelLabelFactory,
-            ResourceSetsPresenter selectionPresenter,
+    protected transient HandlerManager eventBus;
+
+    public DefaultSelectionModel(LabelProvider selectionModelLabelFactory,
             ResourceSetFactory resourceSetFactory) {
 
         assert selectionModelLabelFactory != null;
-        assert selectionPresenter != null;
-        assert selectionDropPresenter != null;
         assert resourceSetFactory != null;
 
-        this.selectionDropPresenter = selectionDropPresenter;
         this.selectionModelLabelFactory = selectionModelLabelFactory;
-        this.selectionPresenter = selectionPresenter;
         this.resourceSetFactory = resourceSetFactory;
+
+        this.eventBus = new HandlerManager(this);
     }
 
+    @Override
     public HandlerRegistration addEventHandler(
             ResourcesAddedEventHandler handler) {
         return selection.addEventHandler(handler);
     }
 
+    @Override
+    public HandlerRegistration addEventHandler(
+            ResourceSetActivatedEventHandler handler) {
+        return eventBus.addHandler(ResourceSetActivatedEvent.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addEventHandler(
+            ResourceSetAddedEventHandler handler) {
+        return eventBus.addHandler(ResourceSetAddedEvent.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addEventHandler(
+            ResourceSetRemovedEventHandler handler) {
+        return eventBus.addHandler(ResourceSetRemovedEvent.TYPE, handler);
+    }
+
+    @Override
     public HandlerRegistration addEventHandler(
             ResourcesRemovedEventHandler handler) {
         return selection.addEventHandler(handler);
@@ -86,17 +101,10 @@ public class DefaultSelectionModel implements SelectionModel, Disposable,
     @Override
     public void addSelectionSet(ResourceSet selectionSet) {
         assert selectionSet != null;
+        assert !selectionSets.contains(selectionSet);
 
         selectionSets.add(selectionSet);
-        selectionPresenter.addResourceSet(selectionSet);
-    }
-
-    public Widget asDropPresenterWidget() {
-        return selectionDropPresenter.asWidget();
-    }
-
-    public Widget asSelectionPresenterWidget() {
-        return selectionPresenter.asWidget();
+        eventBus.fireEvent(new ResourceSetAddedEvent(selectionSet));
     }
 
     @Override
@@ -106,10 +114,6 @@ public class DefaultSelectionModel implements SelectionModel, Disposable,
 
     @Override
     public void dispose() {
-        selectionPresenter.dispose();
-        selectionPresenter = null;
-        selectionDropPresenter.dispose();
-        selectionDropPresenter = null;
         selection.dispose();
         selection = null;
     }
@@ -124,21 +128,12 @@ public class DefaultSelectionModel implements SelectionModel, Disposable,
     }
 
     @Override
-    public void init() {
-        selectionPresenter.init();
-
-        selectionDropPresenter.init();
-
-        DefaultResourceSet resources = new DefaultResourceSet();
-        resources.setLabel("add selection");
-        selectionDropPresenter.addResourceSet(resources);
-    }
-
-    @Override
     public void removeSelectionSet(ResourceSet selectionSet) {
         assert selectionSet != null;
-        this.selectionSets.remove(selectionSet);
-        selectionPresenter.removeResourceSet(selectionSet);
+        assert selectionSets.contains(selectionSet);
+
+        selectionSets.remove(selectionSet);
+        eventBus.fireEvent(new ResourceSetRemovedEvent(selectionSet));
     }
 
     @Override
@@ -187,7 +182,7 @@ public class DefaultSelectionModel implements SelectionModel, Disposable,
                 || selectionSets.contains(newSelectionModel);
 
         selection.setDelegate(newSelectionModel);
-        selectionPresenter.setSelectedResourceSet(newSelectionModel);
+        eventBus.fireEvent(new ResourceSetActivatedEvent(newSelectionModel));
     }
 
     private void storeResourceSet(ResourceSetCollector persistanceManager,

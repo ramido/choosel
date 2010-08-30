@@ -24,8 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
-import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.persistence.Persistable;
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
@@ -37,7 +35,6 @@ import org.thechiselgroup.choosel.client.resources.ResourceCategoryChange;
 import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetEventForwarder;
-import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ResourceSplitter;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
@@ -45,7 +42,6 @@ import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
-import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.ui.CSS;
 import org.thechiselgroup.choosel.client.ui.WidgetFactory;
 import org.thechiselgroup.choosel.client.ui.popup.DefaultPopupManager;
@@ -64,13 +60,10 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 public class DefaultView extends AbstractWindowContent implements View {
 
@@ -146,29 +139,25 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private HandlerRegistrationSet handlerRegistrations = new HandlerRegistrationSet();
 
-    private DefaultSelectionModel selectionModel;
+    private SelectionModel selectionModel;
 
-    @Inject
-    public DefaultView(
-            @Named(ChooselInjectionConstants.LABEL_PROVIDER_SELECTION_SET) LabelProvider selectionModelLabelFactory,
-            ResourceSetFactory resourceSetFactory,
-            @Named(ChooselInjectionConstants.AVATAR_FACTORY_SELECTION) ResourceSetsPresenter selectionPresenter,
-            @Named(ChooselInjectionConstants.AVATAR_FACTORY_SELECTION_DROP) ResourceSetsPresenter selectionDropPresenter,
-            ResourceSplitter resourceSplitter,
+    private SelectionModelPresenter selectionModelPresenter;
+
+    public DefaultView(ResourceSplitter resourceSplitter,
             ViewContentDisplay contentDisplay, String label,
             String contentType, ResourceItemValueResolver configuration,
+            SelectionModel selectionModel,
+            SelectionModelPresenter selectionModelPresenter,
             ResourceModel resourceModel,
             ResourceModelPresenter resourceModelPresenter, HoverModel hoverModel) {
 
         super(label, contentType);
 
         assert configuration != null;
-        assert selectionModelLabelFactory != null;
-        assert resourceSetFactory != null;
-        assert selectionPresenter != null;
-        assert selectionDropPresenter != null;
         assert resourceSplitter != null;
         assert contentDisplay != null;
+        assert selectionModel != null;
+        assert selectionModelPresenter != null;
         assert resourceModel != null;
         assert resourceModelPresenter != null;
         assert hoverModel != null;
@@ -176,19 +165,14 @@ public class DefaultView extends AbstractWindowContent implements View {
         this.configuration = configuration;
         this.resourceSplitter = resourceSplitter;
         this.contentDisplay = contentDisplay;
+
+        this.selectionModel = selectionModel;
+        this.selectionModelPresenter = selectionModelPresenter;
+
         this.resourceModel = resourceModel;
         this.resourceModelPresenter = resourceModelPresenter;
+
         this.hoverModel = hoverModel;
-
-        // TODO move
-        this.selectionModel = new DefaultSelectionModel(selectionDropPresenter,
-                selectionModelLabelFactory, selectionPresenter,
-                resourceSetFactory);
-    }
-
-    @Override
-    public void addSelectionSet(ResourceSet selectionSet) {
-        selectionModel.addSelectionSet(selectionSet);
     }
 
     @Override
@@ -210,11 +194,6 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private void checkResize() {
         contentDisplay.checkResize();
-    }
-
-    @Override
-    public boolean containsSelectionSet(ResourceSet resourceSet) {
-        return selectionModel.containsSelectionSet(resourceSet);
     }
 
     private ResourceItem createResourceItem(String category,
@@ -270,6 +249,9 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         resourceModelPresenter.dispose();
         resourceModelPresenter = null;
+
+        selectionModelPresenter.dispose();
+        selectionModelPresenter = null;
 
         hoverModel = null;
 
@@ -329,13 +311,8 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     @Override
-    public ResourceSet getSelection() {
-        return selectionModel.getSelection();
-    }
-
-    // for test
-    public List<ResourceSet> getSelectionSets() {
-        return selectionModel.getSelectionSets();
+    public SelectionModel getSelectionModel() {
+        return selectionModel;
     }
 
     @Override
@@ -416,22 +393,10 @@ public class DefaultView extends AbstractWindowContent implements View {
         configurationPanel.setSize("100%", "");
         configurationPanel.setStyleName(CSS_VIEW_CONFIGURATION_PANEL);
 
-        initResourceModelPresenterUI();
+        initResourceModelPresenter();
         initConfigurationMenu();
         initViewMenu();
-
-        HorizontalPanel panel = new HorizontalPanel();
-
-        Widget widget = selectionModel.asDropPresenterWidget();
-        Widget widget2 = selectionModel.asSelectionPresenterWidget();
-
-        panel.add(widget2);
-        panel.add(widget);
-
-        configurationPanel.add(panel, DockPanel.EAST);
-        configurationPanel.setCellHorizontalAlignment(panel,
-                HasAlignment.ALIGN_RIGHT);
-        configurationPanel.setCellWidth(panel, "100%"); // eats up all space
+        initSelectionModelPresenter();
     }
 
     // TODO eliminate inner class, implement methods in DefaultView & test them
@@ -489,7 +454,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
             @Override
             public void switchSelection(ResourceSet resources) {
-                DefaultView.this.switchSelection(resources);
+                selectionModel.switchSelection(resources);
             }
         };
         contentDisplay.init(contentDisplayCallback);
@@ -513,7 +478,7 @@ public class DefaultView extends AbstractWindowContent implements View {
                 }));
     }
 
-    private void initResourceModelPresenterUI() {
+    private void initResourceModelPresenter() {
         Widget widget = resourceModelPresenter.asWidget();
 
         configurationPanel.add(widget, DockPanel.WEST);
@@ -551,6 +516,16 @@ public class DefaultView extends AbstractWindowContent implements View {
                                 false);
                     }
                 });
+    }
+
+    private void initSelectionModelPresenter() {
+        selectionModelPresenter.init();
+
+        Widget widget = selectionModelPresenter.asWidget();
+        configurationPanel.add(widget, DockPanel.EAST);
+        configurationPanel.setCellHorizontalAlignment(widget,
+                HasAlignment.ALIGN_RIGHT);
+        configurationPanel.setCellWidth(widget, "100%"); // eats up all space
     }
 
     // TODO move non-ui stuff to constructor
@@ -637,11 +612,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         selectionResourceRemovedHandlerRegistration = null;
     }
 
-    @Override
-    public void removeSelectionSet(ResourceSet selectionSet) {
-        selectionModel.removeSelectionSet(selectionSet);
-    }
-
     protected void resize(int width, int height) {
         /*
          * special resize method required, because otherwise window height
@@ -663,8 +633,10 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     @Override
     public void restore(final Memento state, final ResourceSetAccessor accessor) {
-        // wait for content to be ready (needed for graph view swf loading on
-        // restore)
+        /*
+         * wait for content to be ready (needed for graph view swf loading on
+         * restore)
+         */
         // XXX this might be the cause for issue 25
         if (contentDisplay.isReady()) {
             doRestore(state, accessor);
@@ -718,11 +690,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         return memento;
     }
 
-    @Override
-    public void setSelection(ResourceSet newSelectionModel) {
-        selectionModel.setSelection(newSelectionModel);
-    }
-
     private void storeContentDisplaySettings(Memento memento) {
         memento.addChild(MEMENTO_CONTENT_DISPLAY, contentDisplay.save());
     }
@@ -747,11 +714,6 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         memento.addChild(MEMENTO_SELECTION_MODEL,
                 ((Persistable) selectionModel).save(persistanceManager));
-    }
-
-    @Override
-    public void switchSelection(ResourceSet resources) {
-        selectionModel.switchSelection(resources);
     }
 
     private void updateHighlighting(List<Resource> affectedResources,

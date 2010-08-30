@@ -70,7 +70,7 @@ public class ReplaceSelectionContentsCommand implements UndoableCommand,
     }
 
     private ResourceSet getSelection() {
-        return view.getSelection();
+        return view.getSelectionModel().getSelection();
     }
 
     public View getView() {

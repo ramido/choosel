@@ -179,12 +179,17 @@ public class ViewFactory implements WindowContentFactory {
                 new ResourceSetAvatarResourceSetsPresenter(
                         userSetsDragAvatarFactory), resourceModel);
 
-        return new DefaultView(selectionModelLabelFactory, resourceSetFactory,
-                new ResourceSetAvatarResourceSetsPresenter(
-                        selectionDragAvatarFactory),
+        DefaultSelectionModel selectionModel = new DefaultSelectionModel(
+                selectionModelLabelFactory, resourceSetFactory);
+
+        DefaultSelectionModelPresenter selectionModelPresenter = new DefaultSelectionModelPresenter(
                 new ResourceSetAvatarResourceSetsPresenter(dropTargetFactory),
-                resourceSplitter, contentDisplay, contentType, contentType,
-                configuration, resourceModel, resourceModelPresenter,
+                new ResourceSetAvatarResourceSetsPresenter(
+                        selectionDragAvatarFactory), selectionModel);
+
+        return new DefaultView(resourceSplitter, contentDisplay, contentType,
+                contentType, configuration, selectionModel,
+                selectionModelPresenter, resourceModel, resourceModelPresenter,
                 hoverModel);
     }
 }

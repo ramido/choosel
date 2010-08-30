@@ -30,6 +30,7 @@ import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarType;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.client.views.ResourceModel;
+import org.thechiselgroup.choosel.client.views.SelectionModel;
 import org.thechiselgroup.choosel.client.views.View;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
 
@@ -60,6 +61,9 @@ public class SelectionPresenterDropCommandFactoryTest {
     @Mock
     private ResourceModel resourceModel;
 
+    @Mock
+    private SelectionModel selectionModel;
+
     @Test
     public void cannotDropIfNoResourcesFromSetAreContainedInView() {
         viewResources = spy(createResources(3, 4, 5));
@@ -84,7 +88,8 @@ public class SelectionPresenterDropCommandFactoryTest {
 
         when(dragAvatar.getResourceSet()).thenReturn(sourceSet);
         when(accessor.findView(dropTarget)).thenReturn(view);
-        when(view.getSelection()).thenReturn(selectionSet);
+        when(view.getSelectionModel()).thenReturn(selectionModel);
+        when(selectionModel.getSelection()).thenReturn(selectionSet);
         when(selectionSet.isModifiable()).thenReturn(true);
         when(view.getResourceModel()).thenReturn(resourceModel);
         when(resourceModel.getResources()).thenReturn(viewResources);

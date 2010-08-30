@@ -20,7 +20,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -44,20 +43,16 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.client.label.LabelProvider;
-import org.thechiselgroup.choosel.client.label.SelectionModelLabelFactory;
-import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceByUriTypeCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizerToMultiCategorizerAdapter;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ResourceSplitter;
+import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
+import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
-import org.thechiselgroup.choosel.client.resources.persistence.DefaultResourceSetCollector;
-import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
@@ -65,22 +60,18 @@ public class DefaultViewTest {
 
     public static class TestView extends DefaultView {
 
-        public TestView(LabelProvider selectionModelLabelFactory,
-                ResourceSetFactory resourceSetFactory,
-                ResourceSetsPresenter selectionPresenter,
-                ResourceSetsPresenter selectionDropPresenter,
-                ResourceSplitter resourceSplitter,
+        public TestView(ResourceSplitter resourceSplitter,
                 ViewContentDisplay contentDisplay, String label,
                 String contentType, ResourceItemValueResolver configuration,
+                SelectionModel selectionModel,
+                SelectionModelPresenter selectionModelPresenter,
                 ResourceModel resourceModel,
                 ResourceModelPresenter resourceModelPresenter,
                 HoverModel hoverModel) {
 
-            super(selectionModelLabelFactory, resourceSetFactory,
-                    selectionPresenter, selectionDropPresenter,
-                    resourceSplitter, contentDisplay, label, contentType,
-                    configuration, resourceModel, resourceModelPresenter,
-                    hoverModel);
+            super(resourceSplitter, contentDisplay, label, contentType,
+                    configuration, selectionModel, selectionModelPresenter,
+                    resourceModel, resourceModelPresenter, hoverModel);
         }
 
         @Override
@@ -104,16 +95,7 @@ public class DefaultViewTest {
     private ResourceItemValueResolver resourceSetToValueResolver;
 
     @Mock
-    private ResourceSet selection;
-
-    @Mock
-    private ResourceSetsPresenter selectionDropPresenter;
-
-    @Mock
     private HandlerRegistration selectionHandlerRegistration;
-
-    @Mock
-    private ResourceSetsPresenter selectionPresenter;
 
     private DefaultView underTest;
 
@@ -124,30 +106,13 @@ public class DefaultViewTest {
     @Mock
     private ResourceModelPresenter resourceModelPresenter;
 
+    @Mock
+    private SelectionModel selectionModel;
+
+    @Mock
+    private SelectionModelPresenter selectionModelPresenter;
+
     private HoverModel hoverModel;
-
-    @Test
-    public void addResourceSetToSelectionPresenterWhenAddedToSelection() {
-        ResourceSet newSelection = createResources(1);
-
-        when(resourceItem.getResourceSet()).thenReturn(newSelection);
-        underTest.getResourceModel().addResources(newSelection);
-        underTest.addSelectionSet(newSelection);
-
-        verify(selectionPresenter, times(1)).addResourceSet(newSelection);
-    }
-
-    // TODO this needs to be changed - we should not test the implementation
-    @Test
-    public void addSelectionHandlers() {
-        underTest.addSelectionSet(selection);
-        underTest.setSelection(selection);
-
-        verify(selection, times(1)).addEventHandler(
-                any(ResourcesAddedEventHandler.class));
-        verify(selection, times(1)).addEventHandler(
-                any(ResourcesRemovedEventHandler.class));
-    }
 
     private ResourceSet captureAddHighlightedResources() {
         ArgumentCaptor<ResourceSet> argument = ArgumentCaptor
@@ -163,6 +128,20 @@ public class DefaultViewTest {
         verify(resourceItem, times(1)).removeHighlightedResources(
                 argument.capture());
         return argument.getValue();
+    }
+
+    private ResourcesAddedEventHandler captureSelectionAddedHandler() {
+        ArgumentCaptor<ResourcesAddedEventHandler> captor = ArgumentCaptor
+                .forClass(ResourcesAddedEventHandler.class);
+        verify(selectionModel, times(1)).addEventHandler(captor.capture());
+        return captor.getValue();
+    }
+
+    private ResourcesRemovedEventHandler captureSelectionRemovedHandler() {
+        ArgumentCaptor<ResourcesRemovedEventHandler> captor = ArgumentCaptor
+                .forClass(ResourcesRemovedEventHandler.class);
+        verify(selectionModel, times(1)).addEventHandler(captor.capture());
+        return captor.getValue();
     }
 
     // TODO move to resource splitter test
@@ -252,11 +231,10 @@ public class DefaultViewTest {
                 new ResourceCategorizerToMultiCategorizerAdapter(
                         new ResourceByUriTypeCategorizer()), resourceSetFactory);
 
-        underTest = spy(new TestView(new SelectionModelLabelFactory(),
-                resourceSetFactory, selectionPresenter, selectionDropPresenter,
-                resourceSplitter, contentDisplay, "", "",
-                resourceSetToValueResolver, resourceModel,
-                resourceModelPresenter, hoverModel));
+        underTest = spy(new TestView(resourceSplitter, contentDisplay, "", "",
+                resourceSetToValueResolver, selectionModel,
+                selectionModelPresenter, resourceModel, resourceModelPresenter,
+                hoverModel));
 
         when(
                 contentDisplay.createResourceItem(
@@ -268,33 +246,15 @@ public class DefaultViewTest {
     @Test
     public void deselectResourceItemWhenResourceRemovedFromSelection() {
         when(resourceItem.getResourceSet()).thenReturn(createResources(1));
-
         underTest.getResourceModel().addResources(createResources(1));
 
-        selection = createResources();
-        underTest.addSelectionSet(selection);
-        underTest.setSelection(selection);
+        ResourcesRemovedEventHandler removedHandler = captureSelectionRemovedHandler();
 
-        selection.add(createResource(1));
-        selection.remove(createResource(1));
+        removedHandler.onResourcesRemoved(new ResourcesRemovedEvent(
+                createResources(), createResources(1).toList()));
 
-        verify(resourceItem, times(1)).setSelected(false);
-    }
-
-    @Test
-    public void deselectResourceItemWhenSelectionChanges() {
-        ResourceSet resources1 = createResources(1);
-        ResourceSet resource2 = createResources();
-
-        when(resourceItem.getResourceSet()).thenReturn(resources1);
-        underTest.getResourceModel().addResources(resources1);
-        underTest.addSelectionSet(resources1);
-        underTest.addSelectionSet(resource2);
-
-        underTest.setSelection(resources1);
-        underTest.setSelection(resource2);
-
-        verify(resourceItem, times(1)).setSelected(false);
+        verify(resourceItem, times(1)).removeSelectedResources(
+                createResources(1).toList());
     }
 
     @Test
@@ -333,21 +293,20 @@ public class DefaultViewTest {
     }
 
     @Test
-    public void disposeSelectionDropPresenter() {
+    public void disposeSelectionLinks() {
+        // underTest.addSelectionSet(selection);
+        // underTest.setSelection(selection);
+
         underTest.dispose();
 
-        verify(selectionDropPresenter, times(1)).dispose();
+        verify(selectionHandlerRegistration, times(2)).removeHandler();
     }
 
     @Test
-    public void disposeSelectionLinks() {
-        underTest.addSelectionSet(selection);
-        underTest.setSelection(selection);
-
+    public void disposeSelectionModelPresenter() {
         underTest.dispose();
 
-        verify(selectionPresenter, times(1)).dispose();
-        verify(selectionHandlerRegistration, times(2)).removeHandler();
+        verify(selectionModelPresenter, times(1)).dispose();
     }
 
     @Test
@@ -439,57 +398,18 @@ public class DefaultViewTest {
                 any(ResourceItem.class));
     }
 
-    /**
-     * Issue 58.
-     */
-    @Test
-    public void restoreSelectedResourceSetInSelectionPresenter() {
-        ResourceSet selection1 = createResources(1);
-        DefaultResourceSetCollector resourceSetCollector = new DefaultResourceSetCollector();
-
-        // create view & selection
-        when(resourceItem.getResourceSet()).thenReturn(createResources(1));
-        underTest.getResourceModel().addResources(createResources(1));
-        underTest.addSelectionSet(selection1);
-        underTest.setSelection(selection1);
-
-        // store old view state & restore it on new view
-        Memento memento = underTest.save(resourceSetCollector);
-        selectionPresenter = mock(ResourceSetsPresenter.class);
-        createView();
-        underTest.init();
-        underTest.doRestore(memento, resourceSetCollector);
-
-        // verify
-        verify(selectionPresenter, times(1)).setSelectedResourceSet(selection1);
-    }
-
     @Test
     public void selectResourceItemWhenResourceAddedToSelection() {
         when(resourceItem.getResourceSet()).thenReturn(createResources(1));
-
         underTest.getResourceModel().addResources(createResources(1));
 
-        selection = createResources();
-        underTest.addSelectionSet(selection);
-        underTest.setSelection(selection);
+        ResourcesAddedEventHandler addedHandler = captureSelectionAddedHandler();
 
-        selection.add(createResource(1));
+        addedHandler.onResourcesAdded(new ResourcesAddedEvent(
+                createResources(), createResources(1).toList()));
 
-        verify(resourceItem, times(1)).setSelected(true);
-    }
-
-    @Test
-    public void selectResourceItemWhenSelectionChanges() {
-        when(resourceItem.getResourceSet()).thenReturn(createResources(1));
-
-        underTest.getResourceModel().addResources(createResources(1));
-
-        selection = createResources(1);
-        underTest.addSelectionSet(selection);
-        underTest.setSelection(selection);
-
-        verify(resourceItem, times(1)).setSelected(true);
+        verify(resourceItem, times(1)).addSelectedResources(
+                createResources(1).toList());
     }
 
     @Before
@@ -501,11 +421,15 @@ public class DefaultViewTest {
         when(contentDisplay.getSlotIDs()).thenReturn(new String[] { SLOT_ID },
                 new String[] {});
 
-        when(selection.addEventHandler(any(ResourcesAddedEventHandler.class)))
+        when(
+                selectionModel
+                        .addEventHandler(any(ResourcesAddedEventHandler.class)))
                 .thenReturn(selectionHandlerRegistration);
-        when(selection.addEventHandler(any(ResourcesRemovedEventHandler.class)))
+        when(
+                selectionModel
+                        .addEventHandler(any(ResourcesRemovedEventHandler.class)))
                 .thenReturn(selectionHandlerRegistration);
-        when(selection.toArray()).thenReturn(new Object[0]);
+        // when(selection.toArray()).thenReturn(new Object[0]);
 
         when(contentDisplay.isReady()).thenReturn(true);
 
@@ -518,19 +442,6 @@ public class DefaultViewTest {
     }
 
     @Test
-    public void switchSelectionCreatesSelectionIfNoneExists() {
-        when(resourceItem.getResourceSet()).thenReturn(createResources(1));
-        underTest.getResourceModel().addResources(createResources(1));
-        underTest.setSelection(null);
-        callback.switchSelection(createResources(1));
-
-        assertEquals(1, underTest.getSelectionSets().size());
-        assertEquals(true,
-                underTest.getSelectionSets().get(0).contains(createResource(1)));
-        assertEquals(true, underTest.getSelection().contains(createResource(1)));
-    }
-
-    @Test
     public void updateCalledOnHoverModelChange() {
         ResourceSet highlightedResources = createResources(1);
         when(resourceItem.getResourceSet()).thenReturn(highlightedResources);
@@ -538,35 +449,20 @@ public class DefaultViewTest {
 
         hoverModel.setHighlightedResourceSet(highlightedResources);
 
-        verifyUpdateGetsCalledWithResourceItemAsUpdatedItem();
+        verifyUpdateCalledWithResourceItemAsUpdatedItem();
     }
 
     @Test
-    public void updateGetsCalledWhenResourceAddedToSelection() {
+    public void updateCalledWhenSelectionChanges() {
         when(resourceItem.getResourceSet()).thenReturn(createResources(1));
 
         underTest.getResourceModel().addResources(createResources(1));
 
-        selection = createResources();
-        underTest.addSelectionSet(selection);
-        underTest.setSelection(selection);
+        ResourcesAddedEventHandler addedHandler = captureSelectionAddedHandler();
+        addedHandler.onResourcesAdded(new ResourcesAddedEvent(
+                createResources(), createResources(1).toList()));
 
-        selection.add(createResource(1));
-
-        verifyUpdateGetsCalledWithResourceItemAsUpdatedItem();
-    }
-
-    @Test
-    public void updateGetsCalledWhenSelectionChanges() {
-        when(resourceItem.getResourceSet()).thenReturn(createResources(1));
-
-        underTest.getResourceModel().addResources(createResources(1));
-
-        selection = createResources(1);
-        underTest.addSelectionSet(selection);
-        underTest.setSelection(selection);
-
-        verifyUpdateGetsCalledWithResourceItemAsUpdatedItem();
+        verifyUpdateCalledWithResourceItemAsUpdatedItem();
     }
 
     @Test
@@ -583,24 +479,7 @@ public class DefaultViewTest {
                 eq(Collections.<ResourceItem> emptySet()));
     }
 
-    @Test
-    public void updateSelectionPresenterWhenSelectedSetChanges() {
-        ResourceSet selection1 = createResources(1);
-        ResourceSet selection2 = createResources();
-
-        when(resourceItem.getResourceSet()).thenReturn(createResources(1));
-        underTest.getResourceModel().addResources(createResources(1));
-        underTest.addSelectionSet(selection1);
-        underTest.addSelectionSet(selection2);
-
-        underTest.setSelection(selection1);
-        underTest.setSelection(selection2);
-
-        verify(selectionPresenter, times(1)).setSelectedResourceSet(selection1);
-        verify(selectionPresenter, times(1)).setSelectedResourceSet(selection2);
-    }
-
-    private void verifyUpdateGetsCalledWithResourceItemAsUpdatedItem() {
+    private void verifyUpdateCalledWithResourceItemAsUpdatedItem() {
         ArgumentCaptor<Set> argument = ArgumentCaptor.forClass(Set.class);
         verify(contentDisplay, times(1)).update(
                 eq(Collections.<ResourceItem> emptySet()), argument.capture(),

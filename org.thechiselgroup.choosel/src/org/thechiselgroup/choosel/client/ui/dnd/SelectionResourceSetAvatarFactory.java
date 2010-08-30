@@ -19,7 +19,7 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DelegatingResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
-import org.thechiselgroup.choosel.client.views.View;
+import org.thechiselgroup.choosel.client.views.SelectionModel;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -43,11 +43,13 @@ public class SelectionResourceSetAvatarFactory extends
         avatar.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                View v = viewAccessor.findView(avatar);
-                if (avatar.getResourceSet().equals(v.getSelection())) {
-                    v.setSelection(null);
+                SelectionModel selectionModel = viewAccessor.findView(avatar)
+                        .getSelectionModel();
+                if (avatar.getResourceSet().equals(
+                        selectionModel.getSelection())) {
+                    selectionModel.setSelection(null);
                 } else {
-                    v.setSelection(avatar.getResourceSet());
+                    selectionModel.setSelection(avatar.getResourceSet());
                 }
             }
         });
