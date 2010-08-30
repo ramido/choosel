@@ -28,4 +28,7 @@ public interface SelectionModel {
     void removeSelectionSet(ResourceSet selectionSet);
 
     void setSelection(ResourceSet newSelectionModel);
+
+    void switchSelection(ResourceSet resources);
+
 }

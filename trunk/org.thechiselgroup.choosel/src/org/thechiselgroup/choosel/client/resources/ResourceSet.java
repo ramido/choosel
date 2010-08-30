@@ -55,4 +55,5 @@ public interface ResourceSet extends HasLabel, Set<Resource> {
      * @return Unmodifiable List that contains elements from this resource set.
      */
     List<Resource> toList();
+
 }

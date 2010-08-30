@@ -107,17 +107,21 @@ public class ResourceItem implements Disposable {
         updateContent();
     }
 
-    public void addHighlightedResources(ResourceSet highlightedResources) {
+    public void addHighlightedResources(
+            Collection<Resource> highlightedResources) {
+
         this.highlightedResources
                 .addAll(calculateAffectedResources(highlightedResources));
     }
 
-    public void addSelectedResources(ResourceSet selectedResources) {
+    public void addSelectedResources(Collection<Resource> selectedResources) {
         this.selectedResources
                 .addAll(calculateAffectedResources(selectedResources));
     }
 
-    private List<Resource> calculateAffectedResources(ResourceSet resources) {
+    private List<Resource> calculateAffectedResources(
+            Collection<Resource> resources) {
+
         assert resources != null;
 
         List<Resource> affectedResources = new ArrayList<Resource>();
@@ -271,12 +275,14 @@ public class ResourceItem implements Disposable {
         return selected;
     }
 
-    public void removeHighlightedResources(ResourceSet highlightedResources) {
+    public void removeHighlightedResources(
+            Collection<Resource> highlightedResources) {
+
         this.highlightedResources
                 .removeAll(calculateAffectedResources(highlightedResources));
     }
 
-    public void removeSelectedResources(ResourceSet selectedResources) {
+    public void removeSelectedResources(Collection<Resource> selectedResources) {
         this.selectedResources
                 .removeAll(calculateAffectedResources(selectedResources));
     }
