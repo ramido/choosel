@@ -64,6 +64,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -419,19 +420,18 @@ public class DefaultView extends AbstractWindowContent implements View {
         initConfigurationMenu();
         initViewMenu();
 
+        HorizontalPanel panel = new HorizontalPanel();
+
         Widget widget = selectionModel.asDropPresenterWidget();
-
-        configurationPanel.add(widget, DockPanel.EAST);
-        configurationPanel.setCellHorizontalAlignment(widget,
-                HasAlignment.ALIGN_RIGHT);
-
         Widget widget2 = selectionModel.asSelectionPresenterWidget();
 
-        configurationPanel.add(widget2, DockPanel.EAST);
-        configurationPanel.setCellHorizontalAlignment(widget2,
-                HasAlignment.ALIGN_RIGHT);
-        configurationPanel.setCellWidth(widget2, "100%"); // eats up all space
+        panel.add(widget2);
+        panel.add(widget);
 
+        configurationPanel.add(panel, DockPanel.EAST);
+        configurationPanel.setCellHorizontalAlignment(panel,
+                HasAlignment.ALIGN_RIGHT);
+        configurationPanel.setCellWidth(panel, "100%"); // eats up all space
     }
 
     // TODO eliminate inner class, implement methods in DefaultView & test them
