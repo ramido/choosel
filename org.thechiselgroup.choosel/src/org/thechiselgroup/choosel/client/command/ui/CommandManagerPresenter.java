@@ -25,14 +25,14 @@ import org.thechiselgroup.choosel.client.command.CommandRedoneEventHandler;
 import org.thechiselgroup.choosel.client.command.CommandUndoneEvent;
 import org.thechiselgroup.choosel.client.command.CommandUndoneEventHandler;
 import org.thechiselgroup.choosel.client.command.UndoableCommand;
-import org.thechiselgroup.choosel.client.ui.Presenter;
 import org.thechiselgroup.choosel.client.util.HasDescription;
+import org.thechiselgroup.choosel.client.util.Initializable;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 
-public class CommandManagerPresenter implements Presenter {
+public class CommandManagerPresenter implements Initializable {
 
     private class CommandManagerHandler implements CommandAddedEventHandler,
             CommandRedoneEventHandler, CommandUndoneEventHandler,

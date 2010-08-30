@@ -21,11 +21,12 @@ import org.thechiselgroup.choosel.client.resources.ResourceSetAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceSetRemovedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourceSetRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
+import org.thechiselgroup.choosel.client.ui.Presenter;
 
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class DefaultResourceModelPresenter implements ResourceModelPresenter {
+public class DefaultResourceModelPresenter implements Presenter {
 
     private ResourceSetsPresenter inputResourceSetsPresenter;
 

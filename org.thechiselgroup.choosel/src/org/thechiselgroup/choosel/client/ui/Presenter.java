@@ -15,14 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui;
 
+import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.util.Initializable;
 
-public interface Presenter extends Initializable {
-
-    /*
-     * Does not extend WidgetAdaptable, because the configuration of the actual
-     * display could happen outside the presenter and involve showing parts of
-     * it at different locations on the screen.
-     */
+public interface Presenter extends Initializable, Disposable, WidgetAdaptable {
 
 }

@@ -17,11 +17,8 @@ package org.thechiselgroup.choosel.client.resources.ui;
 
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.Presenter;
-import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
-import org.thechiselgroup.choosel.client.util.Disposable;
 
-public interface ResourceSetsPresenter extends Presenter, Disposable,
-        WidgetAdaptable {
+public interface ResourceSetsPresenter extends Presenter {
 
     void addResourceSet(ResourceSet resources);
 

@@ -43,6 +43,7 @@ import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.client.ui.CSS;
+import org.thechiselgroup.choosel.client.ui.Presenter;
 import org.thechiselgroup.choosel.client.ui.WidgetFactory;
 import org.thechiselgroup.choosel.client.ui.popup.DefaultPopupManager;
 import org.thechiselgroup.choosel.client.util.Disposable;
@@ -54,7 +55,6 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockPanel;
@@ -129,27 +129,22 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private ResourceSplitter resourceSplitter;
 
-    private HandlerRegistration selectionResourceAddedHandlerRegistration;
-
-    private HandlerRegistration selectionResourceRemovedHandlerRegistration;
-
     private ResourceModel resourceModel;
 
-    private ResourceModelPresenter resourceModelPresenter;
+    private Presenter resourceModelPresenter;
 
     private HandlerRegistrationSet handlerRegistrations = new HandlerRegistrationSet();
 
     private SelectionModel selectionModel;
 
-    private SelectionModelPresenter selectionModelPresenter;
+    private Presenter selectionModelPresenter;
 
     public DefaultView(ResourceSplitter resourceSplitter,
             ViewContentDisplay contentDisplay, String label,
             String contentType, ResourceItemValueResolver configuration,
-            SelectionModel selectionModel,
-            SelectionModelPresenter selectionModelPresenter,
-            ResourceModel resourceModel,
-            ResourceModelPresenter resourceModelPresenter, HoverModel hoverModel) {
+            SelectionModel selectionModel, Presenter selectionModelPresenter,
+            ResourceModel resourceModel, Presenter resourceModelPresenter,
+            HoverModel hoverModel) {
 
         super(label, contentType);
 
@@ -186,7 +181,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         Set<Resource> affectedResourcesInThisView = resourceModel
                 .retain(affectedResources);
 
-        // TODO ResourceSet should inherit Set<Resource>
         ResourceSet affectedResourcesInThisView2 = new DefaultResourceSet();
         affectedResourcesInThisView2.addAll(affectedResourcesInThisView);
         return affectedResourcesInThisView2;
@@ -226,20 +220,12 @@ public class DefaultView extends AbstractWindowContent implements View {
     public void dispose() {
         Log.debug("dispose view " + toString());
 
-        removeSelectionModelResourceHandlers();
-
         for (ResourceItem resourceItem : categoriesToResourceItems.values()) {
             resourceItem.dispose();
         }
 
-        // XXX what if the models are shared between different views?
-        if (resourceModel instanceof Disposable) {
-            ((Disposable) resourceModel).dispose();
-        }
-
-        if (selectionModel instanceof Disposable) {
-            ((Disposable) selectionModel).dispose();
-        }
+        dispose(resourceModel);
+        dispose(selectionModel);
 
         resourceModel = null;
         allResourcesToSplitterForwarder.dispose();
@@ -259,13 +245,19 @@ public class DefaultView extends AbstractWindowContent implements View {
         handlerRegistrations = null;
     }
 
+    private void dispose(Object target) {
+        if (target instanceof Disposable) {
+            ((Disposable) target).dispose();
+        }
+    }
+
     // protected for test access
     protected void doRestore(Memento state, ResourceSetAccessor accessor) {
         contentDisplay.startRestore();
 
-        restoreResourceModel(state, accessor);
-        restoreSelectionModel(state, accessor);
-        restoreContentDisplay(state);
+        restore(resourceModel, MEMENTO_RESOURCE_MODEL, state, accessor);
+        restore(selectionModel, MEMENTO_SELECTION_MODEL, state, accessor);
+        contentDisplay.restore(state.getChild(MEMENTO_CONTENT_DISPLAY));
 
         contentDisplay.endRestore();
     }
@@ -317,15 +309,10 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     @Override
     public void init() {
-        // TODO refactor
-        if (resourceModel instanceof Initializable) {
-            ((Initializable) resourceModel).init();
-        }
+        init(resourceModel);
 
-        if (selectionModel instanceof Initializable) {
-            ((Initializable) selectionModel).init();
-        }
-        initSelectionModel();
+        init(selectionModel);
+        initSelectionModelEventHandlers();
 
         resourceModelPresenter.init();
 
@@ -336,6 +323,12 @@ public class DefaultView extends AbstractWindowContent implements View {
         initUI();
 
         initContentDisplay();
+    }
+
+    private void init(Object target) {
+        if (target instanceof Initializable) {
+            ((Initializable) target).init();
+        }
     }
 
     private void initAllResourcesToResourceSplitterLink() {
@@ -499,23 +492,21 @@ public class DefaultView extends AbstractWindowContent implements View {
         });
     }
 
-    private void initSelectionModel() {
-        selectionResourceAddedHandlerRegistration = selectionModel
+    private void initSelectionModelEventHandlers() {
+        handlerRegistrations.addHandlerRegistration(selectionModel
                 .addEventHandler(new ResourcesAddedEventHandler() {
                     @Override
                     public void onResourcesAdded(ResourcesAddedEvent e) {
-                        updateSelectionStatusDisplay(e.getAddedResources(),
-                                true);
+                        updateSelection(e.getAddedResources(), true);
                     }
-                });
-        selectionResourceRemovedHandlerRegistration = selectionModel
+                }));
+        handlerRegistrations.addHandlerRegistration(selectionModel
                 .addEventHandler(new ResourcesRemovedEventHandler() {
                     @Override
                     public void onResourcesRemoved(ResourcesRemovedEvent e) {
-                        updateSelectionStatusDisplay(e.getRemovedResources(),
-                                false);
+                        updateSelection(e.getRemovedResources(), false);
                     }
-                });
+                }));
     }
 
     private void initSelectionModelPresenter() {
@@ -602,16 +593,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         return resourceItem;
     }
 
-    private void removeSelectionModelResourceHandlers() {
-        if (selectionModel != null) {
-            selectionResourceAddedHandlerRegistration.removeHandler();
-            selectionResourceRemovedHandlerRegistration.removeHandler();
-        }
-
-        selectionResourceAddedHandlerRegistration = null;
-        selectionResourceRemovedHandlerRegistration = null;
-    }
-
     protected void resize(int width, int height) {
         /*
          * special resize method required, because otherwise window height
@@ -650,70 +631,37 @@ public class DefaultView extends AbstractWindowContent implements View {
         }
     }
 
-    private void restoreContentDisplay(Memento state) {
-        Memento contentDisplayState = state.getChild(MEMENTO_CONTENT_DISPLAY);
-        contentDisplay.restore(contentDisplayState);
-    }
-
-    private void restoreResourceModel(Memento state,
+    private void restore(Object target, String mementoKey, Memento state,
             ResourceSetAccessor accessor) {
 
-        if (!(this.resourceModel instanceof Persistable)) {
-            return;
+        if (target instanceof Persistable) {
+            ((Persistable) target)
+                    .restore(state.getChild(mementoKey), accessor);
         }
-
-        ((Persistable) this.resourceModel).restore(
-                state.getChild(MEMENTO_RESOURCE_MODEL), accessor);
     }
 
-    private void restoreSelectionModel(Memento state,
-            ResourceSetAccessor accessor) {
+    private void save(Object target, String mementoKey,
+            ResourceSetCollector persistanceManager, Memento memento) {
 
-        if (!(this.selectionModel instanceof Persistable)) {
-            return;
+        if (target instanceof Persistable) {
+            memento.addChild(mementoKey,
+                    ((Persistable) resourceModel).save(persistanceManager));
         }
-
-        ((Persistable) this.selectionModel).restore(
-                state.getChild(MEMENTO_SELECTION_MODEL), accessor);
     }
 
     @Override
-    public Memento save(ResourceSetCollector persistanceManager) {
+    public Memento save(ResourceSetCollector resourceSetCollector) {
         Memento memento = new Memento();
 
-        storeSelectionModel(persistanceManager, memento);
-        storeResourceModel(persistanceManager, memento);
-        storeContentDisplaySettings(memento);
+        save(selectionModel, MEMENTO_SELECTION_MODEL, resourceSetCollector,
+                memento);
+        save(resourceModel, MEMENTO_RESOURCE_MODEL, resourceSetCollector,
+                memento);
+        memento.addChild(MEMENTO_CONTENT_DISPLAY, contentDisplay.save());
 
-        // TODO later: store layer settings
+        // TODO later: store configuration settings
 
         return memento;
-    }
-
-    private void storeContentDisplaySettings(Memento memento) {
-        memento.addChild(MEMENTO_CONTENT_DISPLAY, contentDisplay.save());
-    }
-
-    private void storeResourceModel(ResourceSetCollector persistanceManager,
-            Memento memento) {
-
-        if (!(this.resourceModel instanceof Persistable)) {
-            return;
-        }
-
-        memento.addChild(MEMENTO_RESOURCE_MODEL,
-                ((Persistable) resourceModel).save(persistanceManager));
-    }
-
-    private void storeSelectionModel(ResourceSetCollector persistanceManager,
-            Memento memento) {
-
-        if (!(this.resourceModel instanceof Persistable)) {
-            return;
-        }
-
-        memento.addChild(MEMENTO_SELECTION_MODEL,
-                ((Persistable) selectionModel).save(persistanceManager));
     }
 
     private void updateHighlighting(List<Resource> affectedResources,
@@ -787,12 +735,9 @@ public class DefaultView extends AbstractWindowContent implements View {
                 Collections.<ResourceItem> emptySet(), removedResourceItems);
     }
 
-    private void updateSelectionStatusDisplay(List<Resource> resources,
-            boolean selected) {
-
+    private void updateSelection(List<Resource> resources, boolean selected) {
         Set<ResourceItem> resourceItems = getResourceItems(resources);
         for (ResourceItem resourceItem : resourceItems) {
-            resourceItem.setSelected(selected); // TODO remove old code
             // TODO test case (similar to highlighting)
             if (selected) {
                 resourceItem.addSelectedResources(resources);

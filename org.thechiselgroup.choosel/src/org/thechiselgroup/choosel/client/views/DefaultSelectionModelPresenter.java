@@ -22,11 +22,12 @@ import org.thechiselgroup.choosel.client.resources.ResourceSetAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceSetRemovedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourceSetRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
+import org.thechiselgroup.choosel.client.ui.Presenter;
 
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class DefaultSelectionModelPresenter implements SelectionModelPresenter {
+public class DefaultSelectionModelPresenter implements Presenter {
 
     private ResourceSetsPresenter selectionDropPresenter;
 
