@@ -109,7 +109,14 @@ public class DotChart extends ChartWidget {
                 .getResourceItem()
                 .removeHighlightedResources(
                         chartItems.get(i).getResourceItem().getResourceSet());
+    }
 
+    private void deselectResources(int i) {
+        chartItems
+                .get(i)
+                .getResourceItem()
+                .removeSelectedResources(
+                        chartItems.get(i).getResourceItem().getResourceSet());
     }
 
     @Override
@@ -194,7 +201,7 @@ public class DotChart extends ChartWidget {
                 for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chartItems.@java.util.ArrayList::size()(); i++) {
                     if(isInSelectionBox(d,i)) {
                         updateMinusPlus(d,i);
-        //                        thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.DotChart::deselectResources(I)(i);
+                        thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.DotChart::deselectResources(I)(i);
                         doReturn = true;
                     }
                 }
@@ -231,7 +238,7 @@ public class DotChart extends ChartWidget {
                 for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chartItems.@java.util.ArrayList::size()(); i++) {
                     if(isInSelectionBox(d,i)) {
                         updateMinusPlus(d,i);
-        //                        thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.DotChart::selectResources(I)(i);
+                        thisChart.@org.thechiselgroup.choosel.client.ui.widget.chart.DotChart::selectResources(I)(i);
                         doReturn = true;
                     }
                 }
@@ -276,10 +283,10 @@ public class DotChart extends ChartWidget {
         function removeBoxes(d) {
             plusBox.visible(false);
             plus.visible(false);
-            plus.textStyle("rgba(0,0,0,.25)");
+            plus.textStyle("black");
             minusBox.visible(false);
             minus.visible(false);
-            minus.textStyle("rgba(0,0,0,.25)");
+            minus.textStyle("black");
 
             d.dx = 0;
             d.dy = 0;
@@ -319,7 +326,6 @@ public class DotChart extends ChartWidget {
                 .getResourceItem()
                 .addHighlightedResources(
                         chartItems.get(i).getResourceItem().getResourceSet());
-
     }
 
     private boolean isInSelectionBox(int x, int y, int dx, int dy, int i) {
@@ -330,10 +336,23 @@ public class DotChart extends ChartWidget {
                         + dy;
     }
 
+    private boolean isSelected(int i) {
+        return chartItems.get(i).getResourceItem().getSelectedResources()
+                .contains(chartItems.get(i));
+    }
+
     @Override
     protected void registerEventHandler(String eventType,
             ProtovisEventHandler handler) {
         regularDot.event(eventType, handler);
+    }
+
+    private void selectResources(int i) {
+        chartItems
+                .get(i)
+                .getResourceItem()
+                .addSelectedResources(
+                        chartItems.get(i).getResourceItem().getResourceSet());
     }
 
     private void setChartParameters() {

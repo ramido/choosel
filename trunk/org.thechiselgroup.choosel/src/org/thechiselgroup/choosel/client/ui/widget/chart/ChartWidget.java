@@ -172,7 +172,14 @@ public abstract class ChartWidget extends Widget {
 
     protected int calculateHighlightedResources(int i) {
         return chartItems.get(i).getResourceItem().getHighlightedResources()
-                .size();
+                .size()
+                - chartItems.get(i).getResourceItem()
+                        .getHighlightedSelectedResources().size();
+    }
+
+    protected int calculateHighlightedSelectedResources(int i) {
+        return chartItems.get(i).getResourceItem()
+                .getHighlightedSelectedResources().size();
     }
 
     // TODO different slots
@@ -188,6 +195,13 @@ public abstract class ChartWidget extends Widget {
                 maxChartItemValue = currentItem;
             }
         }
+    }
+
+    protected int calculateSelectedResources(int i) {
+        return chartItems.get(i).getResourceItem().getSelectedResources()
+                .size()
+                - chartItems.get(i).getResourceItem()
+                        .getHighlightedSelectedResources().size();
     }
 
     public void checkResize() {
@@ -238,6 +252,16 @@ public abstract class ChartWidget extends Widget {
         for (ChartItem chartItem : chartItems) {
             Status status = chartItem.getResourceItem().getStatus();
             if ((status == Status.PARTIALLY_HIGHLIGHTED || status == Status.PARTIALLY_HIGHLIGHTED_SELECTED)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasPartiallySelectedChartItems() {
+        for (ChartItem chartItem : chartItems) {
+            Status status = chartItem.getResourceItem().getStatus();
+            if ((status == Status.PARTIALLY_SELECTED || status == Status.PARTIALLY_HIGHLIGHTED_SELECTED)) {
                 return true;
             }
         }
