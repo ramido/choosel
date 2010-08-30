@@ -16,8 +16,8 @@
 package org.thechiselgroup.choosel.client.command.ui;
 
 import org.thechiselgroup.choosel.client.ui.HasEnabledState;
-import org.thechiselgroup.choosel.client.ui.Presenter;
 import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
+import org.thechiselgroup.choosel.client.util.Initializable;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -27,7 +27,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Widget;
 
 // TODO refactor: undoable command only
-public class CommandPresenter implements WidgetAdaptable, Presenter {
+public class CommandPresenter implements WidgetAdaptable, Initializable {
 
     public static class ButtonDisplay extends Button implements Display,
             HasEnabledState {

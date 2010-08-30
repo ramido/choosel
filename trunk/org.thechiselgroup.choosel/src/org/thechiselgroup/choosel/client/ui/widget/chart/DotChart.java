@@ -112,11 +112,6 @@ public class DotChart extends ChartWidget {
 
     }
 
-    private void deselectResources(int i) {
-        chartItems.get(i).getResourceItem().setSelected(false);
-
-    }
-
     @Override
     public void drawChart() {
         assert chartItems.size() >= 1;
@@ -339,10 +334,6 @@ public class DotChart extends ChartWidget {
     protected void registerEventHandler(String eventType,
             ProtovisEventHandler handler) {
         regularDot.event(eventType, handler);
-    }
-
-    private void selectResources(int i) {
-        chartItems.get(i).getResourceItem().setSelected(true);
     }
 
     private void setChartParameters() {

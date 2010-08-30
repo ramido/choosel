@@ -15,13 +15,15 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui;
 
+import org.thechiselgroup.choosel.client.util.Initializable;
+
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.TextBox;
 
 // TODO need command factory or command with execute(String) -- insertion buggy
 // TODO presenter-display separation
-public class TextCommandPresenter implements Presenter {
+public class TextCommandPresenter implements Initializable {
 
     private String buttonLabel;
 

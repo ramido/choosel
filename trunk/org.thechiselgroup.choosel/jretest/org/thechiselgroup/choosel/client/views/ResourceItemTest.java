@@ -381,7 +381,6 @@ public class ResourceItemTest {
 
     @Test
     public void statusIsDefault() {
-        underTest.setSelected(false);
         assertEquals(Status.DEFAULT, underTest.getStatus());
     }
 
@@ -405,7 +404,6 @@ public class ResourceItemTest {
         resources.addAll(createResources(1));
         underTest.addHighlightedResources(createResources(1));
         underTest.removeHighlightedResources(createResources(1));
-        underTest.setSelected(false);
         assertEquals(Status.DEFAULT, underTest.getStatus());
     }
 
@@ -413,7 +411,6 @@ public class ResourceItemTest {
     public void statusIsNotHighlightedOnEmptyAdd() {
         resources.addAll(createResources(1));
         underTest.addHighlightedResources(createResources(2));
-        underTest.setSelected(false);
         assertEquals(Status.DEFAULT, underTest.getStatus());
     }
 

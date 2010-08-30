@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.workspace;
 
-import org.thechiselgroup.choosel.client.ui.Presenter;
+import org.thechiselgroup.choosel.client.util.Initializable;
 
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -28,7 +28,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.inject.Inject;
 
 // TODO split into different presenters for save & title
-public class WorkspacePresenter implements Presenter {
+public class WorkspacePresenter implements Initializable {
 
     public static class DefaultWorkspacePresenterDisplay implements
             WorkspacePresenterDisplay {

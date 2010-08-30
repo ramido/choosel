@@ -53,6 +53,7 @@ import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
+import org.thechiselgroup.choosel.client.ui.Presenter;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
@@ -64,10 +65,8 @@ public class DefaultViewTest {
                 ViewContentDisplay contentDisplay, String label,
                 String contentType, ResourceItemValueResolver configuration,
                 SelectionModel selectionModel,
-                SelectionModelPresenter selectionModelPresenter,
-                ResourceModel resourceModel,
-                ResourceModelPresenter resourceModelPresenter,
-                HoverModel hoverModel) {
+                Presenter selectionModelPresenter, ResourceModel resourceModel,
+                Presenter resourceModelPresenter, HoverModel hoverModel) {
 
             super(resourceSplitter, contentDisplay, label, contentType,
                     configuration, selectionModel, selectionModelPresenter,
@@ -95,7 +94,10 @@ public class DefaultViewTest {
     private ResourceItemValueResolver resourceSetToValueResolver;
 
     @Mock
-    private HandlerRegistration selectionHandlerRegistration;
+    private HandlerRegistration selectionAddedHandlerRegistration;
+
+    @Mock
+    private HandlerRegistration selectionRemovedHandlerRegistration;
 
     private DefaultView underTest;
 
@@ -104,13 +106,13 @@ public class DefaultViewTest {
     private ResourceModel resourceModel;
 
     @Mock
-    private ResourceModelPresenter resourceModelPresenter;
+    private Presenter resourceModelPresenter;
 
     @Mock
     private SelectionModel selectionModel;
 
     @Mock
-    private SelectionModelPresenter selectionModelPresenter;
+    private Presenter selectionModelPresenter;
 
     private HoverModel hoverModel;
 
@@ -293,13 +295,11 @@ public class DefaultViewTest {
     }
 
     @Test
-    public void disposeSelectionLinks() {
-        // underTest.addSelectionSet(selection);
-        // underTest.setSelection(selection);
-
+    public void disposeSelectionModelEventHandlers() {
         underTest.dispose();
 
-        verify(selectionHandlerRegistration, times(2)).removeHandler();
+        verify(selectionAddedHandlerRegistration, times(1)).removeHandler();
+        verify(selectionRemovedHandlerRegistration, times(1)).removeHandler();
     }
 
     @Test
@@ -424,12 +424,11 @@ public class DefaultViewTest {
         when(
                 selectionModel
                         .addEventHandler(any(ResourcesAddedEventHandler.class)))
-                .thenReturn(selectionHandlerRegistration);
+                .thenReturn(selectionAddedHandlerRegistration);
         when(
                 selectionModel
                         .addEventHandler(any(ResourcesRemovedEventHandler.class)))
-                .thenReturn(selectionHandlerRegistration);
-        // when(selection.toArray()).thenReturn(new Object[0]);
+                .thenReturn(selectionRemovedHandlerRegistration);
 
         when(contentDisplay.isReady()).thenReturn(true);
 

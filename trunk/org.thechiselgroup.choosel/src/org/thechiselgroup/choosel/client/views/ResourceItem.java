@@ -60,8 +60,6 @@ public class ResourceItem implements Disposable {
     // TODO update & paint on changes in resources!!!
     private final ResourceSet resources;
 
-    private boolean selected;
-
     private final ResourceItemValueResolver valueResolver;
 
     private HighlightingManager highlightingManager;
@@ -271,10 +269,6 @@ public class ResourceItem implements Disposable {
         });
     }
 
-    public boolean isSelected() {
-        return selected;
-    }
-
     public void removeHighlightedResources(
             Collection<Resource> highlightedResources) {
 
@@ -298,15 +292,6 @@ public class ResourceItem implements Disposable {
      */
     public void setDisplayObject(Object displayObject) {
         this.displayObject = displayObject;
-    }
-
-    public void setSelected(boolean selected) {
-        if (this.selected == selected) {
-            return;
-        }
-
-        this.selected = selected;
-        updateStyling();
     }
 
     /**
