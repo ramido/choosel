@@ -146,6 +146,7 @@ public class CircularBarChart extends ChartWidget {
     public void drawChart() {
         assert chartItems.size() >= 1;
 
+        calculateMaximumChartItemValue();
         drawScale();
         drawWedge();
     }

@@ -85,8 +85,8 @@ public class BarChart extends ChartWidget {
 
     private ProtovisFunctionDouble barStart = new ProtovisFunctionDouble() {
         @Override
-        public double f(ChartItem value, int index) {
-            return barWidth.f(value, index) / 2 + index
+        public double f(ChartItem value, int i) {
+            return barWidth.f(value, i) / 2 + i
                     * layout.getBarWidthSpace(chartHeight, chartWidth)
                     / chartItems.size();
         }
@@ -107,8 +107,8 @@ public class BarChart extends ChartWidget {
         }
 
         @Override
-        public double f(ChartItem value, int index) {
-            return calculateLength(highlightedBarCounts[index]);
+        public double f(ChartItem value, int i) {
+            return calculateLength(highlightedBarCounts[i]);
         }
     };
 
@@ -222,6 +222,7 @@ public class BarChart extends ChartWidget {
         calculateChartVariables();
         setChartParameters();
 
+        calculateMaximumChartItemValue();
         if (layout.isVerticalBarChart(chartHeight, chartWidth)) {
             Scale scale = Scale.linear(0, getMaximumChartItemValue()).range(0,
                     chartHeight);

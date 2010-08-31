@@ -58,6 +58,10 @@ public class ChartItem {
         return resourceItem;
     }
 
+    public ChartViewContentDisplay getView() {
+        return view;
+    }
+
     // TODO find better way to separate controller
     public void onEvent(Event e) {
         switch (e.getTypeInt()) {
