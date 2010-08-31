@@ -168,7 +168,7 @@ public class ResourceItem implements Disposable {
         return highlightingManager;
     }
 
-    SubsetStatus getHighlightStatus() {
+    public SubsetStatus getHighlightStatus() {
         if (cachedHighlightStatus == null) {
             cachedHighlightStatus = getSubsetStatus(highlightedResources);
         }
@@ -193,7 +193,7 @@ public class ResourceItem implements Disposable {
         return selectedResources;
     }
 
-    SubsetStatus getSelectionStatus() {
+    public SubsetStatus getSelectionStatus() {
         if (cachedSelectedStatus == null) {
             cachedSelectedStatus = getSubsetStatus(selectedResources);
         }
