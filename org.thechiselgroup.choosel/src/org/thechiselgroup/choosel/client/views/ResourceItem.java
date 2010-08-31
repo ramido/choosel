@@ -22,10 +22,6 @@ import java.util.List;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
-import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 import org.thechiselgroup.choosel.client.ui.popup.PopupClosingEvent;
 import org.thechiselgroup.choosel.client.ui.popup.PopupClosingHandler;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
@@ -100,9 +96,6 @@ public class ResourceItem implements Disposable {
 
         initHighlighting();
         initPopupHighlighting();
-        initResourceEventHandling(resources);
-
-        updateContent();
     }
 
     public void addHighlightedResources(
@@ -270,21 +263,6 @@ public class ResourceItem implements Disposable {
         });
     }
 
-    private void initResourceEventHandling(ResourceSet resources) {
-        resources.addEventHandler(new ResourcesAddedEventHandler() {
-            @Override
-            public void onResourcesAdded(ResourcesAddedEvent e) {
-                updateContent();
-            }
-        });
-        resources.addEventHandler(new ResourcesRemovedEventHandler() {
-            @Override
-            public void onResourcesRemoved(ResourcesRemovedEvent e) {
-                updateContent();
-            }
-        });
-    }
-
     public void removeHighlightedResources(
             Collection<Resource> highlightedResources) {
 
@@ -310,26 +288,4 @@ public class ResourceItem implements Disposable {
         this.displayObject = displayObject;
     }
 
-    /**
-     * Should be overridden by subclasses to apply correct styling to the visual
-     * representation. Gets called whenever status (highlighting, selecting,
-     * etc.) changes.
-     * 
-     * @param status
-     *            Current status of resource item.
-     */
-    protected void setStatusStyling(Status status) {
-
-    }
-
-    /**
-     * Should be overridden by subclasses to update the content of the visual
-     * representation. Gets called whenever the underlying resource set changes.
-     */
-    protected void updateContent() {
-    }
-
-    protected void updateStyling() {
-        setStatusStyling(getStatus());
-    }
 }

@@ -15,10 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
-
-public abstract class IconResourceItem extends ResourceItem {
+public abstract class IconResourceItem {
 
     protected static final String CSS_RESOURCE_ITEM_ICON = "resourceItemIcon";
 
@@ -34,12 +31,19 @@ public abstract class IconResourceItem extends ResourceItem {
 
     private String selectedColor;
 
-    public IconResourceItem(String category, ResourceSet resources,
-            HoverModel hoverModel, PopupManager popupManager,
-            ResourceItemValueResolver layerModel) {
+    // TODO pull up
+    protected ResourceItem resourceItem;
 
-        super(category, resources, hoverModel, popupManager, layerModel);
-        initColors();
+    public IconResourceItem(ResourceItem resourceItem) {
+        assert resourceItem != null;
+
+        this.resourceItem = resourceItem;
+
+        // TODO move colors to color provider
+        // TODO add border (should be automatically calculated based on color)
+        defaultColor = (String) getResourceValue(SlotResolver.COLOR_SLOT);
+        highlightColor = "#FDF49A";
+        selectedColor = "#E7B076";
     }
 
     // XXX likely to break, needs refactoring
@@ -66,16 +70,13 @@ public abstract class IconResourceItem extends ResourceItem {
         return highlightColor;
     }
 
-    protected String getSelectedColor() {
-        return selectedColor;
+    // TODO pull up
+    protected Object getResourceValue(String key) {
+        return resourceItem.getResourceValue(key);
     }
 
-    private void initColors() {
-        // TODO move colors to color provider
-        // TODO add border (should be automatically calculated based on color)
-        defaultColor = (String) getResourceValue(SlotResolver.COLOR_SLOT);
-        highlightColor = "#FDF49A";
-        selectedColor = "#E7B076";
+    protected String getSelectedColor() {
+        return selectedColor;
     }
 
 }

@@ -19,17 +19,13 @@ import java.util.Date;
 import java.util.Set;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
-import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.ui.widget.timeline.TimeLineEvent;
 import org.thechiselgroup.choosel.client.ui.widget.timeline.TimeLineWidget;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
-import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -64,14 +60,11 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
         timelineWidget.layout();
     }
 
-    @Override
-    public ResourceItem createResourceItem(ResourceItemValueResolver resolver,
-            String category, ResourceSet resources, HoverModel hoverModel) {
-
-        PopupManager popupManager = createPopupManager(resolver, resources);
-
-        return new TimeLineItem(category, resources, this, popupManager,
-                hoverModel, resolver, dragEnablerFactory);
+    private void createTimeLineItems(Set<ResourceItem> addedResourceItems) {
+        for (ResourceItem resourceItem : addedResourceItems) {
+            resourceItem.setDisplayObject(new TimeLineItem(resourceItem, this,
+                    dragEnablerFactory));
+        }
     }
 
     @Override
@@ -100,7 +93,7 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
         TimeLineEvent[] events = new TimeLineEvent[resourceItems.size()];
         int counter = 0;
         for (ResourceItem item : resourceItems) {
-            TimeLineItem timelineItem = (TimeLineItem) item;
+            TimeLineItem timelineItem = (TimeLineItem) item.getDisplayObject();
             events[counter++] = timelineItem.getTimeLineEvent();
         }
         return events;
@@ -112,10 +105,6 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
 
     private void removeEventsFromTimeline(Set<ResourceItem> removedResourceItems) {
         timelineWidget.removeEvents(getTimeLineEvents(removedResourceItems));
-    }
-
-    @Override
-    public void removeResourceItem(ResourceItem resourceItem) {
     }
 
     @Override
@@ -144,15 +133,25 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
             Set<ResourceItem> updatedResourceItems,
             Set<ResourceItem> removedResourceItems) {
 
-        super.update(addedResourceItems, updatedResourceItems,
-                removedResourceItems);
-
         if (!addedResourceItems.isEmpty()) {
+            createTimeLineItems(addedResourceItems);
             addEventsToTimeline(addedResourceItems);
+            updateStatusStyling(addedResourceItems);
+        }
+
+        if (!updatedResourceItems.isEmpty()) {
+            updateStatusStyling(updatedResourceItems);
         }
 
         if (!removedResourceItems.isEmpty()) {
             removeEventsFromTimeline(removedResourceItems);
+        }
+    }
+
+    private void updateStatusStyling(Set<ResourceItem> resourceItems) {
+        for (ResourceItem resourceItem : resourceItems) {
+            ((TimeLineItem) resourceItem.getDisplayObject())
+                    .setStatusStyling(resourceItem.getStatus());
         }
     }
 }

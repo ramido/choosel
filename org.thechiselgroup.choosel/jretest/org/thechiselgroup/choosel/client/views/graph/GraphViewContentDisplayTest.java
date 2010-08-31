@@ -272,7 +272,8 @@ public class GraphViewContentDisplayTest {
                 Collections.<ResourceItem> emptySet(),
                 Collections.<ResourceItem> emptySet());
 
-        underTest.removeResourceItem(resourceItem);
+        underTest.update(Collections.<ResourceItem> emptySet(),
+                Collections.<ResourceItem> emptySet(), toSet(resourceItem));
 
         assertContentEquals(createResources(), underTest.getAllResources());
 
@@ -297,7 +298,8 @@ public class GraphViewContentDisplayTest {
 
         ArgumentCaptor<Arc> captor = ArgumentCaptor.forClass(Arc.class);
 
-        underTest.removeResourceItem(resourceItem1);
+        underTest.update(Collections.<ResourceItem> emptySet(),
+                Collections.<ResourceItem> emptySet(), toSet(resourceItem1));
 
         verify(display, times(1)).removeArc(captor.capture());
     }
@@ -321,7 +323,8 @@ public class GraphViewContentDisplayTest {
 
         ArgumentCaptor<Arc> captor = ArgumentCaptor.forClass(Arc.class);
 
-        underTest.removeResourceItem(resourceItem2);
+        underTest.update(Collections.<ResourceItem> emptySet(),
+                Collections.<ResourceItem> emptySet(), toSet(resourceItem2));
 
         verify(display, times(1)).removeArc(captor.capture());
     }

@@ -16,7 +16,6 @@
 package org.thechiselgroup.choosel.client.views;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -353,20 +352,6 @@ public class ResourceItemTest {
         underTest.addSelectedResources(createResources(1));
 
         assertEquals(SubsetStatus.PARTIAL, underTest.getSelectionStatus());
-    }
-
-    @Test
-    public void setHighlightedNeverCallsUpdateStyling() {
-        resources.addAll(createResources(1));
-        underTest.addHighlightedResources(createResources(1));
-        verify(underTest, never()).updateStyling();
-    }
-
-    @Test
-    public void setSelectedNeverCallsUpdateStyling() {
-        resources.addAll(createResources(1));
-        underTest.addSelectedResources(createResources(1));
-        verify(underTest, never()).updateStyling();
     }
 
     @Before

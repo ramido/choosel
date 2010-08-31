@@ -82,11 +82,6 @@ public abstract class ChartViewContentDisplay extends
 
     // TODO implement
     @Override
-    public void removeResourceItem(ResourceItem chartItem) {
-    }
-
-    // TODO implement
-    @Override
     public void restore(Memento state) {
     }
 
@@ -124,9 +119,6 @@ public abstract class ChartViewContentDisplay extends
 
             chartWidget.removeChartItem(chartItem);
         }
-
-        super.update(addedResourceItems, updatedResourceItems,
-                removedResourceItems);
 
         /*
          * The updateChart method only gets called when necessary so as to

@@ -21,13 +21,10 @@ import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarType;
 import org.thechiselgroup.choosel.client.ui.dnd.DragProxyEventReceiver;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.client.ui.popup.DefaultPopupManager;
-import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
-import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
-import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 
-public class TextItem extends ResourceItem {
+public class TextItem {
 
     public class TextItemLabel extends ResourceSetAvatar implements
             DragProxyEventReceiver {
@@ -54,7 +51,7 @@ public class TextItem extends ResourceItem {
          */
         @Override
         public void dragProxyAttached() {
-            getHighlightingManager().setHighlighting(false);
+            resourceItem.getHighlightingManager().setHighlighting(false);
         }
 
         @Override
@@ -96,14 +93,17 @@ public class TextItem extends ResourceItem {
 
     private TextItemLabel label;
 
-    public TextItem(String category, ResourceSet resources,
-            HoverModel hoverModel, PopupManager popupManager,
-            TextViewContentDisplay.Display display,
-            ResourceItemValueResolver layerModel,
-            ResourceSetAvatarDragController dragController) {
+    private ResourceItem resourceItem;
 
-        super(category, resources, hoverModel, popupManager, layerModel);
+    public TextItem(TextViewContentDisplay.Display display,
+            ResourceSetAvatarDragController dragController,
+            ResourceItem resourceItem) {
 
+        assert resourceItem != null;
+        assert display != null;
+        assert dragController != null;
+
+        this.resourceItem = resourceItem;
         this.display = display;
         this.dragController = dragController;
     }
@@ -112,18 +112,36 @@ public class TextItem extends ResourceItem {
         return label;
     }
 
+    public ResourceItem getResourceItem() {
+        return resourceItem;
+    }
+
     public void init() {
-        this.label = new TextItemLabel("", dragController, getResourceSet());
+        this.label = new TextItemLabel("", dragController,
+                resourceItem.getResourceSet());
         this.label.addStyleName(CSS_LIST);
 
-        DefaultPopupManager.linkManagerToSource(popupManager, getLabel());
+        DefaultPopupManager.linkManagerToSource(resourceItem.getPopupManager(),
+                getLabel());
 
         updateContent();
     }
 
-    @Override
-    protected void setStatusStyling(Status status) {
-        switch (status) {
+    public void updateContent() {
+        if (label == null) {
+            return;
+        }
+        String description = (String) resourceItem
+                .getResourceValue(SlotResolver.DESCRIPTION_SLOT);
+        int tagCount = Integer.parseInt((String) resourceItem
+                .getResourceValue(SlotResolver.FONT_SIZE_SLOT));
+
+        this.label.setText(description);
+        this.label.setTagCount(tagCount);
+    }
+
+    public void updateStatusStyling() {
+        switch (resourceItem.getStatus()) {
         case HIGHLIGHTED_SELECTED: {
             display.removeStyleName(this, CSS_PARTIALLY_HIGHLIGHTED);
             display.addStyleName(this, CSS_SELECTED);
@@ -161,18 +179,5 @@ public class TextItem extends ResourceItem {
         }
             break;
         }
-    }
-
-    @Override
-    protected void updateContent() {
-        if (label == null) {
-            return;
-        }
-        String description = (String) getResourceValue(SlotResolver.DESCRIPTION_SLOT);
-        int tagCount = Integer
-                .parseInt((String) getResourceValue(SlotResolver.FONT_SIZE_SLOT));
-
-        this.label.setText(description);
-        this.label.setTagCount(tagCount);
     }
 }
