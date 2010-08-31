@@ -94,7 +94,6 @@ public class ChartItem {
             resourceItem.getPopupManager().onMouseOver(e.getClientX(),
                     e.getClientY());
             resourceItem.getHighlightingManager().setHighlighting(true);
-
         }
             break;
         case Event.ONMOUSEUP: {

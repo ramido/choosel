@@ -104,11 +104,8 @@ public class DotChart extends ChartWidget {
     }
 
     private void dehighlightResources(int i) {
-        chartItems
-                .get(i)
-                .getResourceItem()
-                .removeHighlightedResources(
-                        chartItems.get(i).getResourceItem().getResourceSet());
+        chartItems.get(i).getResourceItem().getHighlightingManager()
+                .setHighlighting(false);
     }
 
     private void deselectResources(int i) {
@@ -323,11 +320,8 @@ public class DotChart extends ChartWidget {
     // @formatter:on
 
     private void highlightResources(int i) {
-        chartItems
-                .get(i)
-                .getResourceItem()
-                .addHighlightedResources(
-                        chartItems.get(i).getResourceItem().getResourceSet());
+        chartItems.get(i).getResourceItem().getHighlightingManager()
+                .setHighlighting(true);
     }
 
     private boolean isInSelectionBox(int x, int y, int dx, int dy, int i) {
