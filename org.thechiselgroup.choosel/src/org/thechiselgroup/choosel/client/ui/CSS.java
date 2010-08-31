@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui;
 
+import static com.google.gwt.user.client.DOM.getElementById;
 import static com.google.gwt.user.client.DOM.getIntStyleAttribute;
 import static com.google.gwt.user.client.DOM.setIntStyleAttribute;
 import static com.google.gwt.user.client.DOM.setStyleAttribute;
@@ -76,8 +77,33 @@ public final class CSS {
 
     public static final String BORDER_COLOR = "borderColor";
 
+    public static final String BORDER_BOTTOM = "borderBottom";
+
+    public static void addClass(String elementID, String cssClass) {
+        Element element = getElementById(elementID);
+        /*
+         * workaround for bug where class name is null
+         */
+        if (element.getClassName() == null) {
+            element.setClassName("");
+        }
+
+        element.addClassName(cssClass);
+    }
+
     public static int getZIndex(Element element) {
         return getIntStyleAttribute(element, Z_INDEX);
+    }
+
+    public static void removeClass(String cssClass, String elementID) {
+        Element element = getElementById(elementID);
+        /*
+         * workaround for bug where class name is null
+         */
+        if (element.getClassName() == null) {
+            element.setClassName("");
+        }
+        element.removeClassName(cssClass);
     }
 
     public static void setAbsoluteBounds(Element element, int left, int top,
@@ -88,12 +114,32 @@ public final class CSS {
         setSize(element, width, height);
     }
 
+    public static void setBackgroundColor(Element element, String color) {
+        setStyleAttribute(element, BACKGROUND_COLOR, color);
+    }
+
+    public static void setBackgroundColor(String elementID, String color) {
+        setBackgroundColor(getElementById(elementID), color);
+    }
+
     public static void setBackgroundColor(Widget widget, String color) {
-        setStyleAttribute(widget.getElement(), BACKGROUND_COLOR, color);
+        setBackgroundColor(widget.getElement(), color);
+    }
+
+    public static void setBorderBottom(Element element, String borderBottom) {
+        setStyleAttribute(element, BORDER_BOTTOM, borderBottom);
+    }
+
+    public static void setBorderBottom(String elementID, String borderBottom) {
+        setBorderBottom(getElementById(elementID), borderBottom);
+    }
+
+    public static void setBorderColor(Element element, String borderColor) {
+        setStyleAttribute(element, BORDER_COLOR, borderColor);
     }
 
     public static void setBorderColor(Widget widget, String borderColor) {
-        setStyleAttribute(widget.getElement(), BORDER_COLOR, borderColor);
+        setBorderColor(widget.getElement(), borderColor);
     }
 
     public static void setDisplay(Element element, String value) {
@@ -160,6 +206,10 @@ public final class CSS {
 
     public static void setZIndex(Element element, int zIndex) {
         setIntStyleAttribute(element, Z_INDEX, zIndex);
+    }
+
+    public static void setZIndex(String elementID, int zIndex) {
+        setIntStyleAttribute(getElementById(elementID), Z_INDEX, zIndex);
     }
 
     public static void setZIndex(Widget widget, int zIndex) {

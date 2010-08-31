@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.client.views.timeline;
 
 import static com.google.gwt.query.client.GQuery.$;
 
+import org.thechiselgroup.choosel.client.ui.CSS;
 import org.thechiselgroup.choosel.client.ui.widget.timeline.TimeLineEvent;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
@@ -27,6 +28,8 @@ import org.thechiselgroup.choosel.client.views.SlotResolver;
 
 import com.google.gwt.query.client.Function;
 import com.google.gwt.query.client.GQuery;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 
 public class TimeLineItem extends IconResourceItem {
@@ -90,10 +93,6 @@ public class TimeLineItem extends IconResourceItem {
         timeLineEvent = TimeLineEvent.create(date, null, "", this);
         tickElementID = view.getEventElementID(OVERVIEW_BAND_ID, TICK_ELEMENT,
                 timeLineEvent);
-    }
-
-    private void addLabelCssClass(String cssClass) {
-        getGElement(labelElementID).addClass(cssClass);
     }
 
     private String getColor() {
@@ -194,10 +193,7 @@ public class TimeLineItem extends IconResourceItem {
         });
     }
 
-    private void removeLabelCssClass(String cssClass) {
-        getGElement(labelElementID).removeClass(cssClass);
-    }
-
+    // TODO optimize -- use plain GWT instead of GQuery
     private void replaceIconImageWithDiv(String iconElementID) {
         GQuery gElement = getGElement(iconElementID);
         gElement.children("img").remove();
@@ -214,57 +210,71 @@ public class TimeLineItem extends IconResourceItem {
     }
 
     private void setIconColor(String color) {
-        GQuery div = getGElement(iconElementID).children("div");
-        div.css("background-color", color);
-        div.css("border-color", calculateBorderColor(color));
+        Element div = (Element) DOM.getElementById(iconElementID)
+                .getFirstChild();
+        if (div != null) {
+            CSS.setBackgroundColor(div, color);
+            CSS.setBorderColor(div, calculateBorderColor(color));
+        }
     }
 
     private void setLabelStyle(Status status) {
+        Element element = DOM.getElementById(labelElementID);
+
+        /*
+         * workaround for bug where class name is null
+         */
+        if (element.getClassName() == null) {
+            element.setClassName("");
+        }
+
         switch (status) {
         case PARTIALLY_HIGHLIGHTED_SELECTED:
         case HIGHLIGHTED_SELECTED: {
-            addLabelCssClass(CSS_SELECTED_CLASS);
-            addLabelCssClass(CSS_HIGHLIGHT_CLASS);
+            element.addClassName(CSS_SELECTED_CLASS);
+            element.addClassName(CSS_HIGHLIGHT_CLASS);
         }
             break;
         case PARTIALLY_HIGHLIGHTED:
         case HIGHLIGHTED: {
-            removeLabelCssClass(CSS_SELECTED_CLASS);
-            addLabelCssClass(CSS_HIGHLIGHT_CLASS);
+            element.removeClassName(CSS_SELECTED_CLASS);
+            element.addClassName(CSS_HIGHLIGHT_CLASS);
         }
             break;
         case DEFAULT: {
-            removeLabelCssClass(CSS_SELECTED_CLASS);
-            removeLabelCssClass(CSS_HIGHLIGHT_CLASS);
+            element.removeClassName(CSS_SELECTED_CLASS);
+            element.removeClassName(CSS_HIGHLIGHT_CLASS);
         }
             break;
         case SELECTED: {
-            removeLabelCssClass(CSS_HIGHLIGHT_CLASS);
-            addLabelCssClass(CSS_SELECTED_CLASS);
+            element.removeClassName(CSS_HIGHLIGHT_CLASS);
+            element.addClassName(CSS_SELECTED_CLASS);
         }
             break;
         }
     }
 
     public void setStatusStyling(Status status) {
-        setIconColor(getColor());
-        setTickColor(getColor());
+        String color = getColor();
+        setIconColor(color);
+        setTickColor(color);
         setTickZIndex(status);
         setLabelStyle(status);
     }
 
     private void setTickColor(String color) {
-        GQuery div = getGElement(tickElementID);
-        div.css("background-color", color);
+        Element tickElement = DOM.getElementById(tickElementID);
+
+        CSS.setBackgroundColor(tickElement, color);
 
         /*
          * TODO refactor: this sets a bottom border on highlighted ticks,
          * because they are otherwise hard to see
          */
         if (getHighlightColor().equals(color)) {
-            div.css("border-bottom", "6px solid " + getDefaultColor());
+            CSS.setBorderBottom(tickElement, "6px solid " + getDefaultColor());
         } else {
-            div.css("border-bottom", "0px solid black");
+            CSS.setBorderBottom(tickElement, "0px solid black");
         }
 
         timeLineEvent.setTickBackgroundColor(color);
@@ -276,17 +286,17 @@ public class TimeLineItem extends IconResourceItem {
         case HIGHLIGHTED_SELECTED:
         case PARTIALLY_HIGHLIGHTED:
         case HIGHLIGHTED: {
-            getGElement(tickElementID).css("z-index", "" + Z_INDEX_HIGHLIGHTED);
+            CSS.setZIndex(tickElementID, Z_INDEX_HIGHLIGHTED);
             timeLineEvent.setTickZIndex("" + Z_INDEX_HIGHLIGHTED);
         }
             break;
         case DEFAULT: {
-            getGElement(tickElementID).css("z-index", "" + Z_INDEX_DEFAULT);
+            CSS.setZIndex(tickElementID, Z_INDEX_DEFAULT);
             timeLineEvent.setTickZIndex("" + Z_INDEX_DEFAULT);
         }
             break;
         case SELECTED: {
-            getGElement(tickElementID).css("z-index", "" + Z_INDEX_SELECTED);
+            CSS.setZIndex(tickElementID, Z_INDEX_SELECTED);
             timeLineEvent.setTickZIndex("" + Z_INDEX_SELECTED);
 
         }
