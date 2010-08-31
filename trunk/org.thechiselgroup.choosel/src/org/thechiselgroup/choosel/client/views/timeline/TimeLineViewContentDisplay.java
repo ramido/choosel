@@ -135,8 +135,8 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
 
         if (!addedResourceItems.isEmpty()) {
             createTimeLineItems(addedResourceItems);
-            addEventsToTimeline(addedResourceItems);
             updateStatusStyling(addedResourceItems);
+            addEventsToTimeline(addedResourceItems);
         }
 
         if (!updatedResourceItems.isEmpty()) {
