@@ -119,6 +119,8 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
         MapItem mapItem = new MapItem(resourceItem, latLng, getCallback(),
                 dragEnablerFactory);
 
+        mapItem.setStatusStyling(resourceItem.getStatus());
+
         map.addOverlay(mapItem.getOverlay());
 
         resourceItem.setDisplayObject(mapItem);
@@ -232,7 +234,6 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
         for (ResourceItem resourceItem : addedResourceItems) {
             initMapItem(resourceItem);
         }
-        updateStatusStyling(addedResourceItems);
 
         for (ResourceItem resourceItem : removedResourceItems) {
             removeOverlay(resourceItem);
