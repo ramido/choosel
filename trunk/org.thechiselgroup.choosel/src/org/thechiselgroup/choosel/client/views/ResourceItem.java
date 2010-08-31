@@ -75,6 +75,10 @@ public class ResourceItem implements Disposable {
 
     private HighlightingManager popupHighlightingManager;
 
+    private SubsetStatus cachedHighlightStatus = null;
+
+    private SubsetStatus cachedSelectedStatus = null;
+
     public ResourceItem(String category, ResourceSet resources,
             HoverModel hoverModel, PopupManager popupManager,
             ResourceItemValueResolver valueResolver) {
@@ -101,11 +105,13 @@ public class ResourceItem implements Disposable {
     public void addHighlightedResources(
             Collection<Resource> highlightedResources) {
 
+        this.cachedHighlightStatus = null;
         this.highlightedResources
                 .addAll(calculateAffectedResources(highlightedResources));
     }
 
     public void addSelectedResources(Collection<Resource> selectedResources) {
+        this.cachedSelectedStatus = null;
         this.selectedResources
                 .addAll(calculateAffectedResources(selectedResources));
     }
@@ -147,13 +153,8 @@ public class ResourceItem implements Disposable {
         assert resources.containsAll(selectedResources);
 
         ResourceSet highlightedSelectedResources = new DefaultResourceSet();
-
-        for (Resource resource : resources) {
-            if (highlightedResources.contains(resource)
-                    && selectedResources.contains(resource)) {
-                highlightedSelectedResources.add(resource);
-            }
-        }
+        highlightedSelectedResources.addAll(highlightedResources);
+        highlightedSelectedResources.retainAll(selectedResources);
 
         return highlightedSelectedResources;
     }
@@ -168,7 +169,11 @@ public class ResourceItem implements Disposable {
     }
 
     SubsetStatus getHighlightStatus() {
-        return getSubsetStatus(highlightedResources);
+        if (cachedHighlightStatus == null) {
+            cachedHighlightStatus = getSubsetStatus(highlightedResources);
+        }
+
+        return cachedHighlightStatus;
     }
 
     public final PopupManager getPopupManager() {
@@ -189,7 +194,11 @@ public class ResourceItem implements Disposable {
     }
 
     SubsetStatus getSelectionStatus() {
-        return getSubsetStatus(selectedResources);
+        if (cachedSelectedStatus == null) {
+            cachedSelectedStatus = getSubsetStatus(selectedResources);
+        }
+
+        return cachedSelectedStatus;
     }
 
     public Status getStatus() {
@@ -266,11 +275,13 @@ public class ResourceItem implements Disposable {
     public void removeHighlightedResources(
             Collection<Resource> highlightedResources) {
 
+        this.cachedHighlightStatus = null;
         this.highlightedResources
                 .removeAll(calculateAffectedResources(highlightedResources));
     }
 
     public void removeSelectedResources(Collection<Resource> selectedResources) {
+        this.cachedSelectedStatus = null;
         this.selectedResources
                 .removeAll(calculateAffectedResources(selectedResources));
     }
