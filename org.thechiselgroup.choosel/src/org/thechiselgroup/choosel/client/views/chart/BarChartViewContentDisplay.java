@@ -68,8 +68,8 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         super(popupManagerFactory, detailsWidgetHelper, dragEnablerFactory);
 
         categorizers = new ChartCategorizer[] {
-                new ChartCategorizer(resourceByTypeCategorizer, "label"),
-                new ChartCategorizer(resourceByTypeCategorizer, "description"), };
+                new ChartCategorizer(resourceByTypeCategorizer, "type"),
+                new ChartCategorizer(resourceByTypeCategorizer, "priority"), };
     }
 
     @Override
