@@ -15,18 +15,16 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.map;
 
+import java.util.Set;
+
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.Resource;
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.CSS;
-import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
-import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 
 import com.google.gwt.maps.client.MapType;
@@ -79,32 +77,6 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
         map.checkResize();
     }
 
-    // TODO test
-    @Override
-    public ResourceItem createResourceItem(ResourceItemValueResolver resolver,
-            String category, ResourceSet resources, HoverModel hoverModel) {
-        // TODO iterate over path
-        // TODO resolve sets
-        // TODO separate resolvers for latitude and longitude
-
-        Resource location = (Resource) resolver.resolve(
-                SlotResolver.LOCATION_SLOT, category, resources);
-
-        double latitude = toDouble(location.getValue(LATITUDE));
-        double longitude = toDouble(location.getValue(LONGITUDE));
-
-        LatLng latLng = LatLng.newInstance(latitude, longitude);
-
-        PopupManager popupManager = createPopupManager(resolver, resources);
-
-        MapItem mapItem = new MapItem(category, latLng, resources, hoverModel,
-                popupManager, resolver, getCallback(), dragEnablerFactory);
-
-        map.addOverlay(mapItem.getOverlay());
-
-        return mapItem;
-    }
-
     @Override
     public Widget createWidget() {
         map = new MapWidget();
@@ -131,9 +103,30 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
                 SlotResolver.LOCATION_SLOT };
     }
 
-    @Override
-    public void removeResourceItem(ResourceItem resourceItem) {
-        map.removeOverlay(((MapItem) resourceItem).getOverlay());
+    private void initMapItem(ResourceItem resourceItem) {
+        // TODO iterate over path
+        // TODO resolve sets
+        // TODO separate resolvers for latitude and longitude
+
+        Resource location = (Resource) resourceItem
+                .getResourceValue(SlotResolver.LOCATION_SLOT);
+
+        double latitude = toDouble(location.getValue(LATITUDE));
+        double longitude = toDouble(location.getValue(LONGITUDE));
+
+        LatLng latLng = LatLng.newInstance(latitude, longitude);
+
+        MapItem mapItem = new MapItem(resourceItem, latLng, getCallback(),
+                dragEnablerFactory);
+
+        map.addOverlay(mapItem.getOverlay());
+
+        resourceItem.setDisplayObject(mapItem);
+    }
+
+    private void removeOverlay(ResourceItem resourceItem) {
+        map.removeOverlay(((MapItem) resourceItem.getDisplayObject())
+                .getOverlay());
     }
 
     @Override
@@ -229,5 +222,29 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
 
         throw new IllegalArgumentException("" + value
                 + " could not be converted to double");
+    }
+
+    @Override
+    public void update(Set<ResourceItem> addedResourceItems,
+            Set<ResourceItem> updatedResourceItems,
+            Set<ResourceItem> removedResourceItems) {
+
+        for (ResourceItem resourceItem : addedResourceItems) {
+            initMapItem(resourceItem);
+        }
+        updateStatusStyling(addedResourceItems);
+
+        for (ResourceItem resourceItem : removedResourceItems) {
+            removeOverlay(resourceItem);
+        }
+
+        updateStatusStyling(updatedResourceItems);
+    }
+
+    private void updateStatusStyling(Set<ResourceItem> resourceItems) {
+        for (ResourceItem resourceItem : resourceItems) {
+            ((MapItem) resourceItem.getDisplayObject())
+                    .setStatusStyling(resourceItem.getStatus());
+        }
     }
 }

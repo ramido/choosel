@@ -17,7 +17,6 @@ package org.thechiselgroup.choosel.client.views;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
@@ -63,13 +62,14 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
     public void checkResize() {
     }
 
-    protected PopupManager createPopupManager(
-            ResourceItemValueResolver resolver, ResourceSet resources) {
+    private PopupManager createPopupManager(ResourceItemValueResolver resolver,
+            ResourceSet resources) {
 
         return createPopupManager(resources,
                 resolver.getResourceSetResolver(SlotResolver.DESCRIPTION_SLOT));
     }
 
+    // for test
     protected PopupManager createPopupManager(final ResourceSet resources,
             final ResourceSetToValueResolver resolver) {
 
@@ -85,8 +85,9 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
     }
 
     @Override
-    public ResourceItem createResourceItem(ResourceItemValueResolver resolver,
-            String category, ResourceSet resources, HoverModel hoverModel) {
+    public final ResourceItem createResourceItem(
+            ResourceItemValueResolver resolver, String category,
+            ResourceSet resources, HoverModel hoverModel) {
 
         assert resolver != null;
         assert resources != null;
@@ -143,21 +144,12 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
     }
 
     @Override
+    public final void removeResourceItem(ResourceItem resourceItem) {
+    }
+
+    @Override
     public void startRestore() {
         restoring = true;
     }
 
-    @Override
-    public void update(Set<ResourceItem> addedResourceItems,
-            Set<ResourceItem> updatedResourceItems,
-            Set<ResourceItem> removedResourceItems) {
-
-        for (ResourceItem addedItem : addedResourceItems) {
-            addedItem.updateStyling();
-        }
-
-        for (ResourceItem updatedItem : updatedResourceItems) {
-            updatedItem.updateStyling();
-        }
-    }
 }

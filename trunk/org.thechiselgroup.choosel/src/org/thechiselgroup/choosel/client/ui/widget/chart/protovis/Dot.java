@@ -108,7 +108,7 @@ public class Dot extends Mark {
     public final native Dot index(int index) /*-{
         return this.index(index);
     }-*/;
-
+    
     public final native Dot left(double left) /*-{
         return this.left(left);
     }-*/;
@@ -116,11 +116,11 @@ public class Dot extends Mark {
     public final native Dot left(ProtovisFunctionDouble f) /*-{
         return this.left(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionDouble(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionDouble;)(this,f));
     }-*/;
-    
+
     public final native Dot left(ProtovisFunctionDoubleToDouble f) /*-{
         return this.left(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionDoubleToDouble(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionDoubleToDouble;)(this,f));
     }-*/;
-    
+
     public final native Dot lineWidth(double lineWidth) /*-{
         return this.lineWidth(lineWidth);
     }-*/;

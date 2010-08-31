@@ -18,19 +18,17 @@ package org.thechiselgroup.choosel.client.views.text;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.CSS;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
-import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.util.CollectionUtils;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
-import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
-import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.text.TextItem.TextItemLabel;
 
@@ -151,11 +149,12 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
             MouseOverHandler {
 
         private ResourceSet getResource(GwtEvent<?> event) {
-            return getTagCloudItem(event).getResourceSet();
+            return getResourceItem(event).getResourceSet();
         }
 
-        private TextItem getTagCloudItem(GwtEvent<?> event) {
-            return ((TextItemLabel) event.getSource()).getTagCloudItem();
+        private ResourceItem getResourceItem(GwtEvent<?> event) {
+            return ((TextItemLabel) event.getSource()).getTagCloudItem()
+                    .getResourceItem();
         }
 
         @Override
@@ -165,12 +164,12 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
         @Override
         public void onMouseOut(MouseOutEvent e) {
-            getTagCloudItem(e).getHighlightingManager().setHighlighting(false);
+            getResourceItem(e).getHighlightingManager().setHighlighting(false);
         }
 
         @Override
         public void onMouseOver(MouseOverEvent e) {
-            getTagCloudItem(e).getHighlightingManager().setHighlighting(true);
+            getResourceItem(e).getHighlightingManager().setHighlighting(true);
         }
     }
 
@@ -216,20 +215,6 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     @Override
-    public ResourceItem createResourceItem(ResourceItemValueResolver resolver,
-            String category, ResourceSet resources, HoverModel hoverModel) {
-
-        PopupManager popupManager = createPopupManager(resolver, resources);
-
-        TextItem tagCloudItem = new TextItem(category, resources, hoverModel,
-                popupManager, display, resolver, dragController);
-
-        display.addItem(tagCloudItem);
-
-        return tagCloudItem;
-    }
-
-    @Override
     public Widget createWidget() {
         itemPanel = new FlowPanel();
 
@@ -253,11 +238,6 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     @Override
-    public void removeResourceItem(ResourceItem tagCloudItem) {
-        display.removeIndividualItem((TextItem) tagCloudItem);
-    }
-
-    @Override
     public void restore(Memento state) {
         // TODO implement
     }
@@ -265,5 +245,32 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
     @Override
     public Memento save() {
         return new Memento(); // TODO implement
+    }
+
+    @Override
+    public void update(Set<ResourceItem> addedResourceItems,
+            Set<ResourceItem> updatedResourceItems,
+            Set<ResourceItem> removedResourceItems) {
+
+        for (ResourceItem resourceItem : addedResourceItems) {
+            TextItem textItem = new TextItem(display, dragController,
+                    resourceItem);
+            display.addItem(textItem);
+            resourceItem.setDisplayObject(textItem);
+            textItem.updateContent();
+            textItem.updateStatusStyling();
+        }
+
+        for (ResourceItem resourceItem : updatedResourceItems) {
+            TextItem textItem = (TextItem) resourceItem.getDisplayObject();
+            textItem.updateContent();
+            textItem.updateStatusStyling();
+        }
+
+        for (ResourceItem resourceItem : removedResourceItems) {
+            display.removeIndividualItem((TextItem) resourceItem
+                    .getDisplayObject());
+        }
+
     }
 }

@@ -15,13 +15,11 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.map;
 
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.IconResourceItem;
-import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
+import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 
@@ -47,21 +45,21 @@ public class MapItem extends IconResourceItem {
 
         @Override
         public void onClick(ClickEvent event) {
-            callback.switchSelection(getResourceSet());
+            callback.switchSelection(resourceItem.getResourceSet());
         }
 
         @Override
         public void onMouseOut(MouseOutEvent event) {
-            getPopupManager()
-                    .onMouseOut(event.getClientX(), event.getClientY());
-            getHighlightingManager().setHighlighting(false);
+            resourceItem.getPopupManager().onMouseOut(event.getClientX(),
+                    event.getClientY());
+            resourceItem.getHighlightingManager().setHighlighting(false);
         }
 
         @Override
         public void onMouseOver(MouseOverEvent event) {
-            getPopupManager().onMouseOver(event.getClientX(),
+            resourceItem.getPopupManager().onMouseOver(event.getClientX(),
                     event.getClientY());
-            getHighlightingManager().setHighlighting(true);
+            resourceItem.getHighlightingManager().setHighlighting(true);
         }
     }
 
@@ -73,13 +71,11 @@ public class MapItem extends IconResourceItem {
 
     private LabelOverlay overlay;
 
-    public MapItem(String category, LatLng point, ResourceSet resources,
-            HoverModel hoverModel, PopupManager popupManager,
-            ResourceItemValueResolver layerModel,
+    public MapItem(ResourceItem resourceItem, LatLng point,
             ViewContentDisplayCallback callback,
             DragEnablerFactory dragEnablerFactory) {
 
-        super(category, resources, hoverModel, popupManager, layerModel);
+        super(resourceItem);
 
         this.callback = callback;
         this.dragEnablerFactory = dragEnablerFactory;
@@ -101,7 +97,9 @@ public class MapItem extends IconResourceItem {
         overlay.addMouseOutHandler(eventHandler);
         overlay.addClickHandler(eventHandler);
 
-        final DragEnabler enabler = dragEnablerFactory.createDragEnabler(this);
+        final DragEnabler enabler = dragEnablerFactory
+                .createDragEnabler(resourceItem);
+
         overlay.addMouseUpHandler(new MouseUpHandler() {
             @Override
             public void onMouseUp(MouseUpEvent event) {
@@ -148,7 +146,6 @@ public class MapItem extends IconResourceItem {
         overlay.setZIndex(Z_INDEX_SELECTED);
     }
 
-    @Override
     protected void setStatusStyling(Status status) {
         switch (status) {
         case PARTIALLY_HIGHLIGHTED:

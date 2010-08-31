@@ -17,14 +17,12 @@ package org.thechiselgroup.choosel.client.views.timeline;
 
 import static com.google.gwt.query.client.GQuery.$;
 
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.widget.timeline.TimeLineEvent;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.IconResourceItem;
-import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
+import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 
 import com.google.gwt.query.client.Function;
@@ -78,12 +76,11 @@ public class TimeLineItem extends IconResourceItem {
 
     private String tickElementID;
 
-    public TimeLineItem(String category, ResourceSet resources,
-            TimeLineViewContentDisplay view, PopupManager popupManager,
-            HoverModel hoverModel, ResourceItemValueResolver layerModel,
+    public TimeLineItem(ResourceItem resourceItem,
+            TimeLineViewContentDisplay view,
             DragEnablerFactory dragEnablerFactory) {
 
-        super(category, resources, hoverModel, popupManager, layerModel);
+        super(resourceItem);
 
         this.view = view;
         this.dragEnablerFactory = dragEnablerFactory;
@@ -100,7 +97,7 @@ public class TimeLineItem extends IconResourceItem {
     }
 
     private String getColor() {
-        switch (getStatus()) {
+        switch (resourceItem.getStatus()) {
         case PARTIALLY_HIGHLIGHTED_SELECTED:
         case HIGHLIGHTED_SELECTED:
         case PARTIALLY_HIGHLIGHTED:
@@ -124,17 +121,19 @@ public class TimeLineItem extends IconResourceItem {
     }
 
     private void onMouseClick(Event e) {
-        view.getCallback().switchSelection(getResourceSet());
+        view.getCallback().switchSelection(resourceItem.getResourceSet());
     }
 
     public void onMouseOut(Event e) {
-        popupManager.onMouseOut(e.getClientX(), e.getClientY());
-        getHighlightingManager().setHighlighting(false);
+        resourceItem.getPopupManager().onMouseOut(e.getClientX(),
+                e.getClientY());
+        resourceItem.getHighlightingManager().setHighlighting(false);
     }
 
     public void onMouseOver(Event e) {
-        popupManager.onMouseOver(e.getClientX(), e.getClientY());
-        getHighlightingManager().setHighlighting(true);
+        resourceItem.getPopupManager().onMouseOver(e.getClientX(),
+                e.getClientY());
+        resourceItem.getHighlightingManager().setHighlighting(true);
     }
 
     public void onPainted(String labelElementID, String iconElementID) {
@@ -162,7 +161,9 @@ public class TimeLineItem extends IconResourceItem {
         element.mouseout(mouseOutListener);
         element.click(mouseClickListener);
 
-        final DragEnabler enabler = dragEnablerFactory.createDragEnabler(this);
+        final DragEnabler enabler = dragEnablerFactory
+                .createDragEnabler(resourceItem);
+
         element.mouseup(new Function() {
             @Override
             public boolean f(Event e) {
@@ -245,8 +246,7 @@ public class TimeLineItem extends IconResourceItem {
         }
     }
 
-    @Override
-    protected void setStatusStyling(Status status) {
+    public void setStatusStyling(Status status) {
         setIconColor(getColor());
         setTickColor(getColor());
         setTickZIndex(status);
