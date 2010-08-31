@@ -140,42 +140,37 @@ public class TextItem {
         this.label.setTagCount(tagCount);
     }
 
+    // TODO test
     public void updateStatusStyling() {
-        switch (resourceItem.getStatus()) {
-        case HIGHLIGHTED_SELECTED: {
-            display.removeStyleName(this, CSS_PARTIALLY_HIGHLIGHTED);
-            display.addStyleName(this, CSS_SELECTED);
+        switch (resourceItem.getHighlightStatus()) {
+        case COMPLETE: {
             display.addStyleName(this, CSS_HIGHLIGHTED);
+            display.removeStyleName(this, CSS_PARTIALLY_HIGHLIGHTED);
         }
             break;
-        case PARTIALLY_HIGHLIGHTED_SELECTED: {
+        case PARTIAL: {
             display.removeStyleName(this, CSS_HIGHLIGHTED);
-            display.addStyleName(this, CSS_SELECTED);
             display.addStyleName(this, CSS_PARTIALLY_HIGHLIGHTED);
         }
             break;
-        case PARTIALLY_HIGHLIGHTED: {
-            display.removeStyleName(this, CSS_HIGHLIGHTED);
-            display.removeStyleName(this, CSS_SELECTED);
-            display.addStyleName(this, CSS_PARTIALLY_HIGHLIGHTED);
-        }
-            break;
-        case HIGHLIGHTED: {
-            display.removeStyleName(this, CSS_PARTIALLY_HIGHLIGHTED);
-            display.removeStyleName(this, CSS_SELECTED);
-            display.addStyleName(this, CSS_HIGHLIGHTED);
-        }
-            break;
-        case DEFAULT: {
-            display.removeStyleName(this, CSS_SELECTED);
+        case NONE: {
             display.removeStyleName(this, CSS_HIGHLIGHTED);
             display.removeStyleName(this, CSS_PARTIALLY_HIGHLIGHTED);
         }
             break;
-        case SELECTED: {
-            display.removeStyleName(this, CSS_PARTIALLY_HIGHLIGHTED);
-            display.removeStyleName(this, CSS_HIGHLIGHTED);
+        }
+
+        switch (resourceItem.getSelectionStatus()) {
+        case COMPLETE: {
             display.addStyleName(this, CSS_SELECTED);
+        }
+            break;
+        case PARTIAL: {
+            display.addStyleName(this, CSS_SELECTED);
+        }
+            break;
+        case NONE: {
+            display.removeStyleName(this, CSS_SELECTED);
         }
             break;
         }
