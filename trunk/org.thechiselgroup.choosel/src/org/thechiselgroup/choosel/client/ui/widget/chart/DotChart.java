@@ -114,8 +114,9 @@ public class DotChart extends ChartWidget {
     private void deselectResources(int i) {
         chartItems
                 .get(i)
-                .getResourceItem()
-                .removeSelectedResources(
+                .getView()
+                .getCallback()
+                .switchSelection(
                         chartItems.get(i).getResourceItem().getResourceSet());
     }
 
@@ -126,6 +127,7 @@ public class DotChart extends ChartWidget {
         calculateChartVariables();
         setChartParameters();
 
+        calculateMaximumChartItemValue();
         Scale scale = Scale.linear(0, getMaximumChartItemValue()).range(0,
                 chartHeight);
         drawScales(scale);
@@ -350,8 +352,9 @@ public class DotChart extends ChartWidget {
     private void selectResources(int i) {
         chartItems
                 .get(i)
-                .getResourceItem()
-                .addSelectedResources(
+                .getView()
+                .getCallback()
+                .switchSelection(
                         chartItems.get(i).getResourceItem().getResourceSet());
     }
 

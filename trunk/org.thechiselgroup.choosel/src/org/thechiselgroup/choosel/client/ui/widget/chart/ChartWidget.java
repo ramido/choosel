@@ -172,9 +172,9 @@ public abstract class ChartWidget extends Widget {
 
     protected int calculateHighlightedResources(int i) {
         return chartItems.get(i).getResourceItem().getHighlightedResources()
-                .size()
-                - chartItems.get(i).getResourceItem()
-                        .getHighlightedSelectedResources().size();
+                .size();
+        // - chartItems.get(i).getResourceItem()
+        // .getHighlightedSelectedResources().size();
     }
 
     protected int calculateHighlightedSelectedResources(int i) {
@@ -184,7 +184,7 @@ public abstract class ChartWidget extends Widget {
 
     // TODO different slots
     // XXX does not work for negative numbers
-    private void calculateMaximumChartItemValue() {
+    protected void calculateMaximumChartItemValue() {
         this.maxChartItemValue = 0;
         for (int i = 0; i < chartItems.size(); i++) {
             int currentItem = Integer

@@ -207,17 +207,17 @@ public class ResourceItem implements Disposable {
             return Status.HIGHLIGHTED_SELECTED;
         }
 
+        if (getHighlightStatus() != SubsetStatus.NONE
+                && getSelectionStatus() != SubsetStatus.NONE) {
+            return Status.PARTIALLY_HIGHLIGHTED_SELECTED;
+        }
+
         if (getHighlightStatus() == SubsetStatus.COMPLETE) {
             return Status.HIGHLIGHTED;
         }
 
         if (getSelectionStatus() == SubsetStatus.COMPLETE) {
             return Status.SELECTED;
-        }
-
-        if (getHighlightStatus() == SubsetStatus.PARTIAL
-                && getSelectionStatus() == SubsetStatus.PARTIAL) {
-            return Status.PARTIALLY_HIGHLIGHTED_SELECTED;
         }
 
         if (getHighlightStatus() == SubsetStatus.PARTIAL) {
