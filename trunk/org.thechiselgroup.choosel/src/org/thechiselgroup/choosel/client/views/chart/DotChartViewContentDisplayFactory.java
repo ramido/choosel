@@ -40,7 +40,6 @@ public class DotChartViewContentDisplayFactory implements ViewContentDisplayFact
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-        return new DotChartViewContentDisplay(popupManagerFactory,
-                detailsWidgetHelper, dragEnablerFactory);
+        return new DotChartViewContentDisplay(dragEnablerFactory);
     }
 }

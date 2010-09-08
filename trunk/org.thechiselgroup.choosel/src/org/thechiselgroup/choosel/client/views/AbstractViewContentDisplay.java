@@ -18,12 +18,6 @@ package org.thechiselgroup.choosel.client.views;
 import java.util.Collections;
 import java.util.List;
 
-import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
-import org.thechiselgroup.choosel.client.ui.WidgetFactory;
-import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
-import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.util.Disposable;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -32,22 +26,9 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
 
     protected ViewContentDisplayCallback callback;
 
-    private DetailsWidgetHelper detailsWidgetHelper;
-
-    private PopupManagerFactory popupManagerFactory;
-
     private boolean restoring = false;
 
     private Widget widget;
-
-    public AbstractViewContentDisplay(PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper) {
-
-        assert popupManagerFactory != null;
-
-        this.popupManagerFactory = popupManagerFactory;
-        this.detailsWidgetHelper = detailsWidgetHelper;
-    }
 
     @Override
     public Widget asWidget() {
@@ -62,36 +43,11 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
     public void checkResize() {
     }
 
-    @Override
-    public PopupManager createPopupManager(ResourceItemValueResolver resolver,
-            ResourceSet resources) {
-
-        return createPopupManager(resources,
-                resolver.getResourceSetResolver(SlotResolver.DESCRIPTION_SLOT));
-    }
-
-    // for test
-    protected PopupManager createPopupManager(final ResourceSet resources,
-            final ResourceSetToValueResolver resolver) {
-
-        WidgetFactory widgetFactory = new WidgetFactory() {
-            @Override
-            public Widget createWidget() {
-                return detailsWidgetHelper.createDetailsWidget(resources,
-                        resolver);
-            }
-        };
-
-        return popupManagerFactory.createPopupManager(widgetFactory);
-    }
-
     protected abstract Widget createWidget();
 
     @Override
     public void dispose() {
         callback = null;
-        detailsWidgetHelper = null;
-        popupManagerFactory = null;
 
         if (widget instanceof Disposable) {
             ((Disposable) widget).dispose();

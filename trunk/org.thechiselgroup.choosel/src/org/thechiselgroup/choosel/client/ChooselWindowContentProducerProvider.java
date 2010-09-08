@@ -41,10 +41,12 @@ import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
+import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.ui.HelpWindowContent;
 import org.thechiselgroup.choosel.client.ui.NoteWindowContent;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropTargetManager;
+import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.views.DefaultResourceSetToValueResolverFactory;
 import org.thechiselgroup.choosel.client.views.DefaultWindowContentProducer;
 import org.thechiselgroup.choosel.client.views.HoverModel;
@@ -88,6 +90,10 @@ public class ChooselWindowContentProducerProvider implements
 
     private final ResourceCategorizer resourceByTypeCategorizer;
 
+    private final PopupManagerFactory popupManagerFactory;
+
+    private final DetailsWidgetHelper detailsWidgetHelper;
+
     @Inject
     public ChooselWindowContentProducerProvider(
             @Named(AVATAR_FACTORY_SET) ResourceSetAvatarFactory userSetsDragAvatarFactory,
@@ -100,7 +106,9 @@ public class ChooselWindowContentProducerProvider implements
             CategoryLabelProvider labelProvider,
             @Named(DROP_TARGET_MANAGER_VIEW_CONTENT) ResourceSetAvatarDropTargetManager contentDropTargetManager,
             SlotResolver slotResolver,
-            ResourceCategorizer resourceByTypeCategorizer, HoverModel hoverModel) {
+            ResourceCategorizer resourceByTypeCategorizer,
+            HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
+            DetailsWidgetHelper detailsWidgetHelper) {
 
         assert userSetsDragAvatarFactory != null;
         assert allResourcesDragAvatarFactory != null;
@@ -113,6 +121,8 @@ public class ChooselWindowContentProducerProvider implements
         assert labelProvider != null;
         assert slotResolver != null;
         assert hoverModel != null;
+        assert popupManagerFactory != null;
+        assert detailsWidgetHelper != null;
 
         this.userSetsDragAvatarFactory = userSetsDragAvatarFactory;
         this.allResourcesDragAvatarFactory = allResourcesDragAvatarFactory;
@@ -125,6 +135,8 @@ public class ChooselWindowContentProducerProvider implements
         this.labelProvider = labelProvider;
         this.hoverModel = hoverModel;
         this.resourceByTypeCategorizer = resourceByTypeCategorizer;
+        this.popupManagerFactory = popupManagerFactory;
+        this.detailsWidgetHelper = detailsWidgetHelper;
 
         this.resourceSetToValueResolverFactory = new DefaultResourceSetToValueResolverFactory(
                 slotResolver, resourceByTypeCategorizer);
@@ -223,7 +235,8 @@ public class ChooselWindowContentProducerProvider implements
                 dropTargetFactory, resourceSetFactory,
                 selectionModelLabelFactory, categorizer, labelProvider,
                 contentDropTargetManager, resourceSetToValueResolverFactory,
-                resourceByTypeCategorizer, hoverModel));
+                resourceByTypeCategorizer, hoverModel, popupManagerFactory,
+                detailsWidgetHelper));
     }
 
 }

@@ -18,8 +18,6 @@ package org.thechiselgroup.choosel.client.views.chart;
 import java.util.Set;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
-import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
-import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
@@ -45,12 +43,7 @@ public abstract class ChartViewContentDisplay extends
     public boolean hadPartiallyHighlightedItemsOnLastUpdate = false;
 
     @Inject
-    public ChartViewContentDisplay(PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper,
-            DragEnablerFactory dragEnablerFactory) {
-
-        super(popupManagerFactory, detailsWidgetHelper);
-
+    public ChartViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
         this.dragEnablerFactory = dragEnablerFactory;
     }
 

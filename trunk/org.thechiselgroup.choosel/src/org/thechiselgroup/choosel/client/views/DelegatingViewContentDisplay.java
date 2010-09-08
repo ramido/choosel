@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -42,12 +40,6 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
     @Override
     public void checkResize() {
         delegate.checkResize();
-    }
-
-    @Override
-    public PopupManager createPopupManager(ResourceItemValueResolver resolver,
-            ResourceSet resources) {
-        return delegate.createPopupManager(resolver, resources);
     }
 
     @Override

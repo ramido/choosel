@@ -22,10 +22,8 @@ import java.util.Set;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.CSS;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
-import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.util.CollectionUtils;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
@@ -197,11 +195,8 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
     private final boolean tagCloud;
 
-    public TextViewContentDisplay(PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper,
+    public TextViewContentDisplay(
             ResourceSetAvatarDragController dragController, boolean tagCloud) {
-
-        super(popupManagerFactory, detailsWidgetHelper);
 
         this.dragController = dragController;
         this.tagCloud = tagCloud;
@@ -213,12 +208,9 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     // for test: can change display
-    protected TextViewContentDisplay(PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper,
+    protected TextViewContentDisplay(
             ResourceSetAvatarDragController dragController, boolean tagCloud,
             Display display) {
-
-        super(popupManagerFactory, detailsWidgetHelper);
 
         this.dragController = dragController;
         this.tagCloud = tagCloud;

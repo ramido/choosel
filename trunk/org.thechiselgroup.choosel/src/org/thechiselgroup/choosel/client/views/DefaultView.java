@@ -42,10 +42,13 @@ import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
+import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.CSS;
 import org.thechiselgroup.choosel.client.ui.Presenter;
 import org.thechiselgroup.choosel.client.ui.WidgetFactory;
 import org.thechiselgroup.choosel.client.ui.popup.DefaultPopupManager;
+import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
+import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.util.HandlerRegistrationSet;
 import org.thechiselgroup.choosel.client.util.Initializable;
@@ -139,15 +142,22 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private Presenter selectionModelPresenter;
 
+    private DetailsWidgetHelper detailsWidgetHelper;
+
+    private PopupManagerFactory popupManagerFactory;
+
     public DefaultView(ResourceSplitter resourceSplitter,
             ViewContentDisplay contentDisplay, String label,
             String contentType, ResourceItemValueResolver configuration,
             SelectionModel selectionModel, Presenter selectionModelPresenter,
             ResourceModel resourceModel, Presenter resourceModelPresenter,
-            HoverModel hoverModel) {
+            HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
+            DetailsWidgetHelper detailsWidgetHelper) {
 
         super(label, contentType);
 
+        assert popupManagerFactory != null;
+        assert detailsWidgetHelper != null;
         assert configuration != null;
         assert resourceSplitter != null;
         assert contentDisplay != null;
@@ -156,6 +166,9 @@ public class DefaultView extends AbstractWindowContent implements View {
         assert resourceModel != null;
         assert resourceModelPresenter != null;
         assert hoverModel != null;
+
+        this.popupManagerFactory = popupManagerFactory;
+        this.detailsWidgetHelper = detailsWidgetHelper;
 
         this.configuration = configuration;
         this.resourceSplitter = resourceSplitter;
@@ -190,6 +203,28 @@ public class DefaultView extends AbstractWindowContent implements View {
         contentDisplay.checkResize();
     }
 
+    private PopupManager createPopupManager(ResourceItemValueResolver resolver,
+            ResourceSet resources) {
+
+        return createPopupManager(resources,
+                resolver.getResourceSetResolver(SlotResolver.DESCRIPTION_SLOT));
+    }
+
+    // for test
+    protected PopupManager createPopupManager(final ResourceSet resources,
+            final ResourceSetToValueResolver resolver) {
+
+        WidgetFactory widgetFactory = new WidgetFactory() {
+            @Override
+            public Widget createWidget() {
+                return detailsWidgetHelper.createDetailsWidget(resources,
+                        resolver);
+            }
+        };
+
+        return popupManagerFactory.createPopupManager(widgetFactory);
+    }
+
     private DefaultResourceItem createResourceItem(String category,
             ResourceSet resources) {
 
@@ -198,8 +233,8 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         // TODO provide configuration to content display in callback
         DefaultResourceItem resourceItem = new DefaultResourceItem(category,
-                resources, hoverModel, contentDisplay.createPopupManager(
-                        configuration, resources), configuration);
+                resources, hoverModel, createPopupManager(configuration,
+                        resources), configuration);
 
         categoriesToResourceItems.put(category, resourceItem);
 
@@ -242,6 +277,9 @@ public class DefaultView extends AbstractWindowContent implements View {
         selectionModelPresenter = null;
 
         hoverModel = null;
+
+        popupManagerFactory = null;
+        detailsWidgetHelper = null;
 
         handlerRegistrations.dispose();
         handlerRegistrations = null;

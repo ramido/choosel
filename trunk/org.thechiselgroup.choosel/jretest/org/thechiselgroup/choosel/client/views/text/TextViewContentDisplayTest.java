@@ -31,43 +31,19 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
-import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
-import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.views.DefaultResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 import org.thechiselgroup.choosel.client.views.text.TextViewContentDisplay.Display;
 
 public class TextViewContentDisplayTest {
-
-    public class TestTextViewContentDisplay extends TextViewContentDisplay {
-
-        public TestTextViewContentDisplay(
-                PopupManagerFactory popupManagerFactory,
-                DetailsWidgetHelper detailsWidgetHelper,
-                ResourceSetAvatarDragController dragController,
-                boolean tagCloud, Display display) {
-
-            super(popupManagerFactory, detailsWidgetHelper, dragController,
-                    tagCloud, display);
-        }
-
-        @Override
-        protected PopupManager createPopupManager(ResourceSet resources,
-                ResourceSetToValueResolver resolver) {
-            return popupManager;
-        }
-
-    }
 
     private ResourceSet allResources;
 
@@ -77,16 +53,7 @@ public class TextViewContentDisplayTest {
     private TextViewContentDisplay underTest;
 
     @Mock
-    private DetailsWidgetHelper detailsWidgetHelper;
-
-    @Mock
     private Display display;
-
-    @Mock
-    protected PopupManager popupManager;
-
-    @Mock
-    private PopupManagerFactory popupManagerFactory;
 
     @Mock
     private ResourceCategorizer resourceCategorizer;
@@ -145,8 +112,7 @@ public class TextViewContentDisplayTest {
 
         when(callback.getAllResources()).thenReturn(allResources);
 
-        underTest = new TestTextViewContentDisplay(popupManagerFactory,
-                detailsWidgetHelper, dragController, false, display);
+        underTest = new TextViewContentDisplay(dragController, false, display);
 
         underTest.init(callback);
 

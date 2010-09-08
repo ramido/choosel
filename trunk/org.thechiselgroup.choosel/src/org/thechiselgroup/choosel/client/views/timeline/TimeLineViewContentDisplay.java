@@ -19,8 +19,6 @@ import java.util.Date;
 import java.util.Set;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
-import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
-import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.ui.widget.timeline.TimeLineEvent;
 import org.thechiselgroup.choosel.client.ui.widget.timeline.TimeLineWidget;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
@@ -42,12 +40,7 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
     private TimeLineWidget timelineWidget;
 
     @Inject
-    public TimeLineViewContentDisplay(PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper,
-            DragEnablerFactory dragEnablerFactory) {
-
-        super(popupManagerFactory, detailsWidgetHelper);
-
+    public TimeLineViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
         this.dragEnablerFactory = dragEnablerFactory;
     }
 

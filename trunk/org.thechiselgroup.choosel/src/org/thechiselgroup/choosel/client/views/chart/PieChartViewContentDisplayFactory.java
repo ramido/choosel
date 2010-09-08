@@ -40,7 +40,6 @@ public class PieChartViewContentDisplayFactory implements ViewContentDisplayFact
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-        return new PieChartViewContentDisplay(popupManagerFactory,
-                detailsWidgetHelper, dragEnablerFactory);
+        return new PieChartViewContentDisplay(dragEnablerFactory);
     }
 }

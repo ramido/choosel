@@ -44,8 +44,7 @@ public class BarChartViewContentDisplayFactory implements ViewContentDisplayFact
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-        return new BarChartViewContentDisplay(popupManagerFactory,
-                detailsWidgetHelper, dragEnablerFactory,
+        return new BarChartViewContentDisplay(dragEnablerFactory,
                 resourceByTypeCategorizer);
     }
 }
