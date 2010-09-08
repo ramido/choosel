@@ -41,7 +41,6 @@ public class CircularBarChartViewContentDisplayFactory implements
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-        return new CircularBarChartViewContentDisplay(popupManagerFactory,
-                detailsWidgetHelper, dragEnablerFactory);
+        return new CircularBarChartViewContentDisplay(dragEnablerFactory);
     }
 }

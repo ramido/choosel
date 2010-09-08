@@ -19,9 +19,7 @@ import java.util.Set;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.Resource;
-import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.CSS;
-import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
@@ -63,12 +61,7 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
     private MapWidget map;
 
     @Inject
-    public MapViewContentDisplay(PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper,
-            DragEnablerFactory dragEnablerFactory) {
-
-        super(popupManagerFactory, detailsWidgetHelper);
-
+    public MapViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
         this.dragEnablerFactory = dragEnablerFactory;
     }
 

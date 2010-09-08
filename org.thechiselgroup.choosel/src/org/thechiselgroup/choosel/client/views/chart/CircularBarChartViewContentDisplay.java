@@ -15,8 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.chart;
 
-import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
-import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.ui.widget.chart.CircularBarChart;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 
@@ -29,11 +27,9 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
 
     @Inject
     public CircularBarChartViewContentDisplay(
-            PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper,
             DragEnablerFactory dragEnablerFactory) {
 
-        super(popupManagerFactory, detailsWidgetHelper, dragEnablerFactory);
+        super(dragEnablerFactory);
     }
 
     @Override

@@ -15,8 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.chart;
 
-import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
-import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.ui.widget.chart.TimeChart;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 
@@ -26,11 +24,9 @@ import com.google.inject.Inject;
 public class TimeChartViewContentDisplay extends ChartViewContentDisplay {
 
     @Inject
-    public TimeChartViewContentDisplay(PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper,
-            DragEnablerFactory dragEnablerFactory) {
+    public TimeChartViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
 
-        super(popupManagerFactory, detailsWidgetHelper, dragEnablerFactory);
+        super(dragEnablerFactory);
     }
 
     @Override

@@ -39,18 +39,14 @@ import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.command.UndoableCommand;
 import org.thechiselgroup.choosel.client.geometry.Point;
-import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceManager;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.client.test.ResourcesTestHelper;
 import org.thechiselgroup.choosel.client.test.TestResourceSetFactory;
-import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
-import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Arc;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidgetReadyEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidgetReadyHandler;
@@ -60,39 +56,11 @@ import org.thechiselgroup.choosel.client.ui.widget.graph.NodeDragHandler;
 import org.thechiselgroup.choosel.client.util.CollectionUtils;
 import org.thechiselgroup.choosel.client.views.DefaultResourceItem;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
-import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay.Display;
 
 public class GraphViewContentDisplayTest {
-
-    public class TestGraphViewContentDisplay extends GraphViewContentDisplay {
-
-        public TestGraphViewContentDisplay(Display display,
-                PopupManagerFactory popupManagerFactory,
-                DetailsWidgetHelper detailsWidgetHelper,
-                CommandManager commandManager, ResourceManager resourceManager,
-                DragEnablerFactory dragEnablerFactory,
-                ResourceCategorizer resourceCategorizer,
-                ArcStyleProvider arcStyleProvider,
-                GraphExpansionRegistry registry) {
-
-            super(display, popupManagerFactory, detailsWidgetHelper,
-                    commandManager, resourceManager, dragEnablerFactory,
-                    resourceCategorizer, arcStyleProvider, registry);
-        }
-
-        @Override
-        protected PopupManager createPopupManager(ResourceSet resources,
-                ResourceSetToValueResolver resolver) {
-            return popupManager;
-        }
-
-    }
-
-    private static final String RESOURCE_ITEM_CATEGORY = "resourceItemCategory";
 
     private ResourceSet allResources;
 
@@ -111,28 +79,13 @@ public class GraphViewContentDisplayTest {
     private GraphViewContentDisplay underTest;
 
     @Mock
-    private DetailsWidgetHelper detailsWidgetHelper;
-
-    @Mock
     private Display display;
 
     @Mock
     private DragEnablerFactory dragEnablerFactory;
 
     @Mock
-    private HoverModel hoverModel;
-
-    @Mock
-    private ResourceItemValueResolver layer;
-
-    @Mock
     private Node node;
-
-    @Mock
-    protected PopupManager popupManager;
-
-    @Mock
-    private PopupManagerFactory popupManagerFactory;
 
     @Mock
     private GraphExpansionRegistry registry;
@@ -152,8 +105,10 @@ public class GraphViewContentDisplayTest {
         ResourceSet resourceSet1 = createResources(1);
         ResourceSet resourceSet2 = createResources(2);
 
-        ResourceItem resourceItem1 = ResourcesTestHelper.createResourceItem(resourceSet1);
-        ResourceItem resourceItem2 = ResourcesTestHelper.createResourceItem(resourceSet2);
+        ResourceItem resourceItem1 = ResourcesTestHelper
+                .createResourceItem(resourceSet1);
+        ResourceItem resourceItem2 = ResourcesTestHelper
+                .createResourceItem(resourceSet2);
 
         underTest.update(toSet(resourceItem1, resourceItem2),
                 Collections.<ResourceItem> emptySet(),
@@ -176,7 +131,8 @@ public class GraphViewContentDisplayTest {
     public void addResourceItemToAllResource() {
         ResourceSet resourceSet = createResources(1);
 
-        ResourceItem resourceItem = ResourcesTestHelper.createResourceItem(resourceSet);
+        ResourceItem resourceItem = ResourcesTestHelper
+                .createResourceItem(resourceSet);
 
         underTest.update(toSet(resourceItem),
                 Collections.<ResourceItem> emptySet(),
@@ -223,8 +179,10 @@ public class GraphViewContentDisplayTest {
 
     @Test
     public void getAllNodes() {
-        ResourceItem resourceItem1 = ResourcesTestHelper.createResourceItem(createResources(1));
-        ResourceItem resourceItem2 = ResourcesTestHelper.createResourceItem(createResources(2));
+        ResourceItem resourceItem1 = ResourcesTestHelper
+                .createResourceItem(createResources(1));
+        ResourceItem resourceItem2 = ResourcesTestHelper
+                .createResourceItem(createResources(2));
 
         underTest.update(toSet(resourceItem1, resourceItem2),
                 Collections.<ResourceItem> emptySet(),
@@ -241,7 +199,8 @@ public class GraphViewContentDisplayTest {
     public void loadNeighbourhoodWhenAddingConcept() {
         Resource concept1 = createResource(1);
 
-        ResourceItem resourceItem = ResourcesTestHelper.createResourceItem(toResourceSet(concept1));
+        ResourceItem resourceItem = ResourcesTestHelper
+                .createResourceItem(toResourceSet(concept1));
 
         underTest.update(toSet(resourceItem),
                 Collections.<ResourceItem> emptySet(),
@@ -261,7 +220,8 @@ public class GraphViewContentDisplayTest {
     public void removeResourceItemFromAllResource() {
         ResourceSet resourceSet = createResources(1);
 
-        ResourceItem resourceItem = ResourcesTestHelper.createResourceItem(resourceSet);
+        ResourceItem resourceItem = ResourcesTestHelper
+                .createResourceItem(resourceSet);
 
         underTest.update(toSet(resourceItem),
                 Collections.<ResourceItem> emptySet(),
@@ -279,8 +239,10 @@ public class GraphViewContentDisplayTest {
         ResourceSet resourceSet1 = createResources(1);
         ResourceSet resourceSet2 = createResources(2);
 
-        ResourceItem resourceItem1 = ResourcesTestHelper.createResourceItem(resourceSet1);
-        ResourceItem resourceItem2 = ResourcesTestHelper.createResourceItem(resourceSet2);
+        ResourceItem resourceItem1 = ResourcesTestHelper
+                .createResourceItem(resourceSet1);
+        ResourceItem resourceItem2 = ResourcesTestHelper
+                .createResourceItem(resourceSet2);
 
         underTest.update(toSet(resourceItem1, resourceItem2),
                 Collections.<ResourceItem> emptySet(),
@@ -302,8 +264,10 @@ public class GraphViewContentDisplayTest {
         ResourceSet resourceSet1 = createResources(1);
         ResourceSet resourceSet2 = createResources(2);
 
-        ResourceItem resourceItem1 = ResourcesTestHelper.createResourceItem(resourceSet1);
-        ResourceItem resourceItem2 = ResourcesTestHelper.createResourceItem(resourceSet2);
+        ResourceItem resourceItem1 = ResourcesTestHelper
+                .createResourceItem(resourceSet1);
+        ResourceItem resourceItem2 = ResourcesTestHelper
+                .createResourceItem(resourceSet2);
 
         underTest.update(toSet(resourceItem1, resourceItem2),
                 Collections.<ResourceItem> emptySet(),
@@ -332,8 +296,7 @@ public class GraphViewContentDisplayTest {
 
         when(callback.getAllResources()).thenReturn(allResources);
 
-        underTest = spy(new TestGraphViewContentDisplay(display,
-                popupManagerFactory, detailsWidgetHelper, commandManager,
+        underTest = spy(new GraphViewContentDisplay(display, commandManager,
                 resourceManager, dragEnablerFactory, resourceCategorizer,
                 arcStyleProvider, registry));
 

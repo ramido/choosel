@@ -40,7 +40,6 @@ public class TimeChartViewContentDisplayFactory implements ViewContentDisplayFac
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-        return new TimeChartViewContentDisplay(popupManagerFactory,
-                detailsWidgetHelper, dragEnablerFactory);
+        return new TimeChartViewContentDisplay(dragEnablerFactory);
     }
 }

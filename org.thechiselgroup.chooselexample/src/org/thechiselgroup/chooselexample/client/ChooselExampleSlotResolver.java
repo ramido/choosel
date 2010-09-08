@@ -58,7 +58,7 @@ public class ChooselExampleSlotResolver extends DefaultSlotResolver {
 		// TestResourceSetFactory.LABEL_KEY);
 		// }
 
-		if (TestResourceSetFactory.DEFAULT_TYPE.equals(category)) {
+		if (TestResourceSetFactory.TYPE_1.equals(category)) {
 			return new SimplePropertyValueResolver(SlotResolver.LABEL_SLOT);
 		}
 

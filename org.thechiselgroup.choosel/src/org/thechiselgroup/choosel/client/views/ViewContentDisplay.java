@@ -19,18 +19,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
-import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.util.Disposable;
 
 public interface ViewContentDisplay extends WidgetAdaptable, Disposable {
 
     void checkResize();
-
-    // TODO move / remove
-    PopupManager createPopupManager(ResourceItemValueResolver resolver,
-            ResourceSet resources);
 
     void endRestore();
 

@@ -41,8 +41,8 @@ public class TagCloudViewContentDisplayFactory implements
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-        return new TextViewContentDisplay(popupManagerFactory,
-                detailsWidgetHelper, dragController, true);
+        return new TextViewContentDisplay(dragController,
+                true);
     }
 
 }

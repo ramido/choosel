@@ -46,6 +46,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceByUriTypeCategorizer;
@@ -56,25 +57,37 @@ import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
+import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.Presenter;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
+import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
 public class DefaultViewTest {
 
-    public static class TestView extends DefaultView {
+    public class TestView extends DefaultView {
 
         public TestView(ResourceSplitter resourceSplitter,
                 ViewContentDisplay contentDisplay, String label,
                 String contentType, ResourceItemValueResolver configuration,
                 SelectionModel selectionModel,
                 Presenter selectionModelPresenter, ResourceModel resourceModel,
-                Presenter resourceModelPresenter, HoverModel hoverModel) {
+                Presenter resourceModelPresenter, HoverModel hoverModel,
+                PopupManagerFactory popupManagerFactory,
+                DetailsWidgetHelper detailsWidgetHelper) {
 
             super(resourceSplitter, contentDisplay, label, contentType,
                     configuration, selectionModel, selectionModelPresenter,
-                    resourceModel, resourceModelPresenter, hoverModel);
+                    resourceModel, resourceModelPresenter, hoverModel,
+                    popupManagerFactory, detailsWidgetHelper);
+        }
+
+        @Override
+        protected PopupManager createPopupManager(ResourceSet resources,
+                ResourceSetToValueResolver resolver) {
+
+            return popupManager;
         }
 
         @Override
@@ -114,6 +127,12 @@ public class DefaultViewTest {
 
     // for future testing
     private ViewContentDisplayCallback callback;
+
+    @Mock
+    private DetailsWidgetHelper detailsWidgetHelper;
+
+    @Mock
+    private PopupManagerFactory popupManagerFactory;
 
     public Set<ResourceItem> captureAddedResourceItems() {
         ArgumentCaptor<Set> captor = ArgumentCaptor.forClass(Set.class);
@@ -181,7 +200,7 @@ public class DefaultViewTest {
         underTest = spy(new TestView(resourceSplitter, contentDisplay, "", "",
                 resourceSetToValueResolver, selectionModel,
                 selectionModelPresenter, resourceModel, resourceModelPresenter,
-                hoverModel));
+                hoverModel, popupManagerFactory, detailsWidgetHelper));
     }
 
     private void deselect(ResourceSet resources) {
@@ -376,12 +395,6 @@ public class DefaultViewTest {
 
         ArgumentCaptor<ViewContentDisplayCallback> captor = ArgumentCaptor
                 .forClass(ViewContentDisplayCallback.class);
-
-        when(
-                contentDisplay.createPopupManager(
-                        any(ResourceItemValueResolver.class),
-                        any(ResourceSet.class))).thenReturn(popupManager);
-
         verify(contentDisplay).init(captor.capture());
         callback = captor.getValue();
     }

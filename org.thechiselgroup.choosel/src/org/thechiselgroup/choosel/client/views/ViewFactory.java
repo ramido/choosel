@@ -34,10 +34,12 @@ import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ResourceSplitter;
+import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.ui.dnd.DropEnabledViewContentDisplay;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropTargetManager;
+import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.util.CollectionUtils;
 import org.thechiselgroup.choosel.client.views.chart.ChartCategorizer;
 import org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay;
@@ -81,6 +83,10 @@ public class ViewFactory implements WindowContentFactory {
 
     private ResourceCategorizer resourceByTypeCategorizer;
 
+    private final PopupManagerFactory popupManagerFactory;
+
+    private final DetailsWidgetHelper detailsWidgetHelper;
+
     public ViewFactory(
             String contentType,
             ViewContentDisplayFactory viewContentDisplayFactory,
@@ -94,7 +100,9 @@ public class ViewFactory implements WindowContentFactory {
             CategoryLabelProvider labelProvider,
             @Named(DROP_TARGET_MANAGER_VIEW_CONTENT) ResourceSetAvatarDropTargetManager contentDropTargetManager,
             DefaultResourceSetToValueResolverFactory resourceSetToValueResolverFactory,
-            ResourceCategorizer resourceByTypeCategorizer, HoverModel hoverModel) {
+            ResourceCategorizer resourceByTypeCategorizer,
+            HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
+            DetailsWidgetHelper detailsWidgetHelper) {
 
         assert contentType != null;
         assert viewContentDisplayFactory != null;
@@ -110,6 +118,8 @@ public class ViewFactory implements WindowContentFactory {
         assert resourceSetToValueResolverFactory != null;
         assert hoverModel != null;
         assert resourceByTypeCategorizer != null;
+        assert popupManagerFactory != null;
+        assert detailsWidgetHelper != null;
 
         this.hoverModel = hoverModel;
         this.contentType = contentType;
@@ -124,6 +134,8 @@ public class ViewFactory implements WindowContentFactory {
         this.categorizer = categorizer;
         this.resourceByTypeCategorizer = resourceByTypeCategorizer;
         this.resourceSetToValueResolverFactory = resourceSetToValueResolverFactory;
+        this.popupManagerFactory = popupManagerFactory;
+        this.detailsWidgetHelper = detailsWidgetHelper;
     }
 
     @Override
@@ -190,6 +202,6 @@ public class ViewFactory implements WindowContentFactory {
         return new DefaultView(resourceSplitter, contentDisplay, contentType,
                 contentType, configuration, selectionModel,
                 selectionModelPresenter, resourceModel, resourceModelPresenter,
-                hoverModel);
+                hoverModel, popupManagerFactory, detailsWidgetHelper);
     }
 }

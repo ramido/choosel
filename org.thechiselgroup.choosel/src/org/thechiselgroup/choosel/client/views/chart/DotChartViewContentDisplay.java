@@ -15,8 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.chart;
 
-import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
-import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.ui.widget.chart.DotChart;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 
@@ -26,11 +24,8 @@ import com.google.inject.Inject;
 public class DotChartViewContentDisplay extends ChartViewContentDisplay {
 
     @Inject
-    public DotChartViewContentDisplay(PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper,
-            DragEnablerFactory dragEnablerFactory) {
-
-        super(popupManagerFactory, detailsWidgetHelper, dragEnablerFactory);
+    public DotChartViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
+        super(dragEnablerFactory);
     }
 
     @Override

@@ -41,7 +41,6 @@ public class ScatterChartViewContentDisplayFactory implements
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-        return new ScatterChartViewContentDisplay(popupManagerFactory,
-                detailsWidgetHelper, dragEnablerFactory);
+        return new ScatterChartViewContentDisplay(dragEnablerFactory);
     }
 }

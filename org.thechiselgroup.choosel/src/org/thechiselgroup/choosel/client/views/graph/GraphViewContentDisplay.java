@@ -33,9 +33,7 @@ import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceManager;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
-import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Arc;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphLayouts;
@@ -213,14 +211,10 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
     @Inject
     public GraphViewContentDisplay(Display display,
-            PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper,
             CommandManager commandManager, ResourceManager resourceManager,
             DragEnablerFactory dragEnablerFactory,
             ResourceCategorizer resourceCategorizer,
             ArcStyleProvider arcStyleProvider, GraphExpansionRegistry registry) {
-
-        super(popupManagerFactory, detailsWidgetHelper);
 
         assert display != null;
         assert commandManager != null;

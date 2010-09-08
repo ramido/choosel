@@ -41,7 +41,6 @@ public class TimeLineViewContentDisplayFactory implements
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-        return new TimeLineViewContentDisplay(popupManagerFactory,
-                detailsWidgetHelper, dragEnablerFactory);
+        return new TimeLineViewContentDisplay(dragEnablerFactory);
     }
 }

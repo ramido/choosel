@@ -23,8 +23,6 @@ import org.thechiselgroup.choosel.client.resolver.ResourceToValueResolver;
 import org.thechiselgroup.choosel.client.resolver.SimplePropertyValueResolver;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
-import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.ui.widget.chart.BarChart;
 import org.thechiselgroup.choosel.client.ui.widget.chart.BarChart.LayoutType;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
@@ -60,12 +58,10 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     private ChartCategorizer[] categorizers;
 
     @Inject
-    public BarChartViewContentDisplay(PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper,
-            DragEnablerFactory dragEnablerFactory,
+    public BarChartViewContentDisplay(DragEnablerFactory dragEnablerFactory,
             ResourceCategorizer resourceByTypeCategorizer) {
 
-        super(popupManagerFactory, detailsWidgetHelper, dragEnablerFactory);
+        super(dragEnablerFactory);
 
         categorizers = new ChartCategorizer[] {
                 new ChartCategorizer(resourceByTypeCategorizer, "type"),

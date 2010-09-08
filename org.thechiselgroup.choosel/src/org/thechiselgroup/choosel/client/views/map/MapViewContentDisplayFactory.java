@@ -40,8 +40,7 @@ public class MapViewContentDisplayFactory implements ViewContentDisplayFactory {
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-        return new MapViewContentDisplay(popupManagerFactory,
-                detailsWidgetHelper, dragEnablerFactory);
+        return new MapViewContentDisplay(dragEnablerFactory);
     }
 
 }

@@ -40,8 +40,8 @@ public class ListViewContentDisplayFactory implements ViewContentDisplayFactory 
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-        return new TextViewContentDisplay(popupManagerFactory,
-                detailsWidgetHelper, dragController, false);
+        return new TextViewContentDisplay(dragController,
+                false);
     }
 
 }
