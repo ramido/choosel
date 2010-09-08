@@ -29,7 +29,7 @@ public interface ViewContentDisplayCallback {
 
     boolean containsResourceWithUri(String uri);
 
-    Collection<ResourceItem> getAllResourceItems();
+    Collection<DefaultResourceItem> getAllResourceItems();
 
     Iterable<Resource> getAllResources();
 

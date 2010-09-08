@@ -62,7 +62,8 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
     public void checkResize() {
     }
 
-    private PopupManager createPopupManager(ResourceItemValueResolver resolver,
+    @Override
+    public PopupManager createPopupManager(ResourceItemValueResolver resolver,
             ResourceSet resources) {
 
         return createPopupManager(resources,
@@ -82,18 +83,6 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
         };
 
         return popupManagerFactory.createPopupManager(widgetFactory);
-    }
-
-    @Override
-    public final ResourceItem createResourceItem(
-            ResourceItemValueResolver resolver, String category,
-            ResourceSet resources, HoverModel hoverModel) {
-
-        assert resolver != null;
-        assert resources != null;
-
-        return new ResourceItem(category, resources, hoverModel,
-                createPopupManager(resolver, resources), resolver);
     }
 
     protected abstract Widget createWidget();
@@ -141,10 +130,6 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
 
     public boolean isRestoring() {
         return restoring;
-    }
-
-    @Override
-    public final void removeResourceItem(ResourceItem resourceItem) {
     }
 
     @Override

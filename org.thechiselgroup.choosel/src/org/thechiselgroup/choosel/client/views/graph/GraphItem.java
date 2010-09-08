@@ -25,7 +25,7 @@ import static org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay.NOD
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.Colors;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
-import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.DefaultResourceItem;
 import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay.Display;
 
 public class GraphItem {
@@ -58,7 +58,7 @@ public class GraphItem {
         this.defaultBackgroundColor = backgroundColor;
     }
 
-    public void updateNode(ResourceItem.Status status) {
+    public void updateNode(DefaultResourceItem.Status status) {
         switch (status) {
         case PARTIALLY_HIGHLIGHTED_SELECTED:
         case HIGHLIGHTED_SELECTED: {

@@ -242,7 +242,7 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
         updateStatusStyling(updatedResourceItems);
     }
 
-    private void updateStatusStyling(Set<ResourceItem> resourceItems) {
+    private void updateStatusStyling(Set<? extends ResourceItem> resourceItems) {
         for (ResourceItem resourceItem : resourceItems) {
             ((MapItem) resourceItem.getDisplayObject())
                     .setStatusStyling(resourceItem.getStatus());

@@ -15,8 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.test;
 
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
 
 import org.junit.Assert;
@@ -26,6 +28,8 @@ import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
+import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.TestResourceItem;
 
 public final class ResourcesTestHelper {
 
@@ -63,5 +67,11 @@ public final class ResourcesTestHelper {
     }
 
     private ResourcesTestHelper() {
+    }
+
+    public static ResourceItem createResourceItem(ResourceSet resources) {
+        ResourceItem resourceItem = spy(new TestResourceItem());
+        when(resourceItem.getResourceSet()).thenReturn(resources);
+        return resourceItem;
     }
 }

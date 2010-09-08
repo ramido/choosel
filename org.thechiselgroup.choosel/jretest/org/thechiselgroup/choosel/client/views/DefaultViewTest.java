@@ -17,8 +17,8 @@ package org.thechiselgroup.choosel.client.views;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -31,16 +31,18 @@ import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.crea
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.toLabeledResources;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.toResourceSet;
-import static org.thechiselgroup.choosel.client.util.CollectionUtils.toSet;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSetFactory;
@@ -54,6 +56,7 @@ import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 import org.thechiselgroup.choosel.client.ui.Presenter;
+import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
@@ -84,11 +87,62 @@ public class DefaultViewTest {
 
     private static final String SLOT_ID = "slot-id";
 
-    @Mock
-    private ViewContentDisplay contentDisplay;
+    public static Set<ResourceItem> emptyResourceItemSet() {
+        return eq(Collections.<ResourceItem> emptySet());
+    }
+
+    private static Set<ResourceItem> eqResourceItems(
+            final Set<ResourceItem> resourceItems) {
+
+        return argThat(new ArgumentMatcher<Set<ResourceItem>>() {
+            @Override
+            public boolean matches(Object o) {
+                Set<ResourceItem> set = (Set<ResourceItem>) o;
+
+                if (set.size() != resourceItems.size()) {
+                    return false;
+                }
+
+                return set.containsAll(resourceItems);
+            }
+        });
+    }
+
+    private static Set<ResourceItem> resourceItemsForResourceSets(
+            final ResourceSet... resourceSets) {
+
+        return argThat(new ArgumentMatcher<Set<ResourceItem>>() {
+            @Override
+            public boolean matches(Object o) {
+                Set<ResourceItem> set = (Set<ResourceItem>) o;
+
+                if (set.size() != resourceSets.length) {
+                    return false;
+                }
+
+                for (ResourceSet resourceSet : resourceSets) {
+                    boolean found = false;
+                    for (ResourceItem item : set) {
+                        ResourceSet itemSet = item.getResourceSet();
+
+                        if (itemSet.size() == resourceSet.size()
+                                && itemSet.containsAll(resourceSet)) {
+                            found = true;
+                        }
+                    }
+
+                    if (!found) {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+        });
+    }
 
     @Mock
-    private ResourceItem resourceItem;
+    private ViewContentDisplay contentDisplay;
 
     @Mock
     private ResourceItemValueResolver resourceSetToValueResolver;
@@ -100,8 +154,6 @@ public class DefaultViewTest {
     private HandlerRegistration selectionRemovedHandlerRegistration;
 
     private DefaultView underTest;
-
-    private ViewContentDisplayCallback callback;
 
     private ResourceModel resourceModel;
 
@@ -116,34 +168,21 @@ public class DefaultViewTest {
 
     private HoverModel hoverModel;
 
-    private ResourceSet captureAddHighlightedResources() {
-        ArgumentCaptor<ResourceSet> argument = ArgumentCaptor
-                .forClass(ResourceSet.class);
-        verify(resourceItem, times(1)).addHighlightedResources(
-                argument.capture());
-        return argument.getValue();
-    }
+    @Mock
+    private PopupManager popupManager;
 
-    private ResourceSet captureRemoveHighlightedResources() {
-        ArgumentCaptor<ResourceSet> argument = ArgumentCaptor
-                .forClass(ResourceSet.class);
-        verify(resourceItem, times(1)).removeHighlightedResources(
-                argument.capture());
-        return argument.getValue();
-    }
+    // for future testing
+    private ViewContentDisplayCallback callback;
 
-    private ResourcesAddedEventHandler captureSelectionAddedHandler() {
-        ArgumentCaptor<ResourcesAddedEventHandler> captor = ArgumentCaptor
-                .forClass(ResourcesAddedEventHandler.class);
-        verify(selectionModel, times(1)).addEventHandler(captor.capture());
+    public Set<ResourceItem> captureAddedResourceItems() {
+        ArgumentCaptor<Set> captor = ArgumentCaptor.forClass(Set.class);
+        verify(contentDisplay, times(1)).update(captor.capture(),
+                emptyResourceItemSet(), emptyResourceItemSet());
         return captor.getValue();
     }
 
-    private ResourcesRemovedEventHandler captureSelectionRemovedHandler() {
-        ArgumentCaptor<ResourcesRemovedEventHandler> captor = ArgumentCaptor
-                .forClass(ResourcesRemovedEventHandler.class);
-        verify(selectionModel, times(1)).addEventHandler(captor.capture());
-        return captor.getValue();
+    private ArrayList<ResourceItem> captureAddedResourceItemsAsList() {
+        return new ArrayList<ResourceItem>(captureAddedResourceItems());
     }
 
     // TODO move to resource splitter test
@@ -164,62 +203,27 @@ public class DefaultViewTest {
         assertTrue(result.get(CATEGORY_2).containsEqualResources(resources2));
     }
 
-    // TODO improve
-    // TODO copy and check if update gets called with the right resource items
-    @Test
-    public void createResourceItemsOnResourcesAdded() {
-        ResourceSet resources1 = createResources(CATEGORY_1, 1, 3, 4);
-        ResourceSet resources2 = createResources(CATEGORY_2, 4, 2);
-        ResourceSet resources = toResourceSet(resources1, resources2);
-
-        resourceModel.addResourceSet(resources);
-
-        ArgumentCaptor<ResourceSet> argument = ArgumentCaptor
-                .forClass(ResourceSet.class);
-        verify(contentDisplay, times(2)).createResourceItem(
-                any(ResourceItemValueResolver.class), any(String.class),
-                argument.capture(), eq(hoverModel));
-
-        List<ResourceSet> values = argument.getAllValues();
-
-        assertEquals(2, values.size());
-        for (int i = 0; i < 2; i++) {
-            ResourceSet resourceSet = values.get(i);
-
-            if (resourceSet.size() == 3) {
-                assertContentEquals(resources1, resourceSet);
-            } else if (resourceSet.size() == 2) {
-                assertContentEquals(resources2, resourceSet);
-            } else {
-                fail("invalid resource set " + resourceSet);
-            }
-        }
-    }
-
-    // TODO copy and check if update gets called with the right resource items
     @Test
     public void createResourceItemsWhenLabeledResourcesAreAdded() {
         ResourceSet resources = createLabeledResources(CATEGORY_1, 1);
 
-        underTest.getResourceModel().addResourceSet(resources);
+        resourceModel.addResourceSet(resources);
 
         resources.add(createResource(CATEGORY_2, 2));
 
-        ArgumentCaptor<ResourceSet> captor = ArgumentCaptor
-                .forClass(ResourceSet.class);
-        verify(contentDisplay, times(2)).createResourceItem(
-                any(ResourceItemValueResolver.class), any(String.class),
-                captor.capture(), eq(hoverModel));
+        ArgumentCaptor<Set> captor = ArgumentCaptor.forClass(Set.class);
+        verify(contentDisplay, times(2)).update(captor.capture(),
+                emptyResourceItemSet(), emptyResourceItemSet());
 
-        List<ResourceSet> capturedResourceSets = captor.getAllValues();
-        for (ResourceSet capturedResourceSet : capturedResourceSets) {
-            assertEquals(1, capturedResourceSet.size());
-        }
+        Set<ResourceItem> set1 = captor.getAllValues().get(0);
+        assertEquals(1, set1.size());
+        assertContentEquals(createResources(CATEGORY_1, 1),
+                ((ResourceItem) set1.toArray()[0]).getResourceSet());
 
-        ResourceSet unionSet = toResourceSet(capturedResourceSets
-                .toArray(new ResourceSet[capturedResourceSets.size()]));
-
-        assertTrue(unionSet.containsAll(resources));
+        Set<ResourceItem> set2 = captor.getAllValues().get(1);
+        assertEquals(1, set2.size());
+        assertContentEquals(createResources(CATEGORY_2, 2),
+                ((ResourceItem) set2.toArray()[0]).getResourceSet());
     }
 
     private void createView() {
@@ -237,26 +241,29 @@ public class DefaultViewTest {
                 resourceSetToValueResolver, selectionModel,
                 selectionModelPresenter, resourceModel, resourceModelPresenter,
                 hoverModel));
+    }
 
-        when(
-                contentDisplay.createResourceItem(
-                        any(ResourceItemValueResolver.class),
-                        any(String.class), any(ResourceSet.class),
-                        eq(hoverModel))).thenReturn(resourceItem);
+    private void deselect(ResourceSet resources) {
+        ArgumentCaptor<ResourcesRemovedEventHandler> captor = ArgumentCaptor
+                .forClass(ResourcesRemovedEventHandler.class);
+        verify(selectionModel, times(1)).addEventHandler(captor.capture());
+        ResourcesRemovedEventHandler removedHandler = captor.getValue();
+        removedHandler.onResourcesRemoved(new ResourcesRemovedEvent(
+                createResources(), resources.toList()));
     }
 
     @Test
     public void deselectResourceItemWhenResourceRemovedFromSelection() {
-        when(resourceItem.getResourceSet()).thenReturn(createResources(1));
-        underTest.getResourceModel().addResources(createResources(1));
+        ResourceSet resources = createResources(1);
 
-        ResourcesRemovedEventHandler removedHandler = captureSelectionRemovedHandler();
+        resourceModel.addResources(resources);
+        List<ResourceItem> resourceItems = captureAddedResourceItemsAsList();
 
-        removedHandler.onResourcesRemoved(new ResourcesRemovedEvent(
-                createResources(), createResources(1).toList()));
+        select(resources);
+        deselect(resources);
 
-        verify(resourceItem, times(1)).removeSelectedResources(
-                createResources(1).toList());
+        assertContentEquals(createResources(), resourceItems.get(0)
+                .getSelectedResources());
     }
 
     @Test
@@ -267,24 +274,26 @@ public class DefaultViewTest {
         verify(contentDisplay, times(1)).dispose();
     }
 
+    @Ignore
     @Test
     public void disposeResourceItemsWhenViewDisposed() {
-        when(resourceItem.getResourceSet()).thenReturn(createResources(1));
-        underTest.getResourceModel().addResources(createResources(1));
-
-        underTest.dispose();
-
-        verify(resourceItem, times(1)).dispose();
+        // when(resourceItem.getResourceSet()).thenReturn(createResources(1));
+        // resourceModel.addResources(createResources(1));
+        //
+        // underTest.dispose();
+        //
+        // verify(resourceItem, times(1)).dispose();
     }
 
+    @Ignore
     @Test
     public void disposeResourceItemWhenResourceItemRemoved() {
-        ResourceSet resources = createLabeledResources(1);
+        // ResourceSet resources = createLabeledResources(1);
+        //
+        // resourceModel.addResourceSet(resources);
+        // resourceModel.removeResourceSet(resources);
 
-        underTest.getResourceModel().addResourceSet(resources);
-        underTest.getResourceModel().removeResourceSet(resources);
-
-        verify(resourceItem, times(1)).dispose();
+        // verify(resourceItem, times(1)).dispose();
     }
 
     @Test
@@ -313,13 +322,12 @@ public class DefaultViewTest {
     public void highlightedResourceSetOnCreatedResourceItems() {
         ResourceSet resources = createResources(CATEGORY_1, 1, 3, 4);
 
-        when(resourceItem.getResourceSet()).thenReturn(resources);
         hoverModel.setHighlightedResourceSet(resources);
-
         resourceModel.addResourceSet(resources);
+        List<ResourceItem> resourceItems = captureAddedResourceItemsAsList();
 
-        ResourceSet realResources = captureAddHighlightedResources();
-        assertContentEquals(resources, realResources);
+        assertContentEquals(resources, resourceItems.get(0)
+                .getHighlightedResources());
     }
 
     @Test
@@ -327,12 +335,12 @@ public class DefaultViewTest {
         ResourceSet resources = createResources(1, 2);
 
         resourceModel.addResourceSet(resources);
-        when(resourceItem.getResourceSet()).thenReturn(resources);
+        List<ResourceItem> resourceItems = captureAddedResourceItemsAsList();
 
         hoverModel.setHighlightedResourceSet(resources);
 
-        ResourceSet actualResources = captureAddHighlightedResources();
-        assertContentEquals(resources, actualResources);
+        assertContentEquals(resources, resourceItems.get(0)
+                .getHighlightedResources());
     }
 
     @Test
@@ -343,39 +351,39 @@ public class DefaultViewTest {
         ResourceSet highlightedResources = toResourceSet(resource1, resource2);
 
         resourceModel.addResourceSet(viewResources);
-        when(resourceItem.getResourceSet()).thenReturn(viewResources);
+        List<ResourceItem> resourceItems = captureAddedResourceItemsAsList();
 
         hoverModel.setHighlightedResourceSet(highlightedResources);
 
-        ResourceSet actualResources = captureAddHighlightedResources();
-        assertContentEquals(viewResources, actualResources);
+        assertContentEquals(viewResources, resourceItems.get(0)
+                .getHighlightedResources());
     }
 
     @Test
     public void highlightedResourcesGetAddedToResourceItemWhenResourcesAddedToHoverModel() {
         ResourceSet resources = createResources(1);
 
-        when(resourceItem.getResourceSet()).thenReturn(resources);
         resourceModel.addResourceSet(resources);
+        List<ResourceItem> resourceItems = captureAddedResourceItemsAsList();
 
         hoverModel.setHighlightedResourceSet(resources);
 
-        ResourceSet actualResources = captureAddHighlightedResources();
-        assertContentEquals(resources, actualResources);
+        assertContentEquals(createResources(1), resourceItems.get(0)
+                .getHighlightedResources());
     }
 
     @Test
     public void highlightedResourcesGetRemovedFromResourceItemWhenResourcesRemovedFromHoverModel() {
         ResourceSet resources = createResources(1);
 
-        when(resourceItem.getResourceSet()).thenReturn(resources);
         resourceModel.addResourceSet(resources);
+        List<ResourceItem> resourceItems = captureAddedResourceItemsAsList();
 
         hoverModel.setHighlightedResourceSet(resources);
         hoverModel.setHighlightedResourceSet(createResources());
 
-        ResourceSet actualResources = captureRemoveHighlightedResources();
-        assertContentEquals(resources, actualResources);
+        assertContentEquals(createResources(), resourceItems.get(0)
+                .getHighlightedResources());
     }
 
     @Test
@@ -384,32 +392,26 @@ public class DefaultViewTest {
                 any(ViewContentDisplayCallback.class));
     }
 
-    // TODO test for specific items
-    @Test
-    public void removeResourceItemsOnResourceSetRemoved() {
-        ResourceSet resources1 = createResources(CATEGORY_1, 1, 3, 4);
-        ResourceSet resources2 = createResources(CATEGORY_2, 4, 2);
-        ResourceSet resources = toLabeledResources(resources1, resources2);
-
-        underTest.getResourceModel().addResourceSet(resources);
-        underTest.getResourceModel().removeResourceSet(resources);
-
-        verify(contentDisplay, times(2)).removeResourceItem(
-                any(ResourceItem.class));
+    private void select(ResourceSet selectedResources) {
+        ArgumentCaptor<ResourcesAddedEventHandler> captor = ArgumentCaptor
+                .forClass(ResourcesAddedEventHandler.class);
+        verify(selectionModel, times(1)).addEventHandler(captor.capture());
+        ResourcesAddedEventHandler addedHandler = captor.getValue();
+        addedHandler.onResourcesAdded(new ResourcesAddedEvent(
+                selectedResources, selectedResources.toList()));
     }
 
     @Test
     public void selectResourceItemWhenResourceAddedToSelection() {
-        when(resourceItem.getResourceSet()).thenReturn(createResources(1));
-        underTest.getResourceModel().addResources(createResources(1));
+        ResourceSet resources = createResources(1);
 
-        ResourcesAddedEventHandler addedHandler = captureSelectionAddedHandler();
+        resourceModel.addResources(resources);
+        List<ResourceItem> resourceItems = captureAddedResourceItemsAsList();
 
-        addedHandler.onResourcesAdded(new ResourcesAddedEvent(
-                createResources(), createResources(1).toList()));
+        select(createResources(1));
 
-        verify(resourceItem, times(1)).addSelectedResources(
-                createResources(1).toList());
+        assertContentEquals(createResources(1), resourceItems.get(0)
+                .getSelectedResources());
     }
 
     @Before
@@ -436,55 +438,77 @@ public class DefaultViewTest {
 
         ArgumentCaptor<ViewContentDisplayCallback> captor = ArgumentCaptor
                 .forClass(ViewContentDisplayCallback.class);
+
+        when(
+                contentDisplay.createPopupManager(
+                        any(ResourceItemValueResolver.class),
+                        any(ResourceSet.class))).thenReturn(popupManager);
+
         verify(contentDisplay).init(captor.capture());
         callback = captor.getValue();
     }
 
+    // TODO check highlighted resources in resource item
     @Test
     public void updateCalledOnHoverModelChange() {
         ResourceSet highlightedResources = createResources(1);
-        when(resourceItem.getResourceSet()).thenReturn(highlightedResources);
+
         resourceModel.addResourceSet(highlightedResources);
+        Set<ResourceItem> addedResourceItems = captureAddedResourceItems();
 
         hoverModel.setHighlightedResourceSet(highlightedResources);
 
-        verifyUpdateCalledWithResourceItemAsUpdatedItem();
+        verify(contentDisplay, times(1)).update(emptyResourceItemSet(),
+                eqResourceItems(addedResourceItems), emptyResourceItemSet());
+    }
+
+    @Test
+    public void updateCalledWhenResourcesRemoved() {
+        ResourceSet resources1 = createResources(CATEGORY_1, 1);
+        ResourceSet resources2 = createResources(CATEGORY_2, 2);
+        ResourceSet resources = toLabeledResources(resources1, resources2);
+
+        resourceModel.addResourceSet(resources);
+        Set<ResourceItem> addedResourceItems = captureAddedResourceItems();
+
+        underTest.getResourceModel().removeResourceSet(resources);
+        verify(contentDisplay, times(1)).update(emptyResourceItemSet(),
+                emptyResourceItemSet(), eqResourceItems(addedResourceItems));
     }
 
     @Test
     public void updateCalledWhenSelectionChanges() {
-        when(resourceItem.getResourceSet()).thenReturn(createResources(1));
+        ResourceSet resources = createResources(1);
 
-        underTest.getResourceModel().addResources(createResources(1));
+        resourceModel.addResources(resources);
+        Set<ResourceItem> addedResourceItems = captureAddedResourceItems();
 
-        ResourcesAddedEventHandler addedHandler = captureSelectionAddedHandler();
-        addedHandler.onResourcesAdded(new ResourcesAddedEvent(
-                createResources(), createResources(1).toList()));
+        select(createResources(1));
 
-        verifyUpdateCalledWithResourceItemAsUpdatedItem();
+        verify(contentDisplay, times(1)).update(emptyResourceItemSet(),
+                eqResourceItems(addedResourceItems), emptyResourceItemSet());
+    }
+
+    @Test
+    public void updateCalledWith2ResourceItemsWhenAddingMixedResourceSet() {
+        ResourceSet resources1 = createResources(CATEGORY_1, 1, 3, 4);
+        ResourceSet resources2 = createResources(CATEGORY_2, 4, 2);
+        ResourceSet resources = toResourceSet(resources1, resources2);
+
+        resourceModel.addResourceSet(resources);
+
+        verify(contentDisplay, times(1)).update(
+                resourceItemsForResourceSets(resources1, resources2),
+                emptyResourceItemSet(), emptyResourceItemSet());
     }
 
     @Test
     public void updateNeverCalledOnHoverModelChangeThatDoesNotAffectViewResources() {
-        ResourceSet highlightedResources = createResources(1);
-        ResourceSet containedResources = createResources(2);
-        when(resourceItem.getResourceSet()).thenReturn(containedResources);
-        resourceModel.addResourceSet(containedResources);
+        resourceModel.addResourceSet(createResources(2));
+        hoverModel.setHighlightedResourceSet(createResources(1));
 
-        hoverModel.setHighlightedResourceSet(highlightedResources);
-
-        verify(contentDisplay, never()).update(
-                eq(Collections.<ResourceItem> emptySet()), any(Set.class),
-                eq(Collections.<ResourceItem> emptySet()));
+        verify(contentDisplay, never()).update(emptyResourceItemSet(),
+                any(Set.class), emptyResourceItemSet());
     }
 
-    private void verifyUpdateCalledWithResourceItemAsUpdatedItem() {
-        ArgumentCaptor<Set> argument = ArgumentCaptor.forClass(Set.class);
-        verify(contentDisplay, times(1)).update(
-                eq(Collections.<ResourceItem> emptySet()), argument.capture(),
-                eq(Collections.<ResourceItem> emptySet()));
-        Set<ResourceItem> updatedResourceItems = argument.getValue();
-
-        assertContentEquals(toSet(resourceItem), updatedResourceItems);
-    }
 }
