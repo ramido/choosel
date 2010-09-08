@@ -340,7 +340,7 @@ public class GraphViewContentDisplayTest {
         underTest.init(callback);
 
         when(resourceCategorizer.getCategory(any(Resource.class))).thenReturn(
-                TestResourceSetFactory.DEFAULT_TYPE);
+                TestResourceSetFactory.TYPE_1);
 
         when(registry.getAutomaticExpander(any(String.class))).thenReturn(
                 automaticExpander);

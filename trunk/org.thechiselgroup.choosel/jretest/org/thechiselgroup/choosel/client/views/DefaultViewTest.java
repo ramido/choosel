@@ -18,14 +18,17 @@ package org.thechiselgroup.choosel.client.views;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.client.test.AdvancedAsserts.assertContentEquals;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.emptyResourceItemSet;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.eqResourceItems;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.resourceItemsForResourceSets;
+import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.TYPE_1;
+import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.TYPE_2;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createLabeledResources;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
@@ -33,7 +36,6 @@ import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.toLa
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.toResourceSet;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -42,7 +44,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSetFactory;
@@ -79,66 +80,6 @@ public class DefaultViewTest {
         @Override
         protected void initUI() {
         }
-    }
-
-    private static final String CATEGORY_1 = "type-1";
-
-    private static final String CATEGORY_2 = "type-2";
-
-    private static final String SLOT_ID = "slot-id";
-
-    public static Set<ResourceItem> emptyResourceItemSet() {
-        return eq(Collections.<ResourceItem> emptySet());
-    }
-
-    private static Set<ResourceItem> eqResourceItems(
-            final Set<ResourceItem> resourceItems) {
-
-        return argThat(new ArgumentMatcher<Set<ResourceItem>>() {
-            @Override
-            public boolean matches(Object o) {
-                Set<ResourceItem> set = (Set<ResourceItem>) o;
-
-                if (set.size() != resourceItems.size()) {
-                    return false;
-                }
-
-                return set.containsAll(resourceItems);
-            }
-        });
-    }
-
-    private static Set<ResourceItem> resourceItemsForResourceSets(
-            final ResourceSet... resourceSets) {
-
-        return argThat(new ArgumentMatcher<Set<ResourceItem>>() {
-            @Override
-            public boolean matches(Object o) {
-                Set<ResourceItem> set = (Set<ResourceItem>) o;
-
-                if (set.size() != resourceSets.length) {
-                    return false;
-                }
-
-                for (ResourceSet resourceSet : resourceSets) {
-                    boolean found = false;
-                    for (ResourceItem item : set) {
-                        ResourceSet itemSet = item.getResourceSet();
-
-                        if (itemSet.size() == resourceSet.size()
-                                && itemSet.containsAll(resourceSet)) {
-                            found = true;
-                        }
-                    }
-
-                    if (!found) {
-                        return false;
-                    }
-                }
-
-                return true;
-            }
-        });
     }
 
     @Mock
@@ -188,8 +129,8 @@ public class DefaultViewTest {
     // TODO move to resource splitter test
     @Test
     public void categorizeLabeledResources() {
-        ResourceSet resources1 = createLabeledResources(CATEGORY_1, 1, 3, 4);
-        ResourceSet resources2 = createLabeledResources(CATEGORY_2, 4, 2);
+        ResourceSet resources1 = createLabeledResources(TYPE_1, 1, 3, 4);
+        ResourceSet resources2 = createLabeledResources(TYPE_2, 4, 2);
         ResourceSet resources = toResourceSet(resources1, resources2);
 
         underTest.getResourceModel().addResourceSet(resources);
@@ -197,19 +138,19 @@ public class DefaultViewTest {
                 .getCategorizedResourceSets();
 
         assertEquals(2, result.size());
-        assertTrue(result.containsKey(CATEGORY_1));
-        assertTrue(result.get(CATEGORY_1).containsEqualResources(resources1));
-        assertTrue(result.containsKey(CATEGORY_2));
-        assertTrue(result.get(CATEGORY_2).containsEqualResources(resources2));
+        assertTrue(result.containsKey(TYPE_1));
+        assertTrue(result.get(TYPE_1).containsEqualResources(resources1));
+        assertTrue(result.containsKey(TYPE_2));
+        assertTrue(result.get(TYPE_2).containsEqualResources(resources2));
     }
 
     @Test
     public void createResourceItemsWhenLabeledResourcesAreAdded() {
-        ResourceSet resources = createLabeledResources(CATEGORY_1, 1);
+        ResourceSet resources = createLabeledResources(TYPE_1, 1);
 
         resourceModel.addResourceSet(resources);
 
-        resources.add(createResource(CATEGORY_2, 2));
+        resources.add(createResource(TYPE_2, 2));
 
         ArgumentCaptor<Set> captor = ArgumentCaptor.forClass(Set.class);
         verify(contentDisplay, times(2)).update(captor.capture(),
@@ -217,12 +158,12 @@ public class DefaultViewTest {
 
         Set<ResourceItem> set1 = captor.getAllValues().get(0);
         assertEquals(1, set1.size());
-        assertContentEquals(createResources(CATEGORY_1, 1),
+        assertContentEquals(createResources(TYPE_1, 1),
                 ((ResourceItem) set1.toArray()[0]).getResourceSet());
 
         Set<ResourceItem> set2 = captor.getAllValues().get(1);
         assertEquals(1, set2.size());
-        assertContentEquals(createResources(CATEGORY_2, 2),
+        assertContentEquals(createResources(TYPE_2, 2),
                 ((ResourceItem) set2.toArray()[0]).getResourceSet());
     }
 
@@ -320,7 +261,7 @@ public class DefaultViewTest {
 
     @Test
     public void highlightedResourceSetOnCreatedResourceItems() {
-        ResourceSet resources = createResources(CATEGORY_1, 1, 3, 4);
+        ResourceSet resources = createResources(TYPE_1, 1, 3, 4);
 
         hoverModel.setHighlightedResourceSet(resources);
         resourceModel.addResourceSet(resources);
@@ -420,9 +361,6 @@ public class DefaultViewTest {
 
         createView();
 
-        when(contentDisplay.getSlotIDs()).thenReturn(new String[] { SLOT_ID },
-                new String[] {});
-
         when(
                 selectionModel
                         .addEventHandler(any(ResourcesAddedEventHandler.class)))
@@ -464,8 +402,8 @@ public class DefaultViewTest {
 
     @Test
     public void updateCalledWhenResourcesRemoved() {
-        ResourceSet resources1 = createResources(CATEGORY_1, 1);
-        ResourceSet resources2 = createResources(CATEGORY_2, 2);
+        ResourceSet resources1 = createResources(TYPE_1, 1);
+        ResourceSet resources2 = createResources(TYPE_2, 2);
         ResourceSet resources = toLabeledResources(resources1, resources2);
 
         resourceModel.addResourceSet(resources);
@@ -491,8 +429,8 @@ public class DefaultViewTest {
 
     @Test
     public void updateCalledWith2ResourceItemsWhenAddingMixedResourceSet() {
-        ResourceSet resources1 = createResources(CATEGORY_1, 1, 3, 4);
-        ResourceSet resources2 = createResources(CATEGORY_2, 4, 2);
+        ResourceSet resources1 = createResources(TYPE_1, 1, 3, 4);
+        ResourceSet resources2 = createResources(TYPE_2, 4, 2);
         ResourceSet resources = toResourceSet(resources1, resources2);
 
         resourceModel.addResourceSet(resources);

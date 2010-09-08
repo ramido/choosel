@@ -44,7 +44,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.inject.Inject;
 
 public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
@@ -57,10 +56,10 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
         private List<String> tagCloudItems = new ArrayList<String>();
 
         @Override
-        public void addItem(TextItem tagCloudItem) {
-            tagCloudItem.init();
+        public void addItem(TextItem textItem) {
+            textItem.init();
 
-            TextItemLabel label = tagCloudItem.getLabel();
+            TextItemLabel label = textItem.getLabel();
 
             itemLabels.add(label);
             updateTagSizes();
@@ -87,8 +86,8 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
         }
 
         @Override
-        public void addStyleName(TextItem tagCloudItem, String cssClass) {
-            tagCloudItem.getLabel().addStyleName(cssClass);
+        public void addStyleName(TextItem textItem, String cssClass) {
+            textItem.getLabel().addStyleName(cssClass);
         }
 
         private List<Double> getTagSizesList() {
@@ -100,13 +99,13 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
         }
 
         @Override
-        public void removeIndividualItem(TextItem tagCloudItem) {
+        public void removeIndividualItem(TextItem textItem) {
             /*
              * whole row needs to be removed, otherwise lots of empty rows
              * consume the whitespace
              */
             for (int i = 0; i < itemPanel.getWidgetCount(); i++) {
-                if (itemPanel.getWidget(i).equals(tagCloudItem.getLabel())) {
+                if (itemPanel.getWidget(i).equals(textItem.getLabel())) {
                     itemPanel.remove(i);
                     tagCloudItems.remove(i);
                     return;
@@ -115,8 +114,8 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
         }
 
         @Override
-        public void removeStyleName(TextItem tagCloudItem, String cssClass) {
-            tagCloudItem.getLabel().removeStyleName(cssClass);
+        public void removeStyleName(TextItem textItem, String cssClass) {
+            textItem.getLabel().removeStyleName(cssClass);
         }
 
         private void updateTagSizes() {
@@ -135,13 +134,13 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
     public static interface Display {
 
-        void addItem(TextItem tagCloudItem);
+        void addItem(TextItem textItem);
 
-        void addStyleName(TextItem tagCloudItem, String cssClass);
+        void addStyleName(TextItem textItem, String cssClass);
 
-        void removeIndividualItem(TextItem tagCloudItem);
+        void removeIndividualItem(TextItem textItem);
 
-        void removeStyleName(TextItem tagCloudItem, String cssClass);
+        void removeStyleName(TextItem textItem, String cssClass);
 
     }
 
@@ -198,7 +197,6 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
     private final boolean tagCloud;
 
-    @Inject
     public TextViewContentDisplay(PopupManagerFactory popupManagerFactory,
             DetailsWidgetHelper detailsWidgetHelper,
             ResourceSetAvatarDragController dragController, boolean tagCloud) {
@@ -208,6 +206,23 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
         this.dragController = dragController;
         this.tagCloud = tagCloud;
         this.display = new DefaultDisplay();
+
+        this.groupValueMapper = new DoubleToGroupValueMapper<String>(
+                new EquidistantBinBoundaryCalculator(), CollectionUtils.toList(
+                        "10px", "14px", "18px", "22px", "26px"));
+    }
+
+    // for test: can change display
+    protected TextViewContentDisplay(PopupManagerFactory popupManagerFactory,
+            DetailsWidgetHelper detailsWidgetHelper,
+            ResourceSetAvatarDragController dragController, boolean tagCloud,
+            Display display) {
+
+        super(popupManagerFactory, detailsWidgetHelper);
+
+        this.dragController = dragController;
+        this.tagCloud = tagCloud;
+        this.display = display;
 
         this.groupValueMapper = new DoubleToGroupValueMapper<String>(
                 new EquidistantBinBoundaryCalculator(), CollectionUtils.toList(

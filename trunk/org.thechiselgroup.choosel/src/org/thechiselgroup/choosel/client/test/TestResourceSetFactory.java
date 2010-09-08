@@ -21,7 +21,9 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
 public final class TestResourceSetFactory {
 
-    public static final String DEFAULT_TYPE = "type";
+    public static final String TYPE_1 = "type-1";
+
+    public static final String TYPE_2 = "type-2";
 
     public static final String LABEL = "label";
 
@@ -32,7 +34,7 @@ public final class TestResourceSetFactory {
     public static final String Y_COORD = "y-coord";
 
     public static ResourceSet createLabeledResources(int... indices) {
-        return createLabeledResources(LABEL, DEFAULT_TYPE, indices);
+        return createLabeledResources(LABEL, TYPE_1, indices);
     }
 
     public static ResourceSet createLabeledResources(String type,
@@ -49,7 +51,7 @@ public final class TestResourceSetFactory {
     }
 
     public static Resource createResource(int index) {
-        return createResource(DEFAULT_TYPE, index);
+        return createResource(TYPE_1, index);
     }
 
     /**
@@ -64,7 +66,7 @@ public final class TestResourceSetFactory {
     }
 
     public static ResourceSet createResources(int... indices) {
-        return createResources(DEFAULT_TYPE, indices);
+        return createResources(TYPE_1, indices);
     }
 
     public static ResourceSet createResources(String type, int... indices) {
