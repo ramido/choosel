@@ -51,7 +51,9 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
         this.dragEnablerFactory = dragEnablerFactory;
     }
 
-    private void addEventsToTimeline(Set<ResourceItem> addedResourceItems) {
+    private void addEventsToTimeline(
+            Set<? extends ResourceItem> addedResourceItems) {
+
         timelineWidget.addEvents(getTimeLineEvents(addedResourceItems));
     }
 
@@ -60,7 +62,9 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
         timelineWidget.layout();
     }
 
-    private void createTimeLineItems(Set<ResourceItem> addedResourceItems) {
+    private void createTimeLineItems(
+            Set<? extends ResourceItem> addedResourceItems) {
+
         for (ResourceItem resourceItem : addedResourceItems) {
             resourceItem.setDisplayObject(new TimeLineItem(resourceItem, this,
                     dragEnablerFactory));
@@ -89,7 +93,9 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
                 SlotResolver.DATE_SLOT };
     }
 
-    private TimeLineEvent[] getTimeLineEvents(Set<ResourceItem> resourceItems) {
+    private TimeLineEvent[] getTimeLineEvents(
+            Set<? extends ResourceItem> resourceItems) {
+
         TimeLineEvent[] events = new TimeLineEvent[resourceItems.size()];
         int counter = 0;
         for (ResourceItem item : resourceItems) {
@@ -103,7 +109,8 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
         return timelineWidget;
     }
 
-    private void removeEventsFromTimeline(Set<ResourceItem> removedResourceItems) {
+    private void removeEventsFromTimeline(
+            Set<? extends ResourceItem> removedResourceItems) {
         timelineWidget.removeEvents(getTimeLineEvents(removedResourceItems));
     }
 
@@ -148,7 +155,7 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
         }
     }
 
-    private void updateStatusStyling(Set<ResourceItem> resourceItems) {
+    private void updateStatusStyling(Set<? extends ResourceItem> resourceItems) {
         for (ResourceItem resourceItem : resourceItems) {
             ((TimeLineItem) resourceItem.getDisplayObject())
                     .setStatusStyling(resourceItem.getStatus());

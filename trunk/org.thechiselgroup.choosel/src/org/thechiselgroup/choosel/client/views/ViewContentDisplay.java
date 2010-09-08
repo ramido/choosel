@@ -21,14 +21,16 @@ import java.util.Set;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
+import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.util.Disposable;
 
 public interface ViewContentDisplay extends WidgetAdaptable, Disposable {
 
     void checkResize();
 
-    ResourceItem createResourceItem(ResourceItemValueResolver resolver,
-            String category, ResourceSet resources, HoverModel hoverModel);
+    // TODO move / remove
+    PopupManager createPopupManager(ResourceItemValueResolver resolver,
+            ResourceSet resources);
 
     void endRestore();
 
@@ -54,8 +56,6 @@ public interface ViewContentDisplay extends WidgetAdaptable, Disposable {
 
     boolean isReady();
 
-    void removeResourceItem(ResourceItem resourceItem);
-
     void restore(Memento state);
 
     Memento save();
@@ -63,10 +63,18 @@ public interface ViewContentDisplay extends WidgetAdaptable, Disposable {
     void startRestore();
 
     /**
+     * <p>
      * Updates the view content display. There is no overlap between the three
      * different resource sets (added, updated, and removed resource items). We
      * use a single method to enable the different view content displays to do a
      * single refresh of the view instead of multiple operations.
+     * </p>
+     * <p>
+     * The resource items can be referenced during a session for reference
+     * testing. When a resource item is created, it is passed in as part of the
+     * added resource items, when it changes, it is part of the updated resource
+     * items, and when it is removed, it is part of the removed resource items.
+     * </p>
      * 
      * @param addedResourceItems
      *            ResourceItems that have been added to the view. Is never

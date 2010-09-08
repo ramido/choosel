@@ -18,8 +18,8 @@ package org.thechiselgroup.choosel.client.views.map;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.IconResourceItem;
+import org.thechiselgroup.choosel.client.views.DefaultResourceItem.Status;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
-import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 

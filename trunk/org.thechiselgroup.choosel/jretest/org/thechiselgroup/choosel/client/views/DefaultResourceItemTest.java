@@ -33,13 +33,13 @@ import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
-import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
-import org.thechiselgroup.choosel.client.views.ResourceItem.SubsetStatus;
+import org.thechiselgroup.choosel.client.views.DefaultResourceItem.Status;
+import org.thechiselgroup.choosel.client.views.DefaultResourceItem.SubsetStatus;
 
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 
-public class ResourceItemTest {
+public class DefaultResourceItemTest {
 
     private static final String RESOURCE_ITEM_CATEGORY = "resourceItemCategory";
 
@@ -53,7 +53,7 @@ public class ResourceItemTest {
 
     private ResourceSet resources;
 
-    private ResourceItem underTest;
+    private DefaultResourceItem underTest;
 
     /**
      * remove highlighting on disposal (issue 65: highlighting remains after
@@ -360,7 +360,7 @@ public class ResourceItemTest {
 
         hoverModel = spy(new HoverModel());
         resources = new DefaultResourceSet();
-        underTest = spy(new ResourceItem(RESOURCE_ITEM_CATEGORY, resources,
+        underTest = spy(new DefaultResourceItem(RESOURCE_ITEM_CATEGORY, resources,
                 hoverModel, popupManager, layer));
     }
 

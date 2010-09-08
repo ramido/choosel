@@ -20,6 +20,7 @@ import java.util.Set;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -44,10 +45,9 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
     }
 
     @Override
-    public ResourceItem createResourceItem(ResourceItemValueResolver resolver,
-            String category, ResourceSet resources, HoverModel hoverModel) {
-        return delegate.createResourceItem(resolver, category, resources,
-                hoverModel);
+    public PopupManager createPopupManager(ResourceItemValueResolver resolver,
+            ResourceSet resources) {
+        return delegate.createPopupManager(resolver, resources);
     }
 
     @Override
@@ -90,11 +90,6 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
     }
 
     @Override
-    public void removeResourceItem(ResourceItem resourceItem) {
-        delegate.removeResourceItem(resourceItem);
-    }
-
-    @Override
     public void restore(Memento state) {
         delegate.restore(state);
     }
@@ -113,6 +108,7 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
     public void update(Set<ResourceItem> addedResourceItems,
             Set<ResourceItem> updatedResourceItems,
             Set<ResourceItem> removedResourceItems) {
+
         delegate.update(addedResourceItems, updatedResourceItems,
                 removedResourceItems);
     }

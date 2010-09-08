@@ -27,7 +27,7 @@ import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventH
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionString;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionStringToString;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Scale;
-import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
+import org.thechiselgroup.choosel.client.views.DefaultResourceItem.Status;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 

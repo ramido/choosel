@@ -113,7 +113,7 @@ public class DefaultView extends AbstractWindowContent implements View {
      * by the resource splitter) to the resource items that display the resource
      * sets in the view.
      */
-    private Map<String, ResourceItem> categoriesToResourceItems = new HashMap<String, ResourceItem>();
+    private Map<String, DefaultResourceItem> categoriesToResourceItems = new HashMap<String, DefaultResourceItem>();
 
     private ResourceItemValueResolver configuration;
 
@@ -190,15 +190,16 @@ public class DefaultView extends AbstractWindowContent implements View {
         contentDisplay.checkResize();
     }
 
-    private ResourceItem createResourceItem(String category,
+    private DefaultResourceItem createResourceItem(String category,
             ResourceSet resources) {
 
         // Added when changing resource item to contain resource sets
         // TODO use factory & dispose + clean up
 
         // TODO provide configuration to content display in callback
-        ResourceItem resourceItem = contentDisplay.createResourceItem(
-                configuration, category, resources, hoverModel);
+        DefaultResourceItem resourceItem = new DefaultResourceItem(category,
+                resources, hoverModel, contentDisplay.createPopupManager(
+                        configuration, resources), configuration);
 
         categoriesToResourceItems.put(category, resourceItem);
 
@@ -220,7 +221,8 @@ public class DefaultView extends AbstractWindowContent implements View {
     public void dispose() {
         Log.debug("dispose view " + toString());
 
-        for (ResourceItem resourceItem : categoriesToResourceItems.values()) {
+        for (DefaultResourceItem resourceItem : categoriesToResourceItems
+                .values()) {
             resourceItem.dispose();
         }
 
@@ -288,7 +290,8 @@ public class DefaultView extends AbstractWindowContent implements View {
         // TODO PERFORMANCE introduce field map: Resource --> List<ResourceItem>
         // such a map would need to be updated
         List<ResourceItem> result = new ArrayList<ResourceItem>();
-        for (ResourceItem resourceItem : categoriesToResourceItems.values()) {
+        for (DefaultResourceItem resourceItem : categoriesToResourceItems
+                .values()) {
             if (resourceItem.getResourceSet().contains(resource)) {
                 result.add(resourceItem);
             }
@@ -409,7 +412,7 @@ public class DefaultView extends AbstractWindowContent implements View {
             }
 
             @Override
-            public Collection<ResourceItem> getAllResourceItems() {
+            public Collection<DefaultResourceItem> getAllResourceItems() {
                 return categoriesToResourceItems.values();
             }
 
@@ -580,12 +583,12 @@ public class DefaultView extends AbstractWindowContent implements View {
                 HasAlignment.ALIGN_RIGHT);
     }
 
-    private ResourceItem removeResourceItem(String category) {
+    private DefaultResourceItem removeResourceItem(String category) {
         assert category != null : "category must not be null";
         assert categoriesToResourceItems.containsKey(category);
 
-        ResourceItem resourceItem = categoriesToResourceItems.remove(category);
-        contentDisplay.removeResourceItem(resourceItem);
+        DefaultResourceItem resourceItem = categoriesToResourceItems
+                .remove(category);
         resourceItem.dispose();
 
         assert !categoriesToResourceItems.containsKey(category);
@@ -678,10 +681,10 @@ public class DefaultView extends AbstractWindowContent implements View {
         Set<ResourceItem> affectedResourceItems = getResourceItems(affectedResourcesInThisView);
         for (ResourceItem resourceItem : affectedResourceItems) {
             if (highlighted) {
-                resourceItem
+                ((DefaultResourceItem) resourceItem)
                         .addHighlightedResources(affectedResourcesInThisView);
             } else {
-                resourceItem
+                ((DefaultResourceItem) resourceItem)
                         .removeHighlightedResources(affectedResourcesInThisView);
             }
             // TODO replace with add / remove of resources from item
@@ -720,6 +723,7 @@ public class DefaultView extends AbstractWindowContent implements View {
             }
                 break;
             case REMOVE: {
+                // XXX dispose should be done after method call...
                 removedResourceItems.add(removeResourceItem(change
                         .getCategory()));
             }
@@ -740,9 +744,11 @@ public class DefaultView extends AbstractWindowContent implements View {
         for (ResourceItem resourceItem : resourceItems) {
             // TODO test case (similar to highlighting)
             if (selected) {
-                resourceItem.addSelectedResources(resources);
+                ((DefaultResourceItem) resourceItem)
+                        .addSelectedResources(resources);
             } else {
-                resourceItem.removeSelectedResources(resources);
+                ((DefaultResourceItem) resourceItem)
+                        .removeSelectedResources(resources);
             }
         }
 

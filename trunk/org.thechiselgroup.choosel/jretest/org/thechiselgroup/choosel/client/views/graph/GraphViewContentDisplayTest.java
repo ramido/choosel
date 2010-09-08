@@ -47,6 +47,7 @@ import org.thechiselgroup.choosel.client.resources.ResourceManager;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
+import org.thechiselgroup.choosel.client.test.ResourcesTestHelper;
 import org.thechiselgroup.choosel.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
@@ -57,6 +58,7 @@ import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeDragEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeDragHandler;
 import org.thechiselgroup.choosel.client.util.CollectionUtils;
+import org.thechiselgroup.choosel.client.views.DefaultResourceItem;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
@@ -150,10 +152,8 @@ public class GraphViewContentDisplayTest {
         ResourceSet resourceSet1 = createResources(1);
         ResourceSet resourceSet2 = createResources(2);
 
-        ResourceItem resourceItem1 = underTest.createResourceItem(layer,
-                RESOURCE_ITEM_CATEGORY, resourceSet1, hoverModel);
-        ResourceItem resourceItem2 = underTest.createResourceItem(layer,
-                RESOURCE_ITEM_CATEGORY, resourceSet2, hoverModel);
+        ResourceItem resourceItem1 = ResourcesTestHelper.createResourceItem(resourceSet1);
+        ResourceItem resourceItem2 = ResourcesTestHelper.createResourceItem(resourceSet2);
 
         underTest.update(toSet(resourceItem1, resourceItem2),
                 Collections.<ResourceItem> emptySet(),
@@ -176,8 +176,7 @@ public class GraphViewContentDisplayTest {
     public void addResourceItemToAllResource() {
         ResourceSet resourceSet = createResources(1);
 
-        ResourceItem resourceItem = underTest.createResourceItem(layer,
-                RESOURCE_ITEM_CATEGORY, resourceSet, hoverModel);
+        ResourceItem resourceItem = ResourcesTestHelper.createResourceItem(resourceSet);
 
         underTest.update(toSet(resourceItem),
                 Collections.<ResourceItem> emptySet(),
@@ -224,10 +223,8 @@ public class GraphViewContentDisplayTest {
 
     @Test
     public void getAllNodes() {
-        ResourceItem resourceItem1 = underTest.createResourceItem(layer,
-                RESOURCE_ITEM_CATEGORY, createResources(1), hoverModel);
-        ResourceItem resourceItem2 = underTest.createResourceItem(layer,
-                RESOURCE_ITEM_CATEGORY, createResources(2), hoverModel);
+        ResourceItem resourceItem1 = ResourcesTestHelper.createResourceItem(createResources(1));
+        ResourceItem resourceItem2 = ResourcesTestHelper.createResourceItem(createResources(2));
 
         underTest.update(toSet(resourceItem1, resourceItem2),
                 Collections.<ResourceItem> emptySet(),
@@ -244,15 +241,14 @@ public class GraphViewContentDisplayTest {
     public void loadNeighbourhoodWhenAddingConcept() {
         Resource concept1 = createResource(1);
 
-        ResourceItem resourceItem = underTest.createResourceItem(layer,
-                RESOURCE_ITEM_CATEGORY, toResourceSet(concept1), hoverModel);
+        ResourceItem resourceItem = ResourcesTestHelper.createResourceItem(toResourceSet(concept1));
 
         underTest.update(toSet(resourceItem),
                 Collections.<ResourceItem> emptySet(),
                 Collections.<ResourceItem> emptySet());
 
-        ArgumentCaptor<ResourceItem> argument = ArgumentCaptor
-                .forClass(ResourceItem.class);
+        ArgumentCaptor<DefaultResourceItem> argument = ArgumentCaptor
+                .forClass(DefaultResourceItem.class);
         verify(automaticExpander, times(1)).expand(argument.capture(),
                 any(GraphNodeExpansionCallback.class));
 
@@ -265,8 +261,7 @@ public class GraphViewContentDisplayTest {
     public void removeResourceItemFromAllResource() {
         ResourceSet resourceSet = createResources(1);
 
-        ResourceItem resourceItem = underTest.createResourceItem(layer,
-                RESOURCE_ITEM_CATEGORY, resourceSet, hoverModel);
+        ResourceItem resourceItem = ResourcesTestHelper.createResourceItem(resourceSet);
 
         underTest.update(toSet(resourceItem),
                 Collections.<ResourceItem> emptySet(),
@@ -284,10 +279,8 @@ public class GraphViewContentDisplayTest {
         ResourceSet resourceSet1 = createResources(1);
         ResourceSet resourceSet2 = createResources(2);
 
-        ResourceItem resourceItem1 = underTest.createResourceItem(layer,
-                RESOURCE_ITEM_CATEGORY, resourceSet1, hoverModel);
-        ResourceItem resourceItem2 = underTest.createResourceItem(layer,
-                RESOURCE_ITEM_CATEGORY, resourceSet2, hoverModel);
+        ResourceItem resourceItem1 = ResourcesTestHelper.createResourceItem(resourceSet1);
+        ResourceItem resourceItem2 = ResourcesTestHelper.createResourceItem(resourceSet2);
 
         underTest.update(toSet(resourceItem1, resourceItem2),
                 Collections.<ResourceItem> emptySet(),
@@ -309,10 +302,8 @@ public class GraphViewContentDisplayTest {
         ResourceSet resourceSet1 = createResources(1);
         ResourceSet resourceSet2 = createResources(2);
 
-        ResourceItem resourceItem1 = underTest.createResourceItem(layer,
-                RESOURCE_ITEM_CATEGORY, resourceSet1, hoverModel);
-        ResourceItem resourceItem2 = underTest.createResourceItem(layer,
-                RESOURCE_ITEM_CATEGORY, resourceSet2, hoverModel);
+        ResourceItem resourceItem1 = ResourcesTestHelper.createResourceItem(resourceSet1);
+        ResourceItem resourceItem2 = ResourcesTestHelper.createResourceItem(resourceSet2);
 
         underTest.update(toSet(resourceItem1, resourceItem2),
                 Collections.<ResourceItem> emptySet(),
