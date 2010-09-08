@@ -45,7 +45,7 @@ public class ChartCategorizer implements ResourceMultiCategorizer {
             return toSet((String) resource.getValue(propertyName));
         }
 
-        if (category.equals(TestResourceSetFactory.DEFAULT_TYPE)) {
+        if (category.equals(TestResourceSetFactory.TYPE_1)) {
             // TODO split by iteration
             return toSet((String) resource
                     .getValue(TestResourceSetFactory.LABEL));

@@ -15,21 +15,30 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.test;
 
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
+
+import java.util.Collections;
+import java.util.Set;
 
 import org.junit.Assert;
 import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatcher;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
+import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
+import org.thechiselgroup.choosel.client.views.DefaultResourceItem;
+import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
-import org.thechiselgroup.choosel.client.views.TestResourceItem;
+import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 
 public final class ResourcesTestHelper {
 
@@ -38,6 +47,66 @@ public final class ResourcesTestHelper {
 
         Assert.assertEquals(expected,
                 resourceSet.contains(createResource(resourceType, resourceId)));
+    }
+
+    public static DefaultResourceItem createResourceItem(ResourceSet resources) {
+        return spy(new DefaultResourceItem("", resources,
+                mock(HoverModel.class), mock(PopupManager.class),
+                mock(ResourceItemValueResolver.class)));
+    }
+
+    public static Set<ResourceItem> emptyResourceItemSet() {
+        return eq(Collections.<ResourceItem> emptySet());
+    }
+
+    public static Set<ResourceItem> eqResourceItems(
+            final Set<ResourceItem> resourceItems) {
+
+        return argThat(new ArgumentMatcher<Set<ResourceItem>>() {
+            @Override
+            public boolean matches(Object o) {
+                Set<ResourceItem> set = (Set<ResourceItem>) o;
+
+                if (set.size() != resourceItems.size()) {
+                    return false;
+                }
+
+                return set.containsAll(resourceItems);
+            }
+        });
+    }
+
+    public static Set<ResourceItem> resourceItemsForResourceSets(
+            final ResourceSet... resourceSets) {
+
+        return argThat(new ArgumentMatcher<Set<ResourceItem>>() {
+            @Override
+            public boolean matches(Object o) {
+                Set<ResourceItem> set = (Set<ResourceItem>) o;
+
+                if (set.size() != resourceSets.length) {
+                    return false;
+                }
+
+                for (ResourceSet resourceSet : resourceSets) {
+                    boolean found = false;
+                    for (ResourceItem item : set) {
+                        ResourceSet itemSet = item.getResourceSet();
+
+                        if (itemSet.size() == resourceSet.size()
+                                && itemSet.containsAll(resourceSet)) {
+                            found = true;
+                        }
+                    }
+
+                    if (!found) {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+        });
     }
 
     public static ArgumentCaptor<ResourcesAddedEvent> verifyOnResourcesAdded(
@@ -67,11 +136,5 @@ public final class ResourcesTestHelper {
     }
 
     private ResourcesTestHelper() {
-    }
-
-    public static ResourceItem createResourceItem(ResourceSet resources) {
-        ResourceItem resourceItem = spy(new TestResourceItem());
-        when(resourceItem.getResourceSet()).thenReturn(resources);
-        return resourceItem;
     }
 }

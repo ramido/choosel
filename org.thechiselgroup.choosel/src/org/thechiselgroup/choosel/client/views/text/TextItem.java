@@ -79,13 +79,13 @@ public class TextItem {
         }
     }
 
-    private static final String CSS_HIGHLIGHTED = "textItemHighlighted";
+    public static final String CSS_HIGHLIGHTED = "textItemHighlighted";
 
-    private static final String CSS_PARTIALLY_HIGHLIGHTED = "textItemPartiallyHighlighted";
+    public static final String CSS_PARTIALLY_HIGHLIGHTED = "textItemPartiallyHighlighted";
 
-    private static final String CSS_LIST = "textItem";
+    public static final String CSS_LIST = "textItem";
 
-    private static final String CSS_SELECTED = "textItemSelected";
+    public static final String CSS_SELECTED = "textItemSelected";
 
     private final TextViewContentDisplay.Display display;
 
@@ -140,7 +140,6 @@ public class TextItem {
         this.label.setTagCount(tagCount);
     }
 
-    // TODO test
     public void updateStatusStyling() {
         switch (resourceItem.getHighlightStatus()) {
         case COMPLETE: {
