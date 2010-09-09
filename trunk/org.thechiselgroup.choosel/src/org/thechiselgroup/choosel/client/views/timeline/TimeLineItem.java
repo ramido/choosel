@@ -19,10 +19,10 @@ import static com.google.gwt.query.client.GQuery.$;
 
 import org.thechiselgroup.choosel.client.ui.CSS;
 import org.thechiselgroup.choosel.client.ui.widget.timeline.TimeLineEvent;
+import org.thechiselgroup.choosel.client.views.DefaultResourceItem.Status;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.IconResourceItem;
-import org.thechiselgroup.choosel.client.views.DefaultResourceItem.Status;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 
@@ -193,25 +193,25 @@ public class TimeLineItem extends IconResourceItem {
         });
     }
 
-    // TODO optimize -- use plain GWT instead of GQuery
     private void replaceIconImageWithDiv(String iconElementID) {
-        GQuery gElement = getGElement(iconElementID);
-        gElement.children("img").remove();
-        GQuery children = gElement.children("div");
-        if (children.length() == 0) {
-            String label = (String) getResourceValue(SlotResolver.LABEL_SLOT);
-            gElement.append("<div class='" + CSS_RESOURCE_ITEM_ICON + "'>"
-                    + label + "</div>");
+        Element element = DOM.getElementById(iconElementID);
 
-            GQuery div = gElement.children("div");
-            div.css("background-color", getColor());
-            div.css("border-color", calculateBorderColor(getColor()));
-        }
+        String color = getColor();
+        String label = (String) getResourceValue(SlotResolver.LABEL_SLOT);
+
+        element.setInnerHTML("<div style='background-color: " + color
+                + "; border-color: " + calculateBorderColor(color)
+                + ";' class='" + CSS_RESOURCE_ITEM_ICON + "'>" + label
+                + "</div>");
     }
 
     private void setIconColor(String color) {
-        Element div = (Element) DOM.getElementById(iconElementID)
-                .getFirstChild();
+        if (iconElementID == null) {
+            return;
+        }
+
+        Element element = DOM.getElementById(iconElementID);
+        Element div = (Element) element.getFirstChild();
         if (div != null) {
             CSS.setBackgroundColor(div, color);
             CSS.setBorderColor(div, calculateBorderColor(color));
@@ -219,6 +219,10 @@ public class TimeLineItem extends IconResourceItem {
     }
 
     private void setLabelStyle(Status status) {
+        if (labelElementID == null) {
+            return;
+        }
+
         Element element = DOM.getElementById(labelElementID);
 
         /*
@@ -256,10 +260,12 @@ public class TimeLineItem extends IconResourceItem {
 
     public void setStatusStyling(Status status) {
         String color = getColor();
+
         setIconColor(color);
-        setTickColor(color);
-        setTickZIndex(status);
         setLabelStyle(status);
+
+        setTickZIndex(status);
+        setTickColor(color);
     }
 
     private void setTickColor(String color) {
