@@ -18,8 +18,6 @@ package org.thechiselgroup.choosel.client.views.graph;
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceManager;
-import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
-import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
@@ -36,13 +34,7 @@ public class GraphViewContentDisplayFactory implements
     private CommandManager commandManager;
 
     @Inject
-    private DetailsWidgetHelper detailsWidgetHelper;
-
-    @Inject
     private DragEnablerFactory dragEnablerFactory;
-
-    @Inject
-    private PopupManagerFactory popupManagerFactory;
 
     @Inject
     private GraphExpansionRegistry registry;
@@ -60,8 +52,8 @@ public class GraphViewContentDisplayFactory implements
     @Override
     public ViewContentDisplay createViewContentDisplay() {
         return new GraphViewContentDisplay(
-                new GraphViewContentDisplay.DefaultDisplay(),
-                commandManager, resourceManager, dragEnablerFactory,
-                resourceCategorizer, arcStyleProvider, registry);
+                new GraphViewContentDisplay.DefaultDisplay(), commandManager,
+                resourceManager, dragEnablerFactory, resourceCategorizer,
+                arcStyleProvider, registry);
     }
 }

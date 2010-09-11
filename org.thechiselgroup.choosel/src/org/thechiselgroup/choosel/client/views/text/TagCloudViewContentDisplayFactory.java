@@ -15,9 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.text;
 
-import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
-import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
 
@@ -27,13 +25,7 @@ public class TagCloudViewContentDisplayFactory implements
         ViewContentDisplayFactory {
 
     @Inject
-    private DetailsWidgetHelper detailsWidgetHelper;
-
-    @Inject
     private ResourceSetAvatarDragController dragController;
-
-    @Inject
-    private PopupManagerFactory popupManagerFactory;
 
     @Inject
     public TagCloudViewContentDisplayFactory() {
@@ -41,8 +33,7 @@ public class TagCloudViewContentDisplayFactory implements
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-        return new TextViewContentDisplay(dragController,
-                true);
+        return new TextViewContentDisplay(dragController, true);
     }
 
 }

@@ -15,8 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.map;
 
-import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
-import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
@@ -26,13 +24,7 @@ import com.google.inject.Inject;
 public class MapViewContentDisplayFactory implements ViewContentDisplayFactory {
 
     @Inject
-    private DetailsWidgetHelper detailsWidgetHelper;
-
-    @Inject
     private DragEnablerFactory dragEnablerFactory;
-
-    @Inject
-    private PopupManagerFactory popupManagerFactory;
 
     @Inject
     public MapViewContentDisplayFactory() {

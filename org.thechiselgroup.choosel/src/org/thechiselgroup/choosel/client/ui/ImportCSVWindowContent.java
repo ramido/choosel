@@ -13,26 +13,22 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.views.chart;
+package org.thechiselgroup.choosel.client.ui;
 
-import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.ViewContentDisplay;
-import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
+import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 
-import com.google.inject.Inject;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Widget;
 
-public class CircularBarChartViewContentDisplayFactory implements
-        ViewContentDisplayFactory {
+public class ImportCSVWindowContent extends AbstractWindowContent {
 
-    @Inject
-    private DragEnablerFactory dragEnablerFactory;
-
-    @Inject
-    public CircularBarChartViewContentDisplayFactory() {
+    public ImportCSVWindowContent() {
+        super("Import CSV", "import_csv");
     }
 
     @Override
-    public ViewContentDisplay createViewContentDisplay() {
-        return new CircularBarChartViewContentDisplay(dragEnablerFactory);
+    public Widget asWidget() {
+        return new HTML("import csv");
     }
+
 }

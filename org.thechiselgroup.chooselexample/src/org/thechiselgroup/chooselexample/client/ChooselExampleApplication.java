@@ -173,31 +173,35 @@ public class ChooselExampleApplication extends ChooselApplication {
 		addDataSourcesButton();
 		addTestDataSourceButton();
 
-		addWindowContentButton(VIEWS_PANEL, "Note", "note");
+		addWindowContentButton(VIEWS_PANEL, "Note",
+				ChooselInjectionConstants.WINDOW_CONTENT_NOTE);
 		addWindowContentButton(VIEWS_PANEL, "List",
 				ChooselInjectionConstants.TYPE_LIST);
-		addWindowContentButton(VIEWS_PANEL, "Map", 
+		addWindowContentButton(VIEWS_PANEL, "Map",
 				ChooselInjectionConstants.TYPE_MAP);
-		addWindowContentButton(VIEWS_PANEL, "Timeline", 
+		addWindowContentButton(VIEWS_PANEL, "Timeline",
 				ChooselInjectionConstants.TYPE_TIMELINE);
-		addWindowContentButton(VIEWS_PANEL, "Bar", 
+		addWindowContentButton(VIEWS_PANEL, "Bar",
 				ChooselInjectionConstants.TYPE_BAR);
-		addWindowContentButton(VIEWS_PANEL, "Circular Bar", 
+		addWindowContentButton(VIEWS_PANEL, "Circular Bar",
 				ChooselInjectionConstants.TYPE_CIRCULAR_BAR);
-		addWindowContentButton(VIEWS_PANEL, "Pie", 
+		addWindowContentButton(VIEWS_PANEL, "Pie",
 				ChooselInjectionConstants.TYPE_PIE);
-		addWindowContentButton(VIEWS_PANEL, "Dot", 
+		addWindowContentButton(VIEWS_PANEL, "Dot",
 				ChooselInjectionConstants.TYPE_DOT);
-		addWindowContentButton(VIEWS_PANEL, "Scatter", 
+		addWindowContentButton(VIEWS_PANEL, "Scatter",
 				ChooselInjectionConstants.TYPE_SCATTER);
-		addWindowContentButton(VIEWS_PANEL, "Time", 
+		addWindowContentButton(VIEWS_PANEL, "Time",
 				ChooselInjectionConstants.TYPE_TIME);
-		addWindowContentButton(VIEWS_PANEL, "Tag Cloud", 
+		addWindowContentButton(VIEWS_PANEL, "Tag Cloud",
 				ChooselInjectionConstants.TYPE_TAG_CLOUD);
-		addWindowContentButton(VIEWS_PANEL, "Graph", 
+		addWindowContentButton(VIEWS_PANEL, "Graph",
 				ChooselInjectionConstants.TYPE_GRAPH);
 
-		addWindowContentButton(HELP_PANEL, "Help Content", "help");
+		addWindowContentButton(HELP_PANEL, "Help Content",
+				ChooselInjectionConstants.WINDOW_CONTENT_HELP);
+		addWindowContentButton(DATA_PANEL, "CSV Import",
+				ChooselInjectionConstants.WINDOW_CONTENT_CSV_IMPORT);
 		addInfoButton();
 	}
 
