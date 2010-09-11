@@ -61,4 +61,10 @@ public interface ChooselInjectionConstants {
 
     String TYPE_TIMELINE = "Timeline";
 
+    String WINDOW_CONTENT_CSV_IMPORT = "import_csv";
+
+    String WINDOW_CONTENT_NOTE = "note";
+
+    String WINDOW_CONTENT_HELP = "help";
+
 }

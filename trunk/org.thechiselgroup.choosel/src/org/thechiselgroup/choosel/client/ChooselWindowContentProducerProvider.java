@@ -36,6 +36,7 @@ import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionCo
 import java.util.HashMap;
 import java.util.Map;
 
+import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.label.CategoryLabelProvider;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
@@ -43,8 +44,9 @@ import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
-import org.thechiselgroup.choosel.client.ui.HelpWindowContent;
-import org.thechiselgroup.choosel.client.ui.NoteWindowContent;
+import org.thechiselgroup.choosel.client.ui.HelpWindowContentFactory;
+import org.thechiselgroup.choosel.client.ui.ImportCSVWindowContentFactory;
+import org.thechiselgroup.choosel.client.ui.NoteWindowContentFactory;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropTargetManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.views.DefaultResourceSetToValueResolverFactory;
@@ -53,7 +55,6 @@ import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.ViewFactory;
-import org.thechiselgroup.choosel.client.windows.WindowContent;
 import org.thechiselgroup.choosel.client.windows.WindowContentFactory;
 import org.thechiselgroup.choosel.client.windows.WindowContentProducer;
 
@@ -141,19 +142,15 @@ public class ChooselWindowContentProducerProvider implements
         this.resourceSetToValueResolverFactory = new DefaultResourceSetToValueResolverFactory(
                 slotResolver, resourceByTypeCategorizer);
 
-        windowContentFactories.put("help", new WindowContentFactory() {
-            @Override
-            public WindowContent createWindowContent() {
-                return new HelpWindowContent();
-            }
-        });
-
-        windowContentFactories.put("note", new WindowContentFactory() {
-            @Override
-            public WindowContent createWindowContent() {
-                return new NoteWindowContent();
-            }
-        });
+        windowContentFactories.put(
+                ChooselInjectionConstants.WINDOW_CONTENT_HELP,
+                new HelpWindowContentFactory());
+        windowContentFactories.put(
+                ChooselInjectionConstants.WINDOW_CONTENT_NOTE,
+                new NoteWindowContentFactory());
+        windowContentFactories.put(
+                ChooselInjectionConstants.WINDOW_CONTENT_CSV_IMPORT,
+                new ImportCSVWindowContentFactory());
     }
 
     @Override
