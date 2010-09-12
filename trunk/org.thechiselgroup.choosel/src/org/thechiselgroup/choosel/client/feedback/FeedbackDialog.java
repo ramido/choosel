@@ -59,14 +59,19 @@ public class FeedbackDialog extends AbstractDialog {
 
     private String title;
 
-    public FeedbackDialog(String title, String message, Throwable error,
-            AsyncCommandExecutor executor, FeedbackServiceAsync feedbackService) {
+    private final String header;
+
+    public FeedbackDialog(String title, String header, String message,
+            Throwable error, AsyncCommandExecutor executor,
+            FeedbackServiceAsync feedbackService) {
 
         assert title != null;
         assert message != null;
         assert executor != null;
         assert feedbackService != null;
+        assert header != null;
 
+        this.header = header;
         this.feedbackService = feedbackService;
         this.executor = executor;
         this.title = title;
@@ -76,7 +81,7 @@ public class FeedbackDialog extends AbstractDialog {
 
     public FeedbackDialog(Throwable error, AsyncCommandExecutor executor,
             FeedbackServiceAsync feedbackService) {
-        this("Error occured", error.getMessage() + "<br/></br>"
+        this("Error", "An error occurred", error.getMessage() + "<br/></br>"
                 + "<b>Please describe the circumstances of this error:</b>",
                 error, executor, feedbackService);
     }
@@ -103,12 +108,17 @@ public class FeedbackDialog extends AbstractDialog {
     }
 
     @Override
+    public String getHeader() {
+        return header;
+    }
+
+    @Override
     public String getOkayButtonLabel() {
         return "Send";
     }
 
     @Override
-    public String getTitle() {
+    public String getWindowTitle() {
         return title;
     }
 

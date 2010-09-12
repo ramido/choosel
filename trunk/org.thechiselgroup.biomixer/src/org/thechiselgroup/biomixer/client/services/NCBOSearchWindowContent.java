@@ -75,7 +75,7 @@ public class NCBOSearchWindowContent extends AbstractWindowContent implements
 				return;
 			}
 
-			((WindowPanel) w).updateToContentSize();
+			((WindowPanel) w).adjustSize();
 		}
 
 	}

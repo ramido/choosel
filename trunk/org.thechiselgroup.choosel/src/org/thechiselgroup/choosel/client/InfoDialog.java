@@ -21,10 +21,10 @@ import org.thechiselgroup.choosel.client.feedback.FeedbackServiceAsync;
 
 import com.google.inject.Inject;
 
+// TODO extract branding
 public class InfoDialog extends FeedbackDialog {
 
-    private static final String MESSAGE = "<h1>Bio-Mixer</h1>"
-            + "<i>\"To understand is hard. Once one understands, "
+    private static final String MESSAGE = "<i>\"To understand is hard. Once one understands, "
             + "action is easy.\"</i>"
             + "<p>(C) Copyright 2009, 2010 "
             + "The CHISEL Group, University of Victoria<br/>"
@@ -41,7 +41,8 @@ public class InfoDialog extends FeedbackDialog {
     @Inject
     public InfoDialog(AsyncCommandExecutor executor,
             FeedbackServiceAsync feedbackService) {
-        super("About Bio-Mixer", MESSAGE, null, executor, feedbackService);
+
+        super("About", "Bio-Mixer", MESSAGE, null, executor, feedbackService);
     }
 
     @Override

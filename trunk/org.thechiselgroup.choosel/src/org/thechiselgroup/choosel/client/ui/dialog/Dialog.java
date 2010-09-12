@@ -23,9 +23,11 @@ public interface Dialog {
 
     Widget getContent();
 
+    String getHeader();
+
     String getOkayButtonLabel();
 
-    String getTitle();
+    String getWindowTitle();
 
     void init(DialogCallback callback);
 

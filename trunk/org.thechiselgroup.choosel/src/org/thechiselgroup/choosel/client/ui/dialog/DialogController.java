@@ -25,7 +25,6 @@ import org.thechiselgroup.choosel.client.util.RemoveHandle;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowController;
 import org.thechiselgroup.choosel.client.windows.WindowPanel;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.AbsolutePanel;
@@ -99,14 +98,15 @@ public class DialogController extends AbstractWindowController {
 
         getBoundaryPanel().add(dialogWindow);
 
-        // display centered below action bar
-        // offsets are useless here -- why? -- use content instead (not
-        // exact)
-        Log.debug("windowOffsetWidth: " + dialogWindow.getOffsetWidth());
-        Log.debug("windowContentWidth: " + dialogWindow.getContentWidth());
+        // TODO variable calculation of window size
+        // XXX this fixes problem that dialog window takes up whole screen
+        dialogWindow.setPixelSize(500, 600);
 
-        int x = (getBoundaryPanel().getOffsetWidth() - dialogWindow
-                .getContentWidth()) / 2;
+        /*
+         * display centered below action bar offsets are useless here -- why? --
+         * use content instead (not exact)
+         */
+        int x = (getBoundaryPanel().getOffsetWidth() - dialogWindow.getWidth()) / 2;
 
         // TODO extract offset (variable)
         dialogWindow.setLocation(x, ActionBar.ACTION_BAR_HEIGHT_PX + 10);
