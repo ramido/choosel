@@ -29,6 +29,7 @@ import org.thechiselgroup.choosel.client.ui.CSS;
 import org.thechiselgroup.choosel.client.ui.WidgetFactory;
 import org.thechiselgroup.choosel.client.ui.dnd.DragProxyEventReceiver;
 import org.thechiselgroup.choosel.client.ui.popup.DefaultPopupManager;
+import org.thechiselgroup.choosel.client.util.MathUtils;
 
 import com.allen_sauer.gwt.dnd.client.util.Location;
 import com.allen_sauer.gwt.dnd.client.util.WidgetLocation;
@@ -71,17 +72,19 @@ public class WindowPanel extends NEffectPanel implements
         }
     }
 
-    private static final int BORDER_THICKNESS = 3;
+    private static final int BORDER_THICKNESS = 7;
 
-    private static final String CSS_WINDOW = "window";
+    private static final String CSS_WINDOW = "choosel-WindowPanel";
 
-    private static final String CSS_WINDOW_BUTTON_PANEL = "window-button-panel";
+    private static final String CSS_WINDOW_BUTTON_PANEL = "choosel-WindowPanel-ButtonPanel";
 
-    private static final String CSS_WINDOW_HEADER = "window-header";
+    private static final String CSS_WINDOW_HEADER = "choosel-WindowPanel-Header";
 
-    private static final String CSS_WINDOW_HEADER_LABEL = "window-header-label";
+    private static final String CSS_WINDOW_HEADER_LABEL = "choosel-WindowPanel-HeaderLabel";
 
-    private static final String CSS_WINDOW_RESIZE_EDGE = "window-resize-edge";
+    private static final String CSS_WINDOW_RESIZE = "choosel-WindowPanel-Resize-";
+
+    private static final String CSS_WINDOW_RESIZE_EDGE = "choosel-WindowPanel-ResizeEdge";
 
     /**
      * Specifies that resizing occur at the east edge.
@@ -108,6 +111,9 @@ public class WindowPanel extends NEffectPanel implements
      */
     public static final DirectionConstant EAST = new DirectionConstant(
             DIRECTION_EAST, "e");
+
+    public static final DirectionConstant EAST_TOP = new DirectionConstant(
+            DIRECTION_EAST, "et");
 
     private static final String IMAGE_CLOSE_ACTIVE = "images/close_active.gif";
 
@@ -157,15 +163,21 @@ public class WindowPanel extends NEffectPanel implements
     public static final DirectionConstant WEST = new DirectionConstant(
             DIRECTION_WEST, "w");
 
-    private static final int WINDOW_BORDER_FROM_CSS = 2;
+    public static final DirectionConstant WEST_TOP = new DirectionConstant(
+            DIRECTION_WEST, "wt");
+
+    private static final int WINDOW_BORDER_FROM_CSS = 2 + 2; // outer + inner
+
+    private static final int TOTAL_BORDER_THICKNESS = 2 * BORDER_THICKNESS
+            + WINDOW_BORDER_FROM_CSS;
 
     private Image closeImage;
 
-    private int contentHeight;
+    private int height;
 
     private Widget contentWidget;
 
-    private int contentWidth;
+    private int width;
 
     private Widget eastTopWidget;
 
@@ -196,11 +208,34 @@ public class WindowPanel extends NEffectPanel implements
 
     private String windowTitle;
 
+    /**
+     * Adjusts the size of the window or the size of its content. If the window
+     * is larger than its content, then the content size is increased. If the
+     * window is smaller, its size is increased. It also checks for maximum
+     * sizes because of desktop limitations.
+     */
     public void adjustSize() {
-        int height = contentWidget.getOffsetHeight();
-        int width = contentWidget.getOffsetWidth();
+        /*
+         * Calculate target width: max of header, adjusted window, content
+         * 
+         * TODO: restrict to available desktop space
+         */
+        int targetWidth = TOTAL_BORDER_THICKNESS
+                + MathUtils.max(headerContainer.getOffsetWidth(),
+                        contentWidget.getOffsetWidth(), width
+                                - TOTAL_BORDER_THICKNESS);
+        /*
+         * Calculate target height: max of adjusted window, content
+         * 
+         * TODO: restrict to available desktop space
+         */
+        int targetHeight = TOTAL_BORDER_THICKNESS
+                + MathUtils.max(
+                        contentWidget.getOffsetWidth(),
+                        width - TOTAL_BORDER_THICKNESS
+                                - headerContainer.getOffsetHeight());
 
-        setContentSize(width, height);
+        setPixelSize(targetWidth, targetHeight);
     }
 
     // TODO refactor
@@ -213,7 +248,7 @@ public class WindowPanel extends NEffectPanel implements
                 // do not super.tearDownEffects as this resets to original state
                 // reset root panel position as this is affected by move
                 CSS.setLocation(rootPanel, 0, 0);
-            };
+            }
         };
 
         move.addEffectCompletedHandler(new EffectCompletedHandler() {
@@ -376,12 +411,8 @@ public class WindowPanel extends NEffectPanel implements
         return "Close";
     }
 
-    public int getContentHeight() {
-        return contentHeight;
-    }
-
-    public int getContentWidth() {
-        return contentWidth;
+    public int getHeight() {
+        return height;
     }
 
     private String getInvisibleCloseImageUrl() {
@@ -406,6 +437,10 @@ public class WindowPanel extends NEffectPanel implements
 
     private String getVisibleCloseImageUrl() {
         return getModuleBase() + IMAGE_CLOSE_VISIBLE;
+    }
+
+    public int getWidth() {
+        return width;
     }
 
     public String getWindowTitle() {
@@ -433,6 +468,8 @@ public class WindowPanel extends NEffectPanel implements
         headerWidget.addStyleName(CSS_WINDOW_HEADER_LABEL);
 
         this.contentWidget = contentWidget;
+        // TODO move to CSS
+        // this.contentWidget.getElement().setAttribute("overflow", "hidden");
 
         HorizontalPanel headerBar = createHeaderBar();
 
@@ -469,9 +506,9 @@ public class WindowPanel extends NEffectPanel implements
         northWidget = setupCell(0, 1, NORTH);
         setupCell(0, 2, NORTH_EAST);
 
-        westTopWidget = setupCell(1, 0, WEST);
+        westTopWidget = setupCell(1, 0, WEST_TOP);
         grid.setWidget(1, 1, headerContainer);
-        eastTopWidget = setupCell(1, 2, EAST);
+        eastTopWidget = setupCell(1, 2, EAST_TOP);
 
         westWidget = setupCell(2, 0, WEST);
         grid.setWidget(2, 1, contentWidget);
@@ -488,6 +525,10 @@ public class WindowPanel extends NEffectPanel implements
             @Override
             public void onEffectCompleted(EffectCompletedEvent event) {
                 removeEffects();
+
+                // TODO extract constant
+                // DOM.setStyleAttribute(rootPanel.getElement(), "opacity",
+                // null);
             }
         });
         addEffect(showEffect);
@@ -517,71 +558,27 @@ public class WindowPanel extends NEffectPanel implements
     @Override
     public void onLoad() {
         super.onLoad();
-        updateToContentSize();
+
+        this.width = getOffsetWidth();
+        this.height = getOffsetHeight();
+
+        adjustSize();
         playEffects();
     }
 
-    public void setAbsoluteSize(int offsetWidth, int offsetHeight) {
-        setPixelSize(offsetWidth, offsetHeight);
+    private void setBorderWidths(int contentWidth, int contentHeight,
+            int headerHeight) {
 
-        int headerHeight = headerContainer.getOffsetHeight();
-        int contentOffsetWidth = offsetWidth - 2 * BORDER_THICKNESS
-                - WINDOW_BORDER_FROM_CSS;
-        int contentOffsetHeight = offsetHeight - 2 * BORDER_THICKNESS
-                - headerHeight - WINDOW_BORDER_FROM_CSS;
+        /* -4: subtract header padding from CSS file */
+        headerContainer.setPixelSize(contentWidth - 4,
+                headerWidget.getOffsetHeight());
 
-        contentWidget.setPixelSize(contentOffsetWidth, contentOffsetHeight);
-        contentWidth = contentOffsetWidth;
-        contentHeight = contentOffsetHeight;
-
-        setBorderWidths(contentOffsetWidth, contentOffsetHeight, headerHeight);
-    }
-
-    private void setBorderWidths(int contentOffsetWidth,
-            int contentOffsetHeight, int headerHeight) {
-        headerContainer.setPixelSize(contentOffsetWidth - 4,
-                headerWidget.getOffsetHeight()); // subtract header padding from
-        // CSS
-        // file
-
-        northWidget.setPixelSize(contentOffsetWidth, BORDER_THICKNESS);
-        southWidget.setPixelSize(contentOffsetWidth, BORDER_THICKNESS);
+        northWidget.setPixelSize(contentWidth, BORDER_THICKNESS);
+        southWidget.setPixelSize(contentWidth, BORDER_THICKNESS);
         westTopWidget.setPixelSize(BORDER_THICKNESS, headerHeight);
-        westWidget.setPixelSize(BORDER_THICKNESS, contentOffsetHeight);
+        westWidget.setPixelSize(BORDER_THICKNESS, contentHeight);
         eastTopWidget.setPixelSize(BORDER_THICKNESS, headerHeight);
-        eastWidget.setPixelSize(BORDER_THICKNESS, contentOffsetHeight);
-    }
-
-    public void setContentSize(int width, int height) {
-        // Log.debug("WindowPanel.setContentSize(" + width + "," + height +
-        // ")");
-
-        contentWidget.setPixelSize(width, height);
-        contentWidth = width;
-        contentHeight = height;
-
-        // use offset for adjusting other widgets as it includes margin +
-        // padding
-        int contentOffsetWidth = contentWidget.getOffsetWidth();
-        int contentOffsetHeight = contentWidget.getOffsetHeight();
-        int headerHeight = headerContainer.getOffsetHeight();
-
-        setBorderWidths(contentOffsetWidth, contentOffsetHeight, headerHeight);
-
-        int maxInnerWidth = contentOffsetWidth;
-
-        // header wider than content?
-        if (headerContainer.getOffsetWidth() > maxInnerWidth) {
-            maxInnerWidth = headerContainer.getOffsetWidth();
-        }
-
-        setPixelSize(maxInnerWidth + 2 * BORDER_THICKNESS
-                + WINDOW_BORDER_FROM_CSS,
-                contentOffsetHeight + headerWidget.getOffsetHeight() + 2
-                        * BORDER_THICKNESS + WINDOW_BORDER_FROM_CSS);
-
-        assert contentHeight == height;
-        assert contentWidth == width;
+        eastWidget.setPixelSize(BORDER_THICKNESS, contentHeight);
     }
 
     public void setLocation(int x, int y) {
@@ -592,6 +589,21 @@ public class WindowPanel extends NEffectPanel implements
         assert y == new WidgetLocation(this, getParent()).getTop();
     }
 
+    @Override
+    public void setPixelSize(int width, int height) {
+        super.setPixelSize(width, height);
+
+        this.width = width;
+        this.height = height;
+
+        int headerHeight = headerContainer.getOffsetHeight();
+        int contentWidth = width - TOTAL_BORDER_THICKNESS;
+        int contentHeight = height - TOTAL_BORDER_THICKNESS - headerHeight;
+
+        contentWidget.setPixelSize(contentWidth, contentHeight);
+        setBorderWidths(contentWidth, contentHeight, headerHeight);
+    }
+
     private Widget setupCell(int row, int col, DirectionConstant direction) {
         final FocusPanel widget = new FocusPanel();
         widget.setPixelSize(BORDER_THICKNESS, BORDER_THICKNESS);
@@ -599,11 +611,17 @@ public class WindowPanel extends NEffectPanel implements
         windowController.getResizeDragController().makeDraggable(widget,
                 direction);
         removeFromDragControllerOnDispose.add(widget);
+
+        /*
+         * both CSS classes need to be set in one call due to limitations in
+         * getCellFormatter().addStyleName
+         */
         grid.getCellFormatter().addStyleName(
                 row,
                 col,
-                CSS_WINDOW_RESIZE_EDGE + " window-resize-"
+                CSS_WINDOW_RESIZE_EDGE + " " + CSS_WINDOW_RESIZE
                         + direction.directionLetters);
+
         return widget;
     }
 
@@ -613,21 +631,6 @@ public class WindowPanel extends NEffectPanel implements
 
     public void setZIndex(final int zIndex) {
         // Bugfix: need to set zIndex manually because of timeline/firefox issue
-        DOM.setIntStyleAttribute(getElement(), CSS.Z_INDEX, zIndex);
-    }
-
-    public void updateToContentSize() {
-        int offsetHeight = contentWidget.getOffsetHeight();
-        if (offsetHeight != 0) {
-            // check for desktop size limitations
-            int newHeight = Math.min(offsetHeight, getParent()
-                    .getOffsetHeight()
-                    - headerContainer.getOffsetHeight()
-                    - (2 * BORDER_THICKNESS) - 2 // additional border
-                    - 20 // FIXME bottom offset
-                    - (getAbsoluteTop() - getParent().getAbsoluteTop()));
-
-            setContentSize(contentWidget.getOffsetWidth(), newHeight);
-        }
+        CSS.setZIndex(this, zIndex);
     }
 }

@@ -95,13 +95,18 @@ public class LoadWorkspaceDialog extends AbstractDialog {
     }
 
     @Override
+    public String getHeader() {
+        return "Load existing workspace";
+    }
+
+    @Override
     public String getOkayButtonLabel() {
         return "Load";
     }
 
     @Override
-    public String getTitle() {
-        return "Load Workspace";
+    public String getWindowTitle() {
+        return "Load";
     }
 
     @Override

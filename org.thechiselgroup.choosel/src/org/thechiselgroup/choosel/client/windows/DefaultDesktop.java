@@ -107,8 +107,6 @@ public class DefaultDesktop extends AbsolutePanel implements Desktop, HasSize {
 
         window.setViewContent(content);
 
-        window.adjustSize(); // required for search view
-
         return window;
     }
 
@@ -120,7 +118,7 @@ public class DefaultDesktop extends AbsolutePanel implements Desktop, HasSize {
 
         WindowPanel w = createWindow(content.getLabel(), content.asWidget(), x,
                 y);
-        w.setAbsoluteSize(windowOffsetWidth, windowOffsetHeight);
+        w.setPixelSize(windowOffsetWidth, windowOffsetHeight);
         w.setViewContent(content);
 
         return w;

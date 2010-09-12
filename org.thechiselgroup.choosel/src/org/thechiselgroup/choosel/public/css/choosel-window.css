@@ -1,14 +1,60 @@
 /** Window-System (includes Desktop) */
 
-.dialog-content {
+.choosel-DialogPanel {
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
 	background-color: rgb(255, 255, 255);
-	height: 100%;
-	width: 100%;
+}
+
+.choosel-DialogPanel-Content {
 	min-width: 150px;
-    max-width: 600px;
     padding: 5px;
-    
-    display: table-cell; 
+}
+
+.choosel-DialogPanel-Header {
+	border-bottom: 1px solid rgb(159, 188, 215);
+	min-width: 150px;
+    padding: 5px;
+    color: rgb(0,0,0);
+    font-size: 26px;
+    font-weight: bold;
+    font-family: Arial;
+}
+
+.choosel-DialogPanel-ButtonBar {
+  border-top: 1px solid rgb(159, 188, 215);
+  margin-top: 4px;
+  width: 100%;
+}
+
+.choosel-DialogPanel-ButtonBar button {
+    float: right;
+	font-size: 13px;
+    background: none;
+    height: 26px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 5px;
+    padding-right: 5px;
+    margin: 5px;
+    background-color: rgb(218, 229, 243);
+    color: rgb(112, 106, 170);
+    border:solid 1px rgb(164, 195, 235);
+}
+
+.choosel-DialogPanel-ButtonBar button:hover {
+	background-color: rgb(193, 217, 241);
+	border: solid 1px rgb(104, 140, 175);
+}
+
+.choosel-DialogPanel-ButtonBar button:focus {
+    border: solid 1px #E7B076;
+}
+
+.choosel-DialogPanel-ButtonBar button:active {
+    background-color: rgb(214, 230, 244);
+    border: solid 1px #E7B076;
 }
 
 .dialog-message {
@@ -22,30 +68,20 @@
     color: rgb(112, 106, 170);
 }
 
-.dialog-panel {
-    margin: 0px;
-    padding: 0px;
-    border: 0px;
-}
-
-.dialog-buttonbar {
-  border-top: 1px solid rgb(159, 188, 215);
-  background-color: rgb(214, 230, 244);
-  margin-top: 4px;
-}
-
 .desktop {
     background-color: rgb(164, 195, 235);
 }
 
-.window {
+.choosel-WindowPanel {
   border-top: 1px solid rgb(159, 188, 215);
   border-left: 1px solid rgb(159, 188, 215);
   border-right: 1px solid rgb(159, 188, 215);
   border-bottom: 1px solid rgb(159, 188, 215);
 	
   display: block;
-  background-color: rgb(214, 230, 244);
+  
+  /** The window element is transparent, but its children are not */
+  background-color: rgba(214, 230, 244, 0.0);
   /**background-color: rgb(226, 226, 226);*/
   
   box-shadow: 1px 1px 3px #333333;
@@ -53,72 +89,88 @@
   -webkit-box-shadow: 1px 1px 3px #333333;
 }
 
-.window .window-header {
+.choosel-WindowPanel-Header {
   padding: 2px;
-	
-  border-bottom: 1px solid rgb(159, 188, 215);
-     
-  margin-bottom: 2px;
+  
   padding-bottom: 1px;
+  border-bottom: 1px solid #688CAF;
  
-  background-color: rgb(193, 217, 241);
+  background-color: rgba(193, 217, 241, 0.65);
   
   overflow: hidden;
 }
 
-.window-header-label {
+.choosel-WindowPanel-HeaderLabel {
   font-weight: bold;
-  color: rgb(112, 106, 170);
+  font-size: 15px;
+  font-family: Arial;
+  /* color: rgb(112, 106, 170); */
+  color: rgb(0, 0, 0);
   text-align: left;
+  
+  position: relative;
+  top: -3px;
+  
   display: inline; /* required so we can calculate minimum width based on header */
 }
  
-.window-button-panel {
+.choosel-WindowPanel-ButtonPanel {
   margin-left: 5px;
   margin-right: 2px;
   cursor: default;
 }
 
-.window .dragdrop-boundary {
+.choosel-WindowPanel .dragdrop-boundary {
   background-color: rgb(159, 188, 215);
   border: 1px solid black;
 }
 
-.window .window-resize-edge {
-  background-color: rgb(193, 217, 241);
+.choosel-WindowPanel-ResizeEdge {
+  background-color: rgba(193, 217, 241, 0.65);
   line-height: 1px;
-  font-size: 1px;
+  font-size: 1px;  
 }
 
-.window .window-resize-nw .dragdrop-handle {
+.choosel-WindowPanel-Resize-nw .dragdrop-handle {
   cursor: nw-resize;
 }
 
-.window .window-resize-n .dragdrop-handle {
+.choosel-WindowPanel-Resize-n .dragdrop-handle {
   cursor: n-resize;
 }
 
-.window .window-resize-ne .dragdrop-handle {
+.choosel-WindowPanel-Resize-ne .dragdrop-handle {
   cursor: ne-resize;
 }
 
-.window .window-resize-w .dragdrop-handle {
+.choosel-WindowPanel-Resize-wt .dragdrop-handle {
   cursor: w-resize;
 }
 
-.window .window-resize-e .dragdrop-handle {
+.choosel-WindowPanel-Resize-w .dragdrop-handle {
+  cursor: w-resize;
+  border-right: 1px solid #688CAF;
+}
+
+.choosel-WindowPanel-Resize-e .dragdrop-handle {
+  cursor: e-resize;
+  border-left: 1px solid #688CAF;
+}
+
+.choosel-WindowPanel-Resize-et .dragdrop-handle {
   cursor: e-resize;
 }
 
-.window .window-resize-sw .dragdrop-handle {
+.choosel-WindowPanel-Resize-sw .dragdrop-handle {
   cursor: sw-resize;
 }
 
-.window .window-resize-s .dragdrop-handle {
+.choosel-WindowPanel-Resize-s .dragdrop-handle {
+  border-top: 1px solid #688CAF;
   cursor: s-resize;
 }
 
-.window .window-resize-se .dragdrop-handle {
+.choosel-WindowPanel-Resize-se .dragdrop-handle {
   cursor: se-resize;
 }
 
