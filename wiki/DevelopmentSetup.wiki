@@ -34,6 +34,8 @@ You should be able to run choosel-example in your development development enviro
 
 If you encounter problems setting up choosel with this guide, complain on the [http://groups.google.com/group/choosel choosel mailing list] :-)
 
+*More information and news on Choosel can be found at <a href="http://lgrammel.blogspot.com/search/label/choosel">lgrammel.blogspot.com</a>*.
+
 = Optional setup =
 
    * To stay on top of code commits to Choosel, please consider installing the [http://www.junginger.biz/eclipse/rss-view.html Eclipse RSS Plugin] and configure it with the [http://code.google.com/feeds/p/choosel/svnchanges/basic subversion commit feed for Choosel]. You might also want to add the feed for [http://code.google.com/feeds/p/choosel/issueupdates/basic issue tracker updates].
