@@ -171,3 +171,15 @@ Client-side XSLT Processor
 *URL*: http://vis.stanford.edu/protovis/
 
 *License*: BSD License
+
+==Open CSV==
+
+CSV Parser Library
+
+*Version*: 2.2
+
+*URL*: http://opencsv.sourceforge.net/
+
+*License*: Apache License 2.0
+
+*Note*: Only CSVParser class is used. Source-code has been modified.
