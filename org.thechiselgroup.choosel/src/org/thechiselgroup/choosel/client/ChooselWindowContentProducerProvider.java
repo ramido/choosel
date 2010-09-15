@@ -36,6 +36,7 @@ import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionCo
 import java.util.HashMap;
 import java.util.Map;
 
+import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.label.CategoryLabelProvider;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
@@ -55,6 +56,7 @@ import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.ViewFactory;
+import org.thechiselgroup.choosel.client.windows.Desktop;
 import org.thechiselgroup.choosel.client.windows.WindowContentFactory;
 import org.thechiselgroup.choosel.client.windows.WindowContentProducer;
 
@@ -109,7 +111,9 @@ public class ChooselWindowContentProducerProvider implements
             SlotResolver slotResolver,
             ResourceCategorizer resourceByTypeCategorizer,
             HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper) {
+            DetailsWidgetHelper detailsWidgetHelper, Desktop desktop,
+            CommandManager commandManager,
+            ResourceSetAvatarFactory defaultDragAvatarFactory) {
 
         assert userSetsDragAvatarFactory != null;
         assert allResourcesDragAvatarFactory != null;
@@ -150,7 +154,8 @@ public class ChooselWindowContentProducerProvider implements
                 new NoteWindowContentFactory());
         windowContentFactories.put(
                 ChooselInjectionConstants.WINDOW_CONTENT_CSV_IMPORT,
-                new ImportCSVWindowContentFactory());
+                new ImportCSVWindowContentFactory(desktop,
+                        defaultDragAvatarFactory, commandManager));
     }
 
     @Override

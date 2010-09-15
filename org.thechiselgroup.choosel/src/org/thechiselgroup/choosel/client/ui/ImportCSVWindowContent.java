@@ -15,8 +15,20 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui;
 
+import java.io.IOException;
+
+import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
+import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
+import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
+import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceSetsPresenter;
+import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
+import org.thechiselgroup.choosel.client.util.CSVParser;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
+import org.thechiselgroup.choosel.client.windows.CreateWindowCommand;
+import org.thechiselgroup.choosel.client.windows.Desktop;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -33,8 +45,21 @@ public class ImportCSVWindowContent extends AbstractWindowContent {
 
     private DockPanel panel;
 
-    public ImportCSVWindowContent() {
+    private ResourceSetAvatarFactory defaultDragAvatarFactory;
+
+    private CommandManager commandManager;
+
+    private Desktop desktop;
+
+    public ImportCSVWindowContent(
+            ResourceSetAvatarFactory defaultDragAvatarFactory,
+            CommandManager commandManager, Desktop desktop) {
+
         super("Import CSV", ChooselInjectionConstants.WINDOW_CONTENT_CSV_IMPORT);
+
+        this.defaultDragAvatarFactory = defaultDragAvatarFactory;
+        this.commandManager = commandManager;
+        this.desktop = desktop;
     }
 
     @Override
@@ -42,6 +67,7 @@ public class ImportCSVWindowContent extends AbstractWindowContent {
         return panel;
     }
 
+    // TODO use dialog panel
     @Override
     public void init() {
         super.init();
@@ -52,39 +78,75 @@ public class ImportCSVWindowContent extends AbstractWindowContent {
         pasteArea.setStyleName(IMPORT_CSV_CSS);
 
         Button button = new Button("parse");
-
         button.addClickHandler(new ClickHandler() {
+
             @Override
             public void onClick(ClickEvent event) {
-                // parse content & put into resources
-                // new csvparser -->XXX
+                try {
+                    ResourceSet resources = parseResourcesFromCSV(pasteArea
+                            .getText());
 
-                // String[] fieldNames = in.readLine().trim().split(",");
-                // Set<Resource> resources = new HashSet<Resource>();
-                //
-                // String line = in.readLine();
-                // while (line != null) {
-                // String[] fieldValues = line.trim().split(",");
-                //
-                // // TODO maybe should be if else
-                // assert (fieldNames.length == fieldValues.length);
-                //
-                // Resource resource = new Resource("csv:" + count++);
-                // for (int i = 0; i < fieldValues.length; i++) {
-                //
-                // resource.putValue(fieldNames[i].trim(),
-                // fieldValues[i].trim());
-                // }
-                //
-                // resources.add(resource);
-                // line = in.readLine();
-                // }
-                //
-                // return resources;
+                    // TODO show dnd window with parsed data
+                    resources.toString();
+
+                    String title = "CSV Import";
+                    final ResourceSetsPresenter presenter = new ResourceSetAvatarResourceSetsPresenter(
+                            defaultDragAvatarFactory);
+                    presenter.init();
+
+                    commandManager.execute(new CreateWindowCommand(desktop,
+                            new AbstractWindowContent(title, "TODO") {
+                                @Override
+                                public Widget asWidget() {
+                                    return presenter.asWidget();
+                                }
+                            }));
+
+                    presenter.addResourceSet(resources);
+
+                } catch (IOException e) {
+                    // TODO choosel exception handling
+                    e.printStackTrace();
+                }
             }
+
         });
 
         panel.add(pasteArea, DockPanel.CENTER);
         panel.add(button, DockPanel.SOUTH);
+    }
+
+    // TODO move
+    /*
+     * TODO later: resource set not the perfect result, rather structure and
+     * table of String values (since they should not be parsed at this point)
+     */
+    public ResourceSet parseResourcesFromCSV(String csvText) throws IOException {
+        CSVParser parser = new CSVParser(',');
+
+        String[] lines = csvText.split("\n");
+
+        if (lines.length == 0) {
+            throw new IOException("no content to parse");
+        }
+
+        ResourceSet resources = new DefaultResourceSet();
+        resources.setLabel("csv-import"); // TODO changeable, inc number
+
+        String[] attributeNames = parser.parseLine(lines[0]);
+
+        for (int i = 1; i < lines.length; i++) {
+            String uri = "csvImport" + i; // TODO improved uri generation
+            Resource resource = new Resource(uri);
+
+            String[] values = parser.parseLine(lines[i]);
+            for (int j = 0; j < values.length; j++) {
+                resource.putValue(attributeNames[j], values[j]);
+            }
+
+            resources.add(resource);
+        }
+
+        return resources;
     }
 }
