@@ -15,6 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
+import static org.thechiselgroup.choosel.client.util.CollectionUtils.toSet;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -460,9 +462,9 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     private void initConfigurationMenu() {
-        if (contentDisplay.getConfigurations().isEmpty()) {
-            return;
-        }
+        // if (contentDisplay.getConfigurations().isEmpty()) {
+        // return;
+        // }
 
         Image image = new Image(getModuleBase() + IMAGE_CONFIGURATION_MENU);
 
@@ -857,6 +859,30 @@ public class DefaultView extends AbstractWindowContent implements View {
             }
         }
 
+        // aggregration TODO move
+        {
+            final List<String> stringPropertyNames = getStringPropertyNames(addedResourceItems);
+            for (final String propertyName : stringPropertyNames) {
+                configurationPanel2.add(new Button("aggregation "
+                        + propertyName, new ClickHandler() {
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        resourceSplitter
+                                .setCategorizer(new ResourceMultiCategorizer() {
+
+                                    @Override
+                                    public Set<String> getCategories(
+                                            Resource resource) {
+                                        return toSet((String) resource
+                                                .getValue(propertyName));
+                                    }
+
+                                });
+                    }
+                }));
+            }
+        }
+
         /*
          * TODO move
          */
@@ -864,9 +890,6 @@ public class DefaultView extends AbstractWindowContent implements View {
                 SlotResolver.DESCRIPTION_SLOT)) {
 
             final List<String> stringPropertyNames = getStringPropertyNames(addedResourceItems);
-            for (String propertyName : stringPropertyNames) {
-                System.out.println(propertyName);
-            }
 
             if (!stringPropertyNames.isEmpty()) {
                 configuration.put(SlotResolver.DESCRIPTION_SLOT,
@@ -874,6 +897,10 @@ public class DefaultView extends AbstractWindowContent implements View {
                             @Override
                             public Object resolve(ResourceSet resources,
                                     String category) {
+
+                                if (resources.size() >= 2) {
+                                    return category;
+                                }
 
                                 return resources.getFirstResource().getValue(
                                         stringPropertyNames.get(0));
@@ -886,9 +913,6 @@ public class DefaultView extends AbstractWindowContent implements View {
                 SlotResolver.CHART_LABEL_SLOT)) {
 
             final List<String> stringPropertyNames = getStringPropertyNames(addedResourceItems);
-            for (String propertyName : stringPropertyNames) {
-                System.out.println(propertyName);
-            }
 
             if (!stringPropertyNames.isEmpty()) {
                 configuration.put(SlotResolver.CHART_LABEL_SLOT,
@@ -897,6 +921,9 @@ public class DefaultView extends AbstractWindowContent implements View {
                             public Object resolve(ResourceSet resources,
                                     String category) {
 
+                                if (resources.size() >= 2) {
+                                    return category;
+                                }
                                 return resources.getFirstResource().getValue(
                                         stringPropertyNames.get(0));
                             }
@@ -908,9 +935,6 @@ public class DefaultView extends AbstractWindowContent implements View {
                 SlotResolver.CHART_VALUE_SLOT)) {
 
             final List<String> propertyNames = getDoublePropertyNames(addedResourceItems);
-            for (String propertyName : propertyNames) {
-                System.out.println(propertyName);
-            }
 
             if (!propertyNames.isEmpty()) {
                 configuration.put(SlotResolver.CHART_VALUE_SLOT,
@@ -919,12 +943,25 @@ public class DefaultView extends AbstractWindowContent implements View {
                             public Object resolve(ResourceSet resources,
                                     String category) {
 
-                                return resources.getFirstResource().getValue(
-                                        propertyNames.get(0));
+                                double sum = 0d;
+                                for (Resource resource : resources) {
+                                    Object value = resource
+                                            .getValue(propertyNames.get(0));
+
+                                    if (value instanceof String) {
+                                        value = Double
+                                                .parseDouble((String) value);
+                                    }
+
+                                    sum += ((Number) value).doubleValue();
+                                }
+
+                                return Double.toString(sum);
                             }
                         });
             }
 
+            // XXX needs auto-refresh in charts
             // XXX breaks on multiple adds
             for (final String propertyName : propertyNames) {
                 configurationPanel2.add(new Button(propertyName,
@@ -939,9 +976,21 @@ public class DefaultView extends AbstractWindowContent implements View {
                                                     ResourceSet resources,
                                                     String category) {
 
-                                                return resources
-                                                        .getFirstResource()
-                                                        .getValue(propertyName);
+                                                double sum = 0d;
+                                                for (Resource resource : resources) {
+                                                    Object value = resource
+                                                            .getValue(propertyName);
+
+                                                    if (value instanceof String) {
+                                                        value = Double
+                                                                .parseDouble((String) value);
+                                                    }
+
+                                                    sum += ((Number) value)
+                                                            .doubleValue();
+                                                }
+
+                                                return Double.toString(sum);
                                             }
                                         });
                             }
