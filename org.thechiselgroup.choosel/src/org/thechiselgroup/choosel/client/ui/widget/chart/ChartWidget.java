@@ -122,7 +122,7 @@ public abstract class ChartWidget extends Widget {
     protected ProtovisFunctionString fullMarkLabelText = new ProtovisFunctionString() {
         @Override
         public String f(ChartItem value, int i) {
-            return Integer.toString(Math.max(calculateAllResources(i),
+            return Double.toString(Math.max(calculateAllResources(i),
                     calculateHighlightedResources(i)));
         }
     };
@@ -131,7 +131,7 @@ public abstract class ChartWidget extends Widget {
         @Override
         public String f(ChartItem value, int i) {
             return calculateAllResources(i) - calculateHighlightedResources(i) < 1 ? null
-                    : Integer.toString(calculateAllResources(i)
+                    : Double.toString(calculateAllResources(i)
                             - calculateHighlightedResources(i));
         }
     };
@@ -144,7 +144,7 @@ public abstract class ChartWidget extends Widget {
         }
     };
 
-    private int maxChartItemValue;
+    private double maxChartItemValue;
 
     public ChartWidget() {
         setElement(DOM.createDiv());
@@ -165,8 +165,8 @@ public abstract class ChartWidget extends Widget {
         calculateMaximumChartItemValue();
     }
 
-    protected int calculateAllResources(int i) {
-        return Integer.parseInt(chartItems.get(i).getResourceItem()
+    protected double calculateAllResources(int i) {
+        return Double.parseDouble(chartItems.get(i).getResourceItem()
                 .getResourceValue(SlotResolver.CHART_VALUE_SLOT).toString());
     }
 
@@ -184,15 +184,16 @@ public abstract class ChartWidget extends Widget {
 
     // TODO different slots
     // XXX does not work for negative numbers
+    // XXX works only for integers
     protected void calculateMaximumChartItemValue() {
         this.maxChartItemValue = 0;
         for (int i = 0; i < chartItems.size(); i++) {
-            int currentItem = Integer
-                    .parseInt(chartItems.get(i).getResourceItem()
+            double currentItemValue = Double
+                    .parseDouble(chartItems.get(i).getResourceItem()
                             .getResourceValue(SlotResolver.CHART_VALUE_SLOT)
                             .toString());
-            if (maxChartItemValue < currentItem) {
-                maxChartItemValue = currentItem;
+            if (maxChartItemValue < currentItemValue) {
+                maxChartItemValue = currentItemValue;
             }
         }
     }

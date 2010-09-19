@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.client.ui;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
@@ -33,7 +34,6 @@ import org.thechiselgroup.choosel.client.windows.Desktop;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -41,9 +41,56 @@ public class ImportCSVWindowContent extends AbstractWindowContent {
 
     private static final String IMPORT_CSV_CSS = "importCSV";
 
+    // TODO test
+    // TODO move --> resource set parser interface
+    /*
+     * TODO later: resource set not the perfect result, rather structure and
+     * table of String values (since they should not be parsed at this point)
+     */
+    public static ResourceSet parseResourcesFromCSV(String csvText)
+            throws IOException {
+        CSVParser parser = new CSVParser(',');
+
+        String[] lines = csvText.split("\n");
+
+        if (lines.length == 0) {
+            throw new IOException("no content to parse");
+        }
+
+        ResourceSet resources = new DefaultResourceSet();
+        resources.setLabel("csv-import"); // TODO changeable, inc number
+
+        String[] attributeNames = parser.parseLine(lines[0]);
+
+        for (int i = 1; i < lines.length; i++) {
+            String uri = "csv:" + i; // TODO improved uri generation
+            Resource resource = new Resource(uri);
+
+            String[] values = parser.parseLine(lines[i]);
+            for (int j = 0; j < values.length; j++) {
+                String stringValue = values[j];
+
+                /*
+                 * TODO should not be parsed at this point - change once setting
+                 * property types possible
+                 */
+                Serializable value = stringValue;
+                if (stringValue.matches("^[-+]?[0-9]*\\.?[0-9]+")) {
+                    value = new Double(stringValue);
+                }
+
+                resource.putValue(attributeNames[j], value);
+            }
+
+            resources.add(resource);
+        }
+
+        return resources;
+    }
+
     private TextArea pasteArea;
 
-    private DockPanel panel;
+    private DialogPanel panel;
 
     private ResourceSetAvatarFactory defaultDragAvatarFactory;
 
@@ -72,12 +119,14 @@ public class ImportCSVWindowContent extends AbstractWindowContent {
     public void init() {
         super.init();
 
-        panel = new DockPanel();
+        panel = new DialogPanel();
+        panel.setHeader("Paste CSV content");
 
         pasteArea = new TextArea();
-        pasteArea.setStyleName(IMPORT_CSV_CSS);
+        panel.setContent(pasteArea);
+        pasteArea.addStyleName(IMPORT_CSV_CSS);
 
-        Button button = new Button("parse");
+        Button button = panel.createButton("parse");
         button.addClickHandler(new ClickHandler() {
 
             @Override
@@ -112,41 +161,5 @@ public class ImportCSVWindowContent extends AbstractWindowContent {
 
         });
 
-        panel.add(pasteArea, DockPanel.CENTER);
-        panel.add(button, DockPanel.SOUTH);
-    }
-
-    // TODO move
-    /*
-     * TODO later: resource set not the perfect result, rather structure and
-     * table of String values (since they should not be parsed at this point)
-     */
-    public ResourceSet parseResourcesFromCSV(String csvText) throws IOException {
-        CSVParser parser = new CSVParser(',');
-
-        String[] lines = csvText.split("\n");
-
-        if (lines.length == 0) {
-            throw new IOException("no content to parse");
-        }
-
-        ResourceSet resources = new DefaultResourceSet();
-        resources.setLabel("csv-import"); // TODO changeable, inc number
-
-        String[] attributeNames = parser.parseLine(lines[0]);
-
-        for (int i = 1; i < lines.length; i++) {
-            String uri = "csv:" + i; // TODO improved uri generation
-            Resource resource = new Resource(uri);
-
-            String[] values = parser.parseLine(lines[i]);
-            for (int j = 0; j < values.length; j++) {
-                resource.putValue(attributeNames[j], values[j]);
-            }
-
-            resources.add(resource);
-        }
-
-        return resources;
     }
 }

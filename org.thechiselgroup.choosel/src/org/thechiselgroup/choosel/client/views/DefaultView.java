@@ -309,6 +309,44 @@ public class DefaultView extends AbstractWindowContent implements View {
         return resourceSplitter.getCategorizedResourceSets();
     }
 
+    // TODO write test cases
+    // return: property keys
+    protected List<String> getDoublePropertyNames(
+            Set<ResourceItem> addedResourceItems) {
+        if (addedResourceItems.isEmpty()) {
+            return new ArrayList<String>();
+        }
+
+        /*
+         * assertion: first add, no aggregation, homogeneous resource set
+         */
+        assert addedResourceItems.size() >= 1;
+
+        // homogeneous resource set --> look only at first item
+        ResourceItem resourceItem = (ResourceItem) addedResourceItems.toArray()[0];
+
+        // TODO this should be a condition of resource item in general
+        assert resourceItem.getResourceSet().size() >= 1;
+
+        // no aggregation
+        Resource resource = resourceItem.getResourceSet().getFirstResource();
+        List<String> stringProperties = new ArrayList<String>();
+
+        for (Entry<String, Serializable> entry : resource.getProperties()
+                .entrySet()) {
+
+            /*
+             * generalize: slot requirement matches what resource attr (type)
+             * can do
+             */
+            if (entry.getValue() instanceof Double) {
+                stringProperties.add(entry.getKey());
+            }
+        }
+
+        return stringProperties;
+    }
+
     protected String getModuleBase() {
         return GWT.getModuleBaseURL();
     }
@@ -828,13 +866,56 @@ public class DefaultView extends AbstractWindowContent implements View {
             if (!stringPropertyNames.isEmpty()) {
                 configuration.put(SlotResolver.DESCRIPTION_SLOT,
                         new ResourceSetToValueResolver() {
-
                             @Override
                             public Object resolve(ResourceSet resources,
                                     String category) {
 
                                 return resources.getFirstResource().getValue(
                                         stringPropertyNames.get(0));
+                            }
+                        });
+            }
+        }
+
+        if (Arrays.asList(contentDisplay.getSlotIDs()).contains(
+                SlotResolver.CHART_LABEL_SLOT)) {
+
+            final List<String> stringPropertyNames = getStringPropertyNames(addedResourceItems);
+            for (String propertyName : stringPropertyNames) {
+                System.out.println(propertyName);
+            }
+
+            if (!stringPropertyNames.isEmpty()) {
+                configuration.put(SlotResolver.CHART_LABEL_SLOT,
+                        new ResourceSetToValueResolver() {
+                            @Override
+                            public Object resolve(ResourceSet resources,
+                                    String category) {
+
+                                return resources.getFirstResource().getValue(
+                                        stringPropertyNames.get(0));
+                            }
+                        });
+            }
+        }
+
+        if (Arrays.asList(contentDisplay.getSlotIDs()).contains(
+                SlotResolver.CHART_VALUE_SLOT)) {
+
+            final List<String> propertyNames = getDoublePropertyNames(addedResourceItems);
+            for (String propertyName : propertyNames) {
+                System.out.println(propertyName);
+            }
+
+            if (!propertyNames.isEmpty()) {
+                configuration.put(SlotResolver.CHART_VALUE_SLOT,
+                        new ResourceSetToValueResolver() {
+                            @Override
+                            public Object resolve(ResourceSet resources,
+                                    String category) {
+
+                                return resources.getFirstResource().getValue(
+                                        propertyNames.get(0));
                             }
                         });
             }

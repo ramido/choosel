@@ -53,7 +53,7 @@ public abstract class ChartViewContentDisplay extends
     }
 
     // TODO push down: the actual chart needs to decide which slots are used
-    // TODO currently inaccurate
+    // XXX currently inaccurate
     @Override
     public String[] getSlotIDs() {
         return new String[] { SlotResolver.DESCRIPTION_SLOT,
