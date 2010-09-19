@@ -15,13 +15,16 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
@@ -346,6 +349,44 @@ public class DefaultView extends AbstractWindowContent implements View {
     @Override
     public SelectionModel getSelectionModel() {
         return selectionModel;
+    }
+
+    // TODO write test cases
+    // return: property keys
+    protected List<String> getStringPropertyNames(
+            Set<ResourceItem> addedResourceItems) {
+        if (addedResourceItems.isEmpty()) {
+            return new ArrayList<String>();
+        }
+
+        /*
+         * assertion: first add, no aggregation, homogeneous resource set
+         */
+        assert addedResourceItems.size() >= 1;
+
+        // homogeneous resource set --> look only at first item
+        ResourceItem resourceItem = (ResourceItem) addedResourceItems.toArray()[0];
+
+        // TODO this should be a condition of resource item in general
+        assert resourceItem.getResourceSet().size() >= 1;
+
+        // no aggregation
+        Resource resource = resourceItem.getResourceSet().getFirstResource();
+        List<String> stringProperties = new ArrayList<String>();
+
+        for (Entry<String, Serializable> entry : resource.getProperties()
+                .entrySet()) {
+
+            /*
+             * generalize: slot requirement matches what resource attr (type)
+             * can do
+             */
+            if (entry.getValue() instanceof String) {
+                stringProperties.add(entry.getKey());
+            }
+        }
+
+        return stringProperties;
     }
 
     @Override
@@ -770,6 +811,32 @@ public class DefaultView extends AbstractWindowContent implements View {
                 // TODO implement
             }
                 break;
+            }
+        }
+
+        /*
+         * TODO move
+         */
+        if (Arrays.asList(contentDisplay.getSlotIDs()).contains(
+                SlotResolver.DESCRIPTION_SLOT)) {
+
+            final List<String> stringPropertyNames = getStringPropertyNames(addedResourceItems);
+            for (String propertyName : stringPropertyNames) {
+                System.out.println(propertyName);
+            }
+
+            if (!stringPropertyNames.isEmpty()) {
+                configuration.put(SlotResolver.DESCRIPTION_SLOT,
+                        new ResourceSetToValueResolver() {
+
+                            @Override
+                            public Object resolve(ResourceSet resources,
+                                    String category) {
+
+                                return resources.getFirstResource().getValue(
+                                        stringPropertyNames.get(0));
+                            }
+                        });
             }
         }
 

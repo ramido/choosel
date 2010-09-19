@@ -389,6 +389,8 @@ public class DefaultViewTest {
                         .addEventHandler(any(ResourcesRemovedEventHandler.class)))
                 .thenReturn(selectionRemovedHandlerRegistration);
 
+        when(contentDisplay.getSlotIDs()).thenReturn(new String[0]);
+
         when(contentDisplay.isReady()).thenReturn(true);
 
         underTest.init();
