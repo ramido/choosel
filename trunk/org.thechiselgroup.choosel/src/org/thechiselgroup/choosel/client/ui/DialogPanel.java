@@ -216,4 +216,13 @@ public class DialogPanel extends Panel {
         headerLabel.setText(header);
     }
 
+    @Override
+    public void setPixelSize(int width, int height) {
+        super.setPixelSize(width, height);
+
+        int contentHeight = getOffsetHeight() - headerLabel.getOffsetHeight()
+                - buttonBar.getOffsetHeight();
+
+        contentWidget.setHeight(contentHeight + CSS.PX);
+    }
 }

@@ -41,8 +41,6 @@ import org.thechiselgroup.choosel.client.ui.dnd.DropEnabledViewContentDisplay;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropTargetManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.util.CollectionUtils;
-import org.thechiselgroup.choosel.client.views.chart.ChartCategorizer;
-import org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.text.TextViewContentDisplay;
 import org.thechiselgroup.choosel.client.windows.WindowContent;
 import org.thechiselgroup.choosel.client.windows.WindowContentFactory;
@@ -171,10 +169,10 @@ public class ViewFactory implements WindowContentFactory {
             }
         }
 
-        if (viewContentDisplay instanceof ChartViewContentDisplay) {
-            categorizer = new ChartCategorizer(resourceByTypeCategorizer,
-                    "type");
-        }
+        // if (viewContentDisplay instanceof ChartViewContentDisplay) {
+        // categorizer = new ChartCategorizer(resourceByTypeCategorizer,
+        // "type");
+        // }
 
         ResourceSplitter resourceSplitter = new ResourceSplitter(categorizer,
                 resourceSetFactory);

@@ -126,4 +126,12 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         return actions;
     }
 
+    // TODO push down: the actual chart needs to decide which slots are used
+    // TODO currently inaccurate
+    @Override
+    public String[] getSlotIDs() {
+        return new String[] { SlotResolver.CHART_LABEL_SLOT,
+                SlotResolver.CHART_VALUE_SLOT };
+    }
+
 }
