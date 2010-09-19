@@ -149,6 +149,8 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private PopupManagerFactory popupManagerFactory;
 
+    private VerticalPanel configurationPanel2;
+
     public DefaultView(ResourceSplitter resourceSplitter,
             ViewContentDisplay contentDisplay, String label,
             String contentType, ResourceItemValueResolver configuration,
@@ -467,27 +469,30 @@ public class DefaultView extends AbstractWindowContent implements View {
         CSS.setMarginTopPx(image, 3);
         CSS.setMarginRightPx(image, 4);
 
+        {
+            configurationPanel2 = new VerticalPanel();
+            // TODO change styling of buttons
+            configurationPanel2.add(new HTML("<b>Configuration Menu</b>"));
+            for (final ViewContentDisplayConfiguration action : contentDisplay
+                    .getConfigurations()) {
+
+                Button w = new Button(action.getLabel());
+                w.addClickHandler(new ClickHandler() {
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        action.execute();
+                    }
+                });
+                configurationPanel2.add(w);
+            }
+        }
+
+        // XXX widget provider instead of widget factory for default popup
+        // manager?
         WidgetFactory widgetFactory = new WidgetFactory() {
             @Override
             public Widget createWidget() {
-                VerticalPanel panel = new VerticalPanel();
-
-                // TODO change styling of buttons
-                panel.add(new HTML("<b>Configuration Menu</b>"));
-                for (final ViewContentDisplayConfiguration action : contentDisplay
-                        .getConfigurations()) {
-
-                    Button w = new Button(action.getLabel());
-                    w.addClickHandler(new ClickHandler() {
-                        @Override
-                        public void onClick(ClickEvent event) {
-                            action.execute();
-                        }
-                    });
-                    panel.add(w);
-                }
-
-                return panel;
+                return configurationPanel2;
             }
         };
 
@@ -918,6 +923,29 @@ public class DefaultView extends AbstractWindowContent implements View {
                                         propertyNames.get(0));
                             }
                         });
+            }
+
+            // XXX breaks on multiple adds
+            for (final String propertyName : propertyNames) {
+                configurationPanel2.add(new Button(propertyName,
+                        new ClickHandler() {
+                            @Override
+                            public void onClick(ClickEvent event) {
+                                configuration.put(
+                                        SlotResolver.CHART_VALUE_SLOT,
+                                        new ResourceSetToValueResolver() {
+                                            @Override
+                                            public Object resolve(
+                                                    ResourceSet resources,
+                                                    String category) {
+
+                                                return resources
+                                                        .getFirstResource()
+                                                        .getValue(propertyName);
+                                            }
+                                        });
+                            }
+                        }));
             }
         }
 
