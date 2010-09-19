@@ -27,6 +27,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class DialogPanel extends Panel {
 
+    private static final int BUTTON_BAR_CSS_MARGIN = 4;
+
     public static final String CSS_DIALOG_PANEL = "choosel-DialogPanel";
 
     public static final String CSS_DIALOG_PANEL_BUTTONBAR = "choosel-DialogPanel-ButtonBar";
@@ -221,7 +223,11 @@ public class DialogPanel extends Panel {
         super.setPixelSize(width, height);
 
         int contentHeight = getOffsetHeight() - headerLabel.getOffsetHeight()
-                - buttonBar.getOffsetHeight();
+                - buttonBar.getOffsetHeight() - BUTTON_BAR_CSS_MARGIN;
+
+        if (contentHeight < 0) {
+            contentHeight = 0;
+        }
 
         contentWidget.setHeight(contentHeight + CSS.PX);
     }
