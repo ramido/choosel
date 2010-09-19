@@ -136,7 +136,7 @@ public class ImportCSVWindowContent extends AbstractWindowContent {
         String[] attributeNames = parser.parseLine(lines[0]);
 
         for (int i = 1; i < lines.length; i++) {
-            String uri = "csvImport" + i; // TODO improved uri generation
+            String uri = "csv:" + i; // TODO improved uri generation
             Resource resource = new Resource(uri);
 
             String[] values = parser.parseLine(lines[i]);
