@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -57,6 +58,7 @@ import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.util.HandlerRegistrationSet;
 import org.thechiselgroup.choosel.client.util.Initializable;
+import org.thechiselgroup.choosel.client.views.map.MapViewContentDisplay;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 
 import com.allen_sauer.gwt.log.client.Log;
@@ -315,6 +317,45 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     // TODO write test cases
     // return: property keys
+    protected List<String> getDatePropertyNames(
+            Set<ResourceItem> addedResourceItems) {
+
+        if (addedResourceItems.isEmpty()) {
+            return new ArrayList<String>();
+        }
+
+        /*
+         * assertion: first add, no aggregation, homogeneous resource set
+         */
+        assert addedResourceItems.size() >= 1;
+
+        // homogeneous resource set --> look only at first item
+        ResourceItem resourceItem = (ResourceItem) addedResourceItems.toArray()[0];
+
+        // TODO this should be a condition of resource item in general
+        assert resourceItem.getResourceSet().size() >= 1;
+
+        // no aggregation
+        Resource resource = resourceItem.getResourceSet().getFirstResource();
+        List<String> stringProperties = new ArrayList<String>();
+
+        for (Entry<String, Serializable> entry : resource.getProperties()
+                .entrySet()) {
+
+            /*
+             * generalize: slot requirement matches what resource attr (type)
+             * can do
+             */
+            if (entry.getValue() instanceof Date) {
+                stringProperties.add(entry.getKey());
+            }
+        }
+
+        return stringProperties;
+    }
+
+    // TODO write test cases
+    // return: property keys
     protected List<String> getDoublePropertyNames(
             Set<ResourceItem> addedResourceItems) {
         if (addedResourceItems.isEmpty()) {
@@ -345,6 +386,49 @@ public class DefaultView extends AbstractWindowContent implements View {
              */
             if (entry.getValue() instanceof Double) {
                 stringProperties.add(entry.getKey());
+            }
+        }
+
+        return stringProperties;
+    }
+
+    protected List<String> getLocationPropertyNames(
+            Set<ResourceItem> addedResourceItems) {
+
+        if (addedResourceItems.isEmpty()) {
+            return new ArrayList<String>();
+        }
+
+        /*
+         * assertion: first add, no aggregation, homogeneous resource set
+         */
+        assert addedResourceItems.size() >= 1;
+
+        // homogeneous resource set --> look only at first item
+        ResourceItem resourceItem = (ResourceItem) addedResourceItems.toArray()[0];
+
+        // TODO this should be a condition of resource item in general
+        assert resourceItem.getResourceSet().size() >= 1;
+
+        // no aggregation
+        Resource resource = resourceItem.getResourceSet().getFirstResource();
+        List<String> stringProperties = new ArrayList<String>();
+
+        for (Entry<String, Serializable> entry : resource.getProperties()
+                .entrySet()) {
+
+            /*
+             * generalize: slot requirement matches what resource attr (type)
+             * can do
+             */
+            if (entry.getValue() instanceof Resource) {
+                Resource r = (Resource) entry.getValue();
+
+                if (r.getValue(MapViewContentDisplay.LATITUDE) != null
+                        && r.getValue(MapViewContentDisplay.LONGITUDE) != null) {
+
+                    stringProperties.add(entry.getKey());
+                }
             }
         }
 
@@ -797,6 +881,50 @@ public class DefaultView extends AbstractWindowContent implements View {
                                 });
                     }
                 }));
+            }
+        }
+
+        /*
+         * TODO move
+         */
+        if (Arrays.asList(contentDisplay.getSlotIDs()).contains(
+                SlotResolver.LOCATION_SLOT)) {
+
+            final List<String> propertyNames = getLocationPropertyNames(addedResourceItems);
+
+            if (!propertyNames.isEmpty()) {
+                configuration.put(SlotResolver.LOCATION_SLOT,
+                        new ResourceSetToValueResolver() {
+                            @Override
+                            public Object resolve(ResourceSet resources,
+                                    String category) {
+
+                                return resources.getFirstResource().getValue(
+                                        propertyNames.get(0));
+                            }
+                        });
+            }
+        }
+
+        /*
+         * TODO move
+         */
+        if (Arrays.asList(contentDisplay.getSlotIDs()).contains(
+                SlotResolver.DATE_SLOT)) {
+
+            final List<String> propertyNames = getDatePropertyNames(addedResourceItems);
+
+            if (!propertyNames.isEmpty()) {
+                configuration.put(SlotResolver.DATE_SLOT,
+                        new ResourceSetToValueResolver() {
+                            @Override
+                            public Object resolve(ResourceSet resources,
+                                    String category) {
+
+                                return resources.getFirstResource().getValue(
+                                        propertyNames.get(0));
+                            }
+                        });
             }
         }
 

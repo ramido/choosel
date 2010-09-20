@@ -92,8 +92,7 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
     @Override
     public String[] getSlotIDs() {
         return new String[] { SlotResolver.DESCRIPTION_SLOT,
-                SlotResolver.LABEL_SLOT, SlotResolver.COLOR_SLOT,
-                SlotResolver.LOCATION_SLOT };
+                SlotResolver.COLOR_SLOT, SlotResolver.LOCATION_SLOT };
     }
 
     private void initMapItem(ResourceItem resourceItem) {

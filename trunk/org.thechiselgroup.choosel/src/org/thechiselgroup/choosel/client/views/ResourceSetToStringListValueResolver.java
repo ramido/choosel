@@ -39,7 +39,7 @@ public class ResourceSetToStringListValueResolver extends
         }
 
         if (resources.size() == 1) {
-            return resolve(resources.getFirstResource()).toString();
+            return "" + resolve(resources.getFirstResource());
         }
 
         String result = "{ ";

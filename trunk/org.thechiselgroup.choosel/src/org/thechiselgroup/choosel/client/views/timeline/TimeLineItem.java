@@ -17,6 +17,8 @@ package org.thechiselgroup.choosel.client.views.timeline;
 
 import static com.google.gwt.query.client.GQuery.$;
 
+import java.util.Date;
+
 import org.thechiselgroup.choosel.client.ui.CSS;
 import org.thechiselgroup.choosel.client.ui.widget.timeline.TimeLineEvent;
 import org.thechiselgroup.choosel.client.views.DefaultResourceItem.Status;
@@ -88,9 +90,18 @@ public class TimeLineItem extends IconResourceItem {
         this.view = view;
         this.dragEnablerFactory = dragEnablerFactory;
 
-        String date = (String) getResourceValue(SlotResolver.DATE_SLOT);
+        Object date = getResourceValue(SlotResolver.DATE_SLOT);
+        String dateString;
+        if (date instanceof Date) {
+            dateString = date.toString();
+        } else if (date instanceof String) {
+            dateString = (String) date;
+        } else {
+            throw new RuntimeException(date.toString()
+                    + " not an appropriate date");
+        }
 
-        timeLineEvent = TimeLineEvent.create(date, null, "", this);
+        timeLineEvent = TimeLineEvent.create(dateString, null, "", this);
         tickElementID = view.getEventElementID(OVERVIEW_BAND_ID, TICK_ELEMENT,
                 timeLineEvent);
     }
@@ -197,7 +208,7 @@ public class TimeLineItem extends IconResourceItem {
         Element element = DOM.getElementById(iconElementID);
 
         String color = getColor();
-        String label = (String) getResourceValue(SlotResolver.LABEL_SLOT);
+        String label = (String) getResourceValue(SlotResolver.DESCRIPTION_SLOT);
 
         element.setInnerHTML("<div style='background-color: " + color
                 + "; border-color: " + calculateBorderColor(color)

@@ -42,6 +42,9 @@ public abstract class IconResourceItem {
         // TODO move colors to color provider
         // TODO add border (should be automatically calculated based on color)
         defaultColor = (String) getResourceValue(SlotResolver.COLOR_SLOT);
+        if (defaultColor == null) {
+            defaultColor = "#6495ed"; // XXX hack
+        }
         highlightColor = "#FDF49A";
         selectedColor = "#E7B076";
     }
