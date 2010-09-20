@@ -23,8 +23,6 @@ import com.google.inject.Inject;
 
 public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay {
 
-    private ChartCategorizer[] categorizers;
-
     @Inject
     public CircularBarChartViewContentDisplay(
             DragEnablerFactory dragEnablerFactory) {

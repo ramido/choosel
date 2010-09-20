@@ -462,10 +462,6 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     private void initConfigurationMenu() {
-        // if (contentDisplay.getConfigurations().isEmpty()) {
-        // return;
-        // }
-
         Image image = new Image(getModuleBase() + IMAGE_CONFIGURATION_MENU);
 
         CSS.setMarginTopPx(image, 3);
@@ -475,18 +471,6 @@ public class DefaultView extends AbstractWindowContent implements View {
             configurationPanel2 = new VerticalPanel();
             // TODO change styling of buttons
             configurationPanel2.add(new HTML("<b>Configuration Menu</b>"));
-            for (final ViewContentDisplayConfiguration action : contentDisplay
-                    .getConfigurations()) {
-
-                Button w = new Button(action.getLabel());
-                w.addClickHandler(new ClickHandler() {
-                    @Override
-                    public void onClick(ClickEvent event) {
-                        action.execute();
-                    }
-                });
-                configurationPanel2.add(w);
-            }
         }
 
         // XXX widget provider instead of widget factory for default popup

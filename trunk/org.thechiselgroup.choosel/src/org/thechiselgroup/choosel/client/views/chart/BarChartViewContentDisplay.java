@@ -18,17 +18,10 @@ package org.thechiselgroup.choosel.client.views.chart;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
-import org.thechiselgroup.choosel.client.resolver.ResourceToValueResolver;
-import org.thechiselgroup.choosel.client.resolver.SimplePropertyValueResolver;
-import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.widget.chart.BarChart;
 import org.thechiselgroup.choosel.client.ui.widget.chart.BarChart.LayoutType;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayAction;
-import org.thechiselgroup.choosel.client.views.ViewContentDisplayConfiguration;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -55,17 +48,9 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         }
     }
 
-    private ChartCategorizer[] categorizers;
-
     @Inject
-    public BarChartViewContentDisplay(DragEnablerFactory dragEnablerFactory,
-            ResourceCategorizer resourceByTypeCategorizer) {
-
+    public BarChartViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
         super(dragEnablerFactory);
-
-        categorizers = new ChartCategorizer[] {
-                new ChartCategorizer(resourceByTypeCategorizer, "type"),
-                new ChartCategorizer(resourceByTypeCategorizer, "priority"), };
     }
 
     @Override
@@ -80,47 +65,6 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
         for (LayoutType layout : LayoutType.values()) {
             actions.add(new BarLayoutAction(layout));
-        }
-
-        return actions;
-    }
-
-    @Override
-    public List<ViewContentDisplayConfiguration> getConfigurations() {
-        List<ViewContentDisplayConfiguration> actions = new ArrayList<ViewContentDisplayConfiguration>();
-
-        for (final ChartCategorizer categorizer : categorizers) {
-            actions.add(new ViewContentDisplayConfiguration() {
-                @Override
-                public void execute() {
-                    // XXX This should be done in a better way
-                    final ResourceToValueResolver resolver = new SimplePropertyValueResolver(
-                            categorizer.getPropertyName());
-                    ResourceSetToValueResolver multiCategorizer = new ResourceSetToValueResolver() {
-                        @Override
-                        public Object resolve(ResourceSet resources,
-                                String category) {
-                            return resolver.resolve(resources
-                                    .getFirstResource());
-                        }
-                    };
-
-                    getCallback().putResolver(SlotResolver.CHART_LABEL_SLOT,
-                            multiCategorizer);
-
-                    getCallback().setCategorizer(categorizer);
-                    /*
-                     * XXX this is a workaround for a bug - the labels should be
-                     * updated when the resource item changes
-                     */
-                    // chartWidget.updateChart();
-                }
-
-                @Override
-                public String getLabel() {
-                    return categorizer.getPropertyName();
-                }
-            });
         }
 
         return actions;
