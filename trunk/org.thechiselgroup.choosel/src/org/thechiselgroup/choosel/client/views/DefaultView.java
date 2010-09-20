@@ -791,74 +791,7 @@ public class DefaultView extends AbstractWindowContent implements View {
         return memento;
     }
 
-    private void updateHighlighting(List<Resource> affectedResources,
-            boolean highlighted) {
-
-        assert affectedResources != null;
-
-        ResourceSet affectedResourcesInThisView = calculateAffectedResources(affectedResources);
-
-        if (affectedResourcesInThisView.isEmpty()) {
-            return;
-        }
-
-        Set<ResourceItem> affectedResourceItems = getResourceItems(affectedResourcesInThisView);
-        for (ResourceItem resourceItem : affectedResourceItems) {
-            if (highlighted) {
-                ((DefaultResourceItem) resourceItem)
-                        .addHighlightedResources(affectedResourcesInThisView);
-            } else {
-                ((DefaultResourceItem) resourceItem)
-                        .removeHighlightedResources(affectedResourcesInThisView);
-            }
-            // TODO replace with add / remove of resources from item
-            // --> can we have filtered view on hover set instead??
-            // --> problem with the order of update calls
-            // ----> use view-internal hover model instead?
-            // TODO dispose resource items once filtered set is used
-            // TODO check that highlighting is right from the beginning
-        }
-
-        contentDisplay.update(Collections.<ResourceItem> emptySet(),
-                affectedResourceItems, Collections.<ResourceItem> emptySet());
-    }
-
-    // TODO use viewContentDisplay.update to perform single update
-    // TODO test update gets called with the right sets
-    // (a) add
-    // (b) remove
-    // (c) update
-    // (d) add + update
-    // (e) remove + update
-    private void updateResourceItemsOnModelChange(
-            Set<ResourceCategoryChange> changes) {
-
-        assert changes != null;
-        assert !changes.isEmpty();
-
-        Set<ResourceItem> addedResourceItems = new HashSet<ResourceItem>();
-        Set<ResourceItem> removedResourceItems = new HashSet<ResourceItem>();
-
-        for (ResourceCategoryChange change : changes) {
-            switch (change.getDelta()) {
-            case ADD: {
-                addedResourceItems.add(createResourceItem(change.getCategory(),
-                        change.getResourceSet()));
-            }
-                break;
-            case REMOVE: {
-                // XXX dispose should be done after method call...
-                removedResourceItems.add(removeResourceItem(change
-                        .getCategory()));
-            }
-                break;
-            case UPDATE: {
-                // TODO implement
-            }
-                break;
-            }
-        }
-
+    protected void updateConfiguration(Set<ResourceItem> addedResourceItems) {
         // aggregration TODO move
         {
             final List<String> stringPropertyNames = getStringPropertyNames(addedResourceItems);
@@ -997,6 +930,77 @@ public class DefaultView extends AbstractWindowContent implements View {
                         }));
             }
         }
+    }
+
+    private void updateHighlighting(List<Resource> affectedResources,
+            boolean highlighted) {
+
+        assert affectedResources != null;
+
+        ResourceSet affectedResourcesInThisView = calculateAffectedResources(affectedResources);
+
+        if (affectedResourcesInThisView.isEmpty()) {
+            return;
+        }
+
+        Set<ResourceItem> affectedResourceItems = getResourceItems(affectedResourcesInThisView);
+        for (ResourceItem resourceItem : affectedResourceItems) {
+            if (highlighted) {
+                ((DefaultResourceItem) resourceItem)
+                        .addHighlightedResources(affectedResourcesInThisView);
+            } else {
+                ((DefaultResourceItem) resourceItem)
+                        .removeHighlightedResources(affectedResourcesInThisView);
+            }
+            // TODO replace with add / remove of resources from item
+            // --> can we have filtered view on hover set instead??
+            // --> problem with the order of update calls
+            // ----> use view-internal hover model instead?
+            // TODO dispose resource items once filtered set is used
+            // TODO check that highlighting is right from the beginning
+        }
+
+        contentDisplay.update(Collections.<ResourceItem> emptySet(),
+                affectedResourceItems, Collections.<ResourceItem> emptySet());
+    }
+
+    // TODO use viewContentDisplay.update to perform single update
+    // TODO test update gets called with the right sets
+    // (a) add
+    // (b) remove
+    // (c) update
+    // (d) add + update
+    // (e) remove + update
+    private void updateResourceItemsOnModelChange(
+            Set<ResourceCategoryChange> changes) {
+
+        assert changes != null;
+        assert !changes.isEmpty();
+
+        Set<ResourceItem> addedResourceItems = new HashSet<ResourceItem>();
+        Set<ResourceItem> removedResourceItems = new HashSet<ResourceItem>();
+
+        for (ResourceCategoryChange change : changes) {
+            switch (change.getDelta()) {
+            case ADD: {
+                addedResourceItems.add(createResourceItem(change.getCategory(),
+                        change.getResourceSet()));
+            }
+                break;
+            case REMOVE: {
+                // XXX dispose should be done after method call...
+                removedResourceItems.add(removeResourceItem(change
+                        .getCategory()));
+            }
+                break;
+            case UPDATE: {
+                // TODO implement
+            }
+                break;
+            }
+        }
+
+        updateConfiguration(addedResourceItems);
 
         contentDisplay.update(addedResourceItems,
                 Collections.<ResourceItem> emptySet(), removedResourceItems);
