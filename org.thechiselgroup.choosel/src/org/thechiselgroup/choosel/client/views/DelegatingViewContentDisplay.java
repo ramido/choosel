@@ -57,11 +57,6 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
         return delegate.getActions();
     }
 
-    @Override
-    public List<ViewContentDisplayConfiguration> getConfigurations() {
-        return delegate.getConfigurations();
-    }
-
     public ViewContentDisplay getDelegate() {
         return delegate;
     }

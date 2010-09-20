@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.chart;
 
-import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
@@ -29,15 +28,11 @@ public class BarChartViewContentDisplayFactory implements
     private DragEnablerFactory dragEnablerFactory;
 
     @Inject
-    private ResourceCategorizer resourceByTypeCategorizer;
-
-    @Inject
     public BarChartViewContentDisplayFactory() {
     }
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-        return new BarChartViewContentDisplay(dragEnablerFactory,
-                resourceByTypeCategorizer);
+        return new BarChartViewContentDisplay(dragEnablerFactory);
     }
 }
