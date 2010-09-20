@@ -27,12 +27,14 @@ import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.util.CSVParser;
+import org.thechiselgroup.choosel.client.views.map.MapViewContentDisplay;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 import org.thechiselgroup.choosel.client.windows.CreateWindowCommand;
 import org.thechiselgroup.choosel.client.windows.Desktop;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
@@ -75,8 +77,35 @@ public class ImportCSVWindowContent extends AbstractWindowContent {
                  * property types possible
                  */
                 Serializable value = stringValue;
+
+                // number
                 if (stringValue.matches("^[-+]?[0-9]*\\.?[0-9]+")) {
                     value = new Double(stringValue);
+                }
+
+                // date
+                if (stringValue
+                        .matches("^(0[1-9]|[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012]|[1-9])/\\d{4}")) {
+
+                    value = DateTimeFormat.getFormat("dd/MM/yyyy").parse(
+                            stringValue);
+                }
+
+                // location (long/lat)
+                if (stringValue
+                        .matches("^[-+]?[0-9]*\\.?[0-9]+\\/[-+]?[0-9]*\\.?[0-9]+")) {
+
+                    Resource r = new Resource();
+
+                    String[] split = stringValue.split("\\/");
+
+                    r.putValue(MapViewContentDisplay.LATITUDE,
+                            Double.parseDouble(split[0]));
+                    r.putValue(MapViewContentDisplay.LONGITUDE,
+                            Double.parseDouble(split[1]));
+
+                    value = r;
+
                 }
 
                 resource.putValue(attributeNames[j], value);

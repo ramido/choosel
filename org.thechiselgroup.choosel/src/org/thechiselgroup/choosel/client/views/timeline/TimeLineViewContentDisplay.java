@@ -82,8 +82,7 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
     @Override
     public String[] getSlotIDs() {
         return new String[] { SlotResolver.DESCRIPTION_SLOT,
-                SlotResolver.LABEL_SLOT, SlotResolver.COLOR_SLOT,
-                SlotResolver.DATE_SLOT };
+                SlotResolver.COLOR_SLOT, SlotResolver.DATE_SLOT };
     }
 
     private TimeLineEvent[] getTimeLineEvents(

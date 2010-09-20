@@ -51,7 +51,10 @@ class TimeLine extends JavaScriptObject {
         {pixelsPerInterval: 50, unit: $wnd.Timeline.DateTime.DAY},
         {pixelsPerInterval: 400, unit: $wnd.Timeline.DateTime.MONTH},
         {pixelsPerInterval: 200, unit: $wnd.Timeline.DateTime.MONTH},
-        {pixelsPerInterval: 100, unit: $wnd.Timeline.DateTime.MONTH})
+        {pixelsPerInterval: 100, unit: $wnd.Timeline.DateTime.MONTH},
+        {pixelsPerInterval: 400, unit: $wnd.Timeline.DateTime.YEAR},
+        {pixelsPerInterval: 200, unit: $wnd.Timeline.DateTime.YEAR},
+        {pixelsPerInterval: 100, unit: $wnd.Timeline.DateTime.YEAR})
         }),         
         $wnd.Timeline.createBandInfo({
         startsOn: dateAsString,
@@ -73,7 +76,8 @@ class TimeLine extends JavaScriptObject {
         {pixelsPerInterval: 100, unit: $wnd.Timeline.DateTime.YEAR},
         {pixelsPerInterval: 50, unit: $wnd.Timeline.DateTime.YEAR},
         {pixelsPerInterval: 400, unit: $wnd.Timeline.DateTime.DECADE},
-        {pixelsPerInterval: 200, unit: $wnd.Timeline.DateTime.DECADE})
+        {pixelsPerInterval: 200, unit: $wnd.Timeline.DateTime.DECADE},
+        {pixelsPerInterval: 100, unit: $wnd.Timeline.DateTime.DECADE})
         })
         ];
 

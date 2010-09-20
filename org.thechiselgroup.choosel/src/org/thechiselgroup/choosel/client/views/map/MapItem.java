@@ -15,10 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.map;
 
+import org.thechiselgroup.choosel.client.views.DefaultResourceItem.Status;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.IconResourceItem;
-import org.thechiselgroup.choosel.client.views.DefaultResourceItem.Status;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
@@ -80,7 +80,7 @@ public class MapItem extends IconResourceItem {
         this.callback = callback;
         this.dragEnablerFactory = dragEnablerFactory;
 
-        String label = (String) getResourceValue(SlotResolver.LABEL_SLOT);
+        String label = (String) getResourceValue(SlotResolver.DESCRIPTION_SLOT);
         this.overlay = new LabelOverlay(point, Point.newInstance(-10, -10),
                 label, CSS_RESOURCE_ITEM_ICON); // -10 = - (width /2)
         this.eventHandler = new MarkerEventHandler();
