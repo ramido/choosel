@@ -54,12 +54,17 @@ public abstract class ChartViewContentDisplay extends
 
     // TODO push down: the actual chart needs to decide which slots are used
     // XXX currently inaccurate
+    // @Override
+    // public String[] getSlotIDs() {
+    // return new String[] { SlotResolver.DESCRIPTION_SLOT,
+    // SlotResolver.LABEL_SLOT, SlotResolver.COLOR_SLOT,
+    // SlotResolver.DATE_SLOT, SlotResolver.MAGNITUDE_SLOT,
+    // SlotResolver.X_COORDINATE_SLOT, SlotResolver.Y_COORDINATE_SLOT };
+    // }
     @Override
     public String[] getSlotIDs() {
-        return new String[] { SlotResolver.DESCRIPTION_SLOT,
-                SlotResolver.LABEL_SLOT, SlotResolver.COLOR_SLOT,
-                SlotResolver.DATE_SLOT, SlotResolver.MAGNITUDE_SLOT,
-                SlotResolver.X_COORDINATE_SLOT, SlotResolver.Y_COORDINATE_SLOT };
+        return new String[] { SlotResolver.CHART_LABEL_SLOT,
+                SlotResolver.CHART_VALUE_SLOT };
     }
 
     /**

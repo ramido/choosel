@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.Colors;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.EventTypes;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Panel;
@@ -139,7 +140,7 @@ public abstract class ChartWidget extends Widget {
     protected ProtovisFunctionString highlightedMarkLabelText = new ProtovisFunctionString() {
         @Override
         public String f(ChartItem value, int i) {
-            return calculateHighlightedResources(i) < 1 ? null : Integer
+            return calculateHighlightedResources(i) <= 0 ? null : Double
                     .toString(calculateHighlightedResources(i));
         }
     };
@@ -166,13 +167,18 @@ public abstract class ChartWidget extends Widget {
     }
 
     protected double calculateAllResources(int i) {
+        // TODO remove conversion
         return Double.parseDouble(chartItems.get(i).getResourceItem()
                 .getResourceValue(SlotResolver.CHART_VALUE_SLOT).toString());
     }
 
-    protected int calculateHighlightedResources(int i) {
-        return chartItems.get(i).getResourceItem().getHighlightedResources()
-                .size();
+    protected double calculateHighlightedResources(int i) {
+        ResourceSet highlightedResources = chartItems.get(i).getResourceItem()
+                .getHighlightedResources();
+
+        // TODO use calculation
+
+        return highlightedResources.size();
         // - chartItems.get(i).getResourceItem()
         // .getHighlightedSelectedResources().size();
     }
