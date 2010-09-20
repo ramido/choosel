@@ -93,6 +93,10 @@ public class DefaultViewTest {
         @Override
         protected void initUI() {
         }
+
+        @Override
+        protected void updateConfiguration(Set<ResourceItem> addedResourceItems) {
+        }
     }
 
     @Mock
