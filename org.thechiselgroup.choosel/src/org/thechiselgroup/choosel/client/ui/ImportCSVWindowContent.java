@@ -60,12 +60,13 @@ public class ImportCSVWindowContent extends AbstractWindowContent {
         }
 
         ResourceSet resources = new DefaultResourceSet();
-        resources.setLabel("csv-import"); // TODO changeable, inc number
+        resources.setLabel("import"); // TODO changeable, inc number
 
         String[] attributeNames = parser.parseLine(lines[0]);
 
         for (int i = 1; i < lines.length; i++) {
-            String uri = "csv:" + i; // TODO improved uri generation
+            // XXX this is a bug because uri's are used for caching
+            String uri = "import:" + i; // TODO improved uri generation
             Resource resource = new Resource(uri);
 
             String[] values = parser.parseLine(lines[i]);
