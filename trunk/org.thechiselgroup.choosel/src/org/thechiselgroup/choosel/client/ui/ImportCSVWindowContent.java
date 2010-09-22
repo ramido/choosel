@@ -15,18 +15,20 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui;
 
-import java.io.IOException;
 import java.io.Serializable;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
+import org.thechiselgroup.choosel.client.importer.CSVImporter;
+import org.thechiselgroup.choosel.client.importer.ImportException;
+import org.thechiselgroup.choosel.client.importer.ImportResult;
+import org.thechiselgroup.choosel.client.importer.Importer;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
-import org.thechiselgroup.choosel.client.util.CSVParser;
 import org.thechiselgroup.choosel.client.views.map.MapViewContentDisplay;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 import org.thechiselgroup.choosel.client.windows.CreateWindowCommand;
@@ -50,26 +52,20 @@ public class ImportCSVWindowContent extends AbstractWindowContent {
      * table of String values (since they should not be parsed at this point)
      */
     public static ResourceSet parseResourcesFromCSV(String csvText)
-            throws IOException {
-        CSVParser parser = new CSVParser(',');
+            throws ImportException {
 
-        String[] lines = csvText.split("\n");
-
-        if (lines.length == 0) {
-            throw new IOException("no content to parse");
-        }
+        Importer importer = new CSVImporter();
+        ImportResult importresult = importer.doImport(csvText);
 
         ResourceSet resources = new DefaultResourceSet();
         resources.setLabel("import"); // TODO changeable, inc number
 
-        String[] attributeNames = parser.parseLine(lines[0]);
-
-        for (int i = 1; i < lines.length; i++) {
+        for (int i = 0; i < importresult.values.size(); i++) {
             // XXX this is a bug because uri's are used for caching
             String uri = "import:" + i; // TODO improved uri generation
             Resource resource = new Resource(uri);
 
-            String[] values = parser.parseLine(lines[i]);
+            String[] values = importresult.values.get(i);
             for (int j = 0; j < values.length; j++) {
                 String stringValue = values[j];
 
@@ -109,7 +105,7 @@ public class ImportCSVWindowContent extends AbstractWindowContent {
 
                 }
 
-                resource.putValue(attributeNames[j], value);
+                resource.putValue(importresult.columns[j], value);
             }
 
             resources.add(resource);
@@ -183,7 +179,7 @@ public class ImportCSVWindowContent extends AbstractWindowContent {
 
                     presenter.addResourceSet(resources);
 
-                } catch (IOException e) {
+                } catch (ImportException e) {
                     // TODO choosel exception handling
                     e.printStackTrace();
                 }
