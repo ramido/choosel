@@ -15,20 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.label;
 
-// TODO refactor with selection model label factory
-public class ResourceSetLabelFactory implements LabelProvider {
-
-    private int currentIndex = 1;
-
-    private String prefix;
+public class ResourceSetLabelFactory extends IncrementingSuffixLabelFactory {
 
     public ResourceSetLabelFactory() {
-        prefix = "Resource Set";
-    }
-
-    @Override
-    public String nextLabel() {
-        return prefix + " " + Integer.toString(currentIndex++);
+        super("Resource Set");
     }
 
 }
