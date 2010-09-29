@@ -17,6 +17,8 @@ package org.thechiselgroup.choosel.client.importer;
 
 import java.io.Serializable;
 
+import org.thechiselgroup.choosel.client.label.IncrementingSuffixLabelFactory;
+import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
@@ -26,6 +28,12 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 
 public class Importer {
 
+    private LabelProvider uriHeaderProvider;
+
+    public Importer() {
+        this.uriHeaderProvider = new IncrementingSuffixLabelFactory("import");
+    }
+
     // TODO test
     // TODO pass set of parsers... --> separate step in which parsers are
     // determined
@@ -34,8 +42,7 @@ public class Importer {
         resources.setLabel("import"); // TODO changeable, inc number
 
         for (int row = 0; row < table.getRowCount(); row++) {
-            // XXX this is a bug because uri's are used for caching
-            String uri = "import:" + row; // TODO improved uri generation
+            String uri = uriHeaderProvider.nextLabel() + ":" + row;
             Resource resource = new Resource(uri);
 
             for (int column = 0; column < table.getColumnCount(); column++) {
