@@ -54,11 +54,7 @@ public class WindowResizeControllerTest {
         }
 
         @Override
-        public void moveBy(int right, int down) {
-        }
-
-        @Override
-        public void setPixelSize(int width, int height) {
+        public void resize(int relativeX, int relativeY, int width, int height) {
             this.width = width;
             this.height = height;
         }
@@ -73,7 +69,7 @@ public class WindowResizeControllerTest {
         WindowResizeController.resize(690, 600, 700, 600, ResizeablePanel.EAST,
                 panel);
 
-        verify(panel, times(1)).setPixelSize(190, 100);
+        verify(panel, times(1)).resize(0, 0, 190, 100);
     }
 
     @Test
@@ -82,7 +78,7 @@ public class WindowResizeControllerTest {
         WindowResizeController.resize(710, 600, 700, 600, ResizeablePanel.EAST,
                 panel);
 
-        verify(panel, times(1)).setPixelSize(210, 100);
+        verify(panel, times(1)).resize(0, 0, 210, 100);
     }
 
     @Test
@@ -90,8 +86,15 @@ public class WindowResizeControllerTest {
         WindowResizeController.resize(500, 610, 500, 600,
                 ResizeablePanel.NORTH, panel);
 
-        verify(panel, times(1)).moveBy(0, 10);
-        verify(panel, times(1)).setPixelSize(200, 90);
+        verify(panel, times(1)).resize(0, 10, 200, 90);
+    }
+
+    @Test
+    public void northDownMoreThanSize() {
+        WindowResizeController.resize(500, 850, 500, 600,
+                ResizeablePanel.NORTH, panel);
+
+        verify(panel, times(1)).resize(0, 90, 200, 10);
     }
 
     @Test
@@ -99,8 +102,7 @@ public class WindowResizeControllerTest {
         WindowResizeController.resize(690, 610, 700, 600,
                 ResizeablePanel.NORTH_EAST, panel);
 
-        verify(panel, times(1)).moveBy(0, 10);
-        verify(panel, times(1)).setPixelSize(190, 90);
+        verify(panel, times(1)).resize(0, 10, 190, 90);
     }
 
     @Test
@@ -108,8 +110,7 @@ public class WindowResizeControllerTest {
         WindowResizeController.resize(710, 610, 700, 600,
                 ResizeablePanel.NORTH_EAST, panel);
 
-        verify(panel, times(1)).moveBy(0, 10);
-        verify(panel, times(1)).setPixelSize(210, 90);
+        verify(panel, times(1)).resize(0, 10, 210, 90);
     }
 
     @Test
@@ -117,8 +118,7 @@ public class WindowResizeControllerTest {
         WindowResizeController.resize(690, 590, 700, 600,
                 ResizeablePanel.NORTH_EAST, panel);
 
-        verify(panel, times(1)).moveBy(0, -10);
-        verify(panel, times(1)).setPixelSize(190, 110);
+        verify(panel, times(1)).resize(0, -10, 190, 110);
     }
 
     @Test
@@ -126,8 +126,7 @@ public class WindowResizeControllerTest {
         WindowResizeController.resize(710, 590, 700, 600,
                 ResizeablePanel.NORTH_EAST, panel);
 
-        verify(panel, times(1)).moveBy(0, -10);
-        verify(panel, times(1)).setPixelSize(210, 110);
+        verify(panel, times(1)).resize(0, -10, 210, 110);
     }
 
     @Test
@@ -135,8 +134,7 @@ public class WindowResizeControllerTest {
         WindowResizeController.resize(500, 590, 500, 600,
                 ResizeablePanel.NORTH, panel);
 
-        verify(panel, times(1)).moveBy(0, -10);
-        verify(panel, times(1)).setPixelSize(200, 110);
+        verify(panel, times(1)).resize(0, -10, 200, 110);
     }
 
     @Test
@@ -144,8 +142,7 @@ public class WindowResizeControllerTest {
         WindowResizeController.resize(490, 610, 500, 600,
                 ResizeablePanel.NORTH_WEST, panel);
 
-        verify(panel, times(1)).moveBy(-10, 10);
-        verify(panel, times(1)).setPixelSize(210, 90);
+        verify(panel, times(1)).resize(-10, 10, 210, 90);
     }
 
     @Test
@@ -153,8 +150,7 @@ public class WindowResizeControllerTest {
         WindowResizeController.resize(510, 610, 500, 600,
                 ResizeablePanel.NORTH_WEST, panel);
 
-        verify(panel, times(1)).moveBy(10, 10);
-        verify(panel, times(1)).setPixelSize(190, 90);
+        verify(panel, times(1)).resize(10, 10, 190, 90);
     }
 
     @Test
@@ -162,8 +158,7 @@ public class WindowResizeControllerTest {
         WindowResizeController.resize(490, 590, 500, 600,
                 ResizeablePanel.NORTH_WEST, panel);
 
-        verify(panel, times(1)).moveBy(-10, -10);
-        verify(panel, times(1)).setPixelSize(210, 110);
+        verify(panel, times(1)).resize(-10, -10, 210, 110);
     }
 
     @Test
@@ -171,8 +166,7 @@ public class WindowResizeControllerTest {
         WindowResizeController.resize(510, 590, 500, 600,
                 ResizeablePanel.NORTH_WEST, panel);
 
-        verify(panel, times(1)).moveBy(10, -10);
-        verify(panel, times(1)).setPixelSize(190, 110);
+        verify(panel, times(1)).resize(10, -10, 190, 110);
     }
 
     @Before
@@ -190,7 +184,7 @@ public class WindowResizeControllerTest {
         WindowResizeController.resize(500, 710, 500, 700,
                 ResizeablePanel.SOUTH, panel);
 
-        verify(panel, times(1)).setPixelSize(200, 110);
+        verify(panel, times(1)).resize(0, 0, 200, 110);
     }
 
     @Test
@@ -198,7 +192,7 @@ public class WindowResizeControllerTest {
         WindowResizeController.resize(690, 710, 700, 700,
                 ResizeablePanel.SOUTH_EAST, panel);
 
-        verify(panel, times(1)).setPixelSize(190, 110);
+        verify(panel, times(1)).resize(0, 0, 190, 110);
     }
 
     @Test
@@ -206,7 +200,7 @@ public class WindowResizeControllerTest {
         WindowResizeController.resize(710, 710, 700, 700,
                 ResizeablePanel.SOUTH_EAST, panel);
 
-        verify(panel, times(1)).setPixelSize(210, 110);
+        verify(panel, times(1)).resize(0, 0, 210, 110);
     }
 
     @Test
@@ -214,7 +208,7 @@ public class WindowResizeControllerTest {
         WindowResizeController.resize(690, 690, 700, 700,
                 ResizeablePanel.SOUTH_EAST, panel);
 
-        verify(panel, times(1)).setPixelSize(190, 90);
+        verify(panel, times(1)).resize(0, 0, 190, 90);
     }
 
     @Test
@@ -222,7 +216,7 @@ public class WindowResizeControllerTest {
         WindowResizeController.resize(710, 690, 700, 700,
                 ResizeablePanel.SOUTH_EAST, panel);
 
-        verify(panel, times(1)).setPixelSize(210, 90);
+        verify(panel, times(1)).resize(0, 0, 210, 90);
     }
 
     @Test
@@ -231,7 +225,7 @@ public class WindowResizeControllerTest {
         WindowResizeController.resize(500, 690, 500, 700,
                 ResizeablePanel.SOUTH, panel);
 
-        verify(panel, times(1)).setPixelSize(200, 90);
+        verify(panel, times(1)).resize(0, 0, 200, 90);
     }
 
     @Test
@@ -239,8 +233,7 @@ public class WindowResizeControllerTest {
         WindowResizeController.resize(490, 710, 500, 700,
                 ResizeablePanel.SOUTH_WEST, panel);
 
-        verify(panel, times(1)).moveBy(-10, 0);
-        verify(panel, times(1)).setPixelSize(210, 110);
+        verify(panel, times(1)).resize(-10, 0, 210, 110);
     }
 
     @Test
@@ -248,8 +241,7 @@ public class WindowResizeControllerTest {
         WindowResizeController.resize(510, 710, 500, 700,
                 ResizeablePanel.SOUTH_WEST, panel);
 
-        verify(panel, times(1)).moveBy(10, 0);
-        verify(panel, times(1)).setPixelSize(190, 110);
+        verify(panel, times(1)).resize(10, 0, 190, 110);
     }
 
     @Test
@@ -257,8 +249,7 @@ public class WindowResizeControllerTest {
         WindowResizeController.resize(490, 690, 500, 700,
                 ResizeablePanel.SOUTH_WEST, panel);
 
-        verify(panel, times(1)).moveBy(-10, 0);
-        verify(panel, times(1)).setPixelSize(210, 90);
+        verify(panel, times(1)).resize(-10, 0, 210, 90);
     }
 
     @Test
@@ -266,8 +257,7 @@ public class WindowResizeControllerTest {
         WindowResizeController.resize(510, 690, 500, 700,
                 ResizeablePanel.SOUTH_WEST, panel);
 
-        verify(panel, times(1)).moveBy(10, 0);
-        verify(panel, times(1)).setPixelSize(190, 90);
+        verify(panel, times(1)).resize(10, 0, 190, 90);
     }
 
     @Test
@@ -275,8 +265,7 @@ public class WindowResizeControllerTest {
         WindowResizeController.resize(490, 600, 500, 600, ResizeablePanel.WEST,
                 panel);
 
-        verify(panel, times(1)).moveBy(-10, 0);
-        verify(panel, times(1)).setPixelSize(210, 100);
+        verify(panel, times(1)).resize(-10, 0, 210, 100);
     }
 
     @Test
@@ -284,7 +273,6 @@ public class WindowResizeControllerTest {
         WindowResizeController.resize(510, 600, 500, 600, ResizeablePanel.WEST,
                 panel);
 
-        verify(panel, times(1)).moveBy(10, 0);
-        verify(panel, times(1)).setPixelSize(190, 100);
+        verify(panel, times(1)).resize(10, 0, 190, 100);
     }
 }

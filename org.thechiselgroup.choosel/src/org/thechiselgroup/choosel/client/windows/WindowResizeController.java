@@ -65,15 +65,8 @@ public final class WindowResizeController extends WindowDragController {
                 verticalMove = height - newHeight;
             }
 
-            // TODO call anyways - should be handled in WindowPanel
-            if (horizontalMove != 0 || verticalMove != 0) {
-                windowPanel.moveBy(horizontalMove, verticalMove);
-            }
-
-            // TODO call anyways - should be handled in WindowPanel
-            if (newHeight != height || newWidth != width) {
-                windowPanel.setPixelSize(newWidth, newHeight);
-            }
+            windowPanel.resize(horizontalMove, verticalMove, newWidth,
+                    newHeight);
         }
     }
 
