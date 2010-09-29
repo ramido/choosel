@@ -33,33 +33,24 @@ public final class WindowResizeController extends WindowDragController {
             int draggableLeft, int draggableTop, int direction,
             ResizeablePanel windowPanel) {
 
+        int verticalDelta = 0;
         if ((direction & ResizeablePanel.DIRECTION_NORTH) != 0) {
-            int verticalDelta = draggableTop - desiredDraggableY;
+            verticalDelta = draggableTop - desiredDraggableY;
             if (verticalDelta != 0) {
                 int height = windowPanel.getHeight();
                 int newHeight = Math.max(height + verticalDelta,
                         MIN_WIDGET_SIZE);
                 if (newHeight != height) {
                     windowPanel.moveBy(0, height - newHeight);
-                    windowPanel.setPixelSize(windowPanel.getWidth(), newHeight);
                 }
             }
         } else if ((direction & ResizeablePanel.DIRECTION_SOUTH) != 0) {
-            int verticalDelta = desiredDraggableY - draggableTop;
-
-            if (verticalDelta != 0) {
-                int height = windowPanel.getHeight();
-                int newHeight = Math.max(height + verticalDelta,
-                        MIN_WIDGET_SIZE);
-
-                if (newHeight != height) {
-                    windowPanel.setPixelSize(windowPanel.getWidth(), newHeight);
-                }
-            }
+            verticalDelta = desiredDraggableY - draggableTop;
         }
 
+        int horizontalDelta = 0;
         if ((direction & ResizeablePanel.DIRECTION_WEST) != 0) {
-            int horizontalDelta = draggableLeft - desiredDraggableX;
+            horizontalDelta = draggableLeft - desiredDraggableX;
             if (horizontalDelta != 0) {
                 int width = windowPanel.getWidth();
                 int newWidth = Math.max(width + horizontalDelta,
@@ -67,20 +58,23 @@ public final class WindowResizeController extends WindowDragController {
 
                 if (newWidth != width) {
                     windowPanel.moveBy(width - newWidth, 0);
-
-                    windowPanel.setPixelSize(newWidth, windowPanel.getHeight());
                 }
             }
         } else if ((direction & ResizeablePanel.DIRECTION_EAST) != 0) {
-            int horizontalDelta = desiredDraggableX - draggableLeft;
-            if (horizontalDelta != 0) {
-                int width = windowPanel.getWidth();
-                int newWidth = Math.max(width + horizontalDelta,
-                        windowPanel.getMinimumWidth());
+            horizontalDelta = desiredDraggableX - draggableLeft;
+        }
 
-                if (newWidth != width) {
-                    windowPanel.setPixelSize(newWidth, windowPanel.getHeight());
-                }
+        if (verticalDelta != 0 || horizontalDelta != 0) {
+            int height = windowPanel.getHeight();
+            int newHeight = Math.max(height + verticalDelta, MIN_WIDGET_SIZE);
+
+            int width = windowPanel.getWidth();
+            int newWidth = Math.max(width + horizontalDelta,
+                    windowPanel.getMinimumWidth());
+
+            // TODO call anyways - should be handled in WindowPanel
+            if (newHeight != height || newWidth != width) {
+                windowPanel.setPixelSize(newWidth, newHeight);
             }
         }
     }

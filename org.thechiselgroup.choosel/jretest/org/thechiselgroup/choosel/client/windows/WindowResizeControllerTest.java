@@ -101,7 +101,6 @@ public class WindowResizeControllerTest {
                         | ResizeablePanel.DIRECTION_EAST, panel);
 
         verify(panel, times(1)).moveBy(0, 10);
-        verify(panel, times(1)).setPixelSize(200, 90);
         verify(panel, times(1)).setPixelSize(190, 90);
     }
 
@@ -112,7 +111,6 @@ public class WindowResizeControllerTest {
                         | ResizeablePanel.DIRECTION_EAST, panel);
 
         verify(panel, times(1)).moveBy(0, 10);
-        verify(panel, times(1)).setPixelSize(200, 90);
         verify(panel, times(1)).setPixelSize(210, 90);
     }
 
@@ -123,7 +121,6 @@ public class WindowResizeControllerTest {
                         | ResizeablePanel.DIRECTION_EAST, panel);
 
         verify(panel, times(1)).moveBy(0, -10);
-        verify(panel, times(1)).setPixelSize(200, 110);
         verify(panel, times(1)).setPixelSize(190, 110);
     }
 
@@ -134,7 +131,6 @@ public class WindowResizeControllerTest {
                         | ResizeablePanel.DIRECTION_EAST, panel);
 
         verify(panel, times(1)).moveBy(0, -10);
-        verify(panel, times(1)).setPixelSize(200, 110);
         verify(panel, times(1)).setPixelSize(210, 110);
     }
 
@@ -154,7 +150,6 @@ public class WindowResizeControllerTest {
                         | ResizeablePanel.DIRECTION_WEST, panel);
 
         verify(panel, times(1)).moveBy(0, 10);
-        verify(panel, times(1)).setPixelSize(200, 90);
         verify(panel, times(1)).moveBy(-10, 0);
         verify(panel, times(1)).setPixelSize(210, 90);
     }
@@ -166,7 +161,6 @@ public class WindowResizeControllerTest {
                         | ResizeablePanel.DIRECTION_WEST, panel);
 
         verify(panel, times(1)).moveBy(0, 10);
-        verify(panel, times(1)).setPixelSize(200, 90);
         verify(panel, times(1)).moveBy(10, 0);
         verify(panel, times(1)).setPixelSize(190, 90);
     }
@@ -178,7 +172,6 @@ public class WindowResizeControllerTest {
                         | ResizeablePanel.DIRECTION_WEST, panel);
 
         verify(panel, times(1)).moveBy(0, -10);
-        verify(panel, times(1)).setPixelSize(200, 110);
         verify(panel, times(1)).moveBy(-10, 0);
         verify(panel, times(1)).setPixelSize(210, 110);
     }
@@ -190,7 +183,6 @@ public class WindowResizeControllerTest {
                         | ResizeablePanel.DIRECTION_WEST, panel);
 
         verify(panel, times(1)).moveBy(0, -10);
-        verify(panel, times(1)).setPixelSize(200, 110);
         verify(panel, times(1)).moveBy(10, 0);
         verify(panel, times(1)).setPixelSize(190, 110);
     }
@@ -219,7 +211,6 @@ public class WindowResizeControllerTest {
                 ResizeablePanel.DIRECTION_SOUTH
                         | ResizeablePanel.DIRECTION_EAST, panel);
 
-        verify(panel, times(1)).setPixelSize(200, 110);
         verify(panel, times(1)).setPixelSize(190, 110);
     }
 
@@ -229,7 +220,6 @@ public class WindowResizeControllerTest {
                 ResizeablePanel.DIRECTION_SOUTH
                         | ResizeablePanel.DIRECTION_EAST, panel);
 
-        verify(panel, times(1)).setPixelSize(200, 110);
         verify(panel, times(1)).setPixelSize(210, 110);
     }
 
@@ -239,7 +229,6 @@ public class WindowResizeControllerTest {
                 ResizeablePanel.DIRECTION_SOUTH
                         | ResizeablePanel.DIRECTION_EAST, panel);
 
-        verify(panel, times(1)).setPixelSize(200, 90);
         verify(panel, times(1)).setPixelSize(190, 90);
     }
 
@@ -249,7 +238,6 @@ public class WindowResizeControllerTest {
                 ResizeablePanel.DIRECTION_SOUTH
                         | ResizeablePanel.DIRECTION_EAST, panel);
 
-        verify(panel, times(1)).setPixelSize(200, 90);
         verify(panel, times(1)).setPixelSize(210, 90);
     }
 
@@ -268,7 +256,6 @@ public class WindowResizeControllerTest {
                 ResizeablePanel.DIRECTION_SOUTH
                         | ResizeablePanel.DIRECTION_WEST, panel);
 
-        verify(panel, times(1)).setPixelSize(200, 110);
         verify(panel, times(1)).moveBy(-10, 0);
         verify(panel, times(1)).setPixelSize(210, 110);
     }
@@ -279,7 +266,6 @@ public class WindowResizeControllerTest {
                 ResizeablePanel.DIRECTION_SOUTH
                         | ResizeablePanel.DIRECTION_WEST, panel);
 
-        verify(panel, times(1)).setPixelSize(200, 110);
         verify(panel, times(1)).moveBy(10, 0);
         verify(panel, times(1)).setPixelSize(190, 110);
     }
@@ -290,7 +276,6 @@ public class WindowResizeControllerTest {
                 ResizeablePanel.DIRECTION_SOUTH
                         | ResizeablePanel.DIRECTION_WEST, panel);
 
-        verify(panel, times(1)).setPixelSize(200, 90);
         verify(panel, times(1)).moveBy(-10, 0);
         verify(panel, times(1)).setPixelSize(210, 90);
     }
@@ -301,7 +286,6 @@ public class WindowResizeControllerTest {
                 ResizeablePanel.DIRECTION_SOUTH
                         | ResizeablePanel.DIRECTION_WEST, panel);
 
-        verify(panel, times(1)).setPixelSize(200, 90);
         verify(panel, times(1)).moveBy(10, 0);
         verify(panel, times(1)).setPixelSize(190, 90);
     }
