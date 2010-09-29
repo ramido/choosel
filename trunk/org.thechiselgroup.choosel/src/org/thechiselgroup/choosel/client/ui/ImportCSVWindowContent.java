@@ -19,10 +19,10 @@ import java.io.Serializable;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
-import org.thechiselgroup.choosel.client.importer.CSVImporter;
-import org.thechiselgroup.choosel.client.importer.ImportException;
-import org.thechiselgroup.choosel.client.importer.ImportResult;
-import org.thechiselgroup.choosel.client.importer.Importer;
+import org.thechiselgroup.choosel.client.importer.CSVStringTableParser;
+import org.thechiselgroup.choosel.client.importer.ParseException;
+import org.thechiselgroup.choosel.client.importer.StringTable;
+import org.thechiselgroup.choosel.client.importer.StringTableParser;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
@@ -52,11 +52,15 @@ public class ImportCSVWindowContent extends AbstractWindowContent {
      * table of String values (since they should not be parsed at this point)
      */
     public static ResourceSet parseResourcesFromCSV(String csvText)
-            throws ImportException {
+            throws ParseException {
 
-        Importer importer = new CSVImporter();
-        ImportResult importresult = importer.doImport(csvText);
+        StringTableParser importer = new CSVStringTableParser();
+        StringTable importresult = importer.parse(csvText);
 
+        return createResources(importresult);
+    }
+
+    public static ResourceSet createResources(StringTable importresult) {
         ResourceSet resources = new DefaultResourceSet();
         resources.setLabel("import"); // TODO changeable, inc number
 
@@ -178,7 +182,7 @@ public class ImportCSVWindowContent extends AbstractWindowContent {
 
                     presenter.addResourceSet(resources);
 
-                } catch (ImportException e) {
+                } catch (ParseException e) {
                     // TODO choosel exception handling
                     e.printStackTrace();
                 }

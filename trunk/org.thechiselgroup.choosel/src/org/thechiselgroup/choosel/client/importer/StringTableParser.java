@@ -15,32 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.importer;
 
-public class ImportException extends Exception {
+public interface StringTableParser {
 
-    private int lineNumber;
-
-    public ImportException(String message) {
-        this(message, -1);
-    }
-
-    public ImportException(String message, int lineNumber) {
-        super(message);
-
-        this.lineNumber = lineNumber;
-    }
-
-    public ImportException(String message, Throwable cause) {
-        this(message, cause, -1);
-    }
-
-    public ImportException(String message, Throwable cause, int lineNumber) {
-        super(message, cause);
-
-        this.lineNumber = lineNumber;
-    }
-
-    public int getLineNumber() {
-        return lineNumber;
-    }
+    StringTable parse(String textToParse) throws ParseException;
 
 }

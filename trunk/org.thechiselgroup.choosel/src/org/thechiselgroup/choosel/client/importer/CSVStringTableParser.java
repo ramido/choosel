@@ -21,19 +21,19 @@ import java.util.List;
 
 import org.thechiselgroup.choosel.client.util.CSVParser;
 
-public class CSVImporter implements Importer {
+public class CSVStringTableParser implements StringTableParser {
 
     private CSVParser parser = new CSVParser(',');
 
     @Override
-    public ImportResult doImport(String data) throws ImportException {
+    public StringTable parse(String data) throws ParseException {
         assert data != null;
 
         try {
             String[] lines = data.split("\n");
 
             if (lines.length <= 1) {
-                throw new ImportException("No values to import");
+                throw new ParseException("No values to import");
             }
 
             String[] columns = parser.parseLine(lines[0]);
@@ -42,17 +42,17 @@ public class CSVImporter implements Importer {
                 String[] lineValues = parser.parseLine(lines[i]);
 
                 if (lineValues.length < columns.length) {
-                    throw new ImportException("Not enough values", i + 1);
+                    throw new ParseException("Not enough values", i + 1);
                 }
 
                 if (lineValues.length > columns.length) {
-                    throw new ImportException("Too many values", i + 1);
+                    throw new ParseException("Too many values", i + 1);
                 }
 
                 values.add(lineValues);
             }
 
-            return new ImportResult(columns, values);
+            return new StringTable(columns, values);
         } catch (IOException ex) {
             return null;
         }

@@ -15,8 +15,36 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.importer;
 
-public interface Importer {
+import java.util.List;
 
-    ImportResult doImport(String data) throws ImportException;
+public class StringTable {
+
+    private final List<String[]> values;
+
+    private final String[] columns;
+
+    public StringTable(String[] columns, List<String[]> values) {
+        assert values != null;
+        assert columns != null;
+
+        this.values = values;
+        this.columns = columns;
+    }
+
+    public int getColumnCount() {
+        return columns.length;
+    }
+
+    public String getColumnName(int column) {
+        return columns[column];
+    }
+
+    public int getRowCount() {
+        return values.size();
+    }
+
+    public String getValue(int row, int column) {
+        return values.get(row)[column];
+    }
 
 }
