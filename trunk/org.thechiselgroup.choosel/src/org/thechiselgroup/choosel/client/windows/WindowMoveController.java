@@ -49,13 +49,8 @@ public final class WindowMoveController extends WindowDragController {
     // TODO command should also switch back to old zIndex
     @Override
     public void dragStart() {
-        windowPanel = (WindowPanel) context.draggable;
-
-        originalLocation = new WidgetLocation(windowPanel, getBoundaryPanel());
-
-        bringToFront(windowPanel);
-
         super.dragStart();
 
+        originalLocation = new WidgetLocation(windowPanel, getBoundaryPanel());
     }
 }

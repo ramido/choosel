@@ -29,7 +29,7 @@ public final class MathUtils {
         return max;
     }
 
-    public static int restrictToInterval(int minimum, int maximum, int value) {
+    public static int restrictToInterval(int value, int minimum, int maximum) {
         return Math.max(minimum, Math.min(maximum, value));
     }
 
