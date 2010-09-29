@@ -15,28 +15,21 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui;
 
-import java.io.Serializable;
-
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.importer.CSVStringTableParser;
+import org.thechiselgroup.choosel.client.importer.Importer;
 import org.thechiselgroup.choosel.client.importer.ParseException;
-import org.thechiselgroup.choosel.client.importer.StringTable;
-import org.thechiselgroup.choosel.client.importer.StringTableParser;
-import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
-import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
-import org.thechiselgroup.choosel.client.views.map.MapViewContentDisplay;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 import org.thechiselgroup.choosel.client.windows.CreateWindowCommand;
 import org.thechiselgroup.choosel.client.windows.Desktop;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
@@ -44,78 +37,6 @@ import com.google.gwt.user.client.ui.Widget;
 public class ImportCSVWindowContent extends AbstractWindowContent {
 
     private static final String IMPORT_CSV_CSS = "importCSV";
-
-    // TODO test
-    // TODO move --> resource set parser interface
-    /*
-     * TODO later: resource set not the perfect result, rather structure and
-     * table of String values (since they should not be parsed at this point)
-     */
-    public static ResourceSet parseResourcesFromCSV(String csvText)
-            throws ParseException {
-
-        StringTableParser importer = new CSVStringTableParser();
-        StringTable importresult = importer.parse(csvText);
-
-        return createResources(importresult);
-    }
-
-    public static ResourceSet createResources(StringTable importresult) {
-        ResourceSet resources = new DefaultResourceSet();
-        resources.setLabel("import"); // TODO changeable, inc number
-
-        for (int row = 0; row < importresult.getRowCount(); row++) {
-            // XXX this is a bug because uri's are used for caching
-            String uri = "import:" + row; // TODO improved uri generation
-            Resource resource = new Resource(uri);
-
-            for (int column = 0; column < importresult.getColumnCount(); column++) {
-                String stringValue = importresult.getValue(row, column);
-
-                /*
-                 * TODO should not be parsed at this point - change once setting
-                 * property types possible
-                 */
-                Serializable value = stringValue;
-
-                // number
-                if (stringValue.matches("^[-+]?[0-9]*\\.?[0-9]+")) {
-                    value = new Double(stringValue);
-                }
-
-                // date
-                if (stringValue
-                        .matches("^(0[1-9]|[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012]|[1-9])/\\d{4}")) {
-
-                    value = DateTimeFormat.getFormat("dd/MM/yyyy").parse(
-                            stringValue);
-                }
-
-                // location (long/lat)
-                if (stringValue
-                        .matches("^[-+]?[0-9]*\\.?[0-9]+\\/[-+]?[0-9]*\\.?[0-9]+")) {
-
-                    Resource r = new Resource();
-
-                    String[] split = stringValue.split("\\/");
-
-                    r.putValue(MapViewContentDisplay.LATITUDE,
-                            Double.parseDouble(split[0]));
-                    r.putValue(MapViewContentDisplay.LONGITUDE,
-                            Double.parseDouble(split[1]));
-
-                    value = r;
-
-                }
-
-                resource.putValue(importresult.getColumnName(column), value);
-            }
-
-            resources.add(resource);
-        }
-
-        return resources;
-    }
 
     private TextArea pasteArea;
 
@@ -161,11 +82,12 @@ public class ImportCSVWindowContent extends AbstractWindowContent {
             @Override
             public void onClick(ClickEvent event) {
                 try {
-                    ResourceSet resources = parseResourcesFromCSV(pasteArea
-                            .getText());
+                    ResourceSet resources = new Importer()
+                            .createResources(new CSVStringTableParser()
+                                    .parse(pasteArea.getText()));
 
-                    // TODO show dnd window with parsed data
-                    resources.toString();
+                    // TODO introduce special section on desktop that contains
+                    // the different data sources
 
                     String title = "CSV Import";
                     final ResourceSetsPresenter presenter = new ResourceSetAvatarResourceSetsPresenter(
