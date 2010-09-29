@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.client.windows;
 import java.util.HashMap;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
-import org.thechiselgroup.choosel.client.windows.WindowPanel.DirectionConstant;
+import org.thechiselgroup.choosel.client.windows.ResizeablePanel.DirectionConstant;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -31,9 +31,9 @@ public final class WindowResizeController extends WindowDragController {
     // for test
     static void resize(int desiredDraggableX, int desiredDraggableY,
             int windowTop, int windowLeft, int direction,
-            WindowPanel windowPanel) {
+            ResizeablePanel windowPanel) {
 
-        if ((direction & WindowPanel.DIRECTION_NORTH) != 0) {
+        if ((direction & ResizeablePanel.DIRECTION_NORTH) != 0) {
             int verticalDelta = windowTop - desiredDraggableY;
             if (verticalDelta != 0) {
                 int height = windowPanel.getHeight();
@@ -44,7 +44,7 @@ public final class WindowResizeController extends WindowDragController {
                     windowPanel.setPixelSize(windowPanel.getWidth(), newHeight);
                 }
             }
-        } else if ((direction & WindowPanel.DIRECTION_SOUTH) != 0) {
+        } else if ((direction & ResizeablePanel.DIRECTION_SOUTH) != 0) {
             int verticalDelta = desiredDraggableY - windowTop;
 
             if (verticalDelta != 0) {
@@ -58,7 +58,7 @@ public final class WindowResizeController extends WindowDragController {
             }
         }
 
-        if ((direction & WindowPanel.DIRECTION_WEST) != 0) {
+        if ((direction & ResizeablePanel.DIRECTION_WEST) != 0) {
             int horizontalDelta = windowLeft - desiredDraggableX;
             if (horizontalDelta != 0) {
                 int width = windowPanel.getWidth();
@@ -71,7 +71,7 @@ public final class WindowResizeController extends WindowDragController {
                     windowPanel.setPixelSize(newWidth, windowPanel.getHeight());
                 }
             }
-        } else if ((direction & WindowPanel.DIRECTION_EAST) != 0) {
+        } else if ((direction & ResizeablePanel.DIRECTION_EAST) != 0) {
             int horizontalDelta = desiredDraggableX - windowLeft;
             if (horizontalDelta != 0) {
                 int width = windowPanel.getWidth();
