@@ -13,7 +13,7 @@ public class IncrementingSuffixLabelFactory implements LabelProvider {
 
     @Override
     public String nextLabel() {
-        return prefix + " " + Integer.toString(currentIndex++);
+        return prefix + Integer.toString(currentIndex++);
     }
 
 }

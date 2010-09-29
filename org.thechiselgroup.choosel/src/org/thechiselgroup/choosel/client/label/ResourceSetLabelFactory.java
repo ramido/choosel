@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.client.label;
 public class ResourceSetLabelFactory extends IncrementingSuffixLabelFactory {
 
     public ResourceSetLabelFactory() {
-        super("Resource Set");
+        super("Resource Set" + " ");
     }
 
 }
