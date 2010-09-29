@@ -28,6 +28,63 @@ public final class WindowResizeController extends WindowDragController {
 
     private static final int MIN_WIDGET_SIZE = 10;
 
+    // for test
+    static void resize(int desiredDraggableX, int desiredDraggableY,
+            int windowTop, int windowLeft, int direction,
+            WindowPanel windowPanel) {
+
+        if ((direction & WindowPanel.DIRECTION_NORTH) != 0) {
+            int verticalDelta = windowTop - desiredDraggableY;
+            if (verticalDelta != 0) {
+                int height = windowPanel.getHeight();
+                int newHeight = Math.max(height + verticalDelta,
+                        MIN_WIDGET_SIZE);
+                if (newHeight != height) {
+                    windowPanel.moveBy(0, height - newHeight);
+                    windowPanel.setPixelSize(windowPanel.getWidth(), newHeight);
+                }
+            }
+        } else if ((direction & WindowPanel.DIRECTION_SOUTH) != 0) {
+            int verticalDelta = desiredDraggableY - windowTop;
+
+            if (verticalDelta != 0) {
+                int height = windowPanel.getHeight();
+                int newHeight = Math.max(height + verticalDelta,
+                        MIN_WIDGET_SIZE);
+
+                if (newHeight != height) {
+                    windowPanel.setPixelSize(windowPanel.getWidth(), newHeight);
+                }
+            }
+        }
+
+        if ((direction & WindowPanel.DIRECTION_WEST) != 0) {
+            int horizontalDelta = windowLeft - desiredDraggableX;
+            if (horizontalDelta != 0) {
+                int width = windowPanel.getWidth();
+                int newWidth = Math.max(width + horizontalDelta,
+                        windowPanel.getMinimumWidth());
+
+                if (newWidth != width) {
+                    windowPanel.moveBy(width - newWidth, 0);
+
+                    windowPanel.setPixelSize(newWidth, windowPanel.getHeight());
+                }
+            }
+        } else if ((direction & WindowPanel.DIRECTION_EAST) != 0) {
+            int horizontalDelta = desiredDraggableX - windowLeft;
+            if (horizontalDelta != 0) {
+                int width = windowPanel.getWidth();
+                int newWidth = Math.max(width + horizontalDelta,
+                        windowPanel.getMinimumWidth());
+
+                if (newWidth != width) {
+                    windowPanel.setPixelSize(newWidth, windowPanel.getHeight());
+                }
+            }
+        }
+    }
+
     private final HashMap<Widget, DirectionConstant> directionMap = new HashMap<Widget, DirectionConstant>();
 
     public WindowResizeController(WindowController controller,
@@ -49,57 +106,11 @@ public final class WindowResizeController extends WindowDragController {
         int top = context.draggable.getAbsoluteTop()
                 - getBoundaryPanel().getAbsoluteTop();
 
-        if ((direction & WindowPanel.DIRECTION_NORTH) != 0) {
-            int verticalDelta = top - desiredDraggableY;
-            if (verticalDelta != 0) {
-                int height = windowPanel.getHeight();
-                int newHeight = Math.max(height + verticalDelta, MIN_WIDGET_SIZE);
-                if (newHeight != height) {
-                    windowPanel.moveBy(0, height - newHeight);
-                    windowPanel.setPixelSize(windowPanel.getWidth(), newHeight);
-                }
-            }
-        } else if ((direction & WindowPanel.DIRECTION_SOUTH) != 0) {
-            int verticalDelta = desiredDraggableY - top;
-
-            if (verticalDelta != 0) {
-                int height = windowPanel.getHeight();
-                int newHeight = Math.max(height + verticalDelta, MIN_WIDGET_SIZE);
-
-                if (newHeight != height) {
-                    windowPanel.setPixelSize(windowPanel.getWidth(), newHeight);
-                }
-            }
-        }
-
         int left = context.draggable.getAbsoluteLeft()
                 - getBoundaryPanel().getAbsoluteLeft();
 
-        if ((direction & WindowPanel.DIRECTION_WEST) != 0) {
-            int horizontalDelta = left - desiredDraggableX;
-            if (horizontalDelta != 0) {
-                int width = windowPanel.getWidth();
-                int newWidth = Math.max(width + horizontalDelta,
-                        windowPanel.getMinimumWidth());
-
-                if (newWidth != width) {
-                    windowPanel.moveBy(width - newWidth, 0);
-
-                    windowPanel.setPixelSize(newWidth, windowPanel.getHeight());
-                }
-            }
-        } else if ((direction & WindowPanel.DIRECTION_EAST) != 0) {
-            int horizontalDelta = desiredDraggableX - left;
-            if (horizontalDelta != 0) {
-                int width = windowPanel.getWidth();
-                int newWidth = Math.max(width + horizontalDelta,
-                        windowPanel.getMinimumWidth());
-
-                if (newWidth != width) {
-                    windowPanel.setPixelSize(newWidth, windowPanel.getHeight());
-                }
-            }
-        }
+        resize(desiredDraggableX, desiredDraggableY, top, left, direction,
+                windowPanel);
     }
 
     @Override
