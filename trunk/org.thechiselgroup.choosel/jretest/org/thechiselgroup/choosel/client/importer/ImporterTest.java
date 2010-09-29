@@ -32,6 +32,25 @@ public class ImporterTest {
 
     private Importer underTest;
 
+    @Test
+    public void sameUriTypeInSameImport() {
+        String[] columns = new String[] { "c1" };
+        List<String[]> values = new ArrayList<String[]>();
+        values.add(new String[] { "v11" });
+        values.add(new String[] { "v21" });
+
+        ResourceSet result = underTest.createResources(new StringTable(columns,
+                values));
+
+        Set<String> uris = new HashSet<String>();
+        for (Resource resource : result) {
+            uris.add(resource.getUri().substring(0,
+                    resource.getUri().indexOf(':')));
+        }
+
+        assertEquals(1, uris.size());
+    }
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
