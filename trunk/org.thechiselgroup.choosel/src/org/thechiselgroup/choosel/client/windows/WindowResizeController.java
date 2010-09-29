@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.client.windows;
 import java.util.HashMap;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
-import org.thechiselgroup.choosel.client.windows.ResizeablePanel.DirectionConstant;
+import org.thechiselgroup.choosel.client.windows.ResizeablePanel.Direction;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -30,20 +30,20 @@ public final class WindowResizeController extends WindowDragController {
 
     // for test
     static void resize(int desiredDraggableX, int desiredDraggableY,
-            int draggableLeft, int draggableTop, int direction,
+            int draggableLeft, int draggableTop, Direction direction,
             ResizeablePanel windowPanel) {
 
         int verticalDelta = 0;
-        if ((direction & ResizeablePanel.DIRECTION_NORTH) != 0) {
+        if (direction.isNorth()) {
             verticalDelta = draggableTop - desiredDraggableY;
-        } else if ((direction & ResizeablePanel.DIRECTION_SOUTH) != 0) {
+        } else if (direction.isSouth()) {
             verticalDelta = desiredDraggableY - draggableTop;
         }
 
         int horizontalDelta = 0;
-        if ((direction & ResizeablePanel.DIRECTION_WEST) != 0) {
+        if (direction.isWest()) {
             horizontalDelta = draggableLeft - desiredDraggableX;
-        } else if ((direction & ResizeablePanel.DIRECTION_EAST) != 0) {
+        } else if (direction.isEast()) {
             horizontalDelta = desiredDraggableX - draggableLeft;
         }
 
@@ -56,12 +56,12 @@ public final class WindowResizeController extends WindowDragController {
                     windowPanel.getMinimumWidth());
 
             int horizontalMove = 0;
-            if ((direction & ResizeablePanel.DIRECTION_WEST) != 0) {
+            if (direction.isWest()) {
                 horizontalMove = width - newWidth;
             }
 
             int verticalMove = 0;
-            if ((direction & ResizeablePanel.DIRECTION_NORTH) != 0) {
+            if (direction.isNorth()) {
                 verticalMove = height - newHeight;
             }
 
@@ -77,7 +77,7 @@ public final class WindowResizeController extends WindowDragController {
         }
     }
 
-    private final HashMap<Widget, DirectionConstant> directionMap = new HashMap<Widget, DirectionConstant>();
+    private final HashMap<Widget, Direction> directionMap = new HashMap<Widget, Direction>();
 
     public WindowResizeController(WindowController controller,
             CommandManager commandManager) {
@@ -93,7 +93,7 @@ public final class WindowResizeController extends WindowDragController {
 
     @Override
     protected void dragMove(int desiredDraggableX, int desiredDraggableY) {
-        int direction = getDirection(context.draggable).directionBits;
+        Direction direction = getDirection(context.draggable);
 
         int top = context.draggable.getAbsoluteTop()
                 - getBoundaryPanel().getAbsoluteTop();
@@ -115,7 +115,7 @@ public final class WindowResizeController extends WindowDragController {
         super.dragStart();
     }
 
-    private DirectionConstant getDirection(Widget draggable) {
+    private Direction getDirection(Widget draggable) {
         return directionMap.get(draggable);
     }
 
@@ -127,8 +127,7 @@ public final class WindowResizeController extends WindowDragController {
         windowPanel = (WindowPanel) draggable;
     }
 
-    public void makeDraggable(Widget widget,
-            WindowPanel.DirectionConstant direction) {
+    public void makeDraggable(Widget widget, WindowPanel.Direction direction) {
         super.makeDraggable(widget);
         directionMap.put(widget, direction);
     }

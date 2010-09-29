@@ -522,7 +522,7 @@ public class WindowPanel extends NEffectPanel implements
         setBorderWidths(contentWidth, contentHeight, headerHeight);
     }
 
-    private Widget setupCell(int row, int col, DirectionConstant direction) {
+    private Widget setupCell(int row, int col, Direction direction) {
         final FocusPanel widget = new FocusPanel();
         widget.setPixelSize(BORDER_THICKNESS, BORDER_THICKNESS);
         grid.setWidget(row, col, widget);

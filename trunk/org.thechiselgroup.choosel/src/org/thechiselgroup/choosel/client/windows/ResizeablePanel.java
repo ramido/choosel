@@ -19,18 +19,35 @@ public interface ResizeablePanel {
 
     /**
      * WindowPanel direction constant, used in
-     * {@link WindowResizeController#makeDraggable(com.google.gwt.user.client.ui.Widget, org.thechiselgroup.mashups.client.windows.demo.client.example.resize.WindowPanel.DirectionConstant)}
+     * {@link WindowResizeController#makeDraggable(com.google.gwt.user.client.ui.Widget, org.thechiselgroup.Direction.client.windows.demo.client.example.resize.WindowPanel.DirectionConstant)}
      * .
      */
-    public static class DirectionConstant {
+    // TODO full class, include direction constants, maybe enum
+    public static class Direction {
 
-        public final int directionBits;
+        private final int directionBits;
 
         public final String directionLetters;
 
-        private DirectionConstant(int directionBits, String directionLetters) {
+        private Direction(int directionBits, String directionLetters) {
             this.directionBits = directionBits;
             this.directionLetters = directionLetters;
+        }
+
+        public boolean isEast() {
+            return (directionBits & DIRECTION_EAST) != 0;
+        }
+
+        public boolean isNorth() {
+            return (directionBits & DIRECTION_NORTH) != 0;
+        }
+
+        public boolean isSouth() {
+            return (directionBits & DIRECTION_SOUTH) != 0;
+        }
+
+        public boolean isWest() {
+            return (directionBits & DIRECTION_WEST) != 0;
         }
     }
 
@@ -57,50 +74,46 @@ public interface ResizeablePanel {
     /**
      * Specifies that resizing occur at the east edge.
      */
-    DirectionConstant EAST = new DirectionConstant(DIRECTION_EAST, "e");
+    Direction EAST = new Direction(DIRECTION_EAST, "e");
 
-    DirectionConstant EAST_TOP = new DirectionConstant(DIRECTION_EAST, "et");
+    Direction EAST_TOP = new Direction(DIRECTION_EAST, "et");
 
     /**
      * Specifies that resizing occur at the both edge.
      */
-    DirectionConstant NORTH = new DirectionConstant(DIRECTION_NORTH, "n");
+    Direction NORTH = new Direction(DIRECTION_NORTH, "n");
 
     /**
      * Specifies that resizing occur at the north-east edge.
      */
-    DirectionConstant NORTH_EAST = new DirectionConstant(DIRECTION_NORTH
-            | DIRECTION_EAST, "ne");
+    Direction NORTH_EAST = new Direction(DIRECTION_NORTH | DIRECTION_EAST, "ne");
 
     /**
      * Specifies that resizing occur at the north-west edge.
      */
-    DirectionConstant NORTH_WEST = new DirectionConstant(DIRECTION_NORTH
-            | DIRECTION_WEST, "nw");
+    Direction NORTH_WEST = new Direction(DIRECTION_NORTH | DIRECTION_WEST, "nw");
 
     /**
      * Specifies that resizing occur at the south edge.
      */
-    DirectionConstant SOUTH = new DirectionConstant(DIRECTION_SOUTH, "s");
+    Direction SOUTH = new Direction(DIRECTION_SOUTH, "s");
 
     /**
      * Specifies that resizing occur at the south-east edge.
      */
-    DirectionConstant SOUTH_EAST = new DirectionConstant(DIRECTION_SOUTH
-            | DIRECTION_EAST, "se");
+    Direction SOUTH_EAST = new Direction(DIRECTION_SOUTH | DIRECTION_EAST, "se");
 
     /**
      * Specifies that resizing occur at the south-west edge.
      */
-    DirectionConstant SOUTH_WEST = new DirectionConstant(DIRECTION_SOUTH
-            | DIRECTION_WEST, "sw");
+    Direction SOUTH_WEST = new Direction(DIRECTION_SOUTH | DIRECTION_WEST, "sw");
 
     /**
      * Specifies that resizing occur at the west edge.
      */
-    DirectionConstant WEST = new DirectionConstant(DIRECTION_WEST, "w");
+    Direction WEST = new Direction(DIRECTION_WEST, "w");
 
-    DirectionConstant WEST_TOP = new DirectionConstant(DIRECTION_WEST, "wt");
+    Direction WEST_TOP = new Direction(DIRECTION_WEST, "wt");
 
     int getHeight();
 
