@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.client.label;
 public class SelectionModelLabelFactory extends IncrementingSuffixLabelFactory {
 
     public SelectionModelLabelFactory() {
-        super("Selection");
+        super("Selection" + " ");
     }
 
 }
