@@ -291,10 +291,10 @@ public class DefaultResourceSetAvatarDragController extends
         int desiredLeft = context.desiredDraggableX - boundaryRectangle.getX();
         if (getBehaviorConstrainedToBoundaryPanel()) {
             desiredLeft = MathUtils.restrictToInterval(
-                    0,
-                    desiredLeft,
                     boundaryRectangle.getWidth()
-                            - context.draggable.getOffsetWidth());
+                            - context.draggable.getOffsetWidth(),
+                    0,
+                    desiredLeft);
         }
         return desiredLeft;
     }
@@ -303,10 +303,10 @@ public class DefaultResourceSetAvatarDragController extends
         int desiredTop = context.desiredDraggableY - boundaryRectangle.getY();
         if (getBehaviorConstrainedToBoundaryPanel()) {
             desiredTop = MathUtils.restrictToInterval(
-                    0,
-                    desiredTop,
                     boundaryRectangle.getHeight()
-                            - context.draggable.getOffsetHeight());
+                            - context.draggable.getOffsetHeight(),
+                    0,
+                    desiredTop);
         }
         return desiredTop;
     }

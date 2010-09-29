@@ -100,24 +100,13 @@ public final class WindowResizeController extends WindowDragController {
 
     @Override
     public void dragStart() {
-        getWindowPanelFromDraggable();
-
-        bringToFront(windowPanel);
-        windowPanel.addStyleName(CSS_WINDOW_TRANSPARENT);
-
         super.dragStart();
+
+        windowPanel.addStyleName(CSS_WINDOW_TRANSPARENT);
     }
 
     private Direction getDirection(Widget draggable) {
         return directionMap.get(draggable);
-    }
-
-    private void getWindowPanelFromDraggable() {
-        Widget draggable = context.draggable;
-        while (!(draggable instanceof WindowPanel) || (draggable == null)) {
-            draggable = draggable.getParent();
-        }
-        windowPanel = (WindowPanel) draggable;
     }
 
     public void makeDraggable(Widget widget, WindowPanel.Direction direction) {

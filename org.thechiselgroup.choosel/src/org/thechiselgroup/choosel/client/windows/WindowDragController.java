@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.client.windows;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
+import org.thechiselgroup.choosel.client.util.MathUtils;
 
 import com.allen_sauer.gwt.dnd.client.AbstractDragController;
 import com.allen_sauer.gwt.dnd.client.util.DOMUtil;
@@ -23,6 +24,7 @@ import com.allen_sauer.gwt.dnd.client.util.Location;
 import com.allen_sauer.gwt.dnd.client.util.WidgetLocation;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.Widget;
 
 public abstract class WindowDragController extends AbstractDragController {
 
@@ -58,14 +60,14 @@ public abstract class WindowDragController extends AbstractDragController {
 
     @Override
     public final void dragMove() {
-        int desiredDraggableX = Math.max(0, Math.min(context.desiredDraggableX
-                - desktopOffsetX,
-                desktopWidth - context.draggable.getOffsetWidth()));
-        int desiredDraggableY = Math.max(0, Math.min(context.desiredDraggableY
-                - desktopOffsetY,
-                desktopHeight - context.draggable.getOffsetHeight()));
+        int desiredXOnDesktop = MathUtils.restrictToInterval(
+                context.desiredDraggableX - desktopOffsetX, 0, desktopWidth
+                        - context.draggable.getOffsetWidth());
+        int desiredYOnDesktop = MathUtils.restrictToInterval(
+                context.desiredDraggableY - desktopOffsetY, 0, desktopHeight
+                        - context.draggable.getOffsetHeight());
 
-        dragMove(desiredDraggableX, desiredDraggableY);
+        dragMove(desiredXOnDesktop, desiredYOnDesktop);
     }
 
     protected abstract void dragMove(int desiredDraggableX,
@@ -85,6 +87,17 @@ public abstract class WindowDragController extends AbstractDragController {
                 + DOMUtil.getBorderLeft(desktopElement);
         desktopOffsetY = desktopLocation.getTop()
                 + DOMUtil.getBorderTop(desktopElement);
+
+        getWindowPanelFromDraggable();
+        bringToFront(windowPanel);
+    }
+
+    private void getWindowPanelFromDraggable() {
+        Widget draggable = context.draggable;
+        while ((draggable != null) && !(draggable instanceof WindowPanel)) {
+            draggable = draggable.getParent();
+        }
+        windowPanel = (WindowPanel) draggable;
     }
 
 }
