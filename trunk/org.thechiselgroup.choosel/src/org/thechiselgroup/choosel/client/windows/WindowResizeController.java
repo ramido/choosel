@@ -30,11 +30,11 @@ public final class WindowResizeController extends WindowDragController {
 
     // for test
     static void resize(int desiredDraggableX, int desiredDraggableY,
-            int windowTop, int windowLeft, int direction,
+            int draggableLeft, int draggableTop, int direction,
             ResizeablePanel windowPanel) {
 
         if ((direction & ResizeablePanel.DIRECTION_NORTH) != 0) {
-            int verticalDelta = windowTop - desiredDraggableY;
+            int verticalDelta = draggableTop - desiredDraggableY;
             if (verticalDelta != 0) {
                 int height = windowPanel.getHeight();
                 int newHeight = Math.max(height + verticalDelta,
@@ -45,7 +45,7 @@ public final class WindowResizeController extends WindowDragController {
                 }
             }
         } else if ((direction & ResizeablePanel.DIRECTION_SOUTH) != 0) {
-            int verticalDelta = desiredDraggableY - windowTop;
+            int verticalDelta = desiredDraggableY - draggableTop;
 
             if (verticalDelta != 0) {
                 int height = windowPanel.getHeight();
@@ -59,7 +59,7 @@ public final class WindowResizeController extends WindowDragController {
         }
 
         if ((direction & ResizeablePanel.DIRECTION_WEST) != 0) {
-            int horizontalDelta = windowLeft - desiredDraggableX;
+            int horizontalDelta = draggableLeft - desiredDraggableX;
             if (horizontalDelta != 0) {
                 int width = windowPanel.getWidth();
                 int newWidth = Math.max(width + horizontalDelta,
@@ -72,7 +72,7 @@ public final class WindowResizeController extends WindowDragController {
                 }
             }
         } else if ((direction & ResizeablePanel.DIRECTION_EAST) != 0) {
-            int horizontalDelta = desiredDraggableX - windowLeft;
+            int horizontalDelta = desiredDraggableX - draggableLeft;
             if (horizontalDelta != 0) {
                 int width = windowPanel.getWidth();
                 int newWidth = Math.max(width + horizontalDelta,
@@ -109,7 +109,7 @@ public final class WindowResizeController extends WindowDragController {
         int left = context.draggable.getAbsoluteLeft()
                 - getBoundaryPanel().getAbsoluteLeft();
 
-        resize(desiredDraggableX, desiredDraggableY, top, left, direction,
+        resize(desiredDraggableX, desiredDraggableY, left, top, direction,
                 windowPanel);
     }
 
