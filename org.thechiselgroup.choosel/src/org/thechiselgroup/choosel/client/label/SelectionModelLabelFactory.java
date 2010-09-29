@@ -15,20 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.label;
 
-// TODO refactor extract common superclass resource set label provider
-public class SelectionModelLabelFactory implements LabelProvider {
-
-    private int currentIndex = 1;
-
-    private String prefix;
+public class SelectionModelLabelFactory extends IncrementingSuffixLabelFactory {
 
     public SelectionModelLabelFactory() {
-        prefix = "Selection";
-    }
-
-    @Override
-    public String nextLabel() {
-        return prefix + " " + Integer.toString(currentIndex++);
+        super("Selection");
     }
 
 }
