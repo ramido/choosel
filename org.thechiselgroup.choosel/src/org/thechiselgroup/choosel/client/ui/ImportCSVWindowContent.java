@@ -60,14 +60,13 @@ public class ImportCSVWindowContent extends AbstractWindowContent {
         ResourceSet resources = new DefaultResourceSet();
         resources.setLabel("import"); // TODO changeable, inc number
 
-        for (int i = 0; i < importresult.values.size(); i++) {
+        for (int row = 0; row < importresult.getRowCount(); row++) {
             // XXX this is a bug because uri's are used for caching
-            String uri = "import:" + i; // TODO improved uri generation
+            String uri = "import:" + row; // TODO improved uri generation
             Resource resource = new Resource(uri);
 
-            String[] values = importresult.values.get(i);
-            for (int j = 0; j < values.length; j++) {
-                String stringValue = values[j];
+            for (int column = 0; column < importresult.getColumnCount(); column++) {
+                String stringValue = importresult.getValue(row, column);
 
                 /*
                  * TODO should not be parsed at this point - change once setting
@@ -105,7 +104,7 @@ public class ImportCSVWindowContent extends AbstractWindowContent {
 
                 }
 
-                resource.putValue(importresult.columns[j], value);
+                resource.putValue(importresult.getColumnName(column), value);
             }
 
             resources.add(resource);

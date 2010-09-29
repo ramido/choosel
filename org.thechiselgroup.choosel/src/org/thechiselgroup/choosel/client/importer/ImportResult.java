@@ -19,9 +19,9 @@ import java.util.List;
 
 public class ImportResult {
 
-    public final List<String[]> values;
+    private final List<String[]> values;
 
-    public final String[] columns;
+    private final String[] columns;
 
     public ImportResult(String[] columns, List<String[]> values) {
         assert values != null;
@@ -29,6 +29,22 @@ public class ImportResult {
 
         this.values = values;
         this.columns = columns;
+    }
+
+    public int getColumnCount() {
+        return columns.length;
+    }
+
+    public String getColumnName(int column) {
+        return columns[column];
+    }
+
+    public int getRowCount() {
+        return values.size();
+    }
+
+    public String getValue(int row, int column) {
+        return values.get(row)[column];
     }
 
 }
