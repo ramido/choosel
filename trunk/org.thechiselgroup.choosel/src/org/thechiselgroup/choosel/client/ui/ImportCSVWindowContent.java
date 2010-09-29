@@ -48,9 +48,11 @@ public class ImportCSVWindowContent extends AbstractWindowContent {
 
     private Desktop desktop;
 
+    private Importer importer;
+
     public ImportCSVWindowContent(
             ResourceSetAvatarFactory defaultDragAvatarFactory,
-            CommandManager commandManager, Desktop desktop) {
+            CommandManager commandManager, Desktop desktop, Importer importer) {
 
         super("Import CSV", ChooselInjectionConstants.WINDOW_CONTENT_CSV_IMPORT);
 
@@ -82,7 +84,7 @@ public class ImportCSVWindowContent extends AbstractWindowContent {
             @Override
             public void onClick(ClickEvent event) {
                 try {
-                    ResourceSet resources = new Importer()
+                    ResourceSet resources = importer
                             .createResources(new CSVStringTableParser()
                                     .parse(pasteArea.getText()));
 

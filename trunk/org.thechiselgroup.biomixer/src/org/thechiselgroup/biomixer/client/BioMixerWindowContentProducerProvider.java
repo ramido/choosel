@@ -25,6 +25,7 @@ import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionCo
 import org.thechiselgroup.biomixer.client.services.NCBOSearchWindowContent;
 import org.thechiselgroup.choosel.client.ChooselWindowContentProducerProvider;
 import org.thechiselgroup.choosel.client.command.CommandManager;
+import org.thechiselgroup.choosel.client.importer.Importer;
 import org.thechiselgroup.choosel.client.label.CategoryLabelProvider;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
@@ -65,7 +66,7 @@ public class BioMixerWindowContentProducerProvider extends
 			HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
 			DetailsWidgetHelper detailsWidgetHelper, Desktop desktop,
 			CommandManager commandManager,
-			ResourceSetAvatarFactory defaultDragAvatarFactory) {
+			ResourceSetAvatarFactory defaultDragAvatarFactory, Importer importer) {
 
 		super(userSetsDragAvatarFactory, allResourcesDragAvatarFactory,
 				selectionDragAvatarFactory, dropTargetFactory,
@@ -73,7 +74,7 @@ public class BioMixerWindowContentProducerProvider extends
 				labelProvider, contentDropTargetManager, slotResolver,
 				resourceByTypeCategorizer, hoverModel, popupManagerFactory,
 				detailsWidgetHelper, desktop, commandManager,
-				defaultDragAvatarFactory);
+				defaultDragAvatarFactory, importer);
 
 		windowContentFactories.put("ncbo-search", new WindowContentFactory() {
 			@Override
