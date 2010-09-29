@@ -59,6 +59,7 @@ public class ImportCSVWindowContent extends AbstractWindowContent {
         this.defaultDragAvatarFactory = defaultDragAvatarFactory;
         this.commandManager = commandManager;
         this.desktop = desktop;
+        this.importer = importer;
     }
 
     @Override
