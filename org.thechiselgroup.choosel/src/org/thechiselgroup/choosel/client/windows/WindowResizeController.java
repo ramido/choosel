@@ -36,14 +36,6 @@ public final class WindowResizeController extends WindowDragController {
         int verticalDelta = 0;
         if ((direction & ResizeablePanel.DIRECTION_NORTH) != 0) {
             verticalDelta = draggableTop - desiredDraggableY;
-            if (verticalDelta != 0) {
-                int height = windowPanel.getHeight();
-                int newHeight = Math.max(height + verticalDelta,
-                        MIN_WIDGET_SIZE);
-                if (newHeight != height) {
-                    windowPanel.moveBy(0, height - newHeight);
-                }
-            }
         } else if ((direction & ResizeablePanel.DIRECTION_SOUTH) != 0) {
             verticalDelta = desiredDraggableY - draggableTop;
         }
@@ -51,15 +43,6 @@ public final class WindowResizeController extends WindowDragController {
         int horizontalDelta = 0;
         if ((direction & ResizeablePanel.DIRECTION_WEST) != 0) {
             horizontalDelta = draggableLeft - desiredDraggableX;
-            if (horizontalDelta != 0) {
-                int width = windowPanel.getWidth();
-                int newWidth = Math.max(width + horizontalDelta,
-                        windowPanel.getMinimumWidth());
-
-                if (newWidth != width) {
-                    windowPanel.moveBy(width - newWidth, 0);
-                }
-            }
         } else if ((direction & ResizeablePanel.DIRECTION_EAST) != 0) {
             horizontalDelta = desiredDraggableX - draggableLeft;
         }
@@ -71,6 +54,21 @@ public final class WindowResizeController extends WindowDragController {
             int width = windowPanel.getWidth();
             int newWidth = Math.max(width + horizontalDelta,
                     windowPanel.getMinimumWidth());
+
+            int horizontalMove = 0;
+            if ((direction & ResizeablePanel.DIRECTION_WEST) != 0) {
+                horizontalMove = width - newWidth;
+            }
+
+            int verticalMove = 0;
+            if ((direction & ResizeablePanel.DIRECTION_NORTH) != 0) {
+                verticalMove = height - newHeight;
+            }
+
+            // TODO call anyways - should be handled in WindowPanel
+            if (horizontalMove != 0 || verticalMove != 0) {
+                windowPanel.moveBy(horizontalMove, verticalMove);
+            }
 
             // TODO call anyways - should be handled in WindowPanel
             if (newHeight != height || newWidth != width) {
