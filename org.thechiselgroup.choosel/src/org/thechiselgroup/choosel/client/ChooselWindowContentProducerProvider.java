@@ -38,6 +38,7 @@ import java.util.Map;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
+import org.thechiselgroup.choosel.client.importer.Importer;
 import org.thechiselgroup.choosel.client.label.CategoryLabelProvider;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
@@ -113,7 +114,7 @@ public class ChooselWindowContentProducerProvider implements
             HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
             DetailsWidgetHelper detailsWidgetHelper, Desktop desktop,
             CommandManager commandManager,
-            ResourceSetAvatarFactory defaultDragAvatarFactory) {
+            ResourceSetAvatarFactory defaultDragAvatarFactory, Importer importer) {
 
         assert userSetsDragAvatarFactory != null;
         assert allResourcesDragAvatarFactory != null;
@@ -155,7 +156,7 @@ public class ChooselWindowContentProducerProvider implements
         windowContentFactories.put(
                 ChooselInjectionConstants.WINDOW_CONTENT_CSV_IMPORT,
                 new ImportCSVWindowContentFactory(desktop,
-                        defaultDragAvatarFactory, commandManager));
+                        defaultDragAvatarFactory, commandManager, importer));
     }
 
     @Override

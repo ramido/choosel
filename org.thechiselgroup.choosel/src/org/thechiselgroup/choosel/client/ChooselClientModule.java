@@ -27,6 +27,7 @@ import org.thechiselgroup.choosel.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.client.error_handling.ErrorHandlingAsyncCommandExecutor;
 import org.thechiselgroup.choosel.client.error_handling.FeedbackDialogErrorHandler;
 import org.thechiselgroup.choosel.client.error_handling.LoggingAsyncCommandExecutor;
+import org.thechiselgroup.choosel.client.importer.Importer;
 import org.thechiselgroup.choosel.client.label.CategoryLabelProvider;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.label.MappingCategoryLabelProvider;
@@ -231,6 +232,7 @@ public class ChooselClientModule extends AbstractGinModule implements
                 Singleton.class);
         bind(AuthenticationManager.class)
                 .to(DefaultAuthenticationManager.class).in(Singleton.class);
+        bind(Importer.class).in(Singleton.class);
 
         bind(ShadeManager.class).in(Singleton.class);
         bind(DialogManager.class).in(Singleton.class);

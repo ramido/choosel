@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.client.ui;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
+import org.thechiselgroup.choosel.client.importer.Importer;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.windows.Desktop;
 import org.thechiselgroup.choosel.client.windows.WindowContent;
@@ -29,18 +30,21 @@ public class ImportCSVWindowContentFactory implements WindowContentFactory {
 
     private CommandManager commandManager;
 
+    private Importer importer;
+
     public ImportCSVWindowContentFactory(Desktop desktop,
             ResourceSetAvatarFactory defaultDragAvatarFactory,
-            CommandManager commandManager) {
+            CommandManager commandManager, Importer importer) {
 
         this.desktop = desktop;
         this.defaultDragAvatarFactory = defaultDragAvatarFactory;
         this.commandManager = commandManager;
+        this.importer = importer;
     }
 
     @Override
     public WindowContent createWindowContent() {
         return new ImportCSVWindowContent(defaultDragAvatarFactory,
-                commandManager, desktop);
+                commandManager, desktop, importer);
     }
 }
