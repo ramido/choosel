@@ -60,14 +60,14 @@ public abstract class WindowDragController extends AbstractDragController {
 
     @Override
     public final void dragMove() {
-        int desiredXOnDesktop = MathUtils.restrictToInterval(
+        int rectrictedDesiredX = MathUtils.restrictToInterval(
                 context.desiredDraggableX - desktopOffsetX, 0, desktopWidth
-                        - context.draggable.getOffsetWidth());
-        int desiredYOnDesktop = MathUtils.restrictToInterval(
+                        - getDraggable().getOffsetWidth());
+        int restrictedDesiredY = MathUtils.restrictToInterval(
                 context.desiredDraggableY - desktopOffsetY, 0, desktopHeight
-                        - context.draggable.getOffsetHeight());
+                        - getDraggable().getOffsetHeight());
 
-        dragMove(desiredXOnDesktop, desiredYOnDesktop);
+        dragMove(rectrictedDesiredX, restrictedDesiredY);
     }
 
     protected abstract void dragMove(int desiredDraggableX,
@@ -92,8 +92,20 @@ public abstract class WindowDragController extends AbstractDragController {
         bringToFront(windowPanel);
     }
 
+    protected int getDesktopOffsetX() {
+        return desktopOffsetX;
+    }
+
+    protected int getDesktopOffsetY() {
+        return desktopOffsetY;
+    }
+
+    protected Widget getDraggable() {
+        return context.draggable;
+    }
+
     private void getWindowPanelFromDraggable() {
-        Widget draggable = context.draggable;
+        Widget draggable = getDraggable();
         while ((draggable != null) && !(draggable instanceof WindowPanel)) {
             draggable = draggable.getParent();
         }
