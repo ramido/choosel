@@ -72,19 +72,16 @@ public class CSVImporterTest {
 
         ImportResult result = underTest.doImport(data);
 
-        assertEquals(2, result.columns.length);
-        assertEquals("columnA", result.columns[0]);
-        assertEquals("columnB", result.columns[1]);
+        assertEquals(2, result.getColumnCount());
+        assertEquals(2, result.getRowCount());
 
-        assertEquals(2, result.values.size());
+        assertEquals("columnA", result.getColumnName(0));
+        assertEquals("columnB", result.getColumnName(1));
 
-        assertEquals(2, result.values.get(0).length);
-        assertEquals("value1A", result.values.get(0)[0]);
-        assertEquals("value1B", result.values.get(0)[1]);
-
-        assertEquals(2, result.values.get(1).length);
-        assertEquals("value2A", result.values.get(1)[0]);
-        assertEquals("value2B", result.values.get(1)[1]);
+        assertEquals("value1A", result.getValue(0, 0));
+        assertEquals("value1B", result.getValue(0, 1));
+        assertEquals("value2A", result.getValue(1, 0));
+        assertEquals("value2B", result.getValue(1, 1));
     }
 
 }
