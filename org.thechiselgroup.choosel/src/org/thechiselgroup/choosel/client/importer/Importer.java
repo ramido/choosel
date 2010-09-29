@@ -38,11 +38,15 @@ public class Importer {
     // TODO pass set of parsers... --> separate step in which parsers are
     // determined
     public ResourceSet createResources(StringTable table) {
+        assert table != null;
+
+        String uriType = uriHeaderProvider.nextLabel();
+
         ResourceSet resources = new DefaultResourceSet();
         resources.setLabel("import"); // TODO changeable, inc number
 
         for (int row = 0; row < table.getRowCount(); row++) {
-            String uri = uriHeaderProvider.nextLabel() + ":" + row;
+            String uri = uriType + ":" + row;
             Resource resource = new Resource(uri);
 
             for (int column = 0; column < table.getColumnCount(); column++) {
