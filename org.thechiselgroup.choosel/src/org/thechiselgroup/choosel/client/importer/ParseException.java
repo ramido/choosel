@@ -15,36 +15,32 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.importer;
 
-import java.util.List;
+public class ParseException extends Exception {
 
-public class ImportResult {
+    private int lineNumber;
 
-    private final List<String[]> values;
-
-    private final String[] columns;
-
-    public ImportResult(String[] columns, List<String[]> values) {
-        assert values != null;
-        assert columns != null;
-
-        this.values = values;
-        this.columns = columns;
+    public ParseException(String message) {
+        this(message, -1);
     }
 
-    public int getColumnCount() {
-        return columns.length;
+    public ParseException(String message, int lineNumber) {
+        super(message);
+
+        this.lineNumber = lineNumber;
     }
 
-    public String getColumnName(int column) {
-        return columns[column];
+    public ParseException(String message, Throwable cause) {
+        this(message, cause, -1);
     }
 
-    public int getRowCount() {
-        return values.size();
+    public ParseException(String message, Throwable cause, int lineNumber) {
+        super(message, cause);
+
+        this.lineNumber = lineNumber;
     }
 
-    public String getValue(int row, int column) {
-        return values.get(row)[column];
+    public int getLineNumber() {
+        return lineNumber;
     }
 
 }

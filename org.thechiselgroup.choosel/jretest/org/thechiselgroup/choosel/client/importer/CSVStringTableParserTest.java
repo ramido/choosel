@@ -22,17 +22,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
-public class CSVImporterTest {
+public class CSVStringTableParserTest {
 
-    private CSVImporter underTest;
+    private CSVStringTableParser underTest;
 
     @Test
     public void failureNoData() {
         try {
             String data = "";
-            underTest.doImport(data);
+            underTest.parse(data);
             fail("no exception thrown");
-        } catch (ImportException e) {
+        } catch (ParseException e) {
             assertEquals(-1, e.getLineNumber());
         }
     }
@@ -41,9 +41,9 @@ public class CSVImporterTest {
     public void failureNotEnoughValues() {
         try {
             String data = "columnA,columnB\nvalue1A,value1B\nvalue2A";
-            underTest.doImport(data);
+            underTest.parse(data);
             fail("no exception thrown");
-        } catch (ImportException e) {
+        } catch (ParseException e) {
             assertEquals(3, e.getLineNumber());
         }
     }
@@ -52,9 +52,9 @@ public class CSVImporterTest {
     public void failureTooManyValues() {
         try {
             String data = "columnA,columnB\nvalue1A,value1B\nvalue2A,value2B,value2C";
-            underTest.doImport(data);
+            underTest.parse(data);
             fail("no exception thrown");
-        } catch (ImportException e) {
+        } catch (ParseException e) {
             assertEquals(3, e.getLineNumber());
         }
     }
@@ -63,14 +63,14 @@ public class CSVImporterTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        underTest = new CSVImporter();
+        underTest = new CSVStringTableParser();
     }
 
     @Test
-    public void simpleImport() throws ImportException {
+    public void simpleImport() throws ParseException {
         String data = "columnA,columnB\nvalue1A,value1B\nvalue2A,value2B";
 
-        ImportResult result = underTest.doImport(data);
+        StringTable result = underTest.parse(data);
 
         assertEquals(2, result.getColumnCount());
         assertEquals(2, result.getRowCount());
