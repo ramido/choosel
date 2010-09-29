@@ -26,8 +26,6 @@ public final class WindowResizeController extends WindowDragController {
 
     private static final String CSS_WINDOW_TRANSPARENT = "windowTransparent";
 
-    private static final int MIN_WIDGET_SIZE = 10;
-
     // for test
     static void resize(int desiredDraggableX, int desiredDraggableY,
             int draggableLeft, int draggableTop, Direction direction,
@@ -49,11 +47,13 @@ public final class WindowResizeController extends WindowDragController {
 
         if (verticalDelta != 0 || horizontalDelta != 0) {
             int height = windowPanel.getHeight();
-            int newHeight = Math.max(height + verticalDelta, MIN_WIDGET_SIZE);
-
             int width = windowPanel.getWidth();
-            int newWidth = Math.max(width + horizontalDelta,
-                    windowPanel.getMinimumWidth());
+
+            windowPanel.setPixelSize(Math.max(0, width + horizontalDelta),
+                    Math.max(0, height + verticalDelta));
+
+            int newWidth = windowPanel.getWidth();
+            int newHeight = windowPanel.getHeight();
 
             int horizontalMove = 0;
             if (direction.isWest()) {
@@ -65,8 +65,7 @@ public final class WindowResizeController extends WindowDragController {
                 verticalMove = height - newHeight;
             }
 
-            windowPanel.resize(horizontalMove, verticalMove, newWidth,
-                    newHeight);
+            windowPanel.moveBy(horizontalMove, verticalMove);
         }
     }
 
@@ -85,8 +84,8 @@ public final class WindowResizeController extends WindowDragController {
     }
 
     @Override
-    protected void dragMove(int desiredDraggableX, int desiredDraggableY) {
-        Direction direction = getDirection(context.draggable);
+    protected void dragMove(int rectrictedDesiredX, int restrictedDesiredY) {
+        Direction direction = getDirection();
 
         int top = context.draggable.getAbsoluteTop()
                 - getBoundaryPanel().getAbsoluteTop();
@@ -94,7 +93,7 @@ public final class WindowResizeController extends WindowDragController {
         int left = context.draggable.getAbsoluteLeft()
                 - getBoundaryPanel().getAbsoluteLeft();
 
-        resize(desiredDraggableX, desiredDraggableY, left, top, direction,
+        resize(rectrictedDesiredX, restrictedDesiredY, left, top, direction,
                 windowPanel);
     }
 
@@ -105,8 +104,8 @@ public final class WindowResizeController extends WindowDragController {
         windowPanel.addStyleName(CSS_WINDOW_TRANSPARENT);
     }
 
-    private Direction getDirection(Widget draggable) {
-        return directionMap.get(draggable);
+    private Direction getDirection() {
+        return directionMap.get(getDraggable());
     }
 
     public void makeDraggable(Widget widget, WindowPanel.Direction direction) {

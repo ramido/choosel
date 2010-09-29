@@ -117,10 +117,10 @@ public interface ResizeablePanel {
 
     int getHeight();
 
-    int getMinimumWidth();
-
     int getWidth();
 
-    void resize(int relativeX, int relativeY, int width, int height);
+    void moveBy(int relativeX, int relativeY);
+
+    void setPixelSize(int width, int height);
 
 }
