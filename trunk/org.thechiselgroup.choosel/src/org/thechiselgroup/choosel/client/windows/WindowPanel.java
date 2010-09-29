@@ -451,12 +451,17 @@ public class WindowPanel extends NEffectPanel implements
         addEffect(showEffect);
     }
 
-    @Override
-    public void moveBy(int right, int down) {
+    public void moveBy(int relativeX, int relativeY) {
+        if (relativeX == 0 && relativeY == 0) {
+            return;
+        }
+
         AbsolutePanel parent = (AbsolutePanel) getParent();
         Location location = new WidgetLocation(this, parent);
-        int left = location.getLeft() + right;
-        int top = location.getTop() + down;
+
+        int left = location.getLeft() + relativeX;
+        int top = location.getTop() + relativeY;
+
         parent.setWidgetPosition(this, left, top);
     }
 
@@ -484,6 +489,13 @@ public class WindowPanel extends NEffectPanel implements
         playEffects();
     }
 
+    // TODO this is almost like set bounds with relative x & y --> refactor?
+    @Override
+    public void resize(int relativeX, int relativeY, int width, int height) {
+        moveBy(relativeX, relativeY);
+        setPixelSize(width, height);
+    }
+
     private void setBorderWidths(int contentWidth, int contentHeight,
             int headerHeight) {
 
@@ -509,10 +521,17 @@ public class WindowPanel extends NEffectPanel implements
 
     @Override
     public void setPixelSize(int width, int height) {
+        assert width >= 0;
+        assert height >= 0;
+
+        if (width == getWidth() && height == getHeight()) {
+            return;
+        }
+
         super.setPixelSize(width, height);
 
-        this.width = width;
-        this.height = height;
+        this.width = getOffsetWidth();
+        this.height = getOffsetHeight();
 
         int headerHeight = headerContainer.getOffsetHeight();
         int contentWidth = width - TOTAL_BORDER_THICKNESS;

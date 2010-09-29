@@ -121,8 +121,6 @@ public interface ResizeablePanel {
 
     int getWidth();
 
-    void moveBy(int right, int down);
-
-    void setPixelSize(int width, int height);
+    void resize(int relativeX, int relativeY, int width, int height);
 
 }
