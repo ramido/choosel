@@ -534,6 +534,14 @@ public class WindowPanel extends NEffectPanel implements
         }
 
         int headerHeight = headerBar.getOffsetHeight();
+
+        /*
+         * Restrict the width/height to be at least the minimum determined by
+         * header & borders.
+         */
+        width = Math.max(width, 4 * TOTAL_BORDER_THICKNESS);
+        height = Math.max(height, 4 * TOTAL_BORDER_THICKNESS + headerHeight);
+
         int contentWidth = width - TOTAL_BORDER_THICKNESS;
         int contentHeight = height - TOTAL_BORDER_THICKNESS - headerHeight;
 
@@ -551,6 +559,15 @@ public class WindowPanel extends NEffectPanel implements
         int headerWidth = headerBar.getOffsetWidth();
         if (headerWidth > realContentWidth) {
             realContentWidth = headerWidth;
+        }
+
+        /*
+         * If the real size is different from the set content size, we set it
+         * again. This enables the content widget to set the right sizes in
+         * affected child widgets.
+         */
+        if (contentHeight != realContentHeight
+                || contentWidth != realContentWidth) {
             contentWidget.setPixelSize(realContentWidth, realContentHeight);
         }
 
