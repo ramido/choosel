@@ -5,6 +5,13 @@
     padding: 0px;
     border: 0px;
 	background-color: rgb(255, 255, 255);
+	
+	border-collapse:collapse;
+	border-spacing: 0px;
+}
+
+.choosel-DialogPanel td {
+    padding: 0px;
 }
 
 .choosel-DialogPanel-Content {
@@ -15,12 +22,17 @@
 
 .choosel-DialogPanel-Header {
 	border-bottom: 1px solid rgb(159, 188, 215);
+	
 	min-width: 150px;
     padding: 5px;
+    
     color: rgb(0,0,0);
+    
     font-size: 26px;
     font-weight: bold;
     font-family: Arial;
+    
+    white-space: nowrap;
 }
 
 .choosel-DialogPanel-ButtonBar {
@@ -102,9 +114,10 @@
   font-weight: bold;
   font-size: 15px;
   font-family: Arial;
-  /* color: rgb(112, 106, 170); */
   color: rgb(0, 0, 0);
   text-align: left;
+  
+  white-space:nowrap;
   
   position: relative;
   top: -3px;
