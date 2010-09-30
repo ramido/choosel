@@ -67,6 +67,12 @@ public class WindowPanel extends NEffectPanel implements
 
     private static final String CSS_WINDOW_HEADER = "choosel-WindowPanel-Header";
 
+    private static final String CSS_WINDOW_RESIZE_EDGE_LEFT_BORDER = "choosel-WindowPanel-ResizeEdge-LeftBorder";
+
+    private static final String CSS_WINDOW_RESIZE_EDGE_RIGHT_BORDER = "choosel-WindowPanel-ResizeEdge-RightBorder";
+
+    private static final String CSS_WINDOW_RESIZE_EDGE_TOP_BORDER = "choosel-WindowPanel-ResizeEdge-TopBorder";
+
     private static final String CSS_WINDOW_HEADER_LABEL = "choosel-WindowPanel-HeaderLabel";
 
     private static final String CSS_WINDOW_RESIZE = "choosel-WindowPanel-Resize-";
@@ -409,21 +415,24 @@ public class WindowPanel extends NEffectPanel implements
         grid.setCellPadding(0);
         rootPanel.add(grid);
 
-        setupCell(0, 0, NORTH_WEST);
-        northWidget = setupCell(0, 1, NORTH);
-        setupCell(0, 2, NORTH_EAST);
+        setupCell(0, 0, ResizeDirection.NORTH_WEST, null);
+        northWidget = setupCell(0, 1, ResizeDirection.NORTH, null);
+        setupCell(0, 2, ResizeDirection.NORTH_EAST, null);
 
-        westTopWidget = setupCell(1, 0, WEST_TOP);
+        westTopWidget = setupCell(1, 0, ResizeDirection.WEST, null);
         grid.setWidget(1, 1, headerContainer);
-        eastTopWidget = setupCell(1, 2, EAST_TOP);
+        eastTopWidget = setupCell(1, 2, ResizeDirection.EAST, null);
 
-        westWidget = setupCell(2, 0, WEST);
+        westWidget = setupCell(2, 0, ResizeDirection.WEST,
+                CSS_WINDOW_RESIZE_EDGE_RIGHT_BORDER);
         grid.setWidget(2, 1, contentWidget);
-        eastWidget = setupCell(2, 2, EAST);
+        eastWidget = setupCell(2, 2, ResizeDirection.EAST,
+                CSS_WINDOW_RESIZE_EDGE_LEFT_BORDER);
 
-        setupCell(3, 0, SOUTH_WEST);
-        southWidget = setupCell(3, 1, SOUTH);
-        setupCell(3, 2, SOUTH_EAST);
+        setupCell(3, 0, ResizeDirection.SOUTH_WEST, null);
+        southWidget = setupCell(3, 1, ResizeDirection.SOUTH,
+                CSS_WINDOW_RESIZE_EDGE_TOP_BORDER);
+        setupCell(3, 2, ResizeDirection.SOUTH_EAST, null);
     }
 
     private void initShowEvent() {
@@ -543,7 +552,8 @@ public class WindowPanel extends NEffectPanel implements
         super.setPixelSize(windowWidth, windowHeight);
     }
 
-    private Widget setupCell(int row, int col, Direction direction) {
+    private Widget setupCell(int row, int col, ResizeDirection direction,
+            String additionalCSSClass) {
         final FocusPanel widget = new FocusPanel();
         widget.setPixelSize(BORDER_THICKNESS, BORDER_THICKNESS);
         grid.setWidget(row, col, widget);
@@ -552,14 +562,15 @@ public class WindowPanel extends NEffectPanel implements
         removeFromDragControllerOnDispose.add(widget);
 
         /*
-         * both CSS classes need to be set in one call due to limitations in
+         * all CSS classes need to be set in one call due to limitations in
          * getCellFormatter().addStyleName
          */
-        grid.getCellFormatter().addStyleName(
-                row,
-                col,
-                CSS_WINDOW_RESIZE_EDGE + " " + CSS_WINDOW_RESIZE
-                        + direction.directionLetters);
+        String css = CSS_WINDOW_RESIZE_EDGE;
+        css += " " + CSS_WINDOW_RESIZE + direction.getDirectionLetters();
+        if (additionalCSSClass != null) {
+            css += " " + additionalCSSClass;
+        }
+        grid.getCellFormatter().addStyleName(row, col, css);
 
         return widget;
     }
