@@ -525,6 +525,8 @@ public class WindowPanel extends NEffectPanel implements
          * widget, because we have no better way to find out about the minimum
          * size. Afterwards, we change the border width and finally adjust the
          * window size.
+         * 
+         * This method breaks easily, so proceed with caution here.
          */
         assert width >= 0;
         assert height >= 0;
