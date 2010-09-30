@@ -425,26 +425,36 @@ public class WindowPanel extends NEffectPanel implements
         setupCell(0, 3, ResizeDirection.NORTH_EAST, null);
         setupCell(0, 4, ResizeDirection.NORTH_EAST, null);
 
-        westTopWidget = setupCell(1, 0, ResizeDirection.WEST, null);
+        setupCell(1, 0, ResizeDirection.NORTH_WEST, null);
         grid.setWidget(1, 1, headerContainer);
         grid.getFlexCellFormatter().setColSpan(1, 1, 3);
-        eastTopWidget = setupCell(1, 2, ResizeDirection.EAST, null);
+        grid.getFlexCellFormatter().setRowSpan(1, 1, 2);
+        setupCell(1, 2, ResizeDirection.NORTH_EAST, null);
 
-        westWidget = setupCell(2, 0, ResizeDirection.WEST,
+        westTopWidget = setupCell(2, 0, ResizeDirection.WEST, null);
+        eastTopWidget = setupCell(2, 1, ResizeDirection.EAST, null);
+
+        westWidget = setupCell(3, 0, ResizeDirection.WEST,
                 CSS_WINDOW_RESIZE_EDGE_RIGHT_BORDER);
-        grid.setWidget(2, 1, contentWidget);
-        grid.getFlexCellFormatter().setColSpan(2, 1, 3);
-        eastWidget = setupCell(2, 2, ResizeDirection.EAST,
+        grid.setWidget(3, 1, contentWidget);
+        grid.getFlexCellFormatter().setColSpan(3, 1, 3);
+        grid.getFlexCellFormatter().setRowSpan(3, 1, 2);
+        eastWidget = setupCell(3, 2, ResizeDirection.EAST,
                 CSS_WINDOW_RESIZE_EDGE_LEFT_BORDER);
 
-        setupCell(3, 0, ResizeDirection.SOUTH_WEST, null);
-        setupCell(3, 1, ResizeDirection.SOUTH_WEST,
+        setupCell(4, 0, ResizeDirection.SOUTH_WEST,
+                CSS_WINDOW_RESIZE_EDGE_RIGHT_BORDER);
+        setupCell(4, 1, ResizeDirection.SOUTH_EAST,
+                CSS_WINDOW_RESIZE_EDGE_LEFT_BORDER);
+
+        setupCell(5, 0, ResizeDirection.SOUTH_WEST, null);
+        setupCell(5, 1, ResizeDirection.SOUTH_WEST,
                 CSS_WINDOW_RESIZE_EDGE_TOP_BORDER);
-        southWidget = setupCell(3, 2, ResizeDirection.SOUTH,
+        southWidget = setupCell(5, 2, ResizeDirection.SOUTH,
                 CSS_WINDOW_RESIZE_EDGE_TOP_BORDER);
-        setupCell(3, 3, ResizeDirection.SOUTH_EAST,
+        setupCell(5, 3, ResizeDirection.SOUTH_EAST,
                 CSS_WINDOW_RESIZE_EDGE_TOP_BORDER);
-        setupCell(3, 4, ResizeDirection.SOUTH_EAST, null);
+        setupCell(5, 4, ResizeDirection.SOUTH_EAST, null);
     }
 
     private void initShowEvent() {
@@ -498,19 +508,6 @@ public class WindowPanel extends NEffectPanel implements
         playEffects();
     }
 
-    private void setBorderWidths(int contentWidth, int contentHeight,
-            int headerHeight) {
-
-        northWidget.setPixelSize(contentWidth - 2 * BORDER_THICKNESS,
-                BORDER_THICKNESS);
-        southWidget.setPixelSize(contentWidth - 2 * BORDER_THICKNESS,
-                BORDER_THICKNESS);
-        westTopWidget.setPixelSize(BORDER_THICKNESS, headerHeight);
-        westWidget.setPixelSize(BORDER_THICKNESS, contentHeight);
-        eastTopWidget.setPixelSize(BORDER_THICKNESS, headerHeight);
-        eastWidget.setPixelSize(BORDER_THICKNESS, contentHeight);
-    }
-
     public void setLocation(int x, int y) {
         AbsolutePanel parent = (AbsolutePanel) getParent();
         parent.setWidgetPosition(this, x, y);
@@ -557,7 +554,7 @@ public class WindowPanel extends NEffectPanel implements
             contentWidget.setPixelSize(realContentWidth, realContentHeight);
         }
 
-        setBorderWidths(realContentWidth, realContentHeight, headerHeight);
+        updateBorderWidths(realContentWidth, realContentHeight, headerHeight);
 
         int windowWidth = realContentWidth + TOTAL_BORDER_THICKNESS;
         int windowHeight = realContentHeight + TOTAL_BORDER_THICKNESS
@@ -605,5 +602,24 @@ public class WindowPanel extends NEffectPanel implements
     public void setZIndex(final int zIndex) {
         // Bugfix: need to set zIndex manually because of timeline/firefox issue
         CSS.setZIndex(this, zIndex);
+    }
+
+    private void updateBorderWidths(int contentWidth, int contentHeight,
+            int headerHeight) {
+
+        northWidget.setPixelSize(contentWidth - 2 * BORDER_THICKNESS,
+                BORDER_THICKNESS);
+        southWidget.setPixelSize(contentWidth - 2 * BORDER_THICKNESS,
+                BORDER_THICKNESS);
+
+        westTopWidget.setPixelSize(BORDER_THICKNESS, headerHeight
+                - BORDER_THICKNESS);
+        eastTopWidget.setPixelSize(BORDER_THICKNESS, headerHeight
+                - BORDER_THICKNESS);
+
+        westWidget.setPixelSize(BORDER_THICKNESS, contentHeight
+                - BORDER_THICKNESS);
+        eastWidget.setPixelSize(BORDER_THICKNESS, contentHeight
+                - BORDER_THICKNESS);
     }
 }
