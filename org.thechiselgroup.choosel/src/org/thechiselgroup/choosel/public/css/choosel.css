@@ -1,3 +1,11 @@
+/*
+ * Focus reset: no outlines around focused elements anymore - these
+ * need to be defined manually.
+ */
+:focus {
+	outline: 0;
+}
+
 .feedback-message {
 	padding: 3px;
 }
