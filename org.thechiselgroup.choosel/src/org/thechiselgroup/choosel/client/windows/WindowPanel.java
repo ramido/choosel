@@ -55,6 +55,10 @@ import com.google.gwt.user.client.ui.Widget;
 public class WindowPanel extends NEffectPanel implements
         DragProxyEventReceiver, Opacity, ResizeablePanel {
 
+    private static final int INNER_CSS_BORDER_WIDTH = 2;
+
+    private static final int OUTER_CSS_BORDER_WIDTH = 2;
+
     private static final int BORDER_THICKNESS = 7;
 
     private static final String CSS_WINDOW = "choosel-WindowPanel";
@@ -75,10 +79,8 @@ public class WindowPanel extends NEffectPanel implements
 
     private static final String IMAGE_CLOSE_VISIBLE = "images/close_visible.gif";
 
-    private static final int WINDOW_BORDER_FROM_CSS = 0 + 2; // outer + inner
-
     private static final int TOTAL_BORDER_THICKNESS = 2 * BORDER_THICKNESS
-            + WINDOW_BORDER_FROM_CSS;
+            + OUTER_CSS_BORDER_WIDTH + INNER_CSS_BORDER_WIDTH;
 
     private Image closeImage;
 
@@ -320,7 +322,7 @@ public class WindowPanel extends NEffectPanel implements
 
     @Override
     public int getHeight() {
-        return grid.getOffsetHeight();
+        return grid.getOffsetHeight() + OUTER_CSS_BORDER_WIDTH;
     }
 
     private String getInvisibleCloseImageUrl() {
@@ -342,7 +344,7 @@ public class WindowPanel extends NEffectPanel implements
 
     @Override
     public int getWidth() {
-        return grid.getOffsetWidth();
+        return grid.getOffsetWidth() + OUTER_CSS_BORDER_WIDTH;
     }
 
     public String getWindowTitle() {
@@ -364,8 +366,6 @@ public class WindowPanel extends NEffectPanel implements
         this.windowTitle = title;
         this.rootPanel = new FocusPanel();
         setWidget(this.rootPanel);
-
-        DOM.setStyleAttribute(rootPanel.getElement(), "border", "0px"); // TODO
 
         this.windowController = windowController;
 
@@ -496,6 +496,7 @@ public class WindowPanel extends NEffectPanel implements
         assert y == new WidgetLocation(this, getParent()).getTop();
     }
 
+    // TODO test
     @Override
     public void setPixelSize(int width, int height) {
         /*
@@ -521,8 +522,7 @@ public class WindowPanel extends NEffectPanel implements
         int realContentWidth = contentWidget.getOffsetWidth();
         int realContentHeight = contentWidget.getOffsetHeight();
 
-        /* -4: subtract header padding from CSS file */
-        headerBar.setPixelSize(contentWidth - 4, headerHeight);
+        headerBar.setPixelSize(realContentWidth, headerHeight);
 
         /*
          * adjust for the case where headerWidth > contentContentWidth
@@ -536,13 +536,11 @@ public class WindowPanel extends NEffectPanel implements
 
         setBorderWidths(realContentWidth, realContentHeight, headerHeight);
 
-        // XXX not only header, but also bar --> widget internal
-
-        int attempedWidth = realContentWidth + TOTAL_BORDER_THICKNESS;
-        int attempedHeight = realContentHeight + TOTAL_BORDER_THICKNESS
+        int windowWidth = realContentWidth + TOTAL_BORDER_THICKNESS;
+        int windowHeight = realContentHeight + TOTAL_BORDER_THICKNESS
                 + headerHeight;
 
-        super.setPixelSize(attempedWidth, attempedHeight);
+        super.setPixelSize(windowWidth, windowHeight);
     }
 
     private Widget setupCell(int row, int col, Direction direction) {
