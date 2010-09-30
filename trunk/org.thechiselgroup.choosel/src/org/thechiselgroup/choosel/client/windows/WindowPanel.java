@@ -44,8 +44,8 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusPanel;
-import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -96,7 +96,7 @@ public class WindowPanel extends NEffectPanel implements
 
     private Widget eastWidget;
 
-    private Grid grid;
+    private FlexTable grid;
 
     private Label headerWidget;
 
@@ -409,30 +409,42 @@ public class WindowPanel extends NEffectPanel implements
             }
         });
 
-        grid = new Grid(4, 3);
+        initGrid(contentWidget, headerContainer);
+    }
+
+    protected void initGrid(Widget contentWidget, FocusPanel headerContainer) {
+        grid = new FlexTable();
         grid.setBorderWidth(0);
         grid.setCellSpacing(0);
         grid.setCellPadding(0);
         rootPanel.add(grid);
 
         setupCell(0, 0, ResizeDirection.NORTH_WEST, null);
-        northWidget = setupCell(0, 1, ResizeDirection.NORTH, null);
-        setupCell(0, 2, ResizeDirection.NORTH_EAST, null);
+        setupCell(0, 1, ResizeDirection.NORTH_WEST, null);
+        northWidget = setupCell(0, 2, ResizeDirection.NORTH, null);
+        setupCell(0, 3, ResizeDirection.NORTH_EAST, null);
+        setupCell(0, 4, ResizeDirection.NORTH_EAST, null);
 
         westTopWidget = setupCell(1, 0, ResizeDirection.WEST, null);
         grid.setWidget(1, 1, headerContainer);
+        grid.getFlexCellFormatter().setColSpan(1, 1, 3);
         eastTopWidget = setupCell(1, 2, ResizeDirection.EAST, null);
 
         westWidget = setupCell(2, 0, ResizeDirection.WEST,
                 CSS_WINDOW_RESIZE_EDGE_RIGHT_BORDER);
         grid.setWidget(2, 1, contentWidget);
+        grid.getFlexCellFormatter().setColSpan(2, 1, 3);
         eastWidget = setupCell(2, 2, ResizeDirection.EAST,
                 CSS_WINDOW_RESIZE_EDGE_LEFT_BORDER);
 
         setupCell(3, 0, ResizeDirection.SOUTH_WEST, null);
-        southWidget = setupCell(3, 1, ResizeDirection.SOUTH,
+        setupCell(3, 1, ResizeDirection.SOUTH_WEST,
                 CSS_WINDOW_RESIZE_EDGE_TOP_BORDER);
-        setupCell(3, 2, ResizeDirection.SOUTH_EAST, null);
+        southWidget = setupCell(3, 2, ResizeDirection.SOUTH,
+                CSS_WINDOW_RESIZE_EDGE_TOP_BORDER);
+        setupCell(3, 3, ResizeDirection.SOUTH_EAST,
+                CSS_WINDOW_RESIZE_EDGE_TOP_BORDER);
+        setupCell(3, 4, ResizeDirection.SOUTH_EAST, null);
     }
 
     private void initShowEvent() {
@@ -489,8 +501,10 @@ public class WindowPanel extends NEffectPanel implements
     private void setBorderWidths(int contentWidth, int contentHeight,
             int headerHeight) {
 
-        northWidget.setPixelSize(contentWidth, BORDER_THICKNESS);
-        southWidget.setPixelSize(contentWidth, BORDER_THICKNESS);
+        northWidget.setPixelSize(contentWidth - 2 * BORDER_THICKNESS,
+                BORDER_THICKNESS);
+        southWidget.setPixelSize(contentWidth - 2 * BORDER_THICKNESS,
+                BORDER_THICKNESS);
         westTopWidget.setPixelSize(BORDER_THICKNESS, headerHeight);
         westWidget.setPixelSize(BORDER_THICKNESS, contentHeight);
         eastTopWidget.setPixelSize(BORDER_THICKNESS, headerHeight);
@@ -554,12 +568,21 @@ public class WindowPanel extends NEffectPanel implements
 
     private Widget setupCell(int row, int col, ResizeDirection direction,
             String additionalCSSClass) {
-        final FocusPanel widget = new FocusPanel();
-        widget.setPixelSize(BORDER_THICKNESS, BORDER_THICKNESS);
-        grid.setWidget(row, col, widget);
-        windowController.getResizeDragController().makeDraggable(widget,
+
+        FocusPanel borderWidget = new FocusPanel();
+
+        /*
+         * Sets the size for the elements that are not resized (e.g. corners and
+         * corner extensions). The corner extensions have the same size as the
+         * corners.
+         */
+        borderWidget.setPixelSize(BORDER_THICKNESS, BORDER_THICKNESS);
+
+        grid.setWidget(row, col, borderWidget);
+
+        windowController.getResizeDragController().makeDraggable(borderWidget,
                 direction);
-        removeFromDragControllerOnDispose.add(widget);
+        removeFromDragControllerOnDispose.add(borderWidget);
 
         /*
          * all CSS classes need to be set in one call due to limitations in
@@ -572,7 +595,7 @@ public class WindowPanel extends NEffectPanel implements
         }
         grid.getCellFormatter().addStyleName(row, col, css);
 
-        return widget;
+        return borderWidget;
     }
 
     public void setViewContent(WindowContent viewContent) {
