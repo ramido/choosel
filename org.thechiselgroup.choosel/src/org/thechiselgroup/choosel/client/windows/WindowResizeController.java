@@ -18,7 +18,6 @@ package org.thechiselgroup.choosel.client.windows;
 import java.util.HashMap;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
-import org.thechiselgroup.choosel.client.windows.ResizeablePanel.Direction;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -28,7 +27,7 @@ public final class WindowResizeController extends WindowDragController {
 
     // for test
     static void resize(int desiredDraggableX, int desiredDraggableY,
-            int draggableLeft, int draggableTop, Direction direction,
+            int draggableLeft, int draggableTop, ResizeDirection direction,
             ResizeablePanel windowPanel) {
 
         int verticalDelta = 0;
@@ -69,7 +68,7 @@ public final class WindowResizeController extends WindowDragController {
         }
     }
 
-    private final HashMap<Widget, Direction> directionMap = new HashMap<Widget, Direction>();
+    private final HashMap<Widget, ResizeDirection> directionMap = new HashMap<Widget, ResizeDirection>();
 
     public WindowResizeController(WindowController controller,
             CommandManager commandManager) {
@@ -85,7 +84,7 @@ public final class WindowResizeController extends WindowDragController {
 
     @Override
     protected void dragMove(int rectrictedDesiredX, int restrictedDesiredY) {
-        Direction direction = getDirection();
+        ResizeDirection direction = getDirection();
 
         int top = context.draggable.getAbsoluteTop()
                 - getBoundaryPanel().getAbsoluteTop();
@@ -104,11 +103,11 @@ public final class WindowResizeController extends WindowDragController {
         windowPanel.addStyleName(CSS_WINDOW_TRANSPARENT);
     }
 
-    private Direction getDirection() {
+    private ResizeDirection getDirection() {
         return directionMap.get(getDraggable());
     }
 
-    public void makeDraggable(Widget widget, WindowPanel.Direction direction) {
+    public void makeDraggable(Widget widget, ResizeDirection direction) {
         super.makeDraggable(widget);
         directionMap.put(widget, direction);
     }

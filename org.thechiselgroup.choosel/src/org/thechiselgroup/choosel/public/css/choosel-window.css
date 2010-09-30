@@ -129,6 +129,18 @@
   font-size: 1px;  
 }
 
+.choosel-WindowPanel-ResizeEdge-RightBorder {
+  border-right: 1px solid #688CAF;
+}
+
+.choosel-WindowPanel-ResizeEdge-LeftBorder {
+  border-left: 1px solid #688CAF;
+}
+
+.choosel-WindowPanel-ResizeEdge-TopBorder {
+  border-top: 1px solid #688CAF;
+}
+
 .choosel-WindowPanel-Resize-nw .dragdrop-handle {
   cursor: nw-resize;
 }
@@ -141,21 +153,11 @@
   cursor: ne-resize;
 }
 
-.choosel-WindowPanel-Resize-wt .dragdrop-handle {
-  cursor: w-resize;
-}
-
 .choosel-WindowPanel-Resize-w .dragdrop-handle {
   cursor: w-resize;
-  border-right: 1px solid #688CAF;
 }
 
 .choosel-WindowPanel-Resize-e .dragdrop-handle {
-  cursor: e-resize;
-  border-left: 1px solid #688CAF;
-}
-
-.choosel-WindowPanel-Resize-et .dragdrop-handle {
   cursor: e-resize;
 }
 
@@ -164,7 +166,6 @@
 }
 
 .choosel-WindowPanel-Resize-s .dragdrop-handle {
-  border-top: 1px solid #688CAF;
   cursor: s-resize;
 }
 
