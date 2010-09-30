@@ -23,6 +23,12 @@ import static com.google.gwt.user.client.DOM.setStyleAttribute;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * Library with convenience methods for working with CSS properties of widgets
+ * and DOM elements.
+ * 
+ * @author Lars Grammel
+ */
 public final class CSS {
 
     public static final String MARGIN_TOP = "marginTop";
@@ -91,6 +97,10 @@ public final class CSS {
         element.addClassName(cssClass);
     }
 
+    public static void clearHeight(Widget widget) {
+        widget.getElement().getStyle().clearHeight();
+    }
+
     public static int getZIndex(Element element) {
         return getIntStyleAttribute(element, Z_INDEX);
     }
@@ -152,6 +162,14 @@ public final class CSS {
 
     public static void setFontSize(Element element, String fontSize) {
         setStyleAttribute(element, FONT_SIZE, fontSize);
+    }
+
+    public static void setHeight(Element element, int heightPx) {
+        setStyleAttribute(element, HEIGHT, heightPx + PX);
+    }
+
+    public static void setHeight(Widget widget, int heightPx) {
+        setHeight(widget.getElement(), heightPx);
     }
 
     public static void setLineHeight(Element element, int lineHeight) {

@@ -27,6 +27,10 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class DialogPanel extends Panel {
 
+    private static final int BUTTON_BAR_HEIGHT = 36;
+
+    private static final int HEADER_HEIGHT = 37;
+
     private static final int BUTTON_BAR_CSS_MARGIN = 4;
 
     public static final String CSS_DIALOG_PANEL = "choosel-DialogPanel";
@@ -45,11 +49,14 @@ public class DialogPanel extends Panel {
 
     private Widget contentWidget;
 
+    private Element contentTD;
+
     public DialogPanel() {
-        panelElement = DOM.createDiv();
+        panelElement = DOM.createTable();
         panelElement.setClassName(CSS_DIALOG_PANEL);
 
         initHeaderLabel();
+        contentTD = createRow();
         initButtonBar();
 
         setElement(panelElement);
@@ -61,11 +68,21 @@ public class DialogPanel extends Panel {
         return button;
     }
 
+    protected Element createRow() {
+        Element tr = DOM.createTR();
+        panelElement.appendChild(tr);
+        Element td = DOM.createTD();
+        tr.appendChild(td);
+        return td;
+    }
+
     // TODO CSS
     public void initButtonBar() {
         buttonBar = new FlowPanel();
         buttonBar.setStyleName(CSS_DIALOG_PANEL_BUTTONBAR);
-        panelElement.appendChild(buttonBar.getElement());
+        Element td = createRow();
+        CSS.setHeight(td, BUTTON_BAR_HEIGHT);
+        td.appendChild(buttonBar.getElement());
         adopt(buttonBar);
     }
 
@@ -73,7 +90,9 @@ public class DialogPanel extends Panel {
     public void initHeaderLabel() {
         headerLabel = new Label();
         headerLabel.setStyleName(CSS_DIALOG_PANEL_HEADER);
-        panelElement.appendChild(headerLabel.getElement());
+        Element td = createRow();
+        CSS.setHeight(td, HEADER_HEIGHT);
+        td.appendChild(headerLabel.getElement());
         adopt(headerLabel);
     }
 
@@ -181,7 +200,7 @@ public class DialogPanel extends Panel {
         try {
             orphan(buttonBar);
         } finally {
-            panelElement.removeChild(buttonBar.getElement());
+            buttonBar.getElement().removeFromParent();
             buttonBar = null;
         }
     }
@@ -190,7 +209,7 @@ public class DialogPanel extends Panel {
         try {
             orphan(contentWidget);
         } finally {
-            panelElement.removeChild(contentWidget.getElement());
+            contentWidget.getElement().removeFromParent();
             contentWidget = null;
         }
     }
@@ -199,7 +218,7 @@ public class DialogPanel extends Panel {
         try {
             orphan(headerLabel);
         } finally {
-            panelElement.removeChild(headerLabel.getElement());
+            headerLabel.getElement().removeFromParent();
             headerLabel = null;
         }
     }
@@ -209,8 +228,7 @@ public class DialogPanel extends Panel {
         assert contentWidget != null;
         this.contentWidget = contentWidget;
         contentWidget.addStyleName(CSS_DIALOG_PANEL_CONTENT);
-        panelElement.insertBefore(contentWidget.getElement(),
-                buttonBar.getElement());
+        contentTD.appendChild(contentWidget.getElement());
         adopt(contentWidget);
     }
 
@@ -220,6 +238,8 @@ public class DialogPanel extends Panel {
 
     @Override
     public void setPixelSize(int width, int height) {
+        CSS.clearHeight(contentWidget);
+
         super.setPixelSize(width, height);
 
         int contentHeight = getOffsetHeight() - headerLabel.getOffsetHeight()
@@ -229,6 +249,7 @@ public class DialogPanel extends Panel {
             contentHeight = 0;
         }
 
-        contentWidget.setHeight(contentHeight + CSS.PX);
+        CSS.setHeight(contentWidget, contentHeight);
     }
+
 }
