@@ -101,6 +101,10 @@
   -moz-box-shadow: 3px 3px 12px #333333;
   -webkit-box-shadow: 3px 3px 12px #333333;
 }
+
+.choosel-WindowPanel table tbody tr td {
+  vertical-align:top;
+}
 	
 .choosel-WindowPanel-Header {
   border-bottom: 1px solid #688CAF; 
@@ -139,7 +143,6 @@
   background-color: rgba(193, 217, 241, 0.65);
   line-height: 1px;
   font-size: 1px;  
-  vertical-align:top;
 }
 
 .choosel-WindowPanel-ResizeEdge-RightBorder {
