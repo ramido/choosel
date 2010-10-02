@@ -130,7 +130,14 @@ Note: Only CSVParser class is used (as org.thechiselgroup.choosel.client.util.CS
 
 
 reset5
-HTML5 CSS Reset
+CSS Reset
 Version: N/A
 URL: http://code.google.com/p/reset5/
 License: MIT
+
+
+YUI 2: Fonts CSS
+CSS Reset
+Version: N/A
+URL: http://developer.yahoo.com/yui/fonts/
+License: BSD
