@@ -1,13 +1,13 @@
 .actionbar {
     width: 100%;
-    height: 93px;
+    height: 92px;
     background-color: rgb(218, 229, 243);
     border-bottom: 1px solid rgb(104, 140, 175);
     padding: 0px;
 }
 
 .actionbar-panelcontainer {
-    height: 57px;
+    height: 56px;
     background-color: rgb(218, 229, 243);
 }
 
@@ -52,7 +52,7 @@
     background-color: rgb(214, 230, 244);
     border-top: 1px solid rgb(193, 217, 241);
     padding: 0px;	
-    height: 57px;
+    height: 56px;
 }
 
 .actionbar-panel-header {
