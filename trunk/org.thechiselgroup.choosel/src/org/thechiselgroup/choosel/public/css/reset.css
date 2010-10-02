@@ -107,3 +107,25 @@ input[type="submit"], input[type="button"], button {
 input, select, a img {
 	vertical-align: middle;
 }
+
+/* Added some more button styling */		
+button { 
+	overflow: visible; /* removes extra side padding in IE */
+}
+
+/**
+* Firefox invisible padding/border fix
+* @see http://www.sitepoint.com/forums/showpost.php?p=4209217&postcount=13
+*/
+input[type="button"]:focus::-moz-focus-inner,
+button::-moz-focus-inner{
+	padding:0;
+	border:none;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	/* Safari and Google Chrome only - fix margins */
+	button span {
+		margin-top: -1px;
+	}
+}
