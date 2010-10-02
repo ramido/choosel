@@ -129,3 +129,8 @@ button::-moz-focus-inner{
 		margin-top: -1px;
 	}
 }
+
+/* prevent text area resizing */
+textarea {
+    resize: none;
+}
