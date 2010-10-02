@@ -24,7 +24,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class ActionBar implements WidgetAdaptable {
 
     // TODO remove constant, replace with dynamic size calculation
-    public static final int ACTION_BAR_HEIGHT_PX = 93 + 1;
+    public static final int ACTION_BAR_HEIGHT_PX = 93;
 
     public static final String CSS_ACTIONBAR = "actionbar";
 
