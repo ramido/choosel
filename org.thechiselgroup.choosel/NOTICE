@@ -127,3 +127,10 @@ Version: 2.2
 URL: http://opencsv.sourceforge.net/
 License: Apache License 2.0
 Note: Only CSVParser class is used (as org.thechiselgroup.choosel.client.util.CSVParser). Source-code has been modified.
+
+
+reset5
+HTML5 CSS Reset
+Version: N/A
+URL: http://code.google.com/p/reset5/
+License: MIT
