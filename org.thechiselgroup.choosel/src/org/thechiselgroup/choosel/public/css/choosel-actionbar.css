@@ -72,6 +72,10 @@
     height: 30px;
 }
 
+.actionbar-panel-content table tbody tr td {
+    padding: 2px;
+}
+
 /** 
  * Button
  */
