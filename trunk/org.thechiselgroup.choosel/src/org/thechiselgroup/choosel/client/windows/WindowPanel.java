@@ -387,7 +387,6 @@ public class WindowPanel extends NEffectPanel implements
         headerBar = createHeaderBar();
 
         FocusPanel headerContainer = new FocusPanel();
-        headerContainer.addStyleName(CSS_WINDOW_HEADER);
         headerContainer.add(headerBar);
 
         windowController.getMoveDragController().makeDraggable(this,
@@ -427,6 +426,7 @@ public class WindowPanel extends NEffectPanel implements
 
         setupCell(1, 0, ResizeDirection.NORTH_WEST, null);
         grid.setWidget(1, 1, headerContainer);
+        grid.getCellFormatter().addStyleName(1, 1, CSS_WINDOW_HEADER);
         grid.getFlexCellFormatter().setColSpan(1, 1, 3);
         grid.getFlexCellFormatter().setRowSpan(1, 1, 2);
         setupCell(1, 2, ResizeDirection.NORTH_EAST, null);

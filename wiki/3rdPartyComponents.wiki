@@ -183,3 +183,13 @@ CSV Parser Library
 *License*: Apache License 2.0
 
 *Note*: Only CSVParser class is used. Source-code has been modified.
+
+==reset5==
+
+HTML5 CSS Reset
+
+*Version*: N/A
+
+*URL*: http://code.google.com/p/reset5/
+
+*License*: MIT
