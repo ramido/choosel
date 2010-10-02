@@ -31,6 +31,8 @@ import com.google.inject.Inject;
 public class ResourceSetAvatarResourceSetsPresenter implements
         ResourceSetsPresenter {
 
+    public static final String CSS_PANEL = "ResourceSetAvatarResourceSetsPresenter-panel";
+
     // TODO move
     public static final String AVATAR_RESOURCE_SET = "avatar-resourceSet";
 
@@ -92,6 +94,7 @@ public class ResourceSetAvatarResourceSetsPresenter implements
     @Override
     public void init() {
         panel = GWT.create(HorizontalPanel.class);
+        panel.setStyleName(CSS_PANEL);
         panel.setSpacing(2);
         panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
         panel.setVerticalAlignment(HasVerticalAlignment.ALIGN_TOP);

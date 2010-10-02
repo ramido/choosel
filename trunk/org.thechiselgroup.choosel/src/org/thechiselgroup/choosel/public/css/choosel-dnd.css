@@ -1,5 +1,9 @@
 /** DnD */
 
+.ResourceSetAvatarResourceSetsPresenter-panel tbody tr td {
+	padding: 2px;
+}
+
 /*
  * margin leads to visual errors in the drag shadow layer
  * margin: 2px 0px;
