@@ -53,7 +53,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 public class WindowPanel extends NEffectPanel implements
-        DragProxyEventReceiver, Opacity, ResizeablePanel {
+        DragProxyEventReceiver, Opacity, WindowController {
 
     private static final int INNER_CSS_BORDER_WIDTH = 2;
 
@@ -115,9 +115,11 @@ public class WindowPanel extends NEffectPanel implements
 
     private Widget westWidget;
 
-    private WindowManager windowController;
+    private WindowManager manager;
 
     private String windowTitle;
+
+    private WindowController controller;
 
     /**
      * Panel that contains the title of the window and window buttons such as
@@ -201,7 +203,7 @@ public class WindowPanel extends NEffectPanel implements
             @Override
             public void onEffectCompleted(EffectCompletedEvent event) {
                 removeEffects();
-                windowController.close(WindowPanel.this);
+                manager.close(WindowPanel.this);
             }
         });
 
@@ -364,6 +366,28 @@ public class WindowPanel extends NEffectPanel implements
     public void init(WindowManager windowController, String title,
             Widget contentWidget) {
 
+        this.controller = new DefaultWindowController(new WindowCallback() {
+            @Override
+            public int getHeight() {
+                return WindowPanel.this.getHeight();
+            }
+
+            @Override
+            public int getWidth() {
+                return WindowPanel.this.getWidth();
+            }
+
+            @Override
+            public void moveBy(int deltaX, int deltaY) {
+                WindowPanel.this.moveBy(deltaX, deltaY);
+            }
+
+            @Override
+            public void setPixelSize(int width, int height) {
+                WindowPanel.this.setPixelSize(width, height);
+            }
+        });
+
         initShowEvent();
 
         DOM.setStyleAttribute(getElement(), "border", "0px"); // TODO move to
@@ -373,7 +397,7 @@ public class WindowPanel extends NEffectPanel implements
         this.rootPanel = new FocusPanel();
         setWidget(this.rootPanel);
 
-        this.windowController = windowController;
+        this.manager = windowController;
 
         rootPanel.addStyleName(CSS_WINDOW);
 
@@ -488,10 +512,10 @@ public class WindowPanel extends NEffectPanel implements
 
     @Override
     protected void onDetach() {
-        windowController.getMoveDragController().makeNotDraggable(this);
+        manager.getMoveDragController().makeNotDraggable(this);
 
         for (Widget w : removeFromDragControllerOnDispose) {
-            windowController.getResizeDragController().makeNotDraggable(w);
+            manager.getResizeDragController().makeNotDraggable(w);
         }
 
         // DragController#unregisterDropController
@@ -507,29 +531,9 @@ public class WindowPanel extends NEffectPanel implements
         playEffects();
     }
 
-    // TODO adjust tests...
     @Override
     public void resize(int deltaX, int deltaY, int targetWidth, int targetHeight) {
-        assert targetWidth >= 0;
-        assert targetHeight >= 0;
-
-        setPixelSize(targetWidth, targetHeight);
-
-        int newWidth = getWidth();
-        int newHeight = getHeight();
-
-        /*
-         * adjust move to the extend the resizing worked
-         */
-        if (deltaX != 0) {
-            deltaX += targetWidth - newWidth;
-        }
-
-        if (deltaY != 0) {
-            deltaY += targetHeight - newHeight;
-        }
-
-        moveBy(deltaX, deltaY);
+        controller.resize(deltaX, deltaY, targetWidth, targetHeight);
     }
 
     public void setLocation(int x, int y) {
@@ -620,8 +624,8 @@ public class WindowPanel extends NEffectPanel implements
 
         grid.setWidget(row, col, borderWidget);
 
-        windowController.getResizeDragController().makeDraggable(borderWidget,
-                direction);
+        manager.getResizeDragController()
+                .makeDraggable(borderWidget, direction);
         removeFromDragControllerOnDispose.add(borderWidget);
 
         /*

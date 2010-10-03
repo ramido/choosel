@@ -28,7 +28,7 @@ public final class WindowResizeController extends WindowDragController {
     // for test
     static void resize(int desiredDraggableX, int desiredDraggableY,
             int draggableLeft, int draggableTop, ResizeDirection direction,
-            ResizeablePanel windowPanel) {
+            WindowController windowPanel) {
 
         int verticalDelta = 0;
         if (direction.isNorth()) {
