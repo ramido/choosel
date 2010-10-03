@@ -16,7 +16,9 @@
 package org.thechiselgroup.choosel.client.windows;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
+import org.thechiselgroup.choosel.client.geometry.Point;
 
+import com.allen_sauer.gwt.dnd.client.util.WidgetLocation;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 
 public abstract class AbstractWindowManager implements WindowManager {
@@ -49,6 +51,13 @@ public abstract class AbstractWindowManager implements WindowManager {
     }
 
     @Override
+    public Point getLocation(WindowPanel window) {
+        // TODO inline calculations
+        WidgetLocation location = new WidgetLocation(window, boundaryPanel);
+        return new Point(location.getLeft(), location.getTop());
+    }
+
+    @Override
     public WindowMoveController getMoveDragController() {
         return moveController;
     }
@@ -56,6 +65,15 @@ public abstract class AbstractWindowManager implements WindowManager {
     @Override
     public WindowResizeController getResizeDragController() {
         return resizeDragController;
+    }
+
+    @Override
+    public void setLocation(WindowPanel window, int x, int y) {
+        // TODO inline calculations
+        boundaryPanel.setWidgetPosition(window, x, y);
+
+        assert x == new WidgetLocation(window, boundaryPanel).getLeft();
+        assert y == new WidgetLocation(window, boundaryPanel).getTop();
     }
 
 }
