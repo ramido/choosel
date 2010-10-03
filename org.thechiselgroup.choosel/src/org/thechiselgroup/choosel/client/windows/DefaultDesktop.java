@@ -39,7 +39,7 @@ public class DefaultDesktop extends AbsolutePanel implements Desktop, HasSize {
 
     private PositionManager positionManager;
 
-    private final DesktopWindowController windowController;
+    private final DesktopWindowManager windowController;
 
     private List<WindowPanel> windows = new LinkedList<WindowPanel>();
 
@@ -53,7 +53,7 @@ public class DefaultDesktop extends AbsolutePanel implements Desktop, HasSize {
 
         // TODO extract constants
         positionManager = new PositionManager(this, 7, 13, 10);
-        windowController = new DesktopWindowController(this, commandManager);
+        windowController = new DesktopWindowManager(this, commandManager);
 
         initBranding();
         disableContextMenu();

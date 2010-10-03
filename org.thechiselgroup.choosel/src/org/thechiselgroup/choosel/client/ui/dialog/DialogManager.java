@@ -46,6 +46,6 @@ public class DialogManager {
     public void show(Dialog dialog) {
         assert dialog != null;
 
-        new DialogController(parentPanel, dialog, shadeManager).init();
+        new DialogWindowManager(parentPanel, dialog, shadeManager).init();
     }
 }

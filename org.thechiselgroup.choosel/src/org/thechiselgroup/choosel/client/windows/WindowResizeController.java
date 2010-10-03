@@ -48,29 +48,27 @@ public final class WindowResizeController extends WindowDragController {
             int height = windowPanel.getHeight();
             int width = windowPanel.getWidth();
 
-            windowPanel.setPixelSize(Math.max(0, width + horizontalDelta),
-                    Math.max(0, height + verticalDelta));
-
-            int newWidth = windowPanel.getWidth();
-            int newHeight = windowPanel.getHeight();
+            int targetWidth = Math.max(0, width + horizontalDelta);
+            int targetHeight = Math.max(0, height + verticalDelta);
 
             int horizontalMove = 0;
             if (direction.isWest()) {
-                horizontalMove = width - newWidth;
+                horizontalMove = width - targetWidth;
             }
 
             int verticalMove = 0;
             if (direction.isNorth()) {
-                verticalMove = height - newHeight;
+                verticalMove = height - targetHeight;
             }
 
-            windowPanel.moveBy(horizontalMove, verticalMove);
+            windowPanel.resize(horizontalMove, verticalMove, targetWidth,
+                    targetHeight);
         }
     }
 
     private final HashMap<Widget, ResizeDirection> directionMap = new HashMap<Widget, ResizeDirection>();
 
-    public WindowResizeController(WindowController controller,
+    public WindowResizeController(WindowManager controller,
             CommandManager commandManager) {
         super(controller, commandManager);
     }

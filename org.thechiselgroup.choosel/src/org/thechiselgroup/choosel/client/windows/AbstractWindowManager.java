@@ -19,7 +19,7 @@ import org.thechiselgroup.choosel.client.command.CommandManager;
 
 import com.google.gwt.user.client.ui.AbsolutePanel;
 
-public abstract class AbstractWindowController implements WindowController {
+public abstract class AbstractWindowManager implements WindowManager {
 
     protected final AbsolutePanel boundaryPanel;
 
@@ -27,7 +27,7 @@ public abstract class AbstractWindowController implements WindowController {
 
     protected final WindowResizeController resizeDragController;
 
-    public AbstractWindowController(AbsolutePanel boundaryPanel,
+    public AbstractWindowManager(AbsolutePanel boundaryPanel,
             CommandManager commandManager) {
 
         assert boundaryPanel != null;

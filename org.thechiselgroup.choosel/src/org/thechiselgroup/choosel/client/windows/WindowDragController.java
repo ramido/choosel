@@ -30,7 +30,7 @@ public abstract class WindowDragController extends AbstractDragController {
 
     protected final CommandManager commandManager;
 
-    private final WindowController controller;
+    private final WindowManager controller;
 
     private int desktopHeight;
 
@@ -42,7 +42,7 @@ public abstract class WindowDragController extends AbstractDragController {
 
     protected WindowPanel windowPanel = null;
 
-    public WindowDragController(WindowController controller,
+    public WindowDragController(WindowManager controller,
             CommandManager commandManager) {
 
         super(controller.getBoundaryPanel());

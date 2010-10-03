@@ -15,18 +15,29 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.windows;
 
-import com.google.gwt.user.client.ui.AbsolutePanel;
+import org.thechiselgroup.choosel.client.command.CommandManager;
 
-public interface WindowController {
+public class DesktopWindowManager extends AbstractWindowManager {
 
-    void bringToFront(WindowPanel window);
+    public DesktopWindowManager(DefaultDesktop desktopPanel,
+            CommandManager commandManager) {
 
-    void close(WindowPanel window);
+        super(desktopPanel, commandManager);
 
-    AbsolutePanel getBoundaryPanel();
+    }
 
-    WindowMoveController getMoveDragController();
+    @Override
+    public void bringToFront(WindowPanel window) {
+        getDesktopPanel().bringToFront(window);
+    }
 
-    WindowResizeController getResizeDragController();
+    @Override
+    public void close(WindowPanel window) {
+        getDesktopPanel().removeWindow(window);
+    }
+
+    protected DefaultDesktop getDesktopPanel() {
+        return (DefaultDesktop) getBoundaryPanel();
+    }
 
 }

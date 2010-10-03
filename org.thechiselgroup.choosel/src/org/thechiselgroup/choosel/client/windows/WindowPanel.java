@@ -115,7 +115,7 @@ public class WindowPanel extends NEffectPanel implements
 
     private Widget westWidget;
 
-    private WindowController windowController;
+    private WindowManager windowController;
 
     private String windowTitle;
 
@@ -361,7 +361,7 @@ public class WindowPanel extends NEffectPanel implements
         return DOM.getIntStyleAttribute(getElement(), CSS.Z_INDEX);
     }
 
-    public void init(WindowController windowController, String title,
+    public void init(WindowManager windowController, String title,
             Widget contentWidget) {
 
         initShowEvent();
@@ -472,7 +472,6 @@ public class WindowPanel extends NEffectPanel implements
         addEffect(showEffect);
     }
 
-    @Override
     public void moveBy(int relativeX, int relativeY) {
         if (relativeX == 0 && relativeY == 0) {
             return;
@@ -506,6 +505,31 @@ public class WindowPanel extends NEffectPanel implements
 
         adjustSize();
         playEffects();
+    }
+
+    // TODO adjust tests...
+    @Override
+    public void resize(int deltaX, int deltaY, int targetWidth, int targetHeight) {
+        assert targetWidth >= 0;
+        assert targetHeight >= 0;
+
+        setPixelSize(targetWidth, targetHeight);
+
+        int newWidth = getWidth();
+        int newHeight = getHeight();
+
+        /*
+         * adjust move to the extend the resizing worked
+         */
+        if (deltaX != 0) {
+            deltaX += targetWidth - newWidth;
+        }
+
+        if (deltaY != 0) {
+            deltaY += targetHeight - newHeight;
+        }
+
+        moveBy(deltaX, deltaY);
     }
 
     public void setLocation(int x, int y) {
