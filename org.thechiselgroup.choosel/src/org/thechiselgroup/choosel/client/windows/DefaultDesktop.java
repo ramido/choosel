@@ -83,10 +83,10 @@ public class DefaultDesktop extends AbsolutePanel implements Desktop, HasSize {
         }
     }
 
-    private WindowPanel createWindow(String title, Widget widget, int x, int y) {
+    private WindowPanel createWindow(String title, Widget contentWidget, int x, int y) {
         WindowPanel window = new WindowPanel();
 
-        window.init(windowController, title, widget);
+        window.init(windowController, title, contentWidget);
 
         addWindowInternal(window);
         add(window, x, y);
@@ -112,16 +112,16 @@ public class DefaultDesktop extends AbsolutePanel implements Desktop, HasSize {
 
     @Override
     public WindowPanel createWindow(WindowContent content, int x, int y,
-            int windowOffsetWidth, int windowOffsetHeight) {
+            int width, int height) {
 
         content.init();
 
-        WindowPanel w = createWindow(content.getLabel(), content.asWidget(), x,
-                y);
-        w.setPixelSize(windowOffsetWidth, windowOffsetHeight);
-        w.setViewContent(content);
+        WindowPanel window = createWindow(content.getLabel(),
+                content.asWidget(), x, y);
+        window.setPixelSize(width, height);
+        window.setViewContent(content);
 
-        return w;
+        return window;
     }
 
     private void disableContextMenu() {

@@ -30,8 +30,8 @@ public interface Desktop {
 
     WindowPanel createWindow(WindowContent content);
 
-    WindowPanel createWindow(WindowContent content, int x, int y,
-            int windowOffsetWidth, int windowOffsetHeight);
+    WindowPanel createWindow(WindowContent content, int x, int y, int width,
+            int height);
 
     List<WindowPanel> getWindows();
 
