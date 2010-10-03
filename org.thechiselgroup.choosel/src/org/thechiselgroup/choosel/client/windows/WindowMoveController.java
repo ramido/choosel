@@ -36,7 +36,7 @@ public final class WindowMoveController extends WindowDragController {
 
         commandManager.addExecutedCommand(new MoveWindowCommand(windowPanel,
                 originalLocation.getLeft(), originalLocation.getTop(),
-                currentLocation.getLeft(), currentLocation.getTop()));
+                currentLocation.getLeft(), currentLocation.getTop(), true));
 
         super.dragEnd();
     }

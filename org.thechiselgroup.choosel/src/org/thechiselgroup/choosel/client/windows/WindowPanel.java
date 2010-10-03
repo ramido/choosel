@@ -154,42 +154,6 @@ public class WindowPanel extends NEffectPanel implements
         setPixelSize(targetWidth, targetHeight);
     }
 
-    public void animateMoveToLocation(final int x, final int y) {
-        /*
-         * Warning: This method is fairly fragile. Proceed with caution.
-         */
-        Point location = getLocation();
-
-        Move move = new Move(x - location.x, y - location.y) {
-            @Override
-            public void tearDownEffect() {
-                /*
-                 * do not super.tearDownEffects as this resets to original state
-                 * reset root panel position as this is affected by move
-                 */
-                CSS.setLocation(rootPanel, 0, 0);
-            }
-        };
-
-        move.addEffectCompletedHandler(new EffectCompletedHandler() {
-            @Override
-            public void onEffectCompleted(EffectCompletedEvent event) {
-                removeEffects();
-                setLocation(x, y);
-                assert 0 == new WidgetLocation(rootPanel, WindowPanel.this)
-                        .getLeft();
-                assert 0 == new WidgetLocation(rootPanel, WindowPanel.this)
-                        .getTop();
-            }
-        });
-
-        move.setTransitionType(FXUtil.EASE_OUT);
-        move.setDuration(FXUtil.MORPH_DURATION_IN_SECONDS);
-
-        addEffect(move);
-        playEffects();
-    }
-
     /**
      * Fades out the window and removes it from the window controller
      * afterwards.
@@ -532,8 +496,63 @@ public class WindowPanel extends NEffectPanel implements
         controller.resize(deltaX, deltaY, targetWidth, targetHeight);
     }
 
+    /**
+     * Sets the location of this window on the pane defined by the
+     * WindowManager. This version of <code>setLocation</code> is not animated.
+     * 
+     * @param x
+     *            x coordinate in the coordinate space defined by the
+     *            WindowManager
+     * @param y
+     *            y coordinate in the coordinate space defined by the
+     *            WindowManager
+     */
     public void setLocation(int x, int y) {
         manager.setLocation(this, x, y);
+    }
+
+    public void setLocation(final int x, final int y, boolean animate) {
+        /*
+         * Warning: This method is fairly fragile. Proceed with caution.
+         */
+
+        if (!animate) {
+            setLocation(x, y);
+            return;
+        }
+
+        assert animate;
+
+        Point location = getLocation();
+
+        Move move = new Move(x - location.x, y - location.y) {
+            @Override
+            public void tearDownEffect() {
+                /*
+                 * do not super.tearDownEffects as this resets to original state
+                 * reset root panel position as this is affected by move
+                 */
+                CSS.setLocation(rootPanel, 0, 0);
+            }
+        };
+
+        move.addEffectCompletedHandler(new EffectCompletedHandler() {
+            @Override
+            public void onEffectCompleted(EffectCompletedEvent event) {
+                removeEffects();
+                setLocation(x, y);
+                assert 0 == new WidgetLocation(rootPanel, WindowPanel.this)
+                        .getLeft();
+                assert 0 == new WidgetLocation(rootPanel, WindowPanel.this)
+                        .getTop();
+            }
+        });
+
+        move.setTransitionType(FXUtil.EASE_OUT);
+        move.setDuration(FXUtil.MORPH_DURATION_IN_SECONDS);
+
+        addEffect(move);
+        playEffects();
     }
 
     // TODO test

@@ -30,6 +30,8 @@ public class MoveWindowCommand implements UndoableCommand, HasDescription {
 
     private final WindowPanel windowPanel;
 
+    private final boolean animate;
+
     /**
      * Constructor with both locations for use from drag controller that moves
      * window while dragging.
@@ -39,9 +41,11 @@ public class MoveWindowCommand implements UndoableCommand, HasDescription {
      * @param sourceY
      * @param targetX
      * @param targetY
+     * @param animate
+     *            TODO
      */
     public MoveWindowCommand(WindowPanel windowPanel, int sourceX, int sourceY,
-            int targetX, int targetY) {
+            int targetX, int targetY, boolean animate) {
 
         assert windowPanel != null;
 
@@ -50,11 +54,12 @@ public class MoveWindowCommand implements UndoableCommand, HasDescription {
         this.sourceY = sourceY;
         this.targetX = targetX;
         this.targetY = targetY;
+        this.animate = animate;
     }
 
     @Override
     public void execute() {
-        windowPanel.animateMoveToLocation(targetX, targetY);
+        windowPanel.setLocation(targetX, targetY, animate);
     }
 
     @Override
@@ -65,7 +70,7 @@ public class MoveWindowCommand implements UndoableCommand, HasDescription {
 
     @Override
     public void undo() {
-        windowPanel.animateMoveToLocation(sourceX, sourceY);
+        windowPanel.setLocation(sourceX, sourceY, animate);
     }
 
 }

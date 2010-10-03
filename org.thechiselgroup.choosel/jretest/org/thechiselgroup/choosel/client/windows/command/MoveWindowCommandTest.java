@@ -54,21 +54,21 @@ public class MoveWindowCommandTest {
         targetY = 25;
 
         command = new MoveWindowCommand(windowPanel, sourceX, sourceY, targetX,
-                targetY);
+                targetY, true);
     }
 
     @Test
     public void setWindowLocationOnExecute() {
         command.execute();
-        verify(windowPanel, times(1)).animateMoveToLocation(eq(targetX),
-                eq(targetY));
+        verify(windowPanel, times(1)).setLocation(eq(targetX), eq(targetY),
+                eq(true));
     }
 
     @Test
     public void setWindowLocationOnUndo() {
         command.undo();
-        verify(windowPanel, times(1)).animateMoveToLocation(eq(sourceX),
-                eq(sourceY));
+        verify(windowPanel, times(1)).setLocation(eq(sourceX), eq(sourceY),
+                eq(true));
     }
 
     @After
