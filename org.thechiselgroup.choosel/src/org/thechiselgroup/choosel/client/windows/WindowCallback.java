@@ -15,13 +15,14 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.windows;
 
-public interface ResizeablePanel {
+public interface WindowCallback {
 
     int getHeight();
 
     int getWidth();
 
-    void resize(int horizontalMove, int verticalMove, int targetWidth,
-            int targetHeight);
+    void moveBy(int deltaX, int deltaY);
+
+    void setPixelSize(int width, int height);
 
 }

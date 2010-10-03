@@ -26,7 +26,7 @@ import org.mockito.MockitoAnnotations;
 // TODO test cases that test minimum sizes
 public class WindowResizeControllerTest {
 
-    private static class TestResizeablePanel implements ResizeablePanel {
+    private static class TestResizeablePanel implements WindowController {
 
         private int height;
 
@@ -57,7 +57,7 @@ public class WindowResizeControllerTest {
 
     }
 
-    private ResizeablePanel panel;
+    private WindowController panel;
 
     @Test
     public void eastLeft() {
