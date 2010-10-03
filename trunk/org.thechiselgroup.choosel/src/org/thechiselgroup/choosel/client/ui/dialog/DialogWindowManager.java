@@ -22,14 +22,14 @@ import org.thechiselgroup.choosel.client.command.NullCommandManager;
 import org.thechiselgroup.choosel.client.ui.ActionBar;
 import org.thechiselgroup.choosel.client.ui.shade.ShadeManager;
 import org.thechiselgroup.choosel.client.util.RemoveHandle;
-import org.thechiselgroup.choosel.client.windows.AbstractWindowController;
+import org.thechiselgroup.choosel.client.windows.AbstractWindowManager;
 import org.thechiselgroup.choosel.client.windows.WindowPanel;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 
-public class DialogController extends AbstractWindowController {
+public class DialogWindowManager extends AbstractWindowManager {
 
     public static enum State {
         CANCELED, FINISHED, RUNNING
@@ -41,7 +41,7 @@ public class DialogController extends AbstractWindowController {
 
     private ShadeManager shadeManager;
 
-    DialogController(AbsolutePanel boundaryPanel, Dialog dialog,
+    DialogWindowManager(AbsolutePanel boundaryPanel, Dialog dialog,
             ShadeManager shadeManager) {
 
         super(boundaryPanel, new NullCommandManager());

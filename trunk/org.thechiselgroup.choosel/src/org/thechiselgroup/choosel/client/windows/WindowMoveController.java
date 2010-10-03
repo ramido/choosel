@@ -23,7 +23,7 @@ public final class WindowMoveController extends WindowDragController {
 
     private WidgetLocation originalLocation;
 
-    public WindowMoveController(WindowController controller,
+    public WindowMoveController(WindowManager controller,
             CommandManager commandManager) {
 
         super(controller, commandManager);

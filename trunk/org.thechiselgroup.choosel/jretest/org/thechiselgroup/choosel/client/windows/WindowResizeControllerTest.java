@@ -18,7 +18,6 @@ package org.thechiselgroup.choosel.client.windows;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -49,13 +48,11 @@ public class WindowResizeControllerTest {
         }
 
         @Override
-        public void moveBy(int relativeX, int relativeY) {
-        }
+        public void resize(int horizontalMove, int verticalMove,
+                int targetWidth, int targetHeight) {
 
-        @Override
-        public void setPixelSize(int width, int height) {
-            this.width = width;
-            this.height = height;
+            this.width = targetWidth;
+            this.height = targetHeight;
         }
 
     }
@@ -65,122 +62,99 @@ public class WindowResizeControllerTest {
     @Test
     public void eastLeft() {
         // TODO change draggable relative information to window-relative??
-        WindowResizeController
-                .resize(690, 600, 700, 600, ResizeDirection.EAST, panel);
+        WindowResizeController.resize(690, 600, 700, 600, ResizeDirection.EAST,
+                panel);
 
-        verify(panel, times(1)).moveBy(0, 0);
-        verify(panel, times(1)).setPixelSize(190, 100);
+        verify(panel, times(1)).resize(0, 0, 190, 100);
     }
 
     @Test
     public void eastRight() {
         // TODO change draggable relative information to window-relative??
-        WindowResizeController
-                .resize(710, 600, 700, 600, ResizeDirection.EAST, panel);
+        WindowResizeController.resize(710, 600, 700, 600, ResizeDirection.EAST,
+                panel);
 
-        verify(panel, times(1)).moveBy(0, 0);
-        verify(panel, times(1)).setPixelSize(210, 100);
+        verify(panel, times(1)).resize(0, 0, 210, 100);
     }
 
     @Test
     public void northDown() {
-        WindowResizeController.resize(500, 610, 500, 600, ResizeDirection.NORTH,
-                panel);
+        WindowResizeController.resize(500, 610, 500, 600,
+                ResizeDirection.NORTH, panel);
 
-        verify(panel, times(1)).moveBy(0, 10);
-        verify(panel, times(1)).setPixelSize(200, 90);
-    }
-
-    @Test
-    public void northDownMoreThanSize() {
-        when(panel.getHeight()).thenReturn(100);
-
-        WindowResizeController.resize(500, 850, 500, 600, ResizeDirection.NORTH,
-                panel);
-
-        verify(panel, times(1)).setPixelSize(200, 0);
-        verify(panel, times(1)).moveBy(0, 0);
+        verify(panel, times(1)).resize(0, 10, 200, 90);
     }
 
     @Test
     public void northEastDownLeft() {
-        WindowResizeController.resize(690, 610, 700, 600, ResizeDirection.NORTH_EAST,
-                panel);
+        WindowResizeController.resize(690, 610, 700, 600,
+                ResizeDirection.NORTH_EAST, panel);
 
-        verify(panel, times(1)).moveBy(0, 10);
-        verify(panel, times(1)).setPixelSize(190, 90);
+        verify(panel, times(1)).resize(0, 10, 190, 90);
     }
 
     @Test
     public void northEastDownRight() {
-        WindowResizeController.resize(710, 610, 700, 600, ResizeDirection.NORTH_EAST,
-                panel);
+        WindowResizeController.resize(710, 610, 700, 600,
+                ResizeDirection.NORTH_EAST, panel);
 
-        verify(panel, times(1)).moveBy(0, 10);
-        verify(panel, times(1)).setPixelSize(210, 90);
+        verify(panel, times(1)).resize(0, 10, 210, 90);
     }
 
     @Test
     public void northEastUpLeft() {
-        WindowResizeController.resize(690, 590, 700, 600, ResizeDirection.NORTH_EAST,
-                panel);
+        WindowResizeController.resize(690, 590, 700, 600,
+                ResizeDirection.NORTH_EAST, panel);
 
-        verify(panel, times(1)).moveBy(0, -10);
-        verify(panel, times(1)).setPixelSize(190, 110);
+        verify(panel, times(1)).resize(0, -10, 190, 110);
     }
 
     @Test
     public void northEastUpRight() {
-        WindowResizeController.resize(710, 590, 700, 600, ResizeDirection.NORTH_EAST,
-                panel);
+        WindowResizeController.resize(710, 590, 700, 600,
+                ResizeDirection.NORTH_EAST, panel);
 
-        verify(panel, times(1)).moveBy(0, -10);
-        verify(panel, times(1)).setPixelSize(210, 110);
+        verify(panel, times(1)).resize(0, -10, 210, 110);
     }
 
     @Test
     public void northUp() {
-        WindowResizeController.resize(500, 590, 500, 600, ResizeDirection.NORTH,
-                panel);
+        WindowResizeController.resize(500, 590, 500, 600,
+                ResizeDirection.NORTH, panel);
 
-        verify(panel, times(1)).moveBy(0, -10);
-        verify(panel, times(1)).setPixelSize(200, 110);
+        verify(panel, times(1)).resize(0, -10, 200, 110);
     }
 
     @Test
     public void northWestDownLeft() {
-        WindowResizeController.resize(490, 610, 500, 600, ResizeDirection.NORTH_WEST,
-                panel);
+        WindowResizeController.resize(490, 610, 500, 600,
+                ResizeDirection.NORTH_WEST, panel);
 
-        verify(panel, times(1)).moveBy(-10, 10);
-        verify(panel, times(1)).setPixelSize(210, 90);
+        verify(panel, times(1)).resize(-10, 10, 210, 90);
     }
 
     @Test
     public void northWestDownRight() {
-        WindowResizeController.resize(510, 610, 500, 600, ResizeDirection.NORTH_WEST,
-                panel);
+        WindowResizeController.resize(510, 610, 500, 600,
+                ResizeDirection.NORTH_WEST, panel);
 
-        verify(panel, times(1)).moveBy(10, 10);
-        verify(panel, times(1)).setPixelSize(190, 90);
+        verify(panel, times(1)).resize(10, 10, 190, 90);
     }
 
     @Test
     public void northWestUpLeft() {
-        WindowResizeController.resize(490, 590, 500, 600, ResizeDirection.NORTH_WEST,
-                panel);
+        WindowResizeController.resize(490, 590, 500, 600,
+                ResizeDirection.NORTH_WEST, panel);
 
-        verify(panel, times(1)).moveBy(-10, -10);
-        verify(panel, times(1)).setPixelSize(210, 110);
+        verify(panel, times(1)).resize(-10, -10, 210, 110);
     }
 
     @Test
     public void northWestUpRight() {
-        WindowResizeController.resize(510, 590, 500, 600, ResizeDirection.NORTH_WEST,
-                panel);
+        WindowResizeController.resize(510, 590, 500, 600,
+                ResizeDirection.NORTH_WEST, panel);
 
-        verify(panel, times(1)).moveBy(10, -10);
-        verify(panel, times(1)).setPixelSize(190, 110);
+        verify(panel, times(1)).resize(10, -10, 190, 110);
     }
 
     @Before
@@ -193,110 +167,98 @@ public class WindowResizeControllerTest {
     @Test
     public void southDown() {
         // TODO change draggable relative information to window-relative??
-        WindowResizeController.resize(500, 710, 500, 700, ResizeDirection.SOUTH,
-                panel);
+        WindowResizeController.resize(500, 710, 500, 700,
+                ResizeDirection.SOUTH, panel);
 
-        verify(panel, times(1)).moveBy(0, 0);
-        verify(panel, times(1)).setPixelSize(200, 110);
+        verify(panel, times(1)).resize(0, 0, 200, 110);
     }
 
     @Test
     public void southEastDownLeft() {
-        WindowResizeController.resize(690, 710, 700, 700, ResizeDirection.SOUTH_EAST,
-                panel);
+        WindowResizeController.resize(690, 710, 700, 700,
+                ResizeDirection.SOUTH_EAST, panel);
 
-        verify(panel, times(1)).moveBy(0, 0);
-        verify(panel, times(1)).setPixelSize(190, 110);
+        verify(panel, times(1)).resize(0, 0, 190, 110);
     }
 
     @Test
     public void southEastDownRight() {
-        WindowResizeController.resize(710, 710, 700, 700, ResizeDirection.SOUTH_EAST,
-                panel);
+        WindowResizeController.resize(710, 710, 700, 700,
+                ResizeDirection.SOUTH_EAST, panel);
 
-        verify(panel, times(1)).moveBy(0, 0);
-        verify(panel, times(1)).setPixelSize(210, 110);
+        verify(panel, times(1)).resize(0, 0, 210, 110);
     }
 
     @Test
     public void southEastUpLeft() {
-        WindowResizeController.resize(690, 690, 700, 700, ResizeDirection.SOUTH_EAST,
-                panel);
+        WindowResizeController.resize(690, 690, 700, 700,
+                ResizeDirection.SOUTH_EAST, panel);
 
-        verify(panel, times(1)).moveBy(0, 0);
-        verify(panel, times(1)).setPixelSize(190, 90);
+        verify(panel, times(1)).resize(0, 0, 190, 90);
     }
 
     @Test
     public void southEastUpRight() {
-        WindowResizeController.resize(710, 690, 700, 700, ResizeDirection.SOUTH_EAST,
-                panel);
+        WindowResizeController.resize(710, 690, 700, 700,
+                ResizeDirection.SOUTH_EAST, panel);
 
-        verify(panel, times(1)).moveBy(0, 0);
-        verify(panel, times(1)).setPixelSize(210, 90);
+        verify(panel, times(1)).resize(0, 0, 210, 90);
     }
 
     @Test
     public void southUp() {
         // TODO change draggable relative information to window-relative??
-        WindowResizeController.resize(500, 690, 500, 700, ResizeDirection.SOUTH,
-                panel);
+        WindowResizeController.resize(500, 690, 500, 700,
+                ResizeDirection.SOUTH, panel);
 
-        verify(panel, times(1)).moveBy(0, 0);
-        verify(panel, times(1)).setPixelSize(200, 90);
+        verify(panel, times(1)).resize(0, 0, 200, 90);
     }
 
     @Test
     public void southWestDownLeft() {
-        WindowResizeController.resize(490, 710, 500, 700, ResizeDirection.SOUTH_WEST,
-                panel);
+        WindowResizeController.resize(490, 710, 500, 700,
+                ResizeDirection.SOUTH_WEST, panel);
 
-        verify(panel, times(1)).moveBy(-10, 0);
-        verify(panel, times(1)).setPixelSize(210, 110);
+        verify(panel, times(1)).resize(-10, 0, 210, 110);
     }
 
     @Test
     public void southWestDownRight() {
-        WindowResizeController.resize(510, 710, 500, 700, ResizeDirection.SOUTH_WEST,
-                panel);
+        WindowResizeController.resize(510, 710, 500, 700,
+                ResizeDirection.SOUTH_WEST, panel);
 
-        verify(panel, times(1)).moveBy(10, 0);
-        verify(panel, times(1)).setPixelSize(190, 110);
+        verify(panel, times(1)).resize(10, 0, 190, 110);
     }
 
     @Test
     public void southWestUpLeft() {
-        WindowResizeController.resize(490, 690, 500, 700, ResizeDirection.SOUTH_WEST,
-                panel);
+        WindowResizeController.resize(490, 690, 500, 700,
+                ResizeDirection.SOUTH_WEST, panel);
 
-        verify(panel, times(1)).moveBy(-10, 0);
-        verify(panel, times(1)).setPixelSize(210, 90);
+        verify(panel, times(1)).resize(-10, 0, 210, 90);
     }
 
     @Test
     public void southWestUpRight() {
-        WindowResizeController.resize(510, 690, 500, 700, ResizeDirection.SOUTH_WEST,
-                panel);
+        WindowResizeController.resize(510, 690, 500, 700,
+                ResizeDirection.SOUTH_WEST, panel);
 
-        verify(panel, times(1)).moveBy(10, 0);
-        verify(panel, times(1)).setPixelSize(190, 90);
+        verify(panel, times(1)).resize(10, 0, 190, 90);
     }
 
     @Test
     public void westLeft() {
-        WindowResizeController
-                .resize(490, 600, 500, 600, ResizeDirection.WEST, panel);
+        WindowResizeController.resize(490, 600, 500, 600, ResizeDirection.WEST,
+                panel);
 
-        verify(panel, times(1)).moveBy(-10, 0);
-        verify(panel, times(1)).setPixelSize(210, 100);
+        verify(panel, times(1)).resize(-10, 0, 210, 100);
     }
 
     @Test
     public void westRight() {
-        WindowResizeController
-                .resize(510, 600, 500, 600, ResizeDirection.WEST, panel);
+        WindowResizeController.resize(510, 600, 500, 600, ResizeDirection.WEST,
+                panel);
 
-        verify(panel, times(1)).moveBy(10, 0);
-        verify(panel, times(1)).setPixelSize(190, 100);
+        verify(panel, times(1)).resize(10, 0, 190, 100);
     }
 }

@@ -17,7 +17,7 @@ package org.thechiselgroup.choosel.client.ui.dialog;
 
 import org.thechiselgroup.choosel.client.ui.DialogPanel;
 import org.thechiselgroup.choosel.client.ui.ZIndex;
-import org.thechiselgroup.choosel.client.ui.dialog.DialogController.State;
+import org.thechiselgroup.choosel.client.ui.dialog.DialogWindowManager.State;
 import org.thechiselgroup.choosel.client.windows.WindowPanel;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -30,7 +30,7 @@ public final class DialogWindow extends WindowPanel implements DialogCallback {
     // TODO extract for i18n
     private final static String CANCEL = "Cancel";
 
-    private DialogController dialogController;
+    private DialogWindowManager dialogController;
 
     private Button okayButton;
 
@@ -71,7 +71,7 @@ public final class DialogWindow extends WindowPanel implements DialogCallback {
     }
 
     // TODO add explanation area
-    public void init(DialogController windowController, final Dialog dialog) {
+    public void init(DialogWindowManager windowController, final Dialog dialog) {
 
         this.dialogController = windowController;
 
