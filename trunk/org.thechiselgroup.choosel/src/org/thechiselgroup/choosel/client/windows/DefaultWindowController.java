@@ -15,6 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.windows;
 
+import org.thechiselgroup.choosel.client.geometry.Point;
+
 /*
  * This class implements algorithms related to WindowPanel and executes them on callback
  * methods. The intention of this class is to enable the testing of error-prone areas
@@ -47,21 +49,20 @@ public class DefaultWindowController implements WindowController {
 
         callback.setPixelSize(targetWidth, targetHeight);
 
-        int newWidth = getWidth();
-        int newHeight = getHeight();
+        if (deltaX != 0 || deltaY != 0) {
+            /*
+             * adjust move to the extent the resize actually succeeded
+             */
+            if (deltaX != 0) {
+                deltaX += targetWidth - getWidth();
+            }
+            if (deltaY != 0) {
+                deltaY += targetHeight - getHeight();
+            }
 
-        /*
-         * adjust move to the extend the resizing worked
-         */
-        if (deltaX != 0) {
-            deltaX += targetWidth - newWidth;
+            Point location = callback.getLocation();
+            callback.setLocation(location.x + deltaX, location.y + deltaY);
         }
-
-        if (deltaY != 0) {
-            deltaY += targetHeight - newHeight;
-        }
-
-        callback.moveBy(deltaX, deltaY);
     }
 
 }

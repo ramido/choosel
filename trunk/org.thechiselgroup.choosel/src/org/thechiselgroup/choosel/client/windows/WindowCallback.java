@@ -15,13 +15,17 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.windows;
 
+import org.thechiselgroup.choosel.client.geometry.Point;
+
 public interface WindowCallback {
 
     int getHeight();
 
+    Point getLocation();
+
     int getWidth();
 
-    void moveBy(int deltaX, int deltaY);
+    void setLocation(int x, int y);
 
     void setPixelSize(int width, int height);
 

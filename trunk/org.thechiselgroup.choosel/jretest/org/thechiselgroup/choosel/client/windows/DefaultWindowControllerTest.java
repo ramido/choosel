@@ -23,9 +23,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.thechiselgroup.choosel.client.geometry.Point;
 
 // TODO test cases that test minimum sizes
 public class DefaultWindowControllerTest {
+
+    private static final int Y = 1;
+
+    private static final int X = 1;
 
     private DefaultWindowController underTest;
 
@@ -39,7 +44,7 @@ public class DefaultWindowControllerTest {
         underTest.resize(0, 100, 200, 0);
 
         verify(callback, times(1)).setPixelSize(200, 0);
-        verify(callback, times(1)).moveBy(0, 0);
+        verify(callback, times(1)).setLocation(X + 0, Y + 0);
     }
 
     @Test
@@ -49,7 +54,7 @@ public class DefaultWindowControllerTest {
         underTest.resize(0, 100, 200, 0);
 
         verify(callback, times(1)).setPixelSize(200, 0);
-        verify(callback, times(1)).moveBy(0, 50);
+        verify(callback, times(1)).setLocation(X + 0, Y + 50);
     }
 
     @Before
@@ -57,6 +62,8 @@ public class DefaultWindowControllerTest {
         MockitoAnnotations.initMocks(this);
 
         underTest = new DefaultWindowController(callback);
+
+        when(callback.getLocation()).thenReturn(new Point(X, Y));
     }
 
 }
