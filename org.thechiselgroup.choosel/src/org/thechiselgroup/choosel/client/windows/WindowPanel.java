@@ -378,13 +378,18 @@ public class WindowPanel extends NEffectPanel implements
             }
 
             @Override
+            public Point getLocation() {
+                return WindowPanel.this.getLocation();
+            }
+
+            @Override
             public int getWidth() {
                 return WindowPanel.this.getWidth();
             }
 
             @Override
-            public void moveBy(int deltaX, int deltaY) {
-                WindowPanel.this.moveBy(deltaX, deltaY);
+            public void setLocation(int x, int y) {
+                WindowPanel.this.setLocation(x, y);
             }
 
             @Override
@@ -499,15 +504,6 @@ public class WindowPanel extends NEffectPanel implements
             }
         });
         addEffect(showEffect);
-    }
-
-    public void moveBy(int deltaX, int deltaY) {
-        if (deltaX == 0 && deltaY == 0) {
-            return;
-        }
-
-        Point location = getLocation();
-        setLocation(location.x + deltaX, location.y + deltaY);
     }
 
     @Override
