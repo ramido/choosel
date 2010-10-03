@@ -15,6 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.windows;
 
+import org.thechiselgroup.choosel.client.geometry.Point;
+
 import com.google.gwt.user.client.ui.AbsolutePanel;
 
 public interface WindowManager {
@@ -25,8 +27,12 @@ public interface WindowManager {
 
     AbsolutePanel getBoundaryPanel();
 
+    Point getLocation(WindowPanel window);
+
     WindowMoveController getMoveDragController();
 
     WindowResizeController getResizeDragController();
+
+    void setLocation(WindowPanel window, int x, int y);
 
 }

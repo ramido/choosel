@@ -25,13 +25,13 @@ import org.adamtacy.client.ui.effects.events.EffectCompletedHandler;
 import org.adamtacy.client.ui.effects.impl.Move;
 import org.thechiselgroup.choosel.client.fx.FXUtil;
 import org.thechiselgroup.choosel.client.fx.Opacity;
+import org.thechiselgroup.choosel.client.geometry.Point;
 import org.thechiselgroup.choosel.client.ui.CSS;
 import org.thechiselgroup.choosel.client.ui.WidgetFactory;
 import org.thechiselgroup.choosel.client.ui.dnd.DragProxyEventReceiver;
 import org.thechiselgroup.choosel.client.ui.popup.DefaultPopupManager;
 import org.thechiselgroup.choosel.client.util.MathUtils;
 
-import com.allen_sauer.gwt.dnd.client.util.Location;
 import com.allen_sauer.gwt.dnd.client.util.WidgetLocation;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -43,7 +43,6 @@ import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HasAlignment;
@@ -155,15 +154,19 @@ public class WindowPanel extends NEffectPanel implements
         setPixelSize(targetWidth, targetHeight);
     }
 
-    // TODO refactor
     public void animateMoveToLocation(final int x, final int y) {
-        WidgetLocation location = new WidgetLocation(this, getParent());
+        /*
+         * Warning: This method is fairly fragile. Proceed with caution.
+         */
+        Point location = getLocation();
 
-        Move move = new Move(x - location.getLeft(), y - location.getTop()) {
+        Move move = new Move(x - location.x, y - location.y) {
             @Override
             public void tearDownEffect() {
-                // do not super.tearDownEffects as this resets to original state
-                // reset root panel position as this is affected by move
+                /*
+                 * do not super.tearDownEffects as this resets to original state
+                 * reset root panel position as this is affected by move
+                 */
                 CSS.setLocation(rootPanel, 0, 0);
             }
         };
@@ -173,10 +176,6 @@ public class WindowPanel extends NEffectPanel implements
             public void onEffectCompleted(EffectCompletedEvent event) {
                 removeEffects();
                 setLocation(x, y);
-                assert x == new WidgetLocation(WindowPanel.this, getParent())
-                        .getLeft();
-                assert y == new WidgetLocation(WindowPanel.this, getParent())
-                        .getTop();
                 assert 0 == new WidgetLocation(rootPanel, WindowPanel.this)
                         .getLeft();
                 assert 0 == new WidgetLocation(rootPanel, WindowPanel.this)
@@ -309,10 +308,12 @@ public class WindowPanel extends NEffectPanel implements
         // ignored
     }
 
+    // TODO use window manager
     public int getAbsoluteX() {
         return getAbsoluteLeft() - getParent().getAbsoluteLeft();
     }
 
+    // TODO use window manager
     public int getAbsoluteY() {
         return getAbsoluteTop() - getParent().getAbsoluteTop();
     }
@@ -335,6 +336,10 @@ public class WindowPanel extends NEffectPanel implements
 
     private String getInvisibleCloseImageUrl() {
         return getModuleBase() + IMAGE_CLOSE_INVISIBLE;
+    }
+
+    private Point getLocation() {
+        return manager.getLocation(this);
     }
 
     protected String getModuleBase() {
@@ -496,18 +501,13 @@ public class WindowPanel extends NEffectPanel implements
         addEffect(showEffect);
     }
 
-    public void moveBy(int relativeX, int relativeY) {
-        if (relativeX == 0 && relativeY == 0) {
+    public void moveBy(int deltaX, int deltaY) {
+        if (deltaX == 0 && deltaY == 0) {
             return;
         }
 
-        AbsolutePanel parent = (AbsolutePanel) getParent();
-        Location location = new WidgetLocation(this, parent);
-
-        int left = location.getLeft() + relativeX;
-        int top = location.getTop() + relativeY;
-
-        parent.setWidgetPosition(this, left, top);
+        Point location = getLocation();
+        setLocation(location.x + deltaX, location.y + deltaY);
     }
 
     @Override
@@ -537,11 +537,7 @@ public class WindowPanel extends NEffectPanel implements
     }
 
     public void setLocation(int x, int y) {
-        AbsolutePanel parent = (AbsolutePanel) getParent();
-        parent.setWidgetPosition(this, x, y);
-
-        assert x == new WidgetLocation(this, getParent()).getLeft();
-        assert y == new WidgetLocation(this, getParent()).getTop();
+        manager.setLocation(this, x, y);
     }
 
     // TODO test
