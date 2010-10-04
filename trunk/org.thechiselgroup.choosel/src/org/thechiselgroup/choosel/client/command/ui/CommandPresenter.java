@@ -24,16 +24,14 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Widget;
 
-public class CommandPresenter implements WidgetAdaptable, Initializable {
-
-    public interface CommandDisplay extends HasClickHandlers, WidgetAdaptable {
-    }
+public class CommandPresenter<T extends HasClickHandlers & WidgetAdaptable>
+        implements WidgetAdaptable, Initializable {
 
     private final Command command;
 
-    private final CommandDisplay display;
+    private final T display;
 
-    public CommandPresenter(CommandDisplay display, Command command) {
+    public CommandPresenter(T display, Command command) {
         assert display != null;
         assert command != null;
 
