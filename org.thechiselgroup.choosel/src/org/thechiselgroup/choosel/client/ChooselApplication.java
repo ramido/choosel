@@ -15,6 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client;
 
+import static org.thechiselgroup.choosel.client.command.ui.IconURLBuilder.getIconUrl;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,6 +28,7 @@ import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.command.ui.CommandManagerPresenter;
 import org.thechiselgroup.choosel.client.command.ui.CommandPresenterFactory;
 import org.thechiselgroup.choosel.client.command.ui.DefaultCommandManagerPresenterDisplay;
+import org.thechiselgroup.choosel.client.command.ui.IconURLBuilder.IconType;
 import org.thechiselgroup.choosel.client.command.ui.ImageCommandDisplay;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
@@ -33,6 +36,7 @@ import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.ui.ActionBar;
+import org.thechiselgroup.choosel.client.ui.ImageButton;
 import org.thechiselgroup.choosel.client.ui.dialog.DialogManager;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 import org.thechiselgroup.choosel.client.windows.CreateWindowCommand;
@@ -147,8 +151,22 @@ public abstract class ChooselApplication {
         addWidget(panelId, button);
     }
 
+    protected void addImageButton(String panelId, String name,
+            ClickHandler handler) {
+
+        assert panelId != null;
+        assert handler != null;
+        assert name != null;
+
+        ImageButton button = new ImageButton(getIconUrl(name, IconType.NORMAL),
+                getIconUrl(name, IconType.HIGHLIGHTED), getIconUrl(name,
+                        IconType.DISABLED));
+        button.addClickHandler(handler);
+        addWidget(panelId, button);
+    }
+
     protected void addInfoButton() {
-        addButton(HELP_PANEL, "About", new ClickHandler() {
+        addImageButton(HELP_PANEL, "help-about", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 dialogManager.show(infoDialog);
@@ -192,6 +210,22 @@ public abstract class ChooselApplication {
         // TODO assert factory for content type is available
 
         addButton(panelId, label, new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                createWindow(contentType);
+            }
+        });
+    }
+
+    public void addWindowContentImageButton(String panelId, String name,
+            final String contentType) {
+
+        assert panelId != null;
+        assert name != null;
+        assert contentType != null;
+        // TODO assert factory for content type is available
+
+        addImageButton(panelId, name, new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 createWindow(contentType);

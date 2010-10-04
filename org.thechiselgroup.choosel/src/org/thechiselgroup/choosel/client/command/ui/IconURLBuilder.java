@@ -15,25 +15,35 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.command.ui;
 
-import static org.thechiselgroup.choosel.client.command.ui.IconURLBuilder.getIconUrl;
+import com.google.gwt.core.client.GWT;
 
-import org.thechiselgroup.choosel.client.command.ui.IconURLBuilder.IconType;
-import org.thechiselgroup.choosel.client.ui.ImageButton;
-import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
+public final class IconURLBuilder {
 
-import com.google.gwt.user.client.ui.Widget;
+    public static enum IconType {
 
-// TODO factory + inline
-public class ImageCommandDisplay extends ImageButton implements WidgetAdaptable {
+        NORMAL("normal"), DISABLED("disabled"), HIGHLIGHTED("highlighted");
 
-    public ImageCommandDisplay(String name) {
-        super(getIconUrl(name, IconType.NORMAL), getIconUrl(name,
-                IconType.HIGHLIGHTED), getIconUrl(name, IconType.DISABLED));
+        private String name;
+
+        IconType(String name) {
+            this.name = name;
+        }
+
     }
 
-    @Override
-    public Widget asWidget() {
-        return this;
+    public static final String PATH = "images/";
+
+    public static final String PREFIX = "icon";
+
+    public static final String SEPARATOR = "-";
+
+    public static final String SUFFIX = ".png";
+
+    public static String getIconUrl(String name, IconType type) {
+        return GWT.getModuleBaseURL() + PATH + PREFIX + SEPARATOR + name
+                + SEPARATOR + type.name + SUFFIX;
     }
 
+    private IconURLBuilder() {
+    }
 }
