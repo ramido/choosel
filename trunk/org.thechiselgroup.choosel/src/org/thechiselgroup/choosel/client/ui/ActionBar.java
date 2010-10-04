@@ -15,7 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -24,19 +27,21 @@ import com.google.gwt.user.client.ui.Widget;
 public class ActionBar implements WidgetAdaptable {
 
     // TODO remove constant, replace with dynamic size calculation
-    public static final int ACTION_BAR_HEIGHT_PX = 92;
+    public static final int ACTION_BAR_HEIGHT_PX = 91;
 
-    public static final String CSS_ACTIONBAR = "actionbar";
+    public static final String CSS_ACTIONBAR = "ActionBar";
 
-    public static final String CSS_ACTIONBAR_PANEL = "actionbar-panel";
+    public static final String CSS_ACTIONBAR_PANEL = "ActionBar-panel";
 
-    public static final String CSS_ACTIONBAR_PANEL_CONTENT = "actionbar-panel-content";
+    public static final String CSS_ACTIONBAR_PANEL_CONTENT = "ActionBar-panel-content";
 
-    public static final String CSS_ACTIONBAR_PANEL_HEADER = "actionbar-panel-header";
+    public static final String CSS_ACTIONBAR_PANEL_EXPANDER = "ActionBar-panel-expander";
 
-    public static final String CSS_ACTIONBAR_PANELCONTAINER = "actionbar-panelcontainer";
+    public static final String CSS_ACTIONBAR_PANEL_HEADER = "ActionBar-panel-header";
 
-    public static final String CSS_ACTIONBAR_TITLE_AREA = "actionbar-titleArea";
+    public static final String CSS_ACTIONBAR_PANELCONTAINER = "ActionBar-panelcontainer";
+
+    public static final String CSS_ACTIONBAR_TITLE_AREA = "ActionBar-titleArea";
 
     private HorizontalPanel actionBarPanelContainer;
 
@@ -60,17 +65,23 @@ public class ActionBar implements WidgetAdaptable {
     }
 
     public void addPanel(String title, Widget contentWidget) {
-        VerticalPanel actionBarPanel = new VerticalPanel();
+        FlexTable actionBarPanel = new FlexTable();
         actionBarPanel.addStyleName(CSS_ACTIONBAR_PANEL);
+
+        Label header = new Label(title);
+        header.addStyleName(CSS_ACTIONBAR_PANEL_HEADER);
+        actionBarPanel.setWidget(0, 0, header);
+        actionBarPanel.getFlexCellFormatter().setColSpan(0, 0, 2);
 
         SimplePanel contentPanel = new SimplePanel();
         contentPanel.add(contentWidget);
         contentPanel.addStyleName(CSS_ACTIONBAR_PANEL_CONTENT);
-        actionBarPanel.add(contentPanel);
+        actionBarPanel.setWidget(1, 0, contentPanel);
 
-        Label header = new Label(title);
-        header.addStyleName(CSS_ACTIONBAR_PANEL_HEADER);
-        actionBarPanel.add(header);
+        actionBarPanel.setWidget(1, 1, new Image(GWT.getModuleBaseURL()
+                + "images/expander.png"));
+        actionBarPanel.getCellFormatter().addStyleName(1, 1,
+                CSS_ACTIONBAR_PANEL_EXPANDER);
 
         actionBarPanelContainer.add(actionBarPanel);
     }

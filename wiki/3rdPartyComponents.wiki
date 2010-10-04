@@ -203,3 +203,13 @@ CSS Reset
 *URL*: http://developer.yahoo.com/yui/fonts/
 
 *License*: BSD
+
+==Tango Icon Library==
+
+Icons used in Choosel
+
+*Version*: 0.8.90 (Choosel uses derived icons)
+
+*URL*: http://tango.freedesktop.org/Tango_Desktop_Project
+
+*License*: Public Domain

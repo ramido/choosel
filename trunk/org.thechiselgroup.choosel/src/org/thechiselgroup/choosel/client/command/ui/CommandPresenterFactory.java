@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.client.command.ui;
 import org.thechiselgroup.choosel.client.command.AsyncCommand;
 import org.thechiselgroup.choosel.client.command.AsyncCommandExecutor;
 import org.thechiselgroup.choosel.client.command.AsyncCommandToCommandAdapter;
-import org.thechiselgroup.choosel.client.command.ui.CommandPresenter.ButtonDisplay;
+import org.thechiselgroup.choosel.client.command.ui.CommandPresenter.CommandDisplay;
 
 import com.google.gwt.user.client.Command;
 import com.google.inject.Inject;
@@ -34,19 +34,35 @@ public class CommandPresenterFactory {
         this.asyncCommandExecutor = asyncCommandExecutor;
     }
 
-    public ButtonDisplay createCommandButton(String text, AsyncCommand command) {
-        ButtonDisplay display = new ButtonDisplay(text);
-        CommandPresenter presenter = new CommandPresenter(display,
-                new AsyncCommandToCommandAdapter(command, asyncCommandExecutor));
-        presenter.init();
+    public ButtonCommandDisplay createCommandButton(String text,
+            AsyncCommand command) {
 
+        return createCommandButton(text, new AsyncCommandToCommandAdapter(
+                command, asyncCommandExecutor));
+    }
+
+    public ButtonCommandDisplay createCommandButton(String text, Command command) {
+        ButtonCommandDisplay display = new ButtonCommandDisplay(text);
+        initPresenter(command, display);
         return display;
     }
 
-    public ButtonDisplay createCommandButton(String text, Command command) {
-        ButtonDisplay display = new ButtonDisplay(text);
+    public ImageCommandDisplay createCommandImage(String imageUrl,
+            AsyncCommand command) {
+
+        return createCommandImage(imageUrl, new AsyncCommandToCommandAdapter(
+                command, asyncCommandExecutor));
+    }
+
+    public ImageCommandDisplay createCommandImage(String imageUrl,
+            Command command) {
+        ImageCommandDisplay display = new ImageCommandDisplay(imageUrl);
+        initPresenter(command, display);
+        return display;
+    }
+
+    private void initPresenter(Command command, CommandDisplay display) {
         CommandPresenter presenter = new CommandPresenter(display, command);
         presenter.init();
-        return display;
     }
 }
