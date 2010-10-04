@@ -99,7 +99,7 @@ public class DefaultCommandManagerPresenterDisplay implements
 
     @Override
     public void setRedoCommandDescription(String commandDescription) {
-        redoLabel.setText(commandDescription);
+        redoLabel.setText("redo " + commandDescription);
     }
 
     @Override
@@ -109,6 +109,6 @@ public class DefaultCommandManagerPresenterDisplay implements
 
     @Override
     public void setUndoCommandDescription(String commandDescription) {
-        undoLabel.setText(commandDescription);
+        undoLabel.setText("undo " + commandDescription);
     }
 }
