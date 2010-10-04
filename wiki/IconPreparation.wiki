@@ -6,6 +6,7 @@ Most of the icons that are used in Choosel are based on the 22x22px icons in [ht
 Choosel !ActionBar icons should be
 
  * 22x22px
+ * saved as PNG
  * available in three versions (highlighted, normal, disabled)
  * the highlighted version uses the original colors (Tango Desktop color palette)
  * the normal version is based on the highlighted version. Use the [http://www.gimp.org/ Gimp] colorize function with hue 214, saturation 30, lighting 47 to create the normal version of the icon.
