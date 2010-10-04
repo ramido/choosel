@@ -79,7 +79,7 @@ public class ActionBar implements WidgetAdaptable {
         actionBarPanel.setWidget(1, 0, contentPanel);
 
         actionBarPanel.setWidget(1, 1, new Image(GWT.getModuleBaseURL()
-                + "images/expander.png"));
+                + "images/expander-normal.png"));
         actionBarPanel.getCellFormatter().addStyleName(1, 1,
                 CSS_ACTIONBAR_PANEL_EXPANDER);
 
