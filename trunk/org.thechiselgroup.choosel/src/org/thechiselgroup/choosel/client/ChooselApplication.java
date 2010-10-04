@@ -15,8 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client;
 
-import static org.thechiselgroup.choosel.client.command.ui.IconURLBuilder.getIconUrl;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +26,6 @@ import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.command.ui.CommandManagerPresenter;
 import org.thechiselgroup.choosel.client.command.ui.CommandPresenterFactory;
 import org.thechiselgroup.choosel.client.command.ui.DefaultCommandManagerPresenterDisplay;
-import org.thechiselgroup.choosel.client.command.ui.IconURLBuilder.IconType;
 import org.thechiselgroup.choosel.client.command.ui.ImageCommandDisplay;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
@@ -158,9 +155,7 @@ public abstract class ChooselApplication {
         assert handler != null;
         assert name != null;
 
-        ImageButton button = new ImageButton(getIconUrl(name, IconType.NORMAL),
-                getIconUrl(name, IconType.HIGHLIGHTED), getIconUrl(name,
-                        IconType.DISABLED));
+        ImageButton button = ImageButton.createImageButton(name);
         button.addClickHandler(handler);
         addWidget(panelId, button);
     }
@@ -297,8 +292,8 @@ public abstract class ChooselApplication {
 
         presenter.init();
 
-        addWidget(EDIT_PANEL, commandManagerPresenterDisplay.getUndoButton());
         addWidget(EDIT_PANEL, commandManagerPresenterDisplay.getRedoButton());
+        addWidget(EDIT_PANEL, commandManagerPresenterDisplay.getUndoButton());
     }
 
     protected abstract void initCustomActions();

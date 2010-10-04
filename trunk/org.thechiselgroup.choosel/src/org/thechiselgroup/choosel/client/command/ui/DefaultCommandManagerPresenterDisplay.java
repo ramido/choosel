@@ -16,13 +16,13 @@
 package org.thechiselgroup.choosel.client.command.ui;
 
 import org.thechiselgroup.choosel.client.command.ui.CommandManagerPresenter.CommandManagerPresenterDisplay;
+import org.thechiselgroup.choosel.client.ui.ImageButton;
 import org.thechiselgroup.choosel.client.ui.WidgetFactory;
 import org.thechiselgroup.choosel.client.ui.popup.DefaultPopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -30,11 +30,11 @@ import com.google.inject.Inject;
 public class DefaultCommandManagerPresenterDisplay implements
         CommandManagerPresenterDisplay {
 
-    private Button redoButton;
+    private ImageButton redoButton;
 
     private Label redoLabel;
 
-    private Button undoButton;
+    private ImageButton undoButton;
 
     private Label undoLabel;
 
@@ -48,7 +48,7 @@ public class DefaultCommandManagerPresenterDisplay implements
         initRedoButton(popupManagerFactory);
     }
 
-    public Button getRedoButton() {
+    public ImageButton getRedoButton() {
         return redoButton;
     }
 
@@ -57,7 +57,7 @@ public class DefaultCommandManagerPresenterDisplay implements
         return redoButton;
     }
 
-    public Button getUndoButton() {
+    public ImageButton getUndoButton() {
         return undoButton;
     }
 
@@ -67,7 +67,7 @@ public class DefaultCommandManagerPresenterDisplay implements
     }
 
     private void initRedoButton(PopupManagerFactory popupManagerFactory) {
-        redoButton = new Button("Redo");
+        redoButton = ImageButton.createImageButton("edit-redo");
         redoLabel = new Label();
         PopupManager popupManager = popupManagerFactory
                 .createPopupManager(new WidgetFactory() {
@@ -80,7 +80,7 @@ public class DefaultCommandManagerPresenterDisplay implements
     }
 
     private void initUndoButton(PopupManagerFactory popupManagerFactory) {
-        undoButton = new Button("Undo");
+        undoButton = ImageButton.createImageButton("edit-undo");
         undoLabel = new Label();
         PopupManager popupManager = popupManagerFactory
                 .createPopupManager(new WidgetFactory() {

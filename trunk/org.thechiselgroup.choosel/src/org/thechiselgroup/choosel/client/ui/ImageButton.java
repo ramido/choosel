@@ -15,6 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui;
 
+import static org.thechiselgroup.choosel.client.command.ui.IconURLBuilder.getIconUrl;
+
+import org.thechiselgroup.choosel.client.command.ui.IconURLBuilder.IconType;
 
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
@@ -25,6 +28,12 @@ import com.google.gwt.user.client.ui.Image;
 public class ImageButton extends Image implements HasEnabledState {
 
     public static final String CSS_IMAGE_COMMAND_DISPLAY = "ImageButton";
+
+    public static ImageButton createImageButton(String name) {
+        return new ImageButton(getIconUrl(name, IconType.NORMAL), getIconUrl(
+                name, IconType.HIGHLIGHTED),
+                getIconUrl(name, IconType.DISABLED));
+    }
 
     private String disabledUrl;
 
