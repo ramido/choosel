@@ -53,6 +53,8 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.ClosingEvent;
+import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -172,6 +174,15 @@ public abstract class ChooselApplication {
         panels.get(panelId).add(widget);
     }
 
+    protected void addWindowClosingConfirmationDialog() {
+        Window.addWindowClosingHandler(new ClosingHandler() {
+            @Override
+            public void onWindowClosing(ClosingEvent event) {
+                event.setMessage("Unsaved changes to the workspace will be lost.");
+            }
+        });
+    }
+
     public void addWindowContentButton(String panelId, String label,
             final String contentType) {
 
@@ -216,6 +227,8 @@ public abstract class ChooselApplication {
 
     public void init() {
         BrowserDetect.checkBrowser();
+
+        addWindowClosingConfirmationDialog();
 
         DockPanel mainPanel = createMainPanel();
 
