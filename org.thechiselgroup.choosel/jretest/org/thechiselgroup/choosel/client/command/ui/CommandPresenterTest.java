@@ -26,14 +26,19 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.thechiselgroup.choosel.client.command.ui.CommandPresenter.CommandDisplay;
+import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 
 public class CommandPresenterTest {
+
+    private interface CommandDisplay extends HasClickHandlers, WidgetAdaptable {
+
+    }
 
     protected ClickHandler clickHandler;
 

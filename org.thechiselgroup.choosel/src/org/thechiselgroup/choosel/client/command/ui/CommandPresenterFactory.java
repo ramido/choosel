@@ -18,8 +18,9 @@ package org.thechiselgroup.choosel.client.command.ui;
 import org.thechiselgroup.choosel.client.command.AsyncCommand;
 import org.thechiselgroup.choosel.client.command.AsyncCommandExecutor;
 import org.thechiselgroup.choosel.client.command.AsyncCommandToCommandAdapter;
-import org.thechiselgroup.choosel.client.command.ui.CommandPresenter.CommandDisplay;
+import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
 
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.Command;
 import com.google.inject.Inject;
 
@@ -61,7 +62,9 @@ public class CommandPresenterFactory {
         return display;
     }
 
-    private void initPresenter(Command command, CommandDisplay display) {
+    private <T extends WidgetAdaptable & HasClickHandlers> void initPresenter(
+            Command command, T display) {
+
         CommandPresenter presenter = new CommandPresenter(display, command);
         presenter.init();
     }

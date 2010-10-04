@@ -15,22 +15,14 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.command.ui;
 
-import org.thechiselgroup.choosel.client.command.ui.CommandPresenter.CommandDisplay;
-import org.thechiselgroup.choosel.client.ui.HasEnabledState;
+import org.thechiselgroup.choosel.client.ui.ImageButton;
+import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOutHandler;
-import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseOverHandler;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
-// TODO hover
-public class ImageCommandDisplay extends Image implements CommandDisplay,
-        HasEnabledState {
-
-    public static final String CSS_IMAGE_COMMAND_DISPLAY = "ImageCommandDisplay";
+// TODO factory + inline
+public class ImageCommandDisplay extends ImageButton implements WidgetAdaptable {
 
     public static final String HIGHLIGHTED = "highlighted";
 
@@ -46,82 +38,19 @@ public class ImageCommandDisplay extends Image implements CommandDisplay,
 
     public static final String SUFFIX = ".png";
 
-    private String disabledUrl;
-
-    private String normalUrl;
-
-    private String highlightedUrl;
-
-    private boolean enabled = true;
-
-    private boolean mouseOver = false;
-
-    {
-        setUrl(disabledUrl);
+    private static String getIconUrl(String name, String string) {
+        return GWT.getModuleBaseURL() + PATH + PREFIX + SEPARATOR + name
+                + SEPARATOR + string + SUFFIX;
     }
 
     public ImageCommandDisplay(String name) {
-        assert name != null;
-
-        this.disabledUrl = getIconUrl(name, DISABLED);
-        this.normalUrl = getIconUrl(name, NORMAL);
-        this.highlightedUrl = getIconUrl(name, HIGHLIGHTED);
-
-        setStyleName(CSS_IMAGE_COMMAND_DISPLAY);
-        setUrl(normalUrl);
-
-        addMouseOverHandler(new MouseOverHandler() {
-            @Override
-            public void onMouseOver(MouseOverEvent event) {
-                mouseOver = true;
-                if (enabled) {
-                    setUrl(highlightedUrl);
-                }
-            }
-        });
-        addMouseOutHandler(new MouseOutHandler() {
-            @Override
-            public void onMouseOut(MouseOutEvent event) {
-                mouseOver = false;
-                if (enabled) {
-                    setUrl(normalUrl);
-                }
-            }
-        });
+        super(getIconUrl(name, NORMAL), getIconUrl(name, HIGHLIGHTED),
+                getIconUrl(name, DISABLED));
     }
 
     @Override
     public Widget asWidget() {
         return this;
-    }
-
-    protected String getIconUrl(String name, String string) {
-        return GWT.getModuleBaseURL() + PATH + PREFIX + SEPARATOR + name
-                + SEPARATOR + string + SUFFIX;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    @Override
-    public void setEnabled(boolean enabled) {
-        if (enabled == this.enabled) {
-            return;
-        }
-
-        this.enabled = enabled;
-
-        if (enabled) {
-            if (mouseOver) {
-                setUrl(highlightedUrl);
-            } else {
-                setUrl(normalUrl);
-            }
-        } else {
-            setUrl(disabledUrl);
-        }
     }
 
 }
