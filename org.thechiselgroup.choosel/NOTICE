@@ -1,6 +1,6 @@
 The Choosel Mashup Framework includes and uses the 
-following software components developed by various 
-people and organizations:
+following software components and resources developed 
+by various people and organizations:
 
 Google App Engine / Java (GAE/J)
 Server-side web application framework
@@ -141,3 +141,10 @@ CSS Reset
 Version: N/A
 URL: http://developer.yahoo.com/yui/fonts/
 License: BSD
+
+
+Tango Icon Library
+Icons used in Choosel
+Version: 0.8.90 (Choosel uses derived icons)
+URL: http://tango.freedesktop.org/Tango_Desktop_Project
+License: Public Domain

@@ -1,13 +1,13 @@
-.actionbar {
+.ActionBar {
     width: 100%;
-    height: 92px;
+    height: 87px;
     background-color: rgb(218, 229, 243);
     border-bottom: 1px solid rgb(104, 140, 175);
     padding: 0px;
 }
 
-.actionbar-panelcontainer {
-    height: 56px;
+.ActionBar-panelcontainer {
+    height: 51px;
     background-color: rgb(218, 229, 243);
 }
 
@@ -15,13 +15,13 @@
  * Title area
  */
 
-.actionbar-titleArea {
+.ActionBar-titleArea {
     height: 35px;
     padding: 2px;
     padding-left: 6px;
 }
 
-.actionbar-titleArea-text {
+.ActionBar-titleArea-text {
 	width: 300px;
     color: rgb(112, 106, 170);
     font-size: 21px;
@@ -29,17 +29,17 @@
     background-color: rgb(218, 229, 243);
 }
 
-.actionbar-titleArea-text:hover {
+.ActionBar-titleArea-text:hover {
     background-color: rgb(255, 255, 225);
     border: solid 1px rgb(104, 140, 175);
 }
 
-.actionbar-titleArea-text:focus {
+.ActionBar-titleArea-text:focus {
     border: solid 1px #E7B076;
     background-color: rgb(255, 255, 225);
 }
 
-.actionbar-titleArea-text:active {
+.ActionBar-titleArea-text:active {
     border: solid 1px #E7B076;
     background-color: rgb(255, 255, 225);
 }
@@ -48,14 +48,30 @@
  * Panel
  */
 
-.actionbar-panel {
+.ActionBar-panel {
     background-color: rgb(214, 230, 244);
-    border-top: 1px solid rgb(193, 217, 241);
+    border-top: 1px solid rgb(164, 195, 235);
     padding: 0px;	
-    height: 56px;
+    height: 51px;
 }
 
-.actionbar-panel-header {
+.ActionBar-panel-expander {
+    /* background-color: rgb(193, 217, 241);  */
+    background-color: rgb(214, 230, 244);
+    
+    height: 30px;
+    min-width: 12px;
+	width: 12px;
+	vertical-align: bottom;
+	
+	border-right: 1px solid rgb(193, 217, 241); /*rgb(164, 195, 235);*/
+    
+    padding: 0px;	
+	padding-bottom: 9px;
+	padding-right: 2px;
+}
+
+.ActionBar-panel-header {
 	border-right: 1px solid rgb(164, 195, 235);
     background-color: rgb(193, 217, 241);
     padding: 2px;
@@ -63,16 +79,15 @@
     text-align: center;
 }
 
-.actionbar-panel-content {
-	border-right: 1px solid rgb(193, 217, 241);
+.ActionBar-panel-content {
     background-color: rgb(214, 230, 244);
     padding: 2px;
     padding-left: 4px;
     padding-right: 4px;
-    height: 30px;
+    height: 26px;
 }
 
-.actionbar-panel-content table tbody tr td {
+.ActionBar-panel-content table tbody tr td {
     padding: 2px;
 }
 
@@ -80,10 +95,10 @@
  * Button
  */
 
-div.actionbar-panel-content button {
-    font-size: 13px;
+.ActionBar-panel-content button {
+    font-size: 12px;
     background: none;
-    height: 26px;
+    height: 20px;
     padding-top: 3px;
     padding-bottom: 3px;
     padding-left: 5px;
@@ -93,27 +108,27 @@ div.actionbar-panel-content button {
     border:solid 1px rgb(164, 195, 235);
 }
 
-div.actionbar-panel-content button:hover {
+.ActionBar-panel-content button:hover {
 	background-color: rgb(193, 217, 241);
 	border: solid 1px rgb(104, 140, 175);
 }
 
-div.actionbar-panel-content button:focus {
+.ActionBar-panel-content button:focus {
     border: solid 1px #E7B076;
 }
 
-div.actionbar-panel-content button:active {
+.ActionBar-panel-content button:active {
     background-color: rgb(214, 230, 244);
     border: solid 1px #E7B076;
 }
 
-div.actionbar-panel-content button[disabled] {
+.ActionBar-panel-content button[disabled] {
 	color: rgb(193, 217, 241);
 	background-color: rgb(214, 230, 244);
 	border: 1px solid rgb(193, 217, 241);
 }
 
-div.actionbar-panel-content button[disabled]:hover {
+.ActionBar-panel-content button[disabled]:hover {
     color: rgb(193, 217, 241);
     background-color: rgb(214, 230, 244);
     border: 1px solid rgb(193, 217, 241);
@@ -123,7 +138,7 @@ div.actionbar-panel-content button[disabled]:hover {
 /** 
  * Text Box
  */
-div.actionbar-panel-content input[type="text"] {
+.ActionBar-panel-content input[type="text"] {
     background-color: #FFFFFF; /* #EBF1F9; */
     color: rgb(112, 106, 170);
     border:solid 1px rgb(164, 195, 235);
@@ -136,18 +151,25 @@ div.actionbar-panel-content input[type="text"] {
     padding-right: 5px;
 }
 
-div.actionbar-panel-content input[type="text"]:hover {
+.ActionBar-panel-content input[type="text"]:hover {
     background-color: rgb(255, 255, 225);
     border: solid 1px rgb(104, 140, 175);
 }
 
-div.actionbar-panel-content input[type="text"]:focus {
+.ActionBar-panel-content input[type="text"]:focus {
     border: solid 1px #E7B076;
     background-color: rgb(255, 255, 225);
 }
 
-div.actionbar-panel-content input[type="text"]:active {
+.ActionBar-panel-content input[type="text"]:active {
     border: solid 1px #E7B076;
     background-color: rgb(255, 255, 225);
 }
  
+ /**
+  * Command Icons
+  */
+.ImageCommandDisplay {
+	width: 22px;
+	height: 22px;
+}	

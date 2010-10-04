@@ -24,9 +24,9 @@ import org.thechiselgroup.choosel.client.authentication.ui.AuthenticationBasedEn
 import org.thechiselgroup.choosel.client.command.AsyncCommandExecutor;
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.command.ui.CommandManagerPresenter;
-import org.thechiselgroup.choosel.client.command.ui.CommandPresenter.ButtonDisplay;
 import org.thechiselgroup.choosel.client.command.ui.CommandPresenterFactory;
 import org.thechiselgroup.choosel.client.command.ui.DefaultCommandManagerPresenterDisplay;
+import org.thechiselgroup.choosel.client.command.ui.ImageCommandDisplay;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
@@ -38,7 +38,6 @@ import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 import org.thechiselgroup.choosel.client.windows.CreateWindowCommand;
 import org.thechiselgroup.choosel.client.windows.Desktop;
 import org.thechiselgroup.choosel.client.windows.WindowContentProducer;
-import org.thechiselgroup.choosel.client.workspace.SaveButtonUpdater;
 import org.thechiselgroup.choosel.client.workspace.WorkspaceManager;
 import org.thechiselgroup.choosel.client.workspace.WorkspacePersistenceManager;
 import org.thechiselgroup.choosel.client.workspace.WorkspacePresenter;
@@ -291,30 +290,33 @@ public abstract class ChooselApplication {
                 workspacePresenterDisplay.getTextBox());
 
         // new workspace
-        ButtonDisplay newButton = commandPresenterFactory.createCommandButton(
-                "New", newWorkspaceCommand);
+        ImageCommandDisplay newButton = commandPresenterFactory
+                .createCommandImage("workspace-new", newWorkspaceCommand);
         addWidget(WORKSPACE_PANEL, newButton);
 
         // load workspace
-        ButtonDisplay loadButton = commandPresenterFactory.createCommandButton(
-                "Load...", loadWorkspaceDialogCommand);
+        ImageCommandDisplay loadButton = commandPresenterFactory
+                .createCommandImage("workspace-open",
+                        loadWorkspaceDialogCommand);
         addWidget(WORKSPACE_PANEL, loadButton);
         new AuthenticationBasedEnablingStateWrapper(authenticationManager,
                 loadButton).init();
 
         // save workspace
-        ButtonDisplay saveButton = commandPresenterFactory.createCommandButton(
-                "Save", saveWorkspaceCommand);
+        ImageCommandDisplay saveButton = commandPresenterFactory
+                .createCommandImage("workspace-save", saveWorkspaceCommand);
         addWidget(WORKSPACE_PANEL, saveButton);
-        saveButton.setWidth("60px");
         AuthenticationBasedEnablingStateWrapper authWrapper = new AuthenticationBasedEnablingStateWrapper(
                 authenticationManager, saveButton);
         authWrapper.init();
-        new SaveButtonUpdater(workspaceManager, saveButton, authWrapper).init();
+
+        // XXX updater broken --> needs text
+        // new SaveButtonUpdater(workspaceManager, saveButton,
+        // authWrapper).init();
 
         // share workspace
-        ButtonDisplay shareButton = commandPresenterFactory
-                .createCommandButton("Share", shareWorkspaceCommand);
+        ImageCommandDisplay shareButton = commandPresenterFactory
+                .createCommandImage("workspace-share", shareWorkspaceCommand);
         addWidget(WORKSPACE_PANEL, shareButton);
         new AuthenticationBasedEnablingStateWrapper(authenticationManager,
                 shareButton).init();

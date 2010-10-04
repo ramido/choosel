@@ -26,7 +26,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.thechiselgroup.choosel.client.command.ui.CommandPresenter.Display;
+import org.thechiselgroup.choosel.client.command.ui.CommandPresenter.CommandDisplay;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -41,7 +41,7 @@ public class CommandPresenterTest {
     private Command command;
 
     @Mock
-    private Display display;
+    private CommandDisplay display;
 
     private CommandPresenter presenter;
 
