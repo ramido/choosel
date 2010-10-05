@@ -32,6 +32,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 
+// TODO split into undo & redo
 public class CommandManagerPresenter implements Initializable {
 
     private class CommandManagerHandler implements CommandAddedEventHandler,
