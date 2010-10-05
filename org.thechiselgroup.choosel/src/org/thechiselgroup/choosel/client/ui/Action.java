@@ -15,6 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui;
 
+import static org.thechiselgroup.choosel.client.command.ui.IconURLBuilder.getIconUrl;
+
+import org.thechiselgroup.choosel.client.command.ui.IconURLBuilder.IconType;
 import org.thechiselgroup.choosel.client.util.ObjectUtils;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -39,9 +42,19 @@ public final class Action implements Command {
 
     private Command command;
 
-    public Action(String name, Command command, String description,
-            String normalIconUrl, String disabledIconUrl, String highlightedIconUrl,
-            boolean enabled) {
+    public Action(String name, Command command) {
+        this(name, command, null, null, null, true, null);
+    }
+
+    public Action(String name, Command command, String iconName) {
+        this(name, command, getIconUrl(iconName, IconType.NORMAL), getIconUrl(
+                iconName, IconType.DISABLED), getIconUrl(iconName,
+                IconType.HIGHLIGHTED), true, null);
+    }
+
+    public Action(String name, Command command, String normalIconUrl,
+            String disabledIconUrl, String highlightedIconUrl, boolean enabled,
+            String description) {
 
         assert name != null;
         assert command != null;
