@@ -15,11 +15,17 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui;
 
+import org.thechiselgroup.choosel.client.ui.popup.DefaultPopupManager;
+import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
+import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
+
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Widget;
 
 public class ActionToolbarItem extends Image {
 
@@ -29,8 +35,13 @@ public class ActionToolbarItem extends Image {
 
     private boolean mouseOver = false;
 
-    public ActionToolbarItem(Action action) {
+    private Label popupLabel;
+
+    public ActionToolbarItem(Action action,
+            PopupManagerFactory popupManagerFactory) {
+
         assert action != null;
+        assert popupManagerFactory != null;
 
         this.action = action;
 
@@ -38,6 +49,7 @@ public class ActionToolbarItem extends Image {
 
         initMouseHandlers();
         initActionChangeHandler();
+        initPopup(popupManagerFactory);
 
         update();
     }
@@ -72,6 +84,19 @@ public class ActionToolbarItem extends Image {
         });
     }
 
+    private void initPopup(PopupManagerFactory popupManagerFactory) {
+        popupLabel = new Label();
+        PopupManager popupManager = popupManagerFactory
+                .createPopupManager(new WidgetFactory() {
+                    @Override
+                    public Widget createWidget() {
+                        return popupLabel;
+                    }
+                });
+        DefaultPopupManager.linkManagerToSource(popupManager, this);
+    }
+
+    // TODO do not show popup if disabled?
     protected void update() {
         if (action.isEnabled()) {
             if (mouseOver) {
@@ -82,6 +107,9 @@ public class ActionToolbarItem extends Image {
         } else {
             setUrl(action.getDisabledIconUrl());
         }
+
+        // TODO name in bold, break, description if available
+        popupLabel.setText(action.getName());
     }
 
 }
