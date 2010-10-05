@@ -32,7 +32,9 @@ import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
+import org.thechiselgroup.choosel.client.ui.Action;
 import org.thechiselgroup.choosel.client.ui.ActionBar;
+import org.thechiselgroup.choosel.client.ui.ActionToolbarItem;
 import org.thechiselgroup.choosel.client.ui.ImageButton;
 import org.thechiselgroup.choosel.client.ui.dialog.DialogManager;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
@@ -332,9 +334,9 @@ public abstract class ChooselApplication {
                 workspacePresenterDisplay.getTextBox());
 
         // new workspace
-        ImageCommandDisplay newButton = commandPresenterFactory
-                .createCommandImage("workspace-new", newWorkspaceCommand);
-        addWidget(WORKSPACE_PANEL, newButton);
+        Action newWorkspaceAction = new Action("New workspace",
+                newWorkspaceCommand, "workspace-new");
+        addWidget(WORKSPACE_PANEL, new ActionToolbarItem(newWorkspaceAction));
 
         // load workspace
         ImageCommandDisplay loadButton = commandPresenterFactory

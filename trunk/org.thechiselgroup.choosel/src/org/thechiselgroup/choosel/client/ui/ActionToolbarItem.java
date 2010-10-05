@@ -21,7 +21,7 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.ui.Image;
 
-public class ActionToolbarIcon extends Image {
+public class ActionToolbarItem extends Image {
 
     public static final String CSS_ACTION_TOOLBAR_BUTTON = "ActionToolbarButton";
 
@@ -29,8 +29,10 @@ public class ActionToolbarIcon extends Image {
 
     private boolean mouseOver = false;
 
-    public ActionToolbarIcon(Action action) {
+    public ActionToolbarItem(Action action) {
         assert action != null;
+
+        this.action = action;
 
         setStyleName(CSS_ACTION_TOOLBAR_BUTTON);
 
