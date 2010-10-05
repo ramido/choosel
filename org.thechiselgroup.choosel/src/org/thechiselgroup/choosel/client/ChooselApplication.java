@@ -37,6 +37,7 @@ import org.thechiselgroup.choosel.client.ui.ActionBar;
 import org.thechiselgroup.choosel.client.ui.ActionToolbarItem;
 import org.thechiselgroup.choosel.client.ui.ImageButton;
 import org.thechiselgroup.choosel.client.ui.dialog.DialogManager;
+import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 import org.thechiselgroup.choosel.client.windows.CreateWindowCommand;
 import org.thechiselgroup.choosel.client.windows.Desktop;
@@ -136,6 +137,9 @@ public abstract class ChooselApplication {
 
     @Inject
     private WorkspacePersistenceManager workspacePersistenceManager;
+
+    @Inject
+    private PopupManagerFactory popupManagerFactory;
 
     @Inject
     private DefaultWorkspacePresenterDisplay workspacePresenterDisplay;
@@ -336,7 +340,8 @@ public abstract class ChooselApplication {
         // new workspace
         Action newWorkspaceAction = new Action("New workspace",
                 newWorkspaceCommand, "workspace-new");
-        addWidget(WORKSPACE_PANEL, new ActionToolbarItem(newWorkspaceAction));
+        addWidget(WORKSPACE_PANEL, new ActionToolbarItem(newWorkspaceAction,
+                popupManagerFactory));
 
         // load workspace
         ImageCommandDisplay loadButton = commandPresenterFactory
