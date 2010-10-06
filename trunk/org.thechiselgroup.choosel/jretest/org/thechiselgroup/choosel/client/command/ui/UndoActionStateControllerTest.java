@@ -16,7 +16,6 @@
 package org.thechiselgroup.choosel.client.command.ui;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -25,21 +24,18 @@ import static org.mockito.Mockito.when;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.command.DefaultCommandManager;
+import org.thechiselgroup.choosel.client.command.NullCommand;
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.client.test.TestUndoableCommandWithDescription;
+import org.thechiselgroup.choosel.client.ui.Action;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-
-public class UndoCommandManagerPresenterTest {
+public class UndoActionStateControllerTest {
 
     private static final String COMMAND_DESCRIPTION = "command";
 
@@ -48,36 +44,17 @@ public class UndoCommandManagerPresenterTest {
 
     private CommandManager commandManager;
 
-    private UndoCommandManagerPresenter underTest;
-
-    @Mock
-    private CommandManagerPresenterDisplay undoDisplay;
+    private UndoActionStateController underTest;
 
     @Mock
     private ResourceSetToValueResolver resolver;
 
-    @Mock
-    private HasClickHandlers undoClickHandlers;
+    private Action action;
 
     // TODO tests for command manager with initial state
     @Test
-    public void buttonsDisabledInitialyForEmptyCommandManager() {
-        verify(undoDisplay, times(1)).setButtonEnabled(false);
-    }
-
-    @Test
-    public void callsUndoOnClick() {
-        commandManager.addExecutedCommand(command);
-
-        ArgumentCaptor<ClickHandler> argument = ArgumentCaptor
-                .forClass(ClickHandler.class);
-        verify(undoClickHandlers, times(1)).addClickHandler(argument.capture());
-
-        ClickHandler handler = argument.getValue();
-
-        handler.onClick(mock(ClickEvent.class));
-
-        verify(commandManager, times(1)).undo();
+    public void disabledInitialyForEmptyCommandManager() {
+        verify(action, times(1)).setEnabled(false);
     }
 
     @Test
@@ -86,11 +63,11 @@ public class UndoCommandManagerPresenterTest {
         commandManager.addExecutedCommand(command);
         commandManager.undo();
 
-        verify(undoDisplay, times(1)).setButtonEnabled(false);
+        verify(action, times(1)).setEnabled(false);
 
         commandManager.clear();
 
-        verify(undoDisplay, times(2)).setButtonEnabled(false);
+        verify(action, times(2)).setEnabled(false);
     }
 
     @Test
@@ -98,20 +75,14 @@ public class UndoCommandManagerPresenterTest {
         commandManager.addExecutedCommand(command);
         commandManager.undo();
 
-        verify(undoDisplay, times(2)).setButtonEnabled(false);
+        verify(action, times(2)).setEnabled(false);
     }
 
     @Test
     public void enableUndoButtonOnEventIfUndoable() {
         commandManager.addExecutedCommand(command);
 
-        verify(undoDisplay).setButtonEnabled(true);
-    }
-
-    @Test
-    public void initRegistersClickHandler() {
-        verify(undoClickHandlers, times(1)).addClickHandler(
-                any(ClickHandler.class));
+        verify(action).setEnabled(true);
     }
 
     @Test
@@ -119,14 +90,14 @@ public class UndoCommandManagerPresenterTest {
         commandManager.addExecutedCommand(command);
         commandManager.undo();
 
-        verify(undoDisplay, times(2)).setCommandDescription("");
+        verify(action, times(2)).setDescription("");
     }
 
     @Test
     public void setUndoButtonDescriptionOnEventIfUndoable() {
         commandManager.addExecutedCommand(command);
 
-        verify(undoDisplay).setCommandDescription(COMMAND_DESCRIPTION);
+        verify(action).setDescription(COMMAND_DESCRIPTION);
     }
 
     @Before
@@ -134,12 +105,12 @@ public class UndoCommandManagerPresenterTest {
         MockitoGWTBridge.setUp();
         MockitoAnnotations.initMocks(this);
 
+        action = spy(new Action("", new NullCommand()));
         commandManager = spy(new DefaultCommandManager());
-        underTest = new UndoCommandManagerPresenter(commandManager, undoDisplay);
+        underTest = new UndoActionStateController(commandManager, action);
 
         when(resolver.resolve(any(ResourceSet.class), any(String.class)))
                 .thenReturn("");
-        when(undoDisplay.getClickHandlers()).thenReturn(undoClickHandlers);
         when(command.getDescription()).thenReturn(COMMAND_DESCRIPTION);
 
         underTest.init();
