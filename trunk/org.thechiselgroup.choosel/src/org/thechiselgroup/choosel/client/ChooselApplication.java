@@ -23,6 +23,7 @@ import org.thechiselgroup.choosel.client.command.AsyncCommandToCommandAdapter;
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.command.ui.RedoActionStateController;
 import org.thechiselgroup.choosel.client.command.ui.UndoActionStateController;
+import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
@@ -166,7 +167,7 @@ public abstract class ChooselApplication {
         addWidget(panelId, button);
     }
 
-    protected void addInfoButton() {
+    protected void initAboutButton() {
         addImageButton(HELP_PANEL, "help-about", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -273,49 +274,31 @@ public abstract class ChooselApplication {
         initActionBar(mainPanel);
         initAuthenticationBar();
 
-        initWorkspaceTitlePresenter();
-
         initWorkspacePanel();
-        initCommandManagerPresenter();
+        initEditPanel();
+        initHelpPanel();
 
         initCustomActions();
 
         loadWorkspaceIfParamSet();
     }
 
-    private void initActionBar(DockPanel mainPanel) {
+    protected void initActionBar(DockPanel mainPanel) {
         mainPanel.add(actionBar.asWidget(), DockPanel.NORTH);
 
+        initWorkspaceTitlePresenter();
+        initActionBarPanels();
+    }
+
+    protected void initActionBarPanels() {
         addToolbarPanel(WORKSPACE_PANEL, "Workspace");
         addToolbarPanel(EDIT_PANEL, "Edit");
-
         initCustomPanels();
+        addToolbarPanel(HELP_PANEL, "Help");
     }
 
     private void initAuthenticationBar() {
         ((VerticalPanel) actionBar.asWidget()).add(authenticationBar);
-    }
-
-    private void initCommandManagerPresenter() {
-        Action redoAction = addActionToToolbar(EDIT_PANEL, new Command() {
-            @Override
-            public void execute() {
-                assert commandManager.canRedo();
-                commandManager.redo();
-            }
-        }, "Redo", "edit-redo");
-
-        new RedoActionStateController(commandManager, redoAction).init();
-
-        Action undoAction = addActionToToolbar(EDIT_PANEL, new Command() {
-            @Override
-            public void execute() {
-                assert commandManager.canUndo();
-                commandManager.undo();
-            }
-        }, "Undo", "edit-undo");
-
-        new UndoActionStateController(commandManager, undoAction).init();
     }
 
     protected abstract void initCustomActions();
@@ -341,6 +324,17 @@ public abstract class ChooselApplication {
         mainPanel.add(desktop.asWidget(), DockPanel.CENTER);
     }
 
+    protected void initEditPanel() {
+        initRedoAction();
+        initUndoAction();
+    }
+
+    protected void initHelpPanel() {
+        addWindowContentImageButton(HELP_PANEL, "help",
+                ChooselInjectionConstants.WINDOW_CONTENT_HELP);
+        initAboutButton();
+    }
+
     protected void initLoadWorkspaceAction() {
         Action loadAction = addActionToToolbar(WORKSPACE_PANEL,
                 new AsyncCommandToCommandAdapter(loadWorkspaceDialogCommand,
@@ -354,6 +348,18 @@ public abstract class ChooselApplication {
     protected void initNewWorkspaceAction() {
         addActionToToolbar(WORKSPACE_PANEL, newWorkspaceCommand,
                 "New workspace", "workspace-new");
+    }
+
+    protected void initRedoAction() {
+        Action redoAction = addActionToToolbar(EDIT_PANEL, new Command() {
+            @Override
+            public void execute() {
+                assert commandManager.canRedo();
+                commandManager.redo();
+            }
+        }, "Redo", "edit-redo");
+
+        new RedoActionStateController(commandManager, redoAction).init();
     }
 
     protected void initSaveWorkspaceAction() {
@@ -376,6 +382,18 @@ public abstract class ChooselApplication {
 
         new AuthenticationBasedEnablingStateWrapper(authenticationManager,
                 action).init();
+    }
+
+    protected void initUndoAction() {
+        Action undoAction = addActionToToolbar(EDIT_PANEL, new Command() {
+            @Override
+            public void execute() {
+                assert commandManager.canUndo();
+                commandManager.undo();
+            }
+        }, "Undo", "edit-undo");
+
+        new UndoActionStateController(commandManager, undoAction).init();
     }
 
     protected void initWorkspacePanel() {

@@ -34,19 +34,16 @@ public class BioMixerApplication extends ChooselApplication {
 		initNCBOSearchField();
 
 		addWindowContentButton(VIEWS_PANEL, "Note", "note");
-		addWindowContentButton(VIEWS_PANEL, "List", ChooselInjectionConstants.TYPE_LIST);
+		addWindowContentButton(VIEWS_PANEL, "List",
+				ChooselInjectionConstants.TYPE_LIST);
 		addWindowContentButton(VIEWS_PANEL, "Timeline", "Timeline");
 		addWindowContentButton(VIEWS_PANEL, "Graph", "Graph");
-
-		addWindowContentButton(HELP_PANEL, "?", "help");
-		addInfoButton();
 	}
 
 	@Override
 	protected void initCustomPanels() {
 		addToolbarPanel(VIEWS_PANEL, "Views");
 		addToolbarPanel(NCBO_SEARCH, "NCBO Concept Search");
-		addToolbarPanel(HELP_PANEL, "Help");
 	}
 
 	private void initNCBOSearchField() {
