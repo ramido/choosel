@@ -25,13 +25,11 @@ import org.thechiselgroup.choosel.client.command.CommandRedoneEventHandler;
 import org.thechiselgroup.choosel.client.command.CommandUndoneEvent;
 import org.thechiselgroup.choosel.client.command.CommandUndoneEventHandler;
 import org.thechiselgroup.choosel.client.command.UndoableCommand;
+import org.thechiselgroup.choosel.client.ui.Action;
 import org.thechiselgroup.choosel.client.util.HasDescription;
 import org.thechiselgroup.choosel.client.util.Initializable;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-
-public class UndoCommandManagerPresenter implements Initializable {
+public class UndoActionStateController implements Initializable {
 
     private class CommandManagerHandler implements CommandAddedEventHandler,
             CommandRedoneEventHandler, CommandUndoneEventHandler,
@@ -62,17 +60,13 @@ public class UndoCommandManagerPresenter implements Initializable {
 
     private CommandManagerHandler commandManagerHandler;
 
-    private final CommandManagerPresenterDisplay undoButtonDisplay;
+    private final Action undoAction;
 
-    public UndoCommandManagerPresenter(CommandManager commandManager,
-            CommandManagerPresenterDisplay undoButtonDisplay) {
+    public UndoActionStateController(CommandManager commandManager,
+            Action undoAction) {
 
         this.commandManager = commandManager;
-        this.undoButtonDisplay = undoButtonDisplay;
-    }
-
-    public CommandManagerPresenterDisplay getDisplay() {
-        return undoButtonDisplay;
+        this.undoAction = undoAction;
     }
 
     private String getUndoCommandDescription() {
@@ -93,15 +87,6 @@ public class UndoCommandManagerPresenter implements Initializable {
     public void init() {
         updateButtonState();
 
-        undoButtonDisplay.getClickHandlers().addClickHandler(
-                new ClickHandler() {
-                    @Override
-                    public void onClick(ClickEvent event) {
-                        assert commandManager.canUndo();
-                        commandManager.undo();
-                    }
-                });
-
         commandManagerHandler = new CommandManagerHandler();
 
         commandManager.addHandler(CommandRedoneEvent.TYPE,
@@ -115,7 +100,7 @@ public class UndoCommandManagerPresenter implements Initializable {
     }
 
     private void updateButtonState() {
-        undoButtonDisplay.setButtonEnabled(commandManager.canUndo());
-        undoButtonDisplay.setCommandDescription(getUndoCommandDescription());
+        undoAction.setEnabled(commandManager.canUndo());
+        undoAction.setDescription(getUndoCommandDescription());
     }
 }

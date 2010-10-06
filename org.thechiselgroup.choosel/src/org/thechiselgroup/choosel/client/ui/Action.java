@@ -24,7 +24,10 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 
-public final class Action implements Command, HasEnabledState {
+/*
+ * This class should not be extended. It is only non-final so we can spy on it in test cases.
+ */
+public class Action implements Command, HasEnabledState {
 
     private String disabledIconUrl;
 

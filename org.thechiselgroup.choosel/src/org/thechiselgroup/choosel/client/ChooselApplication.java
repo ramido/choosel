@@ -23,8 +23,7 @@ import org.thechiselgroup.choosel.client.command.AsyncCommandToCommandAdapter;
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.command.ui.RedoCommandManagerPresenter;
 import org.thechiselgroup.choosel.client.command.ui.RedoCommandManagerPresenterDisplay;
-import org.thechiselgroup.choosel.client.command.ui.UndoCommandManagerPresenter;
-import org.thechiselgroup.choosel.client.command.ui.UndoCommandManagerPresenterDisplay;
+import org.thechiselgroup.choosel.client.command.ui.UndoActionStateController;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
@@ -134,11 +133,15 @@ public abstract class ChooselApplication {
     @Inject
     private DefaultWorkspacePresenterDisplay workspacePresenterDisplay;
 
+    protected void addActionToToolbar(String panelId, Action action) {
+        getToolbarPanel(panelId).addAction(action);
+    }
+
     public Action addActionToToolbar(String panelId, Command command,
             String title, String iconName) {
 
         Action action = new Action(title, command, iconName);
-        getToolbarPanel(panelId).addAction(action);
+        addActionToToolbar(panelId, action);
         return action;
     }
 
@@ -303,13 +306,15 @@ public abstract class ChooselApplication {
         addWidget(EDIT_PANEL,
                 redoCommandManagerPresenterDisplay.getRedoButton());
 
-        UndoCommandManagerPresenterDisplay undoCommandManagerPresenterDisplay = new UndoCommandManagerPresenterDisplay(
-                popupManagerFactory);
-        UndoCommandManagerPresenter undoPresenter = new UndoCommandManagerPresenter(
-                commandManager, undoCommandManagerPresenterDisplay);
-        undoPresenter.init();
-        addWidget(EDIT_PANEL,
-                undoCommandManagerPresenterDisplay.getUndoButton());
+        Action undoAction = addActionToToolbar(EDIT_PANEL, new Command() {
+            @Override
+            public void execute() {
+                assert commandManager.canUndo();
+                commandManager.undo();
+            }
+        }, "Undo", "edit-undo");
+
+        new UndoActionStateController(commandManager, undoAction).init();
     }
 
     protected abstract void initCustomActions();
