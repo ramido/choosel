@@ -30,7 +30,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.command.DefaultCommandManager;
-import org.thechiselgroup.choosel.client.command.ui.CommandManagerPresenter.CommandManagerPresenterDisplay;
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
@@ -40,7 +39,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 
-public class CommandManagerPresenterTest {
+public class UndoCommandManagerPresenterTest {
 
     private static final String COMMAND_DESCRIPTION = "command";
 
@@ -49,13 +48,10 @@ public class CommandManagerPresenterTest {
 
     private CommandManager commandManager;
 
-    private CommandManagerPresenter commandManagerPresenter;
+    private UndoCommandManagerPresenter underTest;
 
     @Mock
     private CommandManagerPresenterDisplay undoDisplay;
-
-    @Mock
-    private HasClickHandlers redoClickHandlers;
 
     @Mock
     private ResourceSetToValueResolver resolver;
@@ -63,30 +59,10 @@ public class CommandManagerPresenterTest {
     @Mock
     private HasClickHandlers undoClickHandlers;
 
-    @Mock
-    private CommandManagerPresenterDisplay redoDisplay;
-
     // TODO tests for command manager with initial state
     @Test
     public void buttonsDisabledInitialyForEmptyCommandManager() {
         verify(undoDisplay, times(1)).setButtonEnabled(false);
-        verify(redoDisplay, times(1)).setButtonEnabled(false);
-    }
-
-    @Test
-    public void callsRedoOnClick() {
-        commandManager.addExecutedCommand(command);
-        commandManager.undo();
-
-        ArgumentCaptor<ClickHandler> argument = ArgumentCaptor
-                .forClass(ClickHandler.class);
-        verify(redoClickHandlers, times(1)).addClickHandler(argument.capture());
-
-        ClickHandler handler = argument.getValue();
-
-        handler.onClick(mock(ClickEvent.class));
-
-        verify(commandManager, times(1)).redo();
     }
 
     @Test
@@ -105,36 +81,16 @@ public class CommandManagerPresenterTest {
     }
 
     @Test
-    public void disableButtonsOnClear() {
+    public void disableOnClear() {
         commandManager.addExecutedCommand(command);
         commandManager.addExecutedCommand(command);
         commandManager.undo();
 
         verify(undoDisplay, times(1)).setButtonEnabled(false);
-        verify(redoDisplay, times(3)).setButtonEnabled(false);
 
         commandManager.clear();
 
         verify(undoDisplay, times(2)).setButtonEnabled(false);
-        verify(redoDisplay, times(4)).setButtonEnabled(false);
-    }
-
-    @Test
-    public void disableRedoButtonOnEventIfNotRedoable() {
-        commandManager.addExecutedCommand(command);
-        commandManager.undo();
-        commandManager.redo();
-
-        verify(redoDisplay, times(3)).setButtonEnabled(false);
-    }
-
-    @Test
-    public void disableRedoCommandDescriptionOnEventIfNotRedoable() {
-        commandManager.addExecutedCommand(command);
-        commandManager.undo();
-        commandManager.redo();
-
-        verify(redoDisplay, times(3)).setCommandDescription("");
     }
 
     @Test
@@ -143,14 +99,6 @@ public class CommandManagerPresenterTest {
         commandManager.undo();
 
         verify(undoDisplay, times(2)).setButtonEnabled(false);
-    }
-
-    @Test
-    public void enableRedoButtonOnEventIfRedoable() {
-        commandManager.addExecutedCommand(command);
-        commandManager.undo();
-
-        verify(redoDisplay, times(1)).setButtonEnabled(true);
     }
 
     @Test
@@ -164,15 +112,6 @@ public class CommandManagerPresenterTest {
     public void initRegistersClickHandler() {
         verify(undoClickHandlers, times(1)).addClickHandler(
                 any(ClickHandler.class));
-    }
-
-    @Test
-    public void setRedoButtonDescriptionOnEventIfRedoable() {
-        commandManager.addExecutedCommand(command);
-        commandManager.undo();
-
-        verify(redoDisplay, times(1))
-                .setCommandDescription(COMMAND_DESCRIPTION);
     }
 
     @Test
@@ -196,16 +135,14 @@ public class CommandManagerPresenterTest {
         MockitoAnnotations.initMocks(this);
 
         commandManager = spy(new DefaultCommandManager());
-        commandManagerPresenter = new CommandManagerPresenter(commandManager,
-                undoDisplay, redoDisplay);
+        underTest = new UndoCommandManagerPresenter(commandManager, undoDisplay);
 
         when(resolver.resolve(any(ResourceSet.class), any(String.class)))
                 .thenReturn("");
         when(undoDisplay.getClickHandlers()).thenReturn(undoClickHandlers);
-        when(redoDisplay.getClickHandlers()).thenReturn(redoClickHandlers);
         when(command.getDescription()).thenReturn(COMMAND_DESCRIPTION);
 
-        commandManagerPresenter.init();
+        underTest.init();
     }
 
     @After

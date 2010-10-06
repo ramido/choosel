@@ -21,8 +21,9 @@ import org.thechiselgroup.choosel.client.authentication.ui.AuthenticationBasedEn
 import org.thechiselgroup.choosel.client.command.AsyncCommandExecutor;
 import org.thechiselgroup.choosel.client.command.AsyncCommandToCommandAdapter;
 import org.thechiselgroup.choosel.client.command.CommandManager;
-import org.thechiselgroup.choosel.client.command.ui.CommandManagerPresenter;
+import org.thechiselgroup.choosel.client.command.ui.RedoCommandManagerPresenter;
 import org.thechiselgroup.choosel.client.command.ui.RedoCommandManagerPresenterDisplay;
+import org.thechiselgroup.choosel.client.command.ui.UndoCommandManagerPresenter;
 import org.thechiselgroup.choosel.client.command.ui.UndoCommandManagerPresenterDisplay;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
@@ -296,17 +297,17 @@ public abstract class ChooselApplication {
     private void initCommandManagerPresenter() {
         RedoCommandManagerPresenterDisplay redoCommandManagerPresenterDisplay = new RedoCommandManagerPresenterDisplay(
                 popupManagerFactory);
-        UndoCommandManagerPresenterDisplay undoCommandManagerPresenterDisplay = new UndoCommandManagerPresenterDisplay(
-                popupManagerFactory);
-
-        CommandManagerPresenter presenter = new CommandManagerPresenter(
-                commandManager, undoCommandManagerPresenterDisplay,
-                redoCommandManagerPresenterDisplay);
-
-        presenter.init();
-
+        RedoCommandManagerPresenter redoPresenter = new RedoCommandManagerPresenter(
+                commandManager, redoCommandManagerPresenterDisplay);
+        redoPresenter.init();
         addWidget(EDIT_PANEL,
                 redoCommandManagerPresenterDisplay.getRedoButton());
+
+        UndoCommandManagerPresenterDisplay undoCommandManagerPresenterDisplay = new UndoCommandManagerPresenterDisplay(
+                popupManagerFactory);
+        UndoCommandManagerPresenter undoPresenter = new UndoCommandManagerPresenter(
+                commandManager, undoCommandManagerPresenterDisplay);
+        undoPresenter.init();
         addWidget(EDIT_PANEL,
                 undoCommandManagerPresenterDisplay.getUndoButton());
     }
