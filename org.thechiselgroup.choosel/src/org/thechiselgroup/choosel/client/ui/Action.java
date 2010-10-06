@@ -24,7 +24,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 
-public final class Action implements Command {
+public final class Action implements Command, HasEnabledState {
 
     private String disabledIconUrl;
 
@@ -122,6 +122,7 @@ public final class Action implements Command {
         return normalIconUrl != null;
     }
 
+    @Override
     public boolean isEnabled() {
         return enabled;
     }
@@ -141,6 +142,7 @@ public final class Action implements Command {
         fireActionChanged();
     }
 
+    @Override
     public void setEnabled(boolean enabled) {
         if (this.enabled == enabled) {
             return;

@@ -44,9 +44,9 @@ public class BioMixerApplication extends ChooselApplication {
 
 	@Override
 	protected void initCustomPanels() {
-		addPanel(VIEWS_PANEL, "Views");
-		addPanel(NCBO_SEARCH, "NCBO Concept Search");
-		addPanel(HELP_PANEL, "Help");
+		addToolbarPanel(VIEWS_PANEL, "Views");
+		addToolbarPanel(NCBO_SEARCH, "NCBO Concept Search");
+		addToolbarPanel(HELP_PANEL, "Help");
 	}
 
 	private void initNCBOSearchField() {
