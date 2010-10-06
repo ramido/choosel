@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.command.ui;
+package org.thechiselgroup.choosel.client.ui;
 
 import com.google.gwt.core.client.GWT;
 
