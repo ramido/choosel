@@ -31,7 +31,6 @@ import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceS
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.ui.Action;
 import org.thechiselgroup.choosel.client.ui.ActionBar;
-import org.thechiselgroup.choosel.client.ui.ImageButton;
 import org.thechiselgroup.choosel.client.ui.dialog.DialogManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
@@ -155,27 +154,6 @@ public abstract class ChooselApplication {
         addWidget(panelId, button);
     }
 
-    protected void addImageButton(String panelId, String name,
-            ClickHandler handler) {
-
-        assert panelId != null;
-        assert handler != null;
-        assert name != null;
-
-        ImageButton button = ImageButton.createImageButton(name);
-        button.addClickHandler(handler);
-        addWidget(panelId, button);
-    }
-
-    protected void initAboutButton() {
-        addImageButton(HELP_PANEL, "help-about", new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                dialogManager.show(infoDialog);
-            }
-        });
-    }
-
     public void addToolbarPanel(String panelId, String title) {
         assert panelId != null;
         assert title != null;
@@ -210,22 +188,6 @@ public abstract class ChooselApplication {
         // TODO assert factory for content type is available
 
         addButton(panelId, label, new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                createWindow(contentType);
-            }
-        });
-    }
-
-    public void addWindowContentImageButton(String panelId, String name,
-            final String contentType) {
-
-        assert panelId != null;
-        assert name != null;
-        assert contentType != null;
-        // TODO assert factory for content type is available
-
-        addImageButton(panelId, name, new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 createWindow(contentType);
@@ -283,6 +245,15 @@ public abstract class ChooselApplication {
         loadWorkspaceIfParamSet();
     }
 
+    protected void initAboutAction() {
+        addActionToToolbar(HELP_PANEL, new Command() {
+            @Override
+            public void execute() {
+                dialogManager.show(infoDialog);
+            }
+        }, "About", "help-about");
+    }
+
     protected void initActionBar(DockPanel mainPanel) {
         mainPanel.add(actionBar.asWidget(), DockPanel.NORTH);
 
@@ -329,10 +300,18 @@ public abstract class ChooselApplication {
         initUndoAction();
     }
 
+    protected void initHelpAction() {
+        addActionToToolbar(HELP_PANEL, new Command() {
+            @Override
+            public void execute() {
+                createWindow(ChooselInjectionConstants.WINDOW_CONTENT_HELP);
+            }
+        }, "Help", "help");
+    }
+
     protected void initHelpPanel() {
-        addWindowContentImageButton(HELP_PANEL, "help",
-                ChooselInjectionConstants.WINDOW_CONTENT_HELP);
-        initAboutButton();
+        initHelpAction();
+        initAboutAction();
     }
 
     protected void initLoadWorkspaceAction() {
