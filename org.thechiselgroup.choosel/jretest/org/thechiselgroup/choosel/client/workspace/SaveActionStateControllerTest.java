@@ -56,7 +56,8 @@ public class SaveActionStateControllerTest {
         workspace2.setSavingState(WorkspaceSavingState.SAVED);
 
         verify(button).setEnabled(false);
-        verify(button).setName("Saved");
+        verify(button).setName(
+                SaveActionStateController.MESSAGE_SAVED_WORKSPACE);
     }
 
     @Test
@@ -65,7 +66,8 @@ public class SaveActionStateControllerTest {
         underTest.init();
 
         verify(button).setEnabled(true);
-        verify(button).setName("Save");
+        verify(button)
+                .setName(SaveActionStateController.MESSAGE_SAVE_WORKSPACE);
     }
 
     @Test
@@ -74,7 +76,8 @@ public class SaveActionStateControllerTest {
         underTest.init();
 
         verify(button).setEnabled(false);
-        verify(button).setName("Saved");
+        verify(button).setName(
+                SaveActionStateController.MESSAGE_SAVED_WORKSPACE);
     }
 
     @Test
@@ -83,7 +86,8 @@ public class SaveActionStateControllerTest {
         underTest.init();
 
         verify(button).setEnabled(false);
-        verify(button).setName("Saving");
+        verify(button).setName(
+                SaveActionStateController.MESSAGE_SAVING_WORKSPACE);
     }
 
     @Before
@@ -110,7 +114,8 @@ public class SaveActionStateControllerTest {
         workspace.setSavingState(WorkspaceSavingState.SAVED);
 
         verify(button).setEnabled(false);
-        verify(button).setName("Saved");
+        verify(button).setName(
+                SaveActionStateController.MESSAGE_SAVED_WORKSPACE);
     }
 
     @Test
@@ -120,7 +125,8 @@ public class SaveActionStateControllerTest {
         workspace.setSavingState(WorkspaceSavingState.NOT_SAVED);
 
         verify(button).setEnabled(true);
-        verify(button).setName("Save");
+        verify(button)
+                .setName(SaveActionStateController.MESSAGE_SAVE_WORKSPACE);
     }
 
     @Test
@@ -130,7 +136,8 @@ public class SaveActionStateControllerTest {
         workspace.setSavingState(WorkspaceSavingState.SAVING);
 
         verify(button).setEnabled(false);
-        verify(button).setName("Saving");
+        verify(button).setName(
+                SaveActionStateController.MESSAGE_SAVING_WORKSPACE);
     }
 
     private void switchWorkspace() {
@@ -151,7 +158,8 @@ public class SaveActionStateControllerTest {
         switchWorkspace();
 
         verify(button).setEnabled(false);
-        verify(button).setName("Saved");
+        verify(button).setName(
+                SaveActionStateController.MESSAGE_SAVED_WORKSPACE);
     }
 
 }
