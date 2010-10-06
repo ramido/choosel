@@ -24,6 +24,12 @@ import com.google.gwt.user.client.ui.HasName;
 
 public class SaveActionStateController implements Disposable {
 
+    public static final String MESSAGE_SAVING_WORKSPACE = "Saving Workspace";
+
+    public static final String MESSAGE_SAVED_WORKSPACE = "Saved Workspace";
+
+    public static final String MESSAGE_SAVE_WORKSPACE = "Save Workspace";
+
     private HasEnabledState hasEnabledState;
 
     private HasName hasName;
@@ -103,16 +109,16 @@ public class SaveActionStateController implements Disposable {
 
         switch (state) {
         case NOT_SAVED: {
-            update("Save", true);
+            update(MESSAGE_SAVE_WORKSPACE, true);
         }
             break;
         case SAVED: {
-            update("Saved", false);
+            update(MESSAGE_SAVED_WORKSPACE, false);
             delayedSwitchToNotSaved();
         }
             break;
         case SAVING: {
-            update("Saving", false);
+            update(MESSAGE_SAVING_WORKSPACE, false);
         }
             break;
         }

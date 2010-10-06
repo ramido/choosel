@@ -320,7 +320,7 @@ public abstract class ChooselApplication {
     protected void initLoadWorkspaceAction() {
         Action loadAction = addActionToToolbar(WORKSPACE_PANEL,
                 new AsyncCommandToCommandAdapter(loadWorkspaceDialogCommand,
-                        asyncCommandExecutor), "Load workspace",
+                        asyncCommandExecutor), "Load Workspace",
                 "workspace-open");
 
         new AuthenticationBasedEnablingStateWrapper(authenticationManager,
@@ -329,7 +329,7 @@ public abstract class ChooselApplication {
 
     protected void initNewWorkspaceAction() {
         addActionToToolbar(WORKSPACE_PANEL, newWorkspaceCommand,
-                "New workspace", "workspace-new");
+                "New Workspace", "workspace-new");
     }
 
     protected void initRedoAction() {
@@ -346,7 +346,9 @@ public abstract class ChooselApplication {
 
     protected void initSaveWorkspaceAction() {
         Action saveAction = addActionToToolbar(WORKSPACE_PANEL,
-                saveWorkspaceCommand, "Save workspace", "workspace-save");
+                saveWorkspaceCommand,
+                SaveActionStateController.MESSAGE_SAVE_WORKSPACE,
+                "workspace-save");
         AuthenticationBasedEnablingStateWrapper authWrapper = new AuthenticationBasedEnablingStateWrapper(
                 authenticationManager, saveAction);
         authWrapper.init();
@@ -358,7 +360,7 @@ public abstract class ChooselApplication {
     protected void initShareWorkspaceAction() {
         Action action = addActionToToolbar(WORKSPACE_PANEL,
                 new AsyncCommandToCommandAdapter(shareWorkspaceCommand,
-                        asyncCommandExecutor), "Share workspace",
+                        asyncCommandExecutor), "Share Workspace",
                 "workspace-share");
 
         new AuthenticationBasedEnablingStateWrapper(authenticationManager,
