@@ -198,17 +198,13 @@ public class ChooselExampleApplication extends ChooselApplication {
 		addWindowContentButton(VIEWS_PANEL, "Graph",
 				ChooselInjectionConstants.TYPE_GRAPH);
 
-		addWindowContentImageButton(HELP_PANEL, "help",
-				ChooselInjectionConstants.WINDOW_CONTENT_HELP);
 		addWindowContentButton(DATA_PANEL, "CSV Import",
 				ChooselInjectionConstants.WINDOW_CONTENT_CSV_IMPORT);
-		addInfoButton();
 	}
 
 	@Override
 	protected void initCustomPanels() {
 		addToolbarPanel(VIEWS_PANEL, "Views");
 		addToolbarPanel(DATA_PANEL, "Data Sources");
-		addToolbarPanel(HELP_PANEL, "Help");
 	}
 }
