@@ -21,7 +21,6 @@ import org.thechiselgroup.choosel.client.command.AsyncCommandExecutor;
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.command.DefaultCommandManager;
 import org.thechiselgroup.choosel.client.command.ui.CommandPresenterFactory;
-import org.thechiselgroup.choosel.client.command.ui.DefaultCommandManagerPresenterDisplay;
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.client.error_handling.ErrorHandlingAsyncCommandExecutor;
@@ -123,8 +122,6 @@ public class ChooselClientModule extends AbstractGinModule implements
     }
 
     private void bindDisplays() {
-        bind(DefaultCommandManagerPresenterDisplay.class);
-
         bind(WorkspacePresenter.WorkspacePresenterDisplay.class).to(
                 WorkspacePresenter.DefaultWorkspacePresenterDisplay.class);
         bind(LoadWorkspaceDialogCommand.DetailsDisplay.class).to(

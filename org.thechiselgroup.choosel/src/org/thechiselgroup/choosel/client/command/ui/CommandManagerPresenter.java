@@ -62,17 +62,11 @@ public class CommandManagerPresenter implements Initializable {
 
     public static interface CommandManagerPresenterDisplay {
 
-        HasClickHandlers getRedoClickHandlers();
+        HasClickHandlers getClickHandlers();
 
-        HasClickHandlers getUndoClickHandlers();
+        void setButtonEnabled(boolean enabled);
 
-        void setRedoButtonEnabled(boolean enabled);
-
-        void setRedoCommandDescription(String commandDescription);
-
-        void setUndoButtonEnabled(boolean enabled);
-
-        void setUndoCommandDescription(String commandDescription);
+        void setCommandDescription(String commandDescription);
 
     }
 
@@ -80,17 +74,21 @@ public class CommandManagerPresenter implements Initializable {
 
     private CommandManagerHandler commandManagerHandler;
 
-    private final CommandManagerPresenterDisplay display;
+    private final CommandManagerPresenterDisplay undoButtonDisplay;
+
+    private final CommandManagerPresenterDisplay redoButtonDisplay;
 
     public CommandManagerPresenter(CommandManager commandManager,
-            CommandManagerPresenterDisplay display) {
+            CommandManagerPresenterDisplay undoButtonDisplay,
+            CommandManagerPresenterDisplay redoButtonDisplay) {
 
         this.commandManager = commandManager;
-        this.display = display;
+        this.undoButtonDisplay = undoButtonDisplay;
+        this.redoButtonDisplay = redoButtonDisplay;
     }
 
     public CommandManagerPresenterDisplay getDisplay() {
-        return display;
+        return undoButtonDisplay;
     }
 
     private String getRedoCommandDescription() {
@@ -125,21 +123,23 @@ public class CommandManagerPresenter implements Initializable {
     public void init() {
         updateButtonState();
 
-        display.getUndoClickHandlers().addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                assert commandManager.canUndo();
-                commandManager.undo();
-            }
-        });
+        undoButtonDisplay.getClickHandlers().addClickHandler(
+                new ClickHandler() {
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        assert commandManager.canUndo();
+                        commandManager.undo();
+                    }
+                });
 
-        display.getRedoClickHandlers().addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                assert commandManager.canRedo();
-                commandManager.redo();
-            }
-        });
+        redoButtonDisplay.getClickHandlers().addClickHandler(
+                new ClickHandler() {
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        assert commandManager.canRedo();
+                        commandManager.redo();
+                    }
+                });
 
         commandManagerHandler = new CommandManagerHandler();
 
@@ -154,10 +154,10 @@ public class CommandManagerPresenter implements Initializable {
     }
 
     private void updateButtonState() {
-        display.setUndoButtonEnabled(commandManager.canUndo());
-        display.setUndoCommandDescription(getUndoCommandDescription());
+        undoButtonDisplay.setButtonEnabled(commandManager.canUndo());
+        undoButtonDisplay.setCommandDescription(getUndoCommandDescription());
 
-        display.setRedoButtonEnabled(commandManager.canRedo());
-        display.setRedoCommandDescription(getRedoCommandDescription());
+        redoButtonDisplay.setButtonEnabled(commandManager.canRedo());
+        redoButtonDisplay.setCommandDescription(getRedoCommandDescription());
     }
 }

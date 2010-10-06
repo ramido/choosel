@@ -27,56 +27,29 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-public class DefaultCommandManagerPresenterDisplay implements
+public class UndoCommandManagerPresenterDisplay implements
         CommandManagerPresenterDisplay {
-
-    private ImageButton redoButton;
-
-    private Label redoLabel;
 
     private ImageButton undoButton;
 
     private Label undoLabel;
 
     @Inject
-    public DefaultCommandManagerPresenterDisplay(
+    public UndoCommandManagerPresenterDisplay(
             PopupManagerFactory popupManagerFactory) {
 
         assert popupManagerFactory != null;
 
         initUndoButton(popupManagerFactory);
-        initRedoButton(popupManagerFactory);
-    }
-
-    public ImageButton getRedoButton() {
-        return redoButton;
     }
 
     @Override
-    public HasClickHandlers getRedoClickHandlers() {
-        return redoButton;
+    public HasClickHandlers getClickHandlers() {
+        return undoButton;
     }
 
     public ImageButton getUndoButton() {
         return undoButton;
-    }
-
-    @Override
-    public HasClickHandlers getUndoClickHandlers() {
-        return undoButton;
-    }
-
-    private void initRedoButton(PopupManagerFactory popupManagerFactory) {
-        redoButton = ImageButton.createImageButton("edit-redo");
-        redoLabel = new Label();
-        PopupManager popupManager = popupManagerFactory
-                .createPopupManager(new WidgetFactory() {
-                    @Override
-                    public Widget createWidget() {
-                        return redoLabel;
-                    }
-                });
-        DefaultPopupManager.linkManagerToSource(popupManager, redoButton);
     }
 
     private void initUndoButton(PopupManagerFactory popupManagerFactory) {
@@ -93,22 +66,13 @@ public class DefaultCommandManagerPresenterDisplay implements
     }
 
     @Override
-    public void setRedoButtonEnabled(boolean enabled) {
-        redoButton.setEnabled(enabled);
-    }
-
-    @Override
-    public void setRedoCommandDescription(String commandDescription) {
-        redoLabel.setText("redo " + commandDescription);
-    }
-
-    @Override
-    public void setUndoButtonEnabled(boolean enabled) {
+    public void setButtonEnabled(boolean enabled) {
         undoButton.setEnabled(enabled);
     }
 
     @Override
-    public void setUndoCommandDescription(String commandDescription) {
+    public void setCommandDescription(String commandDescription) {
         undoLabel.setText("undo " + commandDescription);
     }
+
 }

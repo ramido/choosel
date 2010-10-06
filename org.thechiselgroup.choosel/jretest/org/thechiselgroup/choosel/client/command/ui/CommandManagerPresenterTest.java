@@ -52,7 +52,7 @@ public class CommandManagerPresenterTest {
     private CommandManagerPresenter commandManagerPresenter;
 
     @Mock
-    private CommandManagerPresenterDisplay display;
+    private CommandManagerPresenterDisplay undoDisplay;
 
     @Mock
     private HasClickHandlers redoClickHandlers;
@@ -63,11 +63,14 @@ public class CommandManagerPresenterTest {
     @Mock
     private HasClickHandlers undoClickHandlers;
 
+    @Mock
+    private CommandManagerPresenterDisplay redoDisplay;
+
     // TODO tests for command manager with initial state
     @Test
     public void buttonsDisabledInitialyForEmptyCommandManager() {
-        verify(display, times(1)).setRedoButtonEnabled(false);
-        verify(display, times(1)).setUndoButtonEnabled(false);
+        verify(undoDisplay, times(1)).setButtonEnabled(false);
+        verify(redoDisplay, times(1)).setButtonEnabled(false);
     }
 
     @Test
@@ -107,13 +110,13 @@ public class CommandManagerPresenterTest {
         commandManager.addExecutedCommand(command);
         commandManager.undo();
 
-        verify(display, times(1)).setUndoButtonEnabled(false);
-        verify(display, times(3)).setRedoButtonEnabled(false);
+        verify(undoDisplay, times(1)).setButtonEnabled(false);
+        verify(redoDisplay, times(3)).setButtonEnabled(false);
 
         commandManager.clear();
 
-        verify(display, times(2)).setUndoButtonEnabled(false);
-        verify(display, times(4)).setRedoButtonEnabled(false);
+        verify(undoDisplay, times(2)).setButtonEnabled(false);
+        verify(redoDisplay, times(4)).setButtonEnabled(false);
     }
 
     @Test
@@ -122,7 +125,7 @@ public class CommandManagerPresenterTest {
         commandManager.undo();
         commandManager.redo();
 
-        verify(display, times(3)).setRedoButtonEnabled(false);
+        verify(redoDisplay, times(3)).setButtonEnabled(false);
     }
 
     @Test
@@ -131,7 +134,7 @@ public class CommandManagerPresenterTest {
         commandManager.undo();
         commandManager.redo();
 
-        verify(display, times(3)).setRedoCommandDescription("");
+        verify(redoDisplay, times(3)).setCommandDescription("");
     }
 
     @Test
@@ -139,7 +142,7 @@ public class CommandManagerPresenterTest {
         commandManager.addExecutedCommand(command);
         commandManager.undo();
 
-        verify(display, times(2)).setUndoButtonEnabled(false);
+        verify(undoDisplay, times(2)).setButtonEnabled(false);
     }
 
     @Test
@@ -147,14 +150,14 @@ public class CommandManagerPresenterTest {
         commandManager.addExecutedCommand(command);
         commandManager.undo();
 
-        verify(display, times(1)).setRedoButtonEnabled(true);
+        verify(redoDisplay, times(1)).setButtonEnabled(true);
     }
 
     @Test
     public void enableUndoButtonOnEventIfUndoable() {
         commandManager.addExecutedCommand(command);
 
-        verify(display).setUndoButtonEnabled(true);
+        verify(undoDisplay).setButtonEnabled(true);
     }
 
     @Test
@@ -168,8 +171,8 @@ public class CommandManagerPresenterTest {
         commandManager.addExecutedCommand(command);
         commandManager.undo();
 
-        verify(display, times(1))
-                .setRedoCommandDescription(COMMAND_DESCRIPTION);
+        verify(redoDisplay, times(1))
+                .setCommandDescription(COMMAND_DESCRIPTION);
     }
 
     @Test
@@ -177,14 +180,14 @@ public class CommandManagerPresenterTest {
         commandManager.addExecutedCommand(command);
         commandManager.undo();
 
-        verify(display, times(2)).setUndoCommandDescription("");
+        verify(undoDisplay, times(2)).setCommandDescription("");
     }
 
     @Test
     public void setUndoButtonDescriptionOnEventIfUndoable() {
         commandManager.addExecutedCommand(command);
 
-        verify(display).setUndoCommandDescription(COMMAND_DESCRIPTION);
+        verify(undoDisplay).setCommandDescription(COMMAND_DESCRIPTION);
     }
 
     @Before
@@ -194,12 +197,12 @@ public class CommandManagerPresenterTest {
 
         commandManager = spy(new DefaultCommandManager());
         commandManagerPresenter = new CommandManagerPresenter(commandManager,
-                display);
+                undoDisplay, redoDisplay);
 
         when(resolver.resolve(any(ResourceSet.class), any(String.class)))
                 .thenReturn("");
-        when(display.getUndoClickHandlers()).thenReturn(undoClickHandlers);
-        when(display.getRedoClickHandlers()).thenReturn(redoClickHandlers);
+        when(undoDisplay.getClickHandlers()).thenReturn(undoClickHandlers);
+        when(redoDisplay.getClickHandlers()).thenReturn(redoClickHandlers);
         when(command.getDescription()).thenReturn(COMMAND_DESCRIPTION);
 
         commandManagerPresenter.init();

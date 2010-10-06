@@ -22,8 +22,8 @@ import org.thechiselgroup.choosel.client.command.AsyncCommandExecutor;
 import org.thechiselgroup.choosel.client.command.AsyncCommandToCommandAdapter;
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.command.ui.CommandManagerPresenter;
-import org.thechiselgroup.choosel.client.command.ui.CommandPresenterFactory;
-import org.thechiselgroup.choosel.client.command.ui.DefaultCommandManagerPresenterDisplay;
+import org.thechiselgroup.choosel.client.command.ui.RedoCommandManagerPresenterDisplay;
+import org.thechiselgroup.choosel.client.command.ui.UndoCommandManagerPresenterDisplay;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
@@ -90,12 +90,6 @@ public abstract class ChooselApplication {
 
     @Inject
     protected CommandManager commandManager;
-
-    @Inject
-    private DefaultCommandManagerPresenterDisplay commandManagerPresenterDisplay;
-
-    @Inject
-    private CommandPresenterFactory commandPresenterFactory;
 
     @Inject
     protected ResourceSetAvatarFactory defaultDragAvatarFactory;
@@ -276,6 +270,8 @@ public abstract class ChooselApplication {
         initActionBar(mainPanel);
         initAuthenticationBar();
 
+        initWorkspaceTitlePresenter();
+
         initWorkspacePanel();
         initCommandManagerPresenter();
 
@@ -298,13 +294,21 @@ public abstract class ChooselApplication {
     }
 
     private void initCommandManagerPresenter() {
+        RedoCommandManagerPresenterDisplay redoCommandManagerPresenterDisplay = new RedoCommandManagerPresenterDisplay(
+                popupManagerFactory);
+        UndoCommandManagerPresenterDisplay undoCommandManagerPresenterDisplay = new UndoCommandManagerPresenterDisplay(
+                popupManagerFactory);
+
         CommandManagerPresenter presenter = new CommandManagerPresenter(
-                commandManager, commandManagerPresenterDisplay);
+                commandManager, undoCommandManagerPresenterDisplay,
+                redoCommandManagerPresenterDisplay);
 
         presenter.init();
 
-        addWidget(EDIT_PANEL, commandManagerPresenterDisplay.getRedoButton());
-        addWidget(EDIT_PANEL, commandManagerPresenterDisplay.getUndoButton());
+        addWidget(EDIT_PANEL,
+                redoCommandManagerPresenterDisplay.getRedoButton());
+        addWidget(EDIT_PANEL,
+                undoCommandManagerPresenterDisplay.getUndoButton());
     }
 
     protected abstract void initCustomActions();
@@ -367,10 +371,14 @@ public abstract class ChooselApplication {
                 action).init();
     }
 
-    private void initWorkspacePanel() {
-        // TODO move
+    protected void initWorkspacePanel() {
+        initNewWorkspaceAction();
+        initLoadWorkspaceAction();
+        initSaveWorkspaceAction();
+        initShareWorkspaceAction();
+    }
 
-        // title area
+    protected void initWorkspaceTitlePresenter() {
         // TODO refactor title area part
         WorkspacePresenter presenter = new WorkspacePresenter(workspaceManager,
                 workspacePresenterDisplay);
@@ -380,11 +388,6 @@ public abstract class ChooselApplication {
                 "actionbar-titleArea-text");
         actionBar.getActionBarTitleArea().add(
                 workspacePresenterDisplay.getTextBox());
-
-        initNewWorkspaceAction();
-        initLoadWorkspaceAction();
-        initSaveWorkspaceAction();
-        initShareWorkspaceAction();
     }
 
     private void loadWorkspaceIfParamSet() {
