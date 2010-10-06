@@ -89,6 +89,11 @@ public class ImageButton extends Image implements HasEnabledState {
             return;
         }
 
+        // TODO focus changes !??
+        // if (!enabled) {
+        // focusable.setFocus(false);
+        // }
+
         this.enabled = enabled;
 
         if (enabled) {

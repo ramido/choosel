@@ -20,16 +20,13 @@ import org.thechiselgroup.choosel.client.util.Disposable;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Focusable;
-import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.HasName;
 
-public class SaveButtonUpdater implements Disposable {
-
-    private Focusable focusable;
+public class SaveActionStateController implements Disposable {
 
     private HasEnabledState hasEnabledState;
 
-    private HasText hasText;
+    private HasName hasName;
 
     private HandlerRegistration savingStateHandlerRegistration;
 
@@ -37,14 +34,12 @@ public class SaveButtonUpdater implements Disposable {
 
     private HandlerRegistration workspaceSwitchedHandler;
 
-    public <T extends HasText & Focusable> SaveButtonUpdater(
-            WorkspaceManager workspaceManager, T button,
-            HasEnabledState hasEnabledState) {
+    public SaveActionStateController(WorkspaceManager workspaceManager,
+            HasName hasName, HasEnabledState hasEnabledState) {
 
         this.workspaceManager = workspaceManager;
-        this.hasText = button;
+        this.hasName = hasName;
         this.hasEnabledState = hasEnabledState;
-        this.focusable = button;
     }
 
     protected void delayedSwitchToNotSaved() {
@@ -99,12 +94,8 @@ public class SaveButtonUpdater implements Disposable {
     }
 
     private void update(String label, boolean enabled) {
-        hasText.setText(label);
+        hasName.setName(label);
         hasEnabledState.setEnabled(enabled);
-
-        if (!enabled) {
-            focusable.setFocus(false);
-        }
     }
 
     private void update(WorkspaceSavingState state) {
