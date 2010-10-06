@@ -15,6 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -49,6 +52,8 @@ public class ActionBar implements WidgetAdaptable {
 
     private VerticalPanel outerWidget;
 
+    private Map<String, ActionBarPanel> panelsByID = new HashMap<String, ActionBarPanel>();
+
     public ActionBar() {
         outerWidget = new VerticalPanel();
         outerWidget.addStyleName(CSS_ACTIONBAR);
@@ -64,17 +69,20 @@ public class ActionBar implements WidgetAdaptable {
         outerWidget.add(actionBarPanelContainer);
     }
 
-    public void addPanel(String title, Widget contentWidget) {
+    public void addPanel(ActionBarPanel panel) {
+        assert panel != null;
+        assert !containsPanel(panel.getPanelId());
+
         FlexTable actionBarPanel = new FlexTable();
         actionBarPanel.addStyleName(CSS_ACTIONBAR_PANEL);
 
-        Label header = new Label(title);
+        Label header = new Label(panel.getTitle());
         header.addStyleName(CSS_ACTIONBAR_PANEL_HEADER);
         actionBarPanel.setWidget(0, 0, header);
         actionBarPanel.getFlexCellFormatter().setColSpan(0, 0, 2);
 
         SimplePanel contentPanel = new SimplePanel();
-        contentPanel.add(contentWidget);
+        contentPanel.add(panel.getContentWidget());
         contentPanel.addStyleName(CSS_ACTIONBAR_PANEL_CONTENT);
         actionBarPanel.setWidget(1, 0, contentPanel);
 
@@ -84,6 +92,7 @@ public class ActionBar implements WidgetAdaptable {
                 CSS_ACTIONBAR_PANEL_EXPANDER);
 
         actionBarPanelContainer.add(actionBarPanel);
+        panelsByID.put(panel.getPanelId(), panel);
     }
 
     @Override
@@ -91,8 +100,17 @@ public class ActionBar implements WidgetAdaptable {
         return outerWidget;
     }
 
+    public boolean containsPanel(String panelId) {
+        return panelsByID.containsKey(panelId);
+    }
+
     public HorizontalPanel getActionBarTitleArea() {
         return actionBarTitleArea;
+    }
+
+    public ActionBarPanel getPanel(String panelId) {
+        assert containsPanel(panelId);
+        return panelsByID.get(panelId);
     }
 
 }

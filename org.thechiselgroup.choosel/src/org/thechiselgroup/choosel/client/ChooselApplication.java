@@ -15,9 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.thechiselgroup.choosel.client.authentication.AuthenticationManager;
 import org.thechiselgroup.choosel.client.authentication.ui.AuthenticationBar;
 import org.thechiselgroup.choosel.client.authentication.ui.AuthenticationBasedEnablingStateWrapper;
@@ -34,7 +31,6 @@ import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceS
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.ui.Action;
 import org.thechiselgroup.choosel.client.ui.ActionBar;
-import org.thechiselgroup.choosel.client.ui.ActionToolbarItem;
 import org.thechiselgroup.choosel.client.ui.ImageButton;
 import org.thechiselgroup.choosel.client.ui.dialog.DialogManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
@@ -118,8 +114,6 @@ public abstract class ChooselApplication {
     @Inject
     private NewWorkspaceCommand newWorkspaceCommand;
 
-    private Map<String, HorizontalPanel> panels = new HashMap<String, HorizontalPanel>();
-
     @Inject
     protected ResourceSetFactory resourceSetsFactory;
 
@@ -175,22 +169,27 @@ public abstract class ChooselApplication {
         });
     }
 
-    public void addPanel(String id, String name) {
-        assert id != null;
-        assert name != null;
+    protected void addNewWorkspaceAction() {
+        // TODO extract constants
+        getToolbarPanel(WORKSPACE_PANEL).addAction(
+                new Action("New workspace", newWorkspaceCommand,
+                        "workspace-new"));
+    }
 
-        HorizontalPanel panel = new HorizontalPanel();
-        panel.setSpacing(2);
-        actionBar.addPanel(name, panel);
-        panels.put(id, panel);
+    public void addToolbarPanel(String panelId, String title) {
+        assert panelId != null;
+        assert title != null;
+
+        actionBar
+                .addPanel(new ToolbarPanel(panelId, title, popupManagerFactory));
     }
 
     public void addWidget(String panelId, Widget widget) {
         assert panelId != null;
-        assert panels.containsKey(panelId);
         assert widget != null;
 
-        panels.get(panelId).add(widget);
+        ((HorizontalPanel) actionBar.getPanel(panelId).getContentWidget())
+                .add(widget);
     }
 
     protected void addWindowClosingConfirmationDialog() {
@@ -260,6 +259,10 @@ public abstract class ChooselApplication {
                 windowContentProducer.createWindowContent(contentType)));
     }
 
+    public ToolbarPanel getToolbarPanel(String panelId) {
+        return (ToolbarPanel) actionBar.getPanel(panelId);
+    }
+
     public void init() {
         BrowserDetect.checkBrowser();
 
@@ -282,8 +285,8 @@ public abstract class ChooselApplication {
     private void initActionBar(DockPanel mainPanel) {
         mainPanel.add(actionBar.asWidget(), DockPanel.NORTH);
 
-        addPanel(WORKSPACE_PANEL, "Workspace");
-        addPanel(EDIT_PANEL, "Edit");
+        addToolbarPanel(WORKSPACE_PANEL, "Workspace");
+        addToolbarPanel(EDIT_PANEL, "Edit");
 
         initCustomPanels();
     }
@@ -337,11 +340,7 @@ public abstract class ChooselApplication {
         actionBar.getActionBarTitleArea().add(
                 workspacePresenterDisplay.getTextBox());
 
-        // new workspace
-        Action newWorkspaceAction = new Action("New workspace",
-                newWorkspaceCommand, "workspace-new");
-        addWidget(WORKSPACE_PANEL, new ActionToolbarItem(newWorkspaceAction,
-                popupManagerFactory));
+        addNewWorkspaceAction();
 
         // load workspace
         ImageCommandDisplay loadButton = commandPresenterFactory
