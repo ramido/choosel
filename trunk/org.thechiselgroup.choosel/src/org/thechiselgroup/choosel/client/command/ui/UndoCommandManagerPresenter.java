@@ -30,10 +30,8 @@ import org.thechiselgroup.choosel.client.util.Initializable;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 
-// TODO split into undo & redo
-public class CommandManagerPresenter implements Initializable {
+public class UndoCommandManagerPresenter implements Initializable {
 
     private class CommandManagerHandler implements CommandAddedEventHandler,
             CommandRedoneEventHandler, CommandUndoneEventHandler,
@@ -60,49 +58,21 @@ public class CommandManagerPresenter implements Initializable {
         }
     }
 
-    public static interface CommandManagerPresenterDisplay {
-
-        HasClickHandlers getClickHandlers();
-
-        void setButtonEnabled(boolean enabled);
-
-        void setCommandDescription(String commandDescription);
-
-    }
-
     private final CommandManager commandManager;
 
     private CommandManagerHandler commandManagerHandler;
 
     private final CommandManagerPresenterDisplay undoButtonDisplay;
 
-    private final CommandManagerPresenterDisplay redoButtonDisplay;
-
-    public CommandManagerPresenter(CommandManager commandManager,
-            CommandManagerPresenterDisplay undoButtonDisplay,
-            CommandManagerPresenterDisplay redoButtonDisplay) {
+    public UndoCommandManagerPresenter(CommandManager commandManager,
+            CommandManagerPresenterDisplay undoButtonDisplay) {
 
         this.commandManager = commandManager;
         this.undoButtonDisplay = undoButtonDisplay;
-        this.redoButtonDisplay = redoButtonDisplay;
     }
 
     public CommandManagerPresenterDisplay getDisplay() {
         return undoButtonDisplay;
-    }
-
-    private String getRedoCommandDescription() {
-        if (!commandManager.canRedo()) {
-            return "";
-        }
-
-        UndoableCommand redoCommand = commandManager.getRedoCommand();
-
-        if (!(redoCommand instanceof HasDescription)) {
-            return "";
-        }
-
-        return ((HasDescription) redoCommand).getDescription();
     }
 
     private String getUndoCommandDescription() {
@@ -132,15 +102,6 @@ public class CommandManagerPresenter implements Initializable {
                     }
                 });
 
-        redoButtonDisplay.getClickHandlers().addClickHandler(
-                new ClickHandler() {
-                    @Override
-                    public void onClick(ClickEvent event) {
-                        assert commandManager.canRedo();
-                        commandManager.redo();
-                    }
-                });
-
         commandManagerHandler = new CommandManagerHandler();
 
         commandManager.addHandler(CommandRedoneEvent.TYPE,
@@ -156,8 +117,5 @@ public class CommandManagerPresenter implements Initializable {
     private void updateButtonState() {
         undoButtonDisplay.setButtonEnabled(commandManager.canUndo());
         undoButtonDisplay.setCommandDescription(getUndoCommandDescription());
-
-        redoButtonDisplay.setButtonEnabled(commandManager.canRedo());
-        redoButtonDisplay.setCommandDescription(getRedoCommandDescription());
     }
 }
