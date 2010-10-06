@@ -15,92 +15,26 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.command.ui;
 
-import org.thechiselgroup.choosel.client.command.CommandAddedEvent;
-import org.thechiselgroup.choosel.client.command.CommandAddedEventHandler;
 import org.thechiselgroup.choosel.client.command.CommandManager;
-import org.thechiselgroup.choosel.client.command.CommandManagerClearedEvent;
-import org.thechiselgroup.choosel.client.command.CommandManagerClearedEventHandler;
-import org.thechiselgroup.choosel.client.command.CommandRedoneEvent;
-import org.thechiselgroup.choosel.client.command.CommandRedoneEventHandler;
-import org.thechiselgroup.choosel.client.command.CommandUndoneEvent;
-import org.thechiselgroup.choosel.client.command.CommandUndoneEventHandler;
 import org.thechiselgroup.choosel.client.command.UndoableCommand;
 import org.thechiselgroup.choosel.client.ui.Action;
-import org.thechiselgroup.choosel.client.util.HasDescription;
-import org.thechiselgroup.choosel.client.util.Initializable;
 
-public class UndoActionStateController implements Initializable {
-
-    private class CommandManagerHandler implements CommandAddedEventHandler,
-            CommandRedoneEventHandler, CommandUndoneEventHandler,
-            CommandManagerClearedEventHandler {
-
-        @Override
-        public void onCleared(CommandManagerClearedEvent event) {
-            updateButtonState();
-        }
-
-        @Override
-        public void onCommandAdded(CommandAddedEvent event) {
-            updateButtonState();
-        }
-
-        @Override
-        public void onCommandRedone(CommandRedoneEvent commandRedoneEvent) {
-            updateButtonState();
-        }
-
-        @Override
-        public void onCommandUndone(CommandUndoneEvent commandUndoneEvent) {
-            updateButtonState();
-        }
-    }
-
-    private final CommandManager commandManager;
-
-    private CommandManagerHandler commandManagerHandler;
-
-    private final Action undoAction;
+public class UndoActionStateController extends
+        CommandManagerActionStateController {
 
     public UndoActionStateController(CommandManager commandManager,
-            Action undoAction) {
-
-        this.commandManager = commandManager;
-        this.undoAction = undoAction;
-    }
-
-    private String getUndoCommandDescription() {
-        if (!commandManager.canUndo()) {
-            return "";
-        }
-
-        UndoableCommand undoCommand = commandManager.getUndoCommand();
-
-        if (!(undoCommand instanceof HasDescription)) {
-            return "";
-        }
-
-        return ((HasDescription) undoCommand).getDescription();
+            Action action) {
+        super(commandManager, action);
     }
 
     @Override
-    public void init() {
-        updateButtonState();
-
-        commandManagerHandler = new CommandManagerHandler();
-
-        commandManager.addHandler(CommandRedoneEvent.TYPE,
-                commandManagerHandler);
-        commandManager.addHandler(CommandUndoneEvent.TYPE,
-                commandManagerHandler);
-        commandManager
-                .addHandler(CommandAddedEvent.TYPE, commandManagerHandler);
-        commandManager.addHandler(CommandManagerClearedEvent.TYPE,
-                commandManagerHandler);
+    protected boolean canPerformOperation() {
+        return commandManager.canUndo();
     }
 
-    private void updateButtonState() {
-        undoAction.setEnabled(commandManager.canUndo());
-        undoAction.setDescription(getUndoCommandDescription());
+    @Override
+    protected UndoableCommand getCommand() {
+        return commandManager.getUndoCommand();
     }
+
 }
