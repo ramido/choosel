@@ -278,8 +278,10 @@ public abstract class ChooselApplication {
     protected abstract void initCustomPanels();
 
     private void initDesktop(DockPanel mainPanel) {
-        // absolute root panel required for drag & drop
-        // into windows on firefox browser
+        /*
+         * Absolute root panel required for drag & drop into windows using
+         * Firefox
+         */
         desktop.asWidget().setPixelSize(Window.getClientWidth(),
                 Window.getClientHeight() - ActionBar.ACTION_BAR_HEIGHT_PX);
 
@@ -349,7 +351,8 @@ public abstract class ChooselApplication {
                 authenticationManager, saveAction);
         authWrapper.init();
 
-        new SaveActionStateController(workspaceManager, saveAction, authWrapper).init();
+        new SaveActionStateController(workspaceManager, saveAction, authWrapper)
+                .init();
     }
 
     protected void initShareWorkspaceAction() {
