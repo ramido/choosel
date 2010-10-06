@@ -21,8 +21,7 @@ import org.thechiselgroup.choosel.client.authentication.ui.AuthenticationBasedEn
 import org.thechiselgroup.choosel.client.command.AsyncCommandExecutor;
 import org.thechiselgroup.choosel.client.command.AsyncCommandToCommandAdapter;
 import org.thechiselgroup.choosel.client.command.CommandManager;
-import org.thechiselgroup.choosel.client.command.ui.RedoCommandManagerPresenter;
-import org.thechiselgroup.choosel.client.command.ui.RedoCommandManagerPresenterDisplay;
+import org.thechiselgroup.choosel.client.command.ui.RedoActionStateController;
 import org.thechiselgroup.choosel.client.command.ui.UndoActionStateController;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
@@ -298,13 +297,15 @@ public abstract class ChooselApplication {
     }
 
     private void initCommandManagerPresenter() {
-        RedoCommandManagerPresenterDisplay redoCommandManagerPresenterDisplay = new RedoCommandManagerPresenterDisplay(
-                popupManagerFactory);
-        RedoCommandManagerPresenter redoPresenter = new RedoCommandManagerPresenter(
-                commandManager, redoCommandManagerPresenterDisplay);
-        redoPresenter.init();
-        addWidget(EDIT_PANEL,
-                redoCommandManagerPresenterDisplay.getRedoButton());
+        Action redoAction = addActionToToolbar(EDIT_PANEL, new Command() {
+            @Override
+            public void execute() {
+                assert commandManager.canRedo();
+                commandManager.redo();
+            }
+        }, "Redo", "edit-redo");
+
+        new RedoActionStateController(commandManager, redoAction).init();
 
         Action undoAction = addActionToToolbar(EDIT_PANEL, new Command() {
             @Override

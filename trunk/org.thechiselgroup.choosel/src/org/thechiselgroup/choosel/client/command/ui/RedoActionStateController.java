@@ -25,14 +25,11 @@ import org.thechiselgroup.choosel.client.command.CommandRedoneEventHandler;
 import org.thechiselgroup.choosel.client.command.CommandUndoneEvent;
 import org.thechiselgroup.choosel.client.command.CommandUndoneEventHandler;
 import org.thechiselgroup.choosel.client.command.UndoableCommand;
+import org.thechiselgroup.choosel.client.ui.Action;
 import org.thechiselgroup.choosel.client.util.HasDescription;
 import org.thechiselgroup.choosel.client.util.Initializable;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-
-// TODO split into undo & redo
-public class RedoCommandManagerPresenter implements Initializable {
+public class RedoActionStateController implements Initializable {
 
     private class CommandManagerHandler implements CommandAddedEventHandler,
             CommandRedoneEventHandler, CommandUndoneEventHandler,
@@ -63,13 +60,13 @@ public class RedoCommandManagerPresenter implements Initializable {
 
     private CommandManagerHandler commandManagerHandler;
 
-    private final CommandManagerPresenterDisplay redoButtonDisplay;
+    private final Action action;
 
-    public RedoCommandManagerPresenter(CommandManager commandManager,
-            CommandManagerPresenterDisplay redoButtonDisplay) {
+    public RedoActionStateController(CommandManager commandManager,
+            Action action) {
 
         this.commandManager = commandManager;
-        this.redoButtonDisplay = redoButtonDisplay;
+        this.action = action;
     }
 
     private String getRedoCommandDescription() {
@@ -90,15 +87,6 @@ public class RedoCommandManagerPresenter implements Initializable {
     public void init() {
         updateButtonState();
 
-        redoButtonDisplay.getClickHandlers().addClickHandler(
-                new ClickHandler() {
-                    @Override
-                    public void onClick(ClickEvent event) {
-                        assert commandManager.canRedo();
-                        commandManager.redo();
-                    }
-                });
-
         commandManagerHandler = new CommandManagerHandler();
 
         commandManager.addHandler(CommandRedoneEvent.TYPE,
@@ -112,7 +100,7 @@ public class RedoCommandManagerPresenter implements Initializable {
     }
 
     private void updateButtonState() {
-        redoButtonDisplay.setButtonEnabled(commandManager.canRedo());
-        redoButtonDisplay.setCommandDescription(getRedoCommandDescription());
+        action.setEnabled(commandManager.canRedo());
+        action.setDescription(getRedoCommandDescription());
     }
 }

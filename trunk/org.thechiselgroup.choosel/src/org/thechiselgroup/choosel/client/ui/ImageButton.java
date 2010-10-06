@@ -15,9 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui;
 
-import static org.thechiselgroup.choosel.client.command.ui.IconURLBuilder.getIconUrl;
+import static org.thechiselgroup.choosel.client.ui.IconURLBuilder.getIconUrl;
 
-import org.thechiselgroup.choosel.client.command.ui.IconURLBuilder.IconType;
+import org.thechiselgroup.choosel.client.ui.IconURLBuilder.IconType;
 
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
