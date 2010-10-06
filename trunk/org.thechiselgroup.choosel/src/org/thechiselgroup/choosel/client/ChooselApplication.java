@@ -19,11 +19,11 @@ import org.thechiselgroup.choosel.client.authentication.AuthenticationManager;
 import org.thechiselgroup.choosel.client.authentication.ui.AuthenticationBar;
 import org.thechiselgroup.choosel.client.authentication.ui.AuthenticationBasedEnablingStateWrapper;
 import org.thechiselgroup.choosel.client.command.AsyncCommandExecutor;
+import org.thechiselgroup.choosel.client.command.AsyncCommandToCommandAdapter;
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.command.ui.CommandManagerPresenter;
 import org.thechiselgroup.choosel.client.command.ui.CommandPresenterFactory;
 import org.thechiselgroup.choosel.client.command.ui.DefaultCommandManagerPresenterDisplay;
-import org.thechiselgroup.choosel.client.command.ui.ImageCommandDisplay;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
@@ -52,6 +52,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.Window.ClosingHandler;
@@ -85,7 +86,7 @@ public abstract class ChooselApplication {
     private AuthenticationManager authenticationManager;
 
     @Inject
-    private AsyncCommandExecutor blockingCommandExecutor;
+    private AsyncCommandExecutor asyncCommandExecutor;
 
     @Inject
     protected CommandManager commandManager;
@@ -138,6 +139,14 @@ public abstract class ChooselApplication {
     @Inject
     private DefaultWorkspacePresenterDisplay workspacePresenterDisplay;
 
+    public Action addActionToToolbar(String panelId, Command command,
+            String title, String iconName) {
+
+        Action action = new Action(title, command, iconName);
+        getToolbarPanel(panelId).addAction(action);
+        return action;
+    }
+
     public void addButton(String panelId, String label, ClickHandler handler) {
         assert panelId != null;
         assert label != null;
@@ -167,13 +176,6 @@ public abstract class ChooselApplication {
                 dialogManager.show(infoDialog);
             }
         });
-    }
-
-    protected void addNewWorkspaceAction() {
-        // TODO extract constants
-        getToolbarPanel(WORKSPACE_PANEL).addAction(
-                new Action("New workspace", newWorkspaceCommand,
-                        "workspace-new"));
     }
 
     public void addToolbarPanel(String panelId, String title) {
@@ -328,7 +330,46 @@ public abstract class ChooselApplication {
         mainPanel.add(desktop.asWidget(), DockPanel.CENTER);
     }
 
+    protected void initLoadWorkspaceAction() {
+        Action loadAction = addActionToToolbar(WORKSPACE_PANEL,
+                new AsyncCommandToCommandAdapter(loadWorkspaceDialogCommand,
+                        asyncCommandExecutor), "Load workspace",
+                "workspace-open");
+
+        new AuthenticationBasedEnablingStateWrapper(authenticationManager,
+                loadAction).init();
+    }
+
+    protected void initNewWorkspaceAction() {
+        addActionToToolbar(WORKSPACE_PANEL, newWorkspaceCommand,
+                "New workspace", "workspace-new");
+    }
+
+    protected void initSaveWorkspaceAction() {
+        Action saveAction = addActionToToolbar(WORKSPACE_PANEL,
+                saveWorkspaceCommand, "Save workspace", "workspace-save");
+        AuthenticationBasedEnablingStateWrapper authWrapper = new AuthenticationBasedEnablingStateWrapper(
+                authenticationManager, saveAction);
+        authWrapper.init();
+
+        // XXX updater broken --> needs text
+        // new SaveButtonUpdater(workspaceManager, saveButton,
+        // authWrapper).init();
+    }
+
+    protected void initShareWorkspaceAction() {
+        Action action = addActionToToolbar(WORKSPACE_PANEL,
+                new AsyncCommandToCommandAdapter(shareWorkspaceCommand,
+                        asyncCommandExecutor), "Share workspace",
+                "workspace-share");
+
+        new AuthenticationBasedEnablingStateWrapper(authenticationManager,
+                action).init();
+    }
+
     private void initWorkspacePanel() {
+        // TODO move
+
         // title area
         // TODO refactor title area part
         WorkspacePresenter presenter = new WorkspacePresenter(workspaceManager,
@@ -340,34 +381,10 @@ public abstract class ChooselApplication {
         actionBar.getActionBarTitleArea().add(
                 workspacePresenterDisplay.getTextBox());
 
-        addNewWorkspaceAction();
-
-        // load workspace
-        ImageCommandDisplay loadButton = commandPresenterFactory
-                .createCommandImage("workspace-open",
-                        loadWorkspaceDialogCommand);
-        addWidget(WORKSPACE_PANEL, loadButton);
-        new AuthenticationBasedEnablingStateWrapper(authenticationManager,
-                loadButton).init();
-
-        // save workspace
-        ImageCommandDisplay saveButton = commandPresenterFactory
-                .createCommandImage("workspace-save", saveWorkspaceCommand);
-        addWidget(WORKSPACE_PANEL, saveButton);
-        AuthenticationBasedEnablingStateWrapper authWrapper = new AuthenticationBasedEnablingStateWrapper(
-                authenticationManager, saveButton);
-        authWrapper.init();
-
-        // XXX updater broken --> needs text
-        // new SaveButtonUpdater(workspaceManager, saveButton,
-        // authWrapper).init();
-
-        // share workspace
-        ImageCommandDisplay shareButton = commandPresenterFactory
-                .createCommandImage("workspace-share", shareWorkspaceCommand);
-        addWidget(WORKSPACE_PANEL, shareButton);
-        new AuthenticationBasedEnablingStateWrapper(authenticationManager,
-                shareButton).init();
+        initNewWorkspaceAction();
+        initLoadWorkspaceAction();
+        initSaveWorkspaceAction();
+        initShareWorkspaceAction();
     }
 
     private void loadWorkspaceIfParamSet() {
@@ -378,7 +395,7 @@ public abstract class ChooselApplication {
 
             LoadWorkspaceCommand loadWorkspaceCommand = new LoadWorkspaceCommand(
                     workspaceID, workspacePersistenceManager);
-            blockingCommandExecutor.execute(loadWorkspaceCommand);
+            asyncCommandExecutor.execute(loadWorkspaceCommand);
         }
     }
 

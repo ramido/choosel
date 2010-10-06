@@ -50,6 +50,9 @@ public class ToolbarPanel implements ActionBarPanel {
 
     public void addAction(Action action) {
         assert action != null;
+
+        // TODO test if action has icons... --> Button
+
         panel.add(new ActionToolbarItem(action, popupManagerFactory));
     }
 

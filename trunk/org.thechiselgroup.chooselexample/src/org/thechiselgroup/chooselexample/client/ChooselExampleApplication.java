@@ -207,8 +207,8 @@ public class ChooselExampleApplication extends ChooselApplication {
 
 	@Override
 	protected void initCustomPanels() {
-		addPanel(VIEWS_PANEL, "Views");
-		addPanel(DATA_PANEL, "Data Sources");
-		addPanel(HELP_PANEL, "Help");
+		addToolbarPanel(VIEWS_PANEL, "Views");
+		addToolbarPanel(DATA_PANEL, "Data Sources");
+		addToolbarPanel(HELP_PANEL, "Help");
 	}
 }
