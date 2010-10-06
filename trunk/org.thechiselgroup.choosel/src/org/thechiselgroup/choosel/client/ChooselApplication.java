@@ -37,6 +37,7 @@ import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 import org.thechiselgroup.choosel.client.windows.CreateWindowCommand;
 import org.thechiselgroup.choosel.client.windows.Desktop;
 import org.thechiselgroup.choosel.client.windows.WindowContentProducer;
+import org.thechiselgroup.choosel.client.workspace.SaveActionStateController;
 import org.thechiselgroup.choosel.client.workspace.WorkspaceManager;
 import org.thechiselgroup.choosel.client.workspace.WorkspacePersistenceManager;
 import org.thechiselgroup.choosel.client.workspace.WorkspacePresenter;
@@ -348,9 +349,7 @@ public abstract class ChooselApplication {
                 authenticationManager, saveAction);
         authWrapper.init();
 
-        // XXX updater broken --> needs text
-        // new SaveButtonUpdater(workspaceManager, saveButton,
-        // authWrapper).init();
+        new SaveActionStateController(workspaceManager, saveAction, authWrapper).init();
     }
 
     protected void initShareWorkspaceAction() {

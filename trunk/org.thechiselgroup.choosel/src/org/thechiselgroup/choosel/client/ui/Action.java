@@ -23,11 +23,12 @@ import org.thechiselgroup.choosel.client.util.ObjectUtils;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.ui.HasName;
 
 /*
  * This class should not be extended. It is only non-final so we can spy on it in test cases.
  */
-public class Action implements Command, HasEnabledState {
+public class Action implements Command, HasEnabledState, HasName {
 
     private String disabledIconUrl;
 
@@ -101,6 +102,7 @@ public class Action implements Command, HasEnabledState {
         return highlightedIconUrl;
     }
 
+    @Override
     public String getName() {
         return name;
     }
@@ -156,6 +158,7 @@ public class Action implements Command, HasEnabledState {
         fireActionChanged();
     }
 
+    @Override
     public void setName(String name) {
         assert name != null;
         assert this.name != null;

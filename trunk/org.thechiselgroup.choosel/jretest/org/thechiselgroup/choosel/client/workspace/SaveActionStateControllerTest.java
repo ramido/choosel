@@ -26,19 +26,17 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.ui.HasEnabledState;
 
-import com.google.gwt.user.client.ui.Focusable;
-import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.HasName;
 
-public class SaveButtonUpdaterTest {
+public class SaveActionStateControllerTest {
 
-    private static interface TestButton extends HasText, HasEnabledState,
-            Focusable {
+    private static interface TestButton extends HasName, HasEnabledState {
     }
 
     @Mock
     private TestButton button;
 
-    private SaveButtonUpdater underTest;
+    private SaveActionStateController underTest;
 
     private Workspace workspace;
 
@@ -58,8 +56,7 @@ public class SaveButtonUpdaterTest {
         workspace2.setSavingState(WorkspaceSavingState.SAVED);
 
         verify(button).setEnabled(false);
-        verify(button).setFocus(false);
-        verify(button).setText("Saved");
+        verify(button).setName("Saved");
     }
 
     @Test
@@ -68,7 +65,7 @@ public class SaveButtonUpdaterTest {
         underTest.init();
 
         verify(button).setEnabled(true);
-        verify(button).setText("Save");
+        verify(button).setName("Save");
     }
 
     @Test
@@ -77,8 +74,7 @@ public class SaveButtonUpdaterTest {
         underTest.init();
 
         verify(button).setEnabled(false);
-        verify(button).setFocus(false);
-        verify(button).setText("Saved");
+        verify(button).setName("Saved");
     }
 
     @Test
@@ -87,8 +83,7 @@ public class SaveButtonUpdaterTest {
         underTest.init();
 
         verify(button).setEnabled(false);
-        verify(button).setFocus(false);
-        verify(button).setText("Saving");
+        verify(button).setName("Saving");
     }
 
     @Before
@@ -98,7 +93,8 @@ public class SaveButtonUpdaterTest {
         workspace = spy(new Workspace());
         workspace2 = spy(new Workspace());
 
-        underTest = new SaveButtonUpdater(workspaceManager, button, button) {
+        underTest = new SaveActionStateController(workspaceManager, button,
+                button) {
             @Override
             protected void delayedSwitchToNotSaved() {
             }
@@ -114,7 +110,7 @@ public class SaveButtonUpdaterTest {
         workspace.setSavingState(WorkspaceSavingState.SAVED);
 
         verify(button).setEnabled(false);
-        verify(button).setText("Saved");
+        verify(button).setName("Saved");
     }
 
     @Test
@@ -124,7 +120,7 @@ public class SaveButtonUpdaterTest {
         workspace.setSavingState(WorkspaceSavingState.NOT_SAVED);
 
         verify(button).setEnabled(true);
-        verify(button).setText("Save");
+        verify(button).setName("Save");
     }
 
     @Test
@@ -133,9 +129,8 @@ public class SaveButtonUpdaterTest {
         underTest.init();
         workspace.setSavingState(WorkspaceSavingState.SAVING);
 
-        verify(button).setFocus(false);
         verify(button).setEnabled(false);
-        verify(button).setText("Saving");
+        verify(button).setName("Saving");
     }
 
     private void switchWorkspace() {
@@ -156,8 +151,7 @@ public class SaveButtonUpdaterTest {
         switchWorkspace();
 
         verify(button).setEnabled(false);
-        verify(button).setFocus(false);
-        verify(button).setText("Saved");
+        verify(button).setName("Saved");
     }
 
 }
