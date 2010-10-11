@@ -15,9 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import java.util.Collections;
-import java.util.List;
-
 import org.thechiselgroup.choosel.client.util.Disposable;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -60,13 +57,13 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
         restoring = false;
     }
 
-    @Override
-    public List<ViewContentDisplayAction> getActions() {
-        return Collections.emptyList();
-    }
-
     public ViewContentDisplayCallback getCallback() {
         return callback;
+    }
+
+    @Override
+    public Widget getConfigurationWidget() {
+        return null;
     }
 
     @Override
