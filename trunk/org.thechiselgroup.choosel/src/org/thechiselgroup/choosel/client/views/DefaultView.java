@@ -71,7 +71,9 @@ import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RequiresResize;
+import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -98,7 +100,7 @@ public class DefaultView extends AbstractWindowContent implements View {
          */
         @Override
         public void setPixelSize(int width, int height) {
-            resize(width, height);
+            DefaultView.this.setSize(width, height);
             super.setPixelSize(width, height);
         }
 
@@ -127,7 +129,14 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private ResourceItemValueResolver configuration;
 
+    // TOOD rename
     private DockPanel configurationPanel;
+
+    // TOOD rename
+    private VerticalPanel configurationPanel2;
+
+    // TOOD rename
+    private StackPanel configurationPanel3;
 
     private ViewContentDisplay contentDisplay;
 
@@ -153,7 +162,9 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private PopupManagerFactory popupManagerFactory;
 
-    private VerticalPanel configurationPanel2;
+    private int width;
+
+    private int height;
 
     public DefaultView(ResourceSplitter resourceSplitter,
             ViewContentDisplay contentDisplay, String label,
@@ -206,10 +217,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         ResourceSet affectedResourcesInThisView2 = new DefaultResourceSet();
         affectedResourcesInThisView2.addAll(affectedResourcesInThisView);
         return affectedResourcesInThisView2;
-    }
-
-    private void checkResize() {
-        contentDisplay.checkResize();
     }
 
     private PopupManager createPopupManager(ResourceItemValueResolver resolver,
@@ -548,6 +555,15 @@ public class DefaultView extends AbstractWindowContent implements View {
     private void initConfigurationMenu() {
         Image image = new Image(getModuleBase() + IMAGE_CONFIGURATION_MENU);
 
+        image.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                configurationPanel3.setVisible(!configurationPanel3.isVisible());
+                updateContentDisplaySize();
+            }
+        });
+
         CSS.setMarginTopPx(image, 3);
         CSS.setMarginRightPx(image, 4);
 
@@ -728,6 +744,14 @@ public class DefaultView extends AbstractWindowContent implements View {
         mainPanel.add(configurationPanel, DockPanel.NORTH);
         mainPanel.add(contentDisplay.asWidget(), DockPanel.CENTER);
 
+        configurationPanel3 = new StackPanel();
+        configurationPanel3.setStyleName("DefaultView-ConfigurationPanel");
+        configurationPanel3.add(new Label("Section A"), "Legend", false);
+        configurationPanel3.add(new Label("Section B"), "Settings", false);
+        configurationPanel3.add(new Label("Section C"), "Mappings", false);
+        configurationPanel3.setVisible(false);
+        mainPanel.add(configurationPanel3, DockPanel.EAST);
+
         mainPanel.setCellHeight(contentDisplay.asWidget(), "100%");
     }
 
@@ -788,25 +812,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         return resourceItem;
     }
 
-    protected void resize(int width, int height) {
-        /*
-         * special resize method required, because otherwise window height
-         * cannot be reduced by dragging - see
-         * http://code.google.com/p/google-web-toolkit/issues/detail?id=316
-         */
-        int targetHeight = height - configurationPanel.getOffsetHeight();
-        contentDisplay.asWidget().setPixelSize(width, targetHeight);
-
-        /*
-         * fixes problem with list??
-         */
-        if (contentDisplay.asWidget() instanceof RequiresResize) {
-            ((RequiresResize) contentDisplay.asWidget()).onResize();
-        }
-
-        checkResize();
-    }
-
     @Override
     public void restore(final Memento state, final ResourceSetAccessor accessor) {
         /*
@@ -857,6 +862,22 @@ public class DefaultView extends AbstractWindowContent implements View {
         // TODO later: store configuration settings
 
         return memento;
+    }
+
+    /**
+     * Sets the size of the default view.
+     * 
+     * @param width
+     * @param height
+     */
+    private void setSize(int width, int height) {
+        assert height >= 0;
+        assert width >= 0;
+
+        this.width = width;
+        this.height = height;
+
+        updateContentDisplaySize();
     }
 
     protected void updateConfiguration(Set<ResourceItem> addedResourceItems) {
@@ -1042,6 +1063,31 @@ public class DefaultView extends AbstractWindowContent implements View {
                         }));
             }
         }
+    }
+
+    private void updateContentDisplaySize() {
+        /*
+         * special resize method required, because otherwise window height
+         * cannot be reduced by dragging - see
+         * http://code.google.com/p/google-web-toolkit/issues/detail?id=316
+         */
+
+        int targetHeight = height - configurationPanel.getOffsetHeight();
+        int targetWidth = configurationPanel3.isVisible() ? width
+                - configurationPanel3.getOffsetWidth() : width;
+
+        Widget contentWidget = contentDisplay.asWidget();
+        contentWidget.setPixelSize(targetWidth, targetHeight);
+
+        /*
+         * TODO fixes problem with list?? --> this should be handled by the
+         * content display... --> move into abstract impl.
+         */
+        if (contentWidget instanceof RequiresResize) {
+            ((RequiresResize) contentWidget).onResize();
+        }
+
+        contentDisplay.checkResize();
     }
 
     private void updateHighlighting(List<Resource> affectedResources,
