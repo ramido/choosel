@@ -15,38 +15,18 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.chart;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.thechiselgroup.choosel.client.ui.widget.chart.BarChart;
 import org.thechiselgroup.choosel.client.ui.widget.chart.BarChart.LayoutType;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.ViewContentDisplayAction;
 
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 public class BarChartViewContentDisplay extends ChartViewContentDisplay {
-
-    public class BarLayoutAction implements ViewContentDisplayAction {
-
-        private LayoutType layout;
-
-        public BarLayoutAction(LayoutType layout) {
-            this.layout = layout;
-        }
-
-        @Override
-        public void execute() {
-            ((BarChart) chartWidget).setLayout(layout);
-            chartWidget.updateChart();
-        }
-
-        @Override
-        public String getLabel() {
-            return layout.getName();
-        }
-    }
 
     @Inject
     public BarChartViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
@@ -60,14 +40,25 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     }
 
     @Override
-    public List<ViewContentDisplayAction> getActions() {
-        List<ViewContentDisplayAction> actions = new ArrayList<ViewContentDisplayAction>();
+    public Widget getConfigurationWidget() {
+        FlowPanel panel = new FlowPanel();
 
+        final ListBox layoutBox = new ListBox(false);
+        layoutBox.setVisibleItemCount(1);
         for (LayoutType layout : LayoutType.values()) {
-            actions.add(new BarLayoutAction(layout));
+            layoutBox.addItem(layout.getName(), layout.toString());
         }
+        layoutBox.addChangeHandler(new ChangeHandler() {
+            @Override
+            public void onChange(ChangeEvent event) {
+                LayoutType layout = LayoutType.valueOf(layoutBox
+                        .getValue(layoutBox.getSelectedIndex()));
+                ((BarChart) chartWidget).setLayout(layout);
+                chartWidget.updateChart();
+            }
+        });
+        panel.add(layoutBox);
 
-        return actions;
+        return panel;
     }
-
 }

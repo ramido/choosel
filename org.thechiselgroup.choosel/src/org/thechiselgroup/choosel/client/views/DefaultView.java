@@ -737,25 +737,13 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     private void initViewConfigurator() {
-        if (contentDisplay.getActions().isEmpty()) {
+        Widget configurationWidget = contentDisplay.getConfigurationWidget();
+
+        if (configurationWidget == null) {
             return;
         }
 
-        VerticalPanel panel = new VerticalPanel();
-        for (final ViewContentDisplayAction action : contentDisplay
-                .getActions()) {
-
-            Button w = new Button(action.getLabel());
-            w.addClickHandler(new ClickHandler() {
-                @Override
-                public void onClick(ClickEvent event) {
-                    action.execute();
-                }
-            });
-            panel.add(w);
-        }
-
-        sideBar.add(panel, "View Settings");
+        sideBar.add(configurationWidget, "View Settings");
     }
 
     private DefaultResourceItem removeResourceItem(String category) {

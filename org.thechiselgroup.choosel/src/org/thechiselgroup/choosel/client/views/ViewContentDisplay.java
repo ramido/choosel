@@ -15,12 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import java.util.List;
 import java.util.Set;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
 import org.thechiselgroup.choosel.client.util.Disposable;
+
+import com.google.gwt.user.client.ui.Widget;
 
 public interface ViewContentDisplay extends WidgetAdaptable, Disposable {
 
@@ -29,10 +30,12 @@ public interface ViewContentDisplay extends WidgetAdaptable, Disposable {
     void endRestore();
 
     /**
-     * Returns an unmodifiable set of actions that can be executed on this view
-     * content display.
+     * Returns a widget that allows for configuration of this view content
+     * display. This is likely to change, probably towards exposing
+     * configuration properties in a descriptive way. <code>null</code> is a
+     * valid return value.
      */
-    List<ViewContentDisplayAction> getActions();
+    Widget getConfigurationWidget();
 
     /**
      * @return identifiers of the visualization slots (retinal properties etc)

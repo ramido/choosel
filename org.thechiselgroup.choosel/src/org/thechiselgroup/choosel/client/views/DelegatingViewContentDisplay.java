@@ -15,13 +15,16 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import java.util.List;
 import java.util.Set;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
 
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * @author Lars Grammel
+ * 
+ */
 public class DelegatingViewContentDisplay implements ViewContentDisplay {
 
     private ViewContentDisplay delegate;
@@ -53,8 +56,8 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
     }
 
     @Override
-    public List<ViewContentDisplayAction> getActions() {
-        return delegate.getActions();
+    public Widget getConfigurationWidget() {
+        return delegate.getConfigurationWidget();
     }
 
     public ViewContentDisplay getDelegate() {
