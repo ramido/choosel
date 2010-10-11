@@ -129,12 +129,16 @@ public class DefaultPopupManager implements Opacity, PopupManager {
         @Override
         public void dragProxyDetached() {
             if (isEnabled()) {
+                // TODO use event instead that demands closing
                 // hide once drop operation is completed
                 setState(INACTIVE_STATE);
             }
         }
     }
 
+    // separate from raw events --> onPopupGainsAttentation,
+    // onPopupLosesAttention, onSourceGainsAttention, onSourceLosesAttention,
+    // onActivatePopup, onHidePopup, onTimeout
     private static class State {
 
         public void enter(DefaultPopupManager manager) {
@@ -158,6 +162,7 @@ public class DefaultPopupManager implements Opacity, PopupManager {
         public void onSourceMouseOver(DefaultPopupManager manager) {
         }
 
+        // TODO this could be special activation??
         public void onSourceRightClick(DefaultPopupManager manager) {
         }
 
@@ -642,6 +647,7 @@ public class DefaultPopupManager implements Opacity, PopupManager {
         this.hideDelay = delay;
     }
 
+    // TODO move into interface
     // for test
     protected void setPopupTransparency(int newTransparency) {
         assert ((newTransparency >= OPACITY_TRANSPARENT) && (newTransparency <= OPACITY_OPAQUE));
