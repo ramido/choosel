@@ -49,10 +49,9 @@ import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
-import org.thechiselgroup.choosel.client.ui.CSS;
+import org.thechiselgroup.choosel.client.ui.ImageButton;
 import org.thechiselgroup.choosel.client.ui.Presenter;
 import org.thechiselgroup.choosel.client.ui.WidgetFactory;
-import org.thechiselgroup.choosel.client.ui.popup.DefaultPopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.util.Disposable;
@@ -68,10 +67,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockPanel;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasAlignment;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -106,6 +102,10 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     }
 
+    private static final String CSS_EXPANDER = "DefaultView-Expander";
+
+    private static final String CSS_CONFIGURATION_PANEL = "DefaultView-ConfigurationPanel";
+
     private static final String CSS_VIEW_CONFIGURATION_PANEL = "view-configurationPanel";
 
     private static final String MEMENTO_CONTENT_DISPLAY = "contentDisplay";
@@ -113,10 +113,6 @@ public class DefaultView extends AbstractWindowContent implements View {
     private static final String MEMENTO_RESOURCE_MODEL = "resource-model";
 
     private static final String MEMENTO_SELECTION_MODEL = "selection-model";
-
-    private static final String IMAGE_VIEW_MENU = "images/menu.png";
-
-    private static final String IMAGE_CONFIGURATION_MENU = "images/configuration.png";
 
     private ResourceSetEventForwarder allResourcesToSplitterForwarder;
 
@@ -130,13 +126,13 @@ public class DefaultView extends AbstractWindowContent implements View {
     private ResourceItemValueResolver configuration;
 
     // TOOD rename
-    private DockPanel configurationPanel;
+    private DockPanel configurationBar;
 
     // TOOD rename
     private VerticalPanel configurationPanel2;
 
     // TOOD rename
-    private StackPanel configurationPanel3;
+    private StackPanel sideBar;
 
     private ViewContentDisplay contentDisplay;
 
@@ -552,54 +548,13 @@ public class DefaultView extends AbstractWindowContent implements View {
         allResourcesToSplitterForwarder.init();
     }
 
-    private void initConfigurationMenu() {
-        Image image = new Image(getModuleBase() + IMAGE_CONFIGURATION_MENU);
-
-        image.addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                configurationPanel3.setVisible(!configurationPanel3.isVisible());
-                updateContentDisplaySize();
-            }
-        });
-
-        CSS.setMarginTopPx(image, 3);
-        CSS.setMarginRightPx(image, 4);
-
-        {
-            configurationPanel2 = new VerticalPanel();
-            // TODO change styling of buttons
-            configurationPanel2.add(new HTML("<b>Configuration Menu</b>"));
-        }
-
-        // XXX widget provider instead of widget factory for default popup
-        // manager?
-        WidgetFactory widgetFactory = new WidgetFactory() {
-            @Override
-            public Widget createWidget() {
-                return configurationPanel2;
-            }
-        };
-
-        DefaultPopupManager manager = new DefaultPopupManager(widgetFactory);
-        DefaultPopupManager.linkManagerToSource(manager, image);
-        // TODO activate menu on click with left mouse button
-        // TODO change popup menu location
-
-        configurationPanel.add(image, DockPanel.EAST);
-        configurationPanel.setCellHorizontalAlignment(image,
-                HasAlignment.ALIGN_RIGHT);
-    }
-
     private void initConfigurationPanelUI() {
-        configurationPanel = new DockPanel();
-        configurationPanel.setSize("100%", "");
-        configurationPanel.setStyleName(CSS_VIEW_CONFIGURATION_PANEL);
+        configurationBar = new DockPanel();
+        configurationBar.setSize("100%", "");
+        configurationBar.setStyleName(CSS_VIEW_CONFIGURATION_PANEL);
 
         initResourceModelPresenter();
-        initConfigurationMenu();
-        initViewMenu();
+        initSideBarExpander();
         initSelectionModelPresenter();
     }
 
@@ -682,11 +637,16 @@ public class DefaultView extends AbstractWindowContent implements View {
                 }));
     }
 
+    private void initMappingsConfigurator() {
+        configurationPanel2 = new VerticalPanel();
+        sideBar.add(configurationPanel2, "Mappings");
+    }
+
     private void initResourceModelPresenter() {
         Widget widget = resourceModelPresenter.asWidget();
 
-        configurationPanel.add(widget, DockPanel.WEST);
-        configurationPanel.setCellHorizontalAlignment(widget,
+        configurationBar.add(widget, DockPanel.WEST);
+        configurationBar.setCellHorizontalAlignment(widget,
                 HasAlignment.ALIGN_LEFT);
     }
 
@@ -724,15 +684,43 @@ public class DefaultView extends AbstractWindowContent implements View {
         selectionModelPresenter.init();
 
         Widget widget = selectionModelPresenter.asWidget();
-        configurationPanel.add(widget, DockPanel.EAST);
-        configurationPanel.setCellHorizontalAlignment(widget,
+        configurationBar.add(widget, DockPanel.EAST);
+        configurationBar.setCellHorizontalAlignment(widget,
                 HasAlignment.ALIGN_RIGHT);
-        configurationPanel.setCellWidth(widget, "100%"); // eats up all space
+        configurationBar.setCellWidth(widget, "100%"); // eats up all space
     }
 
-    // TODO move non-ui stuff to constructor
+    private void initSideBar() {
+        sideBar = new StackPanel();
+        sideBar.setStyleName(CSS_CONFIGURATION_PANEL);
+        sideBar.setVisible(false);
+
+        initMappingsConfigurator();
+        initViewConfigurator();
+    }
+
+    private void initSideBarExpander() {
+        ImageButton expander = ImageButton.createExpanderButton();
+
+        expander.setStyleName(CSS_EXPANDER);
+
+        expander.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                sideBar.setVisible(!sideBar.isVisible());
+                updateContentDisplaySize();
+            }
+        });
+
+        configurationBar.add(expander, DockPanel.EAST);
+        configurationBar.setCellHorizontalAlignment(expander,
+                HasAlignment.ALIGN_RIGHT);
+    }
+
     protected void initUI() {
         initConfigurationPanelUI();
+        initSideBar();
 
         mainPanel = new MainPanel();
 
@@ -741,62 +729,33 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         mainPanel.setSize("500px", "300px");
 
-        mainPanel.add(configurationPanel, DockPanel.NORTH);
+        mainPanel.add(configurationBar, DockPanel.NORTH);
         mainPanel.add(contentDisplay.asWidget(), DockPanel.CENTER);
-
-        configurationPanel3 = new StackPanel();
-        configurationPanel3.setStyleName("DefaultView-ConfigurationPanel");
-        configurationPanel3.add(new Label("Section A"), "Legend", false);
-        configurationPanel3.add(new Label("Section B"), "Settings", false);
-        configurationPanel3.add(new Label("Section C"), "Mappings", false);
-        configurationPanel3.setVisible(false);
-        mainPanel.add(configurationPanel3, DockPanel.EAST);
+        mainPanel.add(sideBar, DockPanel.EAST);
 
         mainPanel.setCellHeight(contentDisplay.asWidget(), "100%");
     }
 
-    private void initViewMenu() {
+    private void initViewConfigurator() {
         if (contentDisplay.getActions().isEmpty()) {
             return;
         }
 
-        Image image = new Image(getModuleBase() + IMAGE_VIEW_MENU);
+        VerticalPanel panel = new VerticalPanel();
+        for (final ViewContentDisplayAction action : contentDisplay
+                .getActions()) {
 
-        CSS.setMarginTopPx(image, 3);
-        CSS.setMarginRightPx(image, 4);
-
-        WidgetFactory widgetFactory = new WidgetFactory() {
-            @Override
-            public Widget createWidget() {
-                VerticalPanel panel = new VerticalPanel();
-
-                // TODO change styling of buttons
-                panel.add(new HTML("<b>View Menu</b>"));
-                for (final ViewContentDisplayAction action : contentDisplay
-                        .getActions()) {
-
-                    Button w = new Button(action.getLabel());
-                    w.addClickHandler(new ClickHandler() {
-                        @Override
-                        public void onClick(ClickEvent event) {
-                            action.execute();
-                        }
-                    });
-                    panel.add(w);
+            Button w = new Button(action.getLabel());
+            w.addClickHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    action.execute();
                 }
+            });
+            panel.add(w);
+        }
 
-                return panel;
-            }
-        };
-
-        DefaultPopupManager manager = new DefaultPopupManager(widgetFactory);
-        DefaultPopupManager.linkManagerToSource(manager, image);
-        // TODO activate menu on click with left mouse button
-        // TODO change popup menu location
-
-        configurationPanel.add(image, DockPanel.EAST);
-        configurationPanel.setCellHorizontalAlignment(image,
-                HasAlignment.ALIGN_RIGHT);
+        sideBar.add(panel, "View Settings");
     }
 
     private DefaultResourceItem removeResourceItem(String category) {
@@ -1072,9 +1031,9 @@ public class DefaultView extends AbstractWindowContent implements View {
          * http://code.google.com/p/google-web-toolkit/issues/detail?id=316
          */
 
-        int targetHeight = height - configurationPanel.getOffsetHeight();
-        int targetWidth = configurationPanel3.isVisible() ? width
-                - configurationPanel3.getOffsetWidth() : width;
+        int targetHeight = height - configurationBar.getOffsetHeight();
+        int targetWidth = sideBar.isVisible() ? width
+                - sideBar.getOffsetWidth() : width;
 
         Widget contentWidget = contentDisplay.asWidget();
         contentWidget.setPixelSize(targetWidth, targetHeight);

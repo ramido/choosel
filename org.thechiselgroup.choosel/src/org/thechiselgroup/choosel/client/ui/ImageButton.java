@@ -27,7 +27,13 @@ import com.google.gwt.user.client.ui.Image;
 
 public class ImageButton extends Image implements HasEnabledState {
 
-    public static final String CSS_IMAGE_COMMAND_DISPLAY = "ImageButton";
+    private static final String EXPANDER = "expander";
+
+    public static ImageButton createExpanderButton() {
+        return new ImageButton(IconURLBuilder.getIconUrl(EXPANDER,
+                IconType.NORMAL, ""), IconURLBuilder.getIconUrl(EXPANDER,
+                IconType.HIGHLIGHTED, ""), null);
+    }
 
     public static ImageButton createImageButton(String name) {
         return new ImageButton(getIconUrl(name, IconType.NORMAL), getIconUrl(
@@ -55,7 +61,6 @@ public class ImageButton extends Image implements HasEnabledState {
                 : normalUrl;
         this.disabledUrl = disabledUrl != null ? disabledUrl : normalUrl;
 
-        setStyleName(CSS_IMAGE_COMMAND_DISPLAY);
         setUrl(normalUrl);
 
         addMouseOverHandler(new MouseOverHandler() {
