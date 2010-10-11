@@ -210,6 +210,10 @@ button.popup-content-action:active {
 	background-color: rgb(218, 229, 243);
 }
 
+.DefaultView-Expander {
+	
+}
+
 .infoLabel {
     font-size: 13px;
     padding-top: 3px;
@@ -319,12 +323,4 @@ button.popup-content-action:active {
 
 .importCSV:active {
     background-color: rgb(255, 255, 225);
-}
-
-/**
- * Command Icons
- */
-.ImageButton {
-	width: 22px;
-	height: 22px;
 }
