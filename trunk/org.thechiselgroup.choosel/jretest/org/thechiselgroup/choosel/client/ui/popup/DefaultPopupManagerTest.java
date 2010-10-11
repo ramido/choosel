@@ -28,7 +28,7 @@ import org.thechiselgroup.choosel.client.test.DndTestHelpers;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.client.ui.WidgetFactory;
 
-public class PopupManagerTest {
+public class DefaultPopupManagerTest {
 
     @Mock
     private PopupClosingHandler closingHandler;
@@ -56,7 +56,7 @@ public class PopupManagerTest {
         underTest = new DefaultPopupManager(widgetFactory) {
             @Override
             protected void setPopupTransparency(int newTransparency) {
-            };
+            }
         };
     }
 
