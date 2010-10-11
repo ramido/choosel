@@ -78,7 +78,7 @@ public class ChooselExampleApplication extends ChooselApplication {
 	private GeoRSSServiceAsync geoRssService;
 
 	private void addDataSourcesButton() {
-		Button geoRssButton = new Button("Tsunami / Earthquake");
+		Button geoRssButton = new Button("Ts/Eq");
 		geoRssButton.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -109,12 +109,12 @@ public class ChooselExampleApplication extends ChooselApplication {
 
 		});
 
-		addWidget(DATA_PANEL, geoRssButton);
+		addWidget(DEVELOPER_MODE_PANEL, geoRssButton);
 	}
 
 	// TODO change into command
 	private void addTestDataSourceButton() {
-		Button b = new Button("Test Data");
+		Button b = new Button("T-Data");
 		b.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -165,13 +165,15 @@ public class ChooselExampleApplication extends ChooselApplication {
 
 		});
 
-		addWidget(DATA_PANEL, b);
+		addWidget(DEVELOPER_MODE_PANEL, b);
 	}
 
 	@Override
 	protected void initCustomActions() {
-		addDataSourcesButton();
-		addTestDataSourceButton();
+		if (runsInDevelopmentMode()) {
+			addDataSourcesButton();
+			addTestDataSourceButton();
+		}
 
 		addWindowContentButton(VIEWS_PANEL, "Note",
 				ChooselInjectionConstants.WINDOW_CONTENT_NOTE);
@@ -204,7 +206,7 @@ public class ChooselExampleApplication extends ChooselApplication {
 
 	@Override
 	protected void initCustomPanels() {
-		addToolbarPanel(VIEWS_PANEL, "Views");
 		addToolbarPanel(DATA_PANEL, "Data Sources");
+		addToolbarPanel(VIEWS_PANEL, "Views");
 	}
 }

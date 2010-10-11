@@ -48,6 +48,7 @@ import org.thechiselgroup.choosel.client.workspace.command.NewWorkspaceCommand;
 import org.thechiselgroup.choosel.client.workspace.command.SaveWorkspaceCommand;
 import org.thechiselgroup.choosel.client.workspace.command.ShareWorkspaceCommand;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -75,6 +76,8 @@ public abstract class ChooselApplication {
     public static final String VIEWS_PANEL = "views";
 
     public static final String WORKSPACE_PANEL = "workspace";
+
+    public static final String DEVELOPER_MODE_PANEL = "developer_mode";
 
     @Inject
     private ActionBar actionBar;
@@ -267,6 +270,10 @@ public abstract class ChooselApplication {
         addToolbarPanel(EDIT_PANEL, "Edit");
         initCustomPanels();
         addToolbarPanel(HELP_PANEL, "Help");
+
+        if (runsInDevelopmentMode()) {
+            addToolbarPanel(DEVELOPER_MODE_PANEL, "Dev Mode");
+        }
     }
 
     private void initAuthenticationBar() {
@@ -408,6 +415,10 @@ public abstract class ChooselApplication {
                     workspaceID, workspacePersistenceManager);
             asyncCommandExecutor.execute(loadWorkspaceCommand);
         }
+    }
+
+    protected boolean runsInDevelopmentMode() {
+        return !GWT.isScript();
     }
 
 }
