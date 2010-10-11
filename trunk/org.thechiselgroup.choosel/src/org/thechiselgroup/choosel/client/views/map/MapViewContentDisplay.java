@@ -25,12 +25,15 @@ import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.maps.client.MapType;
 import com.google.gwt.maps.client.MapWidget;
-import com.google.gwt.maps.client.control.MenuMapTypeControl;
 import com.google.gwt.maps.client.control.SmallMapControl;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -80,13 +83,52 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
         map.setHeight("100%");
 
         map.addControl(new SmallMapControl());
-        map.addControl(new MenuMapTypeControl());
 
         map.addMapType(MapType.getPhysicalMap());
         map.setCurrentMapType(MapType.getHybridMap());
         map.setScrollWheelZoomEnabled(true);
 
         return map;
+    }
+
+    @Override
+    public Widget getConfigurationWidget() {
+        FlowPanel panel = new FlowPanel();
+
+        final ListBox layoutBox = new ListBox(false);
+        layoutBox.setVisibleItemCount(1);
+
+        layoutBox.addItem("Hybrid", MEMENTO_MAP_TYPE_HYBRID);
+        layoutBox.addItem("Map", MEMENTO_MAP_TYPE_NORMAL);
+        layoutBox.addItem("Satellite", MEMENTO_MAP_TYPE_SATELLITE);
+        layoutBox.addItem("Terrain", MEMENTO_MAP_TYPE_PHYSICAL);
+
+        layoutBox.addChangeHandler(new ChangeHandler() {
+            @Override
+            public void onChange(ChangeEvent event) {
+                setMapType(layoutBox.getValue(layoutBox.getSelectedIndex()));
+            }
+        });
+        panel.add(layoutBox);
+
+        return panel;
+    }
+
+    public String getMapType() {
+        MapType mapType = map.getCurrentMapType();
+        if (MapType.getNormalMap().equals(mapType)) {
+            return MEMENTO_MAP_TYPE_NORMAL;
+        } else if (MapType.getSatelliteMap().equals(mapType)) {
+            return MEMENTO_MAP_TYPE_SATELLITE;
+        } else if (MapType.getPhysicalMap().equals(mapType)) {
+            return MEMENTO_MAP_TYPE_PHYSICAL;
+        } else if (MapType.getHybridMap().equals(mapType)) {
+            return MEMENTO_MAP_TYPE_HYBRID;
+        } else {
+            throw new RuntimeException(
+                    "map type persistence not supported for type "
+                            + mapType.getName(false));
+        }
     }
 
     @Override
@@ -125,7 +167,7 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
 
     @Override
     public void restore(Memento state) {
-        restoreMapType(state);
+        setMapType((String) state.getValue(MEMENTO_MAP_TYPE));
         restoreCenterPosition(state);
         restoreZoomLevel(state);
     }
@@ -136,22 +178,6 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
         double centerLongitude = Double.parseDouble((String) state
                 .getValue(MEMENTO_CENTER_LONGITUDE));
         map.setCenter(LatLng.newInstance(centerLatitude, centerLongitude));
-    }
-
-    private void restoreMapType(Memento state) {
-        String mapTypeID = (String) state.getValue(MEMENTO_MAP_TYPE);
-        if (MEMENTO_MAP_TYPE_NORMAL.equals(mapTypeID)) {
-            map.setCurrentMapType(MapType.getNormalMap());
-        } else if (MEMENTO_MAP_TYPE_SATELLITE.equals(mapTypeID)) {
-            map.setCurrentMapType(MapType.getSatelliteMap());
-        } else if (MEMENTO_MAP_TYPE_PHYSICAL.equals(mapTypeID)) {
-            map.setCurrentMapType(MapType.getPhysicalMap());
-        } else if (MEMENTO_MAP_TYPE_HYBRID.equals(mapTypeID)) {
-            map.setCurrentMapType(MapType.getHybridMap());
-        } else {
-            throw new RuntimeException(
-                    "map type persistence not supported for type " + mapTypeID);
-        }
     }
 
     private void restoreZoomLevel(Memento state) {
@@ -166,7 +192,7 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
 
         saveCenterPosition(state);
         saveZoomLevel(state);
-        saveMapType(state);
+        state.setValue(MEMENTO_MAP_TYPE, getMapType());
 
         return state;
     }
@@ -179,27 +205,23 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
                 Double.toString(center.getLatitude()));
     }
 
-    private void saveMapType(Memento state) {
-        String mapTypeID;
-        MapType mapType = map.getCurrentMapType();
-        if (MapType.getNormalMap().equals(mapType)) {
-            mapTypeID = MEMENTO_MAP_TYPE_NORMAL;
-        } else if (MapType.getSatelliteMap().equals(mapType)) {
-            mapTypeID = MEMENTO_MAP_TYPE_SATELLITE;
-        } else if (MapType.getPhysicalMap().equals(mapType)) {
-            mapTypeID = MEMENTO_MAP_TYPE_PHYSICAL;
-        } else if (MapType.getHybridMap().equals(mapType)) {
-            mapTypeID = MEMENTO_MAP_TYPE_HYBRID;
-        } else {
-            throw new RuntimeException(
-                    "map type persistence not supported for type "
-                            + mapType.getName(false));
-        }
-        state.setValue(MEMENTO_MAP_TYPE, mapTypeID);
-    }
-
     private void saveZoomLevel(Memento state) {
         state.setValue(MEMENTO_ZOOM_LEVEL, Integer.toString(map.getZoomLevel()));
+    }
+
+    public void setMapType(String mapTypeID) {
+        if (MEMENTO_MAP_TYPE_NORMAL.equals(mapTypeID)) {
+            map.setCurrentMapType(MapType.getNormalMap());
+        } else if (MEMENTO_MAP_TYPE_SATELLITE.equals(mapTypeID)) {
+            map.setCurrentMapType(MapType.getSatelliteMap());
+        } else if (MEMENTO_MAP_TYPE_PHYSICAL.equals(mapTypeID)) {
+            map.setCurrentMapType(MapType.getPhysicalMap());
+        } else if (MEMENTO_MAP_TYPE_HYBRID.equals(mapTypeID)) {
+            map.setCurrentMapType(MapType.getHybridMap());
+        } else {
+            throw new RuntimeException(
+                    "map type persistence not supported for type " + mapTypeID);
+        }
     }
 
     // TODO move to library class
