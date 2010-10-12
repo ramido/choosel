@@ -101,7 +101,7 @@ public abstract class ChooselApplication {
     protected Desktop desktop;
 
     @Inject
-    private DialogManager dialogManager;
+    protected DialogManager dialogManager;
 
     @Inject
     private InfoDialog infoDialog;
