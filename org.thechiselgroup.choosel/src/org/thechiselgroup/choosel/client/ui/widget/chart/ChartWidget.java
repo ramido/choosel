@@ -29,6 +29,7 @@ import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFuncti
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionStringToString;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Scale;
 import org.thechiselgroup.choosel.client.views.DefaultResourceItem.Status;
+import org.thechiselgroup.choosel.client.views.Slot;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
@@ -37,18 +38,17 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * 
  * @author Bradley Blashko
- * 
+ * @author Lars Grammel
  */
 public abstract class ChartWidget extends Widget {
 
     public static class ChartItemComparator implements Comparator<ChartItem> {
 
-        private String slotType;
+        private Slot slot;
 
-        public ChartItemComparator(String slotType) {
-            this.slotType = slotType;
+        public ChartItemComparator(Slot slot) {
+            this.slot = slot;
         }
 
         @Override
@@ -58,7 +58,7 @@ public abstract class ChartWidget extends Widget {
         }
 
         private String getDescriptionString(ChartItem item) {
-            return item.getResourceItem().getResourceValue(slotType).toString();
+            return item.getResourceItem().getResourceValue(slot).toString();
         }
     }
 
@@ -236,7 +236,7 @@ public abstract class ChartWidget extends Widget {
     }
 
     // XXX not called anywhere
-    protected SlotValues getSlotValues(String slot) {
+    protected SlotValues getSlotValues(Slot slot) {
         double[] slotValues = new double[chartItems.size()];
 
         for (int i = 0; i < chartItems.size(); i++) {

@@ -182,8 +182,8 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
     }
 
     @Override
-    public Object getResourceValue(String slotID) {
-        return valueResolver.resolve(slotID, category, resources);
+    public Object getResourceValue(Slot slot) {
+        return valueResolver.resolve(slot, category, resources);
     }
 
     @Override

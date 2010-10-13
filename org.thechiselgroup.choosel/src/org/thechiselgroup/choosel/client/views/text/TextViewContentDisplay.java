@@ -27,6 +27,7 @@ import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.client.util.CollectionUtils;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.Slot;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.text.TextItem.TextItemLabel;
 
@@ -234,9 +235,9 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     @Override
-    public String[] getSlotIDs() {
+    public Slot[] getSlots() {
         // TODO introduce font size slot?
-        return new String[] { SlotResolver.DESCRIPTION_SLOT,
+        return new Slot[] { SlotResolver.DESCRIPTION_SLOT,
                 SlotResolver.MAGNITUDE_SLOT };
     }
 

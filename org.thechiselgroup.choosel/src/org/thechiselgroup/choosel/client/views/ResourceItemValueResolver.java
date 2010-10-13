@@ -25,7 +25,7 @@ public class ResourceItemValueResolver {
 
     private DefaultResourceSetToValueResolverFactory resourceSetResolverFactory;
 
-    private Map<String, ResourceSetToValueResolver> slotIDsToValueResolvers = new HashMap<String, ResourceSetToValueResolver>();
+    private Map<Slot, ResourceSetToValueResolver> slotsToValueResolvers = new HashMap<Slot, ResourceSetToValueResolver>();
 
     public ResourceItemValueResolver(
             DefaultResourceSetToValueResolverFactory resourceSetResolverFactory) {
@@ -33,28 +33,28 @@ public class ResourceItemValueResolver {
     }
 
     // TODO search for calls from outside this class and remove
-    public ResourceSetToValueResolver getResourceSetResolver(String slotID) {
-        assert slotID != null;
+    public ResourceSetToValueResolver getResourceSetResolver(Slot slot) {
+        assert slot != null;
 
-        if (!slotIDsToValueResolvers.containsKey(slotID)) {
-            slotIDsToValueResolvers.put(slotID,
-                    resourceSetResolverFactory.createResolver(slotID));
+        if (!slotsToValueResolvers.containsKey(slot)) {
+            slotsToValueResolvers.put(slot,
+                    resourceSetResolverFactory.createResolver(slot));
         }
 
-        return slotIDsToValueResolvers.get(slotID);
+        return slotsToValueResolvers.get(slot);
     }
 
-    public ResourceSetToValueResolver put(String slotID,
+    public ResourceSetToValueResolver put(Slot slot,
             ResourceSetToValueResolver resolver) {
-        return slotIDsToValueResolvers.put(slotID, resolver);
+        return slotsToValueResolvers.put(slot, resolver);
     }
 
     /*
      * TODO add semantic meta-information as parameter, e.g. expected return
      * type or context (semantic description of slot?)
      */
-    public Object resolve(String slotID, String category, ResourceSet resources) {
-        return getResourceSetResolver(slotID).resolve(resources, category);
+    public Object resolve(Slot slot, String category, ResourceSet resources) {
+        return getResourceSetResolver(slot).resolve(resources, category);
     }
 
 }

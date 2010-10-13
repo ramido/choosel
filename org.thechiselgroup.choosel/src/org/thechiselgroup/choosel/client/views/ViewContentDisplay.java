@@ -38,10 +38,10 @@ public interface ViewContentDisplay extends WidgetAdaptable, Disposable {
     Widget getConfigurationWidget();
 
     /**
-     * @return identifiers of the visualization slots (retinal properties etc)
-     *         that are supported by this view content display.
+     * @return visualization slots that are supported by this view content
+     *         display.
      */
-    String[] getSlotIDs();
+    Slot[] getSlots();
 
     void init(ViewContentDisplayCallback callback);
 

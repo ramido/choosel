@@ -22,6 +22,7 @@ import org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.Slot;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 
 import com.google.inject.Inject;
@@ -62,8 +63,8 @@ public abstract class ChartViewContentDisplay extends
     // SlotResolver.X_COORDINATE_SLOT, SlotResolver.Y_COORDINATE_SLOT };
     // }
     @Override
-    public String[] getSlotIDs() {
-        return new String[] { SlotResolver.CHART_LABEL_SLOT,
+    public Slot[] getSlots() {
+        return new Slot[] { SlotResolver.CHART_LABEL_SLOT,
                 SlotResolver.CHART_VALUE_SLOT };
     }
 

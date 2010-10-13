@@ -22,10 +22,10 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 public class ResourceSetToSumResolver extends
         AbstractResourceSetToValueResolver {
 
-    public ResourceSetToSumResolver(String slotID,
+    public ResourceSetToSumResolver(Slot slot,
             DefaultResourceToValueResolverFactory factory,
             ResourceCategorizer categorizer) {
-        super(slotID, factory, categorizer);
+        super(slot, factory, categorizer);
     }
 
     @Override

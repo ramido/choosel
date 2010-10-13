@@ -39,7 +39,7 @@ public interface ViewContentDisplayCallback {
 
     List<ResourceItem> getResourceItems(Resource resource);
 
-    void putResolver(String slotID, ResourceSetToValueResolver resolver);
+    void putResolver(Slot slot, ResourceSetToValueResolver resolver);
 
     void setCategorizer(ResourceMultiCategorizer categorizer);
 

@@ -34,7 +34,7 @@ public interface ResourceItem {
 
     ResourceSet getResourceSet();
 
-    Object getResourceValue(String slotID);
+    Object getResourceValue(Slot slot);
 
     Collection<Resource> getSelectedResources();
 

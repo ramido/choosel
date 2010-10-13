@@ -600,10 +600,9 @@ public class DefaultView extends AbstractWindowContent implements View {
             }
 
             @Override
-            public void putResolver(String slotID,
+            public void putResolver(Slot slot,
                     ResourceSetToValueResolver resolver) {
-
-                configuration.put(slotID, resolver);
+                configuration.put(slot, resolver);
             }
 
             @Override
@@ -855,7 +854,7 @@ public class DefaultView extends AbstractWindowContent implements View {
         /*
          * TODO move
          */
-        if (Arrays.asList(contentDisplay.getSlotIDs()).contains(
+        if (Arrays.asList(contentDisplay.getSlots()).contains(
                 SlotResolver.LOCATION_SLOT)) {
 
             final List<String> propertyNames = getLocationPropertyNames(addedResourceItems);
@@ -877,7 +876,7 @@ public class DefaultView extends AbstractWindowContent implements View {
         /*
          * TODO move
          */
-        if (Arrays.asList(contentDisplay.getSlotIDs()).contains(
+        if (Arrays.asList(contentDisplay.getSlots()).contains(
                 SlotResolver.DATE_SLOT)) {
 
             final List<String> propertyNames = getDatePropertyNames(addedResourceItems);
@@ -899,7 +898,7 @@ public class DefaultView extends AbstractWindowContent implements View {
         /*
          * TODO move
          */
-        if (Arrays.asList(contentDisplay.getSlotIDs()).contains(
+        if (Arrays.asList(contentDisplay.getSlots()).contains(
                 SlotResolver.DESCRIPTION_SLOT)) {
 
             final List<String> stringPropertyNames = getStringPropertyNames(addedResourceItems);
@@ -922,7 +921,7 @@ public class DefaultView extends AbstractWindowContent implements View {
             }
         }
 
-        if (Arrays.asList(contentDisplay.getSlotIDs()).contains(
+        if (Arrays.asList(contentDisplay.getSlots()).contains(
                 SlotResolver.CHART_LABEL_SLOT)) {
 
             final List<String> stringPropertyNames = getStringPropertyNames(addedResourceItems);
@@ -944,7 +943,7 @@ public class DefaultView extends AbstractWindowContent implements View {
             }
         }
 
-        if (Arrays.asList(contentDisplay.getSlotIDs()).contains(
+        if (Arrays.asList(contentDisplay.getSlots()).contains(
                 SlotResolver.CHART_VALUE_SLOT)) {
 
             final List<String> propertyNames = getDoublePropertyNames(addedResourceItems);

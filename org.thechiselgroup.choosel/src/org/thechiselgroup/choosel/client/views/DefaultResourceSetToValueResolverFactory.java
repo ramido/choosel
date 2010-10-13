@@ -42,13 +42,13 @@ public class DefaultResourceSetToValueResolverFactory {
                 slotResolver);
     }
 
-    public ResourceSetToValueResolver createResolver(String slotID) {
-        assert slotID != null;
+    public ResourceSetToValueResolver createResolver(Slot slot) {
+        assert slot != null;
 
         // TODO need default aggregate resolvers for the different slots
         // e.g. for the tag cloud vs list
-        if (SlotResolver.DESCRIPTION_SLOT.equals(slotID)) {
-            return new ResourceSetToFirstResourcePropertyResolver(slotID,
+        if (SlotResolver.DESCRIPTION_SLOT.equals(slot)) {
+            return new ResourceSetToFirstResourcePropertyResolver(slot,
                     resourceResolverFactory, resourceByTypeCategorizer) {
 
                 @Override
@@ -73,65 +73,65 @@ public class DefaultResourceSetToValueResolverFactory {
             // resourceResolverFactory, resourceByTypeCategorizer);
         }
 
-        if (SlotResolver.CHART_LABEL_SLOT.equals(slotID)) {
-            return new ResourceSetToFirstResourcePropertyResolver(slotID,
+        if (SlotResolver.CHART_LABEL_SLOT.equals(slot)) {
+            return new ResourceSetToFirstResourcePropertyResolver(slot,
                     resourceResolverFactory, resourceByTypeCategorizer);
         }
 
-        if (SlotResolver.COLOR_SLOT.equals(slotID)) {
+        if (SlotResolver.COLOR_SLOT.equals(slot)) {
             return new ResourceSetToColorResolver(resourceByTypeCategorizer);
         }
 
-        if (SlotResolver.LABEL_SLOT.equals(slotID)) {
-            return new ResourceSetToStringListValueResolver(slotID,
+        if (SlotResolver.LABEL_SLOT.equals(slot)) {
+            return new ResourceSetToStringListValueResolver(slot,
                     resourceResolverFactory, resourceByTypeCategorizer);
         }
 
-        if (SlotResolver.DATE_SLOT.equals(slotID)) {
-            return new ResourceSetToFirstResourcePropertyResolver(slotID,
+        if (SlotResolver.DATE_SLOT.equals(slot)) {
+            return new ResourceSetToFirstResourcePropertyResolver(slot,
                     resourceResolverFactory, resourceByTypeCategorizer);
         }
 
-        if (SlotResolver.LOCATION_SLOT.equals(slotID)) {
-            return new ResourceSetToFirstResourcePropertyResolver(slotID,
+        if (SlotResolver.LOCATION_SLOT.equals(slot)) {
+            return new ResourceSetToFirstResourcePropertyResolver(slot,
                     resourceResolverFactory, resourceByTypeCategorizer);
         }
 
-        if (SlotResolver.GRAPH_LABEL_SLOT.equals(slotID)) {
-            return new ResourceSetToStringListValueResolver(slotID,
+        if (SlotResolver.GRAPH_LABEL_SLOT.equals(slot)) {
+            return new ResourceSetToStringListValueResolver(slot,
                     resourceResolverFactory, resourceByTypeCategorizer);
         }
 
-        if (SlotResolver.GRAPH_NODE_BORDER_COLOR_SLOT.equals(slotID)) {
-            return new ResourceSetToFirstResourcePropertyResolver(slotID,
+        if (SlotResolver.GRAPH_NODE_BORDER_COLOR_SLOT.equals(slot)) {
+            return new ResourceSetToFirstResourcePropertyResolver(slot,
                     resourceResolverFactory, resourceByTypeCategorizer);
         }
 
-        if (SlotResolver.GRAPH_NODE_BACKGROUND_COLOR_SLOT.equals(slotID)) {
-            return new ResourceSetToFirstResourcePropertyResolver(slotID,
+        if (SlotResolver.GRAPH_NODE_BACKGROUND_COLOR_SLOT.equals(slot)) {
+            return new ResourceSetToFirstResourcePropertyResolver(slot,
                     resourceResolverFactory, resourceByTypeCategorizer);
         }
 
-        if (slotID.equals(SlotResolver.MAGNITUDE_SLOT)) {
-            return new ResourceSetToSumResolver(slotID,
-                    resourceResolverFactory, resourceByTypeCategorizer);
+        if (slot.equals(SlotResolver.MAGNITUDE_SLOT)) {
+            return new ResourceSetToSumResolver(slot, resourceResolverFactory,
+                    resourceByTypeCategorizer);
         }
 
-        if (slotID.equals(SlotResolver.X_COORDINATE_SLOT)) {
-            return new ResourceSetToSumResolver(slotID,
-                    resourceResolverFactory, resourceByTypeCategorizer);
+        if (slot.equals(SlotResolver.X_COORDINATE_SLOT)) {
+            return new ResourceSetToSumResolver(slot, resourceResolverFactory,
+                    resourceByTypeCategorizer);
         }
 
-        if (slotID.equals(SlotResolver.Y_COORDINATE_SLOT)) {
-            return new ResourceSetToSumResolver(slotID,
-                    resourceResolverFactory, resourceByTypeCategorizer);
+        if (slot.equals(SlotResolver.Y_COORDINATE_SLOT)) {
+            return new ResourceSetToSumResolver(slot, resourceResolverFactory,
+                    resourceByTypeCategorizer);
         }
 
-        if (slotID.equals(SlotResolver.FONT_SIZE_SLOT)) {
+        if (slot.equals(SlotResolver.FONT_SIZE_SLOT)) {
             return new ResourceSetToCountResolver();
         }
 
-        if (slotID.equals(SlotResolver.CHART_VALUE_SLOT)) {
+        if (slot.equals(SlotResolver.CHART_VALUE_SLOT)) {
             return new ResourceSetToCountResolver();
         }
 

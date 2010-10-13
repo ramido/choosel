@@ -59,6 +59,7 @@ import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.Slot;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayAction;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
@@ -387,8 +388,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     }
 
     @Override
-    public String[] getSlotIDs() {
-        return new String[] { SlotResolver.DESCRIPTION_SLOT,
+    public Slot[] getSlots() {
+        return new Slot[] { SlotResolver.DESCRIPTION_SLOT,
                 SlotResolver.GRAPH_LABEL_SLOT,
                 SlotResolver.GRAPH_NODE_BORDER_COLOR_SLOT,
                 SlotResolver.GRAPH_NODE_BACKGROUND_COLOR_SLOT };

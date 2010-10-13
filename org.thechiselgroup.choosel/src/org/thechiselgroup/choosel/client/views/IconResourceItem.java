@@ -74,8 +74,8 @@ public abstract class IconResourceItem {
     }
 
     // TODO pull up
-    protected Object getResourceValue(String key) {
-        return resourceItem.getResourceValue(key);
+    protected Object getResourceValue(Slot slot) {
+        return resourceItem.getResourceValue(slot);
     }
 
     protected String getSelectedColor() {

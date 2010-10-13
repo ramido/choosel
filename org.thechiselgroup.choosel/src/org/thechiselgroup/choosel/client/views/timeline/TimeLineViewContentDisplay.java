@@ -24,6 +24,7 @@ import org.thechiselgroup.choosel.client.ui.widget.timeline.TimeLineWidget;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.Slot;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -80,8 +81,8 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     @Override
-    public String[] getSlotIDs() {
-        return new String[] { SlotResolver.DESCRIPTION_SLOT,
+    public Slot[] getSlots() {
+        return new Slot[] { SlotResolver.DESCRIPTION_SLOT,
                 SlotResolver.COLOR_SLOT, SlotResolver.DATE_SLOT };
     }
 
