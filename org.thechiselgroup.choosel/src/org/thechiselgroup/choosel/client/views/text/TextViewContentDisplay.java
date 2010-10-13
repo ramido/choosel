@@ -258,7 +258,7 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
     @Override
     public void update(Set<ResourceItem> addedResourceItems,
             Set<ResourceItem> updatedResourceItems,
-            Set<ResourceItem> removedResourceItems) {
+            Set<ResourceItem> removedResourceItems, Set<Slot> changedSlots) {
 
         for (ResourceItem resourceItem : addedResourceItems) {
             TextItem textItem = new TextItem(display, dragController,

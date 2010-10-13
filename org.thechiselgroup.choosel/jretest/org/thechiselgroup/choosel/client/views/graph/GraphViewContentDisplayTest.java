@@ -57,6 +57,7 @@ import org.thechiselgroup.choosel.client.util.CollectionUtils;
 import org.thechiselgroup.choosel.client.views.DefaultResourceItem;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.Slot;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay.Display;
 
@@ -112,7 +113,8 @@ public class GraphViewContentDisplayTest {
 
         underTest.update(toSet(resourceItem1, resourceItem2),
                 Collections.<ResourceItem> emptySet(),
-                Collections.<ResourceItem> emptySet());
+                Collections.<ResourceItem> emptySet(),
+                Collections.<Slot> emptySet());
 
         String arcId = underTest.getArcId("arcType", resourceSet1
                 .getFirstResource().getUri(), resourceSet2.getFirstResource()
@@ -136,7 +138,8 @@ public class GraphViewContentDisplayTest {
 
         underTest.update(toSet(resourceItem),
                 Collections.<ResourceItem> emptySet(),
-                Collections.<ResourceItem> emptySet());
+                Collections.<ResourceItem> emptySet(),
+                Collections.<Slot> emptySet());
 
         resourceSet.add(createResource(2));
 
@@ -186,7 +189,8 @@ public class GraphViewContentDisplayTest {
 
         underTest.update(toSet(resourceItem1, resourceItem2),
                 Collections.<ResourceItem> emptySet(),
-                Collections.<ResourceItem> emptySet());
+                Collections.<ResourceItem> emptySet(),
+                Collections.<Slot> emptySet());
 
         Node node1 = ((GraphItem) resourceItem1.getDisplayObject()).getNode();
         Node node2 = ((GraphItem) resourceItem2.getDisplayObject()).getNode();
@@ -204,7 +208,8 @@ public class GraphViewContentDisplayTest {
 
         underTest.update(toSet(resourceItem),
                 Collections.<ResourceItem> emptySet(),
-                Collections.<ResourceItem> emptySet());
+                Collections.<ResourceItem> emptySet(),
+                Collections.<Slot> emptySet());
 
         ArgumentCaptor<DefaultResourceItem> argument = ArgumentCaptor
                 .forClass(DefaultResourceItem.class);
@@ -225,10 +230,12 @@ public class GraphViewContentDisplayTest {
 
         underTest.update(toSet(resourceItem),
                 Collections.<ResourceItem> emptySet(),
-                Collections.<ResourceItem> emptySet());
+                Collections.<ResourceItem> emptySet(),
+                Collections.<Slot> emptySet());
 
         underTest.update(Collections.<ResourceItem> emptySet(),
-                Collections.<ResourceItem> emptySet(), toSet(resourceItem));
+                Collections.<ResourceItem> emptySet(), toSet(resourceItem),
+                Collections.<Slot> emptySet());
 
         assertContentEquals(createResources(), underTest.getAllResources());
 
@@ -246,7 +253,8 @@ public class GraphViewContentDisplayTest {
 
         underTest.update(toSet(resourceItem1, resourceItem2),
                 Collections.<ResourceItem> emptySet(),
-                Collections.<ResourceItem> emptySet());
+                Collections.<ResourceItem> emptySet(),
+                Collections.<Slot> emptySet());
 
         underTest.showArc("arcType", resourceSet1.getFirstResource().getUri(),
                 resourceSet2.getFirstResource().getUri());
@@ -254,7 +262,8 @@ public class GraphViewContentDisplayTest {
         ArgumentCaptor<Arc> captor = ArgumentCaptor.forClass(Arc.class);
 
         underTest.update(Collections.<ResourceItem> emptySet(),
-                Collections.<ResourceItem> emptySet(), toSet(resourceItem1));
+                Collections.<ResourceItem> emptySet(), toSet(resourceItem1),
+                Collections.<Slot> emptySet());
 
         verify(display, times(1)).removeArc(captor.capture());
     }
@@ -271,7 +280,8 @@ public class GraphViewContentDisplayTest {
 
         underTest.update(toSet(resourceItem1, resourceItem2),
                 Collections.<ResourceItem> emptySet(),
-                Collections.<ResourceItem> emptySet());
+                Collections.<ResourceItem> emptySet(),
+                Collections.<Slot> emptySet());
 
         underTest.showArc("arcType", resourceSet1.getFirstResource().getUri(),
                 resourceSet2.getFirstResource().getUri());
@@ -279,7 +289,8 @@ public class GraphViewContentDisplayTest {
         ArgumentCaptor<Arc> captor = ArgumentCaptor.forClass(Arc.class);
 
         underTest.update(Collections.<ResourceItem> emptySet(),
-                Collections.<ResourceItem> emptySet(), toSet(resourceItem2));
+                Collections.<ResourceItem> emptySet(), toSet(resourceItem2),
+                Collections.<Slot> emptySet());
 
         verify(display, times(1)).removeArc(captor.capture());
     }

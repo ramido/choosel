@@ -66,6 +66,11 @@ public interface ViewContentDisplay extends WidgetAdaptable, Disposable {
      * added resource items, when it changes, it is part of the updated resource
      * items, and when it is removed, it is part of the removed resource items.
      * </p>
+     * <p>
+     * In addition to changing resource items, the slot mapping of a
+     * visualization could have changed in the same instance. This is reflected
+     * by the changedSlots parameter.
+     * </p>
      * 
      * @param addedResourceItems
      *            ResourceItems that have been added to the view. Is never
@@ -77,9 +82,12 @@ public interface ViewContentDisplay extends WidgetAdaptable, Disposable {
      * @param removedResourceItems
      *            ResourceItems that have been removed from the view. Is never
      *            <code>null</code>, but can be an empty set.
+     * @param updatedSlots
+     *            Slots for which the mappings have changed. Is never
+     *            <code>null</code>, but can be an empty set.
      */
     void update(Set<ResourceItem> addedResourceItems,
             Set<ResourceItem> updatedResourceItems,
-            Set<ResourceItem> removedResourceItems);
+            Set<ResourceItem> removedResourceItems, Set<Slot> updatedSlots);
 
 }

@@ -40,6 +40,7 @@ import org.thechiselgroup.choosel.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.client.views.DefaultResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.Slot;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 import org.thechiselgroup.choosel.client.views.text.TextViewContentDisplay.Display;
 
@@ -69,7 +70,8 @@ public class TextViewContentDisplayTest {
 
         underTest.update(toSet((ResourceItem) resourceItem),
                 Collections.<ResourceItem> emptySet(),
-                Collections.<ResourceItem> emptySet());
+                Collections.<ResourceItem> emptySet(),
+                Collections.<Slot> emptySet());
 
         TextItem displayObject = (TextItem) resourceItem.getDisplayObject();
 
@@ -77,13 +79,15 @@ public class TextViewContentDisplayTest {
         resourceItem.addHighlightedResources(createResources(1, 2));
         underTest.update(Collections.<ResourceItem> emptySet(),
                 toSet((ResourceItem) resourceItem),
-                Collections.<ResourceItem> emptySet());
+                Collections.<ResourceItem> emptySet(),
+                Collections.<Slot> emptySet());
 
         // create selection that contains one of those resources
         resourceItem.addSelectedResources(createResources(1));
         underTest.update(Collections.<ResourceItem> emptySet(),
                 toSet((ResourceItem) resourceItem),
-                Collections.<ResourceItem> emptySet());
+                Collections.<ResourceItem> emptySet(),
+                Collections.<Slot> emptySet());
 
         reset(display);
 
@@ -91,7 +95,8 @@ public class TextViewContentDisplayTest {
         resourceItem.removeHighlightedResources(createResources(1, 2));
         underTest.update(Collections.<ResourceItem> emptySet(),
                 toSet((ResourceItem) resourceItem),
-                Collections.<ResourceItem> emptySet());
+                Collections.<ResourceItem> emptySet(),
+                Collections.<Slot> emptySet());
 
         // check label status (should be: partially selected, but not partially
         // highlighted)

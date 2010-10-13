@@ -62,12 +62,16 @@ import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasAlignment;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -102,6 +106,32 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     }
 
+    public static class SumResourceSetToValueResolver implements
+            ResourceSetToValueResolver {
+        private final String propertyName;
+
+        public SumResourceSetToValueResolver(String propertyName) {
+            this.propertyName = propertyName;
+        }
+
+        @Override
+        public Object resolve(ResourceSet resources, String category) {
+
+            double sum = 0d;
+            for (Resource resource : resources) {
+                Object value = resource.getValue(propertyName);
+
+                if (value instanceof String) {
+                    value = Double.parseDouble((String) value);
+                }
+
+                sum += ((Number) value).doubleValue();
+            }
+
+            return Double.toString(sum);
+        }
+    }
+
     private static final String CSS_EXPANDER = "DefaultView-Expander";
 
     private static final String CSS_CONFIGURATION_PANEL = "DefaultView-ConfigurationPanel";
@@ -129,7 +159,7 @@ public class DefaultView extends AbstractWindowContent implements View {
     private DockPanel configurationBar;
 
     // TOOD rename
-    private VerticalPanel configurationPanel2;
+    private VerticalPanel visualMappingPanel;
 
     // TOOD rename
     private StackPanel sideBar;
@@ -637,8 +667,8 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     private void initMappingsConfigurator() {
-        configurationPanel2 = new VerticalPanel();
-        sideBar.add(configurationPanel2, "Mappings");
+        visualMappingPanel = new VerticalPanel();
+        sideBar.add(visualMappingPanel, "Mappings");
     }
 
     private void initResourceModelPresenter() {
@@ -831,23 +861,23 @@ public class DefaultView extends AbstractWindowContent implements View {
         {
             final List<String> stringPropertyNames = getStringPropertyNames(addedResourceItems);
             for (final String propertyName : stringPropertyNames) {
-                configurationPanel2.add(new Button("aggregation "
-                        + propertyName, new ClickHandler() {
-                    @Override
-                    public void onClick(ClickEvent event) {
-                        resourceSplitter
-                                .setCategorizer(new ResourceMultiCategorizer() {
+                visualMappingPanel.add(new Button("group by " + propertyName,
+                        new ClickHandler() {
+                            @Override
+                            public void onClick(ClickEvent event) {
+                                resourceSplitter
+                                        .setCategorizer(new ResourceMultiCategorizer() {
 
-                                    @Override
-                                    public Set<String> getCategories(
-                                            Resource resource) {
-                                        return toSet((String) resource
-                                                .getValue(propertyName));
-                                    }
+                                            @Override
+                                            public Set<String> getCategories(
+                                                    Resource resource) {
+                                                return toSet((String) resource
+                                                        .getValue(propertyName));
+                                            }
 
-                                });
-                    }
-                }));
+                                        });
+                            }
+                        }));
             }
         }
 
@@ -895,51 +925,62 @@ public class DefaultView extends AbstractWindowContent implements View {
             }
         }
 
-        /*
-         * TODO move
-         */
-        if (Arrays.asList(contentDisplay.getSlots()).contains(
-                SlotResolver.DESCRIPTION_SLOT)) {
+        for (final Slot slot : contentDisplay.getSlots()) {
+            if (slot.getDataType() == DataType.TEXT) {
+                final List<String> propertyNames = getStringPropertyNames(addedResourceItems);
 
-            final List<String> stringPropertyNames = getStringPropertyNames(addedResourceItems);
+                if (!propertyNames.isEmpty()) {
+                    configuration.put(slot, new ResourceSetToValueResolver() {
+                        @Override
+                        public Object resolve(ResourceSet resources,
+                                String category) {
 
-            if (!stringPropertyNames.isEmpty()) {
-                configuration.put(SlotResolver.DESCRIPTION_SLOT,
-                        new ResourceSetToValueResolver() {
-                            @Override
-                            public Object resolve(ResourceSet resources,
-                                    String category) {
-
-                                if (resources.size() >= 2) {
-                                    return category;
-                                }
-
-                                return resources.getFirstResource().getValue(
-                                        stringPropertyNames.get(0));
+                            if (resources.size() >= 2) {
+                                return category;
                             }
-                        });
-            }
-        }
 
-        if (Arrays.asList(contentDisplay.getSlots()).contains(
-                SlotResolver.CHART_LABEL_SLOT)) {
+                            return resources.getFirstResource().getValue(
+                                    propertyNames.get(0));
+                        }
+                    });
+                }
 
-            final List<String> stringPropertyNames = getStringPropertyNames(addedResourceItems);
+                final ListBox slotPropertyMappingBox = new ListBox(false);
+                slotPropertyMappingBox.setVisibleItemCount(1);
 
-            if (!stringPropertyNames.isEmpty()) {
-                configuration.put(SlotResolver.CHART_LABEL_SLOT,
-                        new ResourceSetToValueResolver() {
-                            @Override
-                            public Object resolve(ResourceSet resources,
-                                    String category) {
+                slotPropertyMappingBox.addChangeHandler(new ChangeHandler() {
+                    @Override
+                    public void onChange(ChangeEvent event) {
+                        final String propertyName = slotPropertyMappingBox
+                                .getValue(slotPropertyMappingBox
+                                        .getSelectedIndex());
 
-                                if (resources.size() >= 2) {
-                                    return category;
-                                }
-                                return resources.getFirstResource().getValue(
-                                        stringPropertyNames.get(0));
-                            }
-                        });
+                        configuration.put(slot,
+                                new ResourceSetToValueResolver() {
+                                    @Override
+                                    public Object resolve(
+                                            ResourceSet resources,
+                                            String category) {
+
+                                        if (resources.size() >= 2) {
+                                            return category;
+                                        }
+
+                                        return resources.getFirstResource()
+                                                .getValue(propertyName);
+                                    }
+                                });
+                        // TODO update content display --> needs methods for
+                        // changes of mappings
+                    }
+                });
+
+                for (String propertyName : propertyNames) {
+                    slotPropertyMappingBox.addItem(propertyName, propertyName);
+                }
+
+                visualMappingPanel.add(new Label(slot.getName()));
+                visualMappingPanel.add(slotPropertyMappingBox);
             }
         }
 
@@ -948,62 +989,35 @@ public class DefaultView extends AbstractWindowContent implements View {
                 final List<String> propertyNames = getDoublePropertyNames(addedResourceItems);
 
                 if (!propertyNames.isEmpty()) {
-                    configuration.put(slot, new ResourceSetToValueResolver() {
-                        @Override
-                        public Object resolve(ResourceSet resources,
-                                String category) {
-
-                            double sum = 0d;
-                            for (Resource resource : resources) {
-                                Object value = resource.getValue(propertyNames
-                                        .get(0));
-
-                                if (value instanceof String) {
-                                    value = Double.parseDouble((String) value);
-                                }
-
-                                sum += ((Number) value).doubleValue();
-                            }
-
-                            return Double.toString(sum);
-                        }
-                    });
+                    final String propertyName = propertyNames.get(0);
+                    configuration.put(slot, new SumResourceSetToValueResolver(
+                            propertyName));
                 }
 
-                // XXX needs auto-refresh in charts
-                // XXX breaks on multiple adds
-                for (final String propertyName : propertyNames) {
-                    configurationPanel2.add(new Button(slot.getName() + " --> "
-                            + propertyName, new ClickHandler() {
-                        @Override
-                        public void onClick(ClickEvent event) {
-                            configuration.put(slot,
-                                    new ResourceSetToValueResolver() {
-                                        @Override
-                                        public Object resolve(
-                                                ResourceSet resources,
-                                                String category) {
+                final ListBox slotPropertyMappingBox = new ListBox(false);
+                slotPropertyMappingBox.setVisibleItemCount(1);
 
-                                            double sum = 0d;
-                                            for (Resource resource : resources) {
-                                                Object value = resource
-                                                        .getValue(propertyName);
+                slotPropertyMappingBox.addChangeHandler(new ChangeHandler() {
+                    @Override
+                    public void onChange(ChangeEvent event) {
+                        String propertyName = slotPropertyMappingBox
+                                .getValue(slotPropertyMappingBox
+                                        .getSelectedIndex());
 
-                                                if (value instanceof String) {
-                                                    value = Double
-                                                            .parseDouble((String) value);
-                                                }
+                        configuration
+                                .put(slot, new SumResourceSetToValueResolver(
+                                        propertyName));
+                        // TODO update content display --> needs methods for
+                        // changes of mappings
+                    }
+                });
 
-                                                sum += ((Number) value)
-                                                        .doubleValue();
-                                            }
-
-                                            return Double.toString(sum);
-                                        }
-                                    });
-                        }
-                    }));
+                for (String propertyName : propertyNames) {
+                    slotPropertyMappingBox.addItem(propertyName, propertyName);
                 }
+
+                visualMappingPanel.add(new Label(slot.getName()));
+                visualMappingPanel.add(slotPropertyMappingBox);
             }
         }
 
@@ -1063,7 +1077,8 @@ public class DefaultView extends AbstractWindowContent implements View {
         }
 
         contentDisplay.update(Collections.<ResourceItem> emptySet(),
-                affectedResourceItems, Collections.<ResourceItem> emptySet());
+                affectedResourceItems, Collections.<ResourceItem> emptySet(),
+                Collections.<Slot> emptySet());
     }
 
     // TODO use viewContentDisplay.update to perform single update
@@ -1105,7 +1120,8 @@ public class DefaultView extends AbstractWindowContent implements View {
         updateConfiguration(addedResourceItems);
 
         contentDisplay.update(addedResourceItems,
-                Collections.<ResourceItem> emptySet(), removedResourceItems);
+                Collections.<ResourceItem> emptySet(), removedResourceItems,
+                Collections.<Slot> emptySet());
     }
 
     private void updateSelection(List<Resource> resources, boolean selected) {
@@ -1122,7 +1138,8 @@ public class DefaultView extends AbstractWindowContent implements View {
         }
 
         contentDisplay.update(Collections.<ResourceItem> emptySet(),
-                resourceItems, Collections.<ResourceItem> emptySet());
+                resourceItems, Collections.<ResourceItem> emptySet(),
+                Collections.<Slot> emptySet());
     }
 
 }

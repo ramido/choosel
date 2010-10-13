@@ -55,8 +55,8 @@ public final class ResourcesTestHelper {
                 mock(ResourceItemValueResolver.class)));
     }
 
-    public static Set<ResourceItem> emptyResourceItemSet() {
-        return eq(Collections.<ResourceItem> emptySet());
+    public static <T> Set<T> emptySet(Class<T> clazz) {
+        return eq(Collections.<T> emptySet());
     }
 
     public static Set<ResourceItem> eqResourceItems(

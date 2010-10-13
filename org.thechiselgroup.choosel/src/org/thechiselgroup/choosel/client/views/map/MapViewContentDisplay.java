@@ -244,7 +244,7 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
     @Override
     public void update(Set<ResourceItem> addedResourceItems,
             Set<ResourceItem> updatedResourceItems,
-            Set<ResourceItem> removedResourceItems) {
+            Set<ResourceItem> removedResourceItems, Set<Slot> changedSlots) {
 
         for (ResourceItem resourceItem : addedResourceItems) {
             initMapItem(resourceItem);

@@ -24,7 +24,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.client.test.AdvancedAsserts.assertContentEquals;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.emptyResourceItemSet;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.emptySet;
 import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.eqResourceItems;
 import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.resourceItemsForResourceSets;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.TYPE_1;
@@ -141,7 +141,8 @@ public class DefaultViewTest {
     public Set<ResourceItem> captureAddedResourceItems() {
         ArgumentCaptor<Set> captor = ArgumentCaptor.forClass(Set.class);
         verify(contentDisplay, times(1)).update(captor.capture(),
-                emptyResourceItemSet(), emptyResourceItemSet());
+                emptySet(ResourceItem.class), emptySet(ResourceItem.class),
+                emptySet(Slot.class));
         return captor.getValue();
     }
 
@@ -177,7 +178,8 @@ public class DefaultViewTest {
 
         ArgumentCaptor<Set> captor = ArgumentCaptor.forClass(Set.class);
         verify(contentDisplay, times(2)).update(captor.capture(),
-                emptyResourceItemSet(), emptyResourceItemSet());
+                emptySet(ResourceItem.class), emptySet(ResourceItem.class),
+                emptySet(Slot.class));
 
         Set<ResourceItem> set1 = captor.getAllValues().get(0);
         assertEquals(1, set1.size());
@@ -415,8 +417,9 @@ public class DefaultViewTest {
 
         hoverModel.setHighlightedResourceSet(highlightedResources);
 
-        verify(contentDisplay, times(1)).update(emptyResourceItemSet(),
-                eqResourceItems(addedResourceItems), emptyResourceItemSet());
+        verify(contentDisplay, times(1)).update(emptySet(ResourceItem.class),
+                eqResourceItems(addedResourceItems),
+                emptySet(ResourceItem.class), emptySet(Slot.class));
     }
 
     @Test
@@ -429,8 +432,9 @@ public class DefaultViewTest {
         Set<ResourceItem> addedResourceItems = captureAddedResourceItems();
 
         underTest.getResourceModel().removeResourceSet(resources);
-        verify(contentDisplay, times(1)).update(emptyResourceItemSet(),
-                emptyResourceItemSet(), eqResourceItems(addedResourceItems));
+        verify(contentDisplay, times(1)).update(emptySet(ResourceItem.class),
+                emptySet(ResourceItem.class),
+                eqResourceItems(addedResourceItems), emptySet(Slot.class));
     }
 
     @Test
@@ -442,8 +446,9 @@ public class DefaultViewTest {
 
         select(createResources(1));
 
-        verify(contentDisplay, times(1)).update(emptyResourceItemSet(),
-                eqResourceItems(addedResourceItems), emptyResourceItemSet());
+        verify(contentDisplay, times(1)).update(emptySet(ResourceItem.class),
+                eqResourceItems(addedResourceItems),
+                emptySet(ResourceItem.class), emptySet(Slot.class));
     }
 
     @Test
@@ -456,7 +461,8 @@ public class DefaultViewTest {
 
         verify(contentDisplay, times(1)).update(
                 resourceItemsForResourceSets(resources1, resources2),
-                emptyResourceItemSet(), emptyResourceItemSet());
+                emptySet(ResourceItem.class), emptySet(ResourceItem.class),
+                emptySet(Slot.class));
     }
 
     @Test
@@ -464,8 +470,9 @@ public class DefaultViewTest {
         resourceModel.addResourceSet(createResources(2));
         hoverModel.setHighlightedResourceSet(createResources(1));
 
-        verify(contentDisplay, never()).update(emptyResourceItemSet(),
-                any(Set.class), emptyResourceItemSet());
+        verify(contentDisplay, never()).update(emptySet(ResourceItem.class),
+                any(Set.class), emptySet(ResourceItem.class),
+                emptySet(Slot.class));
     }
 
 }

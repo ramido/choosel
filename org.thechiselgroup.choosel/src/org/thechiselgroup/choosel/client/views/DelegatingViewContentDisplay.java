@@ -97,10 +97,10 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
     @Override
     public void update(Set<ResourceItem> addedResourceItems,
             Set<ResourceItem> updatedResourceItems,
-            Set<ResourceItem> removedResourceItems) {
+            Set<ResourceItem> removedResourceItems, Set<Slot> changedSlots) {
 
         delegate.update(addedResourceItems, updatedResourceItems,
-                removedResourceItems);
+                removedResourceItems, changedSlots);
     }
 
 }
