@@ -368,128 +368,74 @@ public class DefaultView extends AbstractWindowContent implements View {
         return resourceSplitter.getCategorizedResourceSets();
     }
 
-    // TODO write test cases
-    // return: property keys
-    protected List<String> getDatePropertyNames(
-            Set<ResourceItem> addedResourceItems) {
-
-        if (addedResourceItems.isEmpty()) {
-            return new ArrayList<String>();
-        }
-
-        /*
-         * assertion: first add, no aggregation, homogeneous resource set
-         */
-        assert addedResourceItems.size() >= 1;
-
-        // homogeneous resource set --> look only at first item
-        ResourceItem resourceItem = (ResourceItem) addedResourceItems.toArray()[0];
-
-        // TODO this should be a condition of resource item in general
-        assert resourceItem.getResourceSet().size() >= 1;
-
-        // no aggregation
-        Resource resource = resourceItem.getResourceSet().getFirstResource();
-        List<String> stringProperties = new ArrayList<String>();
-
-        for (Entry<String, Serializable> entry : resource.getProperties()
-                .entrySet()) {
-
-            /*
-             * generalize: slot requirement matches what resource attr (type)
-             * can do
-             */
-            if (entry.getValue() instanceof Date) {
-                stringProperties.add(entry.getKey());
-            }
-        }
-
-        return stringProperties;
-    }
-
-    // TODO write test cases
-    // return: property keys
-    protected List<String> getDoublePropertyNames(
-            Set<ResourceItem> addedResourceItems) {
-        if (addedResourceItems.isEmpty()) {
-            return new ArrayList<String>();
-        }
-
-        /*
-         * assertion: first add, no aggregation, homogeneous resource set
-         */
-        assert addedResourceItems.size() >= 1;
-
-        // homogeneous resource set --> look only at first item
-        ResourceItem resourceItem = (ResourceItem) addedResourceItems.toArray()[0];
-
-        // TODO this should be a condition of resource item in general
-        assert resourceItem.getResourceSet().size() >= 1;
-
-        // no aggregation
-        Resource resource = resourceItem.getResourceSet().getFirstResource();
-        List<String> stringProperties = new ArrayList<String>();
-
-        for (Entry<String, Serializable> entry : resource.getProperties()
-                .entrySet()) {
-
-            /*
-             * generalize: slot requirement matches what resource attr (type)
-             * can do
-             */
-            if (entry.getValue() instanceof Double) {
-                stringProperties.add(entry.getKey());
-            }
-        }
-
-        return stringProperties;
-    }
-
-    protected List<String> getLocationPropertyNames(
-            Set<ResourceItem> addedResourceItems) {
-
-        if (addedResourceItems.isEmpty()) {
-            return new ArrayList<String>();
-        }
-
-        /*
-         * assertion: first add, no aggregation, homogeneous resource set
-         */
-        assert addedResourceItems.size() >= 1;
-
-        // homogeneous resource set --> look only at first item
-        ResourceItem resourceItem = (ResourceItem) addedResourceItems.toArray()[0];
-
-        // TODO this should be a condition of resource item in general
-        assert resourceItem.getResourceSet().size() >= 1;
-
-        // no aggregation
-        Resource resource = resourceItem.getResourceSet().getFirstResource();
-        List<String> stringProperties = new ArrayList<String>();
-
-        for (Entry<String, Serializable> entry : resource.getProperties()
-                .entrySet()) {
-
-            /*
-             * generalize: slot requirement matches what resource attr (type)
-             * can do
-             */
-            if (entry.getValue() instanceof Resource) {
-                Resource r = (Resource) entry.getValue();
-
-                if (r.getValue(MapViewContentDisplay.LATITUDE) != null
-                        && r.getValue(MapViewContentDisplay.LONGITUDE) != null) {
-
-                    stringProperties.add(entry.getKey());
-                }
-            }
-        }
-
-        return stringProperties;
-    }
-
     protected String getModuleBase() {
         return GWT.getModuleBaseURL();
+    }
+
+    // TODO move
+    // TODO write test cases
+    // return: property keys
+    protected List<String> getPropertyNamesForDataType(
+            Set<ResourceItem> resourceItems, DataType dataType) {
+
+        if (resourceItems.isEmpty()) {
+            return new ArrayList<String>();
+        }
+
+        /*
+         * assertion: first add, no aggregation, homogeneous resource set
+         */
+        assert resourceItems.size() >= 1;
+
+        // homogeneous resource set --> look only at first item
+        ResourceItem resourceItem = (ResourceItem) resourceItems.toArray()[0];
+
+        // TODO this should be a condition of resource item in general
+        assert resourceItem.getResourceSet().size() >= 1;
+
+        // no aggregation
+        Resource resource = resourceItem.getResourceSet().getFirstResource();
+        List<String> properties = new ArrayList<String>();
+
+        for (Entry<String, Serializable> entry : resource.getProperties()
+                .entrySet()) {
+
+            switch (dataType) {
+            case TEXT: {
+                if (entry.getValue() instanceof String) {
+                    properties.add(entry.getKey());
+                }
+            }
+                break;
+            case NUMBER: {
+                if (entry.getValue() instanceof Double) {
+                    properties.add(entry.getKey());
+                }
+            }
+                break;
+            case LOCATION: {
+                if (entry.getValue() instanceof Resource) {
+                    Resource r = (Resource) entry.getValue();
+
+                    if (r.getValue(MapViewContentDisplay.LATITUDE) != null
+                            && r.getValue(MapViewContentDisplay.LONGITUDE) != null) {
+
+                        properties.add(entry.getKey());
+                    }
+                }
+            }
+                break;
+            case DATE: {
+                if (entry.getValue() instanceof Date) {
+                    properties.add(entry.getKey());
+                }
+            }
+                break;
+            }
+
+        }
+
+        return properties;
     }
 
     // TODO improve algorithm: switch depending on size of resource vs size of
@@ -528,44 +474,6 @@ public class DefaultView extends AbstractWindowContent implements View {
     @Override
     public SelectionModel getSelectionModel() {
         return selectionModel;
-    }
-
-    // TODO write test cases
-    // return: property keys
-    protected List<String> getStringPropertyNames(
-            Set<ResourceItem> addedResourceItems) {
-        if (addedResourceItems.isEmpty()) {
-            return new ArrayList<String>();
-        }
-
-        /*
-         * assertion: first add, no aggregation, homogeneous resource set
-         */
-        assert addedResourceItems.size() >= 1;
-
-        // homogeneous resource set --> look only at first item
-        ResourceItem resourceItem = (ResourceItem) addedResourceItems.toArray()[0];
-
-        // TODO this should be a condition of resource item in general
-        assert resourceItem.getResourceSet().size() >= 1;
-
-        // no aggregation
-        Resource resource = resourceItem.getResourceSet().getFirstResource();
-        List<String> stringProperties = new ArrayList<String>();
-
-        for (Entry<String, Serializable> entry : resource.getProperties()
-                .entrySet()) {
-
-            /*
-             * generalize: slot requirement matches what resource attr (type)
-             * can do
-             */
-            if (entry.getValue() instanceof String) {
-                stringProperties.add(entry.getKey());
-            }
-        }
-
-        return stringProperties;
     }
 
     @Override
@@ -879,7 +787,8 @@ public class DefaultView extends AbstractWindowContent implements View {
     protected void updateConfiguration(Set<ResourceItem> addedResourceItems) {
         // aggregration TODO move
         {
-            final List<String> stringPropertyNames = getStringPropertyNames(addedResourceItems);
+            final List<String> stringPropertyNames = getPropertyNamesForDataType(
+                    addedResourceItems, DataType.TEXT);
             for (final String propertyName : stringPropertyNames) {
                 visualMappingPanel.add(new Button("group by " + propertyName,
                         new ClickHandler() {
@@ -907,7 +816,8 @@ public class DefaultView extends AbstractWindowContent implements View {
         if (Arrays.asList(contentDisplay.getSlots()).contains(
                 SlotResolver.LOCATION_SLOT)) {
 
-            final List<String> propertyNames = getLocationPropertyNames(addedResourceItems);
+            final List<String> propertyNames = getPropertyNamesForDataType(
+                    addedResourceItems, DataType.LOCATION);
 
             if (!propertyNames.isEmpty()) {
                 configuration.put(SlotResolver.LOCATION_SLOT,
@@ -929,7 +839,8 @@ public class DefaultView extends AbstractWindowContent implements View {
         if (Arrays.asList(contentDisplay.getSlots()).contains(
                 SlotResolver.DATE_SLOT)) {
 
-            final List<String> propertyNames = getDatePropertyNames(addedResourceItems);
+            final List<String> propertyNames = getPropertyNamesForDataType(
+                    addedResourceItems, DataType.DATE);
 
             if (!propertyNames.isEmpty()) {
                 configuration.put(SlotResolver.DATE_SLOT,
@@ -947,7 +858,8 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         for (final Slot slot : contentDisplay.getSlots()) {
             if (slot.getDataType() == DataType.TEXT) {
-                final List<String> propertyNames = getStringPropertyNames(addedResourceItems);
+                List<String> propertyNames = getPropertyNamesForDataType(
+                        addedResourceItems, DataType.TEXT);
 
                 if (!propertyNames.isEmpty()) {
                     final String propertyName = propertyNames.get(0);
@@ -989,7 +901,8 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         for (final Slot slot : contentDisplay.getSlots()) {
             if (slot.getDataType() == DataType.NUMBER) {
-                final List<String> propertyNames = getDoublePropertyNames(addedResourceItems);
+                List<String> propertyNames = getPropertyNamesForDataType(
+                        addedResourceItems, DataType.NUMBER);
 
                 if (!propertyNames.isEmpty()) {
                     final String propertyName = propertyNames.get(0);
