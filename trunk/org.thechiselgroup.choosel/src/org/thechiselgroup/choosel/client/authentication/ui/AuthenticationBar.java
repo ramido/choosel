@@ -75,12 +75,9 @@ public class AuthenticationBar extends HTML {
         }
             break;
         case SIGNED_OUT: {
-            String html = "<span class='warning'>Not signed in"
-                    + " [WARNING: workspace will be lost on sign in]</span>";
-            html += "<a href='"
+            setHTML("<a href='"
                     + authenticationManager.getAuthentication().getLoginURL()
-                    + "'>Sign in</a>";
-            setHTML(html);
+                    + "'>Sign in</a>");
         }
             break;
         case SIGNED_IN: {
