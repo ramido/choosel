@@ -80,9 +80,8 @@ public class MapItem extends IconResourceItem {
         this.callback = callback;
         this.dragEnablerFactory = dragEnablerFactory;
 
-        String label = (String) getResourceValue(SlotResolver.DESCRIPTION_SLOT);
         this.overlay = new LabelOverlay(point, Point.newInstance(-10, -10),
-                label, CSS_RESOURCE_ITEM_ICON); // -10 = - (width /2)
+                resolveLabel(), CSS_RESOURCE_ITEM_ICON); // -10 = - (width /2)
         this.eventHandler = new MarkerEventHandler();
 
         initEventHandlers();
@@ -128,6 +127,10 @@ public class MapItem extends IconResourceItem {
         });
     }
 
+    public String resolveLabel() {
+        return (String) getResourceValue(SlotResolver.DESCRIPTION_SLOT);
+    }
+
     public void setDefaultStyle() {
         overlay.setBackgroundColor(getDefaultColor());
         overlay.setBorderColor(calculateBorderColor(getDefaultColor()));
@@ -164,5 +167,9 @@ public class MapItem extends IconResourceItem {
         }
             break;
         }
+    }
+
+    public void updateLabel() {
+        overlay.setLabel(resolveLabel());
     }
 }
