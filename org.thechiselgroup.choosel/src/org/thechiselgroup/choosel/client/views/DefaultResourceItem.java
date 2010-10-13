@@ -35,18 +35,6 @@ import com.google.gwt.event.dom.client.MouseOverHandler;
 // TODO separate out resource item controller
 public class DefaultResourceItem implements Disposable, ResourceItem {
 
-    public static enum Status {
-
-        DEFAULT, HIGHLIGHTED, HIGHLIGHTED_SELECTED, SELECTED, PARTIALLY_HIGHLIGHTED, PARTIALLY_HIGHLIGHTED_SELECTED, PARTIALLY_SELECTED
-
-    }
-
-    public static enum SubsetStatus {
-
-        NONE, PARTIAL, COMPLETE
-
-    }
-
     private String category;
 
     protected final HoverModel hoverModel;

@@ -33,8 +33,8 @@ import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
-import org.thechiselgroup.choosel.client.views.DefaultResourceItem.Status;
-import org.thechiselgroup.choosel.client.views.DefaultResourceItem.SubsetStatus;
+import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
+import org.thechiselgroup.choosel.client.views.ResourceItem.SubsetStatus;
 
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
@@ -360,8 +360,8 @@ public class DefaultResourceItemTest {
 
         hoverModel = spy(new HoverModel());
         resources = new DefaultResourceSet();
-        underTest = spy(new DefaultResourceItem(RESOURCE_ITEM_CATEGORY, resources,
-                hoverModel, popupManager, layer));
+        underTest = spy(new DefaultResourceItem(RESOURCE_ITEM_CATEGORY,
+                resources, hoverModel, popupManager, layer));
     }
 
     @Test
