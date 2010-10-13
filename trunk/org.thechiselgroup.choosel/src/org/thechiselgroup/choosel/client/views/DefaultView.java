@@ -133,6 +133,25 @@ public class DefaultView extends AbstractWindowContent implements View {
         }
     }
 
+    private static class TextResourceSetToValueResolver implements
+            ResourceSetToValueResolver {
+        private final String propertyName;
+
+        private TextResourceSetToValueResolver(String propertyName) {
+            this.propertyName = propertyName;
+        }
+
+        @Override
+        public Object resolve(ResourceSet resources, String category) {
+
+            if (resources.size() >= 2) {
+                return category;
+            }
+
+            return resources.getFirstResource().getValue(propertyName);
+        }
+    }
+
     private static final String CSS_EXPANDER = "DefaultView-Expander";
 
     private static final String CSS_CONFIGURATION_PANEL = "DefaultView-ConfigurationPanel";
@@ -931,19 +950,10 @@ public class DefaultView extends AbstractWindowContent implements View {
                 final List<String> propertyNames = getStringPropertyNames(addedResourceItems);
 
                 if (!propertyNames.isEmpty()) {
-                    configuration.put(slot, new ResourceSetToValueResolver() {
-                        @Override
-                        public Object resolve(ResourceSet resources,
-                                String category) {
+                    final String propertyName = propertyNames.get(0);
 
-                            if (resources.size() >= 2) {
-                                return category;
-                            }
-
-                            return resources.getFirstResource().getValue(
-                                    propertyNames.get(0));
-                        }
-                    });
+                    configuration.put(slot, new TextResourceSetToValueResolver(
+                            propertyName));
                 }
 
                 final ListBox slotPropertyMappingBox = new ListBox(false);
@@ -952,25 +962,13 @@ public class DefaultView extends AbstractWindowContent implements View {
                 slotPropertyMappingBox.addChangeHandler(new ChangeHandler() {
                     @Override
                     public void onChange(ChangeEvent event) {
-                        final String propertyName = slotPropertyMappingBox
+                        String propertyName = slotPropertyMappingBox
                                 .getValue(slotPropertyMappingBox
                                         .getSelectedIndex());
 
-                        configuration.put(slot,
-                                new ResourceSetToValueResolver() {
-                                    @Override
-                                    public Object resolve(
-                                            ResourceSet resources,
-                                            String category) {
-
-                                        if (resources.size() >= 2) {
-                                            return category;
-                                        }
-
-                                        return resources.getFirstResource()
-                                                .getValue(propertyName);
-                                    }
-                                });
+                        configuration
+                                .put(slot, new TextResourceSetToValueResolver(
+                                        propertyName));
 
                         contentDisplay.update(
                                 Collections.<ResourceItem> emptySet(),
@@ -1012,8 +1010,12 @@ public class DefaultView extends AbstractWindowContent implements View {
                         configuration
                                 .put(slot, new SumResourceSetToValueResolver(
                                         propertyName));
-                        // TODO update content display --> needs methods for
-                        // changes of mappings
+
+                        contentDisplay.update(
+                                Collections.<ResourceItem> emptySet(),
+                                Collections.<ResourceItem> emptySet(),
+                                Collections.<ResourceItem> emptySet(),
+                                CollectionUtils.toSet(slot));
                     }
                 });
 
