@@ -25,7 +25,13 @@ public interface ResourceItem {
 
     public static enum Status {
 
-        DEFAULT, HIGHLIGHTED, HIGHLIGHTED_SELECTED, SELECTED, PARTIALLY_HIGHLIGHTED, PARTIALLY_HIGHLIGHTED_SELECTED, PARTIALLY_SELECTED
+        DEFAULT, HIGHLIGHTED, HIGHLIGHTED_SELECTED, SELECTED, PARTIALLY_HIGHLIGHTED, PARTIALLY_HIGHLIGHTED_SELECTED, PARTIALLY_SELECTED;
+
+    }
+
+    public static enum Subset {
+
+        ALL, SELECTED, HIGHLIGHTED
 
     }
 
@@ -60,6 +66,9 @@ public interface ResourceItem {
     ResourceSet getResourceSet();
 
     Object getResourceValue(Slot slot);
+
+    // TODO test
+    Object getResourceValue(Slot slot, Subset subset);
 
     Collection<Resource> getSelectedResources();
 

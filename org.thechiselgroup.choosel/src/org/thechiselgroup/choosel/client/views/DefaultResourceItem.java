@@ -175,6 +175,20 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
     }
 
     @Override
+    public Object getResourceValue(Slot slot, Subset subset) {
+        switch (subset) {
+        case ALL:
+            return valueResolver.resolve(slot, category, resources);
+        case SELECTED:
+            return valueResolver.resolve(slot, category, selectedResources);
+        case HIGHLIGHTED:
+            return valueResolver.resolve(slot, category, highlightedResources);
+        }
+
+        throw new RuntimeException("invalid subset");
+    }
+
+    @Override
     public Collection<Resource> getSelectedResources() {
         assert resources.containsAll(selectedResources);
         return selectedResources;
