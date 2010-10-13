@@ -77,7 +77,7 @@ public class BarChart extends ChartWidget {
 
     private double[] highlightedBarCounts;
 
-    private double[] barCounts;
+    private double[] regularValues;
 
     protected int chartHeight;
 
@@ -115,7 +115,7 @@ public class BarChart extends ChartWidget {
     private ProtovisFunctionDouble regularBarLength = new ProtovisFunctionDouble() {
         @Override
         public double f(ChartItem value, int i) {
-            return calculateLength(barCounts[i] - highlightedBarCounts[i]);
+            return calculateLength(regularValues[i] - highlightedBarCounts[i]);
         }
     };
 
@@ -126,16 +126,16 @@ public class BarChart extends ChartWidget {
                 return;
             }
 
-            barCounts = new double[chartItems.size()];
+            regularValues = new double[chartItems.size()];
 
             for (int i = 0; i < chartItems.size(); i++) {
-                barCounts[i] = calculateAllResources(i);
+                regularValues[i] = calculateAllResources(i);
             }
         }
 
         @Override
         public double f(ChartItem value, int i) {
-            return calculateLength(barCounts[i]);
+            return calculateLength(regularValues[i]);
         }
     };
 
