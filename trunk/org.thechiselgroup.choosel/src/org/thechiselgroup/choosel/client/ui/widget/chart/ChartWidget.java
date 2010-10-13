@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.Colors;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.EventTypes;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Panel;
@@ -29,6 +28,7 @@ import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFuncti
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionStringToString;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Scale;
 import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
+import org.thechiselgroup.choosel.client.views.ResourceItem.Subset;
 import org.thechiselgroup.choosel.client.views.Slot;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.chart.ChartItem;
@@ -167,20 +167,21 @@ public abstract class ChartWidget extends Widget {
     }
 
     protected double calculateAllResources(int i) {
+        return calculateChartItemValue(i, SlotResolver.CHART_VALUE_SLOT,
+                Subset.ALL);
+    }
+
+    protected double calculateChartItemValue(int chartItemIndex, Slot slot,
+            Subset subset) {
+
         // TODO remove conversion
-        return Double.parseDouble(chartItems.get(i).getResourceItem()
-                .getResourceValue(SlotResolver.CHART_VALUE_SLOT).toString());
+        return Double.parseDouble(chartItems.get(chartItemIndex)
+                .getResourceItem().getResourceValue(slot, subset).toString());
     }
 
     protected double calculateHighlightedResources(int i) {
-        ResourceSet highlightedResources = chartItems.get(i).getResourceItem()
-                .getHighlightedResources();
-
-        // TODO use calculation
-
-        return highlightedResources.size();
-        // - chartItems.get(i).getResourceItem()
-        // .getHighlightedSelectedResources().size();
+        return calculateChartItemValue(i, SlotResolver.CHART_VALUE_SLOT,
+                Subset.HIGHLIGHTED);
     }
 
     protected int calculateHighlightedSelectedResources(int i) {
