@@ -32,13 +32,13 @@ public abstract class AbstractResourceSetToValueResolver implements
 
     protected Map<String, ResourceToValueResolver> resourceTypeToResourceToValueResolvers = new HashMap<String, ResourceToValueResolver>();
 
-    private String slotID;
+    private Slot slot;
 
-    public AbstractResourceSetToValueResolver(String slotID,
+    public AbstractResourceSetToValueResolver(Slot slot,
             DefaultResourceToValueResolverFactory factory,
             ResourceCategorizer categorizer) {
 
-        this.slotID = slotID;
+        this.slot = slot;
         this.factory = factory;
         this.categorizer = categorizer;
     }
@@ -49,7 +49,7 @@ public abstract class AbstractResourceSetToValueResolver implements
         if (!resourceTypeToResourceToValueResolvers.containsKey(resourceType)) {
 
             resourceTypeToResourceToValueResolvers.put(resourceType,
-                    factory.createResolver(slotID, resourceType));
+                    factory.createResolver(slot, resourceType));
         }
 
         return resourceTypeToResourceToValueResolvers.get(resourceType);

@@ -27,7 +27,7 @@ public class DefaultResourceToValueResolverFactory {
     }
 
     // TODO category is actually resource type
-    public ResourceToValueResolver createResolver(String slotID, String category) {
+    public ResourceToValueResolver createResolver(Slot slot, String category) {
 
         // TODO current work:
         // need interface: slotId, category, set of resources, TYPE e.g.
@@ -36,66 +36,66 @@ public class DefaultResourceToValueResolverFactory {
         // what about context?
 
         assert category != null;
-        assert slotID != null;
+        assert slot != null;
 
         // TODO use maps instead, need better slot system
-        if (SlotResolver.COLOR_SLOT.equals(slotID)) {
+        if (SlotResolver.COLOR_SLOT.equals(slot)) {
             return slotResolver.createColorSlotResolver(category, null);
         }
 
-        if (SlotResolver.LABEL_SLOT.equals(slotID)) {
+        if (SlotResolver.LABEL_SLOT.equals(slot)) {
             return slotResolver.createLabelSlotResolver(category);
         }
 
-        if (SlotResolver.DESCRIPTION_SLOT.equals(slotID)) {
+        if (SlotResolver.DESCRIPTION_SLOT.equals(slot)) {
             return slotResolver.createDescriptionSlotResolver(category);
         }
 
-        if (SlotResolver.CHART_LABEL_SLOT.equals(slotID)) {
+        if (SlotResolver.CHART_LABEL_SLOT.equals(slot)) {
             return slotResolver.createChartLabelSlotResolver(category);
         }
 
-        if (SlotResolver.DATE_SLOT.equals(slotID)) {
+        if (SlotResolver.DATE_SLOT.equals(slot)) {
             return slotResolver.createDateSlotResolver(category);
         }
 
-        if (SlotResolver.LOCATION_SLOT.equals(slotID)) {
+        if (SlotResolver.LOCATION_SLOT.equals(slot)) {
             return slotResolver.createLocationSlotResolver(category);
         }
 
-        if (SlotResolver.GRAPH_LABEL_SLOT.equals(slotID)) {
+        if (SlotResolver.GRAPH_LABEL_SLOT.equals(slot)) {
             return slotResolver.createGraphLabelSlotResolver(category);
         }
 
-        if (SlotResolver.GRAPH_NODE_BORDER_COLOR_SLOT.equals(slotID)) {
+        if (SlotResolver.GRAPH_NODE_BORDER_COLOR_SLOT.equals(slot)) {
             return slotResolver.createGraphNodeBorderColorResolver(category);
         }
 
-        if (SlotResolver.GRAPH_NODE_BACKGROUND_COLOR_SLOT.equals(slotID)) {
+        if (SlotResolver.GRAPH_NODE_BACKGROUND_COLOR_SLOT.equals(slot)) {
             return slotResolver
                     .createGraphNodeBackgroundColorResolver(category);
         }
 
-        if (slotID.equals(SlotResolver.MAGNITUDE_SLOT)) {
+        if (slot.equals(SlotResolver.MAGNITUDE_SLOT)) {
             return slotResolver.createMagnitudeSlotResolver(category);
         }
 
-        if (slotID.equals(SlotResolver.X_COORDINATE_SLOT)) {
+        if (slot.equals(SlotResolver.X_COORDINATE_SLOT)) {
             return slotResolver.createXCoordinateSlotResolver(category);
         }
 
-        if (slotID.equals(SlotResolver.Y_COORDINATE_SLOT)) {
+        if (slot.equals(SlotResolver.Y_COORDINATE_SLOT)) {
             return slotResolver.createYCoordinateSlotResolver(category);
         }
 
-        if (slotID.equals(SlotResolver.FONT_SIZE_SLOT)) {
+        if (slot.equals(SlotResolver.FONT_SIZE_SLOT)) {
             return slotResolver.createFontSizeSlotResolver(category);
         }
 
-        if (slotID.equals(SlotResolver.CHART_VALUE_SLOT)) {
+        if (slot.equals(SlotResolver.CHART_VALUE_SLOT)) {
             return slotResolver.createFontSizeSlotResolver(category);
         }
 
-        throw new IllegalArgumentException("Invalid slot id: " + slotID);
+        throw new IllegalArgumentException("Invalid slot id: " + slot);
     }
 }

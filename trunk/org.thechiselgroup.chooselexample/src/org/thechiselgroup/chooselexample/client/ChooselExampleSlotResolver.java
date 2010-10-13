@@ -22,7 +22,6 @@ import org.thechiselgroup.choosel.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.client.util.ConversionException;
 import org.thechiselgroup.choosel.client.util.Converter;
 import org.thechiselgroup.choosel.client.views.DefaultSlotResolver;
-import org.thechiselgroup.choosel.client.views.SlotResolver;
 
 public class ChooselExampleSlotResolver extends DefaultSlotResolver {
 
@@ -59,7 +58,7 @@ public class ChooselExampleSlotResolver extends DefaultSlotResolver {
 		// }
 
 		if (TestResourceSetFactory.TYPE_1.equals(category)) {
-			return new SimplePropertyValueResolver(SlotResolver.LABEL_SLOT);
+			return new SimplePropertyValueResolver("label");
 		}
 
 		throw new RuntimeException("failed creating slot mapping");

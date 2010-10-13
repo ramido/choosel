@@ -23,6 +23,7 @@ import org.thechiselgroup.choosel.client.ui.CSS;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.Slot;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -132,8 +133,8 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     @Override
-    public String[] getSlotIDs() {
-        return new String[] { SlotResolver.DESCRIPTION_SLOT,
+    public Slot[] getSlots() {
+        return new Slot[] { SlotResolver.DESCRIPTION_SLOT,
                 SlotResolver.COLOR_SLOT, SlotResolver.LOCATION_SLOT };
     }
 

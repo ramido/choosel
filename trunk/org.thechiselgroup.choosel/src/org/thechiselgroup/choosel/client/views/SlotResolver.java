@@ -22,34 +22,37 @@ import org.thechiselgroup.choosel.client.resolver.ResourceToValueResolver;
 // TODO create more flexible slot system
 public interface SlotResolver {
 
-    String CHART_LABEL_SLOT = "chart-label";
+    Slot CHART_LABEL_SLOT = new Slot("chart-label", "Label", DataType.TEXT);
 
-    String CHART_VALUE_SLOT = "chart-value";
+    Slot CHART_VALUE_SLOT = new Slot("chart-value", "Value", DataType.NUMBER);
 
-    String COLOR_SLOT = "color";
+    Slot COLOR_SLOT = new Slot("color", "Color", DataType.COLOR);
 
-    String DATE_SLOT = "date";
+    Slot DATE_SLOT = new Slot("date", "Date", DataType.DATE);
 
-    String DESCRIPTION_SLOT = "description";
+    Slot DESCRIPTION_SLOT = new Slot("description", "Label", DataType.TEXT);
 
-    String GRAPH_LABEL_SLOT = "graphLabel";
+    Slot GRAPH_LABEL_SLOT = new Slot("graphLabel", "Label", DataType.TEXT);
 
-    String GRAPH_NODE_BACKGROUND_COLOR_SLOT = "graphNodeBackgroundColor";
+    Slot GRAPH_NODE_BACKGROUND_COLOR_SLOT = new Slot(
+            "graphNodeBackgroundColor", "Node Color", DataType.COLOR);
 
-    String GRAPH_NODE_BORDER_COLOR_SLOT = "graphNodeBorderColor";
+    Slot GRAPH_NODE_BORDER_COLOR_SLOT = new Slot("graphNodeBorderColor",
+            "Node Border Color", DataType.COLOR);
 
-    String LABEL_SLOT = "label";
+    // TODO same as chart label?
+    Slot LABEL_SLOT = new Slot("label", "Label", DataType.TEXT);
 
-    String LOCATION_SLOT = "location";
+    Slot LOCATION_SLOT = new Slot("location", "Location", DataType.LOCATION);
 
     // TODO slots should be view-centric, not data centric
-    String MAGNITUDE_SLOT = "magnitude";
+    Slot MAGNITUDE_SLOT = new Slot("magnitude", "Magnitude", DataType.NUMBER);
 
-    String FONT_SIZE_SLOT = "font-size";
+    Slot FONT_SIZE_SLOT = new Slot("font-size", "Font Size", DataType.NUMBER);
 
-    String X_COORDINATE_SLOT = "x-coord";
+    Slot X_COORDINATE_SLOT = new Slot("x-coord", "X", DataType.NUMBER);
 
-    String Y_COORDINATE_SLOT = "y-coord";
+    Slot Y_COORDINATE_SLOT = new Slot("y-coord", "Y", DataType.NUMBER);
 
     ResourceToValueResolver createChartLabelSlotResolver(String category);
 

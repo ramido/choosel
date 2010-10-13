@@ -65,8 +65,8 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
     }
 
     @Override
-    public String[] getSlotIDs() {
-        return delegate.getSlotIDs();
+    public Slot[] getSlots() {
+        return delegate.getSlots();
     }
 
     @Override

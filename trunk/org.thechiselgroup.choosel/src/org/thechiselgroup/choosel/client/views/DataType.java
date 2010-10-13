@@ -15,22 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
+public enum DataType {
 
-public class ResourceSetToFirstResourcePropertyResolver extends
-        AbstractResourceSetToValueResolver {
-
-    public ResourceSetToFirstResourcePropertyResolver(Slot slot,
-            DefaultResourceToValueResolverFactory factory,
-            ResourceCategorizer categorizer) {
-        super(slot, factory, categorizer);
-    }
-
-    @Override
-    public Object resolve(ResourceSet resources, String category) {
-        assert !resources.isEmpty();
-        return resolve(resources.getFirstResource());
-    }
+    TEXT, DATE, NUMBER, LOCATION, COLOR;
 
 }
