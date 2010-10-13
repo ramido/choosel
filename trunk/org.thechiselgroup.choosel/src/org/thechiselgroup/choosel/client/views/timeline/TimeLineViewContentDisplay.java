@@ -131,7 +131,7 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
     @Override
     public void update(Set<ResourceItem> addedResourceItems,
             Set<ResourceItem> updatedResourceItems,
-            Set<ResourceItem> removedResourceItems) {
+            Set<ResourceItem> removedResourceItems, Set<Slot> changedSlots) {
 
         if (!addedResourceItems.isEmpty()) {
             createTimeLineItems(addedResourceItems);

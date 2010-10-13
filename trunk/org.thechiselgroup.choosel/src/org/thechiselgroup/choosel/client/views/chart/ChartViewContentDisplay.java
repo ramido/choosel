@@ -99,7 +99,7 @@ public abstract class ChartViewContentDisplay extends
     @Override
     public void update(Set<ResourceItem> addedResourceItems,
             Set<ResourceItem> updatedResourceItems,
-            Set<ResourceItem> removedResourceItems) {
+            Set<ResourceItem> removedResourceItems, Set<Slot> changedSlots) {
 
         for (ResourceItem resourceItem : addedResourceItems) {
             ChartItem chartItem = new ChartItem(this, dragEnablerFactory,

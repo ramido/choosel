@@ -561,7 +561,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     @Override
     public void update(Set<ResourceItem> addedResourceItems,
             Set<ResourceItem> updatedResourceItems,
-            Set<ResourceItem> removedResourceItems) {
+            Set<ResourceItem> removedResourceItems, Set<Slot> changedSlots) {
 
         for (ResourceItem addedItem : addedResourceItems) {
             createDisplayObjectForResourceItem(addedItem);
