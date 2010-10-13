@@ -30,6 +30,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.thechiselgroup.choosel.client.calculation.AverageCalculation;
+import org.thechiselgroup.choosel.client.calculation.Calculation;
+import org.thechiselgroup.choosel.client.calculation.CountCalculation;
+import org.thechiselgroup.choosel.client.calculation.MaxCalculation;
+import org.thechiselgroup.choosel.client.calculation.MinCalculation;
+import org.thechiselgroup.choosel.client.calculation.SumCalculation;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.persistence.Persistable;
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
@@ -105,51 +111,6 @@ public class DefaultView extends AbstractWindowContent implements View {
             super.setPixelSize(width, height);
         }
 
-    }
-
-    public static class SumResourceSetToValueResolver implements
-            ResourceSetToValueResolver {
-        private final String propertyName;
-
-        public SumResourceSetToValueResolver(String propertyName) {
-            this.propertyName = propertyName;
-        }
-
-        @Override
-        public Object resolve(ResourceSet resources, String category) {
-
-            double sum = 0d;
-            for (Resource resource : resources) {
-                Object value = resource.getValue(propertyName);
-
-                if (value instanceof String) {
-                    value = Double.parseDouble((String) value);
-                }
-
-                sum += ((Number) value).doubleValue();
-            }
-
-            return Double.toString(sum);
-        }
-    }
-
-    private static class TextResourceSetToValueResolver implements
-            ResourceSetToValueResolver {
-        private final String propertyName;
-
-        private TextResourceSetToValueResolver(String propertyName) {
-            this.propertyName = propertyName;
-        }
-
-        @Override
-        public Object resolve(ResourceSet resources, String category) {
-
-            if (resources.size() >= 2) {
-                return category;
-            }
-
-            return resources.getFirstResource().getValue(propertyName);
-        }
     }
 
     private static final String CSS_EXPANDER = "DefaultView-Expander";
@@ -906,23 +867,47 @@ public class DefaultView extends AbstractWindowContent implements View {
 
                 if (!propertyNames.isEmpty()) {
                     final String propertyName = propertyNames.get(0);
-                    configuration.put(slot, new SumResourceSetToValueResolver(
-                            propertyName));
+                    configuration.put(slot,
+                            new CalculationResourceSetToValueResolver(
+                                    propertyName, new SumCalculation()));
                 }
+
+                final ListBox calculationBox = new ListBox(false);
+                calculationBox.setVisibleItemCount(1);
+                calculationBox.addItem("Sum", "sum");
+                calculationBox.addItem("Count", "cnt");
+                calculationBox.addItem("Average", "avg");
+                calculationBox.addItem("Minimum", "min");
+                calculationBox.addItem("Maximum", "max");
 
                 final ListBox slotPropertyMappingBox = new ListBox(false);
                 slotPropertyMappingBox.setVisibleItemCount(1);
 
-                slotPropertyMappingBox.addChangeHandler(new ChangeHandler() {
+                ChangeHandler handler = new ChangeHandler() {
                     @Override
                     public void onChange(ChangeEvent event) {
                         String propertyName = slotPropertyMappingBox
                                 .getValue(slotPropertyMappingBox
                                         .getSelectedIndex());
 
-                        configuration
-                                .put(slot, new SumResourceSetToValueResolver(
-                                        propertyName));
+                        String calculationString = calculationBox
+                                .getValue(calculationBox.getSelectedIndex());
+                        Calculation calculation = null;
+                        if (calculationString.equals("sum")) {
+                            calculation = new SumCalculation();
+                        } else if (calculationString.equals("cnt")) {
+                            calculation = new CountCalculation();
+                        } else if (calculationString.equals("avg")) {
+                            calculation = new AverageCalculation();
+                        } else if (calculationString.equals("min")) {
+                            calculation = new MinCalculation();
+                        } else if (calculationString.equals("max")) {
+                            calculation = new MaxCalculation();
+                        }
+
+                        configuration.put(slot,
+                                new CalculationResourceSetToValueResolver(
+                                        propertyName, calculation));
 
                         contentDisplay.update(
                                 Collections.<ResourceItem> emptySet(),
@@ -930,13 +915,17 @@ public class DefaultView extends AbstractWindowContent implements View {
                                 Collections.<ResourceItem> emptySet(),
                                 CollectionUtils.toSet(slot));
                     }
-                });
+                };
+
+                slotPropertyMappingBox.addChangeHandler(handler);
+                calculationBox.addChangeHandler(handler);
 
                 for (String propertyName : propertyNames) {
                     slotPropertyMappingBox.addItem(propertyName, propertyName);
                 }
 
                 visualMappingPanel.add(new Label(slot.getName()));
+                visualMappingPanel.add(calculationBox);
                 visualMappingPanel.add(slotPropertyMappingBox);
             }
         }
