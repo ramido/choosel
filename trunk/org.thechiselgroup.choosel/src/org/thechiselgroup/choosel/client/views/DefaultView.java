@@ -943,72 +943,70 @@ public class DefaultView extends AbstractWindowContent implements View {
             }
         }
 
-        if (Arrays.asList(contentDisplay.getSlots()).contains(
-                SlotResolver.CHART_VALUE_SLOT)) {
+        for (final Slot slot : contentDisplay.getSlots()) {
+            if (slot.getDataType() == DataType.NUMBER) {
+                final List<String> propertyNames = getDoublePropertyNames(addedResourceItems);
 
-            final List<String> propertyNames = getDoublePropertyNames(addedResourceItems);
+                if (!propertyNames.isEmpty()) {
+                    configuration.put(slot, new ResourceSetToValueResolver() {
+                        @Override
+                        public Object resolve(ResourceSet resources,
+                                String category) {
 
-            if (!propertyNames.isEmpty()) {
-                configuration.put(SlotResolver.CHART_VALUE_SLOT,
-                        new ResourceSetToValueResolver() {
-                            @Override
-                            public Object resolve(ResourceSet resources,
-                                    String category) {
+                            double sum = 0d;
+                            for (Resource resource : resources) {
+                                Object value = resource.getValue(propertyNames
+                                        .get(0));
 
-                                double sum = 0d;
-                                for (Resource resource : resources) {
-                                    Object value = resource
-                                            .getValue(propertyNames.get(0));
-
-                                    if (value instanceof String) {
-                                        value = Double
-                                                .parseDouble((String) value);
-                                    }
-
-                                    sum += ((Number) value).doubleValue();
+                                if (value instanceof String) {
+                                    value = Double.parseDouble((String) value);
                                 }
 
-                                return Double.toString(sum);
+                                sum += ((Number) value).doubleValue();
                             }
-                        });
-            }
 
-            // XXX needs auto-refresh in charts
-            // XXX breaks on multiple adds
-            for (final String propertyName : propertyNames) {
-                configurationPanel2.add(new Button(propertyName,
-                        new ClickHandler() {
-                            @Override
-                            public void onClick(ClickEvent event) {
-                                configuration.put(
-                                        SlotResolver.CHART_VALUE_SLOT,
-                                        new ResourceSetToValueResolver() {
-                                            @Override
-                                            public Object resolve(
-                                                    ResourceSet resources,
-                                                    String category) {
+                            return Double.toString(sum);
+                        }
+                    });
+                }
 
-                                                double sum = 0d;
-                                                for (Resource resource : resources) {
-                                                    Object value = resource
-                                                            .getValue(propertyName);
+                // XXX needs auto-refresh in charts
+                // XXX breaks on multiple adds
+                for (final String propertyName : propertyNames) {
+                    configurationPanel2.add(new Button(slot.getName() + " --> "
+                            + propertyName, new ClickHandler() {
+                        @Override
+                        public void onClick(ClickEvent event) {
+                            configuration.put(slot,
+                                    new ResourceSetToValueResolver() {
+                                        @Override
+                                        public Object resolve(
+                                                ResourceSet resources,
+                                                String category) {
 
-                                                    if (value instanceof String) {
-                                                        value = Double
-                                                                .parseDouble((String) value);
-                                                    }
+                                            double sum = 0d;
+                                            for (Resource resource : resources) {
+                                                Object value = resource
+                                                        .getValue(propertyName);
 
-                                                    sum += ((Number) value)
-                                                            .doubleValue();
+                                                if (value instanceof String) {
+                                                    value = Double
+                                                            .parseDouble((String) value);
                                                 }
 
-                                                return Double.toString(sum);
+                                                sum += ((Number) value)
+                                                        .doubleValue();
                                             }
-                                        });
-                            }
-                        }));
+
+                                            return Double.toString(sum);
+                                        }
+                                    });
+                        }
+                    }));
+                }
             }
         }
+
     }
 
     private void updateContentDisplaySize() {
