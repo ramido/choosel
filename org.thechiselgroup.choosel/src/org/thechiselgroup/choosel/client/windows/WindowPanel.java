@@ -139,7 +139,7 @@ public class WindowPanel extends NEffectPanel implements
          * TODO: restrict to available desktop space
          */
         int targetWidth = TOTAL_BORDER_THICKNESS
-                + MathUtils.max(headerBar.getOffsetWidth(),
+                + MathUtils.maxInt(headerBar.getOffsetWidth(),
                         contentWidget.getOffsetWidth(), getWidth()
                                 - TOTAL_BORDER_THICKNESS);
         /*
@@ -148,7 +148,7 @@ public class WindowPanel extends NEffectPanel implements
          * TODO: restrict to available desktop space
          */
         int targetHeight = TOTAL_BORDER_THICKNESS
-                + MathUtils.max(contentWidget.getOffsetHeight(), getHeight()
+                + MathUtils.maxInt(contentWidget.getOffsetHeight(), getHeight()
                         - TOTAL_BORDER_THICKNESS - headerBar.getOffsetHeight());
 
         setPixelSize(targetWidth, targetHeight);
