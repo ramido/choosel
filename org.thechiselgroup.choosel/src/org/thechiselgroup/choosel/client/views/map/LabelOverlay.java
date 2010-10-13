@@ -139,6 +139,11 @@ public class LabelOverlay extends Overlay {
         CSS.setBorderColor(label, color);
     }
 
+    public void setLabel(String labelText) {
+        assert labelText != null;
+        this.label.setText(labelText);
+    }
+
     public void setZIndex(int zIndex) {
         CSS.setZIndex(label, zIndex);
     }

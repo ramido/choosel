@@ -254,6 +254,13 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
             removeOverlay(resourceItem);
         }
 
+        if (changedSlots.contains(SlotResolver.DESCRIPTION_SLOT)) {
+            for (ResourceItem resourceItem : getCallback()
+                    .getAllResourceItems()) {
+                ((MapItem) resourceItem.getDisplayObject()).updateLabel();
+            }
+        }
+
         updateStatusStyling(updatedResourceItems);
     }
 

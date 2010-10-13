@@ -54,6 +54,7 @@ import org.thechiselgroup.choosel.client.ui.Presenter;
 import org.thechiselgroup.choosel.client.ui.WidgetFactory;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
+import org.thechiselgroup.choosel.client.util.CollectionUtils;
 import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.util.HandlerRegistrationSet;
 import org.thechiselgroup.choosel.client.util.Initializable;
@@ -970,8 +971,12 @@ public class DefaultView extends AbstractWindowContent implements View {
                                                 .getValue(propertyName);
                                     }
                                 });
-                        // TODO update content display --> needs methods for
-                        // changes of mappings
+
+                        contentDisplay.update(
+                                Collections.<ResourceItem> emptySet(),
+                                Collections.<ResourceItem> emptySet(),
+                                Collections.<ResourceItem> emptySet(),
+                                CollectionUtils.toSet(slot));
                     }
                 });
 
