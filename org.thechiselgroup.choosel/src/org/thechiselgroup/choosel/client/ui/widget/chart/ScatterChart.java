@@ -70,7 +70,7 @@ public class ScatterChart extends ChartWidget {
             scatterCountsY = new double[chartItems.size()];
 
             for (int i = 0; i < chartItems.size(); i++) {
-                scatterCountsY[i] = calculateAllResources(i);
+                scatterCountsY[i] = calculateAllResourcesY(i);
             }
 
             minY = ArrayUtils.min(scatterCountsY) - 1;
@@ -132,9 +132,16 @@ public class ScatterChart extends ChartWidget {
         scatterLeft.beforeRender();
     }
 
+    // TODO refactor
     protected double calculateAllResourcesX(int i) {
         return Double.parseDouble(chartItems.get(i).getResourceItem()
-                .getResourceValue(SlotResolver.MAGNITUDE_SLOT).toString());
+                .getResourceValue(SlotResolver.X_COORDINATE_SLOT).toString());
+    }
+
+    // TODO refactor
+    protected double calculateAllResourcesY(int i) {
+        return Double.parseDouble(chartItems.get(i).getResourceItem()
+                .getResourceValue(SlotResolver.Y_COORDINATE_SLOT).toString());
     }
 
     private void calculateChartVariables() {
