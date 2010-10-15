@@ -133,7 +133,7 @@ public class TextItem {
         }
         String description = (String) resourceItem
                 .getResourceValue(SlotResolver.DESCRIPTION_SLOT);
-        int tagCount = Integer.parseInt((String) resourceItem
+        int tagCount = (int) Double.parseDouble((String) resourceItem
                 .getResourceValue(SlotResolver.FONT_SIZE_SLOT));
 
         this.label.setText(description);
