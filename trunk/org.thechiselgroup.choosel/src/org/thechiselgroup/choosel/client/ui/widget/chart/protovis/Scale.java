@@ -44,7 +44,7 @@ public class Scale extends JavaScriptObject {
         return this.ticks();
     }-*/;
 
-    public final native JavaScriptObject ticks(Number ticks) /*-{
+    public final native JavaScriptObject ticks(int ticks) /*-{
         return this.ticks(ticks);
     }-*/;
 

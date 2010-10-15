@@ -69,6 +69,16 @@ public final class MathUtils {
         return min;
     }
 
+    public static int powInt(int base, int exponent) {
+        assert exponent >= 0;
+
+        int result = 1;
+        for (int i = 0; i < exponent; i++) {
+            result *= base;
+        }
+        return result;
+    }
+
     public static int restrictToInterval(int value, int minimum, int maximum) {
         return Math.max(minimum, Math.min(maximum, value));
     }
