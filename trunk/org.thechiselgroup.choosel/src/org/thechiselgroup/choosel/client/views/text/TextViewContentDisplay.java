@@ -37,8 +37,11 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -47,6 +50,8 @@ import com.google.gwt.user.client.ui.Widget;
 public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
     public class DefaultDisplay implements Display {
+
+        private static final String CSS_TAG_CLOUD = "choosel-TextViewContentDisplay-TagCloud";
 
         private static final int MAX_FONT_SIZE = 26;
 
@@ -65,12 +70,13 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
             Element element = label.getElement();
 
-            if (tagCloud) {
-                CSS.setDisplay(element, CSS.INLINE);
-                CSS.setWhitespace(element, CSS.NOWRAP);
-                CSS.setFloat(element, CSS.LEFT);
-                CSS.setLineHeight(element, MAX_FONT_SIZE);
-            }
+            // TODO CSS class
+            // if (tagCloud) {
+            // CSS.setDisplay(element, CSS.INLINE);
+            // CSS.setWhitespace(element, CSS.NOWRAP);
+            // CSS.setFloat(element, CSS.LEFT);
+            // CSS.setLineHeight(element, MAX_FONT_SIZE);
+            // }
 
             label.addMouseOverHandler(labelEventHandler);
             label.addMouseOutHandler(labelEventHandler);
@@ -117,16 +123,24 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
             textItem.getLabel().removeStyleName(cssClass);
         }
 
-        private void updateTagSizes() {
+        @Override
+        public void setTagCloud(boolean tagCloud) {
+            if (tagCloud) {
+                itemPanel.addStyleName(CSS_TAG_CLOUD);
+            } else {
+                itemPanel.removeStyleName(CSS_TAG_CLOUD);
+            }
+        }
+
+        @Override
+        public void updateTagSizes() {
             List<Double> tagNumbers = getTagSizesList();
 
             for (TextItemLabel itemLabel : itemLabels) {
                 String fontSize = groupValueMapper.getGroupValue(
                         itemLabel.getTagCount(), tagNumbers);
 
-                if (tagCloud) {
-                    CSS.setFontSize(itemLabel.getElement(), fontSize);
-                }
+                CSS.setFontSize(itemLabel.getElement(), fontSize);
             }
         }
     }
@@ -140,6 +154,10 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
         void removeIndividualItem(TextItem textItem);
 
         void removeStyleName(TextItem textItem, String cssClass);
+
+        void setTagCloud(boolean tagCloud);
+
+        void updateTagSizes();
 
     }
 
@@ -194,7 +212,7 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
     private DoubleToGroupValueMapper<String> groupValueMapper;
 
-    private final boolean tagCloud;
+    private boolean tagCloud;
 
     public TextViewContentDisplay(
             ResourceSetAvatarDragController dragController, boolean tagCloud) {
@@ -235,10 +253,27 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     @Override
+    public Widget getConfigurationWidget() {
+        FlowPanel panel = new FlowPanel();
+
+        final CheckBox tagCloudBox = new CheckBox("One item per row");
+        tagCloudBox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+
+            @Override
+            public void onValueChange(ValueChangeEvent<Boolean> event) {
+                setTagCloud(!tagCloudBox.getValue());
+            }
+
+        });
+        panel.add(tagCloudBox);
+
+        return panel;
+    }
+
+    @Override
     public Slot[] getSlots() {
-        // TODO introduce font size slot?
         return new Slot[] { SlotResolver.DESCRIPTION_SLOT,
-                SlotResolver.MAGNITUDE_SLOT };
+                SlotResolver.FONT_SIZE_SLOT };
     }
 
     public boolean isTagCloud() {
@@ -253,6 +288,15 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
     @Override
     public Memento save() {
         return new Memento(); // TODO implement
+    }
+
+    private void setTagCloud(boolean tagCloud) {
+        if (tagCloud == this.tagCloud) {
+            return;
+        }
+
+        this.tagCloud = tagCloud;
+        display.setTagCloud(tagCloud);
     }
 
     @Override
@@ -278,6 +322,14 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
         for (ResourceItem resourceItem : removedResourceItems) {
             display.removeIndividualItem((TextItem) resourceItem
                     .getDisplayObject());
+        }
+
+        if (changedSlots.contains(SlotResolver.FONT_SIZE_SLOT)) {
+            for (ResourceItem resourceItem : callback.getAllResourceItems()) {
+                TextItem textItem = (TextItem) resourceItem.getDisplayObject();
+                textItem.updateContent();
+                display.updateTagSizes();
+            }
         }
 
     }

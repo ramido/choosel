@@ -150,7 +150,7 @@ public class TimeChart extends ChartWidget {
                     SlotResolver.DATE_SLOT);
         } else if (coordinate == 1) {
             return getChartItem(i).getResourceItem().getResourceValue(
-                    SlotResolver.MAGNITUDE_SLOT);
+                    SlotResolver.FONT_SIZE_SLOT);
         }
         throw new RuntimeException("No slot value available");
     }
