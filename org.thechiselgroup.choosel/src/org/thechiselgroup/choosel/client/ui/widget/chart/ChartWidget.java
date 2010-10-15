@@ -27,6 +27,7 @@ import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventH
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionString;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionStringToString;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Scale;
+import org.thechiselgroup.choosel.client.util.MathUtils;
 import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
 import org.thechiselgroup.choosel.client.views.ResourceItem.Subset;
 import org.thechiselgroup.choosel.client.views.Slot;
@@ -60,6 +61,34 @@ public abstract class ChartWidget extends Widget {
         private String getDescriptionString(ChartItem item) {
             return item.getResourceItem().getResourceValue(slot).toString();
         }
+    }
+
+    // TODO move to library
+    public static String formatDecimal(double value, int decimalPlaces) {
+        String valueAsString = Double.toString(value);
+
+        int pointIndex = valueAsString.indexOf('.');
+        if (pointIndex != -1) {
+            valueAsString = valueAsString.substring(0, pointIndex);
+            double decimalValue = value - Integer.parseInt(valueAsString);
+            int truncatedDecimalValue = (int) (decimalValue * MathUtils.powInt(
+                    10, decimalPlaces));
+            return valueAsString + "." + truncatedDecimalValue;
+        }
+
+        return valueAsString + "." + repeat("0", decimalPlaces);
+    }
+
+    // TODO move to StringUtils / FormatterUtils
+    public static String repeat(String value, int times) {
+        assert times >= 0;
+        assert value != null;
+
+        String result = "";
+        for (int i = 0; i < times; i++) {
+            result += value;
+        }
+        return result;
     }
 
     protected Panel chart;
@@ -121,11 +150,21 @@ public abstract class ChartWidget extends Widget {
     };
 
     protected ProtovisFunctionString fullMarkLabelText = new ProtovisFunctionString() {
+
         @Override
-        public String f(ChartItem value, int i) {
-            return Double.toString(Math.max(calculateAllResources(i),
-                    calculateHighlightedResources(i)));
+        public String f(ChartItem chartItem, int i) {
+            return formatDecimal(calculateAllResources(i), 2);
         }
+
+    };
+
+    protected ProtovisFunctionString highlightedLabelText = new ProtovisFunctionString() {
+
+        @Override
+        public String f(ChartItem chartItem, int i) {
+            return formatDecimal(calculateHighlightedResources(i), 2);
+        }
+
     };
 
     protected ProtovisFunctionString regularMarkLabelText = new ProtovisFunctionString() {

@@ -177,7 +177,7 @@ public class Bar extends Mark {
         return this.visible(visible);
     }-*/;
     
-    public final native Bar visible(ProtovisFunctionBoolean visible) /*-{
+    public final native Bar visible(ProtovisFunctionBoolean f) /*-{
         return this.visible(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionBoolean(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionBoolean;)(this,f));
     }-*/;
 
