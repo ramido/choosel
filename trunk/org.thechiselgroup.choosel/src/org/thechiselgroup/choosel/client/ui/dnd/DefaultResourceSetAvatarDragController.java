@@ -15,6 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.dnd;
 
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.ROOT_PANEL;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,6 +48,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 // TODO move area calculation to preview package & use delegation instead
 // (composition when creating drag avatar drag controller while setting
@@ -121,10 +124,11 @@ public class DefaultResourceSetAvatarDragController extends
     private HoverModel hoverModel;
 
     @Inject
-    public DefaultResourceSetAvatarDragController(Desktop desktop,
+    public DefaultResourceSetAvatarDragController(
+            @Named(ROOT_PANEL) AbsolutePanel panel, Desktop desktop,
             ShadeManager shadeManager, HoverModel hoverModel) {
 
-        super(desktop.asWidget());
+        super(panel);
 
         assert hoverModel != null;
         assert shadeManager != null;
@@ -132,8 +136,7 @@ public class DefaultResourceSetAvatarDragController extends
         this.hoverModel = hoverModel;
         this.shadeManager = shadeManager;
         this.desktop = desktop;
-        this.boundaryDropController = new BoundaryDropController(
-                desktop.asWidget(), false);
+        this.boundaryDropController = new BoundaryDropController(panel, false);
 
         setBehaviorDragStartSensitivity(2);
     }
