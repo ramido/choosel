@@ -84,7 +84,7 @@ public final class DialogWindow extends WindowPanel implements DialogCallback {
         createOkayButton(dialog, dialogPanel);
         createCancelButton(dialogPanel);
 
-        init(windowController, dialog.getWindowTitle(), dialogPanel);
+        init(windowController, dialog.getWindowTitle(), false, dialogPanel);
 
         setZIndex(ZIndex.DIALOG);
     }
