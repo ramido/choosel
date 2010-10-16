@@ -129,8 +129,6 @@ public class WindowPanel extends NEffectPanel implements
      */
     private HorizontalPanel headerBar;
 
-    private Widget headerContainer;
-
     /**
      * Adjusts the size of the window or the size of its content. If the window
      * is larger than its content, then the content size is increased. If the
@@ -367,73 +365,7 @@ public class WindowPanel extends NEffectPanel implements
         return borderWidget;
     }
 
-    private void initGrid(Widget contentWidget) {
-        grid = new FlexTable();
-        grid.setBorderWidth(0);
-        grid.setCellSpacing(0);
-        grid.setCellPadding(0);
-        rootPanel.add(grid);
-
-        initCell(0, 0, ResizeDirection.NORTH_WEST, null);
-        initCell(0, 1, ResizeDirection.NORTH_WEST, null);
-        northWidget = initCell(0, 2, ResizeDirection.NORTH, null);
-        initCell(0, 3, ResizeDirection.NORTH_EAST, null);
-        initCell(0, 4, ResizeDirection.NORTH_EAST, null);
-
-        initCell(1, 0, ResizeDirection.NORTH_WEST, null);
-        grid.setWidget(1, 1, headerBar);
-        grid.getCellFormatter().addStyleName(1, 1, CSS_WINDOW_HEADER);
-        grid.getFlexCellFormatter().setColSpan(1, 1, 3);
-        grid.getFlexCellFormatter().setRowSpan(1, 1, 2);
-        initCell(1, 2, ResizeDirection.NORTH_EAST, null);
-
-        westTopWidget = initCell(2, 0, ResizeDirection.WEST, null);
-        eastTopWidget = initCell(2, 1, ResizeDirection.EAST, null);
-
-        westWidget = initCell(3, 0, ResizeDirection.WEST,
-                CSS_WINDOW_RESIZE_EDGE_RIGHT_BORDER);
-        grid.setWidget(3, 1, contentWidget);
-        grid.getFlexCellFormatter().setColSpan(3, 1, 3);
-        grid.getFlexCellFormatter().setRowSpan(3, 1, 2);
-        eastWidget = initCell(3, 2, ResizeDirection.EAST,
-                CSS_WINDOW_RESIZE_EDGE_LEFT_BORDER);
-
-        initCell(4, 0, ResizeDirection.SOUTH_WEST,
-                CSS_WINDOW_RESIZE_EDGE_RIGHT_BORDER);
-        initCell(4, 1, ResizeDirection.SOUTH_EAST,
-                CSS_WINDOW_RESIZE_EDGE_LEFT_BORDER);
-
-        initCell(5, 0, ResizeDirection.SOUTH_WEST, null);
-        initCell(5, 1, ResizeDirection.SOUTH_WEST,
-                CSS_WINDOW_RESIZE_EDGE_TOP_BORDER);
-        southWidget = initCell(5, 2, ResizeDirection.SOUTH,
-                CSS_WINDOW_RESIZE_EDGE_TOP_BORDER);
-        initCell(5, 3, ResizeDirection.SOUTH_EAST,
-                CSS_WINDOW_RESIZE_EDGE_TOP_BORDER);
-        initCell(5, 4, ResizeDirection.SOUTH_EAST, null);
-    }
-
-    private void initHeader(WindowManager windowManager, String title) {
-        headerBar = new HorizontalPanel();
-        headerBar.setSize("100%", "");
-
-        headerWidget = new ResizingTextBox(20, 250);// Label(title);
-        ((TextBox) this.headerWidget).setText(title);
-        headerWidget.addStyleName(CSS_WINDOW_HEADER_LABEL);
-        headerBar.add(headerWidget);
-        headerBar.setCellHorizontalAlignment(headerWidget,
-                HasAlignment.ALIGN_LEFT);
-
-        Label headerContainer = new Label(" ");
-        headerContainer.getElement().getStyle().setWidth(100d, Unit.PCT);
-        headerContainer.getElement().getStyle().setHeight(20, Unit.PX);
-
-        windowManager.getMoveDragController().makeDraggable(this,
-                headerContainer);
-        this.headerContainer = headerContainer;
-        headerBar.add(headerContainer);
-        headerBar.setCellWidth(headerContainer, "100%");
-
+    private void initCloseImage() {
         closeImage = new Image(getInvisibleCloseImageUrl());
         closeImage.addStyleName(CSS_WINDOW_BUTTON_PANEL);
 
@@ -491,6 +423,70 @@ public class WindowPanel extends NEffectPanel implements
         headerBar.setCellVerticalAlignment(closeImage, HasAlignment.ALIGN_TOP);
     }
 
+    private void initGrid(Widget contentWidget) {
+        grid = new FlexTable();
+        grid.setBorderWidth(0);
+        grid.setCellSpacing(0);
+        grid.setCellPadding(0);
+        rootPanel.add(grid);
+
+        initCell(0, 0, ResizeDirection.NORTH_WEST, null);
+        initCell(0, 1, ResizeDirection.NORTH_WEST, null);
+        northWidget = initCell(0, 2, ResizeDirection.NORTH, null);
+        initCell(0, 3, ResizeDirection.NORTH_EAST, null);
+        initCell(0, 4, ResizeDirection.NORTH_EAST, null);
+
+        initCell(1, 0, ResizeDirection.NORTH_WEST, null);
+        grid.setWidget(1, 1, headerBar);
+        grid.getCellFormatter().addStyleName(1, 1, CSS_WINDOW_HEADER);
+        grid.getFlexCellFormatter().setColSpan(1, 1, 3);
+        grid.getFlexCellFormatter().setRowSpan(1, 1, 2);
+        initCell(1, 2, ResizeDirection.NORTH_EAST, null);
+
+        westTopWidget = initCell(2, 0, ResizeDirection.WEST, null);
+        eastTopWidget = initCell(2, 1, ResizeDirection.EAST, null);
+
+        westWidget = initCell(3, 0, ResizeDirection.WEST,
+                CSS_WINDOW_RESIZE_EDGE_RIGHT_BORDER);
+        grid.setWidget(3, 1, contentWidget);
+        grid.getFlexCellFormatter().setColSpan(3, 1, 3);
+        grid.getFlexCellFormatter().setRowSpan(3, 1, 2);
+        eastWidget = initCell(3, 2, ResizeDirection.EAST,
+                CSS_WINDOW_RESIZE_EDGE_LEFT_BORDER);
+
+        initCell(4, 0, ResizeDirection.SOUTH_WEST,
+                CSS_WINDOW_RESIZE_EDGE_RIGHT_BORDER);
+        initCell(4, 1, ResizeDirection.SOUTH_EAST,
+                CSS_WINDOW_RESIZE_EDGE_LEFT_BORDER);
+
+        initCell(5, 0, ResizeDirection.SOUTH_WEST, null);
+        initCell(5, 1, ResizeDirection.SOUTH_WEST,
+                CSS_WINDOW_RESIZE_EDGE_TOP_BORDER);
+        southWidget = initCell(5, 2, ResizeDirection.SOUTH,
+                CSS_WINDOW_RESIZE_EDGE_TOP_BORDER);
+        initCell(5, 3, ResizeDirection.SOUTH_EAST,
+                CSS_WINDOW_RESIZE_EDGE_TOP_BORDER);
+        initCell(5, 4, ResizeDirection.SOUTH_EAST, null);
+    }
+
+    private void initHeader(WindowManager windowManager, String title) {
+        headerBar = new HorizontalPanel();
+        headerBar.setSize("100%", "");
+
+        initTitleWidget(title, windowManager);
+        initMoveLabel(windowManager);
+        initCloseImage();
+    }
+
+    private void initMoveLabel(WindowManager windowManager) {
+        Label moveLabel = new Label(" ");
+        moveLabel.getElement().getStyle().setWidth(100d, Unit.PCT);
+        moveLabel.getElement().getStyle().setHeight(20, Unit.PX);
+        windowManager.getMoveDragController().makeDraggable(this, moveLabel);
+        headerBar.add(moveLabel);
+        headerBar.setCellWidth(moveLabel, "100%");
+    }
+
     private void initShowEvent() {
         NEffect showEffect = createShowEffect();
         showEffect.addEffectCompletedHandler(new EffectCompletedHandler() {
@@ -504,6 +500,15 @@ public class WindowPanel extends NEffectPanel implements
             }
         });
         addEffect(showEffect);
+    }
+
+    private void initTitleWidget(String title, WindowManager windowManager) {
+        headerWidget = new ResizingTextBox(20, 250);// Label(title);
+        ((TextBox) this.headerWidget).setText(title);
+        headerWidget.addStyleName(CSS_WINDOW_HEADER_LABEL);
+        headerBar.add(headerWidget);
+        headerBar.setCellHorizontalAlignment(headerWidget,
+                HasAlignment.ALIGN_LEFT);
     }
 
     @Override
