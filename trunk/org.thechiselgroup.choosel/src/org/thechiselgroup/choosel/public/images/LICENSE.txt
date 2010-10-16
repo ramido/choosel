@@ -1,9 +1,0 @@
-menu.png is based on the Android Icons from http://www.androidicons.com/
-         It is available under the 
-         Creative Commons Attribution-Share Alike license 
-         ( http://creativecommons.org/licenses/by/3.0/ )
-         
-configuration.png is based on the Android Icons from http://www.androidicons.com/
-         It is available under the 
-         Creative Commons Attribution-Share Alike license 
-         ( http://creativecommons.org/licenses/by/3.0/ )
