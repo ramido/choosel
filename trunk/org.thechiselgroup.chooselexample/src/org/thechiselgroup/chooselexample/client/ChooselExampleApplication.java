@@ -97,6 +97,17 @@ public class ChooselExampleApplication extends ChooselApplication {
 	protected void initCustomActions() {
 		if (runsInDevelopmentMode()) {
 			addTestDataSourceButton();
+
+			addWindowContentButton(DEVELOPER_MODE_PANEL, "Tag Cloud",
+					ChooselInjectionConstants.TYPE_TAG_CLOUD);
+			addWindowContentButton(DEVELOPER_MODE_PANEL, "Graph",
+					ChooselInjectionConstants.TYPE_GRAPH);
+			addWindowContentButton(DEVELOPER_MODE_PANEL, "Circular Bar",
+					ChooselInjectionConstants.TYPE_CIRCULAR_BAR);
+			addWindowContentButton(DEVELOPER_MODE_PANEL, "Time",
+					ChooselInjectionConstants.TYPE_TIME);
+			addWindowContentButton(DEVELOPER_MODE_PANEL, "Dot",
+					ChooselInjectionConstants.TYPE_DOT);
 		}
 
 		addWindowContentButton(VIEWS_PANEL, "Note",
@@ -107,22 +118,12 @@ public class ChooselExampleApplication extends ChooselApplication {
 				ChooselInjectionConstants.TYPE_MAP);
 		addWindowContentButton(VIEWS_PANEL, "Timeline",
 				ChooselInjectionConstants.TYPE_TIMELINE);
-		addWindowContentButton(VIEWS_PANEL, "Bar",
+		addWindowContentButton(VIEWS_PANEL, "Bar Chart",
 				ChooselInjectionConstants.TYPE_BAR);
-		addWindowContentButton(VIEWS_PANEL, "Circular Bar",
-				ChooselInjectionConstants.TYPE_CIRCULAR_BAR);
-		addWindowContentButton(VIEWS_PANEL, "Pie",
+		addWindowContentButton(VIEWS_PANEL, "Pie Chart",
 				ChooselInjectionConstants.TYPE_PIE);
-		addWindowContentButton(VIEWS_PANEL, "Dot",
-				ChooselInjectionConstants.TYPE_DOT);
-		addWindowContentButton(VIEWS_PANEL, "Scatter",
+		addWindowContentButton(VIEWS_PANEL, "Scatter Plot",
 				ChooselInjectionConstants.TYPE_SCATTER);
-		addWindowContentButton(VIEWS_PANEL, "Time",
-				ChooselInjectionConstants.TYPE_TIME);
-		addWindowContentButton(VIEWS_PANEL, "Tag Cloud",
-				ChooselInjectionConstants.TYPE_TAG_CLOUD);
-		addWindowContentButton(VIEWS_PANEL, "Graph",
-				ChooselInjectionConstants.TYPE_GRAPH);
 
 		addWindowContentButton(DATA_PANEL, "CSV Import",
 				ChooselInjectionConstants.WINDOW_CONTENT_CSV_IMPORT);
