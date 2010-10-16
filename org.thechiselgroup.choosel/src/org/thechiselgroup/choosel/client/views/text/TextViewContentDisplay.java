@@ -212,32 +212,28 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
     private DoubleToGroupValueMapper<String> groupValueMapper;
 
-    private boolean tagCloud;
+    private boolean tagCloud = false;
 
-    public TextViewContentDisplay(
-            ResourceSetAvatarDragController dragController, boolean tagCloud) {
+    public TextViewContentDisplay(ResourceSetAvatarDragController dragController) {
+        assert dragController != null;
 
         this.dragController = dragController;
-        this.tagCloud = tagCloud;
         this.display = new DefaultDisplay();
 
-        this.groupValueMapper = new DoubleToGroupValueMapper<String>(
-                new EquidistantBinBoundaryCalculator(), CollectionUtils.toList(
-                        "10px", "14px", "18px", "22px", "26px"));
+        initGroupValueMapper();
     }
 
     // for test: can change display
     protected TextViewContentDisplay(
-            ResourceSetAvatarDragController dragController, boolean tagCloud,
-            Display display) {
+            ResourceSetAvatarDragController dragController, Display display) {
+
+        assert dragController != null;
+        assert display != null;
 
         this.dragController = dragController;
-        this.tagCloud = tagCloud;
         this.display = display;
 
-        this.groupValueMapper = new DoubleToGroupValueMapper<String>(
-                new EquidistantBinBoundaryCalculator(), CollectionUtils.toList(
-                        "10px", "14px", "18px", "22px", "26px"));
+        initGroupValueMapper();
     }
 
     @Override
@@ -274,6 +270,12 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
     public Slot[] getSlots() {
         return new Slot[] { SlotResolver.DESCRIPTION_SLOT,
                 SlotResolver.FONT_SIZE_SLOT };
+    }
+
+    private void initGroupValueMapper() {
+        this.groupValueMapper = new DoubleToGroupValueMapper<String>(
+                new EquidistantBinBoundaryCalculator(), CollectionUtils.toList(
+                        "10px", "14px", "18px", "22px", "26px"));
     }
 
     public boolean isTagCloud() {

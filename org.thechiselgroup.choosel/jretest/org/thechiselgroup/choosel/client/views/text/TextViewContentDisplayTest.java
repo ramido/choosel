@@ -117,7 +117,7 @@ public class TextViewContentDisplayTest {
 
         when(callback.getAllResources()).thenReturn(allResources);
 
-        underTest = new TextViewContentDisplay(dragController, false, display);
+        underTest = new TextViewContentDisplay(dragController, display);
 
         underTest.init(callback);
 

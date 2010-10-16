@@ -21,18 +21,18 @@ import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
 
 import com.google.inject.Inject;
 
-public class ListViewContentDisplayFactory implements ViewContentDisplayFactory {
+public class TextViewContentDisplayFactory implements ViewContentDisplayFactory {
 
     @Inject
     private ResourceSetAvatarDragController dragController;
 
     @Inject
-    public ListViewContentDisplayFactory() {
+    public TextViewContentDisplayFactory() {
     }
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-        return new TextViewContentDisplay(dragController, false);
+        return new TextViewContentDisplay(dragController);
     }
 
 }

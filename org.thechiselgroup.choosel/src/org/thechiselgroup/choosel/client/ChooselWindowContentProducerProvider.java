@@ -25,11 +25,10 @@ import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionCo
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_CIRCULAR_BAR;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_DOT;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_GRAPH;
-import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_LIST;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_MAP;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_PIE;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_SCATTER;
-import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_TAG_CLOUD;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_TEXT;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_TIME;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_TIMELINE;
 
@@ -192,8 +191,8 @@ public class ChooselWindowContentProducerProvider implements
     }
 
     @Inject
-    public void registerList(@Named(TYPE_LIST) ViewContentDisplayFactory factory) {
-        registerViewContentDisplayFactory(TYPE_LIST, factory);
+    public void registerText(@Named(TYPE_TEXT) ViewContentDisplayFactory factory) {
+        registerViewContentDisplayFactory(TYPE_TEXT, factory);
     }
 
     @Inject
@@ -210,12 +209,6 @@ public class ChooselWindowContentProducerProvider implements
     public void registerScatter(
             @Named(TYPE_SCATTER) ViewContentDisplayFactory factory) {
         registerViewContentDisplayFactory(TYPE_SCATTER, factory);
-    }
-
-    @Inject
-    public void registerTagCloud(
-            @Named(TYPE_TAG_CLOUD) ViewContentDisplayFactory factory) {
-        registerViewContentDisplayFactory(TYPE_TAG_CLOUD, factory);
     }
 
     @Inject

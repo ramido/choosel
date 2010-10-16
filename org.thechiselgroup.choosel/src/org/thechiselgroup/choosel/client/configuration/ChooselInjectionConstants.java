@@ -45,7 +45,7 @@ public interface ChooselInjectionConstants {
 
     String TYPE_GRAPH = "Graph";
 
-    String TYPE_LIST = "List";
+    String TYPE_TEXT = "Text";
 
     String TYPE_MAP = "Map";
 
@@ -54,8 +54,6 @@ public interface ChooselInjectionConstants {
     String TYPE_CIRCULAR_BAR = "Circular Bar";
 
     String TYPE_SCATTER = "Scatter";
-
-    String TYPE_TAG_CLOUD = "TagCloud";
 
     String TYPE_TIME = "Time";
 
