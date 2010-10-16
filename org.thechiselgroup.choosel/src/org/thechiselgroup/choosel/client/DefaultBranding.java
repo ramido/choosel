@@ -21,7 +21,7 @@ public class DefaultBranding implements Branding {
 
     @Override
     public String getApplicationTitle() {
-        return "Choosel Mashups Example";
+        return "Choosel";
     }
 
     @Override
