@@ -90,8 +90,7 @@ import org.thechiselgroup.choosel.client.views.graph.DefaultGraphExpansionRegist
 import org.thechiselgroup.choosel.client.views.graph.GraphExpansionRegistry;
 import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.map.MapViewContentDisplayFactory;
-import org.thechiselgroup.choosel.client.views.text.ListViewContentDisplayFactory;
-import org.thechiselgroup.choosel.client.views.text.TagCloudViewContentDisplayFactory;
+import org.thechiselgroup.choosel.client.views.text.TextViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.timeline.TimeLineViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.windows.Branding;
 import org.thechiselgroup.choosel.client.windows.DefaultDesktop;
@@ -188,14 +187,12 @@ public class ChooselClientModule extends AbstractGinModule implements
     protected void bindViewContentDisplayFactories() {
         bindViewContentDisplayFactory(TYPE_MAP,
                 MapViewContentDisplayFactory.class);
-        bindViewContentDisplayFactory(TYPE_LIST,
-                ListViewContentDisplayFactory.class);
+        bindViewContentDisplayFactory(TYPE_TEXT,
+                TextViewContentDisplayFactory.class);
         bindViewContentDisplayFactory(TYPE_GRAPH,
                 GraphViewContentDisplayFactory.class);
         bindViewContentDisplayFactory(TYPE_TIMELINE,
                 TimeLineViewContentDisplayFactory.class);
-        bindViewContentDisplayFactory(TYPE_TAG_CLOUD,
-                TagCloudViewContentDisplayFactory.class);
         bindViewContentDisplayFactory(TYPE_BAR,
                 BarChartViewContentDisplayFactory.class);
         bindViewContentDisplayFactory(TYPE_PIE,

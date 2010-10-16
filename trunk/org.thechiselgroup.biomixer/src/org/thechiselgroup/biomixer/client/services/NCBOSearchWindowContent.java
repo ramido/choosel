@@ -131,7 +131,7 @@ public class NCBOSearchWindowContent extends AbstractWindowContent implements
 	@Override
 	public void init() {
 		resultView = (View) viewFactory
-				.createWindowContent(ChooselInjectionConstants.TYPE_LIST);
+				.createWindowContent(ChooselInjectionConstants.TYPE_TEXT);
 		infoLabel = new Label("Searching...");
 		infoLabel.addStyleName("infoLabel");
 		deckPanel = new ViewContentDeckpanel();

@@ -98,8 +98,6 @@ public class ChooselExampleApplication extends ChooselApplication {
 		if (runsInDevelopmentMode()) {
 			addTestDataSourceButton();
 
-			addWindowContentButton(DEVELOPER_MODE_PANEL, "Tag Cloud",
-					ChooselInjectionConstants.TYPE_TAG_CLOUD);
 			addWindowContentButton(DEVELOPER_MODE_PANEL, "Graph",
 					ChooselInjectionConstants.TYPE_GRAPH);
 			addWindowContentButton(DEVELOPER_MODE_PANEL, "Circular Bar",
@@ -112,8 +110,8 @@ public class ChooselExampleApplication extends ChooselApplication {
 
 		addWindowContentButton(VIEWS_PANEL, "Note",
 				ChooselInjectionConstants.WINDOW_CONTENT_NOTE);
-		addWindowContentButton(VIEWS_PANEL, "List",
-				ChooselInjectionConstants.TYPE_LIST);
+		addWindowContentButton(VIEWS_PANEL, "Text",
+				ChooselInjectionConstants.TYPE_TEXT);
 		addWindowContentButton(VIEWS_PANEL, "Map",
 				ChooselInjectionConstants.TYPE_MAP);
 		addWindowContentButton(VIEWS_PANEL, "Timeline",

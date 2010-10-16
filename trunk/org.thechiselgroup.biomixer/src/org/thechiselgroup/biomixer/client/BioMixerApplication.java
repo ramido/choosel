@@ -34,8 +34,8 @@ public class BioMixerApplication extends ChooselApplication {
 		initNCBOSearchField();
 
 		addWindowContentButton(VIEWS_PANEL, "Note", "note");
-		addWindowContentButton(VIEWS_PANEL, "List",
-				ChooselInjectionConstants.TYPE_LIST);
+		addWindowContentButton(VIEWS_PANEL, "Text",
+				ChooselInjectionConstants.TYPE_TEXT);
 		addWindowContentButton(VIEWS_PANEL, "Timeline", "Timeline");
 		addWindowContentButton(VIEWS_PANEL, "Graph", "Graph");
 	}
