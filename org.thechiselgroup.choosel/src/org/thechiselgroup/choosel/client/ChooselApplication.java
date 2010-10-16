@@ -15,6 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client;
 
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.DATA_SOURCES_PANEL;
+
 import org.thechiselgroup.choosel.client.authentication.AuthenticationManager;
 import org.thechiselgroup.choosel.client.authentication.ui.AuthenticationBar;
 import org.thechiselgroup.choosel.client.authentication.ui.AuthenticationBasedEnablingStateWrapper;
@@ -64,6 +66,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 public abstract class ChooselApplication {
 
@@ -80,7 +83,11 @@ public abstract class ChooselApplication {
     public static final String DEVELOPER_MODE_PANEL = "developer_mode";
 
     @Inject
-    private ActionBar actionBar;
+    protected ActionBar actionBar;
+
+    @Inject
+    protected @Named(DATA_SOURCES_PANEL)
+    ResourceSetAvatarResourceSetsPresenter dataSourceResourceSetsPresenter;
 
     @Inject
     private AuthenticationBar authenticationBar;

@@ -43,6 +43,7 @@ import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ui.DefaultDetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
+import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.resources.ui.configuration.AllResourceSetAvatarFactoryProvider;
 import org.thechiselgroup.choosel.client.resources.ui.configuration.DefaultResourceSetAvatarFactoryProvider;
 import org.thechiselgroup.choosel.client.resources.ui.configuration.ResourceSetsDragAvatarFactoryProvider;
@@ -170,6 +171,10 @@ public class ChooselClientModule extends AbstractGinModule implements
                 .annotatedWith(Names.named(AVATAR_FACTORY_SELECTION_DROP))
                 .toProvider(SelectionDropTargetFactoryProvider.class)
                 .in(Singleton.class);
+
+        bind(ResourceSetAvatarResourceSetsPresenter.class)
+                .annotatedWith(Names.named(DATA_SOURCES_PANEL))
+                .toProvider(DataSourcePanelProvider.class).in(Singleton.class);
     }
 
     private void bindHoverModel() {

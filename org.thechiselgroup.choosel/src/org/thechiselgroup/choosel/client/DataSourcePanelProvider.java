@@ -13,28 +13,31 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.ui;
+package org.thechiselgroup.choosel.client;
 
-import org.thechiselgroup.choosel.client.importer.Importer;
+import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceSetsPresenter;
-import org.thechiselgroup.choosel.client.windows.WindowContent;
-import org.thechiselgroup.choosel.client.windows.WindowContentFactory;
 
-public class ImportCSVWindowContentFactory implements WindowContentFactory {
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
-    private Importer importer;
+public class DataSourcePanelProvider implements
+        Provider<ResourceSetAvatarResourceSetsPresenter> {
 
-    private ResourceSetAvatarResourceSetsPresenter dataSourcesPanel;
+    private final ResourceSetAvatarFactory factory;
 
-    public ImportCSVWindowContentFactory(Importer importer,
-            ResourceSetAvatarResourceSetsPresenter dataSourcesPanel) {
+    @Inject
+    public DataSourcePanelProvider(ResourceSetAvatarFactory factory) {
+        this.factory = factory;
 
-        this.importer = importer;
-        this.dataSourcesPanel = dataSourcesPanel;
     }
 
     @Override
-    public WindowContent createWindowContent() {
-        return new ImportCSVWindowContent(importer, dataSourcesPanel);
+    public ResourceSetAvatarResourceSetsPresenter get() {
+        ResourceSetAvatarResourceSetsPresenter presenter = new ResourceSetAvatarResourceSetsPresenter(
+                factory);
+        presenter.init();
+        return presenter;
     }
+
 }

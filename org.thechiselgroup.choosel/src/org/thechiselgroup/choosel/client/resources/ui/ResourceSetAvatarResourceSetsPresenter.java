@@ -48,8 +48,8 @@ public class ResourceSetAvatarResourceSetsPresenter implements
     @Inject
     public ResourceSetAvatarResourceSetsPresenter(
             ResourceSetAvatarFactory dragAvatarFactory) {
-        assert dragAvatarFactory != null;
 
+        assert dragAvatarFactory != null;
         this.dragAvatarFactory = dragAvatarFactory;
     }
 
