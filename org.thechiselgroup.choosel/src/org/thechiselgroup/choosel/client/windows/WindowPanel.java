@@ -27,6 +27,7 @@ import org.thechiselgroup.choosel.client.fx.FXUtil;
 import org.thechiselgroup.choosel.client.fx.Opacity;
 import org.thechiselgroup.choosel.client.geometry.Point;
 import org.thechiselgroup.choosel.client.ui.CSS;
+import org.thechiselgroup.choosel.client.ui.ResizingTextBox;
 import org.thechiselgroup.choosel.client.ui.WidgetFactory;
 import org.thechiselgroup.choosel.client.ui.dnd.DragProxyEventReceiver;
 import org.thechiselgroup.choosel.client.ui.popup.DefaultPopupManager;
@@ -34,6 +35,7 @@ import org.thechiselgroup.choosel.client.util.MathUtils;
 
 import com.allen_sauer.gwt.dnd.client.util.WidgetLocation;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
@@ -49,6 +51,7 @@ import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 public class WindowPanel extends NEffectPanel implements
@@ -97,7 +100,7 @@ public class WindowPanel extends NEffectPanel implements
 
     private FlexTable grid;
 
-    private Label headerWidget;
+    private Widget headerWidget;
 
     private Widget northWidget;
 
@@ -125,6 +128,8 @@ public class WindowPanel extends NEffectPanel implements
      * the close button.
      */
     private HorizontalPanel headerBar;
+
+    private Widget headerContainer;
 
     /**
      * Adjusts the size of the window or the size of its content. If the window
@@ -182,74 +187,6 @@ public class WindowPanel extends NEffectPanel implements
                 close();
             }
         };
-    }
-
-    private HorizontalPanel createHeaderBar() {
-        HorizontalPanel headerBar = new HorizontalPanel();
-
-        headerBar.setSize("100%", "");
-        headerBar.add(headerWidget);
-        headerBar.setCellHorizontalAlignment(headerWidget,
-                HasAlignment.ALIGN_LEFT);
-
-        closeImage = new Image(getInvisibleCloseImageUrl());
-        closeImage.addStyleName(CSS_WINDOW_BUTTON_PANEL);
-
-        closeImage.addMouseOverHandler(new MouseOverHandler() {
-            @Override
-            public void onMouseOver(MouseOverEvent event) {
-                closeImage.setUrl(getActiveCloseImageUrl());
-            }
-        });
-
-        closeImage.addMouseOutHandler(new MouseOutHandler() {
-            @Override
-            public void onMouseOut(MouseOutEvent event) {
-                closeImage.setUrl(getVisibleCloseImageUrl());
-            }
-        });
-
-        rootPanel.addMouseOverHandler(new MouseOverHandler() {
-            @Override
-            public void onMouseOver(MouseOverEvent event) {
-                closeImage.setUrl(getVisibleCloseImageUrl());
-            }
-        });
-
-        rootPanel.addMouseOutHandler(new MouseOutHandler() {
-            @Override
-            public void onMouseOut(MouseOutEvent event) {
-                closeImage.setUrl(getInvisibleCloseImageUrl());
-            }
-        });
-
-        // disable dragging / transparency on mouse down over image
-        closeImage.addMouseDownHandler(new MouseDownHandler() {
-            @Override
-            public void onMouseDown(MouseDownEvent event) {
-                event.stopPropagation();
-                event.preventDefault();
-            }
-        });
-
-        closeImage.addClickHandler(createCloseButtonClickHandler());
-
-        DefaultPopupManager manager = DefaultPopupManager.createPopupManager(
-                closeImage, new WidgetFactory() {
-                    @Override
-                    public Widget createWidget() {
-                        return new Label(getClosePopupLabel());
-                    }
-                });
-        manager.setHideDelay(0);
-
-        headerBar.add(closeImage);
-        headerBar.setCellHorizontalAlignment(closeImage,
-                HasAlignment.ALIGN_RIGHT);
-        headerBar.setCellVerticalAlignment(closeImage,
-                HasAlignment.ALIGN_MIDDLE);
-
-        return headerBar;
     }
 
     // hook
@@ -332,7 +269,7 @@ public class WindowPanel extends NEffectPanel implements
         return DOM.getIntStyleAttribute(getElement(), CSS.Z_INDEX);
     }
 
-    public void init(WindowManager windowController, String title,
+    public void init(WindowManager windowManager, String title,
             Widget contentWidget) {
 
         this.controller = new DefaultWindowController(new WindowCallback() {
@@ -365,35 +302,24 @@ public class WindowPanel extends NEffectPanel implements
         initShowEvent();
 
         DOM.setStyleAttribute(getElement(), "border", "0px"); // TODO move to
-                                                              // CSS class
+                                                              // CSS class or
+                                                              // CSS file
 
         this.windowTitle = title;
         this.rootPanel = new FocusPanel();
         setWidget(this.rootPanel);
 
-        this.manager = windowController;
+        this.manager = windowManager;
 
         rootPanel.addStyleName(CSS_WINDOW);
 
-        this.headerWidget = new Label(title);
-        headerWidget.addStyleName(CSS_WINDOW_HEADER_LABEL);
-
         this.contentWidget = contentWidget;
-        // TODO move to CSS
-        // this.contentWidget.getElement().setAttribute("overflow", "hidden");
-
-        headerBar = createHeaderBar();
-
-        FocusPanel headerContainer = new FocusPanel();
-        headerContainer.add(headerBar);
-
-        windowController.getMoveDragController().makeDraggable(this,
-                headerContainer);
+        initHeader(windowManager, title);
 
         rootPanel.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                // TODO fix bug: window not to front
+                // XXX fix bug: window not to front
                 // deactivated because of list box issue
                 // // force our panel to the top of our z-index context
                 // AbsolutePanel boundaryPanel = windowController
@@ -406,53 +332,163 @@ public class WindowPanel extends NEffectPanel implements
             }
         });
 
-        initGrid(contentWidget, headerContainer);
+        initGrid(contentWidget);
     }
 
-    protected void initGrid(Widget contentWidget, FocusPanel headerContainer) {
+    private Widget initCell(int row, int col, ResizeDirection direction,
+            String additionalCSSClass) {
+
+        FocusPanel borderWidget = new FocusPanel();
+
+        /*
+         * Sets the size for the elements that are not resized (e.g. corners and
+         * corner extensions). The corner extensions have the same size as the
+         * corners.
+         */
+        borderWidget.setPixelSize(BORDER_THICKNESS, BORDER_THICKNESS);
+
+        grid.setWidget(row, col, borderWidget);
+
+        manager.getResizeDragController()
+                .makeDraggable(borderWidget, direction);
+        removeFromDragControllerOnDispose.add(borderWidget);
+
+        /*
+         * all CSS classes need to be set in one call due to limitations in
+         * getCellFormatter().addStyleName
+         */
+        String css = CSS_WINDOW_RESIZE_EDGE;
+        css += " " + CSS_WINDOW_RESIZE + direction.getDirectionLetters();
+        if (additionalCSSClass != null) {
+            css += " " + additionalCSSClass;
+        }
+        grid.getCellFormatter().addStyleName(row, col, css);
+
+        return borderWidget;
+    }
+
+    private void initGrid(Widget contentWidget) {
         grid = new FlexTable();
         grid.setBorderWidth(0);
         grid.setCellSpacing(0);
         grid.setCellPadding(0);
         rootPanel.add(grid);
 
-        setupCell(0, 0, ResizeDirection.NORTH_WEST, null);
-        setupCell(0, 1, ResizeDirection.NORTH_WEST, null);
-        northWidget = setupCell(0, 2, ResizeDirection.NORTH, null);
-        setupCell(0, 3, ResizeDirection.NORTH_EAST, null);
-        setupCell(0, 4, ResizeDirection.NORTH_EAST, null);
+        initCell(0, 0, ResizeDirection.NORTH_WEST, null);
+        initCell(0, 1, ResizeDirection.NORTH_WEST, null);
+        northWidget = initCell(0, 2, ResizeDirection.NORTH, null);
+        initCell(0, 3, ResizeDirection.NORTH_EAST, null);
+        initCell(0, 4, ResizeDirection.NORTH_EAST, null);
 
-        setupCell(1, 0, ResizeDirection.NORTH_WEST, null);
-        grid.setWidget(1, 1, headerContainer);
+        initCell(1, 0, ResizeDirection.NORTH_WEST, null);
+        grid.setWidget(1, 1, headerBar);
         grid.getCellFormatter().addStyleName(1, 1, CSS_WINDOW_HEADER);
         grid.getFlexCellFormatter().setColSpan(1, 1, 3);
         grid.getFlexCellFormatter().setRowSpan(1, 1, 2);
-        setupCell(1, 2, ResizeDirection.NORTH_EAST, null);
+        initCell(1, 2, ResizeDirection.NORTH_EAST, null);
 
-        westTopWidget = setupCell(2, 0, ResizeDirection.WEST, null);
-        eastTopWidget = setupCell(2, 1, ResizeDirection.EAST, null);
+        westTopWidget = initCell(2, 0, ResizeDirection.WEST, null);
+        eastTopWidget = initCell(2, 1, ResizeDirection.EAST, null);
 
-        westWidget = setupCell(3, 0, ResizeDirection.WEST,
+        westWidget = initCell(3, 0, ResizeDirection.WEST,
                 CSS_WINDOW_RESIZE_EDGE_RIGHT_BORDER);
         grid.setWidget(3, 1, contentWidget);
         grid.getFlexCellFormatter().setColSpan(3, 1, 3);
         grid.getFlexCellFormatter().setRowSpan(3, 1, 2);
-        eastWidget = setupCell(3, 2, ResizeDirection.EAST,
+        eastWidget = initCell(3, 2, ResizeDirection.EAST,
                 CSS_WINDOW_RESIZE_EDGE_LEFT_BORDER);
 
-        setupCell(4, 0, ResizeDirection.SOUTH_WEST,
+        initCell(4, 0, ResizeDirection.SOUTH_WEST,
                 CSS_WINDOW_RESIZE_EDGE_RIGHT_BORDER);
-        setupCell(4, 1, ResizeDirection.SOUTH_EAST,
+        initCell(4, 1, ResizeDirection.SOUTH_EAST,
                 CSS_WINDOW_RESIZE_EDGE_LEFT_BORDER);
 
-        setupCell(5, 0, ResizeDirection.SOUTH_WEST, null);
-        setupCell(5, 1, ResizeDirection.SOUTH_WEST,
+        initCell(5, 0, ResizeDirection.SOUTH_WEST, null);
+        initCell(5, 1, ResizeDirection.SOUTH_WEST,
                 CSS_WINDOW_RESIZE_EDGE_TOP_BORDER);
-        southWidget = setupCell(5, 2, ResizeDirection.SOUTH,
+        southWidget = initCell(5, 2, ResizeDirection.SOUTH,
                 CSS_WINDOW_RESIZE_EDGE_TOP_BORDER);
-        setupCell(5, 3, ResizeDirection.SOUTH_EAST,
+        initCell(5, 3, ResizeDirection.SOUTH_EAST,
                 CSS_WINDOW_RESIZE_EDGE_TOP_BORDER);
-        setupCell(5, 4, ResizeDirection.SOUTH_EAST, null);
+        initCell(5, 4, ResizeDirection.SOUTH_EAST, null);
+    }
+
+    private void initHeader(WindowManager windowManager, String title) {
+        headerBar = new HorizontalPanel();
+        headerBar.setSize("100%", "");
+
+        headerWidget = new ResizingTextBox(20, 250);// Label(title);
+        ((TextBox) this.headerWidget).setText(title);
+        headerWidget.addStyleName(CSS_WINDOW_HEADER_LABEL);
+        headerBar.add(headerWidget);
+        headerBar.setCellHorizontalAlignment(headerWidget,
+                HasAlignment.ALIGN_LEFT);
+
+        Label headerContainer = new Label(" ");
+        headerContainer.getElement().getStyle().setWidth(100d, Unit.PCT);
+        headerContainer.getElement().getStyle().setHeight(20, Unit.PX);
+
+        windowManager.getMoveDragController().makeDraggable(this,
+                headerContainer);
+        this.headerContainer = headerContainer;
+        headerBar.add(headerContainer);
+        headerBar.setCellWidth(headerContainer, "100%");
+
+        closeImage = new Image(getInvisibleCloseImageUrl());
+        closeImage.addStyleName(CSS_WINDOW_BUTTON_PANEL);
+
+        closeImage.addMouseOverHandler(new MouseOverHandler() {
+            @Override
+            public void onMouseOver(MouseOverEvent event) {
+                closeImage.setUrl(getActiveCloseImageUrl());
+            }
+        });
+
+        closeImage.addMouseOutHandler(new MouseOutHandler() {
+            @Override
+            public void onMouseOut(MouseOutEvent event) {
+                closeImage.setUrl(getVisibleCloseImageUrl());
+            }
+        });
+
+        rootPanel.addMouseOverHandler(new MouseOverHandler() {
+            @Override
+            public void onMouseOver(MouseOverEvent event) {
+                closeImage.setUrl(getVisibleCloseImageUrl());
+            }
+        });
+
+        rootPanel.addMouseOutHandler(new MouseOutHandler() {
+            @Override
+            public void onMouseOut(MouseOutEvent event) {
+                closeImage.setUrl(getInvisibleCloseImageUrl());
+            }
+        });
+
+        // disable dragging / transparency on mouse down over image
+        closeImage.addMouseDownHandler(new MouseDownHandler() {
+            @Override
+            public void onMouseDown(MouseDownEvent event) {
+                event.stopPropagation();
+                event.preventDefault();
+            }
+        });
+
+        closeImage.addClickHandler(createCloseButtonClickHandler());
+
+        DefaultPopupManager manager = DefaultPopupManager.createPopupManager(
+                closeImage, new WidgetFactory() {
+                    @Override
+                    public Widget createWidget() {
+                        return new Label(getClosePopupLabel());
+                    }
+                });
+        manager.setHideDelay(0);
+
+        headerBar.add(closeImage);
+        headerBar.setCellHorizontalAlignment(closeImage,
+                HasAlignment.ALIGN_RIGHT);
+        headerBar.setCellVerticalAlignment(closeImage, HasAlignment.ALIGN_TOP);
     }
 
     private void initShowEvent() {
@@ -619,38 +655,6 @@ public class WindowPanel extends NEffectPanel implements
                 + headerHeight;
 
         super.setPixelSize(windowWidth, windowHeight);
-    }
-
-    private Widget setupCell(int row, int col, ResizeDirection direction,
-            String additionalCSSClass) {
-
-        FocusPanel borderWidget = new FocusPanel();
-
-        /*
-         * Sets the size for the elements that are not resized (e.g. corners and
-         * corner extensions). The corner extensions have the same size as the
-         * corners.
-         */
-        borderWidget.setPixelSize(BORDER_THICKNESS, BORDER_THICKNESS);
-
-        grid.setWidget(row, col, borderWidget);
-
-        manager.getResizeDragController()
-                .makeDraggable(borderWidget, direction);
-        removeFromDragControllerOnDispose.add(borderWidget);
-
-        /*
-         * all CSS classes need to be set in one call due to limitations in
-         * getCellFormatter().addStyleName
-         */
-        String css = CSS_WINDOW_RESIZE_EDGE;
-        css += " " + CSS_WINDOW_RESIZE + direction.getDirectionLetters();
-        if (additionalCSSClass != null) {
-            css += " " + additionalCSSClass;
-        }
-        grid.getCellFormatter().addStyleName(row, col, css);
-
-        return borderWidget;
     }
 
     public void setViewContent(WindowContent viewContent) {

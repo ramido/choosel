@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.workspace;
 
+import org.thechiselgroup.choosel.client.ui.ResizingTextBox;
 import org.thechiselgroup.choosel.client.util.Initializable;
 
 import com.google.gwt.event.dom.client.BlurEvent;
@@ -36,7 +37,7 @@ public class WorkspacePresenter implements Initializable {
         private TextBox textBox;
 
         public DefaultWorkspacePresenterDisplay() {
-            this.textBox = new TextBox();
+            this.textBox = new ResizingTextBox(50, 500);
         }
 
         @Override

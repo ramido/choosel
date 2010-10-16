@@ -119,18 +119,39 @@
   font-family: Arial;
   color: rgb(0, 0, 0);
   text-align: left;
+  background-color: rgba(0, 0, 0, 0.0);  
+  border: solid 1px rgba(0, 0, 0, 0.0);
   
   white-space:nowrap;
   
   position: relative;
-  top: -3px;
+  /* top: -3px; */ 
+  margin-bottom: 2px;
+  margin-top: 0px;
   
+  padding: 0px;
   display: inline; /* required so we can calculate minimum width based on header */
+}
+ 
+.choosel-WindowPanel-HeaderLabel:hover {
+    background-color: rgb(255, 255, 225);
+    border: solid 1px rgb(104, 140, 175);
+}
+
+.choosel-WindowPanel-HeaderLabel:focus {
+    border: solid 1px #E7B076;
+    background-color: rgb(255, 255, 225);
+}
+
+.choosel-WindowPanel-HeaderLabel:active {
+    border: solid 1px #E7B076;
+    background-color: rgb(255, 255, 225);
 }
  
 .choosel-WindowPanel-ButtonPanel {
   margin-left: 5px;
   margin-right: 2px;
+  margin-top: 2px;
   cursor: default;
 }
 
