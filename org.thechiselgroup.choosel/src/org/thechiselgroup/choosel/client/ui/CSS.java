@@ -172,6 +172,10 @@ public final class CSS {
         setHeight(widget.getElement(), heightPx);
     }
 
+    public static void setLeft(Element element, int left) {
+        setStyleAttribute(element, LEFT, left + PX);
+    }
+
     public static void setLineHeight(Element element, int lineHeight) {
         setStyleAttribute(element, LINE_HEIGHT, lineHeight + PX);
     }
@@ -208,6 +212,10 @@ public final class CSS {
     public static void setSize(Element element, int width, int height) {
         setWidth(element, width);
         setStyleAttribute(element, HEIGHT, height + PX);
+    }
+
+    public static void setTop(Element element, int top) {
+        setStyleAttribute(element, TOP, top + PX);
     }
 
     public static void setWhitespace(Element element, String value) {

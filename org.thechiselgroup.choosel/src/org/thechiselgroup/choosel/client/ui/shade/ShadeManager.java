@@ -16,7 +16,6 @@
 package org.thechiselgroup.choosel.client.ui.shade;
 
 import static com.google.gwt.user.client.DOM.createDiv;
-import static com.google.gwt.user.client.DOM.setStyleAttribute;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.ROOT_PANEL;
 
 import java.util.ArrayList;
@@ -90,11 +89,9 @@ public class ShadeManager implements HasClickHandlers {
 
         shadeElement.setClassName(ShadeManager.CSS_SHADE);
 
-        // TODO extract to CSS class
-        setStyleAttribute(shadeElement, CSS.POSITION, CSS.ABSOLUTE);
-        setStyleAttribute(shadeElement, CSS.LEFT, r.getX() + CSS.PX);
-        setStyleAttribute(shadeElement, CSS.TOP, r.getY() + CSS.PX);
-
+        CSS.setPosition(shadeElement, CSS.ABSOLUTE);
+        CSS.setLeft(shadeElement, r.getX());
+        CSS.setTop(shadeElement, r.getY());
         CSS.setHeight(shadeElement, r.getHeight());
         CSS.setWidth(shadeElement, r.getWidth());
         CSS.setZIndex(shadeElement, zIndex);
