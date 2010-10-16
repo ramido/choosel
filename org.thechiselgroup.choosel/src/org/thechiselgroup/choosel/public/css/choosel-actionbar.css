@@ -88,6 +88,8 @@
     padding-left: 4px;
     padding-right: 4px;
     height: 26px;
+    
+    border-right: 1px solid rgb(193, 217, 241); /* TODO deactivate when expander is visible */
 }
 
 .ActionBar-panel-content table tbody tr td {

@@ -18,10 +18,8 @@ package org.thechiselgroup.choosel.client.ui;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -86,10 +84,11 @@ public class ActionBar implements WidgetAdaptable {
         contentPanel.addStyleName(CSS_ACTIONBAR_PANEL_CONTENT);
         actionBarPanel.setWidget(1, 0, contentPanel);
 
-        actionBarPanel.setWidget(1, 1, new Image(GWT.getModuleBaseURL()
-                + "images/expander-normal.png"));
-        actionBarPanel.getCellFormatter().addStyleName(1, 1,
-                CSS_ACTIONBAR_PANEL_EXPANDER);
+        // TODO reactivate expanders once drop down menus are available
+        // actionBarPanel.setWidget(1, 1, new Image(GWT.getModuleBaseURL()
+        // + "images/expander-normal.png"));
+        // actionBarPanel.getCellFormatter().addStyleName(1, 1,
+        // CSS_ACTIONBAR_PANEL_EXPANDER);
 
         actionBarPanelContainer.add(actionBarPanel);
         panelsByID.put(panel.getPanelId(), panel);
