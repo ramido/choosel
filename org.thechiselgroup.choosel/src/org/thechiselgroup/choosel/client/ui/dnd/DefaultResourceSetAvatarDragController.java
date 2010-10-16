@@ -120,9 +120,6 @@ public class DefaultResourceSetAvatarDragController extends
 
     private HoverModel hoverModel;
 
-    /**
-     * Constructor for dependency injection --> TODO change to @Named tags
-     */
     @Inject
     public DefaultResourceSetAvatarDragController(Desktop desktop,
             ShadeManager shadeManager, HoverModel hoverModel) {
@@ -292,8 +289,7 @@ public class DefaultResourceSetAvatarDragController extends
         if (getBehaviorConstrainedToBoundaryPanel()) {
             desiredLeft = MathUtils.restrictToInterval(
                     boundaryRectangle.getWidth()
-                            - context.draggable.getOffsetWidth(),
-                    0,
+                            - context.draggable.getOffsetWidth(), 0,
                     desiredLeft);
         }
         return desiredLeft;
@@ -304,8 +300,7 @@ public class DefaultResourceSetAvatarDragController extends
         if (getBehaviorConstrainedToBoundaryPanel()) {
             desiredTop = MathUtils.restrictToInterval(
                     boundaryRectangle.getHeight()
-                            - context.draggable.getOffsetHeight(),
-                    0,
+                            - context.draggable.getOffsetHeight(), 0,
                     desiredTop);
         }
         return desiredTop;

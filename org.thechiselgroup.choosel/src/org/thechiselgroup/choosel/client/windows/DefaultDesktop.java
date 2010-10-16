@@ -128,6 +128,7 @@ public class DefaultDesktop extends AbsolutePanel implements Desktop, HasSize {
         return window;
     }
 
+    // TODO extract
     private void disableContextMenu() {
         /*
          * only disable the context menu in compiled code (not in development
