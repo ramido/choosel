@@ -77,6 +77,8 @@ public class WindowPanel extends NEffectPanel implements
 
     private static final String CSS_WINDOW_HEADER_LABEL = "choosel-WindowPanel-HeaderLabel";
 
+    private static final String CSS_WINDOW_HEADER_TEXT = "choosel-WindowPanel-HeaderText";
+
     private static final String CSS_WINDOW_RESIZE = "choosel-WindowPanel-Resize-";
 
     private static final String CSS_WINDOW_RESIZE_EDGE = "choosel-WindowPanel-ResizeEdge";
@@ -268,7 +270,7 @@ public class WindowPanel extends NEffectPanel implements
     }
 
     public void init(WindowManager windowManager, String title,
-            Widget contentWidget) {
+            boolean titleEditable, Widget contentWidget) {
 
         this.controller = new DefaultWindowController(new WindowCallback() {
             @Override
@@ -312,7 +314,7 @@ public class WindowPanel extends NEffectPanel implements
         rootPanel.addStyleName(CSS_WINDOW);
 
         this.contentWidget = contentWidget;
-        initHeader(windowManager, title);
+        initHeader(windowManager, titleEditable, title);
 
         rootPanel.addClickHandler(new ClickHandler() {
             @Override
@@ -469,11 +471,13 @@ public class WindowPanel extends NEffectPanel implements
         initCell(5, 4, ResizeDirection.SOUTH_EAST, null);
     }
 
-    private void initHeader(WindowManager windowManager, String title) {
+    private void initHeader(WindowManager windowManager, boolean editableTitle,
+            String title) {
+
         headerBar = new HorizontalPanel();
         headerBar.setSize("100%", "");
 
-        initTitleWidget(title, windowManager);
+        initTitleWidget(title, editableTitle, windowManager);
         initMoveLabel(windowManager);
         initCloseImage();
     }
@@ -502,10 +506,20 @@ public class WindowPanel extends NEffectPanel implements
         addEffect(showEffect);
     }
 
-    private void initTitleWidget(String title, WindowManager windowManager) {
-        headerWidget = new ResizingTextBox(20, 250);// Label(title);
-        ((TextBox) this.headerWidget).setText(title);
-        headerWidget.addStyleName(CSS_WINDOW_HEADER_LABEL);
+    private void initTitleWidget(String title, boolean editableTitle,
+            WindowManager windowManager) {
+
+        if (editableTitle) {
+            headerWidget = new ResizingTextBox(20, 250);
+            ((TextBox) this.headerWidget).setText(title);
+            headerWidget.addStyleName(CSS_WINDOW_HEADER_TEXT);
+        } else {
+            headerWidget = new Label(title);
+            headerWidget.addStyleName(CSS_WINDOW_HEADER_LABEL);
+            windowManager.getMoveDragController().makeDraggable(this,
+                    headerWidget);
+        }
+
         headerBar.add(headerWidget);
         headerBar.setCellHorizontalAlignment(headerWidget,
                 HasAlignment.ALIGN_LEFT);

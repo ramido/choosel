@@ -23,6 +23,7 @@ import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.geometry.HasSize;
 import org.thechiselgroup.choosel.client.geometry.Point;
 import org.thechiselgroup.choosel.client.ui.ZIndex;
+import org.thechiselgroup.choosel.client.views.DefaultView;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
@@ -83,10 +84,12 @@ public class DefaultDesktop extends AbsolutePanel implements Desktop, HasSize {
         }
     }
 
-    private WindowPanel createWindow(String title, Widget contentWidget, int x, int y) {
+    private WindowPanel createWindow(String title, boolean titleEditable,
+            Widget contentWidget, int x, int y) {
+
         WindowPanel window = new WindowPanel();
 
-        window.init(windowController, title, contentWidget);
+        window.init(windowController, title, titleEditable, contentWidget);
 
         addWindowInternal(window);
         add(window, x, y);
@@ -103,7 +106,8 @@ public class DefaultDesktop extends AbsolutePanel implements Desktop, HasSize {
         Point point = positionManager.getNextLocation(500, 400);
 
         WindowPanel window = createWindow(content.getLabel(),
-                content.asWidget(), point.x, point.y);
+                content instanceof DefaultView, content.asWidget(), point.x,
+                point.y);
 
         window.setViewContent(content);
 
@@ -117,7 +121,7 @@ public class DefaultDesktop extends AbsolutePanel implements Desktop, HasSize {
         content.init();
 
         WindowPanel window = createWindow(content.getLabel(),
-                content.asWidget(), x, y);
+                content instanceof DefaultView, content.asWidget(), x, y);
         window.setPixelSize(width, height);
         window.setViewContent(content);
 

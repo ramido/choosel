@@ -113,7 +113,7 @@
   vertical-align: top;
 }
 
-.choosel-WindowPanel-HeaderLabel {
+.choosel-WindowPanel-HeaderLabel, .choosel-WindowPanel-HeaderText {
   font-weight: bold;
   font-size: 15px;
   font-family: Arial;
@@ -133,17 +133,17 @@
   display: inline; /* required so we can calculate minimum width based on header */
 }
  
-.choosel-WindowPanel-HeaderLabel:hover {
+.choosel-WindowPanel-HeaderText:hover {
     background-color: rgb(255, 255, 225);
     border: solid 1px rgb(104, 140, 175);
 }
 
-.choosel-WindowPanel-HeaderLabel:focus {
+.choosel-WindowPanel-HeaderText:focus {
     border: solid 1px #E7B076;
     background-color: rgb(255, 255, 225);
 }
 
-.choosel-WindowPanel-HeaderLabel:active {
+.choosel-WindowPanel-HeaderText:active {
     border: solid 1px #E7B076;
     background-color: rgb(255, 255, 225);
 }
