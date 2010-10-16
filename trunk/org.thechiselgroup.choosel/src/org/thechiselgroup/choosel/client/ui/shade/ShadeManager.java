@@ -16,8 +16,8 @@
 package org.thechiselgroup.choosel.client.ui.shade;
 
 import static com.google.gwt.user.client.DOM.createDiv;
-import static com.google.gwt.user.client.DOM.setIntStyleAttribute;
 import static com.google.gwt.user.client.DOM.setStyleAttribute;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.ROOT_PANEL;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,8 +40,8 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 public class ShadeManager implements HasClickHandlers {
 
@@ -71,8 +71,8 @@ public class ShadeManager implements HasClickHandlers {
     private final int zIndex;
 
     @Inject
-    public ShadeManager() {
-        this(RootPanel.get(), ZIndex.SHADE);
+    public ShadeManager(@Named(ROOT_PANEL) AbsolutePanel panel) {
+        this(panel, ZIndex.SHADE);
     }
 
     public ShadeManager(AbsolutePanel panel, int zIndex) {
@@ -90,12 +90,14 @@ public class ShadeManager implements HasClickHandlers {
 
         shadeElement.setClassName(ShadeManager.CSS_SHADE);
 
+        // TODO extract to CSS class
         setStyleAttribute(shadeElement, CSS.POSITION, CSS.ABSOLUTE);
         setStyleAttribute(shadeElement, CSS.LEFT, r.getX() + CSS.PX);
         setStyleAttribute(shadeElement, CSS.TOP, r.getY() + CSS.PX);
-        setStyleAttribute(shadeElement, CSS.HEIGHT, r.getHeight() + CSS.PX);
-        setStyleAttribute(shadeElement, CSS.WIDTH, r.getWidth() + CSS.PX);
-        setIntStyleAttribute(shadeElement, CSS.Z_INDEX, zIndex);
+
+        CSS.setHeight(shadeElement, r.getHeight());
+        CSS.setWidth(shadeElement, r.getWidth());
+        CSS.setZIndex(shadeElement, zIndex);
 
         return shadeElement;
     }
@@ -113,13 +115,13 @@ public class ShadeManager implements HasClickHandlers {
     }
 
     public RemoveHandle showShade() {
-        return showShade(Collections.EMPTY_LIST);
+        return showShade(Collections.<Rectangle> emptyList());
     }
 
     public RemoveHandle showShade(List<Rectangle> excludedAreas) {
         /*
          * Token-based mechanism that supports acquiring a shade multiple times.
-         * The shade is removed when all token are released.
+         * The shade is removed when all tokens are released.
          */
 
         if (tokens.isEmpty()) {

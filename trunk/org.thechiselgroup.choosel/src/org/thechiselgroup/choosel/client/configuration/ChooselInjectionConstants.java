@@ -27,6 +27,8 @@ public interface ChooselInjectionConstants {
 
     String DEFAULT = "default";
 
+    String ROOT_PANEL = "RootPanel";
+
     String DROP_TARGET_MANAGER_VIEW_CONTENT = "drop-target-manager-view-content";
 
     String LABEL_PROVIDER_RESOURCE_SET = "label-provider-resources";

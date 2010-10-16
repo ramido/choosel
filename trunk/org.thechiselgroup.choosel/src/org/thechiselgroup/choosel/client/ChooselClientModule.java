@@ -106,6 +106,7 @@ import org.thechiselgroup.choosel.client.workspace.command.LoadWorkspaceDialogCo
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.inject.client.AbstractGinModule;
+import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 
@@ -244,6 +245,9 @@ public class ChooselClientModule extends AbstractGinModule implements
         bind(AsyncCommandExecutor.class).to(
                 MessageBlockingCommandExecutor.class).in(Singleton.class);
         bind(CommandPresenterFactory.class).in(Singleton.class);
+
+        bind(AbsolutePanel.class).annotatedWith(Names.named(ROOT_PANEL))
+                .toProvider(RootPanelProvider.class);
 
         bindViewContentDisplayFactories();
 
