@@ -15,23 +15,30 @@
  *******************************************************************************/
 package org.thechiselgroup.chooselexample.client;
 
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_BAR;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_CIRCULAR_BAR;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_DOT;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_GRAPH;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_MAP;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_PIE;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_SCATTER;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_TEXT;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_TIME;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_TIMELINE;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.WINDOW_CONTENT_CSV_IMPORT;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.WINDOW_CONTENT_NOTE;
+
 import java.util.Date;
 
 import org.thechiselgroup.choosel.client.ChooselApplication;
-import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceSetsPresenter;
-import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.test.TestResourceSetFactory;
-import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
-import org.thechiselgroup.choosel.client.windows.CreateWindowCommand;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Widget;
 
 public class ChooselExampleApplication extends ChooselApplication {
 
@@ -44,19 +51,6 @@ public class ChooselExampleApplication extends ChooselApplication {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				String title = "TestResources";
-				final ResourceSetsPresenter dataSourcesPresenter = new ResourceSetAvatarResourceSetsPresenter(
-						defaultDragAvatarFactory);
-				dataSourcesPresenter.init();
-
-				commandManager.execute(new CreateWindowCommand(desktop,
-						new AbstractWindowContent(title, "TODO") {
-							@Override
-							public Widget asWidget() {
-								return dataSourcesPresenter.asWidget();
-							}
-						}));
-
 				int counter = 0;
 				ResourceSet resourceSet = createResourceSet();
 				resourceSet.setLabel("Test");
@@ -71,7 +65,7 @@ public class ChooselExampleApplication extends ChooselApplication {
 					resource.putValue("label", "test" + category);
 				}
 
-				dataSourcesPresenter.addResourceSet(resourceSet);
+				dataSourceResourceSetsPresenter.addResourceSet(resourceSet);
 
 				ResourceSet graphResourceSet = createResourceSet();
 				graphResourceSet.setLabel("GraphTest");
@@ -85,7 +79,8 @@ public class ChooselExampleApplication extends ChooselApplication {
 					graphResourceSet.add(resource);
 				}
 
-				dataSourcesPresenter.addResourceSet(graphResourceSet);
+				dataSourceResourceSetsPresenter
+						.addResourceSet(graphResourceSet);
 			}
 
 		});
@@ -98,33 +93,23 @@ public class ChooselExampleApplication extends ChooselApplication {
 		if (runsInDevelopmentMode()) {
 			addTestDataSourceButton();
 
-			addWindowContentButton(DEVELOPER_MODE_PANEL, "Graph",
-					ChooselInjectionConstants.TYPE_GRAPH);
+			addWindowContentButton(DEVELOPER_MODE_PANEL, "Graph", TYPE_GRAPH);
 			addWindowContentButton(DEVELOPER_MODE_PANEL, "Circular Bar",
-					ChooselInjectionConstants.TYPE_CIRCULAR_BAR);
-			addWindowContentButton(DEVELOPER_MODE_PANEL, "Time",
-					ChooselInjectionConstants.TYPE_TIME);
-			addWindowContentButton(DEVELOPER_MODE_PANEL, "Dot",
-					ChooselInjectionConstants.TYPE_DOT);
+					TYPE_CIRCULAR_BAR);
+			addWindowContentButton(DEVELOPER_MODE_PANEL, "Time", TYPE_TIME);
+			addWindowContentButton(DEVELOPER_MODE_PANEL, "Dot", TYPE_DOT);
 		}
 
-		addWindowContentButton(VIEWS_PANEL, "Note",
-				ChooselInjectionConstants.WINDOW_CONTENT_NOTE);
-		addWindowContentButton(VIEWS_PANEL, "Text",
-				ChooselInjectionConstants.TYPE_TEXT);
-		addWindowContentButton(VIEWS_PANEL, "Map",
-				ChooselInjectionConstants.TYPE_MAP);
-		addWindowContentButton(VIEWS_PANEL, "Timeline",
-				ChooselInjectionConstants.TYPE_TIMELINE);
-		addWindowContentButton(VIEWS_PANEL, "Bar Chart",
-				ChooselInjectionConstants.TYPE_BAR);
-		addWindowContentButton(VIEWS_PANEL, "Pie Chart",
-				ChooselInjectionConstants.TYPE_PIE);
-		addWindowContentButton(VIEWS_PANEL, "Scatter Plot",
-				ChooselInjectionConstants.TYPE_SCATTER);
+		addWindowContentButton(VIEWS_PANEL, "Note", WINDOW_CONTENT_NOTE);
+		addWindowContentButton(VIEWS_PANEL, "Text", TYPE_TEXT);
+		addWindowContentButton(VIEWS_PANEL, "Map", TYPE_MAP);
+		addWindowContentButton(VIEWS_PANEL, "Timeline", TYPE_TIMELINE);
+		addWindowContentButton(VIEWS_PANEL, "Bar Chart", TYPE_BAR);
+		addWindowContentButton(VIEWS_PANEL, "Pie Chart", TYPE_PIE);
+		addWindowContentButton(VIEWS_PANEL, "Scatter Plot", TYPE_SCATTER);
 
-		addWindowContentButton(DATA_PANEL, "CSV Import",
-				ChooselInjectionConstants.WINDOW_CONTENT_CSV_IMPORT);
+		addWindowContentButton(DATA_PANEL, "Import", WINDOW_CONTENT_CSV_IMPORT);
+		addWidget(DATA_PANEL, dataSourceResourceSetsPresenter.asWidget());
 	}
 
 	@Override

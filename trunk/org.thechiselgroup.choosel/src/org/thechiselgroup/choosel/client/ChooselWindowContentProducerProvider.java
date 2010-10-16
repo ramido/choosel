@@ -19,6 +19,7 @@ import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionCo
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_SELECTION;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_SELECTION_DROP;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_SET;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.DATA_SOURCES_PANEL;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.DROP_TARGET_MANAGER_VIEW_CONTENT;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.LABEL_PROVIDER_SELECTION_SET;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_BAR;
@@ -35,7 +36,6 @@ import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionCo
 import java.util.HashMap;
 import java.util.Map;
 
-import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.importer.Importer;
 import org.thechiselgroup.choosel.client.label.CategoryLabelProvider;
@@ -45,6 +45,7 @@ import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
+import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.ui.HelpWindowContentFactory;
 import org.thechiselgroup.choosel.client.ui.ImportCSVWindowContentFactory;
 import org.thechiselgroup.choosel.client.ui.NoteWindowContentFactory;
@@ -56,7 +57,6 @@ import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.ViewFactory;
-import org.thechiselgroup.choosel.client.windows.Desktop;
 import org.thechiselgroup.choosel.client.windows.WindowContentFactory;
 import org.thechiselgroup.choosel.client.windows.WindowContentProducer;
 
@@ -110,10 +110,11 @@ public class ChooselWindowContentProducerProvider implements
             @Named(DROP_TARGET_MANAGER_VIEW_CONTENT) ResourceSetAvatarDropTargetManager contentDropTargetManager,
             SlotResolver slotResolver,
             ResourceCategorizer resourceByTypeCategorizer,
-            HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper, Desktop desktop,
-            CommandManager commandManager,
-            ResourceSetAvatarFactory defaultDragAvatarFactory, Importer importer) {
+            HoverModel hoverModel,
+            PopupManagerFactory popupManagerFactory,
+            DetailsWidgetHelper detailsWidgetHelper,
+            Importer importer,
+            @Named(DATA_SOURCES_PANEL) ResourceSetAvatarResourceSetsPresenter dataSourcesPanel) {
 
         assert userSetsDragAvatarFactory != null;
         assert allResourcesDragAvatarFactory != null;
@@ -154,8 +155,7 @@ public class ChooselWindowContentProducerProvider implements
                 new NoteWindowContentFactory());
         windowContentFactories.put(
                 ChooselInjectionConstants.WINDOW_CONTENT_CSV_IMPORT,
-                new ImportCSVWindowContentFactory(desktop,
-                        defaultDragAvatarFactory, commandManager, importer));
+                new ImportCSVWindowContentFactory(importer, dataSourcesPanel));
     }
 
     @Override
@@ -191,11 +191,6 @@ public class ChooselWindowContentProducerProvider implements
     }
 
     @Inject
-    public void registerText(@Named(TYPE_TEXT) ViewContentDisplayFactory factory) {
-        registerViewContentDisplayFactory(TYPE_TEXT, factory);
-    }
-
-    @Inject
     public void registerMap(@Named(TYPE_MAP) ViewContentDisplayFactory factory) {
         registerViewContentDisplayFactory(TYPE_MAP, factory);
     }
@@ -209,6 +204,11 @@ public class ChooselWindowContentProducerProvider implements
     public void registerScatter(
             @Named(TYPE_SCATTER) ViewContentDisplayFactory factory) {
         registerViewContentDisplayFactory(TYPE_SCATTER, factory);
+    }
+
+    @Inject
+    public void registerText(@Named(TYPE_TEXT) ViewContentDisplayFactory factory) {
+        registerViewContentDisplayFactory(TYPE_TEXT, factory);
     }
 
     @Inject
