@@ -33,11 +33,11 @@ public class BioMixerApplication extends ChooselApplication {
 	protected void initCustomActions() {
 		initNCBOSearchField();
 
-		addWindowContentButton(VIEWS_PANEL, "Note", "note");
-		addWindowContentButton(VIEWS_PANEL, "Text",
+		addCreateWindowActionToToolbar(VIEWS_PANEL, "Note", "note");
+		addCreateWindowActionToToolbar(VIEWS_PANEL, "Text",
 				ChooselInjectionConstants.TYPE_TEXT);
-		addWindowContentButton(VIEWS_PANEL, "Timeline", "Timeline");
-		addWindowContentButton(VIEWS_PANEL, "Graph", "Graph");
+		addCreateWindowActionToToolbar(VIEWS_PANEL, "Timeline", "Timeline");
+		addCreateWindowActionToToolbar(VIEWS_PANEL, "Graph", "Graph");
 	}
 
 	@Override
