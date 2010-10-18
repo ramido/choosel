@@ -40,6 +40,8 @@ public class ImportDialog extends AbstractDialog {
 
     private Importer importer;
 
+    private TextBox nameTextBox;
+
     public ImportDialog(Importer importer,
             ResourceSetAvatarResourceSetsPresenter presenter) {
 
@@ -61,7 +63,8 @@ public class ImportDialog extends AbstractDialog {
         Label nameLabel = new Label("Name of data set:");
         nameLabel.setStyleName(CSS_IMPORT_PANEL_LABEL);
         namePanel.add(nameLabel);
-        namePanel.add(new TextBox());
+        nameTextBox = new TextBox();
+        namePanel.add(nameTextBox);
         panel.add(namePanel);
 
         Label contentLabel = new Label("Paste CSV data below:");
@@ -97,6 +100,7 @@ public class ImportDialog extends AbstractDialog {
             StringTable parsedRows = new CSVStringTableParser()
                     .parse(pastedText);
             ResourceSet parsedResources = importer.createResources(parsedRows);
+            parsedResources.setLabel(nameTextBox.getText());
             presenter.addResourceSet(parsedResources);
         } catch (ParseException e) {
             // TODO correct exception handling
