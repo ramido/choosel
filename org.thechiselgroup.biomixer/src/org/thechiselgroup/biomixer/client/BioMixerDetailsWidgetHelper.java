@@ -32,72 +32,72 @@ import com.google.inject.Inject;
 
 public class BioMixerDetailsWidgetHelper extends DetailsWidgetHelper {
 
-	@Inject
-	public BioMixerDetailsWidgetHelper(ResourceSetFactory resourceSetFactory,
-			ResourceSetAvatarFactory dragAvatarFactory,
-			ResourceSetAvatarDragController dragController) {
-		super(resourceSetFactory, dragAvatarFactory, dragController);
-	}
+    @Inject
+    public BioMixerDetailsWidgetHelper(ResourceSetFactory resourceSetFactory,
+            ResourceSetAvatarFactory dragAvatarFactory,
+            ResourceSetAvatarDragController dragController) {
+        super(resourceSetFactory, dragAvatarFactory, dragController);
+    }
 
-	// TODO use dragAvatarFactory (injection)
-	@Override
-	public Widget createDetailsWidget(ResourceSet resourceSet,
-			ResourceSetToValueResolver resolver) {
+    // TODO use dragAvatarFactory (injection)
+    @Override
+    public Widget createDetailsWidget(ResourceSet resourceSet,
+            ResourceSetToValueResolver resolver) {
 
-		VerticalPanel verticalPanel = GWT.create(VerticalPanel.class);
+        VerticalPanel verticalPanel = GWT.create(VerticalPanel.class);
 
-		// FIXME use generic way to put in custom widgets
-		if (resourceSet.getFirstResource().getUri()
-				.startsWith(NcboUriHelper.NCBO_CONCEPT)) {
-			ResourceSetAvatar avatar = new ResourceSetAvatar(
-					(String) resourceSet.getFirstResource().getValue(
-							NCBO.CONCEPT_NAME), "avatar-resourceSet",
-					resourceSet, ResourceSetAvatarType.SET);
-			avatar.setEnabled(true);
-			dragController.setDraggable(avatar, true);
-			verticalPanel.add(avatar);
+        // FIXME use generic way to put in custom widgets
+        if (resourceSet.getFirstResource().getUri()
+                .startsWith(NcboUriHelper.NCBO_CONCEPT)) {
+            ResourceSetAvatar avatar = new ResourceSetAvatar(
+                    (String) resourceSet.getFirstResource().getValue(
+                            NCBO.CONCEPT_NAME), "avatar-resourceSet",
+                    resourceSet, ResourceSetAvatarType.SET);
+            avatar.setEnabled(true);
+            dragController.setDraggable(avatar, true);
+            verticalPanel.add(avatar);
 
-			addRow(resourceSet.getFirstResource(), verticalPanel, "Ontology",
-					NCBO.CONCEPT_ONTOLOGY_NAME);
-			addRow(resourceSet.getFirstResource(), verticalPanel, "Concept ID",
-					NCBO.CONCEPT_SHORT_ID);
-		} else if (resourceSet.getFirstResource().getUri()
-				.startsWith(NcboUriHelper.NCBO_MAPPING)) {
-			ResourceSetAvatar avatar = new ResourceSetAvatar("Mapping",
-					"avatar-resourceSet", resourceSet,
-					ResourceSetAvatarType.SET);
-			avatar.setEnabled(true);
-			dragController.setDraggable(avatar, true);
-			verticalPanel.add(avatar);
+            addRow(resourceSet.getFirstResource(), verticalPanel, "Ontology",
+                    NCBO.CONCEPT_ONTOLOGY_NAME);
+            addRow(resourceSet.getFirstResource(), verticalPanel, "Concept ID",
+                    NCBO.CONCEPT_SHORT_ID);
+        } else if (resourceSet.getFirstResource().getUri()
+                .startsWith(NcboUriHelper.NCBO_MAPPING)) {
+            ResourceSetAvatar avatar = new ResourceSetAvatar("Mapping",
+                    "avatar-resourceSet", resourceSet,
+                    ResourceSetAvatarType.SET);
+            avatar.setEnabled(true);
+            dragController.setDraggable(avatar, true);
+            verticalPanel.add(avatar);
 
-			addRow(resourceSet.getFirstResource(), verticalPanel, "Created",
-					NCBO.MAPPING_CREATION_DATE);
-			addRow(resourceSet.getFirstResource(), verticalPanel,
-					"Source concept", NCBO.MAPPING_SOURCE_CONCEPT_NAME);
-			addRow(resourceSet.getFirstResource(), verticalPanel,
-					"Source ontology", NCBO.MAPPING_SOURCE_ONTOLOGY_NAME);
-			addRow(resourceSet.getFirstResource(), verticalPanel,
-					"Source ontology version ID",
-					NCBO.MAPPING_SOURCE_ONTOLOGY_VERSION_ID);
-			addRow(resourceSet.getFirstResource(), verticalPanel,
-					"Destination concept",
-					NCBO.MAPPING_DESTINATION_CONCEPT_NAME);
-			addRow(resourceSet.getFirstResource(), verticalPanel,
-					"Destination ontology",
-					NCBO.MAPPING_DESTINATION_ONTOLOGY_NAME);
-			addRow(resourceSet.getFirstResource(), verticalPanel,
-					"Destination ontology version ID",
-					NCBO.MAPPING_DESTINATION_ONTOLOGY_VERSION_ID);
-		} else {
-			verticalPanel.add(avatarFactory.createAvatar(resourceSet));
+            addRow(resourceSet.getFirstResource(), verticalPanel, "Created",
+                    NCBO.MAPPING_CREATION_DATE);
+            addRow(resourceSet.getFirstResource(), verticalPanel,
+                    "Source concept", NCBO.MAPPING_SOURCE_CONCEPT_NAME);
+            addRow(resourceSet.getFirstResource(), verticalPanel,
+                    "Source ontology", NCBO.MAPPING_SOURCE_ONTOLOGY_NAME);
+            addRow(resourceSet.getFirstResource(), verticalPanel,
+                    "Source ontology version ID",
+                    NCBO.MAPPING_SOURCE_ONTOLOGY_VERSION_ID);
+            addRow(resourceSet.getFirstResource(), verticalPanel,
+                    "Destination concept",
+                    NCBO.MAPPING_DESTINATION_CONCEPT_NAME);
+            addRow(resourceSet.getFirstResource(), verticalPanel,
+                    "Destination ontology",
+                    NCBO.MAPPING_DESTINATION_ONTOLOGY_NAME);
+            addRow(resourceSet.getFirstResource(), verticalPanel,
+                    "Destination ontology version ID",
+                    NCBO.MAPPING_DESTINATION_ONTOLOGY_VERSION_ID);
+        } else {
+            verticalPanel.add(avatarFactory.createAvatar(resourceSet));
 
-			String value = resolver.resolve(resourceSet, "").toString();
-			HTML html = GWT.create(HTML.class);
-			html.setHTML(value);
-			verticalPanel.add(html);
-		}
+            String value = resolver.resolve(resourceSet, "").toString();
+            HTML html = GWT.create(HTML.class);
+            html.setHTML(value);
+            verticalPanel.add(html);
+        }
 
-		return verticalPanel;
-	}
+        return verticalPanel;
+    }
 
 }

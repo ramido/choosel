@@ -24,90 +24,90 @@ import org.thechiselgroup.choosel.client.views.DefaultSlotResolver;
 
 public class BioMixerSlotResolver extends DefaultSlotResolver {
 
-	@Override
-	public ResourceToValueResolver createDescriptionSlotResolver(String category) {
-		// TODO switch based on category -- need category as part of layerModel
-		// TODO resources as part of layerModel
-		// TODO how to do the automatic color assignment?
-		// TODO refactor // extract
-		if (NcboUriHelper.NCBO_CONCEPT.equals(category)) {
-			return new ResourceToValueResolver() {
-				@Override
-				public Object resolve(Resource resource) {
-					return resource.getValue(NCBO.CONCEPT_NAME) + " [from: "
-							+ resource.getValue(NCBO.CONCEPT_ONTOLOGY_NAME)
-							+ "]";
-				}
-			};
-		} else if (NcboUriHelper.NCBO_MAPPING.equals(category)) {
-			return new ResourceToValueResolver() {
-				@Override
-				public Object resolve(Resource resource) {
-					return resource.getValue(NCBO.MAPPING_SOURCE_CONCEPT_NAME)
-							+ " ["
-							+ resource
-									.getValue(NCBO.MAPPING_SOURCE_ONTOLOGY_NAME)
-							+ "] --> "
-							+ resource
-									.getValue(NCBO.MAPPING_DESTINATION_CONCEPT_NAME)
-							+ " ["
-							+ resource
-									.getValue(NCBO.MAPPING_DESTINATION_ONTOLOGY_NAME)
-							+ "]";
-				}
-			};
-		} else {
-			throw new RuntimeException("failed creating slot mapping");
-		}
-	}
+    @Override
+    public ResourceToValueResolver createDescriptionSlotResolver(String category) {
+        // TODO switch based on category -- need category as part of layerModel
+        // TODO resources as part of layerModel
+        // TODO how to do the automatic color assignment?
+        // TODO refactor // extract
+        if (NcboUriHelper.NCBO_CONCEPT.equals(category)) {
+            return new ResourceToValueResolver() {
+                @Override
+                public Object resolve(Resource resource) {
+                    return resource.getValue(NCBO.CONCEPT_NAME) + " [from: "
+                            + resource.getValue(NCBO.CONCEPT_ONTOLOGY_NAME)
+                            + "]";
+                }
+            };
+        } else if (NcboUriHelper.NCBO_MAPPING.equals(category)) {
+            return new ResourceToValueResolver() {
+                @Override
+                public Object resolve(Resource resource) {
+                    return resource.getValue(NCBO.MAPPING_SOURCE_CONCEPT_NAME)
+                            + " ["
+                            + resource
+                                    .getValue(NCBO.MAPPING_SOURCE_ONTOLOGY_NAME)
+                            + "] --> "
+                            + resource
+                                    .getValue(NCBO.MAPPING_DESTINATION_CONCEPT_NAME)
+                            + " ["
+                            + resource
+                                    .getValue(NCBO.MAPPING_DESTINATION_ONTOLOGY_NAME)
+                            + "]";
+                }
+            };
+        } else {
+            throw new RuntimeException("failed creating slot mapping");
+        }
+    }
 
-	@Override
-	public ResourceToValueResolver createGraphLabelSlotResolver(String category) {
-		if (NcboUriHelper.NCBO_CONCEPT.equals(category)) {
-			return new SimplePropertyValueResolver(NCBO.CONCEPT_NAME);
-		}
+    @Override
+    public ResourceToValueResolver createGraphLabelSlotResolver(String category) {
+        if (NcboUriHelper.NCBO_CONCEPT.equals(category)) {
+            return new SimplePropertyValueResolver(NCBO.CONCEPT_NAME);
+        }
 
-		return new FixedValuePropertyValueResolver("");
-	}
+        return new FixedValuePropertyValueResolver("");
+    }
 
-	@Override
-	public ResourceToValueResolver createGraphNodeBackgroundColorResolver(
-			String category) {
+    @Override
+    public ResourceToValueResolver createGraphNodeBackgroundColorResolver(
+            String category) {
 
-		if (category.equals(NcboUriHelper.NCBO_CONCEPT)) {
-			return new FixedValuePropertyValueResolver("#DAE5F3");
-		}
+        if (category.equals(NcboUriHelper.NCBO_CONCEPT)) {
+            return new FixedValuePropertyValueResolver("#DAE5F3");
+        }
 
-		if (category.equals(NcboUriHelper.NCBO_MAPPING)) {
-			return new FixedValuePropertyValueResolver("#E4E4E4");
-		}
+        if (category.equals(NcboUriHelper.NCBO_MAPPING)) {
+            return new FixedValuePropertyValueResolver("#E4E4E4");
+        }
 
-		return super.createGraphNodeBackgroundColorResolver(category);
-	}
+        return super.createGraphNodeBackgroundColorResolver(category);
+    }
 
-	@Override
-	public ResourceToValueResolver createGraphNodeBorderColorResolver(
-			String category) {
+    @Override
+    public ResourceToValueResolver createGraphNodeBorderColorResolver(
+            String category) {
 
-		if (category.equals(NcboUriHelper.NCBO_CONCEPT)) {
-			return new FixedValuePropertyValueResolver("#AFC6E5");
-		}
+        if (category.equals(NcboUriHelper.NCBO_CONCEPT)) {
+            return new FixedValuePropertyValueResolver("#AFC6E5");
+        }
 
-		if (category.equals(NcboUriHelper.NCBO_MAPPING)) {
-			return new FixedValuePropertyValueResolver("#D4D4D4");
-		}
+        if (category.equals(NcboUriHelper.NCBO_MAPPING)) {
+            return new FixedValuePropertyValueResolver("#D4D4D4");
+        }
 
-		return super.createGraphNodeBorderColorResolver(category);
-	}
+        return super.createGraphNodeBorderColorResolver(category);
+    }
 
-	@Override
-	public ResourceToValueResolver createLocationSlotResolver(String category) {
-		return new NullPropertyValueResolver();
-	}
+    @Override
+    public ResourceToValueResolver createLocationSlotResolver(String category) {
+        return new NullPropertyValueResolver();
+    }
 
-	@Override
-	public ResourceToValueResolver createFontSizeSlotResolver(String category) {
-		return new FixedValuePropertyValueResolver(new Integer(1));
-	}
+    @Override
+    public ResourceToValueResolver createFontSizeSlotResolver(String category) {
+        return new FixedValuePropertyValueResolver(new Integer(1));
+    }
 
 }

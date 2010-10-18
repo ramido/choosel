@@ -33,76 +33,76 @@ import org.thechiselgroup.choosel.client.views.graph.Relationship;
 import com.allen_sauer.gwt.log.client.Log;
 
 public class MappingNeighbourhoodCallback2 extends
-		AbstractNeighbourhoodCallback {
+        AbstractNeighbourhoodCallback {
 
-	public MappingNeighbourhoodCallback2(GraphDisplay graph,
-			ErrorHandler errorHandler,
-			GraphNodeExpansionCallback expansionCallback) {
+    public MappingNeighbourhoodCallback2(GraphDisplay graph,
+            ErrorHandler errorHandler,
+            GraphNodeExpansionCallback expansionCallback) {
 
-		super(graph, errorHandler, expansionCallback);
-	}
+        super(graph, errorHandler, expansionCallback);
+    }
 
-	private void addRelationshipArcs(List<Relationship> displayableRelationships) {
-		for (Relationship relationship : displayableRelationships) {
-			String sourceId = relationship.getSource().getUri();
-			String targetId = relationship.getTarget().getUri();
+    private void addRelationshipArcs(List<Relationship> displayableRelationships) {
+        for (Relationship relationship : displayableRelationships) {
+            String sourceId = relationship.getSource().getUri();
+            String targetId = relationship.getTarget().getUri();
 
-			expansionCallback.showArc(GraphViewContentDisplay.ARC_TYPE_MAPPING,
-					sourceId, targetId);
-		}
-	}
+            expansionCallback.showArc(GraphViewContentDisplay.ARC_TYPE_MAPPING,
+                    sourceId, targetId);
+        }
+    }
 
-	private List<Relationship> calculateDisplayableRelationships(
-			List<Relationship> relationships) {
+    private List<Relationship> calculateDisplayableRelationships(
+            List<Relationship> relationships) {
 
-		List<Relationship> result = new ArrayList<Relationship>();
+        List<Relationship> result = new ArrayList<Relationship>();
 
-		for (Relationship mapping : relationships) {
-			if (contains(mapping.getTarget()) && contains(mapping.getSource())) {
-				result.add(mapping);
-			}
-		}
+        for (Relationship mapping : relationships) {
+            if (contains(mapping.getTarget()) && contains(mapping.getSource())) {
+                result.add(mapping);
+            }
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	private List<Resource> calculateNewResources(
-			NeighbourhoodServiceResult result) {
-		List<Resource> newResources = new ArrayList<Resource>();
-		Set<Resource> neighbours = result.getNeighbours();
-		for (Resource resource : neighbours) {
-			if (!containsUri(resource.getUri())) {
-				newResources.add(resource);
-			}
-		}
-		return newResources;
-	}
+    private List<Resource> calculateNewResources(
+            NeighbourhoodServiceResult result) {
+        List<Resource> newResources = new ArrayList<Resource>();
+        Set<Resource> neighbours = result.getNeighbours();
+        for (Resource resource : neighbours) {
+            if (!containsUri(resource.getUri())) {
+                newResources.add(resource);
+            }
+        }
+        return newResources;
+    }
 
-	protected void layoutNodes(Iterable<Resource> newResources,
-			Resource inputResource) {
+    protected void layoutNodes(Iterable<Resource> newResources,
+            Resource inputResource) {
 
-		Node inputNode = getNode(inputResource);
-		Point inputLocation = graph.getLocation(inputNode);
+        Node inputNode = getNode(inputResource);
+        Point inputLocation = graph.getLocation(inputNode);
 
-		Log.debug("ConceptNeighbourhoodCallback.onSuccess - input location "
-				+ inputLocation.x + ", " + inputLocation.y);
+        Log.debug("ConceptNeighbourhoodCallback.onSuccess - input location "
+                + inputLocation.x + ", " + inputLocation.y);
 
-		List<Node> nodesToLayout = new ArrayList<Node>();
-		for (Resource resource : newResources) {
-			Node node = getNode(resource);
-			graph.setLocation(node, inputLocation);
-			nodesToLayout.add(node);
-		}
+        List<Node> nodesToLayout = new ArrayList<Node>();
+        for (Resource resource : newResources) {
+            Node node = getNode(resource);
+            graph.setLocation(node, inputLocation);
+            nodesToLayout.add(node);
+        }
 
-		graph.runLayoutOnNodes(nodesToLayout);
-	}
+        graph.runLayoutOnNodes(nodesToLayout);
+    }
 
-	@Override
-	public void onSuccess(NeighbourhoodServiceResult result) {
-		List<Resource> newResources = calculateNewResources(result);
-		addResources(newResources);
-		addRelationshipArcs(calculateDisplayableRelationships(result
-				.getRelationships()));
-		layoutNodes(newResources, result.getResource());
-	}
+    @Override
+    public void onSuccess(NeighbourhoodServiceResult result) {
+        List<Resource> newResources = calculateNewResources(result);
+        addResources(newResources);
+        addRelationshipArcs(calculateDisplayableRelationships(result
+                .getRelationships()));
+        layoutNodes(newResources, result.getResource());
+    }
 }

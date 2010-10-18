@@ -24,32 +24,32 @@ import org.thechiselgroup.choosel.client.views.graph.GraphExpansionRegistry;
 
 public class ChooselExampleClientModule extends ChooselClientModule {
 
-	@Override
-	protected void bindCustomServices() {
-	}
+    @Override
+    protected void bindCustomServices() {
+    }
 
-	@Override
-	protected Class<? extends ChooselApplication> getApplicationClass() {
-		return ChooselExampleApplication.class;
-	}
+    @Override
+    protected Class<? extends ChooselApplication> getApplicationClass() {
+        return ChooselExampleApplication.class;
+    }
 
-	@Override
-	protected Class<? extends DetailsWidgetHelper> getDetailsWidgetHelperClass() {
-		return ChooselExampleDetailsWidgetHelper.class;
-	}
+    @Override
+    protected Class<? extends DetailsWidgetHelper> getDetailsWidgetHelperClass() {
+        return ChooselExampleDetailsWidgetHelper.class;
+    }
 
-	@Override
-	protected Class<? extends DropTargetCapabilityChecker> getDropTargetCapabilityCheckerClass() {
-		return ChooselExampleDropTargetCapabilityChecker.class;
-	}
+    @Override
+    protected Class<? extends DropTargetCapabilityChecker> getDropTargetCapabilityCheckerClass() {
+        return ChooselExampleDropTargetCapabilityChecker.class;
+    }
 
-	@Override
-	protected Class<? extends SlotResolver> getSlotResolverClass() {
-		return ChooselExampleSlotResolver.class;
-	}
+    @Override
+    protected Class<? extends SlotResolver> getSlotResolverClass() {
+        return ChooselExampleSlotResolver.class;
+    }
 
-	@Override
-	protected Class<? extends GraphExpansionRegistry> getGraphExpansionRegistryClass() {
-		return ChooselExampleGraphExpansionRegistry.class;
-	}
+    @Override
+    protected Class<? extends GraphExpansionRegistry> getGraphExpansionRegistryClass() {
+        return ChooselExampleGraphExpansionRegistry.class;
+    }
 }

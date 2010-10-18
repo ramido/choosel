@@ -32,52 +32,52 @@ import org.w3c.dom.Node;
 
 @SuppressWarnings("serial")
 public class NCBOConceptSearchServiceImpl extends XMLCallServlet implements
-		NCBOConceptSearchService {
+        NCBOConceptSearchService {
 
-	private static final String WEB_SERVICE = "http://rest.bioontology.org/bioportal/search/";
+    private static final String WEB_SERVICE = "http://rest.bioontology.org/bioportal/search/";
 
-	@Override
-	protected Resource analyzeNode(Node node, String label) throws Exception {
-		String conceptShortId = evaluateString(NCBO.CONCEPT_SHORT_ID, node);
-		String ontologyId = evaluateString(NCBO.CONCEPT_ONTOLOGY_ID, node);
+    @Override
+    protected Resource analyzeNode(Node node, String label) throws Exception {
+        String conceptShortId = evaluateString(NCBO.CONCEPT_SHORT_ID, node);
+        String ontologyId = evaluateString(NCBO.CONCEPT_ONTOLOGY_ID, node);
 
-		Resource concept = new Resource(NcboUriHelper.toConceptURI(ontologyId,
-				conceptShortId));
+        Resource concept = new Resource(NcboUriHelper.toConceptURI(ontologyId,
+                conceptShortId));
 
-		concept.putValue(NCBO.CONCEPT_ID, evaluateString(NCBO.CONCEPT_ID, node));
-		concept.putValue(NCBO.CONCEPT_SHORT_ID, conceptShortId);
-		concept.putValue(NCBO.CONCEPT_NAME,
-				evaluateString(NCBO.CONCEPT_NAME, node));
-		concept.putValue(NCBO.CONCEPT_ONTOLOGY_ID, ontologyId);
-		concept.putValue(NCBO.CONCEPT_ONTOLOGY_NAME,
-				evaluateString(NCBO.CONCEPT_ONTOLOGY_NAME, node));
+        concept.putValue(NCBO.CONCEPT_ID, evaluateString(NCBO.CONCEPT_ID, node));
+        concept.putValue(NCBO.CONCEPT_SHORT_ID, conceptShortId);
+        concept.putValue(NCBO.CONCEPT_NAME,
+                evaluateString(NCBO.CONCEPT_NAME, node));
+        concept.putValue(NCBO.CONCEPT_ONTOLOGY_ID, ontologyId);
+        concept.putValue(NCBO.CONCEPT_ONTOLOGY_NAME,
+                evaluateString(NCBO.CONCEPT_ONTOLOGY_NAME, node));
 
-		return concept;
-	}
+        return concept;
+    }
 
-	@Override
-	public void init(ServletConfig config) throws ServletException {
-		super.init(config);
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
 
-		setupSetExpression("//success/data/page/contents/searchResultList/searchBean");
+        setupSetExpression("//success/data/page/contents/searchResultList/searchBean");
 
-		registerExpression(NCBO.CONCEPT_ID, "conceptId/text()");
-		registerExpression(NCBO.CONCEPT_SHORT_ID, "conceptIdShort/text()");
-		registerExpression(NCBO.CONCEPT_NAME, "preferredName/text()");
-		registerExpression(NCBO.CONCEPT_ONTOLOGY_ID, "ontologyId/text()");
-		registerExpression(NCBO.CONCEPT_ONTOLOGY_NAME,
-				"ontologyDisplayLabel/text()");
-	}
+        registerExpression(NCBO.CONCEPT_ID, "conceptId/text()");
+        registerExpression(NCBO.CONCEPT_SHORT_ID, "conceptIdShort/text()");
+        registerExpression(NCBO.CONCEPT_NAME, "preferredName/text()");
+        registerExpression(NCBO.CONCEPT_ONTOLOGY_ID, "ontologyId/text()");
+        registerExpression(NCBO.CONCEPT_ONTOLOGY_NAME,
+                "ontologyDisplayLabel/text()");
+    }
 
-	@Override
-	public Set<Resource> searchConcepts(String queryText)
-			throws ServiceException {
-		try {
-			String url = WEB_SERVICE + URLEncoder.encode(queryText, "UTF-8")
-					+ "?isexactmatch=1";
-			return analyzeXML(url, "concept");
-		} catch (UnsupportedEncodingException e) {
-			throw new ServiceException(e.getMessage());
-		}
-	}
+    @Override
+    public Set<Resource> searchConcepts(String queryText)
+            throws ServiceException {
+        try {
+            String url = WEB_SERVICE + URLEncoder.encode(queryText, "UTF-8")
+                    + "?isexactmatch=1";
+            return analyzeXML(url, "concept");
+        } catch (UnsupportedEncodingException e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
 }

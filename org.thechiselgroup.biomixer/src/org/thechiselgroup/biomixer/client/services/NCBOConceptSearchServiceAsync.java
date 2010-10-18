@@ -24,6 +24,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 // TODO generalize search interface
 public interface NCBOConceptSearchServiceAsync {
 
-	void searchConcepts(String queryText, AsyncCallback<Set<Resource>> callback);
+    void searchConcepts(String queryText, AsyncCallback<Set<Resource>> callback);
 
 }

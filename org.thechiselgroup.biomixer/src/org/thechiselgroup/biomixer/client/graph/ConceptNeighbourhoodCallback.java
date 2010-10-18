@@ -34,72 +34,72 @@ import org.thechiselgroup.choosel.client.views.graph.Relationship;
 // TODO extract superclass
 public class ConceptNeighbourhoodCallback extends AbstractNeighbourhoodCallback {
 
-	private final ResourceManager resourceManager;
+    private final ResourceManager resourceManager;
 
-	public ConceptNeighbourhoodCallback(GraphDisplay graph,
-			ResourceManager resourceManager, ErrorHandler errorHandler,
-			GraphNodeExpansionCallback expansionCallback) {
+    public ConceptNeighbourhoodCallback(GraphDisplay graph,
+            ResourceManager resourceManager, ErrorHandler errorHandler,
+            GraphNodeExpansionCallback expansionCallback) {
 
-		super(graph, errorHandler, expansionCallback);
+        super(graph, errorHandler, expansionCallback);
 
-		this.resourceManager = resourceManager;
-	}
+        this.resourceManager = resourceManager;
+    }
 
-	private void createArcs(List<Relationship> relationships) {
-		for (Relationship relationship : relationships) {
-			String targetUri = relationship.getTarget().getUri();
-			String sourceUri = relationship.getSource().getUri();
+    private void createArcs(List<Relationship> relationships) {
+        for (Relationship relationship : relationships) {
+            String targetUri = relationship.getTarget().getUri();
+            String sourceUri = relationship.getSource().getUri();
 
-			expansionCallback.showArc(
-					NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS, sourceUri,
-					targetUri);
-		}
-	}
+            expansionCallback.showArc(
+                    NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS, sourceUri,
+                    targetUri);
+        }
+    }
 
-	protected void layoutNodes(Set<Resource> newResources,
-			Resource inputResource) {
+    protected void layoutNodes(Set<Resource> newResources,
+            Resource inputResource) {
 
-		Node inputNode = getNode(inputResource);
-		Point inputLocation = graph.getLocation(inputNode);
+        Node inputNode = getNode(inputResource);
+        Point inputLocation = graph.getLocation(inputNode);
 
-		List<Node> nodesToLayout = new ArrayList<Node>();
-		for (Resource resource : newResources) {
-			Node node = getNode(resource);
-			graph.setLocation(node, inputLocation);
-			nodesToLayout.add(node);
-		}
+        List<Node> nodesToLayout = new ArrayList<Node>();
+        for (Resource resource : newResources) {
+            Node node = getNode(resource);
+            graph.setLocation(node, inputLocation);
+            nodesToLayout.add(node);
+        }
 
-		graph.runLayoutOnNodes(nodesToLayout);
-	}
+        graph.runLayoutOnNodes(nodesToLayout);
+    }
 
-	@Override
-	public void onSuccess(NeighbourhoodServiceResult result) {
-		// FIXME add to global storage // convert result to use objects
-		// from global storage
+    @Override
+    public void onSuccess(NeighbourhoodServiceResult result) {
+        // FIXME add to global storage // convert result to use objects
+        // from global storage
 
-		Resource inputResource = resourceManager.add(result.getResource());
-		List<Resource> neighbours = new ArrayList<Resource>();
-		for (Resource resource : result.getNeighbours()) {
-			neighbours.add(resourceManager.add(resource));
-		}
-		List<Relationship> relationships = new ArrayList<Relationship>();
-		for (Relationship relationship : result.getRelationships()) {
-			relationships.add(new Relationship(resourceManager.add(relationship
-					.getSource()),
-					resourceManager.add(relationship.getTarget())));
-		}
+        Resource inputResource = resourceManager.add(result.getResource());
+        List<Resource> neighbours = new ArrayList<Resource>();
+        for (Resource resource : result.getNeighbours()) {
+            neighbours.add(resourceManager.add(resource));
+        }
+        List<Relationship> relationships = new ArrayList<Relationship>();
+        for (Relationship relationship : result.getRelationships()) {
+            relationships.add(new Relationship(resourceManager.add(relationship
+                    .getSource()),
+                    resourceManager.add(relationship.getTarget())));
+        }
 
-		Set<Resource> newResources = getNewResources(neighbours);
+        Set<Resource> newResources = getNewResources(neighbours);
 
-		// TODO filter to arcs/node where both concepts are contained
+        // TODO filter to arcs/node where both concepts are contained
 
-		addResources(newResources);
-		updateUriLists(NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS,
-				relationships, inputResource);
+        addResources(newResources);
+        updateUriLists(NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS,
+                relationships, inputResource);
 
-		createArcs(relationships);
+        createArcs(relationships);
 
-		layoutNodes(newResources, inputResource);
-	}
+        layoutNodes(newResources, inputResource);
+    }
 
 }

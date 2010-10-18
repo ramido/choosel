@@ -25,80 +25,80 @@ import org.thechiselgroup.choosel.client.views.DefaultSlotResolver;
 
 public class ChooselExampleSlotResolver extends DefaultSlotResolver {
 
-	@Override
-	public ResourceToValueResolver createDateSlotResolver(String type) {
-		return new SimplePropertyValueResolver("date");
-	}
+    @Override
+    public ResourceToValueResolver createDateSlotResolver(String type) {
+        return new SimplePropertyValueResolver("date");
+    }
 
-	@Override
-	public ResourceToValueResolver createDescriptionSlotResolver(String category) {
-		// TODO switch based on category -- need category as part of layerModel
-		// TODO resources as part of layerModel
-		// TODO how to do the automatic color assignment?
-		// TODO refactor // extract
-		if ("tsunami".equals(category)) {
-			return new SimplePropertyValueResolver("date");
-		}
+    @Override
+    public ResourceToValueResolver createDescriptionSlotResolver(String category) {
+        // TODO switch based on category -- need category as part of layerModel
+        // TODO resources as part of layerModel
+        // TODO how to do the automatic color assignment?
+        // TODO refactor // extract
+        if ("tsunami".equals(category)) {
+            return new SimplePropertyValueResolver("date");
+        }
 
-		if ("earthquake".equals(category)) {
-			return new SimplePropertyValueResolver("description");
-		}
+        if ("earthquake".equals(category)) {
+            return new SimplePropertyValueResolver("description");
+        }
 
-		if ("csv".equals(category)) {
-			return new SimplePropertyValueResolver("value");
-		}
+        if ("csv".equals(category)) {
+            return new SimplePropertyValueResolver("value");
+        }
 
-		if ("graphtest".equals(category)) {
-			return new SimplePropertyValueResolver("title");
-		}
+        if ("graphtest".equals(category)) {
+            return new SimplePropertyValueResolver("title");
+        }
 
-		// if (TestResourceSetFactory.DEFAULT_TYPE.equals(category)) {
-		// return new SimplePropertyValueResolver(
-		// TestResourceSetFactory.LABEL_KEY);
-		// }
+        // if (TestResourceSetFactory.DEFAULT_TYPE.equals(category)) {
+        // return new SimplePropertyValueResolver(
+        // TestResourceSetFactory.LABEL_KEY);
+        // }
 
-		if (TestResourceSetFactory.TYPE_1.equals(category)) {
-			return new SimplePropertyValueResolver("label");
-		}
+        if (TestResourceSetFactory.TYPE_1.equals(category)) {
+            return new SimplePropertyValueResolver("label");
+        }
 
-		throw new RuntimeException("failed creating slot mapping");
-	}
+        throw new RuntimeException("failed creating slot mapping");
+    }
 
-	@Override
-	public ResourceToValueResolver createLabelSlotResolver(String category) {
+    @Override
+    public ResourceToValueResolver createLabelSlotResolver(String category) {
 
-		Converter<Float, String> converter = new Converter<Float, String>() {
-			@Override
-			public String convert(Float value) throws ConversionException {
-				if (value != null) {
-					int f = (value).intValue();
-					return "" + f;
-				}
+        Converter<Float, String> converter = new Converter<Float, String>() {
+            @Override
+            public String convert(Float value) throws ConversionException {
+                if (value != null) {
+                    int f = (value).intValue();
+                    return "" + f;
+                }
 
-				return "";
-			}
-		};
+                return "";
+            }
+        };
 
-		SimplePropertyValueResolver resolver;
-		if ("csv".equals(category)) {
-			return new SimplePropertyValueResolver("value");
-		} else if ("graphtest".equals(category)) {
-			return new SimplePropertyValueResolver("description");
-		} else {
-			resolver = new SimplePropertyValueResolver("magnitude");
-		}
+        SimplePropertyValueResolver resolver;
+        if ("csv".equals(category)) {
+            return new SimplePropertyValueResolver("value");
+        } else if ("graphtest".equals(category)) {
+            return new SimplePropertyValueResolver("description");
+        } else {
+            resolver = new SimplePropertyValueResolver("magnitude");
+        }
 
-		return new PropertyValueResolverConverterWrapper(resolver, converter);
-	}
+        return new PropertyValueResolverConverterWrapper(resolver, converter);
+    }
 
-	@Override
-	public ResourceToValueResolver createLocationSlotResolver(String category) {
-		return new SimplePropertyValueResolver("location");
-	}
+    @Override
+    public ResourceToValueResolver createLocationSlotResolver(String category) {
+        return new SimplePropertyValueResolver("location");
+    }
 
-	@Override
-	public ResourceToValueResolver createMagnitudeSlotResolver(String type) {
-		return new SimplePropertyValueResolver("magnitude");
-	}
+    @Override
+    public ResourceToValueResolver createMagnitudeSlotResolver(String type) {
+        return new SimplePropertyValueResolver("magnitude");
+    }
 
 }

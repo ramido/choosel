@@ -24,10 +24,10 @@ import com.google.inject.Inject;
 
 public class NCBOConceptSearchCommand extends SearchCommand {
 
-	@Inject
-	public NCBOConceptSearchCommand(CommandManager commandManager,
-			Desktop desktop, WindowContentProducer viewFactory) {
-		super(commandManager, desktop, viewFactory, "ncbo-search");
-	}
+    @Inject
+    public NCBOConceptSearchCommand(CommandManager commandManager,
+            Desktop desktop, WindowContentProducer viewFactory) {
+        super(commandManager, desktop, viewFactory, "ncbo-search");
+    }
 
 }

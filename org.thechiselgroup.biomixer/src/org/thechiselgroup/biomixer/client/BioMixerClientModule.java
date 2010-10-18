@@ -38,63 +38,63 @@ import com.google.inject.name.Names;
 
 public class BioMixerClientModule extends ChooselClientModule {
 
-	@Override
-	protected void bindCustomServices() {
-		bind(NCBOConceptSearchServiceAsync.class).to(
-				NCBOConceptSearchServiceAsyncClientImplementation.class).in(
-				Singleton.class);
-		bind(NeighbourhoodServiceAsync.class)
-				.annotatedWith(Names.named("concept"))
-				.to(NCBOConceptNeighbourhoodServiceAsyncClientImplementation.class)
-				.in(Singleton.class);
-		bind(NeighbourhoodServiceAsync.class)
-				.annotatedWith(Names.named("mapping"))
-				.to(NCBOMappingNeighbourhoodServiceAsyncClientImplementation.class)
-				.in(Singleton.class);
-	}
+    @Override
+    protected void bindCustomServices() {
+        bind(NCBOConceptSearchServiceAsync.class).to(
+                NCBOConceptSearchServiceAsyncClientImplementation.class).in(
+                Singleton.class);
+        bind(NeighbourhoodServiceAsync.class)
+                .annotatedWith(Names.named("concept"))
+                .to(NCBOConceptNeighbourhoodServiceAsyncClientImplementation.class)
+                .in(Singleton.class);
+        bind(NeighbourhoodServiceAsync.class)
+                .annotatedWith(Names.named("mapping"))
+                .to(NCBOMappingNeighbourhoodServiceAsyncClientImplementation.class)
+                .in(Singleton.class);
+    }
 
-	@Override
-	protected Class<? extends Branding> getBrandingClass() {
-		return BioMixerBranding.class;
-	}
+    @Override
+    protected Class<? extends Branding> getBrandingClass() {
+        return BioMixerBranding.class;
+    }
 
-	@Override
-	protected Class<? extends ChooselApplication> getApplicationClass() {
-		return BioMixerApplication.class;
-	}
+    @Override
+    protected Class<? extends ChooselApplication> getApplicationClass() {
+        return BioMixerApplication.class;
+    }
 
-	@Override
-	protected Class<? extends ArcStyleProvider> getArcStyleProviderClass() {
-		return BioMixerArcStyleProvider.class;
-	}
+    @Override
+    protected Class<? extends ArcStyleProvider> getArcStyleProviderClass() {
+        return BioMixerArcStyleProvider.class;
+    }
 
-	@Override
-	protected Class<? extends CategoryLabelProvider> getCategoryLabelProviderClass() {
-		return BioMixerMappingCategoryLabelProvider.class;
-	}
+    @Override
+    protected Class<? extends CategoryLabelProvider> getCategoryLabelProviderClass() {
+        return BioMixerMappingCategoryLabelProvider.class;
+    }
 
-	@Override
-	protected Class<? extends ChooselWindowContentProducerProvider> getContentProducerProviderClass() {
-		return BioMixerWindowContentProducerProvider.class;
-	}
+    @Override
+    protected Class<? extends ChooselWindowContentProducerProvider> getContentProducerProviderClass() {
+        return BioMixerWindowContentProducerProvider.class;
+    }
 
-	@Override
-	protected Class<? extends DetailsWidgetHelper> getDetailsWidgetHelperClass() {
-		return BioMixerDetailsWidgetHelper.class;
-	}
+    @Override
+    protected Class<? extends DetailsWidgetHelper> getDetailsWidgetHelperClass() {
+        return BioMixerDetailsWidgetHelper.class;
+    }
 
-	@Override
-	protected Class<? extends DropTargetCapabilityChecker> getDropTargetCapabilityCheckerClass() {
-		return BioMixerDropTargetCapabilityChecker.class;
-	}
+    @Override
+    protected Class<? extends DropTargetCapabilityChecker> getDropTargetCapabilityCheckerClass() {
+        return BioMixerDropTargetCapabilityChecker.class;
+    }
 
-	@Override
-	protected Class<? extends DefaultGraphExpansionRegistry> getGraphExpansionRegistryClass() {
-		return BioMixerGraphExpansionRegistry.class;
-	}
+    @Override
+    protected Class<? extends DefaultGraphExpansionRegistry> getGraphExpansionRegistryClass() {
+        return BioMixerGraphExpansionRegistry.class;
+    }
 
-	@Override
-	protected Class<? extends SlotResolver> getSlotResolverClass() {
-		return BioMixerSlotResolver.class;
-	}
+    @Override
+    protected Class<? extends SlotResolver> getSlotResolverClass() {
+        return BioMixerSlotResolver.class;
+    }
 }
