@@ -15,9 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.test;
 
+import java.util.Date;
+
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
+
+import com.google.gwt.user.client.Random;
 
 public final class TestResourceSetFactory {
 
@@ -32,6 +36,42 @@ public final class TestResourceSetFactory {
     public static final String X_COORD = "x-coord";
 
     public static final String Y_COORD = "y-coord";
+
+    /**
+     * for manual testing in app
+     */
+    public static ResourceSet addGraphTestData(ResourceSet graphResourceSet) {
+        graphResourceSet.setLabel("GraphTest");
+        for (int i = 0; i < 25; i++) {
+            Resource resource = new Resource("graphtest:" + i);
+            resource.putValue("title", "graphtest:" + i);
+            if (i > 0) {
+                resource.putValueAsUriList("parent", "graphtest:" + (i - 1));
+            }
+            graphResourceSet.add(resource);
+        }
+        return graphResourceSet;
+    }
+
+    /**
+     * for manual testing in app
+     */
+    public static ResourceSet addTestData(ResourceSet resourceSet) {
+        int counter = 0;
+        resourceSet.setLabel("Test");
+        for (int i = 0; i < 50; i++) {
+            resourceSet.add(createResource(i));
+        }
+        for (Resource resource : resourceSet) {
+            resource.putValue("date", new Date(
+                    1281991537 + 100000 * (counter++)).toString());
+            resource.putValue("magnitude", Random.nextInt(10));
+            int category = Random.nextInt(10);
+            resource.putValue("tagContent", "test" + category);
+            resource.putValue("label", "test" + category);
+        }
+        return resourceSet;
+    }
 
     public static ResourceSet createLabeledResources(int... indices) {
         return createLabeledResources(LABEL, TYPE_1, indices);
