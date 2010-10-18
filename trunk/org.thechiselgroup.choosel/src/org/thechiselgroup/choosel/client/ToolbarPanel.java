@@ -17,7 +17,8 @@ package org.thechiselgroup.choosel.client;
 
 import org.thechiselgroup.choosel.client.ui.Action;
 import org.thechiselgroup.choosel.client.ui.ActionBarPanel;
-import org.thechiselgroup.choosel.client.ui.ActionToolbarItem;
+import org.thechiselgroup.choosel.client.ui.ActionToolbarButton;
+import org.thechiselgroup.choosel.client.ui.ActionToolbarImage;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -51,9 +52,11 @@ public class ToolbarPanel implements ActionBarPanel {
     public void addAction(Action action) {
         assert action != null;
 
-        // TODO test if action has icons... --> Button
-
-        panel.add(new ActionToolbarItem(action, popupManagerFactory));
+        if (action.getNormalIconUrl() == null) {
+            panel.add(new ActionToolbarButton(action, popupManagerFactory));
+        } else {
+            panel.add(new ActionToolbarImage(action, popupManagerFactory));
+        }
     }
 
     @Override

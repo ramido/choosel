@@ -174,10 +174,6 @@ public class DialogPanel extends Panel {
 
     @Override
     public boolean remove(Widget child) {
-        if (!(child == buttonBar || child == contentWidget || child == headerLabel)) {
-            return false;
-        }
-
         if (child == contentWidget) {
             removeContentWidget();
             return true;

@@ -40,10 +40,18 @@ public final class IconURLBuilder {
     public static final String SUFFIX = ".png";
 
     public static String getIconUrl(String name, IconType type) {
+        if (name == null) {
+            return null;
+        }
+
         return getIconUrl(name, type, PREFIX + SEPARATOR);
     }
 
     public static String getIconUrl(String name, IconType type, String prefix) {
+        if (name == null) {
+            return null;
+        }
+
         return GWT.getModuleBaseURL() + PATH + prefix + name + SEPARATOR
                 + type.name + SUFFIX;
     }

@@ -139,6 +139,10 @@
     border: 1px solid rgb(193, 217, 241);
 }
 
+.ActionBar-panel-content img {
+	width: 22px;
+	height: 22px;
+}
 
 /** 
  * Text Box
@@ -169,10 +173,4 @@
 .ActionBar-panel-content input[type="text"]:active {
     border: solid 1px #E7B076;
     background-color: rgb(255, 255, 225);
-}
-
-
-.ActionToolbarButton {
-	width: 22px;
-	height: 22px;
 }
