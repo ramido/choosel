@@ -312,24 +312,43 @@ button.popup-content-action:active {
 	padding: 0px;	
 }
 
-.importCSV {
-    background-color: rgba(255,255,255,0.85);
-    color: rgb(112, 106, 170);
-    border: solid 0px;
-    font-size: 13px;
+.choosel-ImportPanel {
     width: 100%;
+    height: 100%;
 }
 
-.importCSV:hover {
-    background-color: rgb(255, 255, 225);
+table.choosel-ImportPanel tbody tr td {
+	padding-left: 5px;
+	padding-right: 5px;
 }
 
-.importCSV:focus {
-    background-color: rgb(255, 255, 225);
+table.choosel-ImportPanel tbody tr td:last-child {
+	padding-bottom: 5px;
 }
 
-.importCSV:active {
-    background-color: rgb(255, 255, 225);
+table.choosel-ImportPanel tbody tr td:first-child {
+	padding-top: 5px;
+}
+
+.choosel-ImportPanel textarea  {
+	width: 100%;
+	height: 100%;
+}
+
+.choosel-ImportPanel-DataSetName {
+	margin-bottom: 5px;
+}
+
+.choosel-ImportPanel-DataSetName .choosel-ImportPanel-Label {
+	display: inline;
+}
+
+.choosel-ImportPanel-DataSetName input[type="text"] {
+	margin-left: 5px;
+}
+
+.choosel-ImportPanel-Label {
+	font-weight: bold;
 }
 
 .choosel-TextWidthEstimator {
@@ -340,4 +359,28 @@ button.popup-content-action:active {
 	border: 0px none;
 	padding: 0px;
 	margin: 0px;
+}
+
+/*
+ * general styling of input elements
+ */
+input[type="text"], textarea {
+    background-color: #FFFFFF;
+    border:solid 1px rgb(164, 195, 235);
+    font-size: 13px;
+}
+
+input[type="text"]:hover, textarea:hover {
+    background-color: rgb(255, 255, 225);
+    border: solid 1px rgb(104, 140, 175);
+}
+
+input[type="text"]:focus, textarea:focus {
+    border: solid 1px #E7B076;
+    background-color: rgb(255, 255, 225);
+}
+
+input[type="text"]:active, textarea:active {
+    border: solid 1px #E7B076;
+    background-color: rgb(255, 255, 225);
 }
