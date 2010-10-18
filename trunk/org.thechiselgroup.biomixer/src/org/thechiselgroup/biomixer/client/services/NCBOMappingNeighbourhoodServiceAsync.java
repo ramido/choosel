@@ -18,6 +18,6 @@ package org.thechiselgroup.biomixer.client.services;
 import org.thechiselgroup.choosel.client.views.graph.NeighbourhoodServiceAsync;
 
 public interface NCBOMappingNeighbourhoodServiceAsync extends
-		NeighbourhoodServiceAsync {
+        NeighbourhoodServiceAsync {
 
 }

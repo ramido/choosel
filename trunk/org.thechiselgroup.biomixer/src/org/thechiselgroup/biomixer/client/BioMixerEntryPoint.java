@@ -22,9 +22,9 @@ import com.google.gwt.core.client.GWT;
 
 public class BioMixerEntryPoint extends ChooselEntryPoint {
 
-	@Override
-	protected ChooselGinjector createChooselGinjector() {
-		return GWT.create(BioMixerGinjector.class);
-	}
+    @Override
+    protected ChooselGinjector createChooselGinjector() {
+        return GWT.create(BioMixerGinjector.class);
+    }
 
 }

@@ -22,30 +22,30 @@ import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay;
 
 public class BioMixerArcStyleProvider extends DefaultArcStyleProvider {
 
-	@Override
-	public String getArcColor(String arcType) {
-		if (NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS.equals(arcType)) {
-			return "#AFC6E5";
-		}
+    @Override
+    public String getArcColor(String arcType) {
+        if (NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS.equals(arcType)) {
+            return "#AFC6E5";
+        }
 
-		if (GraphViewContentDisplay.ARC_TYPE_MAPPING.equals(arcType)) {
-			return "#D4D4D4";
-		}
+        if (GraphViewContentDisplay.ARC_TYPE_MAPPING.equals(arcType)) {
+            return "#D4D4D4";
+        }
 
-		return super.getArcColor(arcType);
-	}
+        return super.getArcColor(arcType);
+    }
 
-	@Override
-	public String getArcStyle(String arcType) {
-		if (NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS.equals(arcType)) {
-			return GraphDisplay.ARC_STYLE_SOLID;
-		}
+    @Override
+    public String getArcStyle(String arcType) {
+        if (NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS.equals(arcType)) {
+            return GraphDisplay.ARC_STYLE_SOLID;
+        }
 
-		if (GraphViewContentDisplay.ARC_TYPE_MAPPING.equals(arcType)) {
-			return GraphDisplay.ARC_STYLE_DASHED;
-		}
+        if (GraphViewContentDisplay.ARC_TYPE_MAPPING.equals(arcType)) {
+            return GraphDisplay.ARC_STYLE_DASHED;
+        }
 
-		return super.getArcStyle(arcType);
-	}
+        return super.getArcStyle(arcType);
+    }
 
 }

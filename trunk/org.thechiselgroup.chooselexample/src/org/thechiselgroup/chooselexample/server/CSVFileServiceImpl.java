@@ -30,52 +30,52 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 @SuppressWarnings("serial")
 public class CSVFileServiceImpl extends RemoteServiceServlet implements
-		CSVFileService {
+        CSVFileService {
 
-	@Override
-	public Set<Resource> getCSVResources(String filePath, String fileName)
-			throws Exception {
+    @Override
+    public Set<Resource> getCSVResources(String filePath, String fileName)
+            throws Exception {
 
-		ServletContext servletContext = this.getServletContext();
-		InputStream resourceAsStream = servletContext
-				.getResourceAsStream(filePath + fileName);
+        ServletContext servletContext = this.getServletContext();
+        InputStream resourceAsStream = servletContext
+                .getResourceAsStream(filePath + fileName);
 
-		if (resourceAsStream == null) {
-			throw new Exception(
-					"File cannot be found.  Please ensure that the file is in the data folder");
-		}
+        if (resourceAsStream == null) {
+            throw new Exception(
+                    "File cannot be found.  Please ensure that the file is in the data folder");
+        }
 
-		InputStreamReader reader = new InputStreamReader(resourceAsStream);
+        InputStreamReader reader = new InputStreamReader(resourceAsStream);
 
-		BufferedReader in = new BufferedReader(reader);
-		int count = 1;
+        BufferedReader in = new BufferedReader(reader);
+        int count = 1;
 
-		try {
-			String[] fieldNames = in.readLine().trim().split(",");
-			Set<Resource> resources = new HashSet<Resource>();
+        try {
+            String[] fieldNames = in.readLine().trim().split(",");
+            Set<Resource> resources = new HashSet<Resource>();
 
-			String line = in.readLine();
-			while (line != null) {
-				String[] fieldValues = line.trim().split(",");
+            String line = in.readLine();
+            while (line != null) {
+                String[] fieldValues = line.trim().split(",");
 
-				// TODO maybe should be if else
-				assert (fieldNames.length == fieldValues.length);
+                // TODO maybe should be if else
+                assert (fieldNames.length == fieldValues.length);
 
-				Resource resource = new Resource("csv:" + count++);
-				for (int i = 0; i < fieldValues.length; i++) {
+                Resource resource = new Resource("csv:" + count++);
+                for (int i = 0; i < fieldValues.length; i++) {
 
-					resource.putValue(fieldNames[i].trim(),
-							fieldValues[i].trim());
-				}
+                    resource.putValue(fieldNames[i].trim(),
+                            fieldValues[i].trim());
+                }
 
-				resources.add(resource);
-				line = in.readLine();
-			}
+                resources.add(resource);
+                line = in.readLine();
+            }
 
-			return resources;
-		} finally {
-			in.close();
-		}
-	}
+            return resources;
+        } finally {
+            in.close();
+        }
+    }
 
 }

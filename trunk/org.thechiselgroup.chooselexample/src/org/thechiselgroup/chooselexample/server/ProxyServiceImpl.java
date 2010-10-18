@@ -29,32 +29,32 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 //TODO move to choosel framework
 @SuppressWarnings("serial")
 public class ProxyServiceImpl extends RemoteServiceServlet implements
-		ProxyService {
+        ProxyService {
 
-	// TODO instead of returning the plain data, the server
-	// could transform different formats (e.g. feeds, csv, owl, xml)
-	// to a common denominator
-	@Override
-	public String fetchURL(String urlString) throws ServiceException {
-		try {
-			URL url = new URL(urlString);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					url.openStream()));
+    // TODO instead of returning the plain data, the server
+    // could transform different formats (e.g. feeds, csv, owl, xml)
+    // to a common denominator
+    @Override
+    public String fetchURL(String urlString) throws ServiceException {
+        try {
+            URL url = new URL(urlString);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(
+                    url.openStream()));
 
-			String content = "";
-			String line;
-			while ((line = reader.readLine()) != null) {
-				content += line + "\n"; // TODO use linebreak property
-			}
-			reader.close();
+            String content = "";
+            String line;
+            while ((line = reader.readLine()) != null) {
+                content += line + "\n"; // TODO use linebreak property
+            }
+            reader.close();
 
-			return content;
+            return content;
 
-		} catch (MalformedURLException e) {
-			throw new ServiceException(e.getMessage());
-		} catch (IOException e) {
-			throw new ServiceException(e.getMessage());
-		}
+        } catch (MalformedURLException e) {
+            throw new ServiceException(e.getMessage());
+        } catch (IOException e) {
+            throw new ServiceException(e.getMessage());
+        }
 
-	}
+    }
 }

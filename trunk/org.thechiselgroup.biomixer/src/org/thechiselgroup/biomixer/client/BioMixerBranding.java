@@ -19,14 +19,14 @@ import org.thechiselgroup.choosel.client.windows.Branding;
 
 public class BioMixerBranding implements Branding {
 
-	@Override
-	public String getApplicationTitle() {
-		return "Bio-Mixer";
-	}
+    @Override
+    public String getApplicationTitle() {
+        return "Bio-Mixer";
+    }
 
-	@Override
-	public String getCopyright() {
-		return "(C) 2010 The CHISEL Group (www.thechiselgroup.org)";
-	}
+    @Override
+    public String getCopyright() {
+        return "(C) 2010 The CHISEL Group (www.thechiselgroup.org)";
+    }
 
 }

@@ -18,11 +18,11 @@ package org.thechiselgroup.biomixer.client;
 import org.thechiselgroup.choosel.client.label.MappingCategoryLabelProvider;
 
 public class BioMixerMappingCategoryLabelProvider extends
-		MappingCategoryLabelProvider {
+        MappingCategoryLabelProvider {
 
-	public BioMixerMappingCategoryLabelProvider() {
-		mapCategoryToLabel(NcboUriHelper.NCBO_CONCEPT, "Concept");
-		mapCategoryToLabel(NcboUriHelper.NCBO_MAPPING, "Mapping");
-	}
+    public BioMixerMappingCategoryLabelProvider() {
+        mapCategoryToLabel(NcboUriHelper.NCBO_CONCEPT, "Concept");
+        mapCategoryToLabel(NcboUriHelper.NCBO_MAPPING, "Mapping");
+    }
 
 }

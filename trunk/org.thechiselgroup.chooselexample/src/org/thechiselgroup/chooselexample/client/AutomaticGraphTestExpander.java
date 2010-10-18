@@ -22,17 +22,17 @@ import org.thechiselgroup.choosel.client.views.graph.GraphNodeExpander;
 import org.thechiselgroup.choosel.client.views.graph.GraphNodeExpansionCallback;
 
 public class AutomaticGraphTestExpander extends
-		AbstractAutomaticGraphNodeExpander implements GraphNodeExpander {
+        AbstractAutomaticGraphNodeExpander implements GraphNodeExpander {
 
-	@Override
-	public void expand(ResourceItem resourceItem,
-			GraphNodeExpansionCallback expansionCallback) {
+    @Override
+    public void expand(ResourceItem resourceItem,
+            GraphNodeExpansionCallback expansionCallback) {
 
-		// TODO better resource item handling
-		Resource resource = resourceItem.getResourceSet().getFirstResource();
+        // TODO better resource item handling
+        Resource resource = resourceItem.getResourceSet().getFirstResource();
 
-		showArcs(resource, expansionCallback, "parent",
-				"graph_test_relationship", false);
-	}
+        showArcs(resource, expansionCallback, "parent",
+                "graph_test_relationship", false);
+    }
 
 }

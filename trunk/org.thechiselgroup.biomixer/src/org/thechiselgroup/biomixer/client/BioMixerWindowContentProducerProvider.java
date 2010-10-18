@@ -42,39 +42,39 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 public class BioMixerWindowContentProducerProvider extends
-		ChooselWindowContentProducerProvider {
+        ChooselWindowContentProducerProvider {
 
-	@Inject
-	protected NCBOSearchWindowContent nCBOSearchViewContent;
+    @Inject
+    protected NCBOSearchWindowContent nCBOSearchViewContent;
 
-	@Inject
-	public BioMixerWindowContentProducerProvider(
-			@Named(AVATAR_FACTORY_SET) ResourceSetAvatarFactory userSetsDragAvatarFactory,
-			@Named(AVATAR_FACTORY_ALL_RESOURCES) ResourceSetAvatarFactory allResourcesDragAvatarFactory,
-			@Named(AVATAR_FACTORY_SELECTION) ResourceSetAvatarFactory selectionDragAvatarFactory,
-			@Named(AVATAR_FACTORY_SELECTION_DROP) ResourceSetAvatarFactory dropTargetFactory,
-			ResourceSetFactory resourceSetFactory,
-			@Named(LABEL_PROVIDER_SELECTION_SET) LabelProvider selectionModelLabelFactory,
-			ResourceMultiCategorizer categorizer,
-			CategoryLabelProvider labelProvider,
-			@Named(DROP_TARGET_MANAGER_VIEW_CONTENT) ResourceSetAvatarDropTargetManager contentDropTargetManager,
-			SlotResolver slotResolver,
-			ResourceCategorizer resourceByTypeCategorizer,
-			HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
-			DetailsWidgetHelper detailsWidgetHelper) {
+    @Inject
+    public BioMixerWindowContentProducerProvider(
+            @Named(AVATAR_FACTORY_SET) ResourceSetAvatarFactory userSetsDragAvatarFactory,
+            @Named(AVATAR_FACTORY_ALL_RESOURCES) ResourceSetAvatarFactory allResourcesDragAvatarFactory,
+            @Named(AVATAR_FACTORY_SELECTION) ResourceSetAvatarFactory selectionDragAvatarFactory,
+            @Named(AVATAR_FACTORY_SELECTION_DROP) ResourceSetAvatarFactory dropTargetFactory,
+            ResourceSetFactory resourceSetFactory,
+            @Named(LABEL_PROVIDER_SELECTION_SET) LabelProvider selectionModelLabelFactory,
+            ResourceMultiCategorizer categorizer,
+            CategoryLabelProvider labelProvider,
+            @Named(DROP_TARGET_MANAGER_VIEW_CONTENT) ResourceSetAvatarDropTargetManager contentDropTargetManager,
+            SlotResolver slotResolver,
+            ResourceCategorizer resourceByTypeCategorizer,
+            HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
+            DetailsWidgetHelper detailsWidgetHelper) {
 
-		super(userSetsDragAvatarFactory, allResourcesDragAvatarFactory,
-				selectionDragAvatarFactory, dropTargetFactory,
-				resourceSetFactory, selectionModelLabelFactory, categorizer,
-				labelProvider, contentDropTargetManager, slotResolver,
-				resourceByTypeCategorizer, hoverModel, popupManagerFactory,
-				detailsWidgetHelper);
+        super(userSetsDragAvatarFactory, allResourcesDragAvatarFactory,
+                selectionDragAvatarFactory, dropTargetFactory,
+                resourceSetFactory, selectionModelLabelFactory, categorizer,
+                labelProvider, contentDropTargetManager, slotResolver,
+                resourceByTypeCategorizer, hoverModel, popupManagerFactory,
+                detailsWidgetHelper);
 
-		windowContentFactories.put("ncbo-search", new WindowContentFactory() {
-			@Override
-			public WindowContent createWindowContent() {
-				return nCBOSearchViewContent;
-			}
-		});
-	}
+        windowContentFactories.put("ncbo-search", new WindowContentFactory() {
+            @Override
+            public WindowContent createWindowContent() {
+                return nCBOSearchViewContent;
+            }
+        });
+    }
 }

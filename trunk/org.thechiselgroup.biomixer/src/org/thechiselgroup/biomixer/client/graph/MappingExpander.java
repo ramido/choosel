@@ -25,65 +25,65 @@ import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay;
 
 public class MappingExpander implements GraphNodeExpander {
 
-	@Override
-	public void expand(ResourceItem resourceItem,
-			GraphNodeExpansionCallback expansionCallback) {
+    @Override
+    public void expand(ResourceItem resourceItem,
+            GraphNodeExpansionCallback expansionCallback) {
 
-		Resource mapping = resourceItem.getResourceSet().getFirstResource();
+        Resource mapping = resourceItem.getResourceSet().getFirstResource();
 
-		ResourceManager resourceManager2 = expansionCallback
-				.getResourceManager();
+        ResourceManager resourceManager2 = expansionCallback
+                .getResourceManager();
 
-		String sourceUri = (String) mapping.getValue(NCBO.MAPPING_SOURCE);
-		if (!expansionCallback.containsResourceWithUri(sourceUri)) {
-			if (!resourceManager2.contains(sourceUri)) {
-				Resource concept = new Resource(sourceUri);
+        String sourceUri = (String) mapping.getValue(NCBO.MAPPING_SOURCE);
+        if (!expansionCallback.containsResourceWithUri(sourceUri)) {
+            if (!resourceManager2.contains(sourceUri)) {
+                Resource concept = new Resource(sourceUri);
 
-				concept.putValue(NCBO.CONCEPT_SHORT_ID, (String) mapping
-						.getValue(NCBO.MAPPING_SOURCE_CONCEPT_ID));
-				concept.putValue(NCBO.CONCEPT_NAME, (String) mapping
-						.getValue(NCBO.MAPPING_SOURCE_CONCEPT_NAME));
-				concept.putValue(NCBO.CONCEPT_ONTOLOGY_ID, (String) mapping
-						.getValue(NCBO.MAPPING_SOURCE_ONTOLOGY_ID));
-				concept.putValue(NCBO.CONCEPT_ONTOLOGY_NAME, (String) mapping
-						.getValue(NCBO.MAPPING_SOURCE_ONTOLOGY_NAME));
+                concept.putValue(NCBO.CONCEPT_SHORT_ID, (String) mapping
+                        .getValue(NCBO.MAPPING_SOURCE_CONCEPT_ID));
+                concept.putValue(NCBO.CONCEPT_NAME, (String) mapping
+                        .getValue(NCBO.MAPPING_SOURCE_CONCEPT_NAME));
+                concept.putValue(NCBO.CONCEPT_ONTOLOGY_ID, (String) mapping
+                        .getValue(NCBO.MAPPING_SOURCE_ONTOLOGY_ID));
+                concept.putValue(NCBO.CONCEPT_ONTOLOGY_NAME, (String) mapping
+                        .getValue(NCBO.MAPPING_SOURCE_ONTOLOGY_NAME));
 
-				resourceManager2.add(concept);
-			}
+                resourceManager2.add(concept);
+            }
 
-			Resource concept = resourceManager2.getByUri(sourceUri);
+            Resource concept = resourceManager2.getByUri(sourceUri);
 
-			expansionCallback.addAutomaticResource(concept);
+            expansionCallback.addAutomaticResource(concept);
 
-			expansionCallback.showArc(GraphViewContentDisplay.ARC_TYPE_MAPPING,
-					sourceUri, mapping.getUri());
-		}
+            expansionCallback.showArc(GraphViewContentDisplay.ARC_TYPE_MAPPING,
+                    sourceUri, mapping.getUri());
+        }
 
-		String destinationUri = (String) mapping
-				.getValue(NCBO.MAPPING_DESTINATION);
+        String destinationUri = (String) mapping
+                .getValue(NCBO.MAPPING_DESTINATION);
 
-		if (!expansionCallback.containsResourceWithUri(destinationUri)) {
-			if (!resourceManager2.contains(destinationUri)) {
-				Resource concept = new Resource(destinationUri);
+        if (!expansionCallback.containsResourceWithUri(destinationUri)) {
+            if (!resourceManager2.contains(destinationUri)) {
+                Resource concept = new Resource(destinationUri);
 
-				concept.putValue(NCBO.CONCEPT_SHORT_ID, (String) mapping
-						.getValue(NCBO.MAPPING_DESTINATION_CONCEPT_ID));
-				concept.putValue(NCBO.CONCEPT_NAME, (String) mapping
-						.getValue(NCBO.MAPPING_DESTINATION_CONCEPT_NAME));
-				concept.putValue(NCBO.CONCEPT_ONTOLOGY_ID, (String) mapping
-						.getValue(NCBO.MAPPING_DESTINATION_ONTOLOGY_ID));
-				concept.putValue(NCBO.CONCEPT_ONTOLOGY_NAME, (String) mapping
-						.getValue(NCBO.MAPPING_DESTINATION_ONTOLOGY_NAME));
+                concept.putValue(NCBO.CONCEPT_SHORT_ID, (String) mapping
+                        .getValue(NCBO.MAPPING_DESTINATION_CONCEPT_ID));
+                concept.putValue(NCBO.CONCEPT_NAME, (String) mapping
+                        .getValue(NCBO.MAPPING_DESTINATION_CONCEPT_NAME));
+                concept.putValue(NCBO.CONCEPT_ONTOLOGY_ID, (String) mapping
+                        .getValue(NCBO.MAPPING_DESTINATION_ONTOLOGY_ID));
+                concept.putValue(NCBO.CONCEPT_ONTOLOGY_NAME, (String) mapping
+                        .getValue(NCBO.MAPPING_DESTINATION_ONTOLOGY_NAME));
 
-				resourceManager2.add(concept);
-			}
+                resourceManager2.add(concept);
+            }
 
-			Resource concept = resourceManager2.getByUri(destinationUri);
+            Resource concept = resourceManager2.getByUri(destinationUri);
 
-			expansionCallback.addAutomaticResource(concept);
+            expansionCallback.addAutomaticResource(concept);
 
-			expansionCallback.showArc(GraphViewContentDisplay.ARC_TYPE_MAPPING,
-					mapping.getUri(), destinationUri);
-		}
-	}
+            expansionCallback.showArc(GraphViewContentDisplay.ARC_TYPE_MAPPING,
+                    mapping.getUri(), destinationUri);
+        }
+    }
 }

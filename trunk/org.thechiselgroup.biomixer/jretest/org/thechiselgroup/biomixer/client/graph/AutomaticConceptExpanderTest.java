@@ -43,99 +43,99 @@ import org.thechiselgroup.choosel.client.views.graph.NeighbourhoodServiceAsync;
 
 public class AutomaticConceptExpanderTest {
 
-	private ResourceSet allResources;
+    private ResourceSet allResources;
 
-	private Resource concept1;
+    private Resource concept1;
 
-	private Resource concept2;
+    private Resource concept2;
 
-	@Mock
-	private NeighbourhoodServiceAsync mappingNeighbourhoodService;
+    @Mock
+    private NeighbourhoodServiceAsync mappingNeighbourhoodService;
 
-	@Mock
-	private ErrorHandler errorHandler;
+    @Mock
+    private ErrorHandler errorHandler;
 
-	private AutomaticConceptExpander underTest;
+    private AutomaticConceptExpander underTest;
 
-	@Mock
-	private GraphNodeExpansionCallback expansionCallback;
+    @Mock
+    private GraphNodeExpansionCallback expansionCallback;
 
-	@Mock
-	private ResourceItem resourceItem;
+    @Mock
+    private ResourceItem resourceItem;
 
-	@Test
-	public void addNeighbourhoodArcWhenAddingConceptReferedFromCurrentConcepts() {
-		concept1 = createResource(NcboUriHelper.NCBO_CONCEPT, 1);
-		concept2 = createResource(NcboUriHelper.NCBO_CONCEPT, 2);
-		allResources.add(concept1);
+    @Test
+    public void addNeighbourhoodArcWhenAddingConceptReferedFromCurrentConcepts() {
+        concept1 = createResource(NcboUriHelper.NCBO_CONCEPT, 1);
+        concept2 = createResource(NcboUriHelper.NCBO_CONCEPT, 2);
+        allResources.add(concept1);
 
-		when(expansionCallback.containsResourceWithUri(concept1.getUri()))
-				.thenReturn(true);
+        when(expansionCallback.containsResourceWithUri(concept1.getUri()))
+                .thenReturn(true);
 
-		concept1.getUriListValue(
-				NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS).add(
-				concept2.getUri());
+        concept1.getUriListValue(
+                NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS).add(
+                concept2.getUri());
 
-		when(resourceItem.getResourceSet()).thenReturn(toResourceSet(concept2));
+        when(resourceItem.getResourceSet()).thenReturn(toResourceSet(concept2));
 
-		underTest.expand(resourceItem, expansionCallback);
+        underTest.expand(resourceItem, expansionCallback);
 
-		ArgumentCaptor<String> sourceArgument = ArgumentCaptor
-				.forClass(String.class);
-		ArgumentCaptor<String> destArgument = ArgumentCaptor
-				.forClass(String.class);
-		verify(expansionCallback, times(1)).showArc(
-				eq(NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS),
-				sourceArgument.capture(), destArgument.capture());
-		assertEquals(concept1.getUri(), sourceArgument.getValue());
-		assertEquals(concept2.getUri(), destArgument.getValue());
-	}
+        ArgumentCaptor<String> sourceArgument = ArgumentCaptor
+                .forClass(String.class);
+        ArgumentCaptor<String> destArgument = ArgumentCaptor
+                .forClass(String.class);
+        verify(expansionCallback, times(1)).showArc(
+                eq(NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS),
+                sourceArgument.capture(), destArgument.capture());
+        assertEquals(concept1.getUri(), sourceArgument.getValue());
+        assertEquals(concept2.getUri(), destArgument.getValue());
+    }
 
-	@Test
-	public void addNeighbourhoodArcWhenAddingConceptReferringCurrentConcepts() {
-		concept1 = createResource(NcboUriHelper.NCBO_CONCEPT, 1);
-		concept2 = createResource(NcboUriHelper.NCBO_CONCEPT, 2);
+    @Test
+    public void addNeighbourhoodArcWhenAddingConceptReferringCurrentConcepts() {
+        concept1 = createResource(NcboUriHelper.NCBO_CONCEPT, 1);
+        concept2 = createResource(NcboUriHelper.NCBO_CONCEPT, 2);
 
-		when(expansionCallback.containsResourceWithUri(concept1.getUri()))
-				.thenReturn(true);
+        when(expansionCallback.containsResourceWithUri(concept1.getUri()))
+                .thenReturn(true);
 
-		concept2.getUriListValue(
-				NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS).add(
-				concept1.getUri());
+        concept2.getUriListValue(
+                NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS).add(
+                concept1.getUri());
 
-		when(resourceItem.getResourceSet()).thenReturn(toResourceSet(concept2));
+        when(resourceItem.getResourceSet()).thenReturn(toResourceSet(concept2));
 
-		underTest.expand(resourceItem, expansionCallback);
+        underTest.expand(resourceItem, expansionCallback);
 
-		ArgumentCaptor<String> sourceArgument = ArgumentCaptor
-				.forClass(String.class);
-		ArgumentCaptor<String> destArgument = ArgumentCaptor
-				.forClass(String.class);
-		verify(expansionCallback, times(1)).showArc(
-				eq(NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS),
-				sourceArgument.capture(), destArgument.capture());
-		assertEquals(concept2.getUri(), sourceArgument.getValue());
-		assertEquals(concept1.getUri(), destArgument.getValue());
-	}
+        ArgumentCaptor<String> sourceArgument = ArgumentCaptor
+                .forClass(String.class);
+        ArgumentCaptor<String> destArgument = ArgumentCaptor
+                .forClass(String.class);
+        verify(expansionCallback, times(1)).showArc(
+                eq(NCBO.CONCEPT_NEIGHBOURHOOD_DESTINATION_CONCEPTS),
+                sourceArgument.capture(), destArgument.capture());
+        assertEquals(concept2.getUri(), sourceArgument.getValue());
+        assertEquals(concept1.getUri(), destArgument.getValue());
+    }
 
-	@Before
-	public void setUp() throws Exception {
-		MockitoGWTBridge.setUp();
-		MockitoAnnotations.initMocks(this);
+    @Before
+    public void setUp() throws Exception {
+        MockitoGWTBridge.setUp();
+        MockitoAnnotations.initMocks(this);
 
-		underTest = new AutomaticConceptExpander(mappingNeighbourhoodService,
-				errorHandler);
+        underTest = new AutomaticConceptExpander(mappingNeighbourhoodService,
+                errorHandler);
 
-		allResources = new DefaultResourceSet();
+        allResources = new DefaultResourceSet();
 
-		when(expansionCallback.getAllResources()).thenReturn(allResources);
-		when(expansionCallback.getCategory(any(Resource.class))).thenReturn(
-				NcboUriHelper.NCBO_CONCEPT);
-	}
+        when(expansionCallback.getAllResources()).thenReturn(allResources);
+        when(expansionCallback.getCategory(any(Resource.class))).thenReturn(
+                NcboUriHelper.NCBO_CONCEPT);
+    }
 
-	@After
-	public void tearDown() {
-		MockitoGWTBridge.tearDown();
-	}
+    @After
+    public void tearDown() {
+        MockitoGWTBridge.tearDown();
+    }
 
 }

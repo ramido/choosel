@@ -24,6 +24,6 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("proxy")
 public interface ProxyService extends RemoteService {
 
-	String fetchURL(String url) throws ServiceException;
+    String fetchURL(String url) throws ServiceException;
 
 }

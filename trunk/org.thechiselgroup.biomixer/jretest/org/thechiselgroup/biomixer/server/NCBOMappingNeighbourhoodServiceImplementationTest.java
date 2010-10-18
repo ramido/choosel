@@ -47,202 +47,202 @@ import org.xml.sax.SAXException;
 
 public class NCBOMappingNeighbourhoodServiceImplementationTest implements NCBO {
 
-	private static final String TEST_CONCEPT_SHORT_ID = "CHEBI:27594";
+    private static final String TEST_CONCEPT_SHORT_ID = "CHEBI:27594";
 
-	private static final String TEST_ONTOLOGY_ID = "1007";
+    private static final String TEST_ONTOLOGY_ID = "1007";
 
-	private static final String TEST_URL = NCBOMappingNeighbourhoodServiceImplementation.SERVICE_URL
-			+ TEST_ONTOLOGY_ID + "/" + TEST_CONCEPT_SHORT_ID;
+    private static final String TEST_URL = NCBOMappingNeighbourhoodServiceImplementation.SERVICE_URL
+            + TEST_ONTOLOGY_ID + "/" + TEST_CONCEPT_SHORT_ID;
 
-	@Mock
-	private DocumentFetchService documentFetchService;
+    @Mock
+    private DocumentFetchService documentFetchService;
 
-	private Resource inputConcept;
+    private Resource inputConcept;
 
-	private void assertIsOtherConcept(Resource resource) {
-		assertEquals("OtherCarbon", resource.getValue(CONCEPT_SHORT_ID));
-		assertEquals("OtherCarbonName", resource.getValue(CONCEPT_NAME));
-		assertEquals("1083", resource.getValue(CONCEPT_ONTOLOGY_ID));
-		assertEquals("NanoParticle Ontology (NPO)",
-				resource.getValue(CONCEPT_ONTOLOGY_NAME));
-	}
+    private void assertIsOtherConcept(Resource resource) {
+        assertEquals("OtherCarbon", resource.getValue(CONCEPT_SHORT_ID));
+        assertEquals("OtherCarbonName", resource.getValue(CONCEPT_NAME));
+        assertEquals("1083", resource.getValue(CONCEPT_ONTOLOGY_ID));
+        assertEquals("NanoParticle Ontology (NPO)",
+                resource.getValue(CONCEPT_ONTOLOGY_NAME));
+    }
 
-	private void assertMappingToInputConcept(Resource resource) {
-		assertEquals("98216", resource.getValue(MAPPING_ID));
-		assertEquals(inputConcept.getUri(),
-				resource.getValue(MAPPING_DESTINATION));
-		assertEquals(NcboUriHelper.toConceptURI("1083", "OtherCarbon"),
-				resource.getValue(MAPPING_SOURCE));
-		assertEquals("NanoParticle Ontology (NPO)",
-				resource.getValue(MAPPING_SOURCE_ONTOLOGY_NAME));
-		assertEquals("OtherCarbonName",
-				resource.getValue(MAPPING_SOURCE_CONCEPT_NAME));
-		assertEquals("Chemical entities of biological interest",
-				resource.getValue(MAPPING_DESTINATION_ONTOLOGY_NAME));
-		assertEquals("Carbon",
-				resource.getValue(MAPPING_DESTINATION_CONCEPT_NAME));
-	}
+    private void assertMappingToInputConcept(Resource resource) {
+        assertEquals("98216", resource.getValue(MAPPING_ID));
+        assertEquals(inputConcept.getUri(),
+                resource.getValue(MAPPING_DESTINATION));
+        assertEquals(NcboUriHelper.toConceptURI("1083", "OtherCarbon"),
+                resource.getValue(MAPPING_SOURCE));
+        assertEquals("NanoParticle Ontology (NPO)",
+                resource.getValue(MAPPING_SOURCE_ONTOLOGY_NAME));
+        assertEquals("OtherCarbonName",
+                resource.getValue(MAPPING_SOURCE_CONCEPT_NAME));
+        assertEquals("Chemical entities of biological interest",
+                resource.getValue(MAPPING_DESTINATION_ONTOLOGY_NAME));
+        assertEquals("Carbon",
+                resource.getValue(MAPPING_DESTINATION_CONCEPT_NAME));
+    }
 
-	private void assertMappingToOtherConcept(Resource resource) {
-		assertEquals("1801522", resource.getValue(MAPPING_ID));
-		assertEquals(NcboUriHelper.toConceptURI("1083", "OtherCarbon"),
-				resource.getValue(MAPPING_DESTINATION));
-		assertEquals(inputConcept.getUri(), resource.getValue(MAPPING_SOURCE));
-	}
+    private void assertMappingToOtherConcept(Resource resource) {
+        assertEquals("1801522", resource.getValue(MAPPING_ID));
+        assertEquals(NcboUriHelper.toConceptURI("1083", "OtherCarbon"),
+                resource.getValue(MAPPING_DESTINATION));
+        assertEquals(inputConcept.getUri(), resource.getValue(MAPPING_SOURCE));
+    }
 
-	private NeighbourhoodServiceResult executeService()
-			throws XPathExpressionException, ServiceException {
+    private NeighbourhoodServiceResult executeService()
+            throws XPathExpressionException, ServiceException {
 
-		NCBOMappingNeighbourhoodServiceImplementation service = new NCBOMappingNeighbourhoodServiceImplementation(
-				documentFetchService);
-		return service.getNeighbourhood(inputConcept);
-	}
+        NCBOMappingNeighbourhoodServiceImplementation service = new NCBOMappingNeighbourhoodServiceImplementation(
+                documentFetchService);
+        return service.getNeighbourhood(inputConcept);
+    }
 
-	@Test
-	public void loadBidirectionalMapping() throws Exception {
-		stubInput("loadBidirectionalMapping.input");
+    @Test
+    public void loadBidirectionalMapping() throws Exception {
+        stubInput("loadBidirectionalMapping.input");
 
-		NeighbourhoodServiceResult result = executeService();
-		List<Resource> neighbours = new ArrayList<Resource>(
-				result.getNeighbours());
-		List<Relationship> relationships = result.getRelationships();
+        NeighbourhoodServiceResult result = executeService();
+        List<Resource> neighbours = new ArrayList<Resource>(
+                result.getNeighbours());
+        List<Relationship> relationships = result.getRelationships();
 
-		// check results
-		verify(documentFetchService).fetchXML(TEST_URL);
+        // check results
+        verify(documentFetchService).fetchXML(TEST_URL);
 
-		assertEquals(3, neighbours.size());
-		Resource otherConcept = null;
-		Resource mapping1 = null;
-		Resource mapping2 = null;
-		for (Resource resource : neighbours) {
-			if (resource.getUri().startsWith(NcboUriHelper.NCBO_CONCEPT)) {
-				assertIsOtherConcept(resource);
-				otherConcept = resource;
-			} else if (resource.getUri().equals(
-					NcboUriHelper.toMappingURI("1801522"))) {
-				assertMappingToOtherConcept(resource);
-				mapping1 = resource;
-			} else if (resource.getUri().equals(
-					NcboUriHelper.toMappingURI("98216"))) {
-				assertMappingToInputConcept(resource);
-				mapping2 = resource;
-			} else {
-				fail("invalid resource " + resource);
-			}
-		}
-		assertNotNull(otherConcept);
-		assertNotNull(mapping1);
-		assertNotNull(mapping2);
+        assertEquals(3, neighbours.size());
+        Resource otherConcept = null;
+        Resource mapping1 = null;
+        Resource mapping2 = null;
+        for (Resource resource : neighbours) {
+            if (resource.getUri().startsWith(NcboUriHelper.NCBO_CONCEPT)) {
+                assertIsOtherConcept(resource);
+                otherConcept = resource;
+            } else if (resource.getUri().equals(
+                    NcboUriHelper.toMappingURI("1801522"))) {
+                assertMappingToOtherConcept(resource);
+                mapping1 = resource;
+            } else if (resource.getUri().equals(
+                    NcboUriHelper.toMappingURI("98216"))) {
+                assertMappingToInputConcept(resource);
+                mapping2 = resource;
+            } else {
+                fail("invalid resource " + resource);
+            }
+        }
+        assertNotNull(otherConcept);
+        assertNotNull(mapping1);
+        assertNotNull(mapping2);
 
-		assertEquals(4, relationships.size());
-		assertTrue(relationships.contains(new Relationship(inputConcept,
-				mapping1)));
-		assertTrue(relationships.contains(new Relationship(mapping1,
-				otherConcept)));
-		assertTrue(relationships.contains(new Relationship(otherConcept,
-				mapping2)));
-		assertTrue(relationships.contains(new Relationship(mapping2,
-				inputConcept)));
-	}
+        assertEquals(4, relationships.size());
+        assertTrue(relationships.contains(new Relationship(inputConcept,
+                mapping1)));
+        assertTrue(relationships.contains(new Relationship(mapping1,
+                otherConcept)));
+        assertTrue(relationships.contains(new Relationship(otherConcept,
+                mapping2)));
+        assertTrue(relationships.contains(new Relationship(mapping2,
+                inputConcept)));
+    }
 
-	private Document loadInputDocument(String input)
-			throws ParserConfigurationException, SAXException, IOException {
-		DocumentBuilderFactory domFactory = DocumentBuilderFactory
-				.newInstance();
-		domFactory.setNamespaceAware(true);
-		DocumentBuilder builder = domFactory.newDocumentBuilder();
-		return builder
-				.parse(NCBOMappingNeighbourhoodServiceImplementationTest.class
-						.getResourceAsStream(input));
-	}
+    private Document loadInputDocument(String input)
+            throws ParserConfigurationException, SAXException, IOException {
+        DocumentBuilderFactory domFactory = DocumentBuilderFactory
+                .newInstance();
+        domFactory.setNamespaceAware(true);
+        DocumentBuilder builder = domFactory.newDocumentBuilder();
+        return builder
+                .parse(NCBOMappingNeighbourhoodServiceImplementationTest.class
+                        .getResourceAsStream(input));
+    }
 
-	@Test
-	public void loadUnidirectionalMappingFromInputConcept() throws Exception {
-		stubInput("loadUnidirectionalMappingFromInputConcept.input");
+    @Test
+    public void loadUnidirectionalMappingFromInputConcept() throws Exception {
+        stubInput("loadUnidirectionalMappingFromInputConcept.input");
 
-		NeighbourhoodServiceResult result = executeService();
-		List<Resource> neighbours = new ArrayList<Resource>(
-				result.getNeighbours());
-		List<Relationship> relationships = result.getRelationships();
+        NeighbourhoodServiceResult result = executeService();
+        List<Resource> neighbours = new ArrayList<Resource>(
+                result.getNeighbours());
+        List<Relationship> relationships = result.getRelationships();
 
-		// check results
-		verify(documentFetchService).fetchXML(TEST_URL);
+        // check results
+        verify(documentFetchService).fetchXML(TEST_URL);
 
-		assertEquals(2, neighbours.size());
-		Resource otherConcept = null;
-		Resource mapping = null;
-		for (Resource resource : neighbours) {
-			if (resource.getUri().startsWith(NcboUriHelper.NCBO_CONCEPT)) {
-				assertIsOtherConcept(resource);
-				otherConcept = resource;
-			} else if (resource.getUri().startsWith(NcboUriHelper.NCBO_MAPPING)) {
-				assertMappingToOtherConcept(resource);
-				mapping = resource;
-			} else {
-				fail("invalid resource " + resource);
-			}
-		}
-		assertNotNull(otherConcept);
-		assertNotNull(mapping);
+        assertEquals(2, neighbours.size());
+        Resource otherConcept = null;
+        Resource mapping = null;
+        for (Resource resource : neighbours) {
+            if (resource.getUri().startsWith(NcboUriHelper.NCBO_CONCEPT)) {
+                assertIsOtherConcept(resource);
+                otherConcept = resource;
+            } else if (resource.getUri().startsWith(NcboUriHelper.NCBO_MAPPING)) {
+                assertMappingToOtherConcept(resource);
+                mapping = resource;
+            } else {
+                fail("invalid resource " + resource);
+            }
+        }
+        assertNotNull(otherConcept);
+        assertNotNull(mapping);
 
-		assertEquals(2, relationships.size());
-		assertTrue(relationships.contains(new Relationship(mapping,
-				otherConcept)));
-		assertTrue(relationships.contains(new Relationship(inputConcept,
-				mapping)));
-	}
+        assertEquals(2, relationships.size());
+        assertTrue(relationships.contains(new Relationship(mapping,
+                otherConcept)));
+        assertTrue(relationships.contains(new Relationship(inputConcept,
+                mapping)));
+    }
 
-	@Test
-	public void loadUnidirectionalMappingToInputConcept() throws Exception {
-		stubInput("loadUnidirectionalMappingToInputConcept.input");
+    @Test
+    public void loadUnidirectionalMappingToInputConcept() throws Exception {
+        stubInput("loadUnidirectionalMappingToInputConcept.input");
 
-		NeighbourhoodServiceResult result = executeService();
+        NeighbourhoodServiceResult result = executeService();
 
-		List<Resource> neighbours = new ArrayList<Resource>(
-				result.getNeighbours());
-		List<Relationship> relationships = result.getRelationships();
+        List<Resource> neighbours = new ArrayList<Resource>(
+                result.getNeighbours());
+        List<Relationship> relationships = result.getRelationships();
 
-		// check results
-		verify(documentFetchService).fetchXML(TEST_URL);
+        // check results
+        verify(documentFetchService).fetchXML(TEST_URL);
 
-		assertEquals(2, neighbours.size());
-		Resource otherConcept = null;
-		Resource mapping = null;
-		for (Resource resource : neighbours) {
-			if (resource.getUri().startsWith(NcboUriHelper.NCBO_CONCEPT)) {
-				assertIsOtherConcept(resource);
-				otherConcept = resource;
-			} else if (resource.getUri().startsWith(NcboUriHelper.NCBO_MAPPING)) {
-				assertMappingToInputConcept(resource);
-				mapping = resource;
+        assertEquals(2, neighbours.size());
+        Resource otherConcept = null;
+        Resource mapping = null;
+        for (Resource resource : neighbours) {
+            if (resource.getUri().startsWith(NcboUriHelper.NCBO_CONCEPT)) {
+                assertIsOtherConcept(resource);
+                otherConcept = resource;
+            } else if (resource.getUri().startsWith(NcboUriHelper.NCBO_MAPPING)) {
+                assertMappingToInputConcept(resource);
+                mapping = resource;
 
-			} else {
-				fail("invalid resource " + resource);
-			}
-		}
-		assertNotNull(otherConcept);
-		assertNotNull(mapping);
+            } else {
+                fail("invalid resource " + resource);
+            }
+        }
+        assertNotNull(otherConcept);
+        assertNotNull(mapping);
 
-		assertEquals(2, relationships.size());
-		assertTrue(relationships.contains(new Relationship(otherConcept,
-				mapping)));
-		assertTrue(relationships.contains(new Relationship(mapping,
-				inputConcept)));
-	}
+        assertEquals(2, relationships.size());
+        assertTrue(relationships.contains(new Relationship(otherConcept,
+                mapping)));
+        assertTrue(relationships.contains(new Relationship(mapping,
+                inputConcept)));
+    }
 
-	@Before
-	public void setUp() {
-		MockitoAnnotations.initMocks(this);
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
 
-		inputConcept = new Resource(NcboUriHelper.toConceptURI(
-				TEST_ONTOLOGY_ID, TEST_CONCEPT_SHORT_ID));
+        inputConcept = new Resource(NcboUriHelper.toConceptURI(
+                TEST_ONTOLOGY_ID, TEST_CONCEPT_SHORT_ID));
 
-		inputConcept.putValue(CONCEPT_SHORT_ID, TEST_CONCEPT_SHORT_ID);
-		inputConcept.putValue(CONCEPT_ONTOLOGY_ID, TEST_ONTOLOGY_ID);
-	}
+        inputConcept.putValue(CONCEPT_SHORT_ID, TEST_CONCEPT_SHORT_ID);
+        inputConcept.putValue(CONCEPT_ONTOLOGY_ID, TEST_ONTOLOGY_ID);
+    }
 
-	private void stubInput(String inputFile) throws Exception {
-		Document document = loadInputDocument(inputFile);
-		when(documentFetchService.fetchXML(TEST_URL)).thenReturn(document);
-	}
+    private void stubInput(String inputFile) throws Exception {
+        Document document = loadInputDocument(inputFile);
+        when(documentFetchService.fetchXML(TEST_URL)).thenReturn(document);
+    }
 }

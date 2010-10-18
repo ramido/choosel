@@ -37,56 +37,60 @@ import com.google.gwt.user.client.ui.Button;
 
 public class ChooselExampleApplication extends ChooselApplication {
 
-	public static final String DATA_PANEL = "data";
+    public static final String DATA_PANEL = "data";
 
-	// TODO change into command
-	private void addTestDataSourceButton() {
-		Button button = new Button("Test-Data");
+    // TODO change into command
+    private void addTestDataSourceButton() {
+        Button button = new Button("Test-Data");
 
-		button.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				dataSourceResourceSetsPresenter
-						.addResourceSet(TestResourceSetFactory
-								.addTestData(createResourceSet()));
-				dataSourceResourceSetsPresenter
-						.addResourceSet(TestResourceSetFactory
-								.addGraphTestData(createResourceSet()));
-			}
+        button.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                dataSourceResourceSetsPresenter
+                        .addResourceSet(TestResourceSetFactory
+                                .addTestData(createResourceSet()));
+                dataSourceResourceSetsPresenter
+                        .addResourceSet(TestResourceSetFactory
+                                .addGraphTestData(createResourceSet()));
+            }
 
-		});
+        });
 
-		addWidget(DEVELOPER_MODE_PANEL, button);
-	}
+        addWidget(DEVELOPER_MODE_PANEL, button);
+    }
 
-	@Override
-	protected void initCustomActions() {
-		if (runsInDevelopmentMode()) {
-			addTestDataSourceButton();
+    @Override
+    protected void initCustomActions() {
+        if (runsInDevelopmentMode()) {
+            addTestDataSourceButton();
 
-			addCreateWindowActionToToolbar(DEVELOPER_MODE_PANEL, "Graph", TYPE_GRAPH);
-			addCreateWindowActionToToolbar(DEVELOPER_MODE_PANEL, "Circular Bar",
-					TYPE_CIRCULAR_BAR);
-			addCreateWindowActionToToolbar(DEVELOPER_MODE_PANEL, "Time", TYPE_TIME);
-			addCreateWindowActionToToolbar(DEVELOPER_MODE_PANEL, "Dot", TYPE_DOT);
-		}
+            addCreateWindowActionToToolbar(DEVELOPER_MODE_PANEL, "Graph",
+                    TYPE_GRAPH);
+            addCreateWindowActionToToolbar(DEVELOPER_MODE_PANEL,
+                    "Circular Bar", TYPE_CIRCULAR_BAR);
+            addCreateWindowActionToToolbar(DEVELOPER_MODE_PANEL, "Time",
+                    TYPE_TIME);
+            addCreateWindowActionToToolbar(DEVELOPER_MODE_PANEL, "Dot",
+                    TYPE_DOT);
+        }
 
-		addCreateWindowActionToToolbar(VIEWS_PANEL, "Note", WINDOW_CONTENT_NOTE);
-		addCreateWindowActionToToolbar(VIEWS_PANEL, "Text", TYPE_TEXT);
-		addCreateWindowActionToToolbar(VIEWS_PANEL, "Map", TYPE_MAP);
-		addCreateWindowActionToToolbar(VIEWS_PANEL, "Timeline", TYPE_TIMELINE);
-		addCreateWindowActionToToolbar(VIEWS_PANEL, "Bar Chart", TYPE_BAR);
-		addCreateWindowActionToToolbar(VIEWS_PANEL, "Pie Chart", TYPE_PIE);
-		addCreateWindowActionToToolbar(VIEWS_PANEL, "Scatter Plot", TYPE_SCATTER);
+        addCreateWindowActionToToolbar(VIEWS_PANEL, "Note", WINDOW_CONTENT_NOTE);
+        addCreateWindowActionToToolbar(VIEWS_PANEL, "Text", TYPE_TEXT);
+        addCreateWindowActionToToolbar(VIEWS_PANEL, "Map", TYPE_MAP);
+        addCreateWindowActionToToolbar(VIEWS_PANEL, "Timeline", TYPE_TIMELINE);
+        addCreateWindowActionToToolbar(VIEWS_PANEL, "Bar Chart", TYPE_BAR);
+        addCreateWindowActionToToolbar(VIEWS_PANEL, "Pie Chart", TYPE_PIE);
+        addCreateWindowActionToToolbar(VIEWS_PANEL, "Scatter Plot",
+                TYPE_SCATTER);
 
-		addDialogActionToToolbar(DATA_PANEL, "Import", new ImportDialog(
-				importer, dataSourceResourceSetsPresenter));
-		addWidget(DATA_PANEL, dataSourceResourceSetsPresenter.asWidget());
-	}
+        addDialogActionToToolbar(DATA_PANEL, "Import", new ImportDialog(
+                importer, dataSourceResourceSetsPresenter));
+        addWidget(DATA_PANEL, dataSourceResourceSetsPresenter.asWidget());
+    }
 
-	@Override
-	protected void initCustomPanels() {
-		addToolbarPanel(DATA_PANEL, "Data");
-		addToolbarPanel(VIEWS_PANEL, "Views");
-	}
+    @Override
+    protected void initCustomPanels() {
+        addToolbarPanel(DATA_PANEL, "Data");
+        addToolbarPanel(VIEWS_PANEL, "Views");
+    }
 }
