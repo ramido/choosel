@@ -22,11 +22,13 @@ import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Scale;
 
 public class SelectionBox extends ChartWidget {
 
+    // @formatter:off
     public static native void drawBox() /*-{
         var chart = this.@org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget::chart;
 
         chart.add($wnd.pv.Label).text("hello").left(30).top(30);
     }-*/;
+    // @formatter:on
 
     protected double minValue;
 

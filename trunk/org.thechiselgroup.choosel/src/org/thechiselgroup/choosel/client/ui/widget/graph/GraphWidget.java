@@ -43,6 +43,7 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
         protected Location() {
         }
 
+        // @formatter:off
         public final native double getX() /*-{
             return this.x;
         }-*/;
@@ -50,6 +51,7 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
         public final native double getY() /*-{
             return this.y;
         }-*/;
+        // @formatter:on
 
     }
 
@@ -70,10 +72,12 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
         }
     }
 
+    // @formatter:off
     private static native void _addArc(String swfID, String arcId,
             String sourceNodeId, String targetNodeId, String type) /*-{
         $doc.getElementById(swfID).addArc(arcId, sourceNodeId, targetNodeId, type);
     }-*/;
+    // @formatter:on
 
     /*
      * There is a bug in the JavaScript to Flex conversion for compiled GWT code
@@ -81,28 +85,36 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
      * it is passed in directly. That is why we create a separate JavaScript
      * String and append the label String passed in from GWT.
      */
+    // @formatter:off
     private static native void _addNode(String swfID, String id, String type,
             String label) /*-{
         var jsLabel = "" + label;
         $doc.getElementById(swfID).addNode(id, type, jsLabel);
     }-*/;
+    // @formatter:on
 
+    // @formatter:off
     private static native void _addNodeMenuItem(String swfID, String itemId,
             String itemLabel, String nodeType) /*-{
         $doc.getElementById(swfID).addNodeMenuItem("_flexvis_onNodeMenuItemClicked", itemId, itemLabel, nodeType);
     }-*/;
+    // @formatter:on
 
     private static GraphWidget _getGraphWidgetByID(String swfID) {
         return GraphWidget.widgets.get(swfID);
     }
 
+    // @formatter:off
     private static native Location _getNodeLocation(String swfID, String nodeId) /*-{
         return $doc.getElementById(swfID).getNodeLocation(nodeId);
     }-*/;
+    // @formatter:on
 
+    // @formatter:off
     private static native String _getSelectedNodeID(String swfID) /*-{
         return $doc.getElementById(swfID).getSelectedNodeID();
     }-*/;
+    // @formatter:on
 
     public static void _log(String message) {
         Log.debug(message);
@@ -184,6 +196,7 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
         _getGraphWidgetByID(swfID).onNodeMouseOver(nodeID, mouseX, mouseY);
     }
 
+    // @formatter:off
     private static native void _registerFlexHooks(String swfID) /*-{
         var flexWidget = $doc.getElementById(swfID);
 
@@ -284,6 +297,7 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
         $wnd._flexvis_nodeDrag=$entry(
         @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onNodeDrag(Ljava/lang/String;IIIILjava/lang/String;));
     }-*/;
+    // @formatter:on
 
     private Map<String, Arc> arcsByID = new HashMap<String, Arc>();
 

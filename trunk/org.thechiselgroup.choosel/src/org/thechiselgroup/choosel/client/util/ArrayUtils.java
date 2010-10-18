@@ -22,11 +22,11 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 public class ArrayUtils {
 
+    // @formatter:off
     public native static void add(Object o, JavaScriptObject array) /*-{
         array.push(o);
     }-*/;
 
-    // @formatter:off
     public native static JavaScriptObject createArray() /*-{
         return new Array();
     }-*/;

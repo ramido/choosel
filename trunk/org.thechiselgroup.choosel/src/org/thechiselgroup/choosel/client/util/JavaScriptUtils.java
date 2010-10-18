@@ -19,6 +19,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 public class JavaScriptUtils {
 
+    // @formatter:off
     public static native double toDouble(JavaScriptObject jso) /*-{
         return jso;
     }-*/;
@@ -30,5 +31,6 @@ public class JavaScriptUtils {
     public static native String toString(JavaScriptObject jso) /*-{
         return jso;
     }-*/;
+    // @formatter:on
 
 }
