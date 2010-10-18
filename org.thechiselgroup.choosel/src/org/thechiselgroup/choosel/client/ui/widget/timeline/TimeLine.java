@@ -111,7 +111,6 @@ class TimeLine extends JavaScriptObject {
         };
         }
     }-*/;
-
     // @formatter:on
 
     /**
@@ -124,7 +123,6 @@ class TimeLine extends JavaScriptObject {
         // TODO change if bands are not synchronized any more
         return this.getBand(0).getCenterVisibleDate().toGMTString();
     }-*/;
-
     // @formatter:on
 
     public final String getEventElementID(int bandIndex, String elementType,

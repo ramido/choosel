@@ -24,6 +24,7 @@ import com.google.gwt.core.client.JavaScriptObject;
  */
 public class Rule extends Mark {
 
+    // @formatter:off
     public static native Rule createRule() /*-{
         return $wnd.pv.Rule;
     }-*/;
@@ -192,4 +193,6 @@ public class Rule extends Mark {
     public final native Rule width(ProtovisFunctionDouble f) /*-{
         return this.width(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionDouble(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionDouble;)(this,f));
     }-*/;
+    // @formatter:on
+
 }
