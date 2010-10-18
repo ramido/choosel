@@ -17,9 +17,9 @@ package org.thechiselgroup.choosel.client.command.ui;
 
 import static org.thechiselgroup.choosel.client.ui.IconURLBuilder.getIconUrl;
 
+import org.thechiselgroup.choosel.client.ui.IconURLBuilder.IconType;
 import org.thechiselgroup.choosel.client.ui.ImageButton;
 import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
-import org.thechiselgroup.choosel.client.ui.IconURLBuilder.IconType;
 
 import com.google.gwt.user.client.ui.Widget;
 

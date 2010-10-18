@@ -349,18 +349,19 @@ public abstract class ChooselApplication {
     }
 
     protected void initNewWorkspaceAction() {
-        addActionToToolbar(WORKSPACE_PANEL, "New Workspace",
-                "workspace-new", newWorkspaceCommand);
+        addActionToToolbar(WORKSPACE_PANEL, "New Workspace", "workspace-new",
+                newWorkspaceCommand);
     }
 
     protected void initRedoAction() {
-        Action redoAction = addActionToToolbar(EDIT_PANEL, "Redo", "edit-redo", new Command() {
-            @Override
-            public void execute() {
-                assert commandManager.canRedo();
-                commandManager.redo();
-            }
-        });
+        Action redoAction = addActionToToolbar(EDIT_PANEL, "Redo", "edit-redo",
+                new Command() {
+                    @Override
+                    public void execute() {
+                        assert commandManager.canRedo();
+                        commandManager.redo();
+                    }
+                });
 
         new RedoActionStateController(commandManager, redoAction).init();
     }
@@ -368,8 +369,7 @@ public abstract class ChooselApplication {
     protected void initSaveWorkspaceAction() {
         Action saveAction = addActionToToolbar(WORKSPACE_PANEL,
                 SaveActionStateController.MESSAGE_SAVE_WORKSPACE,
-                "workspace-save",
-                saveWorkspaceCommand);
+                "workspace-save", saveWorkspaceCommand);
         AuthenticationBasedEnablingStateWrapper authWrapper = new AuthenticationBasedEnablingStateWrapper(
                 authenticationManager, saveAction);
         authWrapper.init();
@@ -379,23 +379,23 @@ public abstract class ChooselApplication {
     }
 
     protected void initShareWorkspaceAction() {
-        Action action = addActionToToolbar(WORKSPACE_PANEL,
-                "Share Workspace", "workspace-share",
-                new AsyncCommandToCommandAdapter(shareWorkspaceCommand,
-                        asyncCommandExecutor));
+        Action action = addActionToToolbar(WORKSPACE_PANEL, "Share Workspace",
+                "workspace-share", new AsyncCommandToCommandAdapter(
+                        shareWorkspaceCommand, asyncCommandExecutor));
 
         new AuthenticationBasedEnablingStateWrapper(authenticationManager,
                 action).init();
     }
 
     protected void initUndoAction() {
-        Action undoAction = addActionToToolbar(EDIT_PANEL, "Undo", "edit-undo", new Command() {
-            @Override
-            public void execute() {
-                assert commandManager.canUndo();
-                commandManager.undo();
-            }
-        });
+        Action undoAction = addActionToToolbar(EDIT_PANEL, "Undo", "edit-undo",
+                new Command() {
+                    @Override
+                    public void execute() {
+                        assert commandManager.canUndo();
+                        commandManager.undo();
+                    }
+                });
 
         new UndoActionStateController(commandManager, undoAction).init();
     }

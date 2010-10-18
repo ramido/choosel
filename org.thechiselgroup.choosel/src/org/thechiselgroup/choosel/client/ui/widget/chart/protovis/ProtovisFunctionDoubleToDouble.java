@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.widget.chart.protovis;
 
-
 public interface ProtovisFunctionDoubleToDouble {
 
     double f(double value, int i);
