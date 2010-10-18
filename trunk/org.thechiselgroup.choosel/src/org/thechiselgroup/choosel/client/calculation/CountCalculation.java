@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.calculation;
 
-
 public class CountCalculation implements Calculation {
 
     @Override

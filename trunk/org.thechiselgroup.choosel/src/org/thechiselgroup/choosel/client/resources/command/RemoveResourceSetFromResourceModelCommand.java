@@ -25,8 +25,8 @@ import org.thechiselgroup.choosel.client.views.ResourceModel;
  * resource set, and removes all resources from this set from the view if they
  * are not explicitly contained in another user set for this view.
  */
-public class RemoveResourceSetFromResourceModelCommand implements UndoableCommand,
-        HasDescription {
+public class RemoveResourceSetFromResourceModelCommand implements
+        UndoableCommand, HasDescription {
 
     private String description;
 
@@ -34,14 +34,15 @@ public class RemoveResourceSetFromResourceModelCommand implements UndoableComman
 
     protected ResourceModel resourceModel;
 
-    public RemoveResourceSetFromResourceModelCommand(ResourceModel resourceModel,
-            ResourceSet resourceSet) {
+    public RemoveResourceSetFromResourceModelCommand(
+            ResourceModel resourceModel, ResourceSet resourceSet) {
         this(resourceModel, resourceSet, "Remove resource set '"
                 + resourceSet.getLabel() + "' from view");
     }
 
-    public RemoveResourceSetFromResourceModelCommand(ResourceModel resourceModel,
-            ResourceSet resourceSet, String description) {
+    public RemoveResourceSetFromResourceModelCommand(
+            ResourceModel resourceModel, ResourceSet resourceSet,
+            String description) {
 
         assert resourceModel != null;
         assert resourceSet != null;

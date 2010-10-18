@@ -24,56 +24,56 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class ImportDialog extends AbstractDialog {
 
-	private TextArea pasteArea;
+    private TextArea pasteArea;
 
-	private ResourceSetAvatarResourceSetsPresenter presenter;
+    private ResourceSetAvatarResourceSetsPresenter presenter;
 
-	private Importer importer;
+    private Importer importer;
 
-	public ImportDialog(Importer importer,
-			ResourceSetAvatarResourceSetsPresenter presenter) {
+    public ImportDialog(Importer importer,
+            ResourceSetAvatarResourceSetsPresenter presenter) {
 
-		this.importer = importer;
-		this.presenter = presenter;
-	}
+        this.importer = importer;
+        this.presenter = presenter;
+    }
 
-	@Override
-	public void cancel() {
-	}
+    @Override
+    public void cancel() {
+    }
 
-	@Override
-	public Widget getContent() {
-		pasteArea = new TextArea();
-		pasteArea.addStyleName("importCSV");
-		return pasteArea;
-	}
+    @Override
+    public Widget getContent() {
+        pasteArea = new TextArea();
+        pasteArea.addStyleName("importCSV");
+        return pasteArea;
+    }
 
-	@Override
-	public String getHeader() {
-		return "Import CSV";
-	}
+    @Override
+    public String getHeader() {
+        return "Import CSV";
+    }
 
-	@Override
-	public String getOkayButtonLabel() {
-		return "Import";
-	}
+    @Override
+    public String getOkayButtonLabel() {
+        return "Import";
+    }
 
-	@Override
-	public String getWindowTitle() {
-		return "Import";
-	}
+    @Override
+    public String getWindowTitle() {
+        return "Import";
+    }
 
-	@Override
-	public void okay() {
-		try {
-			String pastedText = pasteArea.getText();
-			StringTable parsedRows = new CSVStringTableParser()
-					.parse(pastedText);
-			ResourceSet parsedResources = importer.createResources(parsedRows);
-			presenter.addResourceSet(parsedResources);
-		} catch (ParseException e) {
-			// TODO correct exception handling
-			throw new RuntimeException(e);
-		}
-	}
+    @Override
+    public void okay() {
+        try {
+            String pastedText = pasteArea.getText();
+            StringTable parsedRows = new CSVStringTableParser()
+                    .parse(pastedText);
+            ResourceSet parsedResources = importer.createResources(parsedRows);
+            presenter.addResourceSet(parsedResources);
+        } catch (ParseException e) {
+            // TODO correct exception handling
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -30,7 +30,8 @@ public class ResourceSetEventForwarder implements ResourcesAddedEventHandler,
 
     private final ResourceContainer target;
 
-    public ResourceSetEventForwarder(ResourceSet source, ResourceContainer target) {
+    public ResourceSetEventForwarder(ResourceSet source,
+            ResourceContainer target) {
         this.source = source;
         this.target = target;
     }

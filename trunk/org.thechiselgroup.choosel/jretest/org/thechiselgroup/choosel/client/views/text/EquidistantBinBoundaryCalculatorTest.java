@@ -23,7 +23,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.thechiselgroup.choosel.client.util.CollectionUtils;
-import org.thechiselgroup.choosel.client.views.text.EquidistantBinBoundaryCalculator;
 
 public class EquidistantBinBoundaryCalculatorTest {
 

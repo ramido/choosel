@@ -1,8 +1,8 @@
 package org.thechiselgroup.choosel.client.views.graph;
 
 import java.util.List;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 public interface GraphExpansionRegistry {
 
