@@ -73,6 +73,8 @@ public final class CSS {
 
     public static final String PX = "px";
 
+    public static final String COLOR = "color";
+
     public static final String RELATIVE = "relative";
 
     public static final String TOP = "top";
@@ -150,6 +152,18 @@ public final class CSS {
 
     public static void setBorderColor(Widget widget, String borderColor) {
         setBorderColor(widget.getElement(), borderColor);
+    }
+
+    public static void setColor(Element element, String color) {
+        setStyleAttribute(element, COLOR, color);
+    }
+
+    public static void setColor(String id, String color) {
+        setColor(getElementById(id), color);
+    }
+
+    public static void setColor(Widget widget, String color) {
+        setColor(widget.getElement(), color);
     }
 
     public static void setDisplay(Element element, String value) {
