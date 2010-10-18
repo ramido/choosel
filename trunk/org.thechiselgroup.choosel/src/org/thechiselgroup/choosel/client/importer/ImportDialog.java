@@ -19,10 +19,20 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.ui.dialog.AbstractDialog;
 
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class ImportDialog extends AbstractDialog {
+
+    private static final String CSS_IMPORT_PANEL = "choosel-ImportPanel";
+
+    private static final String CSS_IMPORT_PANEL_DATA_SET_NAME = "choosel-ImportPanel-DataSetName";
+
+    private static final String CSS_IMPORT_PANEL_LABEL = "choosel-ImportPanel-Label";
 
     private TextArea pasteArea;
 
@@ -43,9 +53,26 @@ public class ImportDialog extends AbstractDialog {
 
     @Override
     public Widget getContent() {
+        VerticalPanel panel = new VerticalPanel();
+        panel.addStyleName(CSS_IMPORT_PANEL);
+
+        FlowPanel namePanel = new FlowPanel();
+        namePanel.addStyleName(CSS_IMPORT_PANEL_DATA_SET_NAME);
+        Label nameLabel = new Label("Name of data set:");
+        nameLabel.setStyleName(CSS_IMPORT_PANEL_LABEL);
+        namePanel.add(nameLabel);
+        namePanel.add(new TextBox());
+        panel.add(namePanel);
+
+        Label contentLabel = new Label("Paste CSV data below:");
+        contentLabel.addStyleName(CSS_IMPORT_PANEL_LABEL);
+        panel.add(contentLabel);
+
         pasteArea = new TextArea();
-        pasteArea.addStyleName("importCSV");
-        return pasteArea;
+        panel.add(pasteArea);
+        panel.setCellHeight(pasteArea, "100%");
+
+        return panel;
     }
 
     @Override
