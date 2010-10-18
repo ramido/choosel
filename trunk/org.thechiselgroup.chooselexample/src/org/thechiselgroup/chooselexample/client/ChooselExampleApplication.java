@@ -28,16 +28,11 @@ import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionCo
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.WINDOW_CONTENT_CSV_IMPORT;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.WINDOW_CONTENT_NOTE;
 
-import java.util.Date;
-
 import org.thechiselgroup.choosel.client.ChooselApplication;
-import org.thechiselgroup.choosel.client.resources.Resource;
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.test.TestResourceSetFactory;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.ui.Button;
 
 public class ChooselExampleApplication extends ChooselApplication {
@@ -46,46 +41,22 @@ public class ChooselExampleApplication extends ChooselApplication {
 
 	// TODO change into command
 	private void addTestDataSourceButton() {
-		Button b = new Button("T-Data");
-		b.addClickHandler(new ClickHandler() {
+		Button button = new Button("Test-Data");
 
+		button.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				int counter = 0;
-				ResourceSet resourceSet = createResourceSet();
-				resourceSet.setLabel("Test");
-				for (int i = 0; i < 50; i++)
-					resourceSet.add(TestResourceSetFactory.createResource(i));
-				for (Resource resource : resourceSet) {
-					resource.putValue("date", new Date(
-							1281991537 + 100000 * (counter++)).toString());
-					resource.putValue("magnitude", Random.nextInt(10));
-					int category = Random.nextInt(10);
-					resource.putValue("tagContent", "test" + category);
-					resource.putValue("label", "test" + category);
-				}
-
-				dataSourceResourceSetsPresenter.addResourceSet(resourceSet);
-
-				ResourceSet graphResourceSet = createResourceSet();
-				graphResourceSet.setLabel("GraphTest");
-				for (int i = 0; i < 25; i++) {
-					Resource resource = new Resource("graphtest:" + i);
-					resource.putValue("title", "graphtest:" + i);
-					if (i > 0) {
-						resource.putValueAsUriList("parent", "graphtest:"
-								+ (i - 1));
-					}
-					graphResourceSet.add(resource);
-				}
-
 				dataSourceResourceSetsPresenter
-						.addResourceSet(graphResourceSet);
+						.addResourceSet(TestResourceSetFactory
+								.addTestData(createResourceSet()));
+				dataSourceResourceSetsPresenter
+						.addResourceSet(TestResourceSetFactory
+								.addGraphTestData(createResourceSet()));
 			}
 
 		});
 
-		addWidget(DEVELOPER_MODE_PANEL, b);
+		addWidget(DEVELOPER_MODE_PANEL, button);
 	}
 
 	@Override
