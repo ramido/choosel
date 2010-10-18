@@ -64,20 +64,20 @@ public class ChooselExampleApplication extends ChooselApplication {
 		if (runsInDevelopmentMode()) {
 			addTestDataSourceButton();
 
-			addWindowContentButton(DEVELOPER_MODE_PANEL, "Graph", TYPE_GRAPH);
-			addWindowContentButton(DEVELOPER_MODE_PANEL, "Circular Bar",
+			addCreateWindowActionToToolbar(DEVELOPER_MODE_PANEL, "Graph", TYPE_GRAPH);
+			addCreateWindowActionToToolbar(DEVELOPER_MODE_PANEL, "Circular Bar",
 					TYPE_CIRCULAR_BAR);
-			addWindowContentButton(DEVELOPER_MODE_PANEL, "Time", TYPE_TIME);
-			addWindowContentButton(DEVELOPER_MODE_PANEL, "Dot", TYPE_DOT);
+			addCreateWindowActionToToolbar(DEVELOPER_MODE_PANEL, "Time", TYPE_TIME);
+			addCreateWindowActionToToolbar(DEVELOPER_MODE_PANEL, "Dot", TYPE_DOT);
 		}
 
-		addWindowContentButton(VIEWS_PANEL, "Note", WINDOW_CONTENT_NOTE);
-		addWindowContentButton(VIEWS_PANEL, "Text", TYPE_TEXT);
-		addWindowContentButton(VIEWS_PANEL, "Map", TYPE_MAP);
-		addWindowContentButton(VIEWS_PANEL, "Timeline", TYPE_TIMELINE);
-		addWindowContentButton(VIEWS_PANEL, "Bar Chart", TYPE_BAR);
-		addWindowContentButton(VIEWS_PANEL, "Pie Chart", TYPE_PIE);
-		addWindowContentButton(VIEWS_PANEL, "Scatter Plot", TYPE_SCATTER);
+		addCreateWindowActionToToolbar(VIEWS_PANEL, "Note", WINDOW_CONTENT_NOTE);
+		addCreateWindowActionToToolbar(VIEWS_PANEL, "Text", TYPE_TEXT);
+		addCreateWindowActionToToolbar(VIEWS_PANEL, "Map", TYPE_MAP);
+		addCreateWindowActionToToolbar(VIEWS_PANEL, "Timeline", TYPE_TIMELINE);
+		addCreateWindowActionToToolbar(VIEWS_PANEL, "Bar Chart", TYPE_BAR);
+		addCreateWindowActionToToolbar(VIEWS_PANEL, "Pie Chart", TYPE_PIE);
+		addCreateWindowActionToToolbar(VIEWS_PANEL, "Scatter Plot", TYPE_SCATTER);
 
 		addDialogActionToToolbar(DATA_PANEL, "Import", new ImportDialog(
 				importer, dataSourceResourceSetsPresenter));

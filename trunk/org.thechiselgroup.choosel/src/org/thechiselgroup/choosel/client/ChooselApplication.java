@@ -55,15 +55,12 @@ import org.thechiselgroup.choosel.client.workspace.command.ShareWorkspaceCommand
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.Window.ClosingHandler;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -157,34 +154,29 @@ public abstract class ChooselApplication {
         getToolbarPanel(panelId).addAction(action);
     }
 
-    public Action addActionToToolbar(String panelId, Command command,
-            String title, String iconName) {
+    protected Action addActionToToolbar(String panelId, String label,
+            String iconName, Command command) {
 
-        Action action = new Action(title, command, iconName);
+        Action action = new Action(label, command, iconName);
         addActionToToolbar(panelId, action);
         return action;
     }
 
-    public void addButtonToToolbar(String panelId, String label,
-            ClickHandler handler) {
-        assert panelId != null;
-        assert label != null;
-        assert handler != null;
+    protected void addCreateWindowActionToToolbar(String panelId, String label,
+            final String contentType) {
 
-        Button button = new Button(label);
-        button.addClickHandler(handler);
-        addWidget(panelId, button);
+        addCreateWindowActionToToolbar(panelId, label, null, contentType);
     }
 
     protected void addCreateWindowActionToToolbar(String panelId, String label,
-            String iconName, final String windowContentId) {
+            String iconName, final String contentType) {
 
-        addActionToToolbar(panelId, new Command() {
+        addActionToToolbar(panelId, label, iconName, new Command() {
             @Override
             public void execute() {
-                createWindow(windowContentId);
+                createWindow(contentType);
             }
-        }, label, iconName);
+        });
     }
 
     protected void addDialogActionToToolbar(String panelId, String label,
@@ -195,15 +187,15 @@ public abstract class ChooselApplication {
     protected void addDialogActionToToolbar(String panelId, String label,
             String iconName, final Dialog dialog) {
 
-        addActionToToolbar(panelId, new Command() {
+        addActionToToolbar(panelId, label, iconName, new Command() {
             @Override
             public void execute() {
                 dialogManager.show(dialog);
             }
-        }, label, iconName);
+        });
     }
 
-    public void addToolbarPanel(String panelId, String title) {
+    protected void addToolbarPanel(String panelId, String title) {
         assert panelId != null;
         assert title != null;
 
@@ -211,38 +203,12 @@ public abstract class ChooselApplication {
                 .addPanel(new ToolbarPanel(panelId, title, popupManagerFactory));
     }
 
-    public void addWidget(String panelId, Widget widget) {
+    protected void addWidget(String panelId, Widget widget) {
         assert panelId != null;
         assert widget != null;
 
         ((HorizontalPanel) actionBar.getPanel(panelId).getContentWidget())
                 .add(widget);
-    }
-
-    protected void addWindowClosingConfirmationDialog() {
-        Window.addWindowClosingHandler(new ClosingHandler() {
-            @Override
-            public void onWindowClosing(ClosingEvent event) {
-                event.setMessage("Unsaved changes to the workspace will be lost.");
-            }
-        });
-    }
-
-    // TODO remove once actions can also be buttons
-    public void addWindowContentButton(String panelId, String label,
-            final String contentType) {
-
-        assert panelId != null;
-        assert label != null;
-        assert contentType != null;
-        // TODO assert factory for content type is available
-
-        addButtonToToolbar(panelId, label, new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                createWindow(contentType);
-            }
-        });
     }
 
     private DockPanel createMainPanel() {
@@ -280,7 +246,7 @@ public abstract class ChooselApplication {
 
         initGlobalErrorHandler();
 
-        addWindowClosingConfirmationDialog();
+        initWindowClosingConfirmationDialog();
 
         DockPanel mainPanel = createMainPanel();
 
@@ -374,36 +340,36 @@ public abstract class ChooselApplication {
 
     protected void initLoadWorkspaceAction() {
         Action loadAction = addActionToToolbar(WORKSPACE_PANEL,
+                "Load Workspace", "workspace-open",
                 new AsyncCommandToCommandAdapter(loadWorkspaceDialogCommand,
-                        asyncCommandExecutor), "Load Workspace",
-                "workspace-open");
+                        asyncCommandExecutor));
 
         new AuthenticationBasedEnablingStateWrapper(authenticationManager,
                 loadAction).init();
     }
 
     protected void initNewWorkspaceAction() {
-        addActionToToolbar(WORKSPACE_PANEL, newWorkspaceCommand,
-                "New Workspace", "workspace-new");
+        addActionToToolbar(WORKSPACE_PANEL, "New Workspace",
+                "workspace-new", newWorkspaceCommand);
     }
 
     protected void initRedoAction() {
-        Action redoAction = addActionToToolbar(EDIT_PANEL, new Command() {
+        Action redoAction = addActionToToolbar(EDIT_PANEL, "Redo", "edit-redo", new Command() {
             @Override
             public void execute() {
                 assert commandManager.canRedo();
                 commandManager.redo();
             }
-        }, "Redo", "edit-redo");
+        });
 
         new RedoActionStateController(commandManager, redoAction).init();
     }
 
     protected void initSaveWorkspaceAction() {
         Action saveAction = addActionToToolbar(WORKSPACE_PANEL,
-                saveWorkspaceCommand,
                 SaveActionStateController.MESSAGE_SAVE_WORKSPACE,
-                "workspace-save");
+                "workspace-save",
+                saveWorkspaceCommand);
         AuthenticationBasedEnablingStateWrapper authWrapper = new AuthenticationBasedEnablingStateWrapper(
                 authenticationManager, saveAction);
         authWrapper.init();
@@ -414,24 +380,33 @@ public abstract class ChooselApplication {
 
     protected void initShareWorkspaceAction() {
         Action action = addActionToToolbar(WORKSPACE_PANEL,
+                "Share Workspace", "workspace-share",
                 new AsyncCommandToCommandAdapter(shareWorkspaceCommand,
-                        asyncCommandExecutor), "Share Workspace",
-                "workspace-share");
+                        asyncCommandExecutor));
 
         new AuthenticationBasedEnablingStateWrapper(authenticationManager,
                 action).init();
     }
 
     protected void initUndoAction() {
-        Action undoAction = addActionToToolbar(EDIT_PANEL, new Command() {
+        Action undoAction = addActionToToolbar(EDIT_PANEL, "Undo", "edit-undo", new Command() {
             @Override
             public void execute() {
                 assert commandManager.canUndo();
                 commandManager.undo();
             }
-        }, "Undo", "edit-undo");
+        });
 
         new UndoActionStateController(commandManager, undoAction).init();
+    }
+
+    protected void initWindowClosingConfirmationDialog() {
+        Window.addWindowClosingHandler(new ClosingHandler() {
+            @Override
+            public void onWindowClosing(ClosingEvent event) {
+                event.setMessage("Unsaved changes to the workspace will be lost.");
+            }
+        });
     }
 
     protected void initWorkspacePanel() {
