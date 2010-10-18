@@ -289,14 +289,17 @@ button.popup-content-action:active {
 
 .note:hover {
     background-color: rgb(255, 255, 225);
+    border: 0px;
 }
 
 .note:focus {
     background-color: rgb(255, 255, 225);
+    border: 0px;
 }
 
 .note:active {
     background-color: rgb(255, 255, 225);
+    border: 0px;
 }
 
 .resourceItemIcon {
