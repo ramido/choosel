@@ -81,35 +81,49 @@ public class DialogWindowManager extends AbstractWindowManager {
     }
 
     public void init() {
-        showShade();
-
-        final DialogWindow dialogWindow = new DialogWindow();
-
-        // initialization order important (breaks otherwise)
-        dialogWindow.init(this, dialog);
-        dialog.init(dialogWindow);
-
-        shadeManager.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                cancelDialog(dialogWindow);
-            }
-        });
-
-        getBoundaryPanel().add(dialogWindow);
-
-        // TODO variable calculation of window size
-        // XXX this fixes problem that dialog window takes up whole screen
-        dialogWindow.setPixelSize(500, 600);
-
         /*
-         * display centered below action bar offsets are useless here -- why? --
-         * use content instead (not exact)
+         * The shade needs to be removed if an exception occurs, otherwise the
+         * user might get locked in a state where he/she cannot remove the
+         * shade.
          */
-        int x = (getBoundaryPanel().getOffsetWidth() - dialogWindow.getWidth()) / 2;
+        try {
+            showShade();
 
-        // TODO extract offset (variable)
-        dialogWindow.setLocation(x, ActionBar.ACTION_BAR_HEIGHT_PX + 10);
+            final DialogWindow dialogWindow = new DialogWindow();
+
+            // initialization order important (breaks otherwise)
+            dialogWindow.init(this, dialog);
+            dialog.init(dialogWindow);
+
+            shadeManager.addClickHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    cancelDialog(dialogWindow);
+                }
+            });
+
+            getBoundaryPanel().add(dialogWindow);
+
+            // TODO variable calculation of window size
+            // XXX this fixes problem that dialog window takes up whole screen
+            dialogWindow.setPixelSize(500, 600);
+
+            /*
+             * display centered below action bar offsets are useless here --
+             * why? -- use content instead (not exact)
+             */
+            int x = (getBoundaryPanel().getOffsetWidth() - dialogWindow
+                    .getWidth()) / 2;
+
+            // TODO extract offset (variable)
+            dialogWindow.setLocation(x, ActionBar.ACTION_BAR_HEIGHT_PX + 10);
+        } catch (RuntimeException e) {
+            hideShade();
+            throw e;
+        } catch (Error e) {
+            hideShade();
+            throw e;
+        }
     }
 
     private void showShade() {

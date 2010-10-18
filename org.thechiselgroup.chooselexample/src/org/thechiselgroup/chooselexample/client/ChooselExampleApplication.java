@@ -25,10 +25,10 @@ import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionCo
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_TEXT;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_TIME;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_TIMELINE;
-import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.WINDOW_CONTENT_CSV_IMPORT;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.WINDOW_CONTENT_NOTE;
 
 import org.thechiselgroup.choosel.client.ChooselApplication;
+import org.thechiselgroup.choosel.client.importer.ImportDialog;
 import org.thechiselgroup.choosel.client.test.TestResourceSetFactory;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -79,7 +79,8 @@ public class ChooselExampleApplication extends ChooselApplication {
 		addWindowContentButton(VIEWS_PANEL, "Pie Chart", TYPE_PIE);
 		addWindowContentButton(VIEWS_PANEL, "Scatter Plot", TYPE_SCATTER);
 
-		addWindowContentButton(DATA_PANEL, "Import", WINDOW_CONTENT_CSV_IMPORT);
+		addDialogActionToToolbar(DATA_PANEL, "Import", new ImportDialog(
+				importer, dataSourceResourceSetsPresenter));
 		addWidget(DATA_PANEL, dataSourceResourceSetsPresenter.asWidget());
 	}
 

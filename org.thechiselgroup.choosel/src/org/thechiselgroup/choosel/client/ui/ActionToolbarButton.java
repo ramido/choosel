@@ -21,33 +21,23 @@ import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOutHandler;
-import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseOverHandler;
-import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ActionToolbarItem extends Image {
-
-    public static final String CSS_ACTION_TOOLBAR_BUTTON = "ActionToolbarButton";
+public class ActionToolbarButton extends Button {
 
     private Action action;
 
-    private boolean mouseOver = false;
-
     private Label popupLabel;
 
-    public ActionToolbarItem(Action action,
+    public ActionToolbarButton(Action action,
             PopupManagerFactory popupManagerFactory) {
 
         assert action != null;
         assert popupManagerFactory != null;
 
         this.action = action;
-
-        setStyleName(CSS_ACTION_TOOLBAR_BUTTON);
 
         initMouseHandlers();
         initActionChangeHandler();
@@ -66,24 +56,6 @@ public class ActionToolbarItem extends Image {
     }
 
     private void initMouseHandlers() {
-        addMouseOverHandler(new MouseOverHandler() {
-            @Override
-            public void onMouseOver(MouseOverEvent event) {
-                mouseOver = true;
-                if (action.isEnabled()) {
-                    setUrl(action.getHighlightedIconUrl());
-                }
-            }
-        });
-        addMouseOutHandler(new MouseOutHandler() {
-            @Override
-            public void onMouseOut(MouseOutEvent event) {
-                mouseOver = false;
-                if (action.isEnabled()) {
-                    setUrl(action.getNormalIconUrl());
-                }
-            }
-        });
         addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -106,17 +78,8 @@ public class ActionToolbarItem extends Image {
 
     // TODO do not show popup if disabled?
     protected void update() {
-        if (action.isEnabled()) {
-            if (mouseOver) {
-                setUrl(action.getHighlightedIconUrl());
-            } else {
-                setUrl(action.getNormalIconUrl());
-            }
-        } else {
-            setUrl(action.getDisabledIconUrl());
-        }
-
-        // TODO name in bold, break, description if available
+        setEnabled(action.isEnabled());
+        setText(action.getName());
         popupLabel.setText(action.getName());
     }
 

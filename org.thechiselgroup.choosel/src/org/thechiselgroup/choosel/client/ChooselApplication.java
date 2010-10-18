@@ -26,6 +26,8 @@ import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.command.ui.RedoActionStateController;
 import org.thechiselgroup.choosel.client.command.ui.UndoActionStateController;
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
+import org.thechiselgroup.choosel.client.error_handling.ErrorHandler;
+import org.thechiselgroup.choosel.client.importer.Importer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
@@ -52,6 +54,7 @@ import org.thechiselgroup.choosel.client.workspace.command.SaveWorkspaceCommand;
 import org.thechiselgroup.choosel.client.workspace.command.ShareWorkspaceCommand;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -94,10 +97,16 @@ public abstract class ChooselApplication {
     private AuthenticationBar authenticationBar;
 
     @Inject
+    protected Importer importer;
+
+    @Inject
     private AuthenticationManager authenticationManager;
 
     @Inject
     private AsyncCommandExecutor asyncCommandExecutor;
+
+    @Inject
+    protected ErrorHandler errorHandler;
 
     @Inject
     protected CommandManager commandManager;
@@ -176,6 +185,11 @@ public abstract class ChooselApplication {
                 createWindow(windowContentId);
             }
         }, label, iconName);
+    }
+
+    protected void addDialogActionToToolbar(String panelId, String label,
+            Dialog dialog) {
+        addDialogActionToToolbar(panelId, label, null, dialog);
     }
 
     protected void addDialogActionToToolbar(String panelId, String label,
@@ -264,6 +278,8 @@ public abstract class ChooselApplication {
     public void init() {
         BrowserDetect.checkBrowser();
 
+        initGlobalErrorHandler();
+
         addWindowClosingConfirmationDialog();
 
         DockPanel mainPanel = createMainPanel();
@@ -335,6 +351,15 @@ public abstract class ChooselApplication {
     protected void initEditPanel() {
         initRedoAction();
         initUndoAction();
+    }
+
+    private void initGlobalErrorHandler() {
+        GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
+            @Override
+            public void onUncaughtException(Throwable e) {
+                errorHandler.handleError(e);
+            }
+        });
     }
 
     protected void initHelpAction() {

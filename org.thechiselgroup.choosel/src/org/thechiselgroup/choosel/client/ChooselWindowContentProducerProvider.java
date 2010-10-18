@@ -19,7 +19,6 @@ import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionCo
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_SELECTION;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_SELECTION_DROP;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_SET;
-import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.DATA_SOURCES_PANEL;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.DROP_TARGET_MANAGER_VIEW_CONTENT;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.LABEL_PROVIDER_SELECTION_SET;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_BAR;
@@ -37,7 +36,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
-import org.thechiselgroup.choosel.client.importer.Importer;
 import org.thechiselgroup.choosel.client.label.CategoryLabelProvider;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
@@ -45,9 +43,7 @@ import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
-import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.ui.HelpWindowContentFactory;
-import org.thechiselgroup.choosel.client.ui.ImportCSVWindowContentFactory;
 import org.thechiselgroup.choosel.client.ui.NoteWindowContentFactory;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropTargetManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
@@ -110,11 +106,8 @@ public class ChooselWindowContentProducerProvider implements
             @Named(DROP_TARGET_MANAGER_VIEW_CONTENT) ResourceSetAvatarDropTargetManager contentDropTargetManager,
             SlotResolver slotResolver,
             ResourceCategorizer resourceByTypeCategorizer,
-            HoverModel hoverModel,
-            PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper,
-            Importer importer,
-            @Named(DATA_SOURCES_PANEL) ResourceSetAvatarResourceSetsPresenter dataSourcesPanel) {
+            HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
+            DetailsWidgetHelper detailsWidgetHelper) {
 
         assert userSetsDragAvatarFactory != null;
         assert allResourcesDragAvatarFactory != null;
@@ -153,9 +146,6 @@ public class ChooselWindowContentProducerProvider implements
         windowContentFactories.put(
                 ChooselInjectionConstants.WINDOW_CONTENT_NOTE,
                 new NoteWindowContentFactory());
-        windowContentFactories.put(
-                ChooselInjectionConstants.WINDOW_CONTENT_CSV_IMPORT,
-                new ImportCSVWindowContentFactory(importer, dataSourcesPanel));
     }
 
     @Override

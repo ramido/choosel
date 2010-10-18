@@ -236,8 +236,7 @@ public class ChooselClientModule extends AbstractGinModule implements
 
         bind(ShadeManager.class).in(Singleton.class);
         bind(DialogManager.class).in(Singleton.class);
-        bind(ErrorHandler.class).to(FeedbackDialogErrorHandler.class).in(
-                Singleton.class);
+        bind(ErrorHandler.class).to(getErrorHandlerClass()).in(Singleton.class);
         bind(MessageManager.class).annotatedWith(Names.named(DEFAULT))
                 .to(DefaultMessageManager.class).in(Singleton.class);
         bind(MessageManager.class).to(ShadeMessageManager.class).in(
@@ -350,6 +349,10 @@ public class ChooselClientModule extends AbstractGinModule implements
 
     protected Class<? extends DropTargetCapabilityChecker> getDropTargetCapabilityCheckerClass() {
         return BlacklistDropTargetCapabilityChecker.class;
+    }
+
+    protected Class<? extends ErrorHandler> getErrorHandlerClass() {
+        return FeedbackDialogErrorHandler.class;
     }
 
     protected Class<? extends GraphExpansionRegistry> getGraphExpansionRegistryClass() {
