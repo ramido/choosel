@@ -173,6 +173,15 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private int height;
 
+    /*
+     * Boolean flag that indicates if the configuration part of the view has
+     * been created.
+     * 
+     * XXX This solution breaks down when there is more than one kind of
+     * resource (i.e. with different properties)
+     */
+    private boolean isConfigurationAvailable = false;
+
     public DefaultView(ResourceSplitter resourceSplitter,
             ViewContentDisplay contentDisplay, String label,
             String contentType, ResourceItemValueResolver configuration,
@@ -746,8 +755,31 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     protected void updateConfiguration(Set<ResourceItem> addedResourceItems) {
+        /*
+         * TODO check if there are changes when adding / adjust each slot -->
+         * stable per slot --> initialize early for the slots & map to object
+         * that has corresponding update method
+         * 
+         * XXX for now: just add a flag if a configuration has been created, and
+         * if that's the case, don't rebuild the configuration.
+         * 
+         * XXX this also fails with redo / undo
+         */
+        if (isConfigurationAvailable) {
+            return;
+        }
+        isConfigurationAvailable = true;
+
+        // TODO do this separately for aggregation & slots (which should be
+        // based on resource items)
+        // TODO update selection of slots?
+
         // aggregration TODO move
         {
+
+            // TODO include aggregation that does not aggregate...
+            // TODO include bin aggregation for numerical slots
+
             final List<String> stringPropertyNames = getPropertyNamesForDataType(
                     addedResourceItems, DataType.TEXT);
             for (final String propertyName : stringPropertyNames) {
@@ -823,10 +855,8 @@ public class DefaultView extends AbstractWindowContent implements View {
                         addedResourceItems, DataType.TEXT);
 
                 if (!propertyNames.isEmpty()) {
-                    final String propertyName = propertyNames.get(0);
-
                     configuration.put(slot, new TextResourceSetToValueResolver(
-                            propertyName));
+                            propertyNames.get(0)));
                 }
 
                 final ListBox slotPropertyMappingBox = new ListBox(false);
@@ -866,10 +896,9 @@ public class DefaultView extends AbstractWindowContent implements View {
                         addedResourceItems, DataType.NUMBER);
 
                 if (!propertyNames.isEmpty()) {
-                    final String propertyName = propertyNames.get(0);
-                    configuration.put(slot,
-                            new CalculationResourceSetToValueResolver(
-                                    propertyName, new SumCalculation()));
+                    CalculationResourceSetToValueResolver resolver = new CalculationResourceSetToValueResolver(
+                            propertyNames.get(0), new SumCalculation());
+                    configuration.put(slot, resolver);
                 }
 
                 final ListBox calculationBox = new ListBox(false);
