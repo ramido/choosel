@@ -1,7 +1,7 @@
 package org.thechiselgroup.choosel.client.ui.widget.chart;
 
 import org.thechiselgroup.choosel.client.ui.Colors;
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Alignments;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Alignment;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Dot;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Label;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventHandler;
@@ -82,7 +82,7 @@ public class DotChart extends ChartWidget {
         }
     };
 
-    private String baselineLabelTextAlign = Alignments.CENTER;
+    private String baselineLabelTextAlign = Alignment.CENTER;
 
     private ProtovisFunctionString baselineLabelText = new ProtovisFunctionString() {
         @Override
@@ -153,7 +153,7 @@ public class DotChart extends ChartWidget {
         this.scale = scale;
         chart.add(Rule.createRule()).data(scale.ticks()).bottom(scale)
                 .strokeStyle(scaleStrokeStyle).width(chartWidth)
-                .anchor(Alignments.LEFT).add(Label.createLabel())
+                .anchor(Alignment.LEFT).add(Label.createLabel())
                 .text(scaleLabelText);
 
         chart.add(Rule.createRule()).left(0).bottom(0)

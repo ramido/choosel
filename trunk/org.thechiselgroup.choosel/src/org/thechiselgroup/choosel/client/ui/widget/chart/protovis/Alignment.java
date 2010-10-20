@@ -13,26 +13,20 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.views.chart;
+package org.thechiselgroup.choosel.client.ui.widget.chart.protovis;
 
-import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.ViewContentDisplay;
-import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
+public final class Alignment {
 
-import com.google.inject.Inject;
+    public static final String TOP = "top";
 
-public class ScatterChartViewContentDisplayFactory implements
-        ViewContentDisplayFactory {
+    public static final String MIDDLE = "middle";
 
-    @Inject
-    private DragEnablerFactory dragEnablerFactory;
+    public static final String BOTTOM = "bottom";
 
-    @Inject
-    public ScatterChartViewContentDisplayFactory() {
-    }
+    public static final String LEFT = "left";
 
-    @Override
-    public ViewContentDisplay createViewContentDisplay() {
-        return new ScatterChartViewContentDisplay(dragEnablerFactory);
-    }
+    public static final String CENTER = "center";
+
+    public static final String RIGHT = "right";
+
 }

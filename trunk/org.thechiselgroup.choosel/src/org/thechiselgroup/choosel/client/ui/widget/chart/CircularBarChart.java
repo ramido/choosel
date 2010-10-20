@@ -16,7 +16,7 @@
 package org.thechiselgroup.choosel.client.ui.widget.chart;
 
 import org.thechiselgroup.choosel.client.ui.Colors;
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Alignments;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Alignment;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Dot;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Label;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventHandler;
@@ -112,7 +112,7 @@ public class CircularBarChart extends ChartWidget {
         }
     };
 
-    private String wedgeLabelAnchor = Alignments.CENTER;
+    private String wedgeLabelAnchor = Alignment.CENTER;
 
     private int wedgeTextAngle = 0;
 

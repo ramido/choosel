@@ -15,31 +15,24 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.chart;
 
-import org.thechiselgroup.choosel.client.ui.widget.chart.ScatterChart;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.Slot;
-import org.thechiselgroup.choosel.client.views.SlotResolver;
+import org.thechiselgroup.choosel.client.views.ViewContentDisplay;
+import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
 
-import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-public class ScatterChartViewContentDisplay extends ChartViewContentDisplay {
+public class ScatterPlotViewContentDisplayFactory implements
+        ViewContentDisplayFactory {
 
     @Inject
-    public ScatterChartViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
+    private DragEnablerFactory dragEnablerFactory;
 
-        super(dragEnablerFactory);
+    @Inject
+    public ScatterPlotViewContentDisplayFactory() {
     }
 
     @Override
-    public Widget createWidget() {
-        chartWidget = new ScatterChart();
-        return chartWidget;
-    }
-
-    @Override
-    public Slot[] getSlots() {
-        return new Slot[] { SlotResolver.CHART_LABEL_SLOT,
-                SlotResolver.X_COORDINATE_SLOT, SlotResolver.Y_COORDINATE_SLOT };
+    public ViewContentDisplay createViewContentDisplay() {
+        return new ScatterPlotViewContentDisplay(dragEnablerFactory);
     }
 }

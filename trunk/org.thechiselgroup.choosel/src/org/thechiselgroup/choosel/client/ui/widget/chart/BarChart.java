@@ -16,7 +16,7 @@
 package org.thechiselgroup.choosel.client.ui.widget.chart;
 
 import org.thechiselgroup.choosel.client.ui.Colors;
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Alignments;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Alignment;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Bar;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Label;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventHandler;
@@ -201,7 +201,7 @@ public class BarChart extends ChartWidget {
         }
     };
 
-    private String baselineLabelTextAlign = Alignments.CENTER;
+    private String baselineLabelTextAlign = Alignment.CENTER;
 
     private int baselineLabelLength = -15;
 
@@ -213,7 +213,7 @@ public class BarChart extends ChartWidget {
         }
     };
 
-    private String barTextBaseline = Alignments.TOP;
+    private String barTextBaseline = Alignment.TOP;
 
     protected LayoutType layout = LayoutType.HORIZONTAL;
 
@@ -306,14 +306,14 @@ public class BarChart extends ChartWidget {
 
         regularBar.add(Label.createLabel()).bottom(baselineLabelStart)
                 .textAlign(baselineLabelTextAlign).left(baselineLabelLength)
-                .text(baselineLabelText).textBaseline(Alignments.MIDDLE);
+                .text(baselineLabelText).textBaseline(Alignment.MIDDLE);
 
         /*
          * TODO adjust label position if label not visible (bar too short or
          * hidden by highlighting bar)
          */
-        regularBar.anchor(Alignments.RIGHT).add(Label.createLabel())
-                .textBaseline(Alignments.MIDDLE).text(fullMarkLabelText)
+        regularBar.anchor(Alignment.RIGHT).add(Label.createLabel())
+                .textBaseline(Alignment.MIDDLE).text(fullMarkLabelText)
                 .textStyle(fullMarkTextStyle);
 
         // TODO negative bars (in opposite direction)
@@ -324,16 +324,16 @@ public class BarChart extends ChartWidget {
                 .strokeStyle(Colors.STEELBLUE).lineWidth(barLineWidth)
                 .visible(isPartiallyHighlighted);
 
-        highlightedBar.anchor(Alignments.RIGHT).add(Label.createLabel())
+        highlightedBar.anchor(Alignment.RIGHT).add(Label.createLabel())
                 .textBaseline(barTextBaseline).text(highlightedLabelText)
-                .textStyle(Colors.BLACK).textBaseline(Alignments.MIDDLE);
+                .textStyle(Colors.BLACK).textBaseline(Alignment.MIDDLE);
     }
 
     protected void drawHorizontalBarScales(Scale scale) {
         this.scale = scale;
         chart.add(Rule.createRule()).data(scale.ticks(5)).left(scale).bottom(0)
                 .strokeStyle(scaleStrokeStyle).height(chartHeight)
-                .anchor(Alignments.BOTTOM).add(Label.createLabel())
+                .anchor(Alignment.BOTTOM).add(Label.createLabel())
                 .text(scaleLabelText);
     }
 
@@ -349,8 +349,8 @@ public class BarChart extends ChartWidget {
                 .text(baselineLabelText);
 
         // XXX text positioning broken (depending on text length)
-        regularBar.anchor(Alignments.TOP).add(Label.createLabel())
-                .textAngle(-Math.PI / 2).textBaseline(Alignments.MIDDLE)
+        regularBar.anchor(Alignment.TOP).add(Label.createLabel())
+                .textAngle(-Math.PI / 2).textBaseline(Alignment.MIDDLE)
                 .textStyle(fullMarkTextStyle).text(fullMarkLabelText);
 
         highlightedBar = chart.add(Bar.createBar())
@@ -360,8 +360,8 @@ public class BarChart extends ChartWidget {
                 .strokeStyle(Colors.STEELBLUE).lineWidth(barLineWidth)
                 .visible(isPartiallyHighlighted);
 
-        highlightedBar.anchor(Alignments.TOP).add(Label.createLabel())
-                .textBaseline(Alignments.MIDDLE).text(highlightedMarkLabelText)
+        highlightedBar.anchor(Alignment.TOP).add(Label.createLabel())
+                .textBaseline(Alignment.MIDDLE).text(highlightedMarkLabelText)
                 .textAngle(-Math.PI / 2);
     }
 
@@ -370,7 +370,7 @@ public class BarChart extends ChartWidget {
         this.scale = scale;
         chart.add(Rule.createRule()).data(scale.ticks(5)).left(0).bottom(scale)
                 .strokeStyle(scaleStrokeStyle).width(chartWidth)
-                .anchor(Alignments.LEFT).add(Label.createLabel())
+                .anchor(Alignment.LEFT).add(Label.createLabel())
                 .text(scaleLabelText);
     }
 

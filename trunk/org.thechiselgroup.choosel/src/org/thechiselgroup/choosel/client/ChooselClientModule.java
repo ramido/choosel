@@ -83,7 +83,7 @@ import org.thechiselgroup.choosel.client.views.chart.BarChartViewContentDisplayF
 import org.thechiselgroup.choosel.client.views.chart.CircularBarChartViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.chart.DotChartViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.chart.PieChartViewContentDisplayFactory;
-import org.thechiselgroup.choosel.client.views.chart.ScatterChartViewContentDisplayFactory;
+import org.thechiselgroup.choosel.client.views.chart.ScatterPlotViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.chart.TimeChartViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.graph.ArcStyleProvider;
 import org.thechiselgroup.choosel.client.views.graph.DefaultArcStyleProvider;
@@ -208,7 +208,7 @@ public class ChooselClientModule extends AbstractGinModule implements
         bindViewContentDisplayFactory(TYPE_DOT,
                 DotChartViewContentDisplayFactory.class);
         bindViewContentDisplayFactory(TYPE_SCATTER,
-                ScatterChartViewContentDisplayFactory.class);
+                ScatterPlotViewContentDisplayFactory.class);
         bindViewContentDisplayFactory(TYPE_TIME,
                 TimeChartViewContentDisplayFactory.class);
     }
