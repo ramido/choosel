@@ -55,13 +55,6 @@ public abstract class ChartViewContentDisplay extends
 
     // TODO push down: the actual chart needs to decide which slots are used
     // XXX currently inaccurate
-    // @Override
-    // public String[] getSlotIDs() {
-    // return new String[] { SlotResolver.DESCRIPTION_SLOT,
-    // SlotResolver.LABEL_SLOT, SlotResolver.COLOR_SLOT,
-    // SlotResolver.DATE_SLOT, SlotResolver.MAGNITUDE_SLOT,
-    // SlotResolver.X_COORDINATE_SLOT, SlotResolver.Y_COORDINATE_SLOT };
-    // }
     @Override
     public Slot[] getSlots() {
         return new Slot[] { SlotResolver.CHART_LABEL_SLOT,
@@ -125,7 +118,8 @@ public abstract class ChartViewContentDisplay extends
          */
         // TODO needs improvement, can updates cause structural changes?
         if (!addedResourceItems.isEmpty() || !removedResourceItems.isEmpty()
-                || hasPartialHighlightStatusChanged()) {
+                || hasPartialHighlightStatusChanged()
+                || !changedSlots.isEmpty()) {
             chartWidget.updateChart();
         } else {
             chartWidget.renderChart();

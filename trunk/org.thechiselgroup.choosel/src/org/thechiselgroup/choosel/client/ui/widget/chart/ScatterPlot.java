@@ -129,6 +129,10 @@ public class ScatterPlot extends ChartWidget {
         }
     };
 
+    private String xAxisLabel = "X-Axis";
+
+    private String yAxisLabel = "Y-Axis";
+
     @Override
     protected void beforeRender() {
         super.beforeRender();
@@ -153,6 +157,16 @@ public class ScatterPlot extends ChartWidget {
         chartHeight = height - BORDER_BOTTOM - BORDER_TOP;
     }
 
+    private void drawAxisLabels() {
+        chart.add(Label.createLabel()).bottom(-BORDER_BOTTOM + 5)
+                .left(chartWidth / 2).text(xAxisLabel)
+                .textAlign(Alignment.CENTER);
+
+        chart.add(Label.createLabel()).bottom(chartHeight / 2)
+                .left(-BORDER_LEFT + 20).text(yAxisLabel)
+                .textAngle(-Math.PI / 2).textAlign(Alignment.CENTER);
+    }
+
     @Override
     public void drawChart() {
         assert chartItems.size() >= 1;
@@ -166,6 +180,7 @@ public class ScatterPlot extends ChartWidget {
         scaleY = Scale.linear(minY, maxY).range(0, chartHeight);
         drawScales(scaleX, scaleY);
         drawScatter();
+        drawAxisLabels();
     }
 
     protected void drawScales(Scale scaleX, Scale scaleY) {
@@ -196,14 +211,14 @@ public class ScatterPlot extends ChartWidget {
                 .size(Math.min(chartHeight, chartWidth)
                         / (chartItems.size() * 2)).fillStyle(chartFillStyle)
                 .strokeStyle(Colors.STEELBLUE);
+    }
 
-        // TODO calculate
-        chart.add(Label.createLabel()).bottom(-BORDER_BOTTOM + 5)
-                .left(chartWidth / 2).text("X-Axis")
-                .textAlign(Alignment.CENTER);
-        chart.add(Label.createLabel()).bottom(chartHeight / 2)
-                .left(-BORDER_LEFT + 20).text("Y-Axis").textAngle(-Math.PI / 2)
-                .textAlign(Alignment.CENTER);
+    public String getXAxisLabel() {
+        return xAxisLabel;
+    }
+
+    public String getYAxisLabel() {
+        return yAxisLabel;
     }
 
     @Override
@@ -214,5 +229,13 @@ public class ScatterPlot extends ChartWidget {
 
     private void setChartParameters() {
         chart.left(BORDER_LEFT).bottom(BORDER_BOTTOM);
+    }
+
+    public void setXAxisLabel(String xAxisLabel) {
+        this.xAxisLabel = xAxisLabel;
+    }
+
+    public void setYAxisLabel(String yAxisLabel) {
+        this.yAxisLabel = yAxisLabel;
     }
 }

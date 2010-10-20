@@ -492,7 +492,7 @@ public class DefaultView extends AbstractWindowContent implements View {
             public boolean containsResource(Resource resource) {
                 return resourceModel.getResources().containsResourceWithUri(
                         resource.getUri());
-            }
+            };
 
             @Override
             public boolean containsResourceWithUri(String uri) {
@@ -523,6 +523,11 @@ public class DefaultView extends AbstractWindowContent implements View {
             @Override
             public List<ResourceItem> getResourceItems(Resource resource) {
                 return DefaultView.this.getResourceItems(resource);
+            }
+
+            @Override
+            public String getSlotResolverDescription(Slot slot) {
+                return configuration.getResourceSetResolver(slot).toString();
             }
 
             @Override
