@@ -246,8 +246,17 @@ public class BarChart extends ChartWidget {
     protected ProtovisFunctionString fullMarkTextStyle = new ProtovisFunctionString() {
         @Override
         public String f(ChartItem value, int i) {
-            return SubsetStatus.COMPLETE.equals(value.getResourceItem()
-                    .getHighlightStatus()) ? Colors.BLACK : Colors.WHITE;
+            if (SubsetStatus.COMPLETE.equals(value.getResourceItem()
+                    .getHighlightStatus())) {
+                return Colors.BLACK;
+            }
+
+            // XXX calculate label size instead of using 60px
+            if (calculateLength(regularValues[i]) < 60) {
+                return Colors.GRAY_2;
+            }
+
+            return Colors.WHITE;
         }
     };
 
@@ -306,12 +315,6 @@ public class BarChart extends ChartWidget {
                 .strokeStyle(AXIS_SCALE_COLOR).lineWidth(barLineWidth);
     }
 
-    private void drawHorizontalBarMeasurementAxisLabel() {
-        chart.add(Label.createLabel()).bottom(-BORDER_BOTTOM + 5)
-                .left(chartWidth / 2).text(measurementLabel)
-                .textAlign(Alignment.CENTER);
-    }
-
     private void drawHorizontalBarChart() {
         regularBar = chart.add(Bar.createBar())
                 .data(ArrayUtils.toJsArray(chartItems)).left(barLineWidth)
@@ -324,12 +327,25 @@ public class BarChart extends ChartWidget {
                 .textBaseline(Alignment.MIDDLE);
 
         /*
-         * TODO adjust label position if label not visible (bar too short or
-         * hidden by highlighting bar)
+         * TODO adjust label position & color if label not visible (bar too
+         * short or hidden by highlighting bar)
          */
+
         regularBar.anchor(Alignment.RIGHT).add(Label.createLabel())
                 .textBaseline(Alignment.MIDDLE).text(fullMarkLabelText)
-                .textStyle(fullMarkTextStyle);
+                .textStyle(fullMarkTextStyle)
+                .textAlign(new ProtovisFunctionString() {
+                    @Override
+                    public String f(ChartItem value, int i) {
+                        // XXX pre-calculation should be done by methods in
+                        // chart..
+                        // XXX calculate label size instead of taking 60px
+                        if (calculateLength(regularValues[i]) < 60) {
+                            return Alignment.LEFT;
+                        }
+                        return Alignment.RIGHT;
+                    }
+                });
 
         // TODO negative bars (in opposite direction)
         highlightedBar = chart.add(Bar.createBar())
@@ -342,6 +358,12 @@ public class BarChart extends ChartWidget {
         highlightedBar.anchor(Alignment.RIGHT).add(Label.createLabel())
                 .textBaseline(barTextBaseline).text(highlightedLabelText)
                 .textStyle(Colors.BLACK).textBaseline(Alignment.MIDDLE);
+    }
+
+    private void drawHorizontalBarMeasurementAxisLabel() {
+        chart.add(Label.createLabel()).bottom(-BORDER_BOTTOM + 5)
+                .left(chartWidth / 2).text(measurementLabel)
+                .textAlign(Alignment.CENTER);
     }
 
     protected void drawHorizontalBarScales(Scale scale) {

@@ -209,6 +209,12 @@ public class Label extends Mark {
     // @formatter:on
 
     // @formatter:off
+    public final native Label textAlign(ProtovisFunctionString f) /*-{
+        return this.textAlign(@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Mark::getFunctionString(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/chart/protovis/ProtovisFunctionString;)(this,f));
+    }-*/;
+    // @formatter:on
+
+    // @formatter:off
     public final native Label textAlign(String textAlign) /*-{
         return this.textAlign(textAlign);
     }-*/;
