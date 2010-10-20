@@ -55,6 +55,7 @@ import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
+import org.thechiselgroup.choosel.client.ui.ConfigurationPanel;
 import org.thechiselgroup.choosel.client.ui.ImageButton;
 import org.thechiselgroup.choosel.client.ui.Presenter;
 import org.thechiselgroup.choosel.client.ui.WidgetFactory;
@@ -74,10 +75,8 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasAlignment;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.StackPanel;
@@ -139,8 +138,7 @@ public class DefaultView extends AbstractWindowContent implements View {
     // TOOD rename
     private DockPanel configurationBar;
 
-    // TOOD rename
-    private VerticalPanel visualMappingPanel;
+    private ConfigurationPanel visualMappingPanel;
 
     // TOOD rename
     private StackPanel sideBar;
@@ -565,7 +563,7 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     private void initMappingsConfigurator() {
-        visualMappingPanel = new VerticalPanel();
+        visualMappingPanel = new ConfigurationPanel();
         sideBar.add(visualMappingPanel, "Mappings");
     }
 
@@ -780,27 +778,39 @@ public class DefaultView extends AbstractWindowContent implements View {
             // TODO include aggregation that does not aggregate...
             // TODO include bin aggregation for numerical slots
 
-            final List<String> stringPropertyNames = getPropertyNamesForDataType(
+            final List<String> propertyNames = getPropertyNamesForDataType(
                     addedResourceItems, DataType.TEXT);
-            for (final String propertyName : stringPropertyNames) {
-                visualMappingPanel.add(new Button("group by " + propertyName,
-                        new ClickHandler() {
-                            @Override
-                            public void onClick(ClickEvent event) {
-                                resourceSplitter
-                                        .setCategorizer(new ResourceMultiCategorizer() {
 
-                                            @Override
-                                            public Set<String> getCategories(
-                                                    Resource resource) {
-                                                return toSet((String) resource
-                                                        .getValue(propertyName));
-                                            }
+            final ListBox groupingBox = new ListBox(false);
+            groupingBox.setVisibleItemCount(1);
 
-                                        });
-                            }
-                        }));
+            groupingBox.addChangeHandler(new ChangeHandler() {
+                @Override
+                public void onChange(ChangeEvent event) {
+                    resourceSplitter
+                            .setCategorizer(new ResourceMultiCategorizer() {
+
+                                @Override
+                                public Set<String> getCategories(
+                                        Resource resource) {
+
+                                    String propertyName = groupingBox
+                                            .getValue(groupingBox
+                                                    .getSelectedIndex());
+
+                                    return toSet((String) resource
+                                            .getValue(propertyName));
+                                }
+
+                            });
+                }
+            });
+
+            for (String propertyName : propertyNames) {
+                groupingBox.addItem(propertyName, propertyName);
             }
+
+            visualMappingPanel.addConfigurationSetting("Grouping", groupingBox);
         }
 
         /*
@@ -885,8 +895,8 @@ public class DefaultView extends AbstractWindowContent implements View {
                     slotPropertyMappingBox.addItem(propertyName, propertyName);
                 }
 
-                visualMappingPanel.add(new Label(slot.getName()));
-                visualMappingPanel.add(slotPropertyMappingBox);
+                visualMappingPanel.addConfigurationSetting(slot.getName(),
+                        slotPropertyMappingBox);
             }
         }
 
@@ -953,9 +963,11 @@ public class DefaultView extends AbstractWindowContent implements View {
                     slotPropertyMappingBox.addItem(propertyName, propertyName);
                 }
 
-                visualMappingPanel.add(new Label(slot.getName()));
-                visualMappingPanel.add(calculationBox);
-                visualMappingPanel.add(slotPropertyMappingBox);
+                VerticalPanel panel = new VerticalPanel();
+                panel.add(calculationBox);
+                panel.add(slotPropertyMappingBox);
+                visualMappingPanel.addConfigurationSetting(slot.getName(),
+                        panel);
             }
         }
 
