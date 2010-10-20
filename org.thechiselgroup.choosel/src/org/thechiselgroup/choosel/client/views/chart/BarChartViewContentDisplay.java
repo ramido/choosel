@@ -15,9 +15,14 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.chart;
 
+import java.util.Set;
+
 import org.thechiselgroup.choosel.client.ui.widget.chart.BarChart;
 import org.thechiselgroup.choosel.client.ui.widget.chart.BarChart.LayoutType;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
+import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.Slot;
+import org.thechiselgroup.choosel.client.views.SlotResolver;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -60,5 +65,26 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         panel.add(layoutBox);
 
         return panel;
+    }
+
+    @Override
+    public Slot[] getSlots() {
+        return new Slot[] { SlotResolver.CHART_LABEL_SLOT,
+                SlotResolver.CHART_VALUE_SLOT };
+    }
+
+    @Override
+    public void update(Set<ResourceItem> addedResourceItems,
+            Set<ResourceItem> updatedResourceItems,
+            Set<ResourceItem> removedResourceItems, Set<Slot> changedSlots) {
+
+        // TODO re-enable
+        // if (!changedSlots.isEmpty()) {
+        ((BarChart) chartWidget).setMeasurementLabel(callback
+                .getSlotResolverDescription(SlotResolver.CHART_VALUE_SLOT));
+        // }
+
+        super.update(addedResourceItems, updatedResourceItems,
+                removedResourceItems, changedSlots);
     }
 }

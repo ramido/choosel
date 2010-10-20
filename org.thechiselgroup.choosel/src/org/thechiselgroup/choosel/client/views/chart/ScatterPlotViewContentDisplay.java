@@ -50,6 +50,7 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
             Set<ResourceItem> updatedResourceItems,
             Set<ResourceItem> removedResourceItems, Set<Slot> changedSlots) {
 
+        // TODO re-enable
         // if (!changedSlots.isEmpty()) {
         ((ScatterPlot) chartWidget).setYAxisLabel(callback
                 .getSlotResolverDescription(SlotResolver.Y_COORDINATE_SLOT));
