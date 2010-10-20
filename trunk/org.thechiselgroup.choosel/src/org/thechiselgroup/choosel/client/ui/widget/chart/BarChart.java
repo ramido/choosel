@@ -348,10 +348,10 @@ public class BarChart extends ChartWidget {
                 .textAlign(baselineLabelTextAlign).bottom(baselineLabelLength)
                 .text(baselineLabelText);
 
-        // XXX text positioning broken (depending on text length)
         regularBar.anchor(Alignment.TOP).add(Label.createLabel())
                 .textAngle(-Math.PI / 2).textBaseline(Alignment.MIDDLE)
-                .textStyle(fullMarkTextStyle).text(fullMarkLabelText);
+                .textAlign(Alignment.RIGHT).textStyle(fullMarkTextStyle)
+                .text(fullMarkLabelText);
 
         highlightedBar = chart.add(Bar.createBar())
                 .data(ArrayUtils.toJsArray(chartItems)).bottom(barLineWidth)
@@ -361,8 +361,8 @@ public class BarChart extends ChartWidget {
                 .visible(isPartiallyHighlighted);
 
         highlightedBar.anchor(Alignment.TOP).add(Label.createLabel())
-                .textBaseline(Alignment.MIDDLE).text(highlightedMarkLabelText)
-                .textAngle(-Math.PI / 2);
+                .textBaseline(Alignment.MIDDLE).textAlign(Alignment.RIGHT)
+                .text(highlightedMarkLabelText).textAngle(-Math.PI / 2);
     }
 
     // TODO extract scale ticks # as property
