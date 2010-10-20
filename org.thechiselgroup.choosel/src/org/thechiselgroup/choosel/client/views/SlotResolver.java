@@ -50,9 +50,9 @@ public interface SlotResolver {
 
     Slot FONT_SIZE_SLOT = new Slot("font-size", "Font Size", DataType.NUMBER);
 
-    Slot X_COORDINATE_SLOT = new Slot("x-coord", "X", DataType.NUMBER);
+    Slot X_COORDINATE_SLOT = new Slot("x-coord", "X-Axis", DataType.NUMBER);
 
-    Slot Y_COORDINATE_SLOT = new Slot("y-coord", "Y", DataType.NUMBER);
+    Slot Y_COORDINATE_SLOT = new Slot("y-coord", "Y-Axis", DataType.NUMBER);
 
     ResourceToValueResolver createChartLabelSlotResolver(String category);
 
