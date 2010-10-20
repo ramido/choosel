@@ -40,7 +40,6 @@ import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RequiresResize;
@@ -67,16 +66,6 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
             itemLabels.add(label);
             updateTagSizes();
-
-            Element element = label.getElement();
-
-            // TODO CSS class
-            // if (tagCloud) {
-            // CSS.setDisplay(element, CSS.INLINE);
-            // CSS.setWhitespace(element, CSS.NOWRAP);
-            // CSS.setFloat(element, CSS.LEFT);
-            // CSS.setLineHeight(element, MAX_FONT_SIZE);
-            // }
 
             label.addMouseOverHandler(labelEventHandler);
             label.addMouseOutHandler(labelEventHandler);
@@ -212,13 +201,13 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
     private DoubleToGroupValueMapper<String> groupValueMapper;
 
-    private boolean tagCloud = false;
+    private boolean tagCloud = true;
 
     public TextViewContentDisplay(ResourceSetAvatarDragController dragController) {
         assert dragController != null;
 
         this.dragController = dragController;
-        this.display = new DefaultDisplay();
+        display = new DefaultDisplay();
 
         initGroupValueMapper();
     }
@@ -244,6 +233,8 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
         scrollPanel = new ResizableScrollPanel(itemPanel);
         scrollPanel.addStyleName(CSS_LIST_VIEW_SCROLLBAR);
+
+        display.setTagCloud(isTagCloud());
 
         return scrollPanel;
     }
@@ -273,7 +264,7 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     private void initGroupValueMapper() {
-        this.groupValueMapper = new DoubleToGroupValueMapper<String>(
+        groupValueMapper = new DoubleToGroupValueMapper<String>(
                 new EquidistantBinBoundaryCalculator(), CollectionUtils.toList(
                         "10px", "14px", "18px", "22px", "26px"));
     }

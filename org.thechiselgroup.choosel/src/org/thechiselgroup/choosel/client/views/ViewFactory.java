@@ -21,15 +21,12 @@ import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionCo
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_SET;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.DROP_TARGET_MANAGER_VIEW_CONTENT;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.LABEL_PROVIDER_SELECTION_SET;
-import static org.thechiselgroup.choosel.client.util.CollectionUtils.toSet;
 
 import java.util.List;
-import java.util.Set;
 
 import org.thechiselgroup.choosel.client.label.CategoryLabelProvider;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.resources.Resource;
-import org.thechiselgroup.choosel.client.resources.ResourceByPropertyMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
@@ -41,7 +38,6 @@ import org.thechiselgroup.choosel.client.ui.dnd.DropEnabledViewContentDisplay;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropTargetManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.util.CollectionUtils;
-import org.thechiselgroup.choosel.client.views.text.TextViewContentDisplay;
 import org.thechiselgroup.choosel.client.windows.WindowContent;
 import org.thechiselgroup.choosel.client.windows.WindowContentFactory;
 
@@ -143,36 +139,6 @@ public class ViewFactory implements WindowContentFactory {
 
         ViewContentDisplay contentDisplay = new DropEnabledViewContentDisplay(
                 viewContentDisplay, contentDropTargetManager);
-
-        // XXX Hack, this should be in some sort of configuration somewhere
-        if (viewContentDisplay instanceof TextViewContentDisplay) {
-            TextViewContentDisplay d = (TextViewContentDisplay) viewContentDisplay;
-
-            if (d.isTagCloud()) {
-                // XXX "tagContent" is from work item explorer
-                final ResourceByPropertyMultiCategorizer otherCategorizer = new ResourceByPropertyMultiCategorizer(
-                        "tagContent");
-
-                categorizer = new ResourceMultiCategorizer() {
-                    @Override
-                    public Set<String> getCategories(Resource resource) {
-                        String category = resourceByTypeCategorizer
-                                .getCategory(resource);
-
-                        if (category.equals("workitem")) {
-                            return toSet(getResourceTagsAsList(resource));
-                        }
-
-                        return otherCategorizer.getCategories(resource);
-                    }
-                };
-            }
-        }
-
-        // if (viewContentDisplay instanceof ChartViewContentDisplay) {
-        // categorizer = new ChartCategorizer(resourceByTypeCategorizer,
-        // "type");
-        // }
 
         ResourceSplitter resourceSplitter = new ResourceSplitter(categorizer,
                 resourceSetFactory);
