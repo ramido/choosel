@@ -176,8 +176,9 @@ public class ScatterPlot extends ChartWidget {
 
         chart.add(Rule.createRule()).data(scaleY.ticks()).bottom(scaleY)
                 .left(0).strokeStyle(scaleStrokeStyle).width(chartWidth)
-                .anchor(Alignment.LEFT).add(Label.createLabel())
-                .text(scaleLabelTextY);
+                .add(Label.createLabel()).text(scaleLabelTextY)
+                .textAngle(-Math.PI / 2).textAlign(Alignment.CENTER)
+                .textBaseline(Alignment.BOTTOM);
 
         chart.add(Rule.createRule()).height(chartHeight).bottom(0).left(0)
                 .strokeStyle(AXIS_SCALE_COLOR);

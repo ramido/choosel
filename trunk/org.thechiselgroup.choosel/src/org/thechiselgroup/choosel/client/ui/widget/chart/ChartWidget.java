@@ -232,7 +232,7 @@ public abstract class ChartWidget extends Widget {
     // XXX does not work for negative numbers
     // XXX works only for integers
     protected void calculateMaximumChartItemValue() {
-        this.maxChartItemValue = 0;
+        maxChartItemValue = 0;
         for (int i = 0; i < chartItems.size(); i++) {
             double currentItemValue = Double
                     .parseDouble(chartItems.get(i).getResourceItem()
@@ -371,6 +371,8 @@ public abstract class ChartWidget extends Widget {
         if (chartItems.size() == 0) {
             chart.height(height).width(width);
         } else {
+            // XXX this is problematic - it is not required for all charts, but
+            // makes them have to have a chart label slot
             Collections.sort(chartItems, new ChartItemComparator(
                     SlotResolver.CHART_LABEL_SLOT));
             drawChart();
