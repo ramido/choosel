@@ -35,8 +35,10 @@ public class ShareWorkspaceCommand implements AsyncCommand {
 
     @Override
     public void execute(AsyncCallback<Void> callback) {
-        String emailAddress = Window.prompt("Enter email address of person who"
-                + "should be invited to work on this workspace",
+        String emailAddress = Window.prompt(
+                // "Enter email address of person who "
+                // + "should be invited to work on this workspace",
+                "Please enter the email address of the collaborator:",
                 "example@example.org");
 
         if (emailAddress == null) {
@@ -49,5 +51,4 @@ public class ShareWorkspaceCommand implements AsyncCommand {
         persistenceManager.shareWorkspace(emailAddress,
                 new ForwardingAsyncCallback<Void>(callback));
     }
-
 }
