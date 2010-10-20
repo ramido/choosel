@@ -16,7 +16,7 @@
 package org.thechiselgroup.choosel.client.ui.widget.chart;
 
 import org.thechiselgroup.choosel.client.ui.Colors;
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Alignments;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Alignment;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Dot;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Label;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventHandler;
@@ -29,11 +29,15 @@ import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
 // TODO right side ticks
-public class ScatterChart extends ChartWidget {
+public class ScatterPlot extends ChartWidget {
 
-    private static final int BORDER_HEIGHT = 20;
+    private static final int BORDER_BOTTOM = 35;
 
-    private static final int BORDER_WIDTH = 20;
+    private static final int BORDER_TOP = 5;
+
+    private static final int BORDER_LEFT = 35;
+
+    private static final int BORDER_RIGHT = 5;
 
     private static final String GRIDLINE_SCALE_COLOR = Colors.GRAY_1;
 
@@ -145,8 +149,8 @@ public class ScatterChart extends ChartWidget {
     }
 
     private void calculateChartVariables() {
-        chartWidth = width - BORDER_WIDTH * 2;
-        chartHeight = height - BORDER_HEIGHT * 2;
+        chartWidth = width - BORDER_LEFT - BORDER_RIGHT;
+        chartHeight = height - BORDER_BOTTOM - BORDER_TOP;
     }
 
     @Override
@@ -167,12 +171,12 @@ public class ScatterChart extends ChartWidget {
     protected void drawScales(Scale scaleX, Scale scaleY) {
         chart.add(Rule.createRule()).data(scaleX.ticks()).bottom(0)
                 .left(scaleX).strokeStyle(scaleStrokeStyle).height(chartHeight)
-                .anchor(Alignments.BOTTOM).add(Label.createLabel())
+                .anchor(Alignment.BOTTOM).add(Label.createLabel())
                 .text(scaleLabelTextX);
 
         chart.add(Rule.createRule()).data(scaleY.ticks()).bottom(scaleY)
                 .left(0).strokeStyle(scaleStrokeStyle).width(chartWidth)
-                .anchor(Alignments.LEFT).add(Label.createLabel())
+                .anchor(Alignment.LEFT).add(Label.createLabel())
                 .text(scaleLabelTextY);
 
         chart.add(Rule.createRule()).height(chartHeight).bottom(0).left(0)
@@ -191,6 +195,14 @@ public class ScatterChart extends ChartWidget {
                 .size(Math.min(chartHeight, chartWidth)
                         / (chartItems.size() * 2)).fillStyle(chartFillStyle)
                 .strokeStyle(Colors.STEELBLUE);
+
+        // TODO calculate
+        chart.add(Label.createLabel()).bottom(-BORDER_BOTTOM + 5)
+                .left(chartWidth / 2).text("X-Axis")
+                .textAlign(Alignment.CENTER);
+        chart.add(Label.createLabel()).bottom(chartHeight / 2)
+                .left(-BORDER_LEFT + 20).text("Y-Axis").textAngle(-Math.PI / 2)
+                .textAlign(Alignment.CENTER);
     }
 
     @Override
@@ -200,6 +212,6 @@ public class ScatterChart extends ChartWidget {
     }
 
     private void setChartParameters() {
-        chart.left(BORDER_WIDTH).bottom(BORDER_HEIGHT);
+        chart.left(BORDER_LEFT).bottom(BORDER_BOTTOM);
     }
 }
