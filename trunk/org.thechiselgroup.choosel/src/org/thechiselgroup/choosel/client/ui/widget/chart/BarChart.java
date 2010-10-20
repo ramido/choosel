@@ -251,6 +251,8 @@ public class BarChart extends ChartWidget {
         }
     };
 
+    private String measurementLabel;
+
     @Override
     protected void beforeRender() {
         super.beforeRender();
@@ -285,6 +287,7 @@ public class BarChart extends ChartWidget {
             chart.left(BORDER_LEFT).bottom(BORDER_BOTTOM);
             Scale scale = Scale.linear(0, getMaximumChartItemValue()).range(0,
                     chartHeight);
+            // TODO axis label
             drawVerticalBarChart();
             drawVerticalBarScales(scale);
         } else {
@@ -292,6 +295,7 @@ public class BarChart extends ChartWidget {
                     BORDER_BOTTOM);
             Scale scale = Scale.linear(0, getMaximumChartItemValue()).range(0,
                     chartWidth);
+            drawHorizontalBarMeasurementAxisLabel();
             drawHorizontalBarChart();
             drawHorizontalBarScales(scale);
 
@@ -300,6 +304,12 @@ public class BarChart extends ChartWidget {
                 .strokeStyle(AXIS_SCALE_COLOR).lineWidth(barLineWidth);
         chart.add(Rule.createRule()).left(0).bottom(0).height(chartHeight)
                 .strokeStyle(AXIS_SCALE_COLOR).lineWidth(barLineWidth);
+    }
+
+    private void drawHorizontalBarMeasurementAxisLabel() {
+        chart.add(Label.createLabel()).bottom(-BORDER_BOTTOM + 5)
+                .left(chartWidth / 2).text(measurementLabel)
+                .textAlign(Alignment.CENTER);
     }
 
     private void drawHorizontalBarChart() {
@@ -379,6 +389,10 @@ public class BarChart extends ChartWidget {
                 .text(scaleLabelText);
     }
 
+    public String getMeasurementLabel() {
+        return measurementLabel;
+    }
+
     @Override
     protected void registerEventHandler(String eventType,
             ProtovisEventHandler handler) {
@@ -388,4 +402,9 @@ public class BarChart extends ChartWidget {
     public void setLayout(LayoutType layout) {
         this.layout = layout;
     }
+
+    public void setMeasurementLabel(String measurementLabel) {
+        this.measurementLabel = measurementLabel;
+    }
+
 }
