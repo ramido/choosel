@@ -69,9 +69,13 @@ public class BarChart extends ChartWidget {
 
     }
 
-    private static final int BORDER_HEIGHT = 20;
+    private static final int BORDER_BOTTOM = 35;
 
-    private static final int BORDER_WIDTH = 20;
+    private static final int BORDER_LEFT = 45;
+
+    private static final int BORDER_TOP = 5;
+
+    private static final int BORDER_RIGHT = 5;
 
     private static final String GRIDLINE_SCALE_COLOR = "rgba(255,255,255,.3)";
 
@@ -81,6 +85,8 @@ public class BarChart extends ChartWidget {
 
     private double[] regularValues;
 
+    // TODO semantic meaning (bar length etc) --> makes different settings
+    // easier
     protected int chartHeight;
 
     protected int chartWidth;
@@ -201,8 +207,6 @@ public class BarChart extends ChartWidget {
         }
     };
 
-    private String baselineLabelTextAlign = Alignment.CENTER;
-
     private int baselineLabelLength = -15;
 
     private ProtovisFunctionString baselineLabelText = new ProtovisFunctionString() {
@@ -256,12 +260,13 @@ public class BarChart extends ChartWidget {
 
     private void calculateChartVariables() {
         if (layout.isVerticalBarChart(chartHeight, chartWidth)) {
-            chartWidth = width - BORDER_WIDTH * 2;
+            chartWidth = width - BORDER_LEFT - BORDER_RIGHT;
         } else {
-            chartWidth = width - BORDER_WIDTH * 2
+            chartWidth = width - BORDER_LEFT - BORDER_RIGHT
                     - HORIZONTAL_BAR_LABEL_EXTRA_MARGIN;
         }
-        chartHeight = height - BORDER_HEIGHT * 2;
+
+        chartHeight = height - BORDER_BOTTOM - BORDER_TOP;
     }
 
     private double calculateLength(double value) {
@@ -277,14 +282,14 @@ public class BarChart extends ChartWidget {
         calculateMaximumChartItemValue();
 
         if (layout.isVerticalBarChart(chartHeight, chartWidth)) {
-            chart.left(BORDER_WIDTH).bottom(BORDER_HEIGHT);
+            chart.left(BORDER_LEFT).bottom(BORDER_BOTTOM);
             Scale scale = Scale.linear(0, getMaximumChartItemValue()).range(0,
                     chartHeight);
             drawVerticalBarChart();
             drawVerticalBarScales(scale);
         } else {
-            chart.left(BORDER_WIDTH + HORIZONTAL_BAR_LABEL_EXTRA_MARGIN)
-                    .bottom(BORDER_HEIGHT);
+            chart.left(BORDER_LEFT + HORIZONTAL_BAR_LABEL_EXTRA_MARGIN).bottom(
+                    BORDER_BOTTOM);
             Scale scale = Scale.linear(0, getMaximumChartItemValue()).range(0,
                     chartWidth);
             drawHorizontalBarChart();
@@ -305,8 +310,8 @@ public class BarChart extends ChartWidget {
                 .lineWidth(barLineWidth);
 
         regularBar.add(Label.createLabel()).bottom(baselineLabelStart)
-                .textAlign(baselineLabelTextAlign).left(baselineLabelLength)
-                .text(baselineLabelText).textBaseline(Alignment.MIDDLE);
+                .textAlign(Alignment.RIGHT).left(0).text(baselineLabelText)
+                .textBaseline(Alignment.MIDDLE);
 
         /*
          * TODO adjust label position if label not visible (bar too short or
@@ -345,7 +350,7 @@ public class BarChart extends ChartWidget {
                 .strokeStyle(Colors.STEELBLUE).lineWidth(barLineWidth);
 
         regularBar.add(Label.createLabel()).left(baselineLabelStart)
-                .textAlign(baselineLabelTextAlign).bottom(baselineLabelLength)
+                .textAlign(Alignment.CENTER).bottom(baselineLabelLength)
                 .text(baselineLabelText);
 
         regularBar.anchor(Alignment.TOP).add(Label.createLabel())
