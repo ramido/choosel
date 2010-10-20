@@ -39,6 +39,8 @@ public interface ViewContentDisplayCallback {
 
     List<ResourceItem> getResourceItems(Resource resource);
 
+    String getSlotResolverDescription(Slot slot);
+
     void putResolver(Slot slot, ResourceSetToValueResolver resolver);
 
     void setCategorizer(ResourceMultiCategorizer categorizer);

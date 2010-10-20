@@ -56,4 +56,9 @@ public class CalculationResourceSetToValueResolver implements
         }
         return values;
     }
+
+    @Override
+    public String toString() {
+        return calculation.toString() + " " + propertyName;
+    }
 }
