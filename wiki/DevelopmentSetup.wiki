@@ -12,6 +12,7 @@
 We recommend using [http://www.eclipse.org Eclipse] for working on Choosel. The following setup is known to work:
 
    * [http://www.eclipse.org/downloads/packages/eclipse-ide-java-developers/heliosr Eclipse IDE for Java Developers 3.6 (Helios)]
+      * Make sure that the version of Eclipse works with the Java version (e.g. 64bit Eclipse with 64bit Java, or 32bit/32bit)
    * Subversion Plugin for Eclipse (you can use Help-->Eclipse Marketplace to install it)
       * [http://www.eclipse.org/subversive/downloads.php Subversive]
       * [http://www.polarion.com/products/svn/subversive/download.php Team Providers]
