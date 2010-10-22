@@ -15,6 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.widget.chart;
 
+import java.util.Collections;
+
 import org.thechiselgroup.choosel.client.ui.Colors;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Alignment;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Bar;
@@ -300,6 +302,9 @@ public class BarChart extends ChartWidget {
     @Override
     public void drawChart() {
         assert chartItems.size() >= 1;
+
+        Collections.sort(chartItems, new ChartItemComparator(
+                SlotResolver.CHART_LABEL_SLOT));
 
         calculateChartVariables();
         calculateMaximumChartItemValue();

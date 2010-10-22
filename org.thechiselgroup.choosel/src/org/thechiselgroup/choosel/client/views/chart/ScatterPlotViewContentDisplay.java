@@ -42,7 +42,7 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
     @Override
     public Slot[] getSlots() {
         return new Slot[] { SlotResolver.X_COORDINATE_SLOT,
-                SlotResolver.Y_COORDINATE_SLOT, SlotResolver.CHART_LABEL_SLOT };
+                SlotResolver.Y_COORDINATE_SLOT };
     }
 
     @Override
