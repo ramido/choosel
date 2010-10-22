@@ -26,6 +26,7 @@ import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFuncti
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionStringToString;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Scale;
 import org.thechiselgroup.choosel.client.util.MathUtils;
+import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
 import org.thechiselgroup.choosel.client.views.ResourceItem.Subset;
 import org.thechiselgroup.choosel.client.views.Slot;
@@ -192,9 +193,8 @@ public abstract class ChartWidget extends Widget {
     protected double calculateChartItemValue(int chartItemIndex, Slot slot,
             Subset subset) {
 
-        // TODO remove conversion
-        return Double.parseDouble(chartItems.get(chartItemIndex)
-                .getResourceItem().getResourceValue(slot, subset).toString());
+        return (Double) getResourceItem(chartItemIndex).getResourceValue(slot,
+                subset);
     }
 
     protected double calculateHighlightedResources(int i) {
@@ -203,8 +203,7 @@ public abstract class ChartWidget extends Widget {
     }
 
     protected int calculateHighlightedSelectedResources(int i) {
-        return chartItems.get(i).getResourceItem()
-                .getHighlightedSelectedResources().size();
+        return getResourceItem(i).getHighlightedSelectedResources().size();
     }
 
     // TODO different slots
@@ -213,10 +212,7 @@ public abstract class ChartWidget extends Widget {
     protected void calculateMaximumChartItemValue() {
         maxChartItemValue = 0;
         for (int i = 0; i < chartItems.size(); i++) {
-            double currentItemValue = Double
-                    .parseDouble(chartItems.get(i).getResourceItem()
-                            .getResourceValue(SlotResolver.CHART_VALUE_SLOT)
-                            .toString());
+            double currentItemValue = calculateAllResources(i);
             if (maxChartItemValue < currentItemValue) {
                 maxChartItemValue = currentItemValue;
             }
@@ -224,10 +220,8 @@ public abstract class ChartWidget extends Widget {
     }
 
     protected int calculateSelectedResources(int i) {
-        return chartItems.get(i).getResourceItem().getSelectedResources()
-                .size()
-                - chartItems.get(i).getResourceItem()
-                        .getHighlightedSelectedResources().size();
+        return getResourceItem(i).getSelectedResources().size()
+                - getResourceItem(i).getHighlightedSelectedResources().size();
     }
 
     public void checkResize() {
@@ -254,13 +248,16 @@ public abstract class ChartWidget extends Widget {
         return maxChartItemValue;
     }
 
+    protected ResourceItem getResourceItem(int chartItemIndex) {
+        return chartItems.get(chartItemIndex).getResourceItem();
+    }
+
     // XXX not called anywhere
     protected SlotValues getSlotValues(Slot slot) {
         double[] slotValues = new double[chartItems.size()];
 
         for (int i = 0; i < chartItems.size(); i++) {
-            Object value = chartItems.get(i).getResourceItem()
-                    .getResourceValue(slot);
+            Object value = getResourceItem(i).getResourceValue(slot);
 
             if (value instanceof Double) {
                 slotValues[i] = (Double) value;
