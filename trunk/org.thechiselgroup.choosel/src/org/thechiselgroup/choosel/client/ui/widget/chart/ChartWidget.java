@@ -16,8 +16,6 @@
 package org.thechiselgroup.choosel.client.ui.widget.chart;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import org.thechiselgroup.choosel.client.ui.Colors;
@@ -43,25 +41,6 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Lars Grammel
  */
 public abstract class ChartWidget extends Widget {
-
-    public static class ChartItemComparator implements Comparator<ChartItem> {
-
-        private Slot slot;
-
-        public ChartItemComparator(Slot slot) {
-            this.slot = slot;
-        }
-
-        @Override
-        public int compare(ChartItem item1, ChartItem item2) {
-            return getDescriptionString(item1).compareTo(
-                    getDescriptionString(item2));
-        }
-
-        private String getDescriptionString(ChartItem item) {
-            return item.getResourceItem().getResourceValue(slot).toString();
-        }
-    }
 
     // TODO move to library
     public static String formatDecimal(double value, int decimalPlaces) {
@@ -371,10 +350,6 @@ public abstract class ChartWidget extends Widget {
         if (chartItems.size() == 0) {
             chart.height(height).width(width);
         } else {
-            // XXX this is problematic - it is not required for all charts, but
-            // makes them have to have a chart label slot
-            Collections.sort(chartItems, new ChartItemComparator(
-                    SlotResolver.CHART_LABEL_SLOT));
             drawChart();
             registerEventHandlers();
         }
