@@ -29,12 +29,13 @@ public class TextItem {
     public class TextItemLabel extends ResourceSetAvatar implements
             DragProxyEventReceiver {
 
-        private int tagCount;
+        private double fontSizeValue;
 
         public TextItemLabel(String text,
                 ResourceSetAvatarDragController dragController,
                 ResourceSet resources) {
 
+            // TODO extract CSS
             super(text, "avatar-resourceSet", resources,
                     ResourceSetAvatarType.SET);
 
@@ -58,12 +59,12 @@ public class TextItem {
         public void dragProxyDetached() {
         }
 
-        public TextItem getTagCloudItem() {
-            return TextItem.this;
+        public double getFontSizeValue() {
+            return fontSizeValue;
         }
 
-        public int getTagCount() {
-            return tagCount;
+        public TextItem getTextItem() {
+            return TextItem.this;
         }
 
         @Override
@@ -71,11 +72,11 @@ public class TextItem {
             super.setEnabled(dragEnabled);
 
             removeStyleName(CSS_AVATAR_DISABLED);
-            removeStyleName("avatar-resourceSet");
+            removeStyleName("avatar-resourceSet"); // TODO extract CSS
         }
 
-        public void setTagCount(int tagCount) {
-            this.tagCount = tagCount;
+        public void setFontSizeValue(double value) {
+            fontSizeValue = value;
         }
     }
 
@@ -117,9 +118,9 @@ public class TextItem {
     }
 
     public void init() {
-        this.label = new TextItemLabel("", dragController,
+        label = new TextItemLabel("", dragController,
                 resourceItem.getResourceSet());
-        this.label.addStyleName(CSS_LIST);
+        label.addStyleName(CSS_LIST);
 
         DefaultPopupManager.linkManagerToSource(resourceItem.getPopupManager(),
                 getLabel());
@@ -128,16 +129,19 @@ public class TextItem {
     }
 
     public void updateContent() {
+        // TODO what is this for
         if (label == null) {
             return;
         }
-        String description = (String) resourceItem
-                .getResourceValue(SlotResolver.DESCRIPTION_SLOT);
-        int tagCount = (int) Double.parseDouble((String) resourceItem
-                .getResourceValue(SlotResolver.FONT_SIZE_SLOT));
 
-        this.label.setText(description);
-        this.label.setTagCount(tagCount);
+        String text = (String) resourceItem
+                .getResourceValue(SlotResolver.DESCRIPTION_SLOT);
+        label.setText(text);
+
+        double fontSizeValue = ((Double) resourceItem
+                .getResourceValue(SlotResolver.FONT_SIZE_SLOT)).doubleValue();
+
+        label.setFontSizeValue(fontSizeValue);
     }
 
     public void updateStatusStyling() {

@@ -56,7 +56,7 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
         private List<TextItemLabel> itemLabels = new ArrayList<TextItemLabel>();
 
-        private List<String> tagCloudItems = new ArrayList<String>();
+        private List<String> textItems = new ArrayList<String>();
 
         @Override
         public void addItem(TextItem textItem) {
@@ -65,7 +65,6 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
             TextItemLabel label = textItem.getLabel();
 
             itemLabels.add(label);
-            updateTagSizes();
 
             label.addMouseOverHandler(labelEventHandler);
             label.addMouseOutHandler(labelEventHandler);
@@ -73,9 +72,10 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
             // insert at right position to maintain sort..
             // TODO cleanup - performance issues
-            tagCloudItems.add(label.getText());
-            Collections.sort(tagCloudItems, String.CASE_INSENSITIVE_ORDER);
-            int row = tagCloudItems.indexOf(label.getText());
+            // XXX does not update when properties change
+            textItems.add(label.getText());
+            Collections.sort(textItems, String.CASE_INSENSITIVE_ORDER);
+            int row = textItems.indexOf(label.getText());
             itemPanel.insert(label, row);
         }
 
@@ -84,32 +84,34 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
             textItem.getLabel().addStyleName(cssClass);
         }
 
-        private List<Double> getTagSizesList() {
-            List<Double> tagNumbers = new ArrayList<Double>();
-            for (TextItemLabel itemLabel : itemLabels) {
-                tagNumbers.add(new Double(itemLabel.getTagCount()));
+        private List<Double> getFontSizeValues() {
+            List<Double> fontSizeValues = new ArrayList<Double>();
+            for (TextItemLabel textItemLabel : itemLabels) {
+                fontSizeValues.add(textItemLabel.getFontSizeValue());
             }
-            return tagNumbers;
-        }
-
-        @Override
-        public void removeIndividualItem(TextItem textItem) {
-            /*
-             * whole row needs to be removed, otherwise lots of empty rows
-             * consume the whitespace
-             */
-            for (int i = 0; i < itemPanel.getWidgetCount(); i++) {
-                if (itemPanel.getWidget(i).equals(textItem.getLabel())) {
-                    itemPanel.remove(i);
-                    tagCloudItems.remove(i);
-                    return;
-                }
-            }
+            return fontSizeValues;
         }
 
         @Override
         public void removeStyleName(TextItem textItem, String cssClass) {
             textItem.getLabel().removeStyleName(cssClass);
+        }
+
+        @Override
+        public void removeTextItem(TextItem textItem) {
+            /*
+             * whole row needs to be removed, otherwise lots of empty rows
+             * consume the whitespace
+             */
+            for (int i = 0; i < itemPanel.getWidgetCount(); i++) {
+                TextItemLabel label = textItem.getLabel();
+                itemLabels.remove(label);
+                if (itemPanel.getWidget(i).equals(label)) {
+                    itemPanel.remove(i);
+                    textItems.remove(i);
+                    return;
+                }
+            }
         }
 
         @Override
@@ -122,12 +124,12 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
         }
 
         @Override
-        public void updateTagSizes() {
-            List<Double> tagNumbers = getTagSizesList();
+        public void updateFontSizes() {
+            List<Double> fontSizeValues = getFontSizeValues();
 
             for (TextItemLabel itemLabel : itemLabels) {
                 String fontSize = groupValueMapper.getGroupValue(
-                        itemLabel.getTagCount(), tagNumbers);
+                        itemLabel.getFontSizeValue(), fontSizeValues);
 
                 CSS.setFontSize(itemLabel.getElement(), fontSize);
             }
@@ -140,13 +142,13 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
         void addStyleName(TextItem textItem, String cssClass);
 
-        void removeIndividualItem(TextItem textItem);
-
         void removeStyleName(TextItem textItem, String cssClass);
+
+        void removeTextItem(TextItem textItem);
 
         void setTagCloud(boolean tagCloud);
 
-        void updateTagSizes();
+        void updateFontSizes();
 
     }
 
@@ -158,7 +160,7 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
         }
 
         private ResourceItem getResourceItem(GwtEvent<?> event) {
-            return ((TextItemLabel) event.getSource()).getTagCloudItem()
+            return ((TextItemLabel) event.getSource()).getTextItem()
                     .getResourceItem();
         }
 
@@ -243,16 +245,17 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
     public Widget getConfigurationWidget() {
         FlowPanel panel = new FlowPanel();
 
-        final CheckBox tagCloudBox = new CheckBox("One item per row");
-        tagCloudBox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+        final CheckBox oneItemPerRowBox = new CheckBox("One item per row");
+        oneItemPerRowBox
+                .addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 
-            @Override
-            public void onValueChange(ValueChangeEvent<Boolean> event) {
-                setTagCloud(!tagCloudBox.getValue());
-            }
+                    @Override
+                    public void onValueChange(ValueChangeEvent<Boolean> event) {
+                        setTagCloud(!oneItemPerRowBox.getValue());
+                    }
 
-        });
-        panel.add(tagCloudBox);
+                });
+        panel.add(oneItemPerRowBox);
 
         return panel;
     }
@@ -313,17 +316,18 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
         }
 
         for (ResourceItem resourceItem : removedResourceItems) {
-            display.removeIndividualItem((TextItem) resourceItem
-                    .getDisplayObject());
+            display.removeTextItem((TextItem) resourceItem.getDisplayObject());
         }
 
-        if (changedSlots.contains(SlotResolver.FONT_SIZE_SLOT)) {
+        if (!changedSlots.isEmpty()) {
             for (ResourceItem resourceItem : callback.getAllResourceItems()) {
                 TextItem textItem = (TextItem) resourceItem.getDisplayObject();
                 textItem.updateContent();
-                display.updateTagSizes();
             }
+
         }
+
+        display.updateFontSizes();
 
     }
 }

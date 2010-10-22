@@ -38,8 +38,8 @@ public class CalculationResourceSetToValueResolver implements
     }
 
     @Override
-    public Object resolve(ResourceSet resources, String category) {
-        return Double.toString(calculation.calculate(toDoubleArray(resources)));
+    public Double resolve(ResourceSet resources, String category) {
+        return calculation.calculate(toDoubleArray(resources));
     }
 
     private double[] toDoubleArray(ResourceSet resources) {
