@@ -72,6 +72,7 @@ public class ChooselExampleApplication extends ChooselApplication {
                     TYPE_TIME);
             addCreateWindowActionToToolbar(DEVELOPER_MODE_PANEL, "Dot",
                     TYPE_DOT);
+            addCreateWindowActionToToolbar(VIEWS_PANEL, "Pie Chart", TYPE_PIE);
         }
 
         addCreateWindowActionToToolbar(VIEWS_PANEL, "Note", WINDOW_CONTENT_NOTE);
@@ -79,7 +80,6 @@ public class ChooselExampleApplication extends ChooselApplication {
         addCreateWindowActionToToolbar(VIEWS_PANEL, "Map", TYPE_MAP);
         addCreateWindowActionToToolbar(VIEWS_PANEL, "Timeline", TYPE_TIMELINE);
         addCreateWindowActionToToolbar(VIEWS_PANEL, "Bar Chart", TYPE_BAR);
-        addCreateWindowActionToToolbar(VIEWS_PANEL, "Pie Chart", TYPE_PIE);
         addCreateWindowActionToToolbar(VIEWS_PANEL, "Scatter Plot",
                 TYPE_SCATTER);
 
@@ -92,5 +92,15 @@ public class ChooselExampleApplication extends ChooselApplication {
     protected void initCustomPanels() {
         addToolbarPanel(DATA_PANEL, "Data");
         addToolbarPanel(VIEWS_PANEL, "Views");
+    }
+
+    @Override
+    protected void initWorkspacePanel() {
+        initNewWorkspaceAction();
+        if (runsInDevelopmentMode()) {
+            initLoadWorkspaceAction();
+            initSaveWorkspaceAction();
+            initShareWorkspaceAction();
+        }
     }
 }
