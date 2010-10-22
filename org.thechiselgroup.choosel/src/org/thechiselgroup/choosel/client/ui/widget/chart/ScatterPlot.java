@@ -135,7 +135,6 @@ public class ScatterPlot extends ChartWidget {
 
     @Override
     protected void beforeRender() {
-        super.beforeRender();
         scatterBottom.beforeRender();
         scatterLeft.beforeRender();
     }

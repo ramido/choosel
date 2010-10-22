@@ -236,19 +236,16 @@ public class DefaultView extends AbstractWindowContent implements View {
     private PopupManager createPopupManager(ResourceItemValueResolver resolver,
             ResourceSet resources) {
 
-        return createPopupManager(resources,
-                resolver.getResourceSetResolver(SlotResolver.DESCRIPTION_SLOT));
+        return createPopupManager(resources);
     }
 
     // for test
-    protected PopupManager createPopupManager(final ResourceSet resources,
-            final ResourceSetToValueResolver resolver) {
-
+    protected PopupManager createPopupManager(final ResourceSet resources) {
         WidgetFactory widgetFactory = new WidgetFactory() {
             @Override
             public Widget createWidget() {
                 return detailsWidgetHelper.createDetailsWidget(resources,
-                        resolver);
+                        configuration);
             }
         };
 
@@ -839,6 +836,23 @@ public class DefaultView extends AbstractWindowContent implements View {
                             }
                         });
             }
+        }
+
+        /*
+         * TODO flexibility TODO move
+         */
+        if (Arrays.asList(contentDisplay.getSlots()).contains(
+                SlotResolver.COLOR_SLOT)) {
+
+            configuration.put(SlotResolver.COLOR_SLOT,
+                    new ResourceSetToValueResolver() {
+                        @Override
+                        public Object resolve(ResourceSet resources,
+                                String category) {
+
+                            return "#6495ed";
+                        }
+                    });
         }
 
         /*

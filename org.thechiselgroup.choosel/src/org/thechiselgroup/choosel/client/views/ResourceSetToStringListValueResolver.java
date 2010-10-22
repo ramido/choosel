@@ -27,9 +27,8 @@ public class ResourceSetToStringListValueResolver extends
         AbstractResourceSetToValueResolver {
 
     public ResourceSetToStringListValueResolver(Slot slot,
-            DefaultResourceToValueResolverFactory factory,
             ResourceCategorizer categorizer) {
-        super(slot, factory, categorizer);
+        super(slot, categorizer);
     }
 
     @Override

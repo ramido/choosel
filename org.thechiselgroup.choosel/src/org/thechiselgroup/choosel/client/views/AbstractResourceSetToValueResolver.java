@@ -28,29 +28,21 @@ public abstract class AbstractResourceSetToValueResolver implements
 
     protected ResourceCategorizer categorizer;
 
-    private DefaultResourceToValueResolverFactory factory;
 
     protected Map<String, ResourceToValueResolver> resourceTypeToResourceToValueResolvers = new HashMap<String, ResourceToValueResolver>();
 
     private Slot slot;
 
     public AbstractResourceSetToValueResolver(Slot slot,
-            DefaultResourceToValueResolverFactory factory,
             ResourceCategorizer categorizer) {
 
         this.slot = slot;
-        this.factory = factory;
         this.categorizer = categorizer;
     }
 
     private ResourceToValueResolver getResourceToValueResolver(
             String resourceType) {
 
-        if (!resourceTypeToResourceToValueResolvers.containsKey(resourceType)) {
-
-            resourceTypeToResourceToValueResolvers.put(resourceType,
-                    factory.createResolver(slot, resourceType));
-        }
 
         return resourceTypeToResourceToValueResolvers.get(resourceType);
     }
