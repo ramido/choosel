@@ -73,4 +73,10 @@ public class Slot {
         return 31 + ((id == null) ? 0 : id.hashCode());
     }
 
+    @Override
+    public String toString() {
+        return "Slot [id=" + id + ", name=" + name + ", dataType=" + dataType
+                + "]";
+    }
+
 }

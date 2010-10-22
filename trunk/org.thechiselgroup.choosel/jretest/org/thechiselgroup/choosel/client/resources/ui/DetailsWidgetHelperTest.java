@@ -29,10 +29,11 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
+import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
+import org.thechiselgroup.choosel.client.views.Slot;
 
 public class DetailsWidgetHelperTest {
 
@@ -43,7 +44,7 @@ public class DetailsWidgetHelperTest {
     private ResourceSetAvatarFactory avatarFactory;
 
     @Mock
-    private ResourceSetToValueResolver resolver;
+    private ResourceItemValueResolver resolver;
 
     @Mock
     private ResourceSet resourceSet;
@@ -79,8 +80,9 @@ public class DetailsWidgetHelperTest {
 
         when(avatarFactory.createAvatar(any(ResourceSet.class))).thenReturn(
                 avatar);
-        when(resolver.resolve(any(ResourceSet.class), any(String.class)))
-                .thenReturn("");
+        when(
+                resolver.resolve(any(Slot.class), any(String.class),
+                        any(ResourceSet.class))).thenReturn("");
         when(resourceSetFactory.createResourceSet()).thenReturn(resourceSet);
     }
 

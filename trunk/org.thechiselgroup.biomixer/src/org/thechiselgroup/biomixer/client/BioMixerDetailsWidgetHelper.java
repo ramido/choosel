@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.biomixer.client;
 
-import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
@@ -23,6 +22,7 @@ import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarType;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
+import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.HTML;
@@ -42,7 +42,7 @@ public class BioMixerDetailsWidgetHelper extends DetailsWidgetHelper {
     // TODO use dragAvatarFactory (injection)
     @Override
     public Widget createDetailsWidget(ResourceSet resourceSet,
-            ResourceSetToValueResolver resolver) {
+            ResourceItemValueResolver resolver) {
 
         VerticalPanel verticalPanel = GWT.create(VerticalPanel.class);
 
@@ -91,7 +91,7 @@ public class BioMixerDetailsWidgetHelper extends DetailsWidgetHelper {
         } else {
             verticalPanel.add(avatarFactory.createAvatar(resourceSet));
 
-            String value = resolver.resolve(resourceSet, "").toString();
+            String value = "";
             HTML html = GWT.create(HTML.class);
             html.setHTML(value);
             verticalPanel.add(html);

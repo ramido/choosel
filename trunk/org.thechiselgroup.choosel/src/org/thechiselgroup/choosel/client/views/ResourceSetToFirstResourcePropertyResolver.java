@@ -22,9 +22,8 @@ public class ResourceSetToFirstResourcePropertyResolver extends
         AbstractResourceSetToValueResolver {
 
     public ResourceSetToFirstResourcePropertyResolver(Slot slot,
-            DefaultResourceToValueResolverFactory factory,
             ResourceCategorizer categorizer) {
-        super(slot, factory, categorizer);
+        super(slot, categorizer);
     }
 
     @Override

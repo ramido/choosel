@@ -46,7 +46,6 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceByUriTypeCategorizer;
@@ -84,8 +83,7 @@ public class DefaultViewTest {
         }
 
         @Override
-        protected PopupManager createPopupManager(ResourceSet resources,
-                ResourceSetToValueResolver resolver) {
+        protected PopupManager createPopupManager(ResourceSet resources) {
 
             return popupManager;
         }

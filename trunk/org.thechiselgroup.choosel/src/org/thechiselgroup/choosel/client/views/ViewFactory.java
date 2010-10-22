@@ -22,12 +22,8 @@ import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionCo
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.DROP_TARGET_MANAGER_VIEW_CONTENT;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.LABEL_PROVIDER_SELECTION_SET;
 
-import java.util.List;
-
 import org.thechiselgroup.choosel.client.label.CategoryLabelProvider;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
-import org.thechiselgroup.choosel.client.resources.Resource;
-import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ResourceSplitter;
@@ -37,19 +33,12 @@ import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceS
 import org.thechiselgroup.choosel.client.ui.dnd.DropEnabledViewContentDisplay;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropTargetManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
-import org.thechiselgroup.choosel.client.util.CollectionUtils;
 import org.thechiselgroup.choosel.client.windows.WindowContent;
 import org.thechiselgroup.choosel.client.windows.WindowContentFactory;
 
 import com.google.inject.name.Named;
 
 public class ViewFactory implements WindowContentFactory {
-
-    // XXX hack TODO remove
-    private static List<String> getResourceTagsAsList(Resource workitemResource) {
-        String tagStr = (String) workitemResource.getValue("subject");
-        return CollectionUtils.splitStringToList(tagStr, ",");
-    }
 
     private ResourceSetAvatarFactory allResourcesDragAvatarFactory;
 
@@ -63,8 +52,6 @@ public class ViewFactory implements WindowContentFactory {
 
     private ResourceSetFactory resourceSetFactory;
 
-    private DefaultResourceSetToValueResolverFactory resourceSetToValueResolverFactory;
-
     private ResourceSetAvatarFactory selectionDragAvatarFactory;
 
     private LabelProvider selectionModelLabelFactory;
@@ -74,8 +61,6 @@ public class ViewFactory implements WindowContentFactory {
     private ViewContentDisplayFactory viewContentDisplayFactory;
 
     private HoverModel hoverModel;
-
-    private ResourceCategorizer resourceByTypeCategorizer;
 
     private final PopupManagerFactory popupManagerFactory;
 
@@ -93,8 +78,6 @@ public class ViewFactory implements WindowContentFactory {
             ResourceMultiCategorizer categorizer,
             CategoryLabelProvider labelProvider,
             @Named(DROP_TARGET_MANAGER_VIEW_CONTENT) ResourceSetAvatarDropTargetManager contentDropTargetManager,
-            DefaultResourceSetToValueResolverFactory resourceSetToValueResolverFactory,
-            ResourceCategorizer resourceByTypeCategorizer,
             HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
             DetailsWidgetHelper detailsWidgetHelper) {
 
@@ -109,9 +92,7 @@ public class ViewFactory implements WindowContentFactory {
         assert selectionModelLabelFactory != null;
         assert categorizer != null;
         assert labelProvider != null;
-        assert resourceSetToValueResolverFactory != null;
         assert hoverModel != null;
-        assert resourceByTypeCategorizer != null;
         assert popupManagerFactory != null;
         assert detailsWidgetHelper != null;
 
@@ -126,8 +107,6 @@ public class ViewFactory implements WindowContentFactory {
         this.resourceSetFactory = resourceSetFactory;
         this.selectionModelLabelFactory = selectionModelLabelFactory;
         this.categorizer = categorizer;
-        this.resourceByTypeCategorizer = resourceByTypeCategorizer;
-        this.resourceSetToValueResolverFactory = resourceSetToValueResolverFactory;
         this.popupManagerFactory = popupManagerFactory;
         this.detailsWidgetHelper = detailsWidgetHelper;
     }
@@ -142,9 +121,6 @@ public class ViewFactory implements WindowContentFactory {
 
         ResourceSplitter resourceSplitter = new ResourceSplitter(categorizer,
                 resourceSetFactory);
-
-        ResourceItemValueResolver configuration = new ResourceItemValueResolver(
-                resourceSetToValueResolverFactory);
 
         ResourceModel resourceModel = new DefaultResourceModel(
                 resourceSetFactory);
@@ -164,7 +140,7 @@ public class ViewFactory implements WindowContentFactory {
                         selectionDragAvatarFactory), selectionModel);
 
         return new DefaultView(resourceSplitter, contentDisplay, contentType,
-                contentType, configuration, selectionModel,
+                contentType, new ResourceItemValueResolver(), selectionModel,
                 selectionModelPresenter, resourceModel, resourceModelPresenter,
                 hoverModel, popupManagerFactory, detailsWidgetHelper);
     }

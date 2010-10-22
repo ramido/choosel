@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.chooselexample.client;
 
-import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
@@ -25,6 +24,7 @@ import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarType;
 import org.thechiselgroup.choosel.client.ui.CSS;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
+import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.HTML;
@@ -44,7 +44,7 @@ public class ChooselExampleDetailsWidgetHelper extends DetailsWidgetHelper {
 
     @Override
     public Widget createDetailsWidget(ResourceSet resources,
-            ResourceSetToValueResolver resolver) {
+            ResourceItemValueResolver resolver) {
 
         VerticalPanel verticalPanel = GWT.create(VerticalPanel.class);
 

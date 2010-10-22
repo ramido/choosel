@@ -23,22 +23,14 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
 public class ResourceItemValueResolver {
 
-    private DefaultResourceSetToValueResolverFactory resourceSetResolverFactory;
-
     private Map<Slot, ResourceSetToValueResolver> slotsToValueResolvers = new HashMap<Slot, ResourceSetToValueResolver>();
-
-    public ResourceItemValueResolver(
-            DefaultResourceSetToValueResolverFactory resourceSetResolverFactory) {
-        this.resourceSetResolverFactory = resourceSetResolverFactory;
-    }
 
     // TODO search for calls from outside this class and remove
     public ResourceSetToValueResolver getResourceSetResolver(Slot slot) {
         assert slot != null;
 
         if (!slotsToValueResolvers.containsKey(slot)) {
-            slotsToValueResolvers.put(slot,
-                    resourceSetResolverFactory.createResolver(slot));
+            throw new IllegalArgumentException("no resolver for " + slot);
         }
 
         return slotsToValueResolvers.get(slot);
