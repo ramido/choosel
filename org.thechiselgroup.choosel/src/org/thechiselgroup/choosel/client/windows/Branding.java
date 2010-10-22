@@ -17,6 +17,8 @@ package org.thechiselgroup.choosel.client.windows;
 
 public interface Branding {
 
+    String getAboutDialogContentHTML();
+
     String getApplicationTitle();
 
     String getCopyright();
