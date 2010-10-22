@@ -102,7 +102,6 @@ public class FeedbackDialog extends AbstractDialog {
         commentArea.setStyleName(CSS_FEEDBACK_COMMENTS);
 
         panel.add(commentArea);
-        panel.setCellWidth(commentArea, "100%");
 
         return panel;
     }
