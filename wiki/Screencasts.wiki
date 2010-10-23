@@ -1,7 +1,7 @@
 #summary Choosel screencasts
 
-==Teaser for VisWeek Poster 2010==
-[http://vimeo.com/16109235]
+==Teaser for !VisWeek Poster 2010==
+On Vimeo: [http://vimeo.com/16109235]
 
 ==Screencast - Timeline and Basic Features==
 <wiki:video url="http://www.youtube.com/v/Oz4uV6a7__0" width="517" height="480"/>
