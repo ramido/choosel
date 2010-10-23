@@ -1,6 +1,6 @@
 #summary Choosel screencasts
 
-`<iframe src="http://player.vimeo.com/video/16109235?portrait=0" width="1280" height="720" frameborder="0">``</iframe>`
+<wiki:video url="http://player.vimeo.com/video/16109235?portrait=0" width="1280" height="720" />
 
 ==Screencast - Timeline and Basic Features==
 <wiki:video url="http://www.youtube.com/v/Oz4uV6a7__0" width="517" height="480"/>
