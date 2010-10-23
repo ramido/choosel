@@ -40,13 +40,7 @@ public interface SlotResolver {
     Slot GRAPH_NODE_BORDER_COLOR_SLOT = new Slot("graphNodeBorderColor",
             "Node Border Color", DataType.COLOR);
 
-    // TODO same as chart label?
-    Slot LABEL_SLOT = new Slot("label", "Label", DataType.TEXT);
-
     Slot LOCATION_SLOT = new Slot("location", "Location", DataType.LOCATION);
-
-    // TODO slots should be view-centric, not data centric
-    Slot MAGNITUDE_SLOT = new Slot("magnitude", "Magnitude", DataType.NUMBER);
 
     Slot FONT_SIZE_SLOT = new Slot("font-size", "Font Size", DataType.NUMBER);
 

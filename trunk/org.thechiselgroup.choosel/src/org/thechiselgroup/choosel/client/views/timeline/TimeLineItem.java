@@ -275,6 +275,10 @@ public class TimeLineItem extends IconResourceItem {
         setIconColor(color);
         setLabelStyle(status);
 
+        if (DOM.getElementById(tickElementID) == null) {
+            return;
+        }
+
         setTickZIndex(status);
         setTickColor(color);
     }
