@@ -43,6 +43,10 @@ public class DefaultBranding implements Branding {
             + "target=\"_blank\">groups.google.com/group/choosel</a></p><br/>"
             + "<p>For more information about the Choosel framework, visit<br/><a href=\"http://code.google.com/p/choosel/\" "
             + "target=\"_blank\">code.google.com/p/choosel/</a></p><br/>"
+            + "<p>For updates on Choosel, you can also follow us on "
+            + "<br/><a target=\"_blank\" href=\"http://twitter.com/chooselmashups\">Twitter (@chooselmashups)</a>"
+            + " or <a target=\"_blank\" href=\"http://www.facebook.com/pages/Choosel-Data-Visualization/170642902949853\">Facebook</a>"
+            + "</p><br/>"
             + "<p><b>Disclaimer</b></p>"
             + "<p>"
             + DISCLAIMER

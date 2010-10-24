@@ -29,6 +29,7 @@ import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionCo
 
 import org.thechiselgroup.choosel.client.ChooselApplication;
 import org.thechiselgroup.choosel.client.RestrictImporterToOneDataSourceManager;
+import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.importer.ImportDialog;
 import org.thechiselgroup.choosel.client.resources.ResourceSetAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourceSetAddedEventHandler;
@@ -38,6 +39,7 @@ import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.client.ui.Action;
+import org.thechiselgroup.choosel.client.windows.WindowContent;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -67,6 +69,14 @@ public class ChooselExampleApplication extends ChooselApplication {
         });
 
         addWidget(DEVELOPER_MODE_PANEL, button);
+    }
+
+    @Override
+    protected void afterInit() {
+        WindowContent content = windowContentProducer
+                .createWindowContent(ChooselInjectionConstants.WINDOW_CONTENT_HELP);
+
+        desktop.createWindow(content, 30, 120, 800, 600);
     }
 
     protected void createImportDialog() {
