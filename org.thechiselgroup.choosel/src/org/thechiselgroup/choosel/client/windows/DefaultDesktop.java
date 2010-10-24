@@ -160,6 +160,10 @@ public class DefaultDesktop extends AbsolutePanel implements Desktop, HasSize {
         appTitleLabel.addStyleName("branding-app-title");
         add(appTitleLabel);
 
+        Label minorTitleLabel = new Label(branding.getMinorApplicationTitle());
+        minorTitleLabel.addStyleName("branding-minor-app-title");
+        add(minorTitleLabel);
+
         Label copyRightLabel = new Label(branding.getCopyright());
         copyRightLabel.addStyleName("branding-copy-right");
         add(copyRightLabel);

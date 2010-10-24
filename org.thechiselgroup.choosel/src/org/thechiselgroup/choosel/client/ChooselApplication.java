@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client;
 
-import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.DATA_SOURCES_PANEL;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.DATA_SOURCES;
 
 import org.thechiselgroup.choosel.client.authentication.AuthenticationManager;
 import org.thechiselgroup.choosel.client.authentication.ui.AuthenticationBar;
@@ -38,6 +38,7 @@ import org.thechiselgroup.choosel.client.ui.ActionBar;
 import org.thechiselgroup.choosel.client.ui.dialog.Dialog;
 import org.thechiselgroup.choosel.client.ui.dialog.DialogManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
+import org.thechiselgroup.choosel.client.views.ResourceSetContainer;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 import org.thechiselgroup.choosel.client.windows.CreateWindowCommand;
 import org.thechiselgroup.choosel.client.windows.Desktop;
@@ -87,8 +88,8 @@ public abstract class ChooselApplication {
     protected ActionBar actionBar;
 
     @Inject
-    protected @Named(DATA_SOURCES_PANEL)
-    ResourceSetAvatarResourceSetsPresenter dataSourceResourceSetsPresenter;
+    protected @Named(DATA_SOURCES)
+    ResourceSetContainer dataSources;
 
     @Inject
     private AuthenticationBar authenticationBar;
@@ -179,15 +180,15 @@ public abstract class ChooselApplication {
         });
     }
 
-    protected void addDialogActionToToolbar(String panelId, String label,
+    protected Action addDialogActionToToolbar(String panelId, String label,
             Dialog dialog) {
-        addDialogActionToToolbar(panelId, label, null, dialog);
+        return addDialogActionToToolbar(panelId, label, null, dialog);
     }
 
-    protected void addDialogActionToToolbar(String panelId, String label,
+    protected Action addDialogActionToToolbar(String panelId, String label,
             String iconName, final Dialog dialog) {
 
-        addActionToToolbar(panelId, label, iconName, new Command() {
+        return addActionToToolbar(panelId, label, iconName, new Command() {
             @Override
             public void execute() {
                 dialogManager.show(dialog);
@@ -285,7 +286,7 @@ public abstract class ChooselApplication {
         }
     }
 
-    private void initAuthenticationBar() {
+    protected void initAuthenticationBar() {
         ((VerticalPanel) actionBar.asWidget()).add(authenticationBar);
     }
 
@@ -349,8 +350,8 @@ public abstract class ChooselApplication {
     }
 
     protected void initNewWorkspaceAction() {
-        addActionToToolbar(WORKSPACE_PANEL, "New Workspace", "workspace-new",
-                newWorkspaceCommand);
+        Action newWorkspaceAction = addActionToToolbar(WORKSPACE_PANEL,
+                "New Workspace", "workspace-new", newWorkspaceCommand);
     }
 
     protected void initRedoAction() {

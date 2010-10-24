@@ -29,7 +29,7 @@ public interface ChooselInjectionConstants {
 
     String ROOT_PANEL = "root-panel";
 
-    String DATA_SOURCES_PANEL = "data-sources-panel";
+    String DATA_SOURCES = "data-sources";
 
     String DROP_TARGET_MANAGER_VIEW_CONTENT = "drop-target-manager-view-content";
 

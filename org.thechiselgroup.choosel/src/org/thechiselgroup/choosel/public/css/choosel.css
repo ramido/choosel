@@ -60,6 +60,16 @@
 	top: 20px;
 	font-size: 50px;
     color: rgb(124, 160, 195);
+	display: inline;
+}
+
+.branding-minor-app-title {
+	display: inline;
+	position: relative;
+	left: 20px;
+	top: 20px;
+	font-size: 20px;
+    color: rgb(124, 160, 195);
 }
 
 .branding-copy-right {
