@@ -19,6 +19,8 @@ public class ParseException extends Exception {
 
     private int lineNumber;
 
+    private String unparseableValue;
+
     public ParseException(String message) {
         this(message, -1);
     }
@@ -26,6 +28,15 @@ public class ParseException extends Exception {
     public ParseException(String message, int lineNumber) {
         super(message);
 
+        this.lineNumber = lineNumber;
+    }
+
+    public ParseException(String message, String unparseableValue,
+            int lineNumber) {
+
+        super(message);
+
+        this.unparseableValue = unparseableValue;
         this.lineNumber = lineNumber;
     }
 
@@ -39,8 +50,21 @@ public class ParseException extends Exception {
         this.lineNumber = lineNumber;
     }
 
+    public ParseException(String message, Throwable cause,
+            String unparseableValue, int lineNumber) {
+
+        super(message, cause);
+
+        this.unparseableValue = unparseableValue;
+        this.lineNumber = lineNumber;
+    }
+
     public int getLineNumber() {
         return lineNumber;
+    }
+
+    public String getUnparseableValue() {
+        return unparseableValue;
     }
 
 }
