@@ -16,8 +16,8 @@
 package org.thechiselgroup.choosel.client.importer;
 
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.ui.dialog.AbstractDialog;
+import org.thechiselgroup.choosel.client.views.ResourceSetContainer;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -36,17 +36,18 @@ public class ImportDialog extends AbstractDialog {
 
     private TextArea pasteArea;
 
-    private ResourceSetAvatarResourceSetsPresenter presenter;
+    private ResourceSetContainer targetContainer;
 
     private Importer importer;
 
     private TextBox nameTextBox;
 
-    public ImportDialog(Importer importer,
-            ResourceSetAvatarResourceSetsPresenter presenter) {
+    public ImportDialog(Importer importer, ResourceSetContainer targetContainer) {
+        assert targetContainer != null;
+        assert importer != null;
 
         this.importer = importer;
-        this.presenter = presenter;
+        this.targetContainer = targetContainer;
     }
 
     @Override
@@ -97,11 +98,27 @@ public class ImportDialog extends AbstractDialog {
     public void okay() {
         try {
             String pastedText = pasteArea.getText();
+
+            if (pastedText.length() > 50000) {
+                throw new ParseException(
+                        "The pasted text is too big. This demo supports only up to 50000 characters in the pasted text.");
+            }
+
             StringTable parsedRows = new CSVStringTableParser()
                     .parse(pastedText);
+
+            if (parsedRows.getColumnCount() > 15) {
+                throw new ParseException(
+                        "Too many columns. This demo supports only up to 15 columns.");
+            }
+            if (parsedRows.getRowCount() > 200) {
+                throw new ParseException(
+                        "Too many rows. This demo supports only up to 200 rows.");
+            }
+
             ResourceSet parsedResources = importer.createResources(parsedRows);
             parsedResources.setLabel(nameTextBox.getText());
-            presenter.addResourceSet(parsedResources);
+            targetContainer.addResourceSet(parsedResources);
         } catch (ParseException e) {
             // TODO correct exception handling
             throw new RuntimeException(e);

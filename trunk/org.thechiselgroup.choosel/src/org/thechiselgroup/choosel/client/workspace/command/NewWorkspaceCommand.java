@@ -18,22 +18,32 @@
  */
 package org.thechiselgroup.choosel.client.workspace.command;
 
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.DATA_SOURCES;
+
+import org.thechiselgroup.choosel.client.views.ResourceSetContainer;
 import org.thechiselgroup.choosel.client.workspace.WorkspaceManager;
 
 import com.google.gwt.user.client.Command;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 public class NewWorkspaceCommand implements Command {
 
     private final WorkspaceManager workspaceManager;
 
+    private final ResourceSetContainer dataSources;
+
+    // TODO refactor: data sources should be part of the workspace manager
     @Inject
-    public NewWorkspaceCommand(WorkspaceManager workspaceManager) {
+    public NewWorkspaceCommand(WorkspaceManager workspaceManager,
+            @Named(DATA_SOURCES) ResourceSetContainer dataSources) {
         this.workspaceManager = workspaceManager;
+        this.dataSources = dataSources;
     }
 
     @Override
     public void execute() {
+        dataSources.clear();
         workspaceManager.createNewWorkspace();
     }
 }

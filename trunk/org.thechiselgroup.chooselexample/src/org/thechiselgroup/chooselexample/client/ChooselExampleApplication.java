@@ -28,16 +28,28 @@ import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionCo
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.WINDOW_CONTENT_NOTE;
 
 import org.thechiselgroup.choosel.client.ChooselApplication;
+import org.thechiselgroup.choosel.client.RestrictImporterToOneDataSourceManager;
 import org.thechiselgroup.choosel.client.importer.ImportDialog;
+import org.thechiselgroup.choosel.client.resources.ResourceSetAddedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourceSetAddedEventHandler;
+import org.thechiselgroup.choosel.client.resources.ResourceSetRemovedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourceSetRemovedEventHandler;
+import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
+import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.test.TestResourceSetFactory;
+import org.thechiselgroup.choosel.client.ui.Action;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.inject.Inject;
 
 public class ChooselExampleApplication extends ChooselApplication {
 
     public static final String DATA_PANEL = "data";
+
+    @Inject
+    private ResourceSetAvatarFactory factory;
 
     // TODO change into command
     private void addTestDataSourceButton() {
@@ -46,17 +58,43 @@ public class ChooselExampleApplication extends ChooselApplication {
         button.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                dataSourceResourceSetsPresenter
-                        .addResourceSet(TestResourceSetFactory
-                                .addTestData(createResourceSet()));
-                dataSourceResourceSetsPresenter
-                        .addResourceSet(TestResourceSetFactory
-                                .addGraphTestData(createResourceSet()));
+                dataSources.addResourceSet(TestResourceSetFactory
+                        .addTestData(createResourceSet()));
+                dataSources.addResourceSet(TestResourceSetFactory
+                        .addGraphTestData(createResourceSet()));
             }
 
         });
 
         addWidget(DEVELOPER_MODE_PANEL, button);
+    }
+
+    protected void createImportDialog() {
+        Action importAction = addDialogActionToToolbar(DATA_PANEL, "Import",
+                new ImportDialog(importer, dataSources));
+        final ResourceSetAvatarResourceSetsPresenter presenter = new ResourceSetAvatarResourceSetsPresenter(
+                factory);
+        presenter.init();
+        addWidget(DATA_PANEL, presenter.asWidget());
+        dataSources.addEventHandler(new ResourceSetAddedEventHandler() {
+            @Override
+            public void onResourceSetAdded(ResourceSetAddedEvent e) {
+                presenter.addResourceSet(e.getResourceSet());
+            }
+        });
+        dataSources.addEventHandler(new ResourceSetRemovedEventHandler() {
+            @Override
+            public void onResourceSetRemoved(ResourceSetRemovedEvent e) {
+                presenter.removeResourceSet(e.getResourceSet());
+            }
+        });
+
+        new RestrictImporterToOneDataSourceManager(dataSources, importAction)
+                .init();
+    }
+
+    @Override
+    protected void initAuthenticationBar() {
     }
 
     @Override
@@ -83,9 +121,7 @@ public class ChooselExampleApplication extends ChooselApplication {
         addCreateWindowActionToToolbar(VIEWS_PANEL, "Scatter Plot",
                 TYPE_SCATTER);
 
-        addDialogActionToToolbar(DATA_PANEL, "Import", new ImportDialog(
-                importer, dataSourceResourceSetsPresenter));
-        addWidget(DATA_PANEL, dataSourceResourceSetsPresenter.asWidget());
+        createImportDialog();
     }
 
     @Override

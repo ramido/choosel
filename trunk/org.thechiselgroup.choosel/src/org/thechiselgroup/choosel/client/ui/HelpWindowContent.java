@@ -21,7 +21,8 @@ import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccess
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 
-import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Widget;
 
 public class HelpWindowContent extends AbstractWindowContent implements
@@ -60,7 +61,11 @@ public class HelpWindowContent extends AbstractWindowContent implements
         final String html = "<p style=\"width: 660px; margin: 10px; padding-bottom: 10px;\"><b>This tutorial contains 20 videos that explain the "
                 + "different features of Bio-Mixer. Please use the video controls or hover over the video to"
                 + " jump to a specific tutorial.</b></p>" + playList;
-        return new HTML(html);
+        // return new HTML(html);
+
+        Frame frame = new Frame();
+        frame.setUrl(GWT.getModuleBaseURL() + "html/help.html");
+        return frame;
     }
 
     @Override

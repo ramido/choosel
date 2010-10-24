@@ -65,7 +65,7 @@ public class DefaultSelectionModel implements SelectionModel, Disposable,
         this.selectionModelLabelFactory = selectionModelLabelFactory;
         this.resourceSetFactory = resourceSetFactory;
 
-        this.eventBus = new HandlerManager(this);
+        eventBus = new HandlerManager(this);
     }
 
     @Override

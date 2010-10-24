@@ -48,4 +48,9 @@ public class BioMixerBranding implements Branding {
         return "(C) 2010 The CHISEL Group (www.thechiselgroup.org)";
     }
 
+    @Override
+    public String getMinorApplicationTitle() {
+        return "";
+    }
+
 }

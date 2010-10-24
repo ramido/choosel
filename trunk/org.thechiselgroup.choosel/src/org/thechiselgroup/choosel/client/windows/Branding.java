@@ -23,4 +23,6 @@ public interface Branding {
 
     String getCopyright();
 
+    String getMinorApplicationTitle();
+
 }
