@@ -16,8 +16,10 @@
 package org.thechiselgroup.choosel.client.importer;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,7 +35,69 @@ public class ImporterTest {
     private Importer underTest;
 
     @Test
-    public void sameUriTypeInSameImport() {
+    public void emptyStringTable() throws Exception {
+        String[] columns = new String[] { "c1" };
+        List<String[]> values = new ArrayList<String[]>();
+
+        ResourceSet result = underTest.createResources(new StringTable(columns,
+                values));
+
+        assertEquals(0, result.size());
+    }
+
+    @Test
+    public void errorInconsistentDateColumn() {
+        try {
+            String[] columns = new String[] { "c1" };
+            List<String[]> values = new ArrayList<String[]>();
+            values.add(new String[] { "12/12/2012" });
+            values.add(new String[] { "text" });
+
+            underTest.createResources(new StringTable(columns, values));
+
+            fail("no ParseException thrown");
+        } catch (ParseException e) {
+            assertEquals("text", e.getUnparseableValue());
+            assertEquals(2, e.getLineNumber());
+        }
+    }
+
+    @Test
+    public void errorInconsistentLocationColumn() {
+        try {
+            String[] columns = new String[] { "c1" };
+            List<String[]> values = new ArrayList<String[]>();
+            values.add(new String[] { "0.9/0.2" });
+            values.add(new String[] { "text" });
+
+            underTest.createResources(new StringTable(columns, values));
+
+            fail("no ParseException thrown");
+        } catch (ParseException e) {
+            assertEquals("text", e.getUnparseableValue());
+            assertEquals(2, e.getLineNumber());
+        }
+    }
+
+    @Test
+    public void errorInconsistentNumberColumn() {
+        try {
+            String[] columns = new String[] { "c1" };
+            List<String[]> values = new ArrayList<String[]>();
+            values.add(new String[] { "0.9" });
+            values.add(new String[] { "text" });
+
+            underTest.createResources(new StringTable(columns, values));
+
+            fail("no ParseException thrown");
+        } catch (ParseException e) {
+            assertEquals("text", e.getUnparseableValue());
+            assertEquals(2, e.getLineNumber());
+        }
+    }
+
+    @Test
+    public void sameUriTypeInSameImport() throws Exception {
         String[] columns = new String[] { "c1" };
         List<String[]> values = new ArrayList<String[]>();
         values.add(new String[] { "v11" });
@@ -55,11 +119,16 @@ public class ImporterTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        underTest = new Importer();
+        underTest = new Importer() {
+            @Override
+            protected Date parseDate(String stringValue) {
+                return new Date();
+            }
+        };
     }
 
     @Test
-    public void uniqueUris() {
+    public void uniqueUris() throws Exception {
         String[] columns = new String[] { "c1" };
         List<String[]> values = new ArrayList<String[]>();
         values.add(new String[] { "v1" });
