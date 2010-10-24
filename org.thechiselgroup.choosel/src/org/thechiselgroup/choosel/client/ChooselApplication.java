@@ -137,7 +137,7 @@ public abstract class ChooselApplication {
     private ShareWorkspaceCommand shareWorkspaceCommand;
 
     @Inject
-    private WindowContentProducer windowContentProducer;
+    protected WindowContentProducer windowContentProducer;
 
     @Inject
     private WorkspaceManager workspaceManager;
@@ -212,6 +212,11 @@ public abstract class ChooselApplication {
                 .add(widget);
     }
 
+    // hook for subclasses
+    protected void afterInit() {
+
+    }
+
     private DockPanel createMainPanel() {
         DockPanel mainPanel = new DockPanel();
         RootPanel.get().add(mainPanel);
@@ -262,6 +267,8 @@ public abstract class ChooselApplication {
         initCustomActions();
 
         loadWorkspaceIfParamSet();
+
+        afterInit();
     }
 
     protected void initAboutAction() {
@@ -350,8 +357,8 @@ public abstract class ChooselApplication {
     }
 
     protected void initNewWorkspaceAction() {
-        Action newWorkspaceAction = addActionToToolbar(WORKSPACE_PANEL,
-                "New Workspace", "workspace-new", newWorkspaceCommand);
+        addActionToToolbar(WORKSPACE_PANEL, "New Workspace", "workspace-new",
+                newWorkspaceCommand);
     }
 
     protected void initRedoAction() {
