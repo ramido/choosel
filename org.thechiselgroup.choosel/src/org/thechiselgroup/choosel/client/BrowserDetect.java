@@ -19,16 +19,17 @@ import com.google.gwt.user.client.Window;
 
 public class BrowserDetect {
 
+    // TODO branding for message
     public static void checkBrowser() {
         if (!isValidBrowser()) {
             Window.alert("Your browser is not supported. "
-                    + "Bio-Mixer supports Chrome >=4 and Firefox >= 3.5");
+                    + "Choosel supports Chrome >=4, Firefox >= 3.5 and Safari >= 5");
         }
     }
 
     public static native String getUserAgent() /*-{
-                                               return navigator.userAgent.toLowerCase();
-                                               }-*/;
+        return navigator.userAgent.toLowerCase();
+    }-*/;
 
     public static boolean isValidBrowser() {
         return isValidBrowser(getUserAgent());
@@ -76,6 +77,22 @@ public class BrowserDetect {
                         firstDot));
 
                 if (major < 4) {
+                    return false;
+                }
+
+                return true;
+            }
+
+            if (userAgent.contains("safari")) {
+                System.out.println(userAgent);
+                int index = userAgent.indexOf("version");
+                index += "version".length();
+                int firstDot = userAgent.indexOf(".", index);
+
+                int major = Integer.parseInt(userAgent.substring(index + 1,
+                        firstDot));
+
+                if (major <= 4) {
                     return false;
                 }
 
