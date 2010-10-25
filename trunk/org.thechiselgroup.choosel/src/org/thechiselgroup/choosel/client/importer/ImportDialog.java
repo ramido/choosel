@@ -19,6 +19,7 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.dialog.AbstractDialog;
 import org.thechiselgroup.choosel.client.views.ResourceSetContainer;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
@@ -79,8 +80,12 @@ public class ImportDialog extends AbstractDialog {
         HTML help = new HTML();
         help.setStyleName(CSS_IMPORT_PANEL_HELP);
         help.setHTML("Here you can import your own data into Choosel"
-                + " (limited to 200 rows).<br/>See <a href=\"\">example CSV data</a>"
-                + " or <a href=\"\">open help</a> for more information.");
+                + " (limited to 200 rows).<br/>See <a target=\"_blank\" href=\""
+                + GWT.getModuleBaseURL() + "html/csvexamples.html"
+                + "\">example CSV data</a>"
+                + " or <a target=\"_blank\" href=\"" + GWT.getModuleBaseURL()
+                + "html/help_import.html"
+                + "\">open help</a> for more information.");
         panel.add(help);
 
         FlowPanel namePanel = new FlowPanel();
