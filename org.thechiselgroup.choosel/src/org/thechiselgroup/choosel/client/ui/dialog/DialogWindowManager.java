@@ -31,10 +31,6 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 
 public class DialogWindowManager extends AbstractWindowManager {
 
-    public static enum State {
-        CANCELED, FINISHED, RUNNING
-    }
-
     private Dialog dialog;
 
     private RemoveHandle shadeHandle;
@@ -51,7 +47,7 @@ public class DialogWindowManager extends AbstractWindowManager {
     }
 
     public void cancelDialog(DialogWindow window) {
-        window.setState(State.CANCELED);
+        dialog.cancel();
         window.close();
     }
 
@@ -60,20 +56,7 @@ public class DialogWindowManager extends AbstractWindowManager {
         assert window instanceof DialogWindow;
 
         getBoundaryPanel().remove(window);
-
-        State state = ((DialogWindow) window).getState();
-        if (State.CANCELED.equals(state)) {
-            dialog.cancel();
-        } else if (State.FINISHED.equals(state)) {
-            dialog.okay();
-        }
-
         hideShade();
-    }
-
-    public void finishDialog(DialogWindow window) {
-        window.setState(State.FINISHED);
-        window.close();
     }
 
     private void hideShade() {
@@ -123,6 +106,15 @@ public class DialogWindowManager extends AbstractWindowManager {
         } catch (Error e) {
             hideShade();
             throw e;
+        }
+    }
+
+    public void okayPressed(DialogWindow window) {
+        try {
+            dialog.okay();
+            window.close();
+        } catch (Exception ex) {
+            dialog.handleException(ex);
         }
     }
 

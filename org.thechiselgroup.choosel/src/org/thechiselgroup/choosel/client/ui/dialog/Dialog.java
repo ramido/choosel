@@ -29,8 +29,10 @@ public interface Dialog {
 
     String getWindowTitle();
 
+    void handleException(Exception ex);
+
     void init(DialogCallback callback);
 
-    void okay();
+    void okay() throws Exception;
 
 }

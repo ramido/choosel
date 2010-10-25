@@ -17,7 +17,6 @@ package org.thechiselgroup.choosel.client.ui.dialog;
 
 import org.thechiselgroup.choosel.client.ui.DialogPanel;
 import org.thechiselgroup.choosel.client.ui.ZIndex;
-import org.thechiselgroup.choosel.client.ui.dialog.DialogWindowManager.State;
 import org.thechiselgroup.choosel.client.windows.WindowPanel;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -33,8 +32,6 @@ public final class DialogWindow extends WindowPanel implements DialogCallback {
     private DialogWindowManager dialogController;
 
     private Button okayButton;
-
-    private State state = State.RUNNING;
 
     private void createCancelButton(DialogPanel dialogPanel) {
         Button cancelButton = dialogPanel.createButton(CANCEL);
@@ -56,7 +53,7 @@ public final class DialogWindow extends WindowPanel implements DialogCallback {
         okayButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                dialogController.finishDialog(DialogWindow.this);
+                dialogController.okayPressed(DialogWindow.this);
             }
         });
     }
@@ -66,14 +63,10 @@ public final class DialogWindow extends WindowPanel implements DialogCallback {
         return CANCEL;
     }
 
-    public State getState() {
-        return state;
-    }
-
     // TODO add explanation area
     public void init(DialogWindowManager windowController, final Dialog dialog) {
 
-        this.dialogController = windowController;
+        dialogController = windowController;
 
         DialogPanel dialogPanel = new DialogPanel();
 
@@ -94,7 +87,4 @@ public final class DialogWindow extends WindowPanel implements DialogCallback {
         okayButton.setEnabled(enabled);
     }
 
-    public void setState(State state) {
-        this.state = state;
-    }
 }
