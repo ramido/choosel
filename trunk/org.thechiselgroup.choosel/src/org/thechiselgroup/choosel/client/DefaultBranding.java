@@ -70,7 +70,7 @@ public class DefaultBranding implements Branding {
 
     @Override
     public String getMinorApplicationTitle() {
-        return "Demo";
+        return "demo";
     }
 
 }
