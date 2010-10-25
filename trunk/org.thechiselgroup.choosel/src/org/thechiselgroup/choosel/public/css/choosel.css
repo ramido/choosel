@@ -360,6 +360,16 @@ table.choosel-ImportPanel tbody tr td:first-child {
 	margin-left: 5px;
 }
 
+.choosel-ImportPanel-Errors {
+	font-weight: bold;
+	display: inline;
+	color: red;
+}
+
+.choosel-ImportPanel-Errors div {
+	display: inline;
+}
+
 .choosel-ImportPanel-Label {
 	font-weight: bold;
 }

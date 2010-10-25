@@ -15,13 +15,20 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.dialog;
 
+
 public abstract class AbstractDialog implements Dialog {
 
     private DialogCallback callback;
 
     @Override
+    public void handleException(Exception ex) {
+        throw new RuntimeException(ex); // TODO better handling
+    }
+
+    @Override
     public void init(DialogCallback callback) {
         assert callback != null;
+
         this.callback = callback;
 
     }

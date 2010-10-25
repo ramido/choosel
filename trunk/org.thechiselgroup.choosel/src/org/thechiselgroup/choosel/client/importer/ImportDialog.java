@@ -20,6 +20,7 @@ import org.thechiselgroup.choosel.client.ui.dialog.AbstractDialog;
 import org.thechiselgroup.choosel.client.views.ResourceSetContainer;
 
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
@@ -34,6 +35,10 @@ public class ImportDialog extends AbstractDialog {
 
     private static final String CSS_IMPORT_PANEL_LABEL = "choosel-ImportPanel-Label";
 
+    private static final String CSS_IMPORT_PANEL_ERRORS = "choosel-ImportPanel-Errors";
+
+    private static final String CSS_IMPORT_PANEL_HELP = "choosel-ImportPanel-Help";
+
     private TextArea pasteArea;
 
     private ResourceSetContainer targetContainer;
@@ -41,6 +46,10 @@ public class ImportDialog extends AbstractDialog {
     private Importer importer;
 
     private TextBox nameTextBox;
+
+    private Label errorLabel;
+
+    private FlowPanel errorPanel;
 
     public ImportDialog(Importer importer, ResourceSetContainer targetContainer) {
         assert targetContainer != null;
@@ -58,6 +67,21 @@ public class ImportDialog extends AbstractDialog {
     public Widget getContent() {
         VerticalPanel panel = new VerticalPanel();
         panel.addStyleName(CSS_IMPORT_PANEL);
+
+        errorPanel = new FlowPanel();
+        errorPanel.setStyleName(CSS_IMPORT_PANEL_ERRORS);
+        errorPanel.add(new Label("Data could not be imported: "));
+        errorLabel = new Label("");
+        errorPanel.add(errorLabel);
+        errorPanel.setVisible(false);
+        panel.add(errorPanel);
+
+        HTML help = new HTML();
+        help.setStyleName(CSS_IMPORT_PANEL_HELP);
+        help.setHTML("Here you can import your own data into Choosel"
+                + " (limited to 200 rows).<br/>See <a href=\"\">example CSV data</a>"
+                + " or <a href=\"\">open help</a> for more information.");
+        panel.add(help);
 
         FlowPanel namePanel = new FlowPanel();
         namePanel.addStyleName(CSS_IMPORT_PANEL_DATA_SET_NAME);
@@ -95,33 +119,47 @@ public class ImportDialog extends AbstractDialog {
     }
 
     @Override
-    public void okay() {
-        try {
-            String pastedText = pasteArea.getText();
-
-            if (pastedText.length() > 50000) {
-                throw new ParseException(
-                        "The pasted text is too big. This demo supports only up to 50000 characters in the pasted text.");
+    public void handleException(Exception ex) {
+        if (ex instanceof ParseException) {
+            String msg = "";
+            if (((ParseException) ex).getLineNumber() != -1) {
+                msg += "Line " + ((ParseException) ex).getLineNumber() + " ";
             }
-
-            StringTable parsedRows = new CSVStringTableParser()
-                    .parse(pastedText);
-
-            if (parsedRows.getColumnCount() > 15) {
-                throw new ParseException(
-                        "Too many columns. This demo supports only up to 15 columns.");
+            if (((ParseException) ex).getUnparseableValue() != null) {
+                msg += "\"" + ((ParseException) ex).getUnparseableValue()
+                        + "\" ";
             }
-            if (parsedRows.getRowCount() > 200) {
-                throw new ParseException(
-                        "Too many rows. This demo supports only up to 200 rows.");
-            }
-
-            ResourceSet parsedResources = importer.createResources(parsedRows);
-            parsedResources.setLabel(nameTextBox.getText());
-            targetContainer.addResourceSet(parsedResources);
-        } catch (ParseException e) {
-            // TODO correct exception handling
-            throw new RuntimeException(e);
+            msg += ex.getMessage();
+            errorLabel.setText(msg);
+        } else {
+            errorLabel.setText(ex.getMessage());
         }
+
+        errorPanel.setVisible(true);
+    }
+
+    @Override
+    public void okay() throws ParseException {
+        String pastedText = pasteArea.getText();
+
+        if (pastedText.length() > 50000) {
+            throw new ParseException(
+                    "The pasted text is too big. This demo supports only up to 50000 characters in the pasted text.");
+        }
+
+        StringTable parsedRows = new CSVStringTableParser().parse(pastedText);
+
+        if (parsedRows.getColumnCount() > 15) {
+            throw new ParseException(
+                    "Too many columns. This demo supports only up to 15 columns.");
+        }
+        if (parsedRows.getRowCount() > 200) {
+            throw new ParseException(
+                    "Too many rows. This demo supports only up to 200 rows.");
+        }
+
+        ResourceSet parsedResources = importer.createResources(parsedRows);
+        parsedResources.setLabel(nameTextBox.getText());
+        targetContainer.addResourceSet(parsedResources);
     }
 }
