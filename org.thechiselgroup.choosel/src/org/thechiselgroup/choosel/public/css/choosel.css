@@ -421,3 +421,33 @@ input[type="text"]:active, textarea:active {
 	padding-left: 5px;
 	padding-right: 5px;
 }
+
+.Choosel-Help-Content {
+	background-color: #ffffff;
+	overflow: auto;
+}
+
+.Choosel-Help-Content h1 {
+	font-size: 20pt;
+	padding-left: 20px;
+	padding-bottom: 5px;
+	padding-top: 10px;
+}
+
+.Choosel-Help-Content h2 {
+	font-size: 14pt;
+	font-weight: bold;
+	padding-left: 20px;
+	padding-bottom: 5px;
+	padding-top: 5px;
+}
+
+.Choosel-Help-Content div {
+	padding-left: 20px;
+	padding-bottom: 5px;
+	padding-top: 5px;
+}
+
+.Choosel-Help-Content ul, .Choosel-Help-Content ol {
+    list-style-position: inside;
+}
