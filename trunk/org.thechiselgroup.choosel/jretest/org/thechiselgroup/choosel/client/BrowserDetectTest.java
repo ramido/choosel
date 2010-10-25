@@ -95,4 +95,12 @@ public class BrowserDetectTest {
                 + "AppleWebKit/531.21.8 (KHTML, like Gecko) "
                 + "Version/4.0.4 Safari/531.21.10"));
     }
+
+    @Test
+    public void testSafari5() {
+        assertEquals(true, BrowserDetect.isValidBrowser("Mozilla/5.0 "
+                + "(Windows; U; Windows NT 6.1; en-US) "
+                + "AppleWebKit/533.18.1 (KHTML, like Gecko) "
+                + "Version/5.0.2 Safari/533.18.5"));
+    }
 }
