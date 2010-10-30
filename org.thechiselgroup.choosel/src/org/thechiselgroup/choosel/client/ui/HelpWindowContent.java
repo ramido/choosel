@@ -87,6 +87,8 @@ public class HelpWindowContent extends AbstractWindowContent implements
         html += "<div>This help provides you with an overview of how to import data, how to configure views, and "
                 + "how to work with selections.</div>";
 
+        html += "<h1>Short Video Demonstration</h1>";
+        html += "<div style=\"text-align: center;\"><iframe src=\"http://player.vimeo.com/video/16109235?portrait=0\" width=\"601\" height=\"338\" frameborder=\"0\"></iframe></div>";
         html += "<h1>Importing data</h1>";
 
         html += "<div>";
