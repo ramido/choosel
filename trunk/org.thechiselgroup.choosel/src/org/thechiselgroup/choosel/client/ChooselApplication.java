@@ -98,7 +98,7 @@ public abstract class ChooselApplication {
     protected Importer importer;
 
     @Inject
-    private AuthenticationManager authenticationManager;
+    protected AuthenticationManager authenticationManager;
 
     @Inject
     private AsyncCommandExecutor asyncCommandExecutor;
