@@ -1,7 +1,7 @@
 #summary Choosel screencasts
 
 ==Teaser for !VisWeek Poster 2010==
-<wiki:gadget url="http://hosting.gmodules.com/ig/gadgets/file/106581606564100174314/vimeo-video.xml" up_videourl="http://vimeo.com/16109235" synd="open" w="517" h="291" title="Vimeo+video" border="#ffffff 3px 1px solid #999999" height="300" border="0" /> 
+<wiki:gadget url="http://hosting.gmodules.com/ig/gadgets/file/106581606564100174314/vimeo-video.xml" up_videourl="http://vimeo.com/16109235" synd="open" width="517" h="291" title="Vimeo+video" border="#ffffff 3px 1px solid #999999" height="291" border="0" /> 
 
 ==Screencast - Timeline and Basic Features==
 <wiki:video url="http://www.youtube.com/v/Oz4uV6a7__0" width="517" height="480"/>
