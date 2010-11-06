@@ -1,4 +1,4 @@
 #summary Presentations on Choosel
 
 ==2010-Apr-13==
-<wiki:gadget url="http://wildfire.gigya.com/wildfire/StpProvider.aspx?ut=Ag8AAAAEAAYAAFUASQBEABQAADEAMwAxADEAMwA2ADcAMwA0ADIABgAASQBJAEQAEgAANwAwADcAMgAwADkANQAxADIABAAAbgB0AA4AAGkARwBvAG8AZwBsAGUABAAAUABJAAoAADEAMAAxADkAMQA.&source=imag" width="500"  height="500" border="0" />
+<wiki:gadget url="http://wildfire.gigya.com/wildfire/StpProvider.aspx?ut=Ag8AAAAEAAYAAFUASQBEABQAADEAMwAxADEAMwA2ADcAMwA0ADIABgAASQBJAEQAEgAANwAwADcAMgAxADMANQA2ADIABAAAbgB0AA4AAGkARwBvAG8AZwBsAGUABAAAUABJAAoAADEAMAAxADkAMQA" width="500"  height="500" border="0" />
