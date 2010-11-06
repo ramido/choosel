@@ -1,18 +1,18 @@
 #summary Contributors and their contributions to Choosel
 
-[http://margaretannestorey.wordpress.com/ Margaret-Anne Storey] Project lead
+*[http://margaretannestorey.wordpress.com/ Margaret-Anne Storey]*: Project lead
  
 
-[http://larsgrammel.de Lars Grammel] Project lead, UI design, framework and application design and implementation, project management, screencasts, presentations, marketing etc.
+*[http://larsgrammel.de Lars Grammel]*: Project lead, UI design, framework and application design and implementation, project management, screencasts, presentations, marketing etc.
 
 
-Bradley Blashko: [http://vis.stanford.edu/protovis/ Protovis] charting integration development, diverse code contributions, CASCON 2010 exhibit
+*Bradley Blashko*: [http://vis.stanford.edu/protovis/ Protovis] charting integration development, diverse code contributions, CASCON 2010 exhibit
 
 
-Patrick Gorman: Performance testing, diverse code contributions
+*Patrick Gorman*: Performance testing, diverse code contributions
 
 
-Del Myers: code modifications to support application development
+*Del Myers*: code modifications to support application development
 
 
-Chris Bennett: Help document
+*Chris Bennett*: User documentation
