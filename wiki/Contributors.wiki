@@ -3,12 +3,16 @@
 [http://margaretannestorey.wordpress.com/ Margaret-Anne Storey] Project lead
  
 
-[http://larsgrammel.de Lars Grammel] Project lead, UI design, framework and application implementation, project management, screencasts, presentations, etc.
+[http://larsgrammel.de Lars Grammel] Project lead, UI design, framework and application design and implementation, project management, screencasts, presentations, marketing etc.
 
-Bradley Blashko: 
 
-Patrick Gorman
+Bradley Blashko: [http://vis.stanford.edu/protovis/ Protovis] charting integration development, diverse code contributions, CASCON 2010 exhibit
 
-Del Myers
 
-Chris Bennett
+Patrick Gorman: Performance testing, diverse code contributions
+
+
+Del Myers: code modifications to support application development
+
+
+Chris Bennett: Help document
