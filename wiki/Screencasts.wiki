@@ -3,12 +3,15 @@
 
 ==Teaser for !InfoVis 2010 Poster and CASCON 2010 Exhibit==
 Lars Grammel, 2010-Oct-22
+
 <wiki:gadget url="http://hosting.gmodules.com/ig/gadgets/file/106581606564100174314/vimeo-video.xml" up_videourl="http://vimeo.com/16109235" synd="open" width="517"  height="291" border="0" /> 
 
 ==Screencast - Timeline and Basic Features==
 Bradley Blashko and Lars Grammel, 2010-Aug-24
+
 <wiki:video url="http://www.youtube.com/v/Oz4uV6a7__0" width="517" height="480"/>
 
 ==Screencast - [http://bio-mixer.appspot.com Bio-Mixer Application]==
 Lars Grammel, 2010-Apr-09
+
 <wiki:video url="http://www.youtube.com/v/OeVpfx92Oo0" width="517" height="381"/>
