@@ -12,7 +12,7 @@
 *Patrick Gorman*: Performance testing, diverse code contributions
 
 
-*Del Myers*: code modifications to support application development
+*Del Myers*: Code modifications to facilitate application development
 
 
 *Chris Bennett*: User documentation
