@@ -1,4 +1,5 @@
 #summary Choosel screencasts
+#labels screencast,video,demo
 
 ==Teaser for !InfoVis 2010 Poster and CASCON 2010 Exhibit==
 <wiki:gadget url="http://hosting.gmodules.com/ig/gadgets/file/106581606564100174314/vimeo-video.xml" up_videourl="http://vimeo.com/16109235" synd="open" width="517"  height="291" border="0" /> 
