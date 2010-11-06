@@ -1,4 +1,5 @@
-#summary Presentations on Choosel
+#summary Presentations and Exhibits on Choosel
+#labels poster,exhibit,presentation
 
-==2010-Apr-13==
+==InfoVis 2010 Poster==
 <wiki:gadget url="http://wildfire.gigya.com/wildfire/StpProvider.aspx?ut=Ag8AAAAEAAYAAFUASQBEABQAADEAMwAxADEAMwA2ADcAMwA0ADIABgAASQBJAEQAEgAANwAwADcAMgAxADMANQA2ADIABAAAbgB0AA4AAGkARwBvAG8AZwBsAGUABAAAUABJAAoAADEAMAAxADkAMQA." width="500"  height="500" border="0" />
