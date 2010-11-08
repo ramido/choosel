@@ -119,14 +119,14 @@ public class DefaultWorkspacePersistenceManager implements
         List<WindowDTO> windowDTOs = new ArrayList<WindowDTO>();
         for (int i = 0; i < windows.size(); i++) {
             WindowPanel window = windows.get(i);
-            WindowContent viewContent = window.getViewContent();
+            WindowContent windowContent = window.getViewContent();
 
-            if (!(viewContent instanceof Persistable)) {
+            if (!(windowContent instanceof Persistable)) {
                 continue;
             }
 
             windowDTOs.add(createWindowDTO(persistanceManager, window,
-                    viewContent));
+                    windowContent));
         }
         return windowDTOs;
     }
