@@ -26,7 +26,6 @@ import org.thechiselgroup.choosel.client.ChooselClientModule;
 import org.thechiselgroup.choosel.client.ChooselWindowContentProducerProvider;
 import org.thechiselgroup.choosel.client.label.CategoryLabelProvider;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
-import org.thechiselgroup.choosel.client.ui.dnd.DropTargetCapabilityChecker;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.graph.ArcStyleProvider;
 import org.thechiselgroup.choosel.client.views.graph.DefaultGraphExpansionRegistry;
@@ -54,11 +53,6 @@ public class BioMixerClientModule extends ChooselClientModule {
     }
 
     @Override
-    protected Class<? extends Branding> getBrandingClass() {
-        return BioMixerBranding.class;
-    }
-
-    @Override
     protected Class<? extends ChooselApplication> getApplicationClass() {
         return BioMixerApplication.class;
     }
@@ -66,6 +60,11 @@ public class BioMixerClientModule extends ChooselClientModule {
     @Override
     protected Class<? extends ArcStyleProvider> getArcStyleProviderClass() {
         return BioMixerArcStyleProvider.class;
+    }
+
+    @Override
+    protected Class<? extends Branding> getBrandingClass() {
+        return BioMixerBranding.class;
     }
 
     @Override
@@ -81,11 +80,6 @@ public class BioMixerClientModule extends ChooselClientModule {
     @Override
     protected Class<? extends DetailsWidgetHelper> getDetailsWidgetHelperClass() {
         return BioMixerDetailsWidgetHelper.class;
-    }
-
-    @Override
-    protected Class<? extends DropTargetCapabilityChecker> getDropTargetCapabilityCheckerClass() {
-        return BioMixerDropTargetCapabilityChecker.class;
     }
 
     @Override

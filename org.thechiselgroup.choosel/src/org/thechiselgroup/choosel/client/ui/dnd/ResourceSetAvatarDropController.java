@@ -17,9 +17,7 @@ package org.thechiselgroup.choosel.client.ui.dnd;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.command.UndoableCommand;
-import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.ui.CSS;
 import org.thechiselgroup.choosel.client.ui.popup.DefaultDelayedPopup;
@@ -135,20 +133,10 @@ public class ResourceSetAvatarDropController extends SimpleDropController {
     }
 
     private boolean isValidDrop(ResourceSetAvatar avatar) {
-        ResourceSet resourceSet = avatar.getResourceSet();
         View view = viewAccessor.findView(getDropTarget());
 
-        // TODO potential refactoring: change the drop target capability checker
-        // interface such that it does the check for a resource set instead of a
-        // single resource
-        for (Resource resource : resourceSet) {
-            String resourceType = resourceTypeCategorizer.getCategory(resource);
-            if (!capabilityChecker.isValidDrop(view.getContentType(),
-                    resourceType)) {
-                return false;
-            }
-        }
-        return true;
+        return capabilityChecker.isValidDrop(view.getSlots(),
+                avatar.getResourceSet());
     }
 
     // TODO support dragging multiple widgets?
@@ -195,8 +183,8 @@ public class ResourceSetAvatarDropController extends SimpleDropController {
 
     // TODO refactor
     private void showPopup(final DragContext context, String message) {
-        this.popup = createPopup(context, message);
-        this.popup.showDelayed();
+        popup = createPopup(context, message);
+        popup.showDelayed();
     }
 
     private void undoCommand() {

@@ -48,7 +48,7 @@ import org.thechiselgroup.choosel.client.resources.ui.configuration.DefaultResou
 import org.thechiselgroup.choosel.client.resources.ui.configuration.ResourceSetsDragAvatarFactoryProvider;
 import org.thechiselgroup.choosel.client.ui.dialog.DialogManager;
 import org.thechiselgroup.choosel.client.ui.dnd.AllSetDropTargetManager;
-import org.thechiselgroup.choosel.client.ui.dnd.BlacklistDropTargetCapabilityChecker;
+import org.thechiselgroup.choosel.client.ui.dnd.DefaultDropTargetCapabilityChecker;
 import org.thechiselgroup.choosel.client.ui.dnd.DefaultResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.client.ui.dnd.DropTargetCapabilityChecker;
 import org.thechiselgroup.choosel.client.ui.dnd.NullResourceSetAvatarDropTargetManager;
@@ -348,7 +348,7 @@ public class ChooselClientModule extends AbstractGinModule implements
     }
 
     protected Class<? extends DropTargetCapabilityChecker> getDropTargetCapabilityCheckerClass() {
-        return BlacklistDropTargetCapabilityChecker.class;
+        return DefaultDropTargetCapabilityChecker.class;
     }
 
     protected Class<? extends ErrorHandler> getErrorHandlerClass() {

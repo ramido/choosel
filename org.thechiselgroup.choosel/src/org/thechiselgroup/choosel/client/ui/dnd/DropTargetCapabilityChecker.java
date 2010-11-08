@@ -15,9 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.dnd;
 
+import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.views.Slot;
+
 //TODO possible class name change
 public interface DropTargetCapabilityChecker {
 
-    boolean isValidDrop(String viewId, String resourceType);
+    boolean isValidDrop(Slot[] slots, ResourceSet resourceSet);
 
 }

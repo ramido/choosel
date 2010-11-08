@@ -27,4 +27,6 @@ public interface View extends WindowContent, Disposable, Persistable {
 
     SelectionModel getSelectionModel();
 
+    Slot[] getSlots();
+
 }
