@@ -115,13 +115,13 @@ public class Importer {
                                 stringValue, row + 1);
                     }
 
-                    Resource r = new Resource();
+                    Resource locationResource = new Resource();
                     String[] split = stringValue.split("\\/");
-                    r.putValue(MapViewContentDisplay.LATITUDE,
+                    locationResource.putValue(MapViewContentDisplay.LATITUDE,
                             Double.parseDouble(split[0]));
-                    r.putValue(MapViewContentDisplay.LONGITUDE,
+                    locationResource.putValue(MapViewContentDisplay.LONGITUDE,
                             Double.parseDouble(split[1]));
-                    value = r;
+                    value = locationResource;
                     break;
                 default:
                     value = stringValue;

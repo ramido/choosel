@@ -36,6 +36,7 @@ import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.client.test.TestUndoableCommandWithDescription;
 import org.thechiselgroup.choosel.client.ui.popup.DelayedPopup;
+import org.thechiselgroup.choosel.client.views.Slot;
 import org.thechiselgroup.choosel.client.views.View;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
 
@@ -61,12 +62,6 @@ public class ResourceSetAvatarDropControllerTest {
             return null;
         }
     }
-
-    private static final String INVALID_RESOURCE_TYPE = "invalid_type";
-
-    private static final String VALID_RESOURCE_TYPE = "valid_type";
-
-    private static final String VIEW_ID = "viewId";
 
     @Mock
     private DropTargetCapabilityChecker capabilityChecker;
@@ -135,23 +130,6 @@ public class ResourceSetAvatarDropControllerTest {
     }
 
     @Test
-    public void cannotDropWhenViewAndMixedResourceSetIncompatible() {
-        testDropTargetValidation(false, VALID_RESOURCE_TYPE,
-                INVALID_RESOURCE_TYPE);
-    }
-
-    @Test
-    public void cannotDropWhenViewAndResourceSetCompatible() {
-        testDropTargetValidation(true, VALID_RESOURCE_TYPE, VALID_RESOURCE_TYPE);
-    }
-
-    @Test
-    public void cannotDropWhenViewAndResourceSetIncompatible() {
-        testDropTargetValidation(false, INVALID_RESOURCE_TYPE,
-                INVALID_RESOURCE_TYPE);
-    }
-
-    @Test
     public void hidePopupOnDrop() {
         when(commandFactory.canDrop(eq(dragAvatar))).thenReturn(true);
 
@@ -187,10 +165,9 @@ public class ResourceSetAvatarDropControllerTest {
         dragContext.draggable = dragAvatar;
         when(commandFactory.createCommand(eq(dragAvatar))).thenReturn(command);
         when(
-                capabilityChecker.isValidDrop(any(String.class),
-                        any(String.class))).thenReturn(true);
+                capabilityChecker.isValidDrop(any(Slot[].class),
+                        any(ResourceSet.class))).thenReturn(true);
         when(viewAccessor.findView(any(Widget.class))).thenReturn(view);
-        when(view.getContentType()).thenReturn(VIEW_ID);
         resources = TestResourceSetFactory.createResources(1, 2);
         when(dragAvatar.getResourceSet()).thenReturn(resources);
     }
@@ -198,25 +175,6 @@ public class ResourceSetAvatarDropControllerTest {
     @After
     public void tearDown() {
         MockitoGWTBridge.tearDown();
-    }
-
-    private void testDropTargetValidation(boolean expectedExecution,
-            String resource1type, String resource2type) {
-
-        when(commandFactory.canDrop(eq(dragAvatar))).thenReturn(true);
-        when(capabilityChecker.isValidDrop(VIEW_ID, INVALID_RESOURCE_TYPE))
-                .thenReturn(false);
-        when(capabilityChecker.isValidDrop(VIEW_ID, VALID_RESOURCE_TYPE))
-                .thenReturn(true);
-
-        when(resourceTypeCategorizer.getCategory(resources.toList().get(0)))
-                .thenReturn(resource1type);
-        when(resourceTypeCategorizer.getCategory(resources.toList().get(1)))
-                .thenReturn(resource2type);
-
-        underTest.onEnter(dragContext);
-
-        verify(command, times(expectedExecution ? 1 : 0)).execute();
     }
 
     /**

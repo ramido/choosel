@@ -17,17 +17,14 @@ package org.thechiselgroup.choosel.client.views;
 
 import static org.thechiselgroup.choosel.client.util.CollectionUtils.toSet;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import org.thechiselgroup.choosel.client.calculation.AverageCalculation;
@@ -47,6 +44,7 @@ import org.thechiselgroup.choosel.client.resources.ResourceCategoryChange;
 import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetEventForwarder;
+import org.thechiselgroup.choosel.client.resources.ResourceSetUtils;
 import org.thechiselgroup.choosel.client.resources.ResourceSplitter;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
@@ -65,7 +63,6 @@ import org.thechiselgroup.choosel.client.util.CollectionUtils;
 import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.util.HandlerRegistrationSet;
 import org.thechiselgroup.choosel.client.util.Initializable;
-import org.thechiselgroup.choosel.client.views.map.MapViewContentDisplay;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 
 import com.allen_sauer.gwt.log.client.Log;
@@ -337,72 +334,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         return GWT.getModuleBaseURL();
     }
 
-    // TODO move
-    // TODO write test cases
-    // return: property keys
-    protected List<String> getPropertyNamesForDataType(
-            Set<ResourceItem> resourceItems, DataType dataType) {
-
-        if (resourceItems.isEmpty()) {
-            return new ArrayList<String>();
-        }
-
-        /*
-         * assertion: first add, no aggregation, homogeneous resource set
-         */
-        assert resourceItems.size() >= 1;
-
-        // homogeneous resource set --> look only at first item
-        ResourceItem resourceItem = (ResourceItem) resourceItems.toArray()[0];
-
-        // TODO this should be a condition of resource item in general
-        assert resourceItem.getResourceSet().size() >= 1;
-
-        // no aggregation
-        Resource resource = resourceItem.getResourceSet().getFirstResource();
-        List<String> properties = new ArrayList<String>();
-
-        for (Entry<String, Serializable> entry : resource.getProperties()
-                .entrySet()) {
-
-            switch (dataType) {
-            case TEXT: {
-                if (entry.getValue() instanceof String) {
-                    properties.add(entry.getKey());
-                }
-            }
-                break;
-            case NUMBER: {
-                if (entry.getValue() instanceof Double) {
-                    properties.add(entry.getKey());
-                }
-            }
-                break;
-            case LOCATION: {
-                if (entry.getValue() instanceof Resource) {
-                    Resource r = (Resource) entry.getValue();
-
-                    if (r.getValue(MapViewContentDisplay.LATITUDE) != null
-                            && r.getValue(MapViewContentDisplay.LONGITUDE) != null) {
-
-                        properties.add(entry.getKey());
-                    }
-                }
-            }
-                break;
-            case DATE: {
-                if (entry.getValue() instanceof Date) {
-                    properties.add(entry.getKey());
-                }
-            }
-                break;
-            }
-
-        }
-
-        return properties;
-    }
-
     // TODO improve algorithm: switch depending on size of resource vs size of
     // resource items --> change to collection
     private Set<ResourceItem> getResourceItems(Iterable<Resource> resources) {
@@ -439,6 +370,11 @@ public class DefaultView extends AbstractWindowContent implements View {
     @Override
     public SelectionModel getSelectionModel() {
         return selectionModel;
+    }
+
+    @Override
+    public Slot[] getSlots() {
+        return contentDisplay.getSlots();
     }
 
     @Override
@@ -780,7 +716,7 @@ public class DefaultView extends AbstractWindowContent implements View {
             // TODO include aggregation that does not aggregate...
             // TODO include bin aggregation for numerical slots
 
-            final List<String> propertyNames = getPropertyNamesForDataType(
+            final List<String> propertyNames = ResourceSetUtils.getPropertyNamesForDataType(
                     addedResourceItems, DataType.TEXT);
 
             final ListBox groupingBox = new ListBox(false);
@@ -821,7 +757,7 @@ public class DefaultView extends AbstractWindowContent implements View {
         if (Arrays.asList(contentDisplay.getSlots()).contains(
                 SlotResolver.LOCATION_SLOT)) {
 
-            final List<String> propertyNames = getPropertyNamesForDataType(
+            final List<String> propertyNames = ResourceSetUtils.getPropertyNamesForDataType(
                     addedResourceItems, DataType.LOCATION);
 
             if (!propertyNames.isEmpty()) {
@@ -861,7 +797,7 @@ public class DefaultView extends AbstractWindowContent implements View {
         if (Arrays.asList(contentDisplay.getSlots()).contains(
                 SlotResolver.DATE_SLOT)) {
 
-            final List<String> propertyNames = getPropertyNamesForDataType(
+            final List<String> propertyNames = ResourceSetUtils.getPropertyNamesForDataType(
                     addedResourceItems, DataType.DATE);
 
             if (!propertyNames.isEmpty()) {
@@ -880,7 +816,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         for (final Slot slot : contentDisplay.getSlots()) {
             if (slot.getDataType() == DataType.TEXT) {
-                List<String> propertyNames = getPropertyNamesForDataType(
+                List<String> propertyNames = ResourceSetUtils.getPropertyNamesForDataType(
                         addedResourceItems, DataType.TEXT);
 
                 if (!propertyNames.isEmpty()) {
@@ -921,7 +857,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         for (final Slot slot : contentDisplay.getSlots()) {
             if (slot.getDataType() == DataType.NUMBER) {
-                List<String> propertyNames = getPropertyNamesForDataType(
+                List<String> propertyNames = ResourceSetUtils.getPropertyNamesForDataType(
                         addedResourceItems, DataType.NUMBER);
 
                 if (!propertyNames.isEmpty()) {
