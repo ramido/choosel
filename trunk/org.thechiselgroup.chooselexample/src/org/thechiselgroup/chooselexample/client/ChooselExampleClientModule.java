@@ -18,7 +18,6 @@ package org.thechiselgroup.chooselexample.client;
 import org.thechiselgroup.choosel.client.ChooselApplication;
 import org.thechiselgroup.choosel.client.ChooselClientModule;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
-import org.thechiselgroup.choosel.client.ui.dnd.DropTargetCapabilityChecker;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.graph.GraphExpansionRegistry;
 
@@ -39,17 +38,12 @@ public class ChooselExampleClientModule extends ChooselClientModule {
     }
 
     @Override
-    protected Class<? extends DropTargetCapabilityChecker> getDropTargetCapabilityCheckerClass() {
-        return ChooselExampleDropTargetCapabilityChecker.class;
+    protected Class<? extends GraphExpansionRegistry> getGraphExpansionRegistryClass() {
+        return ChooselExampleGraphExpansionRegistry.class;
     }
 
     @Override
     protected Class<? extends SlotResolver> getSlotResolverClass() {
         return ChooselExampleSlotResolver.class;
-    }
-
-    @Override
-    protected Class<? extends GraphExpansionRegistry> getGraphExpansionRegistryClass() {
-        return ChooselExampleGraphExpansionRegistry.class;
     }
 }
