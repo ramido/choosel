@@ -17,7 +17,6 @@ package org.thechiselgroup.choosel.client.views;
 
 import org.thechiselgroup.choosel.client.command.UndoableCommand;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.UnmodifiableResourceSet;
 import org.thechiselgroup.choosel.client.resources.command.AddResourceSetToViewCommand;
 import org.thechiselgroup.choosel.client.resources.command.AddResourcesToResourceModelCommand;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
@@ -64,9 +63,10 @@ public class ViewDisplayDropCommandFactory implements
                     addedResources);
         }
 
-        if (dragAvatar.getType() != ResourceSetAvatarType.SET) {
-            addedResources = new UnmodifiableResourceSet(addedResources);
-        }
+        // XXX Deactivated preventing the renaming of all/selection sets for now
+        // if (dragAvatar.getType() != ResourceSetAvatarType.SET) {
+        // addedResources = new UnmodifiableResourceSet(addedResources);
+        // }
 
         return new AddResourceSetToViewCommand(getResourceModel(),
                 addedResources);

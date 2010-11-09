@@ -21,6 +21,7 @@ import static org.mockito.Mockito.when;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -60,6 +61,7 @@ public class ViewDisplayDropCommandFactoryTest {
     @Mock
     private ResourceModel resourceModel;
 
+    @Ignore
     @Test
     public void addedSetForAllIsUnmodifiable() {
         testResourceSetInCommandIsModifiable(false, ResourceSetAvatarType.ALL);
@@ -70,6 +72,7 @@ public class ViewDisplayDropCommandFactoryTest {
         testResourceSetInCommandIsModifiable(true, ResourceSetAvatarType.SET);
     }
 
+    @Ignore
     @Test
     public void addedSetForSelectionIsUnmodifiable() {
         testResourceSetInCommandIsModifiable(false,
@@ -77,6 +80,7 @@ public class ViewDisplayDropCommandFactoryTest {
     }
 
     @Test
+    @Ignore
     public void addedSetForTypeIsUnmodifiable() {
         testResourceSetInCommandIsModifiable(false,
                 ResourceSetAvatarType.SELECTION);
