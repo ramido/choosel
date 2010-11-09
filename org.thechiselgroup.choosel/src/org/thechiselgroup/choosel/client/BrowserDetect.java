@@ -47,19 +47,23 @@ public class BrowserDetect {
                 int index = userAgent.indexOf("firefox");
                 index += "firefox".length();
                 int firstDot = userAgent.indexOf(".", index);
-                int secondDot = userAgent.indexOf(".", firstDot + 1);
-                if (secondDot == -1) {
-                    secondDot = userAgent.length();
-                }
-
                 int major = Integer.parseInt(userAgent.substring(index + 1,
                         firstDot));
-                int minor = Integer.parseInt(userAgent.substring(firstDot + 1,
-                        secondDot));
+
+                if (major > 3) {
+                    return true;
+                }
 
                 if (major < 3) {
                     return false;
                 }
+
+                int secondDot = userAgent.indexOf(".", firstDot + 1);
+                if (secondDot == -1) {
+                    secondDot = userAgent.length();
+                }
+                int minor = Integer.parseInt(userAgent.substring(firstDot + 1,
+                        secondDot));
 
                 if (major == 3 && minor < 5) {
                     return false;
