@@ -74,6 +74,13 @@ public class BrowserDetectTest {
     }
 
     @Test
+    public void firefox4_0b6() {
+        assertEquals(true, BrowserDetect.isValidBrowser("Mozilla/5.0 "
+                + "(Windows NT 6.1; WOW64; rv:2.0b6) "
+                + "Gecko/20100101 Firefox/4.0b6"));
+    }
+
+    @Test
     public void testInternetExplorer8() {
         assertEquals(false, BrowserDetect.isValidBrowser("Mozilla/4.0 "
                 + "(compatible; MSIE 8.0; Windows NT 5.1; "
