@@ -25,17 +25,20 @@ public class UnmodifiableResourceSet extends DelegatingResourceSet {
 
     @Override
     public boolean add(Resource i) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(
+                "UnmodifiableResourceSet.add not supported");
     }
 
     @Override
     public boolean addAll(Collection<? extends Resource> resources) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(
+                "UnmodifiableResourceSet.addAll not supported");
     }
 
     @Override
     public void clear() {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(
+                "UnmodifiableResourceSet.clear not supported");
     }
 
     @Override
@@ -45,17 +48,20 @@ public class UnmodifiableResourceSet extends DelegatingResourceSet {
 
     @Override
     public boolean remove(Object o) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(
+                "UnmodifiableResourceSet.remove not supported");
     }
 
     @Override
     public boolean removeAll(Collection<?> resources) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(
+                "UnmodifiableResourceSet.removeAll not supported");
     }
 
     @Override
     public void setLabel(String label) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(
+                "UnmodifiableResourceSet.setLabel not supported");
     }
 
 }
