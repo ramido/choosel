@@ -3,7 +3,7 @@
 
 =Scope=
 
-Choosel is built on top of GWT and the Google App Engine (the backend can be modified to run on any servlet container). It is a *research prototype*. The current limitations are:
+Choosel is built on top of [http://code.google.com/webtoolkit/ GWT] and the [http://code.google.com/appengine/ Google App Engine] (the backend can be modified to run on any servlet container). It is a *research prototype*. The current limitations are:
 
   * *Small number of data items* (up to 200 rows) - see [http://code.google.com/p/choosel/wiki/Performance performance testing results]. We believe this is mostly due to problems with the GWT collections performance (see [http://lgrammel.blogspot.com/2010/09/gwt-arraylist-hashset-and-jsarray.html benchmark]) and are planning to switch to lightweight collections. This will hopefully allow Choosel to scale up to several thousand data items.
   * *Exploration of static, read-only data*. Choosel assumes that the data does not change, and that it cannot be modified.
@@ -12,13 +12,11 @@ Choosel is built on top of GWT and the Google App Engine (the backend can be mod
 
 For more details on the design decisions, see the [http://lgrammel.blogspot.com/2010/09/why-choosel-is-based-on-gwt.html blog post on the design decisions (Why Choosel is based on GWT)].
 
-
 =Architecture Diagram=
 
 http://choosel.googlecode.com/svn/wiki/choosel-architecture.png
 
-
-
+The Choosel client is written in [http://code.google.com/webtoolkit/ GWT] and runs in the browser. The Choosel backend is written for the[http://code.google.com/appengine/ Google App engine], but it can be modified to run on any [http://www.oracle.com/technetwork/java/index-jsp-135475.html Java Servlet container].
 
 =User Interface Elements=
 
