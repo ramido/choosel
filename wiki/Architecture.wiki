@@ -1,7 +1,10 @@
 #summary Choosel Architecture Overview
 #labels developer,architecture,design
 
-=Assumptions and Limitations=
+
+=Architecture Diagram=
+
+http://choosel.googlecode.com/svn/wiki/choosel-architecture.png
 
 Choosel is built on top of GWT and the Google App Engine (the backend can be modified to run on any servlet container). It is a *research prototype*. The current limitations are:
 
@@ -11,12 +14,6 @@ Choosel is built on top of GWT and the Google App Engine (the backend can be mod
   * *Designed for mouse interaction and full screen windows on larger monitors (1280x1024)*. Touch interaction (e.g. iPad) is different in that hovering (and thus highlighting and tooltips) is difficult, and occlusion is problematic. Also, multitouch interaction is not supported. Similarly, small screen devices (e.g. smartphones) are unsuitable for Choosel.
 
 For more details on the design decisions, see the [http://lgrammel.blogspot.com/2010/09/why-choosel-is-based-on-gwt.html blog post on the design decisions (Why Choosel is based on GWT)].
-
-=Architecture Diagram=
-
-http://choosel.googlecode.com/svn/wiki/choosel-architecture.png
-
-Choosel is based on a client-server architecture. However, the client does not depend on the server except for loading, saving and sharing, and in many cases for data access (due to cross-domain scripting issues). In our example application, the CSV file gets entered in the browser, and the client does not depend on server for that.
 
 
 
