@@ -6,7 +6,8 @@
 Choosel is built on top of GWT and the Google App Engine (the backend can be modified to run on any servlet container). It is a *research prototype*. The current limitations are:
 
   * *Small number of data items* (up to 200 rows) - see [http://code.google.com/p/choosel/wiki/Performance performance testing results]. We believe this is mostly due to problems with the GWT collections performance (see [http://lgrammel.blogspot.com/2010/09/gwt-arraylist-hashset-and-jsarray.html benchmark]) and are planning to switch to lightweight collections. This will hopefully allow Choosel to scale up to several thousand data items.
-  * *Firefox 3.5+, Chrome 4+, and Safari 5+ are supported*. There are problems with the CSS rendering in Internet Explorer and older browser. Choosel also depends on fast JavaScript engines.
+  * *Exploration of static, read-only data*. Choosel assumes that the data does not change, and that it cannot be modified.
+  * *Firefox 3.5+, Chrome 4+, and Safari 5+ are supported*. There are problems with the CSS rendering in Internet Explorer and older browser. Choosel also depends on fast !JavaScript engines.
   * *Designed for mouse interaction and full screen windows on larger monitors (1280x1024)*. Touch interaction (e.g. iPad) is different in that hovering (and thus highlighting and tooltips) is difficult, and occlusion is problematic. Also, multitouch interaction is not supported. Similarly, small screen devices (e.g. smartphones) are unsuitable for Choosel.
 
 For more details on the design decisions, see the [http://lgrammel.blogspot.com/2010/09/why-choosel-is-based-on-gwt.html blog post on the design decisions (Why Choosel is based on GWT)].
