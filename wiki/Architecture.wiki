@@ -1,4 +1,12 @@
 #summary Choosel Architecture Overview
 #labels developer,architecture,design
 
+=Architecture Diagram=
+
 http://choosel.googlecode.com/svn/wiki/choosel-architecture.png
+
+Choosel uses a client-server architecture.
+
+=User Interface Elements=
+
+=Data Representation=
