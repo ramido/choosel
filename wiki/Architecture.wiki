@@ -1,7 +1,7 @@
 #summary Choosel Architecture Overview
 #labels developer,architecture,design
 
-=Assumptions=
+=Scope=
 
 Choosel is built on top of GWT and the Google App Engine (the backend can be modified to run on any servlet container). It is a *research prototype*. The current limitations are:
 
