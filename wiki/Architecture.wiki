@@ -1,0 +1,4 @@
+#summary Choosel Architecture Overview
+#labels developer,architecture,design
+
+http://choosel.googlecode.com/svn/wiki/choosel-architecture.png
