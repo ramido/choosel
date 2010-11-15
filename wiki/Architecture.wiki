@@ -1,11 +1,21 @@
 #summary Choosel Architecture Overview
 #labels developer,architecture,design
 
+=Assumptions and Limitations=
+
+Choosel is built on top of GWT and the Google App Engine (the backend can be modified to run on any servlet container). Its current limitations are:
+
+  * Limited number (up to 200) of data items (rows) - see [http://code.google.com/p/choosel/wiki/Performance performance testing results]. We believe this is mostly due to problems with the GWT collections performance (see [http://lgrammel.blogspot.com/2010/09/gwt-arraylist-hashset-and-jsarray.html benchmark]) and are planning to switch to lightweight collections. This will hopefully allow Choosel to scale up to several thousand data items.
+
+For more details on the design decisions, see the [http://lgrammel.blogspot.com/2010/09/why-choosel-is-based-on-gwt.html blog post on the design decisions (Why Choosel is based on GWT)].
+
 =Architecture Diagram=
 
 http://choosel.googlecode.com/svn/wiki/choosel-architecture.png
 
-Choosel uses a client-server architecture.
+Choosel is based on a client-server architecture. However, the client does not depend on the server except for loading, saving and sharing, and in many cases for data access (due to cross-domain scripting issues). In our example application, the CSV file gets entered in the browser, and the client does not depend on server for that.
+
+
 
 =User Interface Elements=
 
