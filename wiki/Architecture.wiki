@@ -26,4 +26,6 @@ Choosel provides several services such as view coordination and configuration, a
 
 http://choosel.googlecode.com/svn/wiki/choosel-ui-elements.png
 
+http://choosel.googlecode.com/svn/wiki/choosel-window.png
+
 =Data Representation=
