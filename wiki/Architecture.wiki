@@ -1,5 +1,5 @@
 #summary Choosel Architecture Overview
-#labels developer,architecture,design,Featured
+#labels Developer,Featured
 
 =Scope=
 
