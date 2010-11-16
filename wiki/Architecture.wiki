@@ -26,13 +26,10 @@ Choosel provides several services such as view coordination and configuration, a
 
 http://choosel.googlecode.com/svn/wiki/choosel-ui-elements.png
 
-[http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel/src/org/thechiselgroup/choosel/client/ui/ActionBar.java ActionBar]
-
-[http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel/src/org/thechiselgroup/choosel/client/windows/Desktop.java Desktop Interface]
-
-[http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel/src/org/thechiselgroup/choosel/client/windows/DefaultDesktop.java Desktop Implementation]
-
-[http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel/src/org/thechiselgroup/choosel/client/windows/WindowPanel.java Window]
+  *[http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel/src/org/thechiselgroup/choosel/client/ui/ActionBar.java ActionBar source code]
+  *[http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel/src/org/thechiselgroup/choosel/client/windows/Desktop.java Desktop Interface source code]
+  *[http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel/src/org/thechiselgroup/choosel/client/windows/DefaultDesktop.java Desktop Implementation source code]
+  *[http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel/src/org/thechiselgroup/choosel/client/windows/WindowPanel.java Window source code]
 
 http://choosel.googlecode.com/svn/wiki/choosel-ui-window.png
 
