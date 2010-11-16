@@ -1,5 +1,5 @@
 #summary Presentations and Exhibits on Choosel
-#labels poster,exhibit,presentation,Featured
+#labels User,Developer,Featured
 
 ==!InfoVis 2010 Poster==
 Lars Grammel, 2010-Oct-26
