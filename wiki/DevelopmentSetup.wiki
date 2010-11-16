@@ -1,5 +1,5 @@
 #summary Describes how to set up an development environment for Choosel.
-#labels Setup,Featured
+#labels Developer,Featured
 
 = Setting up Java, GAE/J & GWT =
 
