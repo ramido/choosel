@@ -1,5 +1,5 @@
 #summary Performance Testing Results
-#labels performance
+#labels Developer
 
 = Performance Tests =
 
