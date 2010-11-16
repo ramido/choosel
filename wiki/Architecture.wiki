@@ -16,7 +16,9 @@ For more details on the design decisions, see the [http://lgrammel.blogspot.com/
 
 http://choosel.googlecode.com/svn/wiki/choosel-architecture.png
 
-The Choosel client is written in [http://code.google.com/webtoolkit/ GWT] and runs in the browser. The Choosel backend is written for the[http://code.google.com/appengine/ Google App engine], but it can be modified to run on any [http://www.oracle.com/technetwork/java/index-jsp-135475.html Java Servlet container].
+The Choosel client is written in [http://code.google.com/webtoolkit/ GWT] and runs in the browser. The Choosel backend is written for the [http://code.google.com/appengine/ Google App engine], but it can be modified to run on any [http://www.oracle.com/technetwork/java/index-jsp-135475.html Java Servlet container].
+
+The client-side framework facilitates the interaction with *visualization components*, which can be third party visualization components and toolkits such as the Simile Timeline, Protovis and FlexViz. Choosel integrates different technologies such as Flash and JavaScript for that purpose.
 
 =User Interface Elements=
 
