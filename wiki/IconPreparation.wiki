@@ -1,5 +1,5 @@
 #summary Guide how to prepare icons for the Choosel ActionBar
-#labels icons,development,design
+#labels icons,Developer,design
 
 Most of the icons that are used in Choosel are based on the 22x22px icons in [http://tango.freedesktop.org/Tango_Desktop_Project Tango Icon Library].
 
