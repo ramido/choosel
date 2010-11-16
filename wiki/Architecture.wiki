@@ -29,3 +29,5 @@ http://choosel.googlecode.com/svn/wiki/choosel-ui-elements.png
 http://choosel.googlecode.com/svn/wiki/choosel-ui-window.png
 
 =Data Representation=
+
+The data is stored in [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel/src/org/thechiselgroup/choosel/client/resources/Resource.java Resource]s, which are essentially key-value maps with an id. [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel/src/org/thechiselgroup/choosel/client/resources/ResourceSet.java Resource Sets] combine several resources. There are multiple implementations of ResourceSet, which are required for divserse purposes such as memory management.
