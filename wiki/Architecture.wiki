@@ -20,7 +20,7 @@ The Choosel client is written in [http://code.google.com/webtoolkit/ GWT] and ru
 
 The client-side framework facilitates the interaction with *visualization components*, which can be wrappers around third party components and toolkits such as the Simile Timeline, Protovis and !FlexViz. Choosel can integrate components developed using different technologies such as Flash and !JavaScript. 
 
-Choosel provides 
+Choosel provides several services such as view coordination and configuration, a desktop, undo/redo management, data management etc to make development of multi-view visualization environments easy.
 
 =User Interface Elements=
 
