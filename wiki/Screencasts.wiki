@@ -1,5 +1,5 @@
 #summary Choosel screencasts
-#labels screencast,video,demo,Featured
+#labels User,Featured
 
 ==Teaser for !InfoVis 2010 Poster and CASCON 2010 Exhibit==
 Lars Grammel, 2010-Oct-22
