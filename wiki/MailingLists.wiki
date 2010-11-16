@@ -1,5 +1,5 @@
 #summary Mailing lists in this project
-#labels Groups
+#labels Developer,User
 
    * [http://groups.google.com/group/choosel choosel] (questions, discussions, feedback, news)
    * [http://groups.google.com/group/choosel-commit choosel-commit] (commit notifications)
