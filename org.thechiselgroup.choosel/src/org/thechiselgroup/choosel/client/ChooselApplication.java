@@ -33,15 +33,18 @@ import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
+import org.thechiselgroup.choosel.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.client.ui.Action;
 import org.thechiselgroup.choosel.client.ui.ActionBar;
 import org.thechiselgroup.choosel.client.ui.dialog.Dialog;
 import org.thechiselgroup.choosel.client.ui.dialog.DialogManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
+import org.thechiselgroup.choosel.client.views.DefaultView;
 import org.thechiselgroup.choosel.client.views.ResourceSetContainer;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 import org.thechiselgroup.choosel.client.windows.CreateWindowCommand;
 import org.thechiselgroup.choosel.client.windows.Desktop;
+import org.thechiselgroup.choosel.client.windows.WindowContent;
 import org.thechiselgroup.choosel.client.windows.WindowContentProducer;
 import org.thechiselgroup.choosel.client.workspace.SaveActionStateController;
 import org.thechiselgroup.choosel.client.workspace.WorkspaceManager;
@@ -83,6 +86,8 @@ public abstract class ChooselApplication {
     public static final String WORKSPACE_PANEL = "workspace";
 
     public static final String DEVELOPER_MODE_PANEL = "developer_mode";
+
+    private static final String WINDOW_ID = "windowId";
 
     @Inject
     protected ActionBar actionBar;
@@ -248,26 +253,59 @@ public abstract class ChooselApplication {
     }
 
     public void init() {
-        BrowserDetect.checkBrowser();
+        String windowIdParam = Window.Location.getParameter(WINDOW_ID);
 
-        initGlobalErrorHandler();
+        if (windowIdParam != null) {
+            ResourceSet addTestData = TestResourceSetFactory
+                    .addTestData(createResourceSet());
 
-        initWindowClosingConfirmationDialog();
+            final WindowContent createWindowContent = windowContentProducer
+                    .createWindowContent("Bar");
 
-        DockPanel mainPanel = createMainPanel();
+            createWindowContent.init();
 
-        initDesktop(mainPanel);
-        initActionBar(mainPanel);
-        initAuthenticationBar();
+            RootPanel.get().add(createWindowContent.asWidget());
 
-        initWorkspacePanel();
-        initEditPanel();
-        initHelpPanel();
+            // Set the size of the window, and listen for changes in size.
+            createWindowContent.asWidget().setPixelSize(
+                    Window.getClientWidth(), Window.getClientHeight());
 
-        initCustomActions();
+            Window.addResizeHandler(new ResizeHandler() {
+                @Override
+                public void onResize(ResizeEvent event) {
+                    createWindowContent.asWidget().setPixelSize(
+                            event.getWidth(), event.getHeight());
+                    // TODO windows need to be moved if they are out of the
+                    // range
+                }
+            });
 
-        loadWorkspaceIfParamSet();
+            // This is important so that we can have the facilities to get the
+            // resource model, and add our resources.
+            DefaultView view = (DefaultView) createWindowContent;
+            view.getResourceModel().addResources(addTestData);
+        } else {
+            BrowserDetect.checkBrowser();
 
+            initGlobalErrorHandler();
+
+            initWindowClosingConfirmationDialog();
+
+            DockPanel mainPanel = createMainPanel();
+
+            initDesktop(mainPanel);
+            initActionBar(mainPanel);
+            initAuthenticationBar();
+
+            initWorkspacePanel();
+            initEditPanel();
+            initHelpPanel();
+
+            initCustomActions();
+
+            loadWorkspaceIfParamSet();
+
+        }
         afterInit();
     }
 
