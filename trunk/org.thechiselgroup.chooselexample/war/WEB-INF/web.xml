@@ -4,7 +4,6 @@
     "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app>
-
   
   <servlet>
     <servlet-name>csvservice</servlet-name>
@@ -66,6 +65,14 @@
     <url-pattern>/acceptInvitation</url-pattern>
   </servlet-mapping>
 
+  <servlet>
+    <servlet-name>view</servlet-name>
+    <servlet-class>org.thechiselgroup.choosel.server.workspace.ViewPersistenceServiceServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>view</servlet-name>
+    <url-pattern>/org_thechiselgroup_chooselexample/view</url-pattern>
+  </servlet-mapping>
 
 <!-- gwt-log remote logging service -->  
 <servlet>
