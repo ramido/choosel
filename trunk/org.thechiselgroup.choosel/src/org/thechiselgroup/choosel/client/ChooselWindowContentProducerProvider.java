@@ -53,6 +53,7 @@ import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.ViewFactory;
 import org.thechiselgroup.choosel.client.windows.WindowContentFactory;
 import org.thechiselgroup.choosel.client.windows.WindowContentProducer;
+import org.thechiselgroup.choosel.client.workspace.ViewPersistence;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -87,6 +88,8 @@ public class ChooselWindowContentProducerProvider implements
 
     private final DetailsWidgetHelper detailsWidgetHelper;
 
+    private final ViewPersistence viewPersistence;
+
     @Inject
     public ChooselWindowContentProducerProvider(
             @Named(AVATAR_FACTORY_SET) ResourceSetAvatarFactory userSetsDragAvatarFactory,
@@ -100,7 +103,8 @@ public class ChooselWindowContentProducerProvider implements
             @Named(DROP_TARGET_MANAGER_VIEW_CONTENT) ResourceSetAvatarDropTargetManager contentDropTargetManager,
             SlotResolver slotResolver, HoverModel hoverModel,
             PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper) {
+            DetailsWidgetHelper detailsWidgetHelper,
+            ViewPersistence viewPersistence) {
 
         assert userSetsDragAvatarFactory != null;
         assert allResourcesDragAvatarFactory != null;
@@ -116,6 +120,7 @@ public class ChooselWindowContentProducerProvider implements
         assert popupManagerFactory != null;
         assert detailsWidgetHelper != null;
 
+        this.viewPersistence = viewPersistence;
         this.userSetsDragAvatarFactory = userSetsDragAvatarFactory;
         this.allResourcesDragAvatarFactory = allResourcesDragAvatarFactory;
         this.selectionDragAvatarFactory = selectionDragAvatarFactory;
@@ -210,7 +215,7 @@ public class ChooselWindowContentProducerProvider implements
                 dropTargetFactory, resourceSetFactory,
                 selectionModelLabelFactory, categorizer, labelProvider,
                 contentDropTargetManager, hoverModel, popupManagerFactory,
-                detailsWidgetHelper));
+                detailsWidgetHelper, viewPersistence));
     }
 
 }

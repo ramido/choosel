@@ -64,6 +64,7 @@ import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.util.HandlerRegistrationSet;
 import org.thechiselgroup.choosel.client.util.Initializable;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
+import org.thechiselgroup.choosel.client.workspace.ViewPersistence;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.GWT;
@@ -72,6 +73,7 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.ListBox;
@@ -177,13 +179,16 @@ public class DefaultView extends AbstractWindowContent implements View {
      */
     private boolean isConfigurationAvailable = false;
 
+    protected ViewPersistence viewPersistence;
+
     public DefaultView(ResourceSplitter resourceSplitter,
             ViewContentDisplay contentDisplay, String label,
             String contentType, ResourceItemValueResolver configuration,
             SelectionModel selectionModel, Presenter selectionModelPresenter,
             ResourceModel resourceModel, Presenter resourceModelPresenter,
             HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper) {
+            DetailsWidgetHelper detailsWidgetHelper,
+            ViewPersistence viewPersistence) {
 
         super(label, contentType);
 
@@ -197,7 +202,9 @@ public class DefaultView extends AbstractWindowContent implements View {
         assert resourceModel != null;
         assert resourceModelPresenter != null;
         assert hoverModel != null;
+        assert viewPersistence != null;
 
+        this.viewPersistence = viewPersistence;
         this.popupManagerFactory = popupManagerFactory;
         this.detailsWidgetHelper = detailsWidgetHelper;
 
@@ -553,6 +560,29 @@ public class DefaultView extends AbstractWindowContent implements View {
         configurationBar.setCellWidth(widget, "100%"); // eats up all space
     }
 
+    private void initShareConfigurator() {
+        VerticalPanel verticalPanel = new VerticalPanel();
+
+        Button w = new Button("Share this");
+        w.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                System.out.println("Button was clicked");
+
+                // TODO Add the call to the WindowPersistenceManager to save a
+                // copy of this window with a unique ID
+
+                DefaultView view = DefaultView.this;
+                viewPersistence.saveView(view);
+
+            }
+        });
+        verticalPanel.add(w);
+
+        sideBar.add(verticalPanel, "Share");
+    }
+
     private void initSideBar() {
         sideBar = new StackPanel();
         sideBar.setStyleName(CSS_CONFIGURATION_PANEL);
@@ -560,6 +590,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         initMappingsConfigurator();
         initViewConfigurator();
+        initShareConfigurator();
     }
 
     private void initSideBarExpander() {
@@ -716,8 +747,9 @@ public class DefaultView extends AbstractWindowContent implements View {
             // TODO include aggregation that does not aggregate...
             // TODO include bin aggregation for numerical slots
 
-            final List<String> propertyNames = ResourceSetUtils.getPropertyNamesForDataType(
-                    addedResourceItems, DataType.TEXT);
+            final List<String> propertyNames = ResourceSetUtils
+                    .getPropertyNamesForDataType(addedResourceItems,
+                            DataType.TEXT);
 
             final ListBox groupingBox = new ListBox(false);
             groupingBox.setVisibleItemCount(1);
@@ -757,8 +789,9 @@ public class DefaultView extends AbstractWindowContent implements View {
         if (Arrays.asList(contentDisplay.getSlots()).contains(
                 SlotResolver.LOCATION_SLOT)) {
 
-            final List<String> propertyNames = ResourceSetUtils.getPropertyNamesForDataType(
-                    addedResourceItems, DataType.LOCATION);
+            final List<String> propertyNames = ResourceSetUtils
+                    .getPropertyNamesForDataType(addedResourceItems,
+                            DataType.LOCATION);
 
             if (!propertyNames.isEmpty()) {
                 configuration.put(SlotResolver.LOCATION_SLOT,
@@ -797,8 +830,9 @@ public class DefaultView extends AbstractWindowContent implements View {
         if (Arrays.asList(contentDisplay.getSlots()).contains(
                 SlotResolver.DATE_SLOT)) {
 
-            final List<String> propertyNames = ResourceSetUtils.getPropertyNamesForDataType(
-                    addedResourceItems, DataType.DATE);
+            final List<String> propertyNames = ResourceSetUtils
+                    .getPropertyNamesForDataType(addedResourceItems,
+                            DataType.DATE);
 
             if (!propertyNames.isEmpty()) {
                 configuration.put(SlotResolver.DATE_SLOT,
@@ -816,8 +850,9 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         for (final Slot slot : contentDisplay.getSlots()) {
             if (slot.getDataType() == DataType.TEXT) {
-                List<String> propertyNames = ResourceSetUtils.getPropertyNamesForDataType(
-                        addedResourceItems, DataType.TEXT);
+                List<String> propertyNames = ResourceSetUtils
+                        .getPropertyNamesForDataType(addedResourceItems,
+                                DataType.TEXT);
 
                 if (!propertyNames.isEmpty()) {
                     configuration.put(slot, new TextResourceSetToValueResolver(
@@ -857,8 +892,9 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         for (final Slot slot : contentDisplay.getSlots()) {
             if (slot.getDataType() == DataType.NUMBER) {
-                List<String> propertyNames = ResourceSetUtils.getPropertyNamesForDataType(
-                        addedResourceItems, DataType.NUMBER);
+                List<String> propertyNames = ResourceSetUtils
+                        .getPropertyNamesForDataType(addedResourceItems,
+                                DataType.NUMBER);
 
                 if (!propertyNames.isEmpty()) {
                     CalculationResourceSetToValueResolver resolver = new CalculationResourceSetToValueResolver(
