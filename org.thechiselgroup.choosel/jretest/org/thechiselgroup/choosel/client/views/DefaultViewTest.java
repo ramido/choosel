@@ -60,6 +60,7 @@ import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.Presenter;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
+import org.thechiselgroup.choosel.client.workspace.ViewPersistence;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
@@ -74,12 +75,13 @@ public class DefaultViewTest {
                 Presenter selectionModelPresenter, ResourceModel resourceModel,
                 Presenter resourceModelPresenter, HoverModel hoverModel,
                 PopupManagerFactory popupManagerFactory,
-                DetailsWidgetHelper detailsWidgetHelper) {
+                DetailsWidgetHelper detailsWidgetHelper,
+                ViewPersistence viewPersistence) {
 
             super(resourceSplitter, contentDisplay, label, contentType,
                     configuration, selectionModel, selectionModelPresenter,
                     resourceModel, resourceModelPresenter, hoverModel,
-                    popupManagerFactory, detailsWidgetHelper);
+                    popupManagerFactory, detailsWidgetHelper, viewPersistence);
         }
 
         @Override
@@ -135,6 +137,9 @@ public class DefaultViewTest {
 
     @Mock
     private PopupManagerFactory popupManagerFactory;
+
+    @Mock
+    private ViewPersistence viewPersistence;
 
     public Set<ResourceItem> captureAddedResourceItems() {
         ArgumentCaptor<Set> captor = ArgumentCaptor.forClass(Set.class);
@@ -204,7 +209,8 @@ public class DefaultViewTest {
         underTest = spy(new TestView(resourceSplitter, contentDisplay, "", "",
                 resourceSetToValueResolver, selectionModel,
                 selectionModelPresenter, resourceModel, resourceModelPresenter,
-                hoverModel, popupManagerFactory, detailsWidgetHelper));
+                hoverModel, popupManagerFactory, detailsWidgetHelper,
+                viewPersistence));
     }
 
     private void deselect(ResourceSet resources) {

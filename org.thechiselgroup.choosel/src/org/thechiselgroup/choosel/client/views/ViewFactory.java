@@ -35,6 +35,7 @@ import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropTargetManag
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.windows.WindowContent;
 import org.thechiselgroup.choosel.client.windows.WindowContentFactory;
+import org.thechiselgroup.choosel.client.workspace.ViewPersistence;
 
 import com.google.inject.name.Named;
 
@@ -66,6 +67,8 @@ public class ViewFactory implements WindowContentFactory {
 
     private final DetailsWidgetHelper detailsWidgetHelper;
 
+    private final ViewPersistence viewPersistence;
+
     public ViewFactory(
             String contentType,
             ViewContentDisplayFactory viewContentDisplayFactory,
@@ -79,7 +82,8 @@ public class ViewFactory implements WindowContentFactory {
             CategoryLabelProvider labelProvider,
             @Named(DROP_TARGET_MANAGER_VIEW_CONTENT) ResourceSetAvatarDropTargetManager contentDropTargetManager,
             HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper) {
+            DetailsWidgetHelper detailsWidgetHelper,
+            ViewPersistence viewPersistence) {
 
         assert contentType != null;
         assert viewContentDisplayFactory != null;
@@ -96,6 +100,7 @@ public class ViewFactory implements WindowContentFactory {
         assert popupManagerFactory != null;
         assert detailsWidgetHelper != null;
 
+        this.viewPersistence = viewPersistence;
         this.hoverModel = hoverModel;
         this.contentType = contentType;
         this.viewContentDisplayFactory = viewContentDisplayFactory;
@@ -142,6 +147,7 @@ public class ViewFactory implements WindowContentFactory {
         return new DefaultView(resourceSplitter, contentDisplay, contentType,
                 contentType, new ResourceItemValueResolver(), selectionModel,
                 selectionModelPresenter, resourceModel, resourceModelPresenter,
-                hoverModel, popupManagerFactory, detailsWidgetHelper);
+                hoverModel, popupManagerFactory, detailsWidgetHelper,
+                viewPersistence);
     }
 }
