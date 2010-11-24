@@ -194,8 +194,7 @@ public class DefaultView extends AbstractWindowContent implements View {
             SelectionModel selectionModel, Presenter selectionModelPresenter,
             ResourceModel resourceModel, Presenter resourceModelPresenter,
             HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper,
-            ViewSaver viewPersistence) {
+            DetailsWidgetHelper detailsWidgetHelper, ViewSaver viewPersistence) {
 
         super(label, contentType);
 
@@ -336,6 +335,7 @@ public class DefaultView extends AbstractWindowContent implements View {
         restore(resourceModel, MEMENTO_RESOURCE_MODEL, state, accessor);
         restore(selectionModel, MEMENTO_SELECTION_MODEL, state, accessor);
         contentDisplay.restore(state.getChild(MEMENTO_CONTENT_DISPLAY));
+        // TODO restore mappings
 
         contentDisplay.endRestore();
     }
@@ -906,11 +906,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
                 visualMappingPanel.addConfigurationSetting(slot.getName(),
                         slotPropertyMappingBox);
-            }
-        }
-
-        for (final Slot slot : contentDisplay.getSlots()) {
-            if (slot.getDataType() == DataType.NUMBER) {
+            } else if (slot.getDataType() == DataType.NUMBER) {
                 List<String> propertyNames = ResourceSetUtils
                         .getPropertyNamesForDataType(addedResourceItems,
                                 DataType.NUMBER);

@@ -66,39 +66,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 
 public class DefaultViewTest {
 
-    public class TestView extends DefaultView {
-
-        public TestView(ResourceSplitter resourceSplitter,
-                ViewContentDisplay contentDisplay, String label,
-                String contentType, ResourceItemValueResolver configuration,
-                SelectionModel selectionModel,
-                Presenter selectionModelPresenter, ResourceModel resourceModel,
-                Presenter resourceModelPresenter, HoverModel hoverModel,
-                PopupManagerFactory popupManagerFactory,
-                DetailsWidgetHelper detailsWidgetHelper,
-                ViewSaver viewPersistence) {
-
-            super(resourceSplitter, contentDisplay, label, contentType,
-                    configuration, selectionModel, selectionModelPresenter,
-                    resourceModel, resourceModelPresenter, hoverModel,
-                    popupManagerFactory, detailsWidgetHelper, viewPersistence);
-        }
-
-        @Override
-        protected PopupManager createPopupManager(ResourceSet resources) {
-
-            return popupManager;
-        }
-
-        @Override
-        protected void initUI() {
-        }
-
-        @Override
-        protected void updateConfiguration(Set<ResourceItem> addedResourceItems) {
-        }
-    }
-
     @Mock
     private ViewContentDisplay contentDisplay;
 
@@ -210,7 +177,7 @@ public class DefaultViewTest {
                 resourceSetToValueResolver, selectionModel,
                 selectionModelPresenter, resourceModel, resourceModelPresenter,
                 hoverModel, popupManagerFactory, detailsWidgetHelper,
-                viewPersistence));
+                viewPersistence, popupManager));
     }
 
     private void deselect(ResourceSet resources) {
