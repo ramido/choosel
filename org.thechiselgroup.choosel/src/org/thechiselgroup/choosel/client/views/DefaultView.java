@@ -686,7 +686,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         if (target instanceof Persistable) {
             memento.addChild(mementoKey,
-                    ((Persistable) resourceModel).save(persistanceManager));
+                    ((Persistable) target).save(persistanceManager));
         }
     }
 
