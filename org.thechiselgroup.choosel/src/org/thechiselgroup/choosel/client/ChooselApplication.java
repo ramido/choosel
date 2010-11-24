@@ -270,23 +270,13 @@ public abstract class ChooselApplication {
                         @Override
                         public void onSuccess(final DefaultView view) {
 
-                            // ResourceSet addTestData = TestResourceSetFactory
-                            // .addTestData(createResourceSet());
-                            //
-                            // final WindowContent createWindowContent =
-                            // windowContentProducer
-                            // .createWindowContent(result
-                            // .getContentType());
-                            //
-                            // createWindowContent.init();
-
                             RootPanel.get().add(view.asWidget());
 
                             // Set the size of the window, and listen for
                             // changes in size.
                             view.asWidget().setPixelSize(
-                                    Window.getClientWidth(),
-                                    Window.getClientHeight());
+                                    Window.getClientWidth() - 1,
+                                    Window.getClientHeight() - 1);
 
                             Window.addResizeHandler(new ResizeHandler() {
                                 @Override
@@ -300,12 +290,6 @@ public abstract class ChooselApplication {
                                 }
                             });
 
-                            // This is important so that we can have the
-                            // facilities to get the
-                            // resource model, and add our resources.
-                            // DefaultView view = (DefaultView)
-                            // createWindowContent;
-                            // view.getResourceModel().addResources(addTestData);
                         }
 
                     });
