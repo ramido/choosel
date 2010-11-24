@@ -33,7 +33,6 @@ import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
-import org.thechiselgroup.choosel.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.client.ui.Action;
 import org.thechiselgroup.choosel.client.ui.ActionBar;
 import org.thechiselgroup.choosel.client.ui.dialog.Dialog;
@@ -44,9 +43,9 @@ import org.thechiselgroup.choosel.client.views.ResourceSetContainer;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 import org.thechiselgroup.choosel.client.windows.CreateWindowCommand;
 import org.thechiselgroup.choosel.client.windows.Desktop;
-import org.thechiselgroup.choosel.client.windows.WindowContent;
 import org.thechiselgroup.choosel.client.windows.WindowContentProducer;
 import org.thechiselgroup.choosel.client.workspace.SaveActionStateController;
+import org.thechiselgroup.choosel.client.workspace.ViewLoader;
 import org.thechiselgroup.choosel.client.workspace.WorkspaceManager;
 import org.thechiselgroup.choosel.client.workspace.WorkspacePersistenceManager;
 import org.thechiselgroup.choosel.client.workspace.WorkspacePresenter;
@@ -65,6 +64,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.Window.ClosingHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -155,6 +155,9 @@ public abstract class ChooselApplication {
 
     @Inject
     private DefaultWorkspacePresenterDisplay workspacePresenterDisplay;
+
+    @Inject
+    private ViewLoader viewLoader;
 
     protected void addActionToToolbar(String panelId, Action action) {
         getToolbarPanel(panelId).addAction(action);
@@ -256,34 +259,57 @@ public abstract class ChooselApplication {
         String windowIdParam = Window.Location.getParameter(WINDOW_ID);
 
         if (windowIdParam != null) {
-            ResourceSet addTestData = TestResourceSetFactory
-                    .addTestData(createResourceSet());
+            viewLoader.loadView(Long.parseLong(windowIdParam),
+                    new AsyncCallback<DefaultView>() {
 
-            final WindowContent createWindowContent = windowContentProducer
-                    .createWindowContent("Bar");
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            // TODO Catch whatever can happen on failure
+                        }
 
-            createWindowContent.init();
+                        @Override
+                        public void onSuccess(final DefaultView view) {
 
-            RootPanel.get().add(createWindowContent.asWidget());
+                            // ResourceSet addTestData = TestResourceSetFactory
+                            // .addTestData(createResourceSet());
+                            //
+                            // final WindowContent createWindowContent =
+                            // windowContentProducer
+                            // .createWindowContent(result
+                            // .getContentType());
+                            //
+                            // createWindowContent.init();
 
-            // Set the size of the window, and listen for changes in size.
-            createWindowContent.asWidget().setPixelSize(
-                    Window.getClientWidth(), Window.getClientHeight());
+                            RootPanel.get().add(view.asWidget());
 
-            Window.addResizeHandler(new ResizeHandler() {
-                @Override
-                public void onResize(ResizeEvent event) {
-                    createWindowContent.asWidget().setPixelSize(
-                            event.getWidth(), event.getHeight());
-                    // TODO windows need to be moved if they are out of the
-                    // range
-                }
-            });
+                            // Set the size of the window, and listen for
+                            // changes in size.
+                            view.asWidget().setPixelSize(
+                                    Window.getClientWidth(),
+                                    Window.getClientHeight());
 
-            // This is important so that we can have the facilities to get the
-            // resource model, and add our resources.
-            DefaultView view = (DefaultView) createWindowContent;
-            view.getResourceModel().addResources(addTestData);
+                            Window.addResizeHandler(new ResizeHandler() {
+                                @Override
+                                public void onResize(ResizeEvent event) {
+                                    view.asWidget()
+                                            .setPixelSize(event.getWidth(),
+                                                    event.getHeight());
+                                    // TODO windows need to be moved if they are
+                                    // out of the
+                                    // range
+                                }
+                            });
+
+                            // This is important so that we can have the
+                            // facilities to get the
+                            // resource model, and add our resources.
+                            // DefaultView view = (DefaultView)
+                            // createWindowContent;
+                            // view.getResourceModel().addResources(addTestData);
+                        }
+
+                    });
+
         } else {
             BrowserDetect.checkBrowser();
 

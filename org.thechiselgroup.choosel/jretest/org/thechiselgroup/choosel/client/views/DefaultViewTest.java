@@ -60,7 +60,7 @@ import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.Presenter;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
-import org.thechiselgroup.choosel.client.workspace.ViewPersistence;
+import org.thechiselgroup.choosel.client.workspace.ViewSaver;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
@@ -76,7 +76,7 @@ public class DefaultViewTest {
                 Presenter resourceModelPresenter, HoverModel hoverModel,
                 PopupManagerFactory popupManagerFactory,
                 DetailsWidgetHelper detailsWidgetHelper,
-                ViewPersistence viewPersistence) {
+                ViewSaver viewPersistence) {
 
             super(resourceSplitter, contentDisplay, label, contentType,
                     configuration, selectionModel, selectionModelPresenter,
@@ -139,7 +139,7 @@ public class DefaultViewTest {
     private PopupManagerFactory popupManagerFactory;
 
     @Mock
-    private ViewPersistence viewPersistence;
+    private ViewSaver viewPersistence;
 
     public Set<ResourceItem> captureAddedResourceItems() {
         ArgumentCaptor<Set> captor = ArgumentCaptor.forClass(Set.class);

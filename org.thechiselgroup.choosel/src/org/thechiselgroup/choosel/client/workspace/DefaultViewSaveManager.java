@@ -20,7 +20,7 @@ import org.thechiselgroup.choosel.client.workspace.service.ViewPersistenceServic
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
-public class DefaultViewPersistenceManager implements ViewPersistenceManager {
+public class DefaultViewSaveManager implements ViewSaveManager {
 
     private ViewPersistenceServiceAsync service;
 
@@ -29,7 +29,7 @@ public class DefaultViewPersistenceManager implements ViewPersistenceManager {
     private ResourceManager resourceManager;
 
     @Inject
-    public DefaultViewPersistenceManager(ViewPersistenceServiceAsync service,
+    public DefaultViewSaveManager(ViewPersistenceServiceAsync service,
             ResourceManager resourceManager,
             ResourceSetFactory resourceSetFactory) {
 
@@ -108,11 +108,14 @@ public class DefaultViewPersistenceManager implements ViewPersistenceManager {
         viewDTO.setResources(resourceCollector
                 .toArray(new Resource[resourceCollector.size()]));
 
+        viewDTO.setTitle(view.getLabel());
+
         return viewDTO;
     }
 
     @Override
-    public void saveView(DefaultView view, final AsyncCallback<Void> callback) {
+    public void saveView(final DefaultView view,
+            final AsyncCallback<Void> callback) {
         assert callback != null;
 
         ViewDTO viewDTO = createViewDTO(view);
@@ -125,7 +128,8 @@ public class DefaultViewPersistenceManager implements ViewPersistenceManager {
 
             @Override
             public void onSuccess(Long result) {
-                // workspace.setId(result);
+                view.setId(result);
+                view.updateSharePanel();
                 super.onSuccess(result);
             }
         });

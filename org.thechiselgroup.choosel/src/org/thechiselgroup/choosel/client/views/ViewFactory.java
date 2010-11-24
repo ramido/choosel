@@ -35,7 +35,7 @@ import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropTargetManag
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.windows.WindowContent;
 import org.thechiselgroup.choosel.client.windows.WindowContentFactory;
-import org.thechiselgroup.choosel.client.workspace.ViewPersistence;
+import org.thechiselgroup.choosel.client.workspace.ViewSaver;
 
 import com.google.inject.name.Named;
 
@@ -67,7 +67,7 @@ public class ViewFactory implements WindowContentFactory {
 
     private final DetailsWidgetHelper detailsWidgetHelper;
 
-    private final ViewPersistence viewPersistence;
+    private final ViewSaver viewPersistence;
 
     public ViewFactory(
             String contentType,
@@ -83,7 +83,7 @@ public class ViewFactory implements WindowContentFactory {
             @Named(DROP_TARGET_MANAGER_VIEW_CONTENT) ResourceSetAvatarDropTargetManager contentDropTargetManager,
             HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
             DetailsWidgetHelper detailsWidgetHelper,
-            ViewPersistence viewPersistence) {
+            ViewSaver viewPersistence) {
 
         assert contentType != null;
         assert viewContentDisplayFactory != null;
