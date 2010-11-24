@@ -15,19 +15,47 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.util.Set;
 
+import org.mockito.ArgumentCaptor;
+import org.thechiselgroup.choosel.client.resources.DefaultResourceSetFactory;
+import org.thechiselgroup.choosel.client.resources.ResourceByUriTypeCategorizer;
+import org.thechiselgroup.choosel.client.resources.ResourceCategorizerToMultiCategorizerAdapter;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSplitter;
+import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
+import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.Presenter;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.workspace.ViewSaver;
 
+import com.google.gwt.event.shared.HandlerRegistration;
+
 public class TestView extends DefaultView {
 
     private final PopupManager popupManager;
+
+    private final ViewContentDisplay contentDisplay;
+
+    private final HoverModel hoverModel;
+
+    private final HandlerRegistration selectionAddedHandlerRegistration;
+
+    private final HandlerRegistration selectionRemovedHandlerRegistration;
+
+    private final Presenter resourceModelPresenter;
+
+    private final Presenter selectionModelPresenter;
+
+    private ViewContentDisplayCallback callback;
 
     public TestView(ResourceSplitter resourceSplitter,
             ViewContentDisplay contentDisplay, String label,
@@ -36,14 +64,22 @@ public class TestView extends DefaultView {
             ResourceModel resourceModel, Presenter resourceModelPresenter,
             HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
             DetailsWidgetHelper detailsWidgetHelper, ViewSaver viewPersistence,
-            PopupManager popupManager) {
+            PopupManager popupManager,
+            HandlerRegistration selectionAddedHandlerRegistration,
+            HandlerRegistration selectionRemovedHandlerRegistration) {
 
         super(resourceSplitter, contentDisplay, label, contentType,
                 configuration, selectionModel, selectionModelPresenter,
                 resourceModel, resourceModelPresenter, hoverModel,
                 popupManagerFactory, detailsWidgetHelper, viewPersistence);
 
+        this.contentDisplay = contentDisplay;
+        this.selectionModelPresenter = selectionModelPresenter;
+        this.resourceModelPresenter = resourceModelPresenter;
+        this.hoverModel = hoverModel;
         this.popupManager = popupManager;
+        this.selectionAddedHandlerRegistration = selectionAddedHandlerRegistration;
+        this.selectionRemovedHandlerRegistration = selectionRemovedHandlerRegistration;
     }
 
     @Override
@@ -51,11 +87,97 @@ public class TestView extends DefaultView {
         return popupManager;
     }
 
+    public ViewContentDisplayCallback getCallback() {
+        return callback;
+    }
+
+    public ViewContentDisplay getContentDisplay() {
+        return contentDisplay;
+    }
+
+    public HoverModel getHoverModel() {
+        return hoverModel;
+    }
+
+    public Presenter getTestResourceModelPresenter() {
+        return resourceModelPresenter;
+    }
+
+    public HandlerRegistration getTestSelectionAddedHandlerRegistration() {
+        return selectionAddedHandlerRegistration;
+    }
+
+    public Presenter getTestSelectionModelPresenter() {
+        return selectionModelPresenter;
+    }
+
+    public HandlerRegistration getTestSelectionRemovedHandlerRegistration() {
+        return selectionRemovedHandlerRegistration;
+    }
+
     @Override
     protected void initUI() {
     }
 
+    public void setCallback(ViewContentDisplayCallback callback) {
+        this.callback = callback;
+    }
+
     @Override
     protected void updateConfiguration(Set<ResourceItem> addedResourceItems) {
+    }
+
+    public static TestView createTestView() {
+        DefaultResourceSetFactory resourceSetFactory = new DefaultResourceSetFactory();
+    
+        DefaultResourceModel resourceModel = new DefaultResourceModel(
+                resourceSetFactory);
+        HoverModel hoverModel = new HoverModel();
+    
+        ViewContentDisplay contentDisplay = mock(ViewContentDisplay.class);
+        ResourceItemValueResolver resourceSetToValueResolver = mock(ResourceItemValueResolver.class);
+        SelectionModel selectionModel = mock(SelectionModel.class);
+        Presenter selectionModelPresenter = mock(Presenter.class);
+        DetailsWidgetHelper detailsWidgetHelper = mock(DetailsWidgetHelper.class);
+        PopupManagerFactory popupManagerFactory = mock(PopupManagerFactory.class);
+        PopupManager popupManager = mock(PopupManager.class);
+        ViewSaver viewPersistence = mock(ViewSaver.class);
+        Presenter resourceModelPresenter = mock(Presenter.class);
+        HandlerRegistration selectionAddedHandlerRegistration = mock(HandlerRegistration.class);
+        HandlerRegistration selectionRemovedHandlerRegistration = mock(HandlerRegistration.class);
+    
+        ResourceSplitter resourceSplitter = new ResourceSplitter(
+                new ResourceCategorizerToMultiCategorizerAdapter(
+                        new ResourceByUriTypeCategorizer()), resourceSetFactory);
+    
+        TestView underTest = spy(new TestView(resourceSplitter, contentDisplay,
+                "", "", resourceSetToValueResolver, selectionModel,
+                selectionModelPresenter, resourceModel, resourceModelPresenter,
+                hoverModel, popupManagerFactory, detailsWidgetHelper,
+                viewPersistence, popupManager,
+                selectionAddedHandlerRegistration,
+                selectionRemovedHandlerRegistration));
+    
+        when(
+                selectionModel
+                        .addEventHandler(any(ResourcesAddedEventHandler.class)))
+                .thenReturn(selectionAddedHandlerRegistration);
+        when(
+                selectionModel
+                        .addEventHandler(any(ResourcesRemovedEventHandler.class)))
+                .thenReturn(selectionRemovedHandlerRegistration);
+    
+        when(contentDisplay.getSlots()).thenReturn(new Slot[0]);
+    
+        when(contentDisplay.isReady()).thenReturn(true);
+    
+        underTest.init();
+    
+        ArgumentCaptor<ViewContentDisplayCallback> captor = ArgumentCaptor
+                .forClass(ViewContentDisplayCallback.class);
+        verify(contentDisplay).init(captor.capture());
+        underTest.setCallback(captor.getValue());
+    
+        return underTest;
     }
 }

@@ -1119,4 +1119,5 @@ public class DefaultView extends AbstractWindowContent implements View {
             sharePanel.add(textBox);
         }
     }
+
 }
