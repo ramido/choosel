@@ -572,30 +572,33 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     private void initShareConfigurator() {
-        sharePanel = new VerticalPanel();
+        if (Window.Location.getParameter("windowId") == null) {
+            sharePanel = new VerticalPanel();
 
-        Button w = new Button("Share this");
-        w.addClickHandler(new ClickHandler() {
+            Button w = new Button("Share this");
+            w.addClickHandler(new ClickHandler() {
 
-            @Override
-            public void onClick(ClickEvent event) {
+                @Override
+                public void onClick(ClickEvent event) {
 
-                // TODO Add the call to the WindowPersistenceManager to save a
-                // copy of this window with a unique ID
+                    // TODO Add the call to the WindowPersistenceManager to save
+                    // a
+                    // copy of this window with a unique ID
 
-                Label genLabel = new Label();
-                genLabel.setText("Generating Share Information...");
+                    Label genLabel = new Label();
+                    genLabel.setText("Generating Share Information...");
 
-                sharePanel.add(genLabel);
+                    sharePanel.add(genLabel);
 
-                DefaultView view = DefaultView.this;
-                viewPersistence.saveView(view);
+                    DefaultView view = DefaultView.this;
+                    viewPersistence.saveView(view);
 
-            }
-        });
-        sharePanel.add(w);
+                }
+            });
+            sharePanel.add(w);
 
-        sideBar.add(sharePanel, "Share");
+            sideBar.add(sharePanel, "Share");
+        }
     }
 
     private void initSideBar() {
