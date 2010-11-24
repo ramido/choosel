@@ -36,7 +36,7 @@ import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.windows.WindowContent;
 import org.thechiselgroup.choosel.client.windows.WindowContentFactory;
-import org.thechiselgroup.choosel.client.workspace.ViewPersistence;
+import org.thechiselgroup.choosel.client.workspace.ViewSaver;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -60,8 +60,7 @@ public class BioMixerWindowContentProducerProvider extends
             @Named(DROP_TARGET_MANAGER_VIEW_CONTENT) ResourceSetAvatarDropTargetManager contentDropTargetManager,
             SlotResolver slotResolver, HoverModel hoverModel,
             PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper,
-            ViewPersistence viewPersistence) {
+            DetailsWidgetHelper detailsWidgetHelper, ViewSaver viewPersistence) {
 
         super(userSetsDragAvatarFactory, allResourcesDragAvatarFactory,
                 selectionDragAvatarFactory, dropTargetFactory,
