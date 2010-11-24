@@ -20,6 +20,7 @@ import javax.jdo.PersistenceManagerFactory;
 
 import org.thechiselgroup.choosel.client.authentication.AuthenticationException;
 import org.thechiselgroup.choosel.client.authentication.AuthorizationException;
+import org.thechiselgroup.choosel.client.services.ServiceException;
 import org.thechiselgroup.choosel.client.workspace.dto.ViewDTO;
 import org.thechiselgroup.choosel.client.workspace.service.ViewPersistenceService;
 
@@ -79,9 +80,20 @@ public class ViewPersistenceServiceImplementation implements
         return pView;
     }
 
-    private PersistentView getPersistentWorkspace(ViewDTO dto,
-            PersistenceManager manager) throws AuthorizationException {
-        return getPersistentView(dto.getId(), manager);
+    @Override
+    public ViewDTO loadView(Long viewId) throws ServiceException {
+        PersistenceManager pm = createPersistanceManager();
+
+        try {
+            return loadView(viewId, pm);
+        } finally {
+            pm.close();
+        }
+    }
+
+    private ViewDTO loadView(Long viewId, PersistenceManager pm)
+            throws AuthorizationException {
+        return toViewDTO(getPersistentView(viewId, pm));
     }
 
     @Override
@@ -103,11 +115,27 @@ public class ViewPersistenceServiceImplementation implements
         }
     }
 
+    private ViewDTO toViewDTO(PersistentView pView) {
+        ViewDTO dto = new ViewDTO();
+
+        dto.setId(pView.getId());
+        dto.setTitle(pView.getTitle());
+        dto.setResources(pView.getResources());
+        dto.setResourceSets(pView.getResourceSets());
+        dto.setContentType(pView.getContentType());
+        dto.setTitle(pView.getTitle());
+        dto.setViewState(pView.getViewState());
+
+        return dto;
+    }
+
     private void updateViewWithDTO(PersistentView view, ViewDTO dto) {
 
         view.setTitle(dto.getTitle());
+        view.setViewState(dto.getViewState());
         view.setResources(dto.getResources());
         view.setResourceSets(dto.getResourceSets());
+        view.setContentType(dto.getContentType());
     }
 
     private boolean viewExists(ViewDTO dto) {

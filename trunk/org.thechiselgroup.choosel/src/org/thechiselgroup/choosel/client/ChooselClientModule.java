@@ -98,12 +98,16 @@ import org.thechiselgroup.choosel.client.windows.DefaultDesktop;
 import org.thechiselgroup.choosel.client.windows.Desktop;
 import org.thechiselgroup.choosel.client.windows.ProxyWindowContentFactory;
 import org.thechiselgroup.choosel.client.windows.WindowContentProducer;
-import org.thechiselgroup.choosel.client.workspace.DefaultViewPersistence;
-import org.thechiselgroup.choosel.client.workspace.DefaultViewPersistenceManager;
+import org.thechiselgroup.choosel.client.workspace.DefaultViewLoadManager;
+import org.thechiselgroup.choosel.client.workspace.DefaultViewLoader;
+import org.thechiselgroup.choosel.client.workspace.DefaultViewSaveManager;
+import org.thechiselgroup.choosel.client.workspace.DefaultViewSaver;
 import org.thechiselgroup.choosel.client.workspace.DefaultWorkspaceManager;
 import org.thechiselgroup.choosel.client.workspace.DefaultWorkspacePersistenceManager;
-import org.thechiselgroup.choosel.client.workspace.ViewPersistence;
-import org.thechiselgroup.choosel.client.workspace.ViewPersistenceManager;
+import org.thechiselgroup.choosel.client.workspace.ViewLoadManager;
+import org.thechiselgroup.choosel.client.workspace.ViewLoader;
+import org.thechiselgroup.choosel.client.workspace.ViewSaveManager;
+import org.thechiselgroup.choosel.client.workspace.ViewSaver;
 import org.thechiselgroup.choosel.client.workspace.WorkspaceManager;
 import org.thechiselgroup.choosel.client.workspace.WorkspacePersistenceManager;
 import org.thechiselgroup.choosel.client.workspace.WorkspacePresenter;
@@ -263,10 +267,12 @@ public class ChooselClientModule extends AbstractGinModule implements
                 getContentProducerProviderClass()).in(Singleton.class);
         bind(WindowContentProducer.class).annotatedWith(Names.named(PROXY))
                 .to(ProxyWindowContentFactory.class).in(Singleton.class);
-        bind(ViewPersistenceManager.class).to(
-                DefaultViewPersistenceManager.class).in(Singleton.class);
-        bind(ViewPersistence.class).to(DefaultViewPersistence.class).in(
+        bind(ViewSaveManager.class).to(DefaultViewSaveManager.class).in(
                 Singleton.class);
+        bind(ViewSaver.class).to(DefaultViewSaver.class).in(Singleton.class);
+        bind(ViewLoadManager.class).to(DefaultViewLoadManager.class).in(
+                Singleton.class);
+        bind(ViewLoader.class).to(DefaultViewLoader.class).in(Singleton.class);
 
         bindDragAvatarDropTargetManagers();
         bindDragAvatarFactories();

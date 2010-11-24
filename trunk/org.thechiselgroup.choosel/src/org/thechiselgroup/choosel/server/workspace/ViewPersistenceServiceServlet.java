@@ -26,6 +26,38 @@ public class ViewPersistenceServiceServlet extends RemoteServiceServlet
     }
 
     @Override
+    public ViewDTO loadView(Long viewId) throws ServiceException {
+
+        long startTime = -1;
+        if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {
+            startTime = System.currentTimeMillis();
+        }
+
+        Log.debug("WorkspacePersistenceServiceServlet.loadWorkspace - "
+                + viewId);
+
+        try {
+            return getServiceDelegate().loadView(viewId);
+        } catch (ServiceException e) {
+            Log.error(
+                    "loadWorkspace failed: "
+                            + StackTraceHelper.getStackTraceAsString(e), e);
+            throw e;
+        } catch (Exception e) {
+            Log.error(
+                    "loadWorkspace failed: "
+                            + StackTraceHelper.getStackTraceAsString(e), e);
+            throw new ServiceException(e);
+        } finally {
+            if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {
+                Log.debug("WorkspacePersistenceServiceServlet.loadWorkspace"
+                        + " completed in "
+                        + (System.currentTimeMillis() - startTime) + " ms");
+            }
+        }
+    }
+
+    @Override
     public Long saveView(ViewDTO view) throws ServiceException {
         long startTime = -1;
         if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {

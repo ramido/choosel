@@ -4,8 +4,7 @@ import org.thechiselgroup.choosel.client.views.DefaultView;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public interface ViewPersistenceManager {
-    // void loadView(Long viewID, AsyncCallback<Workspace> callback);
+public interface ViewSaveManager {
 
     void saveView(DefaultView view, AsyncCallback<Void> callback);
 }

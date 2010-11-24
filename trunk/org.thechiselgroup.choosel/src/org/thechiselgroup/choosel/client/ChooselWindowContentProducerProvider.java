@@ -53,7 +53,7 @@ import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.ViewFactory;
 import org.thechiselgroup.choosel.client.windows.WindowContentFactory;
 import org.thechiselgroup.choosel.client.windows.WindowContentProducer;
-import org.thechiselgroup.choosel.client.workspace.ViewPersistence;
+import org.thechiselgroup.choosel.client.workspace.ViewSaver;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -88,7 +88,7 @@ public class ChooselWindowContentProducerProvider implements
 
     private final DetailsWidgetHelper detailsWidgetHelper;
 
-    private final ViewPersistence viewPersistence;
+    private final ViewSaver viewPersistence;
 
     @Inject
     public ChooselWindowContentProducerProvider(
@@ -104,7 +104,7 @@ public class ChooselWindowContentProducerProvider implements
             SlotResolver slotResolver, HoverModel hoverModel,
             PopupManagerFactory popupManagerFactory,
             DetailsWidgetHelper detailsWidgetHelper,
-            ViewPersistence viewPersistence) {
+            ViewSaver viewPersistence) {
 
         assert userSetsDragAvatarFactory != null;
         assert allResourcesDragAvatarFactory != null;

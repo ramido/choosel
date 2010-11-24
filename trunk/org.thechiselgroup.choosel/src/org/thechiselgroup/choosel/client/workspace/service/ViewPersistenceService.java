@@ -9,5 +9,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("view")
 public interface ViewPersistenceService extends RemoteService {
 
+    ViewDTO loadView(Long viewId) throws ServiceException;
+
     Long saveView(ViewDTO view) throws ServiceException;
 }

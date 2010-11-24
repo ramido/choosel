@@ -6,15 +6,15 @@ import org.thechiselgroup.choosel.client.views.DefaultView;
 
 import com.google.inject.Inject;
 
-public class DefaultViewPersistence implements ViewPersistence {
+public class DefaultViewSaver implements ViewSaver {
 
     private final ErrorHandler errorHandler;
 
-    private final ViewPersistenceManager viewPersistenceManager;
+    private final ViewSaveManager viewPersistenceManager;
 
     @Inject
-    public DefaultViewPersistence(
-            ViewPersistenceManager viewPersistenceManager,
+    public DefaultViewSaver(
+            ViewSaveManager viewPersistenceManager,
             ErrorHandler errorHandler) {
 
         this.viewPersistenceManager = viewPersistenceManager;

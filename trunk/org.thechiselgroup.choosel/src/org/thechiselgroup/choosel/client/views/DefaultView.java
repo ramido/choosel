@@ -64,7 +64,7 @@ import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.util.HandlerRegistrationSet;
 import org.thechiselgroup.choosel.client.util.Initializable;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
-import org.thechiselgroup.choosel.client.workspace.ViewPersistence;
+import org.thechiselgroup.choosel.client.workspace.ViewSaver;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.GWT;
@@ -73,12 +73,15 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasAlignment;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.StackPanel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -110,6 +113,8 @@ public class DefaultView extends AbstractWindowContent implements View {
         }
 
     }
+
+    private Long id;
 
     private static final String CSS_EXPANDER = "DefaultView-Expander";
 
@@ -179,7 +184,9 @@ public class DefaultView extends AbstractWindowContent implements View {
      */
     private boolean isConfigurationAvailable = false;
 
-    protected ViewPersistence viewPersistence;
+    protected ViewSaver viewPersistence;
+
+    private VerticalPanel sharePanel;
 
     public DefaultView(ResourceSplitter resourceSplitter,
             ViewContentDisplay contentDisplay, String label,
@@ -188,7 +195,7 @@ public class DefaultView extends AbstractWindowContent implements View {
             ResourceModel resourceModel, Presenter resourceModelPresenter,
             HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
             DetailsWidgetHelper detailsWidgetHelper,
-            ViewPersistence viewPersistence) {
+            ViewSaver viewPersistence) {
 
         super(label, contentType);
 
@@ -335,6 +342,10 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     public Map<String, ResourceSet> getCategorizedResourceSets() {
         return resourceSplitter.getCategorizedResourceSets();
+    }
+
+    public Long getId() {
+        return id;
     }
 
     protected String getModuleBase() {
@@ -561,26 +572,30 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     private void initShareConfigurator() {
-        VerticalPanel verticalPanel = new VerticalPanel();
+        sharePanel = new VerticalPanel();
 
         Button w = new Button("Share this");
         w.addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
-                System.out.println("Button was clicked");
 
                 // TODO Add the call to the WindowPersistenceManager to save a
                 // copy of this window with a unique ID
+
+                Label genLabel = new Label();
+                genLabel.setText("Generating Share Information...");
+
+                sharePanel.add(genLabel);
 
                 DefaultView view = DefaultView.this;
                 viewPersistence.saveView(view);
 
             }
         });
-        verticalPanel.add(w);
+        sharePanel.add(w);
 
-        sideBar.add(verticalPanel, "Share");
+        sideBar.add(sharePanel, "Share");
     }
 
     private void initSideBar() {
@@ -703,6 +718,10 @@ public class DefaultView extends AbstractWindowContent implements View {
         // TODO later: store configuration settings
 
         return memento;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     /**
@@ -1083,4 +1102,25 @@ public class DefaultView extends AbstractWindowContent implements View {
                 Collections.<Slot> emptySet());
     }
 
+    public void updateSharePanel() {
+        if (id != null) {
+            String url = Window.Location.getHref();
+            if (Window.Location.getParameterMap().size() == 0) {
+                url = url + "?windowId=" + getId().toString();
+            } else {
+                url = url + "&windowId=" + getId().toString();
+            }
+
+            sharePanel.remove(1);
+
+            Label urlLabel = new Label();
+            urlLabel.setText("Share Link:");
+
+            TextBox textBox = new TextBox();
+            textBox.setText(url);
+
+            sharePanel.add(urlLabel);
+            sharePanel.add(textBox);
+        }
+    }
 }

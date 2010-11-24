@@ -21,6 +21,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.workspace.dto.ResourceSetDTO;
 import org.thechiselgroup.choosel.client.workspace.dto.WindowDTO;
@@ -32,7 +33,7 @@ public class PersistentView {
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private Long id;
 
-    @Persistent
+    @Persistent(serialized = "true")
     private String title;
 
     @Persistent(serialized = "true")
@@ -46,6 +47,13 @@ public class PersistentView {
 
     @Persistent(serialized = "true")
     private WindowDTO[] windows;
+
+    @Persistent(serialized = "true")
+    private Memento viewState;
+
+    public String getContentType() {
+        return contentType;
+    }
 
     public Long getId() {
         return id;
@@ -63,8 +71,16 @@ public class PersistentView {
         return title;
     }
 
+    public Memento getViewState() {
+        return viewState;
+    }
+
     public WindowDTO[] getWindows() {
         return windows;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 
     public void setId(Long id) {
@@ -81,6 +97,10 @@ public class PersistentView {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public void setViewState(Memento viewState) {
+        this.viewState = viewState;
     }
 
 }
