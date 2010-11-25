@@ -19,7 +19,9 @@ import static org.thechiselgroup.choosel.client.util.CollectionUtils.toSet;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.thechiselgroup.choosel.client.calculation.AverageCalculation;
@@ -246,13 +248,22 @@ public class VisualMappingsControl implements WidgetAdaptable {
                                     propertyNames.get(0), new SumCalculation()));
                 }
 
+                Calculation[] calculations = new Calculation[] {
+                        new SumCalculation(), new CountCalculation(),
+                        new AverageCalculation(), new MinCalculation(),
+                        new MaxCalculation() };
+
+                final Map<String, Calculation> calculationMap = new HashMap<String, Calculation>();
+                for (Calculation calculation : calculations) {
+                    calculationMap.put(calculation.getID(), calculation);
+                }
+
                 final ListBox calculationBox = new ListBox(false);
                 calculationBox.setVisibleItemCount(1);
-                calculationBox.addItem("Sum", "sum");
-                calculationBox.addItem("Count", "cnt");
-                calculationBox.addItem("Average", "avg");
-                calculationBox.addItem("Minimum", "min");
-                calculationBox.addItem("Maximum", "max");
+                for (Calculation calculation : calculations) {
+                    calculationBox.addItem(calculation.getDescription(),
+                            calculation.getID());
+                }
 
                 final ListBox slotPropertyMappingBox = new ListBox(false);
                 slotPropertyMappingBox.setVisibleItemCount(1);
@@ -266,18 +277,8 @@ public class VisualMappingsControl implements WidgetAdaptable {
 
                         String calculationString = calculationBox
                                 .getValue(calculationBox.getSelectedIndex());
-                        Calculation calculation = null;
-                        if (calculationString.equals("sum")) {
-                            calculation = new SumCalculation();
-                        } else if (calculationString.equals("cnt")) {
-                            calculation = new CountCalculation();
-                        } else if (calculationString.equals("avg")) {
-                            calculation = new AverageCalculation();
-                        } else if (calculationString.equals("min")) {
-                            calculation = new MinCalculation();
-                        } else if (calculationString.equals("max")) {
-                            calculation = new MaxCalculation();
-                        }
+                        Calculation calculation = calculationMap
+                                .get(calculationString);
 
                         resolver.put(slot,
                                 new CalculationResourceSetToValueResolver(
