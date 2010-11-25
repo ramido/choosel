@@ -18,20 +18,22 @@ package org.thechiselgroup.choosel.client.views;
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
-class TextResourceSetToValueResolver implements ResourceSetToValueResolver {
+public class TextResourceSetToValueResolver implements
+        ResourceSetToValueResolver {
+
     private final String propertyName;
 
-    TextResourceSetToValueResolver(String propertyName) {
+    public TextResourceSetToValueResolver(String propertyName) {
         this.propertyName = propertyName;
     }
 
     @Override
     public Object resolve(ResourceSet resources, String category) {
-
         if (resources.size() >= 2) {
             return category;
         }
 
         return resources.getFirstResource().getValue(propertyName);
     }
+
 }

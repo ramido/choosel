@@ -15,10 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import static org.thechiselgroup.choosel.client.util.CollectionUtils.toSet;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,12 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.thechiselgroup.choosel.client.calculation.AverageCalculation;
-import org.thechiselgroup.choosel.client.calculation.Calculation;
-import org.thechiselgroup.choosel.client.calculation.CountCalculation;
-import org.thechiselgroup.choosel.client.calculation.MaxCalculation;
-import org.thechiselgroup.choosel.client.calculation.MinCalculation;
-import org.thechiselgroup.choosel.client.calculation.SumCalculation;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.persistence.Persistable;
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
@@ -44,7 +35,6 @@ import org.thechiselgroup.choosel.client.resources.ResourceCategoryChange;
 import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetEventForwarder;
-import org.thechiselgroup.choosel.client.resources.ResourceSetUtils;
 import org.thechiselgroup.choosel.client.resources.ResourceSplitter;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
@@ -53,13 +43,11 @@ import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
-import org.thechiselgroup.choosel.client.ui.ConfigurationPanel;
 import org.thechiselgroup.choosel.client.ui.ImageButton;
 import org.thechiselgroup.choosel.client.ui.Presenter;
 import org.thechiselgroup.choosel.client.ui.WidgetFactory;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
-import org.thechiselgroup.choosel.client.util.CollectionUtils;
 import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.util.HandlerRegistrationSet;
 import org.thechiselgroup.choosel.client.util.Initializable;
@@ -68,8 +56,6 @@ import org.thechiselgroup.choosel.client.workspace.ViewSaver;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Timer;
@@ -78,7 +64,6 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -142,8 +127,6 @@ public class DefaultView extends AbstractWindowContent implements View {
     // TOOD rename
     private DockPanel configurationBar;
 
-    private ConfigurationPanel visualMappingPanel;
-
     // TOOD rename
     private StackPanel sideBar;
 
@@ -188,6 +171,8 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private VerticalPanel sharePanel;
 
+    private VisualMappingsControl visualMappingsControl;
+
     public DefaultView(ResourceSplitter resourceSplitter,
             ViewContentDisplay contentDisplay, String label,
             String contentType, ResourceItemValueResolver configuration,
@@ -225,6 +210,9 @@ public class DefaultView extends AbstractWindowContent implements View {
         this.resourceModelPresenter = resourceModelPresenter;
 
         this.hoverModel = hoverModel;
+
+        visualMappingsControl = new VisualMappingsControl(contentDisplay,
+                configuration, resourceSplitter, resourceModel);
     }
 
     @Override
@@ -443,7 +431,7 @@ public class DefaultView extends AbstractWindowContent implements View {
             public boolean containsResource(Resource resource) {
                 return resourceModel.getResources().containsResourceWithUri(
                         resource.getUri());
-            };
+            }
 
             @Override
             public boolean containsResourceWithUri(String uri) {
@@ -519,8 +507,8 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     private void initMappingsConfigurator() {
-        visualMappingPanel = new ConfigurationPanel();
-        sideBar.add(visualMappingPanel, "Mappings");
+        visualMappingsControl.init();
+        sideBar.add(visualMappingsControl.asWidget(), "Mappings");
     }
 
     private void initResourceModelPresenter() {
@@ -743,245 +731,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         updateContentDisplaySize();
     }
 
-    protected void updateConfiguration(Set<ResourceItem> addedResourceItems) {
-        /*
-         * TODO check if there are changes when adding / adjust each slot -->
-         * stable per slot --> initialize early for the slots & map to object
-         * that has corresponding update method
-         * 
-         * XXX for now: just add a flag if a configuration has been created, and
-         * if that's the case, don't rebuild the configuration.
-         * 
-         * XXX this also fails with redo / undo
-         */
-        if (isConfigurationAvailable) {
-            return;
-        }
-        isConfigurationAvailable = true;
-
-        // TODO do this separately for aggregation & slots (which should be
-        // based on resource items)
-        // TODO update selection of slots?
-
-        // aggregration TODO move
-        {
-
-            // TODO include aggregation that does not aggregate...
-            // TODO include bin aggregation for numerical slots
-
-            final List<String> propertyNames = ResourceSetUtils
-                    .getPropertyNamesForDataType(addedResourceItems,
-                            DataType.TEXT);
-
-            final ListBox groupingBox = new ListBox(false);
-            groupingBox.setVisibleItemCount(1);
-
-            groupingBox.addChangeHandler(new ChangeHandler() {
-                @Override
-                public void onChange(ChangeEvent event) {
-                    resourceSplitter
-                            .setCategorizer(new ResourceMultiCategorizer() {
-
-                                @Override
-                                public Set<String> getCategories(
-                                        Resource resource) {
-
-                                    String propertyName = groupingBox
-                                            .getValue(groupingBox
-                                                    .getSelectedIndex());
-
-                                    return toSet((String) resource
-                                            .getValue(propertyName));
-                                }
-
-                            });
-                }
-            });
-
-            for (String propertyName : propertyNames) {
-                groupingBox.addItem(propertyName, propertyName);
-            }
-
-            visualMappingPanel.addConfigurationSetting("Grouping", groupingBox);
-        }
-
-        /*
-         * TODO move
-         */
-        if (Arrays.asList(contentDisplay.getSlots()).contains(
-                SlotResolver.LOCATION_SLOT)) {
-
-            final List<String> propertyNames = ResourceSetUtils
-                    .getPropertyNamesForDataType(addedResourceItems,
-                            DataType.LOCATION);
-
-            if (!propertyNames.isEmpty()) {
-                configuration.put(SlotResolver.LOCATION_SLOT,
-                        new ResourceSetToValueResolver() {
-                            @Override
-                            public Object resolve(ResourceSet resources,
-                                    String category) {
-
-                                return resources.getFirstResource().getValue(
-                                        propertyNames.get(0));
-                            }
-                        });
-            }
-        }
-
-        /*
-         * TODO flexibility TODO move
-         */
-        if (Arrays.asList(contentDisplay.getSlots()).contains(
-                SlotResolver.COLOR_SLOT)) {
-
-            configuration.put(SlotResolver.COLOR_SLOT,
-                    new ResourceSetToValueResolver() {
-                        @Override
-                        public Object resolve(ResourceSet resources,
-                                String category) {
-
-                            return "#6495ed";
-                        }
-                    });
-        }
-
-        /*
-         * TODO move
-         */
-        if (Arrays.asList(contentDisplay.getSlots()).contains(
-                SlotResolver.DATE_SLOT)) {
-
-            final List<String> propertyNames = ResourceSetUtils
-                    .getPropertyNamesForDataType(addedResourceItems,
-                            DataType.DATE);
-
-            if (!propertyNames.isEmpty()) {
-                configuration.put(SlotResolver.DATE_SLOT,
-                        new ResourceSetToValueResolver() {
-                            @Override
-                            public Object resolve(ResourceSet resources,
-                                    String category) {
-
-                                return resources.getFirstResource().getValue(
-                                        propertyNames.get(0));
-                            }
-                        });
-            }
-        }
-
-        for (final Slot slot : contentDisplay.getSlots()) {
-            if (slot.getDataType() == DataType.TEXT) {
-                List<String> propertyNames = ResourceSetUtils
-                        .getPropertyNamesForDataType(addedResourceItems,
-                                DataType.TEXT);
-
-                if (!propertyNames.isEmpty()) {
-                    configuration.put(slot, new TextResourceSetToValueResolver(
-                            propertyNames.get(0)));
-                }
-
-                final ListBox slotPropertyMappingBox = new ListBox(false);
-                slotPropertyMappingBox.setVisibleItemCount(1);
-
-                slotPropertyMappingBox.addChangeHandler(new ChangeHandler() {
-                    @Override
-                    public void onChange(ChangeEvent event) {
-                        String propertyName = slotPropertyMappingBox
-                                .getValue(slotPropertyMappingBox
-                                        .getSelectedIndex());
-
-                        configuration
-                                .put(slot, new TextResourceSetToValueResolver(
-                                        propertyName));
-
-                        contentDisplay.update(
-                                Collections.<ResourceItem> emptySet(),
-                                Collections.<ResourceItem> emptySet(),
-                                Collections.<ResourceItem> emptySet(),
-                                CollectionUtils.toSet(slot));
-                    }
-                });
-
-                for (String propertyName : propertyNames) {
-                    slotPropertyMappingBox.addItem(propertyName, propertyName);
-                }
-
-                visualMappingPanel.addConfigurationSetting(slot.getName(),
-                        slotPropertyMappingBox);
-            } else if (slot.getDataType() == DataType.NUMBER) {
-                List<String> propertyNames = ResourceSetUtils
-                        .getPropertyNamesForDataType(addedResourceItems,
-                                DataType.NUMBER);
-
-                if (!propertyNames.isEmpty()) {
-                    CalculationResourceSetToValueResolver resolver = new CalculationResourceSetToValueResolver(
-                            propertyNames.get(0), new SumCalculation());
-                    configuration.put(slot, resolver);
-                }
-
-                final ListBox calculationBox = new ListBox(false);
-                calculationBox.setVisibleItemCount(1);
-                calculationBox.addItem("Sum", "sum");
-                calculationBox.addItem("Count", "cnt");
-                calculationBox.addItem("Average", "avg");
-                calculationBox.addItem("Minimum", "min");
-                calculationBox.addItem("Maximum", "max");
-
-                final ListBox slotPropertyMappingBox = new ListBox(false);
-                slotPropertyMappingBox.setVisibleItemCount(1);
-
-                ChangeHandler handler = new ChangeHandler() {
-                    @Override
-                    public void onChange(ChangeEvent event) {
-                        String propertyName = slotPropertyMappingBox
-                                .getValue(slotPropertyMappingBox
-                                        .getSelectedIndex());
-
-                        String calculationString = calculationBox
-                                .getValue(calculationBox.getSelectedIndex());
-                        Calculation calculation = null;
-                        if (calculationString.equals("sum")) {
-                            calculation = new SumCalculation();
-                        } else if (calculationString.equals("cnt")) {
-                            calculation = new CountCalculation();
-                        } else if (calculationString.equals("avg")) {
-                            calculation = new AverageCalculation();
-                        } else if (calculationString.equals("min")) {
-                            calculation = new MinCalculation();
-                        } else if (calculationString.equals("max")) {
-                            calculation = new MaxCalculation();
-                        }
-
-                        configuration.put(slot,
-                                new CalculationResourceSetToValueResolver(
-                                        propertyName, calculation));
-
-                        contentDisplay.update(
-                                Collections.<ResourceItem> emptySet(),
-                                Collections.<ResourceItem> emptySet(),
-                                Collections.<ResourceItem> emptySet(),
-                                CollectionUtils.toSet(slot));
-                    }
-                };
-
-                slotPropertyMappingBox.addChangeHandler(handler);
-                calculationBox.addChangeHandler(handler);
-
-                for (String propertyName : propertyNames) {
-                    slotPropertyMappingBox.addItem(propertyName, propertyName);
-                }
-
-                VerticalPanel panel = new VerticalPanel();
-                panel.add(calculationBox);
-                panel.add(slotPropertyMappingBox);
-                visualMappingPanel.addConfigurationSetting(slot.getName(),
-                        panel);
-            }
-        }
-
-    }
-
     private void updateContentDisplaySize() {
         /*
          * special resize method required, because otherwise window height
@@ -1076,7 +825,8 @@ public class DefaultView extends AbstractWindowContent implements View {
             }
         }
 
-        updateConfiguration(addedResourceItems);
+        // TODO remove / replace with interface
+        visualMappingsControl.updateConfiguration(addedResourceItems);
 
         contentDisplay.update(addedResourceItems,
                 Collections.<ResourceItem> emptySet(), removedResourceItems,
@@ -1103,12 +853,9 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     public void updateSharePanel() {
         if (id != null) {
-            String url = Window.Location.getHref();
-            if (Window.Location.getParameterMap().size() == 0) {
-                url = url + "?windowId=" + getId().toString();
-            } else {
-                url = url + "&windowId=" + getId().toString();
-            }
+            String url = Window.Location.getHref()
+                    + (Window.Location.getParameterMap().size() == 0 ? "?"
+                            : "&") + "windowId=" + getId().toString();
 
             sharePanel.remove(1);
 

@@ -1,0 +1,314 @@
+/*******************************************************************************
+ * Copyright 2009, 2010 Lars Grammel 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at 
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0 
+ *     
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ * See the License for the specific language governing permissions and 
+ * limitations under the License.  
+ *******************************************************************************/
+package org.thechiselgroup.choosel.client.views;
+
+import static org.thechiselgroup.choosel.client.util.CollectionUtils.toSet;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
+import org.thechiselgroup.choosel.client.calculation.AverageCalculation;
+import org.thechiselgroup.choosel.client.calculation.Calculation;
+import org.thechiselgroup.choosel.client.calculation.CountCalculation;
+import org.thechiselgroup.choosel.client.calculation.MaxCalculation;
+import org.thechiselgroup.choosel.client.calculation.MinCalculation;
+import org.thechiselgroup.choosel.client.calculation.SumCalculation;
+import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
+import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
+import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.resources.ResourceSetUtils;
+import org.thechiselgroup.choosel.client.resources.ResourceSplitter;
+import org.thechiselgroup.choosel.client.ui.ConfigurationPanel;
+import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
+import org.thechiselgroup.choosel.client.util.CollectionUtils;
+
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
+
+public class VisualMappingsControl implements WidgetAdaptable {
+
+    private boolean isConfigurationAvailable;
+
+    private final ResourceSplitter splitter;
+
+    private final ResourceModel resourceModel;
+
+    private final ResourceItemValueResolver resolver;
+
+    private ConfigurationPanel visualMappingPanel;
+
+    private final ViewContentDisplay contentDisplay;
+
+    public VisualMappingsControl(ViewContentDisplay contentDisplay,
+            ResourceItemValueResolver resolver, ResourceSplitter splitter,
+            ResourceModel resourceModel) {
+
+        this.contentDisplay = contentDisplay;
+        this.resolver = resolver;
+        this.splitter = splitter;
+        this.resourceModel = resourceModel;
+
+    }
+
+    @Override
+    public Widget asWidget() {
+        return visualMappingPanel;
+    }
+
+    public void init() {
+        visualMappingPanel = new ConfigurationPanel();
+    }
+
+    // TODO link to resource model instead & do updates when resources change
+    public void updateConfiguration(Set<ResourceItem> addedResourceItems) {
+        /*
+         * TODO check if there are changes when adding / adjust each slot -->
+         * stable per slot --> initialize early for the slots & map to object
+         * that has corresponding update method
+         * 
+         * XXX for now: just add a flag if a configuration has been created, and
+         * if that's the case, don't rebuild the configuration.
+         * 
+         * XXX this also fails with redo / undo
+         */
+        if (isConfigurationAvailable) {
+            return;
+        }
+        isConfigurationAvailable = true;
+
+        // TODO do this separately for aggregation & slots (which should be
+        // based on resource items)
+        // TODO update selection of slots?
+
+        // aggregration TODO move
+        {
+
+            // TODO include aggregation that does not aggregate...
+            // TODO include bin aggregation for numerical slots
+
+            final List<String> propertyNames = ResourceSetUtils
+                    .getPropertyNamesForDataType(addedResourceItems,
+                            DataType.TEXT);
+
+            final ListBox groupingBox = new ListBox(false);
+            groupingBox.setVisibleItemCount(1);
+
+            groupingBox.addChangeHandler(new ChangeHandler() {
+                @Override
+                public void onChange(ChangeEvent event) {
+                    splitter.setCategorizer(new ResourceMultiCategorizer() {
+
+                        @Override
+                        public Set<String> getCategories(Resource resource) {
+
+                            String propertyName = groupingBox
+                                    .getValue(groupingBox.getSelectedIndex());
+
+                            return toSet((String) resource
+                                    .getValue(propertyName));
+                        }
+
+                    });
+                }
+            });
+
+            for (String propertyName : propertyNames) {
+                groupingBox.addItem(propertyName, propertyName);
+            }
+
+            visualMappingPanel.addConfigurationSetting("Grouping", groupingBox);
+        }
+
+        /*
+         * TODO move
+         */
+        if (Arrays.asList(contentDisplay.getSlots()).contains(
+                SlotResolver.LOCATION_SLOT)) {
+            final List<String> propertyNames = ResourceSetUtils
+                    .getPropertyNamesForDataType(addedResourceItems,
+                            DataType.LOCATION);
+
+            if (!propertyNames.isEmpty()) {
+                resolver.put(SlotResolver.LOCATION_SLOT,
+                        new ResourceSetToValueResolver() {
+                            @Override
+                            public Object resolve(ResourceSet resources,
+                                    String category) {
+
+                                return resources.getFirstResource().getValue(
+                                        propertyNames.get(0));
+                            }
+                        });
+            }
+        }
+
+        /*
+         * TODO flexibility TODO move
+         */
+        if (Arrays.asList(contentDisplay.getSlots()).contains(
+                SlotResolver.COLOR_SLOT)) {
+            resolver.put(SlotResolver.COLOR_SLOT,
+                    new ResourceSetToValueResolver() {
+                        @Override
+                        public Object resolve(ResourceSet resources,
+                                String category) {
+
+                            return "#6495ed";
+                        }
+                    });
+        }
+
+        /*
+         * TODO move
+         */
+        if (Arrays.asList(contentDisplay.getSlots()).contains(
+                SlotResolver.DATE_SLOT)) {
+            final List<String> propertyNames = ResourceSetUtils
+                    .getPropertyNamesForDataType(addedResourceItems,
+                            DataType.DATE);
+
+            if (!propertyNames.isEmpty()) {
+                resolver.put(SlotResolver.DATE_SLOT,
+                        new ResourceSetToValueResolver() {
+                            @Override
+                            public Object resolve(ResourceSet resources,
+                                    String category) {
+
+                                return resources.getFirstResource().getValue(
+                                        propertyNames.get(0));
+                            }
+                        });
+            }
+        }
+
+        for (final Slot slot : contentDisplay.getSlots()) {
+            if (slot.getDataType() == DataType.TEXT) {
+                List<String> propertyNames = ResourceSetUtils
+                        .getPropertyNamesForDataType(addedResourceItems,
+                                DataType.TEXT);
+
+                if (!propertyNames.isEmpty()) {
+                    resolver.put(slot, new TextResourceSetToValueResolver(
+                            propertyNames.get(0)));
+                }
+
+                final ListBox slotPropertyMappingBox = new ListBox(false);
+                slotPropertyMappingBox.setVisibleItemCount(1);
+
+                slotPropertyMappingBox.addChangeHandler(new ChangeHandler() {
+                    @Override
+                    public void onChange(ChangeEvent event) {
+                        String propertyName = slotPropertyMappingBox
+                                .getValue(slotPropertyMappingBox
+                                        .getSelectedIndex());
+
+                        resolver.put(slot, new TextResourceSetToValueResolver(
+                                propertyName));
+
+                        contentDisplay.update(
+                                Collections.<ResourceItem> emptySet(),
+                                Collections.<ResourceItem> emptySet(),
+                                Collections.<ResourceItem> emptySet(),
+                                CollectionUtils.toSet(slot));
+                    }
+                });
+
+                for (String propertyName : propertyNames) {
+                    slotPropertyMappingBox.addItem(propertyName, propertyName);
+                }
+
+                visualMappingPanel.addConfigurationSetting(slot.getName(),
+                        slotPropertyMappingBox);
+            } else if (slot.getDataType() == DataType.NUMBER) {
+                List<String> propertyNames = ResourceSetUtils
+                        .getPropertyNamesForDataType(addedResourceItems,
+                                DataType.NUMBER);
+
+                if (!propertyNames.isEmpty()) {
+                    resolver.put(slot,
+                            new CalculationResourceSetToValueResolver(
+                                    propertyNames.get(0), new SumCalculation()));
+                }
+
+                final ListBox calculationBox = new ListBox(false);
+                calculationBox.setVisibleItemCount(1);
+                calculationBox.addItem("Sum", "sum");
+                calculationBox.addItem("Count", "cnt");
+                calculationBox.addItem("Average", "avg");
+                calculationBox.addItem("Minimum", "min");
+                calculationBox.addItem("Maximum", "max");
+
+                final ListBox slotPropertyMappingBox = new ListBox(false);
+                slotPropertyMappingBox.setVisibleItemCount(1);
+
+                ChangeHandler handler = new ChangeHandler() {
+                    @Override
+                    public void onChange(ChangeEvent event) {
+                        String propertyName = slotPropertyMappingBox
+                                .getValue(slotPropertyMappingBox
+                                        .getSelectedIndex());
+
+                        String calculationString = calculationBox
+                                .getValue(calculationBox.getSelectedIndex());
+                        Calculation calculation = null;
+                        if (calculationString.equals("sum")) {
+                            calculation = new SumCalculation();
+                        } else if (calculationString.equals("cnt")) {
+                            calculation = new CountCalculation();
+                        } else if (calculationString.equals("avg")) {
+                            calculation = new AverageCalculation();
+                        } else if (calculationString.equals("min")) {
+                            calculation = new MinCalculation();
+                        } else if (calculationString.equals("max")) {
+                            calculation = new MaxCalculation();
+                        }
+
+                        resolver.put(slot,
+                                new CalculationResourceSetToValueResolver(
+                                        propertyName, calculation));
+
+                        contentDisplay.update(
+                                Collections.<ResourceItem> emptySet(),
+                                Collections.<ResourceItem> emptySet(),
+                                Collections.<ResourceItem> emptySet(),
+                                CollectionUtils.toSet(slot));
+                    }
+                };
+
+                slotPropertyMappingBox.addChangeHandler(handler);
+                calculationBox.addChangeHandler(handler);
+
+                for (String propertyName : propertyNames) {
+                    slotPropertyMappingBox.addItem(propertyName, propertyName);
+                }
+
+                VerticalPanel panel = new VerticalPanel();
+                panel.add(calculationBox);
+                panel.add(slotPropertyMappingBox);
+                visualMappingPanel.addConfigurationSetting(slot.getName(),
+                        panel);
+            }
+        }
+
+    }
+
+}
