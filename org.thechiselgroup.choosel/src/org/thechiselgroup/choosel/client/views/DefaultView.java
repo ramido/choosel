@@ -203,7 +203,7 @@ public class DefaultView extends AbstractWindowContent implements View {
         this.hoverModel = hoverModel;
 
         visualMappingsControl = new VisualMappingsControl(contentDisplay,
-                configuration, resourceSplitter, resourceModel);
+                configuration, resourceSplitter);
     }
 
     @Override
@@ -400,7 +400,20 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private void initAllResourcesToResourceSplitterLink() {
         allResourcesToSplitterForwarder = new ResourceSetEventForwarder(
-                resourceModel.getResources(), resourceSplitter);
+                resourceModel.getResources(), resourceSplitter) {
+
+            @Override
+            public void onResourcesAdded(ResourcesAddedEvent e) {
+                visualMappingsControl.updateConfiguration(e.getTarget());
+                super.onResourcesAdded(e);
+            }
+
+            @Override
+            public void onResourcesRemoved(ResourcesRemovedEvent e) {
+                visualMappingsControl.updateConfiguration(e.getTarget());
+                super.onResourcesRemoved(e);
+            }
+        };
         allResourcesToSplitterForwarder.init();
     }
 
@@ -815,9 +828,6 @@ public class DefaultView extends AbstractWindowContent implements View {
                 break;
             }
         }
-
-        // TODO remove / replace with interface
-        visualMappingsControl.updateConfiguration(addedResourceItems);
 
         contentDisplay.update(addedResourceItems,
                 Collections.<ResourceItem> emptySet(), removedResourceItems,

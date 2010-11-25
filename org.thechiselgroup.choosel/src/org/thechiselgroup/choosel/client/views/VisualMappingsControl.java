@@ -57,8 +57,6 @@ public class VisualMappingsControl implements WidgetAdaptable {
 
     private final ResourceSplitter splitter;
 
-    private final ResourceModel resourceModel;
-
     private final ResourceItemValueResolver resolver;
 
     private ConfigurationPanel visualMappingPanel;
@@ -66,14 +64,11 @@ public class VisualMappingsControl implements WidgetAdaptable {
     private final ViewContentDisplay contentDisplay;
 
     public VisualMappingsControl(ViewContentDisplay contentDisplay,
-            ResourceItemValueResolver resolver, ResourceSplitter splitter,
-            ResourceModel resourceModel) {
+            ResourceItemValueResolver resolver, ResourceSplitter splitter) {
 
         this.contentDisplay = contentDisplay;
         this.resolver = resolver;
         this.splitter = splitter;
-        this.resourceModel = resourceModel;
-
     }
 
     @Override
@@ -86,7 +81,7 @@ public class VisualMappingsControl implements WidgetAdaptable {
     }
 
     // TODO link to resource model instead & do updates when resources change
-    public void updateConfiguration(Set<ResourceItem> addedResourceItems) {
+    public void updateConfiguration(ResourceSet resources) {
         /*
          * TODO check if there are changes when adding / adjust each slot -->
          * stable per slot --> initialize early for the slots & map to object
@@ -113,8 +108,7 @@ public class VisualMappingsControl implements WidgetAdaptable {
             // TODO include bin aggregation for numerical slots
 
             final List<String> propertyNames = ResourceSetUtils
-                    .getPropertyNamesForDataType(addedResourceItems,
-                            DataType.TEXT);
+                    .getPropertyNamesForDataType(resources, DataType.TEXT);
 
             final ListBox groupingBox = new ListBox(false);
             groupingBox.setVisibleItemCount(1);
@@ -151,8 +145,7 @@ public class VisualMappingsControl implements WidgetAdaptable {
         if (Arrays.asList(contentDisplay.getSlots()).contains(
                 SlotResolver.LOCATION_SLOT)) {
             final List<String> propertyNames = ResourceSetUtils
-                    .getPropertyNamesForDataType(addedResourceItems,
-                            DataType.LOCATION);
+                    .getPropertyNamesForDataType(resources, DataType.LOCATION);
 
             if (!propertyNames.isEmpty()) {
                 resolver.put(SlotResolver.LOCATION_SLOT,
@@ -190,8 +183,7 @@ public class VisualMappingsControl implements WidgetAdaptable {
         if (Arrays.asList(contentDisplay.getSlots()).contains(
                 SlotResolver.DATE_SLOT)) {
             final List<String> propertyNames = ResourceSetUtils
-                    .getPropertyNamesForDataType(addedResourceItems,
-                            DataType.DATE);
+                    .getPropertyNamesForDataType(resources, DataType.DATE);
 
             if (!propertyNames.isEmpty()) {
                 resolver.put(SlotResolver.DATE_SLOT,
@@ -210,8 +202,7 @@ public class VisualMappingsControl implements WidgetAdaptable {
         for (final Slot slot : contentDisplay.getSlots()) {
             if (slot.getDataType() == DataType.TEXT) {
                 List<String> propertyNames = ResourceSetUtils
-                        .getPropertyNamesForDataType(addedResourceItems,
-                                DataType.TEXT);
+                        .getPropertyNamesForDataType(resources, DataType.TEXT);
 
                 if (!propertyNames.isEmpty()) {
                     resolver.put(slot, new TextResourceSetToValueResolver(
@@ -247,8 +238,7 @@ public class VisualMappingsControl implements WidgetAdaptable {
                         slotPropertyMappingBox);
             } else if (slot.getDataType() == DataType.NUMBER) {
                 List<String> propertyNames = ResourceSetUtils
-                        .getPropertyNamesForDataType(addedResourceItems,
-                                DataType.NUMBER);
+                        .getPropertyNamesForDataType(resources, DataType.NUMBER);
 
                 if (!propertyNames.isEmpty()) {
                     resolver.put(slot,
