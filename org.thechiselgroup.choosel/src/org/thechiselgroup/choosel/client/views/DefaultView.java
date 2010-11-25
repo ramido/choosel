@@ -158,15 +158,6 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private int height;
 
-    /*
-     * Boolean flag that indicates if the configuration part of the view has
-     * been created.
-     * 
-     * XXX This solution breaks down when there is more than one kind of
-     * resource (i.e. with different properties)
-     */
-    private boolean isConfigurationAvailable = false;
-
     protected ViewSaver viewPersistence;
 
     private VerticalPanel sharePanel;
