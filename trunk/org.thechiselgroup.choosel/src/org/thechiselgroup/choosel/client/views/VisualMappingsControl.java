@@ -46,7 +46,14 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class VisualMappingsControl implements WidgetAdaptable {
 
-    private boolean isConfigurationAvailable;
+    /*
+     * Boolean flag that indicates if the configuration part of the view has
+     * been created.
+     * 
+     * XXX This solution breaks down when there is more than one kind of
+     * resource (i.e. with different properties)
+     */
+    private boolean isConfigurationAvailable = false;
 
     private final ResourceSplitter splitter;
 
