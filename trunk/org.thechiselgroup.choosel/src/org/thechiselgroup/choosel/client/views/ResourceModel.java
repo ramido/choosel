@@ -48,8 +48,10 @@ public interface ResourceModel {
      */
     boolean containsResourceSet(ResourceSet resourceSet);
 
+    // TODO document
     ResourceSet getAutomaticResourceSet();
 
+    // TODO document
     CombinedResourceSet getCombinedUserResourceSets();
 
     /**

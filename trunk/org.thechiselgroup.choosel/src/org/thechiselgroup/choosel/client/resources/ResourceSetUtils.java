@@ -20,16 +20,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.thechiselgroup.choosel.client.views.DataType;
-import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.map.MapViewContentDisplay;
 
 public final class ResourceSetUtils {
 
-    public static List<String> getPropertyNamesForDataType(ResourceSet resourceSet,
-            DataType dataType) {
+    public static List<String> getPropertyNamesForDataType(
+            ResourceSet resourceSet, DataType dataType) {
 
         // no aggregation
         Resource resource = resourceSet.getFirstResource();
@@ -74,31 +72,6 @@ public final class ResourceSetUtils {
         }
 
         return properties;
-    }
-
-    // TODO move
-    // TODO write test cases
-    // return: property keys
-    public static List<String> getPropertyNamesForDataType(
-            Set<ResourceItem> resourceItems, DataType dataType) {
-
-        if (resourceItems.isEmpty()) {
-            return new ArrayList<String>();
-        }
-
-        /*
-         * assertion: first add, no aggregation, homogeneous resource set
-         */
-        assert resourceItems.size() >= 1;
-
-        // homogeneous resource set --> look only at first item
-        ResourceItem resourceItem = (ResourceItem) resourceItems.toArray()[0];
-
-        // TODO this should be a condition of resource item in general
-        assert resourceItem.getResourceSet().size() >= 1;
-
-        return getPropertyNamesForDataType(resourceItem.getResourceSet(),
-                dataType);
     }
 
     private ResourceSetUtils() {
