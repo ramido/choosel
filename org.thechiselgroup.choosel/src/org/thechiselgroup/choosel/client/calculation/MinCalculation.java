@@ -25,8 +25,18 @@ public class MinCalculation implements Calculation {
     }
 
     @Override
-    public String toString() {
+    public String getDescription() {
+        return "Minimum";
+    }
+
+    @Override
+    public String getID() {
         return "min";
+    }
+
+    @Override
+    public String toString() {
+        return getID();
     }
 
 }
