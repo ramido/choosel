@@ -23,8 +23,18 @@ public class CountCalculation implements Calculation {
     }
 
     @Override
-    public String toString() {
+    public String getDescription() {
+        return "Count";
+    }
+
+    @Override
+    public String getID() {
         return "cnt";
+    }
+
+    @Override
+    public String toString() {
+        return getID();
     }
 
 }

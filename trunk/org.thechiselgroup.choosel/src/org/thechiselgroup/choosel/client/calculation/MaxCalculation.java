@@ -25,8 +25,18 @@ public class MaxCalculation implements Calculation {
     }
 
     @Override
-    public String toString() {
+    public String getDescription() {
+        return "Maximum";
+    }
+
+    @Override
+    public String getID() {
         return "max";
+    }
+
+    @Override
+    public String toString() {
+        return getID();
     }
 
 }

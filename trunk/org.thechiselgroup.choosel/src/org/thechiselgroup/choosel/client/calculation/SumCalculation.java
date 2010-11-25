@@ -25,8 +25,18 @@ public class SumCalculation implements Calculation {
     }
 
     @Override
-    public String toString() {
+    public String getDescription() {
+        return "Sum";
+    }
+
+    @Override
+    public String getID() {
         return "sum";
+    }
+
+    @Override
+    public String toString() {
+        return getID();
     }
 
 }

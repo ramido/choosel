@@ -19,4 +19,8 @@ public interface Calculation {
 
     double calculate(double[] values);
 
+    String getDescription();
+
+    String getID();
+
 }
