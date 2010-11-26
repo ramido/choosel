@@ -16,16 +16,8 @@
 package org.thechiselgroup.choosel.client.views;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.thechiselgroup.choosel.client.calculation.AverageCalculation;
-import org.thechiselgroup.choosel.client.calculation.Calculation;
-import org.thechiselgroup.choosel.client.calculation.CountCalculation;
-import org.thechiselgroup.choosel.client.calculation.MaxCalculation;
-import org.thechiselgroup.choosel.client.calculation.MinCalculation;
 import org.thechiselgroup.choosel.client.calculation.SumCalculation;
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.ResourceByPropertyMultiCategorizer;
@@ -34,12 +26,10 @@ import org.thechiselgroup.choosel.client.resources.ResourceSetUtils;
 import org.thechiselgroup.choosel.client.resources.ResourceSplitter;
 import org.thechiselgroup.choosel.client.ui.ConfigurationPanel;
 import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
-import org.thechiselgroup.choosel.client.util.CollectionUtils;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class VisualMappingsControl implements WidgetAdaptable {
@@ -221,62 +211,14 @@ public class VisualMappingsControl implements WidgetAdaptable {
                                     propertyNames.get(0), new SumCalculation()));
                 }
 
-                Calculation[] calculations = new Calculation[] {
-                        new SumCalculation(), new CountCalculation(),
-                        new AverageCalculation(), new MinCalculation(),
-                        new MaxCalculation() };
+                SlotControl control = new NumberSlotControl(slot, resolver,
+                        contentDisplay);
 
-                final Map<String, Calculation> calculationMap = new HashMap<String, Calculation>();
-                for (Calculation calculation : calculations) {
-                    calculationMap.put(calculation.getID(), calculation);
-                }
-
-                final ListBox calculationBox = new ListBox(false);
-                calculationBox.setVisibleItemCount(1);
-                for (Calculation calculation : calculations) {
-                    calculationBox.addItem(calculation.getDescription(),
-                            calculation.getID());
-                }
-
-                final ListBox slotPropertyMappingBox = new ListBox(false);
-                slotPropertyMappingBox.setVisibleItemCount(1);
-
-                ChangeHandler handler = new ChangeHandler() {
-                    @Override
-                    public void onChange(ChangeEvent event) {
-                        String propertyName = slotPropertyMappingBox
-                                .getValue(slotPropertyMappingBox
-                                        .getSelectedIndex());
-
-                        String calculationString = calculationBox
-                                .getValue(calculationBox.getSelectedIndex());
-                        Calculation calculation = calculationMap
-                                .get(calculationString);
-
-                        resolver.put(slot,
-                                new CalculationResourceSetToValueResolver(
-                                        propertyName, calculation));
-
-                        contentDisplay.update(
-                                Collections.<ResourceItem> emptySet(),
-                                Collections.<ResourceItem> emptySet(),
-                                Collections.<ResourceItem> emptySet(),
-                                CollectionUtils.toSet(slot));
-                    }
-                };
-
-                slotPropertyMappingBox.addChangeHandler(handler);
-                calculationBox.addChangeHandler(handler);
-
-                for (String propertyName : propertyNames) {
-                    slotPropertyMappingBox.addItem(propertyName, propertyName);
-                }
-
-                VerticalPanel panel = new VerticalPanel();
-                panel.add(calculationBox);
-                panel.add(slotPropertyMappingBox);
+                control.init();
                 visualMappingPanel.addConfigurationSetting(slot.getName(),
-                        panel);
+                        control.asWidget());
+
+                control.updateOptions(propertyNames);
             }
         }
 
