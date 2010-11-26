@@ -17,7 +17,7 @@ package org.thechiselgroup.choosel.client.workspace;
 
 import org.thechiselgroup.choosel.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.client.error_handling.ErrorHandlingAsyncCallback;
-import org.thechiselgroup.choosel.client.views.DefaultView;
+import org.thechiselgroup.choosel.client.views.ShareConfiguration;
 
 import com.google.inject.Inject;
 
@@ -28,8 +28,7 @@ public class DefaultViewSaver implements ViewSaver {
     private final ViewSaveManager viewPersistenceManager;
 
     @Inject
-    public DefaultViewSaver(
-            ViewSaveManager viewPersistenceManager,
+    public DefaultViewSaver(ViewSaveManager viewPersistenceManager,
             ErrorHandler errorHandler) {
 
         this.viewPersistenceManager = viewPersistenceManager;
@@ -37,9 +36,10 @@ public class DefaultViewSaver implements ViewSaver {
     }
 
     @Override
-    public void saveView(DefaultView view) {
-        viewPersistenceManager.saveView(view,
+    public void saveView(ShareConfiguration shareConfiguration) {
+        viewPersistenceManager.saveView(shareConfiguration,
                 new ErrorHandlingAsyncCallback<Void>(errorHandler));
+
     }
 
 }

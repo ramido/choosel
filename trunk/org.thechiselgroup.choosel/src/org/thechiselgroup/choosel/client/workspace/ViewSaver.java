@@ -15,9 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.workspace;
 
-import org.thechiselgroup.choosel.client.views.DefaultView;
+import org.thechiselgroup.choosel.client.views.ShareConfiguration;
 
 public interface ViewSaver {
 
-    void saveView(DefaultView view);
+    void saveView(ShareConfiguration shareConfiguration);
 }
