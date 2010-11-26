@@ -33,6 +33,10 @@ public class ResourceByPropertyMultiCategorizer implements
         return CollectionUtils.toSet((String) resource.getValue(property));
     }
 
+    public String getProperty() {
+        return property;
+    }
+
     @Override
     public String toString() {
         return super.toString();

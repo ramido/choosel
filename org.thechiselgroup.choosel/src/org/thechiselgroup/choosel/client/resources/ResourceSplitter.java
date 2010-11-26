@@ -53,7 +53,7 @@ public class ResourceSplitter implements ResourceContainer {
         this.multiCategorizer = multiCategorizer;
         this.resourceSetFactory = resourceSetFactory;
 
-        this.eventBus = new HandlerManager(this);
+        eventBus = new HandlerManager(this);
     }
 
     @Override
@@ -153,6 +153,10 @@ public class ResourceSplitter implements ResourceContainer {
 
     public Map<String, ResourceSet> getCategorizedResourceSets() {
         return new HashMap<String, ResourceSet>(categorizedResources);
+    }
+
+    public ResourceMultiCategorizer getCategorizer() {
+        return multiCategorizer;
     }
 
     @Override

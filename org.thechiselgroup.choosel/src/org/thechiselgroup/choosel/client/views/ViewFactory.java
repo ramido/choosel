@@ -82,8 +82,7 @@ public class ViewFactory implements WindowContentFactory {
             CategoryLabelProvider labelProvider,
             @Named(DROP_TARGET_MANAGER_VIEW_CONTENT) ResourceSetAvatarDropTargetManager contentDropTargetManager,
             HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper,
-            ViewSaver viewPersistence) {
+            DetailsWidgetHelper detailsWidgetHelper, ViewSaver viewPersistence) {
 
         assert contentType != null;
         assert viewContentDisplayFactory != null;
@@ -144,10 +143,15 @@ public class ViewFactory implements WindowContentFactory {
                 new ResourceSetAvatarResourceSetsPresenter(
                         selectionDragAvatarFactory), selectionModel);
 
+        ResourceItemValueResolver configuration = new ResourceItemValueResolver();
+
+        VisualMappingsControl visualMappingsControl = new DefaultVisualMappingsControl(
+                contentDisplay, configuration, resourceSplitter);
+
         return new DefaultView(resourceSplitter, contentDisplay, contentType,
-                contentType, new ResourceItemValueResolver(), selectionModel,
+                contentType, configuration, selectionModel,
                 selectionModelPresenter, resourceModel, resourceModelPresenter,
                 hoverModel, popupManagerFactory, detailsWidgetHelper,
-                viewPersistence);
+                viewPersistence, visualMappingsControl);
     }
 }

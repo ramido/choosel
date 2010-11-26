@@ -49,10 +49,11 @@ import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 
-
 public class DefaultViewTest {
 
     private TestView underTest;
+
+    private Slot descriptionSlot;
 
     public Set<ResourceItem> captureAddedResourceItems() {
         ArgumentCaptor<Set> captor = ArgumentCaptor.forClass(Set.class);
@@ -239,6 +240,21 @@ public class DefaultViewTest {
                 any(ViewContentDisplayCallback.class));
     }
 
+    @Test
+    public void initialResourceItemValueForTextSlot() {
+        Resource resource = new Resource("test:1");
+        resource.putValue("text1", "t1");
+        resource.putValue("text2", "t2");
+
+        underTest.getResourceModel().addResources(toResourceSet(resource));
+
+        List<ResourceItem> resourceItems = captureAddedResourceItemsAsList();
+        assertEquals(1, resourceItems.size());
+        ResourceItem resourceItem = resourceItems.get(0);
+
+        assertEquals("t1", resourceItem.getResourceValue(descriptionSlot));
+    }
+
     private void select(ResourceSet selectedResources) {
         ArgumentCaptor<ResourcesAddedEventHandler> captor = ArgumentCaptor
                 .forClass(ResourcesAddedEventHandler.class);
@@ -266,7 +282,9 @@ public class DefaultViewTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        underTest = TestView.createTestView();
+        descriptionSlot = new Slot("1", "Description", DataType.TEXT);
+
+        underTest = TestView.createTestView(descriptionSlot);
     }
 
     // TODO check highlighted resources in resource item
