@@ -143,8 +143,7 @@ public class DefaultViewSaveManager implements ViewSaveManager {
 
             @Override
             public void onSuccess(Long result) {
-                view.setId(result);
-                view.updateSharePanel();
+                view.updateSharePanel(result);
                 super.onSuccess(result);
             }
         });

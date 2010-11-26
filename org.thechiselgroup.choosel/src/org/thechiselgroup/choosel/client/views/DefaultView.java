@@ -102,8 +102,6 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     }
 
-    private Long id;
-
     private static final String CSS_EXPANDER = "DefaultView-Expander";
 
     private static final String CSS_CONFIGURATION_PANEL = "DefaultView-ConfigurationPanel";
@@ -325,10 +323,6 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     public Map<String, ResourceSet> getCategorizedResourceSets() {
         return resourceSplitter.getCategorizedResourceSets();
-    }
-
-    public Long getId() {
-        return id;
     }
 
     protected String getModuleBase() {
@@ -749,10 +743,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         return memento;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     private void setInitialMappings(
             DataTypeToListMap<String> propertiesByDataType) {
 
@@ -931,23 +921,21 @@ public class DefaultView extends AbstractWindowContent implements View {
                 Collections.<Slot> emptySet());
     }
 
-    public void updateSharePanel() {
-        if (id != null) {
-            String url = Window.Location.getHref()
-                    + (Window.Location.getParameterMap().size() == 0 ? "?"
-                            : "&") + "windowId=" + getId().toString();
+    public void updateSharePanel(Long id) {
+        String url = Window.Location.getHref()
+                + (Window.Location.getParameterMap().size() == 0 ? "?" : "&")
+                + "windowId=" + id.toString();
 
-            sharePanel.remove(1);
+        sharePanel.remove(1);
 
-            Label urlLabel = new Label();
-            urlLabel.setText("Share Link:");
+        Label urlLabel = new Label();
+        urlLabel.setText("Share Link:");
 
-            TextBox textBox = new TextBox();
-            textBox.setText(url);
+        TextBox textBox = new TextBox();
+        textBox.setText(url);
 
-            sharePanel.add(urlLabel);
-            sharePanel.add(textBox);
-        }
+        sharePanel.add(urlLabel);
+        sharePanel.add(textBox);
     }
 
 }
