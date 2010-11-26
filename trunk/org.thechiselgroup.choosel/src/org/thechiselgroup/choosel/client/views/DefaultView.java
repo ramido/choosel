@@ -24,8 +24,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.thechiselgroup.choosel.client.calculation.SumCalculation;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.persistence.Persistable;
+import org.thechiselgroup.choosel.client.resolver.FixedValuePropertyValueResolver;
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
@@ -35,6 +37,7 @@ import org.thechiselgroup.choosel.client.resources.ResourceCategoryChange;
 import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetEventForwarder;
+import org.thechiselgroup.choosel.client.resources.ResourceSetUtils;
 import org.thechiselgroup.choosel.client.resources.ResourceSplitter;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
@@ -164,6 +167,15 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private VisualMappingsControl visualMappingsControl;
 
+    /*
+     * Boolean flag that indicates if the configuration part of the view has
+     * been created.
+     * 
+     * XXX This solution breaks down when there is more than one kind of
+     * resource (i.e. with different properties)
+     */
+    private boolean isConfigurationAvailable = false;
+
     public DefaultView(ResourceSplitter resourceSplitter,
             ViewContentDisplay contentDisplay, String label,
             String contentType, ResourceItemValueResolver configuration,
@@ -222,12 +234,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         return affectedResourcesInThisView2;
     }
 
-    private PopupManager createPopupManager(ResourceItemValueResolver resolver,
-            ResourceSet resources) {
-
-        return createPopupManager(resources);
-    }
-
     // for test
     protected PopupManager createPopupManager(final ResourceSet resources) {
         WidgetFactory widgetFactory = new WidgetFactory() {
@@ -249,8 +255,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         // TODO provide configuration to content display in callback
         DefaultResourceItem resourceItem = new DefaultResourceItem(category,
-                resources, hoverModel, createPopupManager(configuration,
-                        resources), configuration);
+                resources, hoverModel, createPopupManager(resources), configuration);
 
         categoriesToResourceItems.put(category, resourceItem);
 
@@ -404,12 +409,14 @@ public class DefaultView extends AbstractWindowContent implements View {
 
             @Override
             public void onResourcesAdded(ResourcesAddedEvent e) {
+                initializeVisualMappings(e.getTarget());
                 visualMappingsControl.updateConfiguration(e.getTarget());
                 super.onResourcesAdded(e);
             }
 
             @Override
             public void onResourcesRemoved(ResourcesRemovedEvent e) {
+                initializeVisualMappings(e.getTarget());
                 visualMappingsControl.updateConfiguration(e.getTarget());
                 super.onResourcesRemoved(e);
             }
@@ -508,6 +515,27 @@ public class DefaultView extends AbstractWindowContent implements View {
                         updateHighlighting(e.getRemovedResources(), false);
                     }
                 }));
+    }
+
+    private void initializeVisualMappings(ResourceSet resources) {
+        DataTypeToListMap<String> propertiesByDataType = ResourceSetUtils
+                .getPropertiesByDataType(resources);
+
+        /*
+         * TODO check if there are changes when adding / adjust each slot -->
+         * stable per slot --> initialize early for the slots & map to object
+         * that has corresponding update method
+         * 
+         * XXX for now: just add a flag if a configuration has been created, and
+         * if that's the case, don't rebuild the configuration.
+         * 
+         * XXX this also fails with redo / undo
+         */
+        // TODO check the validity of the configuration instead
+        if (!isConfigurationAvailable) {
+            setInitialMappings(propertiesByDataType);
+            isConfigurationAvailable = true;
+        }
     }
 
     private void initMappingsConfigurator() {
@@ -652,7 +680,8 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private DefaultResourceItem removeResourceItem(String category) {
         assert category != null : "category must not be null";
-        assert categoriesToResourceItems.containsKey(category);
+        assert categoriesToResourceItems.containsKey(category) : "no resource item for "
+                + category;
 
         DefaultResourceItem resourceItem = categoriesToResourceItems
                 .remove(category);
@@ -717,6 +746,51 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    private void setInitialMappings(
+            DataTypeToListMap<String> propertiesByDataType) {
+
+        for (Slot slot : contentDisplay.getSlots()) {
+            DataType dataType = slot.getDataType();
+            List<String> properties = propertiesByDataType.get(dataType);
+
+            /*
+             * XXX this is actually a problem for the properties besides color.
+             * If we don't have a property of that type, the data cannot be
+             * visualized.
+             */
+            if (properties.isEmpty() && dataType != DataType.COLOR) {
+                continue;
+            }
+
+            ResourceSetToValueResolver setToValueResolver = null;
+
+            switch (dataType) {
+            case TEXT:
+                setToValueResolver = new TextResourceSetToValueResolver(
+                        properties.get(0));
+                break;
+            case NUMBER:
+                setToValueResolver = new CalculationResourceSetToValueResolver(
+                        properties.get(0), new SumCalculation());
+                break;
+            case DATE:
+                setToValueResolver = new FirstResourcePropertyResolver(
+                        properties.get(0));
+                break;
+            case COLOR:
+                setToValueResolver = new FixedValuePropertyValueResolver(
+                        "#6495ed");
+                break;
+            case LOCATION:
+                setToValueResolver = new FirstResourcePropertyResolver(
+                        properties.get(0));
+                break;
+            }
+
+            configuration.put(slot, setToValueResolver);
+        }
     }
 
     /**
