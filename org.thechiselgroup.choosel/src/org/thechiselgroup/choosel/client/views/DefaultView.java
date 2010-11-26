@@ -71,7 +71,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class DefaultView extends AbstractWindowContent implements View {
 
-    private class MainPanel extends DockPanel implements ViewProvider {
+    private class ViewPanel extends DockPanel implements ViewProvider {
 
         /**
          * Enables finding this view by searching the widget hierarchy.
@@ -133,7 +133,10 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private HoverModel hoverModel;
 
-    private DockPanel mainPanel;
+    /**
+     * The main panel of this view. It contains all other widgets of this view.
+     */
+    private ViewPanel viewPanel;
 
     private ResourceGrouping resourceGrouping;
 
@@ -211,7 +214,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     @Override
     public Widget asWidget() {
-        return mainPanel;
+        return viewPanel;
     }
 
     private ResourceSet calculateAffectedResources(
@@ -643,18 +646,18 @@ public class DefaultView extends AbstractWindowContent implements View {
         initConfigurationPanelUI();
         initSideBar();
 
-        mainPanel = new MainPanel();
+        viewPanel = new ViewPanel();
 
-        mainPanel.setBorderWidth(0);
-        mainPanel.setSpacing(0);
+        viewPanel.setBorderWidth(0);
+        viewPanel.setSpacing(0);
 
-        mainPanel.setSize("500px", "300px");
+        viewPanel.setSize("500px", "300px");
 
-        mainPanel.add(configurationBar, DockPanel.NORTH);
-        mainPanel.add(contentDisplay.asWidget(), DockPanel.CENTER);
-        mainPanel.add(sideBar, DockPanel.EAST);
+        viewPanel.add(configurationBar, DockPanel.NORTH);
+        viewPanel.add(contentDisplay.asWidget(), DockPanel.CENTER);
+        viewPanel.add(sideBar, DockPanel.EAST);
 
-        mainPanel.setCellHeight(contentDisplay.asWidget(), "100%");
+        viewPanel.setCellHeight(contentDisplay.asWidget(), "100%");
     }
 
     private void initViewConfigurator() {
