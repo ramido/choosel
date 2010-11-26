@@ -19,38 +19,29 @@ import java.util.Collections;
 import java.util.List;
 
 import org.thechiselgroup.choosel.client.util.CollectionUtils;
+import org.thechiselgroup.choosel.client.util.NullConverter;
+import org.thechiselgroup.choosel.client.views.widget.listbox.ExtendedListBox;
+import org.thechiselgroup.choosel.client.views.widget.listbox.ListBoxControl;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
 public class TextSlotControl extends SlotControl {
 
-    private ListBox propertySelectionBox;
-
-    private ChangeHandler changeHandler;
-
-    private HandlerRegistration changeHandlerRegistration;
-
-    private final ResourceItemValueResolver resolver;
+    private ListBoxControl<String> propertySelector;
 
     public TextSlotControl(Slot slot, final ResourceItemValueResolver resolver,
             final ViewContentDisplay contentDisplay) {
 
         super(slot);
 
-        this.resolver = resolver;
-
-        propertySelectionBox = new ListBox(false);
-        propertySelectionBox.setVisibleItemCount(1);
-
-        changeHandler = new ChangeHandler() {
+        propertySelector = new ListBoxControl<String>(
+                new ExtendedListBox(false), new NullConverter<String>());
+        propertySelector.setChangeHandler(new ChangeHandler() {
             @Override
             public void onChange(ChangeEvent event) {
-                String propertyName = propertySelectionBox
-                        .getValue(propertySelectionBox.getSelectedIndex());
+                String propertyName = propertySelector.getSelectedValue();
 
                 resolver.put(getSlot(), new TextResourceSetToValueResolver(
                         propertyName));
@@ -60,31 +51,16 @@ public class TextSlotControl extends SlotControl {
                         Collections.<ResourceItem> emptySet(),
                         CollectionUtils.toSet(getSlot()));
             }
-        };
-        changeHandlerRegistration = propertySelectionBox
-                .addChangeHandler(changeHandler);
+        });
     }
 
     @Override
     public Widget asWidget() {
-        return propertySelectionBox;
+        return propertySelector.asWidget();
     }
 
     @Override
     public void updateOptions(List<String> properties) {
-        changeHandlerRegistration.removeHandler();
-        propertySelectionBox.clear();
-        for (String property : properties) {
-            propertySelectionBox.addItem(property, property);
-        }
-
-        // XXX assuming a TextResourceSetToValueResolver is error prone
-        String property = ((TextResourceSetToValueResolver) resolver
-                .getResourceSetResolver(getSlot())).getProperty();
-        int index = properties.indexOf(property);
-        propertySelectionBox.setSelectedIndex(index);
-
-        changeHandlerRegistration = propertySelectionBox
-                .addChangeHandler(changeHandler);
+        propertySelector.setValues(properties);
     }
 }
