@@ -29,25 +29,11 @@ public class TextSlotControl extends SlotControl {
 
     private ListBox slotPropertyMappingBox;
 
-    private final ResourceItemValueResolver resolver;
-
-    private final ViewContentDisplay contentDisplay;
-
-    public TextSlotControl(Slot slot, ResourceItemValueResolver resolver,
-            ViewContentDisplay contentDisplay) {
+    public TextSlotControl(Slot slot, final ResourceItemValueResolver resolver,
+            final ViewContentDisplay contentDisplay) {
 
         super(slot);
-        this.resolver = resolver;
-        this.contentDisplay = contentDisplay;
-    }
 
-    @Override
-    public Widget asWidget() {
-        return slotPropertyMappingBox;
-    }
-
-    @Override
-    public void init() {
         slotPropertyMappingBox = new ListBox(false);
         slotPropertyMappingBox.setVisibleItemCount(1);
 
@@ -66,6 +52,11 @@ public class TextSlotControl extends SlotControl {
                         CollectionUtils.toSet(getSlot()));
             }
         });
+    }
+
+    @Override
+    public Widget asWidget() {
+        return slotPropertyMappingBox;
     }
 
     @Override

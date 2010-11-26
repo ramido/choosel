@@ -40,25 +40,12 @@ public class NumberSlotControl extends SlotControl {
 
     private ListBox slotPropertyMappingBox;
 
-    private ResourceItemValueResolver resolver;
-
-    private ViewContentDisplay contentDisplay;
-
-    public NumberSlotControl(Slot slot, ResourceItemValueResolver resolver,
-            ViewContentDisplay contentDisplay) {
+    public NumberSlotControl(Slot slot,
+            final ResourceItemValueResolver resolver,
+            final ViewContentDisplay contentDisplay) {
 
         super(slot);
-        this.resolver = resolver;
-        this.contentDisplay = contentDisplay;
-    }
 
-    @Override
-    public Widget asWidget() {
-        return panel;
-    }
-
-    @Override
-    public void init() {
         Calculation[] calculations = new Calculation[] { new SumCalculation(),
                 new CountCalculation(), new AverageCalculation(),
                 new MinCalculation(), new MaxCalculation() };
@@ -105,6 +92,11 @@ public class NumberSlotControl extends SlotControl {
         panel = new VerticalPanel();
         panel.add(calculationBox);
         panel.add(slotPropertyMappingBox);
+    }
+
+    @Override
+    public Widget asWidget() {
+        return panel;
     }
 
     @Override
