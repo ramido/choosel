@@ -28,25 +28,29 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class TextSlotControl extends SlotControl {
 
-    private ListBox slotPropertyMappingBox;
+    private ListBox propertySelectionBox;
 
     private ChangeHandler changeHandler;
 
     private HandlerRegistration changeHandlerRegistration;
+
+    private final ResourceItemValueResolver resolver;
 
     public TextSlotControl(Slot slot, final ResourceItemValueResolver resolver,
             final ViewContentDisplay contentDisplay) {
 
         super(slot);
 
-        slotPropertyMappingBox = new ListBox(false);
-        slotPropertyMappingBox.setVisibleItemCount(1);
+        this.resolver = resolver;
+
+        propertySelectionBox = new ListBox(false);
+        propertySelectionBox.setVisibleItemCount(1);
 
         changeHandler = new ChangeHandler() {
             @Override
             public void onChange(ChangeEvent event) {
-                String propertyName = slotPropertyMappingBox
-                        .getValue(slotPropertyMappingBox.getSelectedIndex());
+                String propertyName = propertySelectionBox
+                        .getValue(propertySelectionBox.getSelectedIndex());
 
                 resolver.put(getSlot(), new TextResourceSetToValueResolver(
                         propertyName));
@@ -57,24 +61,30 @@ public class TextSlotControl extends SlotControl {
                         CollectionUtils.toSet(getSlot()));
             }
         };
-        changeHandlerRegistration = slotPropertyMappingBox
+        changeHandlerRegistration = propertySelectionBox
                 .addChangeHandler(changeHandler);
     }
 
     @Override
     public Widget asWidget() {
-        return slotPropertyMappingBox;
+        return propertySelectionBox;
     }
 
     @Override
     public void updateOptions(List<String> properties) {
         changeHandlerRegistration.removeHandler();
-        slotPropertyMappingBox.clear();
+        propertySelectionBox.clear();
         for (String property : properties) {
-            slotPropertyMappingBox.addItem(property, property);
+            propertySelectionBox.addItem(property, property);
         }
-        // TODO select correct position
-        changeHandlerRegistration = slotPropertyMappingBox
+
+        // XXX assuming a TextResourceSetToValueResolver is error prone
+        String property = ((TextResourceSetToValueResolver) resolver
+                .getResourceSetResolver(getSlot())).getProperty();
+        int index = properties.indexOf(property);
+        propertySelectionBox.setSelectedIndex(index);
+
+        changeHandlerRegistration = propertySelectionBox
                 .addChangeHandler(changeHandler);
     }
 }
