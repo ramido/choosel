@@ -47,7 +47,7 @@ public class TestView extends DefaultView {
         HoverModel hoverModel = new HoverModel();
 
         ViewContentDisplay contentDisplay = mock(ViewContentDisplay.class);
-        ResourceItemValueResolver resourceSetToValueResolver = spy(new ResourceItemValueResolver());
+        SlotMappingConfiguration resourceSetToValueResolver = spy(new SlotMappingConfiguration());
         SelectionModel selectionModel = mock(SelectionModel.class);
         Presenter selectionModelPresenter = mock(Presenter.class);
         DetailsWidgetHelper detailsWidgetHelper = mock(DetailsWidgetHelper.class);
@@ -113,7 +113,7 @@ public class TestView extends DefaultView {
 
     public TestView(ResourceGrouping resourceSplitter,
             ViewContentDisplay contentDisplay, String label,
-            String contentType, ResourceItemValueResolver configuration,
+            String contentType, SlotMappingConfiguration configuration,
             SelectionModel selectionModel, Presenter selectionModelPresenter,
             ResourceModel resourceModel, Presenter resourceModelPresenter,
             HoverModel hoverModel, PopupManagerFactory popupManagerFactory,

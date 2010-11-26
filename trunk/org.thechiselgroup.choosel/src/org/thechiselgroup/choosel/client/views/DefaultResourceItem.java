@@ -44,7 +44,7 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
     // TODO update & paint on changes in resources!!!
     private final ResourceSet resources;
 
-    private final ResourceItemValueResolver valueResolver;
+    private final SlotMappingConfiguration valueResolver;
 
     private HighlightingManager highlightingManager;
 
@@ -69,7 +69,7 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
 
     public DefaultResourceItem(String groupID, ResourceSet resources,
             HoverModel hoverModel, PopupManager popupManager,
-            ResourceItemValueResolver valueResolver) {
+            SlotMappingConfiguration valueResolver) {
 
         assert groupID != null;
         assert resources != null;

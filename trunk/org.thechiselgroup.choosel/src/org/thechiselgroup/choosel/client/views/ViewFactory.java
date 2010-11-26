@@ -143,7 +143,7 @@ public class ViewFactory implements WindowContentFactory {
                 new ResourceSetAvatarResourceSetsPresenter(
                         selectionDragAvatarFactory), selectionModel);
 
-        ResourceItemValueResolver configuration = new ResourceItemValueResolver();
+        SlotMappingConfiguration configuration = new SlotMappingConfiguration();
 
         VisualMappingsControl visualMappingsControl = new DefaultVisualMappingsControl(
                 contentDisplay, configuration, resourceSplitter);

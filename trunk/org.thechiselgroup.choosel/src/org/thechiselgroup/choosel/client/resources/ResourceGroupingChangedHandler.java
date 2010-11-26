@@ -15,9 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
-public interface ResourceCategoriesChangedHandler extends
-        ResourceCategoryContainerEventHandler {
+import com.google.gwt.event.shared.EventHandler;
 
-    void onResourceCategoriesChanged(ResourceCategoriesChangedEvent e);
+public interface ResourceGroupingChangedHandler extends EventHandler {
+
+    void onResourceCategoriesChanged(ResourceGroupingChangedEvent e);
 
 }

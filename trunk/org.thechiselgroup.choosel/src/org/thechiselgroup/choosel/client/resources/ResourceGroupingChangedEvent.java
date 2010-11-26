@@ -19,10 +19,10 @@ import java.util.List;
 
 import com.google.gwt.event.shared.GwtEvent;
 
-public class ResourceCategoriesChangedEvent extends
-        GwtEvent<ResourceCategoriesChangedHandler> {
+public class ResourceGroupingChangedEvent extends
+        GwtEvent<ResourceGroupingChangedHandler> {
 
-    public static final GwtEvent.Type<ResourceCategoriesChangedHandler> TYPE = new GwtEvent.Type<ResourceCategoriesChangedHandler>();
+    public static final GwtEvent.Type<ResourceGroupingChangedHandler> TYPE = new GwtEvent.Type<ResourceGroupingChangedHandler>();
 
     /**
      * A list is used here because maintaining the order in which the changes
@@ -32,7 +32,7 @@ public class ResourceCategoriesChangedEvent extends
      */
     private final List<ResourceGroupingChange> changes;
 
-    public ResourceCategoriesChangedEvent(List<ResourceGroupingChange> changes) {
+    public ResourceGroupingChangedEvent(List<ResourceGroupingChange> changes) {
         assert changes != null;
         assert !changes.isEmpty();
 
@@ -40,12 +40,12 @@ public class ResourceCategoriesChangedEvent extends
     }
 
     @Override
-    protected void dispatch(ResourceCategoriesChangedHandler handler) {
+    protected void dispatch(ResourceGroupingChangedHandler handler) {
         handler.onResourceCategoriesChanged(this);
     }
 
     @Override
-    public GwtEvent.Type<ResourceCategoriesChangedHandler> getAssociatedType() {
+    public GwtEvent.Type<ResourceGroupingChangedHandler> getAssociatedType() {
         return TYPE;
     }
 

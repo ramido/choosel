@@ -38,7 +38,7 @@ import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.views.DefaultResourceItem;
 import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
-import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
+import org.thechiselgroup.choosel.client.views.SlotMappingConfiguration;
 
 public final class ResourcesTestHelper {
 
@@ -52,7 +52,7 @@ public final class ResourcesTestHelper {
     public static DefaultResourceItem createResourceItem(ResourceSet resources) {
         return spy(new DefaultResourceItem("", resources,
                 mock(HoverModel.class), mock(PopupManager.class),
-                mock(ResourceItemValueResolver.class)));
+                mock(SlotMappingConfiguration.class)));
     }
 
     public static <T> Set<T> emptySet(Class<T> clazz) {

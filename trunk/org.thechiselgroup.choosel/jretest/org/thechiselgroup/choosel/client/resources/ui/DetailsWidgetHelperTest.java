@@ -32,7 +32,7 @@ import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
-import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
+import org.thechiselgroup.choosel.client.views.SlotMappingConfiguration;
 import org.thechiselgroup.choosel.client.views.Slot;
 
 public class DetailsWidgetHelperTest {
@@ -44,7 +44,7 @@ public class DetailsWidgetHelperTest {
     private ResourceSetAvatarFactory avatarFactory;
 
     @Mock
-    private ResourceItemValueResolver resolver;
+    private SlotMappingConfiguration resolver;
 
     @Mock
     private ResourceSet resourceSet;

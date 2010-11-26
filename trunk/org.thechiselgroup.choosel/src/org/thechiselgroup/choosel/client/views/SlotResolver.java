@@ -53,7 +53,7 @@ public interface SlotResolver {
     ResourceToValueResolver createChartValueSlotResolver(String category);
 
     ResourceToValueResolver createColorSlotResolver(String category,
-            List<ResourceItemValueResolver> layers);
+            List<SlotMappingConfiguration> layers);
 
     ResourceToValueResolver createDateSlotResolver(String category);
 

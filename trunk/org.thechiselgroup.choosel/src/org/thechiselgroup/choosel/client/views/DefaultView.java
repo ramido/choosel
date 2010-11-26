@@ -31,10 +31,10 @@ import org.thechiselgroup.choosel.client.resolver.FixedValuePropertyValueResolve
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
-import org.thechiselgroup.choosel.client.resources.ResourceCategoriesChangedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourceCategoriesChangedHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.client.resources.ResourceGroupingChange;
+import org.thechiselgroup.choosel.client.resources.ResourceGroupingChangedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourceGroupingChangedHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetEventForwarder;
@@ -51,6 +51,7 @@ import org.thechiselgroup.choosel.client.ui.Presenter;
 import org.thechiselgroup.choosel.client.ui.WidgetFactory;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
+import org.thechiselgroup.choosel.client.util.CollectionUtils;
 import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.util.HandlerRegistrationSet;
 import org.thechiselgroup.choosel.client.util.Initializable;
@@ -109,7 +110,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private static final String MEMENTO_SELECTION_MODEL = "selection-model";
 
-    private ResourceSetEventForwarder allResourcesToSplitterForwarder;
+    private ResourceSetEventForwarder allResourcesToGroupingForwarder;
 
     /**
      * Maps group ids (representing the resource sets that are calculated by the
@@ -118,12 +119,12 @@ public class DefaultView extends AbstractWindowContent implements View {
      */
     private Map<String, DefaultResourceItem> groupsToResourceItems = new HashMap<String, DefaultResourceItem>();
 
-    private ResourceItemValueResolver configuration;
+    private SlotMappingConfiguration slotMappingConfiguration;
 
-    // TOOD rename
+    // TODO rename
     private DockPanel configurationBar;
 
-    // TOOD rename
+    // TODO rename
     private StackPanel sideBar;
 
     private ViewContentDisplay contentDisplay;
@@ -134,7 +135,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private DockPanel mainPanel;
 
-    private ResourceGrouping resourceSplitter;
+    private ResourceGrouping resourceGrouping;
 
     private ResourceModel resourceModel;
 
@@ -169,9 +170,10 @@ public class DefaultView extends AbstractWindowContent implements View {
      */
     private boolean isConfigurationAvailable = false;
 
-    public DefaultView(ResourceGrouping resourceSplitter,
+    public DefaultView(ResourceGrouping resourceGrouping,
             ViewContentDisplay contentDisplay, String label,
-            String contentType, ResourceItemValueResolver configuration,
+            String contentType,
+            SlotMappingConfiguration slotMappingConfiguration,
             SelectionModel selectionModel, Presenter selectionModelPresenter,
             ResourceModel resourceModel, Presenter resourceModelPresenter,
             HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
@@ -182,8 +184,8 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         assert popupManagerFactory != null;
         assert detailsWidgetHelper != null;
-        assert configuration != null;
-        assert resourceSplitter != null;
+        assert slotMappingConfiguration != null;
+        assert resourceGrouping != null;
         assert contentDisplay != null;
         assert selectionModel != null;
         assert selectionModelPresenter != null;
@@ -196,8 +198,8 @@ public class DefaultView extends AbstractWindowContent implements View {
         this.viewPersistence = viewPersistence;
         this.popupManagerFactory = popupManagerFactory;
         this.detailsWidgetHelper = detailsWidgetHelper;
-        this.configuration = configuration;
-        this.resourceSplitter = resourceSplitter;
+        this.slotMappingConfiguration = slotMappingConfiguration;
+        this.resourceGrouping = resourceGrouping;
         this.contentDisplay = contentDisplay;
         this.selectionModel = selectionModel;
         this.selectionModelPresenter = selectionModelPresenter;
@@ -229,7 +231,7 @@ public class DefaultView extends AbstractWindowContent implements View {
             @Override
             public Widget createWidget() {
                 return detailsWidgetHelper.createDetailsWidget(resources,
-                        configuration);
+                        slotMappingConfiguration);
             }
         };
 
@@ -245,7 +247,7 @@ public class DefaultView extends AbstractWindowContent implements View {
         // TODO provide configuration to content display in callback
         DefaultResourceItem resourceItem = new DefaultResourceItem(groupID,
                 resources, hoverModel, createPopupManager(resources),
-                configuration);
+                slotMappingConfiguration);
 
         assert !groupsToResourceItems.containsKey(groupID) : "groupsToResourceItems already contains "
                 + groupID;
@@ -278,8 +280,8 @@ public class DefaultView extends AbstractWindowContent implements View {
         dispose(selectionModel);
 
         resourceModel = null;
-        allResourcesToSplitterForwarder.dispose();
-        allResourcesToSplitterForwarder = null;
+        allResourcesToGroupingForwarder.dispose();
+        allResourcesToGroupingForwarder = null;
         contentDisplay.dispose();
         contentDisplay = null;
 
@@ -317,7 +319,7 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     public Map<String, ResourceSet> getCategorizedResourceSets() {
-        return resourceSplitter.getCategorizedResourceSets();
+        return resourceGrouping.getCategorizedResourceSets();
     }
 
     protected String getModuleBase() {
@@ -383,13 +385,14 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         resourceModelPresenter.init();
 
-        initResourceSplitter();
-        initAllResourcesToResourceSplitterLink();
+        initResourceGrouping();
+        initAllResourcesToResourceGroupingLink();
         initHoverModelHooks();
 
         initUI();
 
         initContentDisplay();
+        initSlotMappingChangeHandler();
     }
 
     private void init(Object target) {
@@ -398,9 +401,9 @@ public class DefaultView extends AbstractWindowContent implements View {
         }
     }
 
-    private void initAllResourcesToResourceSplitterLink() {
-        allResourcesToSplitterForwarder = new ResourceSetEventForwarder(
-                resourceModel.getResources(), resourceSplitter) {
+    private void initAllResourcesToResourceGroupingLink() {
+        allResourcesToGroupingForwarder = new ResourceSetEventForwarder(
+                resourceModel.getResources(), resourceGrouping) {
 
             @Override
             public void onResourcesAdded(ResourcesAddedEvent e) {
@@ -416,7 +419,7 @@ public class DefaultView extends AbstractWindowContent implements View {
                 super.onResourcesRemoved(e);
             }
         };
-        allResourcesToSplitterForwarder.init();
+        allResourcesToGroupingForwarder.init();
     }
 
     private void initConfigurationPanelUI() {
@@ -472,18 +475,22 @@ public class DefaultView extends AbstractWindowContent implements View {
 
             @Override
             public String getSlotResolverDescription(Slot slot) {
-                return configuration.getResourceSetResolver(slot).toString();
+                if (!slotMappingConfiguration.containsResolver(slot)) {
+                    return "N/A";
+                }
+
+                return slotMappingConfiguration.getResolver(slot).toString();
             }
 
             @Override
             public void putResolver(Slot slot,
                     ResourceSetToValueResolver resolver) {
-                configuration.put(slot, resolver);
+                slotMappingConfiguration.setMapping(slot, resolver);
             }
 
             @Override
             public void setCategorizer(ResourceMultiCategorizer categorizer) {
-                resourceSplitter.setCategorizer(categorizer);
+                resourceGrouping.setCategorizer(categorizer);
             }
 
             @Override
@@ -537,25 +544,25 @@ public class DefaultView extends AbstractWindowContent implements View {
         sideBar.add(visualMappingsControl.asWidget(), "Mappings");
     }
 
+    private void initResourceGrouping() {
+        resourceGrouping.addHandler(new ResourceGroupingChangedHandler() {
+
+            @Override
+            public void onResourceCategoriesChanged(
+                    ResourceGroupingChangedEvent e) {
+
+                assert e != null;
+                updateResourceItemsOnModelChange(e.getChanges());
+            }
+        });
+    }
+
     private void initResourceModelPresenter() {
         Widget widget = resourceModelPresenter.asWidget();
 
         configurationBar.add(widget, DockPanel.WEST);
         configurationBar.setCellHorizontalAlignment(widget,
                 HasAlignment.ALIGN_LEFT);
-    }
-
-    private void initResourceSplitter() {
-        resourceSplitter.addHandler(new ResourceCategoriesChangedHandler() {
-
-            @Override
-            public void onResourceCategoriesChanged(
-                    ResourceCategoriesChangedEvent e) {
-
-                assert e != null;
-                updateResourceItemsOnModelChange(e.getChanges());
-            }
-        });
     }
 
     private void initSelectionModelEventHandlers() {
@@ -618,6 +625,18 @@ public class DefaultView extends AbstractWindowContent implements View {
         configurationBar.add(expander, DockPanel.EAST);
         configurationBar.setCellHorizontalAlignment(expander,
                 HasAlignment.ALIGN_RIGHT);
+    }
+
+    protected void initSlotMappingChangeHandler() {
+        slotMappingConfiguration.addHandler(new SlotMappingChangedHandler() {
+            @Override
+            public void onResourceCategoriesChanged(SlotMappingChangedEvent e) {
+                contentDisplay.update(Collections.<ResourceItem> emptySet(),
+                        Collections.<ResourceItem> emptySet(),
+                        Collections.<ResourceItem> emptySet(),
+                        CollectionUtils.toSet(e.getSlot()));
+            }
+        });
     }
 
     protected void initUI() {
@@ -755,7 +774,7 @@ public class DefaultView extends AbstractWindowContent implements View {
                 break;
             }
 
-            configuration.put(slot, setToValueResolver);
+            slotMappingConfiguration.setMapping(slot, setToValueResolver);
         }
     }
 

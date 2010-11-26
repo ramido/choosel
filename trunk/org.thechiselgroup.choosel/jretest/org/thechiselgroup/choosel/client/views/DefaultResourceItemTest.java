@@ -46,7 +46,7 @@ public class DefaultResourceItemTest {
     private HoverModel hoverModel;
 
     @Mock
-    private ResourceItemValueResolver layer;
+    private SlotMappingConfiguration layer;
 
     @Mock
     private PopupManager popupManager;

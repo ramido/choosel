@@ -96,10 +96,10 @@ public class ResourceGrouping implements ResourceContainer {
     }
 
     public HandlerRegistration addHandler(
-            ResourceCategoriesChangedHandler handler) {
+            ResourceGroupingChangedHandler handler) {
         assert handler != null;
         return eventBus
-                .addHandler(ResourceCategoriesChangedEvent.TYPE, handler);
+                .addHandler(ResourceGroupingChangedEvent.TYPE, handler);
     }
 
     private void addResourcesToAllResources(Collection<Resource> resources) {
@@ -145,7 +145,7 @@ public class ResourceGrouping implements ResourceContainer {
 
     private void fireChanges(List<ResourceGroupingChange> changes) {
         if (!changes.isEmpty()) {
-            eventBus.fireEvent(new ResourceCategoriesChangedEvent(changes));
+            eventBus.fireEvent(new ResourceGroupingChangedEvent(changes));
         }
     }
 

@@ -35,7 +35,7 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
 
     private final ResourceGrouping splitter;
 
-    private final ResourceItemValueResolver resolver;
+    private final SlotMappingConfiguration resolver;
 
     private ConfigurationPanel visualMappingPanel;
 
@@ -48,7 +48,7 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
     private Map<Slot, SlotControl> slotToSlotControls = new HashMap<Slot, SlotControl>();
 
     public DefaultVisualMappingsControl(ViewContentDisplay contentDisplay,
-            ResourceItemValueResolver resolver, ResourceGrouping splitter) {
+            SlotMappingConfiguration resolver, ResourceGrouping splitter) {
 
         this.contentDisplay = contentDisplay;
         this.resolver = resolver;
@@ -109,12 +109,10 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
         for (Slot slot : contentDisplay.getSlots()) {
             switch (slot.getDataType()) {
             case TEXT:
-                addSlotControl(new TextSlotControl(slot, resolver,
-                        contentDisplay));
+                addSlotControl(new TextSlotControl(slot, resolver));
                 break;
             case NUMBER:
-                addSlotControl(new NumberSlotControl(slot, resolver,
-                        contentDisplay));
+                addSlotControl(new NumberSlotControl(slot, resolver));
                 break;
             }
         }

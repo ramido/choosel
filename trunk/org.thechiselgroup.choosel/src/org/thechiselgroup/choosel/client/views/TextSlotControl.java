@@ -15,10 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import java.util.Collections;
 import java.util.List;
 
-import org.thechiselgroup.choosel.client.util.CollectionUtils;
 import org.thechiselgroup.choosel.client.util.NullConverter;
 import org.thechiselgroup.choosel.client.views.widget.listbox.ExtendedListBox;
 import org.thechiselgroup.choosel.client.views.widget.listbox.ListBoxControl;
@@ -31,13 +29,14 @@ public class TextSlotControl extends SlotControl {
 
     private ListBoxControl<String> propertySelector;
 
-    private final ResourceItemValueResolver resolver;
+    private final SlotMappingConfiguration slotMappingConfiguration;
 
-    public TextSlotControl(Slot slot, final ResourceItemValueResolver resolver,
-            final ViewContentDisplay contentDisplay) {
+    public TextSlotControl(Slot slot,
+            final SlotMappingConfiguration slotMappingConfiguration) {
 
         super(slot);
-        this.resolver = resolver;
+
+        this.slotMappingConfiguration = slotMappingConfiguration;
 
         propertySelector = new ListBoxControl<String>(
                 new ExtendedListBox(false), new NullConverter<String>());
@@ -46,13 +45,8 @@ public class TextSlotControl extends SlotControl {
             public void onChange(ChangeEvent event) {
                 String propertyName = propertySelector.getSelectedValue();
 
-                resolver.put(getSlot(), new TextResourceSetToValueResolver(
-                        propertyName));
-
-                contentDisplay.update(Collections.<ResourceItem> emptySet(),
-                        Collections.<ResourceItem> emptySet(),
-                        Collections.<ResourceItem> emptySet(),
-                        CollectionUtils.toSet(getSlot()));
+                slotMappingConfiguration.setMapping(getSlot(),
+                        new TextResourceSetToValueResolver(propertyName));
             }
         });
     }
@@ -67,8 +61,8 @@ public class TextSlotControl extends SlotControl {
         propertySelector.setValues(properties);
 
         if (propertySelector.getSelectedValue() == null) {
-            String property = ((TextResourceSetToValueResolver) resolver
-                    .getResourceSetResolver(getSlot())).getProperty();
+            String property = ((TextResourceSetToValueResolver) slotMappingConfiguration
+                    .getResolver(getSlot())).getProperty();
             propertySelector.setSelectedValue(property);
         }
     }

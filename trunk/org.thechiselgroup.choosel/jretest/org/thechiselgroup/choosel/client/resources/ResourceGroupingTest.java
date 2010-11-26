@@ -63,7 +63,7 @@ public class ResourceGroupingTest {
     private ResourceMultiCategorizer categorizer2;
 
     @Mock
-    private ResourceCategoriesChangedHandler changeHandler;
+    private ResourceGroupingChangedHandler changeHandler;
 
     private ResourceGrouping splitter;
 
@@ -81,8 +81,8 @@ public class ResourceGroupingTest {
     }
 
     public List<ResourceGroupingChange> captureChanges() {
-        ArgumentCaptor<ResourceCategoriesChangedEvent> eventCaptor = ArgumentCaptor
-                .forClass(ResourceCategoriesChangedEvent.class);
+        ArgumentCaptor<ResourceGroupingChangedEvent> eventCaptor = ArgumentCaptor
+                .forClass(ResourceGroupingChangedEvent.class);
         verify(changeHandler, times(1)).onResourceCategoriesChanged(
                 eventCaptor.capture());
         return eventCaptor.getValue().getChanges();
@@ -195,7 +195,7 @@ public class ResourceGroupingTest {
         splitter.setCategorizer(categorizer1);
 
         verify(changeHandler, times(0)).onResourceCategoriesChanged(
-                any(ResourceCategoriesChangedEvent.class));
+                any(ResourceGroupingChangedEvent.class));
     }
 
     @Test
@@ -215,7 +215,7 @@ public class ResourceGroupingTest {
         splitter.removeAll(Collections.<Resource> emptyList());
 
         verify(changeHandler, times(0)).onResourceCategoriesChanged(
-                any(ResourceCategoriesChangedEvent.class));
+                any(ResourceGroupingChangedEvent.class));
     }
 
     // TODO test for add all --> multiple categories
@@ -256,10 +256,10 @@ public class ResourceGroupingTest {
     public void fireResourceCategoryAddedEventOnAdd() {
         final boolean[] called = { false };
 
-        splitter.addHandler(new ResourceCategoriesChangedHandler() {
+        splitter.addHandler(new ResourceGroupingChangedHandler() {
             @Override
             public void onResourceCategoriesChanged(
-                    ResourceCategoriesChangedEvent e) {
+                    ResourceGroupingChangedEvent e) {
 
                 assertContentEquals(toSet(new ResourceGroupingChange(Delta.ADD,
                         CATEGORY_1_1, createResources(1))), e.getChanges());
@@ -281,10 +281,10 @@ public class ResourceGroupingTest {
     public void fireResourceCategoryAddedEventOnAddAll() {
         final boolean[] called = { false };
 
-        splitter.addHandler(new ResourceCategoriesChangedHandler() {
+        splitter.addHandler(new ResourceGroupingChangedHandler() {
             @Override
             public void onResourceCategoriesChanged(
-                    ResourceCategoriesChangedEvent e) {
+                    ResourceGroupingChangedEvent e) {
 
                 assertContentEquals(toSet(new ResourceGroupingChange(Delta.ADD,
                         CATEGORY_1_1, createResources(1, 2, 3))), e
