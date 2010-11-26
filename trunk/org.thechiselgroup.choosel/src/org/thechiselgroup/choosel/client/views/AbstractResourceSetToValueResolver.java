@@ -28,21 +28,14 @@ public abstract class AbstractResourceSetToValueResolver implements
 
     protected ResourceCategorizer categorizer;
 
-
     protected Map<String, ResourceToValueResolver> resourceTypeToResourceToValueResolvers = new HashMap<String, ResourceToValueResolver>();
 
-    private Slot slot;
-
-    public AbstractResourceSetToValueResolver(Slot slot,
-            ResourceCategorizer categorizer) {
-
-        this.slot = slot;
+    public AbstractResourceSetToValueResolver(ResourceCategorizer categorizer) {
         this.categorizer = categorizer;
     }
 
     private ResourceToValueResolver getResourceToValueResolver(
             String resourceType) {
-
 
         return resourceTypeToResourceToValueResolvers.get(resourceType);
     }

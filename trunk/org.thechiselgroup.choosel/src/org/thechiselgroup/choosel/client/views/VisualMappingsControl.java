@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.thechiselgroup.choosel.client.calculation.SumCalculation;
+import org.thechiselgroup.choosel.client.resolver.FixedValuePropertyValueResolver;
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.ResourceByPropertyMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
@@ -30,6 +31,7 @@ import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -57,6 +59,10 @@ public class VisualMappingsControl implements WidgetAdaptable {
     private DataTypeToListMap<SlotControl> slotControlsByDataType;
 
     private Map<Slot, SlotControl> slotToSlotControls = new HashMap<Slot, SlotControl>();
+
+    private HandlerRegistration groupingChangeHandlerRegistration;
+
+    private ChangeHandler groupingChangeHandler;
 
     public VisualMappingsControl(ViewContentDisplay contentDisplay,
             ResourceItemValueResolver resolver, ResourceSplitter splitter) {
@@ -97,7 +103,7 @@ public class VisualMappingsControl implements WidgetAdaptable {
         groupingBox = new ListBox(false);
         groupingBox.setVisibleItemCount(1);
 
-        groupingBox.addChangeHandler(new ChangeHandler() {
+        groupingChangeHandler = new ChangeHandler() {
             @Override
             public void onChange(ChangeEvent event) {
                 String property = groupingBox.getValue(groupingBox
@@ -106,7 +112,9 @@ public class VisualMappingsControl implements WidgetAdaptable {
                 splitter.setCategorizer(new ResourceByPropertyMultiCategorizer(
                         property));
             }
-        });
+        };
+        groupingChangeHandlerRegistration = groupingBox
+                .addChangeHandler(groupingChangeHandler);
 
         visualMappingPanel.addConfigurationSetting("Grouping", groupingBox);
     }
@@ -132,62 +140,52 @@ public class VisualMappingsControl implements WidgetAdaptable {
             DataTypeToListMap<String> propertiesByDataType) {
 
         for (Slot slot : contentDisplay.getSlots()) {
-            final List<String> propertyNames = propertiesByDataType.get(slot
-                    .getDataType());
+            DataType dataType = slot.getDataType();
+            List<String> properties = propertiesByDataType.get(dataType);
 
-            switch (slot.getDataType()) {
+            /*
+             * XXX this is actually a problem for the properties besides color.
+             * If we don't have a property of that type, the data cannot be
+             * visualized.
+             */
+            if (properties.isEmpty() && dataType != DataType.COLOR) {
+                continue;
+            }
+
+            ResourceSetToValueResolver setToValueResolver = null;
+
+            switch (dataType) {
             case TEXT:
-                if (propertyNames.isEmpty()) {
-                    continue;
-                }
-                resolver.put(slot, new TextResourceSetToValueResolver(
-                        propertyNames.get(0)));
+                setToValueResolver = new TextResourceSetToValueResolver(
+                        properties.get(0));
                 break;
             case NUMBER:
-                if (propertyNames.isEmpty()) {
-                    continue;
-                }
-                resolver.put(slot, new CalculationResourceSetToValueResolver(
-                        propertyNames.get(0), new SumCalculation()));
+                setToValueResolver = new CalculationResourceSetToValueResolver(
+                        properties.get(0), new SumCalculation());
                 break;
             case DATE:
-                if (propertyNames.isEmpty()) {
-                    continue;
-                }
-                resolver.put(slot, new ResourceSetToValueResolver() {
-                    @Override
-                    public Object resolve(ResourceSet resources, String category) {
-                        return resources.getFirstResource().getValue(
-                                propertyNames.get(0));
-                    }
-                });
+                setToValueResolver = new FirstResourcePropertyResolver(
+                        properties.get(0));
                 break;
             case COLOR:
-                resolver.put(slot, new ResourceSetToValueResolver() {
-                    @Override
-                    public Object resolve(ResourceSet resources, String category) {
-                        return "#6495ed";
-                    }
-                });
+                setToValueResolver = new FixedValuePropertyValueResolver(
+                        "#6495ed");
                 break;
             case LOCATION:
-                if (propertyNames.isEmpty()) {
-                    continue;
-                }
-                resolver.put(slot, new ResourceSetToValueResolver() {
-                    @Override
-                    public Object resolve(ResourceSet resources, String category) {
-                        return resources.getFirstResource().getValue(
-                                propertyNames.get(0));
-                    }
-                });
+                setToValueResolver = new FirstResourcePropertyResolver(
+                        properties.get(0));
                 break;
             }
+
+            resolver.put(slot, setToValueResolver);
         }
     }
 
     // TODO link to resource model instead & do updates when resources change
     public void updateConfiguration(ResourceSet resources) {
+        DataTypeToListMap<String> propertiesByDataType = ResourceSetUtils
+                .getPropertiesByDataType(resources);
+
         /*
          * TODO check if there are changes when adding / adjust each slot -->
          * stable per slot --> initialize early for the slots & map to object
@@ -198,20 +196,12 @@ public class VisualMappingsControl implements WidgetAdaptable {
          * 
          * XXX this also fails with redo / undo
          */
-        if (isConfigurationAvailable) {
-            return;
+        if (!isConfigurationAvailable) {
+            setInitialMappings(propertiesByDataType);
+            isConfigurationAvailable = true;
         }
-        isConfigurationAvailable = true;
 
-        // TODO do this separately for aggregation & slots (which should be
-        // based on resource items)
         // TODO update selection of slots?
-
-        DataTypeToListMap<String> propertiesByDataType = ResourceSetUtils
-                .getPropertiesByDataType(resources);
-
-        setInitialMappings(propertiesByDataType);
-
         updateGroupingBox(propertiesByDataType);
         updateSlotControls(propertiesByDataType);
     }
@@ -219,9 +209,14 @@ public class VisualMappingsControl implements WidgetAdaptable {
     private void updateGroupingBox(
             DataTypeToListMap<String> propertiesByDataType) {
 
+        groupingChangeHandlerRegistration.removeHandler();
+        groupingBox.clear();
         for (String property : propertiesByDataType.get(DataType.TEXT)) {
             groupingBox.addItem(property, property);
         }
+        // TODO select correct index
+        groupingChangeHandlerRegistration = groupingBox
+                .addChangeHandler(groupingChangeHandler);
     }
 
     protected void updateSlotControls(
