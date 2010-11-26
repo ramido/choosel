@@ -30,9 +30,13 @@ public final class ResourceSetUtils {
     public static DataTypeToListMap<String> getPropertiesByDataType(
             ResourceSet resourceSet) {
 
+        if (resourceSet.isEmpty()) {
+            return new DataTypeToListMap<String>();
+        }
+
         // no aggregation
-        Resource resource = resourceSet.getFirstResource();
         DataTypeToListMap<String> result = new DataTypeToListMap<String>();
+        Resource resource = resourceSet.getFirstResource();
 
         for (Entry<String, Serializable> entry : resource.getProperties()
                 .entrySet()) {

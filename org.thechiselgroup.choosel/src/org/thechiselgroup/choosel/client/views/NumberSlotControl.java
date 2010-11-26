@@ -30,6 +30,7 @@ import org.thechiselgroup.choosel.client.util.CollectionUtils;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -39,6 +40,10 @@ public class NumberSlotControl extends SlotControl {
     private VerticalPanel panel;
 
     private ListBox slotPropertyMappingBox;
+
+    private ChangeHandler changeHandler;
+
+    private HandlerRegistration changeHandlerRegistration;
 
     public NumberSlotControl(Slot slot,
             final ResourceItemValueResolver resolver,
@@ -65,7 +70,7 @@ public class NumberSlotControl extends SlotControl {
         slotPropertyMappingBox = new ListBox(false);
         slotPropertyMappingBox.setVisibleItemCount(1);
 
-        ChangeHandler handler = new ChangeHandler() {
+        changeHandler = new ChangeHandler() {
             @Override
             public void onChange(ChangeEvent event) {
                 String propertyName = slotPropertyMappingBox
@@ -86,8 +91,9 @@ public class NumberSlotControl extends SlotControl {
             }
         };
 
-        slotPropertyMappingBox.addChangeHandler(handler);
-        calculationBox.addChangeHandler(handler);
+        changeHandlerRegistration = slotPropertyMappingBox
+                .addChangeHandler(changeHandler);
+        calculationBox.addChangeHandler(changeHandler);
 
         panel = new VerticalPanel();
         panel.add(calculationBox);
@@ -101,8 +107,13 @@ public class NumberSlotControl extends SlotControl {
 
     @Override
     public void updateOptions(List<String> properties) {
+        changeHandlerRegistration.removeHandler();
+        slotPropertyMappingBox.clear();
         for (String property : properties) {
             slotPropertyMappingBox.addItem(property, property);
         }
+        // TODO restore correct index
+        changeHandlerRegistration = slotPropertyMappingBox
+                .addChangeHandler(changeHandler);
     }
 }

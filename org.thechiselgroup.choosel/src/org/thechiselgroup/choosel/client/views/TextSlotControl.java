@@ -22,12 +22,17 @@ import org.thechiselgroup.choosel.client.util.CollectionUtils;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
 public class TextSlotControl extends SlotControl {
 
     private ListBox slotPropertyMappingBox;
+
+    private ChangeHandler changeHandler;
+
+    private HandlerRegistration changeHandlerRegistration;
 
     public TextSlotControl(Slot slot, final ResourceItemValueResolver resolver,
             final ViewContentDisplay contentDisplay) {
@@ -37,7 +42,7 @@ public class TextSlotControl extends SlotControl {
         slotPropertyMappingBox = new ListBox(false);
         slotPropertyMappingBox.setVisibleItemCount(1);
 
-        slotPropertyMappingBox.addChangeHandler(new ChangeHandler() {
+        changeHandler = new ChangeHandler() {
             @Override
             public void onChange(ChangeEvent event) {
                 String propertyName = slotPropertyMappingBox
@@ -51,7 +56,9 @@ public class TextSlotControl extends SlotControl {
                         Collections.<ResourceItem> emptySet(),
                         CollectionUtils.toSet(getSlot()));
             }
-        });
+        };
+        changeHandlerRegistration = slotPropertyMappingBox
+                .addChangeHandler(changeHandler);
     }
 
     @Override
@@ -61,8 +68,13 @@ public class TextSlotControl extends SlotControl {
 
     @Override
     public void updateOptions(List<String> properties) {
+        changeHandlerRegistration.removeHandler();
+        slotPropertyMappingBox.clear();
         for (String property : properties) {
             slotPropertyMappingBox.addItem(property, property);
         }
+        // TODO select correct position
+        changeHandlerRegistration = slotPropertyMappingBox
+                .addChangeHandler(changeHandler);
     }
 }

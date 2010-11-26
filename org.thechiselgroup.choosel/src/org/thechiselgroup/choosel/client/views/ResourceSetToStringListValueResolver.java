@@ -26,9 +26,8 @@ import org.thechiselgroup.choosel.client.util.CollectionUtils;
 public class ResourceSetToStringListValueResolver extends
         AbstractResourceSetToValueResolver {
 
-    public ResourceSetToStringListValueResolver(Slot slot,
-            ResourceCategorizer categorizer) {
-        super(slot, categorizer);
+    public ResourceSetToStringListValueResolver(ResourceCategorizer categorizer) {
+        super(categorizer);
     }
 
     @Override
