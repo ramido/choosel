@@ -21,10 +21,14 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 public class TextResourceSetToValueResolver implements
         ResourceSetToValueResolver {
 
-    private final String propertyName;
+    private final String property;
 
-    public TextResourceSetToValueResolver(String propertyName) {
-        this.propertyName = propertyName;
+    public TextResourceSetToValueResolver(String property) {
+        this.property = property;
+    }
+
+    public String getProperty() {
+        return property;
     }
 
     @Override
@@ -33,7 +37,7 @@ public class TextResourceSetToValueResolver implements
             return category;
         }
 
-        return resources.getFirstResource().getValue(propertyName);
+        return resources.getFirstResource().getValue(property);
     }
 
 }

@@ -23,18 +23,22 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 public class CalculationResourceSetToValueResolver implements
         ResourceSetToValueResolver {
 
-    private final String propertyName;
+    private final String property;
 
     private final Calculation calculation;
 
-    public CalculationResourceSetToValueResolver(String propertyName,
+    public CalculationResourceSetToValueResolver(String property,
             Calculation calculation) {
 
-        assert propertyName != null;
+        assert property != null;
         assert calculation != null;
 
-        this.propertyName = propertyName;
+        this.property = property;
         this.calculation = calculation;
+    }
+
+    public String getProperty() {
+        return property;
     }
 
     @Override
@@ -46,7 +50,7 @@ public class CalculationResourceSetToValueResolver implements
         double[] values = new double[resources.size()];
         int i = 0;
         for (Resource resource : resources) {
-            Object value = resource.getValue(propertyName);
+            Object value = resource.getValue(property);
 
             if (value instanceof String) {
                 value = Double.parseDouble((String) value);
@@ -59,6 +63,6 @@ public class CalculationResourceSetToValueResolver implements
 
     @Override
     public String toString() {
-        return calculation.toString() + " " + propertyName;
+        return calculation.toString() + " " + property;
     }
 }
