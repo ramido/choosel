@@ -54,7 +54,7 @@ public class DefaultViewTest {
 
     private TestView underTest;
 
-    private Slot descriptionSlot;
+    private Slot slot;
 
     public Set<ResourceItem> captureAddedResourceItems() {
         ArgumentCaptor<Set> captor = ArgumentCaptor.forClass(Set.class);
@@ -84,6 +84,25 @@ public class DefaultViewTest {
         assertTrue(result.get(TYPE_1).containsEqualResources(resources1));
         assertTrue(result.containsKey(TYPE_2));
         assertTrue(result.get(TYPE_2).containsEqualResources(resources2));
+    }
+
+    @Test
+    public void changeSlotMapping() {
+        Resource resource = new Resource("test:1");
+        resource.putValue("text1", "t1");
+        resource.putValue("text2", "t2");
+
+        underTest.getSlotMappingConfiguration().setMapping(slot,
+                new FirstResourcePropertyResolver("text1"));
+        underTest.getResourceModel().addResources(toResourceSet(resource));
+        underTest.getSlotMappingConfiguration().setMapping(slot,
+                new FirstResourcePropertyResolver("text2"));
+
+        List<ResourceItem> resourceItems = underTest.getResourceItems();
+        assertEquals(1, resourceItems.size());
+        ResourceItem resourceItem = resourceItems.get(0);
+
+        assertEquals("t2", resourceItem.getResourceValue(slot));
     }
 
     @Test
@@ -293,7 +312,7 @@ public class DefaultViewTest {
         assertEquals(1, resourceItems.size());
         ResourceItem resourceItem = resourceItems.get(0);
 
-        assertEquals("t1", resourceItem.getResourceValue(descriptionSlot));
+        assertEquals("t1", resourceItem.getResourceValue(slot));
     }
 
     private void select(ResourceSet selectedResources) {
@@ -323,9 +342,9 @@ public class DefaultViewTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        descriptionSlot = new Slot("1", "Description", DataType.TEXT);
+        slot = new Slot("1", "Description", DataType.TEXT);
 
-        underTest = TestView.createTestView(descriptionSlot);
+        underTest = TestView.createTestView(slot);
     }
 
     // TODO check highlighted resources in resource item
