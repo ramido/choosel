@@ -93,35 +93,8 @@ public class VisualMappingsControl implements WidgetAdaptable {
         visualMappingPanel.addConfigurationSetting("Grouping", groupingBox);
     }
 
-    // TODO link to resource model instead & do updates when resources change
-    public void updateConfiguration(ResourceSet resources) {
-        /*
-         * TODO check if there are changes when adding / adjust each slot -->
-         * stable per slot --> initialize early for the slots & map to object
-         * that has corresponding update method
-         * 
-         * XXX for now: just add a flag if a configuration has been created, and
-         * if that's the case, don't rebuild the configuration.
-         * 
-         * XXX this also fails with redo / undo
-         */
-        if (isConfigurationAvailable) {
-            return;
-        }
-        isConfigurationAvailable = true;
-
-        // TODO do this separately for aggregation & slots (which should be
-        // based on resource items)
-        // TODO update selection of slots?
-
-        // TODO map [ data type --> list<property> ]
-        DataTypeToListMap<String> propertiesByDataType = ResourceSetUtils
-                .getPropertiesByDataType(resources);
-
-        for (String property : propertiesByDataType.get(DataType.TEXT)) {
-            groupingBox.addItem(property, property);
-        }
-
+    private void setInitialMappings(
+            DataTypeToListMap<String> propertiesByDataType) {
         /*
          * TODO move
          */
@@ -193,6 +166,52 @@ public class VisualMappingsControl implements WidgetAdaptable {
                     resolver.put(slot, new TextResourceSetToValueResolver(
                             propertyNames.get(0)));
                 }
+            } else if (slot.getDataType() == DataType.NUMBER) {
+                List<String> propertyNames = propertiesByDataType
+                        .get(DataType.NUMBER);
+
+                if (!propertyNames.isEmpty()) {
+                    resolver.put(slot,
+                            new CalculationResourceSetToValueResolver(
+                                    propertyNames.get(0), new SumCalculation()));
+                }
+            }
+        }
+    }
+
+    // TODO link to resource model instead & do updates when resources change
+    public void updateConfiguration(ResourceSet resources) {
+        /*
+         * TODO check if there are changes when adding / adjust each slot -->
+         * stable per slot --> initialize early for the slots & map to object
+         * that has corresponding update method
+         * 
+         * XXX for now: just add a flag if a configuration has been created, and
+         * if that's the case, don't rebuild the configuration.
+         * 
+         * XXX this also fails with redo / undo
+         */
+        if (isConfigurationAvailable) {
+            return;
+        }
+        isConfigurationAvailable = true;
+
+        // TODO do this separately for aggregation & slots (which should be
+        // based on resource items)
+        // TODO update selection of slots?
+
+        // TODO map [ data type --> list<property> ]
+        DataTypeToListMap<String> propertiesByDataType = ResourceSetUtils
+                .getPropertiesByDataType(resources);
+
+        updateGroupingBox(propertiesByDataType);
+
+        setInitialMappings(propertiesByDataType);
+
+        for (final Slot slot : contentDisplay.getSlots()) {
+            if (slot.getDataType() == DataType.TEXT) {
+                List<String> propertyNames = propertiesByDataType
+                        .get(DataType.TEXT);
 
                 SlotControl control = new TextSlotControl(slot, resolver,
                         contentDisplay);
@@ -205,12 +224,6 @@ public class VisualMappingsControl implements WidgetAdaptable {
                 List<String> propertyNames = propertiesByDataType
                         .get(DataType.NUMBER);
 
-                if (!propertyNames.isEmpty()) {
-                    resolver.put(slot,
-                            new CalculationResourceSetToValueResolver(
-                                    propertyNames.get(0), new SumCalculation()));
-                }
-
                 SlotControl control = new NumberSlotControl(slot, resolver,
                         contentDisplay);
 
@@ -222,6 +235,14 @@ public class VisualMappingsControl implements WidgetAdaptable {
             }
         }
 
+    }
+
+    private void updateGroupingBox(
+            DataTypeToListMap<String> propertiesByDataType) {
+
+        for (String property : propertiesByDataType.get(DataType.TEXT)) {
+            groupingBox.addItem(property, property);
+        }
     }
 
 }
