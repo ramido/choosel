@@ -137,8 +137,9 @@ public class VisualMappingsControl implements WidgetAdaptable {
          */
         if (Arrays.asList(contentDisplay.getSlots()).contains(
                 SlotResolver.LOCATION_SLOT)) {
-            final List<String> propertyNames = ResourceSetUtils
-                    .getPropertyNamesForDataType(resources, DataType.LOCATION);
+
+            final List<String> propertyNames = propertiesByDataType
+                    .get(DataType.LOCATION);
 
             if (!propertyNames.isEmpty()) {
                 resolver.put(SlotResolver.LOCATION_SLOT,
@@ -175,8 +176,9 @@ public class VisualMappingsControl implements WidgetAdaptable {
          */
         if (Arrays.asList(contentDisplay.getSlots()).contains(
                 SlotResolver.DATE_SLOT)) {
-            final List<String> propertyNames = ResourceSetUtils
-                    .getPropertyNamesForDataType(resources, DataType.DATE);
+
+            final List<String> propertyNames = propertiesByDataType
+                    .get(DataType.DATE);
 
             if (!propertyNames.isEmpty()) {
                 resolver.put(SlotResolver.DATE_SLOT,
@@ -194,44 +196,24 @@ public class VisualMappingsControl implements WidgetAdaptable {
 
         for (final Slot slot : contentDisplay.getSlots()) {
             if (slot.getDataType() == DataType.TEXT) {
-                List<String> propertyNames = ResourceSetUtils
-                        .getPropertyNamesForDataType(resources, DataType.TEXT);
+                List<String> propertyNames = propertiesByDataType
+                        .get(DataType.TEXT);
 
                 if (!propertyNames.isEmpty()) {
                     resolver.put(slot, new TextResourceSetToValueResolver(
                             propertyNames.get(0)));
                 }
 
-                final ListBox slotPropertyMappingBox = new ListBox(false);
-                slotPropertyMappingBox.setVisibleItemCount(1);
-
-                slotPropertyMappingBox.addChangeHandler(new ChangeHandler() {
-                    @Override
-                    public void onChange(ChangeEvent event) {
-                        String propertyName = slotPropertyMappingBox
-                                .getValue(slotPropertyMappingBox
-                                        .getSelectedIndex());
-
-                        resolver.put(slot, new TextResourceSetToValueResolver(
-                                propertyName));
-
-                        contentDisplay.update(
-                                Collections.<ResourceItem> emptySet(),
-                                Collections.<ResourceItem> emptySet(),
-                                Collections.<ResourceItem> emptySet(),
-                                CollectionUtils.toSet(slot));
-                    }
-                });
-
-                for (String propertyName : propertyNames) {
-                    slotPropertyMappingBox.addItem(propertyName, propertyName);
-                }
-
+                SlotControl control = new TextSlotControl(slot, resolver,
+                        contentDisplay);
+                control.init();
                 visualMappingPanel.addConfigurationSetting(slot.getName(),
-                        slotPropertyMappingBox);
+                        control.asWidget());
+
+                control.updateOptions(propertyNames);
             } else if (slot.getDataType() == DataType.NUMBER) {
-                List<String> propertyNames = ResourceSetUtils
-                        .getPropertyNamesForDataType(resources, DataType.NUMBER);
+                List<String> propertyNames = propertiesByDataType
+                        .get(DataType.NUMBER);
 
                 if (!propertyNames.isEmpty()) {
                     resolver.put(slot,
