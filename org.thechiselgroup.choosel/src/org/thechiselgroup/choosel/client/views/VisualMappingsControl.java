@@ -53,6 +53,8 @@ public class VisualMappingsControl implements WidgetAdaptable {
 
     private ListBox groupingBox;
 
+    private DataTypeToListMap<SlotControl> slotControlsByDataType;
+
     public VisualMappingsControl(ViewContentDisplay contentDisplay,
             ResourceItemValueResolver resolver, ResourceSplitter splitter) {
 
@@ -70,6 +72,7 @@ public class VisualMappingsControl implements WidgetAdaptable {
         visualMappingPanel = new ConfigurationPanel();
 
         initGroupingBox();
+        initSlotControls();
     }
 
     private void initGroupingBox() {
@@ -91,6 +94,32 @@ public class VisualMappingsControl implements WidgetAdaptable {
         });
 
         visualMappingPanel.addConfigurationSetting("Grouping", groupingBox);
+    }
+
+    private void initSlotControls() {
+        slotControlsByDataType = new DataTypeToListMap<SlotControl>();
+
+        // TODO refactor
+        for (final Slot slot : contentDisplay.getSlots()) {
+            if (slot.getDataType() == DataType.TEXT) {
+                SlotControl control = new TextSlotControl(slot, resolver,
+                        contentDisplay);
+                control.init();
+                visualMappingPanel.addConfigurationSetting(slot.getName(),
+                        control.asWidget());
+
+                slotControlsByDataType.get(DataType.TEXT).add(control);
+            } else if (slot.getDataType() == DataType.NUMBER) {
+                SlotControl control = new NumberSlotControl(slot, resolver,
+                        contentDisplay);
+
+                control.init();
+                visualMappingPanel.addConfigurationSetting(slot.getName(),
+                        control.asWidget());
+
+                slotControlsByDataType.get(DataType.NUMBER).add(control);
+            }
+        }
     }
 
     private void setInitialMappings(
@@ -200,41 +229,13 @@ public class VisualMappingsControl implements WidgetAdaptable {
         // based on resource items)
         // TODO update selection of slots?
 
-        // TODO map [ data type --> list<property> ]
         DataTypeToListMap<String> propertiesByDataType = ResourceSetUtils
                 .getPropertiesByDataType(resources);
 
-        updateGroupingBox(propertiesByDataType);
-
         setInitialMappings(propertiesByDataType);
 
-        for (final Slot slot : contentDisplay.getSlots()) {
-            if (slot.getDataType() == DataType.TEXT) {
-                List<String> propertyNames = propertiesByDataType
-                        .get(DataType.TEXT);
-
-                SlotControl control = new TextSlotControl(slot, resolver,
-                        contentDisplay);
-                control.init();
-                visualMappingPanel.addConfigurationSetting(slot.getName(),
-                        control.asWidget());
-
-                control.updateOptions(propertyNames);
-            } else if (slot.getDataType() == DataType.NUMBER) {
-                List<String> propertyNames = propertiesByDataType
-                        .get(DataType.NUMBER);
-
-                SlotControl control = new NumberSlotControl(slot, resolver,
-                        contentDisplay);
-
-                control.init();
-                visualMappingPanel.addConfigurationSetting(slot.getName(),
-                        control.asWidget());
-
-                control.updateOptions(propertyNames);
-            }
-        }
-
+        updateGroupingBox(propertiesByDataType);
+        updateSlotControls(propertiesByDataType);
     }
 
     private void updateGroupingBox(
@@ -242,6 +243,16 @@ public class VisualMappingsControl implements WidgetAdaptable {
 
         for (String property : propertiesByDataType.get(DataType.TEXT)) {
             groupingBox.addItem(property, property);
+        }
+    }
+
+    protected void updateSlotControls(
+            DataTypeToListMap<String> propertiesByDataType) {
+
+        for (DataType dataType : DataType.values()) {
+            for (SlotControl slotControl : slotControlsByDataType.get(dataType)) {
+                slotControl.updateOptions(propertiesByDataType.get(dataType));
+            }
         }
     }
 
