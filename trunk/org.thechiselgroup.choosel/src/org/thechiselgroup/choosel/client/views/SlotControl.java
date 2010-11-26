@@ -18,9 +18,8 @@ package org.thechiselgroup.choosel.client.views;
 import java.util.List;
 
 import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
-import org.thechiselgroup.choosel.client.util.Initializable;
 
-public abstract class SlotControl implements WidgetAdaptable, Initializable {
+public abstract class SlotControl implements WidgetAdaptable {
 
     private Slot slot;
 

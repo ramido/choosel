@@ -16,7 +16,9 @@
 package org.thechiselgroup.choosel.client.views;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.thechiselgroup.choosel.client.calculation.SumCalculation;
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
@@ -55,12 +57,26 @@ public class VisualMappingsControl implements WidgetAdaptable {
 
     private DataTypeToListMap<SlotControl> slotControlsByDataType;
 
+    private Map<Slot, SlotControl> slotToSlotControls = new HashMap<Slot, SlotControl>();
+
     public VisualMappingsControl(ViewContentDisplay contentDisplay,
             ResourceItemValueResolver resolver, ResourceSplitter splitter) {
 
         this.contentDisplay = contentDisplay;
         this.resolver = resolver;
         this.splitter = splitter;
+    }
+
+    private void addSlotControl(SlotControl control) {
+        assert control != null;
+
+        Slot slot = control.getSlot();
+
+        visualMappingPanel.addConfigurationSetting(slot.getName(),
+                control.asWidget());
+
+        slotControlsByDataType.get(slot.getDataType()).add(control);
+        slotToSlotControls.put(slot, control);
     }
 
     @Override
@@ -102,22 +118,11 @@ public class VisualMappingsControl implements WidgetAdaptable {
         // TODO refactor
         for (final Slot slot : contentDisplay.getSlots()) {
             if (slot.getDataType() == DataType.TEXT) {
-                SlotControl control = new TextSlotControl(slot, resolver,
-                        contentDisplay);
-                control.init();
-                visualMappingPanel.addConfigurationSetting(slot.getName(),
-                        control.asWidget());
-
-                slotControlsByDataType.get(DataType.TEXT).add(control);
+                addSlotControl(new TextSlotControl(slot, resolver,
+                        contentDisplay));
             } else if (slot.getDataType() == DataType.NUMBER) {
-                SlotControl control = new NumberSlotControl(slot, resolver,
-                        contentDisplay);
-
-                control.init();
-                visualMappingPanel.addConfigurationSetting(slot.getName(),
-                        control.asWidget());
-
-                slotControlsByDataType.get(DataType.NUMBER).add(control);
+                addSlotControl(new NumberSlotControl(slot, resolver,
+                        contentDisplay));
             }
         }
     }
