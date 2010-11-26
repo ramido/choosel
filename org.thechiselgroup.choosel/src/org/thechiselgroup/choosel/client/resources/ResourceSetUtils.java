@@ -37,23 +37,26 @@ public final class ResourceSetUtils {
         for (Entry<String, Serializable> entry : resource.getProperties()
                 .entrySet()) {
 
-            if (entry.getValue() instanceof String) {
-                result.get(DataType.TEXT).add(entry.getKey());
+            Serializable value = entry.getValue();
+            String propertyName = entry.getKey();
+
+            if (value instanceof String) {
+                result.get(DataType.TEXT).add(propertyName);
             }
-            if (entry.getValue() instanceof Double) {
-                result.get(DataType.NUMBER).add(entry.getKey());
+            if (value instanceof Double) {
+                result.get(DataType.NUMBER).add(propertyName);
             }
-            if (entry.getValue() instanceof Resource) {
-                Resource r = (Resource) entry.getValue();
+            if (value instanceof Resource) {
+                Resource r = (Resource) value;
 
                 if (r.getValue(MapViewContentDisplay.LATITUDE) != null
                         && r.getValue(MapViewContentDisplay.LONGITUDE) != null) {
 
-                    result.get(DataType.LOCATION).add(entry.getKey());
+                    result.get(DataType.LOCATION).add(propertyName);
                 }
             }
-            if (entry.getValue() instanceof Date) {
-                result.get(DataType.DATE).add(entry.getKey());
+            if (value instanceof Date) {
+                result.get(DataType.DATE).add(propertyName);
             }
 
         }
