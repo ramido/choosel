@@ -45,11 +45,15 @@ public class NumberSlotControl extends SlotControl {
 
     private HandlerRegistration changeHandlerRegistration;
 
+    private final ResourceItemValueResolver resolver;
+
     public NumberSlotControl(Slot slot,
             final ResourceItemValueResolver resolver,
             final ViewContentDisplay contentDisplay) {
 
         super(slot);
+
+        this.resolver = resolver;
 
         Calculation[] calculations = new Calculation[] { new SumCalculation(),
                 new CountCalculation(), new AverageCalculation(),
@@ -112,7 +116,13 @@ public class NumberSlotControl extends SlotControl {
         for (String property : properties) {
             slotPropertyMappingBox.addItem(property, property);
         }
-        // TODO restore correct index
+
+        // XXX assuming a TextResourceSetToValueResolver is error prone
+        String property = ((CalculationResourceSetToValueResolver) resolver
+                .getResourceSetResolver(getSlot())).getProperty();
+        int index = properties.indexOf(property);
+        slotPropertyMappingBox.setSelectedIndex(index);
+
         changeHandlerRegistration = slotPropertyMappingBox
                 .addChangeHandler(changeHandler);
     }

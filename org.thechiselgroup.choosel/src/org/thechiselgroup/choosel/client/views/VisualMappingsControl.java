@@ -196,6 +196,7 @@ public class VisualMappingsControl implements WidgetAdaptable {
          * 
          * XXX this also fails with redo / undo
          */
+        // TODO check the validity of the configuration instead
         if (!isConfigurationAvailable) {
             setInitialMappings(propertiesByDataType);
             isConfigurationAvailable = true;
