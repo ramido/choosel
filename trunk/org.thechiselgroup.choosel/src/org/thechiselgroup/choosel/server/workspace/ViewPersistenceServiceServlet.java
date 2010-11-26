@@ -48,24 +48,23 @@ public class ViewPersistenceServiceServlet extends RemoteServiceServlet
             startTime = System.currentTimeMillis();
         }
 
-        Log.debug("WorkspacePersistenceServiceServlet.loadWorkspace - "
-                + viewId);
+        Log.debug("ViewPersistenceServiceServlet.loadView - " + viewId);
 
         try {
             return getServiceDelegate().loadView(viewId);
         } catch (ServiceException e) {
             Log.error(
-                    "loadWorkspace failed: "
+                    "loadView failed: "
                             + StackTraceHelper.getStackTraceAsString(e), e);
             throw e;
         } catch (Exception e) {
             Log.error(
-                    "loadWorkspace failed: "
+                    "loadView failed: "
                             + StackTraceHelper.getStackTraceAsString(e), e);
             throw new ServiceException(e);
         } finally {
             if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {
-                Log.debug("WorkspacePersistenceServiceServlet.loadWorkspace"
+                Log.debug("ViewPersistenceServiceServlet.loadView"
                         + " completed in "
                         + (System.currentTimeMillis() - startTime) + " ms");
             }
@@ -85,17 +84,17 @@ public class ViewPersistenceServiceServlet extends RemoteServiceServlet
             return getServiceDelegate().saveView(view);
         } catch (ServiceException e) {
             Log.error(
-                    "saveWorkspace failed: "
+                    "saveView failed: "
                             + StackTraceHelper.getStackTraceAsString(e), e);
             throw e;
         } catch (Exception e) {
             Log.error(
-                    "saveWorkspace failed: "
+                    "saveView failed: "
                             + StackTraceHelper.getStackTraceAsString(e), e);
             throw new ServiceException(e);
         } finally {
             if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {
-                Log.debug("WorkspacePersistenceServiceServlet.saveWorkspace"
+                Log.debug("ViewPersistenceServiceServlet.saveView"
                         + " completed in "
                         + (System.currentTimeMillis() - startTime) + " ms");
             }

@@ -67,6 +67,7 @@ import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -264,7 +265,10 @@ public abstract class ChooselApplication {
 
                         @Override
                         public void onFailure(Throwable caught) {
-                            // TODO Catch whatever can happen on failure
+                            Label label = new Label();
+                            label.setText("Sorry, the specified view is not available.");
+
+                            RootPanel.get().add(label);
                         }
 
                         @Override
@@ -284,7 +288,8 @@ public abstract class ChooselApplication {
                                     view.asWidget()
                                             .setPixelSize(event.getWidth(),
                                                     event.getHeight());
-                                    // TODO windows need to be moved if they are
+                                    // TODO windows need to be moved if they
+                                    // are
                                     // out of the
                                     // range
                                 }
