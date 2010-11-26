@@ -608,6 +608,7 @@ public class DefaultView extends AbstractWindowContent implements View {
                     genLabel.setText("Generating Share Information...");
 
                     sharePanel.add(genLabel);
+                    sharePanel.setStyleName("share-panel-generating");
 
                     DefaultView view = DefaultView.this;
                     viewPersistence.saveView(view);
@@ -937,5 +938,4 @@ public class DefaultView extends AbstractWindowContent implements View {
         sharePanel.add(urlLabel);
         sharePanel.add(textBox);
     }
-
 }
