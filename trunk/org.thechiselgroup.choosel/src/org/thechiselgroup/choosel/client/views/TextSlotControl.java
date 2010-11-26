@@ -31,10 +31,13 @@ public class TextSlotControl extends SlotControl {
 
     private ListBoxControl<String> propertySelector;
 
+    private final ResourceItemValueResolver resolver;
+
     public TextSlotControl(Slot slot, final ResourceItemValueResolver resolver,
             final ViewContentDisplay contentDisplay) {
 
         super(slot);
+        this.resolver = resolver;
 
         propertySelector = new ListBoxControl<String>(
                 new ExtendedListBox(false), new NullConverter<String>());
@@ -62,5 +65,11 @@ public class TextSlotControl extends SlotControl {
     @Override
     public void updateOptions(List<String> properties) {
         propertySelector.setValues(properties);
+
+        if (propertySelector.getSelectedValue() == null) {
+            String property = ((TextResourceSetToValueResolver) resolver
+                    .getResourceSetResolver(getSlot())).getProperty();
+            propertySelector.setSelectedValue(property);
+        }
     }
 }

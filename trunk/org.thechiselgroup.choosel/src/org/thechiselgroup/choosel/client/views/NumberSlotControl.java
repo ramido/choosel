@@ -47,11 +47,14 @@ public class NumberSlotControl extends SlotControl {
 
     private ChangeHandler changeHandler;
 
+    private final ResourceItemValueResolver resolver;
+
     public NumberSlotControl(Slot slot,
             final ResourceItemValueResolver resolver,
             final ViewContentDisplay contentDisplay) {
 
         super(slot);
+        this.resolver = resolver;
 
         changeHandler = new ChangeHandler() {
             @Override
@@ -105,5 +108,11 @@ public class NumberSlotControl extends SlotControl {
     @Override
     public void updateOptions(List<String> properties) {
         propertySelector.setValues(properties);
+
+        if (propertySelector.getSelectedValue() == null) {
+            String property = ((CalculationResourceSetToValueResolver) resolver
+                    .getResourceSetResolver(getSlot())).getProperty();
+            propertySelector.setSelectedValue(property);
+        }
     }
 }

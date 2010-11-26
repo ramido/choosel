@@ -21,8 +21,6 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Set;
-
 import org.mockito.ArgumentCaptor;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ResourceByUriTypeCategorizer;
@@ -40,6 +38,60 @@ import org.thechiselgroup.choosel.client.workspace.ViewSaver;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 public class TestView extends DefaultView {
+
+    public static TestView createTestView(Slot... slots) {
+        DefaultResourceSetFactory resourceSetFactory = new DefaultResourceSetFactory();
+
+        DefaultResourceModel resourceModel = new DefaultResourceModel(
+                resourceSetFactory);
+        HoverModel hoverModel = new HoverModel();
+
+        ViewContentDisplay contentDisplay = mock(ViewContentDisplay.class);
+        ResourceItemValueResolver resourceSetToValueResolver = spy(new ResourceItemValueResolver());
+        SelectionModel selectionModel = mock(SelectionModel.class);
+        Presenter selectionModelPresenter = mock(Presenter.class);
+        DetailsWidgetHelper detailsWidgetHelper = mock(DetailsWidgetHelper.class);
+        PopupManagerFactory popupManagerFactory = mock(PopupManagerFactory.class);
+        PopupManager popupManager = mock(PopupManager.class);
+        ViewSaver viewPersistence = mock(ViewSaver.class);
+        Presenter resourceModelPresenter = mock(Presenter.class);
+        HandlerRegistration selectionAddedHandlerRegistration = mock(HandlerRegistration.class);
+        HandlerRegistration selectionRemovedHandlerRegistration = mock(HandlerRegistration.class);
+        VisualMappingsControl visualMappingsControl = mock(VisualMappingsControl.class);
+
+        ResourceSplitter resourceSplitter = new ResourceSplitter(
+                new ResourceCategorizerToMultiCategorizerAdapter(
+                        new ResourceByUriTypeCategorizer()), resourceSetFactory);
+
+        TestView underTest = spy(new TestView(resourceSplitter, contentDisplay,
+                "", "", resourceSetToValueResolver, selectionModel,
+                selectionModelPresenter, resourceModel, resourceModelPresenter,
+                hoverModel, popupManagerFactory, detailsWidgetHelper,
+                viewPersistence, popupManager,
+                selectionAddedHandlerRegistration,
+                selectionRemovedHandlerRegistration, visualMappingsControl));
+
+        when(
+                selectionModel
+                        .addEventHandler(any(ResourcesAddedEventHandler.class)))
+                .thenReturn(selectionAddedHandlerRegistration);
+        when(
+                selectionModel
+                        .addEventHandler(any(ResourcesRemovedEventHandler.class)))
+                .thenReturn(selectionRemovedHandlerRegistration);
+
+        when(contentDisplay.getSlots()).thenReturn(slots);
+        when(contentDisplay.isReady()).thenReturn(true);
+
+        underTest.init();
+
+        ArgumentCaptor<ViewContentDisplayCallback> captor = ArgumentCaptor
+                .forClass(ViewContentDisplayCallback.class);
+        verify(contentDisplay).init(captor.capture());
+        underTest.setCallback(captor.getValue());
+
+        return underTest;
+    }
 
     private final PopupManager popupManager;
 
@@ -66,12 +118,14 @@ public class TestView extends DefaultView {
             DetailsWidgetHelper detailsWidgetHelper, ViewSaver viewPersistence,
             PopupManager popupManager,
             HandlerRegistration selectionAddedHandlerRegistration,
-            HandlerRegistration selectionRemovedHandlerRegistration) {
+            HandlerRegistration selectionRemovedHandlerRegistration,
+            VisualMappingsControl visualMappingsControl) {
 
         super(resourceSplitter, contentDisplay, label, contentType,
                 configuration, selectionModel, selectionModelPresenter,
                 resourceModel, resourceModelPresenter, hoverModel,
-                popupManagerFactory, detailsWidgetHelper, viewPersistence);
+                popupManagerFactory, detailsWidgetHelper, viewPersistence,
+                visualMappingsControl);
 
         this.contentDisplay = contentDisplay;
         this.selectionModelPresenter = selectionModelPresenter;
@@ -121,63 +175,5 @@ public class TestView extends DefaultView {
 
     public void setCallback(ViewContentDisplayCallback callback) {
         this.callback = callback;
-    }
-
-    @Override
-    protected void updateConfiguration(Set<ResourceItem> addedResourceItems) {
-    }
-
-    public static TestView createTestView() {
-        DefaultResourceSetFactory resourceSetFactory = new DefaultResourceSetFactory();
-    
-        DefaultResourceModel resourceModel = new DefaultResourceModel(
-                resourceSetFactory);
-        HoverModel hoverModel = new HoverModel();
-    
-        ViewContentDisplay contentDisplay = mock(ViewContentDisplay.class);
-        ResourceItemValueResolver resourceSetToValueResolver = mock(ResourceItemValueResolver.class);
-        SelectionModel selectionModel = mock(SelectionModel.class);
-        Presenter selectionModelPresenter = mock(Presenter.class);
-        DetailsWidgetHelper detailsWidgetHelper = mock(DetailsWidgetHelper.class);
-        PopupManagerFactory popupManagerFactory = mock(PopupManagerFactory.class);
-        PopupManager popupManager = mock(PopupManager.class);
-        ViewSaver viewPersistence = mock(ViewSaver.class);
-        Presenter resourceModelPresenter = mock(Presenter.class);
-        HandlerRegistration selectionAddedHandlerRegistration = mock(HandlerRegistration.class);
-        HandlerRegistration selectionRemovedHandlerRegistration = mock(HandlerRegistration.class);
-    
-        ResourceSplitter resourceSplitter = new ResourceSplitter(
-                new ResourceCategorizerToMultiCategorizerAdapter(
-                        new ResourceByUriTypeCategorizer()), resourceSetFactory);
-    
-        TestView underTest = spy(new TestView(resourceSplitter, contentDisplay,
-                "", "", resourceSetToValueResolver, selectionModel,
-                selectionModelPresenter, resourceModel, resourceModelPresenter,
-                hoverModel, popupManagerFactory, detailsWidgetHelper,
-                viewPersistence, popupManager,
-                selectionAddedHandlerRegistration,
-                selectionRemovedHandlerRegistration));
-    
-        when(
-                selectionModel
-                        .addEventHandler(any(ResourcesAddedEventHandler.class)))
-                .thenReturn(selectionAddedHandlerRegistration);
-        when(
-                selectionModel
-                        .addEventHandler(any(ResourcesRemovedEventHandler.class)))
-                .thenReturn(selectionRemovedHandlerRegistration);
-    
-        when(contentDisplay.getSlots()).thenReturn(new Slot[0]);
-    
-        when(contentDisplay.isReady()).thenReturn(true);
-    
-        underTest.init();
-    
-        ArgumentCaptor<ViewContentDisplayCallback> captor = ArgumentCaptor
-                .forClass(ViewContentDisplayCallback.class);
-        verify(contentDisplay).init(captor.capture());
-        underTest.setCallback(captor.getValue());
-    
-        return underTest;
     }
 }

@@ -182,7 +182,8 @@ public class DefaultView extends AbstractWindowContent implements View {
             SelectionModel selectionModel, Presenter selectionModelPresenter,
             ResourceModel resourceModel, Presenter resourceModelPresenter,
             HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper, ViewSaver viewPersistence) {
+            DetailsWidgetHelper detailsWidgetHelper, ViewSaver viewPersistence,
+            VisualMappingsControl visualMappingsControl) {
 
         super(label, contentType);
 
@@ -197,25 +198,20 @@ public class DefaultView extends AbstractWindowContent implements View {
         assert resourceModelPresenter != null;
         assert hoverModel != null;
         assert viewPersistence != null;
+        assert visualMappingsControl != null;
 
         this.viewPersistence = viewPersistence;
         this.popupManagerFactory = popupManagerFactory;
         this.detailsWidgetHelper = detailsWidgetHelper;
-
         this.configuration = configuration;
         this.resourceSplitter = resourceSplitter;
         this.contentDisplay = contentDisplay;
-
         this.selectionModel = selectionModel;
         this.selectionModelPresenter = selectionModelPresenter;
-
         this.resourceModel = resourceModel;
         this.resourceModelPresenter = resourceModelPresenter;
-
         this.hoverModel = hoverModel;
-
-        visualMappingsControl = new VisualMappingsControl(contentDisplay,
-                configuration, resourceSplitter);
+        this.visualMappingsControl = visualMappingsControl;
     }
 
     @Override
@@ -255,7 +251,11 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         // TODO provide configuration to content display in callback
         DefaultResourceItem resourceItem = new DefaultResourceItem(category,
-                resources, hoverModel, createPopupManager(resources), configuration);
+                resources, hoverModel, createPopupManager(resources),
+                configuration);
+
+        assert !categoriesToResourceItems.containsKey(category) : "categoriesToResourceItems already contains "
+                + category;
 
         categoriesToResourceItems.put(category, resourceItem);
 
@@ -539,7 +539,6 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     private void initMappingsConfigurator() {
-        visualMappingsControl.init();
         sideBar.add(visualMappingsControl.asWidget(), "Mappings");
     }
 
@@ -883,6 +882,8 @@ public class DefaultView extends AbstractWindowContent implements View {
         Set<ResourceItem> addedResourceItems = new HashSet<ResourceItem>();
         Set<ResourceItem> removedResourceItems = new HashSet<ResourceItem>();
 
+        // XXX remove needs to be process before add and update --> write test
+        // case that shows bug
         for (ResourceCategoryChange change : changes) {
             switch (change.getDelta()) {
             case ADD: {
