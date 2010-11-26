@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -115,100 +114,74 @@ public class VisualMappingsControl implements WidgetAdaptable {
     private void initSlotControls() {
         slotControlsByDataType = new DataTypeToListMap<SlotControl>();
 
-        // TODO refactor
-        for (final Slot slot : contentDisplay.getSlots()) {
-            if (slot.getDataType() == DataType.TEXT) {
+        for (Slot slot : contentDisplay.getSlots()) {
+            switch (slot.getDataType()) {
+            case TEXT:
                 addSlotControl(new TextSlotControl(slot, resolver,
                         contentDisplay));
-            } else if (slot.getDataType() == DataType.NUMBER) {
+                break;
+            case NUMBER:
                 addSlotControl(new NumberSlotControl(slot, resolver,
                         contentDisplay));
+                break;
             }
         }
     }
 
     private void setInitialMappings(
             DataTypeToListMap<String> propertiesByDataType) {
-        /*
-         * TODO move
-         */
-        if (Arrays.asList(contentDisplay.getSlots()).contains(
-                SlotResolver.LOCATION_SLOT)) {
 
-            final List<String> propertyNames = propertiesByDataType
-                    .get(DataType.LOCATION);
+        for (Slot slot : contentDisplay.getSlots()) {
+            final List<String> propertyNames = propertiesByDataType.get(slot
+                    .getDataType());
 
-            if (!propertyNames.isEmpty()) {
-                resolver.put(SlotResolver.LOCATION_SLOT,
-                        new ResourceSetToValueResolver() {
-                            @Override
-                            public Object resolve(ResourceSet resources,
-                                    String category) {
-
-                                return resources.getFirstResource().getValue(
-                                        propertyNames.get(0));
-                            }
-                        });
-            }
-        }
-
-        /*
-         * TODO flexibility TODO move
-         */
-        if (Arrays.asList(contentDisplay.getSlots()).contains(
-                SlotResolver.COLOR_SLOT)) {
-            resolver.put(SlotResolver.COLOR_SLOT,
-                    new ResourceSetToValueResolver() {
-                        @Override
-                        public Object resolve(ResourceSet resources,
-                                String category) {
-
-                            return "#6495ed";
-                        }
-                    });
-        }
-
-        /*
-         * TODO move
-         */
-        if (Arrays.asList(contentDisplay.getSlots()).contains(
-                SlotResolver.DATE_SLOT)) {
-
-            final List<String> propertyNames = propertiesByDataType
-                    .get(DataType.DATE);
-
-            if (!propertyNames.isEmpty()) {
-                resolver.put(SlotResolver.DATE_SLOT,
-                        new ResourceSetToValueResolver() {
-                            @Override
-                            public Object resolve(ResourceSet resources,
-                                    String category) {
-
-                                return resources.getFirstResource().getValue(
-                                        propertyNames.get(0));
-                            }
-                        });
-            }
-        }
-
-        for (final Slot slot : contentDisplay.getSlots()) {
-            if (slot.getDataType() == DataType.TEXT) {
-                List<String> propertyNames = propertiesByDataType
-                        .get(DataType.TEXT);
-
-                if (!propertyNames.isEmpty()) {
-                    resolver.put(slot, new TextResourceSetToValueResolver(
-                            propertyNames.get(0)));
+            switch (slot.getDataType()) {
+            case TEXT:
+                if (propertyNames.isEmpty()) {
+                    continue;
                 }
-            } else if (slot.getDataType() == DataType.NUMBER) {
-                List<String> propertyNames = propertiesByDataType
-                        .get(DataType.NUMBER);
-
-                if (!propertyNames.isEmpty()) {
-                    resolver.put(slot,
-                            new CalculationResourceSetToValueResolver(
-                                    propertyNames.get(0), new SumCalculation()));
+                resolver.put(slot, new TextResourceSetToValueResolver(
+                        propertyNames.get(0)));
+                break;
+            case NUMBER:
+                if (propertyNames.isEmpty()) {
+                    continue;
                 }
+                resolver.put(slot, new CalculationResourceSetToValueResolver(
+                        propertyNames.get(0), new SumCalculation()));
+                break;
+            case DATE:
+                if (propertyNames.isEmpty()) {
+                    continue;
+                }
+                resolver.put(slot, new ResourceSetToValueResolver() {
+                    @Override
+                    public Object resolve(ResourceSet resources, String category) {
+                        return resources.getFirstResource().getValue(
+                                propertyNames.get(0));
+                    }
+                });
+                break;
+            case COLOR:
+                resolver.put(slot, new ResourceSetToValueResolver() {
+                    @Override
+                    public Object resolve(ResourceSet resources, String category) {
+                        return "#6495ed";
+                    }
+                });
+                break;
+            case LOCATION:
+                if (propertyNames.isEmpty()) {
+                    continue;
+                }
+                resolver.put(slot, new ResourceSetToValueResolver() {
+                    @Override
+                    public Object resolve(ResourceSet resources, String category) {
+                        return resources.getFirstResource().getValue(
+                                propertyNames.get(0));
+                    }
+                });
+                break;
             }
         }
     }
