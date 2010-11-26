@@ -18,33 +18,38 @@ package org.thechiselgroup.choosel.client.resources;
 import org.thechiselgroup.choosel.client.util.Delta;
 
 /**
- * Represents a delta change to the resource categories in a resource splitter.
+ * Delta change to the resource groupings.
  * 
  * @author Lars Grammel
  */
-public class ResourceCategoryChange {
+public class ResourceGroupingChange {
 
     private Delta delta;
 
-    private String category;
+    private String groupID;
 
     private ResourceSet resourceSet;
 
     /**
+     * @param delta
+     *            kind of change (ADD / UPDATE / REMOVE )
+     * @param groupID
+     *            identifier of the changed group. The identifier is local to
+     *            the grouping.
      * @param resourceSet
      *            What is included here depends on the delta: Delta.ADD: new
      *            content (all resources in set); Delta.UPDATE: new content (all
      *            resources in set); Delta.REMOVE: old content
      */
-    public ResourceCategoryChange(Delta delta, String category,
+    public ResourceGroupingChange(Delta delta, String groupID,
             ResourceSet resourceSet) {
 
         assert delta != null;
-        assert category != null;
+        assert groupID != null;
         assert resourceSet != null;
 
         this.delta = delta;
-        this.category = category;
+        this.groupID = groupID;
         this.resourceSet = resourceSet;
     }
 
@@ -57,9 +62,9 @@ public class ResourceCategoryChange {
             return false;
         }
 
-        ResourceCategoryChange other = (ResourceCategoryChange) obj;
+        ResourceGroupingChange other = (ResourceGroupingChange) obj;
 
-        if (!category.equals(other.category)) {
+        if (!groupID.equals(other.groupID)) {
             return false;
         }
 
@@ -74,14 +79,25 @@ public class ResourceCategoryChange {
         return true;
     }
 
-    public String getCategory() {
-        return category;
-    }
-
+    /**
+     * @return kind of change (ADD / UPDATE / REMOVE )
+     */
     public Delta getDelta() {
         return delta;
     }
 
+    /**
+     * @return identifier of the changed group
+     */
+    public String getGroupID() {
+        return groupID;
+    }
+
+    /**
+     * @return What is included here depends on the delta: Delta.ADD: new
+     *         content (all resources in set); Delta.UPDATE: new content (all
+     *         resources in set); Delta.REMOVE: old content
+     */
     public ResourceSet getResourceSet() {
         return resourceSet;
     }
@@ -90,16 +106,15 @@ public class ResourceCategoryChange {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result
-                + ((category == null) ? 0 : category.hashCode());
+        result = prime * result + ((groupID == null) ? 0 : groupID.hashCode());
         result = prime * result + ((delta == null) ? 0 : delta.hashCode());
         return result;
     }
 
     @Override
     public String toString() {
-        return "ResourceCategoriesChange [delta=" + delta + ", category="
-                + category + ", resourceSet=" + resourceSet + "]";
+        return "ResourceGroupingChange [delta=" + delta + ", groupID="
+                + groupID + ", resourceSet=" + resourceSet + "]";
     }
 
 }

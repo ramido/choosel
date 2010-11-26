@@ -43,6 +43,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.client.resources.ResourceByPropertyMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
@@ -163,6 +164,46 @@ public class DefaultViewTest {
         underTest.dispose();
 
         verify(underTest.getTestSelectionModelPresenter(), times(1)).dispose();
+    }
+
+    @Test
+    public void groupingChangeChangesCategory() {
+        Resource resource = new Resource("test:1");
+        resource.putValue("text1", "category1");
+        resource.putValue("text2", "category2");
+
+        underTest.getResourceSplitter().setCategorizer(
+                new ResourceByPropertyMultiCategorizer("text1"));
+        underTest.getResourceModel().addResources(toResourceSet(resource));
+        underTest.getResourceSplitter().setCategorizer(
+                new ResourceByPropertyMultiCategorizer("text2"));
+
+        List<ResourceItem> resourceItems = underTest.getResourceItems();
+        assertEquals(1, resourceItems.size());
+        ResourceItem resourceItem = resourceItems.get(0);
+        assertEquals("category2", resourceItem.getGroupID());
+    }
+
+    /**
+     * Removing a resource item and adding another resource item, both with the
+     * same category, in one operation caused a bug.
+     */
+    @Test
+    public void groupingChangeWithRemovingAndAddingSameCategory() {
+        Resource resource = new Resource("test:1");
+        resource.putValue("text1", "category1");
+        resource.putValue("text2", "category1");
+
+        underTest.getResourceSplitter().setCategorizer(
+                new ResourceByPropertyMultiCategorizer("text1"));
+        underTest.getResourceModel().addResources(toResourceSet(resource));
+        underTest.getResourceSplitter().setCategorizer(
+                new ResourceByPropertyMultiCategorizer("text2"));
+
+        List<ResourceItem> resourceItems = underTest.getResourceItems();
+        assertEquals(1, resourceItems.size());
+        ResourceItem resourceItem = resourceItems.get(0);
+        assertEquals("category1", resourceItem.getGroupID());
     }
 
     @Test

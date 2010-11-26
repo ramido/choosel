@@ -18,11 +18,9 @@ package org.thechiselgroup.choosel.client.resources;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.thechiselgroup.choosel.client.util.Delta;
 import org.thechiselgroup.choosel.client.util.SingleItemCollection;
@@ -33,7 +31,7 @@ import com.google.inject.Inject;
 
 // TODO update & extend (1, many sets added / removed) test case
 // TODO change name
-public class ResourceSplitter implements ResourceContainer {
+public class ResourceGrouping implements ResourceContainer {
 
     // TODO Are resource sets too heavyweight here?
     private Map<String, ResourceSet> categorizedResources = new HashMap<String, ResourceSet>();
@@ -47,7 +45,7 @@ public class ResourceSplitter implements ResourceContainer {
     private List<Resource> allResources = new ArrayList<Resource>();
 
     @Inject
-    public ResourceSplitter(ResourceMultiCategorizer multiCategorizer,
+    public ResourceGrouping(ResourceMultiCategorizer multiCategorizer,
             ResourceSetFactory resourceSetFactory) {
 
         this.multiCategorizer = multiCategorizer;
@@ -67,14 +65,14 @@ public class ResourceSplitter implements ResourceContainer {
 
         addResourcesToAllResources(resources);
 
-        Set<ResourceCategoryChange> changes = new HashSet<ResourceCategoryChange>();
+        List<ResourceGroupingChange> changes = new ArrayList<ResourceGroupingChange>();
         addResourcesToCategorization(resources, changes);
         fireChanges(changes);
     }
 
     private void addCategoryResources(String category,
             List<Resource> categoryResources,
-            Set<ResourceCategoryChange> changes) {
+            List<ResourceGroupingChange> changes) {
 
         assert category != null;
         assert categoryResources != null;
@@ -84,7 +82,7 @@ public class ResourceSplitter implements ResourceContainer {
 
             resourceSet.addAll(categoryResources);
 
-            changes.add(new ResourceCategoryChange(Delta.UPDATE, category,
+            changes.add(new ResourceGroupingChange(Delta.UPDATE, category,
                     resourceSet));
         } else {
             ResourceSet resourceSet = resourceSetFactory.createResourceSet();
@@ -92,7 +90,7 @@ public class ResourceSplitter implements ResourceContainer {
 
             categorizedResources.put(category, resourceSet);
 
-            changes.add(new ResourceCategoryChange(Delta.ADD, category,
+            changes.add(new ResourceGroupingChange(Delta.ADD, category,
                     resourceSet));
         }
     }
@@ -112,7 +110,7 @@ public class ResourceSplitter implements ResourceContainer {
     }
 
     private void addResourcesToCategorization(Iterable<Resource> resources,
-            Set<ResourceCategoryChange> changes) {
+            List<ResourceGroupingChange> changes) {
         Map<String, List<Resource>> resourcesPerCategory = categorize(resources);
         for (Map.Entry<String, List<Resource>> entry : resourcesPerCategory
                 .entrySet()) {
@@ -137,15 +135,15 @@ public class ResourceSplitter implements ResourceContainer {
         return resourcesPerCategory;
     }
 
-    private void clearCategories(Set<ResourceCategoryChange> changes) {
+    private void clearCategories(List<ResourceGroupingChange> changes) {
         for (Entry<String, ResourceSet> entry : categorizedResources.entrySet()) {
-            changes.add(new ResourceCategoryChange(Delta.REMOVE,
+            changes.add(new ResourceGroupingChange(Delta.REMOVE,
                     entry.getKey(), entry.getValue()));
         }
         categorizedResources.clear();
     }
 
-    private void fireChanges(Set<ResourceCategoryChange> changes) {
+    private void fireChanges(List<ResourceGroupingChange> changes) {
         if (!changes.isEmpty()) {
             eventBus.fireEvent(new ResourceCategoriesChangedEvent(changes));
         }
@@ -170,14 +168,14 @@ public class ResourceSplitter implements ResourceContainer {
 
         removeResourcesFromAllResources(resources);
 
-        Set<ResourceCategoryChange> changes = new HashSet<ResourceCategoryChange>();
+        List<ResourceGroupingChange> changes = new ArrayList<ResourceGroupingChange>();
         removeResourcesFromCategorization(resources, changes);
         fireChanges(changes);
     }
 
     private void removeCategoryResources(String category,
             List<Resource> resourcesToRemove,
-            Set<ResourceCategoryChange> changes) {
+            List<ResourceGroupingChange> changes) {
 
         ResourceSet storedCategoryResources = categorizedResources
                 .get(category);
@@ -186,12 +184,12 @@ public class ResourceSplitter implements ResourceContainer {
                 && storedCategoryResources.containsAll(resourcesToRemove)) {
 
             categorizedResources.remove(category);
-            changes.add(new ResourceCategoryChange(Delta.REMOVE, category,
+            changes.add(new ResourceGroupingChange(Delta.REMOVE, category,
                     storedCategoryResources));
 
         } else {
             storedCategoryResources.removeAll(resourcesToRemove);
-            changes.add(new ResourceCategoryChange(Delta.UPDATE, category,
+            changes.add(new ResourceGroupingChange(Delta.UPDATE, category,
                     storedCategoryResources));
         }
     }
@@ -201,7 +199,7 @@ public class ResourceSplitter implements ResourceContainer {
     }
 
     private void removeResourcesFromCategorization(
-            Iterable<Resource> resources, Set<ResourceCategoryChange> changes) {
+            Iterable<Resource> resources, List<ResourceGroupingChange> changes) {
 
         Map<String, List<Resource>> resourcesPerCategory = categorize(resources);
         for (Map.Entry<String, List<Resource>> entry : resourcesPerCategory
@@ -219,7 +217,7 @@ public class ResourceSplitter implements ResourceContainer {
 
         multiCategorizer = newCategorizer;
 
-        Set<ResourceCategoryChange> changes = new HashSet<ResourceCategoryChange>();
+        List<ResourceGroupingChange> changes = new ArrayList<ResourceGroupingChange>();
         clearCategories(changes);
         addResourcesToCategorization(allResources, changes);
         fireChanges(changes);

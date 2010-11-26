@@ -21,7 +21,7 @@ import java.util.Map;
 import org.thechiselgroup.choosel.client.resources.ResourceByPropertyMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetUtils;
-import org.thechiselgroup.choosel.client.resources.ResourceSplitter;
+import org.thechiselgroup.choosel.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.client.ui.ConfigurationPanel;
 import org.thechiselgroup.choosel.client.util.NullConverter;
 import org.thechiselgroup.choosel.client.views.widget.listbox.ExtendedListBox;
@@ -33,7 +33,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class DefaultVisualMappingsControl implements VisualMappingsControl {
 
-    private final ResourceSplitter splitter;
+    private final ResourceGrouping splitter;
 
     private final ResourceItemValueResolver resolver;
 
@@ -48,7 +48,7 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
     private Map<Slot, SlotControl> slotToSlotControls = new HashMap<Slot, SlotControl>();
 
     public DefaultVisualMappingsControl(ViewContentDisplay contentDisplay,
-            ResourceItemValueResolver resolver, ResourceSplitter splitter) {
+            ResourceItemValueResolver resolver, ResourceGrouping splitter) {
 
         this.contentDisplay = contentDisplay;
         this.resolver = resolver;

@@ -26,7 +26,7 @@ import org.thechiselgroup.choosel.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ResourceByUriTypeCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizerToMultiCategorizerAdapter;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.ResourceSplitter;
+import org.thechiselgroup.choosel.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
@@ -59,7 +59,7 @@ public class TestView extends DefaultView {
         HandlerRegistration selectionRemovedHandlerRegistration = mock(HandlerRegistration.class);
         VisualMappingsControl visualMappingsControl = mock(VisualMappingsControl.class);
 
-        ResourceSplitter resourceSplitter = new ResourceSplitter(
+        ResourceGrouping resourceSplitter = new ResourceGrouping(
                 new ResourceCategorizerToMultiCategorizerAdapter(
                         new ResourceByUriTypeCategorizer()), resourceSetFactory);
 
@@ -109,7 +109,9 @@ public class TestView extends DefaultView {
 
     private ViewContentDisplayCallback callback;
 
-    public TestView(ResourceSplitter resourceSplitter,
+    private final ResourceGrouping resourceSplitter;
+
+    public TestView(ResourceGrouping resourceSplitter,
             ViewContentDisplay contentDisplay, String label,
             String contentType, ResourceItemValueResolver configuration,
             SelectionModel selectionModel, Presenter selectionModelPresenter,
@@ -127,6 +129,7 @@ public class TestView extends DefaultView {
                 popupManagerFactory, detailsWidgetHelper, viewPersistence,
                 visualMappingsControl);
 
+        this.resourceSplitter = resourceSplitter;
         this.contentDisplay = contentDisplay;
         this.selectionModelPresenter = selectionModelPresenter;
         this.resourceModelPresenter = resourceModelPresenter;
@@ -153,6 +156,10 @@ public class TestView extends DefaultView {
         return hoverModel;
     }
 
+    public ResourceGrouping getResourceSplitter() {
+        return resourceSplitter;
+    }
+
     public Presenter getTestResourceModelPresenter() {
         return resourceModelPresenter;
     }
@@ -176,4 +183,5 @@ public class TestView extends DefaultView {
     public void setCallback(ViewContentDisplayCallback callback) {
         this.callback = callback;
     }
+
 }
