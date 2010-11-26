@@ -374,6 +374,10 @@ public class DefaultView extends AbstractWindowContent implements View {
         return selectionModel;
     }
 
+    public SlotMappingConfiguration getSlotMappingConfiguration() {
+        return slotMappingConfiguration;
+    }
+
     @Override
     public Slot[] getSlots() {
         return contentDisplay.getSlots();
