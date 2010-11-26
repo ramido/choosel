@@ -22,9 +22,44 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import org.thechiselgroup.choosel.client.views.DataType;
+import org.thechiselgroup.choosel.client.views.DataTypeToListMap;
 import org.thechiselgroup.choosel.client.views.map.MapViewContentDisplay;
 
 public final class ResourceSetUtils {
+
+    public static DataTypeToListMap<String> getPropertiesByDataType(
+            ResourceSet resourceSet) {
+
+        // no aggregation
+        Resource resource = resourceSet.getFirstResource();
+        DataTypeToListMap<String> result = new DataTypeToListMap<String>();
+
+        for (Entry<String, Serializable> entry : resource.getProperties()
+                .entrySet()) {
+
+            if (entry.getValue() instanceof String) {
+                result.get(DataType.TEXT).add(entry.getKey());
+            }
+            if (entry.getValue() instanceof Double) {
+                result.get(DataType.NUMBER).add(entry.getKey());
+            }
+            if (entry.getValue() instanceof Resource) {
+                Resource r = (Resource) entry.getValue();
+
+                if (r.getValue(MapViewContentDisplay.LATITUDE) != null
+                        && r.getValue(MapViewContentDisplay.LONGITUDE) != null) {
+
+                    result.get(DataType.LOCATION).add(entry.getKey());
+                }
+            }
+            if (entry.getValue() instanceof Date) {
+                result.get(DataType.DATE).add(entry.getKey());
+            }
+
+        }
+
+        return result;
+    }
 
     public static List<String> getPropertyNamesForDataType(
             ResourceSet resourceSet, DataType dataType) {
@@ -72,6 +107,7 @@ public final class ResourceSetUtils {
         }
 
         return properties;
+
     }
 
     private ResourceSetUtils() {

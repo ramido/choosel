@@ -15,14 +15,11 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import static org.thechiselgroup.choosel.client.util.CollectionUtils.toSet;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.thechiselgroup.choosel.client.calculation.AverageCalculation;
 import org.thechiselgroup.choosel.client.calculation.Calculation;
@@ -31,8 +28,7 @@ import org.thechiselgroup.choosel.client.calculation.MaxCalculation;
 import org.thechiselgroup.choosel.client.calculation.MinCalculation;
 import org.thechiselgroup.choosel.client.calculation.SumCalculation;
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
-import org.thechiselgroup.choosel.client.resources.Resource;
-import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
+import org.thechiselgroup.choosel.client.resources.ResourceByPropertyMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetUtils;
 import org.thechiselgroup.choosel.client.resources.ResourceSplitter;
@@ -65,6 +61,8 @@ public class VisualMappingsControl implements WidgetAdaptable {
 
     private final ViewContentDisplay contentDisplay;
 
+    private ListBox groupingBox;
+
     public VisualMappingsControl(ViewContentDisplay contentDisplay,
             ResourceItemValueResolver resolver, ResourceSplitter splitter) {
 
@@ -80,6 +78,29 @@ public class VisualMappingsControl implements WidgetAdaptable {
 
     public void init() {
         visualMappingPanel = new ConfigurationPanel();
+
+        initGroupingBox();
+    }
+
+    private void initGroupingBox() {
+        // TODO include aggregation that does not aggregate...
+        // TODO include bin aggregation for numerical slots
+
+        groupingBox = new ListBox(false);
+        groupingBox.setVisibleItemCount(1);
+
+        groupingBox.addChangeHandler(new ChangeHandler() {
+            @Override
+            public void onChange(ChangeEvent event) {
+                String property = groupingBox.getValue(groupingBox
+                        .getSelectedIndex());
+
+                splitter.setCategorizer(new ResourceByPropertyMultiCategorizer(
+                        property));
+            }
+        });
+
+        visualMappingPanel.addConfigurationSetting("Grouping", groupingBox);
     }
 
     // TODO link to resource model instead & do updates when resources change
@@ -103,42 +124,12 @@ public class VisualMappingsControl implements WidgetAdaptable {
         // based on resource items)
         // TODO update selection of slots?
 
-        // aggregration TODO move
-        {
+        // TODO map [ data type --> list<property> ]
+        DataTypeToListMap<String> propertiesByDataType = ResourceSetUtils
+                .getPropertiesByDataType(resources);
 
-            // TODO include aggregation that does not aggregate...
-            // TODO include bin aggregation for numerical slots
-
-            final List<String> propertyNames = ResourceSetUtils
-                    .getPropertyNamesForDataType(resources, DataType.TEXT);
-
-            final ListBox groupingBox = new ListBox(false);
-            groupingBox.setVisibleItemCount(1);
-
-            groupingBox.addChangeHandler(new ChangeHandler() {
-                @Override
-                public void onChange(ChangeEvent event) {
-                    splitter.setCategorizer(new ResourceMultiCategorizer() {
-
-                        @Override
-                        public Set<String> getCategories(Resource resource) {
-
-                            String propertyName = groupingBox
-                                    .getValue(groupingBox.getSelectedIndex());
-
-                            return toSet((String) resource
-                                    .getValue(propertyName));
-                        }
-
-                    });
-                }
-            });
-
-            for (String propertyName : propertyNames) {
-                groupingBox.addItem(propertyName, propertyName);
-            }
-
-            visualMappingPanel.addConfigurationSetting("Grouping", groupingBox);
+        for (String property : propertiesByDataType.get(DataType.TEXT)) {
+            groupingBox.addItem(property, property);
         }
 
         /*
