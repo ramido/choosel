@@ -28,6 +28,7 @@ import org.thechiselgroup.choosel.client.resources.UnmodifiableResourceSet;
 import org.thechiselgroup.choosel.client.resources.persistence.DefaultResourceSetCollector;
 import org.thechiselgroup.choosel.client.services.ForwardingAsyncCallback;
 import org.thechiselgroup.choosel.client.views.DefaultView;
+import org.thechiselgroup.choosel.client.views.ShareConfiguration;
 import org.thechiselgroup.choosel.client.workspace.dto.ResourceSetDTO;
 import org.thechiselgroup.choosel.client.workspace.dto.ViewDTO;
 import org.thechiselgroup.choosel.client.workspace.service.ViewPersistenceServiceAsync;
@@ -129,11 +130,11 @@ public class DefaultViewSaveManager implements ViewSaveManager {
     }
 
     @Override
-    public void saveView(final DefaultView view,
+    public void saveView(final ShareConfiguration shareConfiguration,
             final AsyncCallback<Void> callback) {
         assert callback != null;
 
-        ViewDTO viewDTO = createViewDTO(view);
+        ViewDTO viewDTO = createViewDTO(shareConfiguration.getView());
 
         service.saveView(viewDTO, new ForwardingAsyncCallback<Long>(callback) {
             @Override
@@ -143,10 +144,11 @@ public class DefaultViewSaveManager implements ViewSaveManager {
 
             @Override
             public void onSuccess(Long result) {
-                view.updateSharePanel(result);
+                shareConfiguration.updateSharePanel(result);
                 super.onSuccess(result);
             }
         });
+
     }
 
 }

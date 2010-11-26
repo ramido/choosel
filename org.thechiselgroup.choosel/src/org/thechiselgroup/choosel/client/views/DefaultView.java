@@ -62,15 +62,10 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasAlignment;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.StackPanel;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class DefaultView extends AbstractWindowContent implements View {
@@ -161,7 +156,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     protected ViewSaver viewPersistence;
 
-    private VerticalPanel sharePanel;
+    private ShareConfiguration shareConfiguration;
 
     private VisualMappingsControl visualMappingsControl;
 
@@ -591,34 +586,9 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     private void initShareConfigurator() {
-        if (Window.Location.getParameter("windowId") == null) {
-            sharePanel = new VerticalPanel();
+        shareConfiguration = new ShareConfiguration(this, viewPersistence);
 
-            Button w = new Button("Share this");
-            w.addClickHandler(new ClickHandler() {
-
-                @Override
-                public void onClick(ClickEvent event) {
-
-                    // TODO Add the call to the WindowPersistenceManager to save
-                    // a
-                    // copy of this window with a unique ID
-
-                    Label genLabel = new Label();
-                    genLabel.setText("Generating Share Information...");
-
-                    sharePanel.add(genLabel);
-                    sharePanel.setStyleName("share-panel-generating");
-
-                    DefaultView view = DefaultView.this;
-                    viewPersistence.saveView(view);
-
-                }
-            });
-            sharePanel.add(w);
-
-            sideBar.add(sharePanel, "Share");
-        }
+        sideBar.add(shareConfiguration.asWidget(), "Share");
     }
 
     private void initSideBar() {
@@ -920,22 +890,5 @@ public class DefaultView extends AbstractWindowContent implements View {
         contentDisplay.update(Collections.<ResourceItem> emptySet(),
                 resourceItems, Collections.<ResourceItem> emptySet(),
                 Collections.<Slot> emptySet());
-    }
-
-    public void updateSharePanel(Long id) {
-        String url = Window.Location.getHref()
-                + (Window.Location.getParameterMap().size() == 0 ? "?" : "&")
-                + "viewId=" + id.toString();
-
-        sharePanel.remove(1);
-
-        Label urlLabel = new Label();
-        urlLabel.setText("Share Link:");
-
-        TextBox textBox = new TextBox();
-        textBox.setText(url);
-
-        sharePanel.add(urlLabel);
-        sharePanel.add(textBox);
     }
 }
