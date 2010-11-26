@@ -39,7 +39,7 @@ public abstract class DefaultSlotResolver implements SlotResolver {
     // REMOVE, use in resource set resolver fac
     @Override
     public ResourceToValueResolver createColorSlotResolver(String category,
-            List<ResourceItemValueResolver> layers) {
+            List<SlotMappingConfiguration> layers) {
 
         String color = COLORS[layers.size()];
         return new FixedValuePropertyValueResolver(color);

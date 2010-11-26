@@ -289,7 +289,7 @@ public class DefaultViewTest {
 
         underTest.getResourceModel().addResources(toResourceSet(resource));
 
-        List<ResourceItem> resourceItems = captureAddedResourceItemsAsList();
+        List<ResourceItem> resourceItems = underTest.getResourceItems();
         assertEquals(1, resourceItems.size());
         ResourceItem resourceItem = resourceItems.get(0);
 

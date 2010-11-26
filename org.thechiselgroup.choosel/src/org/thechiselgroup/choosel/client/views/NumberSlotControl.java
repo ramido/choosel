@@ -16,7 +16,6 @@
 package org.thechiselgroup.choosel.client.views;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.thechiselgroup.choosel.client.calculation.AverageCalculation;
@@ -25,7 +24,6 @@ import org.thechiselgroup.choosel.client.calculation.CountCalculation;
 import org.thechiselgroup.choosel.client.calculation.MaxCalculation;
 import org.thechiselgroup.choosel.client.calculation.MinCalculation;
 import org.thechiselgroup.choosel.client.calculation.SumCalculation;
-import org.thechiselgroup.choosel.client.util.CollectionUtils;
 import org.thechiselgroup.choosel.client.util.ConversionException;
 import org.thechiselgroup.choosel.client.util.Converter;
 import org.thechiselgroup.choosel.client.util.NullConverter;
@@ -47,14 +45,14 @@ public class NumberSlotControl extends SlotControl {
 
     private ChangeHandler changeHandler;
 
-    private final ResourceItemValueResolver resolver;
+    private final SlotMappingConfiguration slotMappingConfiguration;
 
     public NumberSlotControl(Slot slot,
-            final ResourceItemValueResolver resolver,
-            final ViewContentDisplay contentDisplay) {
+            final SlotMappingConfiguration slotMappingConfiguration) {
 
         super(slot);
-        this.resolver = resolver;
+
+        this.slotMappingConfiguration = slotMappingConfiguration;
 
         changeHandler = new ChangeHandler() {
             @Override
@@ -63,14 +61,9 @@ public class NumberSlotControl extends SlotControl {
                 Calculation calculation = calculationSelector
                         .getSelectedValue();
 
-                resolver.put(getSlot(),
+                slotMappingConfiguration.setMapping(getSlot(),
                         new CalculationResourceSetToValueResolver(propertyName,
                                 calculation));
-
-                contentDisplay.update(Collections.<ResourceItem> emptySet(),
-                        Collections.<ResourceItem> emptySet(),
-                        Collections.<ResourceItem> emptySet(),
-                        CollectionUtils.toSet(getSlot()));
             }
         };
 
@@ -110,8 +103,8 @@ public class NumberSlotControl extends SlotControl {
         propertySelector.setValues(properties);
 
         if (propertySelector.getSelectedValue() == null) {
-            String property = ((CalculationResourceSetToValueResolver) resolver
-                    .getResourceSetResolver(getSlot())).getProperty();
+            String property = ((CalculationResourceSetToValueResolver) slotMappingConfiguration
+                    .getResolver(getSlot())).getProperty();
             propertySelector.setSelectedValue(property);
         }
     }
