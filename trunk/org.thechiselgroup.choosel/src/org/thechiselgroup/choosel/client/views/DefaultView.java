@@ -925,7 +925,7 @@ public class DefaultView extends AbstractWindowContent implements View {
     public void updateSharePanel(Long id) {
         String url = Window.Location.getHref()
                 + (Window.Location.getParameterMap().size() == 0 ? "?" : "&")
-                + "windowId=" + id.toString();
+                + "viewId=" + id.toString();
 
         sharePanel.remove(1);
 

@@ -88,7 +88,7 @@ public abstract class ChooselApplication {
 
     public static final String DEVELOPER_MODE_PANEL = "developer_mode";
 
-    private static final String WINDOW_ID = "windowId";
+    private static final String VIEW_ID = "viewId";
 
     @Inject
     protected ActionBar actionBar;
@@ -257,47 +257,10 @@ public abstract class ChooselApplication {
     }
 
     public void init() {
-        String windowIdParam = Window.Location.getParameter(WINDOW_ID);
+        String viewIdParam = Window.Location.getParameter(VIEW_ID);
 
-        if (windowIdParam != null) {
-            viewLoader.loadView(Long.parseLong(windowIdParam),
-                    new AsyncCallback<DefaultView>() {
-
-                        @Override
-                        public void onFailure(Throwable caught) {
-                            Label label = new Label();
-                            label.setText("Sorry, the specified view is not available.");
-
-                            RootPanel.get().add(label);
-                        }
-
-                        @Override
-                        public void onSuccess(final DefaultView view) {
-
-                            RootPanel.get().add(view.asWidget());
-
-                            // Set the size of the window, and listen for
-                            // changes in size.
-                            view.asWidget().setPixelSize(
-                                    Window.getClientWidth() - 1,
-                                    Window.getClientHeight() - 1);
-
-                            Window.addResizeHandler(new ResizeHandler() {
-                                @Override
-                                public void onResize(ResizeEvent event) {
-                                    view.asWidget()
-                                            .setPixelSize(event.getWidth(),
-                                                    event.getHeight());
-                                    // TODO windows need to be moved if they
-                                    // are
-                                    // out of the
-                                    // range
-                                }
-                            });
-
-                        }
-
-                    });
+        if (viewIdParam != null) {
+            loadViewIfParamSet(viewIdParam);
 
         } else {
             BrowserDetect.checkBrowser();
@@ -487,6 +450,42 @@ public abstract class ChooselApplication {
                 "actionbar-titleArea-text");
         actionBar.getActionBarTitleArea().add(
                 workspacePresenterDisplay.getTextBox());
+    }
+
+    private void loadViewIfParamSet(String viewIdParam) {
+        viewLoader.loadView(Long.parseLong(viewIdParam),
+                new AsyncCallback<DefaultView>() {
+
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        Label label = new Label();
+                        label.setText("Sorry, the specified view is not available.");
+
+                        RootPanel.get().add(label);
+                    }
+
+                    @Override
+                    public void onSuccess(final DefaultView view) {
+
+                        RootPanel.get().add(view.asWidget());
+
+                        // Set the size of the window, and listen for
+                        // changes in size.
+                        view.asWidget().setPixelSize(
+                                Window.getClientWidth() - 1,
+                                Window.getClientHeight() - 1);
+
+                        Window.addResizeHandler(new ResizeHandler() {
+                            @Override
+                            public void onResize(ResizeEvent event) {
+                                view.asWidget().setPixelSize(event.getWidth(),
+                                        event.getHeight());
+                            }
+                        });
+
+                    }
+
+                });
     }
 
     private void loadWorkspaceIfParamSet() {
