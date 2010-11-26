@@ -26,7 +26,7 @@ import org.thechiselgroup.choosel.client.label.CategoryLabelProvider;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
-import org.thechiselgroup.choosel.client.resources.ResourceSplitter;
+import org.thechiselgroup.choosel.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceSetsPresenter;
@@ -123,7 +123,7 @@ public class ViewFactory implements WindowContentFactory {
         ViewContentDisplay contentDisplay = new DropEnabledViewContentDisplay(
                 viewContentDisplay, contentDropTargetManager);
 
-        ResourceSplitter resourceSplitter = new ResourceSplitter(categorizer,
+        ResourceGrouping resourceSplitter = new ResourceGrouping(categorizer,
                 resourceSetFactory);
 
         ResourceModel resourceModel = new DefaultResourceModel(

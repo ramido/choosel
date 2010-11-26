@@ -33,12 +33,12 @@ import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceCategoriesChangedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourceCategoriesChangedHandler;
-import org.thechiselgroup.choosel.client.resources.ResourceCategoryChange;
+import org.thechiselgroup.choosel.client.resources.ResourceGrouping;
+import org.thechiselgroup.choosel.client.resources.ResourceGroupingChange;
 import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetEventForwarder;
 import org.thechiselgroup.choosel.client.resources.ResourceSetUtils;
-import org.thechiselgroup.choosel.client.resources.ResourceSplitter;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
@@ -119,11 +119,11 @@ public class DefaultView extends AbstractWindowContent implements View {
     private ResourceSetEventForwarder allResourcesToSplitterForwarder;
 
     /**
-     * Maps category names (representing the resource sets that are calculated
-     * by the resource splitter) to the resource items that display the resource
-     * sets in the view.
+     * Maps group ids (representing the resource sets that are calculated by the
+     * resource grouping) to the resource items that display the resource sets
+     * in the view.
      */
-    private Map<String, DefaultResourceItem> categoriesToResourceItems = new HashMap<String, DefaultResourceItem>();
+    private Map<String, DefaultResourceItem> groupsToResourceItems = new HashMap<String, DefaultResourceItem>();
 
     private ResourceItemValueResolver configuration;
 
@@ -141,7 +141,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private DockPanel mainPanel;
 
-    private ResourceSplitter resourceSplitter;
+    private ResourceGrouping resourceSplitter;
 
     private ResourceModel resourceModel;
 
@@ -176,7 +176,7 @@ public class DefaultView extends AbstractWindowContent implements View {
      */
     private boolean isConfigurationAvailable = false;
 
-    public DefaultView(ResourceSplitter resourceSplitter,
+    public DefaultView(ResourceGrouping resourceSplitter,
             ViewContentDisplay contentDisplay, String label,
             String contentType, ResourceItemValueResolver configuration,
             SelectionModel selectionModel, Presenter selectionModelPresenter,
@@ -243,21 +243,21 @@ public class DefaultView extends AbstractWindowContent implements View {
         return popupManagerFactory.createPopupManager(widgetFactory);
     }
 
-    private DefaultResourceItem createResourceItem(String category,
+    private DefaultResourceItem createResourceItem(String groupID,
             ResourceSet resources) {
 
         // Added when changing resource item to contain resource sets
         // TODO use factory & dispose + clean up
 
         // TODO provide configuration to content display in callback
-        DefaultResourceItem resourceItem = new DefaultResourceItem(category,
+        DefaultResourceItem resourceItem = new DefaultResourceItem(groupID,
                 resources, hoverModel, createPopupManager(resources),
                 configuration);
 
-        assert !categoriesToResourceItems.containsKey(category) : "categoriesToResourceItems already contains "
-                + category;
+        assert !groupsToResourceItems.containsKey(groupID) : "groupsToResourceItems already contains "
+                + groupID;
 
-        categoriesToResourceItems.put(category, resourceItem);
+        groupsToResourceItems.put(groupID, resourceItem);
 
         // TODO introduce partial selection
 
@@ -277,8 +277,7 @@ public class DefaultView extends AbstractWindowContent implements View {
     public void dispose() {
         Log.debug("dispose view " + toString());
 
-        for (DefaultResourceItem resourceItem : categoriesToResourceItems
-                .values()) {
+        for (DefaultResourceItem resourceItem : groupsToResourceItems.values()) {
             resourceItem.dispose();
         }
 
@@ -336,6 +335,14 @@ public class DefaultView extends AbstractWindowContent implements View {
         return GWT.getModuleBaseURL();
     }
 
+    public List<ResourceItem> getResourceItems() {
+        List<ResourceItem> result = new ArrayList<ResourceItem>();
+        for (DefaultResourceItem resourceItem : groupsToResourceItems.values()) {
+            result.add(resourceItem);
+        }
+        return result;
+    }
+
     // TODO improve algorithm: switch depending on size of resource vs size of
     // resource items --> change to collection
     private Set<ResourceItem> getResourceItems(Iterable<Resource> resources) {
@@ -354,8 +361,7 @@ public class DefaultView extends AbstractWindowContent implements View {
         // TODO PERFORMANCE introduce field map: Resource --> List<ResourceItem>
         // such a map would need to be updated
         List<ResourceItem> result = new ArrayList<ResourceItem>();
-        for (DefaultResourceItem resourceItem : categoriesToResourceItems
-                .values()) {
+        for (DefaultResourceItem resourceItem : groupsToResourceItems.values()) {
             if (resourceItem.getResourceSet().contains(resource)) {
                 result.add(resourceItem);
             }
@@ -452,7 +458,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
             @Override
             public Collection<DefaultResourceItem> getAllResourceItems() {
-                return categoriesToResourceItems.values();
+                return groupsToResourceItems.values();
             }
 
             @Override
@@ -677,16 +683,16 @@ public class DefaultView extends AbstractWindowContent implements View {
         sideBar.add(configurationWidget, "View Settings");
     }
 
-    private DefaultResourceItem removeResourceItem(String category) {
-        assert category != null : "category must not be null";
-        assert categoriesToResourceItems.containsKey(category) : "no resource item for "
-                + category;
+    private DefaultResourceItem removeResourceItem(String groupID) {
+        assert groupID != null : "groupIDs must not be null";
+        assert groupsToResourceItems.containsKey(groupID) : "no resource item for "
+                + groupID;
 
-        DefaultResourceItem resourceItem = categoriesToResourceItems
-                .remove(category);
+        DefaultResourceItem resourceItem = groupsToResourceItems
+                .remove(groupID);
         resourceItem.dispose();
 
-        assert !categoriesToResourceItems.containsKey(category);
+        assert !groupsToResourceItems.containsKey(groupID);
 
         return resourceItem;
     }
@@ -874,7 +880,7 @@ public class DefaultView extends AbstractWindowContent implements View {
     // (d) add + update
     // (e) remove + update
     private void updateResourceItemsOnModelChange(
-            Set<ResourceCategoryChange> changes) {
+            List<ResourceGroupingChange> changes) {
 
         assert changes != null;
         assert !changes.isEmpty();
@@ -882,19 +888,17 @@ public class DefaultView extends AbstractWindowContent implements View {
         Set<ResourceItem> addedResourceItems = new HashSet<ResourceItem>();
         Set<ResourceItem> removedResourceItems = new HashSet<ResourceItem>();
 
-        // XXX remove needs to be process before add and update --> write test
-        // case that shows bug
-        for (ResourceCategoryChange change : changes) {
+        for (ResourceGroupingChange change : changes) {
             switch (change.getDelta()) {
             case ADD: {
-                addedResourceItems.add(createResourceItem(change.getCategory(),
+                addedResourceItems.add(createResourceItem(change.getGroupID(),
                         change.getResourceSet()));
             }
                 break;
             case REMOVE: {
                 // XXX dispose should be done after method call...
-                removedResourceItems.add(removeResourceItem(change
-                        .getCategory()));
+                removedResourceItems
+                        .add(removeResourceItem(change.getGroupID()));
             }
                 break;
             case UPDATE: {

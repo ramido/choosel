@@ -44,6 +44,12 @@ public interface ResourceItem {
     Object getDisplayObject();
 
     /**
+     * This is the view-specific resource item identifier. Refers to the
+     * identifier of the underlying group of resources.
+     */
+    String getGroupID();
+
+    /**
      * @return all resources in this resource item that are highlighted.
      *         Resources that are not contained in this resource item are not
      *         included in the result.

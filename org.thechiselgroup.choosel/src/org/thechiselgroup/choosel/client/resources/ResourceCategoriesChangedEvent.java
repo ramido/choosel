@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
-import java.util.Set;
+import java.util.List;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -24,9 +24,15 @@ public class ResourceCategoriesChangedEvent extends
 
     public static final GwtEvent.Type<ResourceCategoriesChangedHandler> TYPE = new GwtEvent.Type<ResourceCategoriesChangedHandler>();
 
-    private final Set<ResourceCategoryChange> changes;
+    /**
+     * A list is used here because maintaining the order in which the changes
+     * have been made is important. If dependent elements are added to a map in
+     * a client class before similar elements are removed, this can cause
+     * errors, and the unordered nature of sets allows for these errors.
+     */
+    private final List<ResourceGroupingChange> changes;
 
-    public ResourceCategoriesChangedEvent(Set<ResourceCategoryChange> changes) {
+    public ResourceCategoriesChangedEvent(List<ResourceGroupingChange> changes) {
         assert changes != null;
         assert !changes.isEmpty();
 
@@ -43,7 +49,7 @@ public class ResourceCategoriesChangedEvent extends
         return TYPE;
     }
 
-    public Set<ResourceCategoryChange> getChanges() {
+    public List<ResourceGroupingChange> getChanges() {
         return changes;
     }
 

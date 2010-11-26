@@ -35,7 +35,7 @@ import com.google.gwt.event.dom.client.MouseOverHandler;
 // TODO separate out resource item controller
 public class DefaultResourceItem implements Disposable, ResourceItem {
 
-    private String category;
+    private String groupID;
 
     protected final HoverModel hoverModel;
 
@@ -67,24 +67,24 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
 
     private SubsetStatus cachedSelectedStatus = null;
 
-    public DefaultResourceItem(String category, ResourceSet resources,
+    public DefaultResourceItem(String groupID, ResourceSet resources,
             HoverModel hoverModel, PopupManager popupManager,
             ResourceItemValueResolver valueResolver) {
 
-        assert category != null;
+        assert groupID != null;
         assert resources != null;
         assert hoverModel != null;
         assert popupManager != null;
         assert valueResolver != null;
 
-        this.category = category;
+        this.groupID = groupID;
         this.resources = resources;
         this.popupManager = popupManager;
         this.hoverModel = hoverModel; // TODO separate controller
         this.valueResolver = valueResolver;
 
-        this.highlightedResources = new DefaultResourceSet();
-        this.selectedResources = new DefaultResourceSet();
+        highlightedResources = new DefaultResourceSet();
+        selectedResources = new DefaultResourceSet();
 
         initHighlighting();
         initPopupHighlighting();
@@ -93,13 +93,13 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
     public void addHighlightedResources(
             Collection<Resource> highlightedResources) {
 
-        this.cachedHighlightStatus = null;
+        cachedHighlightStatus = null;
         this.highlightedResources
                 .addAll(calculateAffectedResources(highlightedResources));
     }
 
     public void addSelectedResources(Collection<Resource> selectedResources) {
-        this.cachedSelectedStatus = null;
+        cachedSelectedStatus = null;
         this.selectedResources
                 .addAll(calculateAffectedResources(selectedResources));
     }
@@ -120,6 +120,11 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
     public void dispose() {
         highlightingManager.dispose();
         popupHighlightingManager.dispose();
+    }
+
+    @Override
+    public String getGroupID() {
+        return groupID;
     }
 
     @Override
@@ -171,18 +176,18 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
 
     @Override
     public Object getResourceValue(Slot slot) {
-        return valueResolver.resolve(slot, category, resources);
+        return valueResolver.resolve(slot, groupID, resources);
     }
 
     @Override
     public Object getResourceValue(Slot slot, Subset subset) {
         switch (subset) {
         case ALL:
-            return valueResolver.resolve(slot, category, resources);
+            return valueResolver.resolve(slot, groupID, resources);
         case SELECTED:
-            return valueResolver.resolve(slot, category, selectedResources);
+            return valueResolver.resolve(slot, groupID, selectedResources);
         case HIGHLIGHTED:
-            return valueResolver.resolve(slot, category, highlightedResources);
+            return valueResolver.resolve(slot, groupID, highlightedResources);
         }
 
         throw new RuntimeException("invalid subset");
@@ -252,12 +257,11 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
     }
 
     private void initHighlighting() {
-        this.highlightingManager = new HighlightingManager(hoverModel,
-                resources);
+        highlightingManager = new HighlightingManager(hoverModel, resources);
     }
 
     private void initPopupHighlighting() {
-        this.popupHighlightingManager = new HighlightingManager(hoverModel,
+        popupHighlightingManager = new HighlightingManager(hoverModel,
                 resources);
 
         popupManager.addPopupMouseOverHandler(new MouseOverHandler() {
@@ -283,13 +287,13 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
     public void removeHighlightedResources(
             Collection<Resource> highlightedResources) {
 
-        this.cachedHighlightStatus = null;
+        cachedHighlightStatus = null;
         this.highlightedResources
                 .removeAll(calculateAffectedResources(highlightedResources));
     }
 
     public void removeSelectedResources(Collection<Resource> selectedResources) {
-        this.cachedSelectedStatus = null;
+        cachedSelectedStatus = null;
         this.selectedResources
                 .removeAll(calculateAffectedResources(selectedResources));
     }

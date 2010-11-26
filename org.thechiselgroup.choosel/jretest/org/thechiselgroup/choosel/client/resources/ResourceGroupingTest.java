@@ -31,6 +31,7 @@ import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.toRe
 import static org.thechiselgroup.choosel.client.util.CollectionUtils.toSet;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -41,7 +42,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.util.Delta;
 
-public class ResourceSplitterTest {
+public class ResourceGroupingTest {
 
     private static final String CATEGORY_1_1 = "category1-1";
 
@@ -64,7 +65,7 @@ public class ResourceSplitterTest {
     @Mock
     private ResourceCategoriesChangedHandler changeHandler;
 
-    private ResourceSplitter splitter;
+    private ResourceGrouping splitter;
 
     @Test
     public void addResourceWithMultipleCategoriesCreatesMultipleCategories() {
@@ -79,7 +80,7 @@ public class ResourceSplitterTest {
         assertContentEquals(createResources(1), result.get(CATEGORY_1_2));
     }
 
-    public Set<ResourceCategoryChange> captureChanges() {
+    public List<ResourceGroupingChange> captureChanges() {
         ArgumentCaptor<ResourceCategoriesChangedEvent> eventCaptor = ArgumentCaptor
                 .forClass(ResourceCategoriesChangedEvent.class);
         verify(changeHandler, times(1)).onResourceCategoriesChanged(
@@ -93,19 +94,19 @@ public class ResourceSplitterTest {
         splitter.addHandler(changeHandler);
         splitter.setCategorizer(categorizer2);
 
-        Set<ResourceCategoryChange> changes = captureChanges();
+        List<ResourceGroupingChange> changes = captureChanges();
 
         assertContentEquals(
-                toSet(new ResourceCategoryChange(Delta.REMOVE, CATEGORY_1_1,
-                        createResources(1, 2, 3)), new ResourceCategoryChange(
+                toSet(new ResourceGroupingChange(Delta.REMOVE, CATEGORY_1_1,
+                        createResources(1, 2, 3)), new ResourceGroupingChange(
                         Delta.REMOVE, CATEGORY_1_2, createResources(4, 5)),
-                        new ResourceCategoryChange(Delta.ADD, CATEGORY_2_1,
+                        new ResourceGroupingChange(Delta.ADD, CATEGORY_2_1,
                                 createResources(1)),
-                        new ResourceCategoryChange(Delta.ADD, CATEGORY_2_2,
+                        new ResourceGroupingChange(Delta.ADD, CATEGORY_2_2,
                                 createResources(2)),
-                        new ResourceCategoryChange(Delta.ADD, CATEGORY_2_3,
+                        new ResourceGroupingChange(Delta.ADD, CATEGORY_2_3,
                                 createResources(3, 4)),
-                        new ResourceCategoryChange(Delta.ADD, CATEGORY_2_4,
+                        new ResourceGroupingChange(Delta.ADD, CATEGORY_2_4,
                                 createResources(4, 5))), changes);
     }
 
@@ -116,19 +117,19 @@ public class ResourceSplitterTest {
         splitter.addHandler(changeHandler);
         splitter.setCategorizer(categorizer1);
 
-        Set<ResourceCategoryChange> changes = captureChanges();
+        List<ResourceGroupingChange> changes = captureChanges();
 
         assertContentEquals(
-                toSet(new ResourceCategoryChange(Delta.ADD, CATEGORY_1_1,
-                        createResources(1, 2, 3)), new ResourceCategoryChange(
+                toSet(new ResourceGroupingChange(Delta.ADD, CATEGORY_1_1,
+                        createResources(1, 2, 3)), new ResourceGroupingChange(
                         Delta.ADD, CATEGORY_1_2, createResources(4, 5)),
-                        new ResourceCategoryChange(Delta.REMOVE, CATEGORY_2_1,
+                        new ResourceGroupingChange(Delta.REMOVE, CATEGORY_2_1,
                                 createResources(1)),
-                        new ResourceCategoryChange(Delta.REMOVE, CATEGORY_2_2,
+                        new ResourceGroupingChange(Delta.REMOVE, CATEGORY_2_2,
                                 createResources(2)),
-                        new ResourceCategoryChange(Delta.REMOVE, CATEGORY_2_3,
+                        new ResourceGroupingChange(Delta.REMOVE, CATEGORY_2_3,
                                 createResources(3, 4)),
-                        new ResourceCategoryChange(Delta.REMOVE, CATEGORY_2_4,
+                        new ResourceGroupingChange(Delta.REMOVE, CATEGORY_2_4,
                                 createResources(4, 5))), changes);
     }
 
@@ -226,9 +227,9 @@ public class ResourceSplitterTest {
         splitter.addHandler(changeHandler);
         splitter.add(resource);
 
-        Set<ResourceCategoryChange> changes = captureChanges();
+        List<ResourceGroupingChange> changes = captureChanges();
 
-        assertContentEquals(toSet(new ResourceCategoryChange(Delta.ADD,
+        assertContentEquals(toSet(new ResourceGroupingChange(Delta.ADD,
                 CATEGORY_1_1, toResourceSet(resource))), changes);
     }
 
@@ -238,11 +239,11 @@ public class ResourceSplitterTest {
         splitter.addHandler(changeHandler);
         splitter.addAll(createResources(3, 4, 5));
 
-        Set<ResourceCategoryChange> changes = captureChanges();
+        List<ResourceGroupingChange> changes = captureChanges();
 
         assertContentEquals(
-                toSet(new ResourceCategoryChange(Delta.UPDATE, CATEGORY_1_1,
-                        createResources(1, 2, 3)), new ResourceCategoryChange(
+                toSet(new ResourceGroupingChange(Delta.UPDATE, CATEGORY_1_1,
+                        createResources(1, 2, 3)), new ResourceGroupingChange(
                         Delta.ADD, CATEGORY_1_2, createResources(4, 5))),
                 changes);
     }
@@ -260,7 +261,7 @@ public class ResourceSplitterTest {
             public void onResourceCategoriesChanged(
                     ResourceCategoriesChangedEvent e) {
 
-                assertContentEquals(toSet(new ResourceCategoryChange(Delta.ADD,
+                assertContentEquals(toSet(new ResourceGroupingChange(Delta.ADD,
                         CATEGORY_1_1, createResources(1))), e.getChanges());
 
                 called[0] = true;
@@ -285,7 +286,7 @@ public class ResourceSplitterTest {
             public void onResourceCategoriesChanged(
                     ResourceCategoriesChangedEvent e) {
 
-                assertContentEquals(toSet(new ResourceCategoryChange(Delta.ADD,
+                assertContentEquals(toSet(new ResourceGroupingChange(Delta.ADD,
                         CATEGORY_1_1, createResources(1, 2, 3))), e
                         .getChanges());
 
@@ -307,11 +308,11 @@ public class ResourceSplitterTest {
         splitter.addHandler(changeHandler);
         splitter.removeAll(allResources);
 
-        Set<ResourceCategoryChange> changes = captureChanges();
+        List<ResourceGroupingChange> changes = captureChanges();
 
-        Set<ResourceCategoryChange> expectedChanges = toSet(
-                new ResourceCategoryChange(Delta.REMOVE, CATEGORY_1_1,
-                        createResources(1, 2, 3)), new ResourceCategoryChange(
+        Set<ResourceGroupingChange> expectedChanges = toSet(
+                new ResourceGroupingChange(Delta.REMOVE, CATEGORY_1_1,
+                        createResources(1, 2, 3)), new ResourceGroupingChange(
                         Delta.UPDATE, CATEGORY_1_2, createResources(5)));
 
         assertContentEquals(expectedChanges, changes);
@@ -325,9 +326,9 @@ public class ResourceSplitterTest {
         splitter.addHandler(changeHandler);
         splitter.remove(resource);
 
-        Set<ResourceCategoryChange> changes = captureChanges();
+        List<ResourceGroupingChange> changes = captureChanges();
 
-        assertContentEquals(toSet(new ResourceCategoryChange(Delta.REMOVE,
+        assertContentEquals(toSet(new ResourceGroupingChange(Delta.REMOVE,
                 CATEGORY_1_1, toResourceSet(resource))), changes);
     }
 
@@ -337,9 +338,9 @@ public class ResourceSplitterTest {
         splitter.addHandler(changeHandler);
         splitter.removeAll(createResources(1, 2, 3));
 
-        Set<ResourceCategoryChange> changes = captureChanges();
+        List<ResourceGroupingChange> changes = captureChanges();
 
-        assertContentEquals(toSet(new ResourceCategoryChange(Delta.REMOVE,
+        assertContentEquals(toSet(new ResourceGroupingChange(Delta.REMOVE,
                 CATEGORY_1_1, createResources(1, 2, 3))), changes);
     }
 
@@ -352,11 +353,11 @@ public class ResourceSplitterTest {
         splitter.addHandler(changeHandler);
         splitter.removeAll(allResources);
 
-        Set<ResourceCategoryChange> changes = captureChanges();
+        List<ResourceGroupingChange> changes = captureChanges();
 
-        Set<ResourceCategoryChange> expectedChanges = toSet(
-                new ResourceCategoryChange(Delta.REMOVE, CATEGORY_1_1,
-                        createResources(1, 2, 3)), new ResourceCategoryChange(
+        Set<ResourceGroupingChange> expectedChanges = toSet(
+                new ResourceGroupingChange(Delta.REMOVE, CATEGORY_1_1,
+                        createResources(1, 2, 3)), new ResourceGroupingChange(
                         Delta.REMOVE, CATEGORY_1_2, createResources(4, 5)));
 
         assertContentEquals(expectedChanges, changes);
@@ -405,7 +406,7 @@ public class ResourceSplitterTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        splitter = new ResourceSplitter(categorizer1,
+        splitter = new ResourceGrouping(categorizer1,
                 new DefaultResourceSetFactory());
 
         setUpCategory(categorizer1, 1, CATEGORY_1_1);
