@@ -104,7 +104,9 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private static final String CSS_VIEW_CONFIGURATION_PANEL = "view-configurationPanel";
 
-    private static final String MEMENTO_CONTENT_DISPLAY = "contentDisplay";
+    private static final String MEMENTO_CONTENT_DISPLAY = "content-display";
+
+    private static final String MEMENTO_SLOT_MAPPINGS = "slot-mappings";
 
     private static final String MEMENTO_RESOURCE_MODEL = "resource-model";
 
@@ -316,7 +318,7 @@ public class DefaultView extends AbstractWindowContent implements View {
         restore(resourceModel, MEMENTO_RESOURCE_MODEL, state, accessor);
         restore(selectionModel, MEMENTO_SELECTION_MODEL, state, accessor);
         contentDisplay.restore(state.getChild(MEMENTO_CONTENT_DISPLAY));
-        // TODO restore mappings
+        slotMappingConfiguration.restore(state.getChild(MEMENTO_SLOT_MAPPINGS));
 
         contentDisplay.endRestore();
     }
@@ -385,6 +387,8 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     @Override
     public void init() {
+        slotMappingConfiguration.initSlots(contentDisplay.getSlots());
+
         init(resourceModel);
 
         init(selectionModel);
@@ -726,16 +730,14 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     @Override
-    public Memento save(ResourceSetCollector resourceSetCollector) {
+    public Memento save(ResourceSetCollector persistanceManager) {
         Memento memento = new Memento();
 
-        save(selectionModel, MEMENTO_SELECTION_MODEL, resourceSetCollector,
+        save(selectionModel, MEMENTO_SELECTION_MODEL, persistanceManager,
                 memento);
-        save(resourceModel, MEMENTO_RESOURCE_MODEL, resourceSetCollector,
-                memento);
+        save(resourceModel, MEMENTO_RESOURCE_MODEL, persistanceManager, memento);
         memento.addChild(MEMENTO_CONTENT_DISPLAY, contentDisplay.save());
-
-        // TODO later: store configuration settings
+        memento.addChild(MEMENTO_SLOT_MAPPINGS, slotMappingConfiguration.save());
 
         return memento;
     }

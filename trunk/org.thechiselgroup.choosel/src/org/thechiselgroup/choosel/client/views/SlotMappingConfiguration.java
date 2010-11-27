@@ -17,7 +17,9 @@ package org.thechiselgroup.choosel.client.views;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
@@ -26,9 +28,17 @@ import com.google.gwt.event.shared.HandlerRegistration;
 
 public class SlotMappingConfiguration {
 
+    private static final String MEMENTO_VALUE_FIRST_RESOURCE_PROPERTY = "first-resource-property";
+
+    private static final String MEMENTO_KEY_PROPERTY = "property";
+
+    private static final String MEMENTO_KEY_TYPE = "type";
+
     private transient HandlerManager eventBus;
 
     private Map<Slot, ResourceSetToValueResolver> slotsToValueResolvers = new HashMap<Slot, ResourceSetToValueResolver>();
+
+    private Map<String, Slot> slotsByID = new HashMap<String, Slot>();
 
     public SlotMappingConfiguration() {
         eventBus = new HandlerManager(this);
@@ -55,6 +65,14 @@ public class SlotMappingConfiguration {
         return slotsToValueResolvers.get(slot);
     }
 
+    public void initSlots(Slot[] slots) {
+        assert slots != null;
+
+        for (Slot slot : slots) {
+            slotsByID.put(slot.getId(), slot);
+        }
+    }
+
     /*
      * TODO add semantic meta-information as parameter, e.g. expected return
      * type or context (semantic description of slot?)
@@ -63,8 +81,56 @@ public class SlotMappingConfiguration {
         return getResolver(slot).resolve(resources, groupID);
     }
 
+    public void restore(Memento memento) {
+        for (Entry<String, Memento> entry : memento.getChildren().entrySet()) {
+            String slotId = entry.getKey();
+            Memento child = entry.getValue();
+
+            assert slotsByID.containsKey(slotId) : "no slot with slot id "
+                    + slotId;
+
+            Slot slot = slotsByID.get(slotId);
+            String value = (String) child.getValue(MEMENTO_KEY_TYPE);
+            if (MEMENTO_VALUE_FIRST_RESOURCE_PROPERTY.equals(value)) {
+                String property = (String) child.getValue(MEMENTO_KEY_PROPERTY);
+
+                setMapping(slot, new FirstResourcePropertyResolver(property));
+            }
+        }
+    }
+
+    public Memento save() {
+        Memento memento = new Memento();
+
+        for (Entry<Slot, ResourceSetToValueResolver> entry : slotsToValueResolvers
+                .entrySet()) {
+
+            Slot slot = entry.getKey();
+            ResourceSetToValueResolver resolver = entry.getValue();
+
+            Memento child = new Memento();
+
+            if (resolver instanceof FirstResourcePropertyResolver) {
+                child.setValue(MEMENTO_KEY_TYPE,
+                        MEMENTO_VALUE_FIRST_RESOURCE_PROPERTY);
+                child.setValue(MEMENTO_KEY_PROPERTY,
+                        ((FirstResourcePropertyResolver) resolver)
+                                .getProperty());
+            }
+
+            // else if (resolver instanceof
+            // CalculationResourceSetToValueResolver) {
+            // } else if (resolver instanceof Fixed)
+            // store details in child memento (i.e. type, property)
+
+            memento.addChild(slot.getId(), child);
+        }
+
+        return memento;
+    }
+
     public void setMapping(Slot slot, ResourceSetToValueResolver resolver) {
-        assert slot != null;
+        assert slot != null : "slot must not be null";
         assert resolver != null;
 
         slotsToValueResolvers.put(slot, resolver);

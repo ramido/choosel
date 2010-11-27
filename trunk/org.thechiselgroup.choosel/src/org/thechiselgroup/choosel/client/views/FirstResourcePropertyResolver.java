@@ -27,6 +27,10 @@ public class FirstResourcePropertyResolver implements
         this.property = property;
     }
 
+    public String getProperty() {
+        return property;
+    }
+
     @Override
     public Object resolve(ResourceSet resources, String category) {
         return resources.getFirstResource().getValue(property);
