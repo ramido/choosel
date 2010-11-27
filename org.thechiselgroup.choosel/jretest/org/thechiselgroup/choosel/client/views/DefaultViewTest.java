@@ -87,7 +87,7 @@ public class DefaultViewTest {
     }
 
     @Test
-    public void changeSlotMapping() {
+    public void changeTextSlotMapping() {
         Resource resource = new Resource("test:1");
         resource.putValue("text1", "t1");
         resource.putValue("text2", "t2");
