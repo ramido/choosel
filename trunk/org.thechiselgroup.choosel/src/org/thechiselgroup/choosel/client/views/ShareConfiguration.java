@@ -8,6 +8,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -19,6 +20,22 @@ public class ShareConfiguration implements WidgetAdaptable {
     private DefaultView view;
 
     private final ViewSaver viewPersistence;
+
+    private Button button;
+
+    private Label label;
+
+    private TextBox textBox;
+
+    private final String EMBED_POSTTEXT = "Created with <a href=\"http://choosel-mashups.appspot.com\">Choosel</a>";
+
+    private final int EMBED_HEIGHT = 400;
+
+    private final int EMBED_WIDTH = 480;
+
+    private TextArea textArea;
+
+    private Label embedLabel;
 
     public ShareConfiguration(DefaultView view, ViewSaver viewPersistence) {
         this.view = view;
@@ -45,30 +62,38 @@ public class ShareConfiguration implements WidgetAdaptable {
     }
 
     private void initShareControls() {
-        if (Window.Location.getParameter("viewId") == null) {
 
-            Button w = new Button("Share this");
-            w.addClickHandler(new ClickHandler() {
+        button = new Button("Share this");
+        label = new Label("Generating Share Information...");
+        label.setVisible(false);
+        textBox = new TextBox();
+        textBox.setVisible(false);
+        embedLabel = new Label();
+        embedLabel.setVisible(false);
+        textArea = new TextArea();
+        textArea.setVisible(false);
 
-                @Override
-                public void onClick(ClickEvent event) {
+        button.addClickHandler(new ClickHandler() {
 
-                    // TODO Add the call to the WindowPersistenceManager to save
-                    // a
-                    // copy of this window with a unique ID
+            @Override
+            public void onClick(ClickEvent event) {
+                label.setVisible(false);
+                textBox.setVisible(false);
+                embedLabel.setVisible(false);
+                textArea.setVisible(false);
 
-                    Label genLabel = new Label();
-                    genLabel.setText("Generating Share Information...");
+                label.setText("Generating Share Information...");
+                label.setVisible(true);
 
-                    sharePanel.add(genLabel);
-                    sharePanel.setStyleName("share-panel-generating");
+                viewPersistence.saveView(ShareConfiguration.this);
 
-                    viewPersistence.saveView(ShareConfiguration.this);
-
-                }
-            });
-            sharePanel.add(w);
-        }
+            }
+        });
+        sharePanel.add(button);
+        sharePanel.add(label);
+        sharePanel.add(textBox);
+        sharePanel.add(embedLabel);
+        sharePanel.add(textArea);
 
     }
 
@@ -77,16 +102,28 @@ public class ShareConfiguration implements WidgetAdaptable {
                 + (Window.Location.getParameterMap().size() == 0 ? "?" : "&")
                 + "viewId=" + id.toString();
 
-        sharePanel.remove(1);
+        String embed = "<iframe src=\""
+                + url
+                + "\" width=\""
+                + EMBED_WIDTH
+                + "\" height=\""
+                + EMBED_HEIGHT
+                + "\">Sorry, your browser doesn't support iFrames</iframe><br /><a href=\""
+                + url + "\">Full Size</a>. " + EMBED_POSTTEXT;
 
-        Label urlLabel = new Label();
-        urlLabel.setText("Share Link:");
+        // Hide things while we change them
+        label.setVisible(false);
 
-        TextBox textBox = new TextBox();
+        label.setText("Share Link:");
         textBox.setText(url);
+        label.setText("Embed Source:");
+        textArea.setText(embed);
 
-        sharePanel.add(urlLabel);
-        sharePanel.add(textBox);
+        label.setVisible(true);
+        textBox.setVisible(true);
+        embedLabel.setVisible(true);
+        textArea.setVisible(true);
+
     }
 
 }
