@@ -116,7 +116,7 @@ public class ShareConfiguration implements WidgetAdaptable {
 
         label.setText("Share Link:");
         textBox.setText(url);
-        label.setText("Embed Source:");
+        embedLabel.setText("Embed Source:");
         textArea.setText(embed);
 
         label.setVisible(true);
