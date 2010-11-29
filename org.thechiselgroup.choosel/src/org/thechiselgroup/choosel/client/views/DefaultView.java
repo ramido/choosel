@@ -31,6 +31,7 @@ import org.thechiselgroup.choosel.client.resolver.FixedValuePropertyValueResolve
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.client.resources.ResourceByPropertyMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.client.resources.ResourceGroupingChange;
 import org.thechiselgroup.choosel.client.resources.ResourceGroupingChangedEvent;
@@ -112,6 +113,8 @@ public class DefaultView extends AbstractWindowContent implements View {
     private static final String MEMENTO_RESOURCE_MODEL = "resource-model";
 
     private static final String MEMENTO_SELECTION_MODEL = "selection-model";
+
+    private static final String MEMENTO_GROUPING = "grouping";
 
     private ResourceSetEventForwarder allResourcesToGroupingForwarder;
 
@@ -319,6 +322,7 @@ public class DefaultView extends AbstractWindowContent implements View {
         restore(resourceModel, MEMENTO_RESOURCE_MODEL, state, accessor);
         restore(selectionModel, MEMENTO_SELECTION_MODEL, state, accessor);
         contentDisplay.restore(state.getChild(MEMENTO_CONTENT_DISPLAY));
+        restoreGrouping(state.getChild(MEMENTO_GROUPING));
         slotMappingConfiguration.restore(state.getChild(MEMENTO_SLOT_MAPPINGS));
 
         contentDisplay.endRestore();
@@ -330,6 +334,10 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     protected String getModuleBase() {
         return GWT.getModuleBaseURL();
+    }
+
+    public ResourceGrouping getResourceGrouping() {
+        return resourceGrouping;
     }
 
     public List<ResourceItem> getResourceItems() {
@@ -723,6 +731,18 @@ public class DefaultView extends AbstractWindowContent implements View {
         }
     }
 
+    // TODO extract constants
+    private void restoreGrouping(Memento groupingMemento) {
+        String categorizerType = (String) groupingMemento.getValue("type");
+
+        if ("byProperty".equals(categorizerType)) {
+            String property = (String) groupingMemento.getValue("property");
+            resourceGrouping
+                    .setCategorizer(new ResourceByPropertyMultiCategorizer(
+                            property));
+        }
+    }
+
     private void save(Object target, String mementoKey,
             ResourceSetCollector persistanceManager, Memento memento) {
 
@@ -740,9 +760,26 @@ public class DefaultView extends AbstractWindowContent implements View {
                 memento);
         save(resourceModel, MEMENTO_RESOURCE_MODEL, persistanceManager, memento);
         memento.addChild(MEMENTO_CONTENT_DISPLAY, contentDisplay.save());
+        saveGrouping(memento);
         memento.addChild(MEMENTO_SLOT_MAPPINGS, slotMappingConfiguration.save());
 
         return memento;
+    }
+
+    // TODO extract constants
+    private void saveGrouping(Memento memento) {
+        Memento groupingMemento = new Memento();
+
+        ResourceMultiCategorizer categorizer = resourceGrouping
+                .getCategorizer();
+        if (categorizer instanceof ResourceByPropertyMultiCategorizer) {
+            groupingMemento.setValue("type", "byProperty");
+            groupingMemento.setValue("property",
+                    ((ResourceByPropertyMultiCategorizer) categorizer)
+                            .getProperty());
+        }
+
+        memento.addChild(MEMENTO_GROUPING, groupingMemento);
     }
 
     private void setInitialMappings(

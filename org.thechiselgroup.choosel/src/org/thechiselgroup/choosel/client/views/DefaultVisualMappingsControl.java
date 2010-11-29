@@ -19,9 +19,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.thechiselgroup.choosel.client.resources.ResourceByPropertyMultiCategorizer;
+import org.thechiselgroup.choosel.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetUtils;
-import org.thechiselgroup.choosel.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.client.ui.ConfigurationPanel;
 import org.thechiselgroup.choosel.client.util.NullConverter;
 import org.thechiselgroup.choosel.client.views.widget.listbox.ExtendedListBox;
@@ -33,7 +33,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class DefaultVisualMappingsControl implements VisualMappingsControl {
 
-    private final ResourceGrouping splitter;
+    private final ResourceGrouping resourceGrouping;
 
     private final SlotMappingConfiguration resolver;
 
@@ -48,11 +48,11 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
     private Map<Slot, SlotControl> slotToSlotControls = new HashMap<Slot, SlotControl>();
 
     public DefaultVisualMappingsControl(ViewContentDisplay contentDisplay,
-            SlotMappingConfiguration resolver, ResourceGrouping splitter) {
+            SlotMappingConfiguration resolver, ResourceGrouping resourceGrouping) {
 
         this.contentDisplay = contentDisplay;
         this.resolver = resolver;
-        this.splitter = splitter;
+        this.resourceGrouping = resourceGrouping;
     }
 
     private void addSlotControl(SlotControl control) {
@@ -94,8 +94,9 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
             @Override
             public void onChange(ChangeEvent event) {
                 String property = groupingBox.getSelectedValue();
-                splitter.setCategorizer(new ResourceByPropertyMultiCategorizer(
-                        property));
+                resourceGrouping
+                        .setCategorizer(new ResourceByPropertyMultiCategorizer(
+                                property));
             }
         });
 
@@ -134,8 +135,8 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
 
         groupingBox.setValues(propertiesByDataType.get(DataType.TEXT));
         if (groupingBox.getSelectedValue() == null
-                && splitter.getCategorizer() instanceof ResourceByPropertyMultiCategorizer) {
-            String property = ((ResourceByPropertyMultiCategorizer) splitter
+                && resourceGrouping.getCategorizer() instanceof ResourceByPropertyMultiCategorizer) {
+            String property = ((ResourceByPropertyMultiCategorizer) resourceGrouping
                     .getCategorizer()).getProperty();
             groupingBox.setSelectedValue(property);
         }

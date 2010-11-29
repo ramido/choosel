@@ -186,15 +186,38 @@ public class DefaultViewTest {
     }
 
     @Test
+    public void grouping() {
+        Resource r1 = new Resource("test:1");
+        r1.putValue("property1", "value1-1");
+        r1.putValue("property2", "value2");
+
+        Resource r2 = new Resource("test:2");
+        r2.putValue("property1", "value1-2");
+        r2.putValue("property2", "value2");
+
+        underTest.getResourceModel().addResources(toResourceSet(r1, r2));
+        underTest.getResourceGrouping().setCategorizer(
+                new ResourceByPropertyMultiCategorizer("property2"));
+
+        List<ResourceItem> resourceItems = underTest.getResourceItems();
+        assertEquals(1, resourceItems.size());
+        ResourceSet resourceItemResources = resourceItems.get(0)
+                .getResourceSet();
+        assertEquals(2, resourceItemResources.size());
+        assertEquals(true, resourceItemResources.contains(r1));
+        assertEquals(true, resourceItemResources.contains(r2));
+    }
+
+    @Test
     public void groupingChangeChangesCategory() {
         Resource resource = new Resource("test:1");
         resource.putValue("text1", "category1");
         resource.putValue("text2", "category2");
 
-        underTest.getResourceSplitter().setCategorizer(
+        underTest.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("text1"));
         underTest.getResourceModel().addResources(toResourceSet(resource));
-        underTest.getResourceSplitter().setCategorizer(
+        underTest.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("text2"));
 
         List<ResourceItem> resourceItems = underTest.getResourceItems();
@@ -213,10 +236,10 @@ public class DefaultViewTest {
         resource.putValue("text1", "category1");
         resource.putValue("text2", "category1");
 
-        underTest.getResourceSplitter().setCategorizer(
+        underTest.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("text1"));
         underTest.getResourceModel().addResources(toResourceSet(resource));
-        underTest.getResourceSplitter().setCategorizer(
+        underTest.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("text2"));
 
         List<ResourceItem> resourceItems = underTest.getResourceItems();
