@@ -59,11 +59,11 @@ public class TestView extends DefaultView {
         HandlerRegistration selectionRemovedHandlerRegistration = mock(HandlerRegistration.class);
         VisualMappingsControl visualMappingsControl = mock(VisualMappingsControl.class);
 
-        ResourceGrouping resourceSplitter = new ResourceGrouping(
+        ResourceGrouping resourceGrouping = new ResourceGrouping(
                 new ResourceCategorizerToMultiCategorizerAdapter(
                         new ResourceByUriTypeCategorizer()), resourceSetFactory);
 
-        TestView underTest = spy(new TestView(resourceSplitter, contentDisplay,
+        TestView underTest = spy(new TestView(resourceGrouping, contentDisplay,
                 "", "", resourceSetToValueResolver, selectionModel,
                 selectionModelPresenter, resourceModel, resourceModelPresenter,
                 hoverModel, popupManagerFactory, detailsWidgetHelper,
@@ -109,8 +109,6 @@ public class TestView extends DefaultView {
 
     private ViewContentDisplayCallback callback;
 
-    private final ResourceGrouping resourceSplitter;
-
     public TestView(ResourceGrouping resourceSplitter,
             ViewContentDisplay contentDisplay, String label,
             String contentType, SlotMappingConfiguration configuration,
@@ -129,7 +127,6 @@ public class TestView extends DefaultView {
                 popupManagerFactory, detailsWidgetHelper, viewPersistence,
                 visualMappingsControl);
 
-        this.resourceSplitter = resourceSplitter;
         this.contentDisplay = contentDisplay;
         this.selectionModelPresenter = selectionModelPresenter;
         this.resourceModelPresenter = resourceModelPresenter;
@@ -154,10 +151,6 @@ public class TestView extends DefaultView {
 
     public HoverModel getHoverModel() {
         return hoverModel;
-    }
-
-    public ResourceGrouping getResourceSplitter() {
-        return resourceSplitter;
     }
 
     public Presenter getTestResourceModelPresenter() {
