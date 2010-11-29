@@ -32,6 +32,7 @@ import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceByPropertyMultiCategorizer;
+import org.thechiselgroup.choosel.client.resources.ResourceByUriMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.client.resources.ResourceGroupingChange;
 import org.thechiselgroup.choosel.client.resources.ResourceGroupingChangedEvent;
@@ -740,6 +741,9 @@ public class DefaultView extends AbstractWindowContent implements View {
             resourceGrouping
                     .setCategorizer(new ResourceByPropertyMultiCategorizer(
                             property));
+        } else if ("byUri".equals(categorizerType)) {
+            resourceGrouping
+                    .setCategorizer(new ResourceByUriMultiCategorizer());
         }
     }
 
@@ -777,6 +781,8 @@ public class DefaultView extends AbstractWindowContent implements View {
             groupingMemento.setValue("property",
                     ((ResourceByPropertyMultiCategorizer) categorizer)
                             .getProperty());
+        } else if (categorizer instanceof ResourceByUriMultiCategorizer) {
+            groupingMemento.setValue("type", "byUri");
         }
 
         memento.addChild(MEMENTO_GROUPING, groupingMemento);

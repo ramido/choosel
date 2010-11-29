@@ -66,7 +66,7 @@ public class DefaultViewPersistenceTest {
     }
 
     @Test
-    public void restoreGrouping() {
+    public void restorePropertyGrouping() {
         // 1. create view and configure it - resources, settings...
         Resource r1 = new Resource("test:1");
         r1.putValue("property1", "value1-1");
@@ -97,6 +97,35 @@ public class DefaultViewPersistenceTest {
         assertEquals(2, resourceItemResources.size());
         assertEquals(true, resourceItemResources.contains(r1));
         assertEquals(true, resourceItemResources.contains(r2));
+    }
+
+    @Test
+    public void restoreUriGrouping() {
+        // 1. create view and configure it - resources, settings...
+        Resource r1 = new Resource("test:1");
+        r1.putValue("property1", "value1-1");
+        r1.putValue("property2", "value2");
+
+        Resource r2 = new Resource("test:2");
+        r2.putValue("property1", "value1-2");
+        r2.putValue("property2", "value2");
+
+        originalView.getResourceModel().addResources(toResourceSet(r1, r2));
+        originalView.getResourceGrouping().setCategorizer(
+                new ResourceByUriMultiCategorizer());
+
+        // 2. save first view
+        DefaultResourceSetCollector collector = new DefaultResourceSetCollector();
+        Memento memento = originalView.save(collector);
+
+        // 3. restore other view - set by uri categorization first
+        restoredView.getResourceGrouping().setCategorizer(
+                new ResourceByPropertyMultiCategorizer("property2"));
+        restoredView.restore(memento, collector);
+
+        // 4. check resource items and control settings
+        List<ResourceItem> resourceItems = restoredView.getResourceItems();
+        assertEquals(2, resourceItems.size());
     }
 
     @Before
