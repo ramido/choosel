@@ -21,7 +21,7 @@ import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
-import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
+import org.thechiselgroup.choosel.client.views.SlotMappingConfiguration;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.HTML;
@@ -41,7 +41,7 @@ public class ChooselExampleDetailsWidgetHelper extends DetailsWidgetHelper {
 
     @Override
     public Widget createDetailsWidget(ResourceSet resources,
-            ResourceItemValueResolver resolver) {
+            SlotMappingConfiguration resolver) {
 
         VerticalPanel verticalPanel = GWT.create(VerticalPanel.class);
         verticalPanel.add(avatarFactory.createAvatar(resources));
