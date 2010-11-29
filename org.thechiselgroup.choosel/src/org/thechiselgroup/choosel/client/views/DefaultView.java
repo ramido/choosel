@@ -63,6 +63,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.RequiresResize;
@@ -604,9 +605,11 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     private void initShareConfigurator() {
-        shareConfiguration = new ShareConfiguration(this, viewPersistence);
+        if (Window.Location.getParameter("viewId") == null) {
+            shareConfiguration = new ShareConfiguration(this, viewPersistence);
 
-        sideBar.add(shareConfiguration.asWidget(), "Share");
+            sideBar.add(shareConfiguration.asWidget(), "Share");
+        }
     }
 
     private void initSideBar() {
