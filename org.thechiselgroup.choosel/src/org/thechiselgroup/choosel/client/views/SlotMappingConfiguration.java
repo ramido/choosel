@@ -19,8 +19,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.thechiselgroup.choosel.client.calculation.AverageCalculation;
 import org.thechiselgroup.choosel.client.calculation.Calculation;
 import org.thechiselgroup.choosel.client.calculation.CountCalculation;
+import org.thechiselgroup.choosel.client.calculation.MaxCalculation;
+import org.thechiselgroup.choosel.client.calculation.MinCalculation;
+import org.thechiselgroup.choosel.client.calculation.SumCalculation;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
@@ -109,6 +113,18 @@ public class SlotMappingConfiguration {
                 if ("count".equals(calculationType)) {
                     setMapping(slot, new CalculationResourceSetToValueResolver(
                             property, new CountCalculation()));
+                } else if ("min".equals(calculationType)) {
+                    setMapping(slot, new CalculationResourceSetToValueResolver(
+                            property, new MinCalculation()));
+                } else if ("max".equals(calculationType)) {
+                    setMapping(slot, new CalculationResourceSetToValueResolver(
+                            property, new MaxCalculation()));
+                } else if ("sum".equals(calculationType)) {
+                    setMapping(slot, new CalculationResourceSetToValueResolver(
+                            property, new SumCalculation()));
+                } else if ("average".equals(calculationType)) {
+                    setMapping(slot, new CalculationResourceSetToValueResolver(
+                            property, new AverageCalculation()));
                 }
             }
         }
@@ -142,6 +158,14 @@ public class SlotMappingConfiguration {
 
                 if (calculation instanceof CountCalculation) {
                     child.setValue(MEMENTO_KEY_CALCULATION_TYPE, "count");
+                } else if (calculation instanceof SumCalculation) {
+                    child.setValue(MEMENTO_KEY_CALCULATION_TYPE, "sum");
+                } else if (calculation instanceof AverageCalculation) {
+                    child.setValue(MEMENTO_KEY_CALCULATION_TYPE, "average");
+                } else if (calculation instanceof MinCalculation) {
+                    child.setValue(MEMENTO_KEY_CALCULATION_TYPE, "min");
+                } else if (calculation instanceof MaxCalculation) {
+                    child.setValue(MEMENTO_KEY_CALCULATION_TYPE, "max");
                 }
             }
             // } else if (resolver instanceof Fixed)
