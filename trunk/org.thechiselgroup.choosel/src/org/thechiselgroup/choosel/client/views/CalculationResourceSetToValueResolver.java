@@ -37,6 +37,10 @@ public class CalculationResourceSetToValueResolver implements
         this.calculation = calculation;
     }
 
+    public Calculation getCalculation() {
+        return calculation;
+    }
+
     public String getProperty() {
         return property;
     }
