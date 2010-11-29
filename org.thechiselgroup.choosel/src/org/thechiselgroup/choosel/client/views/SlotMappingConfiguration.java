@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.thechiselgroup.choosel.client.calculation.Calculation;
+import org.thechiselgroup.choosel.client.calculation.CountCalculation;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
@@ -27,6 +29,10 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 public class SlotMappingConfiguration {
+
+    private static final String MEMENTO_KEY_CALCULATION_TYPE = "calculationType";
+
+    private static final String MEMENTO_VALUE_CALCULATION = "calculation";
 
     private static final String MEMENTO_VALUE_FIRST_RESOURCE_PROPERTY = "first-resource-property";
 
@@ -95,6 +101,15 @@ public class SlotMappingConfiguration {
                 String property = (String) child.getValue(MEMENTO_KEY_PROPERTY);
 
                 setMapping(slot, new FirstResourcePropertyResolver(property));
+            } else if (MEMENTO_VALUE_CALCULATION.equals(value)) {
+                String property = (String) child.getValue(MEMENTO_KEY_PROPERTY);
+                String calculationType = (String) child
+                        .getValue(MEMENTO_KEY_CALCULATION_TYPE);
+
+                if ("count".equals(calculationType)) {
+                    setMapping(slot, new CalculationResourceSetToValueResolver(
+                            property, new CountCalculation()));
+                }
             }
         }
     }
@@ -116,10 +131,19 @@ public class SlotMappingConfiguration {
                 child.setValue(MEMENTO_KEY_PROPERTY,
                         ((FirstResourcePropertyResolver) resolver)
                                 .getProperty());
-            }
+            } else if (resolver instanceof CalculationResourceSetToValueResolver) {
+                child.setValue(MEMENTO_KEY_TYPE, MEMENTO_VALUE_CALCULATION);
 
-            // else if (resolver instanceof
-            // CalculationResourceSetToValueResolver) {
+                Calculation calculation = ((CalculationResourceSetToValueResolver) resolver)
+                        .getCalculation();
+                child.setValue(MEMENTO_KEY_PROPERTY,
+                        ((CalculationResourceSetToValueResolver) resolver)
+                                .getProperty());
+
+                if (calculation instanceof CountCalculation) {
+                    child.setValue(MEMENTO_KEY_CALCULATION_TYPE, "count");
+                }
+            }
             // } else if (resolver instanceof Fixed)
             // store details in child memento (i.e. type, property)
 
