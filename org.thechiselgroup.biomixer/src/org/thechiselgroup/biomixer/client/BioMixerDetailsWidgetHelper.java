@@ -22,7 +22,7 @@ import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarType;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
-import org.thechiselgroup.choosel.client.views.ResourceItemValueResolver;
+import org.thechiselgroup.choosel.client.views.SlotMappingConfiguration;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.HTML;
@@ -42,7 +42,7 @@ public class BioMixerDetailsWidgetHelper extends DetailsWidgetHelper {
     // TODO use dragAvatarFactory (injection)
     @Override
     public Widget createDetailsWidget(ResourceSet resourceSet,
-            ResourceItemValueResolver resolver) {
+            SlotMappingConfiguration resolver) {
 
         VerticalPanel verticalPanel = GWT.create(VerticalPanel.class);
 
