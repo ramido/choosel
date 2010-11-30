@@ -60,7 +60,6 @@ import org.thechiselgroup.choosel.client.util.Initializable;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 import org.thechiselgroup.choosel.client.workspace.ViewSaver;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -180,7 +179,7 @@ public class DefaultView extends AbstractWindowContent implements View {
      */
     private boolean isConfigurationAvailable = false;
 
-    private boolean initialized;
+    private boolean isInitialized;
 
     public DefaultView(ResourceGrouping resourceGrouping,
             ViewContentDisplay contentDisplay, String label,
@@ -282,8 +281,6 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     @Override
     public void dispose() {
-        Log.debug("dispose view " + toString());
-
         for (DefaultResourceItem resourceItem : groupsToResourceItems.values()) {
             resourceItem.dispose();
         }
@@ -320,6 +317,8 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     // protected for test access
     protected void doRestore(Memento state, ResourceSetAccessor accessor) {
+        assert isInitialized : "view has to be initialized before restoring it";
+
         contentDisplay.startRestore();
 
         restore(resourceModel, MEMENTO_RESOURCE_MODEL, state, accessor);
@@ -399,7 +398,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     @Override
     public void init() {
-        assert !initialized : "This view has already been initialized";
+        assert !isInitialized : "view has already been initialized";
 
         slotMappingConfiguration.initSlots(contentDisplay.getSlots());
 
@@ -418,7 +417,8 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         initContentDisplay();
         initSlotMappingChangeHandler();
-        initialized = true;
+
+        isInitialized = true;
     }
 
     private void init(Object target) {
@@ -793,12 +793,30 @@ public class DefaultView extends AbstractWindowContent implements View {
         memento.addChild(MEMENTO_GROUPING, groupingMemento);
     }
 
+    // TODO refactor
     private void setInitialMappings(
             DataTypeToListMap<String> propertiesByDataType) {
 
         for (Slot slot : contentDisplay.getSlots()) {
             DataType dataType = slot.getDataType();
             List<String> properties = propertiesByDataType.get(dataType);
+
+            ResourceSetToValueResolver setToValueResolver = null;
+
+            if (properties.isEmpty()) {
+                switch (dataType) {
+                case NUMBER:
+                    setToValueResolver = new FixedValuePropertyValueResolver(
+                            new Double(0));
+                    break;
+                case COLOR:
+                    setToValueResolver = new FixedValuePropertyValueResolver(
+                            "#6495ed");
+                    break;
+                }
+
+                slotMappingConfiguration.setMapping(slot, setToValueResolver);
+            }
 
             /*
              * XXX this is actually a problem for the properties besides color.
@@ -808,8 +826,6 @@ public class DefaultView extends AbstractWindowContent implements View {
             if (properties.isEmpty() && dataType != DataType.COLOR) {
                 continue;
             }
-
-            ResourceSetToValueResolver setToValueResolver = null;
 
             switch (dataType) {
             case TEXT:

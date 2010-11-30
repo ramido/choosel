@@ -39,6 +39,12 @@ import com.google.inject.Inject;
 
 public class DefaultViewLoadManager implements ViewLoadManager {
 
+    public static interface ViewInitializer {
+
+        void init(WindowContent content);
+
+    }
+
     private ViewPersistenceServiceAsync service;
 
     private ResourceSetFactory resourceSetFactory;
@@ -70,31 +76,8 @@ public class DefaultViewLoadManager implements ViewLoadManager {
         this.service = service;
     }
 
-    @Override
-    public void loadView(Long id, final AsyncCallback<DefaultView> callback) {
-        assert callback != null;
-
-        service.loadView(id, new AsyncCallback<ViewDTO>() {
-
-            @Override
-            public void onFailure(Throwable caught) {
-                callback.onFailure(caught);
-
-            }
-
-            @Override
-            public void onSuccess(ViewDTO result) {
-                try {
-                    DefaultView view = loadView(result);
-                    callback.onSuccess(view);
-                } catch (Exception e) {
-                    callback.onFailure(e);
-                }
-            }
-        });
-    }
-
-    protected DefaultView loadView(ViewDTO dto) {
+    private WindowContent loadResourcesAndView(ViewDTO dto,
+            ViewInitializer viewInitializer) {
 
         restoreResources(dto);
 
@@ -134,7 +117,8 @@ public class DefaultViewLoadManager implements ViewLoadManager {
                 .createWindowContent(dto.getContentType());
 
         content.setLabel(dto.getTitle());
-        content.init();
+
+        viewInitializer.init(content);
 
         /*
          * important: we restore the content after the window was created,
@@ -145,9 +129,40 @@ public class DefaultViewLoadManager implements ViewLoadManager {
             ((Persistable) content).restore(dto.getViewState(), accessor);
         }
 
-        DefaultView view = (DefaultView) content;
+        return content;
+    }
 
-        return view;
+    @Override
+    public void loadView(Long id, final AsyncCallback<DefaultView> callback) {
+        assert callback != null;
+
+        service.loadView(id, new AsyncCallback<ViewDTO>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                callback.onFailure(caught);
+
+            }
+
+            @Override
+            public void onSuccess(ViewDTO result) {
+                try {
+                    DefaultView view = loadView(result);
+                    callback.onSuccess(view);
+                } catch (Exception e) {
+                    callback.onFailure(e);
+                }
+            }
+        });
+    }
+
+    protected DefaultView loadView(ViewDTO dto) {
+        return (DefaultView) loadResourcesAndView(dto, new ViewInitializer() {
+            @Override
+            public void init(WindowContent content) {
+                content.init();
+            }
+        });
     }
 
     @Override
@@ -200,60 +215,18 @@ public class DefaultViewLoadManager implements ViewLoadManager {
     }
 
     protected Workspace loadWorkspace(ViewDTO dto) {
+        desktop.clearWindows();
+
         workspaceManager.createNewWorkspace();
         Workspace workspace = workspaceManager.getWorkspace();
         workspaceManager.setWorkspace(workspace);
 
-        restoreResources(dto);
-
-        ResourceSetDTO[] resourceSetDTOs = dto.getResourceSets();
-        final ResourceSet[] resourceSets = new ResourceSet[resourceSetDTOs.length];
-        // 1. restore primary resource sets
-        for (ResourceSetDTO resourceSetDTO : resourceSetDTOs) {
-            if (!resourceSetDTO.isUnmodifiable()) {
-                ResourceSet resourceSet = resourceSetFactory
-                        .createResourceSet();
-                resourceSet.setLabel(resourceSetDTO.getLabel());
-                for (String uri : resourceSetDTO.getResourceIds()) {
-                    resourceSet.add(resourceManager.getByUri(uri));
-                }
-                resourceSets[resourceSetDTO.getId()] = resourceSet;
-            }
-        }
-        // 2. restore unmodifiable resource sets
-        for (ResourceSetDTO resourceSetDTO : resourceSetDTOs) {
-            if (resourceSetDTO.isUnmodifiable()) {
-                int delegateId = resourceSetDTO.getDelegateSetId();
-                ResourceSet resourceSet = new UnmodifiableResourceSet(
-                        resourceSets[delegateId]);
-                resourceSets[resourceSetDTO.getId()] = resourceSet;
-            }
-        }
-
-        ResourceSetAccessor accessor = new ResourceSetAccessor() {
+        loadResourcesAndView(dto, new ViewInitializer() {
             @Override
-            public ResourceSet getResourceSet(int id) {
-                assert id >= 0;
-                return resourceSets[id];
+            public void init(WindowContent content) {
+                desktop.createWindow(content);
             }
-        };
-
-        final WindowContent content = windowContentProducer
-                .createWindowContent(dto.getContentType());
-
-        content.setLabel(dto.getTitle());
-
-        desktop.clearWindows();
-        desktop.createWindow(content);
-
-        /*
-         * important: we restore the content after the window was created,
-         * because different view content objects such as the timeline require
-         * the view to be attached to the DOM.
-         */
-        if (content instanceof Persistable) {
-            ((Persistable) content).restore(dto.getViewState(), accessor);
-        }
+        });
 
         return workspace;
     }
