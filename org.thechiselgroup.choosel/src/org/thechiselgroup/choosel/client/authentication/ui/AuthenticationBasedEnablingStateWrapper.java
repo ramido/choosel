@@ -16,7 +16,6 @@
 package org.thechiselgroup.choosel.client.authentication.ui;
 
 import org.thechiselgroup.choosel.client.authentication.AuthenticationManager;
-import org.thechiselgroup.choosel.client.authentication.AuthenticationState;
 import org.thechiselgroup.choosel.client.authentication.AuthenticationStateChangedEvent;
 import org.thechiselgroup.choosel.client.authentication.AuthenticationStateChangedEventHandler;
 import org.thechiselgroup.choosel.client.ui.HasEnabledState;
@@ -79,7 +78,7 @@ public class AuthenticationBasedEnablingStateWrapper implements Disposable,
 
     @Override
     public void setEnabled(boolean enabled) {
-        this.outsideEnabled = enabled;
+        outsideEnabled = enabled;
         updateDelegateEnabling();
     }
 
@@ -88,7 +87,7 @@ public class AuthenticationBasedEnablingStateWrapper implements Disposable,
     }
 
     private void updateEnabling() {
-        this.authEnabled = authenticationManager.getAuthenticationState() == AuthenticationState.SIGNED_IN;
+        authEnabled = authenticationManager.isAuthenticated();
         updateDelegateEnabling();
     }
 }
