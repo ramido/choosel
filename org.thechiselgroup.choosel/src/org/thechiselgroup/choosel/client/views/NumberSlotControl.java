@@ -24,6 +24,7 @@ import org.thechiselgroup.choosel.client.calculation.CountCalculation;
 import org.thechiselgroup.choosel.client.calculation.MaxCalculation;
 import org.thechiselgroup.choosel.client.calculation.MinCalculation;
 import org.thechiselgroup.choosel.client.calculation.SumCalculation;
+import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.util.ConversionException;
 import org.thechiselgroup.choosel.client.util.Converter;
 import org.thechiselgroup.choosel.client.util.NullConverter;
@@ -103,9 +104,14 @@ public class NumberSlotControl extends SlotControl {
         propertySelector.setValues(properties);
 
         if (propertySelector.getSelectedValue() == null) {
-            String property = ((CalculationResourceSetToValueResolver) slotMappingConfiguration
-                    .getResolver(getSlot())).getProperty();
-            propertySelector.setSelectedValue(property);
+            ResourceSetToValueResolver resolver = slotMappingConfiguration
+                    .getResolver(getSlot());
+
+            if (resolver instanceof CalculationResourceSetToValueResolver) {
+                String property = ((CalculationResourceSetToValueResolver) resolver)
+                        .getProperty();
+                propertySelector.setSelectedValue(property);
+            }
         }
     }
 }

@@ -323,21 +323,6 @@ public class DefaultViewTest {
                 any(ViewContentDisplayCallback.class));
     }
 
-    @Test
-    public void initialResourceItemValueForTextSlot() {
-        Resource resource = new Resource("test:1");
-        resource.putValue("text1", "t1");
-        resource.putValue("text2", "t2");
-
-        underTest.getResourceModel().addResources(toResourceSet(resource));
-
-        List<ResourceItem> resourceItems = underTest.getResourceItems();
-        assertEquals(1, resourceItems.size());
-        ResourceItem resourceItem = resourceItems.get(0);
-
-        assertEquals("t1", resourceItem.getResourceValue(slot));
-    }
-
     private void select(ResourceSet selectedResources) {
         ArgumentCaptor<ResourcesAddedEventHandler> captor = ArgumentCaptor
                 .forClass(ResourcesAddedEventHandler.class);

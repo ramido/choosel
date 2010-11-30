@@ -96,15 +96,15 @@ public class NCBOSearchWindowContent extends AbstractWindowContent implements
 
     private Label infoLabel;
 
-    private ResourceSetFactory resourceSetFactory;
+    private final ResourceSetFactory resourceSetFactory;
 
     private View resultView;
 
-    private NCBOConceptSearchServiceAsync searchService;
+    private final NCBOConceptSearchServiceAsync searchService;
 
     private String searchTerm;
 
-    private WindowContentProducer viewFactory;
+    private final WindowContentProducer viewFactory;
 
     @Inject
     public NCBOSearchWindowContent(ResourceSetFactory resourceSetFactory,
@@ -132,6 +132,7 @@ public class NCBOSearchWindowContent extends AbstractWindowContent implements
     public void init() {
         resultView = (View) viewFactory
                 .createWindowContent(ChooselInjectionConstants.TYPE_TEXT);
+
         infoLabel = new Label("Searching...");
         infoLabel.addStyleName("infoLabel");
         deckPanel = new ViewContentDeckpanel();
@@ -185,6 +186,7 @@ public class NCBOSearchWindowContent extends AbstractWindowContent implements
                 });
     }
 
+    @Override
     public void initParameter(String searchTerm) {
         setSearchTerm(searchTerm);
     }

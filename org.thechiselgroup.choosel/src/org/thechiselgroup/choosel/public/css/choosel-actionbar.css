@@ -88,7 +88,7 @@ input.ActionBar-titleArea-text {
 .ActionBar-panel-content button {
     font-size: 12px;
     background: none;
-    height: 20px;
+    height: 22px;
     padding-top: 3px;
     padding-bottom: 3px;
     padding-left: 5px;
@@ -126,12 +126,12 @@ input.ActionBar-titleArea-text {
 
 .ActionBar-panel-content input[type="text"] {
     color: rgb(112, 106, 170);
-    height: 26px;
-    padding-top: 5px; /** padding is slightly different from button to make up
+    height: 22px;
+    padding-top: 1px; /** padding is slightly different from button to make up
     for different font baseline positioning */ 
     padding-bottom: 1px;
-    padding-left: 5px;
-    padding-right: 5px;
+    padding-left: 3px;
+    padding-right: 3px;
 }
 
 .ActionBar-panel-content img {
