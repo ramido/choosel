@@ -19,9 +19,10 @@ import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
  * Provides access to the authentication state. This class can be used to check
- * if the user has been authenticated, to check what the exact authentication
- * state is, and to register handlers that get notified when the authentication
- * state changes (e.g. the user logs on or off).
+ * if the user has been authenticated, to get the authentication object, to
+ * check what the exact authentication state is, and to register handlers that
+ * get notified when the authentication state changes (e.g. the user logs on or
+ * off).
  * 
  * @author Lars Grammel
  */
