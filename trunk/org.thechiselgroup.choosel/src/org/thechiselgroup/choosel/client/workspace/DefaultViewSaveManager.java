@@ -139,7 +139,8 @@ public class DefaultViewSaveManager implements ViewSaveManager {
         service.saveView(viewDTO, new ForwardingAsyncCallback<Long>(callback) {
             @Override
             public void onFailure(Throwable caught) {
-                super.onFailure(caught);
+                shareConfiguration.notLoggedIn();
+                // super.onFailure(caught);
             }
 
             @Override

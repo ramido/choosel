@@ -15,8 +15,11 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.workspace.service;
 
+import java.util.List;
+
 import org.thechiselgroup.choosel.client.services.ServiceException;
 import org.thechiselgroup.choosel.client.workspace.dto.ViewDTO;
+import org.thechiselgroup.choosel.client.workspace.dto.ViewPreviewDTO;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -25,6 +28,8 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 public interface ViewPersistenceService extends RemoteService {
 
     ViewDTO loadView(Long viewId) throws ServiceException;
+
+    List<ViewPreviewDTO> loadViewPreviews() throws ServiceException;
 
     Long saveView(ViewDTO view) throws ServiceException;
 }

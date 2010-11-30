@@ -50,6 +50,7 @@ import org.thechiselgroup.choosel.client.workspace.WorkspaceManager;
 import org.thechiselgroup.choosel.client.workspace.WorkspacePersistenceManager;
 import org.thechiselgroup.choosel.client.workspace.WorkspacePresenter;
 import org.thechiselgroup.choosel.client.workspace.WorkspacePresenter.DefaultWorkspacePresenterDisplay;
+import org.thechiselgroup.choosel.client.workspace.command.LoadViewAsWorkspaceCommand;
 import org.thechiselgroup.choosel.client.workspace.command.LoadWorkspaceCommand;
 import org.thechiselgroup.choosel.client.workspace.command.LoadWorkspaceDialogCommand;
 import org.thechiselgroup.choosel.client.workspace.command.NewWorkspaceCommand;
@@ -89,6 +90,8 @@ public abstract class ChooselApplication {
     public static final String DEVELOPER_MODE_PANEL = "developer_mode";
 
     private static final String VIEW_ID = "viewId";
+
+    private static final String NEW_WORKSPACE = "nw";
 
     @Inject
     protected ActionBar actionBar;
@@ -258,10 +261,10 @@ public abstract class ChooselApplication {
 
     public void init() {
         String viewIdParam = Window.Location.getParameter(VIEW_ID);
+        String newWorkspace = Window.Location.getParameter(NEW_WORKSPACE);
 
-        if (viewIdParam != null) {
+        if ((viewIdParam != null) && (newWorkspace == null)) {
             loadViewIfParamSet(viewIdParam);
-
         } else {
             BrowserDetect.checkBrowser();
 
@@ -281,7 +284,11 @@ public abstract class ChooselApplication {
 
             initCustomActions();
 
-            loadWorkspaceIfParamSet();
+            if (newWorkspace != null) {
+                loadViewAsWorkspace(viewIdParam, newWorkspace);
+            } else {
+                loadWorkspaceIfParamSet();
+            }
 
         }
         afterInit();
@@ -452,20 +459,34 @@ public abstract class ChooselApplication {
                 workspacePresenterDisplay.getTextBox());
     }
 
+    private void loadViewAsWorkspace(String viewIdParam, String newWorkspace) {
+
+        if (viewIdParam != null) {
+            Long workspaceID = Long.parseLong(viewIdParam);
+
+            LoadViewAsWorkspaceCommand loadWorkspaceCommand = new LoadViewAsWorkspaceCommand(
+                    workspaceID, viewLoader);
+            asyncCommandExecutor.execute(loadWorkspaceCommand);
+        }
+
+    }
+
     private void loadViewIfParamSet(String viewIdParam) {
+        final Label label = new Label();
+        label.setText("Loading View...");
+        RootPanel.get().add(label);
+
         viewLoader.loadView(Long.parseLong(viewIdParam),
                 new AsyncCallback<DefaultView>() {
 
                     @Override
                     public void onFailure(Throwable caught) {
-                        Label label = new Label();
                         label.setText("Sorry, the specified view is not available.");
-
-                        RootPanel.get().add(label);
                     }
 
                     @Override
                     public void onSuccess(final DefaultView view) {
+                        RootPanel.get().remove(label);
 
                         RootPanel.get().add(view.asWidget());
 

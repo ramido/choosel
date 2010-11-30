@@ -15,18 +15,24 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.workspace;
 
-import java.util.List;
+public class ViewPreview {
 
-import org.thechiselgroup.choosel.client.views.DefaultView;
+    private Long id;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
+    private String title;
 
-public interface ViewLoadManager {
+    public ViewPreview(Long id, String title) {
+        super();
+        this.id = id;
+        this.title = title;
+    }
 
-    void loadView(Long id, AsyncCallback<DefaultView> callback);
+    public Long getId() {
+        return id;
+    }
 
-    void loadViewAsWorkspace(Long id, AsyncCallback<Workspace> callback);
-
-    void loadViewPreviews(AsyncCallback<List<ViewPreview>> callback);
+    public String getName() {
+        return title;
+    }
 
 }

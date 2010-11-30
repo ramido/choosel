@@ -97,6 +97,14 @@ public class ShareConfiguration implements WidgetAdaptable {
 
     }
 
+    public void notLoggedIn() {
+        label.setText("Sorry, you are not currently authenticated.  Please log in to share views");
+        label.setVisible(true);
+        textBox.setVisible(false);
+        embedLabel.setVisible(false);
+        textArea.setVisible(false);
+    }
+
     public void updateSharePanel(Long id) {
         String url = Window.Location.getHref()
                 + (Window.Location.getParameterMap().size() == 0 ? "?" : "&")
@@ -109,7 +117,8 @@ public class ShareConfiguration implements WidgetAdaptable {
                 + "\" height=\""
                 + EMBED_HEIGHT
                 + "\">Sorry, your browser doesn't support iFrames</iframe><br /><a href=\""
-                + url + "\">Full Size</a>. " + EMBED_POSTTEXT;
+                + url + "&nw\">Open this view in Choosel</a>. "
+                + EMBED_POSTTEXT;
 
         // Hide things while we change them
         label.setVisible(false);

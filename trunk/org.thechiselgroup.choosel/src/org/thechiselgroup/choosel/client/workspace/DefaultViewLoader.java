@@ -40,4 +40,10 @@ public class DefaultViewLoader implements ViewLoader {
         viewPersistenceManager.loadView(id, callback);
     }
 
+    @Override
+    public void loadViewAsWorkspace(Long id, AsyncCallback<Workspace> callback) {
+        viewPersistenceManager.loadViewAsWorkspace(id, callback);
+
+    }
+
 }

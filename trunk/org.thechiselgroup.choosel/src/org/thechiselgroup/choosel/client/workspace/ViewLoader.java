@@ -23,4 +23,6 @@ public interface ViewLoader {
 
     void loadView(Long id, AsyncCallback<DefaultView> callback);
 
+    void loadViewAsWorkspace(Long id, AsyncCallback<Workspace> callback);
+
 }
