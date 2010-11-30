@@ -180,6 +180,8 @@ public class DefaultView extends AbstractWindowContent implements View {
      */
     private boolean isConfigurationAvailable = false;
 
+    private boolean initialized;
+
     public DefaultView(ResourceGrouping resourceGrouping,
             ViewContentDisplay contentDisplay, String label,
             String contentType,
@@ -397,6 +399,8 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     @Override
     public void init() {
+        assert !initialized : "This view has already been initialized";
+
         slotMappingConfiguration.initSlots(contentDisplay.getSlots());
 
         init(resourceModel);
@@ -414,6 +418,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         initContentDisplay();
         initSlotMappingChangeHandler();
+        initialized = true;
     }
 
     private void init(Object target) {

@@ -15,8 +15,11 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.server.workspace;
 
+import java.util.List;
+
 import org.thechiselgroup.choosel.client.services.ServiceException;
 import org.thechiselgroup.choosel.client.workspace.dto.ViewDTO;
+import org.thechiselgroup.choosel.client.workspace.dto.ViewPreviewDTO;
 import org.thechiselgroup.choosel.client.workspace.service.ViewPersistenceService;
 import org.thechiselgroup.choosel.server.PMF;
 import org.thechiselgroup.choosel.server.util.StackTraceHelper;
@@ -33,8 +36,7 @@ public class ViewPersistenceServiceServlet extends RemoteServiceServlet
     private ViewPersistenceService getServiceDelegate() {
         if (service == null) {
             service = new ViewPersistenceServiceImplementation(PMF.get(),
-                    new WorkspaceSecurityManager(
-                            UserServiceFactory.getUserService()));
+                    UserServiceFactory.getUserService());
         }
 
         return service;
@@ -65,6 +67,36 @@ public class ViewPersistenceServiceServlet extends RemoteServiceServlet
         } finally {
             if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {
                 Log.debug("ViewPersistenceServiceServlet.loadView"
+                        + " completed in "
+                        + (System.currentTimeMillis() - startTime) + " ms");
+            }
+        }
+    }
+
+    @Override
+    public List<ViewPreviewDTO> loadViewPreviews() throws ServiceException {
+        long startTime = -1;
+        if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {
+            startTime = System.currentTimeMillis();
+        }
+
+        Log.debug("WorkspacePersistenceServiceServlet.loadWorkspacePreviews");
+
+        try {
+            return getServiceDelegate().loadViewPreviews();
+        } catch (ServiceException e) {
+            Log.error(
+                    "loadWorkspacePreviews failed: "
+                            + StackTraceHelper.getStackTraceAsString(e), e);
+            throw e;
+        } catch (Exception e) {
+            Log.error(
+                    "loadWorkspacePreviews failed: "
+                            + StackTraceHelper.getStackTraceAsString(e), e);
+            throw new ServiceException(e);
+        } finally {
+            if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {
+                Log.debug("WorkspacePersistenceServiceServlet.loadWorkspacePreviews"
                         + " completed in "
                         + (System.currentTimeMillis() - startTime) + " ms");
             }

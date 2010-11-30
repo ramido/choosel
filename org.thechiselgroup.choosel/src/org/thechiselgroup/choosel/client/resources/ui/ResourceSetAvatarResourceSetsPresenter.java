@@ -55,8 +55,10 @@ public class ResourceSetAvatarResourceSetsPresenter implements
 
     @Override
     public void addResourceSet(ResourceSet resources) {
+        assert resources != null;
         assert panel != null;
-        assert !resourceSetsToDragAvatars.containsKey(resources);
+        assert !resourceSetsToDragAvatars.containsKey(resources) : "Resource Set "
+                + resources + " is already contained in this presenter";
 
         ResourceSetAvatar avatar = dragAvatarFactory.createAvatar(resources);
 

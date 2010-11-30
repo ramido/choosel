@@ -15,15 +15,23 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.server.workspace;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
+import javax.jdo.Query;
 
 import org.thechiselgroup.choosel.client.authentication.AuthenticationException;
 import org.thechiselgroup.choosel.client.authentication.AuthorizationException;
 import org.thechiselgroup.choosel.client.services.ServiceException;
 import org.thechiselgroup.choosel.client.workspace.dto.ViewDTO;
+import org.thechiselgroup.choosel.client.workspace.dto.ViewPreviewDTO;
 import org.thechiselgroup.choosel.client.workspace.service.ViewPersistenceService;
 
+import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserService;
 import com.google.inject.Inject;
 
 /**
@@ -41,19 +49,25 @@ import com.google.inject.Inject;
 public class ViewPersistenceServiceImplementation implements
         ViewPersistenceService {
 
-    private WorkspaceSecurityManager permissionManager;
-
     private final PersistenceManagerFactory persistenceManagerFactory;
+
+    private final UserService userService;
 
     @Inject
     public ViewPersistenceServiceImplementation(PersistenceManagerFactory pmf,
-            WorkspaceSecurityManager securityManager) {
-
-        assert securityManager != null;
+            UserService userService) {
+        assert userService != null;
         assert pmf != null;
 
-        permissionManager = securityManager;
+        this.userService = userService;
         persistenceManagerFactory = pmf;
+    }
+
+    public void checkAuthenticated() throws AuthenticationException {
+        if (!userService.isUserLoggedIn()) {
+            throw new AuthenticationException(
+                    "Authentication failed: User not signed in.");
+        }
     }
 
     private PersistenceManager createPersistanceManager() {
@@ -64,9 +78,12 @@ public class ViewPersistenceServiceImplementation implements
         PersistentView view = new PersistentView();
         view = pm.makePersistent(view);
 
-        // permissionManager.createWorkspacePermissionForCurrentUser(view, pm);
-
         return view;
+    }
+
+    private User getCurrentUser() throws AuthenticationException {
+        checkAuthenticated();
+        return userService.getCurrentUser();
     }
 
     private PersistentView getPersistentView(Long viewId,
@@ -75,9 +92,18 @@ public class ViewPersistenceServiceImplementation implements
         PersistentView pView = manager.getObjectById(PersistentView.class,
                 viewId);
 
-        // permissionManager.checkAuthorization(pWorkspace, manager);
-
         return pView;
+    }
+
+    private Collection<PersistentView> getPersistentViewsForUser(
+            PersistenceManager manager, User user) {
+
+        Query userIdQuery = manager.newQuery(
+                PersistentWorkspacePermission.class, "userId == userIdParam");
+        userIdQuery.declareParameters("String userIdParam");
+
+        return (Collection<PersistentView>) userIdQuery.execute(user
+                .getUserId());
     }
 
     @Override
@@ -97,17 +123,42 @@ public class ViewPersistenceServiceImplementation implements
     }
 
     @Override
+    public List<ViewPreviewDTO> loadViewPreviews()
+            throws AuthenticationException {
+
+        PersistenceManager manager = createPersistanceManager();
+        try {
+            User user = getCurrentUser();
+
+            return loadViewPreviews(manager, user);
+        } finally {
+            manager.close();
+        }
+    }
+
+    private List<ViewPreviewDTO> loadViewPreviews(PersistenceManager manager,
+            User user) {
+        Collection<PersistentView> views = getPersistentViewsForUser(manager,
+                user);
+        List<ViewPreviewDTO> result = new ArrayList<ViewPreviewDTO>();
+        for (PersistentView view : views) {
+            result.add(toViewPreviewDTO(view));
+        }
+        return result;
+    }
+
+    @Override
     public Long saveView(ViewDTO dto) throws AuthenticationException,
             AuthorizationException {
-
-        // permissionManager.checkAuthenticated();
 
         PersistenceManager pm = createPersistanceManager();
 
         try {
+            User user = getCurrentUser();
+
             PersistentView view = createPersistentView(pm);
 
-            updateViewWithDTO(view, dto);
+            updateViewWithDTO(view, dto, user);
 
             return view.getId();
         } finally {
@@ -129,13 +180,21 @@ public class ViewPersistenceServiceImplementation implements
         return dto;
     }
 
-    private void updateViewWithDTO(PersistentView view, ViewDTO dto) {
+    private ViewPreviewDTO toViewPreviewDTO(PersistentView view) {
+        return new ViewPreviewDTO(view.getId(), view.getTitle());
+    }
+
+    private void updateViewWithDTO(PersistentView view, ViewDTO dto, User user) {
 
         view.setTitle(dto.getTitle());
         view.setViewState(dto.getViewState());
         view.setResources(dto.getResources());
         view.setResourceSets(dto.getResourceSets());
         view.setContentType(dto.getContentType());
+
+        view.setUserName(user.getNickname());
+        view.setUserId(user.getUserId());
+        view.setUserEmail(user.getEmail());
     }
 
     private boolean viewExists(ViewDTO dto) {

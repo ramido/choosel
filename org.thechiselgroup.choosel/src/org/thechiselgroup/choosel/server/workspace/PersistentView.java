@@ -51,6 +51,15 @@ public class PersistentView {
     @Persistent(serialized = "true")
     private Memento viewState;
 
+    @Persistent(serialized = "true")
+    private String userEmail;
+
+    @Persistent(serialized = "true")
+    private String userId;
+
+    @Persistent(serialized = "true")
+    private String userName;
+
     public String getContentType() {
         return contentType;
     }
@@ -101,6 +110,30 @@ public class PersistentView {
 
     public void setViewState(Memento viewState) {
         this.viewState = viewState;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserName() {
+        return userName;
     }
 
 }
