@@ -39,6 +39,8 @@ import com.google.gwt.event.shared.HandlerRegistration;
 
 public class TestView extends DefaultView {
 
+    private static ShareConfiguration shareConfiguration;
+
     public static TestView createTestView(Slot... slots) {
         DefaultResourceSetFactory resourceSetFactory = new DefaultResourceSetFactory();
 
@@ -58,6 +60,7 @@ public class TestView extends DefaultView {
         HandlerRegistration selectionAddedHandlerRegistration = mock(HandlerRegistration.class);
         HandlerRegistration selectionRemovedHandlerRegistration = mock(HandlerRegistration.class);
         VisualMappingsControl visualMappingsControl = mock(VisualMappingsControl.class);
+        ShareConfiguration shareConfiguration = mock(ShareConfiguration.class);
 
         ResourceGrouping resourceGrouping = new ResourceGrouping(
                 new ResourceCategorizerToMultiCategorizerAdapter(
@@ -67,9 +70,9 @@ public class TestView extends DefaultView {
                 "", "", resourceSetToValueResolver, selectionModel,
                 selectionModelPresenter, resourceModel, resourceModelPresenter,
                 hoverModel, popupManagerFactory, detailsWidgetHelper,
-                viewPersistence, popupManager,
-                selectionAddedHandlerRegistration,
-                selectionRemovedHandlerRegistration, visualMappingsControl));
+                popupManager, selectionAddedHandlerRegistration,
+                selectionRemovedHandlerRegistration, visualMappingsControl,
+                shareConfiguration));
 
         when(
                 selectionModel
@@ -115,17 +118,17 @@ public class TestView extends DefaultView {
             SelectionModel selectionModel, Presenter selectionModelPresenter,
             ResourceModel resourceModel, Presenter resourceModelPresenter,
             HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper, ViewSaver viewPersistence,
-            PopupManager popupManager,
+            DetailsWidgetHelper detailsWidgetHelper, PopupManager popupManager,
             HandlerRegistration selectionAddedHandlerRegistration,
             HandlerRegistration selectionRemovedHandlerRegistration,
-            VisualMappingsControl visualMappingsControl) {
+            VisualMappingsControl visualMappingsControl,
+            ShareConfiguration shareConfiguration) {
 
         super(resourceSplitter, contentDisplay, label, contentType,
                 configuration, selectionModel, selectionModelPresenter,
                 resourceModel, resourceModelPresenter, hoverModel,
-                popupManagerFactory, detailsWidgetHelper, viewPersistence,
-                visualMappingsControl);
+                popupManagerFactory, detailsWidgetHelper,
+                visualMappingsControl, shareConfiguration);
 
         this.contentDisplay = contentDisplay;
         this.selectionModelPresenter = selectionModelPresenter;
@@ -134,6 +137,7 @@ public class TestView extends DefaultView {
         this.popupManager = popupManager;
         this.selectionAddedHandlerRegistration = selectionAddedHandlerRegistration;
         this.selectionRemovedHandlerRegistration = selectionRemovedHandlerRegistration;
+        shareConfiguration = shareConfiguration;
     }
 
     @Override

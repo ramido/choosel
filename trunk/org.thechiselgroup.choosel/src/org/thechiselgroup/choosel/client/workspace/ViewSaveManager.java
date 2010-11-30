@@ -15,12 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.workspace;
 
-import org.thechiselgroup.choosel.client.views.ShareConfiguration;
+import org.thechiselgroup.choosel.client.views.DefaultShareConfiguration;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface ViewSaveManager {
 
-    void saveView(ShareConfiguration shareConfiguration,
+    void saveView(DefaultShareConfiguration shareConfiguration,
             AsyncCallback<Void> callback);
 }

@@ -24,9 +24,9 @@ import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionCo
 
 import org.thechiselgroup.choosel.client.label.CategoryLabelProvider;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
+import org.thechiselgroup.choosel.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
-import org.thechiselgroup.choosel.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceSetsPresenter;
@@ -35,7 +35,6 @@ import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropTargetManag
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.windows.WindowContent;
 import org.thechiselgroup.choosel.client.windows.WindowContentFactory;
-import org.thechiselgroup.choosel.client.workspace.ViewSaver;
 
 import com.google.inject.name.Named;
 
@@ -67,7 +66,7 @@ public class ViewFactory implements WindowContentFactory {
 
     private final DetailsWidgetHelper detailsWidgetHelper;
 
-    private final ViewSaver viewPersistence;
+    private final ShareConfiguration shareConfiguration;
 
     public ViewFactory(
             String contentType,
@@ -82,7 +81,8 @@ public class ViewFactory implements WindowContentFactory {
             CategoryLabelProvider labelProvider,
             @Named(DROP_TARGET_MANAGER_VIEW_CONTENT) ResourceSetAvatarDropTargetManager contentDropTargetManager,
             HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper, ViewSaver viewPersistence) {
+            DetailsWidgetHelper detailsWidgetHelper,
+            ShareConfiguration shareConfiguration) {
 
         assert contentType != null;
         assert viewContentDisplayFactory != null;
@@ -98,8 +98,9 @@ public class ViewFactory implements WindowContentFactory {
         assert hoverModel != null;
         assert popupManagerFactory != null;
         assert detailsWidgetHelper != null;
+        assert shareConfiguration != null;
 
-        this.viewPersistence = viewPersistence;
+        this.shareConfiguration = shareConfiguration;
         this.hoverModel = hoverModel;
         this.contentType = contentType;
         this.viewContentDisplayFactory = viewContentDisplayFactory;
@@ -152,6 +153,6 @@ public class ViewFactory implements WindowContentFactory {
                 contentType, configuration, selectionModel,
                 selectionModelPresenter, resourceModel, resourceModelPresenter,
                 hoverModel, popupManagerFactory, detailsWidgetHelper,
-                viewPersistence, visualMappingsControl);
+                visualMappingsControl, shareConfiguration);
     }
 }

@@ -64,7 +64,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.RequiresResize;
@@ -166,8 +165,6 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     protected ViewSaver viewPersistence;
 
-    private ShareConfiguration shareConfiguration;
-
     private VisualMappingsControl visualMappingsControl;
 
     /*
@@ -181,6 +178,8 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private boolean isInitialized;
 
+    private final ShareConfiguration shareConfiguration;
+
     public DefaultView(ResourceGrouping resourceGrouping,
             ViewContentDisplay contentDisplay, String label,
             String contentType,
@@ -188,8 +187,9 @@ public class DefaultView extends AbstractWindowContent implements View {
             SelectionModel selectionModel, Presenter selectionModelPresenter,
             ResourceModel resourceModel, Presenter resourceModelPresenter,
             HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper, ViewSaver viewPersistence,
-            VisualMappingsControl visualMappingsControl) {
+            DetailsWidgetHelper detailsWidgetHelper,
+            VisualMappingsControl visualMappingsControl,
+            ShareConfiguration shareConfiguration) {
 
         super(label, contentType);
 
@@ -203,10 +203,10 @@ public class DefaultView extends AbstractWindowContent implements View {
         assert resourceModel != null;
         assert resourceModelPresenter != null;
         assert hoverModel != null;
-        assert viewPersistence != null;
         assert visualMappingsControl != null;
+        assert shareConfiguration != null;
 
-        this.viewPersistence = viewPersistence;
+        this.shareConfiguration = shareConfiguration;
         this.popupManagerFactory = popupManagerFactory;
         this.detailsWidgetHelper = detailsWidgetHelper;
         this.slotMappingConfiguration = slotMappingConfiguration;
@@ -619,11 +619,7 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     private void initShareConfigurator() {
-        if (Window.Location.getParameter("viewId") == null) {
-            shareConfiguration = new ShareConfiguration(this, viewPersistence);
-
-            sideBar.add(shareConfiguration.asWidget(), "Share");
-        }
+        shareConfiguration.attach(DefaultView.this, sideBar);
     }
 
     private void initSideBar() {

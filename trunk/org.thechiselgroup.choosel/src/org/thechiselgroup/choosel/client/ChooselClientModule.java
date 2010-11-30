@@ -71,11 +71,13 @@ import org.thechiselgroup.choosel.client.util.FlashURLFetchService;
 import org.thechiselgroup.choosel.client.util.HandlerManagerProvider;
 import org.thechiselgroup.choosel.client.util.URLFetchService;
 import org.thechiselgroup.choosel.client.util.xslt.SarissaDocumentProcessor;
+import org.thechiselgroup.choosel.client.views.DefaultShareConfiguration;
 import org.thechiselgroup.choosel.client.views.DefaultSlotResolver;
 import org.thechiselgroup.choosel.client.views.DefaultViewAccessor;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ResourceSetContainer;
+import org.thechiselgroup.choosel.client.views.ShareConfiguration;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
@@ -275,6 +277,9 @@ public class ChooselClientModule extends AbstractGinModule implements
         bind(ViewLoadManager.class).to(DefaultViewLoadManager.class).in(
                 Singleton.class);
         bind(ViewLoader.class).to(DefaultViewLoader.class).in(Singleton.class);
+
+        bind(ShareConfiguration.class).to(DefaultShareConfiguration.class).in(
+                Singleton.class);
 
         bindDragAvatarDropTargetManagers();
         bindDragAvatarFactories();
