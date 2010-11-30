@@ -1,0 +1,4 @@
+#summary List of the classes that can be injected via Gin on the client.
+#labels Developer
+
+  * 'org.thechiselgroup.choosel.client.authentication.*AuthenticationManager*'
