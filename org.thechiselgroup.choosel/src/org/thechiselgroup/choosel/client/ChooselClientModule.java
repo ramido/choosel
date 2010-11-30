@@ -238,8 +238,10 @@ public class ChooselClientModule extends AbstractGinModule implements
                 Singleton.class);
         bind(ViewAccessor.class).to(DefaultViewAccessor.class).in(
                 Singleton.class);
-        bind(AuthenticationManager.class)
-                .to(DefaultAuthenticationManager.class).in(Singleton.class);
+
+        bind(AuthenticationManager.class).to(getAuthenticationManagerClass())
+                .in(Singleton.class);
+
         bind(Importer.class).in(Singleton.class);
 
         bind(ShadeManager.class).in(Singleton.class);
@@ -343,6 +345,14 @@ public class ChooselClientModule extends AbstractGinModule implements
 
     protected Class<? extends ArcStyleProvider> getArcStyleProviderClass() {
         return DefaultArcStyleProvider.class;
+    }
+
+    /**
+     * Applications can override this method to provide a custom authentication
+     * manager.
+     */
+    protected Class<? extends AuthenticationManager> getAuthenticationManagerClass() {
+        return DefaultAuthenticationManager.class;
     }
 
     protected Class<? extends Branding> getBrandingClass() {
