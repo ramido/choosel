@@ -50,8 +50,8 @@ public class DefaultAuthenticationManager implements AuthenticationManager {
 
         assert handler != null;
 
-        return this.handlerManager.addHandler(
-                AuthenticationStateChangedEvent.TYPE, handler);
+        return handlerManager.addHandler(AuthenticationStateChangedEvent.TYPE,
+                handler);
     }
 
     @Override
@@ -94,12 +94,17 @@ public class DefaultAuthenticationManager implements AuthenticationManager {
         setState(AuthenticationState.WAITING);
     }
 
+    @Override
+    public boolean isAuthenticated() {
+        return getAuthenticationState() == AuthenticationState.SIGNED_IN;
+    }
+
     private void setState(AuthenticationState newState) {
-        if (newState == this.state) {
+        if (newState == state) {
             return;
         }
 
-        this.state = newState;
+        state = newState;
 
         handlerManager.fireEvent(new AuthenticationStateChangedEvent(this,
                 newState));

@@ -28,4 +28,6 @@ public interface AuthenticationManager {
 
     Throwable getFailure();
 
+    boolean isAuthenticated();
+
 }
