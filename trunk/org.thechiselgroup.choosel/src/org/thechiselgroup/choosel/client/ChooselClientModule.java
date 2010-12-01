@@ -113,6 +113,7 @@ import org.thechiselgroup.choosel.client.workspace.ViewSaver;
 import org.thechiselgroup.choosel.client.workspace.WorkspaceManager;
 import org.thechiselgroup.choosel.client.workspace.WorkspacePersistenceManager;
 import org.thechiselgroup.choosel.client.workspace.WorkspacePresenter;
+import org.thechiselgroup.choosel.client.workspace.command.ConfigureSharedViewsDialogCommand;
 import org.thechiselgroup.choosel.client.workspace.command.LoadWorkspaceDialogCommand;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -137,6 +138,8 @@ public class ChooselClientModule extends AbstractGinModule implements
                 WorkspacePresenter.DefaultWorkspacePresenterDisplay.class);
         bind(LoadWorkspaceDialogCommand.DetailsDisplay.class).to(
                 LoadWorkspaceDialogCommand.DefaultDetailsDisplay.class);
+        bind(ConfigureSharedViewsDialogCommand.DetailsDisplay.class).to(
+                ConfigureSharedViewsDialogCommand.DefaultDetailsDisplay.class);
     }
 
     private void bindDragAvatarDropTargetManagers() {

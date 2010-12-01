@@ -15,6 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.server.workspace;
 
+import java.util.Date;
+
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
@@ -52,12 +54,15 @@ public class PersistentView {
     private Memento viewState;
 
     @Persistent(serialized = "true")
+    private Date sharedDate;
+
+    @Persistent
     private String userEmail;
 
-    @Persistent(serialized = "true")
+    @Persistent
     private String userId;
 
-    @Persistent(serialized = "true")
+    @Persistent
     private String userName;
 
     public String getContentType() {
@@ -76,8 +81,24 @@ public class PersistentView {
         return resourceSets;
     }
 
+    public Date getSharedDate() {
+        return sharedDate;
+    }
+
     public String getTitle() {
         return title;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public String getUserName() {
+        return userName;
     }
 
     public Memento getViewState() {
@@ -104,36 +125,28 @@ public class PersistentView {
         this.resourceSets = resourceSets;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setSharedDate(Date sharedDate) {
+        this.sharedDate = sharedDate;
     }
 
-    public void setViewState(Memento viewState) {
-        this.viewState = viewState;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public void setUserEmail(String userEmail) {
         this.userEmail = userEmail;
     }
 
-    public String getUserEmail() {
-        return userEmail;
-    }
-
     public void setUserId(String userId) {
         this.userId = userId;
-    }
-
-    public String getUserId() {
-        return userId;
     }
 
     public void setUserName(String userName) {
         this.userName = userName;
     }
 
-    public String getUserName() {
-        return userName;
+    public void setViewState(Memento viewState) {
+        this.viewState = viewState;
     }
 
 }
