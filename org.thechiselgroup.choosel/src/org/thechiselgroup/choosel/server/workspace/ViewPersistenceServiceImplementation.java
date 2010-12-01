@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.server.workspace;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 
@@ -98,12 +99,15 @@ public class ViewPersistenceServiceImplementation implements
     private Collection<PersistentView> getPersistentViewsForUser(
             PersistenceManager manager, User user) {
 
-        Query userIdQuery = manager.newQuery(
-                PersistentWorkspacePermission.class, "userId == userIdParam");
-        userIdQuery.declareParameters("String userIdParam");
-
-        return (Collection<PersistentView>) userIdQuery.execute(user
-                .getUserId());
+        Query userIdQuery = manager.newQuery(PersistentView.class, "userId == "
+                + user.getUserId());
+        // Query userIdQuery = manager.newQuery(PersistentView.class,
+        // "userId == userIdParam");
+        // userIdQuery.declareParameters("String userIdParam");
+        //
+        // return (Collection<PersistentView>) userIdQuery.execute(user
+        // .getUserId());
+        return (Collection<PersistentView>) userIdQuery.execute();
     }
 
     @Override
@@ -195,9 +199,6 @@ public class ViewPersistenceServiceImplementation implements
         view.setUserName(user.getNickname());
         view.setUserId(user.getUserId());
         view.setUserEmail(user.getEmail());
-    }
-
-    private boolean viewExists(ViewDTO dto) {
-        return dto.getId() != null;
+        view.setSharedDate(Calendar.getInstance().getTime());
     }
 }

@@ -735,6 +735,8 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     // TODO extract constants
     private void restoreGrouping(Memento groupingMemento) {
+        assert groupingMemento != null : "The grouping memento you're trying to get a result from wasn't set";
+
         String categorizerType = (String) groupingMemento.getValue("type");
 
         if ("byProperty".equals(categorizerType)) {
