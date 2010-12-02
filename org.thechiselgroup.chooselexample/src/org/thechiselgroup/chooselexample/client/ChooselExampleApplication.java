@@ -29,6 +29,8 @@ import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionCo
 
 import org.thechiselgroup.choosel.client.ChooselApplication;
 import org.thechiselgroup.choosel.client.RestrictImporterToOneDataSourceManager;
+import org.thechiselgroup.choosel.client.command.AsyncCommandExecutor;
+import org.thechiselgroup.choosel.client.command.AsyncCommandToCommandAdapter;
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.importer.ImportDialog;
 import org.thechiselgroup.choosel.client.resources.ResourceSetAddedEvent;
@@ -40,6 +42,7 @@ import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceS
 import org.thechiselgroup.choosel.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.client.ui.Action;
 import org.thechiselgroup.choosel.client.windows.WindowContent;
+import org.thechiselgroup.choosel.client.workspace.command.ConfigureSharedViewsDialogCommand;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -52,6 +55,12 @@ public class ChooselExampleApplication extends ChooselApplication {
 
     @Inject
     private ResourceSetAvatarFactory factory;
+
+    @Inject
+    private ConfigureSharedViewsDialogCommand configSharedViewsCommand;
+
+    @Inject
+    AsyncCommandExecutor asyncCommandExecutor;
 
     // TODO change into command
     private void addTestDataSourceButton() {
@@ -103,12 +112,17 @@ public class ChooselExampleApplication extends ChooselApplication {
                 .init();
     }
 
-    @Override
-    protected void initAuthenticationBar() {
-    }
+    // @Override
+    // protected void initAuthenticationBar() {
+    // }
 
     @Override
     protected void initCustomActions() {
+        Action loadAction = addActionToToolbar(WORKSPACE_PANEL,
+                "Load Workspace", "workspace-open",
+                new AsyncCommandToCommandAdapter(configSharedViewsCommand,
+                        asyncCommandExecutor));
+
         if (runsInDevelopmentMode()) {
             addTestDataSourceButton();
 
