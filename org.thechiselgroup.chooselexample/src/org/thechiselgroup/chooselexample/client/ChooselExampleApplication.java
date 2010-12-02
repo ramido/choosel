@@ -118,8 +118,7 @@ public class ChooselExampleApplication extends ChooselApplication {
 
     @Override
     protected void initCustomActions() {
-        Action loadAction = addActionToToolbar(WORKSPACE_PANEL,
-                "Load Workspace", "workspace-open",
+        addActionToToolbar(WORKSPACE_PANEL, "Load Workspace", "workspace-open",
                 new AsyncCommandToCommandAdapter(configSharedViewsCommand,
                         asyncCommandExecutor));
 

@@ -16,8 +16,8 @@
 package org.thechiselgroup.choosel.server.workspace;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import javax.jdo.PersistenceManager;
@@ -99,15 +99,12 @@ public class ViewPersistenceServiceImplementation implements
     private Collection<PersistentView> getPersistentViewsForUser(
             PersistenceManager manager, User user) {
 
-        Query userIdQuery = manager.newQuery(PersistentView.class, "userId == "
-                + user.getUserId());
-        // Query userIdQuery = manager.newQuery(PersistentView.class,
-        // "userId == userIdParam");
-        // userIdQuery.declareParameters("String userIdParam");
+        Query userIdQuery = manager.newQuery(PersistentView.class,
+                "userId == userIdParam");
+        userIdQuery.declareParameters("String userIdParam");
         //
-        // return (Collection<PersistentView>) userIdQuery.execute(user
-        // .getUserId());
-        return (Collection<PersistentView>) userIdQuery.execute();
+        return (Collection<PersistentView>) userIdQuery.execute(user
+                .getUserId());
     }
 
     @Override
@@ -159,7 +156,6 @@ public class ViewPersistenceServiceImplementation implements
 
         try {
             User user = getCurrentUser();
-
             PersistentView view = createPersistentView(pm);
 
             updateViewWithDTO(view, dto, user);
@@ -189,7 +185,6 @@ public class ViewPersistenceServiceImplementation implements
     }
 
     private void updateViewWithDTO(PersistentView view, ViewDTO dto, User user) {
-
         view.setTitle(dto.getTitle());
         view.setViewState(dto.getViewState());
         view.setResources(dto.getResources());
@@ -199,6 +194,6 @@ public class ViewPersistenceServiceImplementation implements
         view.setUserName(user.getNickname());
         view.setUserId(user.getUserId());
         view.setUserEmail(user.getEmail());
-        view.setSharedDate(Calendar.getInstance().getTime());
+        view.setSharedDate(new Date());
     }
 }
