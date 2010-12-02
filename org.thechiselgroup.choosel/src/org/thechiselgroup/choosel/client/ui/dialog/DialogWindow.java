@@ -33,7 +33,7 @@ public final class DialogWindow extends WindowPanel implements DialogCallback {
 
     private Button okayButton;
 
-    private void createCancelButton(DialogPanel dialogPanel) {
+    protected void createCancelButton(DialogPanel dialogPanel) {
         Button cancelButton = dialogPanel.createButton(CANCEL);
         cancelButton.addClickHandler(createCloseButtonClickHandler());
     }
@@ -48,7 +48,7 @@ public final class DialogWindow extends WindowPanel implements DialogCallback {
         };
     }
 
-    private void createOkayButton(final Dialog dialog, DialogPanel dialogPanel) {
+    protected void createOkayButton(final Dialog dialog, DialogPanel dialogPanel) {
         okayButton = dialogPanel.createButton(dialog.getOkayButtonLabel());
         okayButton.addClickHandler(new ClickHandler() {
             @Override
@@ -74,12 +74,16 @@ public final class DialogWindow extends WindowPanel implements DialogCallback {
         dialogPanel.setContent(content);
         dialogPanel.setHeader(dialog.getHeader());
 
-        createOkayButton(dialog, dialogPanel);
-        createCancelButton(dialogPanel);
+        initButtons(dialog, dialogPanel);
 
         init(windowController, dialog.getWindowTitle(), false, dialogPanel);
 
         setZIndex(ZIndex.DIALOG);
+    }
+
+    protected void initButtons(final Dialog dialog, DialogPanel dialogPanel) {
+        createOkayButton(dialog, dialogPanel);
+        createCancelButton(dialogPanel);
     }
 
     @Override
