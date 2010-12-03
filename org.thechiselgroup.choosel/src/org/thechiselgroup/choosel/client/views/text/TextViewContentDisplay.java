@@ -88,7 +88,7 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
     private DoubleToGroupValueMapper<String> groupValueMapper;
 
-    private boolean tagCloud = true;
+    private boolean tagCloud = false;
 
     private Comparator<TextItem> comparator = new Comparator<TextItem>() {
         @Override
@@ -111,8 +111,6 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
         labelEventHandler = new LabelEventHandler();
 
         initGroupValueMapper();
-
-        setTagCloud(true);
     }
 
     /**
@@ -155,7 +153,9 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
     @Override
     public Widget createWidget() {
-        return textItemContainer.createWidget();
+        Widget widget = textItemContainer.createWidget();
+        setTagCloud(true);
+        return widget;
     }
 
     @Override
