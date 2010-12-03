@@ -33,6 +33,13 @@ public final class DialogWindow extends WindowPanel implements DialogCallback {
 
     private Button okayButton;
 
+    /**
+     * Close the dialog with an cancel state.
+     */
+    public final void cancel() {
+        dialogController.cancelDialog(this);
+    }
+
     protected void createCancelButton(DialogPanel dialogPanel) {
         Button cancelButton = dialogPanel.createButton(CANCEL);
         cancelButton.addClickHandler(createCloseButtonClickHandler());
@@ -43,8 +50,9 @@ public final class DialogWindow extends WindowPanel implements DialogCallback {
         return new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                dialogController.cancelDialog(DialogWindow.this);
+                cancel();
             }
+
         };
     }
 
@@ -53,7 +61,7 @@ public final class DialogWindow extends WindowPanel implements DialogCallback {
         okayButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                dialogController.okayPressed(DialogWindow.this);
+                okay();
             }
         });
     }
@@ -84,6 +92,13 @@ public final class DialogWindow extends WindowPanel implements DialogCallback {
     protected void initButtons(final Dialog dialog, DialogPanel dialogPanel) {
         createOkayButton(dialog, dialogPanel);
         createCancelButton(dialogPanel);
+    }
+
+    /**
+     * Close the dialog with an okay state.
+     */
+    public final void okay() {
+        dialogController.okayPressed(this);
     }
 
     @Override
