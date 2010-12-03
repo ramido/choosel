@@ -41,6 +41,7 @@ import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.client.views.DefaultResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.Slot;
+import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 import org.thechiselgroup.choosel.client.views.text.TextViewContentDisplay.Display;
 
@@ -57,6 +58,9 @@ public class TextViewContentDisplayTest {
     private Display display;
 
     @Mock
+    private TextItemLabel itemLabel;
+
+    @Mock
     private ResourceCategorizer resourceCategorizer;
 
     @Mock
@@ -68,12 +72,13 @@ public class TextViewContentDisplayTest {
         DefaultResourceItem resourceItem = createResourceItem(createResources(
                 1, 2));
 
+        when(resourceItem.getResourceValue(SlotResolver.FONT_SIZE_SLOT))
+                .thenReturn(new Double(2));
+
         underTest.update(toSet((ResourceItem) resourceItem),
                 Collections.<ResourceItem> emptySet(),
                 Collections.<ResourceItem> emptySet(),
                 Collections.<Slot> emptySet());
-
-        TextItem displayObject = (TextItem) resourceItem.getDisplayObject();
 
         // both resources get highlighted as the selection is dragged
         resourceItem.addHighlightedResources(createResources(1, 2));
@@ -89,7 +94,7 @@ public class TextViewContentDisplayTest {
                 Collections.<ResourceItem> emptySet(),
                 Collections.<Slot> emptySet());
 
-        reset(display);
+        reset(itemLabel);
 
         // highlighting is removed after drag operation
         resourceItem.removeHighlightedResources(createResources(1, 2));
@@ -100,12 +105,10 @@ public class TextViewContentDisplayTest {
 
         // check label status (should be: partially selected, but not partially
         // highlighted)
-        verify(display, times(1)).addStyleName(displayObject,
-                TextItem.CSS_SELECTED);
-        verify(display, times(1)).removeStyleName(displayObject,
+        verify(itemLabel, times(1)).addStyleName(TextItem.CSS_SELECTED);
+        verify(itemLabel, times(1)).removeStyleName(
                 TextItem.CSS_PARTIALLY_HIGHLIGHTED);
-        verify(display, times(1)).removeStyleName(displayObject,
-                TextItem.CSS_HIGHLIGHTED);
+        verify(itemLabel, times(1)).removeStyleName(TextItem.CSS_HIGHLIGHTED);
     }
 
     @Before
@@ -115,6 +118,8 @@ public class TextViewContentDisplayTest {
 
         allResources = new DefaultResourceSet();
 
+        when(display.createTextItemLabel(any(ResourceItem.class))).thenReturn(
+                itemLabel);
         when(callback.getAllResources()).thenReturn(allResources);
 
         underTest = new TextViewContentDisplay(dragController, display);

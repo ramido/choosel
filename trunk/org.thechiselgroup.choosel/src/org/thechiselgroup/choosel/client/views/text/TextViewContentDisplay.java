@@ -22,14 +22,12 @@ import java.util.Set;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.ui.CSS;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.client.util.CollectionUtils;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.Slot;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
-import org.thechiselgroup.choosel.client.views.text.TextItem.TextItemLabel;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -50,105 +48,23 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
     public class DefaultDisplay implements Display {
 
-        private static final String CSS_TAG_CLOUD = "choosel-TextViewContentDisplay-TagCloud";
-
-        private static final int MAX_FONT_SIZE = 26;
-
-        private List<TextItemLabel> itemLabels = new ArrayList<TextItemLabel>();
-
-        private List<String> textItems = new ArrayList<String>();
-
         @Override
-        public void addItem(TextItem textItem) {
-            textItem.init();
-
-            TextItemLabel label = textItem.getLabel();
-
-            itemLabels.add(label);
-
-            label.addMouseOverHandler(labelEventHandler);
-            label.addMouseOutHandler(labelEventHandler);
-            label.addClickHandler(labelEventHandler);
-
-            // insert at right position to maintain sort..
-            // TODO cleanup - performance issues
-            // XXX does not update when properties change
-            textItems.add(label.getText());
-            Collections.sort(textItems, String.CASE_INSENSITIVE_ORDER);
-            int row = textItems.indexOf(label.getText());
-            itemPanel.insert(label, row);
+        public TextItemLabel createTextItemLabel(ResourceItem resourceItem) {
+            return new DefaultTextItemLabel(dragController, resourceItem);
         }
 
         @Override
-        public void addStyleName(TextItem textItem, String cssClass) {
-            textItem.getLabel().addStyleName(cssClass);
+        public void insert(TextItemLabel label, int row) {
+            itemPanel.insert(label.asWidget(), row);
         }
 
-        private List<Double> getFontSizeValues() {
-            List<Double> fontSizeValues = new ArrayList<Double>();
-            for (TextItemLabel textItemLabel : itemLabels) {
-                fontSizeValues.add(textItemLabel.getFontSizeValue());
-            }
-            return fontSizeValues;
-        }
-
-        @Override
-        public void removeStyleName(TextItem textItem, String cssClass) {
-            textItem.getLabel().removeStyleName(cssClass);
-        }
-
-        @Override
-        public void removeTextItem(TextItem textItem) {
-            /*
-             * whole row needs to be removed, otherwise lots of empty rows
-             * consume the whitespace
-             */
-            for (int i = 0; i < itemPanel.getWidgetCount(); i++) {
-                TextItemLabel label = textItem.getLabel();
-                itemLabels.remove(label);
-                if (itemPanel.getWidget(i).equals(label)) {
-                    itemPanel.remove(i);
-                    textItems.remove(i);
-                    return;
-                }
-            }
-        }
-
-        @Override
-        public void setTagCloud(boolean tagCloud) {
-            if (tagCloud) {
-                itemPanel.addStyleName(CSS_TAG_CLOUD);
-            } else {
-                itemPanel.removeStyleName(CSS_TAG_CLOUD);
-            }
-        }
-
-        @Override
-        public void updateFontSizes() {
-            List<Double> fontSizeValues = getFontSizeValues();
-
-            for (TextItemLabel itemLabel : itemLabels) {
-                String fontSize = groupValueMapper.getGroupValue(
-                        itemLabel.getFontSizeValue(), fontSizeValues);
-
-                CSS.setFontSize(itemLabel.getElement(), fontSize);
-            }
-        }
     }
 
     public static interface Display {
 
-        void addItem(TextItem textItem);
+        TextItemLabel createTextItemLabel(ResourceItem resourceItem);
 
-        void addStyleName(TextItem textItem, String cssClass);
-
-        void removeStyleName(TextItem textItem, String cssClass);
-
-        void removeTextItem(TextItem textItem);
-
-        void setTagCloud(boolean tagCloud);
-
-        void updateFontSizes();
+        void insert(TextItemLabel label, int row);
 
     }
 
@@ -160,8 +76,7 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
         }
 
         private ResourceItem getResourceItem(GwtEvent<?> event) {
-            return ((TextItemLabel) event.getSource()).getTextItem()
-                    .getResourceItem();
+            return ((DefaultTextItemLabel) event.getSource()).getResourceItem();
         }
 
         @Override
@@ -188,6 +103,14 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
         }
 
     }
+
+    private static final String CSS_TAG_CLOUD = "choosel-TextViewContentDisplay-TagCloud";
+
+    private static final int MAX_FONT_SIZE = 26;
+
+    private List<TextItem> items = new ArrayList<TextItem>();
+
+    private List<String> textItems = new ArrayList<String>();
 
     public static final String CSS_LIST_VIEW_SCROLLBAR = "listViewScrollbar";
 
@@ -227,6 +150,26 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
         initGroupValueMapper();
     }
 
+    private void addItem(TextItem textItem) {
+        textItem.init(display.createTextItemLabel(textItem.getResourceItem()));
+
+        TextItemLabel label = textItem.getLabel();
+
+        items.add(textItem);
+
+        label.addMouseOverHandler(labelEventHandler);
+        label.addMouseOutHandler(labelEventHandler);
+        label.addClickHandler(labelEventHandler);
+
+        // insert at right position to maintain sort..
+        // TODO cleanup - performance issues
+        // XXX does not update when properties change
+        textItems.add(label.getText());
+        Collections.sort(textItems, String.CASE_INSENSITIVE_ORDER);
+        int row = textItems.indexOf(label.getText());
+        display.insert(label, row);
+    }
+
     @Override
     public Widget createWidget() {
         itemPanel = new FlowPanel();
@@ -235,8 +178,6 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
         scrollPanel = new ResizableScrollPanel(itemPanel);
         scrollPanel.addStyleName(CSS_LIST_VIEW_SCROLLBAR);
-
-        display.setTagCloud(isTagCloud());
 
         return scrollPanel;
     }
@@ -272,8 +213,20 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
                         "10px", "14px", "18px", "22px", "26px"));
     }
 
-    public boolean isTagCloud() {
-        return tagCloud;
+    private void removeTextItem(TextItem textItem) {
+        /*
+         * whole row needs to be removed, otherwise lots of empty rows consume
+         * the whitespace
+         */
+        TextItemLabel label = textItem.getLabel();
+        items.remove(textItem);
+        for (int i = 0; i < itemPanel.getWidgetCount(); i++) {
+            if (itemPanel.getWidget(i).equals(label)) {
+                itemPanel.remove(i);
+                textItems.remove(i);
+                return;
+            }
+        }
     }
 
     @Override
@@ -292,7 +245,12 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
         }
 
         this.tagCloud = tagCloud;
-        display.setTagCloud(tagCloud);
+
+        if (tagCloud) {
+            itemPanel.addStyleName(CSS_TAG_CLOUD);
+        } else {
+            itemPanel.removeStyleName(CSS_TAG_CLOUD);
+        }
     }
 
     @Override
@@ -301,9 +259,8 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
             Set<ResourceItem> removedResourceItems, Set<Slot> changedSlots) {
 
         for (ResourceItem resourceItem : addedResourceItems) {
-            TextItem textItem = new TextItem(display, dragController,
-                    resourceItem);
-            display.addItem(textItem);
+            TextItem textItem = new TextItem(resourceItem);
+            addItem(textItem);
             resourceItem.setDisplayObject(textItem);
             textItem.updateContent();
             textItem.updateStatusStyling();
@@ -316,7 +273,7 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
         }
 
         for (ResourceItem resourceItem : removedResourceItems) {
-            display.removeTextItem((TextItem) resourceItem.getDisplayObject());
+            removeTextItem((TextItem) resourceItem.getDisplayObject());
         }
 
         if (!changedSlots.isEmpty()) {
@@ -327,7 +284,17 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
         }
 
-        display.updateFontSizes();
+        updateFontSizes();
 
+    }
+
+    private void updateFontSizes() {
+        List<Double> fontSizeValues = new ArrayList<Double>();
+        for (TextItem textItem : items) {
+            fontSizeValues.add(textItem.getFontSizeValue());
+        }
+        for (TextItem textItem : items) {
+            textItem.scaleFont(fontSizeValues, groupValueMapper);
+        }
     }
 }
