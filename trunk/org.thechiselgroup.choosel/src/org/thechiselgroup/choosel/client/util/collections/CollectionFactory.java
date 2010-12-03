@@ -24,7 +24,7 @@ public final class CollectionFactory {
 
     public static <T> LightweightList<T> createLightweightList() {
         if (GWT.isScript() || GWT.isClient()) {
-            return JavaScriptLightweightList.create();
+            return new JavaScriptLightweightList<T>();
         }
 
         return new ArrayListToLightweightListAdapter<T>();

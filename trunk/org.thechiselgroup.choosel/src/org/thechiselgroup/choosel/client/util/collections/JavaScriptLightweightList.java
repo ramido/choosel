@@ -21,25 +21,59 @@ import java.util.List;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
-public final class JavaScriptLightweightList<T> extends JavaScriptObject
-        implements LightweightList<T> {
+/**
+ * <p>
+ * <b>IMPLEMENTATION NOTE</b>: we use an internal JavaScript object because
+ * implementing interfaces with generics on JavaScriptObjets causes the
+ * development mode to break (see
+ * {@link "http://code.google.com/p/google-web-toolkit/issues/detail?id=4864"}
+ * ).
+ * </p>
+ * 
+ * @author Lars Grammel
+ * 
+ * @see http://code.google.com/p/google-web-toolkit/issues/detail?id=4864
+ */
+public final class JavaScriptLightweightList<T> implements LightweightList<T> {
 
-    public static native <T> JavaScriptLightweightList<T> create() /*-{
+    private static final class NativeList<T> extends JavaScriptObject {
+
+        protected NativeList() {
+
+        }
+
+        public final native void add(T t) /*-{
+            this.push(t);
+        }-*/;
+
+        public final native T get(int i) /*-{
+            return this[i];
+        }-*/;
+
+        public final native int size() /*-{
+            return this.length;
+        }-*/;
+    }
+
+    private static native <T> NativeList<T> createNativeList() /*-{
         return new Array();
     }-*/;
 
-    protected JavaScriptLightweightList() {
+    private NativeList<T> jsList;
+
+    public JavaScriptLightweightList() {
+        jsList = createNativeList();
     }
 
     @Override
-    public final native void add(T t) /*-{
-        this.push(t);
-    }-*/;
+    public void add(T t) {
+        this.jsList.add(t);
+    }
 
     @Override
-    public final native T get(int i) /*-{
-        return this[i];
-    }-*/;
+    public T get(int i) {
+        return this.jsList.get(i);
+    }
 
     @Override
     public boolean isEmpty() {
@@ -70,9 +104,9 @@ public final class JavaScriptLightweightList<T> extends JavaScriptObject
     }
 
     @Override
-    public final native int size() /*-{
-        return this.length;
-    }-*/;
+    public int size() {
+        return this.jsList.size();
+    }
 
     @Override
     public List<T> toList() {
