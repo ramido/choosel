@@ -40,33 +40,9 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.RequiresResize;
-import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class TextViewContentDisplay extends AbstractViewContentDisplay {
-
-    public class DefaultDisplay implements Display {
-
-        @Override
-        public TextItemLabel createTextItemLabel(ResourceItem resourceItem) {
-            return new DefaultTextItemLabel(dragController, resourceItem);
-        }
-
-        @Override
-        public void insert(TextItemLabel label, int row) {
-            itemPanel.insert(label.asWidget(), row);
-        }
-
-    }
-
-    public static interface Display {
-
-        TextItemLabel createTextItemLabel(ResourceItem resourceItem);
-
-        void insert(TextItemLabel label, int row);
-
-    }
 
     private class LabelEventHandler implements ClickHandler, MouseOutHandler,
             MouseOverHandler {
@@ -95,15 +71,6 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
         }
     }
 
-    private static class ResizableScrollPanel extends ScrollPanel implements
-            RequiresResize {
-
-        private ResizableScrollPanel(Widget child) {
-            super(child);
-        }
-
-    }
-
     private static final String CSS_TAG_CLOUD = "choosel-TextViewContentDisplay-TagCloud";
 
     private static final int MAX_FONT_SIZE = 26;
@@ -114,15 +81,9 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
     public static final String CSS_LIST_VIEW_SCROLLBAR = "listViewScrollbar";
 
-    private final Display display;
-
-    private ResourceSetAvatarDragController dragController;
+    private final TextItemContainer textItemContainer;
 
     private LabelEventHandler labelEventHandler;
-
-    private ScrollPanel scrollPanel;
-
-    private FlowPanel itemPanel;
 
     private DoubleToGroupValueMapper<String> groupValueMapper;
 
@@ -131,27 +92,25 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
     public TextViewContentDisplay(ResourceSetAvatarDragController dragController) {
         assert dragController != null;
 
-        this.dragController = dragController;
-        display = new DefaultDisplay();
+        textItemContainer = new DefaultTextItemContainer(dragController);
 
         initGroupValueMapper();
     }
 
-    // for test: can change display
-    protected TextViewContentDisplay(
-            ResourceSetAvatarDragController dragController, Display display) {
+    // for test: can change container
+    protected TextViewContentDisplay(TextItemContainer textItemContainer) {
+        assert textItemContainer != null;
 
-        assert dragController != null;
-        assert display != null;
+        this.textItemContainer = textItemContainer;
 
-        this.dragController = dragController;
-        this.display = display;
+        labelEventHandler = new LabelEventHandler();
 
         initGroupValueMapper();
     }
 
     private void addItem(TextItem textItem) {
-        textItem.init(display.createTextItemLabel(textItem.getResourceItem()));
+        textItem.init(textItemContainer.createTextItemLabel(textItem
+                .getResourceItem()));
 
         TextItemLabel label = textItem.getLabel();
 
@@ -167,19 +126,12 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
         textItems.add(label.getText());
         Collections.sort(textItems, String.CASE_INSENSITIVE_ORDER);
         int row = textItems.indexOf(label.getText());
-        display.insert(label, row);
+        textItemContainer.insert(label, row);
     }
 
     @Override
     public Widget createWidget() {
-        itemPanel = new FlowPanel();
-
-        labelEventHandler = new LabelEventHandler();
-
-        scrollPanel = new ResizableScrollPanel(itemPanel);
-        scrollPanel.addStyleName(CSS_LIST_VIEW_SCROLLBAR);
-
-        return scrollPanel;
+        return textItemContainer.createWidget();
     }
 
     @Override
@@ -220,12 +172,9 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
          */
         TextItemLabel label = textItem.getLabel();
         items.remove(textItem);
-        for (int i = 0; i < itemPanel.getWidgetCount(); i++) {
-            if (itemPanel.getWidget(i).equals(label)) {
-                itemPanel.remove(i);
-                textItems.remove(i);
-                return;
-            }
+        if (textItemContainer.contains(label)) {
+            textItems.remove(textItemContainer.indexOf(label));
+            textItemContainer.remove(label);
         }
     }
 
@@ -247,9 +196,9 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
         this.tagCloud = tagCloud;
 
         if (tagCloud) {
-            itemPanel.addStyleName(CSS_TAG_CLOUD);
+            textItemContainer.addStyleName(CSS_TAG_CLOUD);
         } else {
-            itemPanel.removeStyleName(CSS_TAG_CLOUD);
+            textItemContainer.removeStyleName(CSS_TAG_CLOUD);
         }
     }
 
