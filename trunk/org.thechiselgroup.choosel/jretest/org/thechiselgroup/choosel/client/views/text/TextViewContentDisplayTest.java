@@ -37,13 +37,11 @@ import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.client.test.TestResourceSetFactory;
-import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.client.views.DefaultResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.Slot;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
-import org.thechiselgroup.choosel.client.views.text.TextViewContentDisplay.Display;
 
 public class TextViewContentDisplayTest {
 
@@ -55,16 +53,13 @@ public class TextViewContentDisplayTest {
     private TextViewContentDisplay underTest;
 
     @Mock
-    private Display display;
+    private TextItemContainer textItemContainer;
 
     @Mock
     private TextItemLabel itemLabel;
 
     @Mock
     private ResourceCategorizer resourceCategorizer;
-
-    @Mock
-    private ResourceSetAvatarDragController dragController;
 
     @Test
     public void partialSelectionShownCorrectly_Issue73() {
@@ -118,11 +113,11 @@ public class TextViewContentDisplayTest {
 
         allResources = new DefaultResourceSet();
 
-        when(display.createTextItemLabel(any(ResourceItem.class))).thenReturn(
-                itemLabel);
+        when(textItemContainer.createTextItemLabel(any(ResourceItem.class)))
+                .thenReturn(itemLabel);
         when(callback.getAllResources()).thenReturn(allResources);
 
-        underTest = new TextViewContentDisplay(dragController, display);
+        underTest = new TextViewContentDisplay(textItemContainer);
 
         underTest.init(callback);
 
