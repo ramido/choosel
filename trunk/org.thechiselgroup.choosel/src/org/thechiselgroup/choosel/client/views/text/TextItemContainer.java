@@ -23,13 +23,9 @@ public interface TextItemContainer {
 
     void addStyleName(String cssClass);
 
-    boolean contains(TextItemLabel label);
-
     TextItemLabel createTextItemLabel(ResourceItem resourceItem);
 
     Widget createWidget();
-
-    int indexOf(TextItemLabel label);
 
     void insert(TextItemLabel label, int row);
 

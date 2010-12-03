@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.client.views.text;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -24,6 +25,8 @@ import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.client.util.CollectionUtils;
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.Slot;
@@ -42,6 +45,8 @@ import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+// XXX memento not implemented
+// XXX order does not update when description property changes
 public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
     private class LabelEventHandler implements ClickHandler, MouseOutHandler,
@@ -77,8 +82,6 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
     private List<TextItem> items = new ArrayList<TextItem>();
 
-    private List<String> textItems = new ArrayList<String>();
-
     public static final String CSS_LIST_VIEW_SCROLLBAR = "listViewScrollbar";
 
     private final TextItemContainer textItemContainer;
@@ -88,6 +91,14 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
     private DoubleToGroupValueMapper<String> groupValueMapper;
 
     private boolean tagCloud = true;
+
+    private Comparator<TextItem> comparator = new Comparator<TextItem>() {
+        @Override
+        public int compare(TextItem o1, TextItem o2) {
+            return o1.getLabel().getText()
+                    .compareToIgnoreCase(o2.getLabel().getText());
+        }
+    };
 
     public TextViewContentDisplay(ResourceSetAvatarDragController dragController) {
         assert dragController != null;
@@ -108,25 +119,24 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
         initGroupValueMapper();
     }
 
-    private void addItem(TextItem textItem) {
-        textItem.init(textItemContainer.createTextItemLabel(textItem
-                .getResourceItem()));
+    private void addResourceItems(Set<ResourceItem> addedResourceItems) {
+        LightweightList<TextItem> addedTextItems = CollectionFactory
+                .createLightweightList();
 
-        TextItemLabel label = textItem.getLabel();
+        for (ResourceItem resourceItem : addedResourceItems) {
+            TextItem textItem = initTextItem(resourceItem);
+            addedTextItems.add(textItem);
+            items.add(textItem);
+        }
 
-        items.add(textItem);
+        Collections.sort(items, comparator);
 
-        label.addMouseOverHandler(labelEventHandler);
-        label.addMouseOutHandler(labelEventHandler);
-        label.addClickHandler(labelEventHandler);
-
-        // insert at right position to maintain sort..
-        // TODO cleanup - performance issues
-        // XXX does not update when properties change
-        textItems.add(label.getText());
-        Collections.sort(textItems, String.CASE_INSENSITIVE_ORDER);
-        int row = textItems.indexOf(label.getText());
-        textItemContainer.insert(label, row);
+        for (TextItem textItem : addedTextItems) {
+            textItemContainer.insert(textItem.getLabel(),
+                    items.indexOf(textItem));
+            textItem.updateContent();
+            textItem.updateStatusStyling();
+        }
     }
 
     @Override
@@ -165,6 +175,23 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
                         "10px", "14px", "18px", "22px", "26px"));
     }
 
+    private TextItem initTextItem(ResourceItem resourceItem) {
+        TextItem textItem = new TextItem(resourceItem);
+
+        TextItemLabel label = textItemContainer.createTextItemLabel(textItem
+                .getResourceItem());
+
+        label.addMouseOverHandler(labelEventHandler);
+        label.addMouseOutHandler(labelEventHandler);
+        label.addClickHandler(labelEventHandler);
+
+        textItem.init(label);
+
+        resourceItem.setDisplayObject(textItem);
+
+        return textItem;
+    }
+
     private void removeTextItem(TextItem textItem) {
         /*
          * whole row needs to be removed, otherwise lots of empty rows consume
@@ -172,10 +199,7 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
          */
         TextItemLabel label = textItem.getLabel();
         items.remove(textItem);
-        if (textItemContainer.contains(label)) {
-            textItems.remove(textItemContainer.indexOf(label));
-            textItemContainer.remove(label);
-        }
+        textItemContainer.remove(label);
     }
 
     @Override
@@ -207,13 +231,7 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
             Set<ResourceItem> updatedResourceItems,
             Set<ResourceItem> removedResourceItems, Set<Slot> changedSlots) {
 
-        for (ResourceItem resourceItem : addedResourceItems) {
-            TextItem textItem = new TextItem(resourceItem);
-            addItem(textItem);
-            resourceItem.setDisplayObject(textItem);
-            textItem.updateContent();
-            textItem.updateStatusStyling();
-        }
+        addResourceItems(addedResourceItems);
 
         for (ResourceItem resourceItem : updatedResourceItems) {
             TextItem textItem = (TextItem) resourceItem.getDisplayObject();

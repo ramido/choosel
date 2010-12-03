@@ -52,11 +52,6 @@ public class DefaultTextItemContainer implements TextItemContainer {
     }
 
     @Override
-    public boolean contains(TextItemLabel label) {
-        return indexOf(label) != -1;
-    }
-
-    @Override
     public TextItemLabel createTextItemLabel(ResourceItem resourceItem) {
         return new DefaultTextItemLabel(dragController, resourceItem);
     }
@@ -70,16 +65,6 @@ public class DefaultTextItemContainer implements TextItemContainer {
                 .addStyleName(TextViewContentDisplay.CSS_LIST_VIEW_SCROLLBAR);
 
         return scrollPanel;
-    }
-
-    @Override
-    public int indexOf(TextItemLabel label) {
-        for (int i = 0; i < itemPanel.getWidgetCount(); i++) {
-            if (itemPanel.getWidget(i).equals(label)) {
-                return i;
-            }
-        }
-        return -1;
     }
 
     @Override
