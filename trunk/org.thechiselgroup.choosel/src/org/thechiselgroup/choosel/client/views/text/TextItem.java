@@ -35,6 +35,13 @@ public class TextItem {
 
     private ResourceItem resourceItem;
 
+    /**
+     * Flag that marks if the label of this text item has already been added to
+     * the container panel. Used to increase the performance of adding multiple
+     * text items to the view.
+     */
+    private boolean addedToPanel = false;
+
     private double fontSizeValue;
 
     public TextItem(ResourceItem resourceItem) {
@@ -66,11 +73,19 @@ public class TextItem {
         updateContent();
     }
 
+    public boolean isAddedToPanel() {
+        return addedToPanel;
+    }
+
     public void scaleFont(List<Double> fontSizeValues,
             DoubleToGroupValueMapper<String> groupValueMapper) {
 
         label.setFontSize(groupValueMapper.getGroupValue(getFontSizeValue(),
                 fontSizeValues));
+    }
+
+    public void setAddedToPanel(boolean addedToPanel) {
+        this.addedToPanel = addedToPanel;
     }
 
     public void setFontSizeValue(double value) {
