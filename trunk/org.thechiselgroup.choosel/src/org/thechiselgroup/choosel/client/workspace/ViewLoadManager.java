@@ -25,6 +25,8 @@ public interface ViewLoadManager {
 
     void loadView(Long id, AsyncCallback<DefaultView> callback);
 
+    void loadViewAsWindow(Long id, AsyncCallback<Workspace> callback);
+
     void loadViewAsWorkspace(Long id, AsyncCallback<Workspace> callback);
 
     void loadViewPreviews(AsyncCallback<List<ViewPreview>> callback);

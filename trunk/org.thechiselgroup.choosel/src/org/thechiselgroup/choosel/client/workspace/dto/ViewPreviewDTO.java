@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.client.workspace.dto;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class ViewPreviewDTO implements Serializable {
 
@@ -25,16 +26,22 @@ public class ViewPreviewDTO implements Serializable {
 
     private String title;
 
+    private String type;
+
+    private Date created;
+
     /**
      * for tests only
      */
     public ViewPreviewDTO() {
-        this(null, null);
+        this(null, null, null, null);
     }
 
-    public ViewPreviewDTO(Long id, String title) {
+    public ViewPreviewDTO(Long id, String title, String type, Date date) {
         this.id = id;
         this.title = title;
+        this.type = type;
+        created = date;
     }
 
     @Override
@@ -66,12 +73,20 @@ public class ViewPreviewDTO implements Serializable {
         return true;
     }
 
+    public Date getCreated() {
+        return created;
+    }
+
     public Long getId() {
         return id;
     }
 
     public String getTitle() {
         return title;
+    }
+
+    public String getType() {
+        return type;
     }
 
     @Override
@@ -81,6 +96,14 @@ public class ViewPreviewDTO implements Serializable {
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((title == null) ? 0 : title.hashCode());
         return result;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     @Override

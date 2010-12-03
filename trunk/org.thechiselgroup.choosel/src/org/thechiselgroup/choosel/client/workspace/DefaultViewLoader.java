@@ -41,6 +41,11 @@ public class DefaultViewLoader implements ViewLoader {
     }
 
     @Override
+    public void loadViewAsWindow(Long id, AsyncCallback<Workspace> callback) {
+        viewPersistenceManager.loadViewAsWindow(id, callback);
+    }
+
+    @Override
     public void loadViewAsWorkspace(Long id, AsyncCallback<Workspace> callback) {
         viewPersistenceManager.loadViewAsWorkspace(id, callback);
 

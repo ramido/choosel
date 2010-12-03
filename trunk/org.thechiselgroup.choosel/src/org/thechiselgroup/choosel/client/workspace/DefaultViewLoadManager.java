@@ -166,6 +166,30 @@ public class DefaultViewLoadManager implements ViewLoadManager {
     }
 
     @Override
+    public void loadViewAsWindow(Long id,
+            final AsyncCallback<Workspace> callback) {
+        assert callback != null;
+
+        service.loadView(id, new AsyncCallback<ViewDTO>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                callback.onFailure(caught);
+            }
+
+            @Override
+            public void onSuccess(ViewDTO result) {
+                try {
+                    Workspace workspace = loadWindow(result);
+                    callback.onSuccess(workspace);
+                } catch (Exception e) {
+                    callback.onFailure(e);
+                }
+            }
+        });
+    }
+
+    @Override
     public void loadViewAsWorkspace(Long id,
             final AsyncCallback<Workspace> callback) {
         assert callback != null;
@@ -205,7 +229,8 @@ public class DefaultViewLoadManager implements ViewLoadManager {
             public void onSuccess(List<ViewPreviewDTO> result) {
                 List<ViewPreview> previews = new ArrayList<ViewPreview>();
                 for (ViewPreviewDTO dto : result) {
-                    previews.add(new ViewPreview(dto.getId(), dto.getTitle()));
+                    previews.add(new ViewPreview(dto.getId(), dto.getTitle(),
+                            dto.getType(), dto.getCreated()));
                 }
 
                 callback.onSuccess(previews);
@@ -214,12 +239,8 @@ public class DefaultViewLoadManager implements ViewLoadManager {
         });
     }
 
-    protected Workspace loadWorkspace(ViewDTO dto) {
-        desktop.clearWindows();
-
-        workspaceManager.createNewWorkspace();
+    protected Workspace loadWindow(ViewDTO dto) {
         Workspace workspace = workspaceManager.getWorkspace();
-        workspaceManager.setWorkspace(workspace);
 
         loadResourcesAndView(dto, new ViewInitializer() {
             @Override
@@ -229,6 +250,14 @@ public class DefaultViewLoadManager implements ViewLoadManager {
         });
 
         return workspace;
+    }
+
+    protected Workspace loadWorkspace(ViewDTO dto) {
+        desktop.clearWindows();
+
+        workspaceManager.createNewWorkspace();
+
+        return loadWindow(dto);
     }
 
     private void restoreResources(ViewDTO dto) {

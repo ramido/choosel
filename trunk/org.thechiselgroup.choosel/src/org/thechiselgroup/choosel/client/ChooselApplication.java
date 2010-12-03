@@ -462,10 +462,10 @@ public abstract class ChooselApplication {
     private void loadViewAsWorkspace(String viewIdParam, String newWorkspace) {
 
         if (viewIdParam != null) {
-            Long workspaceID = Long.parseLong(viewIdParam);
+            Long viewID = Long.parseLong(viewIdParam);
 
             LoadViewAsWorkspaceCommand loadWorkspaceCommand = new LoadViewAsWorkspaceCommand(
-                    workspaceID, viewLoader);
+                    viewID, viewLoader);
             asyncCommandExecutor.execute(loadWorkspaceCommand);
         }
 

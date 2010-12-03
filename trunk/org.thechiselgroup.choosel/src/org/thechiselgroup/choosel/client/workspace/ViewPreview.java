@@ -15,16 +15,28 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.workspace;
 
+import java.util.Date;
+
 public class ViewPreview {
 
     private Long id;
 
     private String title;
 
-    public ViewPreview(Long id, String title) {
+    private String type;
+
+    private Date date;
+
+    public ViewPreview(Long id, String title, String type, Date date) {
         super();
         this.id = id;
         this.title = title;
+        this.type = type;
+        this.date = date;
+    }
+
+    public Date getDate() {
+        return date;
     }
 
     public Long getId() {
@@ -33,6 +45,18 @@ public class ViewPreview {
 
     public String getName() {
         return title;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
 }
