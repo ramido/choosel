@@ -45,8 +45,8 @@ public class DefaultResourceModelTest {
         ResourceSet resources1 = createResources("test", 1, 2, 3);
         ResourceSet resources2 = createResources("test", 3, 4, 5);
 
-        underTest.addResources(resources1);
-        underTest.addResources(resources2);
+        underTest.addUnnamedResources(resources1);
+        underTest.addUnnamedResources(resources2);
         ResourceSet allResources = underTest.getResources();
 
         assertEquals(5, allResources.size());
@@ -104,7 +104,7 @@ public class DefaultResourceModelTest {
     public void containsAddedResources() {
         ResourceSet resources = createResources(1, 2, 3);
 
-        underTest.addResources(resources);
+        underTest.addUnnamedResources(resources);
 
         assertEquals(true, underTest.containsResources(resources));
     }
@@ -127,7 +127,7 @@ public class DefaultResourceModelTest {
         ResourceSet resources = createResources(1, 2, 3);
         resources.setLabel("test");
 
-        underTest.addResources(resources);
+        underTest.addUnnamedResources(resources);
 
         assertEquals(false, underTest.containsResourceSet(resources));
     }
@@ -153,9 +153,9 @@ public class DefaultResourceModelTest {
         ResourceSet resources1 = createResources(1, 2, 3);
         ResourceSet resources2 = createResources(3, 4, 5);
 
-        underTest.addResources(resources1);
-        underTest.addResources(resources2);
-        underTest.removeResources(resources2);
+        underTest.addUnnamedResources(resources1);
+        underTest.addUnnamedResources(resources2);
+        underTest.removeUnnamedResources(resources2);
         ResourceSet allResources = underTest.getResources();
 
         assertEquals(2, allResources.size());

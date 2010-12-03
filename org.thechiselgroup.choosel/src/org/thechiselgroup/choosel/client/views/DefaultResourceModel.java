@@ -15,10 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.persistence.Persistable;
@@ -29,6 +26,8 @@ import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.client.util.Disposable;
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 
 public class DefaultResourceModel implements ResourceModel, Disposable,
         Persistable {
@@ -58,7 +57,7 @@ public class DefaultResourceModel implements ResourceModel, Disposable,
     }
 
     @Override
-    public void addResources(Collection<Resource> resources) {
+    public void addUnnamedResources(Iterable<Resource> resources) {
         assert resources != null;
         automaticResources.addAll(resources);
     }
@@ -79,7 +78,7 @@ public class DefaultResourceModel implements ResourceModel, Disposable,
     }
 
     @Override
-    public boolean containsResources(Collection<Resource> resources) {
+    public boolean containsResources(Iterable<Resource> resources) {
         assert resources != null;
         return allResources.containsAll(resources);
     }
@@ -110,6 +109,24 @@ public class DefaultResourceModel implements ResourceModel, Disposable,
     }
 
     @Override
+    public LightweightList<Resource> getIntersection(
+            Iterable<Resource> resources) {
+
+        assert resources != null;
+
+        // TODO performance: use hash-based retain operation instead?
+
+        LightweightList<Resource> intersection = CollectionFactory
+                .createLightweightList();
+        for (Resource resource : resources) {
+            if (allResources.contains(resource)) {
+                intersection.add(resource);
+            }
+        }
+        return intersection;
+    }
+
+    @Override
     public ResourceSet getResources() {
         return allResources;
     }
@@ -132,12 +149,6 @@ public class DefaultResourceModel implements ResourceModel, Disposable,
     }
 
     @Override
-    public void removeResources(Collection<Resource> resources) {
-        assert resources != null;
-        automaticResources.removeAll(resources);
-    }
-
-    @Override
     public void removeResourceSet(ResourceSet resourceSet) {
         assert resourceSet != null;
         assert resourceSet.hasLabel();
@@ -146,9 +157,15 @@ public class DefaultResourceModel implements ResourceModel, Disposable,
     }
 
     @Override
+    public void removeUnnamedResources(Iterable<Resource> resources) {
+        assert resources != null;
+        automaticResources.removeAll(resources);
+    }
+
+    @Override
     public void restore(Memento state, ResourceSetAccessor accessor) {
         // TODO remove user sets, automatic resources
-        addResources(restoreAutomaticResources(state, accessor));
+        addUnnamedResources(restoreAutomaticResources(state, accessor));
         restoreUserResourceSets(state, accessor);
     }
 
@@ -172,20 +189,6 @@ public class DefaultResourceModel implements ResourceModel, Disposable,
             addResourceSet(restoreResourceSet(state, accessor,
                     MEMENTO_RESOURCE_SET_PREFIX + i));
         }
-    }
-
-    @Override
-    public Set<Resource> retain(List<Resource> resources) {
-        assert resources != null;
-
-        Set<Resource> retainedResources = new HashSet<Resource>();
-        // TODO performance: use hash-based retain operation instead
-        for (Resource resource : resources) {
-            if (allResources.contains(resource)) {
-                retainedResources.add(resource);
-            }
-        }
-        return retainedResources;
     }
 
     @Override

@@ -15,13 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-
 import org.thechiselgroup.choosel.client.resources.CombinedResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 
 public interface ResourceModel {
 
@@ -29,7 +26,7 @@ public interface ResourceModel {
      * Add the resources to the contents of this view without displaying the
      * resource set explicitly.
      */
-    void addResources(Collection<Resource> resources);
+    void addUnnamedResources(Iterable<Resource> resources);
 
     /**
      * Explicit adding of the resource set as a new, displayed resource set.
@@ -41,7 +38,7 @@ public interface ResourceModel {
     /**
      * Checks if the resources are displayed in this view.
      */
-    boolean containsResources(Collection<Resource> resources);
+    boolean containsResources(Iterable<Resource> resources);
 
     /**
      * Checks if this labeled resource set is explicitly displayed in this view.
@@ -55,16 +52,19 @@ public interface ResourceModel {
     CombinedResourceSet getCombinedUserResourceSets();
 
     /**
+     * Calculates the intersection, i.e. those resources that are both in the
+     * parameter and in this resource model.
+     * 
+     * @return new <code>LightweightList</code> that contains only the subset of
+     *         <code>resources</code> that is contained in this resource model
+     */
+    LightweightList<Resource> getIntersection(Iterable<Resource> resources);
+
+    /**
      * Returns an unmodifiable resource set containing all resources displayed
      * in this view.
      */
     ResourceSet getResources();
-
-    /**
-     * Removes resources that are <b>not</b> contained in any explicitly added
-     * resource set.
-     */
-    void removeResources(Collection<Resource> resources);
 
     /**
      * Removes a resource set that was explicitly added via
@@ -74,9 +74,9 @@ public interface ResourceModel {
     void removeResourceSet(ResourceSet resourceSet);
 
     /**
-     * @return new <code>Set</code> that contains only the subset of
-     *         <code>resources</code> that is contained in this resource model
+     * Removes resources that are <b>not</b> contained in any explicitly added
+     * resource set.
      */
-    Set<Resource> retain(List<Resource> resources);
+    void removeUnnamedResources(Iterable<Resource> resources);
 
 }

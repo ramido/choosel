@@ -13,29 +13,31 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.resources;
+package org.thechiselgroup.choosel.client.util.collections;
 
-import org.thechiselgroup.choosel.client.util.collections.LightweightList;
+import java.util.List;
 
-public class DefaultResourceSet extends AbstractUriMapBasedResourceSet {
+/**
+ * Minimalistic list for intermediary data processing. A JavaScript
+ * implementation is available.
+ * 
+ * @author Lars Grammel
+ */
+public interface LightweightList<T> extends Iterable<T> {
 
-    public DefaultResourceSet() {
-    }
+    void add(T t);
 
-    @Override
-    protected void doAdd(Resource resource,
-            LightweightList<Resource> addedResources) {
+    T get(int i);
 
-        addResourceToMap(resource);
-        addedResources.add(resource);
-    }
+    boolean isEmpty();
 
-    @Override
-    protected void doRemove(Resource resource,
-            LightweightList<Resource> removedResources) {
+    int size();
 
-        removeResourceFromMap(resource.getUri());
-        removedResources.add(resource);
-    }
+    /**
+     * Converts the lightweight list into a regular list from the Java
+     * collections framework. This is especially useful for tests, however, it
+     * removes all performance advantages.
+     */
+    List<T> toList();
 
 }

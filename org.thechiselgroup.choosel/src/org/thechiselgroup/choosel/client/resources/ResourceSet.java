@@ -16,23 +16,50 @@
 package org.thechiselgroup.choosel.client.resources;
 
 import java.util.List;
-import java.util.Set;
 
 import org.thechiselgroup.choosel.client.label.HasLabel;
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
+ * <p>
  * Classes implementing this interface manage sets of resources. They support
- * event notification on changes, and are more heavy-weight than plain lists.
- * Thus, simple ArrayLists should be preferred if the additional functionality
- * (labels, events) are not required.
+ * event notification on changes and are more heavy-weight than plain arrays or
+ * sets. For intermediate calculations that do not require events etc, consider
+ * using a {@link LightweightList} via {@link CollectionFactory}.
+ * </p>
+ * <p>
+ * <b>IMPLEMENTATION NOTE</b>: This interface originally extended
+ * java.util.Set<Resource>. However, the collection classes in java.util require
+ * supporting subclasses of Resource, as well as supporting generic objects in
+ * contains and remove. In GWT, this lead to a performance penalty, as
+ * instanceof checks and class casting are fairly expensive (at least according
+ * to profiling in Chrome 8). Therefore, this interface now provides methods
+ * that resemble the Java collections API, but are specific to Resources.
+ * </p>
+ * 
+ * @see Resource
  */
-public interface ResourceSet extends HasLabel, Set<Resource> {
+public interface ResourceSet extends HasLabel, Iterable<Resource> {
+
+    boolean add(Resource resource);
+
+    boolean addAll(Iterable<Resource> resources);
 
     HandlerRegistration addEventHandler(ResourcesAddedEventHandler handler);
 
     HandlerRegistration addEventHandler(ResourcesRemovedEventHandler handler);
+
+    /**
+     * Removes all resources from this resource set.
+     */
+    void clear();
+
+    boolean contains(Resource resource);
+
+    boolean containsAll(Iterable<Resource> resources);
 
     boolean containsEqualResources(ResourceSet other);
 
@@ -45,7 +72,24 @@ public interface ResourceSet extends HasLabel, Set<Resource> {
     // especially in the graph
     Resource getFirstResource();
 
+    boolean isEmpty();
+
     boolean isModifiable();
+
+    boolean remove(Resource resource);
+
+    boolean removeAll(Iterable<Resource> resources);
+
+    boolean removeAll(ResourceSet resources);
+
+    boolean retainAll(ResourceSet resources);
+
+    /**
+     * Returns the number of resources in this resource set.
+     * 
+     * @return number of resources in this set.
+     */
+    int size();
 
     void switchContainment(Resource resource);
 

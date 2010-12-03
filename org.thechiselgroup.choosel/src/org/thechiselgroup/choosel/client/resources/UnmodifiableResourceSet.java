@@ -15,8 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
-import java.util.Collection;
-
 public class UnmodifiableResourceSet extends DelegatingResourceSet {
 
     public UnmodifiableResourceSet(ResourceSet delegate) {
@@ -30,7 +28,7 @@ public class UnmodifiableResourceSet extends DelegatingResourceSet {
     }
 
     @Override
-    public boolean addAll(Collection<? extends Resource> resources) {
+    public boolean addAll(Iterable<Resource> resources) {
         throw new UnsupportedOperationException(
                 "UnmodifiableResourceSet.addAll not supported");
     }
@@ -47,21 +45,45 @@ public class UnmodifiableResourceSet extends DelegatingResourceSet {
     }
 
     @Override
-    public boolean remove(Object o) {
+    public boolean remove(Resource r) {
         throw new UnsupportedOperationException(
                 "UnmodifiableResourceSet.remove not supported");
     }
 
     @Override
-    public boolean removeAll(Collection<?> resources) {
+    public boolean removeAll(Iterable<Resource> resources) {
         throw new UnsupportedOperationException(
                 "UnmodifiableResourceSet.removeAll not supported");
+    }
+
+    @Override
+    public boolean removeAll(ResourceSet resources) {
+        throw new UnsupportedOperationException(
+                "UnmodifiableResourceSet.removeAll not supported");
+    }
+
+    @Override
+    public boolean retainAll(ResourceSet resources) {
+        throw new UnsupportedOperationException(
+                "UnmodifiableResourceSet.retainAll not supported");
     }
 
     @Override
     public void setLabel(String label) {
         throw new UnsupportedOperationException(
                 "UnmodifiableResourceSet.setLabel not supported");
+    }
+
+    @Override
+    public void switchContainment(Resource resource) {
+        throw new UnsupportedOperationException(
+                "UnmodifiableResourceSet.switchContainment not supported");
+    }
+
+    @Override
+    public void switchContainment(ResourceSet resources) {
+        throw new UnsupportedOperationException(
+                "UnmodifiableResourceSet.switchContainment not supported");
     }
 
 }

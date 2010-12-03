@@ -15,10 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
@@ -26,6 +22,8 @@ import org.thechiselgroup.choosel.client.ui.popup.PopupClosingEvent;
 import org.thechiselgroup.choosel.client.ui.popup.PopupClosingHandler;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.util.Disposable;
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
@@ -90,28 +88,31 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
         initPopupHighlighting();
     }
 
-    public void addHighlightedResources(
-            Collection<Resource> highlightedResources) {
-
+    public void addHighlightedResources(Iterable<Resource> highlightedResources) {
         cachedHighlightStatus = null;
         this.highlightedResources
                 .addAll(calculateAffectedResources(highlightedResources));
     }
 
-    public void addSelectedResources(Collection<Resource> selectedResources) {
+    public void addSelectedResources(Iterable<Resource> selectedResources) {
         cachedSelectedStatus = null;
         this.selectedResources
                 .addAll(calculateAffectedResources(selectedResources));
     }
 
-    private List<Resource> calculateAffectedResources(
-            Collection<Resource> resources) {
+    private LightweightList<Resource> calculateAffectedResources(
+            Iterable<Resource> resources) {
 
         assert resources != null;
 
-        List<Resource> affectedResources = new ArrayList<Resource>();
-        affectedResources.addAll(resources);
-        affectedResources.retainAll(this.resources);
+        LightweightList<Resource> affectedResources = CollectionFactory
+                .createLightweightList();
+
+        for (Resource resource : resources) {
+            if (this.resources.contains(resource)) {
+                affectedResources.add(resource);
+            }
+        }
 
         return affectedResources;
     }
@@ -123,13 +124,13 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
     }
 
     @Override
-    public String getGroupID() {
-        return groupID;
+    public Object getDisplayObject() {
+        return displayObject;
     }
 
     @Override
-    public Object getDisplayObject() {
-        return displayObject;
+    public String getGroupID() {
+        return groupID;
     }
 
     @Override
@@ -139,7 +140,7 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
     }
 
     @Override
-    public Collection<Resource> getHighlightedSelectedResources() {
+    public ResourceSet getHighlightedSelectedResources() {
         assert resources.containsAll(highlightedResources);
         assert resources.containsAll(selectedResources);
 
@@ -194,7 +195,7 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
     }
 
     @Override
-    public Collection<Resource> getSelectedResources() {
+    public ResourceSet getSelectedResources() {
         assert resources.containsAll(selectedResources);
         return selectedResources;
     }
@@ -285,14 +286,14 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
     }
 
     public void removeHighlightedResources(
-            Collection<Resource> highlightedResources) {
+            Iterable<Resource> highlightedResources) {
 
         cachedHighlightStatus = null;
         this.highlightedResources
                 .removeAll(calculateAffectedResources(highlightedResources));
     }
 
-    public void removeSelectedResources(Collection<Resource> selectedResources) {
+    public void removeSelectedResources(Iterable<Resource> selectedResources) {
         cachedSelectedStatus = null;
         this.selectedResources
                 .removeAll(calculateAffectedResources(selectedResources));

@@ -13,29 +13,32 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.resources;
+package org.thechiselgroup.choosel.client.util.collections;
 
-import org.thechiselgroup.choosel.client.util.collections.LightweightList;
+import java.util.HashMap;
+import java.util.Map;
 
-public class DefaultResourceSet extends AbstractUriMapBasedResourceSet {
+import com.google.gwt.core.client.GWT;
 
-    public DefaultResourceSet() {
+public final class CollectionFactory {
+
+    public static <T> LightweightList<T> createLightweightList() {
+        if (GWT.isScript() || GWT.isClient()) {
+            return JavaScriptLightweightList.create();
+        }
+
+        return new ArrayListToLightweightListAdapter<T>();
     }
 
-    @Override
-    protected void doAdd(Resource resource,
-            LightweightList<Resource> addedResources) {
+    public static <T> Map<String, T> createStringMap() {
+        if (GWT.isScript() || GWT.isClient()) {
+            return new JavaScriptStringToObjectMap<T>();
+        }
 
-        addResourceToMap(resource);
-        addedResources.add(resource);
+        return new HashMap<String, T>();
     }
 
-    @Override
-    protected void doRemove(Resource resource,
-            LightweightList<Resource> removedResources) {
-
-        removeResourceFromMap(resource.getUri());
-        removedResources.add(resource);
+    private CollectionFactory() {
     }
 
 }

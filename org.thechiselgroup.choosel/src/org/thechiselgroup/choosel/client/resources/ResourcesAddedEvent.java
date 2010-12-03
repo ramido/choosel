@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
-import java.util.List;
+import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -24,7 +24,9 @@ public class ResourcesAddedEvent extends
 
     public static final GwtEvent.Type<ResourcesAddedEventHandler> TYPE = new GwtEvent.Type<ResourcesAddedEventHandler>();
 
-    public ResourcesAddedEvent(ResourceSet target, List<Resource> addedResources) {
+    public ResourcesAddedEvent(ResourceSet target,
+            LightweightList<Resource> addedResources) {
+
         super(target, addedResources);
     }
 
@@ -33,7 +35,7 @@ public class ResourcesAddedEvent extends
         handler.onResourcesAdded(this);
     }
 
-    public List<Resource> getAddedResources() {
+    public LightweightList<Resource> getAddedResources() {
         return affectedResources;
     }
 

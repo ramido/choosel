@@ -15,8 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
-import java.util.HashMap;
 import java.util.Map;
+
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 
 public class DefaultResourceManager implements ResourceManager {
 
@@ -45,7 +46,8 @@ public class DefaultResourceManager implements ResourceManager {
 
     }
 
-    private Map<String, ResourceElement> keysToResourceElements = new HashMap<String, ResourceElement>();
+    private Map<String, ResourceElement> keysToResourceElements = CollectionFactory
+            .createStringMap();
 
     @Override
     public Resource add(Resource resource) {

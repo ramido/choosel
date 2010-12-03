@@ -15,13 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources.command;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.thechiselgroup.choosel.client.command.UndoableCommand;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.util.HasDescription;
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 
 /**
  * Adds a resource set to another resource set by adding the missing resources
@@ -30,7 +29,7 @@ import org.thechiselgroup.choosel.client.util.HasDescription;
 public class AddResourceSetToResourceSetCommand implements UndoableCommand,
         HasDescription {
 
-    protected List<Resource> addedResources = null;
+    protected LightweightList<Resource> addedResources = null;
 
     protected ResourceSet addedSet;
 
@@ -50,9 +49,12 @@ public class AddResourceSetToResourceSetCommand implements UndoableCommand,
     @Override
     public void execute() {
         if (addedResources == null) {
-            addedResources = new ArrayList<Resource>();
-            addedResources.addAll(addedSet);
-            addedResources.removeAll(modifiedSet);
+            addedResources = CollectionFactory.createLightweightList();
+            for (Resource resource : addedSet) {
+                if (!modifiedSet.contains(resource)) {
+                    addedResources.add(resource);
+                }
+            }
         }
 
         modifiedSet.addAll(addedResources);

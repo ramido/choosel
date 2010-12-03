@@ -15,8 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui;
 
-import java.util.HashMap;
 import java.util.Map;
+
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -50,7 +51,8 @@ public class ActionBar implements WidgetAdaptable {
 
     private VerticalPanel outerWidget;
 
-    private Map<String, ActionBarPanel> panelsByID = new HashMap<String, ActionBarPanel>();
+    private Map<String, ActionBarPanel> panelsByID = CollectionFactory
+            .createStringMap();
 
     public ActionBar() {
         outerWidget = new VerticalPanel();

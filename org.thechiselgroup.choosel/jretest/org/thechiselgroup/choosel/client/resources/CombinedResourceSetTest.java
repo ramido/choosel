@@ -104,7 +104,8 @@ public class CombinedResourceSetTest {
         ArgumentCaptor<ResourcesAddedEvent> argument = verifyOnResourcesAdded(
                 1, addedHandler);
 
-        List<Resource> eventResources = argument.getValue().getAddedResources();
+        List<Resource> eventResources = argument.getValue().getAddedResources()
+                .toList();
         assertEquals(3, eventResources.size());
     }
 

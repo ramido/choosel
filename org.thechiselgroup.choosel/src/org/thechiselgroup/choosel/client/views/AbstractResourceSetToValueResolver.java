@@ -15,20 +15,21 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resolver.ResourceToValueResolver;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 
 public abstract class AbstractResourceSetToValueResolver implements
         ResourceSetToValueResolver {
 
     protected ResourceCategorizer categorizer;
 
-    protected Map<String, ResourceToValueResolver> resourceTypeToResourceToValueResolvers = new HashMap<String, ResourceToValueResolver>();
+    protected Map<String, ResourceToValueResolver> resourceTypeToResourceToValueResolvers = CollectionFactory
+            .createStringMap();
 
     public AbstractResourceSetToValueResolver(ResourceCategorizer categorizer) {
         this.categorizer = categorizer;

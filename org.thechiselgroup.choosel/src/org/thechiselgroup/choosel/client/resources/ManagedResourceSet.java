@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
-import java.util.List;
+import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 
 import com.google.inject.Inject;
 
@@ -30,7 +30,9 @@ public class ManagedResourceSet extends AbstractUriMapBasedResourceSet {
     }
 
     @Override
-    protected void doAdd(Resource resource, List<Resource> addedResources) {
+    protected void doAdd(Resource resource,
+            LightweightList<Resource> addedResources) {
+
         resourceManager.add(resource);
         Resource realResource = resourceManager.allocate(resource.getUri());
         addResourceToMap(realResource);
@@ -38,7 +40,9 @@ public class ManagedResourceSet extends AbstractUriMapBasedResourceSet {
     }
 
     @Override
-    public void doRemove(Resource resource, List<Resource> removedResources) {
+    public void doRemove(Resource resource,
+            LightweightList<Resource> removedResources) {
+
         String key = resource.getUri();
         removeResourceFromMap(key);
         resourceManager.deallocate(key);

@@ -15,30 +15,28 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources.command;
 
-import java.util.Collection;
-import java.util.List;
-
 import org.thechiselgroup.choosel.client.command.UndoableCommand;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.util.CollectionUtils;
 import org.thechiselgroup.choosel.client.util.HasDescription;
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.client.views.ResourceModel;
 
 /**
- * Adds resources to a resource model.
+ * Adds resources to a resource model - not explictly, but to unnamed set.
  */
 public class AddResourcesToResourceModelCommand implements UndoableCommand,
         HasDescription {
 
-    private List<Resource> addedResources;
+    private LightweightList<Resource> addedResources;
 
-    private Collection<Resource> resources;
+    private ResourceSet resources;
 
     private ResourceModel resourceModel;
 
     public AddResourcesToResourceModelCommand(ResourceModel resourceModel,
-            Collection<Resource> resources) {
+            ResourceSet resources) {
 
         assert resourceModel != null;
         assert resources != null;
@@ -52,10 +50,14 @@ public class AddResourcesToResourceModelCommand implements UndoableCommand,
         assert addedResources == null;
 
         ResourceSet viewResources = resourceModel.getResources();
-        addedResources = CollectionUtils.toList(resources);
-        addedResources.removeAll(viewResources.toList());
+        addedResources = CollectionFactory.createLightweightList();
+        for (Resource resource : resources) {
+            if (!viewResources.contains(resource)) {
+                addedResources.add(resource);
+            }
+        }
 
-        resourceModel.addResources(addedResources);
+        resourceModel.addUnnamedResources(addedResources);
 
         assert addedResources != null;
         assert resourceModel.containsResources(resources);
@@ -72,7 +74,7 @@ public class AddResourcesToResourceModelCommand implements UndoableCommand,
         assert addedResources != null;
         assert resourceModel.containsResources(resources);
 
-        resourceModel.removeResources(addedResources);
+        resourceModel.removeUnnamedResources(addedResources);
         addedResources = null;
 
         assert addedResources == null;

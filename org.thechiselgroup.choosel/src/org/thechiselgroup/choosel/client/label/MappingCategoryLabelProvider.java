@@ -15,12 +15,14 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.label;
 
-import java.util.HashMap;
 import java.util.Map;
+
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 
 public class MappingCategoryLabelProvider implements CategoryLabelProvider {
 
-    private final Map<String, String> categoriesToLabels = new HashMap<String, String>();
+    private final Map<String, String> categoriesToLabels = CollectionFactory
+            .createStringMap();
 
     @Override
     public String getLabel(String category) {

@@ -39,7 +39,7 @@ public class DefaultViewInitialValuesTest {
         resource.putValue("text1", "t1");
         resource.putValue("text2", "t2");
 
-        underTest.getResourceModel().addResources(toResourceSet(resource));
+        underTest.getResourceModel().addUnnamedResources(toResourceSet(resource));
 
         assertEquals(true, underTest.getSlotMappingConfiguration()
                 .containsResolver(numberSlot));
@@ -57,7 +57,7 @@ public class DefaultViewInitialValuesTest {
         resource.putValue("text1", "t1");
         resource.putValue("text2", "t2");
 
-        underTest.getResourceModel().addResources(toResourceSet(resource));
+        underTest.getResourceModel().addUnnamedResources(toResourceSet(resource));
 
         assertEquals(true, underTest.getSlotMappingConfiguration()
                 .containsResolver(textSlot));

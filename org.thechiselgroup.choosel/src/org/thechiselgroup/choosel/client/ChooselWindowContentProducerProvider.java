@@ -32,7 +32,6 @@ import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionCo
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_TIME;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_TIMELINE;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
@@ -46,6 +45,7 @@ import org.thechiselgroup.choosel.client.ui.HelpWindowContentFactory;
 import org.thechiselgroup.choosel.client.ui.NoteWindowContentFactory;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropTargetManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.views.DefaultWindowContentProducer;
 import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ShareConfiguration;
@@ -80,7 +80,8 @@ public class ChooselWindowContentProducerProvider implements
 
     private ResourceSetAvatarFactory userSetsDragAvatarFactory;
 
-    protected final Map<String, WindowContentFactory> windowContentFactories = new HashMap<String, WindowContentFactory>();
+    protected final Map<String, WindowContentFactory> windowContentFactories = CollectionFactory
+            .createStringMap();
 
     private HoverModel hoverModel;
 

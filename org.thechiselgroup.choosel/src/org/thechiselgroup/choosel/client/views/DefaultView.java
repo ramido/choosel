@@ -18,7 +18,6 @@ package org.thechiselgroup.choosel.client.views;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +28,6 @@ import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.persistence.Persistable;
 import org.thechiselgroup.choosel.client.resolver.FixedValuePropertyValueResolver;
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
-import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceByPropertyMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceByUriMultiCategorizer;
@@ -57,6 +55,8 @@ import org.thechiselgroup.choosel.client.util.CollectionUtils;
 import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.util.HandlerRegistrationSet;
 import org.thechiselgroup.choosel.client.util.Initializable;
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 import org.thechiselgroup.choosel.client.workspace.ViewSaver;
 
@@ -122,7 +122,8 @@ public class DefaultView extends AbstractWindowContent implements View {
      * resource grouping) to the resource items that display the resource sets
      * in the view.
      */
-    private Map<String, DefaultResourceItem> groupsToResourceItems = new HashMap<String, DefaultResourceItem>();
+    private Map<String, DefaultResourceItem> groupsToResourceItems = CollectionFactory
+            .createStringMap();
 
     private SlotMappingConfiguration slotMappingConfiguration;
 
@@ -225,17 +226,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         return viewPanel;
     }
 
-    private ResourceSet calculateAffectedResources(
-            List<Resource> affectedResources) {
-
-        Set<Resource> affectedResourcesInThisView = resourceModel
-                .retain(affectedResources);
-
-        ResourceSet affectedResourcesInThisView2 = new DefaultResourceSet();
-        affectedResourcesInThisView2.addAll(affectedResourcesInThisView);
-        return affectedResourcesInThisView2;
-    }
-
     // for test
     protected PopupManager createPopupManager(final ResourceSet resources) {
         WidgetFactory widgetFactory = new WidgetFactory() {
@@ -267,8 +257,9 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         // TODO introduce partial selection
 
-        ResourceSet affectedResources = calculateAffectedResources(hoverModel
-                .toList());
+        LightweightList<Resource> affectedResources = resourceModel
+                .getIntersection(hoverModel.getResources());
+
         if (!affectedResources.isEmpty()) {
             resourceItem.addHighlightedResources(affectedResources);
         }
@@ -893,12 +884,13 @@ public class DefaultView extends AbstractWindowContent implements View {
         contentDisplay.checkResize();
     }
 
-    private void updateHighlighting(List<Resource> affectedResources,
-            boolean highlighted) {
+    private void updateHighlighting(
+            LightweightList<Resource> affectedResources, boolean highlighted) {
 
         assert affectedResources != null;
 
-        ResourceSet affectedResourcesInThisView = calculateAffectedResources(affectedResources);
+        LightweightList<Resource> affectedResourcesInThisView = resourceModel
+                .getIntersection(affectedResources);
 
         if (affectedResourcesInThisView.isEmpty()) {
             return;
@@ -967,7 +959,9 @@ public class DefaultView extends AbstractWindowContent implements View {
                 Collections.<Slot> emptySet());
     }
 
-    private void updateSelection(List<Resource> resources, boolean selected) {
+    private void updateSelection(LightweightList<Resource> resources,
+            boolean selected) {
+
         Set<ResourceItem> resourceItems = getResourceItems(resources);
         for (ResourceItem resourceItem : resourceItems) {
             // TODO test case (similar to highlighting)

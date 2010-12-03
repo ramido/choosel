@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -40,7 +39,7 @@ public class DelegatingResourceSet implements ResourceSet {
     }
 
     @Override
-    public boolean addAll(Collection<? extends Resource> resources) {
+    public boolean addAll(Iterable<Resource> resources) {
         return delegate.addAll(resources);
     }
 
@@ -68,12 +67,12 @@ public class DelegatingResourceSet implements ResourceSet {
     }
 
     @Override
-    public boolean contains(Object o) {
-        return delegate.contains(o);
+    public boolean contains(Resource resource) {
+        return delegate.contains(resource);
     }
 
     @Override
-    public boolean containsAll(Collection<?> resources) {
+    public boolean containsAll(Iterable<Resource> resources) {
         return delegate.containsAll(resources);
     }
 
@@ -127,18 +126,23 @@ public class DelegatingResourceSet implements ResourceSet {
     }
 
     @Override
-    public boolean remove(Object o) {
-        return delegate.remove(o);
+    public boolean remove(Resource resource) {
+        return delegate.remove(resource);
     }
 
     @Override
-    public boolean removeAll(Collection<?> c) {
-        return delegate.removeAll(c);
+    public boolean removeAll(Iterable<Resource> resources) {
+        return delegate.removeAll(resources);
     }
 
     @Override
-    public boolean retainAll(Collection<?> c) {
-        return delegate.retainAll(c);
+    public boolean removeAll(ResourceSet resources) {
+        return delegate.removeAll(resources);
+    }
+
+    @Override
+    public boolean retainAll(ResourceSet resources) {
+        return delegate.retainAll(resources);
     }
 
     @Override
@@ -159,16 +163,6 @@ public class DelegatingResourceSet implements ResourceSet {
     @Override
     public void switchContainment(ResourceSet resources) {
         delegate.switchContainment(resources);
-    }
-
-    @Override
-    public Object[] toArray() {
-        return delegate.toArray();
-    }
-
-    @Override
-    public <T> T[] toArray(T[] a) {
-        return delegate.toArray(a);
     }
 
     @Override

@@ -24,6 +24,8 @@ public class Resource implements Serializable {
 
     private static final long serialVersionUID = 5652752520235015241L;
 
+    // TODO find ways to use better map implementation
+    // (CollectionFactory.createStringMap)
     private HashMap<String, Serializable> properties = new HashMap<String, Serializable>();
 
     // unique resource identifier (URI)
@@ -89,7 +91,7 @@ public class Resource implements Serializable {
     }
 
     public boolean isUriList(String key) {
-        return this.getValue(key) instanceof UriList;
+        return getValue(key) instanceof UriList;
     }
 
     public void putValue(String key, Serializable value) {

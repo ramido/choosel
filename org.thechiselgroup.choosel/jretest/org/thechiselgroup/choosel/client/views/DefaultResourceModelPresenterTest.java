@@ -61,7 +61,7 @@ public class DefaultResourceModelPresenterTest {
     @Test
     public void allResourcesPresenterContainsSetWithAllResources() {
         resourceModel.addResourceSet(createLabeledResources(1));
-        resourceModel.addResources(createResources(2));
+        resourceModel.addUnnamedResources(createResources(2));
 
         ArgumentCaptor<ResourceSet> argument = ArgumentCaptor
                 .forClass(ResourceSet.class);
