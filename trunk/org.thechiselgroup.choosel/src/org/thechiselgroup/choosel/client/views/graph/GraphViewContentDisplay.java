@@ -17,7 +17,6 @@ package org.thechiselgroup.choosel.client.views.graph;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +54,7 @@ import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseOutEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseOutHandler;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseOverEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseOverHandler;
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
@@ -201,7 +201,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
     private List<Arc> arcList = new ArrayList<Arc>();
 
-    private final Map<String, ResourceItem> nodeIdToResourceItemMap = new HashMap<String, ResourceItem>();
+    private final Map<String, ResourceItem> nodeIdToResourceItemMap = CollectionFactory
+            .createStringMap();
 
     private boolean ready = false;
 

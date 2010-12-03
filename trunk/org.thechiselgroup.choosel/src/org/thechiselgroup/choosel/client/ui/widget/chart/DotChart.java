@@ -348,8 +348,8 @@ public class DotChart extends ChartWidget {
     }
 
     private boolean isSelected(int i) {
-        return chartItems.get(i).getResourceItem().getSelectedResources()
-                .contains(chartItems.get(i));
+        return !chartItems.get(i).getResourceItem().getSelectedResources()
+                .isEmpty();
     }
 
     @Override

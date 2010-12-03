@@ -60,7 +60,7 @@ public class DefaultViewPersistenceTest {
 
         originalView.getSlotMappingConfiguration().setMapping(textSlot,
                 new FirstResourcePropertyResolver("property1"));
-        originalView.getResourceModel().addResources(toResourceSet(resource));
+        originalView.getResourceModel().addUnnamedResources(toResourceSet(resource));
         originalView.getSlotMappingConfiguration().setMapping(textSlot,
                 new FirstResourcePropertyResolver("property2"));
 
@@ -104,7 +104,7 @@ public class DefaultViewPersistenceTest {
         r2.putValue("property1", "value1-2");
         r2.putValue("property2", "value2");
 
-        originalView.getResourceModel().addResources(toResourceSet(r1, r2));
+        originalView.getResourceModel().addUnnamedResources(toResourceSet(r1, r2));
         originalView.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("property2"));
 
@@ -143,7 +143,7 @@ public class DefaultViewPersistenceTest {
         r2.putValue("property1", "value1-2");
         r2.putValue("property2", "value2");
 
-        originalView.getResourceModel().addResources(toResourceSet(r1, r2));
+        originalView.getResourceModel().addUnnamedResources(toResourceSet(r1, r2));
         originalView.getResourceGrouping().setCategorizer(
                 new ResourceByUriMultiCategorizer());
 
@@ -188,7 +188,7 @@ public class DefaultViewPersistenceTest {
         r3.putValue("property1", new Double(8));
         r3.putValue("property2", "value2");
 
-        originalView.getResourceModel().addResources(toResourceSet(r1, r2, r3));
+        originalView.getResourceModel().addUnnamedResources(toResourceSet(r1, r2, r3));
         originalView.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("property2"));
         originalView.getSlotMappingConfiguration().setMapping(

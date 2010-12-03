@@ -15,14 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import org.thechiselgroup.choosel.client.label.DefaultHasLabel;
 import org.thechiselgroup.choosel.client.label.HasLabel;
 import org.thechiselgroup.choosel.client.label.LabelChangedEventHandler;
 import org.thechiselgroup.choosel.client.util.SingleItemCollection;
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerManager;
@@ -35,8 +33,8 @@ public abstract class AbstractResourceSet implements ResourceSet {
     private HasLabel labelDelegate;
 
     public AbstractResourceSet() {
-        this.eventBus = new HandlerManager(this);
-        this.labelDelegate = new DefaultHasLabel(this);
+        eventBus = new HandlerManager(this);
+        labelDelegate = new DefaultHasLabel(this);
     }
 
     @Override
@@ -47,10 +45,12 @@ public abstract class AbstractResourceSet implements ResourceSet {
     }
 
     @Override
-    public boolean addAll(Collection<? extends Resource> resources) {
+    public boolean addAll(Iterable<Resource> resources) {
         assert resources != null;
 
-        List<Resource> addedResources = new ArrayList<Resource>();
+        LightweightList<Resource> addedResources = CollectionFactory
+                .createLightweightList();
+
         for (Resource resource : resources) {
             if (!contains(resource)) {
                 doAdd(resource, addedResources);
@@ -91,20 +91,12 @@ public abstract class AbstractResourceSet implements ResourceSet {
     }
 
     @Override
-    public boolean contains(Object o) {
-        if (!(o instanceof Resource)) {
-            return false;
-        }
-
-        return contains((Resource) o);
-    }
-
     public abstract boolean contains(Resource resource);
 
     @Override
-    public boolean containsAll(Collection<?> resources) {
-        for (Object o : resources) {
-            if (!contains(o)) {
+    public boolean containsAll(Iterable<Resource> resources) {
+        for (Resource resource : resources) {
+            if (!contains(resource)) {
                 return false;
             }
         }
@@ -127,10 +119,10 @@ public abstract class AbstractResourceSet implements ResourceSet {
     }
 
     protected abstract void doAdd(Resource resource,
-            List<Resource> addedResources);
+            LightweightList<Resource> addedResources);
 
     protected abstract void doRemove(Resource resource,
-            List<Resource> removedResources);
+            LightweightList<Resource> removedResources);
 
     @Override
     public Resource getFirstResource() {
@@ -158,25 +150,21 @@ public abstract class AbstractResourceSet implements ResourceSet {
     }
 
     @Override
-    public boolean remove(Object o) {
-        assert o != null;
+    public boolean remove(Resource resource) {
+        assert resource != null;
 
-        if (!(o instanceof Resource)) {
-            return false;
-        }
-
-        return removeAll(new SingleItemCollection<Resource>((Resource) o));
+        return removeAll(new SingleItemCollection<Resource>(resource));
     }
 
     @Override
-    public boolean removeAll(Collection<?> resources) {
+    public boolean removeAll(Iterable<Resource> resources) {
         assert resources != null;
 
-        List<Resource> removedResources = new ArrayList();
-        for (Object o : resources) {
-            if (contains(o)) {
-                assert o instanceof Resource;
-                Resource resource = (Resource) o;
+        LightweightList<Resource> removedResources = CollectionFactory
+                .createLightweightList();
+
+        for (Resource resource : resources) {
+            if (contains(resource)) {
                 doRemove(resource, removedResources);
             }
         }
@@ -188,12 +176,18 @@ public abstract class AbstractResourceSet implements ResourceSet {
         return !removedResources.isEmpty();
     }
 
+    @Override
+    public boolean removeAll(ResourceSet resources) {
+        return removeAll((Iterable<Resource>) resources);
+    }
+
     // TODO implement faster retains if both are default resource sets
     @Override
-    public boolean retainAll(Collection<?> resources) {
+    public boolean retainAll(ResourceSet resources) {
         assert resources != null;
 
-        List<Resource> removedResources = new ArrayList<Resource>();
+        LightweightList<Resource> removedResources = CollectionFactory
+                .createLightweightList();
         for (Resource resource : toList()) {
             if (!resources.contains(resource)) {
                 doRemove(resource, removedResources);
@@ -233,16 +227,6 @@ public abstract class AbstractResourceSet implements ResourceSet {
         for (Resource resource : resources) {
             switchContainment(resource);
         }
-    }
-
-    @Override
-    public Object[] toArray() {
-        return toList().toArray();
-    }
-
-    @Override
-    public <T> T[] toArray(T[] a) {
-        return toList().toArray(a);
     }
 
 }

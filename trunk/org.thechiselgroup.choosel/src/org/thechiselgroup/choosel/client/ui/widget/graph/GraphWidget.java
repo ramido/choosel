@@ -16,12 +16,12 @@
 package org.thechiselgroup.choosel.client.ui.widget.graph;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import org.thechiselgroup.choosel.client.geometry.Point;
 import org.thechiselgroup.choosel.client.util.ArrayUtils;
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 
 import pl.rmalinowski.gwt2swf.client.ui.SWFWidget;
 
@@ -62,7 +62,8 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
     public static final String SWF_FILE = GWT.getModuleBaseURL()
             + "swf/BasicGraph.swf";
 
-    private static Map<String, GraphWidget> widgets = new HashMap<String, GraphWidget>();
+    private static Map<String, GraphWidget> widgets = CollectionFactory
+            .createStringMap();
 
     static {
         try {
@@ -299,15 +300,16 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
     }-*/;
     // @formatter:on
 
-    private Map<String, Arc> arcsByID = new HashMap<String, Arc>();
+    private Map<String, Arc> arcsByID = CollectionFactory.createStringMap();
 
     private Element loadingInfoDiv;
 
-    private Map<String, NodeMenuItemClickedHandler> nodeMenuItemClickHandlers = new HashMap<String, NodeMenuItemClickedHandler>();
+    private Map<String, NodeMenuItemClickedHandler> nodeMenuItemClickHandlers = CollectionFactory
+            .createStringMap();
 
     private int nodeMenuItemIdCounter = 0;
 
-    private Map<String, Node> nodesByID = new HashMap<String, Node>();
+    private Map<String, Node> nodesByID = CollectionFactory.createStringMap();
 
     public GraphWidget(int width, int height) {
         super(SWF_FILE, width, height);

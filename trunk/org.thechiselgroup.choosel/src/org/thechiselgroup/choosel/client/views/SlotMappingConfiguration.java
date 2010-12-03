@@ -28,6 +28,7 @@ import org.thechiselgroup.choosel.client.calculation.SumCalculation;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -48,7 +49,7 @@ public class SlotMappingConfiguration {
 
     private Map<Slot, ResourceSetToValueResolver> slotsToValueResolvers = new HashMap<Slot, ResourceSetToValueResolver>();
 
-    private Map<String, Slot> slotsByID = new HashMap<String, Slot>();
+    private Map<String, Slot> slotsByID = CollectionFactory.createStringMap();
 
     public SlotMappingConfiguration() {
         eventBus = new HandlerManager(this);

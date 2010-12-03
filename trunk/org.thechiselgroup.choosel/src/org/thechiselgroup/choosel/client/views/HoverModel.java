@@ -15,12 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import java.util.List;
-
 import org.thechiselgroup.choosel.client.resources.CombinedResourceSet;
 import org.thechiselgroup.choosel.client.resources.CountingResourceSet;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
-import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetDelegateChangedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
@@ -74,16 +71,16 @@ public class HoverModel {
         highlightedSingleResources.addAll(resource);
     }
 
+    public ResourceSet getResources() {
+        return combinedHighlightedResources;
+    }
+
     public void removeHighlightedResources(ResourceSet resources) {
         highlightedSingleResources.removeAll(resources);
     }
 
     public void setHighlightedResourceSet(ResourceSet resourceSet) {
         highlightedResourceSetContainer.setDelegate(resourceSet);
-    }
-
-    public List<Resource> toList() {
-        return combinedHighlightedResources.toList();
     }
 
 }

@@ -13,29 +13,44 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.resources;
+package org.thechiselgroup.choosel.client.util.collections;
 
-import org.thechiselgroup.choosel.client.util.collections.LightweightList;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-public class DefaultResourceSet extends AbstractUriMapBasedResourceSet {
+public class ArrayListToLightweightListAdapter<T> implements LightweightList<T> {
 
-    public DefaultResourceSet() {
+    private List<T> delegate = new ArrayList<T>();
+
+    @Override
+    public void add(T t) {
+        delegate.add(t);
     }
 
     @Override
-    protected void doAdd(Resource resource,
-            LightweightList<Resource> addedResources) {
-
-        addResourceToMap(resource);
-        addedResources.add(resource);
+    public T get(int i) {
+        return delegate.get(i);
     }
 
     @Override
-    protected void doRemove(Resource resource,
-            LightweightList<Resource> removedResources) {
+    public boolean isEmpty() {
+        return delegate.isEmpty();
+    }
 
-        removeResourceFromMap(resource.getUri());
-        removedResources.add(resource);
+    @Override
+    public Iterator<T> iterator() {
+        return delegate.iterator();
+    }
+
+    @Override
+    public int size() {
+        return delegate.size();
+    }
+
+    @Override
+    public List<T> toList() {
+        return delegate;
     }
 
 }

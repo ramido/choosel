@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -44,7 +43,7 @@ public final class NullResourceSet implements ResourceSet {
     }
 
     @Override
-    public boolean addAll(Collection<? extends Resource> resources) {
+    public boolean addAll(Iterable<Resource> resources) {
         return false;
     }
 
@@ -74,12 +73,12 @@ public final class NullResourceSet implements ResourceSet {
     }
 
     @Override
-    public boolean contains(Object o) {
+    public boolean contains(Resource r) {
         return false;
     }
 
     @Override
-    public boolean containsAll(Collection<?> resources) {
+    public boolean containsAll(Iterable<Resource> resources) {
         return false;
     }
 
@@ -129,17 +128,22 @@ public final class NullResourceSet implements ResourceSet {
     }
 
     @Override
-    public boolean remove(Object o) {
+    public boolean remove(Resource o) {
         return false;
     }
 
     @Override
-    public boolean removeAll(Collection<?> c) {
+    public boolean removeAll(Iterable<Resource> resources) {
         return false;
     }
 
     @Override
-    public boolean retainAll(Collection<?> c) {
+    public boolean removeAll(ResourceSet resources) {
+        return false;
+    }
+
+    @Override
+    public boolean retainAll(ResourceSet resources) {
         return false;
     }
 
@@ -158,16 +162,6 @@ public final class NullResourceSet implements ResourceSet {
 
     @Override
     public void switchContainment(ResourceSet resources) {
-    }
-
-    @Override
-    public Object[] toArray() {
-        return new Object[0];
-    }
-
-    @Override
-    public <T> T[] toArray(T[] a) {
-        return (T[]) new Object[0];
     }
 
     @Override

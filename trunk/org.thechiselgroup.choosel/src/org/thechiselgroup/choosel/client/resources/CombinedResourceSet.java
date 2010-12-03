@@ -48,6 +48,10 @@ public class CombinedResourceSet extends DelegatingResourceSet {
     private ResourcesAddedEventHandler resourceAddedHandler = new ResourcesAddedEventHandler() {
         @Override
         public void onResourcesAdded(ResourcesAddedEvent e) {
+            /*
+             * addAll is called to keep the add iteration atomic (one event
+             * should get fired)
+             */
             addAll(e.getAddedResources());
         }
     };
@@ -78,7 +82,7 @@ public class CombinedResourceSet extends DelegatingResourceSet {
     public CombinedResourceSet(ResourceSet delegate) {
         super(delegate);
 
-        this.eventBus = new HandlerManager(this);
+        eventBus = new HandlerManager(this);
     }
 
     public HandlerRegistration addEventHandler(
@@ -166,9 +170,15 @@ public class CombinedResourceSet extends DelegatingResourceSet {
         containedResourceSets.remove(resourceSetElement);
         resourceSetElement.removeHandlers();
 
-        List<Resource> toRemove = new ArrayList<Resource>(resourceSet);
+        // XXX performance improvements
+        List<Resource> toRemove = new ArrayList<Resource>();
+        for (Resource resource : resourceSet) {
+            toRemove.add(resource);
+        }
         for (ResourceSetElement rse : containedResourceSets) {
-            toRemove.removeAll(rse.resourceSet);
+            for (Resource resource : rse.resourceSet) {
+                toRemove.remove(resource);
+            }
         }
 
         removeAll(toRemove);

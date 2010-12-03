@@ -121,8 +121,13 @@ public class DefaultViewSaveManager implements ViewSaveManager {
         }
         viewDTO.setResourceSets(resourceSetDTOs);
 
-        viewDTO.setResources(resourceCollector
-                .toArray(new Resource[resourceCollector.size()]));
+        Resource[] resources = new Resource[resourceCollector.size()];
+        int count = 0;
+        for (Resource resource : resourceCollector) {
+            resources[count++] = resource;
+        }
+
+        viewDTO.setResources(resources);
 
         viewDTO.setTitle(view.getLabel());
 

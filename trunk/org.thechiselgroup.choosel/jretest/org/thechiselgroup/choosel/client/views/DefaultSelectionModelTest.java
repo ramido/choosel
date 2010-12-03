@@ -129,7 +129,7 @@ public class DefaultSelectionModelTest {
         selection.add(createResource(1));
 
         List<Resource> addedResources = verifyOnResourcesAdded(1, addedHandler)
-                .getValue().getAddedResources();
+                .getValue().getAddedResources().toList();
         assertContentEquals(createResources(1), addedResources);
     }
 
@@ -141,7 +141,7 @@ public class DefaultSelectionModelTest {
         underTest.setSelection(selection);
 
         List<Resource> addedResources = verifyOnResourcesAdded(1, addedHandler)
-                .getValue().getAddedResources();
+                .getValue().getAddedResources().toList();
         assertContentEquals(createResources(1), addedResources);
 
     }
@@ -188,7 +188,7 @@ public class DefaultSelectionModelTest {
         selection.remove(createResource(1));
 
         List<Resource> removedResources = verifyOnResourcesRemoved(1,
-                removedHandler).getValue().getRemovedResources();
+                removedHandler).getValue().getRemovedResources().toList();
         assertContentEquals(createResources(1), removedResources);
     }
 
@@ -205,7 +205,7 @@ public class DefaultSelectionModelTest {
         underTest.setSelection(resource2);
 
         List<Resource> removedResources = verifyOnResourcesRemoved(1,
-                removedHandler).getValue().getRemovedResources();
+                removedHandler).getValue().getRemovedResources().toList();
         assertContentEquals(createResources(1), removedResources);
     }
 
@@ -219,7 +219,6 @@ public class DefaultSelectionModelTest {
                 .thenReturn(selectionHandlerRegistration);
         when(selection.addEventHandler(any(ResourcesRemovedEventHandler.class)))
                 .thenReturn(selectionHandlerRegistration);
-        when(selection.toArray()).thenReturn(new Object[0]);
     }
 
     @Test

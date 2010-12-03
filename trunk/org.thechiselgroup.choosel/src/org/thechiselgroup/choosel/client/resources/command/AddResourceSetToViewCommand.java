@@ -95,7 +95,7 @@ public class AddResourceSetToViewCommand implements UndoableCommand,
         assert alreadyContainedResources != null;
 
         resourceModel.removeResourceSet(resourceSet);
-        resourceModel.addResources(alreadyContainedResources);
+        resourceModel.addUnnamedResources(alreadyContainedResources);
         alreadyContainedResources = null;
 
         assert !resourceModel.containsResourceSet(resourceSet);

@@ -15,16 +15,14 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
-import java.util.Collection;
-
 public interface ResourceContainer {
 
     void add(Resource resource);
 
-    void addAll(Collection<Resource> resources);
+    void addAll(Iterable<Resource> resources);
 
     void remove(Resource resource);
 
-    void removeAll(Collection<Resource> resources);
+    void removeAll(Iterable<Resource> resources);
 
 }

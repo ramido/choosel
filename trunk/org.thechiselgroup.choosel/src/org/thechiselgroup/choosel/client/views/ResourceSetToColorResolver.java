@@ -15,13 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 
 public class ResourceSetToColorResolver implements ResourceSetToValueResolver {
 
@@ -30,7 +30,8 @@ public class ResourceSetToColorResolver implements ResourceSetToValueResolver {
 
     private ResourceCategorizer categorizer;
 
-    private Map<String, String> resourceTypeToColor = new HashMap<String, String>();
+    private Map<String, String> resourceTypeToColor = CollectionFactory
+            .createStringMap();
 
     public ResourceSetToColorResolver(ResourceCategorizer categorizer) {
         this.categorizer = categorizer;

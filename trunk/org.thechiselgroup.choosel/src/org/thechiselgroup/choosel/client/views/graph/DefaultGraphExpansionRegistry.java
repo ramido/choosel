@@ -17,17 +17,20 @@ package org.thechiselgroup.choosel.client.views.graph;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+
 public class DefaultGraphExpansionRegistry implements GraphExpansionRegistry {
 
-    private Map<String, GraphNodeExpander> automaticExpandersByCategory = new HashMap<String, GraphNodeExpander>();
+    private Map<String, GraphNodeExpander> automaticExpandersByCategory = CollectionFactory
+            .createStringMap();
 
-    private Map<String, List<NodeMenuEntry>> menuEntriesByCategory = new HashMap<String, List<NodeMenuEntry>>();
+    private Map<String, List<NodeMenuEntry>> menuEntriesByCategory = CollectionFactory
+            .createStringMap();
 
     @Override
     public GraphNodeExpander getAutomaticExpander(String category) {

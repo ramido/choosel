@@ -15,16 +15,17 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import java.util.HashMap;
 import java.util.Map;
 
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.windows.WindowContent;
 import org.thechiselgroup.choosel.client.windows.WindowContentFactory;
 import org.thechiselgroup.choosel.client.windows.WindowContentProducer;
 
 public class DefaultWindowContentProducer implements WindowContentProducer {
 
-    private Map<String, WindowContentFactory> windowContentFactories = new HashMap<String, WindowContentFactory>();
+    private Map<String, WindowContentFactory> windowContentFactories = CollectionFactory
+            .createStringMap();
 
     @Override
     public WindowContent createWindowContent(String contentType) {

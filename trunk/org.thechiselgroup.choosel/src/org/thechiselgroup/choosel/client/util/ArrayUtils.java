@@ -20,6 +20,7 @@ import java.util.List;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
+// TODO use JS array instead!!
 public class ArrayUtils {
 
     // @formatter:off

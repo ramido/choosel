@@ -16,7 +16,6 @@
 package org.thechiselgroup.choosel.client.resources;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +23,7 @@ import java.util.Map.Entry;
 
 import org.thechiselgroup.choosel.client.util.Delta;
 import org.thechiselgroup.choosel.client.util.SingleItemCollection;
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -34,7 +34,8 @@ import com.google.inject.Inject;
 public class ResourceGrouping implements ResourceContainer {
 
     // TODO Are resource sets too heavyweight here?
-    private Map<String, ResourceSet> categorizedResources = new HashMap<String, ResourceSet>();
+    private Map<String, ResourceSet> categorizedResources = CollectionFactory
+            .createStringMap();
 
     private transient HandlerManager eventBus;
 
@@ -60,7 +61,7 @@ public class ResourceGrouping implements ResourceContainer {
     }
 
     @Override
-    public void addAll(Collection<Resource> resources) {
+    public void addAll(Iterable<Resource> resources) {
         assert resources != null;
 
         addResourcesToAllResources(resources);
@@ -95,22 +96,23 @@ public class ResourceGrouping implements ResourceContainer {
         }
     }
 
-    public HandlerRegistration addHandler(
-            ResourceGroupingChangedHandler handler) {
+    public HandlerRegistration addHandler(ResourceGroupingChangedHandler handler) {
         assert handler != null;
-        return eventBus
-                .addHandler(ResourceGroupingChangedEvent.TYPE, handler);
+        return eventBus.addHandler(ResourceGroupingChangedEvent.TYPE, handler);
     }
 
-    private void addResourcesToAllResources(Collection<Resource> resources) {
+    private void addResourcesToAllResources(Iterable<Resource> resources) {
         List<Resource> newResources = new ArrayList<Resource>();
-        newResources.addAll(resources);
+        for (Resource resource : resources) {
+            newResources.add(resource);
+        }
         newResources.removeAll(allResources);
         allResources.addAll(newResources);
     }
 
     private void addResourcesToCategorization(Iterable<Resource> resources,
             List<ResourceGroupingChange> changes) {
+
         Map<String, List<Resource>> resourcesPerCategory = categorize(resources);
         for (Map.Entry<String, List<Resource>> entry : resourcesPerCategory
                 .entrySet()) {
@@ -119,7 +121,9 @@ public class ResourceGrouping implements ResourceContainer {
     }
 
     private Map<String, List<Resource>> categorize(Iterable<Resource> resources) {
-        Map<String, List<Resource>> resourcesPerCategory = new HashMap<String, List<Resource>>();
+        Map<String, List<Resource>> resourcesPerCategory = CollectionFactory
+                .createStringMap();
+
         for (Resource resource : resources) {
             for (String category : multiCategorizer.getCategories(resource)) {
                 assert category != null;
@@ -163,7 +167,7 @@ public class ResourceGrouping implements ResourceContainer {
     }
 
     @Override
-    public void removeAll(Collection<Resource> resources) {
+    public void removeAll(Iterable<Resource> resources) {
         assert resources != null;
 
         removeResourcesFromAllResources(resources);
@@ -194,8 +198,10 @@ public class ResourceGrouping implements ResourceContainer {
         }
     }
 
-    private void removeResourcesFromAllResources(Collection<Resource> resources) {
-        allResources.removeAll(resources);
+    private void removeResourcesFromAllResources(Iterable<Resource> resources) {
+        for (Resource resource : resources) {
+            allResources.remove(resource);
+        }
     }
 
     private void removeResourcesFromCategorization(

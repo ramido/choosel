@@ -16,11 +16,12 @@
 package org.thechiselgroup.choosel.client.resources;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 
 /**
  * Allows adding the same resource multiple times and stores the count. The
@@ -38,18 +39,20 @@ public class CountingResourceSet extends AbstractResourceSet {
 
         public ResourceElement(Resource resource) {
             this.resource = resource;
-            this.counter = 1;
+            counter = 1;
         }
 
     }
 
-    private Map<String, ResourceElement> uriToResourceElementMap = new HashMap<String, ResourceElement>();
+    private Map<String, ResourceElement> uriToResourceElementMap = CollectionFactory
+            .createStringMap();
 
     @Override
-    public boolean addAll(Collection<? extends Resource> resources) {
+    public boolean addAll(Iterable<Resource> resources) {
         assert resources != null;
 
-        List<Resource> addedResources = new ArrayList<Resource>();
+        LightweightList<Resource> addedResources = CollectionFactory
+                .createLightweightList();
         for (Resource resource : resources) {
             doAdd(resource, addedResources);
         }
@@ -67,7 +70,8 @@ public class CountingResourceSet extends AbstractResourceSet {
     }
 
     @Override
-    protected void doAdd(Resource resource, List<Resource> addedResources) {
+    protected void doAdd(Resource resource,
+            LightweightList<Resource> addedResources) {
         String uri = resource.getUri();
 
         if (uriToResourceElementMap.containsKey(uri)) {
@@ -79,7 +83,8 @@ public class CountingResourceSet extends AbstractResourceSet {
     }
 
     @Override
-    protected void doRemove(Resource resource, List<Resource> removedResources) {
+    protected void doRemove(Resource resource,
+            LightweightList<Resource> removedResources) {
         String uri = resource.getUri();
         assert uriToResourceElementMap.containsKey(uri);
 

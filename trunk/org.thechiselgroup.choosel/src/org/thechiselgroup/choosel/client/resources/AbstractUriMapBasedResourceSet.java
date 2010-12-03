@@ -16,16 +16,17 @@
 package org.thechiselgroup.choosel.client.resources;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 
 // TODO move label support into separate class
 public abstract class AbstractUriMapBasedResourceSet extends
         AbstractResourceSet {
 
-    protected Map<String, Resource> uriToResource = new HashMap<String, Resource>();
+    protected Map<String, Resource> uriToResource = CollectionFactory.createStringMap();
 
     protected Resource addResourceToMap(Resource resource) {
         return uriToResource.put(resource.getUri(), resource);

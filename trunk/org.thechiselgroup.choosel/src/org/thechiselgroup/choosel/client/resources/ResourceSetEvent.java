@@ -15,18 +15,23 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
-import java.util.List;
+import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 public abstract class ResourceSetEvent<H extends ResourceEventHandler> extends
         GwtEvent<H> {
 
-    protected final List<Resource> affectedResources;
+    protected final LightweightList<Resource> affectedResources;
 
     private final ResourceSet target;
 
-    public ResourceSetEvent(ResourceSet target, List<Resource> affectedResources) {
+    public ResourceSetEvent(ResourceSet target,
+            LightweightList<Resource> affectedResources) {
+
+        assert target != null;
+        assert affectedResources != null;
+
         this.affectedResources = affectedResources;
         this.target = target;
     }

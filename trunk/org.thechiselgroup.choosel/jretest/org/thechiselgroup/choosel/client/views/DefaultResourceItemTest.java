@@ -63,12 +63,12 @@ public class DefaultResourceItemTest {
     public void disposeRemovesHighlighting() {
         resources.addAll(createResources(1, 2));
         underTest.getHighlightingManager().setHighlighting(true);
-        assertContentEquals(createResources(1, 2), hoverModel.toList());
+        assertContentEquals(createResources(1, 2), hoverModel.getResources());
 
         underTest.dispose();
 
-        assertContentEquals(Collections.<Resource> emptyList(),
-                hoverModel.toList());
+        assertContentEquals(Collections.<Resource> emptyList(), hoverModel
+                .getResources().toList());
     }
 
     /**
@@ -85,12 +85,12 @@ public class DefaultResourceItemTest {
                 argument.capture());
         argument.getValue().onMouseOver(new MouseOverEvent() {
         });
-        assertContentEquals(createResources(1, 2), hoverModel.toList());
+        assertContentEquals(createResources(1, 2), hoverModel.getResources());
 
         underTest.dispose();
 
-        assertContentEquals(Collections.<Resource> emptyList(),
-                hoverModel.toList());
+        assertContentEquals(Collections.<Resource> emptyList(), hoverModel
+                .getResources().toList());
     }
 
     @Test

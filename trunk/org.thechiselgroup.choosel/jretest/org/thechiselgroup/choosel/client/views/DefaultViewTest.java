@@ -49,6 +49,8 @@ import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 
 public class DefaultViewTest {
 
@@ -94,7 +96,7 @@ public class DefaultViewTest {
 
         underTest.getSlotMappingConfiguration().setMapping(slot,
                 new FirstResourcePropertyResolver("text1"));
-        underTest.getResourceModel().addResources(toResourceSet(resource));
+        underTest.getResourceModel().addUnnamedResources(toResourceSet(resource));
         underTest.getSlotMappingConfiguration().setMapping(slot,
                 new FirstResourcePropertyResolver("text2"));
 
@@ -135,15 +137,22 @@ public class DefaultViewTest {
         verify(underTest.getSelectionModel(), times(1)).addEventHandler(
                 captor.capture());
         ResourcesRemovedEventHandler removedHandler = captor.getValue();
+
+        LightweightList<Resource> removedResources = CollectionFactory
+                .createLightweightList();
+        for (Resource resource : resources) {
+            removedResources.add(resource);
+        }
+
         removedHandler.onResourcesRemoved(new ResourcesRemovedEvent(
-                createResources(), resources.toList()));
+                createResources(), removedResources));
     }
 
     @Test
     public void deselectResourceItemWhenResourceRemovedFromSelection() {
         ResourceSet resources = createResources(1);
 
-        underTest.getResourceModel().addResources(resources);
+        underTest.getResourceModel().addUnnamedResources(resources);
         List<ResourceItem> resourceItems = captureAddedResourceItemsAsList();
 
         select(resources);
@@ -195,7 +204,7 @@ public class DefaultViewTest {
         r2.putValue("property1", "value1-2");
         r2.putValue("property2", "value2");
 
-        underTest.getResourceModel().addResources(toResourceSet(r1, r2));
+        underTest.getResourceModel().addUnnamedResources(toResourceSet(r1, r2));
         underTest.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("property2"));
 
@@ -216,7 +225,7 @@ public class DefaultViewTest {
 
         underTest.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("text1"));
-        underTest.getResourceModel().addResources(toResourceSet(resource));
+        underTest.getResourceModel().addUnnamedResources(toResourceSet(resource));
         underTest.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("text2"));
 
@@ -238,7 +247,7 @@ public class DefaultViewTest {
 
         underTest.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("text1"));
-        underTest.getResourceModel().addResources(toResourceSet(resource));
+        underTest.getResourceModel().addUnnamedResources(toResourceSet(resource));
         underTest.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("text2"));
 
@@ -328,16 +337,23 @@ public class DefaultViewTest {
                 .forClass(ResourcesAddedEventHandler.class);
         verify(underTest.getSelectionModel(), times(1)).addEventHandler(
                 captor.capture());
+
+        LightweightList<Resource> addedResources = CollectionFactory
+                .createLightweightList();
+        for (Resource resource : selectedResources) {
+            addedResources.add(resource);
+        }
+
         ResourcesAddedEventHandler addedHandler = captor.getValue();
         addedHandler.onResourcesAdded(new ResourcesAddedEvent(
-                selectedResources, selectedResources.toList()));
+                selectedResources, addedResources));
     }
 
     @Test
     public void selectResourceItemWhenResourceAddedToSelection() {
         ResourceSet resources = createResources(1);
 
-        underTest.getResourceModel().addResources(resources);
+        underTest.getResourceModel().addUnnamedResources(resources);
         List<ResourceItem> resourceItems = captureAddedResourceItemsAsList();
 
         select(createResources(1));
@@ -391,7 +407,7 @@ public class DefaultViewTest {
     public void updateCalledWhenSelectionChanges() {
         ResourceSet resources = createResources(1);
 
-        underTest.getResourceModel().addResources(resources);
+        underTest.getResourceModel().addUnnamedResources(resources);
         Set<ResourceItem> addedResourceItems = captureAddedResourceItems();
 
         select(createResources(1));

@@ -150,7 +150,7 @@ public class DefaultResourceSetTest {
         underTest.addAll(createResources(1, 2, 3));
 
         List<Resource> addedResources = verifyOnResourcesAdded(1, addedHandler)
-                .getValue().getAddedResources();
+                .getValue().getAddedResources().toList();
 
         assertEquals(2, addedResources.size());
         assertEquals(false, addedResources.contains(createResource(1)));
@@ -165,7 +165,7 @@ public class DefaultResourceSetTest {
         underTest.removeAll(createResources(1, 2, 3));
 
         List<Resource> removedResources = verifyOnResourcesRemoved(1,
-                removedHandler).getValue().getRemovedResources();
+                removedHandler).getValue().getRemovedResources().toList();
 
         assertEquals(2, removedResources.size());
         assertEquals(false, removedResources.contains(createResource(1)));
@@ -193,7 +193,7 @@ public class DefaultResourceSetTest {
         underTest.retainAll(createResources(1, 2));
 
         List<Resource> removedResources = verifyOnResourcesRemoved(1,
-                removedHandler).getValue().getRemovedResources();
+                removedHandler).getValue().getRemovedResources().toList();
 
         assertEquals(2, removedResources.size());
         assertEquals(false, removedResources.contains(createResource(1)));
@@ -222,6 +222,6 @@ public class DefaultResourceSetTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        this.underTest = new DefaultResourceSet();
+        underTest = new DefaultResourceSet();
     }
 }

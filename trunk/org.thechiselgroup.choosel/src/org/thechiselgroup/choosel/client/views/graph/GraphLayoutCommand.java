@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.graph;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +23,7 @@ import org.thechiselgroup.choosel.client.geometry.Point;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
 import org.thechiselgroup.choosel.client.util.HasDescription;
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 
 // TODO store results after execute for redo because some graph layouts are non-deterministic
 // TODO use animations (requires extending the flex graph interface) 
@@ -35,7 +35,8 @@ public class GraphLayoutCommand implements HasDescription, UndoableCommand {
 
     private List<Node> nodes;
 
-    private Map<String, Point> nodeLocations = new HashMap<String, Point>();
+    private Map<String, Point> nodeLocations = CollectionFactory
+            .createStringMap();
 
     public GraphLayoutCommand(GraphDisplay display, String layout,
             List<Node> nodes) {

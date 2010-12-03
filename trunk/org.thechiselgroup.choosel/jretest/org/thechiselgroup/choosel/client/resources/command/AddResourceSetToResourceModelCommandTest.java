@@ -56,7 +56,7 @@ public class AddResourceSetToResourceModelCommandTest {
 
         ArgumentCaptor<Collection> argument = ArgumentCaptor
                 .forClass(Collection.class);
-        verify(resourceModel, times(1)).addResources(argument.capture());
+        verify(resourceModel, times(1)).addUnnamedResources(argument.capture());
 
         assertEquals(true, argument.getValue().contains(createResource(1)));
     }

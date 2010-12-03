@@ -16,11 +16,11 @@
 package org.thechiselgroup.choosel.client.util;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget;
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 
 import pl.rmalinowski.gwt2swf.client.ui.SWFWidget;
 
@@ -41,7 +41,8 @@ public class FlashURLFetchService extends SWFWidget implements URLFetchService {
     public static final String SWF_FILE = GWT.getModuleBaseURL()
             + "swf/FlexProxy.swf";
 
-    private static Map<String, FlashURLFetchService> widgets = new HashMap<String, FlashURLFetchService>();
+    private static Map<String, FlashURLFetchService> widgets = CollectionFactory
+            .createStringMap();
 
     static {
         try {
@@ -65,17 +66,18 @@ public class FlashURLFetchService extends SWFWidget implements URLFetchService {
     }
 
     private static native void _requestURL(String swfID, String url) /*-{
-                                                                        $doc.getElementById(swfID).call(url, "_flexproxy_callback");
-                                                                        }-*/;
+        $doc.getElementById(swfID).call(url, "_flexproxy_callback");
+    }-*/;
 
     private static native void exportStaticMethods() /*-{
-                                                        $wnd._flexproxy_loaded=$entry(
-                                                        @org.thechiselgroup.choosel.client.util.FlashURLFetchService::_onLoad(Ljava/lang/String;));
-                                                        $wnd._flexproxy_callback=$entry(
-                                                        @org.thechiselgroup.choosel.client.util.FlashURLFetchService::_callback(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;));
-                                                        }-*/;
+        $wnd._flexproxy_loaded=$entry(
+        @org.thechiselgroup.choosel.client.util.FlashURLFetchService::_onLoad(Ljava/lang/String;));
+        $wnd._flexproxy_callback=$entry(
+        @org.thechiselgroup.choosel.client.util.FlashURLFetchService::_callback(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;));
+    }-*/;
 
-    private Map<String, List<AsyncCallback<String>>> requests = new HashMap<String, List<AsyncCallback<String>>>();
+    private Map<String, List<AsyncCallback<String>>> requests = CollectionFactory
+            .createStringMap();
 
     private Status status = Status.NOT_INITIALIZED;
 

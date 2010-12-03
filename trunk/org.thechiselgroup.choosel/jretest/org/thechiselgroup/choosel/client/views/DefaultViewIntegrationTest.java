@@ -90,7 +90,7 @@ public class DefaultViewIntegrationTest {
         r3.putValue("property1", new Double(8));
         r3.putValue("property2", "value2");
 
-        underTest.getResourceModel().addResources(toResourceSet(r1, r2, r3));
+        underTest.getResourceModel().addUnnamedResources(toResourceSet(r1, r2, r3));
         underTest.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("property2"));
         underTest.getSlotMappingConfiguration().setMapping(

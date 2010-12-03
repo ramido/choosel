@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Assert;
+import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
 public final class AdvancedAsserts {
 
@@ -38,9 +40,19 @@ public final class AdvancedAsserts {
         assertContains(value + " should be contained in " + c, c, value);
     }
 
+    public static <T> void assertContains(ResourceSet c, Resource value) {
+        assertContains(value + " should be contained in " + c, c, value);
+    }
+
     public static <T> void assertContains(String failureMessage,
             Collection<T> c, T value) {
         Assert.assertEquals(failureMessage, true, c.contains(value));
+    }
+
+    public static <T> void assertContains(String failureMessage, ResourceSet r,
+            Resource value) {
+
+        Assert.assertEquals(failureMessage, true, r.contains(value));
     }
 
     public static <T> void assertContentEquals(Collection<T> expected,
@@ -51,6 +63,30 @@ public final class AdvancedAsserts {
 
         Assert.assertEquals(failureMessage, expected.size(), result.size());
         for (T expectedValue : expected) {
+            assertContains(failureMessage, result, expectedValue);
+        }
+    }
+
+    public static <T> void assertContentEquals(ResourceSet expected,
+            Collection<Resource> result) {
+
+        String failureMessage = "expected: " + expected + ", but was: "
+                + result;
+
+        Assert.assertEquals(failureMessage, expected.size(), result.size());
+        for (Resource expectedValue : expected) {
+            assertContains(failureMessage, result, expectedValue);
+        }
+    }
+
+    public static <T> void assertContentEquals(ResourceSet expected,
+            ResourceSet result) {
+
+        String failureMessage = "expected: " + expected + ", but was: "
+                + result;
+
+        Assert.assertEquals(failureMessage, expected.size(), result.size());
+        for (Resource expectedValue : expected) {
             assertContains(failureMessage, result, expectedValue);
         }
     }

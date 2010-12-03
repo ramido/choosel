@@ -54,7 +54,7 @@ public class CountingResourceSetTest {
 
         ResourcesAddedEvent event = verifyOnResourcesAdded(1, addedHandler)
                 .getValue();
-        assertContentEquals(resources, event.getAddedResources());
+        assertContentEquals(resources, event.getAddedResources().toList());
     }
 
     @Test
@@ -101,7 +101,8 @@ public class CountingResourceSetTest {
 
         ResourcesAddedEvent event = verifyOnResourcesAdded(1, addedHandler)
                 .getValue();
-        assertContentEquals(createResources(2, 3), event.getAddedResources());
+        assertContentEquals(createResources(2, 3), event.getAddedResources()
+                .toList());
     }
 
     @Test
@@ -116,7 +117,8 @@ public class CountingResourceSetTest {
 
         ResourcesRemovedEvent event = verifyOnResourcesRemoved(1,
                 removedHandler).getValue();
-        assertContentEquals(createResources(2, 3), event.getRemovedResources());
+        assertContentEquals(createResources(2, 3), event.getRemovedResources()
+                .toList());
     }
 
     @Test
@@ -129,7 +131,7 @@ public class CountingResourceSetTest {
 
         ResourcesRemovedEvent event = verifyOnResourcesRemoved(1,
                 removedHandler).getValue();
-        assertContentEquals(resources, event.getRemovedResources());
+        assertContentEquals(resources, event.getRemovedResources().toList());
     }
 
     @Test
@@ -194,7 +196,7 @@ public class CountingResourceSetTest {
         underTest.retainAll(createResources(1, 2));
 
         List<Resource> removedResources = verifyOnResourcesRemoved(1,
-                removedHandler).getValue().getRemovedResources();
+                removedHandler).getValue().getRemovedResources().toList();
 
         assertEquals(2, removedResources.size());
         assertEquals(false, removedResources.contains(createResource(1)));
@@ -225,7 +227,7 @@ public class CountingResourceSetTest {
         underTest.retainAll(createResources(1, 2));
 
         List<Resource> removedResources = verifyOnResourcesRemoved(1,
-                removedHandler).getValue().getRemovedResources();
+                removedHandler).getValue().getRemovedResources().toList();
 
         assertEquals(1, removedResources.size());
         assertEquals(false, removedResources.contains(createResource(1)));

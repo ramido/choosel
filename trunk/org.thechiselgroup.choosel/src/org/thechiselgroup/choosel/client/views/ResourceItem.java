@@ -15,9 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import java.util.Collection;
-
-import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 
@@ -56,7 +53,7 @@ public interface ResourceItem {
      */
     ResourceSet getHighlightedResources();
 
-    Collection<Resource> getHighlightedSelectedResources();
+    ResourceSet getHighlightedSelectedResources();
 
     /**
      * @return highlighting manager that manages the highlighting for this
@@ -76,7 +73,7 @@ public interface ResourceItem {
     // TODO test
     Object getResourceValue(Slot slot, Subset subset);
 
-    Collection<Resource> getSelectedResources();
+    ResourceSet getSelectedResources();
 
     SubsetStatus getSelectionStatus();
 
