@@ -181,7 +181,8 @@ public class ViewPersistenceServiceImplementation implements
     }
 
     private ViewPreviewDTO toViewPreviewDTO(PersistentView view) {
-        return new ViewPreviewDTO(view.getId(), view.getTitle());
+        return new ViewPreviewDTO(view.getId(), view.getTitle(),
+                view.getContentType(), view.getSharedDate());
     }
 
     private void updateViewWithDTO(PersistentView view, ViewDTO dto, User user) {

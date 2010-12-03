@@ -23,8 +23,8 @@ import org.thechiselgroup.choosel.client.services.ForwardingAsyncCallback;
 import org.thechiselgroup.choosel.client.ui.dialog.DialogManager;
 import org.thechiselgroup.choosel.client.util.HasDescription;
 import org.thechiselgroup.choosel.client.workspace.ViewLoadManager;
+import org.thechiselgroup.choosel.client.workspace.ViewLoader;
 import org.thechiselgroup.choosel.client.workspace.ViewPreview;
-import org.thechiselgroup.choosel.client.workspace.WorkspacePersistenceManager;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -40,11 +40,10 @@ public class ConfigureSharedViewsDialogCommand implements AsyncCommand,
 
         private DialogManager dialogManager;
 
-        private WorkspacePersistenceManager persistenceManager;
+        private ViewLoader persistenceManager;
 
         @Inject
-        public DefaultDetailsDisplay(
-                WorkspacePersistenceManager persistenceManager,
+        public DefaultDetailsDisplay(ViewLoader persistenceManager,
                 DialogManager dialogManager,
                 AsyncCommandExecutor asyncCommandExecutor) {
 

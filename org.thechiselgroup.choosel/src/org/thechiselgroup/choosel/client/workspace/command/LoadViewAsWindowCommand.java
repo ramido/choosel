@@ -22,13 +22,13 @@ import org.thechiselgroup.choosel.client.workspace.Workspace;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public class LoadViewAsWorkspaceCommand implements AsyncCommand, HasDescription {
+public class LoadViewAsWindowCommand implements AsyncCommand, HasDescription {
 
     private ViewLoader persistenceManager;
 
     private Long viewId;
 
-    public LoadViewAsWorkspaceCommand(Long workspaceId,
+    public LoadViewAsWindowCommand(Long workspaceId,
             ViewLoader persistenceManager) {
 
         assert workspaceId != null;
@@ -40,7 +40,7 @@ public class LoadViewAsWorkspaceCommand implements AsyncCommand, HasDescription 
 
     @Override
     public void execute(final AsyncCallback<Void> callback) {
-        persistenceManager.loadViewAsWindow(viewId,
+        persistenceManager.loadViewAsWorkspace(viewId,
                 new AsyncCallback<Workspace>() {
                     @Override
                     public void onFailure(Throwable caught) {
