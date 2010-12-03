@@ -25,8 +25,6 @@ import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.client.util.CollectionUtils;
-import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
-import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.Slot;
@@ -101,11 +99,7 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
     };
 
     public TextViewContentDisplay(ResourceSetAvatarDragController dragController) {
-        assert dragController != null;
-
-        textItemContainer = new DefaultTextItemContainer(dragController);
-
-        initGroupValueMapper();
+        this(new DefaultTextItemContainer(dragController));
     }
 
     // for test: can change container
@@ -117,25 +111,45 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
         labelEventHandler = new LabelEventHandler();
 
         initGroupValueMapper();
+
+        setTagCloud(true);
     }
 
+    /**
+     * <p>
+     * Creates TextItems for the added resource items and adds them to the user
+     * interface.
+     * </p>
+     * <p>
+     * <b>PERFORMANCE NOTE</b>: This method is designed such that the items are
+     * only sorted once, and then there is just a single pass along the sorted
+     * items.
+     * </p>
+     */
     private void addResourceItems(Set<ResourceItem> addedResourceItems) {
-        LightweightList<TextItem> addedTextItems = CollectionFactory
-                .createLightweightList();
+        assert addedResourceItems != null;
 
         for (ResourceItem resourceItem : addedResourceItems) {
             TextItem textItem = initTextItem(resourceItem);
-            addedTextItems.add(textItem);
             items.add(textItem);
         }
 
+        // Time complexity: O(n*log(n)).
         Collections.sort(items, comparator);
 
-        for (TextItem textItem : addedTextItems) {
-            textItemContainer.insert(textItem.getLabel(),
-                    items.indexOf(textItem));
-            textItem.updateContent();
-            textItem.updateStatusStyling();
+        /*
+         * Time complexity: O(n). Iterate over items and check for addedToPanel
+         * flag to prevent IndexOutOfBoundsExceptions and keep execution time
+         * linear to number of ResourceItems in this view.
+         */
+        for (int i = 0; i < items.size(); i++) {
+            TextItem textItem = items.get(i);
+            if (!textItem.isAddedToPanel()) {
+                textItemContainer.insert(textItem.getLabel(), i);
+                textItem.updateContent();
+                textItem.updateStatusStyling();
+                textItem.setAddedToPanel(true);
+            }
         }
     }
 
