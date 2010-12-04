@@ -28,7 +28,7 @@ import static org.thechiselgroup.choosel.client.test.AdvancedAsserts.assertMapKe
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.toResourceSet;
-import static org.thechiselgroup.choosel.client.util.CollectionUtils.toSet;
+import static org.thechiselgroup.choosel.client.util.collections.CollectionUtils.toSet;
 
 import java.util.Collections;
 import java.util.List;
@@ -65,15 +65,16 @@ public class ResourceGroupingTest {
     @Mock
     private ResourceGroupingChangedHandler changeHandler;
 
-    private ResourceGrouping splitter;
+    private ResourceGrouping underTest;
 
     @Test
     public void addResourceWithMultipleCategoriesCreatesMultipleCategories() {
         setUpCategory(categorizer1, 1, CATEGORY_1_1, CATEGORY_1_2);
 
-        splitter.add(createResource(1));
+        underTest.add(createResource(1));
 
-        Map<String, ResourceSet> result = splitter.getCategorizedResourceSets();
+        Map<String, ResourceSet> result = underTest
+                .getCategorizedResourceSets();
 
         assertMapKeysEqual(result, CATEGORY_1_1, CATEGORY_1_2);
         assertContentEquals(createResources(1), result.get(CATEGORY_1_1));
@@ -90,9 +91,9 @@ public class ResourceGroupingTest {
 
     @Test
     public void changeCategorizerFiresEvents1() {
-        splitter.addAll(createResources(1, 2, 3, 4, 5));
-        splitter.addHandler(changeHandler);
-        splitter.setCategorizer(categorizer2);
+        underTest.addAll(createResources(1, 2, 3, 4, 5));
+        underTest.addHandler(changeHandler);
+        underTest.setCategorizer(categorizer2);
 
         List<ResourceGroupingChange> changes = captureChanges();
 
@@ -112,10 +113,10 @@ public class ResourceGroupingTest {
 
     @Test
     public void changeCategorizerFiresEvents2() {
-        splitter.addAll(createResources(1, 2, 3, 4, 5));
-        splitter.setCategorizer(categorizer2);
-        splitter.addHandler(changeHandler);
-        splitter.setCategorizer(categorizer1);
+        underTest.addAll(createResources(1, 2, 3, 4, 5));
+        underTest.setCategorizer(categorizer2);
+        underTest.addHandler(changeHandler);
+        underTest.setCategorizer(categorizer1);
 
         List<ResourceGroupingChange> changes = captureChanges();
 
@@ -135,10 +136,11 @@ public class ResourceGroupingTest {
 
     @Test
     public void changeCategorizerUpdatesCategories1() {
-        splitter.addAll(createResources(1, 2, 3, 4, 5));
-        splitter.setCategorizer(categorizer2);
+        underTest.addAll(createResources(1, 2, 3, 4, 5));
+        underTest.setCategorizer(categorizer2);
 
-        Map<String, ResourceSet> result = splitter.getCategorizedResourceSets();
+        Map<String, ResourceSet> result = underTest
+                .getCategorizedResourceSets();
 
         assertMapKeysEqual(result, CATEGORY_2_1, CATEGORY_2_2, CATEGORY_2_3,
                 CATEGORY_2_4);
@@ -150,11 +152,12 @@ public class ResourceGroupingTest {
 
     @Test
     public void changeCategorizerUpdatesCategories2() {
-        splitter.addAll(createResources(1, 2, 3, 4, 5));
-        splitter.setCategorizer(categorizer2);
-        splitter.setCategorizer(categorizer1);
+        underTest.addAll(createResources(1, 2, 3, 4, 5));
+        underTest.setCategorizer(categorizer2);
+        underTest.setCategorizer(categorizer1);
 
-        Map<String, ResourceSet> result = splitter.getCategorizedResourceSets();
+        Map<String, ResourceSet> result = underTest
+                .getCategorizedResourceSets();
 
         assertMapKeysEqual(result, CATEGORY_1_1, CATEGORY_1_2);
         assertContentEquals(createResources(1, 2, 3), result.get(CATEGORY_1_1));
@@ -163,12 +166,13 @@ public class ResourceGroupingTest {
 
     @Test
     public void changeCategorizerUpdatesCategoriesAfterAddAllTwiceAndRemoveAll() {
-        splitter.addAll(createResources(1, 2, 3, 4, 5));
-        splitter.addAll(createResources(1, 2));
-        splitter.removeAll(createResources(1, 2));
-        splitter.setCategorizer(categorizer2);
+        underTest.addAll(createResources(1, 2, 3, 4, 5));
+        underTest.addAll(createResources(1, 2));
+        underTest.removeAll(createResources(1, 2));
+        underTest.setCategorizer(categorizer2);
 
-        Map<String, ResourceSet> result = splitter.getCategorizedResourceSets();
+        Map<String, ResourceSet> result = underTest
+                .getCategorizedResourceSets();
 
         assertMapKeysEqual(result, CATEGORY_2_3, CATEGORY_2_4);
         assertContentEquals(createResources(3, 4), result.get(CATEGORY_2_3));
@@ -177,11 +181,12 @@ public class ResourceGroupingTest {
 
     @Test
     public void changeCategorizerUpdatesCategoriesAfterRemoveAll() {
-        splitter.addAll(createResources(1, 2, 3, 4, 5));
-        splitter.removeAll(createResources(1, 2));
-        splitter.setCategorizer(categorizer2);
+        underTest.addAll(createResources(1, 2, 3, 4, 5));
+        underTest.removeAll(createResources(1, 2));
+        underTest.setCategorizer(categorizer2);
 
-        Map<String, ResourceSet> result = splitter.getCategorizedResourceSets();
+        Map<String, ResourceSet> result = underTest
+                .getCategorizedResourceSets();
 
         assertMapKeysEqual(result, CATEGORY_2_3, CATEGORY_2_4);
         assertContentEquals(createResources(3, 4), result.get(CATEGORY_2_3));
@@ -190,9 +195,9 @@ public class ResourceGroupingTest {
 
     @Test
     public void changeToSameCategorizerDoesNotFireEvent() {
-        splitter.addAll(createResources(1, 2, 3, 4, 5));
-        splitter.addHandler(changeHandler);
-        splitter.setCategorizer(categorizer1);
+        underTest.addAll(createResources(1, 2, 3, 4, 5));
+        underTest.addHandler(changeHandler);
+        underTest.setCategorizer(categorizer1);
 
         verify(changeHandler, times(0)).onResourceCategoriesChanged(
                 any(ResourceGroupingChangedEvent.class));
@@ -200,9 +205,10 @@ public class ResourceGroupingTest {
 
     @Test
     public void createCategories() {
-        splitter.addAll(createResources(1, 2, 3, 4, 5));
+        underTest.addAll(createResources(1, 2, 3, 4, 5));
 
-        Map<String, ResourceSet> result = splitter.getCategorizedResourceSets();
+        Map<String, ResourceSet> result = underTest
+                .getCategorizedResourceSets();
 
         assertMapKeysEqual(result, CATEGORY_1_1, CATEGORY_1_2);
         assertContentEquals(createResources(1, 2, 3), result.get(CATEGORY_1_1));
@@ -211,21 +217,19 @@ public class ResourceGroupingTest {
 
     @Test
     public void doNotFireResourceCategoryChangesWhenNothingChangesOnRemove() {
-        splitter.addHandler(changeHandler);
-        splitter.removeAll(Collections.<Resource> emptyList());
+        underTest.addHandler(changeHandler);
+        underTest.removeAll(Collections.<Resource> emptyList());
 
         verify(changeHandler, times(0)).onResourceCategoriesChanged(
                 any(ResourceGroupingChangedEvent.class));
     }
 
-    // TODO test for add all --> multiple categories
-
     @Test
     public void fireResourceCategoryAddedAndChangeChangeOnAdd() {
         Resource resource = createResource(1);
 
-        splitter.addHandler(changeHandler);
-        splitter.add(resource);
+        underTest.addHandler(changeHandler);
+        underTest.add(resource);
 
         List<ResourceGroupingChange> changes = captureChanges();
 
@@ -233,11 +237,13 @@ public class ResourceGroupingTest {
                 CATEGORY_1_1, toResourceSet(resource))), changes);
     }
 
+    // TODO test for add all --> multiple categories
+
     @Test
     public void fireResourceCategoryAddedAndChangedOnAddAll() {
-        splitter.addAll(createResources(1, 2));
-        splitter.addHandler(changeHandler);
-        splitter.addAll(createResources(3, 4, 5));
+        underTest.addAll(createResources(1, 2));
+        underTest.addHandler(changeHandler);
+        underTest.addAll(createResources(3, 4, 5));
 
         List<ResourceGroupingChange> changes = captureChanges();
 
@@ -256,7 +262,7 @@ public class ResourceGroupingTest {
     public void fireResourceCategoryAddedEventOnAdd() {
         final boolean[] called = { false };
 
-        splitter.addHandler(new ResourceGroupingChangedHandler() {
+        underTest.addHandler(new ResourceGroupingChangedHandler() {
             @Override
             public void onResourceCategoriesChanged(
                     ResourceGroupingChangedEvent e) {
@@ -268,7 +274,7 @@ public class ResourceGroupingTest {
             }
         });
 
-        splitter.add(createResource(1));
+        underTest.add(createResource(1));
 
         assertEquals(true, called[0]);
     }
@@ -281,7 +287,7 @@ public class ResourceGroupingTest {
     public void fireResourceCategoryAddedEventOnAddAll() {
         final boolean[] called = { false };
 
-        splitter.addHandler(new ResourceGroupingChangedHandler() {
+        underTest.addHandler(new ResourceGroupingChangedHandler() {
             @Override
             public void onResourceCategoriesChanged(
                     ResourceGroupingChangedEvent e) {
@@ -294,7 +300,7 @@ public class ResourceGroupingTest {
             }
         });
 
-        splitter.addAll(createResources(1, 2, 3));
+        underTest.addAll(createResources(1, 2, 3));
 
         assertEquals(true, called[0]);
     }
@@ -304,9 +310,9 @@ public class ResourceGroupingTest {
         ResourceSet allResources = new DefaultResourceSet();
         allResources.addAll(createResources(1, 2, 3, 4));
 
-        splitter.addAll(createResources(1, 2, 3, 4, 5));
-        splitter.addHandler(changeHandler);
-        splitter.removeAll(allResources);
+        underTest.addAll(createResources(1, 2, 3, 4, 5));
+        underTest.addHandler(changeHandler);
+        underTest.removeAll(allResources);
 
         List<ResourceGroupingChange> changes = captureChanges();
 
@@ -322,9 +328,9 @@ public class ResourceGroupingTest {
     public void fireResourceCategoryRemovedChangeOnRemove() {
         Resource resource = createResource(1);
 
-        splitter.add(resource);
-        splitter.addHandler(changeHandler);
-        splitter.remove(resource);
+        underTest.add(resource);
+        underTest.addHandler(changeHandler);
+        underTest.remove(resource);
 
         List<ResourceGroupingChange> changes = captureChanges();
 
@@ -334,9 +340,9 @@ public class ResourceGroupingTest {
 
     @Test
     public void fireResourceCategoryRemovedChangeOnRemoveAll() {
-        splitter.addAll(createResources(1, 2, 3));
-        splitter.addHandler(changeHandler);
-        splitter.removeAll(createResources(1, 2, 3));
+        underTest.addAll(createResources(1, 2, 3));
+        underTest.addHandler(changeHandler);
+        underTest.removeAll(createResources(1, 2, 3));
 
         List<ResourceGroupingChange> changes = captureChanges();
 
@@ -349,9 +355,9 @@ public class ResourceGroupingTest {
         ResourceSet allResources = new DefaultResourceSet();
         allResources.addAll(createResources(1, 2, 3, 4, 5));
 
-        splitter.addAll(createResources(1, 2, 3, 4, 5));
-        splitter.addHandler(changeHandler);
-        splitter.removeAll(allResources);
+        underTest.addAll(createResources(1, 2, 3, 4, 5));
+        underTest.addHandler(changeHandler);
+        underTest.removeAll(allResources);
 
         List<ResourceGroupingChange> changes = captureChanges();
 
@@ -364,13 +370,24 @@ public class ResourceGroupingTest {
     }
 
     @Test
+    public void getGroupsReturningSingleGroupForSingleResource() {
+        setUpCategory(categorizer1, 1, CATEGORY_1_1);
+        ResourceSet resources = createResources(1);
+        underTest.addAll(resources);
+
+        Set<String> result = underTest.getGroups(resources);
+
+        assertContentEquals(toSet(CATEGORY_1_1), result);
+    }
+
+    @Test
     public void noResourceSetEventsFiredOnCompleteCategoryRemovalViaRemove() {
-        splitter.add(createResource(1));
-        ResourceSet categorizedResources = splitter
+        underTest.add(createResource(1));
+        ResourceSet categorizedResources = underTest
                 .getCategorizedResourceSets().get(CATEGORY_1_1);
         ResourcesRemovedEventHandler resourcesRemovedHandler = mock(ResourcesRemovedEventHandler.class);
         categorizedResources.addEventHandler(resourcesRemovedHandler);
-        splitter.remove(createResource(1));
+        underTest.remove(createResource(1));
 
         verify(resourcesRemovedHandler, never()).onResourcesRemoved(
                 any(ResourcesRemovedEvent.class));
@@ -378,12 +395,12 @@ public class ResourceGroupingTest {
 
     @Test
     public void noResourceSetEventsFiredOnCompleteCategoryRemovalViaRemoveAll() {
-        splitter.addAll(createResources(1, 2, 3));
-        ResourceSet categorizedResources = splitter
+        underTest.addAll(createResources(1, 2, 3));
+        ResourceSet categorizedResources = underTest
                 .getCategorizedResourceSets().get(CATEGORY_1_1);
         ResourcesRemovedEventHandler resourcesRemovedHandler = mock(ResourcesRemovedEventHandler.class);
         categorizedResources.addEventHandler(resourcesRemovedHandler);
-        splitter.removeAll(createResources(1, 2, 3));
+        underTest.removeAll(createResources(1, 2, 3));
 
         verify(resourcesRemovedHandler, never()).onResourcesRemoved(
                 any(ResourcesRemovedEvent.class));
@@ -391,10 +408,11 @@ public class ResourceGroupingTest {
 
     @Test
     public void removeResourceSet() {
-        splitter.addAll(createResources(1, 2, 3, 4, 5));
-        splitter.removeAll(createResources(1, 2, 3));
+        underTest.addAll(createResources(1, 2, 3, 4, 5));
+        underTest.removeAll(createResources(1, 2, 3));
 
-        Map<String, ResourceSet> result = splitter.getCategorizedResourceSets();
+        Map<String, ResourceSet> result = underTest
+                .getCategorizedResourceSets();
 
         assertEquals(1, result.size());
         assertTrue(result.containsKey(CATEGORY_1_2));
@@ -406,7 +424,7 @@ public class ResourceGroupingTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        splitter = new ResourceGrouping(categorizer1,
+        underTest = new ResourceGrouping(categorizer1,
                 new DefaultResourceSetFactory());
 
         setUpCategory(categorizer1, 1, CATEGORY_1_1);
