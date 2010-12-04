@@ -15,9 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import java.util.Set;
-
 import org.thechiselgroup.choosel.client.persistence.Memento;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -95,9 +94,10 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
     }
 
     @Override
-    public void update(Set<ResourceItem> addedResourceItems,
-            Set<ResourceItem> updatedResourceItems,
-            Set<ResourceItem> removedResourceItems, Set<Slot> changedSlots) {
+    public void update(LightweightCollection<ResourceItem> addedResourceItems,
+            LightweightCollection<ResourceItem> updatedResourceItems,
+            LightweightCollection<ResourceItem> removedResourceItems,
+            LightweightCollection<Slot> changedSlots) {
 
         delegate.update(addedResourceItems, updatedResourceItems,
                 removedResourceItems, changedSlots);
