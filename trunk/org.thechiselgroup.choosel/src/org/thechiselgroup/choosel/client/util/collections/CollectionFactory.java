@@ -15,8 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.util.collections;
 
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 import com.google.gwt.core.client.GWT;
 
@@ -30,12 +32,44 @@ public final class CollectionFactory {
         return new ArrayListToLightweightListAdapter<T>();
     }
 
+    public static NumberArray createNumberArray() {
+        if (GWT.isScript() || GWT.isClient()) {
+            return JsDoubleArray.create();
+        }
+
+        return new DefaultNumberArray();
+    }
+
+    public static NumberArray createNumberArray(double... values) {
+        NumberArray array = createNumberArray();
+        for (double value : values) {
+            array.push(value);
+        }
+        return array;
+    }
+
+    /**
+     * Return a sorted String to value map.
+     * 
+     * @return Sorted String to value map. The Map does not implement SortedMap
+     *         (TODO extend JavaScript implementation), however, the result from
+     *         its iterator method is sorted.
+     */
     public static <T> Map<String, T> createStringMap() {
-        if (GWT.isScript()) {
+        if (GWT.isScript() || GWT.isClient()) {
             return new JavaScriptStringToObjectMap<T>();
         }
 
-        return new HashMap<String, T>();
+        // return sorted Java map implementation
+        return new TreeMap<String, T>();
+    }
+
+    public static Set<String> createStringSet() {
+        if (GWT.isScript() || GWT.isClient()) {
+            return new JavaScriptStringSet();
+        }
+
+        return new HashSet<String>();
     }
 
     private CollectionFactory() {
