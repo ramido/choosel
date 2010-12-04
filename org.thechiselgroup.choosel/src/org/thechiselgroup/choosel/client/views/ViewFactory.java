@@ -66,7 +66,7 @@ public class ViewFactory implements WindowContentFactory {
 
     private final DetailsWidgetHelper detailsWidgetHelper;
 
-    private final ShareConfiguration shareConfiguration;
+    private final ShareConfigurationFactory shareConfigurationFactory;
 
     public ViewFactory(
             String contentType,
@@ -82,7 +82,7 @@ public class ViewFactory implements WindowContentFactory {
             @Named(DROP_TARGET_MANAGER_VIEW_CONTENT) ResourceSetAvatarDropTargetManager contentDropTargetManager,
             HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
             DetailsWidgetHelper detailsWidgetHelper,
-            ShareConfiguration shareConfiguration) {
+            ShareConfigurationFactory shareConfigurationFactory) {
 
         assert contentType != null;
         assert viewContentDisplayFactory != null;
@@ -98,9 +98,9 @@ public class ViewFactory implements WindowContentFactory {
         assert hoverModel != null;
         assert popupManagerFactory != null;
         assert detailsWidgetHelper != null;
-        assert shareConfiguration != null;
+        assert shareConfigurationFactory != null;
 
-        this.shareConfiguration = shareConfiguration;
+        this.shareConfigurationFactory = shareConfigurationFactory;
         this.hoverModel = hoverModel;
         this.contentType = contentType;
         this.viewContentDisplayFactory = viewContentDisplayFactory;
@@ -148,6 +148,9 @@ public class ViewFactory implements WindowContentFactory {
 
         VisualMappingsControl visualMappingsControl = new DefaultVisualMappingsControl(
                 contentDisplay, configuration, resourceSplitter);
+
+        ShareConfiguration shareConfiguration = shareConfigurationFactory
+                .createShareConfiguration();
 
         return new DefaultView(resourceSplitter, contentDisplay, contentType,
                 contentType, configuration, selectionModel,

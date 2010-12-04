@@ -13,7 +13,6 @@ import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.inject.Inject;
 
 public class DefaultShareConfiguration implements ShareConfiguration {
 
@@ -41,7 +40,6 @@ public class DefaultShareConfiguration implements ShareConfiguration {
 
     private final AuthenticationManager authenticationManager;
 
-    @Inject
     public DefaultShareConfiguration(ViewSaver viewPersistence,
             AuthenticationManager authenticationManager) {
         this.viewPersistence = viewPersistence;
