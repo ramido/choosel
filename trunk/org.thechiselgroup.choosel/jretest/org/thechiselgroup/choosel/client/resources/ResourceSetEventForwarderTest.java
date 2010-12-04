@@ -20,7 +20,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
-import static org.thechiselgroup.choosel.client.util.CollectionUtils.toList;
+import static org.thechiselgroup.choosel.client.util.collections.CollectionUtils.toList;
 
 import java.util.Collection;
 import java.util.List;
