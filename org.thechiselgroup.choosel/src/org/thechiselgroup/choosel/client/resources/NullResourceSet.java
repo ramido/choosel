@@ -22,6 +22,7 @@ import java.util.List;
 import org.thechiselgroup.choosel.client.label.LabelChangedEventHandler;
 import org.thechiselgroup.choosel.client.util.NullHandlerRegistration;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.client.util.collections.NullIterator;
 
@@ -106,7 +107,7 @@ public final class NullResourceSet implements ResourceSet {
 
     @Override
     public LightweightList<Resource> getIntersection(
-            Iterable<Resource> resources) {
+            LightweightCollection<Resource> resources) {
 
         return CollectionFactory.createLightweightList();
     }

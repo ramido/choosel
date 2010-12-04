@@ -29,6 +29,11 @@ public class ArrayListToLightweightListAdapter<T> implements LightweightList<T> 
     }
 
     @Override
+    public boolean contains(T t) {
+        return delegate.contains(t);
+    }
+
+    @Override
     public T get(int i) {
         return delegate.get(i);
     }

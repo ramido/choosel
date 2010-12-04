@@ -22,6 +22,7 @@ import org.thechiselgroup.choosel.client.label.HasLabel;
 import org.thechiselgroup.choosel.client.label.LabelChangedEventHandler;
 import org.thechiselgroup.choosel.client.util.SingleItemCollection;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
@@ -90,69 +91,28 @@ public abstract class AbstractResourceSet implements ResourceSet {
     /**
      * Intersection calculation based on contains.
      * 
+     * @param iteratedResources
+     *            Resources that are iterated over. Usually this set should be
+     *            smaller than the other one, unless its contains check is slow.
+     * @param containmentCheckedResources
+     *            Resources on which contains is called. Make sure contains is
+     *            fast for this set.
+     * 
      * @see #getIntersection(Iterable)
      */
     private LightweightList<Resource> calculateIntersectionUsingContains(
-            Iterable<Resource> resources) {
+            Iterable<Resource> iteratedResources,
+            LightweightCollection<Resource> containmentCheckedResources) {
 
         LightweightList<Resource> result = CollectionFactory
                 .createLightweightList();
 
-        for (Resource resource : resources) {
-            if (contains(resource)) {
+        for (Resource resource : iteratedResources) {
+            if (containmentCheckedResources.contains(resource)) {
                 result.add(resource);
             }
         }
         return result;
-    }
-
-    @Override
-    public void clear() {
-        removeAll(toList());
-    }
-
-    @Override
-    public abstract boolean contains(Resource resource);
-
-    @Override
-    public boolean containsAll(Iterable<Resource> resources) {
-        for (Resource resource : resources) {
-            if (!contains(resource)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    @Override
-    public final boolean containsEqualResources(ResourceSet other) {
-        if (size() != other.size()) {
-            return false;
-        }
-
-        return containsAll(other);
-    }
-
-    @Override
-    public boolean containsResourceWithUri(String uri) {
-        return getByUri(uri) != null;
-    }
-
-    protected abstract void doAdd(Resource resource,
-            LightweightList<Resource> addedResources);
-
-    protected abstract void doRemove(Resource resource,
-            LightweightList<Resource> removedResources);
-
-    @Override
-    public Resource getFirstResource() {
-        assert !isEmpty();
-        return toList().get(0);
-    }
-
-    public int getHandlerCount(Type<?> type) {
-        return eventBus.getHandlerCount(type);
     }
 
     /**
@@ -160,24 +120,22 @@ public abstract class AbstractResourceSet implements ResourceSet {
      * <b>IMPLEMENTATION NOTE</b>: We assume return by {@link #iterator()} are
      * sorted and contain each resource at most once. We do a fast intersection
      * calculation assuming that the resources that are passed in are sorted as
-     * well.
+     * well. We assert that this resource set and the passed in resources are
+     * not empty.
      * </p>
      */
-    @Override
-    public LightweightList<Resource> getIntersection(
-            Iterable<Resource> resources) {
+    private LightweightList<Resource> calculateIntersectionUsingDoubleIteration(
+            LightweightCollection<Resource> resources) {
 
         assert resources != null;
+        assert !isEmpty();
+        assert !resources.isEmpty();
 
         LightweightList<Resource> result = CollectionFactory
                 .createLightweightList();
 
         Iterator<Resource> internalIterator = iterator();
         Iterator<Resource> otherIterator = resources.iterator();
-
-        if (!internalIterator.hasNext() || !otherIterator.hasNext()) {
-            return result;
-        }
 
         /*
          * we compare based on URIs because resources are unique and URIs
@@ -235,6 +193,82 @@ public abstract class AbstractResourceSet implements ResourceSet {
                 } while (otherUri.compareTo(oldUri) == 0);
             }
         }
+    }
+
+    @Override
+    public void clear() {
+        removeAll(toList());
+    }
+
+    @Override
+    public boolean contains(Resource resource) {
+        assert resource != null;
+        return containsResourceWithUri(resource.getUri());
+    }
+
+    @Override
+    public boolean containsAll(Iterable<Resource> resources) {
+        for (Resource resource : resources) {
+            if (!contains(resource)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public final boolean containsEqualResources(ResourceSet other) {
+        if (size() != other.size()) {
+            return false;
+        }
+
+        return containsAll(other);
+    }
+
+    protected abstract void doAdd(Resource resource,
+            LightweightList<Resource> addedResources);
+
+    protected abstract void doRemove(Resource resource,
+            LightweightList<Resource> removedResources);
+
+    @Override
+    public Resource getFirstResource() {
+        assert !isEmpty();
+        return toList().get(0);
+    }
+
+    public int getHandlerCount(Type<?> type) {
+        return eventBus.getHandlerCount(type);
+    }
+
+    /**
+     * <p>
+     * <b>IMPLEMENTATION NOTE</b>: We assume return by {@link #iterator()} are
+     * sorted and contain each resource at most once.
+     * </p>
+     */
+    @Override
+    public LightweightList<Resource> getIntersection(
+            LightweightCollection<Resource> resources) {
+
+        assert resources != null;
+
+        // special case: one collection is empty
+        if (isEmpty() || resources.isEmpty()) {
+            return CollectionFactory.createLightweightList();
+        }
+
+        /*
+         * special case: other collection is resource set. Resource sets are
+         * assumed to be hash-based and to use a fast contains method, so we can
+         * just iterate over the smaller set and check for containment.
+         */
+        if (size() < resources.size() && resources instanceof ResourceSet) {
+            return calculateIntersectionUsingContains(this, resources);
+        }
+
+        return calculateIntersectionUsingContains(resources, this);
     }
 
     @Override

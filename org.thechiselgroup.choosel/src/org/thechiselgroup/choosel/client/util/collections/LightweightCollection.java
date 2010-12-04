@@ -17,7 +17,19 @@ package org.thechiselgroup.choosel.client.util.collections;
 
 import java.util.List;
 
+/**
+ * Generic lightweight collection. LightweightCollection provides a read-only
+ * interface that extends Iterable and only contains the most important
+ * operations and thus facilitate the implementation of optimized JavaScript
+ * versions.
+ * 
+ * @author Lars Grammel
+ * 
+ * @param <T>
+ */
 public interface LightweightCollection<T> extends Iterable<T> {
+
+    boolean contains(T t);
 
     boolean isEmpty();
 

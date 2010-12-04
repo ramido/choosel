@@ -23,6 +23,11 @@ public final class NullLightweightCollection<T> implements
         LightweightCollection<T> {
 
     @Override
+    public boolean contains(T t) {
+        return false;
+    }
+
+    @Override
     public boolean isEmpty() {
         return true;
     }

@@ -26,6 +26,7 @@ import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.persistence.Persistable;
 import org.thechiselgroup.choosel.client.resolver.FixedValuePropertyValueResolver;
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
+import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceByPropertyMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceByUriMultiCategorizer;
@@ -49,11 +50,13 @@ import org.thechiselgroup.choosel.client.ui.Presenter;
 import org.thechiselgroup.choosel.client.ui.WidgetFactory;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
+import org.thechiselgroup.choosel.client.util.Delta;
 import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.util.HandlerRegistrationSet;
 import org.thechiselgroup.choosel.client.util.Initializable;
 import org.thechiselgroup.choosel.client.util.SingleItemIterable;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
@@ -239,7 +242,8 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     private DefaultResourceItem createResourceItem(String groupID,
-            ResourceSet resources) {
+            ResourceSet resources,
+            LightweightCollection<Resource> highlightedResources) {
 
         // Added when changing resource item to contain resource sets
         // TODO use factory & dispose + clean up
@@ -251,16 +255,12 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         assert !groupsToResourceItems.containsKey(groupID) : "groupsToResourceItems already contains "
                 + groupID;
-
         groupsToResourceItems.put(groupID, resourceItem);
 
         // TODO introduce partial selection
 
-        LightweightList<Resource> affectedResources = resourceModel
-                .getIntersection(hoverModel.getResources());
-
-        if (!affectedResources.isEmpty()) {
-            resourceItem.addHighlightedResources(affectedResources);
+        if (!highlightedResources.isEmpty()) {
+            resourceItem.addHighlightedResources(highlightedResources);
         }
 
         // / TODO is this necessary?
@@ -681,6 +681,72 @@ public class DefaultView extends AbstractWindowContent implements View {
         sideBar.add(configurationWidget, "View Settings");
     }
 
+    /**
+     * Processes the added resource groups when the grouping changes.
+     */
+    private LightweightCollection<ResourceItem> processAddChanges(
+            List<ResourceGroupingChange> changes) {
+
+        LightweightList<ResourceItem> addedResourceItems = CollectionFactory
+                .createLightweightList();
+
+        /*
+         * PERFORMANCE: cache highlighted resources and use resource set to
+         * enable fast containment checks in DefaultResourceItem
+         */
+        ResourceSet highlightedResources = null;
+        for (ResourceGroupingChange change : changes) {
+            if (change.getDelta() == Delta.ADD) {
+                if (highlightedResources == null) {
+                    highlightedResources = new DefaultResourceSet();
+                    highlightedResources.addAll(resourceModel
+                            .getIntersection(hoverModel.getResources()));
+                }
+                DefaultResourceItem resourceItem = createResourceItem(
+                        change.getGroupID(), change.getResourceSet(),
+                        highlightedResources);
+
+                addedResourceItems.add(resourceItem);
+            }
+        }
+
+        return addedResourceItems;
+    }
+
+    private LightweightCollection<ResourceItem> processRemoveChanges(
+            List<ResourceGroupingChange> changes) {
+
+        LightweightList<ResourceItem> removedResourceItems = CollectionFactory
+                .createLightweightList();
+        for (ResourceGroupingChange change : changes) {
+            switch (change.getDelta()) {
+            case REMOVE: {
+                // XXX dispose should be done after method call...
+                removedResourceItems
+                        .add(removeResourceItem(change.getGroupID()));
+            }
+                break;
+            }
+        }
+        return removedResourceItems;
+    }
+
+    // TODO implement
+    private LightweightCollection<ResourceItem> processUpdates(
+            List<ResourceGroupingChange> changes) {
+
+        for (ResourceGroupingChange change : changes) {
+            switch (change.getDelta()) {
+            case UPDATE: {
+                // TODO implement
+            }
+                break;
+            }
+        }
+
+        return LightweightCollections.<ResourceItem> emptyCollection();
+    }
+
     private DefaultResourceItem removeResourceItem(String groupID) {
         assert groupID != null : "groupIDs must not be null";
         assert groupsToResourceItems.containsKey(groupID) : "no resource item for "
@@ -888,8 +954,13 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         assert affectedResources != null;
 
-        LightweightList<Resource> affectedResourcesInThisView = resourceModel
-                .getIntersection(affectedResources);
+        /*
+         * PERFORMANCE: use resource set to enable fast containment checks in
+         * DefaultResourceItem
+         */
+        ResourceSet affectedResourcesInThisView = new DefaultResourceSet();
+        affectedResourcesInThisView.addAll(resourceModel
+                .getIntersection(affectedResources));
 
         if (affectedResourcesInThisView.isEmpty()) {
             return;
@@ -932,33 +1003,15 @@ public class DefaultView extends AbstractWindowContent implements View {
         assert changes != null;
         assert !changes.isEmpty();
 
-        LightweightList<ResourceItem> addedResourceItems = CollectionFactory
-                .createLightweightList();
-        LightweightList<ResourceItem> removedResourceItems = CollectionFactory
-                .createLightweightList();
+        /*
+         * IMPORTANT: remove old items before adding new once (there might be
+         * conflicts, i.e. groups with the same id)
+         */
+        LightweightCollection<ResourceItem> removedResourceItems = processRemoveChanges(changes);
+        LightweightCollection<ResourceItem> addedResourceItems = processAddChanges(changes);
+        LightweightCollection<ResourceItem> updatedResourceItems = processUpdates(changes);
 
-        for (ResourceGroupingChange change : changes) {
-            switch (change.getDelta()) {
-            case ADD: {
-                addedResourceItems.add(createResourceItem(change.getGroupID(),
-                        change.getResourceSet()));
-            }
-                break;
-            case REMOVE: {
-                // XXX dispose should be done after method call...
-                removedResourceItems
-                        .add(removeResourceItem(change.getGroupID()));
-            }
-                break;
-            case UPDATE: {
-                // TODO implement
-            }
-                break;
-            }
-        }
-
-        contentDisplay.update(addedResourceItems,
-                LightweightCollections.<ResourceItem> emptyCollection(),
+        contentDisplay.update(addedResourceItems, updatedResourceItems,
                 removedResourceItems,
                 LightweightCollections.<Slot> emptyCollection());
     }

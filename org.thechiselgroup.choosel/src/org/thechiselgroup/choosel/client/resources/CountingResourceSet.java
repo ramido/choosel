@@ -65,8 +65,8 @@ public class CountingResourceSet extends AbstractResourceSet {
     }
 
     @Override
-    public boolean contains(Resource resource) {
-        return uriToResourceElementMap.containsKey(resource.getUri());
+    public boolean containsResourceWithUri(String uri) {
+        return uriToResourceElementMap.containsKey(uri);
     }
 
     @Override
