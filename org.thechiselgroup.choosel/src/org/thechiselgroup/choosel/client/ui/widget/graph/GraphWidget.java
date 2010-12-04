@@ -20,7 +20,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.thechiselgroup.choosel.client.geometry.Point;
-import org.thechiselgroup.choosel.client.util.ArrayUtils;
+import org.thechiselgroup.choosel.client.util.collections.ArrayUtils;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 
 import pl.rmalinowski.gwt2swf.client.ui.SWFWidget;

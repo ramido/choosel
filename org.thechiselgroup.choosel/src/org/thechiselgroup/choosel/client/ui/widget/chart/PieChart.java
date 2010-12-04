@@ -22,7 +22,7 @@ import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventH
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDouble;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDoubleWithCache;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Wedge;
-import org.thechiselgroup.choosel.client.util.ArrayUtils;
+import org.thechiselgroup.choosel.client.util.collections.ArrayUtils;
 import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
 // Version of Pie chart with the average of the area 

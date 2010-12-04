@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.widget.chart;
 
-import org.thechiselgroup.choosel.client.util.ArrayUtils;
+import org.thechiselgroup.choosel.client.util.collections.ArrayUtils;
 
 public class SlotValues {
 
