@@ -27,6 +27,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 
 public class DefaultResourceSetTest {
 
@@ -93,6 +95,86 @@ public class DefaultResourceSetTest {
         underTest.setLabel("some text");
 
         assertEquals(true, underTest.hasLabel());
+    }
+
+    @Test
+    public void intersectionMixedResourcesUnderTest() {
+        underTest.addAll(createResources(3, 1, 4, 2));
+
+        LightweightList<Resource> paramList = CollectionFactory
+                .createLightweightList();
+        paramList.add(createResource(3));
+        paramList.add(createResource(4));
+        paramList.add(createResource(5));
+
+        LightweightList<Resource> intersection = underTest
+                .getIntersection(paramList);
+
+        assertEquals(2, intersection.size());
+        assertEquals(createResource(3), intersection.get(0));
+        assertEquals(createResource(4), intersection.get(1));
+    }
+
+    @Test
+    public void intersectionMixedResourcesUnderTestAndParameter() {
+        underTest.addAll(createResources(3, 1, 4, 2, 11, 12, 15, 13, 10));
+
+        LightweightList<Resource> paramList = CollectionFactory
+                .createLightweightList();
+        paramList.add(createResource(1));
+        paramList.add(createResource(11));
+        paramList.add(createResource(13));
+        paramList.add(createResource(3));
+        paramList.add(createResource(4));
+        paramList.add(createResource(5));
+        paramList.add(createResource(9));
+
+        LightweightList<Resource> intersection = underTest
+                .getIntersection(paramList);
+
+        assertEquals(5, intersection.size());
+        assertEquals(createResource(1), intersection.get(0));
+        assertEquals(createResource(11), intersection.get(1));
+        assertEquals(createResource(13), intersection.get(2));
+        assertEquals(createResource(3), intersection.get(3));
+        assertEquals(createResource(4), intersection.get(4));
+    }
+
+    @Test
+    public void intersectionOrder() {
+        underTest.addAll(createResources(1, 2, 3, 4));
+
+        LightweightList<Resource> paramList = CollectionFactory
+                .createLightweightList();
+        paramList.add(createResource(2));
+        paramList.add(createResource(4));
+        paramList.add(createResource(5));
+
+        LightweightList<Resource> intersection = underTest
+                .getIntersection(paramList);
+
+        assertEquals(2, intersection.size());
+        assertEquals(createResource(2), intersection.get(0));
+        assertEquals(createResource(4), intersection.get(1));
+
+    }
+
+    @Test
+    public void intersectionSimple() {
+        underTest.addAll(createResources(1, 2, 3));
+
+        LightweightList<Resource> paramList = CollectionFactory
+                .createLightweightList();
+        paramList.add(createResource(3));
+        paramList.add(createResource(4));
+        paramList.add(createResource(5));
+
+        LightweightList<Resource> intersection = underTest
+                .getIntersection(paramList);
+
+        assertEquals(1, intersection.size());
+        assertEquals(createResource(3), intersection.get(0));
+
     }
 
     @Test
