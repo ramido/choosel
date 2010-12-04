@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.thechiselgroup.choosel.client.label.LabelChangedEventHandler;
+import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
@@ -98,6 +99,12 @@ public class DelegatingResourceSet implements ResourceSet {
     @Override
     public Resource getFirstResource() {
         return delegate.getFirstResource();
+    }
+
+    @Override
+    public LightweightList<Resource> getIntersection(
+            Iterable<Resource> resources) {
+        return delegate.getIntersection(resources);
     }
 
     @Override

@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.thechiselgroup.choosel.client.label.HasLabel;
@@ -72,9 +73,31 @@ public interface ResourceSet extends HasLabel, Iterable<Resource> {
     // especially in the graph
     Resource getFirstResource();
 
+    /**
+     * Calculates the intersection of this resource set and the resources in the
+     * parameter. <b>Assumes that resources are sorted by URIs String natural
+     * order</b>.
+     * 
+     * @param sortedResources
+     *            Sorted Iterable over resources that are in both this resource
+     *            set and in the param. Resources can appear multiple times.
+     * 
+     * @return Sorted intersection (resources are sorted by the natural order of
+     *         their URIs). Each resource is contained at most once.
+     */
+    LightweightList<Resource> getIntersection(Iterable<Resource> sortedResources);
+
     boolean isEmpty();
 
     boolean isModifiable();
+
+    /**
+     * @return Iterator over the resources in this resource set. Resource sets
+     *         are sorted by the natural order of the URIs of the contained
+     *         resources.
+     */
+    @Override
+    Iterator<Resource> iterator();
 
     boolean remove(Resource resource);
 
@@ -82,6 +105,16 @@ public interface ResourceSet extends HasLabel, Iterable<Resource> {
 
     boolean removeAll(ResourceSet resources);
 
+    /**
+     * Removes all resources from this resource set that are not contained in
+     * the parameter resource set.
+     * 
+     * @param resources
+     *            resource set with resource that will remain in this resource
+     *            set
+     * 
+     * @return true if this resource set changed as a result of this operation
+     */
     boolean retainAll(ResourceSet resources);
 
     /**
