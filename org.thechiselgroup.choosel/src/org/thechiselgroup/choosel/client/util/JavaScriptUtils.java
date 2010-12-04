@@ -17,7 +17,7 @@ package org.thechiselgroup.choosel.client.util;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
-public class JavaScriptUtils {
+public final class JavaScriptUtils {
 
     // @formatter:off
     public static native double toDouble(JavaScriptObject jso) /*-{
@@ -32,5 +32,9 @@ public class JavaScriptUtils {
         return jso;
     }-*/;
     // @formatter:on
+
+    private JavaScriptUtils() {
+
+    }
 
 }
