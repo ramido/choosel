@@ -15,16 +15,18 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.util.collections;
 
-/**
- * Minimalistic list for intermediary data processing. A JavaScript
- * implementation is available.
- * 
- * @author Lars Grammel
- */
-public interface LightweightList<T> extends LightweightCollection<T> {
+import java.util.List;
 
-    void add(T t);
+public interface LightweightCollection<T> extends Iterable<T> {
 
-    T get(int i);
+    boolean isEmpty();
+
+    int size();
+
+    /**
+     * Converts this lightweight collection into a List. This usually has a
+     * fairly high performance penalty and is only recommended for testing.
+     */
+    List<T> toList();
 
 }
