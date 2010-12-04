@@ -22,7 +22,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.thechiselgroup.choosel.client.test.AdvancedAsserts.assertContentEquals;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.emptySet;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.emptyLightweightCollection;
 import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.eqResourceItems;
 import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.resourceItemsForResourceSets;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.TYPE_1;
@@ -33,10 +33,8 @@ import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.crea
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.toLabeledResources;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.toResourceSet;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -50,6 +48,7 @@ import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 
 public class DefaultViewTest {
@@ -58,16 +57,19 @@ public class DefaultViewTest {
 
     private Slot slot;
 
-    public Set<ResourceItem> captureAddedResourceItems() {
-        ArgumentCaptor<Set> captor = ArgumentCaptor.forClass(Set.class);
+    public LightweightCollection<ResourceItem> captureAddedResourceItems() {
+        ArgumentCaptor<LightweightCollection> captor = ArgumentCaptor
+                .forClass(LightweightCollection.class);
         verify(underTest.getContentDisplay(), times(1)).update(
-                captor.capture(), emptySet(ResourceItem.class),
-                emptySet(ResourceItem.class), emptySet(Slot.class));
+                captor.capture(),
+                emptyLightweightCollection(ResourceItem.class),
+                emptyLightweightCollection(ResourceItem.class),
+                emptyLightweightCollection(Slot.class));
         return captor.getValue();
     }
 
-    private ArrayList<ResourceItem> captureAddedResourceItemsAsList() {
-        return new ArrayList<ResourceItem>(captureAddedResourceItems());
+    private List<ResourceItem> captureAddedResourceItemsAsList() {
+        return captureAddedResourceItems().toList();
     }
 
     // TODO move to resource splitter test
@@ -96,7 +98,8 @@ public class DefaultViewTest {
 
         underTest.getSlotMappingConfiguration().setMapping(slot,
                 new FirstResourcePropertyResolver("text1"));
-        underTest.getResourceModel().addUnnamedResources(toResourceSet(resource));
+        underTest.getResourceModel().addUnnamedResources(
+                toResourceSet(resource));
         underTest.getSlotMappingConfiguration().setMapping(slot,
                 new FirstResourcePropertyResolver("text2"));
 
@@ -115,17 +118,20 @@ public class DefaultViewTest {
 
         resources.add(createResource(TYPE_2, 2));
 
-        ArgumentCaptor<Set> captor = ArgumentCaptor.forClass(Set.class);
+        ArgumentCaptor<LightweightCollection> captor = ArgumentCaptor
+                .forClass(LightweightCollection.class);
         verify(underTest.getContentDisplay(), times(2)).update(
-                captor.capture(), emptySet(ResourceItem.class),
-                emptySet(ResourceItem.class), emptySet(Slot.class));
+                captor.capture(),
+                emptyLightweightCollection(ResourceItem.class),
+                emptyLightweightCollection(ResourceItem.class),
+                emptyLightweightCollection(Slot.class));
 
-        Set<ResourceItem> set1 = captor.getAllValues().get(0);
+        List<ResourceItem> set1 = captor.getAllValues().get(0).toList();
         assertEquals(1, set1.size());
         assertContentEquals(createResources(TYPE_1, 1),
                 ((ResourceItem) set1.toArray()[0]).getResourceSet());
 
-        Set<ResourceItem> set2 = captor.getAllValues().get(1);
+        List<ResourceItem> set2 = captor.getAllValues().get(1).toList();
         assertEquals(1, set2.size());
         assertContentEquals(createResources(TYPE_2, 2),
                 ((ResourceItem) set2.toArray()[0]).getResourceSet());
@@ -225,7 +231,8 @@ public class DefaultViewTest {
 
         underTest.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("text1"));
-        underTest.getResourceModel().addUnnamedResources(toResourceSet(resource));
+        underTest.getResourceModel().addUnnamedResources(
+                toResourceSet(resource));
         underTest.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("text2"));
 
@@ -247,7 +254,8 @@ public class DefaultViewTest {
 
         underTest.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("text1"));
-        underTest.getResourceModel().addUnnamedResources(toResourceSet(resource));
+        underTest.getResourceModel().addUnnamedResources(
+                toResourceSet(resource));
         underTest.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("text2"));
 
@@ -377,15 +385,16 @@ public class DefaultViewTest {
         ResourceSet highlightedResources = createResources(1);
 
         underTest.getResourceModel().addResourceSet(highlightedResources);
-        Set<ResourceItem> addedResourceItems = captureAddedResourceItems();
+        LightweightCollection<ResourceItem> addedResourceItems = captureAddedResourceItems();
 
         underTest.getHoverModel().setHighlightedResourceSet(
                 highlightedResources);
 
         verify(underTest.getContentDisplay(), times(1)).update(
-                emptySet(ResourceItem.class),
+                emptyLightweightCollection(ResourceItem.class),
                 eqResourceItems(addedResourceItems),
-                emptySet(ResourceItem.class), emptySet(Slot.class));
+                emptyLightweightCollection(ResourceItem.class),
+                emptyLightweightCollection(Slot.class));
     }
 
     @Test
@@ -395,12 +404,14 @@ public class DefaultViewTest {
         ResourceSet resources = toLabeledResources(resources1, resources2);
 
         underTest.getResourceModel().addResourceSet(resources);
-        Set<ResourceItem> addedResourceItems = captureAddedResourceItems();
+        LightweightCollection<ResourceItem> addedResourceItems = captureAddedResourceItems();
 
         underTest.getResourceModel().removeResourceSet(resources);
         verify(underTest.getContentDisplay(), times(1)).update(
-                emptySet(ResourceItem.class), emptySet(ResourceItem.class),
-                eqResourceItems(addedResourceItems), emptySet(Slot.class));
+                emptyLightweightCollection(ResourceItem.class),
+                emptyLightweightCollection(ResourceItem.class),
+                eqResourceItems(addedResourceItems),
+                emptyLightweightCollection(Slot.class));
     }
 
     @Test
@@ -408,14 +419,15 @@ public class DefaultViewTest {
         ResourceSet resources = createResources(1);
 
         underTest.getResourceModel().addUnnamedResources(resources);
-        Set<ResourceItem> addedResourceItems = captureAddedResourceItems();
+        LightweightCollection<ResourceItem> addedResourceItems = captureAddedResourceItems();
 
         select(createResources(1));
 
         verify(underTest.getContentDisplay(), times(1)).update(
-                emptySet(ResourceItem.class),
+                emptyLightweightCollection(ResourceItem.class),
                 eqResourceItems(addedResourceItems),
-                emptySet(ResourceItem.class), emptySet(Slot.class));
+                emptyLightweightCollection(ResourceItem.class),
+                emptyLightweightCollection(Slot.class));
     }
 
     @Test
@@ -428,8 +440,9 @@ public class DefaultViewTest {
 
         verify(underTest.getContentDisplay(), times(1)).update(
                 resourceItemsForResourceSets(resources1, resources2),
-                emptySet(ResourceItem.class), emptySet(ResourceItem.class),
-                emptySet(Slot.class));
+                emptyLightweightCollection(ResourceItem.class),
+                emptyLightweightCollection(ResourceItem.class),
+                emptyLightweightCollection(Slot.class));
     }
 
     @Test
@@ -438,8 +451,9 @@ public class DefaultViewTest {
         underTest.getHoverModel().setHighlightedResourceSet(createResources(1));
 
         verify(underTest.getContentDisplay(), never()).update(
-                emptySet(ResourceItem.class), any(Set.class),
-                emptySet(ResourceItem.class), emptySet(Slot.class));
+                emptyLightweightCollection(ResourceItem.class),
+                any(LightweightCollection.class),
+                emptyLightweightCollection(ResourceItem.class),
+                emptyLightweightCollection(Slot.class));
     }
-
 }
