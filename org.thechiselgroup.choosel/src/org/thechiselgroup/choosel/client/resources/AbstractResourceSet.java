@@ -15,8 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
-import java.util.Iterator;
-
 import org.thechiselgroup.choosel.client.label.DefaultHasLabel;
 import org.thechiselgroup.choosel.client.label.HasLabel;
 import org.thechiselgroup.choosel.client.label.LabelChangedEventHandler;
@@ -100,7 +98,7 @@ public abstract class AbstractResourceSet implements ResourceSet {
      * 
      * @see #getIntersection(Iterable)
      */
-    private LightweightList<Resource> calculateIntersectionUsingContains(
+    private LightweightList<Resource> calculateIntersection(
             Iterable<Resource> iteratedResources,
             LightweightCollection<Resource> containmentCheckedResources) {
 
@@ -113,86 +111,6 @@ public abstract class AbstractResourceSet implements ResourceSet {
             }
         }
         return result;
-    }
-
-    /**
-     * <p>
-     * <b>IMPLEMENTATION NOTE</b>: We assume return by {@link #iterator()} are
-     * sorted and contain each resource at most once. We do a fast intersection
-     * calculation assuming that the resources that are passed in are sorted as
-     * well. We assert that this resource set and the passed in resources are
-     * not empty.
-     * </p>
-     */
-    private LightweightList<Resource> calculateIntersectionUsingDoubleIteration(
-            LightweightCollection<Resource> resources) {
-
-        assert resources != null;
-        assert !isEmpty();
-        assert !resources.isEmpty();
-
-        LightweightList<Resource> result = CollectionFactory
-                .createLightweightList();
-
-        Iterator<Resource> internalIterator = iterator();
-        Iterator<Resource> otherIterator = resources.iterator();
-
-        /*
-         * we compare based on URIs because resources are unique and URIs
-         * comparisons remove the overhead of casting etc.
-         */
-        Resource internalResource = internalIterator.next();
-        String internalUri = internalResource.getUri();
-        Resource otherResource = otherIterator.next();
-        String otherUri = otherResource.getUri();
-
-        // we break the loop by returning when hasNext is not true
-        while (true) {
-            int compareResult = internalUri.compareTo(otherUri);
-
-            if (compareResult > 0) {
-                // increase other resource until different resource
-                String oldUri;
-                do {
-                    oldUri = otherUri;
-                    if (!otherIterator.hasNext()) {
-                        return result;
-                    }
-                    otherResource = otherIterator.next();
-                    otherUri = otherResource.getUri();
-                    assert otherUri.compareTo(oldUri) >= 0 : "passed in resources iterable must be sorted";
-                } while (otherUri.compareTo(oldUri) == 0);
-            } else if (compareResult < 0) {
-                if (!internalIterator.hasNext()) {
-                    return result;
-                }
-                internalResource = internalIterator.next();
-                internalUri = internalResource.getUri();
-            } else {
-                assert compareResult == 0;
-                assert internalUri.equals(otherUri);
-
-                result.add(otherResource);
-
-                if (!internalIterator.hasNext()) {
-                    return result;
-                }
-                internalResource = internalIterator.next();
-                internalUri = internalResource.getUri();
-
-                // increase other resource until different resource
-                String oldUri;
-                do {
-                    oldUri = otherUri;
-                    if (!otherIterator.hasNext()) {
-                        return result;
-                    }
-                    otherResource = otherIterator.next();
-                    otherUri = otherResource.getUri();
-                    assert otherUri.compareTo(oldUri) >= 0 : "passed in resources iterable must be sorted";
-                } while (otherUri.compareTo(oldUri) == 0);
-            }
-        }
     }
 
     @Override
@@ -242,12 +160,6 @@ public abstract class AbstractResourceSet implements ResourceSet {
         return eventBus.getHandlerCount(type);
     }
 
-    /**
-     * <p>
-     * <b>IMPLEMENTATION NOTE</b>: We assume return by {@link #iterator()} are
-     * sorted and contain each resource at most once.
-     * </p>
-     */
     @Override
     public LightweightList<Resource> getIntersection(
             LightweightCollection<Resource> resources) {
@@ -265,10 +177,10 @@ public abstract class AbstractResourceSet implements ResourceSet {
          * just iterate over the smaller set and check for containment.
          */
         if (size() < resources.size() && resources instanceof ResourceSet) {
-            return calculateIntersectionUsingContains(this, resources);
+            return calculateIntersection(this, resources);
         }
 
-        return calculateIntersectionUsingContains(resources, this);
+        return calculateIntersection(resources, this);
     }
 
     @Override

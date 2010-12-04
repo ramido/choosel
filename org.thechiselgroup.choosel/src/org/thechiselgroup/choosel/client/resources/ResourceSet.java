@@ -97,18 +97,13 @@ public interface ResourceSet extends HasLabel, LightweightCollection<Resource> {
 
     /**
      * Calculates the intersection of this resource set and the resources in the
-     * parameter. <b>Assumes that resources are sorted by URIs String natural
-     * order</b>.
+     * parameter.
      * 
-     * @param sortedResources
-     *            Sorted Iterable over resources that are in both this resource
-     *            set and in the param. Resources can appear multiple times.
-     * 
-     * @return Sorted intersection (resources are sorted by the natural order of
-     *         their URIs). Each resource is contained at most once.
+     * @return LightweightList with resources that are in both this resource set
+     *         and in <code>resources</code>.
      */
     LightweightList<Resource> getIntersection(
-            LightweightCollection<Resource> sortedResources);
+            LightweightCollection<Resource> resources);
 
     @Override
     boolean isEmpty();
