@@ -26,6 +26,8 @@ import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.crea
 import java.util.Collections;
 import java.util.Set;
 
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
 import org.junit.Assert;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatcher;
@@ -35,6 +37,7 @@ import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.DefaultResourceItem;
 import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
@@ -55,34 +58,58 @@ public final class ResourcesTestHelper {
                 mock(SlotMappingConfiguration.class)));
     }
 
+    public static <T> LightweightCollection<T> emptyLightweightCollection(
+            final Class<T> clazz) {
+
+        return argThat(new BaseMatcher<LightweightCollection<T>>() {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("Empty LightweightCollection Matcher");
+            }
+
+            @Override
+            public boolean matches(Object item) {
+                if (item == null) {
+                    return false;
+                }
+
+                if (!(item instanceof LightweightCollection)) {
+                    return false;
+                }
+
+                return ((LightweightCollection) item).isEmpty();
+            }
+        });
+    }
+
     public static <T> Set<T> emptySet(Class<T> clazz) {
         return eq(Collections.<T> emptySet());
     }
 
-    public static Set<ResourceItem> eqResourceItems(
-            final Set<ResourceItem> resourceItems) {
+    public static LightweightCollection<ResourceItem> eqResourceItems(
+            final LightweightCollection<ResourceItem> resourceItems) {
 
-        return argThat(new ArgumentMatcher<Set<ResourceItem>>() {
+        return argThat(new ArgumentMatcher<LightweightCollection<ResourceItem>>() {
             @Override
             public boolean matches(Object o) {
-                Set<ResourceItem> set = (Set<ResourceItem>) o;
+                LightweightCollection<ResourceItem> set = (LightweightCollection<ResourceItem>) o;
 
                 if (set.size() != resourceItems.size()) {
                     return false;
                 }
 
-                return set.containsAll(resourceItems);
+                return set.toList().containsAll(resourceItems.toList());
             }
         });
     }
 
-    public static Set<ResourceItem> resourceItemsForResourceSets(
+    public static LightweightCollection<ResourceItem> resourceItemsForResourceSets(
             final ResourceSet... resourceSets) {
 
-        return argThat(new ArgumentMatcher<Set<ResourceItem>>() {
+        return argThat(new ArgumentMatcher<LightweightCollection<ResourceItem>>() {
             @Override
             public boolean matches(Object o) {
-                Set<ResourceItem> set = (Set<ResourceItem>) o;
+                LightweightCollection<ResourceItem> set = (LightweightCollection<ResourceItem>) o;
 
                 if (set.size() != resourceSets.length) {
                     return false;
