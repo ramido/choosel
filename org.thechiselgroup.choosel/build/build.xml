@@ -74,6 +74,9 @@
     <mkdir dir="${dist}"/>
   </target>
 	
+  <!--
+    Checks out gwt-dnd-3.0.0 and applies performance and null pointer exception patch.
+  -->
   <target name="dnd-library">
   	<delete dir="bin/temp/gwt-dnd"/>
   	<delete dir="bin/temp/gwt-dnd-classes"/>
@@ -91,7 +94,12 @@
   	  Windows Vista / 7: Full GnuWin32 Installation required
   	    see http://sourceforge.net/tracker/index.php?func=detail&aid=1890860&group_id=23617&atid=379173
   	-->
-  	<patch patchfile="build/patches/MouseDragHandler.java.patch"
+  	<!--
+  	  NOTE: patch order important
+  	-->
+  	<patch patchfile="build/patches/MouseDragHandler.java-Performance.patch"
+  	       originalfile="bin/temp/gwt-dnd/src/com/allen_sauer/gwt/dnd/client/MouseDragHandler.java" />
+  	<patch patchfile="build/patches/MouseDragHandler.java-NullPointerException.patch"
   	       originalfile="bin/temp/gwt-dnd/src/com/allen_sauer/gwt/dnd/client/MouseDragHandler.java" />
   	
   	<javac srcdir="bin/temp/gwt-dnd/src"
