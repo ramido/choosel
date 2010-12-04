@@ -22,7 +22,6 @@ import org.thechiselgroup.choosel.client.ui.popup.PopupClosingEvent;
 import org.thechiselgroup.choosel.client.ui.popup.PopupClosingHandler;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.util.Disposable;
-import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 
 import com.google.gwt.event.dom.client.MouseOutEvent;
@@ -89,12 +88,16 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
     }
 
     public void addHighlightedResources(Iterable<Resource> highlightedResources) {
+        assert highlightedResources != null;
+
         cachedHighlightStatus = null;
         this.highlightedResources
                 .addAll(calculateAffectedResources(highlightedResources));
     }
 
     public void addSelectedResources(Iterable<Resource> selectedResources) {
+        assert selectedResources != null;
+
         cachedSelectedStatus = null;
         this.selectedResources
                 .addAll(calculateAffectedResources(selectedResources));
@@ -102,19 +105,7 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
 
     private LightweightList<Resource> calculateAffectedResources(
             Iterable<Resource> resources) {
-
-        assert resources != null;
-
-        LightweightList<Resource> affectedResources = CollectionFactory
-                .createLightweightList();
-
-        for (Resource resource : resources) {
-            if (this.resources.contains(resource)) {
-                affectedResources.add(resource);
-            }
-        }
-
-        return affectedResources;
+        return this.resources.getIntersection(resources);
     }
 
     @Override
@@ -288,12 +279,16 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
     public void removeHighlightedResources(
             Iterable<Resource> highlightedResources) {
 
+        assert highlightedResources != null;
+
         cachedHighlightStatus = null;
         this.highlightedResources
                 .removeAll(calculateAffectedResources(highlightedResources));
     }
 
     public void removeSelectedResources(Iterable<Resource> selectedResources) {
+        assert selectedResources != null;
+
         cachedSelectedStatus = null;
         this.selectedResources
                 .removeAll(calculateAffectedResources(selectedResources));
