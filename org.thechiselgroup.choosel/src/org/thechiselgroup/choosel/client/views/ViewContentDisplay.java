@@ -15,11 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import java.util.Set;
-
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
 import org.thechiselgroup.choosel.client.util.Disposable;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -86,8 +85,9 @@ public interface ViewContentDisplay extends WidgetAdaptable, Disposable {
      *            Slots for which the mappings have changed. Is never
      *            <code>null</code>, but can be an empty set.
      */
-    void update(Set<ResourceItem> addedResourceItems,
-            Set<ResourceItem> updatedResourceItems,
-            Set<ResourceItem> removedResourceItems, Set<Slot> updatedSlots);
+    void update(LightweightCollection<ResourceItem> addedResourceItems,
+            LightweightCollection<ResourceItem> updatedResourceItems,
+            LightweightCollection<ResourceItem> removedResourceItems,
+            LightweightCollection<Slot> updatedSlots);
 
 }

@@ -15,10 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.chart;
 
-import java.util.Set;
-
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.ui.widget.chart.ChartWidget;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
@@ -90,9 +89,10 @@ public abstract class ChartViewContentDisplay extends
      * situation) once no matter how many resource items are being affected.
      */
     @Override
-    public void update(Set<ResourceItem> addedResourceItems,
-            Set<ResourceItem> updatedResourceItems,
-            Set<ResourceItem> removedResourceItems, Set<Slot> changedSlots) {
+    public void update(LightweightCollection<ResourceItem> addedResourceItems,
+            LightweightCollection<ResourceItem> updatedResourceItems,
+            LightweightCollection<ResourceItem> removedResourceItems,
+            LightweightCollection<Slot> changedSlots) {
 
         for (ResourceItem resourceItem : addedResourceItems) {
             ChartItem chartItem = new ChartItem(this, dragEnablerFactory,

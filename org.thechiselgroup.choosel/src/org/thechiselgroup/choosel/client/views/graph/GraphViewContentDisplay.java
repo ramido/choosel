@@ -21,7 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.geometry.Point;
@@ -55,6 +54,7 @@ import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseOutHandler;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseOverEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseOverHandler;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
@@ -560,9 +560,10 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     }
 
     @Override
-    public void update(Set<ResourceItem> addedResourceItems,
-            Set<ResourceItem> updatedResourceItems,
-            Set<ResourceItem> removedResourceItems, Set<Slot> changedSlots) {
+    public void update(LightweightCollection<ResourceItem> addedResourceItems,
+            LightweightCollection<ResourceItem> updatedResourceItems,
+            LightweightCollection<ResourceItem> removedResourceItems,
+            LightweightCollection<Slot> changedSlots) {
 
         for (ResourceItem addedItem : addedResourceItems) {
             createDisplayObjectForResourceItem(addedItem);

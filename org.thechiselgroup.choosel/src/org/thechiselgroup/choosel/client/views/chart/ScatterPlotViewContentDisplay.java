@@ -15,9 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.chart;
 
-import java.util.Set;
-
 import org.thechiselgroup.choosel.client.ui.widget.chart.ScatterPlot;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.Slot;
@@ -46,9 +45,10 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
     }
 
     @Override
-    public void update(Set<ResourceItem> addedResourceItems,
-            Set<ResourceItem> updatedResourceItems,
-            Set<ResourceItem> removedResourceItems, Set<Slot> changedSlots) {
+    public void update(LightweightCollection<ResourceItem> addedResourceItems,
+            LightweightCollection<ResourceItem> updatedResourceItems,
+            LightweightCollection<ResourceItem> removedResourceItems,
+            LightweightCollection<Slot> changedSlots) {
 
         // TODO re-enable
         // if (!changedSlots.isEmpty()) {
