@@ -25,6 +25,10 @@ public final class MathUtils {
         return sum(values) / values.length;
     }
 
+    /**
+     * Deprecated - use NumberArray
+     */
+    @Deprecated
     public static double maxDouble(double... values) {
         assert values != null;
         double max = Double.MIN_VALUE;
@@ -36,6 +40,10 @@ public final class MathUtils {
         return max;
     }
 
+    /**
+     * Deprecated - use NumberArray
+     */
+    @Deprecated
     public static int maxInt(int... values) {
         assert values != null;
         int max = Integer.MIN_VALUE;
@@ -47,6 +55,10 @@ public final class MathUtils {
         return max;
     }
 
+    /**
+     * Deprecated - use NumberArray
+     */
+    @Deprecated
     public static double minDouble(double... values) {
         assert values != null;
         double min = Double.MAX_VALUE;
@@ -58,6 +70,10 @@ public final class MathUtils {
         return min;
     }
 
+    /**
+     * Deprecated - use NumberArray
+     */
+    @Deprecated
     public static int minInt(int... values) {
         assert values != null;
         int min = Integer.MAX_VALUE;
@@ -79,6 +95,7 @@ public final class MathUtils {
         return result;
     }
 
+    // TODO change / refactor
     public static int restrictToInterval(int value, int minimum, int maximum) {
         return Math.max(minimum, Math.min(maximum, value));
     }
