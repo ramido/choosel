@@ -17,11 +17,15 @@ package org.thechiselgroup.choosel.client.views.text;
 
 import java.util.List;
 
+import org.thechiselgroup.choosel.client.util.collections.NumberArray;
+
 public class DoubleToGroupValueMapper<T> {
 
     private BinBoundaryCalculator binCalculator;
 
     private List<T> groupValues;
+
+    private double[] boundaries;
 
     public DoubleToGroupValueMapper(BinBoundaryCalculator binCalculator,
             List<T> groupValues) {
@@ -30,25 +34,31 @@ public class DoubleToGroupValueMapper<T> {
         this.groupValues = groupValues;
     }
 
-    private int calculateBinIndex(double value, double[] boundaries) {
-        int counter = 0;
-        while (counter < boundaries.length && value >= boundaries[counter]) {
-            counter++;
+    // TODO binary search might be potential speedup
+    private int calculateBinIndex(double value) {
+        int index = 0;
+        while (index < boundaries.length && value >= boundaries[index]) {
+            index++;
         }
-        assert counter <= boundaries.length;
-        return counter;
+
+        assert index >= 0;
+        assert index <= boundaries.length;
+        return index;
     }
 
-    public T getGroupValue(double value, List<Double> allValues) {
-        assert allValues != null;
-        assert !allValues.isEmpty();
-        assert allValues.contains(value);
+    public T getGroupValue(double value) {
+        assert boundaries != null;
 
-        double[] boundaries = binCalculator.calculateBinBoundaries(allValues,
+        return groupValues.get(calculateBinIndex(value));
+    }
+
+    public void setNumberValues(NumberArray allValues) {
+        assert allValues != null;
+        assert !allValues.isEmpty() : "allValues must not be empty";
+
+        boundaries = binCalculator.calculateBinBoundaries(allValues,
                 groupValues.size());
 
         assert boundaries.length == groupValues.size() - 1;
-
-        return groupValues.get(calculateBinIndex(value, boundaries));
     }
 }

@@ -25,7 +25,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.client.util.CollectionUtils;
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.client.util.collections.CollectionUtils;
+import org.thechiselgroup.choosel.client.util.collections.NumberArray;
 
 public class DoubleToGroupValueMapperTest {
 
@@ -36,7 +38,7 @@ public class DoubleToGroupValueMapperTest {
 
     private List<String> groups;
 
-    private List<Double> values;
+    private NumberArray values;
 
     @Test
     public void emptyRanges() {
@@ -44,7 +46,9 @@ public class DoubleToGroupValueMapperTest {
                 binCalculator.calculateBinBoundaries(eq(values),
                         eq(groups.size()))).thenReturn(new double[] { 0d, 0d });
 
-        assertEquals(groups.get(2), underTest.getGroupValue(0d, values));
+        underTest.setNumberValues(values);
+
+        assertEquals(groups.get(2), underTest.getGroupValue(0d));
     }
 
     @Test
@@ -54,7 +58,9 @@ public class DoubleToGroupValueMapperTest {
                         eq(groups.size()))).thenReturn(
                 new double[] { 3.3333d, 6.6666d });
 
-        assertEquals(groups.get(0), underTest.getGroupValue(0d, values));
+        underTest.setNumberValues(values);
+
+        assertEquals(groups.get(0), underTest.getGroupValue(0d));
     }
 
     @Test
@@ -64,7 +70,9 @@ public class DoubleToGroupValueMapperTest {
                         eq(groups.size()))).thenReturn(
                 new double[] { 3.3333d, 6.6666d });
 
-        assertEquals(groups.get(2), underTest.getGroupValue(10d, values));
+        underTest.setNumberValues(values);
+
+        assertEquals(groups.get(2), underTest.getGroupValue(10d));
     }
 
     @Test
@@ -73,13 +81,15 @@ public class DoubleToGroupValueMapperTest {
                 binCalculator.calculateBinBoundaries(eq(values),
                         eq(groups.size()))).thenReturn(new double[] { 5d, 6d });
 
-        assertEquals(groups.get(0), underTest.getGroupValue(4d, values));
+        underTest.setNumberValues(values);
+
+        assertEquals(groups.get(0), underTest.getGroupValue(4d));
     }
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        values = CollectionUtils.toList(0d, 2d, 3d, 4d, 10d);
+        values = CollectionFactory.createNumberArray(0d, 2d, 3d, 4d, 10d);
         groups = CollectionUtils.toList("1", "2", "3");
         underTest = new DoubleToGroupValueMapper<String>(binCalculator, groups);
     }

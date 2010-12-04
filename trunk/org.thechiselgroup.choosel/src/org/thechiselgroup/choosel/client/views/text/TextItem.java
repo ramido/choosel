@@ -15,8 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.text;
 
-import java.util.List;
-
 import org.thechiselgroup.choosel.client.ui.popup.DefaultPopupManager;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
@@ -42,7 +40,9 @@ public class TextItem {
      */
     private boolean addedToPanel = false;
 
-    private double fontSizeValue;
+    private double fontSizeSlotValue;
+
+    private String lastFontSizeLabelValue;
 
     public TextItem(ResourceItem resourceItem) {
         assert resourceItem != null;
@@ -50,8 +50,8 @@ public class TextItem {
         this.resourceItem = resourceItem;
     }
 
-    public double getFontSizeValue() {
-        return fontSizeValue;
+    public double getFontSizeSlotValue() {
+        return fontSizeSlotValue;
     }
 
     public TextItemLabel getLabel() {
@@ -77,19 +77,26 @@ public class TextItem {
         return addedToPanel;
     }
 
-    public void scaleFont(List<Double> fontSizeValues,
-            DoubleToGroupValueMapper<String> groupValueMapper) {
+    /**
+     * <p>
+     * <b>IMPLEMENTATION NOTE</b>: the last calculated font size gets cached and is 
+     * compared to the result of the current font size calculation to prevent expensive 
+     * DOM styling operations. 
+     * </p>
+     */
+    public void scaleFont(DoubleToGroupValueMapper<String> groupValueMapper) {
+        String newFontSizeLabelValue = groupValueMapper
+                .getGroupValue(fontSizeSlotValue);
 
-        label.setFontSize(groupValueMapper.getGroupValue(getFontSizeValue(),
-                fontSizeValues));
+        if (lastFontSizeLabelValue == null
+                || newFontSizeLabelValue.compareTo(lastFontSizeLabelValue) != 0) {
+            label.setFontSize(newFontSizeLabelValue);
+            lastFontSizeLabelValue = newFontSizeLabelValue;
+        }
     }
 
     public void setAddedToPanel(boolean addedToPanel) {
         this.addedToPanel = addedToPanel;
-    }
-
-    public void setFontSizeValue(double value) {
-        fontSizeValue = value;
     }
 
     public void updateContent() {
@@ -101,10 +108,8 @@ public class TextItem {
         label.setText((String) resourceItem
                 .getResourceValue(SlotResolver.DESCRIPTION_SLOT));
 
-        double fontSizeValue = ((Double) resourceItem
+        fontSizeSlotValue = ((Double) resourceItem
                 .getResourceValue(SlotResolver.FONT_SIZE_SLOT)).doubleValue();
-
-        setFontSizeValue(fontSizeValue);
     }
 
     public void updateStatusStyling() {

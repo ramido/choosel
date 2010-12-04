@@ -22,9 +22,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResourceItem;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
-import static org.thechiselgroup.choosel.client.util.CollectionUtils.toSet;
-
-import java.util.Collections;
 
 import org.junit.After;
 import org.junit.Before;
@@ -37,6 +34,7 @@ import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.client.test.TestResourceSetFactory;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.client.views.DefaultResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.Slot;
@@ -70,33 +68,37 @@ public class TextViewContentDisplayTest {
         when(resourceItem.getResourceValue(SlotResolver.FONT_SIZE_SLOT))
                 .thenReturn(new Double(2));
 
-        underTest.update(toSet((ResourceItem) resourceItem),
-                Collections.<ResourceItem> emptySet(),
-                Collections.<ResourceItem> emptySet(),
-                Collections.<Slot> emptySet());
+        underTest.update(LightweightCollections
+                .toCollection((ResourceItem) resourceItem),
+                LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections.<Slot> emptySet());
 
         // both resources get highlighted as the selection is dragged
         resourceItem.addHighlightedResources(createResources(1, 2));
-        underTest.update(Collections.<ResourceItem> emptySet(),
-                toSet((ResourceItem) resourceItem),
-                Collections.<ResourceItem> emptySet(),
-                Collections.<Slot> emptySet());
+        underTest.update(LightweightCollections
+                .<ResourceItem> emptyCollection(), LightweightCollections
+                .toCollection((ResourceItem) resourceItem),
+                LightweightCollections.<ResourceItem> emptyCollection(),
+                LightweightCollections.<Slot> emptyCollection());
 
         // create selection that contains one of those resources
         resourceItem.addSelectedResources(createResources(1));
-        underTest.update(Collections.<ResourceItem> emptySet(),
-                toSet((ResourceItem) resourceItem),
-                Collections.<ResourceItem> emptySet(),
-                Collections.<Slot> emptySet());
+        underTest.update(LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections
+                        .toCollection((ResourceItem) resourceItem),
+                LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections.<Slot> emptySet());
 
         reset(itemLabel);
 
         // highlighting is removed after drag operation
         resourceItem.removeHighlightedResources(createResources(1, 2));
-        underTest.update(Collections.<ResourceItem> emptySet(),
-                toSet((ResourceItem) resourceItem),
-                Collections.<ResourceItem> emptySet(),
-                Collections.<Slot> emptySet());
+        underTest.update(LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections
+                        .toCollection((ResourceItem) resourceItem),
+                LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections.<Slot> emptySet());
 
         // check label status (should be: partially selected, but not partially
         // highlighted)

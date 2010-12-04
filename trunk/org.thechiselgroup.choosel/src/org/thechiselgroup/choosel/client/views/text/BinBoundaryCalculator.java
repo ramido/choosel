@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.text;
 
-import java.util.List;
+import org.thechiselgroup.choosel.client.util.collections.NumberArray;
 
 //TODO think about renaming interface
 public interface BinBoundaryCalculator {
@@ -23,7 +23,7 @@ public interface BinBoundaryCalculator {
     /**
      * Calculates the boundaries between different bins
      * 
-     * @param dataValues
+     * @param values
      *            data that should be rendered in the different bins.
      * @param numberOfBins
      * 
@@ -40,7 +40,6 @@ public interface BinBoundaryCalculator {
      *         of the interval with the highest index and this boundary, and the
      *         other intervals with this boundary will be empty.
      */
-    public double[] calculateBinBoundaries(List<Double> dataValues,
-            int numberOfBins);
+    public double[] calculateBinBoundaries(NumberArray values, int numberOfBins);
 
 }
