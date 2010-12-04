@@ -13,16 +13,32 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.resources;
+package org.thechiselgroup.choosel.client.util.collections;
 
-import java.util.Set;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
-import org.thechiselgroup.choosel.client.util.collections.CollectionUtils;
-
-public class ResourceByUriMultiCategorizer implements ResourceMultiCategorizer {
+public final class NullLightweightCollection<T> implements
+        LightweightCollection<T> {
 
     @Override
-    public Set<String> getCategories(Resource resource) {
-        return CollectionUtils.toSet(resource.getUri());
+    public boolean isEmpty() {
+        return true;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return NullIterator.nullIterator();
+    }
+
+    @Override
+    public int size() {
+        return 0;
+    }
+
+    @Override
+    public List<T> toList() {
+        return Collections.emptyList();
     }
 }
