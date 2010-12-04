@@ -19,12 +19,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
-import org.thechiselgroup.choosel.client.util.CollectionUtils;
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.client.util.collections.CollectionUtils;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.client.util.collections.NumberArray;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.Slot;
@@ -124,8 +126,15 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
      * items.
      * </p>
      */
-    private void addResourceItems(Set<ResourceItem> addedResourceItems) {
+    private void addResourceItems(
+            LightweightCollection<ResourceItem> addedResourceItems) {
+
         assert addedResourceItems != null;
+
+        // PERFORMANCE: do not execute sort if nothing changes
+        if (addedResourceItems.isEmpty()) {
+            return;
+        }
 
         for (ResourceItem resourceItem : addedResourceItems) {
             TextItem textItem = initTextItem(resourceItem);
@@ -241,9 +250,10 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     @Override
-    public void update(Set<ResourceItem> addedResourceItems,
-            Set<ResourceItem> updatedResourceItems,
-            Set<ResourceItem> removedResourceItems, Set<Slot> changedSlots) {
+    public void update(LightweightCollection<ResourceItem> addedResourceItems,
+            LightweightCollection<ResourceItem> updatedResourceItems,
+            LightweightCollection<ResourceItem> removedResourceItems,
+            LightweightCollection<Slot> changedSlots) {
 
         addResourceItems(addedResourceItems);
 
@@ -265,17 +275,21 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
         }
 
-        updateFontSizes();
-
+        if (!items.isEmpty()) {
+            updateFontSizes();
+        }
     }
 
     private void updateFontSizes() {
-        List<Double> fontSizeValues = new ArrayList<Double>();
+        assert !items.isEmpty();
+
+        NumberArray fontSizeValues = CollectionFactory.createNumberArray();
         for (TextItem textItem : items) {
-            fontSizeValues.add(textItem.getFontSizeValue());
+            fontSizeValues.push(textItem.getFontSizeSlotValue());
         }
+        groupValueMapper.setNumberValues(fontSizeValues);
         for (TextItem textItem : items) {
-            textItem.scaleFont(fontSizeValues, groupValueMapper);
+            textItem.scaleFont(groupValueMapper);
         }
     }
 }

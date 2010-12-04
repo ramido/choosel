@@ -15,9 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.text;
 
-import java.util.List;
-
-import org.thechiselgroup.choosel.client.util.ArrayUtils;
+import org.thechiselgroup.choosel.client.util.collections.NumberArray;
 
 /**
  * Calculates <code>numberOfBins</code> equal-length bins between the minimum
@@ -28,12 +26,12 @@ import org.thechiselgroup.choosel.client.util.ArrayUtils;
 public class EquidistantBinBoundaryCalculator implements BinBoundaryCalculator {
 
     @Override
-    public double[] calculateBinBoundaries(List<Double> values, int numberOfBins) {
+    public double[] calculateBinBoundaries(NumberArray values, int numberOfBins) {
         assert values != null;
         assert numberOfBins >= 1;
 
-        double max = (values.isEmpty()) ? 0 : ArrayUtils.max(values);
-        double min = (values.isEmpty()) ? 0 : ArrayUtils.min(values);
+        double max = (values.isEmpty()) ? 0 : values.max();
+        double min = (values.isEmpty()) ? 0 : values.min();
 
         assert max >= min;
 
