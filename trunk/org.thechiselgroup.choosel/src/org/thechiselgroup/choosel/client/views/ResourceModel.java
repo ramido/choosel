@@ -18,20 +18,21 @@ package org.thechiselgroup.choosel.client.views;
 import org.thechiselgroup.choosel.client.resources.CombinedResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 
 public interface ResourceModel {
+
+    /**
+     * Explicit adding of the resource set as a new, displayed resource set.
+     */
+    void addResourceSet(ResourceSet resourceSet);
 
     /**
      * Add the resources to the contents of this view without displaying the
      * resource set explicitly.
      */
     void addUnnamedResources(Iterable<Resource> resources);
-
-    /**
-     * Explicit adding of the resource set as a new, displayed resource set.
-     */
-    void addResourceSet(ResourceSet resourceSet);
 
     void clear();
 
@@ -58,7 +59,8 @@ public interface ResourceModel {
      * @return new <code>LightweightList</code> that contains only the subset of
      *         <code>resources</code> that is contained in this resource model
      */
-    LightweightList<Resource> getIntersection(Iterable<Resource> resources);
+    LightweightList<Resource> getIntersection(
+            LightweightCollection<Resource> resources);
 
     /**
      * Returns an unmodifiable resource set containing all resources displayed

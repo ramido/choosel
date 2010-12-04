@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.thechiselgroup.choosel.client.label.HasLabel;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -43,7 +44,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * 
  * @see Resource
  */
-public interface ResourceSet extends HasLabel, Iterable<Resource> {
+public interface ResourceSet extends HasLabel, LightweightCollection<Resource> {
 
     boolean add(Resource resource);
 
@@ -58,12 +59,33 @@ public interface ResourceSet extends HasLabel, Iterable<Resource> {
      */
     void clear();
 
+    /**
+     * <p>
+     * <b>PERFORMANCE</b>: Assumed to be very fast (linear to size of
+     * ResourceSet with very small multiplier). ResourceSet implementations
+     * should use hashing of the resource URI for containment checks.
+     * </p>
+     * 
+     * @param resource
+     *            Resource. Must not be null.
+     */
+    @Override
     boolean contains(Resource resource);
 
     boolean containsAll(Iterable<Resource> resources);
 
     boolean containsEqualResources(ResourceSet other);
 
+    /**
+     * <p>
+     * <b>PERFORMANCE</b>: Assumed to be very fast (linear to size of
+     * ResourceSet with very small multiplier). ResourceSet implementations
+     * should use hashing of the resource URI for containment checks.
+     * </p>
+     * 
+     * @param uri
+     *            Resource URI. Must not be null.
+     */
     boolean containsResourceWithUri(String uri);
 
     Resource getByUri(String uri);
@@ -85,8 +107,10 @@ public interface ResourceSet extends HasLabel, Iterable<Resource> {
      * @return Sorted intersection (resources are sorted by the natural order of
      *         their URIs). Each resource is contained at most once.
      */
-    LightweightList<Resource> getIntersection(Iterable<Resource> sortedResources);
+    LightweightList<Resource> getIntersection(
+            LightweightCollection<Resource> sortedResources);
 
+    @Override
     boolean isEmpty();
 
     boolean isModifiable();
@@ -122,6 +146,7 @@ public interface ResourceSet extends HasLabel, Iterable<Resource> {
      * 
      * @return number of resources in this set.
      */
+    @Override
     int size();
 
     void switchContainment(Resource resource);
@@ -131,6 +156,7 @@ public interface ResourceSet extends HasLabel, Iterable<Resource> {
     /**
      * @return Unmodifiable List that contains elements from this resource set.
      */
+    @Override
     List<Resource> toList();
 
 }

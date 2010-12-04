@@ -71,6 +71,16 @@ public final class JavaScriptLightweightList<T> implements LightweightList<T> {
     }
 
     @Override
+    public boolean contains(T t) {
+        for (int i = 0; i < size(); i++) {
+            if (get(i).equals(t)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public T get(int i) {
         return this.jsList.get(i);
     }

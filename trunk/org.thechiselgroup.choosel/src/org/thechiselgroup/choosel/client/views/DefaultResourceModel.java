@@ -26,6 +26,7 @@ import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.client.util.Disposable;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 
 public class DefaultResourceModel implements ResourceModel, Disposable,
@@ -109,7 +110,7 @@ public class DefaultResourceModel implements ResourceModel, Disposable,
 
     @Override
     public LightweightList<Resource> getIntersection(
-            Iterable<Resource> resources) {
+            LightweightCollection<Resource> resources) {
 
         assert resources != null;
         return allResources.getIntersection(resources);

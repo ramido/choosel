@@ -26,16 +26,17 @@ import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 public abstract class AbstractUriMapBasedResourceSet extends
         AbstractResourceSet {
 
-    protected Map<String, Resource> uriToResource = CollectionFactory.createStringMap();
+    protected Map<String, Resource> uriToResource = CollectionFactory
+            .createStringMap();
 
     protected Resource addResourceToMap(Resource resource) {
         return uriToResource.put(resource.getUri(), resource);
     }
 
     @Override
-    public boolean contains(Resource resource) {
-        assert resource != null;
-        return uriToResource.containsKey(resource.getUri());
+    public boolean containsResourceWithUri(String uri) {
+        assert uri != null;
+        return uriToResource.containsKey(uri);
     }
 
     @Override

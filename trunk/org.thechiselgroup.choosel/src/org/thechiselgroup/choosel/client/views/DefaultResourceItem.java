@@ -22,7 +22,7 @@ import org.thechiselgroup.choosel.client.ui.popup.PopupClosingEvent;
 import org.thechiselgroup.choosel.client.ui.popup.PopupClosingHandler;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.util.Disposable;
-import org.thechiselgroup.choosel.client.util.collections.LightweightList;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
@@ -87,25 +87,24 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
         initPopupHighlighting();
     }
 
-    public void addHighlightedResources(Iterable<Resource> highlightedResources) {
+    public void addHighlightedResources(
+            LightweightCollection<Resource> highlightedResources) {
+
         assert highlightedResources != null;
 
         cachedHighlightStatus = null;
-        this.highlightedResources
-                .addAll(calculateAffectedResources(highlightedResources));
+        this.highlightedResources.addAll(resources
+                .getIntersection(highlightedResources));
     }
 
-    public void addSelectedResources(Iterable<Resource> selectedResources) {
+    public void addSelectedResources(
+            LightweightCollection<Resource> selectedResources) {
+
         assert selectedResources != null;
 
         cachedSelectedStatus = null;
-        this.selectedResources
-                .addAll(calculateAffectedResources(selectedResources));
-    }
-
-    private LightweightList<Resource> calculateAffectedResources(
-            Iterable<Resource> resources) {
-        return this.resources.getIntersection(resources);
+        this.selectedResources.addAll(resources
+                .getIntersection(selectedResources));
     }
 
     @Override
@@ -277,21 +276,22 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
     }
 
     public void removeHighlightedResources(
-            Iterable<Resource> highlightedResources) {
+            LightweightCollection<Resource> highlightedResources) {
 
         assert highlightedResources != null;
 
         cachedHighlightStatus = null;
-        this.highlightedResources
-                .removeAll(calculateAffectedResources(highlightedResources));
+        this.highlightedResources.removeAll(resources
+                .getIntersection(highlightedResources));
     }
 
-    public void removeSelectedResources(Iterable<Resource> selectedResources) {
+    public void removeSelectedResources(
+            LightweightCollection<Resource> selectedResources) {
         assert selectedResources != null;
 
         cachedSelectedStatus = null;
-        this.selectedResources
-                .removeAll(calculateAffectedResources(selectedResources));
+        this.selectedResources.removeAll(resources
+                .getIntersection(selectedResources));
     }
 
     @Override
