@@ -35,6 +35,21 @@ import com.google.gwt.core.client.JsArrayString;
  */
 public final class JavaScriptStringToObjectMap<T> implements Map<String, T> {
 
+    private final static class InternalJsArray<T> extends JavaScriptObject {
+
+        protected InternalJsArray() {
+        }
+
+        public final native InternalMapEntry<T> get(int index) /*-{
+            return this[index];
+        }-*/;
+
+        public final native int length() /*-{
+            return this.length;
+        }-*/;
+
+    }
+
     private static class InternalMapEntry<T> implements Map.Entry<String, T> {
 
         private final String key;
@@ -65,7 +80,11 @@ public final class JavaScriptStringToObjectMap<T> implements Map<String, T> {
 
     }
 
-    private static final class NativeMap<T> extends JavaScriptObject {
+    /**
+     * Sorted String to value map written in JavaScript. Caches sorted key array
+     * and sorted map entry array (created lazily).
+     */
+    private final static class NativeMap<T> extends JavaScriptObject {
 
         /*
          * IMPLEMENTATION NOTE: although this internal map requires String keys,
@@ -79,36 +98,79 @@ public final class JavaScriptStringToObjectMap<T> implements Map<String, T> {
 
         // @formatter:off
         public native void clear() /*-{
-            for (var key in this) {
-                delete this[key];
+            for (var key in this.map) {
+                delete this.map[key];
             }
+            this.keys = null;
+            this.entries = null;
         }-*/;
         // @formatter:on
 
         private native boolean containsKey(Object key) /*-{
-            return key in this;
+            return key in this.map;
         }-*/;
 
+        /**
+         * @return sorted map entry array
+         */
+        // @formatter:off
+        private native InternalJsArray<T> getEntryJsArray() /*-{
+            // return if initialized
+            if (this.entries != null) {
+                return this.entries;
+            }
+
+            // initialize key cache if required 
+            if (this.keys == null) {
+                this.keys = [];
+                for (var key in this.map) {
+                    this.keys.push(key);
+                }
+                this.keys.sort();
+            }
+
+            // calculate value array
+            this.entries = [];
+            for (var i in this.keys) {
+                this.entries.push(this.map[this.keys[i]]);
+            }
+
+            return this.entries;
+        }-*/;
+        // @formatter:on
+
+        /**
+         * @return sorted key array
+         */
         // @formatter:off
         private native JsArrayString getKeyJsArray() /*-{
-            var result = [];
-            for (var key in this) {
-                result.push(key);
+            if (this.keys != null) {
+                return this.keys;
             }
-            return result;
+
+            this.keys = [];
+            for (var key in this.map) {
+                this.keys.push(key);
+            }
+            this.keys.sort();
+            return this.keys;
         }-*/;
         // @formatter:on
 
         private native InternalMapEntry<T> getMapEntry(Object key) /*-{
-            return this[key];
+            return this.map[key];
         }-*/;
 
         private native void putMapEntry(Object key, InternalMapEntry<T> entry) /*-{
-            this[key] = entry;
+            this.map[key] = entry;
+            this.keys = null;
+            this.entries = null;
         }-*/;
 
         private native void remove(Object key) /*-{
-            delete this[key];
+            delete this.map[key];
+            this.keys = null;
+            this.entries = null;
         }-*/;
 
     }
@@ -134,10 +196,10 @@ public final class JavaScriptStringToObjectMap<T> implements Map<String, T> {
 
         @Override
         public boolean contains(Object o) {
-            JsArrayString keyArray = jsMap.getKeyJsArray();
+            InternalJsArray<T> entryJsArray = jsMap.getEntryJsArray();
 
-            for (int i = 0; i < keyArray.length(); i++) {
-                if (jsMap.getMapEntry(keyArray.get(i)).equals(o)) {
+            for (int i = 0; i < entryJsArray.length(); i++) {
+                if (entryJsArray.get(i).equals(o)) {
                     return true;
                 }
             }
@@ -163,7 +225,7 @@ public final class JavaScriptStringToObjectMap<T> implements Map<String, T> {
 
         @Override
         public Iterator<Map.Entry<String, T>> iterator() {
-            final JsArrayString keyArray = jsMap.getKeyJsArray();
+            final InternalJsArray<T> entryJsArray = jsMap.getEntryJsArray();
 
             return new Iterator<Map.Entry<String, T>>() {
 
@@ -171,12 +233,12 @@ public final class JavaScriptStringToObjectMap<T> implements Map<String, T> {
 
                 @Override
                 public boolean hasNext() {
-                    return currentIndex < keyArray.length();
+                    return currentIndex < entryJsArray.length();
                 }
 
                 @Override
                 public Map.Entry<String, T> next() {
-                    return jsMap.getMapEntry(keyArray.get(currentIndex++));
+                    return entryJsArray.get(currentIndex++);
                 }
 
                 @Override
@@ -209,11 +271,11 @@ public final class JavaScriptStringToObjectMap<T> implements Map<String, T> {
 
         @Override
         public Object[] toArray() {
-            JsArrayString keyArray = jsMap.getKeyJsArray();
+            InternalJsArray<T> entryJsArray = jsMap.getEntryJsArray();
 
-            Object[] result = new Object[keyArray.length()];
+            Object[] result = new Object[entryJsArray.length()];
             for (int i = 0; i < result.length; i++) {
-                result[i] = jsMap.getMapEntry(keyArray.get(i));
+                result[i] = entryJsArray.get(i);
             }
 
             return result;
@@ -221,10 +283,10 @@ public final class JavaScriptStringToObjectMap<T> implements Map<String, T> {
 
         @Override
         public <S> S[] toArray(S[] a) {
-            JsArrayString keyArray = jsMap.getKeyJsArray();
+            InternalJsArray<T> entryJsArray = jsMap.getEntryJsArray();
 
             for (int i = 0; i < a.length; i++) {
-                a[i] = (S) jsMap.getMapEntry(keyArray.get(i));
+                a[i] = (S) entryJsArray.get(i);
             }
 
             return a;
@@ -280,7 +342,7 @@ public final class JavaScriptStringToObjectMap<T> implements Map<String, T> {
 
         @Override
         public Iterator<T> iterator() {
-            final JsArrayString keyArray = jsMap.getKeyJsArray();
+            final InternalJsArray<T> entryJsArray = jsMap.getEntryJsArray();
 
             return new Iterator<T>() {
 
@@ -288,13 +350,12 @@ public final class JavaScriptStringToObjectMap<T> implements Map<String, T> {
 
                 @Override
                 public boolean hasNext() {
-                    return currentIndex < keyArray.length();
+                    return currentIndex < entryJsArray.length();
                 }
 
                 @Override
                 public T next() {
-                    return jsMap.getMapEntry(keyArray.get(currentIndex++))
-                            .getValue();
+                    return entryJsArray.get(currentIndex++).getValue();
                 }
 
                 @Override
@@ -327,11 +388,11 @@ public final class JavaScriptStringToObjectMap<T> implements Map<String, T> {
 
         @Override
         public Object[] toArray() {
-            JsArrayString keyArray = jsMap.getKeyJsArray();
+            InternalJsArray<T> entryJsArray = jsMap.getEntryJsArray();
 
-            Object[] result = new Object[keyArray.length()];
+            Object[] result = new Object[entryJsArray.length()];
             for (int i = 0; i < result.length; i++) {
-                result[i] = jsMap.getMapEntry(keyArray.get(i)).value;
+                result[i] = entryJsArray.get(i).value;
             }
 
             return result;
@@ -339,10 +400,10 @@ public final class JavaScriptStringToObjectMap<T> implements Map<String, T> {
 
         @Override
         public <S> S[] toArray(S[] a) {
-            JsArrayString keyArray = jsMap.getKeyJsArray();
+            InternalJsArray<T> entryJsArray = jsMap.getEntryJsArray();
 
             for (int i = 0; i < a.length; i++) {
-                a[i] = (S) jsMap.getMapEntry(keyArray.get(i)).value;
+                a[i] = (S) entryJsArray.get(i).value;
             }
 
             return a;
@@ -486,7 +547,11 @@ public final class JavaScriptStringToObjectMap<T> implements Map<String, T> {
     }
 
     private native NativeMap<T> createNativeMap() /*-{
-        return new Object();
+        var nativeMap = new Object();
+        nativeMap.map = new Object(); // associative array
+        nativeMap.keys = null; // cache for sorted keys
+        nativeMap.entries = null; // cache for sorted entries
+        return nativeMap;
     }-*/;
 
     @Override
