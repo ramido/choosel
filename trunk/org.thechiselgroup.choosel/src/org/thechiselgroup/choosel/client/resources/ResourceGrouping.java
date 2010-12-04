@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.thechiselgroup.choosel.client.util.Delta;
 import org.thechiselgroup.choosel.client.util.SingleItemCollection;
@@ -30,11 +31,10 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.inject.Inject;
 
 // TODO update & extend (1, many sets added / removed) test case
-// TODO change name
 public class ResourceGrouping implements ResourceContainer {
 
     // TODO Are resource sets too heavyweight here?
-    private Map<String, ResourceSet> categorizedResources = CollectionFactory
+    private Map<String, ResourceSet> groupedResources = CollectionFactory
             .createStringMap();
 
     private transient HandlerManager eventBus;
@@ -44,6 +44,9 @@ public class ResourceGrouping implements ResourceContainer {
     private final ResourceSetFactory resourceSetFactory;
 
     private List<Resource> allResources = new ArrayList<Resource>();
+
+    private Map<String, Set<String>> resourceIdToGroups = CollectionFactory
+            .createStringMap();
 
     @Inject
     public ResourceGrouping(ResourceMultiCategorizer multiCategorizer,
@@ -67,32 +70,29 @@ public class ResourceGrouping implements ResourceContainer {
         addResourcesToAllResources(resources);
 
         List<ResourceGroupingChange> changes = new ArrayList<ResourceGroupingChange>();
-        addResourcesToCategorization(resources, changes);
+        addResourcesToGrouping(resources, changes);
         fireChanges(changes);
     }
 
-    private void addCategoryResources(String category,
-            List<Resource> categoryResources,
-            List<ResourceGroupingChange> changes) {
+    /**
+     * Adds the group to its resources for reverse lookup.
+     * 
+     * @see #resourceIdToGroups
+     */
+    private void addGroupToResources(String group,
+            List<Resource> addedGroupResources) {
 
-        assert category != null;
-        assert categoryResources != null;
+        for (Resource resource : addedGroupResources) {
+            String resourceId = resource.getUri();
+            Set<String> resourceGroups;
+            if (!resourceIdToGroups.containsKey(resourceId)) {
+                resourceGroups = CollectionFactory.createStringSet();
+                resourceIdToGroups.put(resourceId, resourceGroups);
+            } else {
+                resourceGroups = resourceIdToGroups.get(resourceId);
+            }
 
-        if (categorizedResources.containsKey(category)) {
-            ResourceSet resourceSet = categorizedResources.get(category);
-
-            resourceSet.addAll(categoryResources);
-
-            changes.add(new ResourceGroupingChange(Delta.UPDATE, category,
-                    resourceSet));
-        } else {
-            ResourceSet resourceSet = resourceSetFactory.createResourceSet();
-            resourceSet.addAll(categoryResources);
-
-            categorizedResources.put(category, resourceSet);
-
-            changes.add(new ResourceGroupingChange(Delta.ADD, category,
-                    resourceSet));
+            resourceGroups.add(group);
         }
     }
 
@@ -110,13 +110,42 @@ public class ResourceGrouping implements ResourceContainer {
         allResources.addAll(newResources);
     }
 
-    private void addResourcesToCategorization(Iterable<Resource> resources,
+    private void addResourcesToGroup(String group,
+            List<Resource> addedResources, List<ResourceGroupingChange> changes) {
+
+        assert group != null;
+        assert addedResources != null;
+        assert changes != null;
+
+        if (groupedResources.containsKey(group)) {
+            ResourceSet groupResources = groupedResources.get(group);
+            groupResources.addAll(addedResources);
+
+            changes.add(new ResourceGroupingChange(Delta.UPDATE, group,
+                    groupResources));
+        } else {
+            ResourceSet groupResources = resourceSetFactory.createResourceSet();
+            groupResources.addAll(addedResources);
+
+            groupedResources.put(group, groupResources);
+
+            changes.add(new ResourceGroupingChange(Delta.ADD, group,
+                    groupResources));
+        }
+    }
+
+    private void addResourcesToGrouping(Iterable<Resource> resources,
             List<ResourceGroupingChange> changes) {
 
         Map<String, List<Resource>> resourcesPerCategory = categorize(resources);
         for (Map.Entry<String, List<Resource>> entry : resourcesPerCategory
                 .entrySet()) {
-            addCategoryResources(entry.getKey(), entry.getValue(), changes);
+
+            String group = entry.getKey();
+            List<Resource> addedGroupResources = entry.getValue();
+
+            addResourcesToGroup(group, addedGroupResources, changes);
+            addGroupToResources(group, addedGroupResources);
         }
     }
 
@@ -140,11 +169,11 @@ public class ResourceGrouping implements ResourceContainer {
     }
 
     private void clearCategories(List<ResourceGroupingChange> changes) {
-        for (Entry<String, ResourceSet> entry : categorizedResources.entrySet()) {
+        for (Entry<String, ResourceSet> entry : groupedResources.entrySet()) {
             changes.add(new ResourceGroupingChange(Delta.REMOVE,
                     entry.getKey(), entry.getValue()));
         }
-        categorizedResources.clear();
+        groupedResources.clear();
     }
 
     private void fireChanges(List<ResourceGroupingChange> changes) {
@@ -154,11 +183,28 @@ public class ResourceGrouping implements ResourceContainer {
     }
 
     public Map<String, ResourceSet> getCategorizedResourceSets() {
-        return new HashMap<String, ResourceSet>(categorizedResources);
+        return new HashMap<String, ResourceSet>(groupedResources);
     }
 
     public ResourceMultiCategorizer getCategorizer() {
         return multiCategorizer;
+    }
+
+    /**
+     * Returns the resource group ids for the resource groups that contain at
+     * least one of the resources.
+     * 
+     * @return resource group ids
+     */
+    public Set<String> getGroups(Iterable<Resource> resources) {
+        assert resources != null;
+
+        Set<String> result = CollectionFactory.createStringSet();
+        for (Resource resource : resources) {
+            // TODO what if resource is not contained
+            result.addAll(resourceIdToGroups.get(resource.getUri()));
+        }
+        return result;
     }
 
     @Override
@@ -173,29 +219,8 @@ public class ResourceGrouping implements ResourceContainer {
         removeResourcesFromAllResources(resources);
 
         List<ResourceGroupingChange> changes = new ArrayList<ResourceGroupingChange>();
-        removeResourcesFromCategorization(resources, changes);
+        removeResourcesFromGrouping(resources, changes);
         fireChanges(changes);
-    }
-
-    private void removeCategoryResources(String category,
-            List<Resource> resourcesToRemove,
-            List<ResourceGroupingChange> changes) {
-
-        ResourceSet storedCategoryResources = categorizedResources
-                .get(category);
-
-        if (storedCategoryResources.size() == resourcesToRemove.size()
-                && storedCategoryResources.containsAll(resourcesToRemove)) {
-
-            categorizedResources.remove(category);
-            changes.add(new ResourceGroupingChange(Delta.REMOVE, category,
-                    storedCategoryResources));
-
-        } else {
-            storedCategoryResources.removeAll(resourcesToRemove);
-            changes.add(new ResourceGroupingChange(Delta.UPDATE, category,
-                    storedCategoryResources));
-        }
     }
 
     private void removeResourcesFromAllResources(Iterable<Resource> resources) {
@@ -204,13 +229,32 @@ public class ResourceGrouping implements ResourceContainer {
         }
     }
 
-    private void removeResourcesFromCategorization(
-            Iterable<Resource> resources, List<ResourceGroupingChange> changes) {
+    private void removeResourcesFromGroup(String group,
+            List<Resource> removedResources,
+            List<ResourceGroupingChange> changes) {
+
+        ResourceSet groupResources = groupedResources.get(group);
+
+        if (groupResources.size() == removedResources.size()
+                && groupResources.containsAll(removedResources)) {
+
+            groupedResources.remove(group);
+            changes.add(new ResourceGroupingChange(Delta.REMOVE, group,
+                    groupResources));
+        } else {
+            groupResources.removeAll(removedResources);
+            changes.add(new ResourceGroupingChange(Delta.UPDATE, group,
+                    groupResources));
+        }
+    }
+
+    private void removeResourcesFromGrouping(Iterable<Resource> resources,
+            List<ResourceGroupingChange> changes) {
 
         Map<String, List<Resource>> resourcesPerCategory = categorize(resources);
         for (Map.Entry<String, List<Resource>> entry : resourcesPerCategory
                 .entrySet()) {
-            removeCategoryResources(entry.getKey(), entry.getValue(), changes);
+            removeResourcesFromGroup(entry.getKey(), entry.getValue(), changes);
         }
     }
 
@@ -225,7 +269,7 @@ public class ResourceGrouping implements ResourceContainer {
 
         List<ResourceGroupingChange> changes = new ArrayList<ResourceGroupingChange>();
         clearCategories(changes);
-        addResourcesToCategorization(allResources, changes);
+        addResourcesToGrouping(allResources, changes);
         fireChanges(changes);
     }
 }

@@ -17,8 +17,6 @@ package org.thechiselgroup.choosel.client.views;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -51,11 +49,12 @@ import org.thechiselgroup.choosel.client.ui.Presenter;
 import org.thechiselgroup.choosel.client.ui.WidgetFactory;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
-import org.thechiselgroup.choosel.client.util.CollectionUtils;
 import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.util.HandlerRegistrationSet;
 import org.thechiselgroup.choosel.client.util.Initializable;
+import org.thechiselgroup.choosel.client.util.SingleItemIterable;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 import org.thechiselgroup.choosel.client.workspace.ViewSaver;
@@ -341,31 +340,30 @@ public class DefaultView extends AbstractWindowContent implements View {
         return result;
     }
 
-    // TODO improve algorithm: switch depending on size of resource vs size of
-    // resource items --> change to collection
-    private Set<ResourceItem> getResourceItems(Iterable<Resource> resources) {
+    /**
+     * @return list of resource items that contain at least one of the
+     *         resources.
+     */
+    private LightweightList<ResourceItem> getResourceItems(
+            Iterable<Resource> resources) {
+
         assert resources != null;
 
-        Set<ResourceItem> result = new HashSet<ResourceItem>();
-        for (Resource resource : resources) {
-            result.addAll(getResourceItems(resource));
+        LightweightList<ResourceItem> result = CollectionFactory
+                .createLightweightList();
+
+        Set<String> groups = resourceGrouping.getGroups(resources);
+        for (String group : groups) {
+            result.add(groupsToResourceItems.get(group));
         }
         return result;
     }
 
-    private List<ResourceItem> getResourceItems(Resource resource) {
-        assert resource != null;
-
-        // TODO PERFORMANCE introduce field map: Resource --> List<ResourceItem>
-        // such a map would need to be updated
-        List<ResourceItem> result = new ArrayList<ResourceItem>();
-        for (DefaultResourceItem resourceItem : groupsToResourceItems.values()) {
-            if (resourceItem.getResourceSet().contains(resource)) {
-                result.add(resourceItem);
-            }
-        }
-
-        return result;
+    /**
+     * @return list of resource items that contain resource
+     */
+    private LightweightList<ResourceItem> getResourceItems(Resource resource) {
+        return getResourceItems(new SingleItemIterable<Resource>(resource));
     }
 
     @Override
@@ -487,7 +485,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
             @Override
             public List<ResourceItem> getResourceItems(Resource resource) {
-                return DefaultView.this.getResourceItems(resource);
+                return DefaultView.this.getResourceItems(resource).toList();
             }
 
             @Override
@@ -646,10 +644,11 @@ public class DefaultView extends AbstractWindowContent implements View {
         slotMappingConfiguration.addHandler(new SlotMappingChangedHandler() {
             @Override
             public void onResourceCategoriesChanged(SlotMappingChangedEvent e) {
-                contentDisplay.update(Collections.<ResourceItem> emptySet(),
-                        Collections.<ResourceItem> emptySet(),
-                        Collections.<ResourceItem> emptySet(),
-                        CollectionUtils.toSet(e.getSlot()));
+                contentDisplay.update(
+                        LightweightCollections.<ResourceItem> emptyCollection(),
+                        LightweightCollections.<ResourceItem> emptyCollection(),
+                        LightweightCollections.<ResourceItem> emptyCollection(),
+                        LightweightCollections.toCollection(e.getSlot()));
             }
         });
     }
@@ -896,7 +895,7 @@ public class DefaultView extends AbstractWindowContent implements View {
             return;
         }
 
-        Set<ResourceItem> affectedResourceItems = getResourceItems(affectedResourcesInThisView);
+        LightweightList<ResourceItem> affectedResourceItems = getResourceItems(affectedResourcesInThisView);
         for (ResourceItem resourceItem : affectedResourceItems) {
             if (highlighted) {
                 ((DefaultResourceItem) resourceItem)
@@ -913,9 +912,11 @@ public class DefaultView extends AbstractWindowContent implements View {
             // TODO check that highlighting is right from the beginning
         }
 
-        contentDisplay.update(Collections.<ResourceItem> emptySet(),
-                affectedResourceItems, Collections.<ResourceItem> emptySet(),
-                Collections.<Slot> emptySet());
+        contentDisplay.update(
+                LightweightCollections.<ResourceItem> emptyCollection(),
+                affectedResourceItems,
+                LightweightCollections.<ResourceItem> emptyCollection(),
+                LightweightCollections.<Slot> emptyCollection());
     }
 
     // TODO use viewContentDisplay.update to perform single update
@@ -931,8 +932,10 @@ public class DefaultView extends AbstractWindowContent implements View {
         assert changes != null;
         assert !changes.isEmpty();
 
-        Set<ResourceItem> addedResourceItems = new HashSet<ResourceItem>();
-        Set<ResourceItem> removedResourceItems = new HashSet<ResourceItem>();
+        LightweightList<ResourceItem> addedResourceItems = CollectionFactory
+                .createLightweightList();
+        LightweightList<ResourceItem> removedResourceItems = CollectionFactory
+                .createLightweightList();
 
         for (ResourceGroupingChange change : changes) {
             switch (change.getDelta()) {
@@ -955,14 +958,15 @@ public class DefaultView extends AbstractWindowContent implements View {
         }
 
         contentDisplay.update(addedResourceItems,
-                Collections.<ResourceItem> emptySet(), removedResourceItems,
-                Collections.<Slot> emptySet());
+                LightweightCollections.<ResourceItem> emptyCollection(),
+                removedResourceItems,
+                LightweightCollections.<Slot> emptyCollection());
     }
 
     private void updateSelection(LightweightList<Resource> resources,
             boolean selected) {
 
-        Set<ResourceItem> resourceItems = getResourceItems(resources);
+        LightweightList<ResourceItem> resourceItems = getResourceItems(resources);
         for (ResourceItem resourceItem : resourceItems) {
             // TODO test case (similar to highlighting)
             if (selected) {
@@ -974,8 +978,10 @@ public class DefaultView extends AbstractWindowContent implements View {
             }
         }
 
-        contentDisplay.update(Collections.<ResourceItem> emptySet(),
-                resourceItems, Collections.<ResourceItem> emptySet(),
-                Collections.<Slot> emptySet());
+        contentDisplay.update(
+                LightweightCollections.<ResourceItem> emptyCollection(),
+                resourceItems,
+                LightweightCollections.<ResourceItem> emptyCollection(),
+                LightweightCollections.<Slot> emptyCollection());
     }
 }
