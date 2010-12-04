@@ -21,7 +21,7 @@ import java.util.List;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.util.CollectionUtils;
+import org.thechiselgroup.choosel.client.util.collections.CollectionUtils;
 
 public class ResourceSetToStringListValueResolver extends
         AbstractResourceSetToValueResolver {
