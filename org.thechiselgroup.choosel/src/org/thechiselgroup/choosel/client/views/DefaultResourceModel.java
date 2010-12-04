@@ -26,7 +26,6 @@ import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.client.util.Disposable;
-import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 
 public class DefaultResourceModel implements ResourceModel, Disposable,
@@ -57,18 +56,18 @@ public class DefaultResourceModel implements ResourceModel, Disposable,
     }
 
     @Override
-    public void addUnnamedResources(Iterable<Resource> resources) {
-        assert resources != null;
-        automaticResources.addAll(resources);
-    }
-
-    @Override
     public void addResourceSet(ResourceSet resourceSet) {
         if (!resourceSet.hasLabel()) {
             automaticResources.addAll(resourceSet);
         } else {
             combinedUserResourceSets.addResourceSet(resourceSet);
         }
+    }
+
+    @Override
+    public void addUnnamedResources(Iterable<Resource> resources) {
+        assert resources != null;
+        automaticResources.addAll(resources);
     }
 
     @Override
@@ -113,17 +112,7 @@ public class DefaultResourceModel implements ResourceModel, Disposable,
             Iterable<Resource> resources) {
 
         assert resources != null;
-
-        // TODO performance: use hash-based retain operation instead?
-
-        LightweightList<Resource> intersection = CollectionFactory
-                .createLightweightList();
-        for (Resource resource : resources) {
-            if (allResources.contains(resource)) {
-                intersection.add(resource);
-            }
-        }
-        return intersection;
+        return allResources.getIntersection(resources);
     }
 
     @Override
