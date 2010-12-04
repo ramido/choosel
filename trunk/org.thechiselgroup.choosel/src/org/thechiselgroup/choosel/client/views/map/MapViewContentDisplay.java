@@ -15,11 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.map;
 
-import java.util.Set;
-
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.ui.CSS;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
@@ -242,9 +241,10 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     @Override
-    public void update(Set<ResourceItem> addedResourceItems,
-            Set<ResourceItem> updatedResourceItems,
-            Set<ResourceItem> removedResourceItems, Set<Slot> changedSlots) {
+    public void update(LightweightCollection<ResourceItem> addedResourceItems,
+            LightweightCollection<ResourceItem> updatedResourceItems,
+            LightweightCollection<ResourceItem> removedResourceItems,
+            LightweightCollection<Slot> changedSlots) {
 
         for (ResourceItem resourceItem : addedResourceItems) {
             initMapItem(resourceItem);
@@ -254,7 +254,8 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
             removeOverlay(resourceItem);
         }
 
-        if (changedSlots.contains(SlotResolver.DESCRIPTION_SLOT)) {
+        // XXX performance of toList
+        if (changedSlots.toList().contains(SlotResolver.DESCRIPTION_SLOT)) {
             for (ResourceItem resourceItem : getCallback()
                     .getAllResourceItems()) {
                 ((MapItem) resourceItem.getDisplayObject()).updateLabel();
@@ -264,7 +265,9 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
         updateStatusStyling(updatedResourceItems);
     }
 
-    private void updateStatusStyling(Set<? extends ResourceItem> resourceItems) {
+    private void updateStatusStyling(
+            LightweightCollection<ResourceItem> resourceItems) {
+
         for (ResourceItem resourceItem : resourceItems) {
             ((MapItem) resourceItem.getDisplayObject())
                     .setStatusStyling(resourceItem.getStatus());
