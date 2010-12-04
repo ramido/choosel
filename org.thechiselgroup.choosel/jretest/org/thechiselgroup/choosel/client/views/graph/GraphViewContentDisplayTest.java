@@ -26,9 +26,6 @@ import static org.thechiselgroup.choosel.client.test.AdvancedAsserts.assertConte
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.toResourceSet;
-import static org.thechiselgroup.choosel.client.util.CollectionUtils.toSet;
-
-import java.util.Collections;
 
 import org.junit.After;
 import org.junit.Before;
@@ -53,7 +50,8 @@ import org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidgetReadyHandler
 import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeDragEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeDragHandler;
-import org.thechiselgroup.choosel.client.util.CollectionUtils;
+import org.thechiselgroup.choosel.client.util.collections.CollectionUtils;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.client.views.DefaultResourceItem;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
@@ -111,10 +109,11 @@ public class GraphViewContentDisplayTest {
         ResourceItem resourceItem2 = ResourcesTestHelper
                 .createResourceItem(resourceSet2);
 
-        underTest.update(toSet(resourceItem1, resourceItem2),
-                Collections.<ResourceItem> emptySet(),
-                Collections.<ResourceItem> emptySet(),
-                Collections.<Slot> emptySet());
+        underTest.update(LightweightCollections.toCollection(resourceItem1,
+                resourceItem2), LightweightCollections
+                .<ResourceItem> emptySet(), LightweightCollections
+                .<ResourceItem> emptySet(), LightweightCollections
+                .<Slot> emptySet());
 
         String arcId = underTest.getArcId("arcType", resourceSet1
                 .getFirstResource().getUri(), resourceSet2.getFirstResource()
@@ -136,10 +135,10 @@ public class GraphViewContentDisplayTest {
         ResourceItem resourceItem = ResourcesTestHelper
                 .createResourceItem(resourceSet);
 
-        underTest.update(toSet(resourceItem),
-                Collections.<ResourceItem> emptySet(),
-                Collections.<ResourceItem> emptySet(),
-                Collections.<Slot> emptySet());
+        underTest.update(LightweightCollections.toCollection(resourceItem),
+                LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections.<Slot> emptySet());
 
         resourceSet.add(createResource(2));
 
@@ -187,10 +186,11 @@ public class GraphViewContentDisplayTest {
         ResourceItem resourceItem2 = ResourcesTestHelper
                 .createResourceItem(createResources(2));
 
-        underTest.update(toSet(resourceItem1, resourceItem2),
-                Collections.<ResourceItem> emptySet(),
-                Collections.<ResourceItem> emptySet(),
-                Collections.<Slot> emptySet());
+        underTest.update(LightweightCollections.toCollection(resourceItem1,
+                resourceItem2), LightweightCollections
+                .<ResourceItem> emptySet(), LightweightCollections
+                .<ResourceItem> emptySet(), LightweightCollections
+                .<Slot> emptySet());
 
         Node node1 = ((GraphItem) resourceItem1.getDisplayObject()).getNode();
         Node node2 = ((GraphItem) resourceItem2.getDisplayObject()).getNode();
@@ -206,10 +206,10 @@ public class GraphViewContentDisplayTest {
         ResourceItem resourceItem = ResourcesTestHelper
                 .createResourceItem(toResourceSet(concept1));
 
-        underTest.update(toSet(resourceItem),
-                Collections.<ResourceItem> emptySet(),
-                Collections.<ResourceItem> emptySet(),
-                Collections.<Slot> emptySet());
+        underTest.update(LightweightCollections.toCollection(resourceItem),
+                LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections.<Slot> emptySet());
 
         ArgumentCaptor<DefaultResourceItem> argument = ArgumentCaptor
                 .forClass(DefaultResourceItem.class);
@@ -228,14 +228,16 @@ public class GraphViewContentDisplayTest {
         ResourceItem resourceItem = ResourcesTestHelper
                 .createResourceItem(resourceSet);
 
-        underTest.update(toSet(resourceItem),
-                Collections.<ResourceItem> emptySet(),
-                Collections.<ResourceItem> emptySet(),
-                Collections.<Slot> emptySet());
+        underTest.update(LightweightCollections.toCollection(resourceItem),
+                LightweightCollections.<ResourceItem> emptyCollection(),
+                LightweightCollections.<ResourceItem> emptyCollection(),
+                LightweightCollections.<Slot> emptyCollection());
 
-        underTest.update(Collections.<ResourceItem> emptySet(),
-                Collections.<ResourceItem> emptySet(), toSet(resourceItem),
-                Collections.<Slot> emptySet());
+        underTest.update(
+                LightweightCollections.<ResourceItem> emptyCollection(),
+                LightweightCollections.<ResourceItem> emptyCollection(),
+                LightweightCollections.toCollection(resourceItem),
+                LightweightCollections.<Slot> emptyCollection());
 
         assertContentEquals(createResources(), underTest.getAllResources());
 
@@ -251,19 +253,22 @@ public class GraphViewContentDisplayTest {
         ResourceItem resourceItem2 = ResourcesTestHelper
                 .createResourceItem(resourceSet2);
 
-        underTest.update(toSet(resourceItem1, resourceItem2),
-                Collections.<ResourceItem> emptySet(),
-                Collections.<ResourceItem> emptySet(),
-                Collections.<Slot> emptySet());
+        underTest.update(LightweightCollections.toCollection(resourceItem1,
+                resourceItem2), LightweightCollections
+                .<ResourceItem> emptyCollection(), LightweightCollections
+                .<ResourceItem> emptyCollection(), LightweightCollections
+                .<Slot> emptyCollection());
 
         underTest.showArc("arcType", resourceSet1.getFirstResource().getUri(),
                 resourceSet2.getFirstResource().getUri());
 
         ArgumentCaptor<Arc> captor = ArgumentCaptor.forClass(Arc.class);
 
-        underTest.update(Collections.<ResourceItem> emptySet(),
-                Collections.<ResourceItem> emptySet(), toSet(resourceItem1),
-                Collections.<Slot> emptySet());
+        underTest.update(
+                LightweightCollections.<ResourceItem> emptyCollection(),
+                LightweightCollections.<ResourceItem> emptyCollection(),
+                LightweightCollections.toCollection(resourceItem1),
+                LightweightCollections.<Slot> emptyCollection());
 
         verify(display, times(1)).removeArc(captor.capture());
     }
@@ -278,19 +283,22 @@ public class GraphViewContentDisplayTest {
         ResourceItem resourceItem2 = ResourcesTestHelper
                 .createResourceItem(resourceSet2);
 
-        underTest.update(toSet(resourceItem1, resourceItem2),
-                Collections.<ResourceItem> emptySet(),
-                Collections.<ResourceItem> emptySet(),
-                Collections.<Slot> emptySet());
+        underTest.update(LightweightCollections.toCollection(resourceItem1,
+                resourceItem2), LightweightCollections
+                .<ResourceItem> emptyCollection(), LightweightCollections
+                .<ResourceItem> emptyCollection(), LightweightCollections
+                .<Slot> emptyCollection());
 
         underTest.showArc("arcType", resourceSet1.getFirstResource().getUri(),
                 resourceSet2.getFirstResource().getUri());
 
         ArgumentCaptor<Arc> captor = ArgumentCaptor.forClass(Arc.class);
 
-        underTest.update(Collections.<ResourceItem> emptySet(),
-                Collections.<ResourceItem> emptySet(), toSet(resourceItem2),
-                Collections.<Slot> emptySet());
+        underTest.update(
+                LightweightCollections.<ResourceItem> emptyCollection(),
+                LightweightCollections.<ResourceItem> emptyCollection(),
+                LightweightCollections.toCollection(resourceItem2),
+                LightweightCollections.<Slot> emptyCollection());
 
         verify(display, times(1)).removeArc(captor.capture());
     }

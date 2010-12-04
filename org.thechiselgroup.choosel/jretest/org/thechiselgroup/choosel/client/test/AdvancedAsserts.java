@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.test;
 
-import static org.thechiselgroup.choosel.client.util.CollectionUtils.toSet;
+import static org.thechiselgroup.choosel.client.util.collections.CollectionUtils.toSet;
 
 import java.util.Collection;
 import java.util.List;
