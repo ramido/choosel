@@ -17,7 +17,6 @@ package org.thechiselgroup.choosel.client.workspace.command;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.thechiselgroup.choosel.client.command.AsyncCommandExecutor;
 import org.thechiselgroup.choosel.client.ui.dialog.AbstractDialog;
@@ -25,16 +24,15 @@ import org.thechiselgroup.choosel.client.ui.dialog.DialogCallback;
 import org.thechiselgroup.choosel.client.views.DefaultView;
 import org.thechiselgroup.choosel.client.workspace.ViewLoader;
 import org.thechiselgroup.choosel.client.workspace.ViewPreview;
-import org.thechiselgroup.choosel.client.workspace.WorkspacePreview;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextArea;
@@ -45,8 +43,6 @@ import com.google.gwt.user.client.ui.Widget;
 public class ConfigureSharedViewsDialog extends AbstractDialog {
 
     private final AsyncCommandExecutor asyncCommandExecutor;
-
-    private Map<RadioButton, WorkspacePreview> buttonsToWorkspaces = new HashMap<RadioButton, WorkspacePreview>();
 
     private RadioButton selectedButton;
 
@@ -77,6 +73,14 @@ public class ConfigureSharedViewsDialog extends AbstractDialog {
     private VerticalPanel viewDisplay;
 
     private FlexTable selectContent;
+
+    private final int EMBED_HEIGHT = 400;
+
+    private final int EMBED_WIDTH = 480;
+
+    private final String EMBED_POSTTEXT = "Created with <a href=\"http://choosel-mashups.appspot.com\">Choosel</a>";
+
+    private final String LOADING_TEXT = "Please wait while we load the preview for the selected view...";
 
     private HashMap<RadioButton, ViewPreview> buttonsToViews = new HashMap<RadioButton, ViewPreview>();
 
@@ -110,7 +114,7 @@ public class ConfigureSharedViewsDialog extends AbstractDialog {
 
     @Override
     public String getOkayButtonLabel() {
-        return "Done";
+        return "Delete";
     }
 
     @Override
@@ -130,30 +134,31 @@ public class ConfigureSharedViewsDialog extends AbstractDialog {
 
         selectContent = new FlexTable();
         VerticalPanel detailsContent = new VerticalPanel();
+        detailsContent.setWidth("100%");
         content.add(selectContent);
         content.add(detailsContent);
 
-        HorizontalPanel urlPanel = new HorizontalPanel();
+        FlexTable urlPanel = new FlexTable();
         VerticalPanel displayPanel = new VerticalPanel();
         detailsContent.add(displayPanel);
         detailsContent.add(urlPanel);
 
         viewDisplay = new VerticalPanel();
-        viewLoading = new Label("Loading...");
+        viewLoading = new Label(LOADING_TEXT);
         displayPanel.add(viewLoading);
         displayPanel.add(viewDisplay);
 
         urlLabel = new Label("URL:");
-        urlPanel.add(urlLabel);
+        urlPanel.setWidget(0, 0, urlLabel);
 
         viewUrl = new TextBox();
-        urlPanel.add(viewUrl);
+        urlPanel.setWidget(1, 0, viewUrl);
 
         embedLabel = new Label("Embed Code:");
-        urlPanel.add(embedLabel);
+        urlPanel.setWidget(0, 1, embedLabel);
 
         viewEmbed = new TextArea();
-        urlPanel.add(viewEmbed);
+        urlPanel.setWidget(1, 1, viewEmbed);
 
         showLoading();
         viewLoading.setVisible(false);
@@ -195,7 +200,7 @@ public class ConfigureSharedViewsDialog extends AbstractDialog {
 
                 @Override
                 public void onClick(ClickEvent event) {
-                    LoadViewAsWorkspaceCommand loadWorkspaceCommand = new LoadViewAsWorkspaceCommand(
+                    LoadViewAsWindowCommand loadWorkspaceCommand = new LoadViewAsWindowCommand(
                             view.getId(), loader);
                     asyncCommandExecutor.execute(loadWorkspaceCommand);
                 }
@@ -212,6 +217,11 @@ public class ConfigureSharedViewsDialog extends AbstractDialog {
 
     @Override
     public void okay() {
+        ViewPreview viewPreview = buttonsToViews.get(selectedButton);
+        DeleteViewCommand deleteViewCommand = new DeleteViewCommand(
+                viewPreview.getId(), loader);
+
+        asyncCommandExecutor.execute(deleteViewCommand);
     }
 
     private void setSelectedButton(RadioButton radioButton) {
@@ -229,9 +239,9 @@ public class ConfigureSharedViewsDialog extends AbstractDialog {
         viewLoading.setVisible(false);
     }
 
-    private void showDialog(Long id) {
+    private void showDialog(final Long id) {
         viewLoading.setVisible(false);
-        viewLoading.setText("Loading...");
+        viewLoading.setText(LOADING_TEXT);
         showLoading();
 
         loader.loadView(id, new AsyncCallback<DefaultView>() {
@@ -247,6 +257,26 @@ public class ConfigureSharedViewsDialog extends AbstractDialog {
                 viewDisplay.clear();
                 view.asWidget().setPixelSize(300, 200);
                 viewDisplay.add(view.asWidget());
+
+                String url = "http://" + Window.Location.getHost()
+                        + Window.Location.getPath() + "?viewId="
+                        + id.toString();
+                String gwtHost = Window.Location.getParameter("gwt.codesvr");
+                if (gwtHost != null) {
+                    url += "&gwt.codesvr=" + gwtHost;
+                }
+
+                String embed = "<iframe src=\""
+                        + url
+                        + "\" width=\""
+                        + EMBED_WIDTH
+                        + "\" height=\""
+                        + EMBED_HEIGHT
+                        + "\">Sorry, your browser doesn't support iFrames</iframe><br /><a href=\""
+                        + url + "&nw\">Open in Choosel</a>. " + EMBED_POSTTEXT;
+
+                viewUrl.setText(url);
+                viewEmbed.setText(embed);
 
                 showContent();
             }

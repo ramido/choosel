@@ -82,6 +82,40 @@ public class ViewPersistenceServiceImplementation implements
         return view;
     }
 
+    private void deletePersistentView(PersistentView pView,
+            PersistenceManager manager) {
+        manager.deletePersistent(pView);
+    }
+
+    @Override
+    public Long deleteView(Long id) throws ServiceException {
+        PersistenceManager manager = createPersistanceManager();
+        try {
+            User user = getCurrentUser();
+
+            return deleteView(id, manager, user);
+        } finally {
+            manager.close();
+        }
+    }
+
+    private Long deleteView(Long id, PersistenceManager manager, User user)
+            throws ServiceException {
+        PersistentView persistentView = getPersistentView(id, manager);
+        if (!persistentView.getUserId().equals(user.getUserId())) {
+            throw new AuthenticationException(
+                    "Authentication failed: Tsk Tsk, no trying to delete others views.  UID should have been "
+                            + persistentView.getUserId()
+                            + ", but was "
+                            + user.getUserId());
+        }
+
+        deletePersistentView(persistentView, manager);
+
+        return null;
+
+    }
+
     private User getCurrentUser() throws AuthenticationException {
         checkAuthenticated();
         return userService.getCurrentUser();

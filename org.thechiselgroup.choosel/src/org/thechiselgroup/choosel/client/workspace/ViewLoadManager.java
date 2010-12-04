@@ -23,6 +23,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface ViewLoadManager {
 
+    void deleteView(Long viewId, AsyncCallback<Long> asyncCallback);
+
     void loadView(Long id, AsyncCallback<DefaultView> callback);
 
     void loadViewAsWindow(Long id, AsyncCallback<Workspace> callback);

@@ -18,18 +18,16 @@ package org.thechiselgroup.choosel.client.workspace.command;
 import org.thechiselgroup.choosel.client.command.AsyncCommand;
 import org.thechiselgroup.choosel.client.util.HasDescription;
 import org.thechiselgroup.choosel.client.workspace.ViewLoader;
-import org.thechiselgroup.choosel.client.workspace.Workspace;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public class LoadViewAsWindowCommand implements AsyncCommand, HasDescription {
+public class DeleteViewCommand implements AsyncCommand, HasDescription {
 
     private ViewLoader persistenceManager;
 
     private Long viewId;
 
-    public LoadViewAsWindowCommand(Long workspaceId,
-            ViewLoader persistenceManager) {
+    public DeleteViewCommand(Long workspaceId, ViewLoader persistenceManager) {
 
         assert workspaceId != null;
         assert persistenceManager != null;
@@ -40,23 +38,22 @@ public class LoadViewAsWindowCommand implements AsyncCommand, HasDescription {
 
     @Override
     public void execute(final AsyncCallback<Void> callback) {
-        persistenceManager.loadViewAsWindow(viewId,
-                new AsyncCallback<Workspace>() {
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        callback.onFailure(caught);
-                    }
+        persistenceManager.deleteView(viewId, new AsyncCallback<Long>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                callback.onFailure(caught);
+            }
 
-                    @Override
-                    public void onSuccess(Workspace workspace) {
-                        callback.onSuccess(null);
-                    }
-                });
+            @Override
+            public void onSuccess(Long id) {
+                callback.onSuccess(null);
+            }
+        });
     }
 
     @Override
     public String getDescription() {
-        String result = "Loading View in Workspace";
+        String result = "Deleting View";
 
         return result;
     }
