@@ -40,7 +40,7 @@ public class LoadViewAsWorkspaceCommand implements AsyncCommand, HasDescription 
 
     @Override
     public void execute(final AsyncCallback<Void> callback) {
-        persistenceManager.loadViewAsWindow(viewId,
+        persistenceManager.loadViewAsWorkspace(viewId,
                 new AsyncCallback<Workspace>() {
                     @Override
                     public void onFailure(Throwable caught) {

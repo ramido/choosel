@@ -33,6 +33,37 @@ public class ViewPersistenceServiceServlet extends RemoteServiceServlet
 
     private ViewPersistenceService service = null;
 
+    @Override
+    public Long deleteView(Long viewId) throws ServiceException {
+
+        long startTime = -1;
+        if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {
+            startTime = System.currentTimeMillis();
+        }
+
+        Log.debug("ViewPersistenceServiceServlet.deleteView - " + viewId);
+
+        try {
+            return getServiceDelegate().deleteView(viewId);
+        } catch (ServiceException e) {
+            Log.error(
+                    "deleteView failed: "
+                            + StackTraceHelper.getStackTraceAsString(e), e);
+            throw e;
+        } catch (Exception e) {
+            Log.error(
+                    "deleteView failed: "
+                            + StackTraceHelper.getStackTraceAsString(e), e);
+            throw new ServiceException(e);
+        } finally {
+            if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {
+                Log.debug("ViewPersistenceServiceServlet.deleteView"
+                        + " completed in "
+                        + (System.currentTimeMillis() - startTime) + " ms");
+            }
+        }
+    }
+
     private ViewPersistenceService getServiceDelegate() {
         if (service == null) {
             service = new ViewPersistenceServiceImplementation(PMF.get(),
@@ -80,23 +111,23 @@ public class ViewPersistenceServiceServlet extends RemoteServiceServlet
             startTime = System.currentTimeMillis();
         }
 
-        Log.debug("WorkspacePersistenceServiceServlet.loadWorkspacePreviews");
+        Log.debug("ViewPersistenceServiceServlet.loadViewPreviews");
 
         try {
             return getServiceDelegate().loadViewPreviews();
         } catch (ServiceException e) {
             Log.error(
-                    "loadWorkspacePreviews failed: "
+                    "loadViewPreviews failed: "
                             + StackTraceHelper.getStackTraceAsString(e), e);
             throw e;
         } catch (Exception e) {
             Log.error(
-                    "loadWorkspacePreviews failed: "
+                    "loadViewPreviews failed: "
                             + StackTraceHelper.getStackTraceAsString(e), e);
             throw new ServiceException(e);
         } finally {
             if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {
-                Log.debug("WorkspacePersistenceServiceServlet.loadWorkspacePreviews"
+                Log.debug("ViewPersistenceServiceServlet.loadViewPreviews"
                         + " completed in "
                         + (System.currentTimeMillis() - startTime) + " ms");
             }

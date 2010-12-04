@@ -36,6 +36,12 @@ public class DefaultViewLoader implements ViewLoader {
     }
 
     @Override
+    public void deleteView(Long viewId, AsyncCallback<Long> asyncCallback) {
+        viewPersistenceManager.deleteView(viewId, asyncCallback);
+
+    }
+
+    @Override
     public void loadView(Long id, AsyncCallback<DefaultView> callback) {
         viewPersistenceManager.loadView(id, callback);
     }

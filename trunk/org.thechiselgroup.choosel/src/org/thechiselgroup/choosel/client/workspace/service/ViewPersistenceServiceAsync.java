@@ -24,6 +24,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface ViewPersistenceServiceAsync {
 
+    void deleteView(Long id, AsyncCallback<Long> asyncCallback);
+
     void loadView(Long viewId, AsyncCallback<ViewDTO> callback);
 
     void loadViewPreviews(AsyncCallback<List<ViewPreviewDTO>> callback);

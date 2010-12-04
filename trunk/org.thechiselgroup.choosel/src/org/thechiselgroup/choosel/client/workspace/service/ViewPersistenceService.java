@@ -27,6 +27,8 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("view")
 public interface ViewPersistenceService extends RemoteService {
 
+    Long deleteView(Long id) throws ServiceException;
+
     ViewDTO loadView(Long viewId) throws ServiceException;
 
     List<ViewPreviewDTO> loadViewPreviews() throws ServiceException;

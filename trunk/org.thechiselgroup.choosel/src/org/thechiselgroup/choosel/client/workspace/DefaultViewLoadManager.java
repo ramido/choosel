@@ -76,6 +76,29 @@ public class DefaultViewLoadManager implements ViewLoadManager {
         this.service = service;
     }
 
+    @Override
+    public void deleteView(Long id, final AsyncCallback<Long> callback) {
+        assert callback != null;
+
+        service.deleteView(id, new AsyncCallback<Long>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                callback.onFailure(caught);
+
+            }
+
+            @Override
+            public void onSuccess(Long result) {
+                try {
+                    callback.onSuccess(result);
+                } catch (Exception e) {
+                    callback.onFailure(e);
+                }
+            }
+        });
+    }
+
     private WindowContent loadResourcesAndView(ViewDTO dto,
             ViewInitializer viewInitializer) {
 
@@ -254,7 +277,6 @@ public class DefaultViewLoadManager implements ViewLoadManager {
 
     protected Workspace loadWorkspace(ViewDTO dto) {
         desktop.clearWindows();
-
         workspaceManager.createNewWorkspace();
 
         return loadWindow(dto);

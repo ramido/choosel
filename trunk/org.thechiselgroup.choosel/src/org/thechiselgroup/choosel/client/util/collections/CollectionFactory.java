@@ -31,7 +31,7 @@ public final class CollectionFactory {
     }
 
     public static <T> Map<String, T> createStringMap() {
-        if (GWT.isScript() || GWT.isClient()) {
+        if (GWT.isScript()) {
             return new JavaScriptStringToObjectMap<T>();
         }
 

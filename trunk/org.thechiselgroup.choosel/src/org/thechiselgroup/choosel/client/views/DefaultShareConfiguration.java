@@ -120,9 +120,12 @@ public class DefaultShareConfiguration implements ShareConfiguration {
 
     @Override
     public void updateSharePanel(Long id) {
-        String url = Window.Location.getHref()
-                + (Window.Location.getParameterMap().size() == 0 ? "?" : "&")
-                + "viewId=" + id.toString();
+        String url = "http://" + Window.Location.getHost()
+                + Window.Location.getPath() + "?viewId=" + id.toString();
+        String gwtHost = Window.Location.getParameter("gwt.codesvr");
+        if (gwtHost != null) {
+            url += "&gwt.codesvr=" + gwtHost;
+        }
 
         String embed = "<iframe src=\""
                 + url
@@ -135,6 +138,7 @@ public class DefaultShareConfiguration implements ShareConfiguration {
 
         // Hide things while we change them
         label.setVisible(false);
+        button.setVisible(false);
 
         label.setText("Share Link:");
         textBox.setText(url);
