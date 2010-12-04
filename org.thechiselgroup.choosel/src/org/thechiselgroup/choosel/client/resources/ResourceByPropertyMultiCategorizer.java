@@ -17,7 +17,7 @@ package org.thechiselgroup.choosel.client.resources;
 
 import java.util.Set;
 
-import org.thechiselgroup.choosel.client.util.CollectionUtils;
+import org.thechiselgroup.choosel.client.util.collections.CollectionUtils;
 
 public class ResourceByPropertyMultiCategorizer implements
         ResourceMultiCategorizer {

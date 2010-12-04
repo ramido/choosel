@@ -13,38 +13,26 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.util;
+package org.thechiselgroup.choosel.client.util.collections;
 
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
-public final class NullIterator<T> implements Iterator<T> {
+
+public final class NullIterable<T> implements Iterable<T> {
 
     @SuppressWarnings("rawtypes")
-    private static NullIterator NULL_ITERATOR = new NullIterator();
+    private static NullIterable NULL_ITERABLE = new NullIterable();
 
     @SuppressWarnings("unchecked")
-    public static <T> Iterator<T> nullIterator() {
-        return NULL_ITERATOR;
+    public static <T> Iterable<T> nullIterable() {
+        return NULL_ITERABLE;
     }
 
-    private NullIterator() {
-
-    }
-
-    @Override
-    public boolean hasNext() {
-        return false;
+    private NullIterable() {
     }
 
     @Override
-    public T next() {
-        throw new NoSuchElementException();
+    public Iterator<T> iterator() {
+        return NullIterator.nullIterator();
     }
-
-    @Override
-    public void remove() {
-        throw new UnsupportedOperationException();
-    }
-
 }
