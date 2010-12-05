@@ -15,13 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.test;
 
-import java.util.Date;
-
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-
-import com.google.gwt.user.client.Random;
 
 public final class TestResourceSetFactory {
 
@@ -29,57 +25,21 @@ public final class TestResourceSetFactory {
 
     public static final String TYPE_2 = "type-2";
 
-    public static final String LABEL = "label";
+    public static final String SET_LABEL = "label";
 
-    public static final String LABEL_KEY = "label-key";
+    public static final String TEXT_PROPERTY = "text-1";
 
-    public static final String X_COORD = "x-coord";
+    public static final String NUMBER_PROPERTY_1 = "number-1";
 
-    public static final String Y_COORD = "y-coord";
-
-    /**
-     * for manual testing in app
-     */
-    public static ResourceSet addGraphTestData(ResourceSet graphResourceSet) {
-        graphResourceSet.setLabel("GraphTest");
-        for (int i = 0; i < 25; i++) {
-            Resource resource = new Resource("graphtest:" + i);
-            resource.putValue("title", "graphtest:" + i);
-            if (i > 0) {
-                resource.putValueAsUriList("parent", "graphtest:" + (i - 1));
-            }
-            graphResourceSet.add(resource);
-        }
-        return graphResourceSet;
-    }
-
-    /**
-     * for manual testing in app
-     */
-    public static ResourceSet addTestData(ResourceSet resourceSet) {
-        int counter = 0;
-        resourceSet.setLabel("Test");
-        for (int i = 0; i < 50; i++) {
-            resourceSet.add(createResource(i));
-        }
-        for (Resource resource : resourceSet) {
-            resource.putValue("date", new Date(
-                    1281991537 + 100000 * (counter++)).toString());
-            resource.putValue("magnitude", Random.nextInt(10));
-            int category = Random.nextInt(10);
-            resource.putValue("tagContent", "test" + category);
-            resource.putValue("label", "test" + category);
-        }
-        return resourceSet;
-    }
+    public static final String NUMBER_PROPERTY_2 = "number-2";
 
     public static ResourceSet createLabeledResources(int... indices) {
-        return createLabeledResources(LABEL, TYPE_1, indices);
+        return createLabeledResources(SET_LABEL, TYPE_1, indices);
     }
 
     public static ResourceSet createLabeledResources(String type,
             int... indices) {
-        return createLabeledResources(LABEL, type, indices);
+        return createLabeledResources(SET_LABEL, type, indices);
     }
 
     public static ResourceSet createLabeledResources(String label, String type,
@@ -94,14 +54,16 @@ public final class TestResourceSetFactory {
         return createResource(TYPE_1, index);
     }
 
-    /**
-     * Creates test resources with random x, y coords and label.
-     */
     public static Resource createResource(String type, int index) {
         Resource r = new Resource(type + ":" + index);
-        r.putValue(X_COORD, Math.random() * 10);
-        r.putValue(Y_COORD, Math.random() * 10);
-        r.putValue(LABEL_KEY, r.getValue(X_COORD) + " " + r.getValue(Y_COORD));
+
+        double value1 = Math.random() * 10;
+        double value2 = Math.random() * 10;
+
+        r.putValue(NUMBER_PROPERTY_1, value1);
+        r.putValue(NUMBER_PROPERTY_2, value2);
+        r.putValue(TEXT_PROPERTY, value1 + " " + value2);
+
         return r;
     }
 
@@ -110,7 +72,6 @@ public final class TestResourceSetFactory {
     }
 
     public static ResourceSet createResources(String type, int... indices) {
-
         DefaultResourceSet resources = new DefaultResourceSet();
         for (int i : indices) {
             resources.add(createResource(type, i));
@@ -119,9 +80,8 @@ public final class TestResourceSetFactory {
     }
 
     public static ResourceSet toLabeledResources(ResourceSet... resourceSets) {
-
         ResourceSet result = toResourceSet(resourceSets);
-        result.setLabel(LABEL);
+        result.setLabel(SET_LABEL);
         return result;
     }
 

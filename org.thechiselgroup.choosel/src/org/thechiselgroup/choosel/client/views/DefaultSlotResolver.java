@@ -15,87 +15,21 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import java.util.List;
-
 import org.thechiselgroup.choosel.client.resolver.FixedValuePropertyValueResolver;
 import org.thechiselgroup.choosel.client.resolver.ResourceToValueResolver;
-import org.thechiselgroup.choosel.client.resolver.SimplePropertyValueResolver;
 
-public abstract class DefaultSlotResolver implements SlotResolver {
+public class DefaultSlotResolver implements SlotResolver {
 
-    // REMOVE, use in resource set resolver fac
-    private static final String[] COLORS = new String[] { "#6495ed", "#b22222" };
-
-    @Override
-    public ResourceToValueResolver createChartLabelSlotResolver(String category) {
-        return createDescriptionSlotResolver(category);
-    }
-
-    @Override
-    public ResourceToValueResolver createChartValueSlotResolver(String category) {
-        return new FixedValuePropertyValueResolver(new Integer(1));
-    }
-
-    // REMOVE, use in resource set resolver fac
-    @Override
-    public ResourceToValueResolver createColorSlotResolver(String category,
-            List<SlotMappingConfiguration> layers) {
-
-        String color = COLORS[layers.size()];
-        return new FixedValuePropertyValueResolver(color);
-    }
-
-    @Override
-    public ResourceToValueResolver createDateSlotResolver(String type) {
-        return new SimplePropertyValueResolver("date");
-    }
-
-    @Override
-    public ResourceToValueResolver createFontSizeSlotResolver(String category) {
-        return new FixedValuePropertyValueResolver(new Integer(1));
-    }
-
-    @Override
-    public ResourceToValueResolver createGraphLabelSlotResolver(String category) {
-        return createDescriptionSlotResolver(category);
-    }
-
-    @Override
     public ResourceToValueResolver createGraphNodeBackgroundColorResolver(
             String category) {
 
         return new FixedValuePropertyValueResolver("#DAE5F3");
     }
 
-    @Override
     public ResourceToValueResolver createGraphNodeBorderColorResolver(
             String category) {
 
         return new FixedValuePropertyValueResolver("#AFC6E5");
     }
 
-    @Override
-    public ResourceToValueResolver createLabelSlotResolver(String category) {
-        return new FixedValuePropertyValueResolver("");
-    }
-
-    @Override
-    public ResourceToValueResolver createLocationSlotResolver(String category) {
-        return new SimplePropertyValueResolver("location");
-    }
-
-    @Override
-    public ResourceToValueResolver createMagnitudeSlotResolver(String type) {
-        return new SimplePropertyValueResolver("magnitude");
-    }
-
-    @Override
-    public ResourceToValueResolver createXCoordinateSlotResolver(String type) {
-        return new SimplePropertyValueResolver("x-coord");
-    }
-
-    @Override
-    public ResourceToValueResolver createYCoordinateSlotResolver(String type) {
-        return new SimplePropertyValueResolver("y-coord");
-    }
 }

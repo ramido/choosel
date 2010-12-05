@@ -15,9 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import java.util.List;
-
-import org.thechiselgroup.choosel.client.resolver.ResourceToValueResolver;
 
 // TODO create more flexible slot system
 public interface SlotResolver {
@@ -47,35 +44,5 @@ public interface SlotResolver {
     Slot X_COORDINATE_SLOT = new Slot("x-coord", "X-Axis", DataType.NUMBER);
 
     Slot Y_COORDINATE_SLOT = new Slot("y-coord", "Y-Axis", DataType.NUMBER);
-
-    ResourceToValueResolver createChartLabelSlotResolver(String category);
-
-    ResourceToValueResolver createChartValueSlotResolver(String category);
-
-    ResourceToValueResolver createColorSlotResolver(String category,
-            List<SlotMappingConfiguration> layers);
-
-    ResourceToValueResolver createDateSlotResolver(String category);
-
-    ResourceToValueResolver createDescriptionSlotResolver(String category);
-
-    ResourceToValueResolver createFontSizeSlotResolver(String category);
-
-    ResourceToValueResolver createGraphLabelSlotResolver(String category);
-
-    ResourceToValueResolver createGraphNodeBackgroundColorResolver(
-            String category);
-
-    ResourceToValueResolver createGraphNodeBorderColorResolver(String category);
-
-    ResourceToValueResolver createLabelSlotResolver(String category);
-
-    ResourceToValueResolver createLocationSlotResolver(String category);
-
-    ResourceToValueResolver createMagnitudeSlotResolver(String category);
-
-    ResourceToValueResolver createXCoordinateSlotResolver(String category);
-
-    ResourceToValueResolver createYCoordinateSlotResolver(String category);
 
 }

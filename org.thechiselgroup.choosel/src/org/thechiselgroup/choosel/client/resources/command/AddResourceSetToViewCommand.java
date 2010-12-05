@@ -21,8 +21,12 @@ import java.util.List;
 import org.thechiselgroup.choosel.client.command.UndoableCommand;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.test.Benchmark;
 import org.thechiselgroup.choosel.client.util.HasDescription;
 import org.thechiselgroup.choosel.client.views.ResourceModel;
+
+import com.google.gwt.core.client.Duration;
+import com.google.gwt.user.client.Window;
 
 /**
  * Adds a labeled resource set to a resource model as an explicitly displayed
@@ -69,7 +73,14 @@ public class AddResourceSetToViewCommand implements UndoableCommand,
         alreadyContainedResources.retainAll(resourceModel.getResources()
                 .toList());
 
-        resourceModel.addResourceSet(resourceSet);
+        if (Benchmark.isBenchmarkEnabled()) {
+            Duration duration = new Duration();
+            resourceModel.addResourceSet(resourceSet);
+            Window.alert("ResourceModel.addResourceSet execution time: "
+                    + duration.elapsedMillis() + " ms");
+        } else {
+            resourceModel.addResourceSet(resourceSet);
+        }
 
         assert resourceModel.containsResourceSet(resourceSet);
         assert alreadyContainedResources != null;
