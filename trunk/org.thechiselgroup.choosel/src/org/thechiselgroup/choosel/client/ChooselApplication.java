@@ -29,12 +29,19 @@ import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants
 import org.thechiselgroup.choosel.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.client.importer.Importer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.resources.ResourceSetAddedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourceSetAddedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
+import org.thechiselgroup.choosel.client.resources.ResourceSetRemovedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourceSetRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceSetsPresenter;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetsPresenter;
+import org.thechiselgroup.choosel.client.test.Benchmark;
+import org.thechiselgroup.choosel.client.test.CreateBenchmarkResourcesCommand;
 import org.thechiselgroup.choosel.client.ui.Action;
 import org.thechiselgroup.choosel.client.ui.ActionBar;
+import org.thechiselgroup.choosel.client.ui.TextCommandPresenter;
 import org.thechiselgroup.choosel.client.ui.dialog.Dialog;
 import org.thechiselgroup.choosel.client.ui.dialog.DialogManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
@@ -70,6 +77,7 @@ import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -78,6 +86,8 @@ import com.google.inject.name.Named;
 public abstract class ChooselApplication {
 
     public static final String WORKSPACE_ID = "workspaceId";
+
+    public static final String DATA_PANEL = "data";
 
     public static final String EDIT_PANEL = "edit";
 
@@ -96,6 +106,10 @@ public abstract class ChooselApplication {
     @Inject
     protected ActionBar actionBar;
 
+    /**
+     * Manages and provides access to the data sources (i.e. the imported and
+     * loaded ResourceSets) that are available in this workspace.
+     */
     @Inject
     protected @Named(DATA_SOURCES)
     ResourceSetContainer dataSources;
@@ -137,7 +151,7 @@ public abstract class ChooselApplication {
     private NewWorkspaceCommand newWorkspaceCommand;
 
     @Inject
-    protected ResourceSetFactory resourceSetsFactory;
+    protected ResourceSetFactory resourceSetFactory;
 
     @Inject
     private SaveWorkspaceCommand saveWorkspaceCommand;
@@ -162,6 +176,9 @@ public abstract class ChooselApplication {
 
     @Inject
     private ViewLoader viewLoader;
+
+    @Inject
+    private ResourceSetAvatarFactory resourceSetAvatarFactory;
 
     protected void addActionToToolbar(String panelId, Action action) {
         getToolbarPanel(panelId).addAction(action);
@@ -236,7 +253,7 @@ public abstract class ChooselApplication {
     }
 
     protected ResourceSet createResourceSet() {
-        return resourceSetsFactory.createResourceSet();
+        return resourceSetFactory.createResourceSet();
     }
 
     protected ResourceSetsPresenter createResourceSetsPresenter() {
@@ -277,12 +294,7 @@ public abstract class ChooselApplication {
             initDesktop(mainPanel);
             initActionBar(mainPanel);
             initAuthenticationBar();
-
-            initWorkspacePanel();
-            initEditPanel();
-            initHelpPanel();
-
-            initCustomActions();
+            initActionBarContent();
 
             if (newWorkspace != null) {
                 loadViewAsWorkspace(viewIdParam, newWorkspace);
@@ -305,9 +317,21 @@ public abstract class ChooselApplication {
         initActionBarPanels();
     }
 
+    protected void initActionBarContent() {
+        initWorkspacePanel();
+        initEditPanel();
+        initDataPanel();
+        initHelpPanel();
+        initDeveloperModePanel();
+
+        initCustomActions();
+    }
+
     protected void initActionBarPanels() {
         addToolbarPanel(WORKSPACE_PANEL, "Workspace");
         addToolbarPanel(EDIT_PANEL, "Edit");
+        addToolbarPanel(DATA_PANEL, "Data");
+        addToolbarPanel(VIEWS_PANEL, "Views");
         initCustomPanels();
         addToolbarPanel(HELP_PANEL, "Help");
 
@@ -320,9 +344,55 @@ public abstract class ChooselApplication {
         ((VerticalPanel) actionBar.asWidget()).add(authenticationBar);
     }
 
-    protected abstract void initCustomActions();
+    protected void initBenchmarkResourceCreator() {
+        if (Benchmark.isBenchmarkEnabled() || runsInDevelopmentMode()) {
+            TextCommandPresenter presenter = new TextCommandPresenter(
+                    new CreateBenchmarkResourcesCommand(resourceSetFactory,
+                            dataSources), "Add");
+            presenter.init();
+            TextBox textBox = presenter.getTextBox();
+            textBox.setMaxLength(6);
+            textBox.setWidth("30px");
+            addWidget(DATA_PANEL, textBox);
+            addWidget(DATA_PANEL, presenter.getExecuteButton());
+        }
+    }
 
-    protected abstract void initCustomPanels();
+    /**
+     * Override to add custom actions and elements to the different panels.
+     */
+    protected void initCustomActions() {
+    }
+
+    /**
+     * Override to insert custom panels between the views and the help panel.
+     */
+    protected void initCustomPanels() {
+    }
+
+    protected void initDataPanel() {
+        initDataSourcesPresenter();
+        initBenchmarkResourceCreator();
+    }
+
+    protected void initDataSourcesPresenter() {
+        final ResourceSetAvatarResourceSetsPresenter presenter = new ResourceSetAvatarResourceSetsPresenter(
+                resourceSetAvatarFactory);
+        presenter.init();
+        addWidget(DATA_PANEL, presenter.asWidget());
+        dataSources.addEventHandler(new ResourceSetAddedEventHandler() {
+            @Override
+            public void onResourceSetAdded(ResourceSetAddedEvent e) {
+                presenter.addResourceSet(e.getResourceSet());
+            }
+        });
+        dataSources.addEventHandler(new ResourceSetRemovedEventHandler() {
+            @Override
+            public void onResourceSetRemoved(ResourceSetRemovedEvent e) {
+                presenter.removeResourceSet(e.getResourceSet());
+            }
+        });
+    }
 
     private void initDesktop(DockPanel mainPanel) {
         /*
@@ -343,6 +413,9 @@ public abstract class ChooselApplication {
         });
 
         mainPanel.add(desktop.asWidget(), DockPanel.CENTER);
+    }
+
+    private void initDeveloperModePanel() {
     }
 
     protected void initEditPanel() {
