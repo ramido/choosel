@@ -16,7 +16,6 @@
 package org.thechiselgroup.biomixer.client;
 
 import org.thechiselgroup.choosel.client.resolver.FixedValuePropertyValueResolver;
-import org.thechiselgroup.choosel.client.resolver.NullPropertyValueResolver;
 import org.thechiselgroup.choosel.client.resolver.ResourceToValueResolver;
 import org.thechiselgroup.choosel.client.resolver.SimplePropertyValueResolver;
 import org.thechiselgroup.choosel.client.resources.Resource;
@@ -24,7 +23,6 @@ import org.thechiselgroup.choosel.client.views.DefaultSlotResolver;
 
 public class BioMixerSlotResolver extends DefaultSlotResolver {
 
-    @Override
     public ResourceToValueResolver createDescriptionSlotResolver(String category) {
         // TODO switch based on category -- need category as part of layerModel
         // TODO resources as part of layerModel
@@ -61,7 +59,6 @@ public class BioMixerSlotResolver extends DefaultSlotResolver {
         }
     }
 
-    @Override
     public ResourceToValueResolver createGraphLabelSlotResolver(String category) {
         if (NcboUriHelper.NCBO_CONCEPT.equals(category)) {
             return new SimplePropertyValueResolver(NCBO.CONCEPT_NAME);
@@ -98,16 +95,6 @@ public class BioMixerSlotResolver extends DefaultSlotResolver {
         }
 
         return super.createGraphNodeBorderColorResolver(category);
-    }
-
-    @Override
-    public ResourceToValueResolver createLocationSlotResolver(String category) {
-        return new NullPropertyValueResolver();
-    }
-
-    @Override
-    public ResourceToValueResolver createFontSizeSlotResolver(String category) {
-        return new FixedValuePropertyValueResolver(new Integer(1));
     }
 
 }

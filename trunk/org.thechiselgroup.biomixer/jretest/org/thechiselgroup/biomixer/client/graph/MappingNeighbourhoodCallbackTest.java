@@ -37,7 +37,7 @@ import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
-import org.thechiselgroup.choosel.client.util.CollectionUtils;
+import org.thechiselgroup.choosel.client.util.collections.CollectionUtils;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 import org.thechiselgroup.choosel.client.views.graph.GraphItem;
