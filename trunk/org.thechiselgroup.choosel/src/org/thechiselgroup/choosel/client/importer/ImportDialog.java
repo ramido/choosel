@@ -80,7 +80,7 @@ public class ImportDialog extends AbstractDialog {
         HTML help = new HTML();
         help.setStyleName(CSS_IMPORT_PANEL_HELP);
         help.setHTML("Here you can import your own data into Choosel"
-                + " (limited to 200 rows).<br/>See <a target=\"_blank\" href=\""
+                + " (limited to 400 rows).<br/>See <a target=\"_blank\" href=\""
                 + GWT.getModuleBaseURL() + "html/csvexamples.html"
                 + "\">example CSV data</a>"
                 + " or <a target=\"_blank\" href=\"" + GWT.getModuleBaseURL()
