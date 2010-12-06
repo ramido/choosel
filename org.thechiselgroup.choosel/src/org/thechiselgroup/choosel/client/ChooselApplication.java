@@ -352,7 +352,7 @@ public abstract class ChooselApplication {
             presenter.init();
             TextBox textBox = presenter.getTextBox();
             textBox.setMaxLength(6);
-            textBox.setWidth("30px");
+            textBox.setWidth("50px");
             addWidget(DATA_PANEL, textBox);
             addWidget(DATA_PANEL, presenter.getExecuteButton());
         }

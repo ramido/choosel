@@ -35,7 +35,9 @@ public final class Benchmark {
     /**
      * Returns if benchmarking is active or not. The benchmarking is only active
      * in GWT clients (i.e. not in test environments and if the
-     * {@link #BENCHMARKING} flag is set). Use as follows:
+     * {@link #BENCHMARKING} flag is set). To enable automatic removal in the
+     * JavaScript compilation of GWT if benchmarking is disabled, use as
+     * follows:
      * 
      * <pre>
      * if (Benchmark.isBenchmarkEnabled) {
