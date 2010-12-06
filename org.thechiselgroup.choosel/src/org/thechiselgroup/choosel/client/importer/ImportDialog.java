@@ -147,22 +147,22 @@ public class ImportDialog extends AbstractDialog {
     public void okay() throws ParseException {
         String pastedText = pasteArea.getText();
 
-        // TODO re-enable
-        // if (pastedText.length() > 50000) {
-        // throw new ParseException(
-        // "The pasted text is too big. This demo supports only up to 50000 characters in the pasted text.");
-        // }
-        //
+        if (pastedText.length() > 75000) {
+            throw new ParseException(
+                    "The pasted text is too big. "
+                            + "This demo supports only up to 75000 characters in the pasted text.");
+        }
+
         StringTable parsedRows = new CSVStringTableParser().parse(pastedText);
-        //
-        // if (parsedRows.getColumnCount() > 15) {
-        // throw new ParseException(
-        // "Too many columns. This demo supports only up to 15 columns.");
-        // }
-        // if (parsedRows.getRowCount() > 200) {
-        // throw new ParseException(
-        // "Too many rows. This demo supports only up to 200 rows.");
-        // }
+
+        if (parsedRows.getColumnCount() > 20) {
+            throw new ParseException(
+                    "Too many columns. This demo supports only up to 20 columns.");
+        }
+        if (parsedRows.getRowCount() > 400) {
+            throw new ParseException(
+                    "Too many rows. This demo supports only up to 400 rows.");
+        }
 
         ResourceSet parsedResources = importer.createResources(parsedRows);
         parsedResources.setLabel(nameTextBox.getText());
