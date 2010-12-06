@@ -33,7 +33,6 @@ import com.google.inject.Inject;
 // TODO update & extend (1, many sets added / removed) test case
 public class ResourceGrouping implements ResourceContainer {
 
-    // TODO Are resource sets too heavyweight here?
     private Map<String, ResourceSet> groupedResources = CollectionFactory
             .createStringMap();
 
@@ -168,12 +167,17 @@ public class ResourceGrouping implements ResourceContainer {
         return resourcesPerCategory;
     }
 
-    private void clearCategories(List<ResourceGroupingChange> changes) {
+    /**
+     * Clears the internal grouping structure. The grouping should be
+     * recalculated after clearing to maintain a consistent state.
+     */
+    private void clearGrouping(List<ResourceGroupingChange> changes) {
         for (Entry<String, ResourceSet> entry : groupedResources.entrySet()) {
             changes.add(new ResourceGroupingChange(Delta.REMOVE,
                     entry.getKey(), entry.getValue()));
         }
         groupedResources.clear();
+        resourceIdToGroups.clear();
     }
 
     private void fireChanges(List<ResourceGroupingChange> changes) {
@@ -201,8 +205,12 @@ public class ResourceGrouping implements ResourceContainer {
 
         Set<String> result = CollectionFactory.createStringSet();
         for (Resource resource : resources) {
-            // TODO what if resource is not contained
-            result.addAll(resourceIdToGroups.get(resource.getUri()));
+            Set<String> groups = resourceIdToGroups.get(resource.getUri());
+
+            // groups are null if resource is not contained
+            if (groups != null) {
+                result.addAll(groups);
+            }
         }
         return result;
     }
@@ -221,6 +229,24 @@ public class ResourceGrouping implements ResourceContainer {
         List<ResourceGroupingChange> changes = new ArrayList<ResourceGroupingChange>();
         removeResourcesFromGrouping(resources, changes);
         fireChanges(changes);
+    }
+
+    /**
+     * Removes the group from the resources for reverse lookup.
+     * 
+     * @see #resourceIdToGroups
+     */
+    private void removeGroupFromResources(String group,
+            List<Resource> removedGroupResources) {
+
+        for (Resource resource : removedGroupResources) {
+            String resourceId = resource.getUri();
+            Set<String> resourceGroups = resourceIdToGroups.get(resourceId);
+            resourceGroups.remove(group);
+            if (resourceGroups.isEmpty()) {
+                resourceIdToGroups.remove(resourceId);
+            }
+        }
     }
 
     private void removeResourcesFromAllResources(Iterable<Resource> resources) {
@@ -254,10 +280,20 @@ public class ResourceGrouping implements ResourceContainer {
         Map<String, List<Resource>> resourcesPerCategory = categorize(resources);
         for (Map.Entry<String, List<Resource>> entry : resourcesPerCategory
                 .entrySet()) {
-            removeResourcesFromGroup(entry.getKey(), entry.getValue(), changes);
+
+            String group = entry.getKey();
+            List<Resource> removedGroupResources = entry.getValue();
+
+            removeResourcesFromGroup(group, removedGroupResources, changes);
+            removeGroupFromResources(group, removedGroupResources);
         }
     }
 
+    /**
+     * Sets a new resource categorizer. Changing the categorizer causes the
+     * whole grouping to be recalculated and triggers an event containining the
+     * resulting changes.
+     */
     public void setCategorizer(ResourceMultiCategorizer newCategorizer) {
         assert newCategorizer != null;
 
@@ -268,7 +304,7 @@ public class ResourceGrouping implements ResourceContainer {
         multiCategorizer = newCategorizer;
 
         List<ResourceGroupingChange> changes = new ArrayList<ResourceGroupingChange>();
-        clearCategories(changes);
+        clearGrouping(changes);
         addResourcesToGrouping(allResources, changes);
         fireChanges(changes);
     }
