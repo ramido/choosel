@@ -4,5 +4,6 @@
 = Performance Tests =
 
 || *Date* || *Choosel SVN Revision* || *Results* || *Tested Browsers* || *Test Environment*||
-|| 2010 Aug 11 || Choosel Rev 290 || [https://spreadsheets.google.com/pub?key=0AlCDj1dv3u4tdEpmeVpCY0hMUW9rR3NZZk9xYUNCd1E&hl=en&output=html Adding Resource to Timeline ] || Chrome 5.0.375.126 ||Win 7 64 bit; Intel i7 860@2.80 GHz (8 core); 8GB RAM||
+|| 2010 Dec 5 || Choosel Rev 748 || [https://spreadsheets.google.com/pub?key=0AgNAl7-WtHbcdGZ6ZC1SOE05cG54LU5qTW96UmIwd1E&hl=en&output=html Adding Resources] || Safari 5.0.3, Chrome 8.0.552.210 beta, Firefox 4.0b7, Firefox 3.5.15 || Windows 7 64bit, Intel Core2 Duo CPU T7700@2.40GHz, 4GB RAM||
+|| 2010 Aug 11 || Choosel Rev 290 || [https://spreadsheets.google.com/pub?key=0AlCDj1dv3u4tdEpmeVpCY0hMUW9rR3NZZk9xYUNCd1E&hl=en&output=html Adding Resources to Timeline ] || Chrome 5.0.375.126 ||Win 7 64 bit; Intel i7 860@2.80 GHz (8 core); 8GB RAM||
 || 2010 Aug 6 || Choosel Rev 260 || [http://spreadsheets.google.com/pub?key=0AlCDj1dv3u4tdFBjU2xidGpIc3ZGM3BlMlVjMVhvZmc&hl=en&gid=0 Adding Resources and General Performance ] || Firefox 3.6.8, Chrome 5.0.375.125  || Win 7 64 bit; Intel i7 860@2.80 GHz (8 core); 8GB RAM||
