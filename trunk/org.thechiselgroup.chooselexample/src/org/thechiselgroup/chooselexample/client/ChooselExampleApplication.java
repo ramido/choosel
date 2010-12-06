@@ -30,7 +30,6 @@ import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionCo
 import org.thechiselgroup.choosel.client.ChooselApplication;
 import org.thechiselgroup.choosel.client.RestrictImporterToOneDataSourceManager;
 import org.thechiselgroup.choosel.client.command.AsyncCommandExecutor;
-import org.thechiselgroup.choosel.client.command.AsyncCommandToCommandAdapter;
 import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.importer.ImportDialog;
 import org.thechiselgroup.choosel.client.ui.Action;
@@ -46,10 +45,6 @@ public class ChooselExampleApplication extends ChooselApplication {
 
     @Inject
     private AsyncCommandExecutor asyncCommandExecutor;
-
-    // @Override
-    // protected void initAuthenticationBar() {
-    // }
 
     @Override
     protected void afterInit() {
@@ -68,10 +63,15 @@ public class ChooselExampleApplication extends ChooselApplication {
     }
 
     @Override
+    protected void initAuthenticationBar() {
+    }
+
+    @Override
     protected void initCustomActions() {
-        addActionToToolbar(WORKSPACE_PANEL, "Load Workspace", "workspace-open",
-                new AsyncCommandToCommandAdapter(configSharedViewsCommand,
-                        asyncCommandExecutor));
+        // addActionToToolbar(WORKSPACE_PANEL, "Load Workspace",
+        // "workspace-open",
+        // new AsyncCommandToCommandAdapter(configSharedViewsCommand,
+        // asyncCommandExecutor));
 
         if (runsInDevelopmentMode()) {
             addCreateWindowActionToToolbar(DEVELOPER_MODE_PANEL, "Graph",
