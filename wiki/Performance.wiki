@@ -1,7 +1,11 @@
-#summary Performance Testing Results
+#summary Testing Results and General Description
 #labels Developer
 
-= Performance Tests =
+=== General Performance ===
+
+Choosel is aimed at small data sets with several thousand rows. The visualizations support ~500 to 1000 visible items per visualization on modern browsers and computers. However, because it is hard to perceive visualization with several thousand items effectively, we will focus on better automatic aggregation and improving the underlying analysis and interaction performance in the future.
+
+=== Performance Tests ===
 
 || *Date* || *Choosel SVN Revision* || *Results* || *Tested Browsers* || *Test Environment*||
 || 2010/Dec/5 || Choosel Rev 748 || [https://spreadsheets.google.com/pub?key=0AgNAl7-WtHbcdGZ6ZC1SOE05cG54LU5qTW96UmIwd1E&hl=en&output=html Adding Resources] || Safari 5.0.3, Chrome 8.0.552.210 beta, Firefox 4.0b7, Firefox 3.5.15 || Windows 7 64bit, Intel Core2 Duo CPU T7700@2.40GHz, 4GB RAM||
