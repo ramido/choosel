@@ -15,9 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.test;
 
+import org.thechiselgroup.choosel.client.resources.ResourceSetContainer;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.ui.HasTextParameter;
-import org.thechiselgroup.choosel.client.views.ResourceSetContainer;
 
 import com.google.gwt.user.client.Command;
 

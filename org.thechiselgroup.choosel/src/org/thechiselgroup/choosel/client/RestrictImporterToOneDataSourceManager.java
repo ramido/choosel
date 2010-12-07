@@ -19,11 +19,11 @@ import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionCo
 
 import org.thechiselgroup.choosel.client.resources.ResourceSetAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourceSetAddedEventHandler;
+import org.thechiselgroup.choosel.client.resources.ResourceSetContainer;
 import org.thechiselgroup.choosel.client.resources.ResourceSetRemovedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourceSetRemovedEventHandler;
 import org.thechiselgroup.choosel.client.ui.HasEnabledState;
 import org.thechiselgroup.choosel.client.util.Disposable;
-import org.thechiselgroup.choosel.client.views.ResourceSetContainer;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.inject.name.Named;

@@ -13,16 +13,11 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.views;
+package org.thechiselgroup.choosel.client.resources;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.ResourceSetAddedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourceSetAddedEventHandler;
-import org.thechiselgroup.choosel.client.resources.ResourceSetRemovedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourceSetRemovedEventHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
