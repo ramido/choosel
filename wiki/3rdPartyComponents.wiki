@@ -13,7 +13,7 @@ The Choosel Mashup Framework includes and uses the following software components
 ||Simile Ajax API||Required for Simile Timeline integration||2.2.0||http://code.google.com/p/simile-widgets/||New BSD||
 ||Gin||Dependency injection for GWT||20091021||http://code.google.com/p/google-gin/||Apache 2.0||
 ||Guice||Dependency injection framework, required for Gin||2.0||http://code.google.com/p/google-guice/||Apache 2.0||
-||GWT DnD||Drag and Drop functionality||3.0.0||http://code.google.com/p/gwt-dnd/||Apache 2.0||
+||GWT DnD||Drag and Drop functionality||3.0.0 (patched)||http://code.google.com/p/gwt-dnd/||Apache 2.0||
 ||GWT FX||Visual Effects||0.5.0-m1||http://code.google.com/p/gwt-fx/||Apache 2.0||
 ||GWT Maps||Google Maps API||1.0||http://code.google.com/p/gwt-google-apis/||Apache 2.0||
 ||GWT 2 SWF||Flash/Flex integration into GWT||0.6.0||http://code.google.com/p/gwt2swf/||Apache 2.0||
