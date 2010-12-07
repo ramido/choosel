@@ -9,17 +9,17 @@ The Choosel Mashup Framework includes and uses the following software components
 ||Mockito||Testing with mock objects ||1.8.2||http://mockito.org/||MIT License||
 ||GWT Log||Logging framework for GWT||3.0.1||http://code.google.com/p/gwt-log/||Apache License 2.0||
 ||FlexViz||Graph Visualization Component||Custom Build||http://sourceforge.net/projects/flexviz/||Mozilla Public License 1.1 (MPL 1.1)||
-||Simile Timeline||Timeline Component||* 2.3.0||http://code.google.com/p/simile-widgets/||New BSD License||
-||Simile Ajax API||Required for Simile Timeline integration||* 2.2.0||http://code.google.com/p/simile-widgets/||New BSD License||
-||Gin||Dependency injection for GWT||* 20091021||http://code.google.com/p/google-gin/||Apache License 2.0||
-||Guice||Dependency injection framework, required for Gin||* 2.0||http://code.google.com/p/google-guice/||Apache License 2.0||
-||GWT DnD||Drag and Drop functionality||* 3.0.0||http://code.google.com/p/gwt-dnd/||Apache License 2.0||
-||GWT FX||Visual Effects||* 0.5.0-m1||http://code.google.com/p/gwt-fx/||Apache License 2.0||
-||GWT Maps||Google Maps API||* 1.0||http://code.google.com/p/gwt-google-apis/||Apache License 2.0||
-||GWT 2 SWF||Flash/Flex integration into GWT||* 0.6.0||http://code.google.com/p/gwt2swf/||Apache License 2.0||
-||GWT Query||JQuery functionality within GWT||* 1.0-PATCHED||http://code.google.com/p/gwtquery/||MIT License||
-||Apache Xalan||Server-side XSLT Processor||* 2.7.1||http://xml.apache.org/xalan-j/||Apache License 2.0||
-||Sarissa||Client-side XSLT Processor||* 0.9.9.4||http://dev.abiss.gr/sarissa/||Apache License 2.0||
+||Simile Timeline||Timeline Component||2.3.0||http://code.google.com/p/simile-widgets/||New BSD License||
+||Simile Ajax API||Required for Simile Timeline integration||2.2.0||http://code.google.com/p/simile-widgets/||New BSD License||
+||Gin||Dependency injection for GWT||20091021||http://code.google.com/p/google-gin/||Apache License 2.0||
+||Guice||Dependency injection framework, required for Gin||2.0||http://code.google.com/p/google-guice/||Apache License 2.0||
+||GWT DnD||Drag and Drop functionality||3.0.0||http://code.google.com/p/gwt-dnd/||Apache License 2.0||
+||GWT FX||Visual Effects||0.5.0-m1||http://code.google.com/p/gwt-fx/||Apache License 2.0||
+||GWT Maps||Google Maps API||1.0||http://code.google.com/p/gwt-google-apis/||Apache License 2.0||
+||GWT 2 SWF||Flash/Flex integration into GWT||0.6.0||http://code.google.com/p/gwt2swf/||Apache License 2.0||
+||GWT Query||JQuery functionality within GWT||1.0-PATCHED||http://code.google.com/p/gwtquery/||MIT License||
+||Apache Xalan||Server-side XSLT Processor||2.7.1||http://xml.apache.org/xalan-j/||Apache License 2.0||
+||Sarissa||Client-side XSLT Processor||0.9.9.4||http://dev.abiss.gr/sarissa/||Apache License 2.0||
 ||Protovis||!JavaScript Visualization Library||3.2||http://vis.stanford.edu/protovis/||BSD License||
 ||Open CSV||CSV Parser Library - *Note*: Only CSVParser class is used. Source-code has been modified.||2.2||http://opencsv.sourceforge.net/||Apache License 2.0||
 ||reset5||CSS Reset||N/A||http://code.google.com/p/reset5/||MIT||
