@@ -20,7 +20,7 @@ package org.thechiselgroup.choosel.client.workspace.command;
 
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.DATA_SOURCES;
 
-import org.thechiselgroup.choosel.client.views.ResourceSetContainer;
+import org.thechiselgroup.choosel.client.resources.ResourceSetContainer;
 import org.thechiselgroup.choosel.client.workspace.WorkspaceManager;
 
 import com.google.gwt.user.client.Command;

@@ -16,8 +16,8 @@
 package org.thechiselgroup.choosel.client.importer;
 
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.resources.ResourceSetContainer;
 import org.thechiselgroup.choosel.client.ui.dialog.AbstractDialog;
-import org.thechiselgroup.choosel.client.views.ResourceSetContainer;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.FlowPanel;
