@@ -1,3 +1,5 @@
 #summary Publications on Choosel in Scientific Venues
 
-Lars Grammel, Margaret-Anne Storey, "[http://thechiselgroup.org/publications/content/poster-choosel-%E2%80%93-web-based-visualization-construction-and-coordination-informat Poster: Choosel – Web-based Visualization Construction and Coordination for Information Visualization Novices]", IEEE Information Visualization Conference (InfoVis), 2010
+*[http://thechiselgroup.org/files/uploads/publications/grammel_choosel_poster_2010.pdf Poster: Choosel – Web-based Visualization Construction and Coordination for Information Visualization Novices]*
+Lars Grammel, Margaret-Anne Storey
+IEEE Information Visualization Conference (!InfoVis), 2010
