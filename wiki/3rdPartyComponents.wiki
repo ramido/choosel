@@ -24,4 +24,4 @@ The Choosel Mashup Framework includes and uses the following software components
 ||Open CSV||CSV Parser Library - *Note*: Only CSVParser class is used. Source-code has been modified.||2.2||http://opencsv.sourceforge.net/||Apache 2.0||
 ||reset5||CSS Reset||N/A||http://code.google.com/p/reset5/||MIT||
 ||YUI 2: Fonts CSS||CSS Reset||N/A||http://developer.yahoo.com/yui/fonts/||BSD||
-||Tango Icon Library||Icons used in Choosel||0.8.90 (Choosel uses derived icons)||http://tango.freedesktop.org/Tango_Desktop_Project||Public Domain||
+||Tango Icon Library||Icons used in Choosel (Choosel uses derived icons)||0.8.90||http://tango.freedesktop.org/Tango_Desktop_Project||Public Domain||
