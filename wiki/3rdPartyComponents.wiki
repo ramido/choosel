@@ -9,7 +9,7 @@ The Choosel Mashup Framework includes and uses the following software components
 ||Mockito||Testing with mock objects ||1.8.2||http://mockito.org/||MIT||
 ||GWT Log||Logging framework for GWT||3.0.1||http://code.google.com/p/gwt-log/||Apache 2.0||
 ||!FlexViz||Graph Visualization Component||Custom Build||http://sourceforge.net/projects/flexviz/||MPL 1.1||
-||Simile Timeline||Timeline Component||2.3.0||http://code.google.com/p/simile-widgets/||New BSD||
+||Simile Timeline||Timeline Component||2.3.0 (patched)||http://code.google.com/p/simile-widgets/||New BSD||
 ||Simile Ajax API||Required for Simile Timeline integration||2.2.0||http://code.google.com/p/simile-widgets/||New BSD||
 ||Gin||Dependency injection for GWT||20091021||http://code.google.com/p/google-gin/||Apache 2.0||
 ||Guice||Dependency injection framework, required for Gin||2.0||http://code.google.com/p/google-guice/||Apache 2.0||
