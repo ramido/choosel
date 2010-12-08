@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.util.math;
 
-import org.thechiselgroup.choosel.client.util.MathUtils;
 
 /**
  * Array of numbers. This special representation is introduced to leverage

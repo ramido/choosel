@@ -70,8 +70,7 @@ public abstract class ChartViewContentDisplay extends
     protected StringFunctionWithIntParam scaleLabelText = new StringFunctionWithIntParam() {
         @Override
         public String f(int value, int i) {
-            // TODO should the interface be changed to int?
-            return scale.tickFormat("" + value);
+            return scale.tickFormat(value);
         }
     };
 
@@ -330,7 +329,11 @@ public abstract class ChartViewContentDisplay extends
         chartItems.remove(chartItem);
     }
 
-    public void renderChart() {
+    /**
+     * Renders the chart. The chart structure does not change, just the
+     * attributes of the SVG elements are updated.
+     */
+    private void renderChart() {
         // TODO instead of isRendering flag, remove event listeners before
         // rendering starts and add them again after rendering is finished.
         try {
@@ -394,11 +397,18 @@ public abstract class ChartViewContentDisplay extends
         }
 
         /*
-         * The updateChart method only gets called when necessary so as to
-         * minimize program overhead.
+         * PERFORMANCE only rebuild the chart SVG DOM elements when structure
+         * changes, otherwise just update their attributes.
+         * 
+         * XXX Updates in size require the reconstruction of the chart,
+         * otherwise the changes will only be visible after a mouseover.
+         * 
+         * TODO fix this - structural changes should only be required when
+         * adding / removing resource items.
          */
-        // TODO needs improvement, can updates cause structural changes?
         if (!addedResourceItems.isEmpty() || !removedResourceItems.isEmpty()) {
+            // || hasPartialHighlightStatusChanged()
+            // || !changedSlots.isEmpty()
             updateChart();
         } else {
             renderChart();

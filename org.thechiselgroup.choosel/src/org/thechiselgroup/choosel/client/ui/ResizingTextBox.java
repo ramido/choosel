@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui;
 
-import org.thechiselgroup.choosel.client.util.MathUtils;
+import org.thechiselgroup.choosel.client.util.math.MathUtils;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;

@@ -25,8 +25,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.client.util.MathUtils;
 import org.thechiselgroup.choosel.client.util.collections.CollectionUtils;
+import org.thechiselgroup.choosel.client.util.math.MathUtils;
 import org.thechiselgroup.choosel.client.util.math.NumberArray;
 
 public class DoubleToGroupValueMapperTest {

@@ -13,11 +13,8 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.util;
+package org.thechiselgroup.choosel.client.util.math;
 
-import org.thechiselgroup.choosel.client.util.math.DefaultNumberArray;
-import org.thechiselgroup.choosel.client.util.math.JsDoubleArray;
-import org.thechiselgroup.choosel.client.util.math.NumberArray;
 
 import com.google.gwt.core.client.GWT;
 
