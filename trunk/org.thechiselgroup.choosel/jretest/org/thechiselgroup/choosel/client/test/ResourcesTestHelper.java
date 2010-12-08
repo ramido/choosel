@@ -31,6 +31,7 @@ import org.hamcrest.Description;
 import org.junit.Assert;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatcher;
+import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
@@ -53,9 +54,16 @@ public final class ResourcesTestHelper {
     }
 
     public static DefaultResourceItem createResourceItem(ResourceSet resources) {
+        return createResourceItem(resources,
+                mock(SlotMappingConfiguration.class));
+    }
+
+    public static DefaultResourceItem createResourceItem(ResourceSet resources,
+            SlotMappingConfiguration slotMappingConfiguration) {
+
         return spy(new DefaultResourceItem("", resources,
                 mock(HoverModel.class), mock(PopupManager.class),
-                mock(SlotMappingConfiguration.class)));
+                slotMappingConfiguration));
     }
 
     public static <T> LightweightCollection<T> emptyLightweightCollection(
@@ -99,6 +107,23 @@ public final class ResourcesTestHelper {
                 }
 
                 return set.toList().containsAll(resourceItems.toList());
+            }
+        });
+    }
+
+    public static LightweightCollection<Resource> eqResources(
+            final LightweightCollection<Resource> resources) {
+
+        return argThat(new ArgumentMatcher<LightweightCollection<Resource>>() {
+            @Override
+            public boolean matches(Object o) {
+                LightweightCollection<Resource> set = (LightweightCollection<Resource>) o;
+
+                if (set.size() != resources.size()) {
+                    return false;
+                }
+
+                return set.toList().containsAll(resources.toList());
             }
         });
     }

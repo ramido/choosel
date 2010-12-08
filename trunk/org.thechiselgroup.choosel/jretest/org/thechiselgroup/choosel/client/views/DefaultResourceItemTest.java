@@ -16,10 +16,13 @@
 package org.thechiselgroup.choosel.client.views;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.client.test.AdvancedAsserts.assertContentEquals;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.eqResources;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
 
 import java.util.Collections;
@@ -34,6 +37,7 @@ import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
+import org.thechiselgroup.choosel.client.views.ResourceItem.Subset;
 import org.thechiselgroup.choosel.client.views.ResourceItem.SubsetStatus;
 
 import com.google.gwt.event.dom.client.MouseOverEvent;
@@ -41,12 +45,12 @@ import com.google.gwt.event.dom.client.MouseOverHandler;
 
 public class DefaultResourceItemTest {
 
-    private static final String RESOURCE_ITEM_CATEGORY = "resourceItemCategory";
+    private static final String RESOURCE_ITEM_GROUP_ID = "resourceItemCategory";
 
     private HoverModel hoverModel;
 
     @Mock
-    private SlotMappingConfiguration layer;
+    private SlotMappingConfiguration slotMappingConfiguration;
 
     @Mock
     private PopupManager popupManager;
@@ -54,6 +58,15 @@ public class DefaultResourceItemTest {
     private ResourceSet resources;
 
     private DefaultResourceItem underTest;
+
+    private Slot numberSlot;
+
+    private SlotMappingChangedHandler captureSlotMappingChangedHandler() {
+        ArgumentCaptor<SlotMappingChangedHandler> captor = ArgumentCaptor
+                .forClass(SlotMappingChangedHandler.class);
+        verify(slotMappingConfiguration, times(1)).addHandler(captor.capture());
+        return captor.getValue();
+    }
 
     /**
      * remove highlighting on disposal (issue 65: highlighting remains after
@@ -186,6 +199,137 @@ public class DefaultResourceItemTest {
         underTest.removeHighlightedResources(createResources(5, 6));
         assertContentEquals(createResources(1),
                 underTest.getHighlightedResources());
+    }
+
+    @Test
+    public void getResourceValue() {
+        resources.addAll(createResources(1, 2, 3, 4));
+
+        when(
+                slotMappingConfiguration.resolve(eq(numberSlot),
+                        eq(RESOURCE_ITEM_GROUP_ID), eq(resources))).thenReturn(
+                2d);
+
+        Object result = underTest.getResourceValue(numberSlot);
+        assertEquals(2d, result);
+    }
+
+    @Test
+    public void getResourceValueClearCacheForAllResourcesOnResourceSetChange() {
+        resources.addAll(createResources(1, 2, 3, 4));
+
+        when(
+                slotMappingConfiguration.resolve(eq(numberSlot),
+                        eq(RESOURCE_ITEM_GROUP_ID), eq(resources))).thenReturn(
+                2d, 3d);
+
+        underTest.getResourceValue(numberSlot);
+        resources.removeAll(createResources(1));
+        Object result = underTest.getResourceValue(numberSlot);
+        assertEquals(3d, result);
+    }
+
+    @Test
+    public void getResourceValueClearCacheForAllResourcesOnSlotChange() {
+        SlotMappingChangedHandler handler = captureSlotMappingChangedHandler();
+
+        resources.addAll(createResources(1, 2, 3, 4));
+
+        when(
+                slotMappingConfiguration.resolve(eq(numberSlot),
+                        eq(RESOURCE_ITEM_GROUP_ID), eq(resources))).thenReturn(
+                2d, 3d);
+
+        underTest.getResourceValue(numberSlot);
+        handler.onResourceCategoriesChanged(new SlotMappingChangedEvent(
+                numberSlot));
+        assertEquals(3d, underTest.getResourceValue(numberSlot));
+    }
+
+    @Test
+    public void getResourceValueClearCacheForHighlightedResourcesOnHighlightedResourceSetChange() {
+        resources.addAll(createResources(1, 2, 3, 4));
+
+        when(
+                slotMappingConfiguration.resolve(eq(numberSlot),
+                        eq(RESOURCE_ITEM_GROUP_ID),
+                        eqResources(createResources()))).thenReturn(0d);
+        when(
+                slotMappingConfiguration.resolve(eq(numberSlot),
+                        eq(RESOURCE_ITEM_GROUP_ID),
+                        eqResources(createResources(2, 3)))).thenReturn(2d);
+        when(
+                slotMappingConfiguration.resolve(eq(numberSlot),
+                        eq(RESOURCE_ITEM_GROUP_ID),
+                        eqResources(createResources(3)))).thenReturn(3d);
+
+        underTest.getResourceValue(numberSlot, Subset.HIGHLIGHTED);
+        underTest.addHighlightedResources(createResources(2, 3));
+        underTest.getResourceValue(numberSlot, Subset.HIGHLIGHTED);
+        underTest.removeHighlightedResources(createResources(2));
+        assertEquals(3d,
+                underTest.getResourceValue(numberSlot, Subset.HIGHLIGHTED));
+    }
+
+    @Test
+    public void getResourceValueClearCacheForHighlightedResourcesOnSlotChange() {
+        SlotMappingChangedHandler handler = captureSlotMappingChangedHandler();
+
+        resources.addAll(createResources(1, 2, 3, 4));
+        when(
+                slotMappingConfiguration.resolve(eq(numberSlot),
+                        eq(RESOURCE_ITEM_GROUP_ID),
+                        eqResources(createResources(2, 3)))).thenReturn(2d, 3d);
+
+        underTest.addHighlightedResources(createResources(2, 3));
+        underTest.getResourceValue(numberSlot, Subset.HIGHLIGHTED);
+        handler.onResourceCategoriesChanged(new SlotMappingChangedEvent(
+                numberSlot));
+        assertEquals(3d,
+                underTest.getResourceValue(numberSlot, Subset.HIGHLIGHTED));
+    }
+
+    @Test
+    public void getResourceValueClearCacheForSelectedResourcesOnSelectedResourceSetChange() {
+        resources.addAll(createResources(1, 2, 3, 4));
+
+        when(
+                slotMappingConfiguration.resolve(eq(numberSlot),
+                        eq(RESOURCE_ITEM_GROUP_ID),
+                        eqResources(createResources()))).thenReturn(0d);
+        when(
+                slotMappingConfiguration.resolve(eq(numberSlot),
+                        eq(RESOURCE_ITEM_GROUP_ID),
+                        eqResources(createResources(2, 3)))).thenReturn(2d);
+        when(
+                slotMappingConfiguration.resolve(eq(numberSlot),
+                        eq(RESOURCE_ITEM_GROUP_ID),
+                        eqResources(createResources(3)))).thenReturn(3d);
+
+        underTest.getResourceValue(numberSlot, Subset.SELECTED);
+        underTest.addSelectedResources(createResources(2, 3));
+        underTest.getResourceValue(numberSlot, Subset.SELECTED);
+        underTest.removeSelectedResources(createResources(2));
+        Object result = underTest.getResourceValue(numberSlot, Subset.SELECTED);
+        assertEquals(3d, result);
+    }
+
+    @Test
+    public void getResourceValueClearCacheForSelectedResourcesOnSlotChange() {
+        SlotMappingChangedHandler handler = captureSlotMappingChangedHandler();
+
+        resources.addAll(createResources(1, 2, 3, 4));
+        when(
+                slotMappingConfiguration.resolve(eq(numberSlot),
+                        eq(RESOURCE_ITEM_GROUP_ID),
+                        eqResources(createResources(2, 3)))).thenReturn(2d, 3d);
+
+        underTest.addSelectedResources(createResources(2, 3));
+        underTest.getResourceValue(numberSlot, Subset.SELECTED);
+        handler.onResourceCategoriesChanged(new SlotMappingChangedEvent(
+                numberSlot));
+        assertEquals(3d,
+                underTest.getResourceValue(numberSlot, Subset.SELECTED));
     }
 
     @Test
@@ -358,10 +502,11 @@ public class DefaultResourceItemTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
+        numberSlot = new Slot("id-2", "number-slot", DataType.NUMBER);
         hoverModel = spy(new HoverModel());
         resources = new DefaultResourceSet();
-        underTest = spy(new DefaultResourceItem(RESOURCE_ITEM_CATEGORY,
-                resources, hoverModel, popupManager, layer));
+        underTest = spy(new DefaultResourceItem(RESOURCE_ITEM_GROUP_ID,
+                resources, hoverModel, popupManager, slotMappingConfiguration));
     }
 
     @Test
