@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.DataType;
 import org.thechiselgroup.choosel.client.views.DataTypeToListMap;
 import org.thechiselgroup.choosel.client.views.map.MapViewContentDisplay;
@@ -119,6 +120,12 @@ public final class ResourceSetUtils {
 
     private ResourceSetUtils() {
 
+    }
+
+    @Deprecated
+    public static Resource firstResource(
+            LightweightCollection<Resource> resources) {
+        return resources.iterator().next();
     }
 
 }

@@ -93,6 +93,7 @@ public interface ResourceSet extends HasLabel, LightweightCollection<Resource> {
     // XXX hack to make changes in resource item work
     // trace and replace with something more sensible,
     // especially in the graph
+    @Deprecated
     Resource getFirstResource();
 
     /**
