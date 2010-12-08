@@ -17,7 +17,7 @@ package org.thechiselgroup.choosel.client.views.text;
 
 import java.util.List;
 
-import org.thechiselgroup.choosel.client.util.collections.NumberArray;
+import org.thechiselgroup.choosel.client.util.math.NumberArray;
 
 public class DoubleToGroupValueMapper<T> {
 

@@ -13,25 +13,23 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.calculation;
+package org.thechiselgroup.choosel.client.util.math;
 
-import org.thechiselgroup.choosel.client.util.MathUtils;
-
-public class SumCalculation implements Calculation {
+public class MaxCalculation implements Calculation {
 
     @Override
-    public double calculate(double[] values) {
-        return MathUtils.sum(values);
+    public double calculate(NumberArray values) {
+        return values.max();
     }
 
     @Override
     public String getDescription() {
-        return "Sum";
+        return "Maximum";
     }
 
     @Override
     public String getID() {
-        return "sum";
+        return "max";
     }
 
     @Override

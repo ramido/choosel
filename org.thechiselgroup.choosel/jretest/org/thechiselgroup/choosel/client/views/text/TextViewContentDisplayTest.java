@@ -16,11 +16,14 @@
 package org.thechiselgroup.choosel.client.views.text;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResourceItem;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.eqResources;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
 
 import org.junit.After;
@@ -38,6 +41,7 @@ import org.thechiselgroup.choosel.client.util.collections.LightweightCollections
 import org.thechiselgroup.choosel.client.views.DefaultResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.Slot;
+import org.thechiselgroup.choosel.client.views.SlotMappingConfiguration;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 
@@ -61,12 +65,17 @@ public class TextViewContentDisplayTest {
 
     @Test
     public void partialSelectionShownCorrectly_Issue73() {
-        // create resource item that contains 2 resources
-        DefaultResourceItem resourceItem = createResourceItem(createResources(
-                1, 2));
+        SlotMappingConfiguration slotMappingConfiguration = mock(SlotMappingConfiguration.class);
 
-        when(resourceItem.getResourceValue(SlotResolver.FONT_SIZE_SLOT))
-                .thenReturn(new Double(2));
+        // create resource item that contains 2 resources
+        DefaultResourceItem resourceItem = createResourceItem(
+                createResources(1, 2), slotMappingConfiguration);
+
+        when(
+                slotMappingConfiguration.resolve(
+                        eq(SlotResolver.FONT_SIZE_SLOT), eq(""),
+                        eqResources(createResources(1, 2)))).thenReturn(
+                new Double(2));
 
         underTest.update(LightweightCollections
                 .toCollection((ResourceItem) resourceItem),

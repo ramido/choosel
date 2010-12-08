@@ -20,8 +20,9 @@ import java.util.List;
 
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.resources.ResourceSetUtils;
 import org.thechiselgroup.choosel.client.util.collections.CollectionUtils;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 
 public class ResourceSetToStringListValueResolver extends
         AbstractResourceSetToValueResolver {
@@ -31,13 +32,15 @@ public class ResourceSetToStringListValueResolver extends
     }
 
     @Override
-    public Object resolve(ResourceSet resources, String category) {
+    public Object resolve(LightweightCollection<Resource> resources,
+            String category) {
+
         if (resources.isEmpty()) {
             return "";
         }
 
         if (resources.size() == 1) {
-            return "" + resolve(resources.getFirstResource());
+            return "" + resolve(ResourceSetUtils.firstResource(resources));
         }
 
         String result = "{ ";

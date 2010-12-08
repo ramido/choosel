@@ -16,7 +16,7 @@
 package org.thechiselgroup.choosel.client.resolver;
 
 import org.thechiselgroup.choosel.client.resources.Resource;
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 
 public class FixedValuePropertyValueResolver implements
         ResourceSetToValueResolver, ResourceToValueResolver {
@@ -28,12 +28,13 @@ public class FixedValuePropertyValueResolver implements
     }
 
     @Override
-    public Object resolve(Resource resource) {
+    public Object resolve(LightweightCollection<Resource> resources,
+            String category) {
         return value;
     }
 
     @Override
-    public Object resolve(ResourceSet resources, String category) {
+    public Object resolve(Resource resource) {
         return value;
     }
 

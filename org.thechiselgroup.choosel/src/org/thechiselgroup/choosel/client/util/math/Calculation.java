@@ -13,30 +13,15 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.calculation;
+package org.thechiselgroup.choosel.client.util.math;
 
-import org.thechiselgroup.choosel.client.util.MathUtils;
 
-public class MinCalculation implements Calculation {
+public interface Calculation {
 
-    @Override
-    public double calculate(double[] values) {
-        return MathUtils.minDouble(values);
-    }
+    double calculate(NumberArray values);
 
-    @Override
-    public String getDescription() {
-        return "Minimum";
-    }
+    String getDescription();
 
-    @Override
-    public String getID() {
-        return "min";
-    }
-
-    @Override
-    public String toString() {
-        return getID();
-    }
+    String getID();
 
 }

@@ -13,30 +13,32 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.calculation;
+package org.thechiselgroup.choosel.client.util.math;
 
 import org.thechiselgroup.choosel.client.util.MathUtils;
 
-public class MaxCalculation implements Calculation {
+/**
+ * Array of numbers. This special representation is introduced to leverage
+ * native JavaScript operations for max, min etc.
+ * 
+ * @author Lars Grammel
+ * 
+ * @see MathUtils
+ */
+public interface NumberArray {
 
-    @Override
-    public double calculate(double[] values) {
-        return MathUtils.maxDouble(values);
-    }
+    double get(int index);
 
-    @Override
-    public String getDescription() {
-        return "Maximum";
-    }
+    boolean isEmpty();
 
-    @Override
-    public String getID() {
-        return "max";
-    }
+    int length();
 
-    @Override
-    public String toString() {
-        return getID();
-    }
+    double max();
+
+    double min();
+
+    void push(double value);
+
+    void set(int index, double value);
 
 }

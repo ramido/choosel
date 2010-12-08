@@ -23,14 +23,14 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.client.calculation.AverageCalculation;
-import org.thechiselgroup.choosel.client.calculation.Calculation;
-import org.thechiselgroup.choosel.client.calculation.CountCalculation;
-import org.thechiselgroup.choosel.client.calculation.MaxCalculation;
-import org.thechiselgroup.choosel.client.calculation.MinCalculation;
-import org.thechiselgroup.choosel.client.calculation.SumCalculation;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceByPropertyMultiCategorizer;
+import org.thechiselgroup.choosel.client.util.math.AverageCalculation;
+import org.thechiselgroup.choosel.client.util.math.Calculation;
+import org.thechiselgroup.choosel.client.util.math.CountCalculation;
+import org.thechiselgroup.choosel.client.util.math.MaxCalculation;
+import org.thechiselgroup.choosel.client.util.math.MinCalculation;
+import org.thechiselgroup.choosel.client.util.math.SumCalculation;
 
 public class DefaultViewIntegrationTest {
 
@@ -43,6 +43,26 @@ public class DefaultViewIntegrationTest {
     @Test
     public void averageCalculationOverGroup() {
         testCalculationOverGroup(4d, new AverageCalculation());
+    }
+
+    @Test
+    public void changeSlotMapping() {
+        underTest.getSlotMappingConfiguration().setMapping(
+                numberSlot,
+                new CalculationResourceSetToValueResolver("property1",
+                        new SumCalculation()));
+
+        List<ResourceItem> resourceItems = underTest.getResourceItems();
+        assertEquals(1, resourceItems.size());
+        ResourceItem resourceItem = resourceItems.get(0);
+        resourceItem.getResourceValue(numberSlot);
+
+        underTest.getSlotMappingConfiguration().setMapping(
+                numberSlot,
+                new CalculationResourceSetToValueResolver("property1",
+                        new CountCalculation()));
+
+        assertEquals(3d, resourceItem.getResourceValue(numberSlot));
     }
 
     @Test
@@ -68,15 +88,6 @@ public class DefaultViewIntegrationTest {
         numberSlot = new Slot("id-2", "number-slot", DataType.NUMBER);
 
         underTest = TestView.createTestView(textSlot, numberSlot);
-    }
-
-    @Test
-    public void sumCalculationOverGroup() {
-        testCalculationOverGroup(12d, new SumCalculation());
-    }
-
-    private void testCalculationOverGroup(double expectedResult,
-            Calculation calculation) {
 
         Resource r1 = new Resource("test:1");
         r1.putValue("property1", new Double(0));
@@ -90,9 +101,20 @@ public class DefaultViewIntegrationTest {
         r3.putValue("property1", new Double(8));
         r3.putValue("property2", "value2");
 
-        underTest.getResourceModel().addUnnamedResources(toResourceSet(r1, r2, r3));
+        underTest.getResourceModel().addUnnamedResources(
+                toResourceSet(r1, r2, r3));
         underTest.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("property2"));
+    }
+
+    @Test
+    public void sumCalculationOverGroup() {
+        testCalculationOverGroup(12d, new SumCalculation());
+    }
+
+    private void testCalculationOverGroup(double expectedResult,
+            Calculation calculation) {
+
         underTest.getSlotMappingConfiguration().setMapping(
                 numberSlot,
                 new CalculationResourceSetToValueResolver("property1",

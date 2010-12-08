@@ -22,6 +22,16 @@ import java.util.TreeMap;
 
 import com.google.gwt.core.client.GWT;
 
+/**
+ * Entry point for creating collections (enable use optimized of JavaScript
+ * versions). For tests, regular JavaVersions of the collections are returned,
+ * but for the hosted (developer) mode and compiled script modes, the optimized
+ * JavaScript collections are used.
+ * 
+ * @author Lars Grammel
+ */
+// TODO introduce methods for all kinds of collections (even if not supported)
+// TODO List, Set, Map, SortedSet, SortedMap
 public final class CollectionFactory {
 
     public static <T> LightweightList<T> createLightweightList() {
@@ -30,22 +40,6 @@ public final class CollectionFactory {
         }
 
         return new ArrayListToLightweightListAdapter<T>();
-    }
-
-    public static NumberArray createNumberArray() {
-        if (GWT.isScript() || GWT.isClient()) {
-            return JsDoubleArray.create();
-        }
-
-        return new DefaultNumberArray();
-    }
-
-    public static NumberArray createNumberArray(double... values) {
-        NumberArray array = createNumberArray();
-        for (double value : values) {
-            array.push(value);
-        }
-        return array;
     }
 
     /**

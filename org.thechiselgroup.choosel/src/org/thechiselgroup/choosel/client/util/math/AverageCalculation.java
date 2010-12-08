@@ -13,15 +13,33 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.calculation;
+package org.thechiselgroup.choosel.client.util.math;
 
-import org.thechiselgroup.choosel.client.util.MathUtils;
 
+/**
+ * Calculates the average.
+ * 
+ * @author Lars Grammel
+ */
 public class AverageCalculation implements Calculation {
 
+    /**
+     * @return average value of values
+     */
+    public static double average(NumberArray values) {
+        assert values != null;
+
+        // TODO NaN - what is the average of an empty array?
+        if (values.length() == 0) {
+            return 0;
+        }
+
+        return SumCalculation.sum(values) / values.length();
+    }
+
     @Override
-    public double calculate(double[] values) {
-        return MathUtils.average(values);
+    public double calculate(NumberArray values) {
+        return average(values);
     }
 
     @Override

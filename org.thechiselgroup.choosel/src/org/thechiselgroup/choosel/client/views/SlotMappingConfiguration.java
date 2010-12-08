@@ -19,16 +19,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.thechiselgroup.choosel.client.calculation.AverageCalculation;
-import org.thechiselgroup.choosel.client.calculation.Calculation;
-import org.thechiselgroup.choosel.client.calculation.CountCalculation;
-import org.thechiselgroup.choosel.client.calculation.MaxCalculation;
-import org.thechiselgroup.choosel.client.calculation.MinCalculation;
-import org.thechiselgroup.choosel.client.calculation.SumCalculation;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.client.util.math.AverageCalculation;
+import org.thechiselgroup.choosel.client.util.math.Calculation;
+import org.thechiselgroup.choosel.client.util.math.CountCalculation;
+import org.thechiselgroup.choosel.client.util.math.MaxCalculation;
+import org.thechiselgroup.choosel.client.util.math.MinCalculation;
+import org.thechiselgroup.choosel.client.util.math.SumCalculation;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -88,7 +89,9 @@ public class SlotMappingConfiguration {
      * TODO add semantic meta-information as parameter, e.g. expected return
      * type or context (semantic description of slot?)
      */
-    public Object resolve(Slot slot, String groupID, ResourceSet resources) {
+    public Object resolve(Slot slot, String groupID,
+            LightweightCollection<Resource> resources) {
+
         return getResolver(slot).resolve(resources, groupID);
     }
 

@@ -19,7 +19,7 @@ import static org.junit.Assert.assertArrayEquals;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.client.util.MathUtils;
 
 public class EquidistantBinBoundaryCalculatorTest {
 
@@ -32,7 +32,7 @@ public class EquidistantBinBoundaryCalculatorTest {
         assertArrayEquals(
                 new double[] { 0, 0, 0 },
                 underTest.calculateBinBoundaries(
-                        CollectionFactory.createNumberArray(), 4), DELTA);
+                        MathUtils.createNumberArray(), 4), DELTA);
     }
 
     @Test
@@ -40,7 +40,7 @@ public class EquidistantBinBoundaryCalculatorTest {
         assertArrayEquals(
                 new double[] {},
                 underTest.calculateBinBoundaries(
-                        CollectionFactory.createNumberArray(0d, 10d), 1), DELTA);
+                        MathUtils.createNumberArray(0d, 10d), 1), DELTA);
     }
 
     @Test
@@ -48,7 +48,7 @@ public class EquidistantBinBoundaryCalculatorTest {
         assertArrayEquals(
                 new double[] { 5 },
                 underTest.calculateBinBoundaries(
-                        CollectionFactory.createNumberArray(0d, 10d), 2), DELTA);
+                        MathUtils.createNumberArray(0d, 10d), 2), DELTA);
     }
 
     @Test
@@ -56,7 +56,7 @@ public class EquidistantBinBoundaryCalculatorTest {
         assertArrayEquals(
                 new double[] { 3.333, 6.666 },
                 underTest.calculateBinBoundaries(
-                        CollectionFactory.createNumberArray(0d, 10d), 3), DELTA);
+                        MathUtils.createNumberArray(0d, 10d), 3), DELTA);
     }
 
     @Test
@@ -64,7 +64,7 @@ public class EquidistantBinBoundaryCalculatorTest {
         assertArrayEquals(
                 new double[] { 2.5, 5, 7.5 },
                 underTest.calculateBinBoundaries(
-                        CollectionFactory.createNumberArray(0d, 10d), 4), DELTA);
+                        MathUtils.createNumberArray(0d, 10d), 4), DELTA);
     }
 
     @Test
@@ -72,7 +72,7 @@ public class EquidistantBinBoundaryCalculatorTest {
         assertArrayEquals(
                 new double[] { 2, 4, 6, 8 },
                 underTest.calculateBinBoundaries(
-                        CollectionFactory.createNumberArray(0d, 10d), 5), DELTA);
+                        MathUtils.createNumberArray(0d, 10d), 5), DELTA);
     }
 
     @Test
@@ -80,7 +80,7 @@ public class EquidistantBinBoundaryCalculatorTest {
         assertArrayEquals(
                 new double[] { 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8 },
                 underTest.calculateBinBoundaries(
-                        CollectionFactory.createNumberArray(0d, 2d), 10), DELTA);
+                        MathUtils.createNumberArray(0d, 2d), 10), DELTA);
     }
 
     @Test
@@ -88,7 +88,7 @@ public class EquidistantBinBoundaryCalculatorTest {
         assertArrayEquals(
                 new double[] { -5, 0, 5 },
                 underTest.calculateBinBoundaries(
-                        CollectionFactory.createNumberArray(-10d, 10d), 4),
+                        MathUtils.createNumberArray(-10d, 10d), 4),
                 DELTA);
     }
 
@@ -102,6 +102,6 @@ public class EquidistantBinBoundaryCalculatorTest {
         assertArrayEquals(
                 new double[] { 0 },
                 underTest.calculateBinBoundaries(
-                        CollectionFactory.createNumberArray(0d), 2), DELTA);
+                        MathUtils.createNumberArray(0d), 2), DELTA);
     }
 }

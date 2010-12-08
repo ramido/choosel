@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.calculation;
+package org.thechiselgroup.choosel.client.util.math;
 
 public class CountCalculation implements Calculation {
 
     @Override
-    public double calculate(double[] values) {
-        return values.length;
+    public double calculate(NumberArray values) {
+        return values.length();
     }
 
     @Override

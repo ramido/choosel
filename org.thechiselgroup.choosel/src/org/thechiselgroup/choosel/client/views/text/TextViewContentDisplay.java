@@ -23,10 +23,10 @@ import java.util.List;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
-import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.client.util.MathUtils;
 import org.thechiselgroup.choosel.client.util.collections.CollectionUtils;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.client.util.collections.NumberArray;
+import org.thechiselgroup.choosel.client.util.math.NumberArray;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.Slot;
@@ -283,7 +283,7 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
     private void updateFontSizes() {
         assert !items.isEmpty();
 
-        NumberArray fontSizeValues = CollectionFactory.createNumberArray();
+        NumberArray fontSizeValues = MathUtils.createNumberArray();
         for (TextItem textItem : items) {
             fontSizeValues.push(textItem.getFontSizeSlotValue());
         }
