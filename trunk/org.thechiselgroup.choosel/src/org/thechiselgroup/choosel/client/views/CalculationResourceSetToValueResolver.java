@@ -17,9 +17,9 @@ package org.thechiselgroup.choosel.client.views;
 
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.Resource;
-import org.thechiselgroup.choosel.client.util.MathUtils;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.util.math.Calculation;
+import org.thechiselgroup.choosel.client.util.math.MathUtils;
 import org.thechiselgroup.choosel.client.util.math.NumberArray;
 
 public class CalculationResourceSetToValueResolver implements

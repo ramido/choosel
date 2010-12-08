@@ -16,7 +16,7 @@
 package org.thechiselgroup.choosel.client.windows;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
-import org.thechiselgroup.choosel.client.util.MathUtils;
+import org.thechiselgroup.choosel.client.util.math.MathUtils;
 
 import com.allen_sauer.gwt.dnd.client.AbstractDragController;
 import com.allen_sauer.gwt.dnd.client.util.DOMUtil;

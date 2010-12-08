@@ -19,7 +19,7 @@ import static org.junit.Assert.assertArrayEquals;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.thechiselgroup.choosel.client.util.MathUtils;
+import org.thechiselgroup.choosel.client.util.math.MathUtils;
 
 public class EquidistantBinBoundaryCalculatorTest {
 

@@ -31,7 +31,7 @@ import org.thechiselgroup.choosel.client.ui.ResizingTextBox;
 import org.thechiselgroup.choosel.client.ui.WidgetFactory;
 import org.thechiselgroup.choosel.client.ui.dnd.DragProxyEventReceiver;
 import org.thechiselgroup.choosel.client.ui.popup.DefaultPopupManager;
-import org.thechiselgroup.choosel.client.util.MathUtils;
+import org.thechiselgroup.choosel.client.util.math.MathUtils;
 
 import com.allen_sauer.gwt.dnd.client.util.WidgetLocation;
 import com.google.gwt.core.client.GWT;

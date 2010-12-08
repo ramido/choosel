@@ -15,6 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.util;
 
+import org.thechiselgroup.choosel.client.util.math.MathUtils;
+
 /**
  * Utility library with convenience methods for String operations.
  * 
