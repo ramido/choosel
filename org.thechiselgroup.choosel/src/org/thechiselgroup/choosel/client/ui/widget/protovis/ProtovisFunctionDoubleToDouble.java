@@ -13,20 +13,10 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.ui.widget.chart.protovis;
+package org.thechiselgroup.choosel.client.ui.widget.protovis;
 
-public class EventTypes {
+public interface ProtovisFunctionDoubleToDouble {
 
-    public static final String MOUSEUP = "mouseup";
-
-    public static final String MOUSEOVER = "mouseover";
-
-    public static final String MOUSEOUT = "mouseout";
-
-    public static final String MOUSEMOVE = "mousemove";
-
-    public static final String MOUSEDOWN = "mousedown";
-
-    public static final String CLICK = "click";
+    double f(double value, int i);
 
 }

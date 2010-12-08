@@ -13,12 +13,24 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.ui.widget.chart.protovis;
+package org.thechiselgroup.choosel.client.ui.widget.protovis;
 
-import org.thechiselgroup.choosel.client.views.chart.ChartItem;
+import com.google.gwt.core.client.JavaScriptObject;
 
-public interface ProtovisFunctionBoolean {
+// @formatter:off
+/**
+ * 
+ * @author Bradley Blashko
+ * 
+ */
+public class Behavior extends JavaScriptObject {
 
-    boolean f(ChartItem value, int i);
+    public final static native Behavior select() /*-{
+        return $wnd.pv.Behavior.select();
+    }-*/;
+
+    protected Behavior() {
+    }
 
 }
+// @formatter:on

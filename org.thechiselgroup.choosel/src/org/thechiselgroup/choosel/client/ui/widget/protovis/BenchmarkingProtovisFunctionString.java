@@ -13,12 +13,29 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.ui.widget.chart.protovis;
+package org.thechiselgroup.choosel.client.ui.widget.protovis;
 
 import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
-public interface ProtovisFunctionString {
+public class BenchmarkingProtovisFunctionString implements
+        ProtovisFunctionString {
 
-    String f(ChartItem value, int i);
+    private ProtovisFunctionString delegate;
+
+    public BenchmarkingProtovisFunctionString(ProtovisFunctionString delegate) {
+        this.delegate = delegate;
+    }
+
+    @Override
+    public String f(ChartItem value, int i) {
+        long startTime = System.currentTimeMillis();
+        try {
+            return delegate.f(value, i);
+        } finally {
+            System.err.println(delegate.toString() + " took "
+                    + (System.currentTimeMillis() - startTime) + " ms -- "
+                    + System.currentTimeMillis());
+        }
+    }
 
 }

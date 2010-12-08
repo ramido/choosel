@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.ui.widget.chart.protovis;
+package org.thechiselgroup.choosel.client.ui.widget.protovis;
 
-public interface ProtovisFunctionStringToString {
+@Deprecated
+public interface ProtovisFunctionDoubleWithCache extends ProtovisFunctionDouble {
 
-    String f(String value, int i);
+    @Deprecated
+    void beforeRender();
 
 }

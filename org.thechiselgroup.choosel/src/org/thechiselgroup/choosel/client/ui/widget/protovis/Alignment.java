@@ -13,12 +13,20 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.ui.widget.chart.protovis;
+package org.thechiselgroup.choosel.client.ui.widget.protovis;
 
-import org.thechiselgroup.choosel.client.views.chart.ChartItem;
+public final class Alignment {
 
-public interface ProtovisFunctionDouble {
+    public static final String TOP = "top";
 
-    double f(ChartItem value, int i);
+    public static final String MIDDLE = "middle";
+
+    public static final String BOTTOM = "bottom";
+
+    public static final String LEFT = "left";
+
+    public static final String CENTER = "center";
+
+    public static final String RIGHT = "right";
 
 }

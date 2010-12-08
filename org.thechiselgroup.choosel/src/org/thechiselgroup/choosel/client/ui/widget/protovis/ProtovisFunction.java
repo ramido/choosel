@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.ui.widget.chart;
+package org.thechiselgroup.choosel.client.ui.widget.protovis;
 
-// TODO rename
-public interface ChartWidgetCallback {
+import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
-    void onAttach();
+public interface ProtovisFunction {
 
-    void onResize(int width, int height);
+    void f(ChartItem value, int i);
 
 }

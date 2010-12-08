@@ -17,8 +17,8 @@ package org.thechiselgroup.choosel.client.views.chart;
 
 import java.util.Collections;
 
-import org.thechiselgroup.choosel.client.ui.widget.chart.ChartItemComparator;
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventHandler;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.ChartItemComparator;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisEventHandler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 

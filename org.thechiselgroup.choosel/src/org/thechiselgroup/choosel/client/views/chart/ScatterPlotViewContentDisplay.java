@@ -16,14 +16,14 @@
 package org.thechiselgroup.choosel.client.views.chart;
 
 import org.thechiselgroup.choosel.client.ui.Colors;
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Alignment;
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Dot;
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Label;
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventHandler;
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDoubleWithCache;
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionStringToString;
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Rule;
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Scale;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.Alignment;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.Dot;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.Label;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisEventHandler;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionDoubleWithCache;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionStringToString;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.Rule;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.Scale;
 import org.thechiselgroup.choosel.client.util.collections.ArrayUtils;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;

@@ -13,12 +13,20 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.ui.widget.chart.protovis;
+package org.thechiselgroup.choosel.client.ui.widget.protovis;
 
-import org.thechiselgroup.choosel.client.views.chart.ChartItem;
+public class EventTypes {
 
-public interface ProtovisFunction {
+    public static final String MOUSEUP = "mouseup";
 
-    void f(ChartItem value, int i);
+    public static final String MOUSEOVER = "mouseover";
+
+    public static final String MOUSEOUT = "mouseout";
+
+    public static final String MOUSEMOVE = "mousemove";
+
+    public static final String MOUSEDOWN = "mousedown";
+
+    public static final String CLICK = "click";
 
 }
