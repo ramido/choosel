@@ -19,6 +19,8 @@ import org.thechiselgroup.choosel.client.ui.Colors;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.ResourceItem.Subset;
+import org.thechiselgroup.choosel.client.views.Slot;
 
 import com.google.gwt.user.client.Event;
 
@@ -35,7 +37,7 @@ public class ChartItem {
 
         this.view = view;
         this.resourceItem = resourceItem;
-        this.enabler = dragEnablerFactory.createDragEnabler(resourceItem);
+        enabler = dragEnablerFactory.createDragEnabler(resourceItem);
     }
 
     public String getColour() {
@@ -56,6 +58,10 @@ public class ChartItem {
 
     public ResourceItem getResourceItem() {
         return resourceItem;
+    }
+
+    public double getResourceValueAsNumber(Slot slot, Subset subset) {
+        return (Double) resourceItem.getResourceValue(slot, subset);
     }
 
     public ChartViewContentDisplay getView() {

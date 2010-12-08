@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.ui.widget.chart.protovis;
+package org.thechiselgroup.choosel.client.ui.widget.chart;
 
-@Deprecated
-public interface ProtovisFunctionDoubleWithCache extends ProtovisFunctionDouble {
+// TODO rename
+public interface ChartWidgetCallback {
 
-    @Deprecated
-    void beforeRender();
+    void onAttach();
+
+    void onResize(int width, int height);
 
 }

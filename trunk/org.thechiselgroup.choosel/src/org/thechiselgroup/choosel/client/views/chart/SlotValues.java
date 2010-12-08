@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.ui.widget.chart;
+package org.thechiselgroup.choosel.client.views.chart;
 
 import org.thechiselgroup.choosel.client.util.collections.ArrayUtils;
 

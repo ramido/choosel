@@ -47,6 +47,7 @@ public class Panel extends Mark {
         return this.anchor(anchor);
     }-*/;
 
+    
     public final native Panel bottom(double bottom) /*-{
         return this.bottom(bottom);
     }-*/;

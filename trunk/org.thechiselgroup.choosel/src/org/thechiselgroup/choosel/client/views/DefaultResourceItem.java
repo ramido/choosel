@@ -37,8 +37,9 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 
 /**
- * Default implementation of {@link ResourceItem}. Provides caching for
- * calculated slot values and for hightlighting and selection status.
+ * Default implementation of {@link ResourceItem}. <b>PERFORMANCE NOTE</b>:
+ * Provides caching for calculated slot values and for highlighting and
+ * selection status.
  * 
  * @author Lars Grammel
  */
@@ -78,22 +79,22 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
     private SubsetStatus cachedSelectedStatus = null;
 
     /**
-     * Cache for the resolved slot values of ALL subset. Maps the slot id to the
-     * value.
+     * PERFORMANCE: Cache for the resolved slot values of ALL subset. Maps the
+     * slot id to the value.
      */
     private Map<String, Object> allSubsetSlotValueCache = CollectionFactory
             .createStringMap();
 
     /**
-     * Cache for the resolved slot values of SELECTED subset. Maps the slot id
-     * to the value.
+     * PERFORMANCE: Cache for the resolved slot values of SELECTED subset. Maps
+     * the slot id to the value.
      */
     private Map<String, Object> highlightedSubsetSlotValueCache = CollectionFactory
             .createStringMap();
 
     /**
-     * Cache for the resolved slot values of HIGHLIGHTED subset. Maps the slot
-     * id to the value.
+     * PERFORMANCE: Cache for the resolved slot values of HIGHLIGHTED subset.
+     * Maps the slot id to the value.
      */
     private Map<String, Object> selectedSubsetSlotValueCache = CollectionFactory
             .createStringMap();

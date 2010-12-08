@@ -15,13 +15,120 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.chart;
 
-import org.thechiselgroup.choosel.client.ui.widget.chart.CircularBarChart;
+import org.thechiselgroup.choosel.client.ui.Colors;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Alignment;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Dot;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Label;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventHandler;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDouble;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDoubleToDouble;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDoubleWithCache;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Scale;
+import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Wedge;
+import org.thechiselgroup.choosel.client.util.collections.ArrayUtils;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 
-import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
+//Version of Pie chart with the average of the area 
+//and the radius calculations for proportional highlighting.
+//(i.e. ratio + sqrt(ratio) / 2)
 public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay {
+
+    private double[] highlightedWedgeCounts;
+
+    private double[] regularWedgeCounts;
+
+    private static final int MARGIN_SIZE = 15;
+
+    private ProtovisFunctionDoubleWithCache highlightedWedgeOuterRadius = new ProtovisFunctionDoubleWithCache() {
+
+        @Override
+        public void beforeRender() {
+            if (chartItems.isEmpty()) {
+                return;
+            }
+
+            highlightedWedgeCounts = new double[chartItems.size()];
+
+            for (int i = 0; i < chartItems.size(); i++) {
+                highlightedWedgeCounts[i] = calculateHighlightedResources(i);
+            }
+
+        }
+
+        @Override
+        public double f(ChartItem value, int i) {
+            return regularWedgeOuterRadius.f(value, i)
+                    * highlightedWedgeCounts[i] / regularWedgeCounts[i];
+        }
+    };
+
+    private double sum;
+
+    private ProtovisFunctionDoubleWithCache regularWedgeOuterRadius = new ProtovisFunctionDoubleWithCache() {
+        @Override
+        public void beforeRender() {
+            if (chartItems.isEmpty()) {
+                return;
+            }
+
+            regularWedgeCounts = new double[chartItems.size()];
+
+            for (int i = 0; i < chartItems.size(); i++) {
+                regularWedgeCounts[i] = calculateAllResources(i);
+            }
+
+        }
+
+        @Override
+        public double f(ChartItem value, int i) {
+            return regularWedgeCounts[i]
+                    * (Math.min(height, width) - MARGIN_SIZE)
+                    / (ArrayUtils.max(regularWedgeCounts) * 2);
+        }
+    };
+
+    private Wedge regularWedge;
+
+    private Wedge highlightedWedge;
+
+    private ProtovisFunctionDouble wedgeLeft = new ProtovisFunctionDouble() {
+        @Override
+        public double f(ChartItem value, int i) {
+            return width / 2;
+        }
+    };
+
+    private ProtovisFunctionDouble wedgeBottom = new ProtovisFunctionDouble() {
+        @Override
+        public double f(ChartItem value, int i) {
+            return height / 2;
+        }
+    };
+
+    private ProtovisFunctionDouble wedgeAngle = new ProtovisFunctionDouble() {
+        @Override
+        public double f(ChartItem value, int i) {
+            return 2 * Math.PI / chartItems.size();
+        }
+    };
+
+    private String wedgeLabelAnchor = Alignment.CENTER;
+
+    private int wedgeTextAngle = 0;
+
+    private int highlightedWedgeInnerRadius = 0;
+
+    private ProtovisFunctionDoubleToDouble scaleRadius = new ProtovisFunctionDoubleToDouble() {
+        @Override
+        public double f(double value, int i) {
+            return value * (Math.min(height, width) - MARGIN_SIZE)
+                    / (getMaximumChartItemValue() * 2);
+        }
+    };
+
+    private int scaleLineWidth = 1;
 
     @Inject
     public CircularBarChartViewContentDisplay(
@@ -31,9 +138,76 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
     }
 
     @Override
-    public Widget createWidget() {
-        chartWidget = new CircularBarChart();
-        return chartWidget;
+    protected void beforeRender() {
+        super.beforeRender();
+        highlightedWedgeOuterRadius.beforeRender();
+        regularWedgeOuterRadius.beforeRender();
+    }
+
+    private void calculateAllResourcesSum() {
+        sum = 0;
+        for (int i = 0; i < chartItems.size(); i++) {
+            sum += calculateAllResources(i);
+        }
+    }
+
+    @Override
+    public void drawChart() {
+        assert chartItems.size() >= 1;
+
+        calculateMaximumChartItemValue();
+        drawScale();
+        drawWedge();
+    }
+
+    private void drawScale() {
+        Scale scale = Scale.linear(0, getMaximumChartItemValue()).range(0,
+                Math.min(height, width) - MARGIN_SIZE);
+
+        chart.add(Dot.createDot()).data(scale.ticks()).left(width / 2)
+                .bottom(height / 2).fillStyle("").strokeStyle(Colors.GRAY_1)
+                .lineWidth(scaleLineWidth).radius(scaleRadius);
+    }
+
+    private void drawWedge() {
+        calculateAllResourcesSum();
+
+        regularWedge = chart.add(Wedge.createWedge())
+                .data(ArrayUtils.toJsArray(chartItems)).left(wedgeLeft)
+                .bottom(wedgeBottom).outerRadius(regularWedgeOuterRadius)
+                .angle(wedgeAngle).strokeStyle(Colors.WHITE);
+
+        if (hasPartiallyHighlightedChartItems()) {
+            regularWedge.innerRadius(highlightedWedgeOuterRadius).fillStyle(
+                    Colors.STEELBLUE);
+
+            regularWedge.anchor(wedgeLabelAnchor).add(Label.createLabel())
+                    .textAngle(wedgeTextAngle).text(regularMarkLabelText)
+                    .textStyle(Colors.WHITE);
+
+            highlightedWedge = regularWedge.add(Wedge.createWedge())
+                    .innerRadius(highlightedWedgeInnerRadius)
+                    .outerRadius(highlightedWedgeOuterRadius)
+                    .fillStyle(Colors.YELLOW);
+
+            highlightedWedge.anchor(wedgeLabelAnchor).add(Label.createLabel())
+                    .textAngle(wedgeTextAngle).text(highlightedMarkLabelText);
+
+            return;
+        }
+
+        regularWedge.innerRadius(0).fillStyle(chartFillStyle);
+
+        regularWedge.anchor(wedgeLabelAnchor).add(Label.createLabel())
+                .textAngle(wedgeTextAngle).text(fullMarkLabelText)
+                .textStyle(fullMarkTextStyle);
+
+    }
+
+    @Override
+    protected void registerEventHandler(String eventType,
+            ProtovisEventHandler handler) {
+        regularWedge.event(eventType, handler);
     }
 
 }
