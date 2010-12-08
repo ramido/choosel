@@ -13,20 +13,15 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.ui.widget.chart.protovis;
+package org.thechiselgroup.choosel.client.ui.widget.protovis;
 
-public final class Alignment {
+/**
+ * Function that return <code>String</code> and takes no arguments.
+ * 
+ * @author Lars Grammel
+ */
+public interface ProtovisFunctionStringNoArgs {
 
-    public static final String TOP = "top";
-
-    public static final String MIDDLE = "middle";
-
-    public static final String BOTTOM = "bottom";
-
-    public static final String LEFT = "left";
-
-    public static final String CENTER = "center";
-
-    public static final String RIGHT = "right";
+    String f();
 
 }

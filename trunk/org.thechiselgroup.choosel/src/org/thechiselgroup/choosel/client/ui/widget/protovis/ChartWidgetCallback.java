@@ -13,10 +13,13 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.ui.widget.chart.protovis;
+package org.thechiselgroup.choosel.client.ui.widget.protovis;
 
-public interface ProtovisFunctionDoubleToDouble {
+// TODO rename
+public interface ChartWidgetCallback {
 
-    double f(double value, int i);
+    void onAttach();
+
+    void onResize(int width, int height);
 
 }

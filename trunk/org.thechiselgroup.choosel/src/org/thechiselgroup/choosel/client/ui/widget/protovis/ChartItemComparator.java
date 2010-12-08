@@ -13,15 +13,28 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.ui.widget.chart.protovis;
+package org.thechiselgroup.choosel.client.ui.widget.protovis;
 
-/**
- * Function that return <code>String</code> and takes no arguments.
- * 
- * @author Lars Grammel
- */
-public interface ProtovisFunctionStringNoArgs {
+import java.util.Comparator;
 
-    String f();
+import org.thechiselgroup.choosel.client.views.Slot;
+import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
+public class ChartItemComparator implements Comparator<ChartItem> {
+
+    private Slot slot;
+
+    public ChartItemComparator(Slot slot) {
+        this.slot = slot;
+    }
+
+    @Override
+    public int compare(ChartItem item1, ChartItem item2) {
+        return getDescriptionString(item1).compareTo(
+                getDescriptionString(item2));
+    }
+
+    private String getDescriptionString(ChartItem item) {
+        return item.getResourceItem().getResourceValue(slot).toString();
+    }
 }

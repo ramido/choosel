@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.ui.widget.chart;
+package org.thechiselgroup.choosel.client.ui.widget.protovis;
 
 import org.thechiselgroup.choosel.client.ui.CSS;
 import org.thechiselgroup.choosel.client.ui.Colors;
 import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Panel;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;

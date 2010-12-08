@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.ui.widget.chart.protovis;
+package org.thechiselgroup.choosel.client.ui.widget.protovis;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -48,52 +48,52 @@ public abstract class Mark extends JavaScriptObject {
      */
 
     // @formatter:off
-    public static final native JavaScriptObject getFunction(
-            JavaScriptObject _this, ProtovisFunction f) /*-{
-        return function(d) 
-             { return f.@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunction::f(Lorg/thechiselgroup/choosel/client/views/chart/ChartItem;I)(d,_this.index);}
-    }-*/;
-    
-    public static final native JavaScriptObject getFunctionBoolean(
-            JavaScriptObject _this, ProtovisFunctionBoolean f) /*-{
-        return function(d) 
-            { return f.@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionBoolean::f(Lorg/thechiselgroup/choosel/client/views/chart/ChartItem;I)(d,_this.index);}
-    }-*/;
-
-    public static final native JavaScriptObject getFunctionDouble(
-            JavaScriptObject _this, ProtovisFunctionDouble f) /*-{
-        return function(d) 
-            { return f.@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDouble::f(Lorg/thechiselgroup/choosel/client/views/chart/ChartItem;I)(d,_this.index);}
-    }-*/;
-
-    public static final native JavaScriptObject getFunctionDoubleToDouble(
-            JavaScriptObject _this, ProtovisFunctionDoubleToDouble f) /*-{
-        return function(d) 
-            { return f.@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDoubleToDouble::f(DI)(d,_this.index);}
-    }-*/;
-    
-    public static final native JavaScriptObject getFunctionString(
-            JavaScriptObject _this, ProtovisFunctionString f) /*-{
-        return function(d) 
-            { return f.@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionString::f(Lorg/thechiselgroup/choosel/client/views/chart/ChartItem;I)(d,_this.index); };
-    }-*/;
-    
-    public static final native JavaScriptObject getFunctionStringToString(
-            JavaScriptObject _this, ProtovisFunctionStringToString f) /*-{
-        return function(d) 
-            { return f.@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionStringToString::f(Ljava/lang/String;I)(d.toString(),_this.index);}
-    }-*/;
-
     public static final native JavaScriptObject registerEvent(
             JavaScriptObject _this, ProtovisEventHandler handler) /*-{
         return function() 
-            { return handler.@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventHandler::handleEvent(Lcom/google/gwt/user/client/Event;I)($wnd.pv.event, _this.index);}
+            { return handler.@org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisEventHandler::handleEvent(Lcom/google/gwt/user/client/Event;I)($wnd.pv.event, _this.index);}
+    }-*/;
+
+    public static final native JavaScriptObject toJavaScriptFunction(
+            JavaScriptObject _this, ProtovisFunction f) /*-{
+        return function(d) 
+             { return f.@org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunction::f(Lorg/thechiselgroup/choosel/client/views/chart/ChartItem;I)(d,_this.index);}
+    }-*/;
+
+    public static final native JavaScriptObject toJavaScriptFunction(
+            JavaScriptObject _this, ProtovisFunctionBoolean f) /*-{
+        return function(d) 
+            { return f.@org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionBoolean::f(Lorg/thechiselgroup/choosel/client/views/chart/ChartItem;I)(d,_this.index);}
+    }-*/;
+
+    public static final native JavaScriptObject toJavaScriptFunction(
+            JavaScriptObject _this, ProtovisFunctionDouble f) /*-{
+        return function(d) 
+            { return f.@org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionDouble::f(Lorg/thechiselgroup/choosel/client/views/chart/ChartItem;I)(d,_this.index);}
+    }-*/;
+    
+    public static final native JavaScriptObject toJavaScriptFunction(
+            JavaScriptObject _this, ProtovisFunctionDoubleToDouble f) /*-{
+        return function(d) 
+            { return f.@org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionDoubleToDouble::f(DI)(d,_this.index);}
+    }-*/;
+    
+    public static final native JavaScriptObject toJavaScriptFunction(
+            JavaScriptObject _this, ProtovisFunctionString f) /*-{
+        return function(d) 
+            { return f.@org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionString::f(Lorg/thechiselgroup/choosel/client/views/chart/ChartItem;I)(d,_this.index); };
     }-*/;
 
     public static final native JavaScriptObject toJavaScriptFunction(
             JavaScriptObject _this, ProtovisFunctionStringNoArgs f) /*-{
         return function() 
-            { return f.@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionStringNoArgs::f()();}
+            { return f.@org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionStringNoArgs::f()();}
+    }-*/;
+
+    public static final native JavaScriptObject toJavaScriptFunction(
+            JavaScriptObject _this, ProtovisFunctionStringToString f) /*-{
+        return function(d) 
+            { return f.@org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionStringToString::f(Ljava/lang/String;I)(d.toString(),_this.index);}
     }-*/;
     // @formatter:on
 
