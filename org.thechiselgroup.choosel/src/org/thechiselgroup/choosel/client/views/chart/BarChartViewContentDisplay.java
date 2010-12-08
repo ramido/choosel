@@ -442,7 +442,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
                 LayoutType layout = LayoutType.valueOf(layoutBox
                         .getValue(layoutBox.getSelectedIndex()));
                 setLayout(layout);
-                updateChart();
+                buildChart();
             }
         });
         panel.add(layoutBox);
