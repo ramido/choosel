@@ -16,6 +16,8 @@
 package org.thechiselgroup.choosel.client.views;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doAnswer;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.toResourceSet;
 
 import java.util.List;
@@ -23,8 +25,11 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceByPropertyMultiCategorizer;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.util.math.AverageCalculation;
 import org.thechiselgroup.choosel.client.util.math.Calculation;
 import org.thechiselgroup.choosel.client.util.math.CountCalculation;
@@ -126,4 +131,43 @@ public class DefaultViewIntegrationTest {
         assertEquals(expectedResult, resourceItem.getResourceValue(numberSlot));
     }
 
+    /**
+     * Shows the bug that happens when the default view gets notified of the
+     * slot update before the ResourceItems are cleaned (by getting notification
+     * of the slot update). The resource items need to get the notification
+     * first to clean their caching.
+     */
+    @Test
+    public void viewContentUpdateAfterChangedSlotMapping() {
+        underTest.getSlotMappingConfiguration().setMapping(
+                numberSlot,
+                new CalculationResourceSetToValueResolver("property1",
+                        new SumCalculation()));
+
+        List<ResourceItem> resourceItems = underTest.getResourceItems();
+        assertEquals(1, resourceItems.size());
+        final ResourceItem resourceItem = resourceItems.get(0);
+        resourceItem.getResourceValue(numberSlot);
+
+        /*
+         * XXX contentDisplay must not be inlined in when part, otherwise
+         * Mockito will throw UnfinishedStubbingException.
+         */
+        ViewContentDisplay contentDisplay = underTest.getContentDisplay();
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) {
+                assertEquals(3d, resourceItem.getResourceValue(numberSlot));
+                return null;
+            }
+        }).when(contentDisplay).update(any(LightweightCollection.class),
+                any(LightweightCollection.class),
+                any(LightweightCollection.class),
+                any(LightweightCollection.class));
+
+        underTest.getSlotMappingConfiguration().setMapping(
+                numberSlot,
+                new CalculationResourceSetToValueResolver("property1",
+                        new CountCalculation()));
+    }
 }

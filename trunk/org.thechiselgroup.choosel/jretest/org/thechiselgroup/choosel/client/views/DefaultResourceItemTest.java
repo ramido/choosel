@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.client.views;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -36,6 +37,7 @@ import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
+import org.thechiselgroup.choosel.client.util.event.EventHandlerPriority;
 import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
 import org.thechiselgroup.choosel.client.views.ResourceItem.Subset;
 import org.thechiselgroup.choosel.client.views.ResourceItem.SubsetStatus;
@@ -64,7 +66,8 @@ public class DefaultResourceItemTest {
     private SlotMappingChangedHandler captureSlotMappingChangedHandler() {
         ArgumentCaptor<SlotMappingChangedHandler> captor = ArgumentCaptor
                 .forClass(SlotMappingChangedHandler.class);
-        verify(slotMappingConfiguration, times(1)).addHandler(captor.capture());
+        verify(slotMappingConfiguration, times(1)).addHandler(captor.capture(),
+                any(EventHandlerPriority.class));
         return captor.getValue();
     }
 
