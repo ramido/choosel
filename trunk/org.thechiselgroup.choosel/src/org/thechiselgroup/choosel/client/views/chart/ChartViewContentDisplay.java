@@ -46,8 +46,8 @@ import com.google.inject.Inject;
  * An abstract ViewContentDisplay class which any Protovis chart's specific
  * ViewContentDisplay can extend.
  * 
- * @author bblashko
- * 
+ * @author Bradley Blashko
+ * @author Lars Grammel
  */
 public abstract class ChartViewContentDisplay extends
         AbstractViewContentDisplay implements ChartWidgetCallback {
@@ -146,8 +146,6 @@ public abstract class ChartViewContentDisplay extends
 
     private DragEnablerFactory dragEnablerFactory;
 
-    public boolean hadPartiallyHighlightedItemsOnLastUpdate = false;
-
     int width;
 
     int height;
@@ -164,12 +162,37 @@ public abstract class ChartViewContentDisplay extends
     }
 
     /**
+     * Called after the rendering is finished. Subclasses can override this
+     * method to clear temporary objects that were constructed for the rendering
+     * process.
+     */
+    protected void afterRender() {
+    }
+
+    /**
      * Is called before the chart is rendered. Subclasses can override this
      * method to recalculate values that are used for all resource item specific
      * calls from Protovis.
      */
     protected void beforeRender() {
         calculateMaximumChartItemValue();
+    }
+
+    /**
+     * Builds a new chart. The current chart is abandoned and a new Protovis
+     * panel is used.
+     */
+    protected void buildChart() {
+        chart = chartWidget.createChartPanel();
+        if (chartItems.size() == 0) {
+            chart.height(height).width(width);
+        } else {
+            drawChart();
+            registerEventHandlers();
+        }
+
+        // XXX how often are event listeners assigned? are they removed?
+        renderChart();
     }
 
     protected double calculateAllResources(int i) {
@@ -271,15 +294,6 @@ public abstract class ChartViewContentDisplay extends
         return new SlotValues(slotValues);
     }
 
-    /**
-     * @return whether or not there is one or more newly partially highlighted
-     *         items while there was none before (or vice versa)
-     */
-    public boolean hasPartialHighlightStatusChanged() {
-        return (!hadPartiallyHighlightedItemsOnLastUpdate && hasPartiallyHighlightedChartItems())
-                || (hadPartiallyHighlightedItemsOnLastUpdate && !hasPartiallyHighlightedChartItems());
-    }
-
     public boolean hasPartiallyHighlightedChartItems() {
         for (ChartItem chartItem : chartItems) {
             Status status = chartItem.getResourceItem().getStatus();
@@ -303,7 +317,7 @@ public abstract class ChartViewContentDisplay extends
     @Override
     public void onAttach() {
         if (chart == null) {
-            updateChart();
+            buildChart();
         }
     }
 
@@ -333,13 +347,19 @@ public abstract class ChartViewContentDisplay extends
      * Renders the chart. The chart structure does not change, just the
      * attributes of the SVG elements are updated.
      */
-    private void renderChart() {
-        // TODO instead of isRendering flag, remove event listeners before
-        // rendering starts and add them again after rendering is finished.
+    protected void renderChart() {
+        /*
+         * XXX re-rendering with layout requires reset see
+         * "http://groups.google.com/group/protovis/browse_thread/thread/b9032215a2f5ac25"
+         * 
+         * TODO instead of isRendering flag, remove event listeners before
+         * rendering starts and add them again after rendering is finished.
+         */
         try {
             isRendering = true;
             beforeRender();
             chart.render();
+            afterRender(); // TODO move into finally block?
         } finally {
             isRendering = false;
         }
@@ -352,7 +372,7 @@ public abstract class ChartViewContentDisplay extends
 
         this.width = width;
         this.height = height;
-        updateChart(); // TODO render chart good enough?
+        buildChart(); // TODO render chart good enough?
     }
 
     // TODO implement
@@ -398,38 +418,16 @@ public abstract class ChartViewContentDisplay extends
 
         /*
          * PERFORMANCE only rebuild the chart SVG DOM elements when structure
-         * changes, otherwise just update their attributes.
+         * changes (i.e. resource items are added or removed), otherwise just
+         * update their attributes.
          * 
-         * XXX Updates in size require the reconstruction of the chart,
-         * otherwise the changes will only be visible after a mouseover.
-         * 
-         * TODO fix this - structural changes should only be required when
-         * adding / removing resource items.
+         * TODO check if rebuild is required if structure changes or if
+         * rendering is sufficient
          */
         if (!addedResourceItems.isEmpty() || !removedResourceItems.isEmpty()) {
-            // || hasPartialHighlightStatusChanged()
-            // || !changedSlots.isEmpty()
-            updateChart();
+            buildChart();
         } else {
             renderChart();
         }
-
-        hadPartiallyHighlightedItemsOnLastUpdate = hasPartiallyHighlightedChartItems();
-    }
-
-    // re-rendering requires reset?
-    // see
-    // http://groups.google.com/group/protovis/browse_thread/thread/b9032215a2f5ac25
-    public void updateChart() {
-        chart = chartWidget.createChartPanel();
-        if (chartItems.size() == 0) {
-            chart.height(height).width(width);
-        } else {
-            drawChart();
-            registerEventHandlers();
-        }
-
-        // XXX how often are event listeners assigned? are they removed?
-        renderChart();
     }
 }
