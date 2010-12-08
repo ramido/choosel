@@ -21,7 +21,6 @@ import org.thechiselgroup.choosel.client.ui.widget.protovis.Dot;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Label;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisEventHandler;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionDouble;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionDoubleWithCache;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionString;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionStringToString;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Rule;
@@ -48,7 +47,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
 
     protected double chartWidth;
 
-    private ProtovisFunctionDouble dotLeft = new ProtovisFunctionDouble() {
+    private ProtovisFunctionDouble<ChartItem> dotLeft = new ProtovisFunctionDouble<ChartItem>() {
 
         @Override
         public double f(ChartItem value, int index) {
@@ -57,7 +56,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
         }
     };
 
-    private ProtovisFunctionDoubleWithCache dotBottom = new ProtovisFunctionDoubleWithCache() {
+    private ProtovisFunctionDoubleWithCache<ChartItem> dotBottom = new ProtovisFunctionDoubleWithCache<ChartItem>() {
 
         @Override
         public void beforeRender() {
@@ -92,7 +91,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
 
     private Dot regularDot;
 
-    private ProtovisFunctionDouble baselineLabelLeft = new ProtovisFunctionDouble() {
+    private ProtovisFunctionDouble<ChartItem> baselineLabelLeft = new ProtovisFunctionDouble<ChartItem>() {
         @Override
         public double f(ChartItem value, int i) {
             return dotLeft.f(value, i);
@@ -184,7 +183,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
 
     // @formatter:off
     public native void drawSelectionBox() /*-{
-        var chart = this.@org.thechiselgroup.choosel.client.views.chart.DotChartViewContentDisplay::chart,
+        var chart = this.@org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay::chart,
         eventToggle = true,
         fade,
         s, 
@@ -219,7 +218,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
             .events("all")
             .event("mousedown", function(d) {
                 var doReturn;
-                for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.client.views.chart.DotChartViewContentDisplay::chartItems.@java.util.ArrayList::size()(); i++) {
+                for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay::chartItems.@java.util.ArrayList::size()(); i++) {
                     if(isInSelectionBox(d,i)) {
                         updateMinusPlus(d,i);
                         thisChart.@org.thechiselgroup.choosel.client.views.chart.DotChartViewContentDisplay::deselectResources(I)(i);
@@ -232,7 +231,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
                 }
             })
             .event("mouseover", function(d) {
-                for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.client.views.chart.DotChartViewContentDisplay::chartItems.@java.util.ArrayList::size()(); i++) {
+                for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay::chartItems.@java.util.ArrayList::size()(); i++) {
                     if(isInSelectionBox(d,i)) {
                         return this.fillStyle("FFFFE1");
                     }
@@ -256,7 +255,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
             .events("all")
             .event("mousedown", function(d) {
                 var doReturn;
-                for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.client.views.chart.DotChartViewContentDisplay::chartItems.@java.util.ArrayList::size()(); i++) {
+                for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay::chartItems.@java.util.ArrayList::size()(); i++) {
                     if(isInSelectionBox(d,i)) {
                         updateMinusPlus(d,i);
                         thisChart.@org.thechiselgroup.choosel.client.views.chart.DotChartViewContentDisplay::selectResources(I)(i);
@@ -269,7 +268,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
                 }
             })
             .event("mouseover", function(d) {
-                for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.client.views.chart.DotChartViewContentDisplay::chartItems.@java.util.ArrayList::size()(); i++) {
+                for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay::chartItems.@java.util.ArrayList::size()(); i++) {
                     if(isInSelectionBox(d,i)) {
                         return this.fillStyle("FFFFE1");
                     }
@@ -284,7 +283,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
             .font("bold");
 
         function addBoxes(d) {
-            for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.client.views.chart.DotChartViewContentDisplay::chartItems.@java.util.ArrayList::size()(); i++) {
+            for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay::chartItems.@java.util.ArrayList::size()(); i++) {
                 if(isInSelectionBox(d,i)) {
                     plusBox.visible(true);
                     plus.visible(true);
@@ -323,7 +322,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
             s.y1 = d.y;
             s.y2 = d.y + d.dy;
 
-            for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.client.views.chart.DotChartViewContentDisplay::chartItems.@java.util.ArrayList::size()(); i++) {
+            for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay::chartItems.@java.util.ArrayList::size()(); i++) {
                 if(isInSelectionBox(d,i)) {
                     thisChart.@org.thechiselgroup.choosel.client.views.chart.DotChartViewContentDisplay::highlightResources(I)(i);
                 } else {

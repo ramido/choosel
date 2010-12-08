@@ -44,7 +44,7 @@ public class Dot extends Mark {
         return this.angle(angle);
     }-*/;
 
-    public final native Dot angle(ProtovisFunctionDouble f) /*-{
+    public final native Dot angle(ProtovisFunctionDouble<?> f) /*-{
         return this.angle(@org.thechiselgroup.choosel.client.ui.widget.protovis.Mark::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/protovis/ProtovisFunctionDouble;)(this,f));
     }-*/;
 

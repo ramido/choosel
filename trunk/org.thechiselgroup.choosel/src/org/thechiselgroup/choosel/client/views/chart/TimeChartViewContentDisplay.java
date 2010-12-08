@@ -35,12 +35,12 @@ public class TimeChartViewContentDisplay extends ChartViewContentDisplay {
     // @formatter:off
     @Override
     public native void drawChart() /*-{
-        var chart = this.@org.thechiselgroup.choosel.client.views.chart.TimeChartViewContentDisplay::chart,
+        var chart = this.@org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay::chart,
         val = new Array();
 
         this.@org.thechiselgroup.choosel.client.views.chart.TimeChartViewContentDisplay::sortByDate()();
 
-        for(var i = 0; i < this.@org.thechiselgroup.choosel.client.views.chart.TimeChartViewContentDisplay::chartItems.@java.util.ArrayList::size()(); i++) {
+        for(var i = 0; i < this.@org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay::chartItems.@java.util.ArrayList::size()(); i++) {
             var xCoord = this.@org.thechiselgroup.choosel.client.views.chart.TimeChartViewContentDisplay::getSlotValue(II)(i,0);
             val[i] = {x: new $wnd.Date(xCoord),
                 y: this.@org.thechiselgroup.choosel.client.views.chart.TimeChartViewContentDisplay::getSlotValue(II)(i,1)};
@@ -49,8 +49,8 @@ public class TimeChartViewContentDisplay extends ChartViewContentDisplay {
         var start = val[0].x;
         var end = val[val.length - 1].x
 
-        var w = this.@org.thechiselgroup.choosel.client.views.chart.TimeChartViewContentDisplay::width - 25,
-            h1 = this.@org.thechiselgroup.choosel.client.views.chart.TimeChartViewContentDisplay::height - 60,
+        var w = this.@org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay::width - 25,
+            h1 = this.@org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay::height - 60,
             h2 = 30,
             x = $wnd.pv.Scale.linear(start, end).range(0, w),
             y = $wnd.pv.Scale.linear(0, $wnd.pv.max(val, function(d) {return d.y;})).range(0, h2);
