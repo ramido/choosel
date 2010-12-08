@@ -24,6 +24,8 @@ import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.client.util.event.EventHandlerPriority;
+import org.thechiselgroup.choosel.client.util.event.PrioritizedHandlerManager;
 import org.thechiselgroup.choosel.client.util.math.AverageCalculation;
 import org.thechiselgroup.choosel.client.util.math.Calculation;
 import org.thechiselgroup.choosel.client.util.math.CountCalculation;
@@ -31,7 +33,6 @@ import org.thechiselgroup.choosel.client.util.math.MaxCalculation;
 import org.thechiselgroup.choosel.client.util.math.MinCalculation;
 import org.thechiselgroup.choosel.client.util.math.SumCalculation;
 
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 public class SlotMappingConfiguration {
@@ -46,20 +47,24 @@ public class SlotMappingConfiguration {
 
     private static final String MEMENTO_KEY_TYPE = "type";
 
-    private transient HandlerManager eventBus;
+    private transient PrioritizedHandlerManager handlerManager;
 
     private Map<Slot, ResourceSetToValueResolver> slotsToValueResolvers = new HashMap<Slot, ResourceSetToValueResolver>();
 
     private Map<String, Slot> slotsByID = CollectionFactory.createStringMap();
 
     public SlotMappingConfiguration() {
-        eventBus = new HandlerManager(this);
+        handlerManager = new PrioritizedHandlerManager(this);
     }
 
-    public HandlerRegistration addHandler(SlotMappingChangedHandler handler) {
-        assert handler != null;
+    public HandlerRegistration addHandler(SlotMappingChangedHandler handler,
+            EventHandlerPriority priority) {
 
-        return eventBus.addHandler(SlotMappingChangedEvent.TYPE, handler);
+        assert handler != null;
+        assert priority != null;
+
+        return handlerManager.addHandler(SlotMappingChangedEvent.TYPE, handler,
+                priority);
     }
 
     public boolean containsResolver(Slot slot) {
@@ -186,7 +191,7 @@ public class SlotMappingConfiguration {
         assert resolver != null;
 
         slotsToValueResolvers.put(slot, resolver);
-        eventBus.fireEvent(new SlotMappingChangedEvent(slot));
+        handlerManager.fireEvent(new SlotMappingChangedEvent(slot));
     }
 
 }

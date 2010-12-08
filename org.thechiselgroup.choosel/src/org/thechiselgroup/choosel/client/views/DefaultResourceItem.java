@@ -30,6 +30,7 @@ import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.client.util.event.EventHandlerPriority;
 
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
@@ -335,7 +336,7 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
                 selectedSubsetSlotValueCache.remove(slotId);
                 highlightedSubsetSlotValueCache.remove(slotId);
             }
-        });
+        }, EventHandlerPriority.FIRST);
     }
 
     private void initHighlighting() {
