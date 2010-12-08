@@ -13,12 +13,27 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.ui.widget.protovis;
+package org.thechiselgroup.choosel.client.views.chart;
 
-import org.thechiselgroup.choosel.client.views.chart.ChartItem;
+import java.util.Comparator;
 
-public interface ProtovisFunctionString {
+import org.thechiselgroup.choosel.client.views.Slot;
 
-    String f(ChartItem value, int i);
+public class ChartItemComparator implements Comparator<ChartItem> {
 
+    private Slot slot;
+
+    public ChartItemComparator(Slot slot) {
+        this.slot = slot;
+    }
+
+    @Override
+    public int compare(ChartItem item1, ChartItem item2) {
+        return getDescriptionString(item1).compareTo(
+                getDescriptionString(item2));
+    }
+
+    private String getDescriptionString(ChartItem item) {
+        return item.getResourceItem().getResourceValue(slot).toString();
+    }
 }

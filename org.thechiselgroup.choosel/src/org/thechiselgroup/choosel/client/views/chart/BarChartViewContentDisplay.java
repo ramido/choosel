@@ -20,16 +20,15 @@ import java.util.Collections;
 import org.thechiselgroup.choosel.client.ui.Colors;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Alignment;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Bar;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.ChartItemComparator;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.BooleanFunction;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.DoubleFunction;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Label;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisEventHandler;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionBoolean;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionDouble;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionString;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionStringNoArgs;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionStringToString;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Rule;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Scale;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunction;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunctionWithIntParam;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunctionWithoutParam;
 import org.thechiselgroup.choosel.client.util.collections.ArrayUtils;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
@@ -105,7 +104,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
     protected int chartWidth;
 
-    private ProtovisFunctionBoolean isPartiallyHighlighted = new ProtovisFunctionBoolean() {
+    private BooleanFunction<ChartItem> isPartiallyHighlighted = new BooleanFunction<ChartItem>() {
         @Override
         public boolean f(ChartItem chartValue, int i) {
             return SubsetStatus.PARTIAL.equals(chartValue.getResourceItem()
@@ -114,7 +113,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     };
 
     // TODO refactor
-    private ProtovisFunctionDouble<ChartItem> barStart = new ProtovisFunctionDouble<ChartItem>() {
+    private DoubleFunction<ChartItem> barStart = new DoubleFunction<ChartItem>() {
         @Override
         public double f(ChartItem value, int i) {
             return barWidth.f(value, i) / 2 + i
@@ -124,7 +123,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     };
 
     // TODO refactor
-    private ProtovisFunctionDouble<ChartItem> highlightedBarStart = new ProtovisFunctionDouble<ChartItem>() {
+    private DoubleFunction<ChartItem> highlightedBarStart = new DoubleFunction<ChartItem>() {
         @Override
         public double f(ChartItem value, int i) {
             // TODO extract first part (reuse other function)
@@ -141,7 +140,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     /**
      * Calculates the length of the highlighted bar.
      */
-    private ProtovisFunctionDouble<ChartItem> highlightedBarLength = new ProtovisFunctionDouble<ChartItem>() {
+    private DoubleFunction<ChartItem> highlightedBarLength = new DoubleFunction<ChartItem>() {
         @Override
         public double f(ChartItem value, int i) {
             return calculateBarLength(value.getResourceValueAsNumber(
@@ -149,14 +148,14 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         }
     };
 
-    private ProtovisFunctionDouble<ChartItem> fullBarLength = new ProtovisFunctionDouble<ChartItem>() {
+    private DoubleFunction<ChartItem> fullBarLength = new DoubleFunction<ChartItem>() {
         @Override
         public double f(ChartItem value, int i) {
             return calculateBarLength(regularValues[i]);
         }
     };
 
-    private ProtovisFunctionDouble<ChartItem> barWidth = new ProtovisFunctionDouble<ChartItem>() {
+    private DoubleFunction<ChartItem> barWidth = new DoubleFunction<ChartItem>() {
         @Override
         public double f(ChartItem value, int i) {
             return layout.getBarWidthSpace(chartHeight, chartWidth)
@@ -165,7 +164,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     };
 
     // TODO barWidth / 3
-    private ProtovisFunctionDouble<ChartItem> highlightedWidth = new ProtovisFunctionDouble<ChartItem>() {
+    private DoubleFunction<ChartItem> highlightedWidth = new DoubleFunction<ChartItem>() {
         @Override
         public double f(ChartItem value, int i) {
             return 0.33 * layout.getBarWidthSpace(chartHeight, chartWidth)
@@ -173,18 +172,17 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         }
     };
 
-    private ProtovisFunctionDouble<ChartItem> regularBarBase = new ProtovisFunctionDouble<ChartItem>() {
+    private DoubleFunction<ChartItem> regularBarBase = new DoubleFunction<ChartItem>() {
         @Override
         public double f(ChartItem value, int i) {
             return highlightedBarLength.f(value, i) + barLineWidth;
         }
     };
 
-    private ProtovisFunctionStringToString scaleStrokeStyle = new ProtovisFunctionStringToString() {
+    private StringFunctionWithIntParam scaleStrokeStyle = new StringFunctionWithIntParam() {
         @Override
-        public String f(String value, int i) {
-            return Double.parseDouble(value) == 0 ? AXIS_SCALE_COLOR
-                    : GRIDLINE_SCALE_COLOR;
+        public String f(int value, int i) {
+            return value == 0 ? AXIS_SCALE_COLOR : GRIDLINE_SCALE_COLOR;
         }
     };
 
@@ -192,14 +190,14 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
     private Bar highlightedBar;
 
-    private ProtovisFunctionDouble<ChartItem> baselineLabelStart = new ProtovisFunctionDouble<ChartItem>() {
+    private DoubleFunction<ChartItem> baselineLabelStart = new DoubleFunction<ChartItem>() {
         @Override
         public double f(ChartItem value, int i) {
             return barStart.f(value, i) + barWidth.f(value, i) / 2;
         }
     };
 
-    private ProtovisFunctionString baselineLabelText = new ProtovisFunctionString() {
+    private StringFunction<ChartItem> baselineLabelText = new StringFunction<ChartItem>() {
         @Override
         public String f(ChartItem value, int i) {
             return value.getResourceItem()
@@ -215,7 +213,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
     private double barLineWidth = 1;
 
-    protected ProtovisFunctionString chartFillStyle = new ProtovisFunctionString() {
+    protected StringFunction<ChartItem> chartFillStyle = new StringFunction<ChartItem>() {
         @Override
         public String f(ChartItem chartItem, int i) {
             if (SubsetStatus.COMPLETE.equals(chartItem.getResourceItem()
@@ -233,7 +231,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         }
     };
 
-    protected ProtovisFunctionString fullMarkTextStyle = new ProtovisFunctionString() {
+    protected StringFunction<ChartItem> fullMarkTextStyle = new StringFunction<ChartItem>() {
         @Override
         public String f(ChartItem value, int i) {
             if (SubsetStatus.COMPLETE.equals(value.getResourceItem()
@@ -252,14 +250,14 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
     private String measurementLabel;
 
-    private ProtovisFunctionStringNoArgs measurementLabelFunction = new ProtovisFunctionStringNoArgs() {
+    private StringFunctionWithoutParam measurementLabelFunction = new StringFunctionWithoutParam() {
         @Override
         public String f() {
             return measurementLabel;
         }
     };
 
-    private ProtovisFunctionString valueLabelAlignment = new ProtovisFunctionString() {
+    private StringFunction<ChartItem> valueLabelAlignment = new StringFunction<ChartItem>() {
 
         @Override
         public String f(ChartItem value, int i) {
@@ -392,7 +390,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
         regularBar.add(Label.createLabel()).left(baselineLabelStart)
                 .textAlign(Alignment.CENTER)
-                .bottom(new ProtovisFunctionDouble<ChartItem>() {
+                .bottom(new DoubleFunction<ChartItem>() {
                     @Override
                     public double f(ChartItem value, int i) {
                         // TODO dynamic positioning depending on label size

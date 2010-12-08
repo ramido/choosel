@@ -17,12 +17,12 @@ package org.thechiselgroup.choosel.client.ui.widget.protovis;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
-// @formatter:off
 /**
  * 
  * @author Bradley Blashko
- * 
+ * @author Lars Grammel
  */
+// @formatter:off
 public class Scale extends JavaScriptObject {
 
     public final static native Scale linear(double from, double to) /*-{
@@ -36,6 +36,10 @@ public class Scale extends JavaScriptObject {
         return this.range(min, max);
     }-*/;
 
+    public final native String tickFormat(int tick) /*-{
+        return this.tickFormat(tick);
+    }-*/;
+    
     public final native String tickFormat(String tick) /*-{
         return this.tickFormat(tick);
     }-*/;
@@ -47,6 +51,7 @@ public class Scale extends JavaScriptObject {
     public final native JavaScriptObject ticks(int ticks) /*-{
         return this.ticks(ticks);
     }-*/;
+
 
 }
 // @formatter:on

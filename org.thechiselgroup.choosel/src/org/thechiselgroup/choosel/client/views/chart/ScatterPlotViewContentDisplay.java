@@ -20,9 +20,9 @@ import org.thechiselgroup.choosel.client.ui.widget.protovis.Alignment;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Dot;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Label;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisEventHandler;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionStringToString;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Rule;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Scale;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunctionWithIntParam;
 import org.thechiselgroup.choosel.client.util.collections.ArrayUtils;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
@@ -118,17 +118,17 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
 
     private Dot scatter;
 
-    protected ProtovisFunctionStringToString scaleLabelTextX = new ProtovisFunctionStringToString() {
+    protected StringFunctionWithIntParam scaleLabelTextX = new StringFunctionWithIntParam() {
         @Override
-        public String f(String o, int index) {
-            return scaleX.tickFormat(o.toString());
+        public String f(int o, int index) {
+            return scaleX.tickFormat(o);
         }
     };
 
-    protected ProtovisFunctionStringToString scaleLabelTextY = new ProtovisFunctionStringToString() {
+    protected StringFunctionWithIntParam scaleLabelTextY = new StringFunctionWithIntParam() {
         @Override
-        public String f(String o, int index) {
-            return scaleY.tickFormat(o.toString());
+        public String f(int o, int index) {
+            return scaleY.tickFormat(o);
         }
     };
 

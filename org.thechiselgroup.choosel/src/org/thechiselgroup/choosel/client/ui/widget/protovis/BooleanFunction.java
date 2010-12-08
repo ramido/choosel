@@ -15,8 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.widget.protovis;
 
-public interface ProtovisFunctionDoubleToDouble {
+public interface BooleanFunction<T> {
 
-    double f(double value, int i);
+    boolean f(T value, int i);
 
 }

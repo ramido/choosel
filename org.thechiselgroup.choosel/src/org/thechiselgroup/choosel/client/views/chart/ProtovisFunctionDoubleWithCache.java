@@ -15,11 +15,11 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.chart;
 
-import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionDouble;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.DoubleFunction;
 
 @Deprecated
 public interface ProtovisFunctionDoubleWithCache<T> extends
-        ProtovisFunctionDouble<T> {
+        DoubleFunction<T> {
 
     @Deprecated
     void beforeRender();
