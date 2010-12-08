@@ -20,8 +20,8 @@ import org.thechiselgroup.choosel.client.ui.widget.protovis.Alignment;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Dot;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Label;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisEventHandler;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionDouble;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionDoubleToDouble;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.DoubleFunction;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.DoubleFunctionWithDoubleParam;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Scale;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Wedge;
 import org.thechiselgroup.choosel.client.util.collections.ArrayUtils;
@@ -92,21 +92,21 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
 
     private Wedge highlightedWedge;
 
-    private ProtovisFunctionDouble<ChartItem> wedgeLeft = new ProtovisFunctionDouble<ChartItem>() {
+    private DoubleFunction<ChartItem> wedgeLeft = new DoubleFunction<ChartItem>() {
         @Override
         public double f(ChartItem value, int i) {
             return width / 2;
         }
     };
 
-    private ProtovisFunctionDouble<ChartItem> wedgeBottom = new ProtovisFunctionDouble<ChartItem>() {
+    private DoubleFunction<ChartItem> wedgeBottom = new DoubleFunction<ChartItem>() {
         @Override
         public double f(ChartItem value, int i) {
             return height / 2;
         }
     };
 
-    private ProtovisFunctionDouble<ChartItem> wedgeAngle = new ProtovisFunctionDouble<ChartItem>() {
+    private DoubleFunction<ChartItem> wedgeAngle = new DoubleFunction<ChartItem>() {
         @Override
         public double f(ChartItem value, int i) {
             return 2 * Math.PI / chartItems.size();
@@ -119,7 +119,7 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
 
     private int highlightedWedgeInnerRadius = 0;
 
-    private ProtovisFunctionDoubleToDouble scaleRadius = new ProtovisFunctionDoubleToDouble() {
+    private DoubleFunctionWithDoubleParam scaleRadius = new DoubleFunctionWithDoubleParam() {
         @Override
         public double f(double value, int i) {
             return value * (Math.min(height, width) - MARGIN_SIZE)

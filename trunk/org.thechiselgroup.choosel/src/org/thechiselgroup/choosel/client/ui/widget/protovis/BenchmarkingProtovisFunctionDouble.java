@@ -16,11 +16,11 @@
 package org.thechiselgroup.choosel.client.ui.widget.protovis;
 
 public class BenchmarkingProtovisFunctionDouble<T> implements
-        ProtovisFunctionDouble<T> {
+        DoubleFunction<T> {
 
-    private ProtovisFunctionDouble<T> delegate;
+    private DoubleFunction<T> delegate;
 
-    public BenchmarkingProtovisFunctionDouble(ProtovisFunctionDouble<T> delegate) {
+    public BenchmarkingProtovisFunctionDouble(DoubleFunction<T> delegate) {
         this.delegate = delegate;
     }
 

@@ -15,13 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.widget.protovis;
 
-/**
- * Function that return <code>String</code> and takes no arguments.
- * 
- * @author Lars Grammel
- */
-public interface ProtovisFunctionStringNoArgs {
+public interface DoubleFunctionWithDoubleParam {
 
-    String f();
+    double f(double value, int i);
 
 }

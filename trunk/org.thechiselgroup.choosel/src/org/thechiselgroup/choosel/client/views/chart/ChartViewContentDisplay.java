@@ -25,9 +25,9 @@ import org.thechiselgroup.choosel.client.ui.widget.protovis.ChartWidgetCallback;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.EventTypes;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Panel;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisEventHandler;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionString;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionStringToString;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Scale;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunction;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunctionWithIntParam;
 import org.thechiselgroup.choosel.client.util.StringUtils;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
@@ -67,10 +67,11 @@ public abstract class ChartViewContentDisplay extends
 
     protected Scale scale;
 
-    protected ProtovisFunctionStringToString scaleLabelText = new ProtovisFunctionStringToString() {
+    protected StringFunctionWithIntParam scaleLabelText = new StringFunctionWithIntParam() {
         @Override
-        public String f(String o, int index) {
-            return scale.tickFormat(o.toString());
+        public String f(int value, int i) {
+            // TODO should the interface be changed to int?
+            return scale.tickFormat("" + value);
         }
     };
 
@@ -80,14 +81,14 @@ public abstract class ChartViewContentDisplay extends
      */
     protected boolean isRendering;
 
-    protected ProtovisFunctionString chartFillStyle = new ProtovisFunctionString() {
+    protected StringFunction<ChartItem> chartFillStyle = new StringFunction<ChartItem>() {
         @Override
         public String f(ChartItem value, int i) {
             return value.getColour();
         }
     };
 
-    protected ProtovisFunctionString partialHighlightingChartFillStyle = new ProtovisFunctionString() {
+    protected StringFunction<ChartItem> partialHighlightingChartFillStyle = new StringFunction<ChartItem>() {
         @Override
         public String f(ChartItem value, int i) {
             return value.getResourceItem().getStatus() == Status.PARTIALLY_HIGHLIGHTED ? Colors.STEELBLUE
@@ -96,7 +97,7 @@ public abstract class ChartViewContentDisplay extends
         }
     };
 
-    protected ProtovisFunctionString fullMarkTextStyle = new ProtovisFunctionString() {
+    protected StringFunction<ChartItem> fullMarkTextStyle = new StringFunction<ChartItem>() {
         @Override
         public String f(ChartItem value, int i) {
             return calculateHighlightedResources(i) == 0 ? Colors.WHITE
@@ -104,7 +105,7 @@ public abstract class ChartViewContentDisplay extends
         }
     };
 
-    protected ProtovisFunctionString fullMarkLabelText = new ProtovisFunctionString() {
+    protected StringFunction<ChartItem> fullMarkLabelText = new StringFunction<ChartItem>() {
 
         @Override
         public String f(ChartItem chartItem, int i) {
@@ -113,7 +114,7 @@ public abstract class ChartViewContentDisplay extends
 
     };
 
-    protected ProtovisFunctionString highlightedLabelText = new ProtovisFunctionString() {
+    protected StringFunction<ChartItem> highlightedLabelText = new StringFunction<ChartItem>() {
 
         @Override
         public String f(ChartItem chartItem, int i) {
@@ -123,7 +124,7 @@ public abstract class ChartViewContentDisplay extends
 
     };
 
-    protected ProtovisFunctionString regularMarkLabelText = new ProtovisFunctionString() {
+    protected StringFunction<ChartItem> regularMarkLabelText = new StringFunction<ChartItem>() {
         @Override
         public String f(ChartItem value, int i) {
             return calculateAllResources(i) - calculateHighlightedResources(i) < 1 ? null
@@ -132,7 +133,7 @@ public abstract class ChartViewContentDisplay extends
         }
     };
 
-    protected ProtovisFunctionString highlightedMarkLabelText = new ProtovisFunctionString() {
+    protected StringFunction<ChartItem> highlightedMarkLabelText = new StringFunction<ChartItem>() {
         @Override
         public String f(ChartItem value, int i) {
             return calculateHighlightedResources(i) <= 0 ? null : Double

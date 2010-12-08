@@ -15,26 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.widget.protovis;
 
-import java.util.Comparator;
+public interface StringFunctionWithIntParam {
 
-import org.thechiselgroup.choosel.client.views.Slot;
-import org.thechiselgroup.choosel.client.views.chart.ChartItem;
+    String f(int value, int i);
 
-public class ChartItemComparator implements Comparator<ChartItem> {
-
-    private Slot slot;
-
-    public ChartItemComparator(Slot slot) {
-        this.slot = slot;
-    }
-
-    @Override
-    public int compare(ChartItem item1, ChartItem item2) {
-        return getDescriptionString(item1).compareTo(
-                getDescriptionString(item2));
-    }
-
-    private String getDescriptionString(ChartItem item) {
-        return item.getResourceItem().getResourceValue(slot).toString();
-    }
 }

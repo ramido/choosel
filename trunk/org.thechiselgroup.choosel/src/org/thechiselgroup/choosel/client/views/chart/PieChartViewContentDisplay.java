@@ -19,7 +19,7 @@ import org.thechiselgroup.choosel.client.ui.Colors;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Alignment;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Label;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisEventHandler;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionDouble;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.DoubleFunction;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Wedge;
 import org.thechiselgroup.choosel.client.util.collections.ArrayUtils;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
@@ -65,7 +65,7 @@ public class PieChartViewContentDisplay extends ChartViewContentDisplay {
 
     private double sum;
 
-    private ProtovisFunctionDouble<ChartItem> regularWedgeOuterRadius = new ProtovisFunctionDouble<ChartItem>() {
+    private DoubleFunction<ChartItem> regularWedgeOuterRadius = new DoubleFunction<ChartItem>() {
         @Override
         public double f(ChartItem value, int i) {
             return Math.min(height, width) / 2 - 5;
@@ -76,21 +76,21 @@ public class PieChartViewContentDisplay extends ChartViewContentDisplay {
 
     private Wedge highlightedWedge;
 
-    private ProtovisFunctionDouble<ChartItem> wedgeLeft = new ProtovisFunctionDouble<ChartItem>() {
+    private DoubleFunction<ChartItem> wedgeLeft = new DoubleFunction<ChartItem>() {
         @Override
         public double f(ChartItem value, int i) {
             return width / 2;
         }
     };
 
-    private ProtovisFunctionDouble<ChartItem> wedgeBottom = new ProtovisFunctionDouble<ChartItem>() {
+    private DoubleFunction<ChartItem> wedgeBottom = new DoubleFunction<ChartItem>() {
         @Override
         public double f(ChartItem value, int i) {
             return height / 2;
         }
     };
 
-    private ProtovisFunctionDouble<ChartItem> wedgeAngle = new ProtovisFunctionDouble<ChartItem>() {
+    private DoubleFunction<ChartItem> wedgeAngle = new DoubleFunction<ChartItem>() {
         @Override
         public double f(ChartItem value, int i) {
             return calculateAllResources(i) * 2 * Math.PI / sum;

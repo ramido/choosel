@@ -15,8 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.widget.protovis;
 
-public interface ProtovisFunctionStringToString {
+public interface DoubleFunction<T> {
 
-    String f(String value, int i);
+    double f(T value, int i);
 
 }

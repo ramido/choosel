@@ -18,13 +18,13 @@ package org.thechiselgroup.choosel.client.views.chart;
 import org.thechiselgroup.choosel.client.ui.Colors;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Alignment;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Dot;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.DoubleFunction;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Label;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisEventHandler;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionDouble;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionString;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionStringToString;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Rule;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Scale;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunction;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunctionWithIntParam;
 import org.thechiselgroup.choosel.client.util.collections.ArrayUtils;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
@@ -47,7 +47,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
 
     protected double chartWidth;
 
-    private ProtovisFunctionDouble<ChartItem> dotLeft = new ProtovisFunctionDouble<ChartItem>() {
+    private DoubleFunction<ChartItem> dotLeft = new DoubleFunction<ChartItem>() {
 
         @Override
         public double f(ChartItem value, int index) {
@@ -81,17 +81,16 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
 
     private int baselineLabelBottom = -15;
 
-    private ProtovisFunctionStringToString scaleStrokeStyle = new ProtovisFunctionStringToString() {
+    private StringFunctionWithIntParam scaleStrokeStyle = new StringFunctionWithIntParam() {
         @Override
-        public String f(String value, int i) {
-            return Double.parseDouble(value) == 0 ? AXIS_SCALE_COLOR
-                    : GRIDLINE_SCALE_COLOR;
+        public String f(int value, int i) {
+            return value == 0 ? AXIS_SCALE_COLOR : GRIDLINE_SCALE_COLOR;
         }
     };
 
     private Dot regularDot;
 
-    private ProtovisFunctionDouble<ChartItem> baselineLabelLeft = new ProtovisFunctionDouble<ChartItem>() {
+    private DoubleFunction<ChartItem> baselineLabelLeft = new DoubleFunction<ChartItem>() {
         @Override
         public double f(ChartItem value, int i) {
             return dotLeft.f(value, i);
@@ -100,7 +99,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
 
     private String baselineLabelTextAlign = Alignment.CENTER;
 
-    private ProtovisFunctionString baselineLabelText = new ProtovisFunctionString() {
+    private StringFunction<ChartItem> baselineLabelText = new StringFunction<ChartItem>() {
         @Override
         public String f(ChartItem value, int i) {
             return value.getResourceItem()

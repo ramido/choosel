@@ -15,10 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.widget.protovis;
 
-import org.thechiselgroup.choosel.client.views.chart.ChartItem;
+public interface StringFunction<T> {
 
-public interface ProtovisFunctionBoolean {
-
-    boolean f(ChartItem value, int i);
+    String f(T value, int i);
 
 }
