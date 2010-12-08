@@ -74,6 +74,44 @@
     <mkdir dir="${dist}"/>
   </target>
 	
+  <target name="choosel-javadoc"
+	     description="updates the javadocs">
+  	
+	  <path id="javadoc-lib">
+		<fileset dir="lib/">
+		  <include name="*.jar" />
+		</fileset>
+		<fileset dir="build/antlib/">
+		  <include name="*.jar" />
+		</fileset>
+   	  </path>
+  	
+	  <delete dir="docs/api"/>
+  	  <mkdir dir="docs/api"/>
+	  <javadoc
+	           destdir="docs/api"
+	  		   classpathref="javadoc-lib"
+	           author="true"
+	           version="false"
+	           use="true"
+	           windowtitle="Choosel API"
+	  		   private="true">
+
+	  	<!-- 
+	  	  TODO check this - including the server causes problems because the classpath does
+	  	  not contain the required annotation classes
+	  	-->
+	    <packageset dir="src" defaultexcludes="yes">
+	      <include name="org/thechiselgroup/choosel/client/**"/>
+	    </packageset>
+
+	    <doctitle><![CDATA[<h1>Choosel API Documentation</h1>]]></doctitle>
+	    <bottom><![CDATA[(C) <a href="http://code.google.com/p/choosel/">Choosel Project</a> 2010]]></bottom>
+	    <link href="http://download.oracle.com/javase/6/docs/api/"/>
+	    <link href="http://google-web-toolkit.googlecode.com/svn/javadoc/2.0/index.html"/>
+	  </javadoc>
+  </target>
+  	
   <!--
     Checks out gwt-dnd-3.0.0 and applies performance and null pointer exception patch.
   -->
