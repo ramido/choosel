@@ -27,10 +27,6 @@ public class Panel extends Mark {
 
     // @formatter:off
     public static native Panel createPanel() /*-{
-        return $wnd.pv.Panel;
-    }-*/;
-
-    public static native Panel createWindowPanel() /*-{
         return new $wnd.pv.Panel();
     }-*/;
     // @formatter:on
@@ -101,12 +97,12 @@ public class Panel extends Mark {
         return this.events(events);
     }-*/;
 
-    public final native Panel fillStyle(StringFunction<?> f) /*-{
-        return this.fillStyle(@org.thechiselgroup.choosel.client.ui.widget.protovis.Mark::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/protovis/StringFunction;)(this,f));
-    }-*/;
-
     public final native Panel fillStyle(String colour) /*-{
         return this.fillStyle(colour);
+    }-*/;
+
+    public final native Panel fillStyle(StringFunction<?> f) /*-{
+        return this.fillStyle(@org.thechiselgroup.choosel.client.ui.widget.protovis.Mark::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/protovis/StringFunction;)(this,f));
     }-*/;
 
     public final native Panel height(double height) /*-{
