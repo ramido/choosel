@@ -33,7 +33,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * 
  * @author Lars Grammel
  * 
- * @see HandlerPriority
+ * @see EventHandlerPriority
  */
 public class PrioritizedHandlerManager {
 
@@ -60,7 +60,7 @@ public class PrioritizedHandlerManager {
     public <H extends EventHandler> HandlerRegistration addHandler(
             GwtEvent.Type<H> type, H handler) {
 
-        return addHandler(type, handler, HandlerPriority.NORMAL);
+        return addHandler(type, handler, EventHandlerPriority.NORMAL);
     }
 
     /**
@@ -73,7 +73,7 @@ public class PrioritizedHandlerManager {
      *         handler.
      */
     public <H extends EventHandler> HandlerRegistration addHandler(
-            GwtEvent.Type<H> type, H handler, HandlerPriority priority) {
+            GwtEvent.Type<H> type, H handler, EventHandlerPriority priority) {
 
         assert priority != null;
         assert type != null;

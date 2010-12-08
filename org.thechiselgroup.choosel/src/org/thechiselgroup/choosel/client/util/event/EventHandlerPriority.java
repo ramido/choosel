@@ -29,7 +29,7 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author Lars Grammel
  * 
  */
-public enum HandlerPriority {
+public enum EventHandlerPriority {
 
     /**
      * Event handlers that should get called first. Examples for this are event
