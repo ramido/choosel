@@ -53,7 +53,7 @@ public final class ChartWidget extends Widget implements WidgetAdaptable {
      * and replaces any previous chart rendered in this widget.
      */
     public Panel createChartPanel() {
-        return Panel.createWindowPanel().canvas(getElement());
+        return Panel.createPanel().canvas(getElement());
     }
 
     @Override
