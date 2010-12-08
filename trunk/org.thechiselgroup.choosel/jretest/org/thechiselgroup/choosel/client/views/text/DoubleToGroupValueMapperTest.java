@@ -25,9 +25,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.client.util.MathUtils;
 import org.thechiselgroup.choosel.client.util.collections.CollectionUtils;
-import org.thechiselgroup.choosel.client.util.collections.NumberArray;
+import org.thechiselgroup.choosel.client.util.math.NumberArray;
 
 public class DoubleToGroupValueMapperTest {
 
@@ -89,7 +89,7 @@ public class DoubleToGroupValueMapperTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        values = CollectionFactory.createNumberArray(0d, 2d, 3d, 4d, 10d);
+        values = MathUtils.createNumberArray(0d, 2d, 3d, 4d, 10d);
         groups = CollectionUtils.toList("1", "2", "3");
         underTest = new DoubleToGroupValueMapper<String>(binCalculator, groups);
     }

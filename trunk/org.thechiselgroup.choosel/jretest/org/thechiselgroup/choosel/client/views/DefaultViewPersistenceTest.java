@@ -23,18 +23,18 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.client.calculation.AverageCalculation;
-import org.thechiselgroup.choosel.client.calculation.Calculation;
-import org.thechiselgroup.choosel.client.calculation.CountCalculation;
-import org.thechiselgroup.choosel.client.calculation.MaxCalculation;
-import org.thechiselgroup.choosel.client.calculation.MinCalculation;
-import org.thechiselgroup.choosel.client.calculation.SumCalculation;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceByPropertyMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceByUriMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.persistence.DefaultResourceSetCollector;
+import org.thechiselgroup.choosel.client.util.math.AverageCalculation;
+import org.thechiselgroup.choosel.client.util.math.Calculation;
+import org.thechiselgroup.choosel.client.util.math.CountCalculation;
+import org.thechiselgroup.choosel.client.util.math.MaxCalculation;
+import org.thechiselgroup.choosel.client.util.math.MinCalculation;
+import org.thechiselgroup.choosel.client.util.math.SumCalculation;
 
 public class DefaultViewPersistenceTest {
 

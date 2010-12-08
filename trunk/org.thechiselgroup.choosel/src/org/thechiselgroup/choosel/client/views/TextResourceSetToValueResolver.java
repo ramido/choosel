@@ -16,7 +16,9 @@
 package org.thechiselgroup.choosel.client.views;
 
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.client.resources.ResourceSetUtils;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 
 public class TextResourceSetToValueResolver implements
         ResourceSetToValueResolver {
@@ -32,12 +34,14 @@ public class TextResourceSetToValueResolver implements
     }
 
     @Override
-    public Object resolve(ResourceSet resources, String category) {
+    public Object resolve(LightweightCollection<Resource> resources,
+            String category) {
+
         if (resources.size() >= 2) {
             return category;
         }
 
-        return resources.getFirstResource().getValue(property);
+        return ResourceSetUtils.firstResource(resources).getValue(property);
     }
 
 }

@@ -13,22 +13,39 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.util.collections;
+package org.thechiselgroup.choosel.client.util.math;
 
-public interface NumberArray {
+public class SumCalculation implements Calculation {
 
-    double get(int index);
+    public static double sum(NumberArray values) {
+        assert values != null;
 
-    boolean isEmpty();
+        double sum = 0;
+        for (int i = 0; i < values.length(); i++) {
+            sum += values.get(i);
+        }
 
-    int length();
+        return sum;
+    }
 
-    double max();
+    @Override
+    public double calculate(NumberArray values) {
+        return sum(values);
+    }
 
-    double min();
+    @Override
+    public String getDescription() {
+        return "Sum";
+    }
 
-    void push(double value);
+    @Override
+    public String getID() {
+        return "sum";
+    }
 
-    void set(int index, double value);
+    @Override
+    public String toString() {
+        return getID();
+    }
 
 }

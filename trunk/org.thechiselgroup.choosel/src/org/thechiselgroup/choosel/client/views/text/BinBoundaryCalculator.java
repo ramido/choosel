@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.text;
 
-import org.thechiselgroup.choosel.client.util.collections.NumberArray;
+import org.thechiselgroup.choosel.client.util.math.NumberArray;
 
 //TODO think about renaming interface
 public interface BinBoundaryCalculator {

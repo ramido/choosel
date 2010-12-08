@@ -15,20 +15,25 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
+import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.resources.ResourceSetUtils;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 
 public class ResourceSetToFirstResourcePropertyResolver extends
         AbstractResourceSetToValueResolver {
 
-    public ResourceSetToFirstResourcePropertyResolver(ResourceCategorizer categorizer) {
+    public ResourceSetToFirstResourcePropertyResolver(
+            ResourceCategorizer categorizer) {
         super(categorizer);
     }
 
     @Override
-    public Object resolve(ResourceSet resources, String category) {
+    public Object resolve(LightweightCollection<Resource> resources,
+            String category) {
+
         assert !resources.isEmpty();
-        return resolve(resources.getFirstResource());
+        return resolve(ResourceSetUtils.firstResource(resources));
     }
 
 }

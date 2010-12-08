@@ -20,8 +20,9 @@ import java.util.Map;
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.resources.ResourceSetUtils;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 
 public class ResourceSetToColorResolver implements ResourceSetToValueResolver {
 
@@ -38,13 +39,14 @@ public class ResourceSetToColorResolver implements ResourceSetToValueResolver {
     }
 
     @Override
-    public Object resolve(ResourceSet resources, String category) {
+    public Object resolve(LightweightCollection<Resource> resources,
+            String category) {
         // TODO what if resource.isEmpty?
         if (resources.isEmpty()) {
             return COLORS[0]; // TODO we need something better
         }
 
-        Resource resource = resources.getFirstResource();
+        Resource resource = ResourceSetUtils.firstResource(resources);
         String resourceType = categorizer.getCategory(resource);
 
         if (!resourceTypeToColor.containsKey(resourceType)) {

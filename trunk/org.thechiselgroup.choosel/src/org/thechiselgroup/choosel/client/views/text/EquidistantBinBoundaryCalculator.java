@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.text;
 
-import org.thechiselgroup.choosel.client.util.collections.NumberArray;
+import org.thechiselgroup.choosel.client.util.math.NumberArray;
 
 /**
  * Calculates <code>numberOfBins</code> equal-length bins between the minimum

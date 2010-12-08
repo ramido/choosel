@@ -18,16 +18,16 @@ package org.thechiselgroup.choosel.client.views;
 import java.util.Arrays;
 import java.util.List;
 
-import org.thechiselgroup.choosel.client.calculation.AverageCalculation;
-import org.thechiselgroup.choosel.client.calculation.Calculation;
-import org.thechiselgroup.choosel.client.calculation.CountCalculation;
-import org.thechiselgroup.choosel.client.calculation.MaxCalculation;
-import org.thechiselgroup.choosel.client.calculation.MinCalculation;
-import org.thechiselgroup.choosel.client.calculation.SumCalculation;
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.util.ConversionException;
 import org.thechiselgroup.choosel.client.util.Converter;
 import org.thechiselgroup.choosel.client.util.NullConverter;
+import org.thechiselgroup.choosel.client.util.math.AverageCalculation;
+import org.thechiselgroup.choosel.client.util.math.Calculation;
+import org.thechiselgroup.choosel.client.util.math.CountCalculation;
+import org.thechiselgroup.choosel.client.util.math.MaxCalculation;
+import org.thechiselgroup.choosel.client.util.math.MinCalculation;
+import org.thechiselgroup.choosel.client.util.math.SumCalculation;
 import org.thechiselgroup.choosel.client.views.widget.listbox.ExtendedListBox;
 import org.thechiselgroup.choosel.client.views.widget.listbox.ListBoxControl;
 

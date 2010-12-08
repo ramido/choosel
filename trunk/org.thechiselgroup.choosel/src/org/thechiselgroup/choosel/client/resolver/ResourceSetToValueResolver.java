@@ -15,11 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resolver;
 
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 
 public interface ResourceSetToValueResolver {
 
     // TODO change --> add category
-    Object resolve(ResourceSet resources, String category);
+    Object resolve(LightweightCollection<Resource> resources, String category);
 
 }

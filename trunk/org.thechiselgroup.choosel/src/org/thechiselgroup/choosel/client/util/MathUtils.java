@@ -15,29 +15,34 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.util;
 
+import org.thechiselgroup.choosel.client.util.math.DefaultNumberArray;
+import org.thechiselgroup.choosel.client.util.math.JsDoubleArray;
+import org.thechiselgroup.choosel.client.util.math.NumberArray;
+
+import com.google.gwt.core.client.GWT;
+
+/**
+ * Provides mathematical methods for NumberArrays.
+ * 
+ * @author Lars Grammel
+ */
+// TODO use object oriented representation? - superclass AbstractNumberArray?!
 public final class MathUtils {
 
-    public static double average(double... values) {
-        assert values != null;
-        if (values.length == 0) {
-            return 0;
+    public static NumberArray createNumberArray() {
+        if (GWT.isScript() || GWT.isClient()) {
+            return JsDoubleArray.create();
         }
-        return sum(values) / values.length;
+
+        return new DefaultNumberArray();
     }
 
-    /**
-     * Deprecated - use NumberArray
-     */
-    @Deprecated
-    public static double maxDouble(double... values) {
-        assert values != null;
-        double max = Double.MIN_VALUE;
+    public static NumberArray createNumberArray(double... values) {
+        NumberArray array = createNumberArray();
         for (double value : values) {
-            if (value > max) {
-                max = value;
-            }
+            array.push(value);
         }
-        return max;
+        return array;
     }
 
     /**
@@ -53,21 +58,6 @@ public final class MathUtils {
             }
         }
         return max;
-    }
-
-    /**
-     * Deprecated - use NumberArray
-     */
-    @Deprecated
-    public static double minDouble(double... values) {
-        assert values != null;
-        double min = Double.MAX_VALUE;
-        for (double value : values) {
-            if (value < min) {
-                min = value;
-            }
-        }
-        return min;
     }
 
     /**
