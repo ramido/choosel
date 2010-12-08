@@ -20,7 +20,6 @@ import org.thechiselgroup.choosel.client.ui.widget.protovis.Alignment;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Dot;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Label;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisEventHandler;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionDoubleWithCache;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionStringToString;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Rule;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Scale;
@@ -67,7 +66,7 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
 
     private Scale scaleY;
 
-    private ProtovisFunctionDoubleWithCache scatterBottom = new ProtovisFunctionDoubleWithCache() {
+    private ProtovisFunctionDoubleWithCache<ChartItem> scatterBottom = new ProtovisFunctionDoubleWithCache<ChartItem>() {
 
         @Override
         public void beforeRender() {
@@ -91,7 +90,7 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
         }
     };
 
-    private ProtovisFunctionDoubleWithCache scatterLeft = new ProtovisFunctionDoubleWithCache() {
+    private ProtovisFunctionDoubleWithCache<ChartItem> scatterLeft = new ProtovisFunctionDoubleWithCache<ChartItem>() {
 
         @Override
         public void beforeRender() {

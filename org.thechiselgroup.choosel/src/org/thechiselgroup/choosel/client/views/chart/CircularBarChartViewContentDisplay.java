@@ -22,7 +22,6 @@ import org.thechiselgroup.choosel.client.ui.widget.protovis.Label;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisEventHandler;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionDouble;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionDoubleToDouble;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionDoubleWithCache;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Scale;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Wedge;
 import org.thechiselgroup.choosel.client.util.collections.ArrayUtils;
@@ -41,7 +40,7 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
 
     private static final int MARGIN_SIZE = 15;
 
-    private ProtovisFunctionDoubleWithCache highlightedWedgeOuterRadius = new ProtovisFunctionDoubleWithCache() {
+    private ProtovisFunctionDoubleWithCache<ChartItem> highlightedWedgeOuterRadius = new ProtovisFunctionDoubleWithCache<ChartItem>() {
 
         @Override
         public void beforeRender() {
@@ -66,7 +65,7 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
 
     private double sum;
 
-    private ProtovisFunctionDoubleWithCache regularWedgeOuterRadius = new ProtovisFunctionDoubleWithCache() {
+    private ProtovisFunctionDoubleWithCache<ChartItem> regularWedgeOuterRadius = new ProtovisFunctionDoubleWithCache<ChartItem>() {
         @Override
         public void beforeRender() {
             if (chartItems.isEmpty()) {
@@ -93,21 +92,21 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
 
     private Wedge highlightedWedge;
 
-    private ProtovisFunctionDouble wedgeLeft = new ProtovisFunctionDouble() {
+    private ProtovisFunctionDouble<ChartItem> wedgeLeft = new ProtovisFunctionDouble<ChartItem>() {
         @Override
         public double f(ChartItem value, int i) {
             return width / 2;
         }
     };
 
-    private ProtovisFunctionDouble wedgeBottom = new ProtovisFunctionDouble() {
+    private ProtovisFunctionDouble<ChartItem> wedgeBottom = new ProtovisFunctionDouble<ChartItem>() {
         @Override
         public double f(ChartItem value, int i) {
             return height / 2;
         }
     };
 
-    private ProtovisFunctionDouble wedgeAngle = new ProtovisFunctionDouble() {
+    private ProtovisFunctionDouble<ChartItem> wedgeAngle = new ProtovisFunctionDouble<ChartItem>() {
         @Override
         public double f(ChartItem value, int i) {
             return 2 * Math.PI / chartItems.size();

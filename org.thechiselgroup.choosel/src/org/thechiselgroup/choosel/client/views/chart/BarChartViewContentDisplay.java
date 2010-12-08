@@ -114,7 +114,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     };
 
     // TODO refactor
-    private ProtovisFunctionDouble barStart = new ProtovisFunctionDouble() {
+    private ProtovisFunctionDouble<ChartItem> barStart = new ProtovisFunctionDouble<ChartItem>() {
         @Override
         public double f(ChartItem value, int i) {
             return barWidth.f(value, i) / 2 + i
@@ -124,7 +124,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     };
 
     // TODO refactor
-    private ProtovisFunctionDouble highlightedBarStart = new ProtovisFunctionDouble() {
+    private ProtovisFunctionDouble<ChartItem> highlightedBarStart = new ProtovisFunctionDouble<ChartItem>() {
         @Override
         public double f(ChartItem value, int i) {
             // TODO extract first part (reuse other function)
@@ -141,7 +141,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     /**
      * Calculates the length of the highlighted bar.
      */
-    private ProtovisFunctionDouble highlightedBarLength = new ProtovisFunctionDouble() {
+    private ProtovisFunctionDouble<ChartItem> highlightedBarLength = new ProtovisFunctionDouble<ChartItem>() {
         @Override
         public double f(ChartItem value, int i) {
             return calculateBarLength(value.getResourceValueAsNumber(
@@ -149,14 +149,14 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         }
     };
 
-    private ProtovisFunctionDouble fullBarLength = new ProtovisFunctionDouble() {
+    private ProtovisFunctionDouble<ChartItem> fullBarLength = new ProtovisFunctionDouble<ChartItem>() {
         @Override
         public double f(ChartItem value, int i) {
             return calculateBarLength(regularValues[i]);
         }
     };
 
-    private ProtovisFunctionDouble barWidth = new ProtovisFunctionDouble() {
+    private ProtovisFunctionDouble<ChartItem> barWidth = new ProtovisFunctionDouble<ChartItem>() {
         @Override
         public double f(ChartItem value, int i) {
             return layout.getBarWidthSpace(chartHeight, chartWidth)
@@ -165,7 +165,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     };
 
     // TODO barWidth / 3
-    private ProtovisFunctionDouble highlightedWidth = new ProtovisFunctionDouble() {
+    private ProtovisFunctionDouble<ChartItem> highlightedWidth = new ProtovisFunctionDouble<ChartItem>() {
         @Override
         public double f(ChartItem value, int i) {
             return 0.33 * layout.getBarWidthSpace(chartHeight, chartWidth)
@@ -173,7 +173,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         }
     };
 
-    private ProtovisFunctionDouble regularBarBase = new ProtovisFunctionDouble() {
+    private ProtovisFunctionDouble<ChartItem> regularBarBase = new ProtovisFunctionDouble<ChartItem>() {
         @Override
         public double f(ChartItem value, int i) {
             return highlightedBarLength.f(value, i) + barLineWidth;
@@ -192,7 +192,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
     private Bar highlightedBar;
 
-    private ProtovisFunctionDouble baselineLabelStart = new ProtovisFunctionDouble() {
+    private ProtovisFunctionDouble<ChartItem> baselineLabelStart = new ProtovisFunctionDouble<ChartItem>() {
         @Override
         public double f(ChartItem value, int i) {
             return barStart.f(value, i) + barWidth.f(value, i) / 2;
@@ -392,7 +392,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
         regularBar.add(Label.createLabel()).left(baselineLabelStart)
                 .textAlign(Alignment.CENTER)
-                .bottom(new ProtovisFunctionDouble() {
+                .bottom(new ProtovisFunctionDouble<ChartItem>() {
                     @Override
                     public double f(ChartItem value, int i) {
                         // TODO dynamic positioning depending on label size

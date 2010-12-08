@@ -15,19 +15,17 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.widget.protovis;
 
-import org.thechiselgroup.choosel.client.views.chart.ChartItem;
+public class BenchmarkingProtovisFunctionDouble<T> implements
+        ProtovisFunctionDouble<T> {
 
-public class BenchmarkingProtovisFunctionDouble implements
-        ProtovisFunctionDouble {
+    private ProtovisFunctionDouble<T> delegate;
 
-    private ProtovisFunctionDouble delegate;
-
-    public BenchmarkingProtovisFunctionDouble(ProtovisFunctionDouble delegate) {
+    public BenchmarkingProtovisFunctionDouble(ProtovisFunctionDouble<T> delegate) {
         this.delegate = delegate;
     }
 
     @Override
-    public double f(ChartItem value, int i) {
+    public double f(T value, int i) {
         long startTime = System.currentTimeMillis();
         try {
             return delegate.f(value, i);

@@ -67,9 +67,9 @@ public abstract class Mark extends JavaScriptObject {
     }-*/;
 
     public static final native JavaScriptObject toJavaScriptFunction(
-            JavaScriptObject _this, ProtovisFunctionDouble f) /*-{
+            JavaScriptObject _this, ProtovisFunctionDouble<?> f) /*-{
         return function(d) 
-            { return f.@org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionDouble::f(Lorg/thechiselgroup/choosel/client/views/chart/ChartItem;I)(d,_this.index);}
+            { return f.@org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisFunctionDouble::f(Ljava/lang/Object;I)(d,_this.index);}
     }-*/;
     
     public static final native JavaScriptObject toJavaScriptFunction(
