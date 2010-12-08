@@ -15,13 +15,20 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
+import java.util.Map;
+
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
+import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 import org.thechiselgroup.choosel.client.ui.popup.PopupClosingEvent;
 import org.thechiselgroup.choosel.client.ui.popup.PopupClosingHandler;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.util.Disposable;
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 
 import com.google.gwt.event.dom.client.MouseOutEvent;
@@ -29,7 +36,13 @@ import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 
-// TODO separate out resource item controller
+/**
+ * Default implementation of {@link ResourceItem}. Provides caching for
+ * calculated slot values and for hightlighting and selection status.
+ * 
+ * @author Lars Grammel
+ */
+// TODO separate out resource item controller part
 public class DefaultResourceItem implements Disposable, ResourceItem {
 
     private String groupID;
@@ -41,7 +54,7 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
     // TODO update & paint on changes in resources!!!
     private final ResourceSet resources;
 
-    private final SlotMappingConfiguration valueResolver;
+    private final SlotMappingConfiguration slotMappingConfiguration;
 
     private HighlightingManager highlightingManager;
 
@@ -64,25 +77,47 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
 
     private SubsetStatus cachedSelectedStatus = null;
 
+    /**
+     * Cache for the resolved slot values of ALL subset. Maps the slot id to the
+     * value.
+     */
+    private Map<String, Object> allSubsetSlotValueCache = CollectionFactory
+            .createStringMap();
+
+    /**
+     * Cache for the resolved slot values of SELECTED subset. Maps the slot id
+     * to the value.
+     */
+    private Map<String, Object> highlightedSubsetSlotValueCache = CollectionFactory
+            .createStringMap();
+
+    /**
+     * Cache for the resolved slot values of HIGHLIGHTED subset. Maps the slot
+     * id to the value.
+     */
+    private Map<String, Object> selectedSubsetSlotValueCache = CollectionFactory
+            .createStringMap();
+
     public DefaultResourceItem(String groupID, ResourceSet resources,
             HoverModel hoverModel, PopupManager popupManager,
-            SlotMappingConfiguration valueResolver) {
+            SlotMappingConfiguration slotMappingConfiguration) {
 
         assert groupID != null;
         assert resources != null;
         assert hoverModel != null;
         assert popupManager != null;
-        assert valueResolver != null;
+        assert slotMappingConfiguration != null;
 
         this.groupID = groupID;
         this.resources = resources;
         this.popupManager = popupManager;
         this.hoverModel = hoverModel; // TODO separate controller
-        this.valueResolver = valueResolver;
+        this.slotMappingConfiguration = slotMappingConfiguration;
 
         highlightedResources = new DefaultResourceSet();
         selectedResources = new DefaultResourceSet();
 
+        initCacheCleaning();
         initHighlighting();
         initPopupHighlighting();
     }
@@ -93,6 +128,7 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
         assert highlightedResources != null;
 
         cachedHighlightStatus = null;
+        highlightedSubsetSlotValueCache.clear();
         this.highlightedResources.addAll(resources
                 .getIntersection(highlightedResources));
     }
@@ -103,6 +139,7 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
         assert selectedResources != null;
 
         cachedSelectedStatus = null;
+        selectedSubsetSlotValueCache.clear();
         this.selectedResources.addAll(resources
                 .getIntersection(selectedResources));
     }
@@ -111,6 +148,33 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
     public void dispose() {
         highlightingManager.dispose();
         popupHighlightingManager.dispose();
+    }
+
+    /**
+     * Performs the slot value resolution for given resources. Uses caching.
+     * 
+     * @param cache
+     *            Map of slot id to cached values
+     */
+    private Object doResolve(Slot slot, ResourceSet resources,
+            Map<String, Object> cache) {
+
+        assert slot != null;
+        assert resources != null;
+        assert cache != null;
+        assert this.resources.containsAll(resources);
+
+        String slotId = slot.getId();
+        if (cache.containsKey(slotId)) {
+            return cache.get(slotId);
+        }
+
+        Object value = slotMappingConfiguration.resolve(slot, groupID,
+                resources);
+
+        cache.put(slotId, value);
+
+        return value;
     }
 
     @Override
@@ -167,21 +231,27 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
 
     @Override
     public Object getResourceValue(Slot slot) {
-        return valueResolver.resolve(slot, groupID, resources);
+        return getResourceValue(slot, Subset.ALL);
     }
 
     @Override
     public Object getResourceValue(Slot slot, Subset subset) {
+        assert slot != null;
+        assert subset != null;
+
         switch (subset) {
         case ALL:
-            return valueResolver.resolve(slot, groupID, resources);
+            return doResolve(slot, resources, allSubsetSlotValueCache);
         case SELECTED:
-            return valueResolver.resolve(slot, groupID, selectedResources);
+            return doResolve(slot, selectedResources,
+                    selectedSubsetSlotValueCache);
         case HIGHLIGHTED:
-            return valueResolver.resolve(slot, groupID, highlightedResources);
+            return doResolve(slot, highlightedResources,
+                    highlightedSubsetSlotValueCache);
         }
 
-        throw new RuntimeException("invalid subset");
+        throw new IllegalArgumentException("invalid slot / sub combination "
+                + slot + " " + subset);
     }
 
     @Override
@@ -199,11 +269,6 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
         return cachedSelectedStatus;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.thechiselgroup.choosel.client.views.ResourceItem#getStatus()
-     */
     @Override
     public Status getStatus() {
         if (getHighlightStatus() == SubsetStatus.COMPLETE
@@ -247,6 +312,31 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
         return SubsetStatus.PARTIAL;
     }
 
+    private void initCacheCleaning() {
+        resources.addEventHandler(new ResourcesAddedEventHandler() {
+            @Override
+            public void onResourcesAdded(ResourcesAddedEvent e) {
+                allSubsetSlotValueCache.clear();
+            }
+        });
+        resources.addEventHandler(new ResourcesRemovedEventHandler() {
+            @Override
+            public void onResourcesRemoved(ResourcesRemovedEvent e) {
+                allSubsetSlotValueCache.clear();
+            }
+        });
+        slotMappingConfiguration.addHandler(new SlotMappingChangedHandler() {
+            @Override
+            public void onResourceCategoriesChanged(SlotMappingChangedEvent e) {
+                String slotId = e.getSlot().getId();
+
+                allSubsetSlotValueCache.remove(slotId);
+                selectedSubsetSlotValueCache.remove(slotId);
+                highlightedSubsetSlotValueCache.remove(slotId);
+            }
+        });
+    }
+
     private void initHighlighting() {
         highlightingManager = new HighlightingManager(hoverModel, resources);
     }
@@ -281,6 +371,7 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
         assert highlightedResources != null;
 
         cachedHighlightStatus = null;
+        highlightedSubsetSlotValueCache.clear();
         this.highlightedResources.removeAll(resources
                 .getIntersection(highlightedResources));
     }
@@ -290,6 +381,7 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
         assert selectedResources != null;
 
         cachedSelectedStatus = null;
+        selectedSubsetSlotValueCache.clear();
         this.selectedResources.removeAll(resources
                 .getIntersection(selectedResources));
     }
