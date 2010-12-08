@@ -17,6 +17,11 @@ package org.thechiselgroup.choosel.client.ui;
 
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * Returns a widget. Used to increase testability.
+ * 
+ * @author Lars Grammel
+ */
 public interface WidgetAdaptable {
 
     Widget asWidget();

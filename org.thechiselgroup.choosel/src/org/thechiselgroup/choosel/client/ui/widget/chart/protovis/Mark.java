@@ -40,7 +40,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 public abstract class Mark extends JavaScriptObject {
 
     /*
-     * IMPORTANT $entry function usage
+     * PERFORMANCE IMPORTANT $entry function usage
      * 
      * We used "$entry(function(d) ...)", but it decreased the performance by
      * factor 5. Do not add $entry here (except for debugging). However, be
@@ -53,7 +53,7 @@ public abstract class Mark extends JavaScriptObject {
         return function(d) 
              { return f.@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunction::f(Lorg/thechiselgroup/choosel/client/views/chart/ChartItem;I)(d,_this.index);}
     }-*/;
-
+    
     public static final native JavaScriptObject getFunctionBoolean(
             JavaScriptObject _this, ProtovisFunctionBoolean f) /*-{
         return function(d) 
@@ -65,7 +65,7 @@ public abstract class Mark extends JavaScriptObject {
         return function(d) 
             { return f.@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDouble::f(Lorg/thechiselgroup/choosel/client/views/chart/ChartItem;I)(d,_this.index);}
     }-*/;
-    
+
     public static final native JavaScriptObject getFunctionDoubleToDouble(
             JavaScriptObject _this, ProtovisFunctionDoubleToDouble f) /*-{
         return function(d) 
@@ -77,7 +77,7 @@ public abstract class Mark extends JavaScriptObject {
         return function(d) 
             { return f.@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionString::f(Lorg/thechiselgroup/choosel/client/views/chart/ChartItem;I)(d,_this.index); };
     }-*/;
-
+    
     public static final native JavaScriptObject getFunctionStringToString(
             JavaScriptObject _this, ProtovisFunctionStringToString f) /*-{
         return function(d) 
@@ -88,6 +88,12 @@ public abstract class Mark extends JavaScriptObject {
             JavaScriptObject _this, ProtovisEventHandler handler) /*-{
         return function() 
             { return handler.@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventHandler::handleEvent(Lcom/google/gwt/user/client/Event;I)($wnd.pv.event, _this.index);}
+    }-*/;
+
+    public static final native JavaScriptObject toJavaScriptFunction(
+            JavaScriptObject _this, ProtovisFunctionStringNoArgs f) /*-{
+        return function() 
+            { return f.@org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionStringNoArgs::f()();}
     }-*/;
     // @formatter:on
 

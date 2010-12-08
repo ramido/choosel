@@ -15,10 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.widget.chart.protovis;
 
-@Deprecated
-public interface ProtovisFunctionDoubleWithCache extends ProtovisFunctionDouble {
+/**
+ * Function that return <code>String</code> and takes no arguments.
+ * 
+ * @author Lars Grammel
+ */
+public interface ProtovisFunctionStringNoArgs {
 
-    @Deprecated
-    void beforeRender();
+    String f();
 
 }

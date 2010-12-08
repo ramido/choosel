@@ -16,23 +16,15 @@
 package org.thechiselgroup.choosel.client.ui.widget.chart;
 
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDouble;
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionDoubleWithCache;
 import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
 public class BenchmarkingProtovisFunctionDouble implements
-        ProtovisFunctionDoubleWithCache {
+        ProtovisFunctionDouble {
 
     private ProtovisFunctionDouble delegate;
 
     public BenchmarkingProtovisFunctionDouble(ProtovisFunctionDouble delegate) {
         this.delegate = delegate;
-    }
-
-    @Override
-    public void beforeRender() {
-        if (delegate instanceof ProtovisFunctionDoubleWithCache) {
-            ((ProtovisFunctionDoubleWithCache) delegate).beforeRender();
-        }
     }
 
     @Override

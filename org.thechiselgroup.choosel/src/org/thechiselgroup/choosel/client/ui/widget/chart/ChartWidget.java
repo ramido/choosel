@@ -15,343 +15,56 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.widget.chart;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.thechiselgroup.choosel.client.ui.CSS;
 import org.thechiselgroup.choosel.client.ui.Colors;
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.EventTypes;
+import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
 import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Panel;
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisEventHandler;
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionString;
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.ProtovisFunctionStringToString;
-import org.thechiselgroup.choosel.client.ui.widget.chart.protovis.Scale;
-import org.thechiselgroup.choosel.client.util.MathUtils;
-import org.thechiselgroup.choosel.client.views.ResourceItem;
-import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
-import org.thechiselgroup.choosel.client.views.ResourceItem.Subset;
-import org.thechiselgroup.choosel.client.views.Slot;
-import org.thechiselgroup.choosel.client.views.SlotResolver;
-import org.thechiselgroup.choosel.client.views.chart.ChartItem;
 
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
+ * Widget that returns a Protovis chart panel for drawing charts and offers a
+ * callback mechanism for onAttach and onResize to allow for chart updates.
+ * 
  * @author Bradley Blashko
  * @author Lars Grammel
  */
-public abstract class ChartWidget extends Widget {
+public final class ChartWidget extends Widget implements WidgetAdaptable {
 
-    // TODO move to library
-    public static String formatDecimal(double value, int decimalPlaces) {
-        String valueAsString = Double.toString(value);
-
-        int pointIndex = valueAsString.indexOf('.');
-        if (pointIndex != -1) {
-            valueAsString = valueAsString.substring(0, pointIndex);
-            double decimalValue = value - Integer.parseInt(valueAsString);
-            int truncatedDecimalValue = (int) (decimalValue * MathUtils.powInt(
-                    10, decimalPlaces));
-            return valueAsString + "." + truncatedDecimalValue;
-        }
-
-        return valueAsString + "." + repeat("0", decimalPlaces);
-    }
-
-    // TODO move to StringUtils / FormatterUtils
-    public static String repeat(String value, int times) {
-        assert times >= 0;
-        assert value != null;
-
-        String result = "";
-        for (int i = 0; i < times; i++) {
-            result += value;
-        }
-        return result;
-    }
-
-    protected Panel chart;
-
-    protected List<ChartItem> chartItems = new ArrayList<ChartItem>();
-
-    protected int height;
-
-    protected int width;
-
-    protected String[] eventTypes = { EventTypes.CLICK, EventTypes.MOUSEDOWN,
-            EventTypes.MOUSEMOVE, EventTypes.MOUSEOUT, EventTypes.MOUSEOVER,
-            EventTypes.MOUSEUP };
-
-    private ProtovisEventHandler handler = new ProtovisEventHandler() {
-        @Override
-        public void handleEvent(Event e, int index) {
-            onEvent(e, index);
-        }
-    };
-
-    protected Scale scale;
-
-    protected ProtovisFunctionStringToString scaleLabelText = new ProtovisFunctionStringToString() {
-        @Override
-        public String f(String o, int index) {
-            return scale.tickFormat(o.toString());
-        }
-    };
-
-    /**
-     * Flags status that chart widget is rendering. While rendering, events are
-     * discarded.
-     */
-    protected boolean isRendering;
-
-    protected ProtovisFunctionString chartFillStyle = new ProtovisFunctionString() {
-        @Override
-        public String f(ChartItem value, int i) {
-            return value.getColour();
-        }
-    };
-
-    protected ProtovisFunctionString partialHighlightingChartFillStyle = new ProtovisFunctionString() {
-        @Override
-        public String f(ChartItem value, int i) {
-            return value.getResourceItem().getStatus() == Status.PARTIALLY_HIGHLIGHTED ? Colors.STEELBLUE
-                    : value.getResourceItem().getStatus() == Status.PARTIALLY_HIGHLIGHTED_SELECTED ? Colors.ORANGE
-                            : value.getColour();
-        }
-    };
-
-    protected ProtovisFunctionString fullMarkTextStyle = new ProtovisFunctionString() {
-        @Override
-        public String f(ChartItem value, int i) {
-            return calculateHighlightedResources(i) == 0 ? Colors.WHITE
-                    : Colors.BLACK;
-        }
-    };
-
-    protected ProtovisFunctionString fullMarkLabelText = new ProtovisFunctionString() {
-
-        @Override
-        public String f(ChartItem chartItem, int i) {
-            return formatDecimal(calculateAllResources(i), 2);
-        }
-
-    };
-
-    protected ProtovisFunctionString highlightedLabelText = new ProtovisFunctionString() {
-
-        @Override
-        public String f(ChartItem chartItem, int i) {
-            return formatDecimal(calculateHighlightedResources(i), 2);
-        }
-
-    };
-
-    protected ProtovisFunctionString regularMarkLabelText = new ProtovisFunctionString() {
-        @Override
-        public String f(ChartItem value, int i) {
-            return calculateAllResources(i) - calculateHighlightedResources(i) < 1 ? null
-                    : Double.toString(calculateAllResources(i)
-                            - calculateHighlightedResources(i));
-        }
-    };
-
-    protected ProtovisFunctionString highlightedMarkLabelText = new ProtovisFunctionString() {
-        @Override
-        public String f(ChartItem value, int i) {
-            return calculateHighlightedResources(i) <= 0 ? null : Double
-                    .toString(calculateHighlightedResources(i));
-        }
-    };
-
-    private double maxChartItemValue;
+    private ChartWidgetCallback callback;
 
     public ChartWidget() {
         setElement(DOM.createDiv());
-        // TODO extract + move to CSS
-        getElement().getStyle().setProperty("backgroundColor", Colors.WHITE);
+        CSS.setBackgroundColor(this, Colors.WHITE);
     }
 
-    public void addChartItem(ChartItem resourceItem) {
-        chartItems.add(resourceItem);
+    @Override
+    public Widget asWidget() {
+        return this;
     }
 
-    /**
-     * Is called before the chart is rendered. Subclasses can override this
-     * method to recalculate values that are used for all resource item specific
-     * calls from Protovis.
-     */
-    protected void beforeRender() {
-        calculateMaximumChartItemValue();
-    }
-
-    protected double calculateAllResources(int i) {
-        return calculateChartItemValue(i, SlotResolver.CHART_VALUE_SLOT,
-                Subset.ALL);
-    }
-
-    protected double calculateChartItemValue(int chartItemIndex, Slot slot,
-            Subset subset) {
-
-        return (Double) getResourceItem(chartItemIndex).getResourceValue(slot,
-                subset);
-    }
-
-    protected double calculateHighlightedResources(int i) {
-        return calculateChartItemValue(i, SlotResolver.CHART_VALUE_SLOT,
-                Subset.HIGHLIGHTED);
-    }
-
-    protected int calculateHighlightedSelectedResources(int i) {
-        return getResourceItem(i).getHighlightedSelectedResources().size();
-    }
-
-    // TODO different slots
-    // XXX does not work for negative numbers
-    // XXX works only for integers
-    protected void calculateMaximumChartItemValue() {
-        maxChartItemValue = 0;
-        for (int i = 0; i < chartItems.size(); i++) {
-            double currentItemValue = calculateAllResources(i);
-            if (maxChartItemValue < currentItemValue) {
-                maxChartItemValue = currentItemValue;
-            }
-        }
-    }
-
-    protected int calculateSelectedResources(int i) {
-        return getResourceItem(i).getSelectedResources().size()
-                - getResourceItem(i).getHighlightedSelectedResources().size();
-    }
-
+    // TODO check call tree and remove?
     public void checkResize() {
-        if (chart != null) {
-            resize(getOffsetWidth(), getOffsetHeight());
-        }
+        callback.onResize(getOffsetWidth(), getOffsetHeight());
     }
 
     /**
-     * <code>drawChart</code> is only called if there are actual data items that
-     * can be rendered ( jsChartItems.length >= 1 ).
+     * Returns new chart panel. The chart panel uses the element of this widget
+     * and replaces any previous chart rendered in this widget.
      */
-    protected abstract void drawChart();
-
-    public ChartItem getChartItem(int index) {
-        assert chartItems != null;
-        assert 0 <= index;
-        assert index < chartItems.size();
-
-        return chartItems.get(index);
-    }
-
-    protected double getMaximumChartItemValue() {
-        return maxChartItemValue;
-    }
-
-    protected ResourceItem getResourceItem(int chartItemIndex) {
-        return chartItems.get(chartItemIndex).getResourceItem();
-    }
-
-    // XXX not called anywhere
-    protected SlotValues getSlotValues(Slot slot) {
-        double[] slotValues = new double[chartItems.size()];
-
-        for (int i = 0; i < chartItems.size(); i++) {
-            Object value = getResourceItem(i).getResourceValue(slot);
-
-            if (value instanceof Double) {
-                slotValues[i] = (Double) value;
-            } else if (value instanceof Number) {
-                slotValues[i] = ((Number) value).doubleValue();
-            } else {
-                slotValues[i] = Double.valueOf(value.toString());
-            }
-        }
-
-        return new SlotValues(slotValues);
-    }
-
-    public boolean hasPartiallyHighlightedChartItems() {
-        for (ChartItem chartItem : chartItems) {
-            Status status = chartItem.getResourceItem().getStatus();
-            if ((status == Status.PARTIALLY_HIGHLIGHTED || status == Status.PARTIALLY_HIGHLIGHTED_SELECTED)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean hasPartiallySelectedChartItems() {
-        for (ChartItem chartItem : chartItems) {
-            Status status = chartItem.getResourceItem().getStatus();
-            if ((status == Status.PARTIALLY_SELECTED || status == Status.PARTIALLY_HIGHLIGHTED_SELECTED)) {
-                return true;
-            }
-        }
-        return false;
+    public Panel createChartPanel() {
+        return Panel.createWindowPanel().canvas(getElement());
     }
 
     @Override
     protected void onAttach() {
         super.onAttach();
-
-        if (chart == null) {
-            updateChart();
-        }
+        callback.onAttach();
     }
 
-    protected void onEvent(Event e, int index) {
-        getChartItem(index).onEvent(e);
+    public void setCallback(ChartWidgetCallback callback) {
+        this.callback = callback;
     }
 
-    protected abstract void registerEventHandler(String eventType,
-            ProtovisEventHandler handler);
-
-    protected void registerEventHandlers() {
-        for (String eventType : eventTypes) {
-            registerEventHandler(eventType, handler);
-        }
-    }
-
-    public void removeChartItem(ChartItem chartItem) {
-        chartItems.remove(chartItem);
-    }
-
-    public void renderChart() {
-        // TODO instead of isRendering flag, remove event listeners before
-        // rendering starts and add them again after rendering is finished.
-        try {
-            isRendering = true;
-            beforeRender();
-            chart.render();
-        } finally {
-            isRendering = false;
-        }
-    }
-
-    private void resize(int width, int height) {
-        if (width == this.width && height == this.height) {
-            return;
-        }
-
-        this.width = width;
-        this.height = height;
-        updateChart(); // TODO render chart good enough?
-    }
-
-    // re-rendering requires reset?
-    // see
-    // http://groups.google.com/group/protovis/browse_thread/thread/b9032215a2f5ac25
-    public void updateChart() {
-        chart = Panel.createWindowPanel().canvas(getElement());
-        if (chartItems.size() == 0) {
-            chart.height(height).width(width);
-        } else {
-            drawChart();
-            registerEventHandlers();
-        }
-
-        // XXX how often are event listeners assigned? are they removed?
-        renderChart();
-    }
 }
