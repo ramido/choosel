@@ -33,13 +33,10 @@ import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.Presenter;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
-import org.thechiselgroup.choosel.client.workspace.ViewSaver;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
 public class TestView extends DefaultView {
-
-    private static ShareConfiguration shareConfiguration;
 
     public static TestView createTestView(Slot... slots) {
         DefaultResourceSetFactory resourceSetFactory = new DefaultResourceSetFactory();
@@ -55,7 +52,6 @@ public class TestView extends DefaultView {
         DetailsWidgetHelper detailsWidgetHelper = mock(DetailsWidgetHelper.class);
         PopupManagerFactory popupManagerFactory = mock(PopupManagerFactory.class);
         PopupManager popupManager = mock(PopupManager.class);
-        ViewSaver viewPersistence = mock(ViewSaver.class);
         Presenter resourceModelPresenter = mock(Presenter.class);
         HandlerRegistration selectionAddedHandlerRegistration = mock(HandlerRegistration.class);
         HandlerRegistration selectionRemovedHandlerRegistration = mock(HandlerRegistration.class);
@@ -137,7 +133,6 @@ public class TestView extends DefaultView {
         this.popupManager = popupManager;
         this.selectionAddedHandlerRegistration = selectionAddedHandlerRegistration;
         this.selectionRemovedHandlerRegistration = selectionRemovedHandlerRegistration;
-        shareConfiguration = shareConfiguration;
     }
 
     @Override
