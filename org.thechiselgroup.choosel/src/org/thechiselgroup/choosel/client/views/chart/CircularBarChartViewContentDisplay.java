@@ -19,7 +19,7 @@ import org.thechiselgroup.choosel.client.ui.Colors;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Alignment;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Dot;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.DoubleFunction;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.DoubleFunctionWithDoubleParam;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.DoubleFunctionDoubleArg;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Label;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisEventHandler;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Scale;
@@ -119,7 +119,7 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
 
     private int highlightedWedgeInnerRadius = 0;
 
-    private DoubleFunctionWithDoubleParam scaleRadius = new DoubleFunctionWithDoubleParam() {
+    private DoubleFunctionDoubleArg scaleRadius = new DoubleFunctionDoubleArg() {
         @Override
         public double f(double value, int i) {
             return value * (Math.min(height, width) - MARGIN_SIZE)

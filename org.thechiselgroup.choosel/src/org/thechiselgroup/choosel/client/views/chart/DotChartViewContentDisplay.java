@@ -24,7 +24,7 @@ import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisEventHandler
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Rule;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Scale;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunction;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunctionWithIntParam;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunctionIntArg;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 
@@ -42,9 +42,9 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
 
     private double[] dotCounts;
 
-    protected double chartHeight;
+    protected int chartHeight;
 
-    protected double chartWidth;
+    protected int chartWidth;
 
     private DoubleFunction<ChartItem> dotLeft = new DoubleFunction<ChartItem>() {
 
@@ -80,7 +80,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
 
     private int baselineLabelBottom = -15;
 
-    private StringFunctionWithIntParam scaleStrokeStyle = new StringFunctionWithIntParam() {
+    private StringFunctionIntArg scaleStrokeStyle = new StringFunctionIntArg() {
         @Override
         public String f(int value, int i) {
             return value == 0 ? AXIS_SCALE_COLOR : GRIDLINE_SCALE_COLOR;

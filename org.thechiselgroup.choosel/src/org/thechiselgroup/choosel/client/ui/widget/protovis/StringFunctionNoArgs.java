@@ -15,8 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.widget.protovis;
 
-public interface DoubleFunctionWithDoubleParam {
+/**
+ * Function that return <code>String</code> and takes no arguments.
+ * 
+ * @author Lars Grammel
+ */
+public interface StringFunctionNoArgs {
 
-    double f(double value, int i);
+    String f();
 
 }

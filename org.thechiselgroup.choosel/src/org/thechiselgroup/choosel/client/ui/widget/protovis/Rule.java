@@ -158,8 +158,8 @@ public class Rule extends Mark {
         return this.strokeStyle(strokeStyle);
     }-*/;
 
-    public final native Rule strokeStyle(StringFunctionWithIntParam f) /*-{
-        return this.strokeStyle(@org.thechiselgroup.choosel.client.ui.widget.protovis.Mark::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/protovis/StringFunctionWithIntParam;)(this,f));
+    public final native Rule strokeStyle(StringFunctionIntArg f) /*-{
+        return this.strokeStyle(@org.thechiselgroup.choosel.client.ui.widget.protovis.Mark::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/protovis/StringFunctionIntArg;)(this,f));
     }-*/;
 
     public final native Rule title(String title) /*-{

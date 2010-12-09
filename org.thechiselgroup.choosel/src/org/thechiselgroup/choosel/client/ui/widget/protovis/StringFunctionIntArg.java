@@ -15,13 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.widget.protovis;
 
-/**
- * Function that return <code>String</code> and takes no arguments.
- * 
- * @author Lars Grammel
- */
-public interface StringFunctionWithoutParam {
+public interface StringFunctionIntArg {
 
-    String f();
+    String f(int value, int i);
 
 }

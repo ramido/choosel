@@ -18,12 +18,19 @@ package org.thechiselgroup.choosel.client.ui.widget.protovis;
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**
+ * Protovis scale.
  * 
  * @author Bradley Blashko
  * @author Lars Grammel
+ * 
+ * @see "http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.html"
  */
 // @formatter:off
 public class Scale extends JavaScriptObject {
+
+    public final static native Scale linear() /*-{
+        return $wnd.pv.Scale.linear();
+    }-*/;
 
     public final static native Scale linear(double from, double to) /*-{
         return $wnd.pv.Scale.linear(from, to);
@@ -32,7 +39,11 @@ public class Scale extends JavaScriptObject {
     protected Scale() {
     }
 
-    public final native Scale range(double min, double max) /*-{
+    public final native Scale domain(double min, double max) /*-{
+        return this.domain(min, max);
+    }-*/;
+
+    public final native Scale range(int min, int max) /*-{
         return this.range(min, max);
     }-*/;
 
@@ -40,10 +51,6 @@ public class Scale extends JavaScriptObject {
         return this.tickFormat(tick);
     }-*/;
     
-    public final native String tickFormat(String tick) /*-{
-        return this.tickFormat(tick);
-    }-*/;
-
     public final native JavaScriptObject ticks() /*-{
         return this.ticks();
     }-*/;
