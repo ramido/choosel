@@ -118,7 +118,7 @@ public class DelegatingResourceSet implements ResourceSet {
     }
 
     @Override
-    public void invertAll(ResourceSet resources) {
+    public void invertAll(Iterable<Resource> resources) {
         delegate.invertAll(resources);
     }
 

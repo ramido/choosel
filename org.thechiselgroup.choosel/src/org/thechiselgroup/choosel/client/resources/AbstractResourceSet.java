@@ -19,6 +19,7 @@ import org.thechiselgroup.choosel.client.label.DefaultHasLabel;
 import org.thechiselgroup.choosel.client.label.HasLabel;
 import org.thechiselgroup.choosel.client.label.LabelChangedEventHandler;
 import org.thechiselgroup.choosel.client.util.SingleItemCollection;
+import org.thechiselgroup.choosel.client.util.SingleItemIterable;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.util.collections.LightweightList;
@@ -29,7 +30,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 
 public abstract class AbstractResourceSet implements ResourceSet {
 
-    protected transient PrioritizedHandlerManager handlerManager;
+    private transient PrioritizedHandlerManager handlerManager;
 
     private HasLabel labelDelegate;
 
@@ -59,8 +60,8 @@ public abstract class AbstractResourceSet implements ResourceSet {
         }
 
         if (!addedResources.isEmpty()) {
-            handlerManager.fireEvent(ResourceSetChangedEvent
-                    .createResourcesAddedEvent(this, addedResources));
+            fireEvent(ResourceSetChangedEvent.createResourcesAddedEvent(this,
+                    addedResources));
         }
 
         return !addedResources.isEmpty();
@@ -144,6 +145,10 @@ public abstract class AbstractResourceSet implements ResourceSet {
     protected abstract void doRemove(Resource resource,
             LightweightList<Resource> removedResources);
 
+    protected void fireEvent(ResourceSetChangedEvent event) {
+        handlerManager.fireEvent(event);
+    }
+
     @Override
     public Resource getFirstResource() {
         assert !isEmpty();
@@ -194,24 +199,36 @@ public abstract class AbstractResourceSet implements ResourceSet {
     public final void invert(Resource resource) {
         assert resource != null;
 
-        if (contains(resource)) {
-            remove(resource);
-            assert !contains(resource);
-        } else {
-            add(resource);
-            assert contains(resource);
-        }
+        invertAll(new SingleItemIterable<Resource>(resource));
     }
 
-    // XXX what if resource is contained in several selected resource items?
+    /*
+     * XXX what if resource is contained in several selected resource items? The
+     * general selection model seems to be flawed. Need to create an issue
+     * tracking item for this.
+     */
     @Override
-    public void invertAll(ResourceSet resources) {
+    public void invertAll(Iterable<Resource> resources) {
         // TODO fix: this fires several events
         assert resources != null;
 
+        LightweightList<Resource> addedResources = CollectionFactory
+                .createLightweightList();
+        LightweightList<Resource> removedResources = CollectionFactory
+                .createLightweightList();
+
         for (Resource resource : resources) {
-            invert(resource);
+            if (contains(resource)) {
+                doRemove(resource, removedResources);
+                assert !contains(resource);
+            } else {
+                doAdd(resource, addedResources);
+                assert contains(resource);
+            }
         }
+
+        fireEvent(ResourceSetChangedEvent.createResourcesAddedAndRemovedEvent(
+                this, addedResources, removedResources));
     }
 
     @Override
@@ -240,8 +257,8 @@ public abstract class AbstractResourceSet implements ResourceSet {
         }
 
         if (!removedResources.isEmpty()) {
-            handlerManager.fireEvent(ResourceSetChangedEvent
-                    .createResourcesRemovedEvent(this, removedResources));
+            fireEvent(ResourceSetChangedEvent.createResourcesRemovedEvent(this,
+                    removedResources));
         }
 
         return !removedResources.isEmpty();
@@ -261,8 +278,8 @@ public abstract class AbstractResourceSet implements ResourceSet {
         }
 
         if (!removedResources.isEmpty()) {
-            handlerManager.fireEvent(ResourceSetChangedEvent
-                    .createResourcesRemovedEvent(this, removedResources));
+            fireEvent(ResourceSetChangedEvent.createResourcesRemovedEvent(this,
+                    removedResources));
         }
 
         return !removedResources.isEmpty();
