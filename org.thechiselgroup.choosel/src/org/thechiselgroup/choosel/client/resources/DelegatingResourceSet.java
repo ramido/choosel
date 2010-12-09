@@ -113,6 +113,16 @@ public class DelegatingResourceSet implements ResourceSet {
     }
 
     @Override
+    public void invert(Resource resource) {
+        delegate.invert(resource);
+    }
+
+    @Override
+    public void invertAll(ResourceSet resources) {
+        delegate.invertAll(resources);
+    }
+
+    @Override
     public boolean isEmpty() {
         return delegate.isEmpty();
     }
@@ -138,11 +148,6 @@ public class DelegatingResourceSet implements ResourceSet {
     }
 
     @Override
-    public boolean removeAll(ResourceSet resources) {
-        return delegate.removeAll(resources);
-    }
-
-    @Override
     public boolean retainAll(ResourceSet resources) {
         return delegate.retainAll(resources);
     }
@@ -155,16 +160,6 @@ public class DelegatingResourceSet implements ResourceSet {
     @Override
     public int size() {
         return delegate.size();
-    }
-
-    @Override
-    public void switchContainment(Resource resource) {
-        delegate.switchContainment(resource);
-    }
-
-    @Override
-    public void switchContainment(ResourceSet resources) {
-        delegate.switchContainment(resources);
     }
 
     @Override

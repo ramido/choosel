@@ -191,6 +191,30 @@ public abstract class AbstractResourceSet implements ResourceSet {
     }
 
     @Override
+    public final void invert(Resource resource) {
+        assert resource != null;
+
+        if (contains(resource)) {
+            remove(resource);
+            assert !contains(resource);
+        } else {
+            add(resource);
+            assert contains(resource);
+        }
+    }
+
+    // XXX what if resource is contained in several selected resource items?
+    @Override
+    public void invertAll(ResourceSet resources) {
+        // TODO fix: this fires several events
+        assert resources != null;
+
+        for (Resource resource : resources) {
+            invert(resource);
+        }
+    }
+
+    @Override
     public boolean isModifiable() {
         return true;
     }
@@ -223,11 +247,6 @@ public abstract class AbstractResourceSet implements ResourceSet {
         return !removedResources.isEmpty();
     }
 
-    @Override
-    public boolean removeAll(ResourceSet resources) {
-        return removeAll((Iterable<Resource>) resources);
-    }
-
     // TODO implement faster retains if both are default resource sets
     @Override
     public boolean retainAll(ResourceSet resources) {
@@ -252,30 +271,6 @@ public abstract class AbstractResourceSet implements ResourceSet {
     @Override
     public void setLabel(String label) {
         labelDelegate.setLabel(label);
-    }
-
-    @Override
-    public final void switchContainment(Resource resource) {
-        assert resource != null;
-
-        if (contains(resource)) {
-            remove(resource);
-            assert !contains(resource);
-        } else {
-            add(resource);
-            assert contains(resource);
-        }
-    }
-
-    // XXX what if resource is contained in several selected resource items?
-    @Override
-    public void switchContainment(ResourceSet resources) {
-        // TODO fix: this fires several events
-        assert resources != null;
-
-        for (Resource resource : resources) {
-            switchContainment(resource);
-        }
     }
 
 }

@@ -62,7 +62,7 @@ public class DefaultResourceSetTest {
     }
 
     @Test
-    public void addResource() {
+    public void addResourceAffectsContainsAndSize() {
         underTest.add(createResource(1));
 
         assertEquals(1, underTest.size());
@@ -70,7 +70,7 @@ public class DefaultResourceSetTest {
     }
 
     @Test
-    public void addResources() {
+    public void addResourcesAffectsContainsAndSize() {
         underTest.addAll(createResources(1, 2, 3));
 
         assertEquals(3, underTest.size());
@@ -174,6 +174,17 @@ public class DefaultResourceSetTest {
     }
 
     @Test
+    public void invertAllAffectsContainsAndSize() {
+        underTest.addAll(createResources(1, 2));
+        underTest.invertAll(createResources(2, 3));
+
+        assertEquals(2, underTest.size());
+        assertEquals(true, underTest.contains(createResource(1)));
+        assertEquals(false, underTest.contains(createResource(2)));
+        assertEquals(true, underTest.contains(createResource(3)));
+    }
+
+    @Test
     public void removeAllFiresResourcesRemovedEvent() {
         underTest.addAll(createResources(1, 2, 3));
         underTest.addEventHandler(changedHandler);
@@ -200,7 +211,7 @@ public class DefaultResourceSetTest {
     }
 
     @Test
-    public void removeResource() {
+    public void removeResourceAffectsContainsAndSize() {
         underTest.addAll(createResources(1, 2, 3));
         underTest.remove(createResource(1));
 
@@ -211,7 +222,7 @@ public class DefaultResourceSetTest {
     }
 
     @Test
-    public void removeResources() {
+    public void removeResourcesAffectsContainsAndSize() {
         underTest.addAll(createResources(1, 2, 3));
         underTest.removeAll(createResources(1, 2, 3));
 
