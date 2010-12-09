@@ -47,13 +47,7 @@ public class DelegatingResourceSet implements ResourceSet {
 
     @Override
     public HandlerRegistration addEventHandler(
-            ResourcesAddedEventHandler handler) {
-        return delegate.addEventHandler(handler);
-    }
-
-    @Override
-    public HandlerRegistration addEventHandler(
-            ResourcesRemovedEventHandler handler) {
+            ResourceSetChangedEventHandler handler) {
         return delegate.addEventHandler(handler);
     }
 

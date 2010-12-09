@@ -24,7 +24,7 @@ import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.client.util.event.EventHandlerPriority;
+import org.thechiselgroup.choosel.client.util.event.PrioritizedEventHandler;
 import org.thechiselgroup.choosel.client.util.event.PrioritizedHandlerManager;
 import org.thechiselgroup.choosel.client.util.math.AverageCalculation;
 import org.thechiselgroup.choosel.client.util.math.Calculation;
@@ -57,14 +57,13 @@ public class SlotMappingConfiguration {
         handlerManager = new PrioritizedHandlerManager(this);
     }
 
-    public HandlerRegistration addHandler(SlotMappingChangedHandler handler,
-            EventHandlerPriority priority) {
-
+    /**
+     * Adds an event handler that gets called when mappings change. Supports
+     * {@link PrioritizedEventHandler}.
+     */
+    public HandlerRegistration addHandler(SlotMappingChangedHandler handler) {
         assert handler != null;
-        assert priority != null;
-
-        return handlerManager.addHandler(SlotMappingChangedEvent.TYPE, handler,
-                priority);
+        return handlerManager.addHandler(SlotMappingChangedEvent.TYPE, handler);
     }
 
     public boolean containsResolver(Slot slot) {

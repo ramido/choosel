@@ -58,7 +58,8 @@ public class CountingResourceSet extends AbstractResourceSet {
         }
 
         if (!addedResources.isEmpty()) {
-            eventBus.fireEvent(new ResourcesAddedEvent(this, addedResources));
+            handlerManager.fireEvent(ResourceSetChangedEvent
+                    .createResourcesAddedEvent(this, addedResources));
         }
 
         return !addedResources.isEmpty();

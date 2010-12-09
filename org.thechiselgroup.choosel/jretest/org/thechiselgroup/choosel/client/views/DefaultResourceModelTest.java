@@ -32,8 +32,7 @@ import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourceSetChangedEvent;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccessor;
 
 public class DefaultResourceModelTest {
@@ -118,8 +117,7 @@ public class DefaultResourceModelTest {
         underTest.addResourceSet(resources);
         underTest.dispose();
 
-        assertEquals(0, resources.getHandlerCount(ResourcesAddedEvent.TYPE));
-        assertEquals(0, resources.getHandlerCount(ResourcesRemovedEvent.TYPE));
+        assertEquals(0, resources.getHandlerCount(ResourceSetChangedEvent.TYPE));
     }
 
     @Test

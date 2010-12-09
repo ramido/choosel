@@ -327,13 +327,20 @@ public abstract class ChartViewContentDisplay extends
 
     @Override
     public void onResize(int width, int height) {
-        resize(width, height);
+        if (width == this.width && height == this.height) {
+            return;
+        }
+
+        this.width = width;
+        this.height = height;
+
+        renderChart();
     }
 
     protected abstract void registerEventHandler(String eventType,
             ProtovisEventHandler handler);
 
-    protected void registerEventHandlers() {
+    private void registerEventHandlers() {
         for (String eventType : eventTypes) {
             registerEventHandler(eventType, handler);
         }
@@ -363,16 +370,6 @@ public abstract class ChartViewContentDisplay extends
         } finally {
             isRendering = false;
         }
-    }
-
-    private void resize(int width, int height) {
-        if (width == this.width && height == this.height) {
-            return;
-        }
-
-        this.width = width;
-        this.height = height;
-        buildChart(); // TODO render chart good enough?
     }
 
     // TODO implement

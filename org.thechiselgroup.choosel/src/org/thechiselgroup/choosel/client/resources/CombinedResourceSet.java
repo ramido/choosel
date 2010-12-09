@@ -26,9 +26,7 @@ public class CombinedResourceSet extends DelegatingResourceSet {
 
     static class ResourceSetElement {
 
-        private HandlerRegistration addHandlerRegistration;
-
-        private HandlerRegistration removeHandlerRegistration;
+        private HandlerRegistration handlerRegistration;
 
         private ResourceSet resourceSet;
 
@@ -36,32 +34,29 @@ public class CombinedResourceSet extends DelegatingResourceSet {
             this.resourceSet = resourceSet;
         }
 
-        public void removeHandlers() {
-            addHandlerRegistration.removeHandler();
-            removeHandlerRegistration.removeHandler();
+        public void removeHandler() {
+            handlerRegistration.removeHandler();
         }
 
     }
 
     private List<ResourceSetElement> containedResourceSets = new ArrayList<ResourceSetElement>();
 
-    private ResourcesAddedEventHandler resourceAddedHandler = new ResourcesAddedEventHandler() {
+    private ResourceSetChangedEventHandler resourceSetChangedHandler = new ResourceSetChangedEventHandler() {
+
         @Override
-        public void onResourcesAdded(ResourcesAddedEvent e) {
+        public void onResourceSetChanged(ResourceSetChangedEvent event) {
+            // TODO introduce combined add/remove processing
             /*
              * addAll is called to keep the add iteration atomic (one event
              * should get fired)
              */
-            addAll(e.getAddedResources());
-        }
-    };
+            addAll(event.getAddedResources());
 
-    private ResourcesRemovedEventHandler resourceRemovedHandler = new ResourcesRemovedEventHandler() {
-        @Override
-        public void onResourcesRemoved(ResourcesRemovedEvent e) {
+            // BEGIN old remove handling
             ResourceSet uniqueResources = new DefaultResourceSet();
             // test that not contained in other resources
-            for (Resource resource : e.getRemovedResources()) {
+            for (Resource resource : event.getRemovedResources()) {
                 boolean isUnique = true;
                 for (ResourceSetElement resourceSetElement : containedResourceSets) {
                     if (resourceSetElement.resourceSet.contains(resource)) {
@@ -105,10 +100,8 @@ public class CombinedResourceSet extends DelegatingResourceSet {
         containedResourceSets.add(resourceSetElement);
         addAll(resourceSet);
 
-        resourceSetElement.addHandlerRegistration = resourceSet
-                .addEventHandler(resourceAddedHandler);
-        resourceSetElement.removeHandlerRegistration = resourceSet
-                .addEventHandler(resourceRemovedHandler);
+        resourceSetElement.handlerRegistration = resourceSet
+                .addEventHandler(resourceSetChangedHandler);
 
         eventBus.fireEvent(new ResourceSetAddedEvent(resourceSet));
     }
@@ -168,7 +161,7 @@ public class CombinedResourceSet extends DelegatingResourceSet {
         }
 
         containedResourceSets.remove(resourceSetElement);
-        resourceSetElement.removeHandlers();
+        resourceSetElement.removeHandler();
 
         // XXX performance improvements
         List<Resource> toRemove = new ArrayList<Resource>();

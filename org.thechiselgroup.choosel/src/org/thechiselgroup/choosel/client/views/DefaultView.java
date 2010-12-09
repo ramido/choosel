@@ -35,12 +35,10 @@ import org.thechiselgroup.choosel.client.resources.ResourceGroupingChangedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourceGroupingChangedHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.resources.ResourceSetChangedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourceSetChangedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceSetEventForwarder;
 import org.thechiselgroup.choosel.client.resources.ResourceSetUtils;
-import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
-import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
@@ -58,7 +56,6 @@ import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.client.util.collections.LightweightList;
-import org.thechiselgroup.choosel.client.util.event.EventHandlerPriority;
 import org.thechiselgroup.choosel.client.util.math.SumCalculation;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 import org.thechiselgroup.choosel.client.workspace.ViewSaver;
@@ -422,18 +419,12 @@ public class DefaultView extends AbstractWindowContent implements View {
                 resourceModel.getResources(), resourceGrouping) {
 
             @Override
-            public void onResourcesAdded(ResourcesAddedEvent e) {
-                initializeVisualMappings(e.getTarget());
-                visualMappingsControl.updateConfiguration(e.getTarget());
-                super.onResourcesAdded(e);
+            public void onResourceSetChanged(ResourceSetChangedEvent event) {
+                initializeVisualMappings(event.getTarget());
+                visualMappingsControl.updateConfiguration(event.getTarget());
+                super.onResourceSetChanged(event);
             }
 
-            @Override
-            public void onResourcesRemoved(ResourcesRemovedEvent e) {
-                initializeVisualMappings(e.getTarget());
-                visualMappingsControl.updateConfiguration(e.getTarget());
-                super.onResourcesRemoved(e);
-            }
         };
         allResourcesToGroupingForwarder.init();
     }
@@ -519,18 +510,14 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private void initHoverModelHooks() {
         handlerRegistrations.addHandlerRegistration(hoverModel
-                .addEventHandler(new ResourcesAddedEventHandler() {
+                .addEventHandler(new ResourceSetChangedEventHandler() {
                     @Override
-                    public void onResourcesAdded(ResourcesAddedEvent e) {
-                        updateHighlighting(e.getAddedResources(), true);
-                    }
+                    public void onResourceSetChanged(
+                            ResourceSetChangedEvent event) {
 
-                }));
-        handlerRegistrations.addHandlerRegistration(hoverModel
-                .addEventHandler(new ResourcesRemovedEventHandler() {
-                    @Override
-                    public void onResourcesRemoved(ResourcesRemovedEvent e) {
-                        updateHighlighting(e.getRemovedResources(), false);
+                        // TODO performance -- single operation
+                        updateHighlighting(event.getAddedResources(), true);
+                        updateHighlighting(event.getRemovedResources(), false);
                     }
                 }));
     }
@@ -583,17 +570,14 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private void initSelectionModelEventHandlers() {
         handlerRegistrations.addHandlerRegistration(selectionModel
-                .addEventHandler(new ResourcesAddedEventHandler() {
+                .addEventHandler(new ResourceSetChangedEventHandler() {
                     @Override
-                    public void onResourcesAdded(ResourcesAddedEvent e) {
-                        updateSelection(e.getAddedResources(), true);
-                    }
-                }));
-        handlerRegistrations.addHandlerRegistration(selectionModel
-                .addEventHandler(new ResourcesRemovedEventHandler() {
-                    @Override
-                    public void onResourcesRemoved(ResourcesRemovedEvent e) {
-                        updateSelection(e.getRemovedResources(), false);
+                    public void onResourceSetChanged(
+                            ResourceSetChangedEvent event) {
+
+                        // TODO performance - single operation
+                        updateSelection(event.getAddedResources(), true);
+                        updateSelection(event.getRemovedResources(), false);
                     }
                 }));
     }
@@ -651,7 +635,7 @@ public class DefaultView extends AbstractWindowContent implements View {
                         LightweightCollections.<ResourceItem> emptyCollection(),
                         LightweightCollections.toCollection(e.getSlot()));
             }
-        }, EventHandlerPriority.NORMAL);
+        });
     }
 
     protected void initUI() {
@@ -951,7 +935,8 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     private void updateHighlighting(
-            LightweightList<Resource> affectedResources, boolean highlighted) {
+            LightweightCollection<Resource> affectedResources,
+            boolean highlighted) {
 
         assert affectedResources != null;
 
@@ -1017,7 +1002,7 @@ public class DefaultView extends AbstractWindowContent implements View {
                 LightweightCollections.<Slot> emptyCollection());
     }
 
-    private void updateSelection(LightweightList<Resource> resources,
+    private void updateSelection(LightweightCollection<Resource> resources,
             boolean selected) {
 
         LightweightList<ResourceItem> resourceItems = getResourceItems(resources);

@@ -43,10 +43,8 @@ import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceByPropertyMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
-import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
+import org.thechiselgroup.choosel.client.resources.ResourceSetChangedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourceSetChangedEventHandler;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.util.collections.LightweightList;
@@ -138,11 +136,11 @@ public class DefaultViewTest {
     }
 
     private void deselect(ResourceSet resources) {
-        ArgumentCaptor<ResourcesRemovedEventHandler> captor = ArgumentCaptor
-                .forClass(ResourcesRemovedEventHandler.class);
+        ArgumentCaptor<ResourceSetChangedEventHandler> captor = ArgumentCaptor
+                .forClass(ResourceSetChangedEventHandler.class);
         verify(underTest.getSelectionModel(), times(1)).addEventHandler(
                 captor.capture());
-        ResourcesRemovedEventHandler removedHandler = captor.getValue();
+        ResourceSetChangedEventHandler removedHandler = captor.getValue();
 
         LightweightList<Resource> removedResources = CollectionFactory
                 .createLightweightList();
@@ -150,8 +148,9 @@ public class DefaultViewTest {
             removedResources.add(resource);
         }
 
-        removedHandler.onResourcesRemoved(new ResourcesRemovedEvent(
-                createResources(), removedResources));
+        removedHandler.onResourceSetChanged(ResourceSetChangedEvent
+                .createResourcesRemovedEvent(createResources(),
+                        removedResources));
     }
 
     @Test
@@ -187,9 +186,7 @@ public class DefaultViewTest {
     public void disposeSelectionModelEventHandlers() {
         underTest.dispose();
 
-        verify(underTest.getTestSelectionAddedHandlerRegistration(), times(1))
-                .removeHandler();
-        verify(underTest.getTestSelectionRemovedHandlerRegistration(), times(1))
+        verify(underTest.getTestSelectionChangedHandlerRegistration(), times(1))
                 .removeHandler();
     }
 
@@ -341,8 +338,8 @@ public class DefaultViewTest {
     }
 
     private void select(ResourceSet selectedResources) {
-        ArgumentCaptor<ResourcesAddedEventHandler> captor = ArgumentCaptor
-                .forClass(ResourcesAddedEventHandler.class);
+        ArgumentCaptor<ResourceSetChangedEventHandler> captor = ArgumentCaptor
+                .forClass(ResourceSetChangedEventHandler.class);
         verify(underTest.getSelectionModel(), times(1)).addEventHandler(
                 captor.capture());
 
@@ -352,9 +349,9 @@ public class DefaultViewTest {
             addedResources.add(resource);
         }
 
-        ResourcesAddedEventHandler addedHandler = captor.getValue();
-        addedHandler.onResourcesAdded(new ResourcesAddedEvent(
-                selectedResources, addedResources));
+        ResourceSetChangedEventHandler changeHandler = captor.getValue();
+        changeHandler.onResourceSetChanged(ResourceSetChangedEvent
+                .createResourcesAddedEvent(selectedResources, addedResources));
     }
 
     @Test

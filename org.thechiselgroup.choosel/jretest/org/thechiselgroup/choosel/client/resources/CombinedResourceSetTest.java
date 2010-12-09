@@ -23,18 +23,15 @@ import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.crea
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
 
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 public class CombinedResourceSetTest {
 
     @Mock
-    private ResourcesAddedEventHandler addedHandler;
+    private ResourceSetChangedEventHandler resourceSetChangedHandler;
 
     private CombinedResourceSet underTest;
 
@@ -98,15 +95,11 @@ public class CombinedResourceSetTest {
 
     @Test
     public void fireAddEventsWhenResourceSetAdded() {
-        underTest.addEventHandler(addedHandler);
+        underTest.addEventHandler(resourceSetChangedHandler);
         underTest.addResourceSet(createLabeledResources(1, 2, 3));
 
-        ArgumentCaptor<ResourcesAddedEvent> argument = verifyOnResourcesAdded(
-                1, addedHandler);
-
-        List<Resource> eventResources = argument.getValue().getAddedResources()
-                .toList();
-        assertEquals(3, eventResources.size());
+        verifyOnResourcesAdded(createResources(1, 2, 3),
+                resourceSetChangedHandler);
     }
 
     @Test
