@@ -73,11 +73,11 @@ public final class BenchmarkResourceSetFactory {
     private static Resource createRandomLocation() {
         Resource locationResource = new Resource();
 
-        int randomLatitudeValue = Random.nextInt(100 * 180);
+        int randomLatitudeValue = Random.nextInt(100 * 90 * 2);
         double latitude = (randomLatitudeValue / 100d) - 90;
         locationResource.putValue(MapViewContentDisplay.LATITUDE, latitude);
 
-        int randomLongitudeValue = Random.nextInt(100 * 360);
+        int randomLongitudeValue = Random.nextInt(100 * 180 * 2);
         double longitude = (randomLongitudeValue / 100d) - 180;
         locationResource.putValue(MapViewContentDisplay.LONGITUDE, longitude);
 

@@ -39,8 +39,8 @@ import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.views.HoverModel;
 
+import com.allen_sauer.gwt.dnd.client.DragEndEvent;
 import com.allen_sauer.gwt.dnd.client.DragHandler;
-import com.allen_sauer.gwt.dnd.client.DragStartEvent;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
@@ -130,7 +130,7 @@ public class HighlightingResourceSetAvatarFactoryTest {
     }
 
     @Test
-    public void hoverClearedAtDragStart() {
+    public void hoverClearedAtDragEnd() {
         underTest.createAvatar(resources);
 
         ArgumentCaptor<DragHandler> argument = ArgumentCaptor
@@ -139,7 +139,7 @@ public class HighlightingResourceSetAvatarFactoryTest {
 
         DragHandler dragHandler = argument.getValue();
 
-        dragHandler.onDragStart(mock(DragStartEvent.class));
+        dragHandler.onDragEnd(mock(DragEndEvent.class));
 
         verify(hoverModel, times(1)).setHighlightedResourceSet(
                 ((ResourceSet) isNull()));

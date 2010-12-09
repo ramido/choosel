@@ -24,9 +24,9 @@ import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.views.HoverModel;
 
+import com.allen_sauer.gwt.dnd.client.DragEndEvent;
 import com.allen_sauer.gwt.dnd.client.DragHandler;
 import com.allen_sauer.gwt.dnd.client.DragHandlerAdapter;
-import com.allen_sauer.gwt.dnd.client.DragStartEvent;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
@@ -91,9 +91,14 @@ public class HighlightingResourceSetAvatarFactory extends
 
                 });
 
+        /**
+         * Removes the hover at the end of a drag and drop operation. Because
+         * the resource set is already hovered, this saves the effort of
+         * highlighting the resources again.
+         */
         final DragHandlerAdapter dragHandler = new DragHandlerAdapter() {
             @Override
-            public void onDragStart(DragStartEvent event) {
+            public void onDragEnd(DragEndEvent event) {
                 removeFromHover();
             }
 

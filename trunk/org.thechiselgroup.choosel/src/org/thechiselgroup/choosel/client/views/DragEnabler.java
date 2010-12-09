@@ -63,16 +63,18 @@ public class DragEnabler {
             return super.createProxy();
         }
 
-        /**
-         * @see http://code.google.com/p/choosel/issues/detail?id=29
-         */
         @Override
         public void dragProxyAttached() {
-            item.getHighlightingManager().setHighlighting(false);
+
         }
 
         @Override
         public void dragProxyDetached() {
+            /*
+             * The highlighting remains active during the dnd operation. At the
+             * end of the dnd operation, the highlighting is removed.
+             */
+            item.getHighlightingManager().setHighlighting(false);
             removeFromParent();
         }
 
@@ -105,7 +107,7 @@ public class DragEnabler {
     }
 
     private void createDragWidget(int absoluteLeft, int absoluteTop) {
-        assert panel == null;
+        assert panel == null : "panel was not null " + panel;
 
         // add to desktop - need widget container
         // FIXME use dependency injection

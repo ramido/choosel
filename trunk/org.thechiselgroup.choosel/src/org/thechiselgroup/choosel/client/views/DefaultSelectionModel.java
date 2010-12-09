@@ -21,6 +21,7 @@ import java.util.List;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.persistence.Persistable;
+import org.thechiselgroup.choosel.client.resources.NullResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourceSetAddedEventHandler;
@@ -114,7 +115,7 @@ public class DefaultSelectionModel implements SelectionModel, Disposable,
     @Override
     public ResourceSet getSelection() {
         return selection.getDelegate();
-    } // for test
+    }
 
     public List<ResourceSet> getSelectionSets() {
         return selectionSets;
@@ -172,7 +173,9 @@ public class DefaultSelectionModel implements SelectionModel, Disposable,
     @Override
     public void setSelection(ResourceSet newSelectionModel) {
         assert newSelectionModel == null
-                || selectionSets.contains(newSelectionModel);
+                || newSelectionModel instanceof NullResourceSet
+                || selectionSets.contains(newSelectionModel) : "selection "
+                + newSelectionModel + " not contained in this view";
 
         selection.setDelegate(newSelectionModel);
         eventBus.fireEvent(new ResourceSetActivatedEvent(newSelectionModel));

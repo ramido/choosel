@@ -53,6 +53,7 @@ import org.thechiselgroup.choosel.client.util.HandlerRegistrationSet;
 import org.thechiselgroup.choosel.client.util.Initializable;
 import org.thechiselgroup.choosel.client.util.SingleItemIterable;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.client.util.collections.CombinedIterable;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.client.util.collections.LightweightList;
@@ -258,7 +259,8 @@ public class DefaultView extends AbstractWindowContent implements View {
         // TODO introduce partial selection
 
         if (!highlightedResources.isEmpty()) {
-            resourceItem.addHighlightedResources(highlightedResources);
+            resourceItem.updateHighlightedResources(highlightedResources,
+                    LightweightCollections.<Resource> emptyCollection());
         }
 
         // / TODO is this necessary?
@@ -322,6 +324,22 @@ public class DefaultView extends AbstractWindowContent implements View {
         return resourceGrouping.getCategorizedResourceSets();
     }
 
+    /**
+     * Calculates the intersection with the resources that are displayed in this
+     * view.
+     * <p>
+     * <b>PERFORMANCE</b>: returns ResourceSet to enable fast containment checks
+     * in DefaultResourceItem.
+     * </p>
+     */
+    private ResourceSet getIntersectionWithViewResources(
+            LightweightCollection<Resource> resources) {
+
+        ResourceSet resourcesInThisView = new DefaultResourceSet();
+        resourcesInThisView.addAll(resourceModel.getIntersection(resources));
+        return resourcesInThisView;
+    }
+
     protected String getModuleBase() {
         return GWT.getModuleBaseURL();
     }
@@ -349,7 +367,6 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         LightweightList<ResourceItem> result = CollectionFactory
                 .createLightweightList();
-
         Set<String> groups = resourceGrouping.getGroups(resources);
         for (String group : groups) {
             result.add(groupsToResourceItems.get(group));
@@ -515,9 +532,8 @@ public class DefaultView extends AbstractWindowContent implements View {
                     public void onResourceSetChanged(
                             ResourceSetChangedEvent event) {
 
-                        // TODO performance -- single operation
-                        updateHighlighting(event.getAddedResources(), true);
-                        updateHighlighting(event.getRemovedResources(), false);
+                        updateHighlighting(event.getAddedResources(),
+                                event.getRemovedResources());
                     }
                 }));
     }
@@ -934,39 +950,33 @@ public class DefaultView extends AbstractWindowContent implements View {
         contentDisplay.checkResize();
     }
 
+    // TODO replace with add / remove of resources from item
+    // --> can we have filtered view on hover set instead??
+    // --> problem with the order of update calls
+    // ----> use view-internal hover model instead?
+    // TODO dispose resource items once filtered set is used
+    // TODO check that highlighting is right from the beginning
     private void updateHighlighting(
-            LightweightCollection<Resource> affectedResources,
-            boolean highlighted) {
+            LightweightCollection<Resource> addedResources,
+            LightweightCollection<Resource> removedResources) {
 
-        assert affectedResources != null;
+        assert addedResources != null;
+        assert removedResources != null;
 
-        /*
-         * PERFORMANCE: use resource set to enable fast containment checks in
-         * DefaultResourceItem
-         */
-        ResourceSet affectedResourcesInThisView = new DefaultResourceSet();
-        affectedResourcesInThisView.addAll(resourceModel
-                .getIntersection(affectedResources));
+        ResourceSet addedResourcesInThisView = getIntersectionWithViewResources(addedResources);
+        ResourceSet removedResourcesInThisView = getIntersectionWithViewResources(removedResources);
 
-        if (affectedResourcesInThisView.isEmpty()) {
+        if (addedResourcesInThisView.isEmpty()
+                && removedResourcesInThisView.isEmpty()) {
             return;
         }
 
-        LightweightList<ResourceItem> affectedResourceItems = getResourceItems(affectedResourcesInThisView);
+        LightweightList<ResourceItem> affectedResourceItems = getResourceItems(new CombinedIterable<Resource>(
+                addedResources, removedResources));
+
         for (ResourceItem resourceItem : affectedResourceItems) {
-            if (highlighted) {
-                ((DefaultResourceItem) resourceItem)
-                        .addHighlightedResources(affectedResourcesInThisView);
-            } else {
-                ((DefaultResourceItem) resourceItem)
-                        .removeHighlightedResources(affectedResourcesInThisView);
-            }
-            // TODO replace with add / remove of resources from item
-            // --> can we have filtered view on hover set instead??
-            // --> problem with the order of update calls
-            // ----> use view-internal hover model instead?
-            // TODO dispose resource items once filtered set is used
-            // TODO check that highlighting is right from the beginning
+            ((DefaultResourceItem) resourceItem).updateHighlightedResources(
+                    addedResourcesInThisView, removedResourcesInThisView);
         }
 
         contentDisplay.update(

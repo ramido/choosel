@@ -49,19 +49,17 @@ public class DefaultTextItemLabel extends ResourceSetAvatar implements
         return this;
     }
 
-    /**
-     * Implements DragProxyEventReceiver to remove highlighting from resource
-     * items when drag operation starts.
-     * 
-     * @see issue 29
-     */
     @Override
     public void dragProxyAttached() {
-        resourceItem.getHighlightingManager().setHighlighting(false);
     }
 
     @Override
     public void dragProxyDetached() {
+        /*
+         * The highlighting remains active during the dnd operation. At the end
+         * of the dnd operation, the highlighting is removed.
+         */
+        resourceItem.getHighlightingManager().setHighlighting(false);
     }
 
     public ResourceItem getResourceItem() {

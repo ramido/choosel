@@ -28,6 +28,7 @@ import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.client.util.event.EventHandlerPriority;
 import org.thechiselgroup.choosel.client.util.event.PrioritizedEventHandler;
 
@@ -153,17 +154,6 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
         initCacheCleaning(resources, slotMappingConfiguration);
         initHighlighting();
         initPopupHighlighting();
-    }
-
-    public void addHighlightedResources(
-            LightweightCollection<Resource> highlightedResources) {
-
-        assert highlightedResources != null;
-
-        cachedHighlightStatus = null;
-        highlightedSubsetSlotValueCache.clear();
-        this.highlightedResources.addAll(resources
-                .getIntersection(highlightedResources));
     }
 
     public void addSelectedResources(
@@ -379,17 +369,6 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
         });
     }
 
-    public void removeHighlightedResources(
-            LightweightCollection<Resource> highlightedResources) {
-
-        assert highlightedResources != null;
-
-        cachedHighlightStatus = null;
-        highlightedSubsetSlotValueCache.clear();
-        this.highlightedResources.removeAll(resources
-                .getIntersection(highlightedResources));
-    }
-
     public void removeSelectedResources(
             LightweightCollection<Resource> selectedResources) {
         assert selectedResources != null;
@@ -408,6 +387,22 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
     @Override
     public String toString() {
         return "ResourceItem[" + resources.toString() + "]";
+    }
+
+    public void updateHighlightedResources(
+            LightweightCollection<Resource> addedHighlightedResources,
+            LightweightCollection<Resource> removedHighlightedResources) {
+
+        assert addedHighlightedResources != null;
+        assert removedHighlightedResources != null;
+
+        cachedHighlightStatus = null;
+        highlightedSubsetSlotValueCache.clear();
+
+        highlightedResources.addAll(resources
+                .getIntersection(addedHighlightedResources));
+        highlightedResources.removeAll(resources
+                .getIntersection(removedHighlightedResources));
     }
 
 }
