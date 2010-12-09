@@ -25,7 +25,6 @@ import org.thechiselgroup.choosel.client.ui.widget.protovis.Rule;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Scale;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunction;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunctionWithIntParam;
-import org.thechiselgroup.choosel.client.util.collections.ArrayUtils;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 
@@ -156,7 +155,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
     private void drawDot() {
         regularDot = chart
                 .add(Dot.createDot())
-                .data(ArrayUtils.toJsArray(chartItems))
+                .data(chartItemJsArray)
                 .bottom(dotBottom)
                 .left(dotLeft)
                 .size(Math.min(chartHeight, chartWidth)

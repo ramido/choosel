@@ -29,6 +29,7 @@ import org.thechiselgroup.choosel.client.ui.widget.protovis.Scale;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunction;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunctionWithIntParam;
 import org.thechiselgroup.choosel.client.util.StringUtils;
+import org.thechiselgroup.choosel.client.util.collections.ArrayUtils;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
@@ -38,6 +39,7 @@ import org.thechiselgroup.choosel.client.views.ResourceItem.Subset;
 import org.thechiselgroup.choosel.client.views.Slot;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -51,6 +53,8 @@ import com.google.inject.Inject;
  */
 public abstract class ChartViewContentDisplay extends
         AbstractViewContentDisplay implements ChartWidgetCallback {
+
+    protected JavaScriptObject chartItemJsArray = ArrayUtils.createArray();
 
     protected List<ChartItem> chartItems = new ArrayList<ChartItem>();
 
@@ -157,8 +161,9 @@ public abstract class ChartViewContentDisplay extends
         this.dragEnablerFactory = dragEnablerFactory;
     }
 
-    public void addChartItem(ChartItem resourceItem) {
-        chartItems.add(resourceItem);
+    public void addChartItem(ChartItem chartItem) {
+        chartItems.add(chartItem);
+        ArrayUtils.add(chartItem, chartItemJsArray);
     }
 
     /**
@@ -352,6 +357,7 @@ public abstract class ChartViewContentDisplay extends
 
     public void removeChartItem(ChartItem chartItem) {
         chartItems.remove(chartItem);
+        ArrayUtils.remove(chartItem, chartItemJsArray);
     }
 
     /**

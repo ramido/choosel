@@ -17,11 +17,10 @@ package org.thechiselgroup.choosel.client.views.chart;
 
 import org.thechiselgroup.choosel.client.ui.Colors;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Alignment;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.DoubleFunction;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Label;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisEventHandler;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.DoubleFunction;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Wedge;
-import org.thechiselgroup.choosel.client.util.collections.ArrayUtils;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 
 import com.google.inject.Inject;
@@ -132,8 +131,7 @@ public class PieChartViewContentDisplay extends ChartViewContentDisplay {
 
         if (hasPartiallyHighlightedChartItems()) {
             regularWedge = chart.add(Wedge.createWedge())
-                    .data(ArrayUtils.toJsArray(chartItems)).left(wedgeLeft)
-                    .bottom(wedgeBottom)
+                    .data(chartItemJsArray).left(wedgeLeft).bottom(wedgeBottom)
                     .innerRadius(highlightedWedgeOuterRadius)
                     .outerRadius(regularWedgeOuterRadius).angle(wedgeAngle)
                     .fillStyle(partialHighlightingChartFillStyle)
@@ -152,11 +150,10 @@ public class PieChartViewContentDisplay extends ChartViewContentDisplay {
             return;
         }
 
-        regularWedge = chart.add(Wedge.createWedge())
-                .data(ArrayUtils.toJsArray(chartItems)).left(wedgeLeft)
-                .bottom(wedgeBottom).outerRadius(regularWedgeOuterRadius)
-                .angle(wedgeAngle).fillStyle(chartFillStyle)
-                .strokeStyle(Colors.WHITE);
+        regularWedge = chart.add(Wedge.createWedge()).data(chartItemJsArray)
+                .left(wedgeLeft).bottom(wedgeBottom)
+                .outerRadius(regularWedgeOuterRadius).angle(wedgeAngle)
+                .fillStyle(chartFillStyle).strokeStyle(Colors.WHITE);
 
         regularWedge.anchor(wedgeLabelAnchor).add(Label.createLabel())
                 .textAngle(wedgeTextAngle).text(fullMarkLabelText)

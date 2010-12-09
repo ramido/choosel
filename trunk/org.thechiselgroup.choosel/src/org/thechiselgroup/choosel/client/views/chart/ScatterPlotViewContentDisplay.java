@@ -212,7 +212,7 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
     private void drawScatter() {
         scatter = chart
                 .add(Dot.createDot())
-                .data(ArrayUtils.toJsArray(chartItems))
+                .data(chartItemJsArray)
                 .bottom(scatterBottom)
                 .left(scatterLeft)
                 .size(Math.min(chartHeight, chartWidth)
