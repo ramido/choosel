@@ -46,7 +46,7 @@ public class UnmodifiableResourceSet extends DelegatingResourceSet {
     }
 
     @Override
-    public void invertAll(ResourceSet resources) {
+    public void invertAll(Iterable<Resource> resources) {
         throw new UnsupportedOperationException(
                 "UnmodifiableResourceSet.invertAll not supported");
     }

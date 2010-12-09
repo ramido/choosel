@@ -123,11 +123,11 @@ public interface ResourceSet extends HasLabel, LightweightCollection<Resource> {
     void invert(Resource resource);
 
     /**
-     * Inverts the containment of the resources in the parameter resource set.
-     * For each resource, if the resource is already contained, it is removed.
-     * If the resource is not already contained, it is added.
+     * Inverts the containment of the resources in the parameter. For each
+     * resource, if the resource is already contained, it is removed. If the
+     * resource is not already contained, it is added.
      */
-    void invertAll(ResourceSet resources);
+    void invertAll(Iterable<Resource> resources);
 
     boolean isModifiable();
 

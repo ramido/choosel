@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.client.resources;
 
 import static org.junit.Assert.assertEquals;
+import static org.thechiselgroup.choosel.client.test.AdvancedAsserts.assertContentEquals;
 import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.verifyOnResourceSetChanged;
 import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.verifyOnResourcesAdded;
 import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.verifyOnResourcesRemoved;
@@ -37,7 +38,7 @@ public class DefaultResourceSetTest {
     private ResourceSetChangedEventHandler changedHandler;
 
     @Test
-    public void addAllFiresResourcesAddedEvent() {
+    public void addAllFiresEvent() {
         underTest.addEventHandler(changedHandler);
         underTest.addAll(createResources(1, 2, 3));
 
@@ -45,7 +46,7 @@ public class DefaultResourceSetTest {
     }
 
     @Test
-    public void addAllWithoutChangesDoesNotFireResourcesAddedEvent() {
+    public void addAllWithoutChangesDoesNotFireEvent() {
         underTest.addAll(createResources(1, 2, 3));
         underTest.addEventHandler(changedHandler);
         underTest.addAll(createResources(1, 2, 3));
@@ -54,7 +55,7 @@ public class DefaultResourceSetTest {
     }
 
     @Test
-    public void addFiresResourcesAddedEvent() {
+    public void addFiresEvent() {
         underTest.addEventHandler(changedHandler);
         underTest.add(createResource(1));
 
@@ -185,7 +186,22 @@ public class DefaultResourceSetTest {
     }
 
     @Test
-    public void removeAllFiresResourcesRemovedEvent() {
+    public void invertAllFiresEvent() {
+        underTest.addAll(createResources(1, 2));
+        underTest.addEventHandler(changedHandler);
+        underTest.invertAll(createResources(2, 3));
+
+        ResourceSetChangedEvent event = verifyOnResourceSetChanged(1,
+                changedHandler).getValue();
+
+        assertContentEquals(createResources(3), event.getAddedResources()
+                .toList());
+        assertContentEquals(createResources(2), event.getRemovedResources()
+                .toList());
+    }
+
+    @Test
+    public void removeAllFiresEvent() {
         underTest.addAll(createResources(1, 2, 3));
         underTest.addEventHandler(changedHandler);
         underTest.removeAll(createResources(1, 2, 3));
@@ -194,7 +210,7 @@ public class DefaultResourceSetTest {
     }
 
     @Test
-    public void removeAllWithoutChangesDoesNotFireResourcesRemovedEvent() {
+    public void removeAllWithoutChangesDoesNotFireEvent() {
         underTest.addEventHandler(changedHandler);
         underTest.removeAll(createResources(1, 2, 3));
 
@@ -202,7 +218,7 @@ public class DefaultResourceSetTest {
     }
 
     @Test
-    public void removeFiresResourcesRemovedEvent() {
+    public void removeFiresEvent() {
         underTest.addAll(createResources(1, 2, 3));
         underTest.addEventHandler(changedHandler);
         underTest.remove(createResource(1));
@@ -264,7 +280,7 @@ public class DefaultResourceSetTest {
     }
 
     @Test
-    public void retainAllFiresResourcesRemovedEvent() {
+    public void retainAllFiresEvent() {
         underTest.addAll(createResources(1, 2, 3, 4));
         underTest.addEventHandler(changedHandler);
         underTest.retainAll(createResources(1, 2));
@@ -273,7 +289,7 @@ public class DefaultResourceSetTest {
     }
 
     @Test
-    public void retainAllWithoutChangesDoesNotFireResourcesRemovedEvent() {
+    public void retainAllWithoutChangesDoesNotFireEvent() {
         underTest.addAll(createResources(1, 2));
         underTest.addEventHandler(changedHandler);
         underTest.retainAll(createResources(1, 2, 3));

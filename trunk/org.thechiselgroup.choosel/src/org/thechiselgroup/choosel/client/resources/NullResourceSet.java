@@ -120,7 +120,7 @@ public final class NullResourceSet implements ResourceSet {
     }
 
     @Override
-    public void invertAll(ResourceSet resources) {
+    public void invertAll(Iterable<Resource> resources) {
     }
 
     @Override
