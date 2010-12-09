@@ -16,7 +16,6 @@
 package org.thechiselgroup.choosel.client.ui.dnd;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
-import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
 import org.thechiselgroup.choosel.client.views.ViewDisplayDropCommandFactory;
 
@@ -30,10 +29,8 @@ public class ViewDisplayDropTargetManager extends
     public ViewDisplayDropTargetManager(CommandManager commandManager,
             ResourceSetAvatarDragController dragController,
             ViewAccessor viewAccessor,
-            DropTargetCapabilityChecker capabilityChecker,
-            ResourceCategorizer categorizer) {
-        super(commandManager, dragController, viewAccessor, capabilityChecker,
-                categorizer);
+            DropTargetCapabilityChecker capabilityChecker) {
+        super(commandManager, dragController, viewAccessor, capabilityChecker);
     }
 
     @Override

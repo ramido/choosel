@@ -28,7 +28,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.command.CommandManager;
-import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.test.DndTestHelpers;
@@ -51,10 +50,9 @@ public class ResourceSetAvatarDropControllerTest {
         private TestDragAvatarDropController(Widget dropTarget,
                 ResourceSetAvatarDropCommandFactory commandFactory,
                 CommandManager commandManager, ViewAccessor viewAccessor,
-                DropTargetCapabilityChecker capabilityChecker,
-                ResourceCategorizer resourceTypeCategorizer) {
+                DropTargetCapabilityChecker capabilityChecker) {
             super(dropTarget, commandFactory, commandManager, viewAccessor,
-                    capabilityChecker, resourceTypeCategorizer);
+                    capabilityChecker);
         }
 
         @Override
@@ -88,9 +86,6 @@ public class ResourceSetAvatarDropControllerTest {
     private DelayedPopup popup;
 
     private ResourceSet resources;
-
-    @Mock
-    private ResourceCategorizer resourceTypeCategorizer;
 
     private ResourceSetAvatarDropController underTest;
 
@@ -156,8 +151,7 @@ public class ResourceSetAvatarDropControllerTest {
         DndTestHelpers.mockDragClientBundle(bridge);
 
         underTest = spy(new TestDragAvatarDropController(dropTarget,
-                commandFactory, commandManager, viewAccessor,
-                capabilityChecker, resourceTypeCategorizer));
+                commandFactory, commandManager, viewAccessor, capabilityChecker));
 
         when(underTest.createPopup(any(DragContext.class), any(String.class)))
                 .thenReturn(popup);

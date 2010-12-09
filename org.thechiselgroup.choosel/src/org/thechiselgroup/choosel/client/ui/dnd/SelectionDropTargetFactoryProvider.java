@@ -62,8 +62,7 @@ public class SelectionDropTargetFactoryProvider implements
 
         return new DropTargetResourceSetAvatarFactory(disablingFactory,
                 new SelectionDropTargetManager(commandManager, dragController,
-                        new DefaultViewAccessor(), capabilityChecker,
-                        categorizer));
+                        new DefaultViewAccessor(), capabilityChecker));
 
     }
 }
