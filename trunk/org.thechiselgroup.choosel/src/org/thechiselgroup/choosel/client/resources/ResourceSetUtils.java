@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.client.resources;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map.Entry;
@@ -27,6 +28,12 @@ import org.thechiselgroup.choosel.client.views.DataTypeToListMap;
 import org.thechiselgroup.choosel.client.views.map.MapViewContentDisplay;
 
 public final class ResourceSetUtils {
+
+    @Deprecated
+    public static Resource firstResource(
+            LightweightCollection<Resource> resources) {
+        return resources.iterator().next();
+    }
 
     public static DataTypeToListMap<String> getPropertiesByDataType(
             ResourceSet resourceSet) {
@@ -71,6 +78,10 @@ public final class ResourceSetUtils {
 
     public static List<String> getPropertyNamesForDataType(
             ResourceSet resourceSet, DataType dataType) {
+
+        if (resourceSet.isEmpty()) {
+            return Collections.emptyList();
+        }
 
         // no aggregation
         Resource resource = resourceSet.getFirstResource();
@@ -120,12 +131,6 @@ public final class ResourceSetUtils {
 
     private ResourceSetUtils() {
 
-    }
-
-    @Deprecated
-    public static Resource firstResource(
-            LightweightCollection<Resource> resources) {
-        return resources.iterator().next();
     }
 
 }
