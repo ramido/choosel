@@ -71,7 +71,9 @@ public class ActionBar implements WidgetAdaptable {
 
     public void addPanel(ActionBarPanel panel) {
         assert panel != null;
-        assert !containsPanel(panel.getPanelId());
+        assert !containsPanel(panel.getPanelId()) : "panel "
+                + panel.getPanelId()
+                + " was already registered in the ActionBar";
 
         FlexTable actionBarPanel = new FlexTable();
         actionBarPanel.addStyleName(CSS_ACTIONBAR_PANEL);
