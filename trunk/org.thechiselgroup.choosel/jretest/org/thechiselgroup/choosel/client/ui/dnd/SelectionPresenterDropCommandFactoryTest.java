@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.client.ui.dnd;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
+import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createLabeledResources;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
 
 import org.junit.After;
@@ -65,6 +66,17 @@ public class SelectionPresenterDropCommandFactoryTest {
     private SelectionModel selectionModel;
 
     @Test
+    public void canDropWhenIntersectionExists() {
+        viewResources = spy(createResources(1, 2));
+        when(resourceModel.getResources()).thenReturn(viewResources);
+
+        sourceSet = spy(createLabeledResources(2, 3));
+        when(dragAvatar.getResourceSet()).thenReturn(sourceSet);
+
+        assertEquals(true, dropCommandFactory.canDrop(dragAvatar));
+    }
+
+    @Test
     public void cannotDropIfNoResourcesFromSetAreContainedInView() {
         viewResources = spy(createResources(3, 4, 5));
         when(resourceModel.getResources()).thenReturn(viewResources);
@@ -82,7 +94,7 @@ public class SelectionPresenterDropCommandFactoryTest {
         MockitoGWTBridge.setUp();
         MockitoAnnotations.initMocks(this);
 
-        sourceSet = spy(createResources(1, 2));
+        sourceSet = spy(createLabeledResources(1, 2));
         viewResources = spy(createResources(1, 3, 4, 5));
         selectionSet = spy(createResources(4));
 
