@@ -8,6 +8,7 @@
 
 *Bradley Blashko*: [http://vis.stanford.edu/protovis/ Protovis] charting integration development, diverse code contributions, CASCON 2010 exhibit
 
+*[http://www.jamiestarke.com/ Jamie Starke]*: Lightweight view sharing
 
 *Patrick Gorman*: Performance testing, diverse code contributions
 
