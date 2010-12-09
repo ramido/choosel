@@ -17,23 +17,20 @@ package org.thechiselgroup.choosel.client.views;
 
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetAddedEventHandler;
+import org.thechiselgroup.choosel.client.resources.ResourceSetChangedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceSetRemovedEventHandler;
-import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
-import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
 public interface SelectionModel {
 
-    HandlerRegistration addEventHandler(ResourcesAddedEventHandler handler);
-
     HandlerRegistration addEventHandler(ResourceSetActivatedEventHandler handler);
 
     HandlerRegistration addEventHandler(ResourceSetAddedEventHandler handler);
 
-    HandlerRegistration addEventHandler(ResourceSetRemovedEventHandler handler);
+    HandlerRegistration addEventHandler(ResourceSetChangedEventHandler handler);
 
-    HandlerRegistration addEventHandler(ResourcesRemovedEventHandler handler);
+    HandlerRegistration addEventHandler(ResourceSetRemovedEventHandler handler);
 
     void addSelectionSet(ResourceSet selectionSet);
 

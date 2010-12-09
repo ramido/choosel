@@ -50,9 +50,17 @@ public interface ResourceSet extends HasLabel, LightweightCollection<Resource> {
 
     boolean addAll(Iterable<Resource> resources);
 
-    HandlerRegistration addEventHandler(ResourcesAddedEventHandler handler);
-
-    HandlerRegistration addEventHandler(ResourcesRemovedEventHandler handler);
+    /**
+     * Adds an event handler that gets called when resources are added to or
+     * removed from this resource set.
+     * 
+     * @param handler
+     *            event handler that gets called when resources are added or
+     *            removed
+     * 
+     * @return handler registration for removing the event handler
+     */
+    HandlerRegistration addEventHandler(ResourceSetChangedEventHandler handler);
 
     /**
      * Removes all resources from this resource set.
@@ -150,6 +158,8 @@ public interface ResourceSet extends HasLabel, LightweightCollection<Resource> {
     void switchContainment(ResourceSet resources);
 
     /**
+     * <b>PERFORMANCE</b>: This method is slow and meant for use in tests.
+     * 
      * @return Unmodifiable List that contains elements from this resource set.
      */
     @Override

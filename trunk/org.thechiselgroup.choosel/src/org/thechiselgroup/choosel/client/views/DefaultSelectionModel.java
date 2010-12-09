@@ -24,11 +24,10 @@ import org.thechiselgroup.choosel.client.persistence.Persistable;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourceSetAddedEventHandler;
+import org.thechiselgroup.choosel.client.resources.ResourceSetChangedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ResourceSetRemovedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourceSetRemovedEventHandler;
-import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
-import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.SwitchingResourceSet;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
@@ -70,12 +69,6 @@ public class DefaultSelectionModel implements SelectionModel, Disposable,
 
     @Override
     public HandlerRegistration addEventHandler(
-            ResourcesAddedEventHandler handler) {
-        return selection.addEventHandler(handler);
-    }
-
-    @Override
-    public HandlerRegistration addEventHandler(
             ResourceSetActivatedEventHandler handler) {
         return eventBus.addHandler(ResourceSetActivatedEvent.TYPE, handler);
     }
@@ -88,14 +81,14 @@ public class DefaultSelectionModel implements SelectionModel, Disposable,
 
     @Override
     public HandlerRegistration addEventHandler(
-            ResourceSetRemovedEventHandler handler) {
-        return eventBus.addHandler(ResourceSetRemovedEvent.TYPE, handler);
+            ResourceSetChangedEventHandler handler) {
+        return selection.addEventHandler(handler);
     }
 
     @Override
     public HandlerRegistration addEventHandler(
-            ResourcesRemovedEventHandler handler) {
-        return selection.addEventHandler(handler);
+            ResourceSetRemovedEventHandler handler) {
+        return eventBus.addHandler(ResourceSetRemovedEvent.TYPE, handler);
     }
 
     @Override

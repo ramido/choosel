@@ -52,14 +52,7 @@ public final class NullResourceSet implements ResourceSet {
 
     @Override
     public HandlerRegistration addEventHandler(
-            ResourcesAddedEventHandler handler) {
-
-        return NullHandlerRegistration.NULL_HANDLER_REGISTRATION;
-    }
-
-    @Override
-    public HandlerRegistration addEventHandler(
-            ResourcesRemovedEventHandler handler) {
+            ResourceSetChangedEventHandler handler) {
 
         return NullHandlerRegistration.NULL_HANDLER_REGISTRATION;
     }

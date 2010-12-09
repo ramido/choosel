@@ -16,11 +16,7 @@
 package org.thechiselgroup.choosel.client.resources;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.thechiselgroup.choosel.client.test.AdvancedAsserts.assertContentEquals;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.verifyOnResourceSetChanged;
 import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.verifyOnResourcesAdded;
 import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.verifyOnResourcesRemoved;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
@@ -36,10 +32,7 @@ import org.mockito.MockitoAnnotations;
 public class CountingResourceSetTest {
 
     @Mock
-    private ResourcesAddedEventHandler addedHandler;
-
-    @Mock
-    private ResourcesRemovedEventHandler removedHandler;
+    private ResourceSetChangedEventHandler changedHandler;
 
     private Resource resource;
 
@@ -49,12 +42,10 @@ public class CountingResourceSetTest {
     public void addAllFiresEvent() {
         ResourceSet resources = createResources(1, 2);
 
-        underTest.addEventHandler(addedHandler);
+        underTest.addEventHandler(changedHandler);
         underTest.addAll(resources);
 
-        ResourcesAddedEvent event = verifyOnResourcesAdded(1, addedHandler)
-                .getValue();
-        assertContentEquals(resources, event.getAddedResources().toList());
+        verifyOnResourcesAdded(resources, changedHandler);
     }
 
     @Test
@@ -62,20 +53,19 @@ public class CountingResourceSetTest {
         ResourceSet containedResources = createResources(1, 2, 3);
 
         underTest.addAll(containedResources);
-        underTest.addEventHandler(addedHandler);
+        underTest.addEventHandler(changedHandler);
         underTest.addAll(containedResources);
 
-        verifyOnResourcesAdded(0, addedHandler);
+        verifyOnResourceSetChanged(0, changedHandler);
     }
 
     @Test
     public void addedFiredOnceIfAddedTwice() {
-        underTest.addEventHandler(addedHandler);
+        underTest.addEventHandler(changedHandler);
         underTest.add(resource);
         underTest.add(resource);
 
-        verify(addedHandler, times(1)).onResourcesAdded(
-                any(ResourcesAddedEvent.class));
+        verifyOnResourceSetChanged(1, changedHandler);
     }
 
     @Test
@@ -84,10 +74,10 @@ public class CountingResourceSetTest {
 
         underTest.addAll(resources);
         underTest.addAll(resources);
-        underTest.addEventHandler(removedHandler);
+        underTest.addEventHandler(changedHandler);
         underTest.removeAll(resources);
 
-        verifyOnResourcesRemoved(0, removedHandler);
+        verifyOnResourceSetChanged(0, changedHandler);
     }
 
     @Test
@@ -96,13 +86,10 @@ public class CountingResourceSetTest {
         ResourceSet resources = createResources(1, 2, 3);
 
         underTest.addAll(containedResources);
-        underTest.addEventHandler(addedHandler);
+        underTest.addEventHandler(changedHandler);
         underTest.addAll(resources);
 
-        ResourcesAddedEvent event = verifyOnResourcesAdded(1, addedHandler)
-                .getValue();
-        assertContentEquals(createResources(2, 3), event.getAddedResources()
-                .toList());
+        verifyOnResourcesAdded(createResources(2, 3), changedHandler);
     }
 
     @Test
@@ -112,13 +99,10 @@ public class CountingResourceSetTest {
 
         underTest.addAll(resources);
         underTest.addAll(doubleResources);
-        underTest.addEventHandler(removedHandler);
+        underTest.addEventHandler(changedHandler);
         underTest.removeAll(resources);
 
-        ResourcesRemovedEvent event = verifyOnResourcesRemoved(1,
-                removedHandler).getValue();
-        assertContentEquals(createResources(2, 3), event.getRemovedResources()
-                .toList());
+        verifyOnResourcesRemoved(createResources(2, 3), changedHandler);
     }
 
     @Test
@@ -126,35 +110,31 @@ public class CountingResourceSetTest {
         ResourceSet resources = createResources(1, 2);
 
         underTest.addAll(resources);
-        underTest.addEventHandler(removedHandler);
+        underTest.addEventHandler(changedHandler);
         underTest.removeAll(resources);
 
-        ResourcesRemovedEvent event = verifyOnResourcesRemoved(1,
-                removedHandler).getValue();
-        assertContentEquals(resources, event.getRemovedResources().toList());
+        verifyOnResourcesRemoved(resources, changedHandler);
     }
 
     @Test
     public void removeFiredOnceIfRemovedTwiceOnceAfterAddedTwice() {
         underTest.add(resource);
         underTest.add(resource);
-        underTest.addEventHandler(removedHandler);
+        underTest.addEventHandler(changedHandler);
         underTest.remove(resource);
         underTest.remove(resource);
 
-        verify(removedHandler, times(1)).onResourcesRemoved(
-                any(ResourcesRemovedEvent.class));
+        verifyOnResourceSetChanged(1, changedHandler);
     }
 
     @Test
     public void removeNotFiredIfOnlyRemovedOnceAfterAddedTwice() {
         underTest.add(resource);
         underTest.add(resource);
-        underTest.addEventHandler(removedHandler);
+        underTest.addEventHandler(changedHandler);
         underTest.remove(resource);
 
-        verify(removedHandler, never()).onResourcesRemoved(
-                any(ResourcesRemovedEvent.class));
+        verifyOnResourceSetChanged(0, changedHandler);
     }
 
     @Test
@@ -192,11 +172,11 @@ public class CountingResourceSetTest {
     @Test
     public void retainAllFiresResourcesRemovedEvent() {
         underTest.addAll(createResources(1, 2, 3, 4));
-        underTest.addEventHandler(removedHandler);
+        underTest.addEventHandler(changedHandler);
         underTest.retainAll(createResources(1, 2));
 
-        List<Resource> removedResources = verifyOnResourcesRemoved(1,
-                removedHandler).getValue().getRemovedResources().toList();
+        List<Resource> removedResources = verifyOnResourceSetChanged(1,
+                changedHandler).getValue().getRemovedResources().toList();
 
         assertEquals(2, removedResources.size());
         assertEquals(false, removedResources.contains(createResource(1)));
@@ -223,11 +203,11 @@ public class CountingResourceSetTest {
     public void retainAllWithDoubleResourceFiresResourcesRemovedEvent() {
         underTest.addAll(createResources(1, 2, 3, 4));
         underTest.addAll(createResources(3));
-        underTest.addEventHandler(removedHandler);
+        underTest.addEventHandler(changedHandler);
         underTest.retainAll(createResources(1, 2));
 
-        List<Resource> removedResources = verifyOnResourcesRemoved(1,
-                removedHandler).getValue().getRemovedResources().toList();
+        List<Resource> removedResources = verifyOnResourceSetChanged(1,
+                changedHandler).getValue().getRemovedResources().toList();
 
         assertEquals(1, removedResources.size());
         assertEquals(false, removedResources.contains(createResource(1)));
@@ -239,10 +219,10 @@ public class CountingResourceSetTest {
     @Test
     public void retainAllWithoutChangesDoesNotFireResourcesRemovedEvent() {
         underTest.addAll(createResources(1, 2));
-        underTest.addEventHandler(removedHandler);
+        underTest.addEventHandler(changedHandler);
         underTest.retainAll(createResources(1, 2, 3));
 
-        verifyOnResourcesRemoved(0, removedHandler);
+        verifyOnResourceSetChanged(0, changedHandler);
     }
 
     @Before

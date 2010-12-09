@@ -22,19 +22,19 @@ import org.thechiselgroup.choosel.client.util.SingleItemCollection;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.util.collections.LightweightList;
+import org.thechiselgroup.choosel.client.util.event.PrioritizedHandlerManager;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 public abstract class AbstractResourceSet implements ResourceSet {
 
-    protected transient HandlerManager eventBus;
+    protected transient PrioritizedHandlerManager handlerManager;
 
     private HasLabel labelDelegate;
 
     public AbstractResourceSet() {
-        eventBus = new HandlerManager(this);
+        handlerManager = new PrioritizedHandlerManager(this);
         labelDelegate = new DefaultHasLabel(this);
     }
 
@@ -59,7 +59,8 @@ public abstract class AbstractResourceSet implements ResourceSet {
         }
 
         if (!addedResources.isEmpty()) {
-            eventBus.fireEvent(new ResourcesAddedEvent(this, addedResources));
+            handlerManager.fireEvent(ResourceSetChangedEvent
+                    .createResourcesAddedEvent(this, addedResources));
         }
 
         return !addedResources.isEmpty();
@@ -67,16 +68,9 @@ public abstract class AbstractResourceSet implements ResourceSet {
 
     @Override
     public HandlerRegistration addEventHandler(
-            ResourcesAddedEventHandler handler) {
+            ResourceSetChangedEventHandler handler) {
 
-        return eventBus.addHandler(ResourcesAddedEvent.TYPE, handler);
-    }
-
-    @Override
-    public HandlerRegistration addEventHandler(
-            ResourcesRemovedEventHandler handler) {
-
-        return eventBus.addHandler(ResourcesRemovedEvent.TYPE, handler);
+        return handlerManager.addHandler(ResourceSetChangedEvent.TYPE, handler);
     }
 
     @Override
@@ -156,8 +150,11 @@ public abstract class AbstractResourceSet implements ResourceSet {
         return toList().get(0);
     }
 
+    /**
+     * <b>FOR TEST USAGE</b>
+     */
     public int getHandlerCount(Type<?> type) {
-        return eventBus.getHandlerCount(type);
+        return handlerManager.getHandlerCount(type);
     }
 
     @Override
@@ -219,7 +216,8 @@ public abstract class AbstractResourceSet implements ResourceSet {
         }
 
         if (!removedResources.isEmpty()) {
-            eventBus.fireEvent(new ResourcesRemovedEvent(this, removedResources));
+            handlerManager.fireEvent(ResourceSetChangedEvent
+                    .createResourcesRemovedEvent(this, removedResources));
         }
 
         return !removedResources.isEmpty();
@@ -244,7 +242,8 @@ public abstract class AbstractResourceSet implements ResourceSet {
         }
 
         if (!removedResources.isEmpty()) {
-            eventBus.fireEvent(new ResourcesRemovedEvent(this, removedResources));
+            handlerManager.fireEvent(ResourceSetChangedEvent
+                    .createResourcesRemovedEvent(this, removedResources));
         }
 
         return !removedResources.isEmpty();
@@ -268,6 +267,7 @@ public abstract class AbstractResourceSet implements ResourceSet {
         }
     }
 
+    // XXX what if resource is contained in several selected resource items?
     @Override
     public void switchContainment(ResourceSet resources) {
         // TODO fix: this fires several events

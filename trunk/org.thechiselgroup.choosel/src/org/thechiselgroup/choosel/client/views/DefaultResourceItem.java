@@ -20,10 +20,8 @@ import java.util.Map;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
-import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
+import org.thechiselgroup.choosel.client.resources.ResourceSetChangedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourceSetChangedEventHandler;
 import org.thechiselgroup.choosel.client.ui.popup.PopupClosingEvent;
 import org.thechiselgroup.choosel.client.ui.popup.PopupClosingHandler;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
@@ -31,6 +29,7 @@ import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.util.event.EventHandlerPriority;
+import org.thechiselgroup.choosel.client.util.event.PrioritizedEventHandler;
 
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
@@ -46,6 +45,38 @@ import com.google.gwt.event.dom.client.MouseOverHandler;
  */
 // TODO separate out resource item controller part
 public class DefaultResourceItem implements Disposable, ResourceItem {
+
+    private final class CacheUpdateOnResourceSetChange implements
+            ResourceSetChangedEventHandler, PrioritizedEventHandler {
+
+        @Override
+        public EventHandlerPriority getPriority() {
+            return EventHandlerPriority.FIRST;
+        }
+
+        @Override
+        public void onResourceSetChanged(ResourceSetChangedEvent event) {
+            allSubsetSlotValueCache.clear();
+        }
+    }
+
+    private final class CacheUpdateOnSlotChange implements
+            SlotMappingChangedHandler, PrioritizedEventHandler {
+
+        @Override
+        public EventHandlerPriority getPriority() {
+            return EventHandlerPriority.FIRST;
+        }
+
+        @Override
+        public void onResourceCategoriesChanged(SlotMappingChangedEvent e) {
+            String slotId = e.getSlot().getId();
+
+            allSubsetSlotValueCache.remove(slotId);
+            selectedSubsetSlotValueCache.remove(slotId);
+            highlightedSubsetSlotValueCache.remove(slotId);
+        }
+    }
 
     private String groupID;
 
@@ -119,7 +150,7 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
         highlightedResources = new DefaultResourceSet();
         selectedResources = new DefaultResourceSet();
 
-        initCacheCleaning();
+        initCacheCleaning(resources, slotMappingConfiguration);
         initHighlighting();
         initPopupHighlighting();
     }
@@ -314,29 +345,10 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
         return SubsetStatus.PARTIAL;
     }
 
-    private void initCacheCleaning() {
-        resources.addEventHandler(new ResourcesAddedEventHandler() {
-            @Override
-            public void onResourcesAdded(ResourcesAddedEvent e) {
-                allSubsetSlotValueCache.clear();
-            }
-        });
-        resources.addEventHandler(new ResourcesRemovedEventHandler() {
-            @Override
-            public void onResourcesRemoved(ResourcesRemovedEvent e) {
-                allSubsetSlotValueCache.clear();
-            }
-        });
-        slotMappingConfiguration.addHandler(new SlotMappingChangedHandler() {
-            @Override
-            public void onResourceCategoriesChanged(SlotMappingChangedEvent e) {
-                String slotId = e.getSlot().getId();
-
-                allSubsetSlotValueCache.remove(slotId);
-                selectedSubsetSlotValueCache.remove(slotId);
-                highlightedSubsetSlotValueCache.remove(slotId);
-            }
-        }, EventHandlerPriority.FIRST);
+    public void initCacheCleaning(ResourceSet resources,
+            SlotMappingConfiguration slotMappingConfiguration) {
+        resources.addEventHandler(new CacheUpdateOnResourceSetChange());
+        slotMappingConfiguration.addHandler(new CacheUpdateOnSlotChange());
     }
 
     private void initHighlighting() {

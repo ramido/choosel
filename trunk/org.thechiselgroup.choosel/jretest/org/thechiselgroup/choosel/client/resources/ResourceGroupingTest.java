@@ -19,12 +19,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.client.test.AdvancedAsserts.assertContentEquals;
 import static org.thechiselgroup.choosel.client.test.AdvancedAsserts.assertMapKeysEqual;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.verifyOnResourceSetChanged;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.toResourceSet;
@@ -463,12 +463,11 @@ public class ResourceGroupingTest {
         underTest.add(createResource(1));
         ResourceSet categorizedResources = underTest
                 .getCategorizedResourceSets().get(GROUP_1_1);
-        ResourcesRemovedEventHandler resourcesRemovedHandler = mock(ResourcesRemovedEventHandler.class);
-        categorizedResources.addEventHandler(resourcesRemovedHandler);
+        ResourceSetChangedEventHandler resourcesChangedHandler = mock(ResourceSetChangedEventHandler.class);
+        categorizedResources.addEventHandler(resourcesChangedHandler);
         underTest.remove(createResource(1));
 
-        verify(resourcesRemovedHandler, never()).onResourcesRemoved(
-                any(ResourcesRemovedEvent.class));
+        verifyOnResourceSetChanged(0, resourcesChangedHandler);
     }
 
     @Test
@@ -476,12 +475,11 @@ public class ResourceGroupingTest {
         underTest.addAll(createResources(1, 2, 3));
         ResourceSet categorizedResources = underTest
                 .getCategorizedResourceSets().get(GROUP_1_1);
-        ResourcesRemovedEventHandler resourcesRemovedHandler = mock(ResourcesRemovedEventHandler.class);
-        categorizedResources.addEventHandler(resourcesRemovedHandler);
+        ResourceSetChangedEventHandler resourcesChangedHandler = mock(ResourceSetChangedEventHandler.class);
+        categorizedResources.addEventHandler(resourcesChangedHandler);
         underTest.removeAll(createResources(1, 2, 3));
 
-        verify(resourcesRemovedHandler, never()).onResourcesRemoved(
-                any(ResourcesRemovedEvent.class));
+        verifyOnResourceSetChanged(0, resourcesChangedHandler);
     }
 
     @Test

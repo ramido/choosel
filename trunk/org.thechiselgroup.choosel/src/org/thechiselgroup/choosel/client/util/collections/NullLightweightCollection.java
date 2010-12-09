@@ -22,6 +22,17 @@ import java.util.List;
 public final class NullLightweightCollection<T> implements
         LightweightCollection<T> {
 
+    @SuppressWarnings("rawtypes")
+    private static NullLightweightCollection NULL_LIGHTWEIGHT_COLLECTION = new NullLightweightCollection();
+
+    @SuppressWarnings("unchecked")
+    public static <T> NullLightweightCollection<T> nullLightweightCollection() {
+        return NULL_LIGHTWEIGHT_COLLECTION;
+    }
+
+    private NullLightweightCollection() {
+    }
+
     @Override
     public boolean contains(T t) {
         return false;
@@ -46,4 +57,5 @@ public final class NullLightweightCollection<T> implements
     public List<T> toList() {
         return Collections.emptyList();
     }
+
 }

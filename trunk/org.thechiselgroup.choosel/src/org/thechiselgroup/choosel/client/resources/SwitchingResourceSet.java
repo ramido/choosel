@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.client.resources;
 
 import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -43,23 +44,14 @@ public class SwitchingResourceSet extends DelegatingResourceSet implements
 
     protected transient HandlerManager eventBus;
 
-    private ResourcesAddedEventHandler resourcesAddedToDelegateHandler = new ResourcesAddedEventHandler() {
+    private ResourceSetChangedEventHandler delegateResourcesChangedHandler = new ResourceSetChangedEventHandler() {
         @Override
-        public void onResourcesAdded(ResourcesAddedEvent e) {
-            forwardEvent(e);
+        public void onResourceSetChanged(ResourceSetChangedEvent event) {
+            forwardEvent(event);
         }
     };
 
-    private ResourcesRemovedEventHandler resourcesRemovedFromDelegateHandler = new ResourcesRemovedEventHandler() {
-        @Override
-        public void onResourcesRemoved(ResourcesRemovedEvent e) {
-            forwardEvent(e);
-        }
-    };
-
-    private HandlerRegistration resourcesAddedToDelegateHandlerRegistration;
-
-    private HandlerRegistration resourcesRemovedFromDelegateHandlerRegistration;
+    private HandlerRegistration delegateResourcesChangedHandlerRegistration;
 
     public SwitchingResourceSet() {
         super(NullResourceSet.NULL_RESOURCE_SET);
@@ -68,10 +60,10 @@ public class SwitchingResourceSet extends DelegatingResourceSet implements
 
     @Override
     public HandlerRegistration addEventHandler(
-            ResourcesAddedEventHandler handler) {
+            ResourceSetChangedEventHandler handler) {
 
         assert handler != null;
-        return eventBus.addHandler(ResourcesAddedEvent.TYPE, handler);
+        return eventBus.addHandler(ResourceSetChangedEvent.TYPE, handler);
     }
 
     public HandlerRegistration addEventHandler(
@@ -82,19 +74,9 @@ public class SwitchingResourceSet extends DelegatingResourceSet implements
                 handler);
     }
 
-    @Override
-    public HandlerRegistration addEventHandler(
-            ResourcesRemovedEventHandler handler) {
-
-        assert handler != null;
-        return eventBus.addHandler(ResourcesRemovedEvent.TYPE, handler);
-    }
-
     private void addEventHandlersToDelegate() {
-        resourcesAddedToDelegateHandlerRegistration = delegate
-                .addEventHandler(resourcesAddedToDelegateHandler);
-        resourcesRemovedFromDelegateHandlerRegistration = delegate
-                .addEventHandler(resourcesRemovedFromDelegateHandler);
+        delegateResourcesChangedHandlerRegistration = delegate
+                .addEventHandler(delegateResourcesChangedHandler);
     }
 
     @Override
@@ -124,9 +106,6 @@ public class SwitchingResourceSet extends DelegatingResourceSet implements
                 addedResources.add(resource);
             }
         }
-        if (!addedResources.isEmpty()) {
-            fireResourcesAdded(addedResources);
-        }
 
         LightweightList<Resource> removedResources = CollectionFactory
                 .createLightweightList();
@@ -135,25 +114,23 @@ public class SwitchingResourceSet extends DelegatingResourceSet implements
                 removedResources.add(resource);
             }
         }
-        if (!removedResources.isEmpty()) {
-            fireResourcesRemoved(removedResources);
+
+        if (!removedResources.isEmpty() || !addedResources.isEmpty()) {
+            fireResourcesChanged(addedResources, removedResources);
         }
     }
 
-    private void fireResourcesAdded(LightweightList<Resource> addedResources) {
-        eventBus.fireEvent(new ResourcesAddedEvent(this, addedResources));
+    private void fireResourcesChanged(
+            LightweightCollection<Resource> addedResources,
+            LightweightCollection<Resource> removedResources) {
+
+        eventBus.fireEvent(ResourceSetChangedEvent
+                .createResourcesAddedAndRemovedEvent(this, addedResources,
+                        removedResources));
     }
 
-    private void fireResourcesRemoved(LightweightList<Resource> removedResources) {
-        eventBus.fireEvent(new ResourcesRemovedEvent(this, removedResources));
-    }
-
-    protected void forwardEvent(ResourcesAddedEvent e) {
-        fireResourcesAdded(e.getAddedResources());
-    }
-
-    protected void forwardEvent(ResourcesRemovedEvent e) {
-        fireResourcesRemoved(e.getRemovedResources());
+    protected void forwardEvent(ResourceSetChangedEvent e) {
+        fireResourcesChanged(e.getAddedResources(), e.getRemovedResources());
     }
 
     public boolean hasDelegate() {
@@ -162,12 +139,10 @@ public class SwitchingResourceSet extends DelegatingResourceSet implements
 
     private void removeEventHandlersFromDelegate() {
         if (hasDelegate()) {
-            resourcesAddedToDelegateHandlerRegistration.removeHandler();
-            resourcesRemovedFromDelegateHandlerRegistration.removeHandler();
+            delegateResourcesChangedHandlerRegistration.removeHandler();
         }
 
-        resourcesAddedToDelegateHandlerRegistration = null;
-        resourcesRemovedFromDelegateHandlerRegistration = null;
+        delegateResourcesChangedHandlerRegistration = null;
     }
 
     public void setDelegate(ResourceSet newDelegate) {

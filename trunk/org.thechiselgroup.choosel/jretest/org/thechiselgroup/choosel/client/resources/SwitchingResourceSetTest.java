@@ -22,8 +22,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.thechiselgroup.choosel.client.test.AdvancedAsserts.assertContentEquals;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.verifyOnResourcesAdded;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.verifyOnResourcesRemoved;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.verifyOnResourceSetChanged;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
 
 import org.junit.Before;
@@ -42,10 +41,7 @@ public class SwitchingResourceSetTest {
     private ResourceSet[] resourceSets;
 
     @Mock
-    private ResourcesAddedEventHandler resourcesAddedHandler;
-
-    @Mock
-    private ResourcesRemovedEventHandler resourcesRemovedHandler;
+    private ResourceSetChangedEventHandler resourcesChangedHandler;
 
     @Test
     public void doNotFireDelegateChangeIfSameDelegateIsSet() {
@@ -73,71 +69,45 @@ public class SwitchingResourceSetTest {
     @Test
     public void doNotFireResourcesAddedEventOnResourcesAddedAfterDispose() {
         underTest.setDelegate(resourceSets[0]);
-        underTest.addEventHandler(resourcesAddedHandler);
+        underTest.addEventHandler(resourcesChangedHandler);
         underTest.dispose();
 
         resourceSets[0].addAll(createResources(3, 4));
 
-        verify(resourcesAddedHandler, times(0)).onResourcesAdded(
-                any(ResourcesAddedEvent.class));
+        verifyOnResourceSetChanged(0, resourcesChangedHandler);
     }
 
     @Test
     public void doNotFireResourcesAddedEventOnResourcesAddedToFormerDelegate() {
         underTest.setDelegate(resourceSets[0]);
         underTest.setDelegate(resourceSets[1]);
-        underTest.addEventHandler(resourcesAddedHandler);
+        underTest.addEventHandler(resourcesChangedHandler);
 
         resourceSets[0].addAll(createResources(3, 4));
 
-        verify(resourcesAddedHandler, times(0)).onResourcesAdded(
-                any(ResourcesAddedEvent.class));
-    }
-
-    @Test
-    public void doNotFireResourcesAddedIfDelegateChangeDoesNotAddResources() {
-        underTest.setDelegate(resourceSets[2]);
-        underTest.addEventHandler(resourcesAddedHandler);
-
-        underTest.setDelegate(resourceSets[0]);
-
-        verify(resourcesAddedHandler, times(0)).onResourcesAdded(
-                any(ResourcesAddedEvent.class));
+        verifyOnResourceSetChanged(0, resourcesChangedHandler);
     }
 
     @Test
     public void doNotFireResourcesRemovedEventOnResourcesRemovedAfterDispose() {
         underTest.setDelegate(resourceSets[0]);
-        underTest.addEventHandler(resourcesRemovedHandler);
+        underTest.addEventHandler(resourcesChangedHandler);
         underTest.dispose();
 
         resourceSets[0].removeAll(createResources(1, 2));
 
-        verify(resourcesRemovedHandler, times(0)).onResourcesRemoved(
-                any(ResourcesRemovedEvent.class));
+        verifyOnResourceSetChanged(0, resourcesChangedHandler);
     }
 
     @Test
     public void doNotFireResourcesRemovedEventOnResourcesRemovedFromFormerDelegate() {
         underTest.setDelegate(resourceSets[0]);
         underTest.setDelegate(resourceSets[1]);
-        underTest.addEventHandler(resourcesRemovedHandler);
+        underTest.addEventHandler(resourcesChangedHandler);
 
         resourceSets[0].removeAll(createResources(1, 2));
 
-        verify(resourcesRemovedHandler, times(0)).onResourcesRemoved(
-                any(ResourcesRemovedEvent.class));
-    }
-
-    @Test
-    public void doNotFireResourcesRemovedIfDelegateChangeDoesNotRemoveResources() {
-        underTest.setDelegate(resourceSets[0]);
-        underTest.addEventHandler(resourcesRemovedHandler);
-
-        underTest.setDelegate(resourceSets[2]);
-
-        verify(resourcesRemovedHandler, times(0)).onResourcesRemoved(
-                any(ResourcesRemovedEvent.class));
+        verifyOnResourceSetChanged(0, resourcesChangedHandler);
     }
 
     @Test
@@ -156,12 +126,12 @@ public class SwitchingResourceSetTest {
     @Test
     public void fireResourcesAddedEventOnResourcesAddedToDelegate() {
         underTest.setDelegate(resourceSets[0]);
-        underTest.addEventHandler(resourcesAddedHandler);
+        underTest.addEventHandler(resourcesChangedHandler);
 
         resourceSets[0].addAll(createResources(3, 4));
 
-        ResourcesAddedEvent firedEvent = verifyOnResourcesAdded(1,
-                resourcesAddedHandler).getValue();
+        ResourceSetChangedEvent firedEvent = verifyOnResourceSetChanged(1,
+                resourcesChangedHandler).getValue();
 
         assertContentEquals(createResources(3, 4), firedEvent
                 .getAddedResources().toList());
@@ -172,12 +142,12 @@ public class SwitchingResourceSetTest {
     public void fireResourcesAddedEventOnResourcesAddedToNewDelegate() {
         underTest.setDelegate(resourceSets[0]);
         underTest.setDelegate(resourceSets[1]);
-        underTest.addEventHandler(resourcesAddedHandler);
+        underTest.addEventHandler(resourcesChangedHandler);
 
         resourceSets[1].addAll(createResources(4, 5));
 
-        ResourcesAddedEvent firedEvent = verifyOnResourcesAdded(1,
-                resourcesAddedHandler).getValue();
+        ResourceSetChangedEvent firedEvent = verifyOnResourceSetChanged(1,
+                resourcesChangedHandler).getValue();
 
         assertContentEquals(createResources(4, 5), firedEvent
                 .getAddedResources().toList());
@@ -187,35 +157,30 @@ public class SwitchingResourceSetTest {
     @Test
     public void fireResourcesEventOnDelegateChange() {
         underTest.setDelegate(resourceSets[2]);
-        underTest.addEventHandler(resourcesRemovedHandler);
-        underTest.addEventHandler(resourcesAddedHandler);
+        underTest.addEventHandler(resourcesChangedHandler);
 
         underTest.setDelegate(resourceSets[3]);
 
-        ResourcesAddedEvent addedEvent = verifyOnResourcesAdded(1,
-                resourcesAddedHandler).getValue();
+        ResourceSetChangedEvent event = verifyOnResourceSetChanged(1,
+                resourcesChangedHandler).getValue();
 
-        assertContentEquals(createResources(4, 5), addedEvent
-                .getAddedResources().toList());
-        assertSame(underTest, addedEvent.getTarget());
+        assertContentEquals(createResources(4, 5), event.getAddedResources()
+                .toList());
+        assertContentEquals(createResources(1, 2), event.getRemovedResources()
+                .toList());
 
-        ResourcesRemovedEvent removedEvent = verifyOnResourcesRemoved(1,
-                resourcesRemovedHandler).getValue();
-
-        assertContentEquals(createResources(1, 2), removedEvent
-                .getRemovedResources().toList());
-        assertSame(underTest, removedEvent.getTarget());
+        assertSame(underTest, event.getTarget());
     }
 
     @Test
     public void fireResourcesRemovedEventOnResourcesRemovedFromDelegate() {
         underTest.setDelegate(resourceSets[0]);
-        underTest.addEventHandler(resourcesRemovedHandler);
+        underTest.addEventHandler(resourcesChangedHandler);
 
         resourceSets[0].removeAll(createResources(1, 2));
 
-        ResourcesRemovedEvent firedEvent = verifyOnResourcesRemoved(1,
-                resourcesRemovedHandler).getValue();
+        ResourceSetChangedEvent firedEvent = verifyOnResourceSetChanged(1,
+                resourcesChangedHandler).getValue();
 
         assertContentEquals(createResources(1, 2), firedEvent
                 .getRemovedResources().toList());
@@ -226,12 +191,12 @@ public class SwitchingResourceSetTest {
     public void fireResourcesRemovedEventOnResourcesRemovedFromNewDelegate() {
         underTest.setDelegate(resourceSets[0]);
         underTest.setDelegate(resourceSets[1]);
-        underTest.addEventHandler(resourcesRemovedHandler);
+        underTest.addEventHandler(resourcesChangedHandler);
 
         resourceSets[1].removeAll(createResources(2, 3));
 
-        ResourcesRemovedEvent firedEvent = verifyOnResourcesRemoved(1,
-                resourcesRemovedHandler).getValue();
+        ResourceSetChangedEvent firedEvent = verifyOnResourceSetChanged(1,
+                resourcesChangedHandler).getValue();
 
         assertContentEquals(createResources(2, 3), firedEvent
                 .getRemovedResources().toList());

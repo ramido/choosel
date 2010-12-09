@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.client.util.collections;
 public final class LightweightCollections {
 
     public static <T> LightweightCollection<T> emptyCollection() {
-        return new NullLightweightCollection<T>();
+        return NullLightweightCollection.nullLightweightCollection();
     }
 
     public static <T> LightweightCollection<T> emptySet() {

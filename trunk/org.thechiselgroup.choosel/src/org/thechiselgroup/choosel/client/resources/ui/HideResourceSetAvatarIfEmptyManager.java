@@ -16,25 +16,21 @@
 package org.thechiselgroup.choosel.client.resources.ui;
 
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
-import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
+import org.thechiselgroup.choosel.client.resources.ResourceSetChangedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourceSetChangedEventHandler;
 import org.thechiselgroup.choosel.client.util.Disposable;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
 public class HideResourceSetAvatarIfEmptyManager implements
-        ResourcesAddedEventHandler, ResourcesRemovedEventHandler,
+        ResourceSetChangedEventHandler,
         ResourceSetAvatarResourcesChangedEventHandler, Disposable {
 
-    private HandlerRegistration addedHandlerRegistration;
+    private HandlerRegistration handlerRegistration;
 
     private final ResourceSetAvatar avatar;
 
     private HandlerRegistration avatarChangeHandlerRegistration;
-
-    private HandlerRegistration removedHandlerRegistration;
 
     public HideResourceSetAvatarIfEmptyManager(ResourceSetAvatar avatar) {
         assert avatar != null;
@@ -42,10 +38,8 @@ public class HideResourceSetAvatarIfEmptyManager implements
     }
 
     private void deregisterResourceSetHandlers() {
-        addedHandlerRegistration.removeHandler();
-        addedHandlerRegistration = null;
-        removedHandlerRegistration.removeHandler();
-        removedHandlerRegistration = null;
+        handlerRegistration.removeHandler();
+        handlerRegistration = null;
     }
 
     @Override
@@ -68,11 +62,6 @@ public class HideResourceSetAvatarIfEmptyManager implements
     }
 
     @Override
-    public void onResourcesAdded(ResourcesAddedEvent e) {
-        updateAvatarState(e.getTarget());
-    }
-
-    @Override
     public void onResourcesChanged(ResourceSetAvatarResourcesChangedEvent event) {
         deregisterResourceSetHandlers();
         registerResourceSetHandlers(event.getNewResources());
@@ -80,15 +69,12 @@ public class HideResourceSetAvatarIfEmptyManager implements
     }
 
     @Override
-    public void onResourcesRemoved(ResourcesRemovedEvent e) {
-        updateAvatarState(e.getTarget());
+    public void onResourceSetChanged(ResourceSetChangedEvent event) {
+        updateAvatarState(event.getTarget());
     }
 
     private void registerResourceSetHandlers(ResourceSet resourceSet) {
-        addedHandlerRegistration = resourceSet
-                .addEventHandler((ResourcesAddedEventHandler) this);
-        removedHandlerRegistration = resourceSet
-                .addEventHandler((ResourcesRemovedEventHandler) this);
+        handlerRegistration = resourceSet.addEventHandler(this);
     }
 
     private void updateAvatarState(ResourceSet resources) {

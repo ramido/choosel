@@ -16,12 +16,11 @@
 package org.thechiselgroup.choosel.client.resources;
 
 import static org.junit.Assert.assertEquals;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.verifyOnResourceSetChanged;
 import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.verifyOnResourcesAdded;
 import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.verifyOnResourcesRemoved;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
-
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -35,34 +34,31 @@ public class DefaultResourceSetTest {
     private ResourceSet underTest;
 
     @Mock
-    private ResourcesAddedEventHandler addedHandler;
-
-    @Mock
-    private ResourcesRemovedEventHandler removedHandler;
+    private ResourceSetChangedEventHandler changedHandler;
 
     @Test
     public void addAllFiresResourcesAddedEvent() {
-        underTest.addEventHandler(addedHandler);
+        underTest.addEventHandler(changedHandler);
         underTest.addAll(createResources(1, 2, 3));
 
-        verifyOnResourcesAdded(1, addedHandler);
+        verifyOnResourceSetChanged(1, changedHandler);
     }
 
     @Test
     public void addAllWithoutChangesDoesNotFireResourcesAddedEvent() {
         underTest.addAll(createResources(1, 2, 3));
-        underTest.addEventHandler(addedHandler);
+        underTest.addEventHandler(changedHandler);
         underTest.addAll(createResources(1, 2, 3));
 
-        verifyOnResourcesAdded(0, addedHandler);
+        verifyOnResourceSetChanged(0, changedHandler);
     }
 
     @Test
     public void addFiresResourcesAddedEvent() {
-        underTest.addEventHandler(addedHandler);
+        underTest.addEventHandler(changedHandler);
         underTest.add(createResource(1));
 
-        verifyOnResourcesAdded(1, addedHandler);
+        verifyOnResourceSetChanged(1, changedHandler);
     }
 
     @Test
@@ -180,27 +176,27 @@ public class DefaultResourceSetTest {
     @Test
     public void removeAllFiresResourcesRemovedEvent() {
         underTest.addAll(createResources(1, 2, 3));
-        underTest.addEventHandler(removedHandler);
+        underTest.addEventHandler(changedHandler);
         underTest.removeAll(createResources(1, 2, 3));
 
-        verifyOnResourcesRemoved(1, removedHandler);
+        verifyOnResourceSetChanged(1, changedHandler);
     }
 
     @Test
     public void removeAllWithoutChangesDoesNotFireResourcesRemovedEvent() {
-        underTest.addEventHandler(removedHandler);
+        underTest.addEventHandler(changedHandler);
         underTest.removeAll(createResources(1, 2, 3));
 
-        verifyOnResourcesRemoved(0, removedHandler);
+        verifyOnResourceSetChanged(0, changedHandler);
     }
 
     @Test
     public void removeFiresResourcesRemovedEvent() {
         underTest.addAll(createResources(1, 2, 3));
-        underTest.addEventHandler(removedHandler);
+        underTest.addEventHandler(changedHandler);
         underTest.remove(createResource(1));
 
-        verifyOnResourcesRemoved(1, removedHandler);
+        verifyOnResourceSetChanged(1, changedHandler);
     }
 
     @Test
@@ -228,31 +224,19 @@ public class DefaultResourceSetTest {
     @Test
     public void resourcesAddedEventOnlyContainAddedResources() {
         underTest.add(createResource(1));
-        underTest.addEventHandler(addedHandler);
+        underTest.addEventHandler(changedHandler);
         underTest.addAll(createResources(1, 2, 3));
 
-        List<Resource> addedResources = verifyOnResourcesAdded(1, addedHandler)
-                .getValue().getAddedResources().toList();
-
-        assertEquals(2, addedResources.size());
-        assertEquals(false, addedResources.contains(createResource(1)));
-        assertEquals(true, addedResources.contains(createResource(2)));
-        assertEquals(true, addedResources.contains(createResource(3)));
+        verifyOnResourcesAdded(createResources(2, 3), changedHandler);
     }
 
     @Test
     public void resourcesRemovedEventOnlyContainsRemovedResources() {
         underTest.addAll(createResources(2, 3));
-        underTest.addEventHandler(removedHandler);
+        underTest.addEventHandler(changedHandler);
         underTest.removeAll(createResources(1, 2, 3));
 
-        List<Resource> removedResources = verifyOnResourcesRemoved(1,
-                removedHandler).getValue().getRemovedResources().toList();
-
-        assertEquals(2, removedResources.size());
-        assertEquals(false, removedResources.contains(createResource(1)));
-        assertEquals(true, removedResources.contains(createResource(2)));
-        assertEquals(true, removedResources.contains(createResource(3)));
+        verifyOnResourcesRemoved(createResources(2, 3), changedHandler);
     }
 
     @Test
@@ -271,26 +255,19 @@ public class DefaultResourceSetTest {
     @Test
     public void retainAllFiresResourcesRemovedEvent() {
         underTest.addAll(createResources(1, 2, 3, 4));
-        underTest.addEventHandler(removedHandler);
+        underTest.addEventHandler(changedHandler);
         underTest.retainAll(createResources(1, 2));
 
-        List<Resource> removedResources = verifyOnResourcesRemoved(1,
-                removedHandler).getValue().getRemovedResources().toList();
-
-        assertEquals(2, removedResources.size());
-        assertEquals(false, removedResources.contains(createResource(1)));
-        assertEquals(false, removedResources.contains(createResource(2)));
-        assertEquals(true, removedResources.contains(createResource(3)));
-        assertEquals(true, removedResources.contains(createResource(4)));
+        verifyOnResourcesRemoved(createResources(3, 4), changedHandler);
     }
 
     @Test
     public void retainAllWithoutChangesDoesNotFireResourcesRemovedEvent() {
         underTest.addAll(createResources(1, 2));
-        underTest.addEventHandler(removedHandler);
+        underTest.addEventHandler(changedHandler);
         underTest.retainAll(createResources(1, 2, 3));
 
-        verifyOnResourcesRemoved(0, removedHandler);
+        verifyOnResourceSetChanged(0, changedHandler);
     }
 
     @Test

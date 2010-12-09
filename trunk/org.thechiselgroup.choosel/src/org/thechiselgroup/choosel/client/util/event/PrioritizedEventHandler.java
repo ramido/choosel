@@ -13,31 +13,25 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.resources;
+package org.thechiselgroup.choosel.client.util.event;
 
-import org.thechiselgroup.choosel.client.util.collections.LightweightList;
+import com.google.gwt.event.shared.EventHandler;
 
-import com.google.gwt.event.shared.GwtEvent;
+/**
+ * Event handler with notification priority.
+ * <code>PrioritizedEventHandler</code>s get treated differently by
+ * {@link PrioritizedHandlerManager}.
+ * 
+ * @author Lars Grammel
+ * 
+ * @see PrioritizedHandlerManager
+ */
+public interface PrioritizedEventHandler extends EventHandler {
 
-public abstract class ResourceSetEvent<H extends ResourceEventHandler> extends
-        GwtEvent<H> {
-
-    protected final LightweightList<Resource> affectedResources;
-
-    private final ResourceSet target;
-
-    public ResourceSetEvent(ResourceSet target,
-            LightweightList<Resource> affectedResources) {
-
-        assert target != null;
-        assert affectedResources != null;
-
-        this.affectedResources = affectedResources;
-        this.target = target;
-    }
-
-    public ResourceSet getTarget() {
-        return target;
-    }
+    /**
+     * Returns the priority in which this event handler should be notified on
+     * changes.
+     */
+    EventHandlerPriority getPriority();
 
 }

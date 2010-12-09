@@ -15,12 +15,14 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.test;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.thechiselgroup.choosel.client.test.AdvancedAsserts.assertContentEquals;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
 
 import java.util.Collections;
@@ -33,10 +35,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatcher;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.ResourcesAddedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
-import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEvent;
-import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
+import org.thechiselgroup.choosel.client.resources.ResourceSetChangedEvent;
+import org.thechiselgroup.choosel.client.resources.ResourceSetChangedEventHandler;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.DefaultResourceItem;
@@ -161,32 +161,39 @@ public final class ResourcesTestHelper {
         });
     }
 
-    public static ArgumentCaptor<ResourcesAddedEvent> verifyOnResourcesAdded(
+    public static ArgumentCaptor<ResourceSetChangedEvent> verifyOnResourceSetChanged(
             int expectedInvocationCount,
-            ResourcesAddedEventHandler resourcesAddedHandler) {
+            ResourceSetChangedEventHandler resourcesChangedHandler) {
 
-        ArgumentCaptor<ResourcesAddedEvent> argument = ArgumentCaptor
-                .forClass(ResourcesAddedEvent.class);
+        ArgumentCaptor<ResourceSetChangedEvent> argument = ArgumentCaptor
+                .forClass(ResourceSetChangedEvent.class);
 
-        verify(resourcesAddedHandler, times(expectedInvocationCount))
-                .onResourcesAdded(argument.capture());
+        verify(resourcesChangedHandler, times(expectedInvocationCount))
+                .onResourceSetChanged(argument.capture());
 
         return argument;
     }
 
-    public static ArgumentCaptor<ResourcesRemovedEvent> verifyOnResourcesRemoved(
-            int expectedInvocationCount,
-            ResourcesRemovedEventHandler resourcesRemovedHandler) {
+    public static void verifyOnResourcesAdded(ResourceSet expectedAddedResources,
+            ResourceSetChangedEventHandler handler) {
 
-        ArgumentCaptor<ResourcesRemovedEvent> argument = ArgumentCaptor
-                .forClass(ResourcesRemovedEvent.class);
-
-        verify(resourcesRemovedHandler, times(expectedInvocationCount))
-                .onResourcesRemoved(argument.capture());
-
-        return argument;
+        ResourceSetChangedEvent event = verifyOnResourceSetChanged(1, handler)
+                .getValue();
+        assertContentEquals(expectedAddedResources, event.getAddedResources()
+                .toList());
+        assertEquals(true, event.getRemovedResources().isEmpty());
     }
 
     private ResourcesTestHelper() {
+    }
+
+    public static void verifyOnResourcesRemoved(ResourceSet expectedResources,
+            ResourceSetChangedEventHandler handler) {
+    
+        ResourceSetChangedEvent event = verifyOnResourceSetChanged(1, handler)
+                .getValue();
+        assertContentEquals(expectedResources, event.getRemovedResources()
+                .toList());
+        assertEquals(true, event.getAddedResources().isEmpty());
     }
 }

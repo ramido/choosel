@@ -19,9 +19,8 @@ import org.thechiselgroup.choosel.client.resources.CombinedResourceSet;
 import org.thechiselgroup.choosel.client.resources.CountingResourceSet;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.resources.ResourceSetChangedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceSetDelegateChangedEventHandler;
-import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
-import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.SwitchingResourceSet;
 
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -53,18 +52,13 @@ public class HoverModel {
     }
 
     public HandlerRegistration addEventHandler(
-            ResourcesAddedEventHandler handler) {
+            ResourceSetChangedEventHandler handler) {
         return combinedHighlightedResources.addEventHandler(handler);
     }
 
     public HandlerRegistration addEventHandler(
             ResourceSetDelegateChangedEventHandler handler) {
         return highlightedResourceSetContainer.addEventHandler(handler);
-    }
-
-    public HandlerRegistration addEventHandler(
-            ResourcesRemovedEventHandler handler) {
-        return combinedHighlightedResources.addEventHandler(handler);
     }
 
     public void addHighlightedResources(ResourceSet resource) {

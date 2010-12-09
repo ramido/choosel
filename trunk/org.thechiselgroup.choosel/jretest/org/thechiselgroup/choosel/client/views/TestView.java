@@ -27,8 +27,7 @@ import org.thechiselgroup.choosel.client.resources.ResourceByUriTypeCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizerToMultiCategorizerAdapter;
 import org.thechiselgroup.choosel.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
-import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
+import org.thechiselgroup.choosel.client.resources.ResourceSetChangedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.Presenter;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
@@ -53,8 +52,7 @@ public class TestView extends DefaultView {
         PopupManagerFactory popupManagerFactory = mock(PopupManagerFactory.class);
         PopupManager popupManager = mock(PopupManager.class);
         Presenter resourceModelPresenter = mock(Presenter.class);
-        HandlerRegistration selectionAddedHandlerRegistration = mock(HandlerRegistration.class);
-        HandlerRegistration selectionRemovedHandlerRegistration = mock(HandlerRegistration.class);
+        HandlerRegistration selectionChangedHandlerRegistration = mock(HandlerRegistration.class);
         VisualMappingsControl visualMappingsControl = mock(VisualMappingsControl.class);
         ShareConfiguration shareConfiguration = mock(ShareConfiguration.class);
 
@@ -66,18 +64,13 @@ public class TestView extends DefaultView {
                 "", "", resourceSetToValueResolver, selectionModel,
                 selectionModelPresenter, resourceModel, resourceModelPresenter,
                 hoverModel, popupManagerFactory, detailsWidgetHelper,
-                popupManager, selectionAddedHandlerRegistration,
-                selectionRemovedHandlerRegistration, visualMappingsControl,
-                shareConfiguration));
+                popupManager, selectionChangedHandlerRegistration,
+                visualMappingsControl, shareConfiguration));
 
         when(
                 selectionModel
-                        .addEventHandler(any(ResourcesAddedEventHandler.class)))
-                .thenReturn(selectionAddedHandlerRegistration);
-        when(
-                selectionModel
-                        .addEventHandler(any(ResourcesRemovedEventHandler.class)))
-                .thenReturn(selectionRemovedHandlerRegistration);
+                        .addEventHandler(any(ResourceSetChangedEventHandler.class)))
+                .thenReturn(selectionChangedHandlerRegistration);
 
         when(contentDisplay.getSlots()).thenReturn(slots);
         when(contentDisplay.isReady()).thenReturn(true);
@@ -98,9 +91,7 @@ public class TestView extends DefaultView {
 
     private final HoverModel hoverModel;
 
-    private final HandlerRegistration selectionAddedHandlerRegistration;
-
-    private final HandlerRegistration selectionRemovedHandlerRegistration;
+    private final HandlerRegistration selectionChangedHandlerRegistration;
 
     private final Presenter resourceModelPresenter;
 
@@ -115,8 +106,7 @@ public class TestView extends DefaultView {
             ResourceModel resourceModel, Presenter resourceModelPresenter,
             HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
             DetailsWidgetHelper detailsWidgetHelper, PopupManager popupManager,
-            HandlerRegistration selectionAddedHandlerRegistration,
-            HandlerRegistration selectionRemovedHandlerRegistration,
+            HandlerRegistration selectionChangedHandlerRegistration,
             VisualMappingsControl visualMappingsControl,
             ShareConfiguration shareConfiguration) {
 
@@ -131,8 +121,7 @@ public class TestView extends DefaultView {
         this.resourceModelPresenter = resourceModelPresenter;
         this.hoverModel = hoverModel;
         this.popupManager = popupManager;
-        this.selectionAddedHandlerRegistration = selectionAddedHandlerRegistration;
-        this.selectionRemovedHandlerRegistration = selectionRemovedHandlerRegistration;
+        this.selectionChangedHandlerRegistration = selectionChangedHandlerRegistration;
     }
 
     @Override
@@ -156,16 +145,12 @@ public class TestView extends DefaultView {
         return resourceModelPresenter;
     }
 
-    public HandlerRegistration getTestSelectionAddedHandlerRegistration() {
-        return selectionAddedHandlerRegistration;
+    public HandlerRegistration getTestSelectionChangedHandlerRegistration() {
+        return selectionChangedHandlerRegistration;
     }
 
     public Presenter getTestSelectionModelPresenter() {
         return selectionModelPresenter;
-    }
-
-    public HandlerRegistration getTestSelectionRemovedHandlerRegistration() {
-        return selectionRemovedHandlerRegistration;
     }
 
     @Override

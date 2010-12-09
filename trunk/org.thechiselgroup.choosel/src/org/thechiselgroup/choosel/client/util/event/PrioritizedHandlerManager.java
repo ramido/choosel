@@ -17,12 +17,15 @@ package org.thechiselgroup.choosel.client.util.event;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
  * <p>
- * HandlerManager that supports prioritize calling of {@link EventHandler}s.
+ * HandlerManager that supports prioritize calling of
+ * {@link PrioritizedEventHandler}s. Regular event handlers are executed with
+ * priority <code>NORMAL</code>.
  * </p>
  * <p>
  * <b>IMPLEMENTATION NOTE</b>: Implemented using several internal
@@ -34,6 +37,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * @author Lars Grammel
  * 
  * @see EventHandlerPriority
+ * @see PrioritizedEventHandler
  */
 public class PrioritizedHandlerManager {
 
@@ -52,7 +56,9 @@ public class PrioritizedHandlerManager {
     }
 
     /**
-     * Adds an event handler with <code>NORMAL</code> priority.
+     * Adds an event handler. If the event handler is a
+     * <code>PrioritizedEventHandler</code>, its priority is taken into account.
+     * Regular event handlers have priority <code>NORMAL</code>.
      * 
      * @return handler registration that can be used to remove the event
      *         handler.
@@ -60,24 +66,13 @@ public class PrioritizedHandlerManager {
     public <H extends EventHandler> HandlerRegistration addHandler(
             GwtEvent.Type<H> type, H handler) {
 
-        return addHandler(type, handler, EventHandlerPriority.NORMAL);
-    }
-
-    /**
-     * Adds an event handler.
-     * 
-     * @param priority
-     *            priority how the event handler should get called
-     * 
-     * @return handler registration that can be used to remove the event
-     *         handler.
-     */
-    public <H extends EventHandler> HandlerRegistration addHandler(
-            GwtEvent.Type<H> type, H handler, EventHandlerPriority priority) {
-
-        assert priority != null;
         assert type != null;
         assert handler != null;
+
+        EventHandlerPriority priority = EventHandlerPriority.NORMAL;
+        if (handler instanceof PrioritizedEventHandler) {
+            priority = ((PrioritizedEventHandler) handler).getPriority();
+        }
 
         switch (priority) {
         case FIRST:
@@ -97,6 +92,15 @@ public class PrioritizedHandlerManager {
         firstPriorityHandlers.fireEvent(event);
         normalPriorityHandlers.fireEvent(event);
         lastPriorityHandlers.fireEvent(event);
+    }
+
+    /**
+     * Returns the number of handler for a given event type.
+     */
+    public int getHandlerCount(Type<?> type) {
+        return firstPriorityHandlers.getHandlerCount(type)
+                + normalPriorityHandlers.getHandlerCount(type)
+                + lastPriorityHandlers.getHandlerCount(type);
     }
 
 }

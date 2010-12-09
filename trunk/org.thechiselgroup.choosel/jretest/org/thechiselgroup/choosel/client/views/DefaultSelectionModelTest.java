@@ -38,14 +38,12 @@ import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.label.SelectionModelLabelFactory;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSetFactory;
-import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetAddedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourceSetAddedEventHandler;
+import org.thechiselgroup.choosel.client.resources.ResourceSetChangedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceSetRemovedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourceSetRemovedEventHandler;
-import org.thechiselgroup.choosel.client.resources.ResourcesAddedEventHandler;
-import org.thechiselgroup.choosel.client.resources.ResourcesRemovedEventHandler;
 import org.thechiselgroup.choosel.client.resources.persistence.DefaultResourceSetCollector;
 
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -61,10 +59,7 @@ public class DefaultSelectionModelTest {
     private DefaultSelectionModel underTest;
 
     @Mock
-    private ResourcesAddedEventHandler addedHandler;
-
-    @Mock
-    private ResourcesRemovedEventHandler removedHandler;
+    private ResourceSetChangedEventHandler resourceSetChangedHandler;
 
     @Mock
     private ResourceSetActivatedEventHandler activatedHandler;
@@ -124,25 +119,21 @@ public class DefaultSelectionModelTest {
         selection = createResources();
         underTest.addSelectionSet(selection);
         underTest.setSelection(selection);
-        underTest.addEventHandler(addedHandler);
+        underTest.addEventHandler(resourceSetChangedHandler);
 
         selection.add(createResource(1));
 
-        List<Resource> addedResources = verifyOnResourcesAdded(1, addedHandler)
-                .getValue().getAddedResources().toList();
-        assertContentEquals(createResources(1), addedResources);
+        verifyOnResourcesAdded(createResources(1), resourceSetChangedHandler);
     }
 
     @Test
     public void fireResourcesAddedWhenSelectionChanges() {
         selection = createResources(1);
         underTest.addSelectionSet(selection);
-        underTest.addEventHandler(addedHandler);
+        underTest.addEventHandler(resourceSetChangedHandler);
         underTest.setSelection(selection);
 
-        List<Resource> addedResources = verifyOnResourcesAdded(1, addedHandler)
-                .getValue().getAddedResources().toList();
-        assertContentEquals(createResources(1), addedResources);
+        verifyOnResourcesAdded(createResources(1), resourceSetChangedHandler);
 
     }
 
@@ -164,15 +155,15 @@ public class DefaultSelectionModelTest {
     @Test
     public void fireResourceSetRemovedEventWhenResourceSetRemoved() {
         ResourceSet selection = createResources(1);
-        ResourceSetRemovedEventHandler resourceSetRemovedHandler = mock(ResourceSetRemovedEventHandler.class);
+        ResourceSetRemovedEventHandler resourceSetaddedHandler = mock(ResourceSetRemovedEventHandler.class);
 
         underTest.addSelectionSet(selection);
-        underTest.addEventHandler(resourceSetRemovedHandler);
+        underTest.addEventHandler(resourceSetaddedHandler);
         underTest.removeSelectionSet(selection);
 
         ArgumentCaptor<ResourceSetRemovedEvent> captor = ArgumentCaptor
                 .forClass(ResourceSetRemovedEvent.class);
-        verify(resourceSetRemovedHandler, times(1)).onResourceSetRemoved(
+        verify(resourceSetaddedHandler, times(1)).onResourceSetRemoved(
                 captor.capture());
         assertContentEquals(selection, captor.getValue().getResourceSet());
     }
@@ -184,12 +175,10 @@ public class DefaultSelectionModelTest {
         underTest.setSelection(selection);
 
         selection.add(createResource(1));
-        underTest.addEventHandler(removedHandler);
+        underTest.addEventHandler(resourceSetChangedHandler);
         selection.remove(createResource(1));
 
-        List<Resource> removedResources = verifyOnResourcesRemoved(1,
-                removedHandler).getValue().getRemovedResources().toList();
-        assertContentEquals(createResources(1), removedResources);
+        verifyOnResourcesRemoved(createResources(1), resourceSetChangedHandler);
     }
 
     @Test
@@ -201,12 +190,10 @@ public class DefaultSelectionModelTest {
         underTest.addSelectionSet(resource2);
 
         underTest.setSelection(resources1);
-        underTest.addEventHandler(removedHandler);
+        underTest.addEventHandler(resourceSetChangedHandler);
         underTest.setSelection(resource2);
 
-        List<Resource> removedResources = verifyOnResourcesRemoved(1,
-                removedHandler).getValue().getRemovedResources().toList();
-        assertContentEquals(createResources(1), removedResources);
+        verifyOnResourcesRemoved(createResources(1), resourceSetChangedHandler);
     }
 
     @Before
@@ -215,9 +202,9 @@ public class DefaultSelectionModelTest {
 
         underTest = createDefaultSelectionModel();
 
-        when(selection.addEventHandler(any(ResourcesAddedEventHandler.class)))
-                .thenReturn(selectionHandlerRegistration);
-        when(selection.addEventHandler(any(ResourcesRemovedEventHandler.class)))
+        when(
+                selection
+                        .addEventHandler(any(ResourceSetChangedEventHandler.class)))
                 .thenReturn(selectionHandlerRegistration);
     }
 

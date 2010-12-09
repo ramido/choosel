@@ -15,8 +15,21 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
-public interface ResourcesAddedEventHandler extends ResourceEventHandler {
+/**
+ * Handler for reacting to resource set changes.
+ * 
+ * @author Lars Grammel
+ * 
+ * @see ResourceSet
+ */
+public interface ResourceSetChangedEventHandler extends ResourceEventHandler {
 
-    void onResourcesAdded(ResourcesAddedEvent e);
+    /**
+     * Called when resource set changed (i.e. resources were added or removed)
+     * 
+     * @param event
+     *            Information about the change that occurred
+     */
+    void onResourceSetChanged(ResourceSetChangedEvent event);
 
 }
