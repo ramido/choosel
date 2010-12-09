@@ -28,7 +28,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.command.CommandManager;
-import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.test.DndTestHelpers;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
@@ -42,11 +41,10 @@ public class AbstractResourceSetAvatarDropTargetManagerTest {
         public TestDragAvatarDropTargetManager(CommandManager commandManager,
                 ResourceSetAvatarDragController dragController,
                 ViewAccessor viewAccessor,
-                DropTargetCapabilityChecker capabilityChecker,
-                ResourceCategorizer categorizer) {
+                DropTargetCapabilityChecker capabilityChecker) {
 
             super(commandManager, dragController, viewAccessor,
-                    capabilityChecker, categorizer);
+                    capabilityChecker);
         }
 
         @Override
@@ -58,9 +56,6 @@ public class AbstractResourceSetAvatarDropTargetManagerTest {
 
     @Mock
     private DropTargetCapabilityChecker capabilityChecker;
-
-    @Mock
-    private ResourceCategorizer categorizer;
 
     @Mock
     private CommandManager commandManager;
@@ -103,7 +98,7 @@ public class AbstractResourceSetAvatarDropTargetManagerTest {
         DndTestHelpers.mockDragClientBundle(bridge);
 
         underTest = spy(new TestDragAvatarDropTargetManager(commandManager,
-                dragController, viewAccessor, capabilityChecker, categorizer));
+                dragController, viewAccessor, capabilityChecker));
     }
 
     @After

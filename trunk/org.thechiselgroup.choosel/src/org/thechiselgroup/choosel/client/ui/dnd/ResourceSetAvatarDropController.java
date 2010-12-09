@@ -17,7 +17,6 @@ package org.thechiselgroup.choosel.client.ui.dnd;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.command.UndoableCommand;
-import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.ui.CSS;
 import org.thechiselgroup.choosel.client.ui.popup.DefaultDelayedPopup;
@@ -53,15 +52,12 @@ public class ResourceSetAvatarDropController extends SimpleDropController {
 
     private DelayedPopup popup = null;
 
-    private ResourceCategorizer resourceTypeCategorizer;
-
     private ViewAccessor viewAccessor;
 
     public ResourceSetAvatarDropController(Widget dropTarget,
             ResourceSetAvatarDropCommandFactory commandFactory,
             CommandManager commandManager, ViewAccessor viewAccessor,
-            DropTargetCapabilityChecker capabilityChecker,
-            ResourceCategorizer resourceTypeCategorizer) {
+            DropTargetCapabilityChecker capabilityChecker) {
 
         super(dropTarget);
 
@@ -69,7 +65,6 @@ public class ResourceSetAvatarDropController extends SimpleDropController {
         this.commandManager = commandManager;
         this.viewAccessor = viewAccessor;
         this.capabilityChecker = capabilityChecker;
-        this.resourceTypeCategorizer = resourceTypeCategorizer;
     }
 
     // TODO prevent drag source self-drop

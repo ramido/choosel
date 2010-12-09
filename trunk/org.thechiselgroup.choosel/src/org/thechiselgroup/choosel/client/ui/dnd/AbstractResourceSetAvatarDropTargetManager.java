@@ -16,7 +16,6 @@
 package org.thechiselgroup.choosel.client.ui.dnd;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
-import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -25,8 +24,6 @@ public abstract class AbstractResourceSetAvatarDropTargetManager implements
         ResourceSetAvatarDropTargetManager {
 
     private DropTargetCapabilityChecker capabilityChecker;
-
-    private ResourceCategorizer categorizer;
 
     private CommandManager commandManager;
 
@@ -38,20 +35,17 @@ public abstract class AbstractResourceSetAvatarDropTargetManager implements
             CommandManager commandManager,
             ResourceSetAvatarDragController dragController,
             ViewAccessor viewAccessor,
-            DropTargetCapabilityChecker capabilityChecker,
-            ResourceCategorizer categorizer) {
+            DropTargetCapabilityChecker capabilityChecker) {
 
         assert commandManager != null;
         assert dragController != null;
         assert viewAccessor != null;
         assert capabilityChecker != null;
-        assert categorizer != null;
 
         this.commandManager = commandManager;
         this.dragController = dragController;
         this.viewAccessor = viewAccessor;
         this.capabilityChecker = capabilityChecker;
-        this.categorizer = categorizer;
     }
 
     protected abstract ResourceSetAvatarDropCommandFactory createCommandFactory(
@@ -70,7 +64,7 @@ public abstract class AbstractResourceSetAvatarDropTargetManager implements
 
         ResourceSetAvatarDropController controller = new ResourceSetAvatarDropController(
                 dropTarget, createCommandFactory(dropTarget, viewAccessor),
-                commandManager, viewAccessor, capabilityChecker, categorizer);
+                commandManager, viewAccessor, capabilityChecker);
 
         dragController.registerDropController(controller);
     }
