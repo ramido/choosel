@@ -27,7 +27,7 @@ import org.thechiselgroup.choosel.client.ui.widget.protovis.Panel;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisEventHandler;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Scale;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunction;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunctionWithIntParam;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunctionIntArg;
 import org.thechiselgroup.choosel.client.util.StringUtils;
 import org.thechiselgroup.choosel.client.util.collections.ArrayUtils;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
@@ -71,7 +71,8 @@ public abstract class ChartViewContentDisplay extends
 
     protected Scale scale;
 
-    protected StringFunctionWithIntParam scaleLabelText = new StringFunctionWithIntParam() {
+    // XXX changing SVG tree structure in protovis function? not good
+    protected StringFunctionIntArg scaleLabelText = new StringFunctionIntArg() {
         @Override
         public String f(int value, int i) {
             return scale.tickFormat(value);
@@ -430,8 +431,12 @@ public abstract class ChartViewContentDisplay extends
          * 
          * TODO check if rebuild is required if structure changes or if
          * rendering is sufficient
+         * 
+         * TODO changing slots requires a rebuild because it affects the scales
+         * and rulers - look for a better solution
          */
-        if (!addedResourceItems.isEmpty() || !removedResourceItems.isEmpty()) {
+        if (!addedResourceItems.isEmpty() || !removedResourceItems.isEmpty()
+                || !changedSlots.isEmpty()) {
             buildChart();
         } else {
             renderChart();

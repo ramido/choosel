@@ -15,25 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.widget.protovis;
 
-public class BenchmarkingProtovisFunctionString<T> implements
-        StringFunction<T> {
+public interface IntFunctionNoArgs {
 
-    private StringFunction<T> delegate;
-
-    public BenchmarkingProtovisFunctionString(StringFunction<T> delegate) {
-        this.delegate = delegate;
-    }
-
-    @Override
-    public String f(T value, int i) {
-        long startTime = System.currentTimeMillis();
-        try {
-            return delegate.f(value, i);
-        } finally {
-            System.err.println(delegate.toString() + " took "
-                    + (System.currentTimeMillis() - startTime) + " ms -- "
-                    + System.currentTimeMillis());
-        }
-    }
+    int f();
 
 }

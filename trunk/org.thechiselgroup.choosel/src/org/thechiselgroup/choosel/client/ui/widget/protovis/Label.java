@@ -184,14 +184,14 @@ public class Label extends Mark {
     // @formatter:on
 
     // @formatter:off
-    public final native Label text(StringFunctionWithIntParam f) /*-{
-        return this.text(@org.thechiselgroup.choosel.client.ui.widget.protovis.Mark::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/protovis/StringFunctionWithIntParam;)(this,f));
+    public final native Label text(StringFunctionIntArg f) /*-{
+        return this.text(@org.thechiselgroup.choosel.client.ui.widget.protovis.Mark::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/protovis/StringFunctionIntArg;)(this,f));
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Label text(StringFunctionWithoutParam f) /*-{
-        return this.text(@org.thechiselgroup.choosel.client.ui.widget.protovis.Mark::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/client/ui/widget/protovis/StringFunctionWithoutParam;)(this,f));
+    public final native Label text(StringFunctionNoArgs f) /*-{
+        return this.text(@org.thechiselgroup.choosel.client.ui.widget.protovis.Mark::toJavaScriptFunction(Lorg/thechiselgroup/choosel/client/ui/widget/protovis/StringFunctionNoArgs;)(f));
     }-*/;
     // @formatter:on
 

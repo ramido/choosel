@@ -15,25 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.widget.protovis;
 
-public class BenchmarkingProtovisFunctionDouble<T> implements
-        DoubleFunction<T> {
+public interface DoubleFunctionDoubleArg {
 
-    private DoubleFunction<T> delegate;
-
-    public BenchmarkingProtovisFunctionDouble(DoubleFunction<T> delegate) {
-        this.delegate = delegate;
-    }
-
-    @Override
-    public double f(T value, int i) {
-        long startTime = System.currentTimeMillis();
-        try {
-            return delegate.f(value, i);
-        } finally {
-            System.err.println(delegate.toString() + " took "
-                    + (System.currentTimeMillis() - startTime) + " ms -- "
-                    + System.currentTimeMillis());
-        }
-    }
+    double f(double value, int i);
 
 }

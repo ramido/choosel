@@ -51,25 +51,37 @@ public abstract class Mark extends JavaScriptObject {
     public static final native JavaScriptObject registerEvent(
             JavaScriptObject _this, ProtovisEventHandler handler) /*-{
         return function() 
-            { return handler.@org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisEventHandler::handleEvent(Lcom/google/gwt/user/client/Event;I)($wnd.pv.event, _this.index);}
+            { return handler.@org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisEventHandler::handleEvent(Lcom/google/gwt/user/client/Event;I)($wnd.pv.event, _this.index);};
+    }-*/;
+    
+    public static final native JavaScriptObject toJavaScriptFunction(
+            DoubleFunctionNoArgs f) /*-{
+        return function() 
+            { return f.@org.thechiselgroup.choosel.client.ui.widget.protovis.DoubleFunctionNoArgs::f()();};
+    }-*/;
+    
+    public static final native JavaScriptObject toJavaScriptFunction(
+            IntFunctionNoArgs f) /*-{
+        return function() 
+            { return f.@org.thechiselgroup.choosel.client.ui.widget.protovis.IntFunctionNoArgs::f()();};
     }-*/;
 
     public static final native JavaScriptObject toJavaScriptFunction(
             JavaScriptObject _this, BooleanFunction<?> f) /*-{
         return function(d) 
-            { return f.@org.thechiselgroup.choosel.client.ui.widget.protovis.BooleanFunction::f(Ljava/lang/Object;I)(d,_this.index);}
-    }-*/;
-
-    public static final native JavaScriptObject toJavaScriptFunction(
-            JavaScriptObject _this, DoubleFunction<?> f) /*-{
-        return function(d) 
-            { return f.@org.thechiselgroup.choosel.client.ui.widget.protovis.DoubleFunction::f(Ljava/lang/Object;I)(d,_this.index);}
+            { return f.@org.thechiselgroup.choosel.client.ui.widget.protovis.BooleanFunction::f(Ljava/lang/Object;I)(d,_this.index);};
     }-*/;
     
     public static final native JavaScriptObject toJavaScriptFunction(
-            JavaScriptObject _this, DoubleFunctionWithDoubleParam f) /*-{
+            JavaScriptObject _this, DoubleFunction<?> f) /*-{
         return function(d) 
-            { return f.@org.thechiselgroup.choosel.client.ui.widget.protovis.DoubleFunctionWithDoubleParam::f(DI)(d,_this.index);}
+            { return f.@org.thechiselgroup.choosel.client.ui.widget.protovis.DoubleFunction::f(Ljava/lang/Object;I)(d,_this.index);};
+    }-*/;
+    
+    public static final native JavaScriptObject toJavaScriptFunction(
+            JavaScriptObject _this, DoubleFunctionDoubleArg f) /*-{
+        return function(d) 
+            { return f.@org.thechiselgroup.choosel.client.ui.widget.protovis.DoubleFunctionDoubleArg::f(DI)(d,_this.index);};
     }-*/;
     
     public static final native JavaScriptObject toJavaScriptFunction(
@@ -79,15 +91,15 @@ public abstract class Mark extends JavaScriptObject {
     }-*/;
 
     public static final native JavaScriptObject toJavaScriptFunction(
-            JavaScriptObject _this, StringFunctionWithIntParam f) /*-{
+            JavaScriptObject _this, StringFunctionIntArg f) /*-{
         return function(d) 
-            { return f.@org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunctionWithIntParam::f(II)(d,_this.index); };
+            { return f.@org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunctionIntArg::f(II)(d,_this.index); };
     }-*/;
 
     public static final native JavaScriptObject toJavaScriptFunction(
-            JavaScriptObject _this, StringFunctionWithoutParam f) /*-{
+            StringFunctionNoArgs f) /*-{
         return function() 
-            { return f.@org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunctionWithoutParam::f()();}
+            { return f.@org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunctionNoArgs::f()();};
     }-*/;
     // @formatter:on
 

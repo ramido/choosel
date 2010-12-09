@@ -15,8 +15,25 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.widget.protovis;
 
-public interface StringFunctionWithIntParam {
+public class BenchmarkingDoubleFunction<T> implements
+        DoubleFunction<T> {
 
-    String f(int value, int i);
+    private DoubleFunction<T> delegate;
+
+    public BenchmarkingDoubleFunction(DoubleFunction<T> delegate) {
+        this.delegate = delegate;
+    }
+
+    @Override
+    public double f(T value, int i) {
+        long startTime = System.currentTimeMillis();
+        try {
+            return delegate.f(value, i);
+        } finally {
+            System.err.println(delegate.toString() + " took "
+                    + (System.currentTimeMillis() - startTime) + " ms -- "
+                    + System.currentTimeMillis());
+        }
+    }
 
 }

@@ -25,8 +25,8 @@ import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisEventHandler
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Rule;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Scale;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunction;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunctionWithIntParam;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunctionWithoutParam;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunctionIntArg;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunctionNoArgs;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
@@ -176,7 +176,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         }
     };
 
-    private StringFunctionWithIntParam scaleStrokeStyle = new StringFunctionWithIntParam() {
+    private StringFunctionIntArg scaleStrokeStyle = new StringFunctionIntArg() {
         @Override
         public String f(int value, int i) {
             return value == 0 ? AXIS_SCALE_COLOR : GRIDLINE_SCALE_COLOR;
@@ -247,7 +247,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
     private String valueAxisLabel;
 
-    private StringFunctionWithoutParam valueAxisLabelFunction = new StringFunctionWithoutParam() {
+    private StringFunctionNoArgs valueAxisLabelFunction = new StringFunctionNoArgs() {
         @Override
         public String f() {
             return valueAxisLabel;
