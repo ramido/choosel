@@ -22,8 +22,14 @@ package org.thechiselgroup.choosel.client.ui.dnd;
  */
 public interface DragProxyEventReceiver {
 
+    /**
+     * Called when the drag proxy is attached (drag and drop operations starts).
+     */
     void dragProxyAttached();
 
+    /**
+     * Called when the drag proxy is removed (drag and drop operations ends).
+     */
     void dragProxyDetached();
 
 }

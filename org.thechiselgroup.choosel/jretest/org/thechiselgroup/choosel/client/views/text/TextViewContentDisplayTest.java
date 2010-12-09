@@ -84,7 +84,8 @@ public class TextViewContentDisplayTest {
                 LightweightCollections.<Slot> emptySet());
 
         // both resources get highlighted as the selection is dragged
-        resourceItem.addHighlightedResources(createResources(1, 2));
+        resourceItem.updateHighlightedResources(createResources(1, 2),
+                LightweightCollections.<Resource> emptyCollection());
         underTest.update(LightweightCollections
                 .<ResourceItem> emptyCollection(), LightweightCollections
                 .toCollection((ResourceItem) resourceItem),
@@ -102,7 +103,9 @@ public class TextViewContentDisplayTest {
         reset(itemLabel);
 
         // highlighting is removed after drag operation
-        resourceItem.removeHighlightedResources(createResources(1, 2));
+        resourceItem.updateHighlightedResources(
+        LightweightCollections.<Resource> emptyCollection(),
+        createResources(1, 2));
         underTest.update(LightweightCollections.<ResourceItem> emptySet(),
                 LightweightCollections
                         .toCollection((ResourceItem) resourceItem),

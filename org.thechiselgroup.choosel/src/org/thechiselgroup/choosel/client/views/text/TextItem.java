@@ -40,9 +40,11 @@ public class TextItem {
      */
     private boolean addedToPanel = false;
 
-    private double fontSizeSlotValue;
+    private double cacheFontSize;
 
     private String lastFontSizeLabelValue;
+
+    private String cachedDescription;
 
     public TextItem(ResourceItem resourceItem) {
         assert resourceItem != null;
@@ -51,7 +53,7 @@ public class TextItem {
     }
 
     public double getFontSizeSlotValue() {
-        return fontSizeSlotValue;
+        return cacheFontSize;
     }
 
     public TextItemLabel getLabel() {
@@ -79,14 +81,14 @@ public class TextItem {
 
     /**
      * <p>
-     * <b>IMPLEMENTATION NOTE</b>: the last calculated font size gets cached and is 
-     * compared to the result of the current font size calculation to prevent expensive 
-     * DOM styling operations. 
+     * <b>IMPLEMENTATION NOTE</b>: the last calculated font size gets cached and
+     * is compared to the result of the current font size calculation to prevent
+     * expensive DOM styling operations.
      * </p>
      */
     public void scaleFont(DoubleToGroupValueMapper<String> groupValueMapper) {
         String newFontSizeLabelValue = groupValueMapper
-                .getGroupValue(fontSizeSlotValue);
+                .getGroupValue(cacheFontSize);
 
         if (lastFontSizeLabelValue == null
                 || newFontSizeLabelValue.compareTo(lastFontSizeLabelValue) != 0) {
@@ -105,10 +107,20 @@ public class TextItem {
             return;
         }
 
-        label.setText((String) resourceItem
-                .getResourceValue(SlotResolver.DESCRIPTION_SLOT));
+        /*
+         * PERFORMANCE: cache description and font size and only update UI
+         * elements when there is a change. This makes a huge difference with
+         * several thousand text items.
+         */
+        String description = (String) resourceItem
+                .getResourceValue(SlotResolver.DESCRIPTION_SLOT);
 
-        fontSizeSlotValue = ((Double) resourceItem
+        if (cachedDescription == null || !cachedDescription.equals(description)) {
+            label.setText(description);
+            cachedDescription = description;
+        }
+
+        cacheFontSize = ((Double) resourceItem
                 .getResourceValue(SlotResolver.FONT_SIZE_SLOT)).doubleValue();
     }
 

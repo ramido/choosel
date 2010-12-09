@@ -16,7 +16,11 @@
 package org.thechiselgroup.choosel.client.resources;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -106,6 +110,28 @@ public class CombinedResourceSet extends DelegatingResourceSet {
         eventBus.fireEvent(new ResourceSetAddedEvent(resourceSet));
     }
 
+    private LightweightList<Resource> calculateResourcesToRemove(
+            ResourceSet resourceSet) {
+
+        LightweightList<Resource> toRemove = CollectionFactory
+                .createLightweightList();
+        for (Resource resource : resourceSet) {
+            boolean contained = false;
+            for (Iterator<ResourceSetElement> it = containedResourceSets
+                    .iterator(); !contained && it.hasNext();) {
+                ResourceSetElement rse = it.next();
+                if (rse.resourceSet.contains(resource)) {
+                    contained = true;
+                }
+            }
+
+            if (!contained) {
+                toRemove.add(resource);
+            }
+        }
+        return toRemove;
+    }
+
     @Override
     public void clear() {
         List<ResourceSetElement> toRemove = new ArrayList<ResourceSetElement>(
@@ -163,18 +189,7 @@ public class CombinedResourceSet extends DelegatingResourceSet {
         containedResourceSets.remove(resourceSetElement);
         resourceSetElement.removeHandler();
 
-        // XXX performance improvements
-        List<Resource> toRemove = new ArrayList<Resource>();
-        for (Resource resource : resourceSet) {
-            toRemove.add(resource);
-        }
-        for (ResourceSetElement rse : containedResourceSets) {
-            for (Resource resource : rse.resourceSet) {
-                toRemove.remove(resource);
-            }
-        }
-
-        removeAll(toRemove);
+        removeAll(calculateResourcesToRemove(resourceSet));
 
         eventBus.fireEvent(new ResourceSetRemovedEvent(resourceSet));
     }

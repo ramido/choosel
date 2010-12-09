@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.client.resources;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.verifyOnResourceSetChanged;
 import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.verifyOnResourcesAdded;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createLabeledResources;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
@@ -94,7 +95,16 @@ public class CombinedResourceSetTest {
     }
 
     @Test
-    public void fireAddEventsWhenResourceSetAdded() {
+    public void doNotFireEventWhenResourceSetAddedButNoNewResources() {
+        underTest.addResourceSet(createLabeledResources(1, 2, 3));
+        underTest.addEventHandler(resourceSetChangedHandler);
+        underTest.addResourceSet(createLabeledResources(1, 2, 3));
+
+        verifyOnResourceSetChanged(0, resourceSetChangedHandler);
+    }
+
+    @Test
+    public void fireEventWhenResourceSetAdded() {
         underTest.addEventHandler(resourceSetChangedHandler);
         underTest.addResourceSet(createLabeledResources(1, 2, 3));
 
