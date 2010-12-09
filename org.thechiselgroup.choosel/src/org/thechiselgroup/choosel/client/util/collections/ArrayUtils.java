@@ -27,15 +27,15 @@ import com.google.gwt.core.client.JavaScriptObject;
 public class ArrayUtils {
 
     // @formatter:off
-    private native static void add(Object o, JavaScriptObject array) /*-{
+    public native static void add(Object o, JavaScriptObject array) /*-{
         array.push(o);
     }-*/;
 
-    private native static JavaScriptObject createArray() /*-{
+    public native static JavaScriptObject createArray() /*-{
         return new Array();
     }-*/;
 
-    private native static int length(JavaScriptObject array) /*-{
+    public native static int length(JavaScriptObject array) /*-{
         return array.length;
     }-*/;
     // @formatter:on
@@ -98,19 +98,19 @@ public class ArrayUtils {
         return min;
     }
 
-    private native static void pushArray(JavaScriptObject array, double d) /*-{
+    public native static void pushArray(JavaScriptObject array, double d) /*-{
         array.push(d);
     }-*/;
 
-    private native static void pushArray(JavaScriptObject array, int i) /*-{
+    public native static void pushArray(JavaScriptObject array, int i) /*-{
         array.push(i);
     }-*/;
 
-    private native static void pushArray(JavaScriptObject array, String o) /*-{
+    public native static void pushArray(JavaScriptObject array, String o) /*-{
         array.push(o);
     }-*/;
 
-    private native static void remove(Object o, JavaScriptObject array) /*-{
+    public native static void remove(Object o, JavaScriptObject array) /*-{
         var index = array.indexOf(o);
         if (index != -1) {
         array.splice(index, 1);

@@ -18,10 +18,10 @@ package org.thechiselgroup.choosel.client.views.chart;
 import org.thechiselgroup.choosel.client.ui.Colors;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Alignment;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Dot;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.Label;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisEventHandler;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.DoubleFunction;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.DoubleFunctionWithDoubleParam;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.Label;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisEventHandler;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Scale;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Wedge;
 import org.thechiselgroup.choosel.client.util.collections.ArrayUtils;
@@ -171,10 +171,10 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
     private void drawWedge() {
         calculateAllResourcesSum();
 
-        regularWedge = chart.add(Wedge.createWedge())
-                .data(ArrayUtils.toJsArray(chartItems)).left(wedgeLeft)
-                .bottom(wedgeBottom).outerRadius(regularWedgeOuterRadius)
-                .angle(wedgeAngle).strokeStyle(Colors.WHITE);
+        regularWedge = chart.add(Wedge.createWedge()).data(chartItemJsArray)
+                .left(wedgeLeft).bottom(wedgeBottom)
+                .outerRadius(regularWedgeOuterRadius).angle(wedgeAngle)
+                .strokeStyle(Colors.WHITE);
 
         if (hasPartiallyHighlightedChartItems()) {
             regularWedge.innerRadius(highlightedWedgeOuterRadius).fillStyle(

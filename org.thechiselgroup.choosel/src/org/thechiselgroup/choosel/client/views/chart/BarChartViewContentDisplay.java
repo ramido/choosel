@@ -15,8 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.chart;
 
-import java.util.Collections;
-
 import org.thechiselgroup.choosel.client.ui.Colors;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Alignment;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Bar;
@@ -29,7 +27,6 @@ import org.thechiselgroup.choosel.client.ui.widget.protovis.Scale;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunction;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunctionWithIntParam;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunctionWithoutParam;
-import org.thechiselgroup.choosel.client.util.collections.ArrayUtils;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
@@ -248,12 +245,12 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         }
     };
 
-    private String measurementLabel;
+    private String valueAxisLabel;
 
-    private StringFunctionWithoutParam measurementLabelFunction = new StringFunctionWithoutParam() {
+    private StringFunctionWithoutParam valueAxisLabelFunction = new StringFunctionWithoutParam() {
         @Override
         public String f() {
-            return measurementLabel;
+            return valueAxisLabel;
         }
     };
 
@@ -310,8 +307,9 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     public void drawChart() {
         assert chartItems.size() >= 1;
 
-        Collections.sort(chartItems, new ChartItemComparator(
-                SlotResolver.CHART_LABEL_SLOT));
+        // TODO do we need sorting?
+        // Collections.sort(chartItems, new ChartItemComparator(
+        // SlotResolver.CHART_LABEL_SLOT));
 
         calculateChartVariables();
         calculateMaximumChartItemValue();
@@ -340,11 +338,10 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     }
 
     private void drawHorizontalBarChart() {
-        regularBar = chart.add(Bar.createBar())
-                .data(ArrayUtils.toJsArray(chartItems)).left(barLineWidth)
-                .width(fullBarLength).bottom(barStart).height(barWidth)
-                .fillStyle(chartFillStyle).strokeStyle(Colors.STEELBLUE)
-                .lineWidth(barLineWidth);
+        regularBar = chart.add(Bar.createBar()).data(chartItemJsArray)
+                .left(barLineWidth).width(fullBarLength).bottom(barStart)
+                .height(barWidth).fillStyle(chartFillStyle)
+                .strokeStyle(Colors.STEELBLUE).lineWidth(barLineWidth);
 
         regularBar.add(Label.createLabel()).bottom(baselineLabelStart)
                 .textAlign(Alignment.RIGHT).left(0).text(baselineLabelText)
@@ -355,12 +352,11 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
                 .textStyle(fullMarkTextStyle).textAlign(valueLabelAlignment);
 
         // TODO negative bars (in opposite direction)
-        highlightedBar = chart.add(Bar.createBar())
-                .data(ArrayUtils.toJsArray(chartItems)).left(barLineWidth)
-                .width(highlightedBarLength).bottom(highlightedBarStart)
-                .height(highlightedWidth).fillStyle(Colors.YELLOW)
-                .strokeStyle(Colors.STEELBLUE).lineWidth(barLineWidth)
-                .visible(isPartiallyHighlighted);
+        highlightedBar = chart.add(Bar.createBar()).data(chartItemJsArray)
+                .left(barLineWidth).width(highlightedBarLength)
+                .bottom(highlightedBarStart).height(highlightedWidth)
+                .fillStyle(Colors.YELLOW).strokeStyle(Colors.STEELBLUE)
+                .lineWidth(barLineWidth).visible(isPartiallyHighlighted);
 
         highlightedBar.anchor(Alignment.RIGHT).add(Label.createLabel())
                 .textBaseline(barTextBaseline).text(highlightedLabelText)
@@ -369,7 +365,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
     private void drawHorizontalBarMeasurementAxisLabel() {
         chart.add(Label.createLabel()).bottom(-BORDER_BOTTOM + 5)
-                .left(chartWidth / 2).text(measurementLabelFunction)
+                .left(chartWidth / 2).text(valueAxisLabelFunction)
                 .textAlign(Alignment.CENTER);
     }
 
@@ -382,8 +378,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     }
 
     private void drawVerticalBarChart() {
-        regularBar = chart.add(Bar.createBar())
-                .data(ArrayUtils.toJsArray(chartItems))
+        regularBar = chart.add(Bar.createBar()).data(chartItemJsArray)
                 .bottom(barLineWidth - 1).height(fullBarLength).left(barStart)
                 .width(barWidth).fillStyle(chartFillStyle)
                 .strokeStyle(Colors.STEELBLUE).lineWidth(barLineWidth);
@@ -406,12 +401,11 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
                 .textAlign(valueLabelAlignment).textStyle(fullMarkTextStyle)
                 .text(fullMarkLabelText);
 
-        highlightedBar = chart.add(Bar.createBar())
-                .data(ArrayUtils.toJsArray(chartItems)).bottom(barLineWidth)
-                .height(highlightedBarLength).left(highlightedBarStart)
-                .width(highlightedWidth).fillStyle(Colors.YELLOW)
-                .strokeStyle(Colors.STEELBLUE).lineWidth(barLineWidth)
-                .visible(isPartiallyHighlighted);
+        highlightedBar = chart.add(Bar.createBar()).data(chartItemJsArray)
+                .bottom(barLineWidth).height(highlightedBarLength)
+                .left(highlightedBarStart).width(highlightedWidth)
+                .fillStyle(Colors.YELLOW).strokeStyle(Colors.STEELBLUE)
+                .lineWidth(barLineWidth).visible(isPartiallyHighlighted);
 
         highlightedBar.anchor(Alignment.TOP).add(Label.createLabel())
                 .textBaseline(Alignment.MIDDLE).textAlign(Alignment.RIGHT)
@@ -466,10 +460,6 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         this.layout = layout;
     }
 
-    public void setMeasurementLabel(String measurementLabel) {
-        this.measurementLabel = measurementLabel;
-    }
-
     @Override
     public void update(LightweightCollection<ResourceItem> addedResourceItems,
             LightweightCollection<ResourceItem> updatedResourceItems,
@@ -478,8 +468,8 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
         // TODO re-enable - might be wrong for initial configuration...
         // if (!changedSlots.isEmpty()) {
-        setMeasurementLabel(callback
-                .getSlotResolverDescription(SlotResolver.CHART_VALUE_SLOT));
+        valueAxisLabel = callback
+                .getSlotResolverDescription(SlotResolver.CHART_VALUE_SLOT);
         // }
 
         super.update(addedResourceItems, updatedResourceItems,
