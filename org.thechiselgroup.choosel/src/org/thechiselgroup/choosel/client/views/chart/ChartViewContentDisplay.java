@@ -334,7 +334,11 @@ public abstract class ChartViewContentDisplay extends
         this.width = width;
         this.height = height;
 
-        renderChart();
+        /*
+         * TODO we could use renderChart() here to improve the performance. This
+         * would require several changes in the chart implementation, though.
+         */
+        buildChart();
     }
 
     protected abstract void registerEventHandler(String eventType,
