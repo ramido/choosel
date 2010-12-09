@@ -42,6 +42,8 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * that resemble the Java collections API, but are specific to Resources.
  * </p>
  * 
+ * @author Lars Grammel
+ * 
  * @see Resource
  */
 public interface ResourceSet extends HasLabel, LightweightCollection<Resource> {
@@ -114,8 +116,18 @@ public interface ResourceSet extends HasLabel, LightweightCollection<Resource> {
     LightweightList<Resource> getIntersection(
             LightweightCollection<Resource> resources);
 
-    @Override
-    boolean isEmpty();
+    /**
+     * Inverts the containment of this resource. If the resource is already
+     * contained, it is removed. If it is not already contained, it is added.
+     */
+    void invert(Resource resource);
+
+    /**
+     * Inverts the containment of the resources in the parameter resource set.
+     * For each resource, if the resource is already contained, it is removed.
+     * If the resource is not already contained, it is added.
+     */
+    void invertAll(ResourceSet resources);
 
     boolean isModifiable();
 
@@ -130,8 +142,6 @@ public interface ResourceSet extends HasLabel, LightweightCollection<Resource> {
     boolean remove(Resource resource);
 
     boolean removeAll(Iterable<Resource> resources);
-
-    boolean removeAll(ResourceSet resources);
 
     /**
      * Removes all resources from this resource set that are not contained in
@@ -152,10 +162,6 @@ public interface ResourceSet extends HasLabel, LightweightCollection<Resource> {
      */
     @Override
     int size();
-
-    void switchContainment(Resource resource);
-
-    void switchContainment(ResourceSet resources);
 
     /**
      * <b>PERFORMANCE</b>: This method is slow and meant for use in tests.

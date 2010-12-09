@@ -116,6 +116,14 @@ public final class NullResourceSet implements ResourceSet {
     }
 
     @Override
+    public void invert(Resource resource) {
+    }
+
+    @Override
+    public void invertAll(ResourceSet resources) {
+    }
+
+    @Override
     public boolean isEmpty() {
         return false;
     }
@@ -141,11 +149,6 @@ public final class NullResourceSet implements ResourceSet {
     }
 
     @Override
-    public boolean removeAll(ResourceSet resources) {
-        return false;
-    }
-
-    @Override
     public boolean retainAll(ResourceSet resources) {
         return false;
     }
@@ -157,14 +160,6 @@ public final class NullResourceSet implements ResourceSet {
     @Override
     public int size() {
         return 0;
-    }
-
-    @Override
-    public void switchContainment(Resource resource) {
-    }
-
-    @Override
-    public void switchContainment(ResourceSet resources) {
     }
 
     @Override

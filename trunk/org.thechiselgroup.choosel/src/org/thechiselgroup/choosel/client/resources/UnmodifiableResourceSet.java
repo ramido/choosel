@@ -40,6 +40,18 @@ public class UnmodifiableResourceSet extends DelegatingResourceSet {
     }
 
     @Override
+    public void invert(Resource resource) {
+        throw new UnsupportedOperationException(
+                "UnmodifiableResourceSet.invert not supported");
+    }
+
+    @Override
+    public void invertAll(ResourceSet resources) {
+        throw new UnsupportedOperationException(
+                "UnmodifiableResourceSet.invertAll not supported");
+    }
+
+    @Override
     public boolean isModifiable() {
         return false;
     }
@@ -57,12 +69,6 @@ public class UnmodifiableResourceSet extends DelegatingResourceSet {
     }
 
     @Override
-    public boolean removeAll(ResourceSet resources) {
-        throw new UnsupportedOperationException(
-                "UnmodifiableResourceSet.removeAll not supported");
-    }
-
-    @Override
     public boolean retainAll(ResourceSet resources) {
         throw new UnsupportedOperationException(
                 "UnmodifiableResourceSet.retainAll not supported");
@@ -72,18 +78,6 @@ public class UnmodifiableResourceSet extends DelegatingResourceSet {
     public void setLabel(String label) {
         throw new UnsupportedOperationException(
                 "UnmodifiableResourceSet.setLabel not supported");
-    }
-
-    @Override
-    public void switchContainment(Resource resource) {
-        throw new UnsupportedOperationException(
-                "UnmodifiableResourceSet.switchContainment not supported");
-    }
-
-    @Override
-    public void switchContainment(ResourceSet resources) {
-        throw new UnsupportedOperationException(
-                "UnmodifiableResourceSet.switchContainment not supported");
     }
 
 }

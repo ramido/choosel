@@ -24,20 +24,31 @@ import java.util.List;
  * versions.
  * 
  * @author Lars Grammel
- * 
- * @param <T>
  */
 public interface LightweightCollection<T> extends Iterable<T> {
 
+    /**
+     * Tests if the element is contained in this collection. <b>PERFORMANCE</b>:
+     * Differs from implementation to implementation. Worst case: linear to size
+     * of collection.
+     */
     boolean contains(T t);
 
+    /**
+     * Returns true if there are no elements in this collection, and false if
+     * there are.
+     */
     boolean isEmpty();
 
+    /**
+     * Returns the number of elements in this collection.
+     */
     int size();
 
     /**
-     * Converts this lightweight collection into a List. This usually has a
-     * fairly high performance penalty and is only recommended for testing.
+     * <b>FOR TEST USAGE.</b> Converts this lightweight collection into a List.
+     * This usually has a fairly high performance penalty and is only
+     * recommended for testing.
      */
     List<T> toList();
 

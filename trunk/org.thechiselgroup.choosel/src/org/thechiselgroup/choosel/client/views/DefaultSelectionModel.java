@@ -198,6 +198,6 @@ public class DefaultSelectionModel implements SelectionModel, Disposable,
 
         assert selection != null;
 
-        getSelection().switchContainment(resources);
+        getSelection().invertAll(resources);
     }
 }
