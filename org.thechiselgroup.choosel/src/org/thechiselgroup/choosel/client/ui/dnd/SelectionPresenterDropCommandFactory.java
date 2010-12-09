@@ -15,10 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.dnd;
 
-import java.util.ArrayList;
-
 import org.thechiselgroup.choosel.client.command.UndoableCommand;
-import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.client.util.HasDescription;
@@ -79,20 +76,16 @@ public class SelectionPresenterDropCommandFactory implements
     public boolean canDrop(ResourceSetAvatar avatar) {
         assert avatar != null;
 
-        if (!avatar.getResourceSet().hasLabel()) {
+        ResourceSet avatarResources = avatar.getResourceSet();
+
+        if (!avatarResources.hasLabel()
+                || getSelectionModel().containsSelectionSet(avatarResources)) {
             return false;
         }
 
-        // TODO extract intersect operation
-        ArrayList<Resource> resources = new ArrayList<Resource>(getView()
-                .getResourceModel().getResources().toList());
-        resources.retainAll(avatar.getResourceSet().toList());
-        if (resources.isEmpty()) {
-            return false;
-        }
+        ResourceSet viewResources = getView().getResourceModel().getResources();
 
-        return !getSelectionModel().containsSelectionSet(
-                avatar.getResourceSet());
+        return !viewResources.getIntersection(avatarResources).isEmpty();
     }
 
     @Override
