@@ -34,6 +34,7 @@ import org.thechiselgroup.choosel.client.ui.dnd.DropEnabledViewContentDisplay;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropTargetManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.client.windows.WindowContent;
 import org.thechiselgroup.choosel.client.windows.WindowContentFactory;
@@ -118,6 +119,31 @@ public class ViewFactory implements WindowContentFactory {
         this.detailsWidgetHelper = detailsWidgetHelper;
     }
 
+    protected LightweightCollection<SidePanelSection> createSidePanelSections(
+            ViewContentDisplay contentDisplay,
+            VisualMappingsControl visualMappingsControl,
+            ShareConfiguration shareConfiguration) {
+
+        LightweightList<SidePanelSection> sidePanelSections = CollectionFactory
+                .createLightweightList();
+
+        sidePanelSections.add(new SidePanelSection("Mappings",
+                visualMappingsControl.asWidget()));
+        sidePanelSections.addAll(contentDisplay.getSidePanelSections());
+        sidePanelSections.addAll(shareConfiguration.getSidePanelSections());
+
+        return sidePanelSections;
+    }
+
+    protected DefaultVisualMappingsControl createVisualMappingsControl(
+            ViewContentDisplay contentDisplay,
+            ResourceGrouping resourceSplitter,
+            SlotMappingConfiguration configuration) {
+
+        return new DefaultVisualMappingsControl(contentDisplay, configuration,
+                resourceSplitter);
+    }
+
     @Override
     public WindowContent createWindowContent() {
         ViewContentDisplay viewContentDisplay = viewContentDisplayFactory
@@ -148,19 +174,14 @@ public class ViewFactory implements WindowContentFactory {
 
         SlotMappingConfiguration configuration = new SlotMappingConfiguration();
 
-        VisualMappingsControl visualMappingsControl = new DefaultVisualMappingsControl(
-                contentDisplay, configuration, resourceSplitter);
+        VisualMappingsControl visualMappingsControl = createVisualMappingsControl(
+                contentDisplay, resourceSplitter, configuration);
 
         ShareConfiguration shareConfiguration = shareConfigurationFactory
                 .createShareConfiguration();
 
-        LightweightList<SidePanelSection> sidePanelSections = CollectionFactory
-                .createLightweightList();
-
-        sidePanelSections.add(new SidePanelSection("Mappings",
-                visualMappingsControl.asWidget()));
-        sidePanelSections.addAll(contentDisplay.getSidePanelSections());
-        sidePanelSections.addAll(shareConfiguration.getSidePanelSections());
+        LightweightCollection<SidePanelSection> sidePanelSections = createSidePanelSections(
+                contentDisplay, visualMappingsControl, shareConfiguration);
 
         return new DefaultView(resourceSplitter, contentDisplay, contentType,
                 contentType, configuration, selectionModel,
