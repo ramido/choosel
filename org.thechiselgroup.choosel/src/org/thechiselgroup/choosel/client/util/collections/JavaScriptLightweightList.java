@@ -71,7 +71,22 @@ public final class JavaScriptLightweightList<T> implements LightweightList<T> {
     }
 
     @Override
+    public void addAll(Iterable<T> collection) {
+        for (T t : collection) {
+            add(t);
+        }
+    }
+
+    @Override
+    public void addAll(T[] array) {
+        for (T t : array) {
+            add(t);
+        }
+    }
+
+    @Override
     public boolean contains(T t) {
+        // TODO would indexOf improve performance?
         for (int i = 0; i < size(); i++) {
             if (get(i).equals(t)) {
                 return true;
@@ -82,6 +97,12 @@ public final class JavaScriptLightweightList<T> implements LightweightList<T> {
 
     @Override
     public T get(int i) {
+        if (i < 0 || i >= size()) {
+            throw new IndexOutOfBoundsException("" + i
+                    + " is not a valid index. The index should between 0 and "
+                    + (size() - 1));
+        }
+
         return this.jsList.get(i);
     }
 

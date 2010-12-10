@@ -29,6 +29,20 @@ public class ArrayListToLightweightListAdapter<T> implements LightweightList<T> 
     }
 
     @Override
+    public void addAll(Iterable<T> collection) {
+        for (T t : collection) {
+            add(t);
+        }
+    }
+
+    @Override
+    public void addAll(T[] array) {
+        for (T t : array) {
+            add(t);
+        }
+    }
+
+    @Override
     public boolean contains(T t) {
         return delegate.contains(t);
     }

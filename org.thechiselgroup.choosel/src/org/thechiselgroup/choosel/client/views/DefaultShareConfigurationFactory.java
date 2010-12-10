@@ -15,6 +15,7 @@ public class DefaultShareConfigurationFactory implements
     @Inject
     public DefaultShareConfigurationFactory(ViewSaver viewSaver,
             AuthenticationManager manager) {
+
         assert viewSaver != null;
         assert manager != null;
 

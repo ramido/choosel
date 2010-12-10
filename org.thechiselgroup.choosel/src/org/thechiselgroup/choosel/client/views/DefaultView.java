@@ -182,6 +182,12 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private final ShareConfiguration shareConfiguration;
 
+    /**
+     * Sections that will be displayed in the side panel. This is a lightweight
+     * collections so we can check whether it is empty or not.
+     */
+    private LightweightCollection<SidePanelSection> sidePanelSections;
+
     public DefaultView(ResourceGrouping resourceGrouping,
             ViewContentDisplay contentDisplay, String label,
             String contentType,
@@ -191,7 +197,8 @@ public class DefaultView extends AbstractWindowContent implements View {
             HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
             DetailsWidgetHelper detailsWidgetHelper,
             VisualMappingsControl visualMappingsControl,
-            ShareConfiguration shareConfiguration) {
+            ShareConfiguration shareConfiguration,
+            LightweightCollection<SidePanelSection> sidePanelSections) {
 
         super(label, contentType);
 
@@ -207,6 +214,7 @@ public class DefaultView extends AbstractWindowContent implements View {
         assert hoverModel != null;
         assert visualMappingsControl != null;
         assert shareConfiguration != null;
+        assert sidePanelSections != null;
 
         this.shareConfiguration = shareConfiguration;
         this.popupManagerFactory = popupManagerFactory;
@@ -220,6 +228,7 @@ public class DefaultView extends AbstractWindowContent implements View {
         this.resourceModelPresenter = resourceModelPresenter;
         this.hoverModel = hoverModel;
         this.visualMappingsControl = visualMappingsControl;
+        this.sidePanelSections = sidePanelSections;
     }
 
     @Override
@@ -438,6 +447,7 @@ public class DefaultView extends AbstractWindowContent implements View {
             @Override
             public void onResourceSetChanged(ResourceSetChangedEvent event) {
                 initializeVisualMappings(event.getTarget());
+                // TODO extrace update visual mappings control (using observers)
                 visualMappingsControl.updateConfiguration(event.getTarget());
                 super.onResourceSetChanged(event);
             }
@@ -559,10 +569,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         }
     }
 
-    private void initMappingsConfigurator() {
-        sideBar.add(visualMappingsControl.asWidget(), "Mappings");
-    }
-
     private void initResourceGrouping() {
         resourceGrouping.addHandler(new ResourceGroupingChangedHandler() {
 
@@ -608,18 +614,18 @@ public class DefaultView extends AbstractWindowContent implements View {
         configurationBar.setCellWidth(widget, "100%"); // eats up all space
     }
 
-    private void initShareConfigurator() {
-        shareConfiguration.attach(DefaultView.this, sideBar);
-    }
-
     private void initSideBar() {
+        assert sideBar == null;
+        assert sidePanelSections != null;
+
         sideBar = new StackPanel();
         sideBar.setStyleName(CSS_CONFIGURATION_PANEL);
         sideBar.setVisible(false);
 
-        initMappingsConfigurator();
-        initViewConfigurator();
-        initShareConfigurator();
+        for (SidePanelSection sidePanelSection : sidePanelSections) {
+            sideBar.add(sidePanelSection.getWidget(),
+                    sidePanelSection.getSectionTitle());
+        }
     }
 
     private void initSideBarExpander() {
@@ -655,6 +661,8 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     protected void initUI() {
+        shareConfiguration.setView(this);
+
         initConfigurationPanelUI();
         initSideBar();
 
@@ -670,14 +678,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         viewPanel.add(sideBar, DockPanel.EAST);
 
         viewPanel.setCellHeight(contentDisplay.asWidget(), "100%");
-    }
-
-    private void initViewConfigurator() {
-        SidePanelSection[] sections = contentDisplay.getSidePanelSections();
-        for (SidePanelSection sidePanelSection : sections) {
-            sideBar.add(sidePanelSection.getWidget(),
-                    sidePanelSection.getSectionTitle());
-        }
     }
 
     /**
