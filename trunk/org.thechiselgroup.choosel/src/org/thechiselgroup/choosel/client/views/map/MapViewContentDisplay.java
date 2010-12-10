@@ -259,7 +259,7 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
         // XXX performance of toList
         if (changedSlots.toList().contains(SlotResolver.DESCRIPTION_SLOT)) {
             for (ResourceItem resourceItem : getCallback()
-                    .getAllResourceItems()) {
+                    .getResourceItems()) {
                 ((MapItem) resourceItem.getDisplayObject()).updateLabel();
             }
         }

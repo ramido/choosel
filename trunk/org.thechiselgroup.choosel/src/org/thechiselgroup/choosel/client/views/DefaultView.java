@@ -16,7 +16,6 @@
 package org.thechiselgroup.choosel.client.views;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -488,11 +487,6 @@ public class DefaultView extends AbstractWindowContent implements View {
             }
 
             @Override
-            public Collection<DefaultResourceItem> getAllResourceItems() {
-                return groupsToResourceItems.values();
-            }
-
-            @Override
             public Iterable<Resource> getAllResources() {
                 return resourceModel.getResources();
             }
@@ -505,6 +499,14 @@ public class DefaultView extends AbstractWindowContent implements View {
             @Override
             public Resource getResourceByUri(String uri) {
                 return resourceModel.getResources().getByUri(uri);
+            }
+
+            @Override
+            public LightweightCollection<ResourceItem> getResourceItems() {
+                LightweightList<ResourceItem> result = CollectionFactory
+                        .createLightweightList();
+                result.addAll(groupsToResourceItems.values());
+                return result;
             }
 
             @Override

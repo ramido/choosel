@@ -269,7 +269,7 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
         }
 
         if (!changedSlots.isEmpty()) {
-            for (ResourceItem resourceItem : callback.getAllResourceItems()) {
+            for (ResourceItem resourceItem : callback.getResourceItems()) {
                 TextItem textItem = (TextItem) resourceItem.getDisplayObject();
                 textItem.updateContent();
             }

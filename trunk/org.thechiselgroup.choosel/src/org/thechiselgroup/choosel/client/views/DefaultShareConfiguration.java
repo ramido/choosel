@@ -110,7 +110,7 @@ public class DefaultShareConfiguration implements ShareConfiguration {
     }
 
     public void notLoggedIn() {
-        label.setText("Sorry, you are not currently authenticated.  Please log in to share views");
+        label.setText("Sorry, you are not currently authenticated.  Please log in to share views.");
         label.setVisible(true);
         textBox.setVisible(false);
         embedLabel.setVisible(false);
