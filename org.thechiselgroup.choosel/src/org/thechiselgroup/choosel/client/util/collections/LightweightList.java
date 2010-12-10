@@ -31,7 +31,7 @@ public interface LightweightList<T> extends LightweightCollection<T> {
     /**
      * Adds all elements in <code>collection</code> to this list.
      */
-    void addAll(Iterable<T> collection);
+    void addAll(Iterable<? extends T> collection);
 
     /**
      * Adds all elements in <code>array</code> to this list.
