@@ -74,6 +74,7 @@ public abstract class AbstractNeighbourhoodCallback extends
     }
 
     protected Node getNode(Resource resource) {
+        assert resource != null;
         return graph.getNode(resource.getUri());
     }
 

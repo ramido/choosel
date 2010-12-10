@@ -54,13 +54,13 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
         delegate.endRestore();
     }
 
-    @Override
-    public Widget getConfigurationWidget() {
-        return delegate.getConfigurationWidget();
-    }
-
     public ViewContentDisplay getDelegate() {
         return delegate;
+    }
+
+    @Override
+    public SidePanelSection[] getSidePanelSections() {
+        return delegate.getSidePanelSections();
     }
 
     @Override

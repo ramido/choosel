@@ -62,8 +62,8 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
     }
 
     @Override
-    public Widget getConfigurationWidget() {
-        return null;
+    public SidePanelSection[] getSidePanelSections() {
+        return new SidePanelSection[0];
     }
 
     @Override
