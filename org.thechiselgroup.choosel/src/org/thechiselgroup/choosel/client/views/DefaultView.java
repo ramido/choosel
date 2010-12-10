@@ -212,7 +212,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         assert resourceModel != null;
         assert resourceModelPresenter != null;
         assert hoverModel != null;
-        assert visualMappingsControl != null;
         assert shareConfiguration != null;
         assert sidePanelSections != null;
 
@@ -448,7 +447,13 @@ public class DefaultView extends AbstractWindowContent implements View {
             public void onResourceSetChanged(ResourceSetChangedEvent event) {
                 initializeVisualMappings(event.getTarget());
                 // TODO extrace update visual mappings control (using observers)
-                visualMappingsControl.updateConfiguration(event.getTarget());
+                // --> is this a problem because the mappings need to be
+                // initialized?
+                // --> no should listen to mappings instead anyways...
+                if (visualMappingsControl != null) {
+                    visualMappingsControl
+                            .updateConfiguration(event.getTarget());
+                }
                 super.onResourceSetChanged(event);
             }
 

@@ -31,10 +31,11 @@ import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionCo
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_TEXT;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_TIME;
 import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.TYPE_TIMELINE;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.WINDOW_CONTENT_HELP;
+import static org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants.WINDOW_CONTENT_NOTE;
 
 import java.util.Map;
 
-import org.thechiselgroup.choosel.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.client.label.CategoryLabelProvider;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
@@ -62,34 +63,38 @@ import com.google.inject.name.Named;
 public class ChooselWindowContentProducerProvider implements
         Provider<WindowContentProducer> {
 
-    private ResourceSetAvatarFactory allResourcesDragAvatarFactory;
+    protected ResourceSetAvatarFactory allResourcesDragAvatarFactory;
 
-    private ResourceMultiCategorizer categorizer;
+    protected ResourceMultiCategorizer categorizer;
 
-    private ResourceSetAvatarDropTargetManager contentDropTargetManager;
+    protected ResourceSetAvatarDropTargetManager contentDropTargetManager;
 
-    private ResourceSetAvatarFactory dropTargetFactory;
+    protected ResourceSetAvatarFactory dropTargetFactory;
 
-    private CategoryLabelProvider labelProvider;
+    protected CategoryLabelProvider labelProvider;
 
-    private ResourceSetFactory resourceSetFactory;
+    protected ResourceSetFactory resourceSetFactory;
 
-    private ResourceSetAvatarFactory selectionDragAvatarFactory;
+    protected ResourceSetAvatarFactory selectionDragAvatarFactory;
 
-    private LabelProvider selectionModelLabelFactory;
+    protected LabelProvider selectionModelLabelFactory;
 
-    private ResourceSetAvatarFactory userSetsDragAvatarFactory;
+    protected ResourceSetAvatarFactory userSetsDragAvatarFactory;
 
-    protected final Map<String, WindowContentFactory> windowContentFactories = CollectionFactory
+    /**
+     * Maps the content type to a factory that produces a window content of that
+     * content type.
+     */
+    private final Map<String, WindowContentFactory> windowContentFactories = CollectionFactory
             .createStringMap();
 
-    private HoverModel hoverModel;
+    protected HoverModel hoverModel;
 
-    private final PopupManagerFactory popupManagerFactory;
+    protected PopupManagerFactory popupManagerFactory;
 
-    private final DetailsWidgetHelper detailsWidgetHelper;
+    protected DetailsWidgetHelper detailsWidgetHelper;
 
-    private final ShareConfigurationFactory shareConfigurationFactory;
+    protected ShareConfigurationFactory shareConfigurationFactory;
 
     @Inject
     public ChooselWindowContentProducerProvider(
@@ -136,11 +141,9 @@ public class ChooselWindowContentProducerProvider implements
         this.popupManagerFactory = popupManagerFactory;
         this.detailsWidgetHelper = detailsWidgetHelper;
 
-        windowContentFactories.put(
-                ChooselInjectionConstants.WINDOW_CONTENT_HELP,
+        putWindowContentFactory(WINDOW_CONTENT_HELP,
                 new HelpWindowContentFactory());
-        windowContentFactories.put(
-                ChooselInjectionConstants.WINDOW_CONTENT_NOTE,
+        putWindowContentFactory(WINDOW_CONTENT_NOTE,
                 new NoteWindowContentFactory());
     }
 
@@ -152,6 +155,15 @@ public class ChooselWindowContentProducerProvider implements
             contentProducer.register(entry.getKey(), entry.getValue());
         }
         return contentProducer;
+    }
+
+    protected void putWindowContentFactory(String contentType,
+            WindowContentFactory factory) {
+
+        assert contentType != null;
+        assert factory != null;
+
+        windowContentFactories.put(contentType, factory);
     }
 
     @Inject
@@ -211,7 +223,7 @@ public class ChooselWindowContentProducerProvider implements
     private void registerViewContentDisplayFactory(String contentType,
             ViewContentDisplayFactory contentDisplayFactory) {
 
-        windowContentFactories.put(contentType, new ViewFactory(contentType,
+        putWindowContentFactory(contentType, new ViewFactory(contentType,
                 contentDisplayFactory, userSetsDragAvatarFactory,
                 allResourcesDragAvatarFactory, selectionDragAvatarFactory,
                 dropTargetFactory, resourceSetFactory,
