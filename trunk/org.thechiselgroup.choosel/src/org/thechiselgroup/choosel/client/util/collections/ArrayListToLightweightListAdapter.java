@@ -29,7 +29,7 @@ public class ArrayListToLightweightListAdapter<T> implements LightweightList<T> 
     }
 
     @Override
-    public void addAll(Iterable<T> collection) {
+    public void addAll(Iterable<? extends T> collection) {
         for (T t : collection) {
             add(t);
         }
