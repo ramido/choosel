@@ -23,8 +23,27 @@ package org.thechiselgroup.choosel.client.util.collections;
  */
 public interface LightweightList<T> extends LightweightCollection<T> {
 
+    /**
+     * Adds an element to this list.
+     */
     void add(T t);
 
+    /**
+     * Adds all elements in <code>collection</code> to this list.
+     */
+    void addAll(Iterable<T> collection);
+
+    /**
+     * Adds all elements in <code>array</code> to this list.
+     */
+    void addAll(T[] array);
+
+    /**
+     * Returns the element at the specified index.
+     * 
+     * @throws IndexOutOfBoundsException
+     *             if i >= |size()| or i < 0
+     */
     T get(int i);
 
 }

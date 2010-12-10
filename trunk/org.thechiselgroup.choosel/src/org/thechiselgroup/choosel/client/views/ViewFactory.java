@@ -33,6 +33,8 @@ import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarResourceS
 import org.thechiselgroup.choosel.client.ui.dnd.DropEnabledViewContentDisplay;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDropTargetManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.client.windows.WindowContent;
 import org.thechiselgroup.choosel.client.windows.WindowContentFactory;
 
@@ -152,10 +154,18 @@ public class ViewFactory implements WindowContentFactory {
         ShareConfiguration shareConfiguration = shareConfigurationFactory
                 .createShareConfiguration();
 
+        LightweightList<SidePanelSection> sidePanelSections = CollectionFactory
+                .createLightweightList();
+
+        sidePanelSections.add(new SidePanelSection("Mappings",
+                visualMappingsControl.asWidget()));
+        sidePanelSections.addAll(contentDisplay.getSidePanelSections());
+        sidePanelSections.addAll(shareConfiguration.getSidePanelSections());
+
         return new DefaultView(resourceSplitter, contentDisplay, contentType,
                 contentType, configuration, selectionModel,
                 selectionModelPresenter, resourceModel, resourceModelPresenter,
                 hoverModel, popupManagerFactory, detailsWidgetHelper,
-                visualMappingsControl, shareConfiguration);
+                visualMappingsControl, shareConfiguration, sidePanelSections);
     }
 }

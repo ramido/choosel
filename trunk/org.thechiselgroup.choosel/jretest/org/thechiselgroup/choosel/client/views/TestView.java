@@ -32,6 +32,7 @@ import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.client.ui.Presenter;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
+import org.thechiselgroup.choosel.client.util.collections.NullLightweightCollection;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
@@ -114,7 +115,9 @@ public class TestView extends DefaultView {
                 configuration, selectionModel, selectionModelPresenter,
                 resourceModel, resourceModelPresenter, hoverModel,
                 popupManagerFactory, detailsWidgetHelper,
-                visualMappingsControl, shareConfiguration);
+                visualMappingsControl, shareConfiguration,
+                NullLightweightCollection
+                        .<SidePanelSection> nullLightweightCollection());
 
         this.contentDisplay = contentDisplay;
         this.selectionModelPresenter = selectionModelPresenter;

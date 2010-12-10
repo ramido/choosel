@@ -8,7 +8,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -55,11 +54,13 @@ public class DefaultShareConfiguration implements ShareConfiguration {
     }
 
     @Override
-    public void attach(View view, StackPanel panel) {
-        this.view = view;
-        if (authenticationManager.isAuthenticated()) {
-            panel.add(asWidget(), "Share");
+    public SidePanelSection[] getSidePanelSections() {
+        if (!authenticationManager.isAuthenticated()) {
+            return new SidePanelSection[0];
         }
+
+        return new SidePanelSection[] { new SidePanelSection("Share",
+                asWidget()) };
     }
 
     public View getView() {
@@ -114,6 +115,11 @@ public class DefaultShareConfiguration implements ShareConfiguration {
         textBox.setVisible(false);
         embedLabel.setVisible(false);
         textArea.setVisible(false);
+    }
+
+    @Override
+    public void setView(View view) {
+        this.view = view;
     }
 
     @Override
