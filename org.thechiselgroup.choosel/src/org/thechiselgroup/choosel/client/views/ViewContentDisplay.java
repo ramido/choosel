@@ -20,8 +20,6 @@ import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
 import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 
-import com.google.gwt.user.client.ui.Widget;
-
 public interface ViewContentDisplay extends WidgetAdaptable, Disposable {
 
     void checkResize();
@@ -29,12 +27,10 @@ public interface ViewContentDisplay extends WidgetAdaptable, Disposable {
     void endRestore();
 
     /**
-     * Returns a widget that allows for configuration of this view content
-     * display. This is likely to change, probably towards exposing
-     * configuration properties in a descriptive way. <code>null</code> is a
-     * valid return value.
+     * Returns the side panel sections. Side panel sections allow for
+     * configuration of this view content display.
      */
-    Widget getConfigurationWidget();
+    SidePanelSection[] getSidePanelSections();
 
     /**
      * @return visualization slots that are supported by this view content

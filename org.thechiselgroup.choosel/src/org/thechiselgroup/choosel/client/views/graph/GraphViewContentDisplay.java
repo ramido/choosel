@@ -59,6 +59,7 @@ import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.SidePanelSection;
 import org.thechiselgroup.choosel.client.views.Slot;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayAction;
@@ -320,43 +321,6 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         return resourceCategorizer.getCategory(resource);
     }
 
-    // TODO cleanup
-    @Override
-    public Widget getConfigurationWidget() {
-        List<ViewContentDisplayAction> actions = new ArrayList<ViewContentDisplayAction>();
-
-        actions.add(new GraphLayoutAction(GraphLayouts.CIRCLE_LAYOUT));
-        // actions.add(new
-        // GraphLayoutAction(GraphLayouts.HORIZONTAL_TREE_LAYOUT));
-        // actions.add(new
-        // GraphLayoutAction(GraphLayouts.VERTICAL_TREE_LAYOUT));
-        // actions.add(new GraphLayoutAction(GraphLayouts.RADIAL_LAYOUT));
-        // actions.add(new GraphLayoutAction(GraphLayouts.SPRING_LAYOUT));
-        actions.add(new GraphLayoutAction(GraphLayouts.INDENTED_TREE_LAYOUT));
-        actions.add(new GraphLayoutAction(GraphLayouts.GRID_LAYOUT_BY_NODE_ID));
-        actions.add(new GraphLayoutAction(GraphLayouts.GRID_LAYOUT_BY_NODE_TYPE));
-        actions.add(new GraphLayoutAction(GraphLayouts.GRID_LAYOUT_ALPHABETICAL));
-        actions.add(new GraphLayoutAction(GraphLayouts.GRID_LAYOUT_BY_ARC_COUNT));
-        // actions.add(new GraphLayoutAction(GraphLayouts.HORIZONTAL_LAYOUT));
-        // actions.add(new GraphLayoutAction(GraphLayouts.VERTICAL_LAYOUT));
-        actions.add(new GraphLayoutAction(GraphLayouts.FORCE_DIRECTED_LAYOUT));
-
-        VerticalPanel panel = new VerticalPanel();
-        for (final ViewContentDisplayAction action : actions) {
-
-            Button w = new Button(action.getLabel());
-            w.addClickHandler(new ClickHandler() {
-                @Override
-                public void onClick(ClickEvent event) {
-                    action.execute();
-                }
-            });
-            panel.add(w);
-        }
-
-        return panel;
-    }
-
     @Override
     public Display getDisplay() {
         return display;
@@ -386,6 +350,44 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     @Override
     public ResourceManager getResourceManager() {
         return resourceManager;
+    }
+
+    // TODO cleanup
+    @Override
+    public SidePanelSection[] getSidePanelSections() {
+        List<ViewContentDisplayAction> actions = new ArrayList<ViewContentDisplayAction>();
+
+        actions.add(new GraphLayoutAction(GraphLayouts.CIRCLE_LAYOUT));
+        // actions.add(new
+        // GraphLayoutAction(GraphLayouts.HORIZONTAL_TREE_LAYOUT));
+        // actions.add(new
+        // GraphLayoutAction(GraphLayouts.VERTICAL_TREE_LAYOUT));
+        // actions.add(new GraphLayoutAction(GraphLayouts.RADIAL_LAYOUT));
+        // actions.add(new GraphLayoutAction(GraphLayouts.SPRING_LAYOUT));
+        actions.add(new GraphLayoutAction(GraphLayouts.INDENTED_TREE_LAYOUT));
+        actions.add(new GraphLayoutAction(GraphLayouts.GRID_LAYOUT_BY_NODE_ID));
+        actions.add(new GraphLayoutAction(GraphLayouts.GRID_LAYOUT_BY_NODE_TYPE));
+        actions.add(new GraphLayoutAction(GraphLayouts.GRID_LAYOUT_ALPHABETICAL));
+        actions.add(new GraphLayoutAction(GraphLayouts.GRID_LAYOUT_BY_ARC_COUNT));
+        // actions.add(new GraphLayoutAction(GraphLayouts.HORIZONTAL_LAYOUT));
+        // actions.add(new GraphLayoutAction(GraphLayouts.VERTICAL_LAYOUT));
+        actions.add(new GraphLayoutAction(GraphLayouts.FORCE_DIRECTED_LAYOUT));
+
+        VerticalPanel layoutPanel = new VerticalPanel();
+        for (final ViewContentDisplayAction action : actions) {
+
+            Button w = new Button(action.getLabel());
+            w.addClickHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    action.execute();
+                }
+            });
+            layoutPanel.add(w);
+        }
+
+        return new SidePanelSection[] { new SidePanelSection("Layouts",
+                layoutPanel), };
     }
 
     @Override

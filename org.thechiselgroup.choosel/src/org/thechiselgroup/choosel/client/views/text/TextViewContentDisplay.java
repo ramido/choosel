@@ -29,6 +29,7 @@ import org.thechiselgroup.choosel.client.util.math.MathUtils;
 import org.thechiselgroup.choosel.client.util.math.NumberArray;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.SidePanelSection;
 import org.thechiselgroup.choosel.client.views.Slot;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 
@@ -168,8 +169,8 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     @Override
-    public Widget getConfigurationWidget() {
-        FlowPanel panel = new FlowPanel();
+    public SidePanelSection[] getSidePanelSections() {
+        FlowPanel settingsPanel = new FlowPanel();
 
         final CheckBox oneItemPerRowBox = new CheckBox("One item per row");
         oneItemPerRowBox
@@ -181,9 +182,9 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
                     }
 
                 });
-        panel.add(oneItemPerRowBox);
+        settingsPanel.add(oneItemPerRowBox);
 
-        return panel;
+        return new SidePanelSection[] { new SidePanelSection("Settings", settingsPanel), };
     }
 
     @Override

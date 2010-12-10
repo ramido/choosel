@@ -673,13 +673,11 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     private void initViewConfigurator() {
-        Widget configurationWidget = contentDisplay.getConfigurationWidget();
-
-        if (configurationWidget == null) {
-            return;
+        SidePanelSection[] sections = contentDisplay.getSidePanelSections();
+        for (SidePanelSection sidePanelSection : sections) {
+            sideBar.add(sidePanelSection.getWidget(),
+                    sidePanelSection.getSectionTitle());
         }
-
-        sideBar.add(configurationWidget, "View Settings");
     }
 
     /**

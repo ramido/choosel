@@ -32,6 +32,7 @@ import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItem.Subset;
 import org.thechiselgroup.choosel.client.views.ResourceItem.SubsetStatus;
+import org.thechiselgroup.choosel.client.views.SidePanelSection;
 import org.thechiselgroup.choosel.client.views.Slot;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 
@@ -39,7 +40,6 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 /* TODO refactor such that the differences between vertical and horizontal bar chart
@@ -422,8 +422,8 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     }
 
     @Override
-    public Widget getConfigurationWidget() {
-        FlowPanel panel = new FlowPanel();
+    public SidePanelSection[] getSidePanelSections() {
+        FlowPanel settingsPanel = new FlowPanel();
 
         final ListBox layoutBox = new ListBox(false);
         layoutBox.setVisibleItemCount(1);
@@ -439,9 +439,10 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
                 buildChart();
             }
         });
-        panel.add(layoutBox);
+        settingsPanel.add(layoutBox);
 
-        return panel;
+        return new SidePanelSection[] { new SidePanelSection("Settings",
+                settingsPanel), };
     }
 
     @Override

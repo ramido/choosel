@@ -22,6 +22,7 @@ import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.SidePanelSection;
 import org.thechiselgroup.choosel.client.views.Slot;
 import org.thechiselgroup.choosel.client.views.SlotResolver;
 
@@ -91,29 +92,6 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
         return map;
     }
 
-    @Override
-    public Widget getConfigurationWidget() {
-        FlowPanel panel = new FlowPanel();
-
-        final ListBox layoutBox = new ListBox(false);
-        layoutBox.setVisibleItemCount(1);
-
-        layoutBox.addItem("Hybrid", MEMENTO_MAP_TYPE_HYBRID);
-        layoutBox.addItem("Map", MEMENTO_MAP_TYPE_NORMAL);
-        layoutBox.addItem("Satellite", MEMENTO_MAP_TYPE_SATELLITE);
-        layoutBox.addItem("Terrain", MEMENTO_MAP_TYPE_PHYSICAL);
-
-        layoutBox.addChangeHandler(new ChangeHandler() {
-            @Override
-            public void onChange(ChangeEvent event) {
-                setMapType(layoutBox.getValue(layoutBox.getSelectedIndex()));
-            }
-        });
-        panel.add(layoutBox);
-
-        return panel;
-    }
-
     public String getMapType() {
         MapType mapType = map.getCurrentMapType();
         if (MapType.getNormalMap().equals(mapType)) {
@@ -129,6 +107,30 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
                     "map type persistence not supported for type "
                             + mapType.getName(false));
         }
+    }
+
+    @Override
+    public SidePanelSection[] getSidePanelSections() {
+        FlowPanel mapSettingsMap = new FlowPanel();
+
+        final ListBox layoutBox = new ListBox(false);
+        layoutBox.setVisibleItemCount(1);
+
+        layoutBox.addItem("Hybrid", MEMENTO_MAP_TYPE_HYBRID);
+        layoutBox.addItem("Map", MEMENTO_MAP_TYPE_NORMAL);
+        layoutBox.addItem("Satellite", MEMENTO_MAP_TYPE_SATELLITE);
+        layoutBox.addItem("Terrain", MEMENTO_MAP_TYPE_PHYSICAL);
+
+        layoutBox.addChangeHandler(new ChangeHandler() {
+            @Override
+            public void onChange(ChangeEvent event) {
+                setMapType(layoutBox.getValue(layoutBox.getSelectedIndex()));
+            }
+        });
+        mapSettingsMap.add(layoutBox);
+
+        return new SidePanelSection[] { new SidePanelSection("Map Settings",
+                mapSettingsMap), };
     }
 
     @Override
