@@ -15,13 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 
 public interface ViewContentDisplayCallback {
 
@@ -29,13 +29,13 @@ public interface ViewContentDisplayCallback {
 
     boolean containsResourceWithUri(String uri);
 
-    Collection<DefaultResourceItem> getAllResourceItems();
-
     Iterable<Resource> getAllResources();
 
     ResourceSet getAutomaticResourceSet();
 
     Resource getResourceByUri(String uri);
+
+    LightweightCollection<ResourceItem> getResourceItems();
 
     List<ResourceItem> getResourceItems(Resource resource);
 
