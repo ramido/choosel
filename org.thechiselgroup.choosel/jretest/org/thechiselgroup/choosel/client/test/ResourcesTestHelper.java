@@ -23,7 +23,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.thechiselgroup.choosel.client.test.AdvancedAsserts.assertContentEquals;
-import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
+import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.*;
 
 import java.util.Collections;
 import java.util.Set;
