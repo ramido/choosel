@@ -530,6 +530,14 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         assert targetId != null;
 
         String arcId = getArcId(arcType, sourceId, targetId);
+        String arcColor = arcStyleProvider.getArcColor(arcType);
+        String arcStyle = arcStyleProvider.getArcStyle(arcType);
+
+        showArc(arcId, sourceId, targetId, arcType, arcColor, arcStyle);
+    }
+
+    private void showArc(String arcId, String sourceId, String targetId,
+            String arcType, String arcColor, String arcStyle) {
 
         if (display.containsArc(arcId)) {
             return;
@@ -540,10 +548,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         display.addArc(arc);
         arcList.add(arc);
 
-        display.setArcStyle(arc, GraphDisplay.ARC_COLOR,
-                arcStyleProvider.getArcColor(arcType));
-        display.setArcStyle(arc, GraphDisplay.ARC_STYLE,
-                arcStyleProvider.getArcStyle(arcType));
+        display.setArcStyle(arc, GraphDisplay.ARC_COLOR, arcColor);
+        display.setArcStyle(arc, GraphDisplay.ARC_STYLE, arcStyle);
     }
 
     @Override
@@ -562,7 +568,14 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         LightweightCollection<ArcType> arcTypes = arcStyleProvider
                 .getArcTypes();
         for (ArcType arcType : arcTypes) {
-            arcType.getArcItems(addedGraphItems);
+            LightweightCollection<ArcItem> arcItems = arcType
+                    .getArcItems(addedGraphItems);
+            // TODO move
+            for (ArcItem arcItem : arcItems) {
+                showArc(arcItem.getId(), arcItem.getSourceNodeItemId(),
+                        arcItem.getTargetNodeItemId(), arcItem.getType(),
+                        arcItem.getColor(), arcItem.getStyle());
+            }
         }
 
         for (ResourceItem updatedItem : updatedResourceItems) {
