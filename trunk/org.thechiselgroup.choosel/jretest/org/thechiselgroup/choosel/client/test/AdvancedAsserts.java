@@ -24,6 +24,7 @@ import java.util.Map;
 import org.junit.Assert;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 
 public final class AdvancedAsserts {
 
@@ -65,6 +66,12 @@ public final class AdvancedAsserts {
         for (T expectedValue : expected) {
             assertContains(failureMessage, result, expectedValue);
         }
+    }
+
+    public static <T> void assertContentEquals(
+            LightweightCollection<T> expected, LightweightCollection<T> actual) {
+
+        assertContentEquals(expected.toList(), actual.toList());
     }
 
     public static <T> void assertContentEquals(ResourceSet expected,

@@ -31,9 +31,6 @@ import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.crea
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.toLabeledResourceSet;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.toResourceSet;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -135,12 +132,7 @@ public class GraphViewContentDisplayTest {
         ArgumentCaptor<LightweightCollection> captor = ArgumentCaptor
                 .forClass(LightweightCollection.class);
         verify(arcType, times(1)).getArcItems(captor.capture());
-        LightweightCollection<GraphItem> value = captor.getValue();
-        List<ResourceItem> resourceItemResult = new ArrayList<ResourceItem>();
-        for (GraphItem graphItem : value) {
-            resourceItemResult.add(graphItem.getResourceItem());
-        }
-        assertContentEquals(resourceItems.toList(), resourceItemResult);
+        assertContentEquals(resourceItems.toList(), captor.getValue().toList());
     }
 
     // TODO remove once arc type stuff works

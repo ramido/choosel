@@ -51,9 +51,7 @@ import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseOutEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseOutHandler;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseOverEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseOverHandler;
-import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DataType;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
@@ -181,14 +179,18 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         }
     }
 
-    // TODO move to ncbo stuff
-    public static final String ARC_TYPE_MAPPING = "mapping";
-
     private static final String MEMENTO_X = "x";
 
     private static final String MEMENTO_Y = "y";
 
     // advanced node class: (incoming, outgoing, expanded: state machine)
+
+    // TODO move
+    public static String getArcId(String arcType, String sourceId,
+            String targetId) {
+        // FIXME this needs escaping of special characters to work properly
+        return arcType + ":" + sourceId + "_" + targetId;
+    }
 
     private ArcStyleProvider arcStyleProvider;
 
@@ -303,11 +305,6 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     @Override
     public ResourceSet getAllResources() {
         return nodeResources;
-    }
-
-    public String getArcId(String arcType, String sourceId, String targetId) {
-        // FIXME this needs escaping of special characters to work properly
-        return arcType + ":" + sourceId + "_" + targetId;
     }
 
     @Override
@@ -558,10 +555,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
             LightweightCollection<ResourceItem> removedResourceItems,
             LightweightCollection<Slot> changedSlots) {
 
-        LightweightList<GraphItem> addedGraphItems = CollectionFactory
-                .createLightweightList();
         for (ResourceItem addedItem : addedResourceItems) {
-            addedGraphItems.add(createGraphNodeItem(addedItem));
+            createGraphNodeItem(addedItem);
             updateNode(addedItem);
         }
 
@@ -569,7 +564,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
                 .getArcTypes();
         for (ArcType arcType : arcTypes) {
             LightweightCollection<ArcItem> arcItems = arcType
-                    .getArcItems(addedGraphItems);
+                    .getArcItems(addedResourceItems);
             // TODO move
             for (ArcItem arcItem : arcItems) {
                 showArc(arcItem.getId(), arcItem.getSourceNodeItemId(),
