@@ -52,6 +52,7 @@ import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.client.test.ResourcesTestHelper;
 import org.thechiselgroup.choosel.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Arc;
+import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidgetReadyEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidgetReadyHandler;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
@@ -109,32 +110,19 @@ public class GraphViewContentDisplayTest {
 
     @Test
     public void addResourceItemsCallsArcTypeGetArcItems() {
-        // create resources with relationship
-        Resource resource1 = createResource(1);
-        Resource resource2 = createResource(2);
-        // TODO move
-        // resource1.putValueAsUriList("relationshipProperty",
-        // resource2.getUri());
-
         // create the resource items
         String groupId1 = "1";
         String groupId2 = "2";
         LightweightCollection<ResourceItem> resourceItems = createResourceItems(
-                toLabeledResourceSet(groupId1, resource1),
-                toLabeledResourceSet(groupId2, resource2));
+                toLabeledResourceSet(groupId1, createResource(1)),
+                toLabeledResourceSet(groupId2, createResource(2)));
 
-        // set up arc style provider
+        // set up arc type provider
         ArcType arcType = mock(ArcType.class);
         when(arcStyleProvider.getArcTypes()).thenReturn(
                 LightweightCollections.toCollection(arcType));
         when(arcType.getArcItems(any(LightweightCollection.class))).thenReturn(
                 LightweightCollections.<ArcItem> emptyCollection());
-
-        // TODO move
-        // set up arc item response
-        // new ArcItem("type", "id", groupId1, groupId2, color, style)
-        // when(arcType.getArcItems(any(LightweightCollection.class))).thenReturn(
-        // arcItems);
 
         // simulate add
         when(callback.getResourceItems()).thenReturn(resourceItems);
@@ -144,10 +132,8 @@ public class GraphViewContentDisplayTest {
                 LightweightCollections.<Slot> emptySet());
 
         // verify that getArcItems called
-
         ArgumentCaptor<LightweightCollection> captor = ArgumentCaptor
                 .forClass(LightweightCollection.class);
-
         verify(arcType, times(1)).getArcItems(captor.capture());
         LightweightCollection<GraphItem> value = captor.getValue();
         List<ResourceItem> resourceItemResult = new ArrayList<ResourceItem>();
@@ -208,6 +194,55 @@ public class GraphViewContentDisplayTest {
         resourceSet.add(createResource(2));
 
         assertContentEquals(resourceSet, underTest.getAllResources());
+    }
+
+    @Test
+    public void arcItemGetsShownWhenAddingResources() {
+        // define values
+        String arcId = "arcid";
+        String arcStyle = GraphDisplay.ARC_STYLE_SOLID;
+        String arcColor = "#ffffff";
+        String arcTypeValue = "arcType";
+
+        // create the resource items
+        String groupId1 = "1";
+        String groupId2 = "2";
+        LightweightCollection<ResourceItem> resourceItems = createResourceItems(
+                toLabeledResourceSet(groupId1, createResource(1)),
+                toLabeledResourceSet(groupId2, createResource(2)));
+
+        // set up arc type provider
+        ArcType arcType = mock(ArcType.class);
+        when(arcStyleProvider.getArcTypes()).thenReturn(
+                LightweightCollections.toCollection(arcType));
+        when(arcType.getArcItems(any(LightweightCollection.class))).thenReturn(
+                LightweightCollections.<ArcItem> emptyCollection());
+
+        // set up arc item response
+        ArcItem arcItem = new ArcItem(arcTypeValue, arcId, groupId1, groupId2,
+                arcColor, arcStyle);
+        when(arcType.getArcItems(any(LightweightCollection.class))).thenReturn(
+                LightweightCollections.toCollection(arcItem));
+
+        // simulate add
+        when(callback.getResourceItems()).thenReturn(resourceItems);
+        underTest.update(resourceItems,
+                LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections.<Slot> emptySet());
+
+        // verify that arc was shown and settings were correctly made
+        ArgumentCaptor<Arc> captor = ArgumentCaptor.forClass(Arc.class);
+        verify(display, times(1)).addArc(captor.capture());
+        Arc result = captor.getValue();
+        assertEquals(arcId, result.getId());
+        assertEquals(groupId1, result.getSourceNodeId());
+        assertEquals(groupId2, result.getTargetNodeId());
+        assertEquals(arcTypeValue, result.getType());
+        verify(display, times(1)).setArcStyle(eq(result),
+                eq(GraphDisplay.ARC_COLOR), eq(arcColor));
+        verify(display, times(1)).setArcStyle(eq(result),
+                eq(GraphDisplay.ARC_STYLE), eq(arcStyle));
     }
 
     /*
