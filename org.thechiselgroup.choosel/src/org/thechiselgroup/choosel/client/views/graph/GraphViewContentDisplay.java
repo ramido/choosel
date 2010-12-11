@@ -51,7 +51,9 @@ import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseOutEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseOutHandler;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseOverEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseOverHandler;
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DataType;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
@@ -256,7 +258,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         return nodeResources.containsResourceWithUri(resourceUri);
     }
 
-    private void createGraphNodeItem(ResourceItem resourceItem) {
+    private GraphItem createGraphNodeItem(ResourceItem resourceItem) {
         // TODO get from group id
         String type = getCategory(resourceItem.getResourceSet()
                 .getFirstResource());
@@ -278,6 +280,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         nodeResources.addResourceSet(resourceItem.getResourceSet());
 
         resourceItem.setDisplayObject(graphItem);
+
+        return graphItem;
     }
 
     // TODO encapsulate in display, use dependency injection
@@ -548,9 +552,17 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
             LightweightCollection<ResourceItem> removedResourceItems,
             LightweightCollection<Slot> changedSlots) {
 
+        LightweightList<GraphItem> addedGraphItems = CollectionFactory
+                .createLightweightList();
         for (ResourceItem addedItem : addedResourceItems) {
-            createGraphNodeItem(addedItem);
+            addedGraphItems.add(createGraphNodeItem(addedItem));
             updateNode(addedItem);
+        }
+
+        LightweightCollection<ArcType> arcTypes = arcStyleProvider
+                .getArcTypes();
+        for (ArcType arcType : arcTypes) {
+            arcType.getArcItems(addedGraphItems);
         }
 
         for (ResourceItem updatedItem : updatedResourceItems) {

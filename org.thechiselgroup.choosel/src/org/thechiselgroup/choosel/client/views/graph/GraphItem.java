@@ -73,6 +73,10 @@ public class GraphItem {
         return (String) resourceItem.getResourceValue(NODE_BORDER_COLOR_SLOT);
     }
 
+    public ResourceItem getResourceItem() {
+        return resourceItem;
+    }
+
     /**
      * Updates the graph node to reflect the style and values of the underlying
      * resource item.

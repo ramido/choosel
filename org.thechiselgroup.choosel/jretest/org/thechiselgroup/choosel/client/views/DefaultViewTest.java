@@ -30,7 +30,7 @@ import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.TYPE
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createLabeledResources;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
-import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.toLabeledResources;
+import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.toLabeledResourceSet;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.toResourceSet;
 
 import java.util.List;
@@ -398,7 +398,7 @@ public class DefaultViewTest {
     public void updateCalledWhenResourcesRemoved() {
         ResourceSet resources1 = createResources(TYPE_1, 1);
         ResourceSet resources2 = createResources(TYPE_2, 2);
-        ResourceSet resources = toLabeledResources(resources1, resources2);
+        ResourceSet resources = toLabeledResourceSet(resources1, resources2);
 
         underTest.getResourceModel().addResourceSet(resources);
         LightweightCollection<ResourceItem> addedResourceItems = captureAddedResourceItems();

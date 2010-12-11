@@ -79,22 +79,48 @@ public final class TestResourceSetFactory {
         return resources;
     }
 
-    public static ResourceSet toLabeledResources(ResourceSet... resourceSets) {
-        ResourceSet result = toResourceSet(resourceSets);
-        result.setLabel(SET_LABEL);
+    public static ResourceSet toLabeledResourceSet(Resource... resources) {
+        return toLabeledResourceSet(SET_LABEL, resources);
+    }
+
+    public static ResourceSet toLabeledResourceSet(ResourceSet... resourceSets) {
+        return toLabeledResourceSet(SET_LABEL, resourceSets);
+    }
+
+    public static ResourceSet toLabeledResourceSet(String label,
+            Resource... resources) {
+
+        ResourceSet result = toResourceSet(resources);
+        result.setLabel(label);
         return result;
     }
 
+    public static ResourceSet toLabeledResourceSet(String label,
+            ResourceSet... resourceSets) {
+
+        ResourceSet result = toResourceSet(resourceSets);
+        result.setLabel(label);
+        return result;
+    }
+
+    /*
+     * we don't expose this method outside the test environment because it
+     * relies on DefaultResourceSet.
+     */
     public static ResourceSet toResourceSet(Resource... resources) {
-        DefaultResourceSet result = new DefaultResourceSet();
+        ResourceSet result = new DefaultResourceSet();
         for (Resource resource : resources) {
             result.add(resource);
         }
         return result;
     }
 
+    /*
+     * we don't expose this method outside the test environment because it
+     * relies on DefaultResourceSet.
+     */
     public static ResourceSet toResourceSet(ResourceSet... resourceSets) {
-        DefaultResourceSet result = new DefaultResourceSet();
+        ResourceSet result = new DefaultResourceSet();
         for (ResourceSet resources : resourceSets) {
             result.addAll(resources);
         }

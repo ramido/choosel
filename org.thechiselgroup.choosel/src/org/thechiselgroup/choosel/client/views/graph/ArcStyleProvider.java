@@ -15,10 +15,17 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.graph;
 
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
+
 public interface ArcStyleProvider {
 
     String getArcColor(String arcType);
 
     String getArcStyle(String arcType);
+
+    /**
+     * Returns the different arc types that can be selected.
+     */
+    LightweightCollection<ArcType> getArcTypes();
 
 }

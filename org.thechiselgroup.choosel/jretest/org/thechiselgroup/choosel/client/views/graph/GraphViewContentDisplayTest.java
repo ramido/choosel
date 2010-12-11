@@ -18,14 +18,21 @@ package org.thechiselgroup.choosel.client.views.graph;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.client.test.AdvancedAsserts.assertContentEquals;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResourceItem;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResourceItems;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
+import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.toLabeledResourceSet;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.toResourceSet;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -51,6 +58,7 @@ import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeDragEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeDragHandler;
 import org.thechiselgroup.choosel.client.util.collections.CollectionUtils;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.client.views.DefaultResourceItem;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
@@ -100,6 +108,57 @@ public class GraphViewContentDisplayTest {
     private Point targetLocation;
 
     @Test
+    public void addResourceItemsCallsArcTypeGetArcItems() {
+        // create resources with relationship
+        Resource resource1 = createResource(1);
+        Resource resource2 = createResource(2);
+        // TODO move
+        // resource1.putValueAsUriList("relationshipProperty",
+        // resource2.getUri());
+
+        // create the resource items
+        String groupId1 = "1";
+        String groupId2 = "2";
+        LightweightCollection<ResourceItem> resourceItems = createResourceItems(
+                toLabeledResourceSet(groupId1, resource1),
+                toLabeledResourceSet(groupId2, resource2));
+
+        // set up arc style provider
+        ArcType arcType = mock(ArcType.class);
+        when(arcStyleProvider.getArcTypes()).thenReturn(
+                LightweightCollections.toCollection(arcType));
+        when(arcType.getArcItems(any(LightweightCollection.class))).thenReturn(
+                LightweightCollections.<ArcItem> emptyCollection());
+
+        // TODO move
+        // set up arc item response
+        // new ArcItem("type", "id", groupId1, groupId2, color, style)
+        // when(arcType.getArcItems(any(LightweightCollection.class))).thenReturn(
+        // arcItems);
+
+        // simulate add
+        when(callback.getResourceItems()).thenReturn(resourceItems);
+        underTest.update(resourceItems,
+                LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections.<Slot> emptySet());
+
+        // verify that getArcItems called
+
+        ArgumentCaptor<LightweightCollection> captor = ArgumentCaptor
+                .forClass(LightweightCollection.class);
+
+        verify(arcType, times(1)).getArcItems(captor.capture());
+        LightweightCollection<GraphItem> value = captor.getValue();
+        List<ResourceItem> resourceItemResult = new ArrayList<ResourceItem>();
+        for (GraphItem graphItem : value) {
+            resourceItemResult.add(graphItem.getResourceItem());
+        }
+        assertContentEquals(resourceItems.toList(), resourceItemResult);
+    }
+
+    // TODO remove once arc type stuff works
+    @Test
     public void addResourceItemsWithRelationshipAddsArc() {
         ResourceSet resourceSet1 = createResources(1);
         ResourceSet resourceSet2 = createResources(2);
@@ -119,11 +178,11 @@ public class GraphViewContentDisplayTest {
                 .<ResourceItem> emptySet(), LightweightCollections
                 .<Slot> emptySet());
 
-        String arcId = underTest.getArcId("arcType", resourceSet1
+        String arcId = underTest.getArcId("arcTypeX", resourceSet1
                 .getFirstResource().getUri(), resourceSet2.getFirstResource()
                 .getUri());
 
-        underTest.showArc("arcType", resourceSet1.getFirstResource().getUri(),
+        underTest.showArc("arcTypeX", resourceSet1.getFirstResource().getUri(),
                 resourceSet2.getFirstResource().getUri());
 
         ArgumentCaptor<Arc> captor = ArgumentCaptor.forClass(Arc.class);
@@ -136,8 +195,7 @@ public class GraphViewContentDisplayTest {
     public void addResourceItemToAllResource() {
         ResourceSet resourceSet = createResources(1);
 
-        ResourceItem resourceItem = ResourcesTestHelper.createResourceItem("1",
-                resourceSet);
+        ResourceItem resourceItem = createResourceItem("1", resourceSet);
 
         when(callback.getResourceItems()).thenReturn(
                 LightweightCollections.toCollection(resourceItem));
@@ -355,6 +413,9 @@ public class GraphViewContentDisplayTest {
 
         when(registry.getAutomaticExpander(any(String.class))).thenReturn(
                 automaticExpander);
+
+        when(arcStyleProvider.getArcTypes()).thenReturn(
+                LightweightCollections.<ArcType> emptyCollection());
 
         ArgumentCaptor<GraphWidgetReadyHandler> argument = ArgumentCaptor
                 .forClass(GraphWidgetReadyHandler.class);

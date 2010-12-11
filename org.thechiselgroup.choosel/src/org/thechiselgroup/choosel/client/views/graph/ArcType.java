@@ -15,25 +15,29 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.graph;
 
-import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.client.util.collections.LightweightCollections;
 
-public class DefaultArcStyleProvider implements ArcStyleProvider {
+/**
+ * Creates arc items for graph items.
+ * 
+ * @author Lars Grammel
+ */
+public interface ArcType {
 
-    @Override
-    public String getArcColor(String arcType) {
-        return "#AFC6E5";
-    }
-
-    @Override
-    public String getArcStyle(String arcType) {
-        return GraphDisplay.ARC_STYLE_SOLID;
-    }
-
-    @Override
-    public LightweightCollection<ArcType> getArcTypes() {
-        return LightweightCollections.emptyCollection();
-    }
+    /**
+     * Returns the arc items representing arcs that should be connected to the
+     * given graph items.
+     * 
+     * @param graphItems
+     *            graph items for which corresponding arc items should be
+     *            returned
+     * @return arc items that connected to the graph items. The arc items do not
+     *         have to be the same (in terms of object references) as already
+     *         returned arc items for the same graph items. However, their ids
+     *         should match: an equal arc item should have an equal id accross
+     *         multiple calls.
+     */
+    LightweightCollection<ArcItem> getArcItems(
+            LightweightCollection<GraphItem> graphItems);
 
 }
