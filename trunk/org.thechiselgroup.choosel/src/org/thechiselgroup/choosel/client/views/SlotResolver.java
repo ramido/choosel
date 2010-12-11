@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-
 // TODO create more flexible slot system
 public interface SlotResolver {
 
@@ -28,14 +27,6 @@ public interface SlotResolver {
     Slot DATE_SLOT = new Slot("date", "Date", DataType.DATE);
 
     Slot DESCRIPTION_SLOT = new Slot("description", "Label", DataType.TEXT);
-
-    Slot GRAPH_LABEL_SLOT = new Slot("graphLabel", "Label", DataType.TEXT);
-
-    Slot GRAPH_NODE_BACKGROUND_COLOR_SLOT = new Slot(
-            "graphNodeBackgroundColor", "Node Color", DataType.COLOR);
-
-    Slot GRAPH_NODE_BORDER_COLOR_SLOT = new Slot("graphNodeBorderColor",
-            "Node Border Color", DataType.COLOR);
 
     Slot LOCATION_SLOT = new Slot("location", "Location", DataType.LOCATION);
 

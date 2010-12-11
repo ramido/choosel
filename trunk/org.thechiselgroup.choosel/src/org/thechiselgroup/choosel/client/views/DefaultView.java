@@ -119,7 +119,7 @@ public class DefaultView extends AbstractWindowContent implements View {
      * resource grouping) to the resource items that display the resource sets
      * in the view.
      */
-    private Map<String, DefaultResourceItem> groupsToResourceItems = CollectionFactory
+    private Map<String, DefaultResourceItem> resourceItemsByGroupId = CollectionFactory
             .createStringMap();
 
     private SlotMappingConfiguration slotMappingConfiguration;
@@ -261,9 +261,9 @@ public class DefaultView extends AbstractWindowContent implements View {
                 resources, hoverModel, createPopupManager(resources),
                 slotMappingConfiguration);
 
-        assert !groupsToResourceItems.containsKey(groupID) : "groupsToResourceItems already contains "
+        assert !resourceItemsByGroupId.containsKey(groupID) : "groupsToResourceItems already contains "
                 + groupID;
-        groupsToResourceItems.put(groupID, resourceItem);
+        resourceItemsByGroupId.put(groupID, resourceItem);
 
         // TODO introduce partial selection
 
@@ -280,7 +280,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     @Override
     public void dispose() {
-        for (DefaultResourceItem resourceItem : groupsToResourceItems.values()) {
+        for (DefaultResourceItem resourceItem : resourceItemsByGroupId.values()) {
             resourceItem.dispose();
         }
 
@@ -359,7 +359,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     public List<ResourceItem> getResourceItems() {
         List<ResourceItem> result = new ArrayList<ResourceItem>();
-        for (DefaultResourceItem resourceItem : groupsToResourceItems.values()) {
+        for (DefaultResourceItem resourceItem : resourceItemsByGroupId.values()) {
             result.add(resourceItem);
         }
         return result;
@@ -378,7 +378,7 @@ public class DefaultView extends AbstractWindowContent implements View {
                 .createLightweightList();
         Set<String> groups = resourceGrouping.getGroups(resources);
         for (String group : groups) {
-            result.add(groupsToResourceItems.get(group));
+            result.add(resourceItemsByGroupId.get(group));
         }
         return result;
     }
@@ -504,10 +504,15 @@ public class DefaultView extends AbstractWindowContent implements View {
             }
 
             @Override
+            public ResourceItem getResourceItemByGroupID(String groupId) {
+                return resourceItemsByGroupId.get(groupId);
+            }
+
+            @Override
             public LightweightCollection<ResourceItem> getResourceItems() {
                 LightweightList<ResourceItem> result = CollectionFactory
                         .createLightweightList();
-                result.addAll(groupsToResourceItems.values());
+                result.addAll(resourceItemsByGroupId.values());
                 return result;
             }
 
@@ -755,14 +760,14 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private DefaultResourceItem removeResourceItem(String groupID) {
         assert groupID != null : "groupIDs must not be null";
-        assert groupsToResourceItems.containsKey(groupID) : "no resource item for "
+        assert resourceItemsByGroupId.containsKey(groupID) : "no resource item for "
                 + groupID;
 
-        DefaultResourceItem resourceItem = groupsToResourceItems
+        DefaultResourceItem resourceItem = resourceItemsByGroupId
                 .remove(groupID);
         resourceItem.dispose();
 
-        assert !groupsToResourceItems.containsKey(groupID);
+        assert !resourceItemsByGroupId.containsKey(groupID);
 
         return resourceItem;
     }

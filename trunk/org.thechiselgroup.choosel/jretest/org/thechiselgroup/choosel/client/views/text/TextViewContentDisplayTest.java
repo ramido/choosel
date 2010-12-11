@@ -68,7 +68,7 @@ public class TextViewContentDisplayTest {
         SlotMappingConfiguration slotMappingConfiguration = mock(SlotMappingConfiguration.class);
 
         // create resource item that contains 2 resources
-        DefaultResourceItem resourceItem = createResourceItem(
+        DefaultResourceItem resourceItem = createResourceItem("",
                 createResources(1, 2), slotMappingConfiguration);
 
         when(
@@ -104,8 +104,8 @@ public class TextViewContentDisplayTest {
 
         // highlighting is removed after drag operation
         resourceItem.updateHighlightedResources(
-        LightweightCollections.<Resource> emptyCollection(),
-        createResources(1, 2));
+                LightweightCollections.<Resource> emptyCollection(),
+                createResources(1, 2));
         underTest.update(LightweightCollections.<ResourceItem> emptySet(),
                 LightweightCollections
                         .toCollection((ResourceItem) resourceItem),

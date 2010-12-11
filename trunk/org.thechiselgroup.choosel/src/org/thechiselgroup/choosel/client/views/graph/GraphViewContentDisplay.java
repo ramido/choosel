@@ -16,10 +16,8 @@
 package org.thechiselgroup.choosel.client.views.graph;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
@@ -53,15 +51,14 @@ import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseOutEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseOutHandler;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseOverEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseOverHandler;
-import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
+import org.thechiselgroup.choosel.client.views.DataType;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.SidePanelSection;
 import org.thechiselgroup.choosel.client.views.Slot;
-import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayAction;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 
@@ -134,8 +131,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         @Override
         public void onMouseMove(MouseMoveEvent event) {
             // TODO restrict to mouse move for current graph item
-            Collection<ResourceItem> values = nodeIdToResourceItemMap.values();
-            for (ResourceItem item : values) {
+            for (ResourceItem item : getCallback().getResourceItems()) {
                 // TODO relative to root pane instead of client area
                 item.getPopupManager().onMouseMove(event.getClientX(),
                         event.getClientY());
@@ -202,9 +198,6 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
     private List<Arc> arcList = new ArrayList<Arc>();
 
-    private final Map<String, ResourceItem> nodeIdToResourceItemMap = CollectionFactory
-            .createStringMap();
-
     private boolean ready = false;
 
     private GraphExpansionRegistry registry;
@@ -215,6 +208,15 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
     private CombinedResourceSet nodeResources = new CombinedResourceSet(
             new DefaultResourceSet());
+
+    public static final Slot NODE_BORDER_COLOR_SLOT = new Slot(
+            "nodeBorderColor", "Node Border Color", DataType.COLOR);
+
+    public static final Slot NODE_BACKGROUND_COLOR_SLOT = new Slot(
+            "nodeBackgroundColor", "Node Color", DataType.COLOR);
+
+    public static final Slot NODE_LABEL_SLOT = new Slot("nodeLabel",
+            "Node Label", DataType.TEXT);
 
     @Inject
     public GraphViewContentDisplay(Display display,
@@ -255,31 +257,19 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     }
 
     private void createDisplayObjectForResourceItem(ResourceItem resourceItem) {
-        String label = (String) resourceItem
-                .getResourceValue(SlotResolver.GRAPH_LABEL_SLOT);
 
+        // TODO get from group id
         String category = getCategory(resourceItem.getResourceSet()
                 .getFirstResource());
 
-        String backgroundColor = (String) resourceItem
-                .getResourceValue(SlotResolver.GRAPH_NODE_BACKGROUND_COLOR_SLOT);
-
-        String borderColor = (String) resourceItem
-                .getResourceValue(SlotResolver.GRAPH_NODE_BORDER_COLOR_SLOT);
-
-        GraphItem gItem = new GraphItem(resourceItem.getResourceSet(), label,
-                category, display);
-
-        nodeIdToResourceItemMap.put(gItem.getNode().getId(), resourceItem);
+        GraphItem gItem = new GraphItem(resourceItem, category, display);
 
         display.addNode(gItem.getNode());
         positionNode(gItem.getNode());
 
-        // needs to be done after node is added to graph
-        gItem.setDefaultColors(backgroundColor, borderColor);
-
+        // TODO re-enable
         // TODO remove once new drag and drop mechanism works...
-        display.setNodeStyle(gItem.getNode(), "showDragImage", "true");
+        display.setNodeStyle(gItem.getNode(), "showDragImage", "false");
 
         display.setNodeStyle(gItem.getNode(), "showArrow", registry
                 .getNodeMenuEntries(category).isEmpty() ? "false" : "true");
@@ -297,10 +287,11 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         return display.asWidget();
     }
 
+    // TODO better caching?
     // default visibility for test case use
     List<Node> getAllNodes() {
         List<Node> result = new ArrayList<Node>();
-        for (ResourceItem resourceItem : nodeIdToResourceItemMap.values()) {
+        for (ResourceItem resourceItem : getCallback().getResourceItems()) {
             result.add(getNodeFromResourceItem(resourceItem));
         }
         return result;
@@ -327,7 +318,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     }
 
     private ResourceItem getGraphItem(Node node) {
-        return nodeIdToResourceItemMap.get(node.getId());
+        return getCallback().getResourceItemByGroupID(node.getId());
     }
 
     private ResourceItem getGraphItem(NodeEvent<?> event) {
@@ -389,9 +380,9 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
     @Override
     public Slot[] getSlots() {
-        return new Slot[] { SlotResolver.GRAPH_LABEL_SLOT,
-                SlotResolver.GRAPH_NODE_BORDER_COLOR_SLOT,
-                SlotResolver.GRAPH_NODE_BACKGROUND_COLOR_SLOT };
+        return new Slot[] { GraphViewContentDisplay.NODE_LABEL_SLOT,
+                GraphViewContentDisplay.NODE_BORDER_COLOR_SLOT,
+                GraphViewContentDisplay.NODE_BACKGROUND_COLOR_SLOT };
     }
 
     @Override
@@ -444,8 +435,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
         assert node != null;
 
-        assert nodeIdToResourceItemMap.containsKey(node.getId());
-        if (nodeIdToResourceItemMap.size() > 1) {
+        if (getCallback().getResourceItems().size() > 1) {
             return;
         }
 
@@ -474,12 +464,9 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     }
 
     private void removeNode(ResourceItem resourceItem) {
-        assert nodeIdToResourceItemMap.containsValue(resourceItem);
-
         Node node = getNodeFromResourceItem(resourceItem);
 
         nodeResources.removeResourceSet(resourceItem.getResourceSet());
-        nodeIdToResourceItemMap.remove(node.getId());
         removeNodeArcs(node);
         display.removeNode(node);
     }

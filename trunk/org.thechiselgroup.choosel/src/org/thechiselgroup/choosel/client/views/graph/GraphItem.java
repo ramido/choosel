@@ -21,41 +21,52 @@ import static org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay.NOD
 import static org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay.NODE_FONT_WEIGHT;
 import static org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay.NODE_FONT_WEIGHT_BOLD;
 import static org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay.NODE_FONT_WEIGHT_NORMAL;
+import static org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay.NODE_BACKGROUND_COLOR_SLOT;
+import static org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay.NODE_BORDER_COLOR_SLOT;
+import static org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay.NODE_LABEL_SLOT;
 
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.Colors;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
 import org.thechiselgroup.choosel.client.views.DefaultResourceItem;
+import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay.Display;
 
 public class GraphItem {
-
-    private String defaultBackgroundColor = Colors.BLUE_3;
-
-    private String defaultBorderColor = Colors.BLUE_1;
 
     private Display display;
 
     private Node node;
 
-    public GraphItem(ResourceSet resources, String label, String category,
+    private final ResourceItem resourceItem;
+
+    public GraphItem(ResourceItem resourceItem, String category,
             GraphViewContentDisplay.Display display) {
 
+        assert resourceItem != null;
         assert category != null;
         assert display != null;
 
-        this.node = new Node(resources.getFirstResource().getUri(), label,
-                category);
+        this.resourceItem = resourceItem;
         this.display = display;
+
+        node = new Node(resourceItem.getGroupID(), getLabelValue(), category);
+    }
+
+    public String getLabelValue() {
+        return (String) resourceItem.getResourceValue(NODE_LABEL_SLOT);
     }
 
     public Node getNode() {
         return node;
     }
 
-    public void setDefaultColors(String backgroundColor, String borderColor) {
-        this.defaultBorderColor = borderColor;
-        this.defaultBackgroundColor = backgroundColor;
+    public String getNodeBackgroundColorValue() {
+        return (String) resourceItem
+                .getResourceValue(NODE_BACKGROUND_COLOR_SLOT);
+    }
+
+    public String getNodeBorderColorValue() {
+        return (String) resourceItem.getResourceValue(NODE_BORDER_COLOR_SLOT);
     }
 
     public void updateNode(DefaultResourceItem.Status status) {
@@ -79,8 +90,9 @@ public class GraphItem {
             break;
         case DEFAULT: {
             display.setNodeStyle(node, NODE_BACKGROUND_COLOR,
-                    defaultBackgroundColor);
-            display.setNodeStyle(node, NODE_BORDER_COLOR, defaultBorderColor);
+                    getNodeBackgroundColorValue());
+            display.setNodeStyle(node, NODE_BORDER_COLOR,
+                    getNodeBorderColorValue());
             display.setNodeStyle(node, NODE_FONT_COLOR, Colors.BLACK);
             display.setNodeStyle(node, NODE_FONT_WEIGHT,
                     NODE_FONT_WEIGHT_NORMAL);
@@ -88,7 +100,7 @@ public class GraphItem {
             break;
         case SELECTED: {
             display.setNodeStyle(node, NODE_BACKGROUND_COLOR,
-                    defaultBackgroundColor);
+                    getNodeBackgroundColorValue());
             display.setNodeStyle(node, NODE_BORDER_COLOR, Colors.ORANGE);
             display.setNodeStyle(node, NODE_FONT_COLOR, Colors.ORANGE);
             display.setNodeStyle(node, NODE_FONT_WEIGHT, NODE_FONT_WEIGHT_BOLD);

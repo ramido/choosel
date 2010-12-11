@@ -53,15 +53,18 @@ public final class ResourcesTestHelper {
                 resourceSet.contains(createResource(resourceType, resourceId)));
     }
 
-    public static DefaultResourceItem createResourceItem(ResourceSet resources) {
-        return createResourceItem(resources,
+    public static DefaultResourceItem createResourceItem(String groupId,
+            ResourceSet resources) {
+
+        return createResourceItem(groupId, resources,
                 mock(SlotMappingConfiguration.class));
     }
 
-    public static DefaultResourceItem createResourceItem(ResourceSet resources,
+    public static DefaultResourceItem createResourceItem(String groupId,
+            ResourceSet resources,
             SlotMappingConfiguration slotMappingConfiguration) {
 
-        return spy(new DefaultResourceItem("", resources,
+        return spy(new DefaultResourceItem(groupId, resources,
                 mock(HoverModel.class), mock(PopupManager.class),
                 slotMappingConfiguration));
     }
@@ -161,6 +164,17 @@ public final class ResourcesTestHelper {
         });
     }
 
+    public static void verifyOnResourcesAdded(
+            ResourceSet expectedAddedResources,
+            ResourceSetChangedEventHandler handler) {
+
+        ResourceSetChangedEvent event = verifyOnResourceSetChanged(1, handler)
+                .getValue();
+        assertContentEquals(expectedAddedResources, event.getAddedResources()
+                .toList());
+        assertEquals(true, event.getRemovedResources().isEmpty());
+    }
+
     public static ArgumentCaptor<ResourceSetChangedEvent> verifyOnResourceSetChanged(
             int expectedInvocationCount,
             ResourceSetChangedEventHandler resourcesChangedHandler) {
@@ -174,26 +188,16 @@ public final class ResourcesTestHelper {
         return argument;
     }
 
-    public static void verifyOnResourcesAdded(ResourceSet expectedAddedResources,
-            ResourceSetChangedEventHandler handler) {
-
-        ResourceSetChangedEvent event = verifyOnResourceSetChanged(1, handler)
-                .getValue();
-        assertContentEquals(expectedAddedResources, event.getAddedResources()
-                .toList());
-        assertEquals(true, event.getRemovedResources().isEmpty());
-    }
-
-    private ResourcesTestHelper() {
-    }
-
     public static void verifyOnResourcesRemoved(ResourceSet expectedResources,
             ResourceSetChangedEventHandler handler) {
-    
+
         ResourceSetChangedEvent event = verifyOnResourceSetChanged(1, handler)
                 .getValue();
         assertContentEquals(expectedResources, event.getRemovedResources()
                 .toList());
         assertEquals(true, event.getAddedResources().isEmpty());
+    }
+
+    private ResourcesTestHelper() {
     }
 }

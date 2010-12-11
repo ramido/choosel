@@ -104,10 +104,14 @@ public class GraphViewContentDisplayTest {
         ResourceSet resourceSet1 = createResources(1);
         ResourceSet resourceSet2 = createResources(2);
 
-        ResourceItem resourceItem1 = ResourcesTestHelper
-                .createResourceItem(resourceSet1);
-        ResourceItem resourceItem2 = ResourcesTestHelper
-                .createResourceItem(resourceSet2);
+        ResourceItem resourceItem1 = ResourcesTestHelper.createResourceItem(
+                "1", resourceSet1);
+        ResourceItem resourceItem2 = ResourcesTestHelper.createResourceItem(
+                "2", resourceSet2);
+
+        when(callback.getResourceItems()).thenReturn(
+                LightweightCollections.toCollection(resourceItem1,
+                        resourceItem2));
 
         underTest.update(LightweightCollections.toCollection(resourceItem1,
                 resourceItem2), LightweightCollections
@@ -132,8 +136,11 @@ public class GraphViewContentDisplayTest {
     public void addResourceItemToAllResource() {
         ResourceSet resourceSet = createResources(1);
 
-        ResourceItem resourceItem = ResourcesTestHelper
-                .createResourceItem(resourceSet);
+        ResourceItem resourceItem = ResourcesTestHelper.createResourceItem("1",
+                resourceSet);
+
+        when(callback.getResourceItems()).thenReturn(
+                LightweightCollections.toCollection(resourceItem));
 
         underTest.update(LightweightCollections.toCollection(resourceItem),
                 LightweightCollections.<ResourceItem> emptySet(),
@@ -181,10 +188,14 @@ public class GraphViewContentDisplayTest {
 
     @Test
     public void getAllNodes() {
-        ResourceItem resourceItem1 = ResourcesTestHelper
-                .createResourceItem(createResources(1));
-        ResourceItem resourceItem2 = ResourcesTestHelper
-                .createResourceItem(createResources(2));
+        ResourceItem resourceItem1 = ResourcesTestHelper.createResourceItem(
+                "1", createResources(1));
+        ResourceItem resourceItem2 = ResourcesTestHelper.createResourceItem(
+                "2", createResources(2));
+
+        when(callback.getResourceItems()).thenReturn(
+                LightweightCollections.toCollection(resourceItem1,
+                        resourceItem2));
 
         underTest.update(LightweightCollections.toCollection(resourceItem1,
                 resourceItem2), LightweightCollections
@@ -203,8 +214,11 @@ public class GraphViewContentDisplayTest {
     public void loadNeighbourhoodWhenAddingConcept() {
         Resource concept1 = createResource(1);
 
-        ResourceItem resourceItem = ResourcesTestHelper
-                .createResourceItem(toResourceSet(concept1));
+        ResourceItem resourceItem = ResourcesTestHelper.createResourceItem("1",
+                toResourceSet(concept1));
+
+        when(callback.getResourceItems()).thenReturn(
+                LightweightCollections.toCollection(resourceItem));
 
         underTest.update(LightweightCollections.toCollection(resourceItem),
                 LightweightCollections.<ResourceItem> emptySet(),
@@ -225,8 +239,11 @@ public class GraphViewContentDisplayTest {
     public void removeResourceItemFromAllResource() {
         ResourceSet resourceSet = createResources(1);
 
-        ResourceItem resourceItem = ResourcesTestHelper
-                .createResourceItem(resourceSet);
+        ResourceItem resourceItem = ResourcesTestHelper.createResourceItem("1",
+                resourceSet);
+
+        when(callback.getResourceItems()).thenReturn(
+                LightweightCollections.toCollection(resourceItem));
 
         underTest.update(LightweightCollections.toCollection(resourceItem),
                 LightweightCollections.<ResourceItem> emptyCollection(),
@@ -245,13 +262,20 @@ public class GraphViewContentDisplayTest {
 
     @Test
     public void removeSourceResourceItemRemovesArc() {
+        String groupId1 = "1";
+        String groupId2 = "2";
+
         ResourceSet resourceSet1 = createResources(1);
         ResourceSet resourceSet2 = createResources(2);
 
-        ResourceItem resourceItem1 = ResourcesTestHelper
-                .createResourceItem(resourceSet1);
-        ResourceItem resourceItem2 = ResourcesTestHelper
-                .createResourceItem(resourceSet2);
+        ResourceItem resourceItem1 = ResourcesTestHelper.createResourceItem(
+                groupId1, resourceSet1);
+        ResourceItem resourceItem2 = ResourcesTestHelper.createResourceItem(
+                groupId2, resourceSet2);
+
+        when(callback.getResourceItems()).thenReturn(
+                LightweightCollections.toCollection(resourceItem1,
+                        resourceItem2));
 
         underTest.update(LightweightCollections.toCollection(resourceItem1,
                 resourceItem2), LightweightCollections
@@ -259,8 +283,7 @@ public class GraphViewContentDisplayTest {
                 .<ResourceItem> emptyCollection(), LightweightCollections
                 .<Slot> emptyCollection());
 
-        underTest.showArc("arcType", resourceSet1.getFirstResource().getUri(),
-                resourceSet2.getFirstResource().getUri());
+        underTest.showArc("arcType", groupId1, groupId2);
 
         ArgumentCaptor<Arc> captor = ArgumentCaptor.forClass(Arc.class);
 
@@ -275,13 +298,20 @@ public class GraphViewContentDisplayTest {
 
     @Test
     public void removeTargetResourceItemRemovesArc() {
+        String groupId1 = "1";
+        String groupId2 = "2";
+
         ResourceSet resourceSet1 = createResources(1);
         ResourceSet resourceSet2 = createResources(2);
 
-        ResourceItem resourceItem1 = ResourcesTestHelper
-                .createResourceItem(resourceSet1);
-        ResourceItem resourceItem2 = ResourcesTestHelper
-                .createResourceItem(resourceSet2);
+        ResourceItem resourceItem1 = ResourcesTestHelper.createResourceItem(
+                groupId1, resourceSet1);
+        ResourceItem resourceItem2 = ResourcesTestHelper.createResourceItem(
+                groupId2, resourceSet2);
+
+        when(callback.getResourceItems()).thenReturn(
+                LightweightCollections.toCollection(resourceItem1,
+                        resourceItem2));
 
         underTest.update(LightweightCollections.toCollection(resourceItem1,
                 resourceItem2), LightweightCollections
@@ -289,8 +319,7 @@ public class GraphViewContentDisplayTest {
                 .<ResourceItem> emptyCollection(), LightweightCollections
                 .<Slot> emptyCollection());
 
-        underTest.showArc("arcType", resourceSet1.getFirstResource().getUri(),
-                resourceSet2.getFirstResource().getUri());
+        underTest.showArc("arcType", groupId1, groupId2);
 
         ArgumentCaptor<Arc> captor = ArgumentCaptor.forClass(Arc.class);
 
