@@ -389,8 +389,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
     @Override
     public Slot[] getSlots() {
-        return new Slot[] { SlotResolver.DESCRIPTION_SLOT,
-                SlotResolver.GRAPH_LABEL_SLOT,
+        return new Slot[] { SlotResolver.GRAPH_LABEL_SLOT,
                 SlotResolver.GRAPH_NODE_BORDER_COLOR_SLOT,
                 SlotResolver.GRAPH_NODE_BACKGROUND_COLOR_SLOT };
     }

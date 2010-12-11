@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.resources.Resource;
 
+// TODO migrate to change default slot mapping initializer
 public class DefaultViewInitialValuesTest {
 
     private TestView underTest;
@@ -39,7 +40,8 @@ public class DefaultViewInitialValuesTest {
         resource.putValue("text1", "t1");
         resource.putValue("text2", "t2");
 
-        underTest.getResourceModel().addUnnamedResources(toResourceSet(resource));
+        underTest.getResourceModel().addUnnamedResources(
+                toResourceSet(resource));
 
         assertEquals(true, underTest.getSlotMappingConfiguration()
                 .containsResolver(numberSlot));
@@ -57,7 +59,8 @@ public class DefaultViewInitialValuesTest {
         resource.putValue("text1", "t1");
         resource.putValue("text2", "t2");
 
-        underTest.getResourceModel().addUnnamedResources(toResourceSet(resource));
+        underTest.getResourceModel().addUnnamedResources(
+                toResourceSet(resource));
 
         assertEquals(true, underTest.getSlotMappingConfiguration()
                 .containsResolver(textSlot));

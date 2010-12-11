@@ -135,6 +135,10 @@ public class ViewFactory implements WindowContentFactory {
         return sidePanelSections;
     }
 
+    protected SlotMappingInitializer createSlotMappingInitializer() {
+        return new DefaultSlotMappingInitializer();
+    }
+
     protected DefaultVisualMappingsControl createVisualMappingsControl(
             ViewContentDisplay contentDisplay,
             ResourceGrouping resourceSplitter,
@@ -183,10 +187,13 @@ public class ViewFactory implements WindowContentFactory {
         LightweightCollection<SidePanelSection> sidePanelSections = createSidePanelSections(
                 contentDisplay, visualMappingsControl, shareConfiguration);
 
+        SlotMappingInitializer slotMappingInitializer = createSlotMappingInitializer();
+
         return new DefaultView(resourceSplitter, contentDisplay, contentType,
                 contentType, configuration, selectionModel,
                 selectionModelPresenter, resourceModel, resourceModelPresenter,
                 hoverModel, popupManagerFactory, detailsWidgetHelper,
-                visualMappingsControl, shareConfiguration, sidePanelSections);
+                visualMappingsControl, shareConfiguration,
+                slotMappingInitializer, sidePanelSections);
     }
 }
