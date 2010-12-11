@@ -38,7 +38,9 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetChangedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourceSetChangedEventHandler;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.client.views.DefaultResourceItem;
 import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
@@ -67,6 +69,23 @@ public final class ResourcesTestHelper {
         return spy(new DefaultResourceItem(groupId, resources,
                 mock(HoverModel.class), mock(PopupManager.class),
                 slotMappingConfiguration));
+    }
+
+    /**
+     * Creates list of resource items with using the label of the resource sets
+     * as group ids.
+     */
+    public static LightweightCollection<ResourceItem> createResourceItems(
+            ResourceSet... resourceSets) {
+
+        LightweightList<ResourceItem> resourceItems = CollectionFactory
+                .createLightweightList();
+        for (ResourceSet resourceSet : resourceSets) {
+            resourceItems.add(createResourceItem(resourceSet.getLabel(),
+                    resourceSet));
+        }
+
+        return resourceItems;
     }
 
     public static <T> LightweightCollection<T> emptyLightweightCollection(
