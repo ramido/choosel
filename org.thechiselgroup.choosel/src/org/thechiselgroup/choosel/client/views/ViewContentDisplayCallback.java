@@ -35,6 +35,8 @@ public interface ViewContentDisplayCallback {
 
     Resource getResourceByUri(String uri);
 
+    ResourceItem getResourceItemByGroupID(String groupId);
+
     LightweightCollection<ResourceItem> getResourceItems();
 
     List<ResourceItem> getResourceItems(Resource resource);
