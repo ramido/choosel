@@ -256,29 +256,28 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         return nodeResources.containsResourceWithUri(resourceUri);
     }
 
-    private void createDisplayObjectForResourceItem(ResourceItem resourceItem) {
-
+    private void createGraphNodeItem(ResourceItem resourceItem) {
         // TODO get from group id
-        String category = getCategory(resourceItem.getResourceSet()
+        String type = getCategory(resourceItem.getResourceSet()
                 .getFirstResource());
 
-        GraphItem gItem = new GraphItem(resourceItem, category, display);
+        GraphItem graphItem = new GraphItem(resourceItem, type, display);
 
-        display.addNode(gItem.getNode());
-        positionNode(gItem.getNode());
+        display.addNode(graphItem.getNode());
+        positionNode(graphItem.getNode());
 
         // TODO re-enable
         // TODO remove once new drag and drop mechanism works...
-        display.setNodeStyle(gItem.getNode(), "showDragImage", "false");
+        display.setNodeStyle(graphItem.getNode(), "showDragImage", "false");
 
-        display.setNodeStyle(gItem.getNode(), "showArrow", registry
-                .getNodeMenuEntries(category).isEmpty() ? "false" : "true");
+        display.setNodeStyle(graphItem.getNode(), "showArrow", registry
+                .getNodeMenuEntries(type).isEmpty() ? "false" : "true");
 
-        registry.getAutomaticExpander(category).expand(resourceItem, this);
+        registry.getAutomaticExpander(type).expand(resourceItem, this);
 
         nodeResources.addResourceSet(resourceItem.getResourceSet());
 
-        resourceItem.setDisplayObject(gItem);
+        resourceItem.setDisplayObject(graphItem);
     }
 
     // TODO encapsulate in display, use dependency injection
@@ -550,7 +549,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
             LightweightCollection<Slot> changedSlots) {
 
         for (ResourceItem addedItem : addedResourceItems) {
-            createDisplayObjectForResourceItem(addedItem);
+            createGraphNodeItem(addedItem);
             updateNode(addedItem);
         }
 
@@ -564,7 +563,6 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     }
 
     private void updateNode(ResourceItem resourceItem) {
-        ((GraphItem) resourceItem.getDisplayObject()).updateNode(resourceItem
-                .getStatus());
+        ((GraphItem) resourceItem.getDisplayObject()).updateNode();
     }
 }
