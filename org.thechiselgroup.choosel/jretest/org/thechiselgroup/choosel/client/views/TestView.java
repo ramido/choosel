@@ -57,6 +57,9 @@ public class TestView extends DefaultView {
         VisualMappingsControl visualMappingsControl = mock(VisualMappingsControl.class);
         ShareConfiguration shareConfiguration = mock(ShareConfiguration.class);
 
+        // TODO change once relevant tests are migrated
+        SlotMappingInitializer slotMappingInitializer = spy(new DefaultSlotMappingInitializer());
+
         ResourceGrouping resourceGrouping = new ResourceGrouping(
                 new ResourceCategorizerToMultiCategorizerAdapter(
                         new ResourceByUriTypeCategorizer()), resourceSetFactory);
@@ -66,7 +69,8 @@ public class TestView extends DefaultView {
                 selectionModelPresenter, resourceModel, resourceModelPresenter,
                 hoverModel, popupManagerFactory, detailsWidgetHelper,
                 popupManager, selectionChangedHandlerRegistration,
-                visualMappingsControl, shareConfiguration));
+                visualMappingsControl, shareConfiguration,
+                slotMappingInitializer));
 
         when(
                 selectionModel
@@ -109,14 +113,15 @@ public class TestView extends DefaultView {
             DetailsWidgetHelper detailsWidgetHelper, PopupManager popupManager,
             HandlerRegistration selectionChangedHandlerRegistration,
             VisualMappingsControl visualMappingsControl,
-            ShareConfiguration shareConfiguration) {
+            ShareConfiguration shareConfiguration,
+            SlotMappingInitializer slotMappingInitializer) {
 
         super(resourceSplitter, contentDisplay, label, contentType,
                 configuration, selectionModel, selectionModelPresenter,
                 resourceModel, resourceModelPresenter, hoverModel,
                 popupManagerFactory, detailsWidgetHelper,
                 visualMappingsControl, shareConfiguration,
-                NullLightweightCollection
+                slotMappingInitializer, NullLightweightCollection
                         .<SidePanelSection> nullLightweightCollection());
 
         this.contentDisplay = contentDisplay;

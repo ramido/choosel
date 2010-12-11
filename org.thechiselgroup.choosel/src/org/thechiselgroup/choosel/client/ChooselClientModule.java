@@ -73,12 +73,10 @@ import org.thechiselgroup.choosel.client.util.HandlerManagerProvider;
 import org.thechiselgroup.choosel.client.util.URLFetchService;
 import org.thechiselgroup.choosel.client.util.xslt.SarissaDocumentProcessor;
 import org.thechiselgroup.choosel.client.views.DefaultShareConfigurationFactory;
-import org.thechiselgroup.choosel.client.views.DefaultSlotResolver;
 import org.thechiselgroup.choosel.client.views.DefaultViewAccessor;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ShareConfigurationFactory;
-import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.chart.BarChartViewContentDisplayFactory;
@@ -338,8 +336,6 @@ public class ChooselClientModule extends AbstractGinModule implements
         bind(URLFetchService.class).to(FlashURLFetchService.class).in(
                 Singleton.class);
 
-        bind(SlotResolver.class).to(getSlotResolverClass()).in(Singleton.class);
-
         bind(Branding.class).to(getBrandingClass()).in(Singleton.class);
 
         bindCustomServices();
@@ -395,7 +391,4 @@ public class ChooselClientModule extends AbstractGinModule implements
         return ResourceByUriTypeCategorizer.class;
     }
 
-    protected Class<? extends SlotResolver> getSlotResolverClass() {
-        return DefaultSlotResolver.class;
-    }
 }

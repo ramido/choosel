@@ -50,7 +50,6 @@ import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.views.DefaultWindowContentProducer;
 import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ShareConfigurationFactory;
-import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.ViewFactory;
 import org.thechiselgroup.choosel.client.windows.WindowContentFactory;
@@ -107,8 +106,7 @@ public class ChooselWindowContentProducerProvider implements
             ResourceMultiCategorizer categorizer,
             CategoryLabelProvider labelProvider,
             @Named(DROP_TARGET_MANAGER_VIEW_CONTENT) ResourceSetAvatarDropTargetManager contentDropTargetManager,
-            SlotResolver slotResolver, HoverModel hoverModel,
-            PopupManagerFactory popupManagerFactory,
+            HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
             DetailsWidgetHelper detailsWidgetHelper,
             ShareConfigurationFactory shareConfigurationFactory) {
 
@@ -121,7 +119,6 @@ public class ChooselWindowContentProducerProvider implements
         assert selectionModelLabelFactory != null;
         assert categorizer != null;
         assert labelProvider != null;
-        assert slotResolver != null;
         assert hoverModel != null;
         assert popupManagerFactory != null;
         assert detailsWidgetHelper != null;

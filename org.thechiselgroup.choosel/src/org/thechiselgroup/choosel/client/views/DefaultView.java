@@ -22,7 +22,6 @@ import java.util.Set;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.persistence.Persistable;
-import org.thechiselgroup.choosel.client.resolver.FixedValuePropertyValueResolver;
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
@@ -37,7 +36,6 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetChangedEvent;
 import org.thechiselgroup.choosel.client.resources.ResourceSetChangedEventHandler;
 import org.thechiselgroup.choosel.client.resources.ResourceSetEventForwarder;
-import org.thechiselgroup.choosel.client.resources.ResourceSetUtils;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
@@ -56,7 +54,6 @@ import org.thechiselgroup.choosel.client.util.collections.CombinedIterable;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.client.util.collections.LightweightList;
-import org.thechiselgroup.choosel.client.util.math.SumCalculation;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 import org.thechiselgroup.choosel.client.workspace.ViewSaver;
 
@@ -187,6 +184,8 @@ public class DefaultView extends AbstractWindowContent implements View {
      */
     private LightweightCollection<SidePanelSection> sidePanelSections;
 
+    private SlotMappingInitializer slotMappingInitializer;
+
     public DefaultView(ResourceGrouping resourceGrouping,
             ViewContentDisplay contentDisplay, String label,
             String contentType,
@@ -197,6 +196,7 @@ public class DefaultView extends AbstractWindowContent implements View {
             DetailsWidgetHelper detailsWidgetHelper,
             VisualMappingsControl visualMappingsControl,
             ShareConfiguration shareConfiguration,
+            SlotMappingInitializer slotMappingInitializer,
             LightweightCollection<SidePanelSection> sidePanelSections) {
 
         super(label, contentType);
@@ -212,8 +212,10 @@ public class DefaultView extends AbstractWindowContent implements View {
         assert resourceModelPresenter != null;
         assert hoverModel != null;
         assert shareConfiguration != null;
+        assert slotMappingInitializer != null;
         assert sidePanelSections != null;
 
+        this.slotMappingInitializer = slotMappingInitializer;
         this.shareConfiguration = shareConfiguration;
         this.popupManagerFactory = popupManagerFactory;
         this.detailsWidgetHelper = detailsWidgetHelper;
@@ -556,9 +558,6 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     private void initializeVisualMappings(ResourceSet resources) {
-        DataTypeToListMap<String> propertiesByDataType = ResourceSetUtils
-                .getPropertiesByDataType(resources);
-
         /*
          * TODO check if there are changes when adding / adjust each slot -->
          * stable per slot --> initialize early for the slots & map to object
@@ -571,7 +570,8 @@ public class DefaultView extends AbstractWindowContent implements View {
          */
         // TODO check the validity of the configuration instead
         if (!isConfigurationAvailable) {
-            setInitialMappings(propertiesByDataType);
+            slotMappingInitializer.initializeMappings(resources,
+                    contentDisplay, slotMappingConfiguration);
             isConfigurationAvailable = true;
         }
     }
@@ -851,67 +851,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         }
 
         memento.addChild(MEMENTO_GROUPING, groupingMemento);
-    }
-
-    // TODO refactor
-    private void setInitialMappings(
-            DataTypeToListMap<String> propertiesByDataType) {
-
-        for (Slot slot : contentDisplay.getSlots()) {
-            DataType dataType = slot.getDataType();
-            List<String> properties = propertiesByDataType.get(dataType);
-
-            ResourceSetToValueResolver setToValueResolver = null;
-
-            if (properties.isEmpty()) {
-                switch (dataType) {
-                case NUMBER:
-                    setToValueResolver = new FixedValuePropertyValueResolver(
-                            new Double(0));
-                    break;
-                case COLOR:
-                    setToValueResolver = new FixedValuePropertyValueResolver(
-                            "#6495ed");
-                    break;
-                }
-
-                slotMappingConfiguration.setMapping(slot, setToValueResolver);
-            }
-
-            /*
-             * XXX this is actually a problem for the properties besides color.
-             * If we don't have a property of that type, the data cannot be
-             * visualized.
-             */
-            if (properties.isEmpty() && dataType != DataType.COLOR) {
-                continue;
-            }
-
-            switch (dataType) {
-            case TEXT:
-                setToValueResolver = new TextResourceSetToValueResolver(
-                        properties.get(0));
-                break;
-            case NUMBER:
-                setToValueResolver = new CalculationResourceSetToValueResolver(
-                        properties.get(0), new SumCalculation());
-                break;
-            case DATE:
-                setToValueResolver = new FirstResourcePropertyResolver(
-                        properties.get(0));
-                break;
-            case COLOR:
-                setToValueResolver = new FixedValuePropertyValueResolver(
-                        "#6495ed");
-                break;
-            case LOCATION:
-                setToValueResolver = new FirstResourcePropertyResolver(
-                        properties.get(0));
-                break;
-            }
-
-            slotMappingConfiguration.setMapping(slot, setToValueResolver);
-        }
     }
 
     /**

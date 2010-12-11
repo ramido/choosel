@@ -15,21 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import org.thechiselgroup.choosel.client.resolver.FixedValuePropertyValueResolver;
-import org.thechiselgroup.choosel.client.resolver.ResourceToValueResolver;
+import org.thechiselgroup.choosel.client.resources.ResourceSet;
 
-public class DefaultSlotResolver implements SlotResolver {
+public interface SlotMappingInitializer {
 
-    public ResourceToValueResolver createGraphNodeBackgroundColorResolver(
-            String category) {
-
-        return new FixedValuePropertyValueResolver("#DAE5F3");
-    }
-
-    public ResourceToValueResolver createGraphNodeBorderColorResolver(
-            String category) {
-
-        return new FixedValuePropertyValueResolver("#AFC6E5");
-    }
-
+    void initializeMappings(ResourceSet resources, ViewContentDisplay contentDisplay,
+            SlotMappingConfiguration slotMappingConfiguration);
 }
