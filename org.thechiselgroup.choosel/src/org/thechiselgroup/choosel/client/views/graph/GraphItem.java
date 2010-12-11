@@ -27,10 +27,14 @@ import static org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisp
 
 import org.thechiselgroup.choosel.client.ui.Colors;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
-import org.thechiselgroup.choosel.client.views.DefaultResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay.Display;
 
+/**
+ * Represents a resource item in the graph view.
+ * 
+ * @author Lars Grammel
+ */
 public class GraphItem {
 
     private Display display;
@@ -39,17 +43,17 @@ public class GraphItem {
 
     private final ResourceItem resourceItem;
 
-    public GraphItem(ResourceItem resourceItem, String category,
+    public GraphItem(ResourceItem resourceItem, String type,
             GraphViewContentDisplay.Display display) {
 
         assert resourceItem != null;
-        assert category != null;
+        assert type != null;
         assert display != null;
 
         this.resourceItem = resourceItem;
         this.display = display;
 
-        node = new Node(resourceItem.getGroupID(), getLabelValue(), category);
+        node = new Node(resourceItem.getGroupID(), getLabelValue(), type);
     }
 
     public String getLabelValue() {
@@ -69,8 +73,12 @@ public class GraphItem {
         return (String) resourceItem.getResourceValue(NODE_BORDER_COLOR_SLOT);
     }
 
-    public void updateNode(DefaultResourceItem.Status status) {
-        switch (status) {
+    /**
+     * Updates the graph node to reflect the style and values of the underlying
+     * resource item.
+     */
+    public void updateNode() {
+        switch (resourceItem.getStatus()) {
         case PARTIALLY_HIGHLIGHTED_SELECTED:
         case HIGHLIGHTED_SELECTED: {
             display.setNodeStyle(node, NODE_BACKGROUND_COLOR, Colors.YELLOW_1);
