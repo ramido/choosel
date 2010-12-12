@@ -79,8 +79,11 @@ public interface GraphDisplay extends WidgetAdaptable {
     <T extends EventHandler> HandlerRegistration addEventHandler(Type<T> type,
             T handler);
 
-    HandlerRegistration addGraphWidgetReadyHandler(
-            GraphWidgetReadyHandler handler);
+    HandlerRegistration addGraphDisplayLoadingFailureHandler(
+            GraphDisplayLoadingFailureEventHandler handler);
+
+    HandlerRegistration addGraphDisplayReadyHandler(
+            GraphDisplayReadyEventHandler handler);
 
     void addNode(Node node);
 

@@ -15,46 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.ui.widget.graph;
 
-public class Arc {
+import com.google.gwt.event.shared.EventHandler;
 
-    private String id;
+public interface GraphDisplayReadyEventHandler extends EventHandler {
 
-    private String sourceNodeId;
-
-    private String targetNodeId;
-
-    private String type;
-
-    private boolean directed;
-
-    public Arc(String id, String sourceNodeId, String targetNodeId,
-            String type, boolean directed) {
-
-        this.id = id;
-        this.sourceNodeId = sourceNodeId;
-        this.targetNodeId = targetNodeId;
-        this.type = type;
-        this.directed = directed;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getSourceNodeId() {
-        return sourceNodeId;
-    }
-
-    public String getTargetNodeId() {
-        return targetNodeId;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public boolean isDirected() {
-        return directed;
-    }
+    void onWidgetReady(GraphDisplayReadyEvent event);
 
 }

@@ -76,8 +76,8 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
 
     // @formatter:off
     private static native void _addArc(String swfID, String arcId,
-            String sourceNodeId, String targetNodeId, String type) /*-{
-        $doc.getElementById(swfID).addArc(arcId, sourceNodeId, targetNodeId, type);
+            String sourceNodeId, String targetNodeId, String type, boolean directed) /*-{
+        $doc.getElementById(swfID).addArc(arcId, sourceNodeId, targetNodeId, type, directed);
     }-*/;
     // @formatter:on
 
@@ -147,7 +147,7 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
             _registerFlexHooks(swfID);
             _getGraphWidgetByID(swfID).onWidgetReady();
         } catch (Exception ex) {
-            Log.error(ex.getMessage(), ex);
+            _getGraphWidgetByID(swfID).onLoadFailure(ex);
         }
     }
 
@@ -329,7 +329,7 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
 
         arcsByID.put(arc.getId(), arc);
         _addArc(getSwfId(), arc.getId(), arc.getSourceNodeId(),
-                arc.getTargetNodeId(), arc.getType());
+                arc.getTargetNodeId(), arc.getType(), arc.isDirected());
     }
 
     @Override
@@ -344,10 +344,17 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
     }
 
     @Override
-    public HandlerRegistration addGraphWidgetReadyHandler(
-            GraphWidgetReadyHandler handler) {
+    public HandlerRegistration addGraphDisplayLoadingFailureHandler(
+            GraphDisplayLoadingFailureEventHandler handler) {
 
-        return addHandler(handler, GraphWidgetReadyEvent.TYPE);
+        return addHandler(handler, GraphDisplayLoadingFailureEvent.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addGraphDisplayReadyHandler(
+            GraphDisplayReadyEventHandler handler) {
+
+        return addHandler(handler, GraphDisplayReadyEvent.TYPE);
     }
 
     @Override
@@ -471,6 +478,12 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
         GraphWidget.widgets.put(getSwfId(), this);
     }
 
+    private void onLoadFailure(Exception ex) {
+        Log.error("Loading SWF failed", ex);
+        loadingInfoDiv.setInnerText("Loading SWF failed: " + ex.getMessage());
+        fireEvent(new GraphDisplayLoadingFailureEvent(this, ex));
+    }
+
     private void onNodeDrag(String nodeID, int startX, int startY, int endX,
             int endY) {
 
@@ -539,7 +552,7 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
 
     private void onWidgetReady() {
         detachLoadingStateInformation();
-        fireEvent(new GraphWidgetReadyEvent(this));
+        fireEvent(new GraphDisplayReadyEvent(this));
     }
 
     @Override

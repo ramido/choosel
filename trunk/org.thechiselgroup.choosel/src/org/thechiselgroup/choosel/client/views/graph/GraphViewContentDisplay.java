@@ -33,10 +33,12 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Arc;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
+import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplayLoadingFailureEvent;
+import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplayLoadingFailureEventHandler;
+import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplayReadyEvent;
+import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplayReadyEventHandler;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphLayouts;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget;
-import org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidgetReadyEvent;
-import org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidgetReadyHandler;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeDragEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeDragHandleMouseDownEvent;
@@ -396,9 +398,9 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     public void init(ViewContentDisplayCallback callback) {
         super.init(callback);
 
-        display.addGraphWidgetReadyHandler(new GraphWidgetReadyHandler() {
+        display.addGraphDisplayReadyHandler(new GraphDisplayReadyEventHandler() {
             @Override
-            public void onWidgetReady(GraphWidgetReadyEvent event) {
+            public void onWidgetReady(GraphDisplayReadyEvent event) {
                 ready = true;
 
                 GraphEventHandler handler = new GraphEventHandler();
@@ -413,7 +415,12 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
                 initNodeMenuItems();
             }
+        });
+        display.addGraphDisplayLoadingFailureHandler(new GraphDisplayLoadingFailureEventHandler() {
+            @Override
+            public void onLoadingFailure(GraphDisplayLoadingFailureEvent event) {
 
+            }
         });
     }
 
@@ -534,7 +541,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         }
 
         Arc arc = new Arc(arcItem.getId(), arcItem.getSourceNodeItemId(),
-                arcItem.getTargetNodeItemId(), arcItem.getType());
+                arcItem.getTargetNodeItemId(), arcItem.getType(),
+                arcItem.isDirected());
 
         display.addArc(arc);
         arcList.add(arc);
