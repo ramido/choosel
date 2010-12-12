@@ -193,7 +193,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         return arcType + ":" + sourceId + "_" + targetId;
     }
 
-    private ArcStyleProvider arcStyleProvider;
+    private ArcTypeProvider arcStyleProvider;
 
     private final CommandManager commandManager;
 
@@ -234,7 +234,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
             CommandManager commandManager, ResourceManager resourceManager,
             DragEnablerFactory dragEnablerFactory,
             ResourceCategorizer resourceCategorizer,
-            ArcStyleProvider arcStyleProvider, GraphExpansionRegistry registry) {
+            ArcTypeProvider arcStyleProvider, GraphExpansionRegistry registry) {
 
         assert display != null;
         assert commandManager != null;

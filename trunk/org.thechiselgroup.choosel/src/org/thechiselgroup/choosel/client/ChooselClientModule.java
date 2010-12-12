@@ -85,8 +85,8 @@ import org.thechiselgroup.choosel.client.views.chart.DotChartViewContentDisplayF
 import org.thechiselgroup.choosel.client.views.chart.PieChartViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.chart.ScatterPlotViewContentDisplayFactory;
 import org.thechiselgroup.choosel.client.views.chart.TimeChartViewContentDisplayFactory;
-import org.thechiselgroup.choosel.client.views.graph.ArcStyleProvider;
-import org.thechiselgroup.choosel.client.views.graph.DefaultArcStyleProvider;
+import org.thechiselgroup.choosel.client.views.graph.ArcTypeProvider;
+import org.thechiselgroup.choosel.client.views.graph.DefaultArcTypeProvider;
 import org.thechiselgroup.choosel.client.views.graph.DefaultGraphExpansionRegistry;
 import org.thechiselgroup.choosel.client.views.graph.GraphExpansionRegistry;
 import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplayFactory;
@@ -323,7 +323,7 @@ public class ChooselClientModule extends AbstractGinModule implements
         bind(DropTargetCapabilityChecker.class).to(
                 getDropTargetCapabilityCheckerClass()).in(Singleton.class);
 
-        bind(ArcStyleProvider.class).to(getArcStyleProviderClass()).in(
+        bind(ArcTypeProvider.class).to(getArcStyleProviderClass()).in(
                 Singleton.class);
 
         bind(GraphExpansionRegistry.class).to(getGraphExpansionRegistryClass())
@@ -347,8 +347,8 @@ public class ChooselClientModule extends AbstractGinModule implements
         return ChooselApplication.class;
     }
 
-    protected Class<? extends ArcStyleProvider> getArcStyleProviderClass() {
-        return DefaultArcStyleProvider.class;
+    protected Class<? extends ArcTypeProvider> getArcStyleProviderClass() {
+        return DefaultArcTypeProvider.class;
     }
 
     /**

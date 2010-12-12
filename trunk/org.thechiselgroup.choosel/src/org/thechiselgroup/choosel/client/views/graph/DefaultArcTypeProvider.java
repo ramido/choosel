@@ -15,17 +15,23 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.graph;
 
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 
-public interface ArcStyleProvider {
+public class DefaultArcTypeProvider implements ArcTypeProvider {
 
-    String getArcColor(String arcType);
+    private final LightweightList<ArcType> arcTypes = CollectionFactory
+            .createLightweightList();
 
-    String getArcStyle(String arcType);
+    protected void addArcType(ArcType arcType) {
+        assert arcType != null;
+        arcTypes.add(arcType);
+    }
 
-    /**
-     * Returns the different arc types that can be selected.
-     */
-    LightweightCollection<ArcType> getArcTypes();
+    @Override
+    public LightweightCollection<ArcType> getArcTypes() {
+        return arcTypes;
+    }
 
 }

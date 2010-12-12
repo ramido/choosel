@@ -15,25 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.graph;
 
-import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.client.util.collections.LightweightCollections;
 
-public class DefaultArcStyleProvider implements ArcStyleProvider {
+public interface ArcTypeProvider {
 
-    @Override
-    public String getArcColor(String arcType) {
-        return "#AFC6E5";
-    }
-
-    @Override
-    public String getArcStyle(String arcType) {
-        return GraphDisplay.ARC_STYLE_SOLID;
-    }
-
-    @Override
-    public LightweightCollection<ArcType> getArcTypes() {
-        return LightweightCollections.emptyCollection();
-    }
+    /**
+     * Returns the different arc types that can be selected.
+     */
+    LightweightCollection<ArcType> getArcTypes();
 
 }
