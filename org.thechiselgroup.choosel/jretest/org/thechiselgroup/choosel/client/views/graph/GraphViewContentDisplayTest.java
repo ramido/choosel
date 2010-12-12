@@ -68,7 +68,7 @@ import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay.Dis
 public class GraphViewContentDisplayTest {
 
     @Mock
-    private ArcStyleProvider arcStyleProvider;
+    private ArcTypeProvider arcStyleProvider;
 
     @Mock
     private GraphNodeExpander automaticExpander;

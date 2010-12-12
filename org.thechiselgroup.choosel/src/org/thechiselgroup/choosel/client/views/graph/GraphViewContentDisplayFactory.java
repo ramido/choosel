@@ -28,7 +28,7 @@ public class GraphViewContentDisplayFactory implements
         ViewContentDisplayFactory {
 
     @Inject
-    private ArcStyleProvider arcStyleProvider;
+    private ArcTypeProvider arcStyleProvider;
 
     @Inject
     private CommandManager commandManager;
