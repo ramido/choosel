@@ -186,14 +186,14 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
     private static final String MEMENTO_Y = "y";
 
-    // advanced node class: (incoming, outgoing, expanded: state machine)
-
     // TODO move
     public static String getArcId(String arcType, String sourceId,
             String targetId) {
         // FIXME this needs escaping of special characters to work properly
         return arcType + ":" + sourceId + "_" + targetId;
     }
+
+    // advanced node class: (incoming, outgoing, expanded: state machine)
 
     private ArcTypeProvider arcStyleProvider;
 
@@ -345,6 +345,13 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
     private ResourceItem getResourceItem(Node node) {
         return getGraphItem(node);
+    }
+
+    @Override
+    public LightweightCollection<ResourceItem> getResourceItems(
+            Iterable<Resource> resources) {
+
+        return getCallback().getResourceItems(resources);
     }
 
     @Override
@@ -557,13 +564,36 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
             LightweightCollection<ResourceItem> removedResourceItems,
             LightweightCollection<Slot> changedSlots) {
 
-        LightweightCollection<ArcType> arcTypes = arcStyleProvider
-                .getArcTypes();
-
         for (ResourceItem addedItem : addedResourceItems) {
             createGraphNodeItem(addedItem);
             updateNode(addedItem);
+        }
 
+        updateArcsForResourceItems(addedResourceItems);
+
+        for (ResourceItem updatedItem : updatedResourceItems) {
+            updateNode(updatedItem);
+        }
+
+        for (ResourceItem resourceItem : removedResourceItems) {
+            removeNode(resourceItem);
+        }
+    }
+
+    /**
+     * Updates the arc items and arcs for the given resource items. The resource
+     * items must already be contained in the view content display (i.e. they
+     * have been added already).
+     */
+    @Override
+    public void updateArcsForResourceItems(
+            LightweightCollection<ResourceItem> resourceItems) {
+
+        assert resourceItems != null;
+
+        LightweightCollection<ArcType> arcTypes = arcStyleProvider
+                .getArcTypes();
+        for (ResourceItem addedItem : resourceItems) {
             for (ArcType arcType : arcTypes) {
                 for (ArcItem arcItem : arcType.getArcItems(addedItem)) {
                     arcItems.add(arcItem);
@@ -583,14 +613,6 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
                 showArc(arcItem);
                 it.remove();
             }
-        }
-
-        for (ResourceItem updatedItem : updatedResourceItems) {
-            updateNode(updatedItem);
-        }
-
-        for (ResourceItem resourceItem : removedResourceItems) {
-            removeNode(resourceItem);
         }
     }
 

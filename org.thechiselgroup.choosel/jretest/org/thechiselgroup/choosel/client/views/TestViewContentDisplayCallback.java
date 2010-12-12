@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.client.views;
 
 import java.util.Map;
 
+import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
@@ -60,6 +61,13 @@ public class TestViewContentDisplayCallback implements
                 .createLightweightList();
         result.addAll(resourceItemsByGroupId.values());
         return result;
+    }
+
+    @Override
+    public LightweightCollection<ResourceItem> getResourceItems(
+            Iterable<Resource> resources) {
+
+        return null;
     }
 
     @Override

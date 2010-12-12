@@ -500,6 +500,13 @@ public class DefaultView extends AbstractWindowContent implements View {
             }
 
             @Override
+            public LightweightCollection<ResourceItem> getResourceItems(
+                    Iterable<Resource> resources) {
+
+                return DefaultView.this.getResourceItems(resources);
+            }
+
+            @Override
             public String getSlotResolverDescription(Slot slot) {
                 if (!slotMappingConfiguration.containsResolver(slot)) {
                     return "N/A";
