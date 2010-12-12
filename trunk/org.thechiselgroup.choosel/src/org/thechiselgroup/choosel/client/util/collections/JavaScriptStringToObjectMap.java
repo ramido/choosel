@@ -617,6 +617,18 @@ public final class JavaScriptStringToObjectMap<T> implements Map<String, T> {
     }
 
     @Override
+    public String toString() {
+        String result = "JavaScriptStringToObjetMap[";
+        for (Entry<String, T> entry : entrySet) {
+            result += entry.getKey();
+            result += "=";
+            result += entry.getValue();
+            result += ";";
+        }
+        return result;
+    }
+
+    @Override
     public Collection<T> values() {
         return values;
     }

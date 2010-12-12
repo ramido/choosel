@@ -40,31 +40,35 @@ public final class JavaScriptStringSet implements Set<String> {
          * IMPLEMENTATION NOTE: although this internal map requires String keys,
          * we use objects to prevent unnecessary class casting. When profiling
          * in Chrome 8, casting turned out to be an expensive operation in GWT.
+         * 
+         * IMPLEMENTATION NOTE: we store the values in an internal object named
+         * values to avoid conflicts with objects added by GWT automatically in
+         * hosted mode on Chrome.
          */
 
         protected NativeStringSet() {
         }
 
         private native void add(Object key) /*-{
-            this[key] = key;
+            this.values[key] = key;
         }-*/;
 
         // @formatter:off
         public native void clear() /*-{
-            for (var key in this) {
-                delete this[key];
+            for (var key in this.values) {
+                delete this.values[key];
             }
         }-*/;
         // @formatter:on
 
         private native boolean contains(Object key) /*-{
-            return key in this;
+            return key in this.values;
         }-*/;
 
         // @formatter:off
         private native JsArrayString getAll() /*-{
             var result = [];
-            for (var key in this) {
+            for (var key in this.values) {
                 result.push(key);
             }
             return result;
@@ -72,7 +76,7 @@ public final class JavaScriptStringSet implements Set<String> {
         // @formatter:on 
 
         private native void remove(Object key) /*-{
-            delete this[key];
+            delete this.values[key];
         }-*/;
 
     }
@@ -87,6 +91,10 @@ public final class JavaScriptStringSet implements Set<String> {
 
     @Override
     public boolean add(String e) {
+        if (e == null) {
+            throw new NullPointerException();
+        }
+
         if (contains(e)) {
             return false;
         }
@@ -126,7 +134,9 @@ public final class JavaScriptStringSet implements Set<String> {
     }
 
     private native NativeStringSet createNativeStringSet() /*-{
-        return new Object();
+        var nativeSet = new Object();
+        nativeSet.values = new Object();
+        return nativeSet;
     }-*/;
 
     @Override
@@ -217,4 +227,15 @@ public final class JavaScriptStringSet implements Set<String> {
         return a;
     }
 
+    @Override
+    public String toString() {
+        String result = "JavaScriptStringSet[";
+        JsArrayString values = jsStringSet.getAll();
+        for (int i = 0; i < values.length(); i++) {
+            result += values.get(i);
+            result += " ; ";
+        }
+        result += "]";
+        return result;
+    }
 }

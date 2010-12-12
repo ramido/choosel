@@ -67,6 +67,13 @@ public interface GraphDisplay extends WidgetAdaptable {
 
     String NODE_FONT_WEIGHT_NORMAL = "normal";
 
+    /**
+     * Adds an arc to the graph display. The target and source nodes must
+     * already be contained in the graph display. An arc with the same id must
+     * not already exist.
+     */
+    // TODO throw exception when nodes not found
+    // TODO throw exception if arc exists already
     void addArc(Arc arc);
 
     <T extends EventHandler> HandlerRegistration addEventHandler(Type<T> type,
@@ -96,11 +103,11 @@ public interface GraphDisplay extends WidgetAdaptable {
 
     void removeNode(Node node);
 
-    void runLayout();
+    void runLayout() throws LayoutException;
 
-    void runLayout(String layout);
+    void runLayout(String layout) throws LayoutException;
 
-    void runLayoutOnNodes(Collection<Node> nodes);
+    void runLayoutOnNodes(Collection<Node> nodes) throws LayoutException;
 
     void setArcStyle(Arc arc, String styleProperty, String styleValue);
 

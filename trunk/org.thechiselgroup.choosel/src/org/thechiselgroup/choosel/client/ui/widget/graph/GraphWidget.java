@@ -27,6 +27,7 @@ import pl.rmalinowski.gwt2swf.client.ui.SWFWidget;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptException;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.shared.EventHandler;
@@ -322,6 +323,10 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
 
     @Override
     public void addArc(Arc arc) {
+        assert !arcsByID.containsKey(arc.getId()) : "arc must not be contained";
+        assert nodesByID.containsKey(arc.getSourceNodeId()) : "source node must be available";
+        assert nodesByID.containsKey(arc.getTargetNodeId()) : "target node must be available";
+
         arcsByID.put(arc.getId(), arc);
         _addArc(getSwfId(), arc.getId(), arc.getSourceNodeId(),
                 arc.getTargetNodeId(), arc.getType());
@@ -347,6 +352,8 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
 
     @Override
     public void addNode(Node node) {
+        assert !nodesByID.containsKey(node.getId()) : "node must not be contained";
+
         _addNode(getSwfId(), node.getId(), node.getType(), node.getLabel());
         nodesByID.put(node.getId(), node);
     }
@@ -548,23 +555,31 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
     }
 
     @Override
-    public void runLayout() {
+    public void runLayout() throws LayoutException {
         runLayout(DEFAULT_LAYOUT);
     }
 
     @Override
-    public void runLayout(String layout) {
-        _runLayout(getSwfId(), layout);
+    public void runLayout(String layout) throws LayoutException {
+        try {
+            _runLayout(getSwfId(), layout);
+        } catch (JavaScriptException ex) {
+            throw new LayoutException(layout, ex);
+        }
     }
 
     @Override
-    public void runLayoutOnNodes(Collection<Node> nodes) {
+    public void runLayoutOnNodes(Collection<Node> nodes) throws LayoutException {
         if (nodes.size() == 0) {
             return;
         }
 
-        _runLayout(getSwfId(), DEFAULT_LAYOUT,
-                ArrayUtils.toJsArray(toNodeIdArray(nodes)));
+        try {
+            _runLayout(getSwfId(), DEFAULT_LAYOUT,
+                    ArrayUtils.toJsArray(toNodeIdArray(nodes)));
+        } catch (JavaScriptException ex) {
+            throw new LayoutException(DEFAULT_LAYOUT, ex);
+        }
     }
 
     @Override
