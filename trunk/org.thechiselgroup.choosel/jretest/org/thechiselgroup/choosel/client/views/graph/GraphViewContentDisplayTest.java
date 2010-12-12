@@ -18,7 +18,6 @@ package org.thechiselgroup.choosel.client.views.graph;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -40,7 +39,6 @@ import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.command.UndoableCommand;
 import org.thechiselgroup.choosel.client.geometry.Point;
-import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceManager;
@@ -63,12 +61,10 @@ import org.thechiselgroup.choosel.client.views.DefaultResourceItem;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.Slot;
-import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
+import org.thechiselgroup.choosel.client.views.TestViewContentDisplayCallback;
 import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay.Display;
 
 public class GraphViewContentDisplayTest {
-
-    private ResourceSet allResources;
 
     @Mock
     private ArcStyleProvider arcStyleProvider;
@@ -76,8 +72,7 @@ public class GraphViewContentDisplayTest {
     @Mock
     private GraphNodeExpander automaticExpander;
 
-    @Mock
-    private ViewContentDisplayCallback callback;
+    private TestViewContentDisplayCallback callback;
 
     @Mock
     private CommandManager commandManager;
@@ -106,6 +101,9 @@ public class GraphViewContentDisplayTest {
 
     private Point targetLocation;
 
+    @Mock
+    private ArcType arcType;
+
     @Test
     public void addResourceItemsCallsArcTypeGetArcItems() {
         // define variables
@@ -113,7 +111,6 @@ public class GraphViewContentDisplayTest {
         String groupId2 = "2";
 
         // set up arc type provider
-        ArcType arcType = mock(ArcType.class);
         when(arcStyleProvider.getArcTypes()).thenReturn(
                 LightweightCollections.toCollection(arcType));
         when(arcType.getArcItems(any(ResourceItem.class))).thenReturn(
@@ -123,7 +120,7 @@ public class GraphViewContentDisplayTest {
         LightweightCollection<ResourceItem> resourceItems = createResourceItems(
                 toLabeledResourceSet(groupId1, createResource(1)),
                 toLabeledResourceSet(groupId2, createResource(2)));
-        when(callback.getResourceItems()).thenReturn(resourceItems);
+        callback.addResourceItems(resourceItems);
         underTest.update(resourceItems,
                 LightweightCollections.<ResourceItem> emptySet(),
                 LightweightCollections.<ResourceItem> emptySet(),
@@ -147,15 +144,14 @@ public class GraphViewContentDisplayTest {
         ResourceItem resourceItem2 = ResourcesTestHelper.createResourceItem(
                 "2", resourceSet2);
 
-        when(callback.getResourceItems()).thenReturn(
-                LightweightCollections.toCollection(resourceItem1,
-                        resourceItem2));
+        LightweightCollection<ResourceItem> resourceItems = LightweightCollections
+                .toCollection(resourceItem1, resourceItem2);
+        callback.addResourceItems(resourceItems);
 
-        underTest.update(LightweightCollections.toCollection(resourceItem1,
-                resourceItem2), LightweightCollections
-                .<ResourceItem> emptySet(), LightweightCollections
-                .<ResourceItem> emptySet(), LightweightCollections
-                .<Slot> emptySet());
+        underTest.update(resourceItems,
+                LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections.<Slot> emptySet());
 
         String arcId = underTest.getArcId("arcTypeX", resourceSet1
                 .getFirstResource().getUri(), resourceSet2.getFirstResource()
@@ -176,9 +172,7 @@ public class GraphViewContentDisplayTest {
 
         ResourceItem resourceItem = createResourceItem("1", resourceSet);
 
-        when(callback.getResourceItems()).thenReturn(
-                LightweightCollections.toCollection(resourceItem));
-
+        callback.addResourceItem(resourceItem);
         underTest.update(LightweightCollections.toCollection(resourceItem),
                 LightweightCollections.<ResourceItem> emptySet(),
                 LightweightCollections.<ResourceItem> emptySet(),
@@ -202,12 +196,9 @@ public class GraphViewContentDisplayTest {
                 toLabeledResourceSet(groupId1, createResource(1)),
                 toLabeledResourceSet(groupId2, createResource(2)));
 
-        // set up arc type provider
-        ArcType arcType = mock(ArcType.class);
+        // set up arc item response
         when(arcStyleProvider.getArcTypes()).thenReturn(
                 LightweightCollections.toCollection(arcType));
-
-        // set up arc item response
         ArcItem arcItem = new ArcItem(arcTypeValue, arcId, groupId1, groupId2,
                 arcColor, arcStyle);
         when(arcType.getArcItems(eq(resourceItems.get(0)))).thenReturn(
@@ -216,11 +207,64 @@ public class GraphViewContentDisplayTest {
                 LightweightCollections.<ArcItem> emptyCollection());
 
         // simulate add
-        // TODO introduce test callback class
-        when(callback.getResourceItems()).thenReturn(resourceItems);
-        when(callback.containsResourceItem("1")).thenReturn(true);
-        when(callback.containsResourceItem("2")).thenReturn(true);
+        callback.addResourceItems(resourceItems);
         underTest.update(resourceItems,
+                LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections.<Slot> emptySet());
+
+        // verify that arc was shown and settings were correctly made
+        ArgumentCaptor<Arc> captor = ArgumentCaptor.forClass(Arc.class);
+        verify(display, times(1)).addArc(captor.capture());
+        Arc result = captor.getValue();
+        assertEquals(arcId, result.getId());
+        assertEquals(groupId1, result.getSourceNodeId());
+        assertEquals(groupId2, result.getTargetNodeId());
+        assertEquals(arcTypeValue, result.getType());
+        verify(display, times(1)).setArcStyle(eq(result),
+                eq(GraphDisplay.ARC_COLOR), eq(arcColor));
+        verify(display, times(1)).setArcStyle(eq(result),
+                eq(GraphDisplay.ARC_STYLE), eq(arcStyle));
+    }
+
+    @Test
+    public void arcItemsGetsShownWhenRequiredResourceItemsAreAddedLater() {
+        // define values
+        String arcId = "arcid";
+        String arcStyle = GraphDisplay.ARC_STYLE_SOLID;
+        String arcColor = "#ffffff";
+        String arcTypeValue = "arcType";
+        String groupId1 = "1";
+        String groupId2 = "2";
+
+        ResourceItem resourceItem1 = createResourceItem(groupId1,
+                createResources(1));
+        ResourceItem resourceItem2 = createResourceItem(groupId2,
+                createResources(2));
+
+        // set up arc item response
+        when(arcStyleProvider.getArcTypes()).thenReturn(
+                LightweightCollections.toCollection(arcType));
+        ArcItem arcItem = new ArcItem(arcTypeValue, arcId, groupId1, groupId2,
+                arcColor, arcStyle);
+        when(arcType.getArcItems(eq(resourceItem1))).thenReturn(
+                LightweightCollections.toCollection(arcItem));
+        when(arcType.getArcItems(eq(resourceItem2))).thenReturn(
+                LightweightCollections.<ArcItem> emptyCollection());
+
+        // simulate add - arc item gets created but not shown
+        callback.addResourceItem(resourceItem1);
+        underTest.update(LightweightCollections.toCollection(resourceItem1),
+                LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections.<Slot> emptySet());
+
+        // verify not shown
+        verify(display, times(0)).addArc(any(Arc.class));
+
+        // 2nd add - arc item should get shown
+        callback.addResourceItem(resourceItem2);
+        underTest.update(LightweightCollections.toCollection(resourceItem2),
                 LightweightCollections.<ResourceItem> emptySet(),
                 LightweightCollections.<ResourceItem> emptySet(),
                 LightweightCollections.<Slot> emptySet());
@@ -284,11 +328,6 @@ public class GraphViewContentDisplayTest {
         String groupId1 = "1";
         String groupId2 = "2";
 
-        // set up arc type provider
-        ArcType arcType = mock(ArcType.class);
-        when(arcStyleProvider.getArcTypes()).thenReturn(
-                LightweightCollections.toCollection(arcType));
-
         // set up arc item response
         ArcItem arcItem1 = new ArcItem(arcTypeValue, arcId1, groupId1,
                 groupId2, arcColor, arcStyle);
@@ -318,15 +357,14 @@ public class GraphViewContentDisplayTest {
         ResourceItem resourceItem2 = ResourcesTestHelper.createResourceItem(
                 "2", createResources(2));
 
-        when(callback.getResourceItems()).thenReturn(
-                LightweightCollections.toCollection(resourceItem1,
-                        resourceItem2));
+        LightweightCollection<ResourceItem> resourceItems = LightweightCollections
+                .toCollection(resourceItem1, resourceItem2);
 
-        underTest.update(LightweightCollections.toCollection(resourceItem1,
-                resourceItem2), LightweightCollections
-                .<ResourceItem> emptySet(), LightweightCollections
-                .<ResourceItem> emptySet(), LightweightCollections
-                .<Slot> emptySet());
+        callback.addResourceItems(resourceItems);
+        underTest.update(resourceItems,
+                LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections.<Slot> emptySet());
 
         Node node1 = ((GraphItem) resourceItem1.getDisplayObject()).getNode();
         Node node2 = ((GraphItem) resourceItem2.getDisplayObject()).getNode();
@@ -342,9 +380,7 @@ public class GraphViewContentDisplayTest {
         ResourceItem resourceItem = ResourcesTestHelper.createResourceItem("1",
                 toResourceSet(concept1));
 
-        when(callback.getResourceItems()).thenReturn(
-                LightweightCollections.toCollection(resourceItem));
-
+        callback.addResourceItem(resourceItem);
         underTest.update(LightweightCollections.toCollection(resourceItem),
                 LightweightCollections.<ResourceItem> emptySet(),
                 LightweightCollections.<ResourceItem> emptySet(),
@@ -367,9 +403,7 @@ public class GraphViewContentDisplayTest {
         ResourceItem resourceItem = ResourcesTestHelper.createResourceItem("1",
                 resourceSet);
 
-        when(callback.getResourceItems()).thenReturn(
-                LightweightCollections.toCollection(resourceItem));
-
+        callback.addResourceItem(resourceItem);
         underTest.update(LightweightCollections.toCollection(resourceItem),
                 LightweightCollections.<ResourceItem> emptyCollection(),
                 LightweightCollections.<ResourceItem> emptyCollection(),
@@ -398,15 +432,14 @@ public class GraphViewContentDisplayTest {
         ResourceItem resourceItem2 = ResourcesTestHelper.createResourceItem(
                 groupId2, resourceSet2);
 
-        when(callback.getResourceItems()).thenReturn(
-                LightweightCollections.toCollection(resourceItem1,
-                        resourceItem2));
+        LightweightCollection<ResourceItem> resourceItems = LightweightCollections
+                .toCollection(resourceItem1, resourceItem2);
 
-        underTest.update(LightweightCollections.toCollection(resourceItem1,
-                resourceItem2), LightweightCollections
-                .<ResourceItem> emptyCollection(), LightweightCollections
-                .<ResourceItem> emptyCollection(), LightweightCollections
-                .<Slot> emptyCollection());
+        callback.addResourceItems(resourceItems);
+        underTest.update(resourceItems,
+                LightweightCollections.<ResourceItem> emptyCollection(),
+                LightweightCollections.<ResourceItem> emptyCollection(),
+                LightweightCollections.<Slot> emptyCollection());
 
         underTest.showArc("arcType", groupId1, groupId2);
 
@@ -434,15 +467,15 @@ public class GraphViewContentDisplayTest {
         ResourceItem resourceItem2 = ResourcesTestHelper.createResourceItem(
                 groupId2, resourceSet2);
 
-        when(callback.getResourceItems()).thenReturn(
-                LightweightCollections.toCollection(resourceItem1,
-                        resourceItem2));
+        LightweightCollection<ResourceItem> resourceItems = LightweightCollections
+                .toCollection(resourceItem1, resourceItem2);
 
-        underTest.update(LightweightCollections.toCollection(resourceItem1,
-                resourceItem2), LightweightCollections
-                .<ResourceItem> emptyCollection(), LightweightCollections
-                .<ResourceItem> emptyCollection(), LightweightCollections
-                .<Slot> emptyCollection());
+        callback.addResourceItems(resourceItems);
+
+        underTest.update(resourceItems,
+                LightweightCollections.<ResourceItem> emptyCollection(),
+                LightweightCollections.<ResourceItem> emptyCollection(),
+                LightweightCollections.<Slot> emptyCollection());
 
         underTest.showArc("arcType", groupId1, groupId2);
 
@@ -462,10 +495,10 @@ public class GraphViewContentDisplayTest {
         MockitoGWTBridge.setUp();
         MockitoAnnotations.initMocks(this);
 
+        callback = spy(new TestViewContentDisplayCallback());
+
         sourceLocation = new Point(10, 15);
         targetLocation = new Point(20, 25);
-
-        allResources = new DefaultResourceSet();
 
         underTest = spy(new GraphViewContentDisplay(display, commandManager,
                 resourceManager, dragEnablerFactory, resourceCategorizer,
