@@ -555,26 +555,29 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
             LightweightCollection<ResourceItem> removedResourceItems,
             LightweightCollection<Slot> changedSlots) {
 
+        LightweightCollection<ArcType> arcTypes = arcStyleProvider
+                .getArcTypes();
+
         for (ResourceItem addedItem : addedResourceItems) {
             createGraphNodeItem(addedItem);
             updateNode(addedItem);
-        }
 
-        LightweightCollection<ArcType> arcTypes = arcStyleProvider
-                .getArcTypes();
-        for (ArcType arcType : arcTypes) {
-            LightweightCollection<ArcItem> arcItems = arcType
-                    .getArcItems(addedResourceItems);
-            // TODO move
-            for (ArcItem arcItem : arcItems) {
-                // TODO also check for target...
-                String sourceGroupId = arcItem.getSourceNodeItemId();
-                String targetGroupId = arcItem.getTargetNodeItemId();
-                if (getCallback().containsResourceItem(sourceGroupId)
-                        && getCallback().containsResourceItem(targetGroupId)) {
-                    showArc(arcItem.getId(), arcItem.getSourceNodeItemId(),
-                            arcItem.getTargetNodeItemId(), arcItem.getType(),
-                            arcItem.getColor(), arcItem.getStyle());
+            for (ArcType arcType : arcTypes) {
+                LightweightCollection<ArcItem> arcItems = arcType
+                        .getArcItems(addedItem);
+                // TODO move
+                for (ArcItem arcItem : arcItems) {
+                    // TODO also check for target...
+                    String sourceGroupId = arcItem.getSourceNodeItemId();
+                    String targetGroupId = arcItem.getTargetNodeItemId();
+                    if (getCallback().containsResourceItem(sourceGroupId)
+                            && getCallback()
+                                    .containsResourceItem(targetGroupId)) {
+                        showArc(arcItem.getId(), arcItem.getSourceNodeItemId(),
+                                arcItem.getTargetNodeItemId(),
+                                arcItem.getType(), arcItem.getColor(),
+                                arcItem.getStyle());
+                    }
                 }
             }
         }
