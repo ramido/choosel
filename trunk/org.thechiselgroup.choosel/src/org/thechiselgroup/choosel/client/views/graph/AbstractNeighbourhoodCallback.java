@@ -16,7 +16,6 @@
 package org.thechiselgroup.choosel.client.views.graph;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.thechiselgroup.choosel.client.error_handling.ErrorHandler;
@@ -76,22 +75,6 @@ public abstract class AbstractNeighbourhoodCallback extends
     protected Node getNode(Resource resource) {
         assert resource != null;
         return graph.getNode(resource.getUri());
-    }
-
-    private void updateUriLists(String property,
-            List<Relationship> relationships) {
-
-        // FIXME use events on resource instead of hard-coded link?
-        for (Relationship relationship : relationships) {
-            relationship.getSource().getUriListValue(property)
-                    .add(relationship.getTarget().getUri());
-        }
-    }
-
-    protected void updateUriLists(String property,
-            List<Relationship> relationships, Resource inputResource) {
-        updateUriLists(property, relationships);
-        inputResource.getUriListValue(property).setLoaded(true);
     }
 
 }
