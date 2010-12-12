@@ -107,12 +107,9 @@ public class GraphViewContentDisplayTest {
 
     @Test
     public void addResourceItemsCallsArcTypeGetArcItems() {
-        // create the resource items
+        // define variables
         String groupId1 = "1";
         String groupId2 = "2";
-        LightweightCollection<ResourceItem> resourceItems = createResourceItems(
-                toLabeledResourceSet(groupId1, createResource(1)),
-                toLabeledResourceSet(groupId2, createResource(2)));
 
         // set up arc type provider
         ArcType arcType = mock(ArcType.class);
@@ -122,6 +119,9 @@ public class GraphViewContentDisplayTest {
                 LightweightCollections.<ArcItem> emptyCollection());
 
         // simulate add
+        LightweightCollection<ResourceItem> resourceItems = createResourceItems(
+                toLabeledResourceSet(groupId1, createResource(1)),
+                toLabeledResourceSet(groupId2, createResource(2)));
         when(callback.getResourceItems()).thenReturn(resourceItems);
         underTest.update(resourceItems,
                 LightweightCollections.<ResourceItem> emptySet(),
@@ -189,19 +189,14 @@ public class GraphViewContentDisplayTest {
     }
 
     @Test
-    public void arcItemGetsShownWhenAddingResources() {
+    public void arcItemGetsShownWhenAddingResourceItems() {
         // define values
         String arcId = "arcid";
         String arcStyle = GraphDisplay.ARC_STYLE_SOLID;
         String arcColor = "#ffffff";
         String arcTypeValue = "arcType";
-
-        // create the resource items
         String groupId1 = "1";
         String groupId2 = "2";
-        LightweightCollection<ResourceItem> resourceItems = createResourceItems(
-                toLabeledResourceSet(groupId1, createResource(1)),
-                toLabeledResourceSet(groupId2, createResource(2)));
 
         // set up arc type provider
         ArcType arcType = mock(ArcType.class);
@@ -217,7 +212,13 @@ public class GraphViewContentDisplayTest {
                 LightweightCollections.toCollection(arcItem));
 
         // simulate add
+        LightweightCollection<ResourceItem> resourceItems = createResourceItems(
+                toLabeledResourceSet(groupId1, createResource(1)),
+                toLabeledResourceSet(groupId2, createResource(2)));
+        // TODO introduce test callback class
         when(callback.getResourceItems()).thenReturn(resourceItems);
+        when(callback.containsResourceItem("1")).thenReturn(true);
+        when(callback.containsResourceItem("2")).thenReturn(true);
         underTest.update(resourceItems,
                 LightweightCollections.<ResourceItem> emptySet(),
                 LightweightCollections.<ResourceItem> emptySet(),
@@ -269,6 +270,46 @@ public class GraphViewContentDisplayTest {
         assertEquals(sourceLocation, command2.getSourceLocation());
         assertEquals(targetLocation, command2.getTargetLocation());
         assertEquals(display, command2.getGraphDisplay());
+    }
+
+    @Test
+    public void doNotShowArcItemForUnknownResourceItems() {
+        // define values
+        String arcId1 = "arcid1";
+        String arcId2 = "arcid2";
+        String arcStyle = GraphDisplay.ARC_STYLE_SOLID;
+        String arcColor = "#ffffff";
+        String arcTypeValue = "arcType";
+        String groupId1 = "1";
+        String groupId2 = "2";
+
+        // set up arc type provider
+        ArcType arcType = mock(ArcType.class);
+        when(arcStyleProvider.getArcTypes()).thenReturn(
+                LightweightCollections.toCollection(arcType));
+        when(arcType.getArcItems(any(LightweightCollection.class))).thenReturn(
+                LightweightCollections.<ArcItem> emptyCollection());
+
+        // set up arc item response
+        ArcItem arcItem1 = new ArcItem(arcTypeValue, arcId1, groupId1,
+                groupId2, arcColor, arcStyle);
+        ArcItem arcItem2 = new ArcItem(arcTypeValue, arcId2, groupId2,
+                groupId1, arcColor, arcStyle);
+        when(arcType.getArcItems(any(LightweightCollection.class))).thenReturn(
+                LightweightCollections.toCollection(arcItem1, arcItem2));
+
+        // simulate add
+        LightweightCollection<ResourceItem> resourceItems = createResourceItems(toLabeledResourceSet(
+                groupId1, createResource(1)));
+        when(callback.getResourceItems()).thenReturn(resourceItems);
+        when(callback.containsResourceItem(groupId1)).thenReturn(true);
+        underTest.update(resourceItems,
+                LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections.<Slot> emptySet());
+
+        // verify that no arc was created
+        verify(display, times(0)).addArc(any(Arc.class));
     }
 
     @Test
@@ -426,8 +467,6 @@ public class GraphViewContentDisplayTest {
         targetLocation = new Point(20, 25);
 
         allResources = new DefaultResourceSet();
-
-        when(callback.getAllResources()).thenReturn(allResources);
 
         underTest = spy(new GraphViewContentDisplay(display, commandManager,
                 resourceManager, dragEnablerFactory, resourceCategorizer,

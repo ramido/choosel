@@ -567,9 +567,15 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
                     .getArcItems(addedResourceItems);
             // TODO move
             for (ArcItem arcItem : arcItems) {
-                showArc(arcItem.getId(), arcItem.getSourceNodeItemId(),
-                        arcItem.getTargetNodeItemId(), arcItem.getType(),
-                        arcItem.getColor(), arcItem.getStyle());
+                // TODO also check for target...
+                String sourceGroupId = arcItem.getSourceNodeItemId();
+                String targetGroupId = arcItem.getTargetNodeItemId();
+                if (getCallback().containsResourceItem(sourceGroupId)
+                        && getCallback().containsResourceItem(targetGroupId)) {
+                    showArc(arcItem.getId(), arcItem.getSourceNodeItemId(),
+                            arcItem.getTargetNodeItemId(), arcItem.getType(),
+                            arcItem.getColor(), arcItem.getStyle());
+                }
             }
         }
 
