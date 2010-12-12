@@ -527,33 +527,20 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         return state;
     }
 
-    @Override
-    public void showArc(String arcType, String sourceId, String targetId) {
-        assert arcType != null;
-        assert sourceId != null;
-        assert targetId != null;
-
-        String arcId = getArcId(arcType, sourceId, targetId);
-        String arcColor = arcStyleProvider.getArcColor(arcType);
-        String arcStyle = arcStyleProvider.getArcStyle(arcType);
-
-        showArc(arcId, sourceId, targetId, arcType, arcColor, arcStyle);
-    }
-
-    private void showArc(String arcId, String sourceId, String targetId,
-            String arcType, String arcColor, String arcStyle) {
-
-        if (display.containsArc(arcId)) {
+    // TODO encapsulate into arc item
+    private void showArc(ArcItem arcItem) {
+        if (display.containsArc(arcItem.getId())) {
             return;
         }
 
-        Arc arc = new Arc(arcId, sourceId, targetId, arcType);
+        Arc arc = new Arc(arcItem.getId(), arcItem.getSourceNodeItemId(),
+                arcItem.getTargetNodeItemId(), arcItem.getType());
 
         display.addArc(arc);
         arcList.add(arc);
 
-        display.setArcStyle(arc, GraphDisplay.ARC_COLOR, arcColor);
-        display.setArcStyle(arc, GraphDisplay.ARC_STYLE, arcStyle);
+        display.setArcStyle(arc, GraphDisplay.ARC_COLOR, arcItem.getColor());
+        display.setArcStyle(arc, GraphDisplay.ARC_STYLE, arcItem.getStyle());
     }
 
     @Override
@@ -585,9 +572,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
             String targetGroupId = arcItem.getTargetNodeItemId();
             if (getCallback().containsResourceItem(sourceGroupId)
                     && getCallback().containsResourceItem(targetGroupId)) {
-                showArc(arcItem.getId(), arcItem.getSourceNodeItemId(),
-                        arcItem.getTargetNodeItemId(), arcItem.getType(),
-                        arcItem.getColor(), arcItem.getStyle());
+                showArc(arcItem);
                 it.remove();
             }
         }

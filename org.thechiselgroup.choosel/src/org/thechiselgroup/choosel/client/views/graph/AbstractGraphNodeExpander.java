@@ -76,17 +76,4 @@ public abstract class AbstractGraphNodeExpander implements GraphNodeExpander {
         return resourceUrisToAdd;
     }
 
-    protected void showArcs(Resource resource,
-            GraphNodeExpansionCallback expansionCallback, String property,
-            String arcType, boolean inverted) {
-
-        for (String uri : resource.getUriListValue(property)) {
-            if (inverted) {
-                expansionCallback.showArc(arcType, uri, resource.getUri());
-            } else {
-                expansionCallback.showArc(arcType, resource.getUri(), uri);
-            }
-        }
-    }
-
 }

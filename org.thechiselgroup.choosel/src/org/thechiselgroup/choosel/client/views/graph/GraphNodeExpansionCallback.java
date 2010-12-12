@@ -30,8 +30,6 @@ public interface GraphNodeExpansionCallback extends ResourceCategorizer {
 
     ResourceSet getAllResources();
 
-    // String getArcId(String arcType, String sourceId, String targetId);
-
     GraphDisplay getDisplay();
 
     Resource getResourceByUri(String value);
@@ -39,11 +37,5 @@ public interface GraphNodeExpansionCallback extends ResourceCategorizer {
     ResourceManager getResourceManager();
 
     boolean isRestoring();
-
-    /**
-     * Displays the specified arc. If the arc is already displayed, nothing
-     * changes. If the arc is not visible yet, it is created.
-     */
-    void showArc(String arcType, String sourceId, String targetId);
 
 }
