@@ -129,7 +129,6 @@ public class TextViewContentDisplayTest {
 
         when(textItemContainer.createTextItemLabel(any(ResourceItem.class)))
                 .thenReturn(itemLabel);
-        when(callback.getAllResources()).thenReturn(allResources);
 
         underTest = new TextViewContentDisplay(textItemContainer);
 
