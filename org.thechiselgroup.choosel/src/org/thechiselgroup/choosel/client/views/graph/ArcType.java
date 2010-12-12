@@ -19,26 +19,25 @@ import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 
 /**
- * Creates arc items for graph items.
+ * Calculates arc items for a given resource item.
  * 
  * @author Lars Grammel
  */
 public interface ArcType {
 
     /**
-     * Returns the arc items representing arcs that should be connected to the
-     * node items for the given resource items.
+     * Returns the arc items representing arcs that are related to a given
+     * resource item.
      * 
-     * @param resourceItems
-     *            resource items for which corresponding arc items should be
+     * @param resourceItem
+     *            resource item for which corresponding arc items should be
      *            returned
      * @return arc items that connected to the node representation of the
-     *         resource items. The arc items do not have to be the same (in
-     *         terms of object references) as already returned arc items for the
-     *         same resource items. However, their ids should match: an equal
-     *         arc item should have an equal id accross multiple calls.
+     *         resource item. The arc items do not have to be the same (in terms
+     *         of object references) as already returned arc items for the same
+     *         resource item. However, their IDs should match: an equal arc item
+     *         should have an equal id across multiple calls.
      */
-    LightweightCollection<ArcItem> getArcItems(
-            LightweightCollection<ResourceItem> resourceItems);
+    LightweightCollection<ArcItem> getArcItems(ResourceItem resourceItem);
 
 }

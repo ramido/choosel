@@ -23,7 +23,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.thechiselgroup.choosel.client.test.AdvancedAsserts.assertContentEquals;
-import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.*;
+import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
 
 import java.util.Collections;
 import java.util.Set;
@@ -75,7 +75,7 @@ public final class ResourcesTestHelper {
      * Creates list of resource items with using the label of the resource sets
      * as group ids.
      */
-    public static LightweightCollection<ResourceItem> createResourceItems(
+    public static LightweightList<ResourceItem> createResourceItems(
             ResourceSet... resourceSets) {
 
         LightweightList<ResourceItem> resourceItems = CollectionFactory
