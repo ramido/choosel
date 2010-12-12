@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.util;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -100,13 +101,14 @@ public class FlashURLFetchService extends SWFWidget implements URLFetchService {
     }
 
     private void callback(String content, String url, String error) {
+        assert requests.containsKey(url) : "no callback for URL " + url
+                + " registered";
         List<AsyncCallback<String>> callbacks = requests.remove(url);
-
-        assert callbacks != null;
 
         if (error != null) {
             for (AsyncCallback<String> callback : callbacks) {
-                callback.onFailure(new Exception(error));
+                callback.onFailure(new IOException("Could not retrieve URL "
+                        + url + " (" + error + ")"));
             }
         } else {
             for (AsyncCallback<String> callback : callbacks) {

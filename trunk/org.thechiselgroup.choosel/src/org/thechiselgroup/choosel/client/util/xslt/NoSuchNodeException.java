@@ -13,16 +13,29 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.util;
+package org.thechiselgroup.choosel.client.util.xslt;
 
-import org.thechiselgroup.choosel.client.util.xslt.NoSuchNodeException;
+public class NoSuchNodeException extends Exception {
 
-public interface DocumentProcessor {
+    private static final long serialVersionUID = 1L;
 
-    Object[] getNodes(Object node, String xpath);
+    private String xpath;
 
-    String getText(Object node, String xpath) throws NoSuchNodeException;
+    private Object node;
 
-    Object parseDocument(String xmlText) throws Exception;
+    public NoSuchNodeException(Object node, String xpath) {
+        super("No node with xpath '" + xpath + "' on " + node.toString());
+
+        this.xpath = xpath;
+        this.node = node;
+    }
+
+    public Object getNode() {
+        return node;
+    }
+
+    public String getXpath() {
+        return xpath;
+    }
 
 }
