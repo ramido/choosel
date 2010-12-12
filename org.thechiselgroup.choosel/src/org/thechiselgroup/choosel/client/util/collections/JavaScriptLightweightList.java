@@ -67,11 +67,15 @@ public final class JavaScriptLightweightList<T> implements LightweightList<T> {
 
     @Override
     public void add(T t) {
+        assert t != null;
+
         this.jsList.add(t);
     }
 
     @Override
     public void addAll(Iterable<? extends T> collection) {
+        assert collection != null;
+
         for (T t : collection) {
             add(t);
         }
@@ -79,6 +83,8 @@ public final class JavaScriptLightweightList<T> implements LightweightList<T> {
 
     @Override
     public void addAll(T[] array) {
+        assert array != null;
+
         for (T t : array) {
             add(t);
         }

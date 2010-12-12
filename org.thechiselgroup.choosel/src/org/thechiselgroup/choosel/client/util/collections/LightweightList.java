@@ -17,7 +17,7 @@ package org.thechiselgroup.choosel.client.util.collections;
 
 /**
  * Minimalistic list for intermediary data processing. A JavaScript
- * implementation is available.
+ * implementation is available. <code>Null</code> values are not supported.
  * 
  * @author Lars Grammel
  */
@@ -25,16 +25,21 @@ public interface LightweightList<T> extends LightweightCollection<T> {
 
     /**
      * Adds an element to this list.
+     * 
+     * @param t
+     *            Element. Must not be null.
      */
     void add(T t);
 
     /**
-     * Adds all elements in <code>collection</code> to this list.
+     * Adds all elements in <code>collection</code> to this list. There must not
+     * be any null elements.
      */
     void addAll(Iterable<? extends T> collection);
 
     /**
-     * Adds all elements in <code>array</code> to this list.
+     * Adds all elements in <code>array</code> to this list. There must not be
+     * any null elements.
      */
     void addAll(T[] array);
 
