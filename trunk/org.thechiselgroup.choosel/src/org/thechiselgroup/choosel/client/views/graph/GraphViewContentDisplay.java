@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.client.views.graph;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -221,6 +222,12 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
     public static final Slot NODE_LABEL_SLOT = new Slot("nodeLabel",
             "Node Label", DataType.TEXT);
+
+    /**
+     * <b>IMPLEMENTATION NOTE</b>: lots of items are added & removed so we use a
+     * linked list.
+     */
+    private List<ArcItem> arcItems = new LinkedList<ArcItem>();
 
     @Inject
     public GraphViewContentDisplay(Display display,
@@ -563,22 +570,25 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
             updateNode(addedItem);
 
             for (ArcType arcType : arcTypes) {
-                LightweightCollection<ArcItem> arcItems = arcType
-                        .getArcItems(addedItem);
-                // TODO move
-                for (ArcItem arcItem : arcItems) {
-                    // TODO also check for target...
-                    String sourceGroupId = arcItem.getSourceNodeItemId();
-                    String targetGroupId = arcItem.getTargetNodeItemId();
-                    if (getCallback().containsResourceItem(sourceGroupId)
-                            && getCallback()
-                                    .containsResourceItem(targetGroupId)) {
-                        showArc(arcItem.getId(), arcItem.getSourceNodeItemId(),
-                                arcItem.getTargetNodeItemId(),
-                                arcItem.getType(), arcItem.getColor(),
-                                arcItem.getStyle());
-                    }
+                for (ArcItem arcItem : arcType.getArcItems(addedItem)) {
+                    arcItems.add(arcItem);
                 }
+            }
+        }
+
+        // TODO go through arcs to show
+        for (Iterator<ArcItem> it = arcItems.iterator(); it.hasNext();) {
+            ArcItem arcItem = it.next();
+
+            // TODO also check for target...
+            String sourceGroupId = arcItem.getSourceNodeItemId();
+            String targetGroupId = arcItem.getTargetNodeItemId();
+            if (getCallback().containsResourceItem(sourceGroupId)
+                    && getCallback().containsResourceItem(targetGroupId)) {
+                showArc(arcItem.getId(), arcItem.getSourceNodeItemId(),
+                        arcItem.getTargetNodeItemId(), arcItem.getType(),
+                        arcItem.getColor(), arcItem.getStyle());
+                it.remove();
             }
         }
 
