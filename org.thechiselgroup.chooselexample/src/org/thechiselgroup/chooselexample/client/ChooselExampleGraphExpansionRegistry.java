@@ -24,7 +24,6 @@ public class ChooselExampleGraphExpansionRegistry extends
 
     @Inject
     public ChooselExampleGraphExpansionRegistry() {
-        putAutomaticExpander("graphtest", new AutomaticGraphTestExpander());
         putNodeMenuEntry("graphtest", "Graph Test Items",
                 new GraphTestGraphTestGraphNodeExpander());
     }

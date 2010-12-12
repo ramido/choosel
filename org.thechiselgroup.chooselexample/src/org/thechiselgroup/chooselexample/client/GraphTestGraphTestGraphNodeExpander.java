@@ -33,10 +33,6 @@ public class GraphTestGraphTestGraphNodeExpander extends
 
         addResources(expansionCallback, calculateUrisToAdd(resource, "parent"),
                 resource);
-
-        showArcs(resource, expansionCallback, "parent",
-                "graph_test_relationship", true);
-
     }
 
 }
