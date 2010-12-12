@@ -128,6 +128,10 @@ public class ChooselClientModule extends AbstractGinModule implements
                 Singleton.class);
     }
 
+    private void bindBranding() {
+        bind(Branding.class).to(getBrandingClass()).in(Singleton.class);
+    }
+
     protected void bindCustomServices() {
     }
 
@@ -272,6 +276,7 @@ public class ChooselClientModule extends AbstractGinModule implements
                 getContentProducerProviderClass()).in(Singleton.class);
         bind(WindowContentProducer.class).annotatedWith(Names.named(PROXY))
                 .to(ProxyWindowContentFactory.class).in(Singleton.class);
+
         bind(ViewSaveManager.class).to(DefaultViewSaveManager.class).in(
                 Singleton.class);
         bind(ViewSaver.class).to(DefaultViewSaver.class).in(Singleton.class);
@@ -336,10 +341,8 @@ public class ChooselClientModule extends AbstractGinModule implements
         bind(URLFetchService.class).to(FlashURLFetchService.class).in(
                 Singleton.class);
 
-        bind(Branding.class).to(getBrandingClass()).in(Singleton.class);
-
+        bindBranding();
         bindCustomServices();
-
         bindApplication();
     }
 
