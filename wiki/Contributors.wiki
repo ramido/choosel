@@ -12,8 +12,8 @@
 
 *Patrick Gorman*: Performance testing, diverse code contributions
 
+*Chris Callendar*: Adaptations to underlying Flex Graph Widget
 
 *Del Myers*: Code modifications to facilitate application development
-
 
 *Chris Bennett*: User documentation
