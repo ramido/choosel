@@ -501,4 +501,55 @@ public class GraphViewContentDisplayTest {
         MockitoGWTBridge.tearDown();
     }
 
+    @Test
+    public void updateArcsForResourceItems() {
+        // define values
+        String arcId = "arcid";
+        String arcStyle = GraphDisplay.ARC_STYLE_SOLID;
+        String arcColor = "#ffffff";
+        String arcTypeValue = "arcType";
+        boolean arcDirected = true;
+        String groupId1 = "1";
+        String groupId2 = "2";
+        LightweightList<ResourceItem> resourceItems = createResourceItems(
+                toLabeledResourceSet(groupId1, createResource(1)),
+                toLabeledResourceSet(groupId2, createResource(2)));
+
+        // set up 1st arc item response - return nothing
+        when(arcStyleProvider.getArcTypes()).thenReturn(
+                LightweightCollections.toCollection(arcType));
+        when(arcType.getArcItems(any(ResourceItem.class))).thenReturn(
+                LightweightCollections.<ArcItem> emptyCollection());
+
+        // simulate add
+        callback.addResourceItems(resourceItems);
+        underTest.update(resourceItems,
+                LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections.<Slot> emptySet());
+
+        // arc item response changed when called 2nd time
+        ArcItem arcItem = new ArcItem(arcTypeValue, arcId, groupId1, groupId2,
+                arcColor, arcStyle, arcDirected);
+        when(arcType.getArcItems(eq(resourceItems.get(0)))).thenReturn(
+                LightweightCollections.toCollection(arcItem));
+
+        // call update resource item
+        underTest.updateArcsForResourceItems(resourceItems);
+
+        // verify that arc was shown and settings were correctly made
+        ArgumentCaptor<Arc> captor = ArgumentCaptor.forClass(Arc.class);
+        verify(display, times(1)).addArc(captor.capture());
+        Arc result = captor.getValue();
+        assertEquals(arcId, result.getId());
+        assertEquals(groupId1, result.getSourceNodeId());
+        assertEquals(groupId2, result.getTargetNodeId());
+        assertEquals(arcTypeValue, result.getType());
+        verify(display, times(1)).setArcStyle(eq(result),
+                eq(GraphDisplay.ARC_COLOR), eq(arcColor));
+        verify(display, times(1)).setArcStyle(eq(result),
+                eq(GraphDisplay.ARC_STYLE), eq(arcStyle));
+
+    }
+
 }

@@ -16,13 +16,16 @@
 package org.thechiselgroup.choosel.client.views.graph;
 
 import org.thechiselgroup.choosel.client.resources.Resource;
-import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceManager;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.client.views.ResourceItem;
 
+// TODO better separation of concern - introduce factories for the expanders
 // TODO use resource items instead of single resources
-public interface GraphNodeExpansionCallback extends ResourceCategorizer {
+// TODO split up interface
+public interface GraphNodeExpansionCallback {
 
     void addAutomaticResource(Resource resource);
 
@@ -30,12 +33,20 @@ public interface GraphNodeExpansionCallback extends ResourceCategorizer {
 
     ResourceSet getAllResources();
 
+    String getCategory(Resource resource);
+
     GraphDisplay getDisplay();
 
     Resource getResourceByUri(String value);
 
+    LightweightCollection<ResourceItem> getResourceItems(
+            Iterable<Resource> resources);
+
     ResourceManager getResourceManager();
 
     boolean isRestoring();
+
+    void updateArcsForResourceItems(
+            LightweightCollection<ResourceItem> resourceItems);
 
 }
