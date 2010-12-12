@@ -17,8 +17,8 @@ package org.thechiselgroup.choosel.client.ui.widget.graph;
 
 import com.google.gwt.event.shared.EventHandler;
 
-public interface GraphWidgetReadyHandler extends EventHandler {
+public interface GraphDisplayLoadingFailureEventHandler extends EventHandler {
 
-    void onWidgetReady(GraphWidgetReadyEvent event);
+    void onLoadingFailure(GraphDisplayLoadingFailureEvent event);
 
 }

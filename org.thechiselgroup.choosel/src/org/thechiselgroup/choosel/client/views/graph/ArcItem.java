@@ -29,6 +29,8 @@ public class ArcItem {
 
     private String color;
 
+    private boolean directed;
+
     /**
      * One of the valid arc styles (ARC_STYLE_DASHED or ARC_STYLE_SOLID).
      * 
@@ -38,7 +40,8 @@ public class ArcItem {
     private String style;
 
     public ArcItem(String type, String id, String sourceNodeItemId,
-            String targetNodeItemId, String color, String style) {
+            String targetNodeItemId, String color, String style,
+            boolean directed) {
 
         this.type = type;
         this.id = id;
@@ -46,6 +49,7 @@ public class ArcItem {
         this.targetNodeItemId = targetNodeItemId;
         this.color = color;
         this.style = style;
+        this.directed = directed;
     }
 
     @Override
@@ -65,6 +69,9 @@ public class ArcItem {
                 return false;
             }
         } else if (!color.equals(other.color)) {
+            return false;
+        }
+        if (directed != other.directed) {
             return false;
         }
         if (id == null) {
@@ -134,6 +141,7 @@ public class ArcItem {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((color == null) ? 0 : color.hashCode());
+        result = prime * result + (directed ? 1231 : 1237);
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime
                 * result
@@ -146,11 +154,16 @@ public class ArcItem {
         return result;
     }
 
+    public boolean isDirected() {
+        return directed;
+    }
+
     @Override
     public String toString() {
         return "ArcItem [type=" + type + ", id=" + id + ", sourceNodeItemId="
                 + sourceNodeItemId + ", targetNodeItemId=" + targetNodeItemId
-                + ", color=" + color + ", style=" + style + "]";
+                + ", color=" + color + ", directed=" + directed + ", style="
+                + style + "]";
     }
 
 }

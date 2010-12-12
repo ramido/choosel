@@ -17,29 +17,30 @@ package org.thechiselgroup.choosel.client.ui.widget.graph;
 
 import com.google.gwt.event.shared.GwtEvent;
 
-public class GraphWidgetReadyEvent extends GwtEvent<GraphWidgetReadyHandler> {
+public class GraphDisplayReadyEvent extends
+        GwtEvent<GraphDisplayReadyEventHandler> {
 
-    public static final Type<GraphWidgetReadyHandler> TYPE = new Type<GraphWidgetReadyHandler>();
+    public static final Type<GraphDisplayReadyEventHandler> TYPE = new Type<GraphDisplayReadyEventHandler>();
 
-    private GraphWidget graphWidget;
+    private GraphDisplay graphDisplay;
 
-    public GraphWidgetReadyEvent(GraphWidget graphWidget) {
+    public GraphDisplayReadyEvent(GraphDisplay graphDisplay) {
         // omitted != null assertion for testing
-        this.graphWidget = graphWidget;
+        this.graphDisplay = graphDisplay;
     }
 
     @Override
-    protected void dispatch(GraphWidgetReadyHandler handler) {
+    protected void dispatch(GraphDisplayReadyEventHandler handler) {
         handler.onWidgetReady(this);
     }
 
     @Override
-    public Type<GraphWidgetReadyHandler> getAssociatedType() {
+    public Type<GraphDisplayReadyEventHandler> getAssociatedType() {
         return TYPE;
     }
 
-    public GraphWidget getSWFWidget() {
-        return graphWidget;
+    public GraphDisplay getGraphDisplay() {
+        return graphDisplay;
     }
 
 }

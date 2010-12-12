@@ -49,8 +49,8 @@ import org.thechiselgroup.choosel.client.test.ResourcesTestHelper;
 import org.thechiselgroup.choosel.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Arc;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
-import org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidgetReadyEvent;
-import org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidgetReadyHandler;
+import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplayReadyEvent;
+import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplayReadyEventHandler;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeDragEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeDragHandler;
@@ -158,6 +158,7 @@ public class GraphViewContentDisplayTest {
         String arcStyle = GraphDisplay.ARC_STYLE_SOLID;
         String arcColor = "#ffffff";
         String arcTypeValue = "arcType";
+        boolean arcDirected = true;
         String groupId1 = "1";
         String groupId2 = "2";
         LightweightList<ResourceItem> resourceItems = createResourceItems(
@@ -168,7 +169,7 @@ public class GraphViewContentDisplayTest {
         when(arcStyleProvider.getArcTypes()).thenReturn(
                 LightweightCollections.toCollection(arcType));
         ArcItem arcItem = new ArcItem(arcTypeValue, arcId, groupId1, groupId2,
-                arcColor, arcStyle);
+                arcColor, arcStyle, arcDirected);
         when(arcType.getArcItems(eq(resourceItems.get(0)))).thenReturn(
                 LightweightCollections.toCollection(arcItem));
         when(arcType.getArcItems(eq(resourceItems.get(1)))).thenReturn(
@@ -204,6 +205,7 @@ public class GraphViewContentDisplayTest {
         String arcTypeValue = "arcType";
         String groupId1 = "1";
         String groupId2 = "2";
+        boolean arcDirected = true;
 
         ResourceItem resourceItem1 = createResourceItem(groupId1,
                 createResources(1));
@@ -214,7 +216,7 @@ public class GraphViewContentDisplayTest {
         when(arcStyleProvider.getArcTypes()).thenReturn(
                 LightweightCollections.toCollection(arcType));
         ArcItem arcItem = new ArcItem(arcTypeValue, arcId, groupId1, groupId2,
-                arcColor, arcStyle);
+                arcColor, arcStyle, arcDirected);
         when(arcType.getArcItems(eq(resourceItem1))).thenReturn(
                 LightweightCollections.toCollection(arcItem));
         when(arcType.getArcItems(eq(resourceItem2))).thenReturn(
@@ -295,12 +297,13 @@ public class GraphViewContentDisplayTest {
         String arcTypeValue = "arcType";
         String groupId1 = "1";
         String groupId2 = "2";
+        boolean arcDirected = true;
 
         // set up arc item response
         ArcItem arcItem1 = new ArcItem(arcTypeValue, arcId1, groupId1,
-                groupId2, arcColor, arcStyle);
+                groupId2, arcColor, arcStyle, arcDirected);
         ArcItem arcItem2 = new ArcItem(arcTypeValue, arcId2, groupId2,
-                groupId1, arcColor, arcStyle);
+                groupId1, arcColor, arcStyle, arcDirected);
         when(arcType.getArcItems(any(ResourceItem.class))).thenReturn(
                 LightweightCollections.toCollection(arcItem1, arcItem2));
 
@@ -487,10 +490,10 @@ public class GraphViewContentDisplayTest {
         when(arcStyleProvider.getArcTypes()).thenReturn(
                 LightweightCollections.<ArcType> emptyCollection());
 
-        ArgumentCaptor<GraphWidgetReadyHandler> argument = ArgumentCaptor
-                .forClass(GraphWidgetReadyHandler.class);
-        verify(display).addGraphWidgetReadyHandler(argument.capture());
-        argument.getValue().onWidgetReady(new GraphWidgetReadyEvent(null));
+        ArgumentCaptor<GraphDisplayReadyEventHandler> argument = ArgumentCaptor
+                .forClass(GraphDisplayReadyEventHandler.class);
+        verify(display).addGraphDisplayReadyHandler(argument.capture());
+        argument.getValue().onWidgetReady(new GraphDisplayReadyEvent(null));
     }
 
     @After
