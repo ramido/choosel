@@ -15,14 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
-public interface ResourceManager extends ResourceAccessor {
+public interface ResourceAccessor {
 
-    Resource add(Resource resource);
+    boolean contains(String uri);
 
-    Resource allocate(String uri);
-
-    void clear();
-
-    void deallocate(String uri);
+    Resource getByUri(String uri);
 
 }
