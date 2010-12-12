@@ -15,37 +15,20 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import java.util.List;
-
-import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
-import org.thechiselgroup.choosel.client.resources.Resource;
-import org.thechiselgroup.choosel.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 
 public interface ViewContentDisplayCallback {
 
-    boolean containsResource(Resource resource);
-
-    boolean containsResourceWithUri(String uri);
-
-    Iterable<Resource> getAllResources();
+    boolean containsResourceItem(String groupId);
 
     ResourceSet getAutomaticResourceSet();
-
-    Resource getResourceByUri(String uri);
 
     ResourceItem getResourceItemByGroupID(String groupId);
 
     LightweightCollection<ResourceItem> getResourceItems();
 
-    List<ResourceItem> getResourceItems(Resource resource);
-
     String getSlotResolverDescription(Slot slot);
-
-    void putResolver(Slot slot, ResourceSetToValueResolver resolver);
-
-    void setCategorizer(ResourceMultiCategorizer categorizer);
 
     void switchSelection(ResourceSet resources);
 

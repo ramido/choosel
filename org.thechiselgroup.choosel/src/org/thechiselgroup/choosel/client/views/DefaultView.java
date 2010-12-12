@@ -22,7 +22,6 @@ import java.util.Set;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.persistence.Persistable;
-import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceByPropertyMultiCategorizer;
@@ -378,6 +377,7 @@ public class DefaultView extends AbstractWindowContent implements View {
                 .createLightweightList();
         Set<String> groups = resourceGrouping.getGroups(resources);
         for (String group : groups) {
+            assert resourceItemsByGroupId.containsKey(group);
             result.add(resourceItemsByGroupId.get(group));
         }
         return result;
@@ -477,30 +477,13 @@ public class DefaultView extends AbstractWindowContent implements View {
         contentDisplayCallback = new ViewContentDisplayCallback() {
 
             @Override
-            public boolean containsResource(Resource resource) {
-                return resourceModel.getResources().containsResourceWithUri(
-                        resource.getUri());
-            }
-
-            @Override
-            public boolean containsResourceWithUri(String uri) {
-                return resourceModel.getResources()
-                        .containsResourceWithUri(uri);
-            }
-
-            @Override
-            public Iterable<Resource> getAllResources() {
-                return resourceModel.getResources();
+            public boolean containsResourceItem(String groupId) {
+                return resourceItemsByGroupId.containsKey(groupId);
             }
 
             @Override
             public ResourceSet getAutomaticResourceSet() {
                 return resourceModel.getAutomaticResourceSet();
-            }
-
-            @Override
-            public Resource getResourceByUri(String uri) {
-                return resourceModel.getResources().getByUri(uri);
             }
 
             @Override
@@ -517,28 +500,12 @@ public class DefaultView extends AbstractWindowContent implements View {
             }
 
             @Override
-            public List<ResourceItem> getResourceItems(Resource resource) {
-                return DefaultView.this.getResourceItems(resource).toList();
-            }
-
-            @Override
             public String getSlotResolverDescription(Slot slot) {
                 if (!slotMappingConfiguration.containsResolver(slot)) {
                     return "N/A";
                 }
 
                 return slotMappingConfiguration.getResolver(slot).toString();
-            }
-
-            @Override
-            public void putResolver(Slot slot,
-                    ResourceSetToValueResolver resolver) {
-                slotMappingConfiguration.setMapping(slot, resolver);
-            }
-
-            @Override
-            public void setCategorizer(ResourceMultiCategorizer categorizer) {
-                resourceGrouping.setCategorizer(categorizer);
             }
 
             @Override
