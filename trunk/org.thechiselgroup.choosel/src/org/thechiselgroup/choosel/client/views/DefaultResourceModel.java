@@ -20,6 +20,7 @@ import java.util.List;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.persistence.Persistable;
 import org.thechiselgroup.choosel.client.resources.CombinedResourceSet;
+import org.thechiselgroup.choosel.client.resources.FilteredResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
@@ -28,6 +29,7 @@ import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollec
 import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.util.collections.LightweightList;
+import org.thechiselgroup.choosel.client.util.predicates.Predicate;
 
 public class DefaultResourceModel implements ResourceModel, Disposable,
         Persistable {
@@ -37,6 +39,8 @@ public class DefaultResourceModel implements ResourceModel, Disposable,
     private ResourceSet automaticResources;
 
     private CombinedResourceSet combinedUserResourceSets;
+
+    private FilteredResourceSet filteredResources;
 
     static final String MEMENTO_RESOURCE_SET_COUNT = "resourceSetCount";
 
@@ -54,6 +58,7 @@ public class DefaultResourceModel implements ResourceModel, Disposable,
         initResourceCombinator();
         initAutomaticResources();
         initAllResources();
+        initFilteredResources();
     }
 
     @Override
@@ -118,19 +123,24 @@ public class DefaultResourceModel implements ResourceModel, Disposable,
 
     @Override
     public ResourceSet getResources() {
-        return allResources;
+        return filteredResources;
     }
 
     private void initAllResources() {
         allResources = new CombinedResourceSet(
                 resourceSetFactory.createResourceSet());
-        allResources.setLabel("All"); // TODO add & update view name
         allResources.addResourceSet(automaticResources);
         allResources.addResourceSet(combinedUserResourceSets);
     }
 
     private void initAutomaticResources() {
         automaticResources = resourceSetFactory.createResourceSet();
+    }
+
+    private void initFilteredResources() {
+        filteredResources = new FilteredResourceSet(allResources,
+                resourceSetFactory.createResourceSet());
+        filteredResources.setLabel("All"); // TODO add & update view name
     }
 
     private void initResourceCombinator() {
@@ -187,6 +197,11 @@ public class DefaultResourceModel implements ResourceModel, Disposable,
         storeAutomaticResources(resourceSetCollector, memento);
         storeUserResourceSets(resourceSetCollector, memento);
         return memento;
+    }
+
+    @Override
+    public void setFilterPredicate(Predicate<Resource> filterPredicate) {
+        filteredResources.setFilterPredicate(filterPredicate);
     }
 
     private void storeAutomaticResources(

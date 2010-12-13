@@ -86,11 +86,6 @@ public class DefaultResourceModelTest {
     }
 
     @Test
-    public void allResourcesHasLabel() {
-        assertEquals(true, underTest.getResources().hasLabel());
-    }
-
-    @Test
     public void containsAddedLabeledResources() {
         ResourceSet resources = createLabeledResources(1, 2, 3);
 
@@ -128,6 +123,11 @@ public class DefaultResourceModelTest {
         underTest.addUnnamedResources(resources);
 
         assertEquals(false, underTest.containsResourceSet(resources));
+    }
+
+    @Test
+    public void getResourcesHasLabel() {
+        assertEquals(true, underTest.getResources().hasLabel());
     }
 
     @Test

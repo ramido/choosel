@@ -20,6 +20,7 @@ import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.util.collections.LightweightList;
+import org.thechiselgroup.choosel.client.util.predicates.Predicate;
 
 public interface ResourceModel {
 
@@ -80,5 +81,7 @@ public interface ResourceModel {
      * resource set.
      */
     void removeUnnamedResources(Iterable<Resource> resources);
+
+    void setFilterPredicate(Predicate<Resource> filterPredicate);
 
 }
