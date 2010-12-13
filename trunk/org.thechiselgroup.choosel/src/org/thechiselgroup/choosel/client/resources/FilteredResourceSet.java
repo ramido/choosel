@@ -128,9 +128,33 @@ public class FilteredResourceSet extends DelegatingResourceSet {
                 "FilteredResourceSet.retainAll is not supported");
     }
 
-    public void setFilterPredicate(Predicate<Resource> filterPredicate) {
-        assert filterPredicate != null;
-        this.filterPredicate = filterPredicate;
+    public void setFilterPredicate(Predicate<Resource> newFilterPredicate) {
+        assert newFilterPredicate != null;
+
+        Predicate<Resource> currentFilterPredicate = filterPredicate;
+
+        if (newFilterPredicate.equals(currentFilterPredicate)) {
+            return;
+        }
+
+        LightweightList<Resource> resourcesToAdd = CollectionFactory
+                .createLightweightList();
+        LightweightList<Resource> resourcesToRemove = CollectionFactory
+                .createLightweightList();
+
+        for (Resource resource : sourceSet) {
+            if (newFilterPredicate.evaluate(resource)
+                    && !currentFilterPredicate.evaluate(resource)) {
+                resourcesToAdd.add(resource);
+            } else if (!newFilterPredicate.evaluate(resource)
+                    && currentFilterPredicate.evaluate(resource)) {
+                resourcesToRemove.add(resource);
+            }
+        }
+
+        filterPredicate = newFilterPredicate;
+
+        getDelegate().change(resourcesToAdd, resourcesToRemove);
     }
 
 }
