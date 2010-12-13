@@ -55,6 +55,14 @@ public class ArcItemContainer {
         return arcColor;
     }
 
+    public String getArcStyle() {
+        return arcStyle;
+    }
+
+    public int getArcThickness() {
+        return arcThickness;
+    }
+
     public ArcType getArcType() {
         return arcType;
     }
