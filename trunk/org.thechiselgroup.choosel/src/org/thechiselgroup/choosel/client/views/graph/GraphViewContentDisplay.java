@@ -214,7 +214,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     public static final Slot NODE_LABEL_SLOT = new Slot("nodeLabel",
             "Node Label", DataType.TEXT);
 
-    private Map<String, ArcItemContainer> arcItemsByArcTypeID = CollectionFactory
+    private Map<String, ArcItemContainer> arcItemContainersByArcTypeID = CollectionFactory
             .createStringMap();
 
     @Inject
@@ -239,6 +239,12 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         this.resourceManager = resourceManager;
         this.dragEnablerFactory = dragEnablerFactory;
         this.registry = registry;
+
+        /*
+         * we init the arc type containers early so they are available for UI
+         * customization in Choosel applications.
+         */
+        initArcTypeContainers();
     }
 
     @Override
@@ -305,9 +311,13 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
     public ArcItemContainer getArcItemContainer(String arcTypeID) {
         assert arcTypeID != null;
-        assert arcItemsByArcTypeID.containsKey(arcTypeID);
+        assert arcItemContainersByArcTypeID.containsKey(arcTypeID);
 
-        return arcItemsByArcTypeID.get(arcTypeID);
+        return arcItemContainersByArcTypeID.get(arcTypeID);
+    }
+
+    public Iterable<ArcItemContainer> getArcItemContainers() {
+        return arcItemContainersByArcTypeID.values();
     }
 
     @Override
@@ -400,13 +410,12 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         super.init(callback);
 
         initStateChangeHandlers();
-        initArcTypeContainers();
     }
 
     private void initArcTypeContainers() {
         for (ArcType arcType : arcStyleProvider.getArcTypes()) {
-            arcItemsByArcTypeID.put(arcType.getID(), new ArcItemContainer(
-                    arcType, graphDisplay));
+            arcItemContainersByArcTypeID.put(arcType.getID(),
+                    new ArcItemContainer(arcType, graphDisplay));
         }
     }
 
@@ -509,7 +518,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     private void removeNodeArcs(Node node) {
         assert node != null;
 
-        for (ArcItemContainer arcItemContainer : arcItemsByArcTypeID.values()) {
+        for (ArcItemContainer arcItemContainer : arcItemContainersByArcTypeID
+                .values()) {
             arcItemContainer.removeNodeArcs(node);
         }
     }
@@ -556,9 +566,9 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     // TODO expose arc type configurations and use listener mechanism
     public void setArcTypeVisible(String arcTypeId, boolean visible) {
         assert arcTypeId != null;
-        assert arcItemsByArcTypeID.containsKey(arcTypeId);
+        assert arcItemContainersByArcTypeID.containsKey(arcTypeId);
 
-        arcItemsByArcTypeID.get(arcTypeId).setVisible(visible);
+        arcItemContainersByArcTypeID.get(arcTypeId).setVisible(visible);
     }
 
     @Override
@@ -592,7 +602,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
             LightweightCollection<ResourceItem> resourceItems) {
 
         assert resourceItems != null;
-        for (ArcItemContainer container : arcItemsByArcTypeID.values()) {
+        for (ArcItemContainer container : arcItemContainersByArcTypeID.values()) {
             container.update(resourceItems);
         }
     }
