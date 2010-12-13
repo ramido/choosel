@@ -20,6 +20,7 @@ import java.util.Map;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Arc;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 
 public class ArcItemContainer {
@@ -40,28 +41,33 @@ public class ArcItemContainer {
     }
 
     public void setVisible(boolean visible) {
-        // TODO take visible into account
-
         for (ArcItem arcItem : arcItemsById.values()) {
-            if (graphDisplay.containsArc(arcItem.getId())) {
-                graphDisplay.removeArc(arcItem.getArc());
-            }
+            arcItem.setVisible(visible, graphDisplay);
         }
     }
 
-    public void showArcs() {
+    private void showArcs() {
         for (ArcItem arcItem : arcItemsById.values()) {
             arcItem.addArcToDisplay(graphDisplay);
         }
     }
 
-    public void update(ResourceItem resourceItem) {
+    public void update(LightweightCollection<ResourceItem> resourceItems) {
+        for (ResourceItem resourceItem : resourceItems) {
+            update(resourceItem);
+        }
+
+        showArcs();
+    }
+
+    private void update(ResourceItem resourceItem) {
         for (Arc arc : arcType.getArcs(resourceItem)) {
             // XXX what about changes?
             if (!arcItemsById.containsKey(arc.getId())) {
-                arcItemsById.put(arc.getId(), new ArcItem(arc,
-                        arcType.getDefaultArcColor(),
-                        arcType.getDefaultArcStyle()));
+                arcItemsById.put(
+                        arc.getId(),
+                        new ArcItem(arc, arcType.getDefaultArcColor(), arcType
+                                .getDefaultArcStyle()));
             }
         }
 

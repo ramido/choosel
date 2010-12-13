@@ -597,15 +597,9 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
             LightweightCollection<ResourceItem> resourceItems) {
 
         assert resourceItems != null;
-
         for (ArcItemContainer container : arcItemsByArcTypeID.values()) {
-            for (ResourceItem resourceItem : resourceItems) {
-                container.update(resourceItem);
-            }
-
-            container.showArcs();
+            container.update(resourceItems);
         }
-
     }
 
     private void updateNode(ResourceItem resourceItem) {
