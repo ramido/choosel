@@ -143,6 +143,17 @@ public class ArcItem {
         return result;
     }
 
+    public void setArcStyle(String arcStyle) {
+        assert arcStyle != null;
+        this.arcStyle = arcStyle;
+    }
+
+    public void setArcThickness(int arcThickness) {
+        assert arcThickness > 0;
+
+        this.arcThickness = arcThickness;
+    }
+
     public void setColor(String arcColor) {
         assert arcColor != null;
         this.arcColor = arcColor;
