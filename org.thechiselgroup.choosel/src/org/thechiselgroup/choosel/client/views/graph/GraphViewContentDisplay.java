@@ -303,6 +303,13 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         return nodeResources;
     }
 
+    public ArcItemContainer getArcItemContainer(String arcTypeID) {
+        assert arcTypeID != null;
+        assert arcItemsByArcTypeID.containsKey(arcTypeID);
+
+        return arcItemsByArcTypeID.get(arcTypeID);
+    }
+
     @Override
     public String getCategory(Resource resource) {
         return resourceCategorizer.getCategory(resource);

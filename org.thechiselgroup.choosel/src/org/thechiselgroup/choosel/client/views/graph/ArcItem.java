@@ -64,11 +64,11 @@ public class ArcItem {
     }
 
     public void applyArcColor(GraphDisplay display) {
-        display.setArcStyle(arc, ArcSettings.ARC_STYLE, arcStyle);
+        display.setArcStyle(arc, ArcSettings.ARC_COLOR, arcColor);
     }
 
     public void applyArcStyle(GraphDisplay display) {
-        display.setArcStyle(arc, ArcSettings.ARC_COLOR, arcColor);
+        display.setArcStyle(arc, ArcSettings.ARC_STYLE, arcStyle);
     }
 
     public void applyArcThickness(GraphDisplay display) {
@@ -141,6 +141,11 @@ public class ArcItem {
                 + ((arcStyle == null) ? 0 : arcStyle.hashCode());
         result = prime * result + arcThickness;
         return result;
+    }
+
+    public void setColor(String arcColor) {
+        assert arcColor != null;
+        this.arcColor = arcColor;
     }
 
     public void setVisible(boolean visible, GraphDisplay graphDisplay) {
