@@ -172,7 +172,7 @@ public class GraphViewContentDisplayTest {
         // set up arc item response
         when(arcStyleProvider.getArcTypes()).thenReturn(
                 LightweightCollections.toCollection(arcType));
-        underTest.init(callback);
+        init();
 
         when(arcType.getArcs(eq(resourceItems.get(0)))).thenReturn(
                 LightweightCollections.toCollection(createArc(arcId, groupId1,
@@ -368,6 +368,9 @@ public class GraphViewContentDisplayTest {
     }
 
     private void init() {
+        underTest = spy(new GraphViewContentDisplay(graphDisplay,
+                commandManager, resourceManager, dragEnablerFactory,
+                resourceCategorizer, arcStyleProvider, registry));
         underTest.init(callback);
         ArgumentCaptor<GraphDisplayReadyEventHandler> argument = ArgumentCaptor
                 .forClass(GraphDisplayReadyEventHandler.class);
@@ -530,7 +533,7 @@ public class GraphViewContentDisplayTest {
         // set up arc item response
         when(arcStyleProvider.getArcTypes()).thenReturn(
                 LightweightCollections.toCollection(arcType));
-        underTest.init(callback);
+        init();
 
         Arc arc = createArc(arcId, groupId1, groupId2);
         when(arcType.getArcs(eq(resourceItems.get(0)))).thenReturn(
@@ -573,10 +576,6 @@ public class GraphViewContentDisplayTest {
         arcTypeValue = "arcType";
         arcDirected = true;
         arcColor = "#ffffff";
-
-        underTest = spy(new GraphViewContentDisplay(graphDisplay,
-                commandManager, resourceManager, dragEnablerFactory,
-                resourceCategorizer, arcStyleProvider, registry));
 
         when(arcStyleProvider.getArcTypes()).thenReturn(
                 LightweightCollections.<ArcType> emptyCollection());
