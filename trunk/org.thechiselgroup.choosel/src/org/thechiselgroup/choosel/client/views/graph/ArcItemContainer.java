@@ -35,6 +35,10 @@ public class ArcItemContainer {
 
     private String arcColor;
 
+    private String arcStyle;
+
+    private int arcThickness;
+
     public ArcItemContainer(ArcType arcType, GraphDisplay graphDisplay) {
         assert graphDisplay != null;
         assert arcType != null;
@@ -42,7 +46,9 @@ public class ArcItemContainer {
         this.arcType = arcType;
         this.graphDisplay = graphDisplay;
 
+        arcStyle = arcType.getDefaultArcStyle();
         arcColor = arcType.getDefaultArcColor();
+        arcThickness = arcType.getDefaultArcThickness();
     }
 
     public String getArcColor() {
@@ -86,6 +92,28 @@ public class ArcItemContainer {
         }
     }
 
+    public void setArcStyle(String arcStyle) {
+        assert arcStyle != null;
+
+        this.arcStyle = arcStyle;
+
+        for (ArcItem arcItem : arcItemsById.values()) {
+            arcItem.setArcStyle(arcStyle);
+            arcItem.applyArcStyle(graphDisplay);
+        }
+    }
+
+    public void setArcThickness(int arcThickness) {
+        assert arcThickness > 0;
+
+        this.arcThickness = arcThickness;
+
+        for (ArcItem arcItem : arcItemsById.values()) {
+            arcItem.setArcThickness(arcThickness);
+            arcItem.applyArcThickness(graphDisplay);
+        }
+    }
+
     public void setVisible(boolean visible) {
         for (ArcItem arcItem : arcItemsById.values()) {
             arcItem.setVisible(visible, graphDisplay);
@@ -110,11 +138,8 @@ public class ArcItemContainer {
         for (Arc arc : arcType.getArcs(resourceItem)) {
             // XXX what about changes?
             if (!arcItemsById.containsKey(arc.getId())) {
-                arcItemsById.put(
-                        arc.getId(),
-                        new ArcItem(arc, arcColor,
-                                arcType.getDefaultArcStyle(), arcType
-                                        .getDefaultArcThickness()));
+                arcItemsById.put(arc.getId(), new ArcItem(arc, arcColor,
+                        arcStyle, arcThickness));
             }
         }
 

@@ -110,6 +110,10 @@ public class GraphViewContentDisplayTest {
 
     private String arcColor;
 
+    private int arcThickness;
+
+    private String arcStyle;
+
     @Test
     public void addResourceItemsCallsArcTypeGetArcItems() {
         String groupId1 = "1";
@@ -531,6 +535,110 @@ public class GraphViewContentDisplayTest {
                 eq(ArcSettings.ARC_COLOR), eq(newColor));
     }
 
+    @Test
+    public void setArcStyleOnContainerChangesStyleOfExistingArcs() {
+        String arcId = "arcid";
+        String groupId1 = "1";
+        String groupId2 = "2";
+        LightweightList<ResourceItem> resourceItems = ResourcesTestHelper
+                .createResourceItems(groupId1, groupId2);
+
+        arcStyleProviderReturnArcType();
+        init();
+
+        Arc arc = createArc(arcId, groupId1, groupId2);
+        arcTypeReturnsArcFor(resourceItems.get(0), arc);
+        arcTypeReturnsNoArcsFor(resourceItems.get(1));
+
+        simulateAddResourceItems(resourceItems);
+
+        verify(graphDisplay, times(1)).setArcStyle(eq(arc),
+                eq(ArcSettings.ARC_STYLE), eq(arcStyle));
+
+        String newStyle = ArcSettings.ARC_STYLE_DASHED;
+        underTest.getArcItemContainer(arcTypeValue).setArcStyle(newStyle);
+
+        verify(graphDisplay, times(1)).setArcStyle(eq(arc),
+                eq(ArcSettings.ARC_STYLE), eq(newStyle));
+    }
+
+    @Test
+    public void setArcStyleOnContainerChangesStyleOfNewArcs() {
+        String arcId = "arcid";
+        String groupId1 = "1";
+        String groupId2 = "2";
+        LightweightList<ResourceItem> resourceItems = ResourcesTestHelper
+                .createResourceItems(groupId1, groupId2);
+
+        arcStyleProviderReturnArcType();
+        init();
+
+        String newStyle = ArcSettings.ARC_STYLE_DASHED;
+        underTest.getArcItemContainer(arcTypeValue).setArcStyle(newStyle);
+
+        Arc arc = createArc(arcId, groupId1, groupId2);
+        arcTypeReturnsArcFor(resourceItems.get(0), arc);
+        arcTypeReturnsNoArcsFor(resourceItems.get(1));
+
+        simulateAddResourceItems(resourceItems);
+
+        verify(graphDisplay, times(1)).setArcStyle(eq(arc),
+                eq(ArcSettings.ARC_STYLE), eq(newStyle));
+    }
+
+    @Test
+    public void setArcThicknessOnContainerChangesThicknessOfExistingArcs() {
+        String arcId = "arcid";
+        String groupId1 = "1";
+        String groupId2 = "2";
+        LightweightList<ResourceItem> resourceItems = ResourcesTestHelper
+                .createResourceItems(groupId1, groupId2);
+
+        arcStyleProviderReturnArcType();
+        init();
+
+        Arc arc = createArc(arcId, groupId1, groupId2);
+        arcTypeReturnsArcFor(resourceItems.get(0), arc);
+        arcTypeReturnsNoArcsFor(resourceItems.get(1));
+
+        simulateAddResourceItems(resourceItems);
+
+        verify(graphDisplay, times(1)).setArcStyle(eq(arc),
+                eq(ArcSettings.ARC_THICKNESS), eq("" + arcThickness));
+
+        int newThickness = 4;
+        underTest.getArcItemContainer(arcTypeValue).setArcThickness(
+                newThickness);
+
+        verify(graphDisplay, times(1)).setArcStyle(eq(arc),
+                eq(ArcSettings.ARC_THICKNESS), eq("" + newThickness));
+    }
+
+    @Test
+    public void setArcThicknessOnContainerChangesThicknessOfNewArcs() {
+        String arcId = "arcid";
+        String groupId1 = "1";
+        String groupId2 = "2";
+        LightweightList<ResourceItem> resourceItems = ResourcesTestHelper
+                .createResourceItems(groupId1, groupId2);
+
+        arcStyleProviderReturnArcType();
+        init();
+
+        int newThickness = 4;
+        underTest.getArcItemContainer(arcTypeValue).setArcThickness(
+                newThickness);
+
+        Arc arc = createArc(arcId, groupId1, groupId2);
+        arcTypeReturnsArcFor(resourceItems.get(0), arc);
+        arcTypeReturnsNoArcsFor(resourceItems.get(1));
+
+        simulateAddResourceItems(resourceItems);
+
+        verify(graphDisplay, times(1)).setArcStyle(eq(arc),
+                eq(ArcSettings.ARC_THICKNESS), eq("" + newThickness));
+    }
+
     @Before
     public void setUp() throws Exception {
         MockitoGWTBridge.setUp();
@@ -544,15 +652,16 @@ public class GraphViewContentDisplayTest {
         arcTypeValue = "arcType";
         arcDirected = true;
         arcColor = "#ffffff";
+        arcThickness = 1;
+        arcStyle = ArcSettings.ARC_STYLE_SOLID;
 
         when(arcStyleProvider.getArcTypes()).thenReturn(
                 LightweightCollections.<ArcType> emptyCollection());
 
         when(arcType.getID()).thenReturn(arcTypeValue);
         when(arcType.getDefaultArcColor()).thenReturn(arcColor);
-        when(arcType.getDefaultArcStyle()).thenReturn(
-                ArcSettings.ARC_STYLE_SOLID);
-        when(arcType.getDefaultArcThickness()).thenReturn(1);
+        when(arcType.getDefaultArcStyle()).thenReturn(arcStyle);
+        when(arcType.getDefaultArcThickness()).thenReturn(arcThickness);
 
         when(resourceCategorizer.getCategory(any(Resource.class))).thenReturn(
                 TestResourceSetFactory.TYPE_1);
