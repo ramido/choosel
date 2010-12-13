@@ -37,7 +37,6 @@ import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
 import org.thechiselgroup.choosel.client.views.ResourceItem.Subset;
 import org.thechiselgroup.choosel.client.views.slots.Slot;
-import org.thechiselgroup.choosel.client.views.slots.SlotResolver;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.Event;
@@ -202,7 +201,7 @@ public abstract class ChartViewContentDisplay extends
     }
 
     protected double calculateAllResources(int i) {
-        return calculateChartItemValue(i, SlotResolver.CHART_VALUE_SLOT,
+        return calculateChartItemValue(i, BarChartViewContentDisplay.CHART_VALUE_SLOT,
                 Subset.ALL);
     }
 
@@ -213,7 +212,7 @@ public abstract class ChartViewContentDisplay extends
     }
 
     protected double calculateHighlightedResources(int i) {
-        return calculateChartItemValue(i, SlotResolver.CHART_VALUE_SLOT,
+        return calculateChartItemValue(i, BarChartViewContentDisplay.CHART_VALUE_SLOT,
                 Subset.HIGHLIGHTED);
     }
 
@@ -277,8 +276,8 @@ public abstract class ChartViewContentDisplay extends
     // XXX currently inaccurate
     @Override
     public Slot[] getSlots() {
-        return new Slot[] { SlotResolver.CHART_LABEL_SLOT,
-                SlotResolver.CHART_VALUE_SLOT };
+        return new Slot[] { BarChartViewContentDisplay.CHART_LABEL_SLOT,
+                BarChartViewContentDisplay.CHART_VALUE_SLOT };
     }
 
     // XXX not called anywhere

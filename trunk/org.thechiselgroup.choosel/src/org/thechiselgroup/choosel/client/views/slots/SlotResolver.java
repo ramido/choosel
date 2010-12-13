@@ -20,22 +20,8 @@ import org.thechiselgroup.choosel.client.resources.DataType;
 // TODO create more flexible slot system
 public interface SlotResolver {
 
-    Slot CHART_LABEL_SLOT = new Slot("chart-label", "Label", DataType.TEXT);
-
-    Slot CHART_VALUE_SLOT = new Slot("chart-value", "Value", DataType.NUMBER);
-
     Slot COLOR_SLOT = new Slot("color", "Color", DataType.COLOR);
 
-    Slot DATE_SLOT = new Slot("date", "Date", DataType.DATE);
-
     Slot DESCRIPTION_SLOT = new Slot("description", "Label", DataType.TEXT);
-
-    Slot LOCATION_SLOT = new Slot("location", "Location", DataType.LOCATION);
-
-    Slot FONT_SIZE_SLOT = new Slot("font-size", "Font Size", DataType.NUMBER);
-
-    Slot X_COORDINATE_SLOT = new Slot("x-coord", "X-Axis", DataType.NUMBER);
-
-    Slot Y_COORDINATE_SLOT = new Slot("y-coord", "Y-Axis", DataType.NUMBER);
 
 }

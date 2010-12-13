@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.chart;
 
+import org.thechiselgroup.choosel.client.resources.DataType;
 import org.thechiselgroup.choosel.client.ui.Colors;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Alignment;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Dot;
@@ -28,7 +29,6 @@ import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.slots.Slot;
-import org.thechiselgroup.choosel.client.views.slots.SlotResolver;
 
 import com.google.inject.Inject;
 
@@ -136,6 +136,10 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
 
     private String yAxisLabel = "Y-Axis";
 
+    public static final Slot Y_COORDINATE_SLOT = new Slot("y-coord", "Y-Axis", DataType.NUMBER);
+
+    public static final Slot X_COORDINATE_SLOT = new Slot("x-coord", "X-Axis", DataType.NUMBER);
+
     @Inject
     public ScatterPlotViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
         super(dragEnablerFactory);
@@ -150,13 +154,13 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
     // TODO refactor
     protected double calculateAllResourcesX(int i) {
         return Double.parseDouble(chartItems.get(i).getResourceItem()
-                .getResourceValue(SlotResolver.X_COORDINATE_SLOT).toString());
+                .getResourceValue(ScatterPlotViewContentDisplay.X_COORDINATE_SLOT).toString());
     }
 
     // TODO refactor
     protected double calculateAllResourcesY(int i) {
         return Double.parseDouble(chartItems.get(i).getResourceItem()
-                .getResourceValue(SlotResolver.Y_COORDINATE_SLOT).toString());
+                .getResourceValue(ScatterPlotViewContentDisplay.Y_COORDINATE_SLOT).toString());
     }
 
     private void calculateChartVariables() {
@@ -222,8 +226,8 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
 
     @Override
     public Slot[] getSlots() {
-        return new Slot[] { SlotResolver.X_COORDINATE_SLOT,
-                SlotResolver.Y_COORDINATE_SLOT };
+        return new Slot[] { ScatterPlotViewContentDisplay.X_COORDINATE_SLOT,
+                ScatterPlotViewContentDisplay.Y_COORDINATE_SLOT };
     }
 
     public String getXAxisLabel() {
@@ -261,9 +265,9 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
         // TODO re-enable
         // if (!changedSlots.isEmpty()) {
         setYAxisLabel(callback
-                .getSlotResolverDescription(SlotResolver.Y_COORDINATE_SLOT));
+                .getSlotResolverDescription(ScatterPlotViewContentDisplay.Y_COORDINATE_SLOT));
         setXAxisLabel(callback
-                .getSlotResolverDescription(SlotResolver.X_COORDINATE_SLOT));
+                .getSlotResolverDescription(ScatterPlotViewContentDisplay.X_COORDINATE_SLOT));
         // }
 
         super.update(addedResourceItems, updatedResourceItems,

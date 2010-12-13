@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.chart;
 
+import org.thechiselgroup.choosel.client.resources.DataType;
 import org.thechiselgroup.choosel.client.ui.Colors;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Alignment;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Bar;
@@ -33,7 +34,6 @@ import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItem.Subset;
 import org.thechiselgroup.choosel.client.views.ResourceItem.SubsetStatus;
 import org.thechiselgroup.choosel.client.views.slots.Slot;
-import org.thechiselgroup.choosel.client.views.slots.SlotResolver;
 import org.thechiselgroup.choosel.client.views.SidePanelSection;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -79,7 +79,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
     }
 
-    public final static Slot VALUE_SLOT = SlotResolver.CHART_VALUE_SLOT;
+    public final static Slot VALUE_SLOT = BarChartViewContentDisplay.CHART_VALUE_SLOT;
 
     private static final int BORDER_BOTTOM = 35;
 
@@ -198,7 +198,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         @Override
         public String f(ChartItem value, int i) {
             return value.getResourceItem()
-                    .getResourceValue(SlotResolver.CHART_LABEL_SLOT).toString();
+                    .getResourceValue(BarChartViewContentDisplay.CHART_LABEL_SLOT).toString();
         }
     };
 
@@ -267,6 +267,10 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
             return Alignment.RIGHT;
         }
     };
+
+    public static final Slot CHART_LABEL_SLOT = new Slot("chart-label", "Label", DataType.TEXT);
+
+    public static final Slot CHART_VALUE_SLOT = new Slot("chart-value", "Value", DataType.NUMBER);
 
     @Inject
     public BarChartViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
@@ -447,8 +451,8 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
     @Override
     public Slot[] getSlots() {
-        return new Slot[] { SlotResolver.CHART_LABEL_SLOT,
-                SlotResolver.CHART_VALUE_SLOT };
+        return new Slot[] { BarChartViewContentDisplay.CHART_LABEL_SLOT,
+                BarChartViewContentDisplay.CHART_VALUE_SLOT };
     }
 
     @Override
@@ -470,7 +474,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         // TODO re-enable - might be wrong for initial configuration...
         // if (!changedSlots.isEmpty()) {
         valueAxisLabel = callback
-                .getSlotResolverDescription(SlotResolver.CHART_VALUE_SLOT);
+                .getSlotResolverDescription(BarChartViewContentDisplay.CHART_VALUE_SLOT);
         // }
 
         super.update(addedResourceItems, updatedResourceItems,

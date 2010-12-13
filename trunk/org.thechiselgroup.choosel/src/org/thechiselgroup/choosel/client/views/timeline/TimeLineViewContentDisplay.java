@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.client.views.timeline;
 import java.util.Date;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
+import org.thechiselgroup.choosel.client.resources.DataType;
 import org.thechiselgroup.choosel.client.ui.widget.timeline.TimeLineEvent;
 import org.thechiselgroup.choosel.client.ui.widget.timeline.TimeLineWidget;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
@@ -39,6 +40,8 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
     private DragEnablerFactory dragEnablerFactory;
 
     private TimeLineWidget timelineWidget;
+
+    public static final Slot DATE_SLOT = new Slot("date", "Date", DataType.DATE);
 
     @Inject
     public TimeLineViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
@@ -83,7 +86,7 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
     @Override
     public Slot[] getSlots() {
         return new Slot[] { SlotResolver.DESCRIPTION_SLOT,
-                SlotResolver.COLOR_SLOT, SlotResolver.DATE_SLOT };
+                SlotResolver.COLOR_SLOT, TimeLineViewContentDisplay.DATE_SLOT };
     }
 
     private TimeLineEvent[] getTimeLineEvents(

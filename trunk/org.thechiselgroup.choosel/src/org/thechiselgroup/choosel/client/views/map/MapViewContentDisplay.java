@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.client.views.map;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
+import org.thechiselgroup.choosel.client.resources.DataType;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.ui.CSS;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
@@ -63,6 +64,8 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
     private DragEnablerFactory dragEnablerFactory;
 
     private MapWidget map;
+
+    public static final Slot LOCATION_SLOT = new Slot("location", "Location", DataType.LOCATION);
 
     @Inject
     public MapViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
@@ -136,7 +139,7 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
     @Override
     public Slot[] getSlots() {
         return new Slot[] { SlotResolver.DESCRIPTION_SLOT,
-                SlotResolver.COLOR_SLOT, SlotResolver.LOCATION_SLOT };
+                SlotResolver.COLOR_SLOT, MapViewContentDisplay.LOCATION_SLOT };
     }
 
     private void initMapItem(ResourceItem resourceItem) {
@@ -145,7 +148,7 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
         // TODO separate resolvers for latitude and longitude
 
         Resource location = (Resource) resourceItem
-                .getResourceValue(SlotResolver.LOCATION_SLOT);
+                .getResourceValue(MapViewContentDisplay.LOCATION_SLOT);
 
         double latitude = toDouble(location.getValue(LATITUDE));
         double longitude = toDouble(location.getValue(LONGITUDE));
