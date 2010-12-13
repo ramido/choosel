@@ -24,6 +24,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.thechiselgroup.choosel.client.test.AdvancedAsserts.assertContentEquals;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
+import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.toLabeledResourceSet;
 
 import java.util.Collections;
 import java.util.Set;
@@ -218,5 +219,15 @@ public final class ResourcesTestHelper {
     }
 
     private ResourcesTestHelper() {
+    }
+
+    public static LightweightList<ResourceItem> createResourceItems(
+            String... groupIds) {
+        ResourceSet[] resourceSets = new ResourceSet[groupIds.length];
+        for (int i = 0; i < resourceSets.length; i++) {
+            resourceSets[i] = toLabeledResourceSet(groupIds[i],
+                    createResource(i + 1));
+        }
+        return createResourceItems(resourceSets);
     }
 }

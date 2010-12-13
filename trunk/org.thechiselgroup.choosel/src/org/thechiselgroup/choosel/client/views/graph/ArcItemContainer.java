@@ -112,9 +112,9 @@ public class ArcItemContainer {
             if (!arcItemsById.containsKey(arc.getId())) {
                 arcItemsById.put(
                         arc.getId(),
-                        new ArcItem(arc, arcType.getDefaultArcColor(), arcType
-                                .getDefaultArcStyle(), arcType
-                                .getDefaultArcThickness()));
+                        new ArcItem(arc, arcColor,
+                                arcType.getDefaultArcStyle(), arcType
+                                        .getDefaultArcThickness()));
             }
         }
 
