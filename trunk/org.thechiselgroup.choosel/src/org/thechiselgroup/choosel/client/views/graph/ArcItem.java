@@ -132,4 +132,10 @@ public class ArcItem {
                 + arc + "]";
     }
 
+    public void setVisible(boolean visible, GraphDisplay graphDisplay) {
+        if (graphDisplay.containsArc(arc.getId())) {
+            graphDisplay.removeArc(arc);
+        }
+    }
+
 }
