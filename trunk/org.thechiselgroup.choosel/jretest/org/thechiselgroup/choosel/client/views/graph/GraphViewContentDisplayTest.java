@@ -105,15 +105,11 @@ public class GraphViewContentDisplayTest {
     @Mock
     private ArcType arcType;
 
-    private String arcStyle;
-
-    private String arcColor;
-
     private String arcTypeValue;
 
     private boolean arcDirected;
 
-    private int arcThickness;
+    private String arcColor;
 
     @Test
     public void addResourceItemsCallsArcTypeGetArcItems() {
@@ -522,6 +518,48 @@ public class GraphViewContentDisplayTest {
         verifyArcRemoved(arcId, groupId1, groupId2);
     }
 
+    @Test
+    public void setArcColorOnContainerChangesColorOfArcs() {
+        String arcId = "arcid";
+        String groupId1 = "1";
+        String groupId2 = "2";
+        LightweightList<ResourceItem> resourceItems = createResourceItems(
+                toLabeledResourceSet(groupId1, createResource(1)),
+                toLabeledResourceSet(groupId2, createResource(2)));
+
+        // set up arc item response
+        when(arcStyleProvider.getArcTypes()).thenReturn(
+                LightweightCollections.toCollection(arcType));
+        underTest.init(callback);
+
+        Arc arc = createArc(arcId, groupId1, groupId2);
+        when(arcType.getArcs(eq(resourceItems.get(0)))).thenReturn(
+                LightweightCollections.toCollection(arc));
+        when(arcType.getArcs(eq(resourceItems.get(1)))).thenReturn(
+                LightweightCollections.<Arc> emptyCollection());
+
+        when(graphDisplay.containsNode(groupId1)).thenReturn(true);
+        when(graphDisplay.containsNode(groupId2)).thenReturn(true);
+
+        // simulate add
+        callback.addResourceItems(resourceItems);
+        underTest.update(resourceItems,
+                LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections.<Slot> emptySet());
+
+        // verify default color
+        verify(graphDisplay, times(1)).setArcStyle(eq(arc),
+                eq(ArcSettings.ARC_COLOR), eq(arcColor));
+
+        // change the color
+        String newColor = "#ff0000";
+        underTest.getArcItemContainer(arcTypeValue).setArcColor(newColor);
+
+        verify(graphDisplay, times(1)).setArcStyle(eq(arc),
+                eq(ArcSettings.ARC_COLOR), eq(newColor));
+    }
+
     @Before
     public void setUp() throws Exception {
         MockitoGWTBridge.setUp();
@@ -532,11 +570,9 @@ public class GraphViewContentDisplayTest {
         sourceLocation = new Point(10, 15);
         targetLocation = new Point(20, 25);
 
-        arcStyle = ArcSettings.ARC_STYLE_SOLID;
-        arcColor = "#ffffff";
         arcTypeValue = "arcType";
         arcDirected = true;
-        arcThickness = 1;
+        arcColor = "#ffffff";
 
         underTest = spy(new GraphViewContentDisplay(graphDisplay,
                 commandManager, resourceManager, dragEnablerFactory,
@@ -547,8 +583,9 @@ public class GraphViewContentDisplayTest {
 
         when(arcType.getID()).thenReturn(arcTypeValue);
         when(arcType.getDefaultArcColor()).thenReturn(arcColor);
-        when(arcType.getDefaultArcStyle()).thenReturn(arcStyle);
-        when(arcType.getDefaultArcThickness()).thenReturn(arcThickness);
+        when(arcType.getDefaultArcStyle()).thenReturn(
+                ArcSettings.ARC_STYLE_SOLID);
+        when(arcType.getDefaultArcThickness()).thenReturn(1);
 
         when(resourceCategorizer.getCategory(any(Resource.class))).thenReturn(
                 TestResourceSetFactory.TYPE_1);
@@ -623,10 +660,6 @@ public class GraphViewContentDisplayTest {
         assertEquals(sourceNodeId, result.getSourceNodeId());
         assertEquals(targetNodeId, result.getTargetNodeId());
         assertEquals(arcTypeValue, result.getType());
-        verify(graphDisplay, times(1)).setArcStyle(eq(result),
-                eq(ArcSettings.ARC_COLOR), eq(arcColor));
-        verify(graphDisplay, times(1)).setArcStyle(eq(result),
-                eq(ArcSettings.ARC_STYLE), eq(arcStyle));
     }
 
 }

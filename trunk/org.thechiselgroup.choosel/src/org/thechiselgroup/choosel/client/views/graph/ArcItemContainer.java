@@ -33,12 +33,16 @@ public class ArcItemContainer {
 
     private final GraphDisplay graphDisplay;
 
+    private String arcColor;
+
     public ArcItemContainer(ArcType arcType, GraphDisplay graphDisplay) {
         assert graphDisplay != null;
         assert arcType != null;
 
         this.arcType = arcType;
         this.graphDisplay = graphDisplay;
+
+        arcColor = arcType.getDefaultArcColor();
     }
 
     public void removeNodeArcs(Node node) {
@@ -61,6 +65,17 @@ public class ArcItemContainer {
         // it.remove();
         // }
         // }
+    }
+
+    public void setArcColor(String arcColor) {
+        assert arcColor != null;
+
+        this.arcColor = arcColor;
+
+        for (ArcItem arcItem : arcItemsById.values()) {
+            arcItem.setColor(arcColor);
+            arcItem.applyArcColor(graphDisplay);
+        }
     }
 
     public void setVisible(boolean visible) {
