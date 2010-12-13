@@ -16,7 +16,6 @@
 package org.thechiselgroup.choosel.client.views.graph;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -30,7 +29,6 @@ import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceManager;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.ui.widget.graph.Arc;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplayLoadingFailureEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplayLoadingFailureEventHandler;
@@ -195,8 +193,6 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     private final GraphDisplay graphDisplay;
 
     public DragEnablerFactory dragEnablerFactory;
-
-    private List<Arc> arcList = new ArrayList<Arc>();
 
     private boolean ready = false;
 
@@ -506,15 +502,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     private void removeNodeArcs(Node node) {
         assert node != null;
 
-        for (Iterator<Arc> it = arcList.iterator(); it.hasNext();) {
-            Arc arc = it.next();
-
-            if (arc.getSourceNodeId() == node.getId()
-                    || arc.getTargetNodeId() == node.getId()) {
-
-                graphDisplay.removeArc(arc);
-                it.remove();
-            }
+        for (ArcItemContainer arcItemContainer : arcItemsByArcTypeID.values()) {
+            arcItemContainer.removeNodeArcs(node);
         }
     }
 
@@ -575,7 +564,6 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
             createGraphNodeItem(addedItem);
             updateNode(addedItem);
         }
-
         updateArcsForResourceItems(addedResourceItems);
 
         for (ResourceItem updatedItem : updatedResourceItems) {

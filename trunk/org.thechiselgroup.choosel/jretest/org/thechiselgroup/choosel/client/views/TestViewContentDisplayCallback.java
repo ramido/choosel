@@ -75,6 +75,10 @@ public class TestViewContentDisplayCallback implements
         return null;
     }
 
+    public void removeResourceItem(ResourceItem resourceItem) {
+        resourceItemsByGroupId.remove(resourceItem.getGroupID());
+    }
+
     @Override
     public void switchSelection(ResourceSet resources) {
     }
