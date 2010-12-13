@@ -23,6 +23,7 @@ import org.thechiselgroup.choosel.client.util.SingleItemIterable;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.util.collections.LightweightList;
+import org.thechiselgroup.choosel.client.util.collections.NullIterable;
 import org.thechiselgroup.choosel.client.util.event.PrioritizedHandlerManager;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
@@ -48,23 +49,7 @@ public abstract class AbstractResourceSet implements ResourceSet {
 
     @Override
     public boolean addAll(Iterable<Resource> resources) {
-        assert resources != null;
-
-        LightweightList<Resource> addedResources = CollectionFactory
-                .createLightweightList();
-
-        for (Resource resource : resources) {
-            if (!contains(resource)) {
-                doAdd(resource, addedResources);
-            }
-        }
-
-        if (!addedResources.isEmpty()) {
-            fireEvent(ResourceSetChangedEvent.createResourcesAddedEvent(this,
-                    addedResources));
-        }
-
-        return !addedResources.isEmpty();
+        return change(resources, NullIterable.<Resource> nullIterable());
     }
 
     @Override
@@ -106,6 +91,41 @@ public abstract class AbstractResourceSet implements ResourceSet {
             }
         }
         return result;
+    }
+
+    @Override
+    public boolean change(Iterable<Resource> resourcesToAdd,
+            Iterable<Resource> resourcesToRemove) {
+
+        assert resourcesToAdd != null;
+        assert resourcesToRemove != null;
+
+        LightweightList<Resource> addedResources = CollectionFactory
+                .createLightweightList();
+        for (Resource resource : resourcesToAdd) {
+            if (!contains(resource)) {
+                doAdd(resource, addedResources);
+            }
+        }
+
+        LightweightList<Resource> removedResources = CollectionFactory
+                .createLightweightList();
+        for (Resource resource : resourcesToRemove) {
+            if (contains(resource)) {
+                doRemove(resource, removedResources);
+            }
+        }
+
+        boolean hasChanged = !addedResources.isEmpty()
+                || !removedResources.isEmpty();
+
+        if (hasChanged) {
+            fireEvent(ResourceSetChangedEvent
+                    .createResourcesAddedAndRemovedEvent(this, addedResources,
+                            removedResources));
+        }
+
+        return hasChanged;
     }
 
     @Override
@@ -245,23 +265,7 @@ public abstract class AbstractResourceSet implements ResourceSet {
 
     @Override
     public boolean removeAll(Iterable<Resource> resources) {
-        assert resources != null;
-
-        LightweightList<Resource> removedResources = CollectionFactory
-                .createLightweightList();
-
-        for (Resource resource : resources) {
-            if (contains(resource)) {
-                doRemove(resource, removedResources);
-            }
-        }
-
-        if (!removedResources.isEmpty()) {
-            fireEvent(ResourceSetChangedEvent.createResourcesRemovedEvent(this,
-                    removedResources));
-        }
-
-        return !removedResources.isEmpty();
+        return change(NullIterable.<Resource> nullIterable(), resources);
     }
 
     // TODO implement faster retains if both are default resource sets

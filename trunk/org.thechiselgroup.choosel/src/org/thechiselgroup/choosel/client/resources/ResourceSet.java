@@ -65,6 +65,16 @@ public interface ResourceSet extends HasLabel, LightweightCollection<Resource> {
     HandlerRegistration addEventHandler(ResourceSetChangedEventHandler handler);
 
     /**
+     * Adds and removes resources in a single operation (which triggers a single
+     * event). The intersection of <code>resourcesToAdd</code> and
+     * <code>resourcesToRemove</code> must be empty.
+     * 
+     * @return true if the resource set changed as a result of this operation.
+     */
+    boolean change(Iterable<Resource> resourcesToAdd,
+            Iterable<Resource> resourcesToRemove);
+
+    /**
      * Removes all resources from this resource set.
      */
     void clear();

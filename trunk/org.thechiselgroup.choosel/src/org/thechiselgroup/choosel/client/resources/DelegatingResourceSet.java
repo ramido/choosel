@@ -58,6 +58,12 @@ public class DelegatingResourceSet implements ResourceSet {
     }
 
     @Override
+    public boolean change(Iterable<Resource> addedResources,
+            Iterable<Resource> removedResources) {
+        return delegate.change(addedResources, removedResources);
+    }
+
+    @Override
     public void clear() {
         delegate.clear();
     }

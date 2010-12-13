@@ -15,8 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
+import static org.thechiselgroup.choosel.client.test.AdvancedAsserts.assertContentEquals;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.verifyOnResourceSetChanged;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
 
@@ -25,8 +26,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.util.predicates.Predicate;
-
-import com.google.gwt.event.shared.HandlerRegistration;
 
 public class FilteredResourceSetTest extends AbstractResourceSetTest {
 
@@ -42,8 +41,8 @@ public class FilteredResourceSetTest extends AbstractResourceSetTest {
         preparePredicate(1, false);
         addToSource(1);
 
-        assertEquals(0, underTest.size());
-        assertEquals(false, underTest.contains(createResource(1)));
+        assertSizeEquals(0);
+        assertContainsResource(1, false);
     }
 
     @Test
@@ -74,12 +73,49 @@ public class FilteredResourceSetTest extends AbstractResourceSetTest {
         preparePredicate(1, true);
         addToSource(1);
 
-        assertEquals(1, underTest.size());
-        assertEquals(true, underTest.contains(createResource(1)));
+        assertSizeEquals(1);
+        assertContainsResource(1, true);
     }
 
     private void addToSource(int... resourceNumbers) {
         source.addAll(createResources(resourceNumbers));
+    }
+
+    @Test
+    public void invertMixedResourcesDoesFireSingleEvent() {
+        preparePredicate(1, true);
+        preparePredicate(2, true);
+        preparePredicate(3, false);
+        preparePredicate(4, false);
+
+        addToSource(1, 3);
+        registerEventHandler();
+        invertOnSource(1, 2, 3, 4);
+
+        ResourceSetChangedEvent event = verifyOnResourceSetChanged(1,
+                changedHandler).getValue();
+        assertContentEquals(createResources(1), event.getRemovedResources());
+        assertContentEquals(createResources(2), event.getAddedResources());
+    }
+
+    @Test
+    public void invertMixedResourcesUpdatesDelegate() {
+        preparePredicate(1, true);
+        preparePredicate(2, true);
+        preparePredicate(3, false);
+        preparePredicate(4, false);
+
+        addToSource(1, 3);
+        registerEventHandler();
+        invertOnSource(1, 2, 3, 4);
+
+        assertSizeEquals(1);
+        assertContainsResource(1, false);
+        assertContainsResource(2, true);
+    }
+
+    private void invertOnSource(int... resourceNumbers) {
+        source.invertAll(createResources(resourceNumbers));
     }
 
     private void preparePredicate(int resourceNumber, boolean value) {
@@ -87,13 +123,22 @@ public class FilteredResourceSetTest extends AbstractResourceSetTest {
                 value);
     }
 
-    private HandlerRegistration registerEventHandler() {
-        return underTest.addEventHandler(changedHandler);
+    // TODO test changing the predicates --> update resources, fire events
+
+    @Test
+    public void removeContainedResourceDoesRemoveResource() {
+        preparePredicate(1, true);
+
+        addToSource(1);
+        removeFromSource(1);
+
+        assertSizeEquals(0);
+        assertContainsResource(1, false);
     }
 
-    // TODO test remove & events
-
-    // TODO test changing the predicates --> update resources, fire events
+    private void removeFromSource(int... resourceNumbers) {
+        source.removeAll(createResources(resourceNumbers));
+    }
 
     @Before
     public void setUp() {
@@ -101,6 +146,7 @@ public class FilteredResourceSetTest extends AbstractResourceSetTest {
 
         source = new DefaultResourceSet();
         underTest = new FilteredResourceSet(source, new DefaultResourceSet());
+        underTestAsResourceSet = underTest;
 
         underTest.setFilterPredicate(predicate);
     }

@@ -49,18 +49,7 @@ public class FilteredResourceSet extends DelegatingResourceSet {
         this.sourceSet.addEventHandler(new ResourceSetChangedEventHandler() {
             @Override
             public void onResourceSetChanged(ResourceSetChangedEvent event) {
-                LightweightCollection<Resource> addedResources = event
-                        .getAddedResources();
-                LightweightList<Resource> filteredAddedResources = CollectionFactory
-                        .createLightweightList();
-                for (Resource resource : addedResources) {
-                    if (filterPredicate.evaluate(resource)) {
-                        filteredAddedResources.add(resource);
-                    }
-                }
-
-                FilteredResourceSet.this.getDelegate().addAll(
-                        filteredAddedResources);
+                processEvent(event);
             }
         });
     }
@@ -78,6 +67,27 @@ public class FilteredResourceSet extends DelegatingResourceSet {
     }
 
     @Override
+    public boolean change(Iterable<Resource> addedResources,
+            Iterable<Resource> removedResources) {
+
+        throw new UnsupportedOperationException(
+                "FilteredResourceSet.change is not supported");
+    }
+
+    private LightweightList<Resource> filter(
+            LightweightCollection<Resource> resources) {
+
+        LightweightList<Resource> filteredResources = CollectionFactory
+                .createLightweightList();
+        for (Resource resource : resources) {
+            if (filterPredicate.evaluate(resource)) {
+                filteredResources.add(resource);
+            }
+        }
+        return filteredResources;
+    }
+
+    @Override
     public void invert(Resource resource) {
         throw new UnsupportedOperationException(
                 "FilteredResourceSet.invert is not supported");
@@ -92,6 +102,11 @@ public class FilteredResourceSet extends DelegatingResourceSet {
     @Override
     public boolean isModifiable() {
         return false;
+    }
+
+    private void processEvent(ResourceSetChangedEvent event) {
+        getDelegate().change(filter(event.getAddedResources()),
+                filter(event.getRemovedResources()));
     }
 
     @Override
