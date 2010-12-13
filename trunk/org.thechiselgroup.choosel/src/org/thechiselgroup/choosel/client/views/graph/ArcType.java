@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.graph;
 
+import org.thechiselgroup.choosel.client.ui.widget.graph.Arc;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 
@@ -26,19 +27,27 @@ import org.thechiselgroup.choosel.client.views.ResourceItem;
 public interface ArcType {
 
     /**
-     * Returns the arc items representing arcs that are related to a given
-     * resource item.
+     * Returns the arcs that are related to a given resource item.
      * 
      * @param resourceItem
-     *            resource item for which corresponding arc items should be
-     *            returned
-     * @return arc items that connected to the node representation of the
-     *         resource item. The arc items do not have to be the same (in terms
-     *         of object references) as already returned arc items for the same
-     *         resource item. However, their IDs should match: an equal arc item
-     *         should have an equal id across multiple calls.
+     *            resource item for which corresponding arcs should be returned
+     * @return arcs that connected to the node representation of the resource
+     *         item. The arcs do not have to be the same (in terms of object
+     *         references) as already returned arcs for the same resource item.
+     *         However, their IDs should match: an equal arc should have an
+     *         equal id across multiple calls.
      */
-    LightweightCollection<ArcItem> getArcItems(ResourceItem resourceItem);
+    LightweightCollection<Arc> getArcs(ResourceItem resourceItem);
+
+    /**
+     * Returns the default color for arcs of this type.
+     */
+    String getDefaultArcColor();
+
+    /**
+     * Returns the default arc style for arcs of this type.
+     */
+    String getDefaultArcStyle();
 
     /**
      * Returns the identifier of this arc type. Each ArcType must have a unique
