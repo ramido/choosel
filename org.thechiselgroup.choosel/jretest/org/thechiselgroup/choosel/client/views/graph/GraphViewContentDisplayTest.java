@@ -423,10 +423,10 @@ public class GraphViewContentDisplayTest {
 
     }
 
-    // TODO restore
     @Ignore
     @Test
     public void removeSourceResourceItemRemovesArc() {
+        String arcId = "arcid";
         String groupId1 = "1";
         String groupId2 = "2";
 
@@ -439,29 +439,42 @@ public class GraphViewContentDisplayTest {
         LightweightCollection<ResourceItem> resourceItems = LightweightCollections
                 .toCollection(resourceItem1, resourceItem2);
 
+        // set up arc item response
+        when(arcStyleProvider.getArcTypes()).thenReturn(
+                LightweightCollections.toCollection(arcType));
+        init();
+        Arc arc = createArc(arcId, groupId1, groupId2);
+        when(arcType.getArcs(eq(resourceItem1))).thenReturn(
+                LightweightCollections.toCollection(arc));
+        when(arcType.getArcs(eq(resourceItem2))).thenReturn(
+                LightweightCollections.<Arc> emptyCollection());
+
+        // simulate add
+        when(graphDisplay.containsNode(groupId1)).thenReturn(true);
+        when(graphDisplay.containsNode(groupId2)).thenReturn(true);
         callback.addResourceItems(resourceItems);
         underTest.update(resourceItems,
+                LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections.<Slot> emptySet());
+        when(graphDisplay.containsArc(arcId)).thenReturn(true);
+
+        // simulate remove
+        when(graphDisplay.containsNode(groupId1)).thenReturn(false);
+        callback.removeResourceItem(resourceItem1);
+        underTest.update(
                 LightweightCollections.<ResourceItem> emptyCollection(),
                 LightweightCollections.<ResourceItem> emptyCollection(),
+                LightweightCollections.toCollection(resourceItem1),
                 LightweightCollections.<Slot> emptyCollection());
 
-        // underTest.showArc("arcType", groupId1, groupId2);
-        //
-        // ArgumentCaptor<Arc> captor = ArgumentCaptor.forClass(Arc.class);
-        //
-        // underTest.update(
-        // LightweightCollections.<ResourceItem> emptyCollection(),
-        // LightweightCollections.<ResourceItem> emptyCollection(),
-        // LightweightCollections.toCollection(resourceItem1),
-        // LightweightCollections.<Slot> emptyCollection());
-        //
-        // verify(display, times(1)).removeArc(captor.capture());
+        verifyArcRemoved(arcId, groupId1, groupId2);
     }
 
-    // TODO restore
     @Ignore
     @Test
     public void removeTargetResourceItemRemovesArc() {
+        String arcId = "arcid";
         String groupId1 = "1";
         String groupId2 = "2";
 
@@ -474,24 +487,36 @@ public class GraphViewContentDisplayTest {
         LightweightCollection<ResourceItem> resourceItems = LightweightCollections
                 .toCollection(resourceItem1, resourceItem2);
 
-        callback.addResourceItems(resourceItems);
+        // set up arc item response
+        when(arcStyleProvider.getArcTypes()).thenReturn(
+                LightweightCollections.toCollection(arcType));
+        init();
+        Arc arc = createArc(arcId, groupId1, groupId2);
+        when(arcType.getArcs(eq(resourceItem1))).thenReturn(
+                LightweightCollections.toCollection(arc));
+        when(arcType.getArcs(eq(resourceItem2))).thenReturn(
+                LightweightCollections.<Arc> emptyCollection());
 
+        // simulate add
+        when(graphDisplay.containsNode(groupId1)).thenReturn(true);
+        when(graphDisplay.containsNode(groupId2)).thenReturn(true);
+        callback.addResourceItems(resourceItems);
         underTest.update(resourceItems,
+                LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections.<Slot> emptySet());
+        when(graphDisplay.containsArc(arcId)).thenReturn(true);
+
+        // simulate remove
+        when(graphDisplay.containsNode(groupId2)).thenReturn(false);
+        callback.removeResourceItem(resourceItem2);
+        underTest.update(
                 LightweightCollections.<ResourceItem> emptyCollection(),
                 LightweightCollections.<ResourceItem> emptyCollection(),
+                LightweightCollections.toCollection(resourceItem2),
                 LightweightCollections.<Slot> emptyCollection());
 
-        // underTest.showArc("arcType", groupId1, groupId2);
-        //
-        // ArgumentCaptor<Arc> captor = ArgumentCaptor.forClass(Arc.class);
-        //
-        // underTest.update(
-        // LightweightCollections.<ResourceItem> emptyCollection(),
-        // LightweightCollections.<ResourceItem> emptyCollection(),
-        // LightweightCollections.toCollection(resourceItem2),
-        // LightweightCollections.<Slot> emptyCollection());
-        //
-        // verify(display, times(1)).removeArc(captor.capture());
+        verifyArcRemoved(arcId, groupId1, groupId2);
     }
 
     @Before

@@ -19,6 +19,7 @@ import java.util.Map;
 
 import org.thechiselgroup.choosel.client.ui.widget.graph.Arc;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
+import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
@@ -38,6 +39,28 @@ public class ArcItemContainer {
 
         this.arcType = arcType;
         this.graphDisplay = graphDisplay;
+    }
+
+    public void removeNodeArcs(Node node) {
+        assert node != null;
+
+        // node --> resource item --> get arcs --> remove those
+        String nodeId = node.getId();
+        // --> call back required
+
+        // find & remove others
+
+        // for (Iterator<Arc> it = arcItemsById.values().iterator();
+        // it.hasNext();) {
+        // Arc arc = it.next();
+        //
+        // if (arc.getSourceNodeId() == node.getId()
+        // || arc.getTargetNodeId() == node.getId()) {
+        //
+        // graphDisplay.removeArc(arc);
+        // it.remove();
+        // }
+        // }
     }
 
     public void setVisible(boolean visible) {
