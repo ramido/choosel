@@ -50,6 +50,11 @@ public interface ArcType {
     String getDefaultArcStyle();
 
     /**
+     * Returns the default arc thickness for arcs of this type.
+     */
+    int getDefaultArcThickness();
+
+    /**
      * Returns the identifier of this arc type. Each ArcType must have a unique
      * identifier.
      */

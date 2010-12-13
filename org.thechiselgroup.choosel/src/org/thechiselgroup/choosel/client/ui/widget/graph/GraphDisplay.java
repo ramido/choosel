@@ -28,33 +28,6 @@ public interface GraphDisplay extends WidgetAdaptable {
 
     String DEFAULT_LAYOUT = GraphLayouts.FORCE_DIRECTED_LAYOUT;
 
-    String ARC_COLOR = "normalLineColor";
-
-    /**
-     * Arc property that defines the style of the arc (solid or dashed).
-     * 
-     * @see #ARC_STYLE_DASHED
-     * @see #ARC_STYLE_SOLID
-     */
-    String ARC_STYLE = "normalLineStyle";
-
-    /**
-     * Style constant for dashed arcs.
-     * 
-     * @see #ARC_STYLE
-     */
-    String ARC_STYLE_DASHED = "dashed";
-
-    /**
-     * Style constant for solid arcs.
-     * 
-     * @see #ARC_STYLE
-     */
-    String ARC_STYLE_SOLID = "solid";
-
-    // FIXME these a flexviz specific, use generic ones & translate in
-    // graphwidget
-
     String NODE_BACKGROUND_COLOR = "normalBackgroundColor";
 
     String NODE_BORDER_COLOR = "normalBorderColor";
@@ -112,6 +85,9 @@ public interface GraphDisplay extends WidgetAdaptable {
 
     void runLayoutOnNodes(Collection<Node> nodes) throws LayoutException;
 
+    /**
+     * @see ArcSettings
+     */
     void setArcStyle(Arc arc, String styleProperty, String styleValue);
 
     void setLocation(Node node, Point location);

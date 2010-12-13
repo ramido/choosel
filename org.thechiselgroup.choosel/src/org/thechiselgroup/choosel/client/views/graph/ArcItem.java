@@ -16,29 +16,36 @@
 package org.thechiselgroup.choosel.client.views.graph;
 
 import org.thechiselgroup.choosel.client.ui.widget.graph.Arc;
+import org.thechiselgroup.choosel.client.ui.widget.graph.ArcSettings;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
 
 // TODO set visible method
 public class ArcItem {
 
-    private String color;
+    private String arcColor;
 
     /**
      * One of the valid arc styles (ARC_STYLE_DASHED or ARC_STYLE_SOLID).
      * 
-     * @see GraphDisplay#ARC_STYLE_DASHED
-     * @see GraphDisplay#ARC_STYLE_SOLID
+     * @see ArcSettings#ARC_STYLE_DASHED
+     * @see ArcSettings#ARC_STYLE_SOLID
      */
     private String arcStyle;
 
     private Arc arc;
 
-    public ArcItem(Arc arc, String color, String arcStyle) {
+    private int arcThickness;
+
+    public ArcItem(Arc arc, String arcColor, String arcStyle, int arcThickness) {
         assert arc != null;
+        assert arcColor != null;
+        assert arcStyle != null;
+        assert arcThickness > 0;
 
         this.arc = arc;
-        this.color = color;
+        this.arcColor = arcColor;
         this.arcStyle = arcStyle;
+        this.arcThickness = arcThickness;
     }
 
     public void addArcToDisplay(GraphDisplay display) {
@@ -52,15 +59,20 @@ public class ArcItem {
 
             applyArcStyle(display);
             applyArcColor(display);
+            applyArcThickness(display);
         }
     }
 
     public void applyArcColor(GraphDisplay display) {
-        display.setArcStyle(arc, GraphDisplay.ARC_STYLE, arcStyle);
+        display.setArcStyle(arc, ArcSettings.ARC_STYLE, arcStyle);
     }
 
     public void applyArcStyle(GraphDisplay display) {
-        display.setArcStyle(arc, GraphDisplay.ARC_COLOR, color);
+        display.setArcStyle(arc, ArcSettings.ARC_COLOR, arcColor);
+    }
+
+    public void applyArcThickness(GraphDisplay display) {
+        display.setArcStyle(arc, ArcSettings.ARC_THICKNESS, "" + arcThickness);
     }
 
     @Override
@@ -82,6 +94,13 @@ public class ArcItem {
         } else if (!arc.equals(other.arc)) {
             return false;
         }
+        if (arcColor == null) {
+            if (other.arcColor != null) {
+                return false;
+            }
+        } else if (!arcColor.equals(other.arcColor)) {
+            return false;
+        }
         if (arcStyle == null) {
             if (other.arcStyle != null) {
                 return false;
@@ -89,11 +108,7 @@ public class ArcItem {
         } else if (!arcStyle.equals(other.arcStyle)) {
             return false;
         }
-        if (color == null) {
-            if (other.color != null) {
-                return false;
-            }
-        } else if (!color.equals(other.color)) {
+        if (arcThickness != other.arcThickness) {
             return false;
         }
         return true;
@@ -104,7 +119,7 @@ public class ArcItem {
     }
 
     public String getColor() {
-        return color;
+        return arcColor;
     }
 
     public String getId() {
@@ -121,21 +136,23 @@ public class ArcItem {
         int result = 1;
         result = prime * result + ((arc == null) ? 0 : arc.hashCode());
         result = prime * result
+                + ((arcColor == null) ? 0 : arcColor.hashCode());
+        result = prime * result
                 + ((arcStyle == null) ? 0 : arcStyle.hashCode());
-        result = prime * result + ((color == null) ? 0 : color.hashCode());
+        result = prime * result + arcThickness;
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return "ArcItem [color=" + color + ", arcStyle=" + arcStyle + ", arc="
-                + arc + "]";
     }
 
     public void setVisible(boolean visible, GraphDisplay graphDisplay) {
         if (graphDisplay.containsArc(arc.getId())) {
             graphDisplay.removeArc(arc);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "ArcItem [arcColor=" + arcColor + ", arcStyle=" + arcStyle
+                + ", arc=" + arc + ", arcThickness=" + arcThickness + "]";
     }
 
 }

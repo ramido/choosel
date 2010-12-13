@@ -90,7 +90,8 @@ public class ArcItemContainer {
                 arcItemsById.put(
                         arc.getId(),
                         new ArcItem(arc, arcType.getDefaultArcColor(), arcType
-                                .getDefaultArcStyle()));
+                                .getDefaultArcStyle(), arcType
+                                .getDefaultArcThickness()));
             }
         }
 
