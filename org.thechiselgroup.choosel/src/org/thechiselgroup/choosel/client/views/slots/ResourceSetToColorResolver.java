@@ -13,46 +13,46 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.views;
+package org.thechiselgroup.choosel.client.views.slots;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSetUtils;
-import org.thechiselgroup.choosel.client.util.collections.CollectionUtils;
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 
-public class ResourceSetToStringListValueResolver extends
-        AbstractResourceSetToValueResolver {
+public class ResourceSetToColorResolver implements ResourceSetToValueResolver {
 
-    public ResourceSetToStringListValueResolver(ResourceCategorizer categorizer) {
-        super(categorizer);
+    private static final String[] COLORS = new String[] { "#6495ed", "#b22222",
+            "#A9C0B1" };
+
+    private ResourceCategorizer categorizer;
+
+    private Map<String, String> resourceTypeToColor = CollectionFactory
+            .createStringMap();
+
+    public ResourceSetToColorResolver(ResourceCategorizer categorizer) {
+        this.categorizer = categorizer;
     }
 
     @Override
     public Object resolve(LightweightCollection<Resource> resources,
             String category) {
-
+        // TODO what if resource.isEmpty?
         if (resources.isEmpty()) {
-            return "";
+            return COLORS[0]; // TODO we need something better
         }
 
-        if (resources.size() == 1) {
-            return "" + resolve(ResourceSetUtils.firstResource(resources));
+        Resource resource = ResourceSetUtils.firstResource(resources);
+        String resourceType = categorizer.getCategory(resource);
+
+        if (!resourceTypeToColor.containsKey(resourceType)) {
+            resourceTypeToColor.put(resourceType,
+                    COLORS[resourceTypeToColor.size()]);
         }
 
-        String result = "{ ";
-
-        List<String> values = new ArrayList<String>();
-        for (Resource resource : resources) {
-            values.add((String) resolve(resource));
-        }
-        result += CollectionUtils.deliminateIterableStringCollection(values,
-                ", ");
-        result += " }";
-
-        return result;
+        return resourceTypeToColor.get(resourceType);
     }
 }

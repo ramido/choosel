@@ -33,6 +33,10 @@ import org.thechiselgroup.choosel.client.ui.Presenter;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.util.collections.NullLightweightCollection;
+import org.thechiselgroup.choosel.client.views.slots.DefaultSlotMappingInitializer;
+import org.thechiselgroup.choosel.client.views.slots.Slot;
+import org.thechiselgroup.choosel.client.views.slots.SlotMappingConfiguration;
+import org.thechiselgroup.choosel.client.views.slots.SlotMappingInitializer;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 

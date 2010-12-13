@@ -13,33 +13,14 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.views;
+package org.thechiselgroup.choosel.client.views.slots;
 
-import com.google.gwt.event.shared.GwtEvent;
+import org.thechiselgroup.choosel.client.resources.Resource;
 
-public class SlotMappingChangedEvent extends
-        GwtEvent<SlotMappingChangedHandler> {
-
-    public static final GwtEvent.Type<SlotMappingChangedHandler> TYPE = new GwtEvent.Type<SlotMappingChangedHandler>();
-
-    private final Slot slot;
-
-    public SlotMappingChangedEvent(Slot slot) {
-        this.slot = slot;
-    }
+public class NullPropertyValueResolver implements ResourceToValueResolver {
 
     @Override
-    protected void dispatch(SlotMappingChangedHandler handler) {
-        handler.onResourceCategoriesChanged(this);
+    public Object resolve(Resource resource) {
+        return null;
     }
-
-    @Override
-    public GwtEvent.Type<SlotMappingChangedHandler> getAssociatedType() {
-        return TYPE;
-    }
-
-    public Slot getSlot() {
-        return slot;
-    }
-
 }

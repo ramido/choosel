@@ -13,27 +13,34 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.views;
+package org.thechiselgroup.choosel.client.views.slots;
 
-// TODO create more flexible slot system
-public interface SlotResolver {
 
-    Slot CHART_LABEL_SLOT = new Slot("chart-label", "Label", DataType.TEXT);
+import com.google.gwt.event.shared.GwtEvent;
 
-    Slot CHART_VALUE_SLOT = new Slot("chart-value", "Value", DataType.NUMBER);
+public class SlotMappingChangedEvent extends
+        GwtEvent<SlotMappingChangedHandler> {
 
-    Slot COLOR_SLOT = new Slot("color", "Color", DataType.COLOR);
+    public static final GwtEvent.Type<SlotMappingChangedHandler> TYPE = new GwtEvent.Type<SlotMappingChangedHandler>();
 
-    Slot DATE_SLOT = new Slot("date", "Date", DataType.DATE);
+    private final Slot slot;
 
-    Slot DESCRIPTION_SLOT = new Slot("description", "Label", DataType.TEXT);
+    public SlotMappingChangedEvent(Slot slot) {
+        this.slot = slot;
+    }
 
-    Slot LOCATION_SLOT = new Slot("location", "Location", DataType.LOCATION);
+    @Override
+    protected void dispatch(SlotMappingChangedHandler handler) {
+        handler.onResourceCategoriesChanged(this);
+    }
 
-    Slot FONT_SIZE_SLOT = new Slot("font-size", "Font Size", DataType.NUMBER);
+    @Override
+    public GwtEvent.Type<SlotMappingChangedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-    Slot X_COORDINATE_SLOT = new Slot("x-coord", "X-Axis", DataType.NUMBER);
-
-    Slot Y_COORDINATE_SLOT = new Slot("y-coord", "Y-Axis", DataType.NUMBER);
+    public Slot getSlot() {
+        return slot;
+    }
 
 }

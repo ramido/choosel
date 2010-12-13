@@ -21,6 +21,7 @@ import org.thechiselgroup.choosel.client.ui.CSS;
 import org.thechiselgroup.choosel.client.ui.ZIndex;
 import org.thechiselgroup.choosel.client.ui.dnd.DragProxyEventReceiver;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
+import org.thechiselgroup.choosel.client.views.slots.SlotResolver;
 import org.thechiselgroup.choosel.client.windows.Desktop;
 
 import com.google.gwt.dom.client.NativeEvent;

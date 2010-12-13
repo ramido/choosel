@@ -61,8 +61,8 @@ import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.client.views.DefaultResourceItem;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
-import org.thechiselgroup.choosel.client.views.Slot;
 import org.thechiselgroup.choosel.client.views.TestViewContentDisplayCallback;
+import org.thechiselgroup.choosel.client.views.slots.Slot;
 
 public class GraphViewContentDisplayTest {
 

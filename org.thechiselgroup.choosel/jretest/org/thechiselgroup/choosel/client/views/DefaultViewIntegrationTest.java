@@ -27,6 +27,7 @@ import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.thechiselgroup.choosel.client.resources.DataType;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceByPropertyMultiCategorizer;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
@@ -36,6 +37,8 @@ import org.thechiselgroup.choosel.client.util.math.CountCalculation;
 import org.thechiselgroup.choosel.client.util.math.MaxCalculation;
 import org.thechiselgroup.choosel.client.util.math.MinCalculation;
 import org.thechiselgroup.choosel.client.util.math.SumCalculation;
+import org.thechiselgroup.choosel.client.views.slots.CalculationResourceSetToValueResolver;
+import org.thechiselgroup.choosel.client.views.slots.Slot;
 
 public class DefaultViewIntegrationTest {
 

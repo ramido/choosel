@@ -13,33 +13,13 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.resolver;
+package org.thechiselgroup.choosel.client.views.slots;
 
-import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.views.ViewContentDisplay;
 
-public class SimplePropertyValueResolver implements ResourceToValueResolver {
+public interface SlotMappingInitializer {
 
-    private String propertyName;
-
-    public SimplePropertyValueResolver(String propertyName) {
-        super();
-        this.propertyName = propertyName;
-    }
-
-    public String getPropertyName() {
-        return propertyName;
-    }
-
-    @Override
-    public Object resolve(Resource resource) {
-        /*
-         * Do not change this to .toString()
-         */
-        return resource.getValue(propertyName);
-    }
-
-    public void setPropertyName(String propertyName) {
-        this.propertyName = propertyName;
-    }
-
+    void initializeMappings(ResourceSet resources, ViewContentDisplay contentDisplay,
+            SlotMappingConfiguration slotMappingConfiguration);
 }

@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.client.views;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.client.views.slots.Slot;
 
 import com.google.gwt.user.client.ui.Widget;
 

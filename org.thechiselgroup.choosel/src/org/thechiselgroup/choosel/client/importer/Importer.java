@@ -20,10 +20,10 @@ import java.util.Date;
 
 import org.thechiselgroup.choosel.client.label.IncrementingSuffixLabelFactory;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
+import org.thechiselgroup.choosel.client.resources.DataType;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.views.DataType;
 import org.thechiselgroup.choosel.client.views.map.MapViewContentDisplay;
 
 import com.google.gwt.i18n.client.DateTimeFormat;

@@ -13,29 +13,34 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.resolver;
+package org.thechiselgroup.choosel.client.views.slots;
 
 import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.client.resources.ResourceSetUtils;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 
-public class FixedValuePropertyValueResolver implements
-        ResourceSetToValueResolver, ResourceToValueResolver {
+public class TextResourceSetToValueResolver implements
+        ResourceSetToValueResolver {
 
-    private Object value;
+    private final String property;
 
-    public FixedValuePropertyValueResolver(Object value) {
-        this.value = value;
+    public TextResourceSetToValueResolver(String property) {
+        this.property = property;
+    }
+
+    public String getProperty() {
+        return property;
     }
 
     @Override
     public Object resolve(LightweightCollection<Resource> resources,
             String category) {
-        return value;
-    }
 
-    @Override
-    public Object resolve(Resource resource) {
-        return value;
+        if (resources.size() >= 2) {
+            return category;
+        }
+
+        return ResourceSetUtils.firstResource(resources).getValue(property);
     }
 
 }

@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.client.views;
 
 import org.thechiselgroup.choosel.client.persistence.Persistable;
 import org.thechiselgroup.choosel.client.util.Disposable;
+import org.thechiselgroup.choosel.client.views.slots.Slot;
 import org.thechiselgroup.choosel.client.windows.WindowContent;
 
 public interface View extends WindowContent, Disposable, Persistable {

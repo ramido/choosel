@@ -35,9 +35,9 @@ import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.client.test.TestUndoableCommandWithDescription;
 import org.thechiselgroup.choosel.client.ui.popup.DelayedPopup;
-import org.thechiselgroup.choosel.client.views.Slot;
 import org.thechiselgroup.choosel.client.views.View;
 import org.thechiselgroup.choosel.client.views.ViewAccessor;
+import org.thechiselgroup.choosel.client.views.slots.Slot;
 
 import com.allen_sauer.gwt.dnd.client.DragContext;
 import com.google.gwt.user.client.ui.Widget;

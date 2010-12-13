@@ -20,7 +20,7 @@ import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItem.Subset;
-import org.thechiselgroup.choosel.client.views.Slot;
+import org.thechiselgroup.choosel.client.views.slots.Slot;
 
 import com.google.gwt.user.client.Event;
 

@@ -23,7 +23,9 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
+import org.thechiselgroup.choosel.client.resources.DataType;
 import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.client.views.slots.Slot;
 
 // TODO migrate to change default slot mapping initializer
 public class DefaultViewInitialValuesTest {

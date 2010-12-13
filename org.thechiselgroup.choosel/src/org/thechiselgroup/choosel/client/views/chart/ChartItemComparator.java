@@ -17,7 +17,7 @@ package org.thechiselgroup.choosel.client.views.chart;
 
 import java.util.Comparator;
 
-import org.thechiselgroup.choosel.client.views.Slot;
+import org.thechiselgroup.choosel.client.views.slots.Slot;
 
 public class ChartItemComparator implements Comparator<ChartItem> {
 

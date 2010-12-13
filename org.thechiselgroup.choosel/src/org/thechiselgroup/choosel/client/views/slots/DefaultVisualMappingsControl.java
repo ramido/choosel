@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.views;
+package org.thechiselgroup.choosel.client.views.slots;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import org.thechiselgroup.choosel.client.resources.DataType;
+import org.thechiselgroup.choosel.client.resources.DataTypeToListMap;
 import org.thechiselgroup.choosel.client.resources.ResourceByPropertyMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
@@ -26,6 +28,8 @@ import org.thechiselgroup.choosel.client.ui.ConfigurationPanel;
 import org.thechiselgroup.choosel.client.ui.widget.listbox.ExtendedListBox;
 import org.thechiselgroup.choosel.client.ui.widget.listbox.ListBoxControl;
 import org.thechiselgroup.choosel.client.util.NullConverter;
+import org.thechiselgroup.choosel.client.views.ViewContentDisplay;
+import org.thechiselgroup.choosel.client.views.VisualMappingsControl;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
