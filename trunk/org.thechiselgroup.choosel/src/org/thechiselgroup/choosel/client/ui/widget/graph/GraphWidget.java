@@ -597,6 +597,11 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
 
     @Override
     public void setArcStyle(Arc arc, String styleProperty, String styleValue) {
+        assert arc != null;
+        assert containsArc(arc.getId());
+        assert styleProperty != null;
+        assert styleValue != null;
+
         _setArcStyle(getSwfId(), arc.getId(), styleProperty, styleValue);
     }
 
@@ -607,6 +612,11 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
 
     @Override
     public void setNodeStyle(Node node, String styleProperty, String styleValue) {
+        assert node != null;
+        assert containsNode(node.getId());
+        assert styleProperty != null;
+        assert styleValue != null;
+
         _setNodeStyle(getSwfId(), node.getId(), styleProperty, styleValue);
     }
 
