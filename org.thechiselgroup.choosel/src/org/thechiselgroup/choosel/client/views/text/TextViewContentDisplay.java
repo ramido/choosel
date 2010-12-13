@@ -21,6 +21,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
+import org.thechiselgroup.choosel.client.resources.DataType;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.client.util.collections.CollectionUtils;
@@ -100,6 +101,8 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
                     .compareToIgnoreCase(o2.getLabel().getText());
         }
     };
+
+    public static final Slot FONT_SIZE_SLOT = new Slot("font-size", "Font Size", DataType.NUMBER);
 
     public TextViewContentDisplay(ResourceSetAvatarDragController dragController) {
         this(new DefaultTextItemContainer(dragController));
@@ -190,7 +193,7 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
     @Override
     public Slot[] getSlots() {
         return new Slot[] { SlotResolver.DESCRIPTION_SLOT,
-                SlotResolver.FONT_SIZE_SLOT };
+                TextViewContentDisplay.FONT_SIZE_SLOT };
     }
 
     private void initGroupValueMapper() {

@@ -90,7 +90,7 @@ public class TimeLineItem extends IconResourceItem {
         this.view = view;
         this.dragEnablerFactory = dragEnablerFactory;
 
-        Object date = getResourceValue(SlotResolver.DATE_SLOT);
+        Object date = getResourceValue(TimeLineViewContentDisplay.DATE_SLOT);
         String dateString;
         if (date instanceof Date) {
             dateString = date.toString();

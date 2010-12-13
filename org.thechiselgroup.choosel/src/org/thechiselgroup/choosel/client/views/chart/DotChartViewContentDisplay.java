@@ -26,7 +26,6 @@ import org.thechiselgroup.choosel.client.ui.widget.protovis.Scale;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunction;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunctionIntArg;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.slots.SlotResolver;
 
 import com.google.inject.Inject;
 
@@ -102,7 +101,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
         @Override
         public String f(ChartItem value, int i) {
             return value.getResourceItem()
-                    .getResourceValue(SlotResolver.CHART_LABEL_SLOT).toString();
+                    .getResourceValue(BarChartViewContentDisplay.CHART_LABEL_SLOT).toString();
         }
     };
 

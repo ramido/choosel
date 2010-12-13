@@ -121,7 +121,7 @@ public class TextItem {
         }
 
         cacheFontSize = ((Double) resourceItem
-                .getResourceValue(SlotResolver.FONT_SIZE_SLOT)).doubleValue();
+                .getResourceValue(TextViewContentDisplay.FONT_SIZE_SLOT)).doubleValue();
     }
 
     public void updateStatusStyling() {

@@ -43,7 +43,6 @@ import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 import org.thechiselgroup.choosel.client.views.slots.Slot;
 import org.thechiselgroup.choosel.client.views.slots.SlotMappingConfiguration;
-import org.thechiselgroup.choosel.client.views.slots.SlotResolver;
 
 public class TextViewContentDisplayTest {
 
@@ -73,7 +72,7 @@ public class TextViewContentDisplayTest {
 
         when(
                 slotMappingConfiguration.resolve(
-                        eq(SlotResolver.FONT_SIZE_SLOT), eq(""),
+                        eq(TextViewContentDisplay.FONT_SIZE_SLOT), eq(""),
                         eqResources(createResources(1, 2)))).thenReturn(
                 new Double(2));
 

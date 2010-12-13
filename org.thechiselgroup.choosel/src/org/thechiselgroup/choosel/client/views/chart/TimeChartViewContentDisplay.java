@@ -19,7 +19,8 @@ import java.util.Collections;
 
 import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisEventHandler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.slots.SlotResolver;
+import org.thechiselgroup.choosel.client.views.text.TextViewContentDisplay;
+import org.thechiselgroup.choosel.client.views.timeline.TimeLineViewContentDisplay;
 
 import com.google.inject.Inject;
 
@@ -156,10 +157,10 @@ public class TimeChartViewContentDisplay extends ChartViewContentDisplay {
     private Object getSlotValue(int i, int coordinate) {
         if (coordinate == 0) {
             return getChartItem(i).getResourceItem().getResourceValue(
-                    SlotResolver.DATE_SLOT);
+                    TimeLineViewContentDisplay.DATE_SLOT);
         } else if (coordinate == 1) {
             return getChartItem(i).getResourceItem().getResourceValue(
-                    SlotResolver.FONT_SIZE_SLOT);
+                    TextViewContentDisplay.FONT_SIZE_SLOT);
         }
         throw new RuntimeException("No slot value available");
     }
@@ -171,7 +172,7 @@ public class TimeChartViewContentDisplay extends ChartViewContentDisplay {
 
     private void sortByDate() {
         Collections.sort(chartItems, new ChartItemComparator(
-                SlotResolver.DATE_SLOT));
+                TimeLineViewContentDisplay.DATE_SLOT));
     }
 
 }
