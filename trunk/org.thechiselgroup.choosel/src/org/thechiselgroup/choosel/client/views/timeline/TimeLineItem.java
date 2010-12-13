@@ -26,7 +26,6 @@ import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.IconResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
-import org.thechiselgroup.choosel.client.views.slots.SlotResolver;
 
 import com.google.gwt.query.client.Function;
 import com.google.gwt.query.client.GQuery;
@@ -85,7 +84,7 @@ public class TimeLineItem extends IconResourceItem {
             TimeLineViewContentDisplay view,
             DragEnablerFactory dragEnablerFactory) {
 
-        super(resourceItem);
+        super(resourceItem, TimeLineViewContentDisplay.COLOR_SLOT);
 
         this.view = view;
         this.dragEnablerFactory = dragEnablerFactory;
@@ -208,7 +207,7 @@ public class TimeLineItem extends IconResourceItem {
         Element element = DOM.getElementById(iconElementID);
 
         String color = getColor();
-        String label = (String) getResourceValue(SlotResolver.DESCRIPTION_SLOT);
+        String label = (String) getResourceValue(TimeLineViewContentDisplay.DESCRIPTION_SLOT);
 
         element.setInnerHTML("<div style='background-color: " + color
                 + "; border-color: " + calculateBorderColor(color)

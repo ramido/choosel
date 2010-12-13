@@ -20,7 +20,6 @@ import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.IconResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
-import org.thechiselgroup.choosel.client.views.slots.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -75,16 +74,20 @@ public class MapItem extends IconResourceItem {
             ViewContentDisplayCallback callback,
             DragEnablerFactory dragEnablerFactory) {
 
-        super(resourceItem);
+        super(resourceItem, MapViewContentDisplay.COLOR_SLOT);
 
         this.callback = callback;
         this.dragEnablerFactory = dragEnablerFactory;
 
-        this.overlay = new LabelOverlay(point, Point.newInstance(-10, -10),
-                resolveLabel(), CSS_RESOURCE_ITEM_ICON); // -10 = - (width /2)
-        this.eventHandler = new MarkerEventHandler();
+        overlay = new LabelOverlay(point, Point.newInstance(-10, -10),
+                getLabelValue(), CSS_RESOURCE_ITEM_ICON); // -10 = - (width /2)
+        eventHandler = new MarkerEventHandler();
 
         initEventHandlers();
+    }
+
+    public String getLabelValue() {
+        return (String) getResourceValue(MapViewContentDisplay.DESCRIPTION_SLOT);
     }
 
     public LabelOverlay getOverlay() {
@@ -127,10 +130,6 @@ public class MapItem extends IconResourceItem {
         });
     }
 
-    public String resolveLabel() {
-        return (String) getResourceValue(SlotResolver.DESCRIPTION_SLOT);
-    }
-
     public void setDefaultStyle() {
         overlay.setBackgroundColor(getDefaultColor());
         overlay.setBorderColor(calculateBorderColor(getDefaultColor()));
@@ -170,6 +169,6 @@ public class MapItem extends IconResourceItem {
     }
 
     public void updateLabel() {
-        overlay.setLabel(resolveLabel());
+        overlay.setLabel(getLabelValue());
     }
 }

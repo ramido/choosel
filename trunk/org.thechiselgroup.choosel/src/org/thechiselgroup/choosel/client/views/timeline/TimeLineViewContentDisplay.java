@@ -26,12 +26,19 @@ import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.slots.Slot;
-import org.thechiselgroup.choosel.client.views.slots.SlotResolver;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
+
+    public static final Slot DESCRIPTION_SLOT = new Slot("description",
+            "Label", DataType.TEXT);
+
+    public static final Slot DATE_SLOT = new Slot("date", "Date", DataType.DATE);
+
+    public final static Slot COLOR_SLOT = new Slot("color", "Color",
+            DataType.COLOR);
 
     private static final String MEMENTO_DATE = "date";
 
@@ -40,8 +47,6 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
     private DragEnablerFactory dragEnablerFactory;
 
     private TimeLineWidget timelineWidget;
-
-    public static final Slot DATE_SLOT = new Slot("date", "Date", DataType.DATE);
 
     @Inject
     public TimeLineViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
@@ -85,8 +90,7 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
 
     @Override
     public Slot[] getSlots() {
-        return new Slot[] { SlotResolver.DESCRIPTION_SLOT,
-                SlotResolver.COLOR_SLOT, TimeLineViewContentDisplay.DATE_SLOT };
+        return new Slot[] { DESCRIPTION_SLOT, COLOR_SLOT, DATE_SLOT };
     }
 
     private TimeLineEvent[] getTimeLineEvents(

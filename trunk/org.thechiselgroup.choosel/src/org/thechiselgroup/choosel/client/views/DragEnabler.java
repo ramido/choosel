@@ -21,7 +21,6 @@ import org.thechiselgroup.choosel.client.ui.CSS;
 import org.thechiselgroup.choosel.client.ui.ZIndex;
 import org.thechiselgroup.choosel.client.ui.dnd.DragProxyEventReceiver;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
-import org.thechiselgroup.choosel.client.views.slots.SlotResolver;
 import org.thechiselgroup.choosel.client.windows.Desktop;
 
 import com.google.gwt.dom.client.NativeEvent;
@@ -126,8 +125,9 @@ public class DragEnabler {
         // FIXME: we are not at the correct part of the widget hierarchy
         // --> this can cause event forwarding (i.e. to windows) to fail
         // TODO title
-        final String text = (String) item
-                .getResourceValue(SlotResolver.DESCRIPTION_SLOT);
+        // TODO we need a global configuration for the detail slots...
+        final String text = "TODO";// (String)
+                                   // item.getResourceValue(descriptionSlot);
         panel = new InvisibleResourceSetAvatar(item, text,
                 "avatar-resourceSet", ResourceSetAvatarType.SET, span);
 
