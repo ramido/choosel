@@ -45,6 +45,14 @@ public class ArcItemContainer {
         arcColor = arcType.getDefaultArcColor();
     }
 
+    public String getArcColor() {
+        return arcColor;
+    }
+
+    public ArcType getArcType() {
+        return arcType;
+    }
+
     public void removeNodeArcs(Node node) {
         assert node != null;
 
