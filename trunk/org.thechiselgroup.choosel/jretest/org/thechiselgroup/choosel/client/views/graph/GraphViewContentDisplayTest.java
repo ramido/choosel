@@ -48,6 +48,7 @@ import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.client.test.ResourcesTestHelper;
 import org.thechiselgroup.choosel.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Arc;
+import org.thechiselgroup.choosel.client.ui.widget.graph.ArcSettings;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplayReadyEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplayReadyEventHandler;
@@ -111,6 +112,8 @@ public class GraphViewContentDisplayTest {
     private String arcTypeValue;
 
     private boolean arcDirected;
+
+    private int arcThickness;
 
     @Test
     public void addResourceItemsCallsArcTypeGetArcItems() {
@@ -529,10 +532,11 @@ public class GraphViewContentDisplayTest {
         sourceLocation = new Point(10, 15);
         targetLocation = new Point(20, 25);
 
-        arcStyle = GraphDisplay.ARC_STYLE_SOLID;
+        arcStyle = ArcSettings.ARC_STYLE_SOLID;
         arcColor = "#ffffff";
         arcTypeValue = "arcType";
         arcDirected = true;
+        arcThickness = 1;
 
         underTest = spy(new GraphViewContentDisplay(graphDisplay,
                 commandManager, resourceManager, dragEnablerFactory,
@@ -544,6 +548,7 @@ public class GraphViewContentDisplayTest {
         when(arcType.getID()).thenReturn(arcTypeValue);
         when(arcType.getDefaultArcColor()).thenReturn(arcColor);
         when(arcType.getDefaultArcStyle()).thenReturn(arcStyle);
+        when(arcType.getDefaultArcThickness()).thenReturn(arcThickness);
 
         when(resourceCategorizer.getCategory(any(Resource.class))).thenReturn(
                 TestResourceSetFactory.TYPE_1);
@@ -619,9 +624,9 @@ public class GraphViewContentDisplayTest {
         assertEquals(targetNodeId, result.getTargetNodeId());
         assertEquals(arcTypeValue, result.getType());
         verify(graphDisplay, times(1)).setArcStyle(eq(result),
-                eq(GraphDisplay.ARC_COLOR), eq(arcColor));
+                eq(ArcSettings.ARC_COLOR), eq(arcColor));
         verify(graphDisplay, times(1)).setArcStyle(eq(result),
-                eq(GraphDisplay.ARC_STYLE), eq(arcStyle));
+                eq(ArcSettings.ARC_STYLE), eq(arcStyle));
     }
 
 }
