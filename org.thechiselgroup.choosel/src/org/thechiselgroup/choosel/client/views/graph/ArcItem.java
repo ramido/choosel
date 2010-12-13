@@ -18,19 +18,10 @@ package org.thechiselgroup.choosel.client.views.graph;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Arc;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
 
+// TODO set visible method
 public class ArcItem {
 
-    private String type;
-
-    private String id;
-
-    private String sourceNodeItemId;
-
-    private String targetNodeItemId;
-
     private String color;
-
-    private boolean directed;
 
     /**
      * One of the valid arc styles (ARC_STYLE_DASHED or ARC_STYLE_SOLID).
@@ -38,38 +29,38 @@ public class ArcItem {
      * @see GraphDisplay#ARC_STYLE_DASHED
      * @see GraphDisplay#ARC_STYLE_SOLID
      */
-    private String style;
+    private String arcStyle;
 
     private Arc arc;
 
-    public ArcItem(String type, String id, String sourceNodeItemId,
-            String targetNodeItemId, String color, String style,
-            boolean directed) {
+    public ArcItem(Arc arc, String color, String arcStyle) {
+        assert arc != null;
 
-        this.type = type;
-        this.id = id;
-        this.sourceNodeItemId = sourceNodeItemId;
-        this.targetNodeItemId = targetNodeItemId;
+        this.arc = arc;
         this.color = color;
-        this.style = style;
-        this.directed = directed;
+        this.arcStyle = arcStyle;
     }
 
     public void addArcToDisplay(GraphDisplay display) {
         assert display != null;
 
-        if (display.containsNode(sourceNodeItemId)
-                && display.containsNode(targetNodeItemId)
-                && !display.containsArc(id)) {
-
-            arc = new Arc(id, sourceNodeItemId, targetNodeItemId, type,
-                    directed);
+        if (display.containsNode(arc.getSourceNodeId())
+                && display.containsNode(arc.getTargetNodeId())
+                && !display.containsArc(arc.getId())) {
 
             display.addArc(arc);
 
-            display.setArcStyle(arc, GraphDisplay.ARC_COLOR, getColor());
-            display.setArcStyle(arc, GraphDisplay.ARC_STYLE, getStyle());
+            applyArcStyle(display);
+            applyArcColor(display);
         }
+    }
+
+    public void applyArcColor(GraphDisplay display) {
+        display.setArcStyle(arc, GraphDisplay.ARC_STYLE, arcStyle);
+    }
+
+    public void applyArcStyle(GraphDisplay display) {
+        display.setArcStyle(arc, GraphDisplay.ARC_COLOR, color);
     }
 
     @Override
@@ -84,49 +75,25 @@ public class ArcItem {
             return false;
         }
         ArcItem other = (ArcItem) obj;
+        if (arc == null) {
+            if (other.arc != null) {
+                return false;
+            }
+        } else if (!arc.equals(other.arc)) {
+            return false;
+        }
+        if (arcStyle == null) {
+            if (other.arcStyle != null) {
+                return false;
+            }
+        } else if (!arcStyle.equals(other.arcStyle)) {
+            return false;
+        }
         if (color == null) {
             if (other.color != null) {
                 return false;
             }
         } else if (!color.equals(other.color)) {
-            return false;
-        }
-        if (directed != other.directed) {
-            return false;
-        }
-        if (id == null) {
-            if (other.id != null) {
-                return false;
-            }
-        } else if (!id.equals(other.id)) {
-            return false;
-        }
-        if (sourceNodeItemId == null) {
-            if (other.sourceNodeItemId != null) {
-                return false;
-            }
-        } else if (!sourceNodeItemId.equals(other.sourceNodeItemId)) {
-            return false;
-        }
-        if (style == null) {
-            if (other.style != null) {
-                return false;
-            }
-        } else if (!style.equals(other.style)) {
-            return false;
-        }
-        if (targetNodeItemId == null) {
-            if (other.targetNodeItemId != null) {
-                return false;
-            }
-        } else if (!targetNodeItemId.equals(other.targetNodeItemId)) {
-            return false;
-        }
-        if (type == null) {
-            if (other.type != null) {
-                return false;
-            }
-        } else if (!type.equals(other.type)) {
             return false;
         }
         return true;
@@ -141,53 +108,28 @@ public class ArcItem {
     }
 
     public String getId() {
-        return id;
-    }
-
-    public String getSourceNodeItemId() {
-        return sourceNodeItemId;
+        return arc.getId();
     }
 
     public String getStyle() {
-        return style;
-    }
-
-    public String getTargetNodeItemId() {
-        return targetNodeItemId;
-    }
-
-    public String getType() {
-        return type;
+        return arcStyle;
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
+        result = prime * result + ((arc == null) ? 0 : arc.hashCode());
+        result = prime * result
+                + ((arcStyle == null) ? 0 : arcStyle.hashCode());
         result = prime * result + ((color == null) ? 0 : color.hashCode());
-        result = prime * result + (directed ? 1231 : 1237);
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime
-                * result
-                + ((sourceNodeItemId == null) ? 0 : sourceNodeItemId.hashCode());
-        result = prime * result + ((style == null) ? 0 : style.hashCode());
-        result = prime
-                * result
-                + ((targetNodeItemId == null) ? 0 : targetNodeItemId.hashCode());
-        result = prime * result + ((type == null) ? 0 : type.hashCode());
         return result;
-    }
-
-    public boolean isDirected() {
-        return directed;
     }
 
     @Override
     public String toString() {
-        return "ArcItem [type=" + type + ", id=" + id + ", sourceNodeItemId="
-                + sourceNodeItemId + ", targetNodeItemId=" + targetNodeItemId
-                + ", color=" + color + ", directed=" + directed + ", style="
-                + style + "]";
+        return "ArcItem [color=" + color + ", arcStyle=" + arcStyle + ", arc="
+                + arc + "]";
     }
 
 }

@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.client.views.graph;
 
 import java.util.Map;
 
+import org.thechiselgroup.choosel.client.ui.widget.graph.Arc;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
@@ -55,10 +56,12 @@ public class ArcItemContainer {
     }
 
     public void update(ResourceItem resourceItem) {
-        for (ArcItem arcItem : arcType.getArcItems(resourceItem)) {
+        for (Arc arc : arcType.getArcs(resourceItem)) {
             // XXX what about changes?
-            if (!arcItemsById.containsKey(arcItem.getId())) {
-                arcItemsById.put(arcItem.getId(), arcItem);
+            if (!arcItemsById.containsKey(arc.getId())) {
+                arcItemsById.put(arc.getId(), new ArcItem(arc,
+                        arcType.getDefaultArcColor(),
+                        arcType.getDefaultArcStyle()));
             }
         }
 
