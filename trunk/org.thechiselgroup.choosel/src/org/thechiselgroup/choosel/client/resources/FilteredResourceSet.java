@@ -15,7 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.client.util.predicates.Predicate;
 
 /**
@@ -49,11 +51,16 @@ public class FilteredResourceSet extends DelegatingResourceSet {
             public void onResourceSetChanged(ResourceSetChangedEvent event) {
                 LightweightCollection<Resource> addedResources = event
                         .getAddedResources();
+                LightweightList<Resource> filteredAddedResources = CollectionFactory
+                        .createLightweightList();
                 for (Resource resource : addedResources) {
                     if (filterPredicate.evaluate(resource)) {
-                        FilteredResourceSet.this.getDelegate().add(resource);
+                        filteredAddedResources.add(resource);
                     }
                 }
+
+                FilteredResourceSet.this.getDelegate().addAll(
+                        filteredAddedResources);
             }
         });
     }
