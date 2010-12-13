@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.views.widget.listbox;
+package org.thechiselgroup.choosel.client.ui.widget.listbox;
 
 import java.util.List;
 

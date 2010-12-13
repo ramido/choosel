@@ -17,9 +17,9 @@ package org.thechiselgroup.choosel.client.views;
 
 import java.util.List;
 
+import org.thechiselgroup.choosel.client.ui.widget.listbox.ExtendedListBox;
+import org.thechiselgroup.choosel.client.ui.widget.listbox.ListBoxControl;
 import org.thechiselgroup.choosel.client.util.NullConverter;
-import org.thechiselgroup.choosel.client.views.widget.listbox.ExtendedListBox;
-import org.thechiselgroup.choosel.client.views.widget.listbox.ListBoxControl;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;

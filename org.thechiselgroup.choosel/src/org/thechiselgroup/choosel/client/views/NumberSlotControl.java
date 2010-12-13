@@ -19,6 +19,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
+import org.thechiselgroup.choosel.client.ui.widget.listbox.ExtendedListBox;
+import org.thechiselgroup.choosel.client.ui.widget.listbox.ListBoxControl;
 import org.thechiselgroup.choosel.client.util.ConversionException;
 import org.thechiselgroup.choosel.client.util.Converter;
 import org.thechiselgroup.choosel.client.util.NullConverter;
@@ -28,8 +30,6 @@ import org.thechiselgroup.choosel.client.util.math.CountCalculation;
 import org.thechiselgroup.choosel.client.util.math.MaxCalculation;
 import org.thechiselgroup.choosel.client.util.math.MinCalculation;
 import org.thechiselgroup.choosel.client.util.math.SumCalculation;
-import org.thechiselgroup.choosel.client.views.widget.listbox.ExtendedListBox;
-import org.thechiselgroup.choosel.client.views.widget.listbox.ListBoxControl;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
