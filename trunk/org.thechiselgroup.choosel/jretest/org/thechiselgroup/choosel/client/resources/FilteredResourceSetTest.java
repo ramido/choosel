@@ -82,6 +82,17 @@ public class FilteredResourceSetTest extends AbstractResourceSetTest {
     }
 
     @Test
+    public void defaultPredicateDoesNotFilterOutResources() {
+        underTest = new FilteredResourceSet(source, new DefaultResourceSet());
+        underTestAsResourceSet = underTest;
+
+        addToSource(1);
+
+        assertSizeEquals(1);
+        assertContainsResource(1, true);
+    }
+
+    @Test
     public void invertMixedResourcesDoesFireSingleEvent() {
         preparePredicate(1, true);
         preparePredicate(2, true);

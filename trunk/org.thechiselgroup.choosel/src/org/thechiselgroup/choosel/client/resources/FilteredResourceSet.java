@@ -19,6 +19,7 @@ import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.client.util.predicates.Predicate;
+import org.thechiselgroup.choosel.client.util.predicates.TruePredicate;
 
 /**
  * ResourceSet that uses a {@link Predicate}s to to filter its contents.
@@ -26,7 +27,7 @@ import org.thechiselgroup.choosel.client.util.predicates.Predicate;
 // TODO this should be a read-only resource set...
 public class FilteredResourceSet extends DelegatingResourceSet {
 
-    private Predicate<Resource> filterPredicate;
+    private Predicate<Resource> filterPredicate = new TruePredicate<Resource>();
 
     private final ResourceSet sourceSet;
 
