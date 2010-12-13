@@ -65,6 +65,12 @@ public final class NullResourceSet implements ResourceSet {
     }
 
     @Override
+    public boolean change(Iterable<Resource> addedResources,
+            Iterable<Resource> removedResources) {
+        return false;
+    }
+
+    @Override
     public void clear() {
     }
 

@@ -34,6 +34,13 @@ public class UnmodifiableResourceSet extends DelegatingResourceSet {
     }
 
     @Override
+    public boolean change(Iterable<Resource> addedResources,
+            Iterable<Resource> removedResources) {
+        throw new UnsupportedOperationException(
+                "FilteredResourceSet.change is not supported");
+    }
+
+    @Override
     public void clear() {
         throw new UnsupportedOperationException(
                 "UnmodifiableResourceSet.clear not supported");

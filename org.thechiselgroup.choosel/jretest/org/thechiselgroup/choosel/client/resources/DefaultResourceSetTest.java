@@ -51,7 +51,7 @@ public class DefaultResourceSetTest extends AbstractResourceSetTest {
 
     @Test
     public void addFiresEvent() {
-        underTest.addEventHandler(changedHandler);
+        registerEventHandler();
         underTest.add(createResource(1));
 
         verifyOnResourceSetChanged(1, changedHandler);
@@ -73,6 +73,26 @@ public class DefaultResourceSetTest extends AbstractResourceSetTest {
         assertEquals(true, underTest.contains(createResource(1)));
         assertEquals(true, underTest.contains(createResource(2)));
         assertEquals(true, underTest.contains(createResource(3)));
+    }
+
+    @Test
+    public void changeAddsAndRemovesResources() {
+        underTest.addAll(createResources(1, 2));
+        underTest.change(createResources(3), createResources(1));
+
+        assertSizeEquals(2);
+        assertContainsResource(1, false);
+        assertContainsResource(2, true);
+        assertContainsResource(3, true);
+    }
+
+    @Test
+    public void changeFiresSingleEvent() {
+        underTest.addAll(createResources(1, 2));
+        registerEventHandler();
+        underTest.change(createResources(3), createResources(1));
+
+        verifyOnResourceSetChanged(1, changedHandler);
     }
 
     @Test
@@ -268,7 +288,7 @@ public class DefaultResourceSetTest extends AbstractResourceSetTest {
 
         assertEquals(true, result);
         assertEquals(2, underTest.size());
-        assertEquals(true, underTest.contains(createResource(1)));
+        assertContainsResource(1, true);
         assertEquals(true, underTest.contains(createResource(2)));
         assertEquals(false, underTest.contains(createResource(3)));
         assertEquals(false, underTest.contains(createResource(4)));
@@ -304,5 +324,6 @@ public class DefaultResourceSetTest extends AbstractResourceSetTest {
         MockitoAnnotations.initMocks(this);
 
         underTest = new DefaultResourceSet();
+        underTestAsResourceSet = underTest;
     }
 }
