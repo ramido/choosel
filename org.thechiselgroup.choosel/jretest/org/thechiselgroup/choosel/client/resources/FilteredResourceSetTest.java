@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.resources;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.client.test.AdvancedAsserts.assertContentEquals;
 import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.verifyOnResourceSetChanged;
@@ -82,6 +83,21 @@ public class FilteredResourceSetTest extends AbstractResourceSetTest {
     }
 
     @Test
+    public void changePredicateUpdatesDelegate() {
+        preparePredicate(1, true);
+        preparePredicate(2, true);
+        preparePredicate(3, false);
+        preparePredicate(4, false);
+
+        addToSource(1, 3);
+        invertOnSource(1, 2, 3, 4);
+
+        assertSizeEquals(1);
+        assertContainsResource(1, false);
+        assertContainsResource(2, true);
+    }
+
+    @Test
     public void defaultPredicateDoesNotFilterOutResources() {
         underTest = new FilteredResourceSet(source, new DefaultResourceSet());
         underTestAsResourceSet = underTest;
@@ -117,12 +133,17 @@ public class FilteredResourceSetTest extends AbstractResourceSetTest {
         preparePredicate(4, false);
 
         addToSource(1, 3);
-        registerEventHandler();
-        invertOnSource(1, 2, 3, 4);
+
+        Predicate<Resource> newPredicate = mock(Predicate.class);
+        preparePredicate(1, false, newPredicate);
+        preparePredicate(2, false, newPredicate);
+        preparePredicate(3, true, newPredicate);
+        preparePredicate(4, true, newPredicate);
+
+        underTest.setFilterPredicate(newPredicate);
 
         assertSizeEquals(1);
-        assertContainsResource(1, false);
-        assertContainsResource(2, true);
+        assertContainsResource(3, true);
     }
 
     private void invertOnSource(int... resourceNumbers) {
@@ -130,11 +151,16 @@ public class FilteredResourceSetTest extends AbstractResourceSetTest {
     }
 
     private void preparePredicate(int resourceNumber, boolean value) {
-        when(predicate.evaluate(createResource(resourceNumber))).thenReturn(
-                value);
+        preparePredicate(resourceNumber, value, predicate);
     }
 
     // TODO test changing the predicates --> update resources, fire events
+
+    private void preparePredicate(int resourceNumber, boolean value,
+            Predicate<Resource> predicate) {
+        when(predicate.evaluate(createResource(resourceNumber))).thenReturn(
+                value);
+    }
 
     @Test
     public void removeContainedResourceDoesRemoveResource() {
