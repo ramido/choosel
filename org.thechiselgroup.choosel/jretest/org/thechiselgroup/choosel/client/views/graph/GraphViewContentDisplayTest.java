@@ -27,7 +27,6 @@ import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createR
 import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResourceItems;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
-import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.toLabeledResourceSet;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.toResourceSet;
 
 import org.junit.After;
@@ -173,10 +172,7 @@ public class GraphViewContentDisplayTest {
                 createArc(arcId, groupId1, groupId2));
         arcTypeReturnsNoArcsFor(resourceItems.get(1));
 
-        when(graphDisplay.containsNode(groupId1)).thenReturn(true);
-        when(graphDisplay.containsNode(groupId2)).thenReturn(true);
-        callback.addResourceItems(resourceItems);
-        addResourceItemToUnderTest(resourceItems);
+        simulateAddResourceItems(resourceItems);
 
         verifyArcShown(arcId, groupId1, groupId2);
     }
@@ -232,14 +228,9 @@ public class GraphViewContentDisplayTest {
                 createArc(arcId, groupId1, groupId2));
         arcTypeReturnsNoArcsFor(resourceItems.get(1));
 
-        // simulate add
-        when(graphDisplay.containsNode(groupId1)).thenReturn(true);
-        when(graphDisplay.containsNode(groupId2)).thenReturn(true);
-        callback.addResourceItems(resourceItems);
-        addResourceItemToUnderTest(resourceItems);
+        simulateAddResourceItems(resourceItems);
         when(graphDisplay.containsArc(arcId)).thenReturn(true);
 
-        // hide arc type
         underTest.setArcTypeVisible(arcType.getID(), false);
 
         verifyArcRemoved(arcId, groupId1, groupId2);
@@ -322,8 +313,7 @@ public class GraphViewContentDisplayTest {
 
         // simulate add
         LightweightCollection<ResourceItem> resourceItems = ResourcesTestHelper
-                .createResourceItems(toLabeledResourceSet(groupId1,
-                        createResource(1)));
+                .createResourceItems(groupId1);
         when(callback.getResourceItems()).thenReturn(resourceItems);
         when(callback.containsResourceItem(groupId1)).thenReturn(true);
         addResourceItemToUnderTest(resourceItems);
@@ -492,32 +482,24 @@ public class GraphViewContentDisplayTest {
 
     @Test
     public void setArcColorOnContainerChangesColorOfExistingArcs() {
-        arcStyleProviderReturnArcType();
-        init();
-
         String arcId = "arcid";
         String groupId1 = "1";
         String groupId2 = "2";
         LightweightList<ResourceItem> resourceItems = ResourcesTestHelper
                 .createResourceItems(groupId1, groupId2);
 
+        arcStyleProviderReturnArcType();
+        init();
+
         Arc arc = createArc(arcId, groupId1, groupId2);
-        when(arcType.getArcs(eq(resourceItems.get(0)))).thenReturn(
-                LightweightCollections.toCollection(arc));
-        when(arcType.getArcs(eq(resourceItems.get(1)))).thenReturn(
-                LightweightCollections.<Arc> emptyCollection());
+        arcTypeReturnsArcFor(resourceItems.get(0), arc);
+        arcTypeReturnsNoArcsFor(resourceItems.get(1));
 
-        // simulate add
-        when(graphDisplay.containsNode(groupId1)).thenReturn(true);
-        when(graphDisplay.containsNode(groupId2)).thenReturn(true);
-        callback.addResourceItems(resourceItems);
-        addResourceItemToUnderTest(resourceItems);
+        simulateAddResourceItems(resourceItems);
 
-        // verify default color
         verify(graphDisplay, times(1)).setArcStyle(eq(arc),
                 eq(ArcSettings.ARC_COLOR), eq(arcColor));
 
-        // change the color
         String newColor = "#ff0000";
         underTest.getArcItemContainer(arcTypeValue).setArcColor(newColor);
 
@@ -535,7 +517,7 @@ public class GraphViewContentDisplayTest {
 
         arcStyleProviderReturnArcType();
         init();
-        // change the color
+
         String newColor = "#ff0000";
         underTest.getArcItemContainer(arcTypeValue).setArcColor(newColor);
 
@@ -543,13 +525,8 @@ public class GraphViewContentDisplayTest {
         arcTypeReturnsArcFor(resourceItems.get(0), arc);
         arcTypeReturnsNoArcsFor(resourceItems.get(1));
 
-        // simulate add
-        when(graphDisplay.containsNode(groupId1)).thenReturn(true);
-        when(graphDisplay.containsNode(groupId2)).thenReturn(true);
-        callback.addResourceItems(resourceItems);
-        addResourceItemToUnderTest(resourceItems);
+        simulateAddResourceItems(resourceItems);
 
-        // verify default color
         verify(graphDisplay, times(1)).setArcStyle(eq(arc),
                 eq(ArcSettings.ARC_COLOR), eq(newColor));
     }
@@ -584,6 +561,16 @@ public class GraphViewContentDisplayTest {
                 automaticExpander);
     }
 
+    private void simulateAddResourceItems(
+            LightweightList<ResourceItem> resourceItems) {
+        for (ResourceItem resourceItem : resourceItems) {
+            when(graphDisplay.containsNode(resourceItem.getGroupID()))
+                    .thenReturn(true);
+        }
+        callback.addResourceItems(resourceItems);
+        addResourceItemToUnderTest(resourceItems);
+    }
+
     @After
     public void tearDown() {
         MockitoGWTBridge.tearDown();
@@ -599,20 +586,12 @@ public class GraphViewContentDisplayTest {
 
         arcStyleProviderReturnArcType();
         init();
-
         arcTypeReturnsNoArcs();
+        simulateAddResourceItems(resourceItems);
 
-        // simulate add
-        when(graphDisplay.containsNode(groupId1)).thenReturn(true);
-        when(graphDisplay.containsNode(groupId2)).thenReturn(true);
-        callback.addResourceItems(resourceItems);
-        addResourceItemToUnderTest(resourceItems);
-
-        // arc item response changed when called 2nd time
         arcTypeReturnsArcFor(resourceItems.get(0),
                 createArc(arcId, groupId1, groupId2));
 
-        // call update resource item
         underTest.updateArcsForResourceItems(resourceItems);
 
         verifyArcShown(arcId, groupId1, groupId2);
