@@ -15,6 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
+import org.thechiselgroup.choosel.client.views.slots.Slot;
+import org.thechiselgroup.choosel.client.views.slots.SlotResolver;
+
 public abstract class IconResourceItem {
 
     protected static final String CSS_RESOURCE_ITEM_ICON = "resourceItemIcon";

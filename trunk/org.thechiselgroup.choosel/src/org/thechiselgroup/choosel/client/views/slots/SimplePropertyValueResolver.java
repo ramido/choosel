@@ -13,17 +13,33 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.views;
+package org.thechiselgroup.choosel.client.views.slots;
 
-import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.Resource;
-import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 
-public class ResourceSetToCountResolver implements ResourceSetToValueResolver {
+public class SimplePropertyValueResolver implements ResourceToValueResolver {
+
+    private String propertyName;
+
+    public SimplePropertyValueResolver(String propertyName) {
+        super();
+        this.propertyName = propertyName;
+    }
+
+    public String getPropertyName() {
+        return propertyName;
+    }
 
     @Override
-    public Object resolve(LightweightCollection<Resource> resources,
-            String category) {
-        return Integer.toString(resources.size());
+    public Object resolve(Resource resource) {
+        /*
+         * Do not change this to .toString()
+         */
+        return resource.getValue(propertyName);
     }
+
+    public void setPropertyName(String propertyName) {
+        this.propertyName = propertyName;
+    }
+
 }

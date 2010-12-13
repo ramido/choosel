@@ -29,11 +29,11 @@ import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.command.DefaultCommandManager;
 import org.thechiselgroup.choosel.client.command.NullCommand;
-import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.client.test.TestUndoableCommandWithDescription;
 import org.thechiselgroup.choosel.client.ui.Action;
+import org.thechiselgroup.choosel.client.views.slots.ResourceSetToValueResolver;
 
 public class UndoActionStateControllerTest {
 

@@ -40,6 +40,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.MockitoAnnotations;
+import org.thechiselgroup.choosel.client.resources.DataType;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceByPropertyMultiCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
@@ -48,6 +49,8 @@ import org.thechiselgroup.choosel.client.resources.ResourceSetChangedEventHandle
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.util.collections.LightweightList;
+import org.thechiselgroup.choosel.client.views.slots.FirstResourcePropertyResolver;
+import org.thechiselgroup.choosel.client.views.slots.Slot;
 
 public class DefaultViewTest {
 

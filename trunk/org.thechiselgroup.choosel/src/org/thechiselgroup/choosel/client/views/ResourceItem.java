@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.client.views;
 
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
+import org.thechiselgroup.choosel.client.views.slots.Slot;
 
 public interface ResourceItem {
 

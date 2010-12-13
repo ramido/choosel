@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.views;
+package org.thechiselgroup.choosel.client.views.slots;
 
 import java.util.List;
 
-import org.thechiselgroup.choosel.client.resolver.FixedValuePropertyValueResolver;
-import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
+import org.thechiselgroup.choosel.client.resources.DataType;
+import org.thechiselgroup.choosel.client.resources.DataTypeToListMap;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetUtils;
 import org.thechiselgroup.choosel.client.util.math.SumCalculation;
+import org.thechiselgroup.choosel.client.views.ViewContentDisplay;
 
 public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
 

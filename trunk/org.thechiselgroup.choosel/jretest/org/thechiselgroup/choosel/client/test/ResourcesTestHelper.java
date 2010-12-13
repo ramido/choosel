@@ -44,7 +44,7 @@ import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.client.views.DefaultResourceItem;
 import org.thechiselgroup.choosel.client.views.HoverModel;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
-import org.thechiselgroup.choosel.client.views.SlotMappingConfiguration;
+import org.thechiselgroup.choosel.client.views.slots.SlotMappingConfiguration;
 
 public final class ResourcesTestHelper {
 

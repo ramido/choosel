@@ -31,6 +31,10 @@ import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.client.util.event.EventHandlerPriority;
 import org.thechiselgroup.choosel.client.util.event.PrioritizedEventHandler;
+import org.thechiselgroup.choosel.client.views.slots.Slot;
+import org.thechiselgroup.choosel.client.views.slots.SlotMappingChangedEvent;
+import org.thechiselgroup.choosel.client.views.slots.SlotMappingChangedHandler;
+import org.thechiselgroup.choosel.client.views.slots.SlotMappingConfiguration;
 
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;

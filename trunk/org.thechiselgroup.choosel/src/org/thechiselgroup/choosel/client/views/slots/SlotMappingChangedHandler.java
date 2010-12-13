@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.resolver;
+package org.thechiselgroup.choosel.client.views.slots;
 
-import org.thechiselgroup.choosel.client.resources.Resource;
+import com.google.gwt.event.shared.EventHandler;
 
-public interface ResourceToValueResolver {
+public interface SlotMappingChangedHandler extends EventHandler {
 
-    Object resolve(Resource resource);
+    void onResourceCategoriesChanged(SlotMappingChangedEvent e);
 
 }

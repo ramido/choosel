@@ -19,7 +19,7 @@ import java.util.Collections;
 
 import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisEventHandler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.SlotResolver;
+import org.thechiselgroup.choosel.client.views.slots.SlotResolver;
 
 import com.google.inject.Inject;
 

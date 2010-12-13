@@ -40,10 +40,10 @@ import org.thechiselgroup.choosel.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.client.views.DefaultResourceItem;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
-import org.thechiselgroup.choosel.client.views.Slot;
-import org.thechiselgroup.choosel.client.views.SlotMappingConfiguration;
-import org.thechiselgroup.choosel.client.views.SlotResolver;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
+import org.thechiselgroup.choosel.client.views.slots.Slot;
+import org.thechiselgroup.choosel.client.views.slots.SlotMappingConfiguration;
+import org.thechiselgroup.choosel.client.views.slots.SlotResolver;
 
 public class TextViewContentDisplayTest {
 

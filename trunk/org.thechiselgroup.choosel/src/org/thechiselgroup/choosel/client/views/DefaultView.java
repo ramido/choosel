@@ -53,6 +53,11 @@ import org.thechiselgroup.choosel.client.util.collections.CombinedIterable;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.client.util.collections.LightweightList;
+import org.thechiselgroup.choosel.client.views.slots.Slot;
+import org.thechiselgroup.choosel.client.views.slots.SlotMappingChangedEvent;
+import org.thechiselgroup.choosel.client.views.slots.SlotMappingChangedHandler;
+import org.thechiselgroup.choosel.client.views.slots.SlotMappingConfiguration;
+import org.thechiselgroup.choosel.client.views.slots.SlotMappingInitializer;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
 import org.thechiselgroup.choosel.client.workspace.ViewSaver;
 

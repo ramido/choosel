@@ -32,8 +32,8 @@ import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
-import org.thechiselgroup.choosel.client.views.SlotMappingConfiguration;
-import org.thechiselgroup.choosel.client.views.Slot;
+import org.thechiselgroup.choosel.client.views.slots.Slot;
+import org.thechiselgroup.choosel.client.views.slots.SlotMappingConfiguration;
 
 public class DetailsWidgetHelperTest {
 

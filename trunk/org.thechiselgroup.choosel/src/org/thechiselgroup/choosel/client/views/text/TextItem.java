@@ -17,7 +17,7 @@ package org.thechiselgroup.choosel.client.views.text;
 
 import org.thechiselgroup.choosel.client.ui.popup.DefaultPopupManager;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
-import org.thechiselgroup.choosel.client.views.SlotResolver;
+import org.thechiselgroup.choosel.client.views.slots.SlotResolver;
 
 public class TextItem {
 

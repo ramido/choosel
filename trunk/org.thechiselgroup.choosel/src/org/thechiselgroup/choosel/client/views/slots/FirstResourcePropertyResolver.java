@@ -13,12 +13,29 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.views;
+package org.thechiselgroup.choosel.client.views.slots;
 
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.client.resources.ResourceSetUtils;
+import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 
-public interface SlotMappingInitializer {
+public class FirstResourcePropertyResolver implements
+        ResourceSetToValueResolver {
 
-    void initializeMappings(ResourceSet resources, ViewContentDisplay contentDisplay,
-            SlotMappingConfiguration slotMappingConfiguration);
+    private final String property;
+
+    public FirstResourcePropertyResolver(String property) {
+        this.property = property;
+    }
+
+    public String getProperty() {
+        return property;
+    }
+
+    @Override
+    public Object resolve(LightweightCollection<Resource> resources,
+            String category) {
+
+        return ResourceSetUtils.firstResource(resources).getValue(property);
+    }
 }

@@ -36,6 +36,10 @@ import org.thechiselgroup.choosel.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.util.collections.LightweightList;
+import org.thechiselgroup.choosel.client.views.slots.DefaultSlotMappingInitializer;
+import org.thechiselgroup.choosel.client.views.slots.DefaultVisualMappingsControl;
+import org.thechiselgroup.choosel.client.views.slots.SlotMappingConfiguration;
+import org.thechiselgroup.choosel.client.views.slots.SlotMappingInitializer;
 import org.thechiselgroup.choosel.client.windows.WindowContent;
 import org.thechiselgroup.choosel.client.windows.WindowContentFactory;
 

@@ -21,12 +21,12 @@ import java.util.Date;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.thechiselgroup.choosel.client.resources.DataType;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.views.DataType;
-import org.thechiselgroup.choosel.client.views.Slot;
 import org.thechiselgroup.choosel.client.views.map.MapViewContentDisplay;
+import org.thechiselgroup.choosel.client.views.slots.Slot;
 
 public class DefaultDropTargetCapabilityCheckerTest {
 

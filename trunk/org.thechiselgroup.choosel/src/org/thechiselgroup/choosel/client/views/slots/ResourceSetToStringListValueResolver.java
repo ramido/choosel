@@ -13,35 +13,46 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.views;
+package org.thechiselgroup.choosel.client.views.slots;
 
-import org.thechiselgroup.choosel.client.resolver.ResourceSetToValueResolver;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceSetUtils;
+import org.thechiselgroup.choosel.client.util.collections.CollectionUtils;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 
-public class TextResourceSetToValueResolver implements
-        ResourceSetToValueResolver {
+public class ResourceSetToStringListValueResolver extends
+        AbstractResourceSetToValueResolver {
 
-    private final String property;
-
-    public TextResourceSetToValueResolver(String property) {
-        this.property = property;
-    }
-
-    public String getProperty() {
-        return property;
+    public ResourceSetToStringListValueResolver(ResourceCategorizer categorizer) {
+        super(categorizer);
     }
 
     @Override
     public Object resolve(LightweightCollection<Resource> resources,
             String category) {
 
-        if (resources.size() >= 2) {
-            return category;
+        if (resources.isEmpty()) {
+            return "";
         }
 
-        return ResourceSetUtils.firstResource(resources).getValue(property);
-    }
+        if (resources.size() == 1) {
+            return "" + resolve(ResourceSetUtils.firstResource(resources));
+        }
 
+        String result = "{ ";
+
+        List<String> values = new ArrayList<String>();
+        for (Resource resource : resources) {
+            values.add((String) resolve(resource));
+        }
+        result += CollectionUtils.deliminateIterableStringCollection(values,
+                ", ");
+        result += " }";
+
+        return result;
+    }
 }
