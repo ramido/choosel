@@ -18,24 +18,19 @@ package org.thechiselgroup.choosel.client.resources;
 import static org.junit.Assert.assertEquals;
 import static org.thechiselgroup.choosel.client.test.AdvancedAsserts.assertContentEquals;
 import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.verifyOnResourceSetChanged;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.verifyOnResourcesAdded;
 import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.verifyOnResourcesRemoved;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 
-public class DefaultResourceSetTest {
+public class DefaultResourceSetTest extends AbstractResourceSetTest {
 
     private ResourceSet underTest;
-
-    @Mock
-    private ResourceSetChangedEventHandler changedHandler;
 
     @Test
     public void addAllFiresEvent() {
@@ -51,7 +46,7 @@ public class DefaultResourceSetTest {
         underTest.addEventHandler(changedHandler);
         underTest.addAll(createResources(1, 2, 3));
 
-        verifyOnResourceSetChanged(0, changedHandler);
+        verifyChangeHandlerNotCalled();
     }
 
     @Test
@@ -214,7 +209,7 @@ public class DefaultResourceSetTest {
         underTest.addEventHandler(changedHandler);
         underTest.removeAll(createResources(1, 2, 3));
 
-        verifyOnResourceSetChanged(0, changedHandler);
+        verifyChangeHandlerNotCalled();
     }
 
     @Test
@@ -254,7 +249,7 @@ public class DefaultResourceSetTest {
         underTest.addEventHandler(changedHandler);
         underTest.addAll(createResources(1, 2, 3));
 
-        verifyOnResourcesAdded(createResources(2, 3), changedHandler);
+        verifyOnResourcesAdded(2, 3);
     }
 
     @Test
@@ -294,7 +289,7 @@ public class DefaultResourceSetTest {
         underTest.addEventHandler(changedHandler);
         underTest.retainAll(createResources(1, 2, 3));
 
-        verifyOnResourceSetChanged(0, changedHandler);
+        verifyChangeHandlerNotCalled();
     }
 
     @Test

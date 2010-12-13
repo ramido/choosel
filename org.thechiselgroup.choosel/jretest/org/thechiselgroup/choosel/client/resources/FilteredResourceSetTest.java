@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.client.resources;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
+import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,44 +26,69 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.util.predicates.Predicate;
 
-public class FilteredResourceSetTest {
+import com.google.gwt.event.shared.HandlerRegistration;
+
+public class FilteredResourceSetTest extends AbstractResourceSetTest {
 
     private FilteredResourceSet underTest;
 
     @Mock
     private Predicate<Resource> predicate;
 
-    private ResourceSet sourceSet;
-
-    @Mock
-    private ResourceSetChangedEventHandler changedHandler;
-
-    // TODO test single event for multiple resources
-
-    // TODO test non-event
+    private ResourceSet source;
 
     @Test
-    public void addItemThatEvaluatesToFalseToSourceDoesNotAddItem() {
-        Resource resource = createResource(1);
-
-        when(predicate.evaluate(resource)).thenReturn(false);
-
-        sourceSet.add(resource);
+    public void addingFalseResourceDoesNotAddResource() {
+        preparePredicate(1, false);
+        addToSource(1);
 
         assertEquals(0, underTest.size());
-        assertEquals(false, underTest.contains(resource));
+        assertEquals(false, underTest.contains(createResource(1)));
     }
 
     @Test
-    public void addItemThatEvaluatesToTrueToSourceDoesAddItem() {
-        Resource resource = createResource(1);
+    public void addingFalseResourcesDoesNotFireEvent() {
+        preparePredicate(1, false);
+        preparePredicate(2, false);
 
-        when(predicate.evaluate(resource)).thenReturn(true);
+        registerEventHandler();
+        addToSource(1, 2);
 
-        sourceSet.add(resource);
+        verifyChangeHandlerNotCalled();
+    }
+
+    @Test
+    public void addingMixedResourcesFireSingleEvent() {
+        preparePredicate(1, true);
+        preparePredicate(2, false);
+        preparePredicate(3, true);
+
+        registerEventHandler();
+        addToSource(1, 2, 3);
+
+        verifyOnResourcesAdded(1, 3);
+    }
+
+    @Test
+    public void addingTrueResourceDoesAddResource() {
+        preparePredicate(1, true);
+        addToSource(1);
 
         assertEquals(1, underTest.size());
-        assertEquals(true, underTest.contains(resource));
+        assertEquals(true, underTest.contains(createResource(1)));
+    }
+
+    private void addToSource(int... resourceNumbers) {
+        source.addAll(createResources(resourceNumbers));
+    }
+
+    private void preparePredicate(int resourceNumber, boolean value) {
+        when(predicate.evaluate(createResource(resourceNumber))).thenReturn(
+                value);
+    }
+
+    private HandlerRegistration registerEventHandler() {
+        return underTest.addEventHandler(changedHandler);
     }
 
     // TODO test remove & events
@@ -73,8 +99,8 @@ public class FilteredResourceSetTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        sourceSet = new DefaultResourceSet();
-        underTest = new FilteredResourceSet(sourceSet, new DefaultResourceSet());
+        source = new DefaultResourceSet();
+        underTest = new FilteredResourceSet(source, new DefaultResourceSet());
 
         underTest.setFilterPredicate(predicate);
     }
