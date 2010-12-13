@@ -26,9 +26,9 @@ import static org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisp
 import static org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay.NODE_LABEL_SLOT;
 
 import org.thechiselgroup.choosel.client.ui.Colors;
+import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
-import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay.Display;
 
 /**
  * Represents a resource item in the graph view.
@@ -37,14 +37,14 @@ import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay.Dis
  */
 public class GraphItem {
 
-    private Display display;
+    private GraphDisplay display;
 
     private Node node;
 
     private final ResourceItem resourceItem;
 
     public GraphItem(ResourceItem resourceItem, String type,
-            GraphViewContentDisplay.Display display) {
+            GraphDisplay display) {
 
         assert resourceItem != null;
         assert type != null;

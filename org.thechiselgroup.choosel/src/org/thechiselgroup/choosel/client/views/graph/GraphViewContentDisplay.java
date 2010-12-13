@@ -17,8 +17,8 @@ package org.thechiselgroup.choosel.client.views.graph;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.thechiselgroup.choosel.client.command.CommandManager;
@@ -30,7 +30,6 @@ import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceManager;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Arc;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplayLoadingFailureEvent;
@@ -54,6 +53,7 @@ import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseOutEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseOutHandler;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseOverEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.NodeMouseOverHandler;
+import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DataType;
@@ -79,7 +79,8 @@ import com.google.inject.Inject;
 public class GraphViewContentDisplay extends AbstractViewContentDisplay
         implements GraphNodeExpansionCallback {
 
-    public static class DefaultDisplay extends GraphWidget implements Display {
+    public static class DefaultDisplay extends GraphWidget implements
+            GraphDisplay {
 
         // TODO why is size needed in the first place??
         public DefaultDisplay() {
@@ -90,14 +91,6 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
             super(width, height);
         }
 
-        @Override
-        public Widget asWidget() {
-            return this;
-        }
-
-    }
-
-    public static interface Display extends WidgetAdaptable, GraphDisplay {
     }
 
     private class GraphEventHandler extends ViewToIndividualItemEventForwarder
@@ -110,7 +103,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
         @Override
         public void onDrag(NodeDragEvent event) {
-            commandManager.addExecutedCommand(new MoveNodeCommand(display,
+            commandManager.addExecutedCommand(new MoveNodeCommand(graphDisplay,
                     event.getNode(), new Point(event.getStartX(), event
                             .getStartY()), new Point(event.getEndX(), event
                             .getEndY())));
@@ -172,7 +165,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
         @Override
         public void execute() {
-            commandManager.execute(new GraphLayoutCommand(display, layout,
+            commandManager.execute(new GraphLayoutCommand(graphDisplay, layout,
                     getAllNodes()));
         }
 
@@ -199,7 +192,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
     private final CommandManager commandManager;
 
-    private final Display display;
+    private final GraphDisplay graphDisplay;
 
     public DragEnablerFactory dragEnablerFactory;
 
@@ -225,14 +218,11 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     public static final Slot NODE_LABEL_SLOT = new Slot("nodeLabel",
             "Node Label", DataType.TEXT);
 
-    /**
-     * <b>IMPLEMENTATION NOTE</b>: lots of items are added & removed so we use a
-     * linked list.
-     */
-    private List<ArcItem> arcItems = new LinkedList<ArcItem>();
+    private Map<String, ArcItemContainer> arcItemsByArcTypeID = CollectionFactory
+            .createStringMap();
 
     @Inject
-    public GraphViewContentDisplay(Display display,
+    public GraphViewContentDisplay(GraphDisplay display,
             CommandManager commandManager, ResourceManager resourceManager,
             DragEnablerFactory dragEnablerFactory,
             ResourceCategorizer resourceCategorizer,
@@ -248,7 +238,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
         this.arcStyleProvider = arcStyleProvider;
         this.resourceCategorizer = resourceCategorizer;
-        this.display = display;
+        graphDisplay = display;
         this.commandManager = commandManager;
         this.resourceManager = resourceManager;
         this.dragEnablerFactory = dragEnablerFactory;
@@ -274,16 +264,17 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         String type = getCategory(resourceItem.getResourceSet()
                 .getFirstResource());
 
-        GraphItem graphItem = new GraphItem(resourceItem, type, display);
+        GraphItem graphItem = new GraphItem(resourceItem, type, graphDisplay);
 
-        display.addNode(graphItem.getNode());
+        graphDisplay.addNode(graphItem.getNode());
         positionNode(graphItem.getNode());
 
         // TODO re-enable
         // TODO remove once new drag and drop mechanism works...
-        display.setNodeStyle(graphItem.getNode(), "showDragImage", "false");
+        graphDisplay
+                .setNodeStyle(graphItem.getNode(), "showDragImage", "false");
 
-        display.setNodeStyle(graphItem.getNode(), "showArrow", registry
+        graphDisplay.setNodeStyle(graphItem.getNode(), "showArrow", registry
                 .getNodeMenuEntries(type).isEmpty() ? "false" : "true");
 
         registry.getAutomaticExpander(type).expand(resourceItem, this);
@@ -298,7 +289,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     // TODO encapsulate in display, use dependency injection
     @Override
     protected Widget createWidget() {
-        return display.asWidget();
+        return graphDisplay.asWidget();
     }
 
     // TODO better caching?
@@ -322,8 +313,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     }
 
     @Override
-    public Display getDisplay() {
-        return display;
+    public GraphDisplay getDisplay() {
+        return graphDisplay;
     }
 
     private ResourceItem getGraphItem(Node node) {
@@ -405,30 +396,15 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     public void init(ViewContentDisplayCallback callback) {
         super.init(callback);
 
-        display.addGraphDisplayReadyHandler(new GraphDisplayReadyEventHandler() {
-            @Override
-            public void onWidgetReady(GraphDisplayReadyEvent event) {
-                ready = true;
+        initStateChangeHandlers();
+        initArcTypeContainers();
+    }
 
-                GraphEventHandler handler = new GraphEventHandler();
-
-                display.addEventHandler(NodeDragHandleMouseDownEvent.TYPE,
-                        handler);
-                display.addEventHandler(NodeMouseOverEvent.TYPE, handler);
-                display.addEventHandler(NodeMouseOutEvent.TYPE, handler);
-                display.addEventHandler(NodeMouseClickEvent.TYPE, handler);
-                display.addEventHandler(NodeDragEvent.TYPE, handler);
-                display.addEventHandler(MouseMoveEvent.getType(), handler);
-
-                initNodeMenuItems();
-            }
-        });
-        display.addGraphDisplayLoadingFailureHandler(new GraphDisplayLoadingFailureEventHandler() {
-            @Override
-            public void onLoadingFailure(GraphDisplayLoadingFailureEvent event) {
-
-            }
-        });
+    private void initArcTypeContainers() {
+        for (ArcType arcType : arcStyleProvider.getArcTypes()) {
+            arcItemsByArcTypeID.put(arcType.getID(), new ArcItemContainer(
+                    arcType, graphDisplay));
+        }
     }
 
     private void initNodeMenuItems() {
@@ -441,6 +417,41 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
                         nodeMenuEntry.getExpander());
             }
         }
+    }
+
+    private void initStateChangeHandlers() {
+        graphDisplay
+                .addGraphDisplayReadyHandler(new GraphDisplayReadyEventHandler() {
+                    @Override
+                    public void onWidgetReady(GraphDisplayReadyEvent event) {
+                        ready = true;
+
+                        GraphEventHandler handler = new GraphEventHandler();
+
+                        graphDisplay.addEventHandler(
+                                NodeDragHandleMouseDownEvent.TYPE, handler);
+                        graphDisplay.addEventHandler(NodeMouseOverEvent.TYPE,
+                                handler);
+                        graphDisplay.addEventHandler(NodeMouseOutEvent.TYPE,
+                                handler);
+                        graphDisplay.addEventHandler(NodeMouseClickEvent.TYPE,
+                                handler);
+                        graphDisplay.addEventHandler(NodeDragEvent.TYPE,
+                                handler);
+                        graphDisplay.addEventHandler(MouseMoveEvent.getType(),
+                                handler);
+
+                        initNodeMenuItems();
+                    }
+                });
+        graphDisplay
+                .addGraphDisplayLoadingFailureHandler(new GraphDisplayLoadingFailureEventHandler() {
+                    @Override
+                    public void onLoadingFailure(
+                            GraphDisplayLoadingFailureEvent event) {
+                        // TODO handle loading failures
+                    }
+                });
     }
 
     @Override
@@ -460,7 +471,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
             return;
         }
 
-        Widget displayWidget = display.asWidget();
+        Widget displayWidget = graphDisplay.asWidget();
         if (displayWidget == null) {
             return; // for tests
         }
@@ -468,13 +479,13 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         int height = displayWidget.getOffsetHeight();
         int width = displayWidget.getOffsetWidth();
 
-        display.setLocation(node, new Point(width / 2, height / 2));
+        graphDisplay.setLocation(node, new Point(width / 2, height / 2));
     }
 
     private void registerNodeMenuItem(String category, String menuLabel,
             final GraphNodeExpander nodeExpander) {
 
-        display.addNodeMenuItemHandler(menuLabel,
+        graphDisplay.addNodeMenuItemHandler(menuLabel,
                 new NodeMenuItemClickedHandler() {
                     @Override
                     public void onNodeMenuItemClicked(Node node) {
@@ -489,7 +500,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
         nodeResources.removeResourceSet(resourceItem.getResourceSet());
         removeNodeArcs(node);
-        display.removeNode(node);
+        graphDisplay.removeNode(node);
     }
 
     private void removeNodeArcs(Node node) {
@@ -501,7 +512,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
             if (arc.getSourceNodeId() == node.getId()
                     || arc.getTargetNodeId() == node.getId()) {
 
-                display.removeArc(arc);
+                graphDisplay.removeArc(arc);
                 it.remove();
             }
         }
@@ -518,7 +529,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
                     (Integer) nodeMemento.getValue(MEMENTO_X),
                     (Integer) nodeMemento.getValue(MEMENTO_Y));
 
-            display.setLocation(item.getNode(), location);
+            graphDisplay.setLocation(item.getNode(), location);
         }
     }
 
@@ -530,7 +541,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         for (ResourceItem resourceItem : resourceItems) {
             GraphItem item = (GraphItem) resourceItem.getDisplayObject();
 
-            Point location = display.getLocation(item.getNode());
+            Point location = graphDisplay.getLocation(item.getNode());
 
             Memento nodeMemento = new Memento();
             nodeMemento.setValue(MEMENTO_X, location.x);
@@ -541,21 +552,17 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         return state;
     }
 
-    // TODO encapsulate into arc item
-    private void showArc(ArcItem arcItem) {
-        if (display.containsArc(arcItem.getId())) {
-            return;
-        }
+    /**
+     * If the arc type becomes invisible, all arcs of this arcType from the view
+     * and arcs of this arc type are not shown any more. If the arc types
+     * becomes visible, all arcs of this type are added.
+     */
+    // TODO expose arc type configurations and use listener mechanism
+    public void setArcTypeVisible(String arcTypeId, boolean visible) {
+        assert arcTypeId != null;
+        assert arcItemsByArcTypeID.containsKey(arcTypeId);
 
-        Arc arc = new Arc(arcItem.getId(), arcItem.getSourceNodeItemId(),
-                arcItem.getTargetNodeItemId(), arcItem.getType(),
-                arcItem.isDirected());
-
-        display.addArc(arc);
-        arcList.add(arc);
-
-        display.setArcStyle(arc, GraphDisplay.ARC_COLOR, arcItem.getColor());
-        display.setArcStyle(arc, GraphDisplay.ARC_STYLE, arcItem.getStyle());
+        arcItemsByArcTypeID.get(arcTypeId).setVisible(visible);
     }
 
     @Override
@@ -591,29 +598,14 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
         assert resourceItems != null;
 
-        LightweightCollection<ArcType> arcTypes = arcStyleProvider
-                .getArcTypes();
-        for (ResourceItem addedItem : resourceItems) {
-            for (ArcType arcType : arcTypes) {
-                for (ArcItem arcItem : arcType.getArcItems(addedItem)) {
-                    arcItems.add(arcItem);
-                }
+        for (ArcItemContainer container : arcItemsByArcTypeID.values()) {
+            for (ResourceItem resourceItem : resourceItems) {
+                container.update(resourceItem);
             }
+
+            container.showArcs();
         }
 
-        // TODO go through arcs to show
-        for (Iterator<ArcItem> it = arcItems.iterator(); it.hasNext();) {
-            ArcItem arcItem = it.next();
-
-            // TODO also check for target...
-            String sourceGroupId = arcItem.getSourceNodeItemId();
-            String targetGroupId = arcItem.getTargetNodeItemId();
-            if (getCallback().containsResourceItem(sourceGroupId)
-                    && getCallback().containsResourceItem(targetGroupId)) {
-                showArc(arcItem);
-                it.remove();
-            }
-        }
     }
 
     private void updateNode(ResourceItem resourceItem) {

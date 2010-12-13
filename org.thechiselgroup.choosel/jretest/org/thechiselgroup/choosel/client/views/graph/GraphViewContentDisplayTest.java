@@ -63,7 +63,6 @@ import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.Slot;
 import org.thechiselgroup.choosel.client.views.TestViewContentDisplayCallback;
-import org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisplay.Display;
 
 public class GraphViewContentDisplayTest {
 
@@ -81,7 +80,7 @@ public class GraphViewContentDisplayTest {
     private GraphViewContentDisplay underTest;
 
     @Mock
-    private Display display;
+    private GraphDisplay graphDisplay;
 
     @Mock
     private DragEnablerFactory dragEnablerFactory;
@@ -105,22 +104,32 @@ public class GraphViewContentDisplayTest {
     @Mock
     private ArcType arcType;
 
+    private String arcStyle;
+
+    private String arcColor;
+
+    private String arcTypeValue;
+
+    private boolean arcDirected;
+
     @Test
     public void addResourceItemsCallsArcTypeGetArcItems() {
         // define variables
         String groupId1 = "1";
         String groupId2 = "2";
+        LightweightCollection<ResourceItem> resourceItems = createResourceItems(
+                toLabeledResourceSet(groupId1, createResource(1)),
+                toLabeledResourceSet(groupId2, createResource(2)));
 
         // set up arc type provider
         when(arcStyleProvider.getArcTypes()).thenReturn(
                 LightweightCollections.toCollection(arcType));
+        init();
+
         when(arcType.getArcItems(any(ResourceItem.class))).thenReturn(
                 LightweightCollections.<ArcItem> emptyCollection());
 
         // simulate add
-        LightweightCollection<ResourceItem> resourceItems = createResourceItems(
-                toLabeledResourceSet(groupId1, createResource(1)),
-                toLabeledResourceSet(groupId2, createResource(2)));
         callback.addResourceItems(resourceItems);
         underTest.update(resourceItems,
                 LightweightCollections.<ResourceItem> emptySet(),
@@ -137,8 +146,9 @@ public class GraphViewContentDisplayTest {
     @Test
     public void addResourceItemToAllResource() {
         ResourceSet resourceSet = createResources(1);
-
         ResourceItem resourceItem = createResourceItem("1", resourceSet);
+
+        init();
 
         callback.addResourceItem(resourceItem);
         underTest.update(LightweightCollections.toCollection(resourceItem),
@@ -152,13 +162,8 @@ public class GraphViewContentDisplayTest {
     }
 
     @Test
-    public void arcItemGetsShownWhenAddingResourceItems() {
-        // define values
+    public void arcsAreAddedWhenAddingResourceItems() {
         String arcId = "arcid";
-        String arcStyle = GraphDisplay.ARC_STYLE_SOLID;
-        String arcColor = "#ffffff";
-        String arcTypeValue = "arcType";
-        boolean arcDirected = true;
         String groupId1 = "1";
         String groupId2 = "2";
         LightweightList<ResourceItem> resourceItems = createResourceItems(
@@ -168,12 +173,17 @@ public class GraphViewContentDisplayTest {
         // set up arc item response
         when(arcStyleProvider.getArcTypes()).thenReturn(
                 LightweightCollections.toCollection(arcType));
+        underTest.init(callback);
+
         ArcItem arcItem = new ArcItem(arcTypeValue, arcId, groupId1, groupId2,
                 arcColor, arcStyle, arcDirected);
         when(arcType.getArcItems(eq(resourceItems.get(0)))).thenReturn(
                 LightweightCollections.toCollection(arcItem));
         when(arcType.getArcItems(eq(resourceItems.get(1)))).thenReturn(
                 LightweightCollections.<ArcItem> emptyCollection());
+
+        when(graphDisplay.containsNode(groupId1)).thenReturn(true);
+        when(graphDisplay.containsNode(groupId2)).thenReturn(true);
 
         // simulate add
         callback.addResourceItems(resourceItems);
@@ -182,30 +192,14 @@ public class GraphViewContentDisplayTest {
                 LightweightCollections.<ResourceItem> emptySet(),
                 LightweightCollections.<Slot> emptySet());
 
-        // verify that arc was shown and settings were correctly made
-        ArgumentCaptor<Arc> captor = ArgumentCaptor.forClass(Arc.class);
-        verify(display, times(1)).addArc(captor.capture());
-        Arc result = captor.getValue();
-        assertEquals(arcId, result.getId());
-        assertEquals(groupId1, result.getSourceNodeId());
-        assertEquals(groupId2, result.getTargetNodeId());
-        assertEquals(arcTypeValue, result.getType());
-        verify(display, times(1)).setArcStyle(eq(result),
-                eq(GraphDisplay.ARC_COLOR), eq(arcColor));
-        verify(display, times(1)).setArcStyle(eq(result),
-                eq(GraphDisplay.ARC_STYLE), eq(arcStyle));
+        verifyArcShown(arcId, groupId1, groupId2);
     }
 
     @Test
-    public void arcItemsGetsShownWhenRequiredResourceItemsAreAddedLater() {
-        // define values
+    public void arcsAreAddedWhenRequiredResourceItemsAreAddedLater() {
         String arcId = "arcid";
-        String arcStyle = GraphDisplay.ARC_STYLE_SOLID;
-        String arcColor = "#ffffff";
-        String arcTypeValue = "arcType";
         String groupId1 = "1";
         String groupId2 = "2";
-        boolean arcDirected = true;
 
         ResourceItem resourceItem1 = createResourceItem(groupId1,
                 createResources(1));
@@ -215,6 +209,8 @@ public class GraphViewContentDisplayTest {
         // set up arc item response
         when(arcStyleProvider.getArcTypes()).thenReturn(
                 LightweightCollections.toCollection(arcType));
+        init();
+
         ArcItem arcItem = new ArcItem(arcTypeValue, arcId, groupId1, groupId2,
                 arcColor, arcStyle, arcDirected);
         when(arcType.getArcItems(eq(resourceItem1))).thenReturn(
@@ -223,6 +219,7 @@ public class GraphViewContentDisplayTest {
                 LightweightCollections.<ArcItem> emptyCollection());
 
         // simulate add - arc item gets created but not shown
+        when(graphDisplay.containsNode(groupId1)).thenReturn(true);
         callback.addResourceItem(resourceItem1);
         underTest.update(LightweightCollections.toCollection(resourceItem1),
                 LightweightCollections.<ResourceItem> emptySet(),
@@ -230,27 +227,54 @@ public class GraphViewContentDisplayTest {
                 LightweightCollections.<Slot> emptySet());
 
         // verify not shown
-        verify(display, times(0)).addArc(any(Arc.class));
+        verify(graphDisplay, times(0)).addArc(any(Arc.class));
 
         // 2nd add - arc item should get shown
+        when(graphDisplay.containsNode(groupId2)).thenReturn(true);
         callback.addResourceItem(resourceItem2);
         underTest.update(LightweightCollections.toCollection(resourceItem2),
                 LightweightCollections.<ResourceItem> emptySet(),
                 LightweightCollections.<ResourceItem> emptySet(),
                 LightweightCollections.<Slot> emptySet());
 
-        // verify that arc was shown and settings were correctly made
-        ArgumentCaptor<Arc> captor = ArgumentCaptor.forClass(Arc.class);
-        verify(display, times(1)).addArc(captor.capture());
-        Arc result = captor.getValue();
-        assertEquals(arcId, result.getId());
-        assertEquals(groupId1, result.getSourceNodeId());
-        assertEquals(groupId2, result.getTargetNodeId());
-        assertEquals(arcTypeValue, result.getType());
-        verify(display, times(1)).setArcStyle(eq(result),
-                eq(GraphDisplay.ARC_COLOR), eq(arcColor));
-        verify(display, times(1)).setArcStyle(eq(result),
-                eq(GraphDisplay.ARC_STYLE), eq(arcStyle));
+        verifyArcShown(arcId, groupId1, groupId2);
+    }
+
+    @Test
+    public void arcsAreRemovedWhenSettingArcTypeNotInvisible() {
+        String arcId = "arcid";
+        String groupId1 = "1";
+        String groupId2 = "2";
+        LightweightList<ResourceItem> resourceItems = createResourceItems(
+                toLabeledResourceSet(groupId1, createResource(1)),
+                toLabeledResourceSet(groupId2, createResource(2)));
+
+        // set up arc item response
+        when(arcStyleProvider.getArcTypes()).thenReturn(
+                LightweightCollections.toCollection(arcType));
+        init();
+
+        ArcItem arcItem = new ArcItem(arcTypeValue, arcId, groupId1, groupId2,
+                arcColor, arcStyle, arcDirected);
+        when(arcType.getArcItems(eq(resourceItems.get(0)))).thenReturn(
+                LightweightCollections.toCollection(arcItem));
+        when(arcType.getArcItems(eq(resourceItems.get(1)))).thenReturn(
+                LightweightCollections.<ArcItem> emptyCollection());
+
+        // simulate add
+        when(graphDisplay.containsNode(groupId1)).thenReturn(true);
+        when(graphDisplay.containsNode(groupId2)).thenReturn(true);
+        callback.addResourceItems(resourceItems);
+        underTest.update(resourceItems,
+                LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections.<ResourceItem> emptySet(),
+                LightweightCollections.<Slot> emptySet());
+        when(graphDisplay.containsArc(arcId)).thenReturn(true);
+
+        // hide arc type
+        underTest.setArcTypeVisible(arcType.getID(), false);
+
+        verifyArcRemoved(arcId, groupId1, groupId2);
     }
 
     /*
@@ -259,10 +283,12 @@ public class GraphViewContentDisplayTest {
      */
     @Test
     public void createNodeMoveCommandWhenNodeDragged() {
+        init();
+
         ArgumentCaptor<NodeDragHandler> argument1 = ArgumentCaptor
                 .forClass(NodeDragHandler.class);
 
-        verify(display, times(1)).addEventHandler(eq(NodeDragEvent.TYPE),
+        verify(graphDisplay, times(1)).addEventHandler(eq(NodeDragEvent.TYPE),
                 argument1.capture());
 
         NodeDragHandler nodeDragHandler = argument1.getValue();
@@ -284,20 +310,17 @@ public class GraphViewContentDisplayTest {
         assertEquals(node, command2.getNode());
         assertEquals(sourceLocation, command2.getSourceLocation());
         assertEquals(targetLocation, command2.getTargetLocation());
-        assertEquals(display, command2.getGraphDisplay());
+        assertEquals(graphDisplay, command2.getGraphDisplay());
     }
 
     @Test
     public void doNotShowArcItemForUnknownResourceItems() {
-        // define values
+        init();
+
         String arcId1 = "arcid1";
         String arcId2 = "arcid2";
-        String arcStyle = GraphDisplay.ARC_STYLE_SOLID;
-        String arcColor = "#ffffff";
-        String arcTypeValue = "arcType";
         String groupId1 = "1";
         String groupId2 = "2";
-        boolean arcDirected = true;
 
         // set up arc item response
         ArcItem arcItem1 = new ArcItem(arcTypeValue, arcId1, groupId1,
@@ -318,11 +341,13 @@ public class GraphViewContentDisplayTest {
                 LightweightCollections.<Slot> emptySet());
 
         // verify that no arc was created
-        verify(display, times(0)).addArc(any(Arc.class));
+        verify(graphDisplay, times(0)).addArc(any(Arc.class));
     }
 
     @Test
     public void getAllNodes() {
+        init();
+
         ResourceItem resourceItem1 = ResourcesTestHelper.createResourceItem(
                 "1", createResources(1));
         ResourceItem resourceItem2 = ResourcesTestHelper.createResourceItem(
@@ -344,12 +369,21 @@ public class GraphViewContentDisplayTest {
                 underTest.getAllNodes());
     }
 
+    private void init() {
+        underTest.init(callback);
+        ArgumentCaptor<GraphDisplayReadyEventHandler> argument = ArgumentCaptor
+                .forClass(GraphDisplayReadyEventHandler.class);
+        verify(graphDisplay).addGraphDisplayReadyHandler(argument.capture());
+        argument.getValue().onWidgetReady(new GraphDisplayReadyEvent(null));
+    }
+
     @Test
     public void loadNeighbourhoodWhenAddingConcept() {
-        Resource concept1 = createResource(1);
+        init();
 
+        Resource resource = createResource(1);
         ResourceItem resourceItem = ResourcesTestHelper.createResourceItem("1",
-                toResourceSet(concept1));
+                toResourceSet(resource));
 
         callback.addResourceItem(resourceItem);
         underTest.update(LightweightCollections.toCollection(resourceItem),
@@ -364,15 +398,15 @@ public class GraphViewContentDisplayTest {
 
         ResourceItem result = argument.getValue();
         assertEquals(1, result.getResourceSet().size());
-        assertEquals(concept1, result.getResourceSet().getFirstResource());
+        assertEquals(resource, result.getResourceSet().getFirstResource());
     }
 
     @Test
     public void removeResourceItemFromAllResource() {
-        ResourceSet resourceSet = createResources(1);
+        init();
 
-        ResourceItem resourceItem = ResourcesTestHelper.createResourceItem("1",
-                resourceSet);
+        ResourceSet resourceSet = createResources(1);
+        ResourceItem resourceItem = createResourceItem("1", resourceSet);
 
         callback.addResourceItem(resourceItem);
         underTest.update(LightweightCollections.toCollection(resourceItem),
@@ -400,10 +434,8 @@ public class GraphViewContentDisplayTest {
         ResourceSet resourceSet1 = createResources(1);
         ResourceSet resourceSet2 = createResources(2);
 
-        ResourceItem resourceItem1 = ResourcesTestHelper.createResourceItem(
-                groupId1, resourceSet1);
-        ResourceItem resourceItem2 = ResourcesTestHelper.createResourceItem(
-                groupId2, resourceSet2);
+        ResourceItem resourceItem1 = createResourceItem(groupId1, resourceSet1);
+        ResourceItem resourceItem2 = createResourceItem(groupId2, resourceSet2);
 
         LightweightCollection<ResourceItem> resourceItems = LightweightCollections
                 .toCollection(resourceItem1, resourceItem2);
@@ -437,10 +469,8 @@ public class GraphViewContentDisplayTest {
         ResourceSet resourceSet1 = createResources(1);
         ResourceSet resourceSet2 = createResources(2);
 
-        ResourceItem resourceItem1 = ResourcesTestHelper.createResourceItem(
-                groupId1, resourceSet1);
-        ResourceItem resourceItem2 = ResourcesTestHelper.createResourceItem(
-                groupId2, resourceSet2);
+        ResourceItem resourceItem1 = createResourceItem(groupId1, resourceSet1);
+        ResourceItem resourceItem2 = createResourceItem(groupId2, resourceSet2);
 
         LightweightCollection<ResourceItem> resourceItems = LightweightCollections
                 .toCollection(resourceItem1, resourceItem2);
@@ -475,25 +505,25 @@ public class GraphViewContentDisplayTest {
         sourceLocation = new Point(10, 15);
         targetLocation = new Point(20, 25);
 
-        underTest = spy(new GraphViewContentDisplay(display, commandManager,
-                resourceManager, dragEnablerFactory, resourceCategorizer,
-                arcStyleProvider, registry));
+        arcStyle = GraphDisplay.ARC_STYLE_SOLID;
+        arcColor = "#ffffff";
+        arcTypeValue = "arcType";
+        arcDirected = true;
 
-        underTest.init(callback);
+        underTest = spy(new GraphViewContentDisplay(graphDisplay,
+                commandManager, resourceManager, dragEnablerFactory,
+                resourceCategorizer, arcStyleProvider, registry));
+
+        when(arcStyleProvider.getArcTypes()).thenReturn(
+                LightweightCollections.<ArcType> emptyCollection());
+
+        when(arcType.getID()).thenReturn(arcTypeValue);
 
         when(resourceCategorizer.getCategory(any(Resource.class))).thenReturn(
                 TestResourceSetFactory.TYPE_1);
 
         when(registry.getAutomaticExpander(any(String.class))).thenReturn(
                 automaticExpander);
-
-        when(arcStyleProvider.getArcTypes()).thenReturn(
-                LightweightCollections.<ArcType> emptyCollection());
-
-        ArgumentCaptor<GraphDisplayReadyEventHandler> argument = ArgumentCaptor
-                .forClass(GraphDisplayReadyEventHandler.class);
-        verify(display).addGraphDisplayReadyHandler(argument.capture());
-        argument.getValue().onWidgetReady(new GraphDisplayReadyEvent(null));
     }
 
     @After
@@ -503,12 +533,7 @@ public class GraphViewContentDisplayTest {
 
     @Test
     public void updateArcsForResourceItems() {
-        // define values
         String arcId = "arcid";
-        String arcStyle = GraphDisplay.ARC_STYLE_SOLID;
-        String arcColor = "#ffffff";
-        String arcTypeValue = "arcType";
-        boolean arcDirected = true;
         String groupId1 = "1";
         String groupId2 = "2";
         LightweightList<ResourceItem> resourceItems = createResourceItems(
@@ -518,8 +543,13 @@ public class GraphViewContentDisplayTest {
         // set up 1st arc item response - return nothing
         when(arcStyleProvider.getArcTypes()).thenReturn(
                 LightweightCollections.toCollection(arcType));
+        init();
+
         when(arcType.getArcItems(any(ResourceItem.class))).thenReturn(
                 LightweightCollections.<ArcItem> emptyCollection());
+
+        when(graphDisplay.containsNode(groupId1)).thenReturn(true);
+        when(graphDisplay.containsNode(groupId2)).thenReturn(true);
 
         // simulate add
         callback.addResourceItems(resourceItems);
@@ -537,19 +567,36 @@ public class GraphViewContentDisplayTest {
         // call update resource item
         underTest.updateArcsForResourceItems(resourceItems);
 
-        // verify that arc was shown and settings were correctly made
+        verifyArcShown(arcId, groupId1, groupId2);
+
+    }
+
+    private void verifyArcRemoved(String arcId, String sourceNodeId,
+            String targetNodeId) {
+
         ArgumentCaptor<Arc> captor = ArgumentCaptor.forClass(Arc.class);
-        verify(display, times(1)).addArc(captor.capture());
+        verify(graphDisplay, times(1)).removeArc(captor.capture());
         Arc result = captor.getValue();
         assertEquals(arcId, result.getId());
-        assertEquals(groupId1, result.getSourceNodeId());
-        assertEquals(groupId2, result.getTargetNodeId());
+        assertEquals(sourceNodeId, result.getSourceNodeId());
+        assertEquals(targetNodeId, result.getTargetNodeId());
         assertEquals(arcTypeValue, result.getType());
-        verify(display, times(1)).setArcStyle(eq(result),
-                eq(GraphDisplay.ARC_COLOR), eq(arcColor));
-        verify(display, times(1)).setArcStyle(eq(result),
-                eq(GraphDisplay.ARC_STYLE), eq(arcStyle));
+    }
 
+    private void verifyArcShown(String arcId, String sourceNodeId,
+            String targetNodeId) {
+
+        ArgumentCaptor<Arc> captor = ArgumentCaptor.forClass(Arc.class);
+        verify(graphDisplay, times(1)).addArc(captor.capture());
+        Arc result = captor.getValue();
+        assertEquals(arcId, result.getId());
+        assertEquals(sourceNodeId, result.getSourceNodeId());
+        assertEquals(targetNodeId, result.getTargetNodeId());
+        assertEquals(arcTypeValue, result.getType());
+        verify(graphDisplay, times(1)).setArcStyle(eq(result),
+                eq(GraphDisplay.ARC_COLOR), eq(arcColor));
+        verify(graphDisplay, times(1)).setArcStyle(eq(result),
+                eq(GraphDisplay.ARC_STYLE), eq(arcStyle));
     }
 
 }

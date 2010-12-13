@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.graph;
 
+import org.thechiselgroup.choosel.client.ui.widget.graph.Arc;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
 
 public class ArcItem {
@@ -39,6 +40,8 @@ public class ArcItem {
      */
     private String style;
 
+    private Arc arc;
+
     public ArcItem(String type, String id, String sourceNodeItemId,
             String targetNodeItemId, String color, String style,
             boolean directed) {
@@ -50,6 +53,23 @@ public class ArcItem {
         this.color = color;
         this.style = style;
         this.directed = directed;
+    }
+
+    public void addArcToDisplay(GraphDisplay display) {
+        assert display != null;
+
+        if (display.containsNode(sourceNodeItemId)
+                && display.containsNode(targetNodeItemId)
+                && !display.containsArc(id)) {
+
+            arc = new Arc(id, sourceNodeItemId, targetNodeItemId, type,
+                    directed);
+
+            display.addArc(arc);
+
+            display.setArcStyle(arc, GraphDisplay.ARC_COLOR, getColor());
+            display.setArcStyle(arc, GraphDisplay.ARC_STYLE, getStyle());
+        }
     }
 
     @Override
@@ -110,6 +130,10 @@ public class ArcItem {
             return false;
         }
         return true;
+    }
+
+    public Arc getArc() {
+        return arc;
     }
 
     public String getColor() {
