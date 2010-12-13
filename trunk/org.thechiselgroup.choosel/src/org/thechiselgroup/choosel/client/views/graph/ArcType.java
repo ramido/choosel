@@ -19,7 +19,7 @@ import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 
 /**
- * Calculates arc items for a given resource item.
+ * A specific class of arcs. Calculates arc items for a given resource item.
  * 
  * @author Lars Grammel
  */
@@ -39,5 +39,11 @@ public interface ArcType {
      *         should have an equal id across multiple calls.
      */
     LightweightCollection<ArcItem> getArcItems(ResourceItem resourceItem);
+
+    /**
+     * Returns the identifier of this arc type. Each ArcType must have a unique
+     * identifier.
+     */
+    String getID();
 
 }
