@@ -112,12 +112,6 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
     }-*/;
     // @formatter:on
 
-    // @formatter:off
-    private static native String _getSelectedNodeID(String swfID) /*-{
-        return $doc.getElementById(swfID).getSelectedNodeID();
-    }-*/;
-    // @formatter:on
-
     public static void _log(String message) {
         Log.debug(message);
     }
@@ -323,6 +317,7 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
 
     @Override
     public void addArc(Arc arc) {
+        assert arc != null;
         assert !arcsByID.containsKey(arc.getId()) : "arc must not be contained";
         assert nodesByID.containsKey(arc.getSourceNodeId()) : "source node must be available";
         assert nodesByID.containsKey(arc.getTargetNodeId()) : "target node must be available";
@@ -336,6 +331,9 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
     public <T extends EventHandler> HandlerRegistration addEventHandler(
             Type<T> type, T handler) {
 
+        assert type != null;
+        assert handler != null;
+
         if (type instanceof DomEvent.Type) {
             return addDomHandler(handler, (DomEvent.Type) type);
         } else {
@@ -347,6 +345,8 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
     public HandlerRegistration addGraphDisplayLoadingFailureHandler(
             GraphDisplayLoadingFailureEventHandler handler) {
 
+        assert handler != null;
+
         return addHandler(handler, GraphDisplayLoadingFailureEvent.TYPE);
     }
 
@@ -354,11 +354,14 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
     public HandlerRegistration addGraphDisplayReadyHandler(
             GraphDisplayReadyEventHandler handler) {
 
+        assert handler != null;
+
         return addHandler(handler, GraphDisplayReadyEvent.TYPE);
     }
 
     @Override
     public void addNode(Node node) {
+        assert node != null;
         assert !nodesByID.containsKey(node.getId()) : "node must not be contained";
 
         _addNode(getSwfId(), node.getId(), node.getType(), node.getLabel());
@@ -369,6 +372,10 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
     public void addNodeMenuItemHandler(String menuLabel,
             NodeMenuItemClickedHandler handler, String nodeType) {
 
+        assert menuLabel != null;
+        assert handler != null;
+        assert nodeType != null;
+
         String id = "menuItemId-" + (nodeMenuItemIdCounter++);
         nodeMenuItemClickHandlers.put(id, handler);
 
@@ -377,6 +384,10 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
 
     @Override
     public void animateMoveTo(Node node, Point targetLocation) {
+        assert node != null;
+        assert containsNode(node.getId());
+        assert targetLocation != null;
+
         _setNodeLocation(getSwfId(), node.getId(), targetLocation.x,
                 targetLocation.y, true);
 
@@ -414,15 +425,15 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
     public Arc getArc(String arcId) {
         assert arcId != null;
         assert arcsByID.containsKey(arcId);
-        return arcsByID.get(arcId);
-    }
 
-    public Arc getArcByID(String arcID) {
-        return arcsByID.get(arcID);
+        return arcsByID.get(arcId);
     }
 
     @Override
     public Point getLocation(Node node) {
+        assert node != null;
+        assert containsNode(node.getId());
+
         Location result = _getNodeLocation(getSwfId(), node.getId());
         return new Point((int) result.getX(), (int) result.getY());
     }
@@ -431,43 +442,36 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
     public Node getNode(String nodeId) {
         assert nodeId != null;
         assert nodesByID.containsKey(nodeId);
+
         return nodesByID.get(nodeId);
-    }
-
-    public Node getNodeByID(String nodeID) {
-        return nodesByID.get(nodeID);
-    }
-
-    public String getSelectedNodeID() {
-        return _getSelectedNodeID(getSwfId());
     }
 
     private void onArcMouseClick(String arcID, int mouseX, int mouseY) {
         int x = getAbsoluteLeft() + mouseX;
         int y = getAbsoluteTop() + mouseY;
 
-        fireEvent(new ArcMouseClickEvent(getArcByID(arcID), x, y));
+        fireEvent(new ArcMouseClickEvent(getArc(arcID), x, y));
     }
 
     private void onArcMouseDoubleClick(String arcID, int mouseX, int mouseY) {
         int x = getAbsoluteLeft() + mouseX;
         int y = getAbsoluteTop() + mouseY;
 
-        fireEvent(new ArcMouseDoubleClickEvent(getArcByID(arcID), x, y));
+        fireEvent(new ArcMouseDoubleClickEvent(getArc(arcID), x, y));
     }
 
     private void onArcMouseOut(String arcID, int mouseX, int mouseY) {
         int x = getAbsoluteLeft() + mouseX;
         int y = getAbsoluteTop() + mouseY;
 
-        fireEvent(new ArcMouseOutEvent(getArcByID(arcID), x, y));
+        fireEvent(new ArcMouseOutEvent(getArc(arcID), x, y));
     }
 
     private void onArcMouseOver(String arcID, int mouseX, int mouseY) {
         int x = getAbsoluteLeft() + mouseX;
         int y = getAbsoluteTop() + mouseY;
 
-        fireEvent(new ArcMouseOverEvent(getArcByID(arcID), x, y));
+        fireEvent(new ArcMouseOverEvent(getArc(arcID), x, y));
     }
 
     @Override
@@ -487,17 +491,16 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
     private void onNodeDrag(String nodeID, int startX, int startY, int endX,
             int endY) {
 
-        fireEvent(new NodeDragEvent(getNodeByID(nodeID), startX, startY, endX,
-                endY));
+        fireEvent(new NodeDragEvent(getNode(nodeID), startX, startY, endX, endY));
     }
 
     private void onNodeDragHandleMouseDown(String nodeID, int mouseX, int mouseY) {
-        fireEvent(new NodeDragHandleMouseDownEvent(getNodeByID(nodeID), mouseX,
+        fireEvent(new NodeDragHandleMouseDownEvent(getNode(nodeID), mouseX,
                 mouseY));
     }
 
     private void onNodeDragHandleMouseMove(String nodeID, int mouseX, int mouseY) {
-        fireEvent(new NodeDragHandleMouseMoveEvent(getNodeByID(nodeID), mouseX,
+        fireEvent(new NodeDragHandleMouseMoveEvent(getNode(nodeID), mouseX,
                 mouseY));
     }
 
@@ -519,28 +522,28 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
         int x = getAbsoluteLeft() + mouseX;
         int y = getAbsoluteTop() + mouseY;
 
-        fireEvent(new NodeMouseClickEvent(getNodeByID(nodeID), x, y));
+        fireEvent(new NodeMouseClickEvent(getNode(nodeID), x, y));
     }
 
     private void onNodeMouseDoubleClick(String nodeID, int mouseX, int mouseY) {
         int x = getAbsoluteLeft() + mouseX;
         int y = getAbsoluteTop() + mouseY;
 
-        fireEvent(new NodeMouseDoubleClickEvent(getNodeByID(nodeID), x, y));
+        fireEvent(new NodeMouseDoubleClickEvent(getNode(nodeID), x, y));
     }
 
     private void onNodeMouseOut(String nodeID, int mouseX, int mouseY) {
         int x = getAbsoluteLeft() + mouseX;
         int y = getAbsoluteTop() + mouseY;
 
-        fireEvent(new NodeMouseOutEvent(getNodeByID(nodeID), x, y));
+        fireEvent(new NodeMouseOutEvent(getNode(nodeID), x, y));
     }
 
     private void onNodeMouseOver(String nodeID, int mouseX, int mouseY) {
         int x = getAbsoluteLeft() + mouseX;
         int y = getAbsoluteTop() + mouseY;
 
-        fireEvent(new NodeMouseOverEvent(getNodeByID(nodeID), x, y));
+        fireEvent(new NodeMouseOverEvent(getNode(nodeID), x, y));
     }
 
     @Override
@@ -557,12 +560,18 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
 
     @Override
     public void removeArc(Arc arc) {
+        assert arc != null;
+        assert containsArc(arc.getId());
+
         _removeArc(getSwfId(), arc.getId());
         arcsByID.remove(arc.getId());
     }
 
     @Override
     public void removeNode(Node node) {
+        assert node != null;
+        assert containsNode(node.getId());
+
         _removeNode(getSwfId(), node.getId());
         nodesByID.remove(node.getId());
     }
@@ -574,6 +583,8 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
 
     @Override
     public void runLayout(String layout) throws LayoutException {
+        assert layout != null;
+
         try {
             _runLayout(getSwfId(), layout);
         } catch (JavaScriptException ex) {
@@ -583,6 +594,8 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
 
     @Override
     public void runLayoutOnNodes(Collection<Node> nodes) throws LayoutException {
+        assert nodes != null;
+
         if (nodes.size() == 0) {
             return;
         }
@@ -607,6 +620,10 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
 
     @Override
     public void setLocation(Node node, Point point) {
+        assert node != null;
+        assert containsNode(node.getId());
+        assert point != null;
+
         _setNodeLocation(getSwfId(), node.getId(), point.x, point.y);
     }
 
