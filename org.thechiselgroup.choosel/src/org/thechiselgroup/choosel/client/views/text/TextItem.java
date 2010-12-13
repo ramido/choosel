@@ -17,7 +17,6 @@ package org.thechiselgroup.choosel.client.views.text;
 
 import org.thechiselgroup.choosel.client.ui.popup.DefaultPopupManager;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
-import org.thechiselgroup.choosel.client.views.slots.SlotResolver;
 
 public class TextItem {
 
@@ -40,8 +39,6 @@ public class TextItem {
      */
     private boolean addedToPanel = false;
 
-    private double cacheFontSize;
-
     private String lastFontSizeLabelValue;
 
     private String cachedDescription;
@@ -52,8 +49,15 @@ public class TextItem {
         this.resourceItem = resourceItem;
     }
 
-    public double getFontSizeSlotValue() {
-        return cacheFontSize;
+    public String getDescriptionValue() {
+        return (String) resourceItem
+                .getResourceValue(TextViewContentDisplay.DESCRIPTION_SLOT);
+    }
+
+    public double getFontSizeValue() {
+        return ((Double) resourceItem
+                .getResourceValue(TextViewContentDisplay.FONT_SIZE_SLOT))
+                .doubleValue();
     }
 
     public TextItemLabel getLabel() {
@@ -88,7 +92,7 @@ public class TextItem {
      */
     public void scaleFont(DoubleToGroupValueMapper<String> groupValueMapper) {
         String newFontSizeLabelValue = groupValueMapper
-                .getGroupValue(cacheFontSize);
+                .getGroupValue(getFontSizeValue());
 
         if (lastFontSizeLabelValue == null
                 || newFontSizeLabelValue.compareTo(lastFontSizeLabelValue) != 0) {
@@ -112,16 +116,12 @@ public class TextItem {
          * elements when there is a change. This makes a huge difference with
          * several thousand text items.
          */
-        String description = (String) resourceItem
-                .getResourceValue(SlotResolver.DESCRIPTION_SLOT);
+        String description = getDescriptionValue();
 
         if (cachedDescription == null || !cachedDescription.equals(description)) {
             label.setText(description);
             cachedDescription = description;
         }
-
-        cacheFontSize = ((Double) resourceItem
-                .getResourceValue(TextViewContentDisplay.FONT_SIZE_SLOT)).doubleValue();
     }
 
     public void updateStatusStyling() {

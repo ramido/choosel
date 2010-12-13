@@ -15,8 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
+import org.thechiselgroup.choosel.client.resources.DataType;
 import org.thechiselgroup.choosel.client.views.slots.Slot;
-import org.thechiselgroup.choosel.client.views.slots.SlotResolver;
 
 public abstract class IconResourceItem {
 
@@ -37,14 +37,16 @@ public abstract class IconResourceItem {
     // TODO pull up
     protected ResourceItem resourceItem;
 
-    public IconResourceItem(ResourceItem resourceItem) {
+    public IconResourceItem(ResourceItem resourceItem, Slot colorSlot) {
         assert resourceItem != null;
+        assert colorSlot != null;
+        assert colorSlot.getDataType().equals(DataType.COLOR);
 
         this.resourceItem = resourceItem;
 
         // TODO move colors to color provider
         // TODO add border (should be automatically calculated based on color)
-        defaultColor = (String) getResourceValue(SlotResolver.COLOR_SLOT);
+        defaultColor = (String) getResourceValue(colorSlot);
         if (defaultColor == null) {
             defaultColor = "#6495ed"; // XXX hack
         }

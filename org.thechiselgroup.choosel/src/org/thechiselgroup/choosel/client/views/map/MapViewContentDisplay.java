@@ -25,7 +25,6 @@ import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.SidePanelSection;
 import org.thechiselgroup.choosel.client.views.slots.Slot;
-import org.thechiselgroup.choosel.client.views.slots.SlotResolver;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -40,6 +39,15 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 public class MapViewContentDisplay extends AbstractViewContentDisplay {
+
+    public final static Slot DESCRIPTION_SLOT = new Slot("description",
+            "Label", DataType.TEXT);
+
+    public final static Slot COLOR_SLOT = new Slot("color", "Color",
+            DataType.COLOR);
+
+    public final static Slot LOCATION_SLOT = new Slot("location", "Location",
+            DataType.LOCATION);
 
     public static final String LATITUDE = "latitude";
 
@@ -64,8 +72,6 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
     private DragEnablerFactory dragEnablerFactory;
 
     private MapWidget map;
-
-    public static final Slot LOCATION_SLOT = new Slot("location", "Location", DataType.LOCATION);
 
     @Inject
     public MapViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
@@ -138,8 +144,7 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
 
     @Override
     public Slot[] getSlots() {
-        return new Slot[] { SlotResolver.DESCRIPTION_SLOT,
-                SlotResolver.COLOR_SLOT, MapViewContentDisplay.LOCATION_SLOT };
+        return new Slot[] { DESCRIPTION_SLOT, COLOR_SLOT, LOCATION_SLOT };
     }
 
     private void initMapItem(ResourceItem resourceItem) {
@@ -260,9 +265,8 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
         }
 
         // XXX performance of toList
-        if (changedSlots.toList().contains(SlotResolver.DESCRIPTION_SLOT)) {
-            for (ResourceItem resourceItem : getCallback()
-                    .getResourceItems()) {
+        if (changedSlots.toList().contains(DESCRIPTION_SLOT)) {
+            for (ResourceItem resourceItem : getCallback().getResourceItems()) {
                 ((MapItem) resourceItem.getDisplayObject()).updateLabel();
             }
         }

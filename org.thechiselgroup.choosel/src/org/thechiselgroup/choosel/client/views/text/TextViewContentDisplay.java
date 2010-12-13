@@ -32,7 +32,6 @@ import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.ResourceItem;
 import org.thechiselgroup.choosel.client.views.SidePanelSection;
 import org.thechiselgroup.choosel.client.views.slots.Slot;
-import org.thechiselgroup.choosel.client.views.slots.SlotResolver;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -78,6 +77,12 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
         }
     }
 
+    public final static Slot DESCRIPTION_SLOT = new Slot("description",
+            "Label", DataType.TEXT);
+
+    public static final Slot FONT_SIZE_SLOT = new Slot("font-size",
+            "Font Size", DataType.NUMBER);
+
     private static final String CSS_TAG_CLOUD = "choosel-TextViewContentDisplay-TagCloud";
 
     private static final int MAX_FONT_SIZE = 26;
@@ -101,8 +106,6 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
                     .compareToIgnoreCase(o2.getLabel().getText());
         }
     };
-
-    public static final Slot FONT_SIZE_SLOT = new Slot("font-size", "Font Size", DataType.NUMBER);
 
     public TextViewContentDisplay(ResourceSetAvatarDragController dragController) {
         this(new DefaultTextItemContainer(dragController));
@@ -187,13 +190,13 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
                 });
         settingsPanel.add(oneItemPerRowBox);
 
-        return new SidePanelSection[] { new SidePanelSection("Settings", settingsPanel), };
+        return new SidePanelSection[] { new SidePanelSection("Settings",
+                settingsPanel), };
     }
 
     @Override
     public Slot[] getSlots() {
-        return new Slot[] { SlotResolver.DESCRIPTION_SLOT,
-                TextViewContentDisplay.FONT_SIZE_SLOT };
+        return new Slot[] { DESCRIPTION_SLOT, FONT_SIZE_SLOT };
     }
 
     private void initGroupValueMapper() {
@@ -289,7 +292,7 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
         NumberArray fontSizeValues = MathUtils.createNumberArray();
         for (TextItem textItem : items) {
-            fontSizeValues.push(textItem.getFontSizeSlotValue());
+            fontSizeValues.push(textItem.getFontSizeValue());
         }
         groupValueMapper.setNumberValues(fontSizeValues);
         for (TextItem textItem : items) {
