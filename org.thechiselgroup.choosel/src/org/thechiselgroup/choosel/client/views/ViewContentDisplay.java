@@ -21,6 +21,14 @@ import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.slots.Slot;
 
+/**
+ * Interface for generic visualizations that can be displayed in a {@link View}.
+ * 
+ * @author Lars Grammel
+ * 
+ * @see View
+ * @see ViewItem
+ */
 public interface ViewContentDisplay extends WidgetAdaptable, Disposable {
 
     void checkResize();
@@ -28,14 +36,13 @@ public interface ViewContentDisplay extends WidgetAdaptable, Disposable {
     void endRestore();
 
     /**
-     * Returns the side panel sections. Side panel sections allow for
-     * configuration of this view content display.
+     * @return {@link SidePanelSection}s for configuring this view content
+     *         display.
      */
     SidePanelSection[] getSidePanelSections();
 
     /**
-     * @return visualization slots that are supported by this view content
-     *         display.
+     * @return {@link Slot}s that are supported by this view content display.
      */
     Slot[] getSlots();
 
@@ -51,40 +58,42 @@ public interface ViewContentDisplay extends WidgetAdaptable, Disposable {
 
     /**
      * <p>
-     * Updates the view content display. There is no overlap between the three
-     * different resource sets (added, updated, and removed resource items). We
-     * use a single method to enable the different view content displays to do a
-     * single refresh of the view instead of multiple operations.
+     * Updates the {@link ViewContentDisplay}. There is no overlap between the
+     * three different {@link ViewItem} sets (added, updated, and removed
+     * {@link ViewItem}s). We use a single method to enable the different
+     * {@link ViewContentDisplay}s to do a single refresh of the view instead of
+     * multiple operations.
      * </p>
      * <p>
-     * The resource items can be referenced during a session for reference
-     * testing. When a resource item is created, it is passed in as part of the
-     * added resource items, when it changes, it is part of the updated resource
-     * items, and when it is removed, it is part of the removed resource items.
+     * The {@link ViewItem}s can be referenced during a session for reference
+     * testing. When a {@link ViewItem} is created, it is passed in as part of
+     * the added {@link ViewItem}s, when it changes, it is part of the updated
+     * {@link ViewItem}s, and when it is removed, it is part of the removed
+     * {@link ViewItem}s.
      * </p>
      * <p>
-     * In addition to changing resource items, the slot mapping of a
+     * In addition to changing {@link ViewItem}s, the slot mapping of a
      * visualization could have changed in the same instance. This is reflected
      * by the changedSlots parameter.
      * </p>
      * 
-     * @param addedResourceItems
-     *            ResourceItems that have been added to the view. Is never
+     * @param addedViewItems
+     *            {@link ViewItem}s that have been added to the view. Is never
      *            <code>null</code>, but can be an empty set.
-     * @param updatedResourceItems
-     *            ResourceItems which have changed (status, data, etc.) such
+     * @param updatedViewItems
+     *            {@link ViewItem}s which have changed (status, data, etc.) such
      *            that their representation needs to be updated. Is never
      *            <code>null</code>, but can be an empty set.
-     * @param removedResourceItems
-     *            ResourceItems that have been removed from the view. Is never
-     *            <code>null</code>, but can be an empty set.
+     * @param removedViewItems
+     *            {@link ViewItem}s that have been removed from the view. Is
+     *            never <code>null</code>, but can be an empty set.
      * @param updatedSlots
-     *            Slots for which the mappings have changed. Is never
+     *            {@link Slot}s for which the mappings have changed. Is never
      *            <code>null</code>, but can be an empty set.
      */
-    void update(LightweightCollection<ViewItem> addedResourceItems,
-            LightweightCollection<ViewItem> updatedResourceItems,
-            LightweightCollection<ViewItem> removedResourceItems,
+    void update(LightweightCollection<ViewItem> addedViewItems,
+            LightweightCollection<ViewItem> updatedViewItems,
+            LightweightCollection<ViewItem> removedViewItems,
             LightweightCollection<Slot> updatedSlots);
 
 }
