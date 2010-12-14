@@ -49,6 +49,7 @@ import org.thechiselgroup.choosel.client.resources.ResourceSetChangedEventHandle
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.util.collections.LightweightList;
+import org.thechiselgroup.choosel.client.views.ViewItem.SubsetStatus;
 import org.thechiselgroup.choosel.client.views.slots.FirstResourcePropertyResolver;
 import org.thechiselgroup.choosel.client.views.slots.Slot;
 
@@ -58,12 +59,36 @@ public class DefaultViewTest {
 
     private Slot slot;
 
+    @Test
+    public void addedSelectedResourcesToView() {
+        ResourceSet resources = createResources(1);
+
+        underTest.getSelectionModel().addSelectionSet(resources);
+
+        underTest.getResourceModel().addResourceSet(resources);
+
+        ArgumentCaptor<LightweightCollection> captor = ArgumentCaptor
+                .forClass(LightweightCollection.class);
+
+        verify(underTest.getContentDisplay(), times(1)).update(
+                captor.capture(), emptyLightweightCollection(ViewItem.class),
+                emptyLightweightCollection(ViewItem.class),
+                emptyLightweightCollection(Slot.class));
+
+        LightweightCollection<ViewItem> value = captor.getValue();
+
+        assertEquals(1, value.size());
+
+        ViewItem next = value.iterator().next();
+        assertEquals(SubsetStatus.COMPLETE, next.getSelectionStatus());
+        assertEquals(resources, next.getSelectedResources());
+    }
+
     public LightweightCollection<ViewItem> captureAddedResourceItems() {
         ArgumentCaptor<LightweightCollection> captor = ArgumentCaptor
                 .forClass(LightweightCollection.class);
         verify(underTest.getContentDisplay(), times(1)).update(
-                captor.capture(),
-                emptyLightweightCollection(ViewItem.class),
+                captor.capture(), emptyLightweightCollection(ViewItem.class),
                 emptyLightweightCollection(ViewItem.class),
                 emptyLightweightCollection(Slot.class));
         return captor.getValue();
@@ -122,8 +147,7 @@ public class DefaultViewTest {
         ArgumentCaptor<LightweightCollection> captor = ArgumentCaptor
                 .forClass(LightweightCollection.class);
         verify(underTest.getContentDisplay(), times(2)).update(
-                captor.capture(),
-                emptyLightweightCollection(ViewItem.class),
+                captor.capture(), emptyLightweightCollection(ViewItem.class),
                 emptyLightweightCollection(ViewItem.class),
                 emptyLightweightCollection(Slot.class));
 
