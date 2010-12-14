@@ -31,7 +31,6 @@ import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.toRe
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -402,7 +401,6 @@ public class GraphViewContentDisplayTest {
 
     }
 
-    @Ignore
     @Test
     public void removeSourceResourceItemRemovesArc() {
         String arcId = "arcid";
@@ -443,7 +441,6 @@ public class GraphViewContentDisplayTest {
         verifyArcRemoved(arcId, groupId1, groupId2);
     }
 
-    @Ignore
     @Test
     public void removeTargetResourceItemRemovesArc() {
         String arcId = "arcid";
