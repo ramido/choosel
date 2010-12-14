@@ -36,43 +36,50 @@ public class ArcItem {
 
     private int arcThickness;
 
-    public ArcItem(Arc arc, String arcColor, String arcStyle, int arcThickness) {
+    private final GraphDisplay graphDisplay;
+
+    public ArcItem(Arc arc, String arcColor, String arcStyle, int arcThickness,
+            GraphDisplay graphDisplay) {
+
         assert arc != null;
         assert arcColor != null;
         assert arcStyle != null;
         assert arcThickness > 0;
+        assert graphDisplay != null;
 
         this.arc = arc;
         this.arcColor = arcColor;
         this.arcStyle = arcStyle;
         this.arcThickness = arcThickness;
+        this.graphDisplay = graphDisplay;
     }
 
-    public void addArcToDisplay(GraphDisplay display) {
-        assert display != null;
+    public void addArcToDisplay() {
+        assert graphDisplay != null;
 
-        if (display.containsNode(arc.getSourceNodeId())
-                && display.containsNode(arc.getTargetNodeId())
-                && !display.containsArc(arc.getId())) {
+        if (graphDisplay.containsNode(arc.getSourceNodeId())
+                && graphDisplay.containsNode(arc.getTargetNodeId())
+                && !graphDisplay.containsArc(arc.getId())) {
 
-            display.addArc(arc);
+            graphDisplay.addArc(arc);
 
-            applyArcStyle(display);
-            applyArcColor(display);
-            applyArcThickness(display);
+            applyArcStyle();
+            applyArcColor();
+            applyArcThickness();
         }
     }
 
-    public void applyArcColor(GraphDisplay display) {
-        display.setArcStyle(arc, ArcSettings.ARC_COLOR, arcColor);
+    private void applyArcColor() {
+        graphDisplay.setArcStyle(arc, ArcSettings.ARC_COLOR, arcColor);
     }
 
-    public void applyArcStyle(GraphDisplay display) {
-        display.setArcStyle(arc, ArcSettings.ARC_STYLE, arcStyle);
+    private void applyArcStyle() {
+        graphDisplay.setArcStyle(arc, ArcSettings.ARC_STYLE, arcStyle);
     }
 
-    public void applyArcThickness(GraphDisplay display) {
-        display.setArcStyle(arc, ArcSettings.ARC_THICKNESS, "" + arcThickness);
+    private void applyArcThickness() {
+        graphDisplay.setArcStyle(arc, ArcSettings.ARC_THICKNESS, ""
+                + arcThickness);
     }
 
     @Override
@@ -146,19 +153,22 @@ public class ArcItem {
     public void setArcStyle(String arcStyle) {
         assert arcStyle != null;
         this.arcStyle = arcStyle;
+        applyArcStyle();
     }
 
     public void setArcThickness(int arcThickness) {
         assert arcThickness > 0;
         this.arcThickness = arcThickness;
+        applyArcThickness();
     }
 
     public void setColor(String arcColor) {
         assert arcColor != null;
         this.arcColor = arcColor;
+        applyArcColor();
     }
 
-    public void setVisible(boolean visible, GraphDisplay graphDisplay) {
+    public void setVisible(boolean visible) {
         if (graphDisplay.containsArc(arc.getId())) {
             graphDisplay.removeArc(arc);
         }
