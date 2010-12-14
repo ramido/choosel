@@ -156,4 +156,9 @@ public final class JavaScriptLightweightList<T> implements LightweightList<T> {
         return result;
     }
 
+    @Override
+    public String toString() {
+        return toList().toString();
+    }
+
 }
