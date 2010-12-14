@@ -264,8 +264,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
     private GraphItem createGraphNodeItem(ViewItem viewItem) {
         // TODO get from group id
-        String type = getCategory(viewItem.getResourceSet()
-                .getFirstResource());
+        String type = getCategory(viewItem.getResourceSet().getFirstResource());
 
         GraphItem graphItem = new GraphItem(viewItem, type, graphDisplay);
 
@@ -561,10 +560,10 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     @Override
     public Memento save() {
         Memento state = new Memento();
-        LightweightCollection<ViewItem> resourceItems = getCallback()
+        LightweightCollection<ViewItem> viewItems = getCallback()
                 .getViewItems();
-        for (ViewItem resourceItem : resourceItems) {
-            GraphItem item = (GraphItem) resourceItem.getDisplayObject();
+        for (ViewItem viewItem : viewItems) {
+            GraphItem item = (GraphItem) viewItem.getDisplayObject();
 
             Point location = graphDisplay.getLocation(item.getNode());
 
@@ -572,7 +571,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
             nodeMemento.setValue(MEMENTO_X, location.x);
             nodeMemento.setValue(MEMENTO_Y, location.y);
 
-            state.addChild(resourceItem.getViewItemID(), nodeMemento);
+            state.addChild(viewItem.getViewItemID(), nodeMemento);
         }
         return state;
     }
@@ -610,24 +609,30 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         for (ViewItem viewItem : removedViewItems) {
             removeViewItem(viewItem);
         }
-    }
 
-    /**
-     * Updates the arc items and arcs for the given resource items. The resource
-     * items must already be contained in the view content display (i.e. they
-     * have been added already and their nodes must be visible).
-     */
-    @Override
-    public void updateArcsForViewItems(
-            LightweightCollection<ViewItem> resourceItems) {
-
-        assert resourceItems != null;
-        for (ArcItemContainer container : arcItemContainersByArcTypeID.values()) {
-            container.update(resourceItems);
+        if (!changedSlots.isEmpty()) {
+            LightweightCollection<ViewItem> viewItems = getCallback()
+                    .getViewItems();
+            for (ViewItem viewItem : viewItems) {
+                updateNode(viewItem);
+            }
         }
     }
 
-    private void updateNode(ViewItem resourceItem) {
-        ((GraphItem) resourceItem.getDisplayObject()).updateNode();
+    /**
+     * Updates the arc items and arcs for the given view items. The view items
+     * must already be contained in the view content display (i.e. they have
+     * been added already and their nodes must be visible).
+     */
+    @Override
+    public void updateArcsForViewItems(LightweightCollection<ViewItem> viewItems) {
+        assert viewItems != null;
+        for (ArcItemContainer container : arcItemContainersByArcTypeID.values()) {
+            container.update(viewItems);
+        }
+    }
+
+    private void updateNode(ViewItem viewItem) {
+        ((GraphItem) viewItem.getDisplayObject()).updateNode();
     }
 }
