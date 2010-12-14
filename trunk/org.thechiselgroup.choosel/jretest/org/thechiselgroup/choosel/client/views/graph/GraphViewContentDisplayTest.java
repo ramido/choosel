@@ -422,7 +422,7 @@ public class GraphViewContentDisplayTest {
         init();
         Arc arc = createArc(arcId, groupId1, groupId2);
         arcTypeReturnsArcFor(resourceItem1, arc);
-        arcTypeReturnsNoArcsFor(resourceItem2);
+        arcTypeReturnsArcFor(resourceItem2, arc);
 
         // simulate add
         when(graphDisplay.containsNode(groupId1)).thenReturn(true);
@@ -461,7 +461,7 @@ public class GraphViewContentDisplayTest {
         init();
         Arc arc = createArc(arcId, groupId1, groupId2);
         arcTypeReturnsArcFor(resourceItem1, arc);
-        arcTypeReturnsNoArcsFor(resourceItem2);
+        arcTypeReturnsArcFor(resourceItem2, arc);
 
         // simulate add
         when(graphDisplay.containsNode(groupId1)).thenReturn(true);

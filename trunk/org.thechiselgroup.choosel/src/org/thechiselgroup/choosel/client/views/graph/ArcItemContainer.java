@@ -19,7 +19,6 @@ import java.util.Map;
 
 import org.thechiselgroup.choosel.client.ui.widget.graph.Arc;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
-import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.ViewItem;
@@ -74,26 +73,17 @@ public class ArcItemContainer {
         return arcType;
     }
 
-    public void removeNodeArcs(Node node) {
-        assert node != null;
+    public void removeViewItem(ViewItem viewItem) {
+        assert viewItem != null;
 
-        // node --> resource item --> get arcs --> remove those
-        String nodeId = node.getId();
-        // --> call back required
+        LightweightCollection<Arc> arcs = arcType.getArcs(viewItem, context);
+        for (Arc arc : arcs) {
+            if (arcItemsById.containsKey(arc.getId())) {
+                arcItemsById.get(arc.getId()).setVisible(false, graphDisplay);
+                arcItemsById.remove(arc.getId());
+            }
+        }
 
-        // find & remove others
-
-        // for (Iterator<Arc> it = arcItemsById.values().iterator();
-        // it.hasNext();) {
-        // Arc arc = it.next();
-        //
-        // if (arc.getSourceNodeId() == node.getId()
-        // || arc.getTargetNodeId() == node.getId()) {
-        //
-        // graphDisplay.removeArc(arc);
-        // it.remove();
-        // }
-        // }
     }
 
     public void setArcColor(String arcColor) {
@@ -149,8 +139,8 @@ public class ArcItemContainer {
         showArcs();
     }
 
-    private void update(ViewItem resourceItem) {
-        for (Arc arc : arcType.getArcs(resourceItem, context)) {
+    private void update(ViewItem viewItem) {
+        for (Arc arc : arcType.getArcs(viewItem, context)) {
             // XXX what about changes?
             if (!arcItemsById.containsKey(arc.getId())) {
                 arcItemsById.put(arc.getId(), new ArcItem(arc, arcColor,

@@ -532,21 +532,15 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
                 }, category);
     }
 
-    private void removeNode(ViewItem resourceItem) {
-        Node node = getNodeFromResourceItem(resourceItem);
+    private void removeViewItem(ViewItem viewItem) {
+        assert viewItem != null;
 
-        nodeResources.removeResourceSet(resourceItem.getResourceSet());
-        removeNodeArcs(node);
-        graphDisplay.removeNode(node);
-    }
-
-    private void removeNodeArcs(Node node) {
-        assert node != null;
-
+        nodeResources.removeResourceSet(viewItem.getResourceSet());
         for (ArcItemContainer arcItemContainer : arcItemContainersByArcTypeID
                 .values()) {
-            arcItemContainer.removeNodeArcs(node);
+            arcItemContainer.removeViewItem(viewItem);
         }
+        graphDisplay.removeNode(getNodeFromResourceItem(viewItem));
     }
 
     @Override
@@ -613,7 +607,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         }
 
         for (ViewItem resourceItem : removedResourceItems) {
-            removeNode(resourceItem);
+            removeViewItem(resourceItem);
         }
     }
 
