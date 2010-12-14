@@ -46,7 +46,7 @@ public interface GraphNodeExpansionCallback {
 
     boolean isRestoring();
 
-    void updateArcsForResourceItems(
+    void updateArcsForViewItems(
             LightweightCollection<ViewItem> resourceItems);
 
 }

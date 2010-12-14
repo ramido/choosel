@@ -262,12 +262,12 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         return nodeResources.containsResourceWithUri(resourceUri);
     }
 
-    private GraphItem createGraphNodeItem(ViewItem resourceItem) {
+    private GraphItem createGraphNodeItem(ViewItem viewItem) {
         // TODO get from group id
-        String type = getCategory(resourceItem.getResourceSet()
+        String type = getCategory(viewItem.getResourceSet()
                 .getFirstResource());
 
-        GraphItem graphItem = new GraphItem(resourceItem, type, graphDisplay);
+        GraphItem graphItem = new GraphItem(viewItem, type, graphDisplay);
 
         graphDisplay.addNode(graphItem.getNode());
         positionNode(graphItem.getNode());
@@ -280,11 +280,11 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         graphDisplay.setNodeStyle(graphItem.getNode(), "showArrow", registry
                 .getNodeMenuEntries(type).isEmpty() ? "false" : "true");
 
-        registry.getAutomaticExpander(type).expand(resourceItem, this);
+        registry.getAutomaticExpander(type).expand(viewItem, this);
 
-        nodeResources.addResourceSet(resourceItem.getResourceSet());
+        nodeResources.addResourceSet(viewItem.getResourceSet());
 
-        resourceItem.setDisplayObject(graphItem);
+        viewItem.setDisplayObject(graphItem);
 
         return graphItem;
     }
@@ -299,8 +299,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     // default visibility for test case use
     List<Node> getAllNodes() {
         List<Node> result = new ArrayList<Node>();
-        for (ViewItem resourceItem : getCallback().getViewItems()) {
-            result.add(getNodeFromResourceItem(resourceItem));
+        for (ViewItem viewItem : getCallback().getViewItems()) {
+            result.add(getNodeFromResourceItem(viewItem));
         }
         return result;
     }
@@ -591,24 +591,24 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     }
 
     @Override
-    public void update(LightweightCollection<ViewItem> addedResourceItems,
-            LightweightCollection<ViewItem> updatedResourceItems,
-            LightweightCollection<ViewItem> removedResourceItems,
+    public void update(LightweightCollection<ViewItem> addedViewItems,
+            LightweightCollection<ViewItem> updatedViewItems,
+            LightweightCollection<ViewItem> removedViewItems,
             LightweightCollection<Slot> changedSlots) {
 
-        for (ViewItem addedItem : addedResourceItems) {
+        for (ViewItem addedItem : addedViewItems) {
             createGraphNodeItem(addedItem);
             updateNode(addedItem);
         }
 
-        updateArcsForResourceItems(addedResourceItems);
+        updateArcsForViewItems(addedViewItems);
 
-        for (ViewItem updatedItem : updatedResourceItems) {
+        for (ViewItem updatedItem : updatedViewItems) {
             updateNode(updatedItem);
         }
 
-        for (ViewItem resourceItem : removedResourceItems) {
-            removeViewItem(resourceItem);
+        for (ViewItem viewItem : removedViewItems) {
+            removeViewItem(viewItem);
         }
     }
 
@@ -618,7 +618,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
      * have been added already and their nodes must be visible).
      */
     @Override
-    public void updateArcsForResourceItems(
+    public void updateArcsForViewItems(
             LightweightCollection<ViewItem> resourceItems) {
 
         assert resourceItems != null;

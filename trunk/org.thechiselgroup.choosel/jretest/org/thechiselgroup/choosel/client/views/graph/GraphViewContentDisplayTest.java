@@ -189,6 +189,19 @@ public class GraphViewContentDisplayTest {
         verifyArcRemoved(arcId, "1", "2");
     }
 
+    @Test
+    public void arcsAreShownWhenContainerVisibleSetTrueAfterBeingCreatedWhileVisibleWasFalse() {
+        arcStyleProviderReturnArcType();
+        init();
+
+        arcTypeReturnsArcs(any(ViewItem.class), createArc("arcid1", 1, 2));
+        underTest.setArcTypeVisible(arcTypeId, false);
+        simulateAddViewItems(createViewItems(1, 2));
+        underTest.setArcTypeVisible(arcTypeId, true);
+
+        verifyArcShown("arcid1", 1, 2);
+    }
+
     private void arcStyleProviderReturnArcType() {
         when(arcStyleProvider.getArcTypes()).thenReturn(
                 LightweightCollections.toCollection(arcType));
@@ -244,7 +257,7 @@ public class GraphViewContentDisplayTest {
     }
 
     @Test
-    public void doNotShowArcItemOnCreationIfContainerDisplaySetFalse() {
+    public void doNotShowArcItemOnCreationIfContainerVisibleSetFalse() {
         arcStyleProviderReturnArcType();
         init();
 
@@ -601,7 +614,7 @@ public class GraphViewContentDisplayTest {
 
         arcTypeReturnsArcs(eq(viewItems.get(0)), createArc("arcid", 1, 2));
 
-        underTest.updateArcsForResourceItems(viewItems);
+        underTest.updateArcsForViewItems(viewItems);
 
         verifyArcShown("arcid", "1", "2");
 
@@ -617,6 +630,10 @@ public class GraphViewContentDisplayTest {
         assertEquals(sourceNodeId, result.getSourceNodeId());
         assertEquals(targetNodeId, result.getTargetNodeId());
         assertEquals(arcTypeId, result.getType());
+    }
+
+    private void verifyArcShown(String arcId, int sourceNodeId, int targetNodeId) {
+        verifyArcShown(arcId, "" + sourceNodeId, "" + targetNodeId);
     }
 
     private void verifyArcShown(String arcId, String sourceNodeId,
