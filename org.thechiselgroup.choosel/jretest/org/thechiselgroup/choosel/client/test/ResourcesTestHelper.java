@@ -57,25 +57,25 @@ public final class ResourcesTestHelper {
                 resourceSet.contains(createResource(resourceType, resourceId)));
     }
 
-    public static DefaultViewItem createResourceItem(String groupId,
-            ResourceSet resources,
-            SlotMappingConfiguration slotMappingConfiguration) {
-
-        return spy(new DefaultViewItem(groupId, resources,
-                mock(HoverModel.class), mock(PopupManager.class),
-                slotMappingConfiguration));
-    }
-
     public static DefaultViewItem createViewItem(int id) {
-        return createResourceItem("" + id, createResources(id),
+        return createViewItem("" + id, createResources(id),
                 mock(SlotMappingConfiguration.class));
     }
 
     public static DefaultViewItem createViewItem(String groupId,
             ResourceSet resources) {
 
-        return createResourceItem(groupId, resources,
+        return createViewItem(groupId, resources,
                 mock(SlotMappingConfiguration.class));
+    }
+
+    public static DefaultViewItem createViewItem(String groupId,
+            ResourceSet resources,
+            SlotMappingConfiguration slotMappingConfiguration) {
+
+        return spy(new DefaultViewItem(groupId, resources,
+                mock(HoverModel.class), mock(PopupManager.class),
+                slotMappingConfiguration));
     }
 
     public static LightweightList<ViewItem> createViewItems(int... viewItemId) {
