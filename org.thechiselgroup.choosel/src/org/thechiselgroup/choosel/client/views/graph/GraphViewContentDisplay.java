@@ -57,10 +57,11 @@ import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.ViewItem;
 import org.thechiselgroup.choosel.client.views.SidePanelSection;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayAction;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
+import org.thechiselgroup.choosel.client.views.ViewItem;
+import org.thechiselgroup.choosel.client.views.ViewItemContainer;
 import org.thechiselgroup.choosel.client.views.slots.Slot;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -413,9 +414,33 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     }
 
     private void initArcTypeContainers() {
+        ViewItemContainer context = new ViewItemContainer() {
+
+            @Override
+            public boolean containsViewItem(String viewItemId) {
+                return getCallback().containsViewItem(viewItemId);
+            }
+
+            @Override
+            public ViewItem getViewItem(String viewItemId) {
+                return getCallback().getViewItem(viewItemId);
+            }
+
+            @Override
+            public LightweightCollection<ViewItem> getViewItems() {
+                return getCallback().getViewItems();
+            }
+
+            @Override
+            public LightweightCollection<ViewItem> getViewItems(
+                    Iterable<Resource> resources) {
+                return getCallback().getViewItems(resources);
+            }
+        };
+
         for (ArcType arcType : arcStyleProvider.getArcTypes()) {
-            arcItemContainersByArcTypeID.put(arcType.getID(),
-                    new ArcItemContainer(arcType, graphDisplay));
+            arcItemContainersByArcTypeID.put(arcType.getArcTypeID(),
+                    new ArcItemContainer(arcType, graphDisplay, context));
         }
     }
 
