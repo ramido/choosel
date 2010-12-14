@@ -24,6 +24,9 @@ import org.thechiselgroup.choosel.client.views.ViewItemContainer;
  * A specific class of arcs. Calculates arc items for a given resource item.
  * 
  * @author Lars Grammel
+ * 
+ * @see Arc
+ * @see ViewItem
  */
 public interface ArcType {
 
@@ -47,23 +50,23 @@ public interface ArcType {
             ViewItemContainer context);
 
     /**
-     * Returns the identifier of this arc type. Each ArcType must have a unique
-     * identifier.
+     * @return identifier of this arc type. Each ArcType must have a unique
+     *         identifier.
      */
     String getArcTypeID();
 
     /**
-     * Returns the default color for arcs of this type.
+     * @return default color for arcs of this type.
      */
     String getDefaultArcColor();
 
     /**
-     * Returns the default arc style for arcs of this type.
+     * @return default arc style for arcs of this type.
      */
     String getDefaultArcStyle();
 
     /**
-     * Returns the default arc thickness for arcs of this type.
+     * @return default arc thickness for arcs of this type.
      */
     int getDefaultArcThickness();
 
