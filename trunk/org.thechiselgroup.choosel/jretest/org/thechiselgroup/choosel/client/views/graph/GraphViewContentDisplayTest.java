@@ -59,8 +59,9 @@ import org.thechiselgroup.choosel.client.util.collections.LightweightCollections
 import org.thechiselgroup.choosel.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.client.views.DefaultViewItem;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.ViewItem;
 import org.thechiselgroup.choosel.client.views.TestViewContentDisplayCallback;
+import org.thechiselgroup.choosel.client.views.ViewItem;
+import org.thechiselgroup.choosel.client.views.ViewItemContainer;
 import org.thechiselgroup.choosel.client.views.slots.Slot;
 
 public class GraphViewContentDisplayTest {
@@ -130,7 +131,8 @@ public class GraphViewContentDisplayTest {
 
         ArgumentCaptor<ViewItem> captor = ArgumentCaptor
                 .forClass(ViewItem.class);
-        verify(arcType, times(2)).getArcs(captor.capture());
+        verify(arcType, times(2)).getArcs(captor.capture(),
+                any(ViewItemContainer.class));
         assertContentEquals(resourceItems.toList(), captor.getAllValues());
     }
 
@@ -165,8 +167,8 @@ public class GraphViewContentDisplayTest {
         String groupId1 = "1";
         String groupId2 = "2";
 
-        LightweightList<ViewItem> resourceItems = createResourceItems(
-                groupId1, groupId2);
+        LightweightList<ViewItem> resourceItems = createResourceItems(groupId1,
+                groupId2);
 
         arcStyleProviderReturnArcType();
         init();
@@ -221,8 +223,8 @@ public class GraphViewContentDisplayTest {
         String arcId = "arcid";
         String groupId1 = "1";
         String groupId2 = "2";
-        LightweightList<ViewItem> resourceItems = createResourceItems(
-                groupId1, groupId2);
+        LightweightList<ViewItem> resourceItems = createResourceItems(groupId1,
+                groupId2);
 
         arcStyleProviderReturnArcType();
         init();
@@ -234,7 +236,7 @@ public class GraphViewContentDisplayTest {
         simulateAddResourceItems(resourceItems);
         when(graphDisplay.containsArc(arcId)).thenReturn(true);
 
-        underTest.setArcTypeVisible(arcType.getID(), false);
+        underTest.setArcTypeVisible(arcType.getArcTypeID(), false);
 
         verifyArcRemoved(arcId, groupId1, groupId2);
     }
@@ -245,18 +247,18 @@ public class GraphViewContentDisplayTest {
     }
 
     private void arcTypeReturnsArcFor(ViewItem resourceItem, Arc arc) {
-        when(arcType.getArcs(eq(resourceItem))).thenReturn(
-                LightweightCollections.toCollection(arc));
+        when(arcType.getArcs(eq(resourceItem), any(ViewItemContainer.class)))
+                .thenReturn(LightweightCollections.toCollection(arc));
     }
 
     private void arcTypeReturnsNoArcs() {
-        when(arcType.getArcs(any(ViewItem.class))).thenReturn(
-                LightweightCollections.<Arc> emptyCollection());
+        when(arcType.getArcs(any(ViewItem.class), any(ViewItemContainer.class)))
+                .thenReturn(LightweightCollections.<Arc> emptyCollection());
     }
 
     private void arcTypeReturnsNoArcsFor(ViewItem resourceItem) {
-        when(arcType.getArcs(eq(resourceItem))).thenReturn(
-                LightweightCollections.<Arc> emptyCollection());
+        when(arcType.getArcs(eq(resourceItem), any(ViewItemContainer.class)))
+                .thenReturn(LightweightCollections.<Arc> emptyCollection());
     }
 
     private Arc createArc(String arcId, String from, String to) {
@@ -311,8 +313,9 @@ public class GraphViewContentDisplayTest {
         // set up arc item response
         Arc arcItem1 = createArc(arcId1, groupId1, groupId2);
         Arc arcItem2 = createArc(arcId2, groupId2, groupId1);
-        when(arcType.getArcs(any(ViewItem.class))).thenReturn(
-                LightweightCollections.toCollection(arcItem1, arcItem2));
+        when(arcType.getArcs(any(ViewItem.class), any(ViewItemContainer.class)))
+                .thenReturn(
+                        LightweightCollections.toCollection(arcItem1, arcItem2));
 
         // simulate add
         LightweightCollection<ViewItem> resourceItems = ResourcesTestHelper
@@ -329,10 +332,10 @@ public class GraphViewContentDisplayTest {
     public void getAllNodes() {
         init();
 
-        ViewItem resourceItem1 = ResourcesTestHelper.createResourceItem(
-                "1", createResources(1));
-        ViewItem resourceItem2 = ResourcesTestHelper.createResourceItem(
-                "2", createResources(2));
+        ViewItem resourceItem1 = ResourcesTestHelper.createResourceItem("1",
+                createResources(1));
+        ViewItem resourceItem2 = ResourcesTestHelper.createResourceItem("2",
+                createResources(2));
 
         LightweightCollection<ViewItem> resourceItems = LightweightCollections
                 .toCollection(resourceItem1, resourceItem2);
@@ -391,8 +394,7 @@ public class GraphViewContentDisplayTest {
         addResourceItemToUnderTest(LightweightCollections
                 .toCollection(resourceItem));
 
-        underTest.update(
-                LightweightCollections.<ViewItem> emptyCollection(),
+        underTest.update(LightweightCollections.<ViewItem> emptyCollection(),
                 LightweightCollections.<ViewItem> emptyCollection(),
                 LightweightCollections.toCollection(resourceItem),
                 LightweightCollections.<Slot> emptyCollection());
@@ -432,8 +434,7 @@ public class GraphViewContentDisplayTest {
         // simulate remove
         when(graphDisplay.containsNode(groupId1)).thenReturn(false);
         callback.removeResourceItem(resourceItem1);
-        underTest.update(
-                LightweightCollections.<ViewItem> emptyCollection(),
+        underTest.update(LightweightCollections.<ViewItem> emptyCollection(),
                 LightweightCollections.<ViewItem> emptyCollection(),
                 LightweightCollections.toCollection(resourceItem1),
                 LightweightCollections.<Slot> emptyCollection());
@@ -472,8 +473,7 @@ public class GraphViewContentDisplayTest {
         // simulate remove
         when(graphDisplay.containsNode(groupId2)).thenReturn(false);
         callback.removeResourceItem(resourceItem2);
-        underTest.update(
-                LightweightCollections.<ViewItem> emptyCollection(),
+        underTest.update(LightweightCollections.<ViewItem> emptyCollection(),
                 LightweightCollections.<ViewItem> emptyCollection(),
                 LightweightCollections.toCollection(resourceItem2),
                 LightweightCollections.<Slot> emptyCollection());
@@ -655,7 +655,7 @@ public class GraphViewContentDisplayTest {
         when(arcStyleProvider.getArcTypes()).thenReturn(
                 LightweightCollections.<ArcType> emptyCollection());
 
-        when(arcType.getID()).thenReturn(arcTypeValue);
+        when(arcType.getArcTypeID()).thenReturn(arcTypeValue);
         when(arcType.getDefaultArcColor()).thenReturn(arcColor);
         when(arcType.getDefaultArcStyle()).thenReturn(arcStyle);
         when(arcType.getDefaultArcThickness()).thenReturn(arcThickness);

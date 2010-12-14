@@ -26,24 +26,24 @@ import org.thechiselgroup.choosel.client.views.slots.Slot;
 
 // TODO extract resource item manager?
 public class TestViewContentDisplayCallback implements
-        ViewContentDisplayCallback {
+        ViewContentDisplayCallback, ViewItemContainer {
 
-    private Map<String, ViewItem> resourceItemsByGroupId = CollectionFactory
+    private Map<String, ViewItem> viewItemsByGroupId = CollectionFactory
             .createStringMap();
 
-    public void addResourceItem(ViewItem resourceItem) {
-        resourceItemsByGroupId.put(resourceItem.getViewItemID(), resourceItem);
+    public void addResourceItem(ViewItem viewItem) {
+        viewItemsByGroupId.put(viewItem.getViewItemID(), viewItem);
     }
 
-    public void addResourceItems(Iterable<ViewItem> resourceItems) {
-        for (ViewItem resourceItem : resourceItems) {
-            addResourceItem(resourceItem);
+    public void addResourceItems(Iterable<ViewItem> viewItems) {
+        for (ViewItem viewItem : viewItems) {
+            addResourceItem(viewItem);
         }
     }
 
     @Override
-    public boolean containsViewItem(String groupId) {
-        return resourceItemsByGroupId.containsKey(groupId);
+    public boolean containsViewItem(String viewItemId) {
+        return viewItemsByGroupId.containsKey(viewItemId);
     }
 
     @Override
@@ -52,15 +52,20 @@ public class TestViewContentDisplayCallback implements
     }
 
     @Override
+    public String getSlotResolverDescription(Slot slot) {
+        return null;
+    }
+
+    @Override
     public ViewItem getViewItem(String groupId) {
-        return resourceItemsByGroupId.get(groupId);
+        return viewItemsByGroupId.get(groupId);
     }
 
     @Override
     public LightweightCollection<ViewItem> getViewItems() {
         LightweightList<ViewItem> result = CollectionFactory
                 .createLightweightList();
-        result.addAll(resourceItemsByGroupId.values());
+        result.addAll(viewItemsByGroupId.values());
         return result;
     }
 
@@ -71,13 +76,8 @@ public class TestViewContentDisplayCallback implements
         return null;
     }
 
-    @Override
-    public String getSlotResolverDescription(Slot slot) {
-        return null;
-    }
-
-    public void removeResourceItem(ViewItem resourceItem) {
-        resourceItemsByGroupId.remove(resourceItem.getViewItemID());
+    public void removeResourceItem(ViewItem viewItem) {
+        viewItemsByGroupId.remove(viewItem.getViewItemID());
     }
 
     @Override

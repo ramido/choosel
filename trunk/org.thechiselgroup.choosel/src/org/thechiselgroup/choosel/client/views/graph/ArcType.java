@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.client.views.graph;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Arc;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.ViewItem;
+import org.thechiselgroup.choosel.client.views.ViewItemContainer;
 
 /**
  * A specific class of arcs. Calculates arc items for a given resource item.
@@ -27,12 +28,14 @@ import org.thechiselgroup.choosel.client.views.ViewItem;
 public interface ArcType {
 
     /**
-     * Returns all arcs that should be connected to a given resource item in the
-     * context of other resource items.
+     * Returns all arcs that should be connected to a given {@link ViewItem} in
+     * the context of other {@link ViewItem}s.
      * 
-     * @param resourceItem
-     *            resource item for which potential arcs should be returned
+     * @param viewItem
+     *            {@link ViewItem} for which potential arcs should be returned
      * @param context
+     *            context in which the arcs for the {@link ViewItem} should be
+     *            calculated.
      * 
      * @return all arcs that are connected to the node representation of the
      *         resource item in the provided context. The arcs do not have to be
@@ -40,8 +43,14 @@ public interface ArcType {
      *         for the same resource item. However, their IDs should match: an
      *         equal arc should have an equal id across multiple calls.
      */
-    // / TODO change spec, include context (introduce ResourceItemAccessor)
-    LightweightCollection<Arc> getArcs(ViewItem resourceItem);
+    LightweightCollection<Arc> getArcs(ViewItem viewItem,
+            ViewItemContainer context);
+
+    /**
+     * Returns the identifier of this arc type. Each ArcType must have a unique
+     * identifier.
+     */
+    String getArcTypeID();
 
     /**
      * Returns the default color for arcs of this type.
@@ -57,11 +66,5 @@ public interface ArcType {
      * Returns the default arc thickness for arcs of this type.
      */
     int getDefaultArcThickness();
-
-    /**
-     * Returns the identifier of this arc type. Each ArcType must have a unique
-     * identifier.
-     */
-    String getID();
 
 }

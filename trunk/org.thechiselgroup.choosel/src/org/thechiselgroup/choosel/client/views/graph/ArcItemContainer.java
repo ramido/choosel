@@ -23,12 +23,13 @@ import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.ViewItem;
+import org.thechiselgroup.choosel.client.views.ViewItemContainer;
 
 public class ArcItemContainer {
 
     private final ArcType arcType;
 
-    private Map<String, ArcItem> arcItemsById = CollectionFactory
+    private final Map<String, ArcItem> arcItemsById = CollectionFactory
             .createStringMap();
 
     private final GraphDisplay graphDisplay;
@@ -39,12 +40,18 @@ public class ArcItemContainer {
 
     private int arcThickness;
 
-    public ArcItemContainer(ArcType arcType, GraphDisplay graphDisplay) {
+    private final ViewItemContainer context;
+
+    public ArcItemContainer(ArcType arcType, GraphDisplay graphDisplay,
+            ViewItemContainer context) {
+
         assert graphDisplay != null;
         assert arcType != null;
+        assert context != null;
 
         this.arcType = arcType;
         this.graphDisplay = graphDisplay;
+        this.context = context;
 
         arcStyle = arcType.getDefaultArcStyle();
         arcColor = arcType.getDefaultArcColor();
@@ -143,7 +150,7 @@ public class ArcItemContainer {
     }
 
     private void update(ViewItem resourceItem) {
-        for (Arc arc : arcType.getArcs(resourceItem)) {
+        for (Arc arc : arcType.getArcs(resourceItem, context)) {
             // XXX what about changes?
             if (!arcItemsById.containsKey(arc.getId())) {
                 arcItemsById.put(arc.getId(), new ArcItem(arc, arcColor,
