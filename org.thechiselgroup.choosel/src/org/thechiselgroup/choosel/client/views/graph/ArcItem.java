@@ -36,6 +36,8 @@ public class ArcItem {
 
     private int arcThickness;
 
+    private boolean visible = false;
+
     private final GraphDisplay graphDisplay;
 
     public ArcItem(Arc arc, String arcColor, String arcStyle, int arcThickness,
@@ -52,21 +54,6 @@ public class ArcItem {
         this.arcStyle = arcStyle;
         this.arcThickness = arcThickness;
         this.graphDisplay = graphDisplay;
-    }
-
-    public void addArcToDisplay() {
-        assert graphDisplay != null;
-
-        if (graphDisplay.containsNode(arc.getSourceNodeId())
-                && graphDisplay.containsNode(arc.getTargetNodeId())
-                && !graphDisplay.containsArc(arc.getId())) {
-
-            graphDisplay.addArc(arc);
-
-            applyArcStyle();
-            applyArcColor();
-            applyArcThickness();
-        }
     }
 
     private void applyArcColor() {
@@ -169,7 +156,19 @@ public class ArcItem {
     }
 
     public void setVisible(boolean visible) {
-        if (graphDisplay.containsArc(arc.getId())) {
+        if (this.visible == visible) {
+            return;
+        }
+
+        this.visible = visible;
+
+        if (visible) {
+            graphDisplay.addArc(arc);
+
+            applyArcStyle();
+            applyArcColor();
+            applyArcThickness();
+        } else {
             graphDisplay.removeArc(arc);
         }
     }

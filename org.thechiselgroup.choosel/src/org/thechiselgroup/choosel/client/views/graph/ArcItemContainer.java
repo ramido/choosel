@@ -83,9 +83,10 @@ public class ArcItemContainer {
 
         LightweightCollection<Arc> arcs = arcType.getArcs(viewItem, context);
         for (Arc arc : arcs) {
-            if (arcItemsById.containsKey(arc.getId())) {
-                arcItemsById.get(arc.getId()).setVisible(false);
-                arcItemsById.remove(arc.getId());
+            String arcId = arc.getId();
+            if (arcItemsById.containsKey(arcId)) {
+                arcItemsById.get(arcId).setVisible(false);
+                arcItemsById.remove(arcId);
             }
         }
 
@@ -124,28 +125,30 @@ public class ArcItemContainer {
         }
     }
 
-    // TODO eliminate
-    private void showArcs() {
-        for (ArcItem arcItem : getArcItems()) {
-            arcItem.addArcToDisplay();
-        }
-    }
+    public void update(LightweightCollection<ViewItem> viewItems) {
+        assert viewItems != null;
 
-    // TODO refactor
-    public void update(LightweightCollection<ViewItem> resourceItems) {
-        for (ViewItem resourceItem : resourceItems) {
-            update(resourceItem);
+        for (ViewItem viewItem : viewItems) {
+            update(viewItem);
         }
-
-        showArcs();
     }
 
     private void update(ViewItem viewItem) {
+        assert viewItem != null;
+        assert context.containsViewItem(viewItem.getViewItemID());
+        assert graphDisplay.containsNode(viewItem.getViewItemID());
+
         for (Arc arc : arcType.getArcs(viewItem, context)) {
             // XXX what about changes?
-            if (!arcItemsById.containsKey(arc.getId())) {
-                arcItemsById.put(arc.getId(), new ArcItem(arc, arcColor,
-                        arcStyle, arcThickness, graphDisplay));
+            if (!arcItemsById.containsKey(arc.getId())
+                    && graphDisplay.containsNode(arc.getSourceNodeId())
+                    && graphDisplay.containsNode(arc.getTargetNodeId())) {
+
+                ArcItem arcItem = new ArcItem(arc, arcColor, arcStyle,
+                        arcThickness, graphDisplay);
+                arcItem.setVisible(true);
+
+                arcItemsById.put(arc.getId(), arcItem);
             }
         }
 

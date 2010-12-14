@@ -600,6 +600,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
             createGraphNodeItem(addedItem);
             updateNode(addedItem);
         }
+
         updateArcsForResourceItems(addedResourceItems);
 
         for (ViewItem updatedItem : updatedResourceItems) {
@@ -614,7 +615,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     /**
      * Updates the arc items and arcs for the given resource items. The resource
      * items must already be contained in the view content display (i.e. they
-     * have been added already).
+     * have been added already and their nodes must be visible).
      */
     @Override
     public void updateArcsForResourceItems(

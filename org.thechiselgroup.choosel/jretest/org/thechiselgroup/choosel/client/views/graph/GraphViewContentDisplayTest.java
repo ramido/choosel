@@ -126,8 +126,7 @@ public class GraphViewContentDisplayTest {
         LightweightCollection<ViewItem> resourceItems = createResourceItems(
                 groupId1, groupId2);
 
-        callback.addResourceItems(resourceItems);
-        addResourceItemToUnderTest(resourceItems);
+        simulateAddResourceItems(resourceItems);
 
         ArgumentCaptor<ViewItem> captor = ArgumentCaptor
                 .forClass(ViewItem.class);
@@ -178,42 +177,6 @@ public class GraphViewContentDisplayTest {
         arcTypeReturnsNoArcsFor(resourceItems.get(1));
 
         simulateAddResourceItems(resourceItems);
-
-        verifyArcShown(arcId, groupId1, groupId2);
-    }
-
-    @Test
-    public void arcsAreAddedWhenRequiredResourceItemsAreAddedLater() {
-        String arcId = "arcid";
-        String groupId1 = "1";
-        String groupId2 = "2";
-
-        ViewItem resourceItem1 = createResourceItem(groupId1,
-                createResources(1));
-        ViewItem resourceItem2 = createResourceItem(groupId2,
-                createResources(2));
-
-        arcStyleProviderReturnArcType();
-        init();
-
-        arcTypeReturnsArcFor(resourceItem1,
-                createArc(arcId, groupId1, groupId2));
-        arcTypeReturnsNoArcsFor(resourceItem2);
-
-        // simulate add - arc item gets created but not shown
-        when(graphDisplay.containsNode(groupId1)).thenReturn(true);
-        callback.addResourceItem(resourceItem1);
-        addResourceItemToUnderTest(LightweightCollections
-                .toCollection(resourceItem1));
-
-        // verify not shown
-        verify(graphDisplay, times(0)).addArc(any(Arc.class));
-
-        // 2nd add - arc item should get shown
-        when(graphDisplay.containsNode(groupId2)).thenReturn(true);
-        callback.addResourceItem(resourceItem2);
-        addResourceItemToUnderTest(LightweightCollections
-                .toCollection(resourceItem2));
 
         verifyArcShown(arcId, groupId1, groupId2);
     }
@@ -351,9 +314,9 @@ public class GraphViewContentDisplayTest {
     }
 
     private void init() {
-        underTest = spy(new GraphViewContentDisplay(graphDisplay,
-                commandManager, resourceManager, dragEnablerFactory,
-                resourceCategorizer, arcStyleProvider, registry));
+        underTest = new GraphViewContentDisplay(graphDisplay, commandManager,
+                resourceManager, dragEnablerFactory, resourceCategorizer,
+                arcStyleProvider, registry);
         underTest.init(callback);
         ArgumentCaptor<GraphDisplayReadyEventHandler> argument = ArgumentCaptor
                 .forClass(GraphDisplayReadyEventHandler.class);
@@ -425,10 +388,11 @@ public class GraphViewContentDisplayTest {
         arcTypeReturnsArcFor(resourceItem2, arc);
 
         // simulate add
-        when(graphDisplay.containsNode(groupId1)).thenReturn(true);
-        when(graphDisplay.containsNode(groupId2)).thenReturn(true);
-        callback.addResourceItems(resourceItems);
-        addResourceItemToUnderTest(resourceItems);
+        // when(graphDisplay.containsNode(groupId1)).thenReturn(true);
+        // when(graphDisplay.containsNode(groupId2)).thenReturn(true);
+        // callback.addResourceItems(resourceItems);
+        // addResourceItemToUnderTest(resourceItems);
+        simulateAddResourceItems(resourceItems);
         when(graphDisplay.containsArc(arcId)).thenReturn(true);
 
         // simulate remove
@@ -668,7 +632,8 @@ public class GraphViewContentDisplayTest {
     }
 
     private void simulateAddResourceItems(
-            LightweightList<ViewItem> resourceItems) {
+            LightweightCollection<ViewItem> resourceItems) {
+
         for (ViewItem resourceItem : resourceItems) {
             when(graphDisplay.containsNode(resourceItem.getViewItemID()))
                     .thenReturn(true);
