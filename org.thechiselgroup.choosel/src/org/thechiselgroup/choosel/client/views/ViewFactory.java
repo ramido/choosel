@@ -126,7 +126,7 @@ public class ViewFactory implements WindowContentFactory {
     protected LightweightCollection<SidePanelSection> createSidePanelSections(
             ViewContentDisplay contentDisplay,
             VisualMappingsControl visualMappingsControl,
-            ShareConfiguration shareConfiguration) {
+            ShareConfiguration shareConfiguration, ResourceModel resourceModel) {
 
         LightweightList<SidePanelSection> sidePanelSections = CollectionFactory
                 .createLightweightList();
@@ -188,8 +188,10 @@ public class ViewFactory implements WindowContentFactory {
         ShareConfiguration shareConfiguration = shareConfigurationFactory
                 .createShareConfiguration();
 
+        // TODO more flexible builder pattern
         LightweightCollection<SidePanelSection> sidePanelSections = createSidePanelSections(
-                contentDisplay, visualMappingsControl, shareConfiguration);
+                contentDisplay, visualMappingsControl, shareConfiguration,
+                resourceModel);
 
         SlotMappingInitializer slotMappingInitializer = createSlotMappingInitializer();
 
