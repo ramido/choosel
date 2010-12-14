@@ -27,16 +27,20 @@ import org.thechiselgroup.choosel.client.views.ResourceItem;
 public interface ArcType {
 
     /**
-     * Returns the arcs that are related to a given resource item.
+     * Returns all arcs that should be connected to a given resource item in the
+     * context of other resource items.
      * 
      * @param resourceItem
-     *            resource item for which corresponding arcs should be returned
-     * @return arcs that connected to the node representation of the resource
-     *         item. The arcs do not have to be the same (in terms of object
-     *         references) as already returned arcs for the same resource item.
-     *         However, their IDs should match: an equal arc should have an
-     *         equal id across multiple calls.
+     *            resource item for which potential arcs should be returned
+     * @param context
+     * 
+     * @return all arcs that are connected to the node representation of the
+     *         resource item in the provided context. The arcs do not have to be
+     *         the same (in terms of object references) as already returned arcs
+     *         for the same resource item. However, their IDs should match: an
+     *         equal arc should have an equal id across multiple calls.
      */
+    // / TODO change spec, include context (introduce ResourceItemAccessor)
     LightweightCollection<Arc> getArcs(ResourceItem resourceItem);
 
     /**

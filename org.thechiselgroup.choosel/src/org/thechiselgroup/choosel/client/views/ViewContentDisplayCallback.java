@@ -15,27 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.slots.Slot;
 
-public interface ViewContentDisplayCallback {
-
-    boolean containsResourceItem(String groupId);
+public interface ViewContentDisplayCallback extends ResourceItemContainer {
 
     ResourceSet getAutomaticResourceSet();
-
-    ResourceItem getResourceItemByGroupID(String groupId);
-
-    LightweightCollection<ResourceItem> getResourceItems();
-
-    /**
-     * Returns the resource items that contain at least one of the given
-     * resources.
-     */
-    LightweightCollection<ResourceItem> getResourceItems(
-            Iterable<Resource> resources);
 
     String getSlotResolverDescription(Slot slot);
 
