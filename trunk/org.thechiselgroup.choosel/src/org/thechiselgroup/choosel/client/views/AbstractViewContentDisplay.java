@@ -68,6 +68,7 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
 
     @Override
     public void init(ViewContentDisplayCallback callback) {
+        assert callback != null;
         this.callback = callback;
     }
 
