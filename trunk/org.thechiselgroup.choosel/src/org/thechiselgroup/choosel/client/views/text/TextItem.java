@@ -16,7 +16,7 @@
 package org.thechiselgroup.choosel.client.views.text;
 
 import org.thechiselgroup.choosel.client.ui.popup.DefaultPopupManager;
-import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.ViewItem;
 
 public class TextItem {
 
@@ -30,7 +30,7 @@ public class TextItem {
 
     private TextItemLabel label;
 
-    private ResourceItem resourceItem;
+    private ViewItem resourceItem;
 
     /**
      * Flag that marks if the label of this text item has already been added to
@@ -43,7 +43,7 @@ public class TextItem {
 
     private String cachedDescription;
 
-    public TextItem(ResourceItem resourceItem) {
+    public TextItem(ViewItem resourceItem) {
         assert resourceItem != null;
 
         this.resourceItem = resourceItem;
@@ -64,7 +64,7 @@ public class TextItem {
         return label;
     }
 
-    public ResourceItem getResourceItem() {
+    public ViewItem getResourceItem() {
         return resourceItem;
     }
 

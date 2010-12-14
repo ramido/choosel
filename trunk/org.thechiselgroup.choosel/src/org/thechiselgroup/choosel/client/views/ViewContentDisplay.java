@@ -82,9 +82,9 @@ public interface ViewContentDisplay extends WidgetAdaptable, Disposable {
      *            Slots for which the mappings have changed. Is never
      *            <code>null</code>, but can be an empty set.
      */
-    void update(LightweightCollection<ResourceItem> addedResourceItems,
-            LightweightCollection<ResourceItem> updatedResourceItems,
-            LightweightCollection<ResourceItem> removedResourceItems,
+    void update(LightweightCollection<ViewItem> addedResourceItems,
+            LightweightCollection<ViewItem> updatedResourceItems,
+            LightweightCollection<ViewItem> removedResourceItems,
             LightweightCollection<Slot> updatedSlots);
 
 }

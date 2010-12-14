@@ -22,7 +22,7 @@ import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.ViewItem;
 
 public class ArcItemContainer {
 
@@ -134,15 +134,15 @@ public class ArcItemContainer {
         }
     }
 
-    public void update(LightweightCollection<ResourceItem> resourceItems) {
-        for (ResourceItem resourceItem : resourceItems) {
+    public void update(LightweightCollection<ViewItem> resourceItems) {
+        for (ViewItem resourceItem : resourceItems) {
             update(resourceItem);
         }
 
         showArcs();
     }
 
-    private void update(ResourceItem resourceItem) {
+    private void update(ViewItem resourceItem) {
         for (Arc arc : arcType.getArcs(resourceItem)) {
             // XXX what about changes?
             if (!arcItemsById.containsKey(arc.getId())) {

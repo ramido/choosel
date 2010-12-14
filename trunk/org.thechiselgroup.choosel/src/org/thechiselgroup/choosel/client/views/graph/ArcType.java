@@ -17,7 +17,7 @@ package org.thechiselgroup.choosel.client.views.graph;
 
 import org.thechiselgroup.choosel.client.ui.widget.graph.Arc;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.ViewItem;
 
 /**
  * A specific class of arcs. Calculates arc items for a given resource item.
@@ -41,7 +41,7 @@ public interface ArcType {
      *         equal arc should have an equal id across multiple calls.
      */
     // / TODO change spec, include context (introduce ResourceItemAccessor)
-    LightweightCollection<Arc> getArcs(ResourceItem resourceItem);
+    LightweightCollection<Arc> getArcs(ViewItem resourceItem);
 
     /**
      * Returns the default color for arcs of this type.

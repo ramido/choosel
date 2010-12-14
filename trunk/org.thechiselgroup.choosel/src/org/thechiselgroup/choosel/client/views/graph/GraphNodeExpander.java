@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.graph;
 
-import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.ViewItem;
 
 /**
  * Expands a graph node.
@@ -24,7 +24,7 @@ import org.thechiselgroup.choosel.client.views.ResourceItem;
  */
 public interface GraphNodeExpander {
 
-    void expand(ResourceItem resourceItem,
+    void expand(ViewItem resourceItem,
             GraphNodeExpansionCallback expansionCallback);
 
 }

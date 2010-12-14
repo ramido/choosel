@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.client.views;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.views.slots.Slot;
 
-public interface ViewContentDisplayCallback extends ResourceItemContainer {
+public interface ViewContentDisplayCallback extends ViewItemContainer {
 
     ResourceSet getAutomaticResourceSet();
 

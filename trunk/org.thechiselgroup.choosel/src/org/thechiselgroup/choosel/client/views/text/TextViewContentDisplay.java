@@ -29,7 +29,7 @@ import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.util.math.MathUtils;
 import org.thechiselgroup.choosel.client.util.math.NumberArray;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
-import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.ViewItem;
 import org.thechiselgroup.choosel.client.views.SidePanelSection;
 import org.thechiselgroup.choosel.client.views.slots.Slot;
 
@@ -57,7 +57,7 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
             return getResourceItem(event).getResourceSet();
         }
 
-        private ResourceItem getResourceItem(GwtEvent<?> event) {
+        private ViewItem getResourceItem(GwtEvent<?> event) {
             return ((DefaultTextItemLabel) event.getSource()).getResourceItem();
         }
 
@@ -134,7 +134,7 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
      * </p>
      */
     private void addResourceItems(
-            LightweightCollection<ResourceItem> addedResourceItems) {
+            LightweightCollection<ViewItem> addedResourceItems) {
 
         assert addedResourceItems != null;
 
@@ -143,7 +143,7 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
             return;
         }
 
-        for (ResourceItem resourceItem : addedResourceItems) {
+        for (ViewItem resourceItem : addedResourceItems) {
             TextItem textItem = initTextItem(resourceItem);
             items.add(textItem);
         }
@@ -205,7 +205,7 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
                         "10px", "14px", "18px", "22px", "26px"));
     }
 
-    private TextItem initTextItem(ResourceItem resourceItem) {
+    private TextItem initTextItem(ViewItem resourceItem) {
         TextItem textItem = new TextItem(resourceItem);
 
         TextItemLabel label = textItemContainer.createTextItemLabel(textItem
@@ -257,25 +257,25 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     @Override
-    public void update(LightweightCollection<ResourceItem> addedResourceItems,
-            LightweightCollection<ResourceItem> updatedResourceItems,
-            LightweightCollection<ResourceItem> removedResourceItems,
+    public void update(LightweightCollection<ViewItem> addedResourceItems,
+            LightweightCollection<ViewItem> updatedResourceItems,
+            LightweightCollection<ViewItem> removedResourceItems,
             LightweightCollection<Slot> changedSlots) {
 
         addResourceItems(addedResourceItems);
 
-        for (ResourceItem resourceItem : updatedResourceItems) {
+        for (ViewItem resourceItem : updatedResourceItems) {
             TextItem textItem = (TextItem) resourceItem.getDisplayObject();
             textItem.updateContent();
             textItem.updateStatusStyling();
         }
 
-        for (ResourceItem resourceItem : removedResourceItems) {
+        for (ViewItem resourceItem : removedResourceItems) {
             removeTextItem((TextItem) resourceItem.getDisplayObject());
         }
 
         if (!changedSlots.isEmpty()) {
-            for (ResourceItem resourceItem : callback.getResourceItems()) {
+            for (ViewItem resourceItem : callback.getViewItems()) {
                 TextItem textItem = (TextItem) resourceItem.getDisplayObject();
                 textItem.updateContent();
             }

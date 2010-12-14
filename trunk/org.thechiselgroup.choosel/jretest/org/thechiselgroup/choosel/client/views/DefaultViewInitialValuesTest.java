@@ -48,9 +48,9 @@ public class DefaultViewInitialValuesTest {
         assertEquals(true, underTest.getSlotMappingConfiguration()
                 .containsResolver(numberSlot));
 
-        List<ResourceItem> resourceItems = underTest.getResourceItems();
+        List<ViewItem> resourceItems = underTest.getViewItems();
         assertEquals(1, resourceItems.size());
-        ResourceItem resourceItem = resourceItems.get(0);
+        ViewItem resourceItem = resourceItems.get(0);
 
         assertEquals(new Double(0), resourceItem.getResourceValue(numberSlot));
     }
@@ -67,9 +67,9 @@ public class DefaultViewInitialValuesTest {
         assertEquals(true, underTest.getSlotMappingConfiguration()
                 .containsResolver(textSlot));
 
-        List<ResourceItem> resourceItems = underTest.getResourceItems();
+        List<ViewItem> resourceItems = underTest.getViewItems();
         assertEquals(1, resourceItems.size());
-        ResourceItem resourceItem = resourceItems.get(0);
+        ViewItem resourceItem = resourceItems.get(0);
 
         assertEquals("t1", resourceItem.getResourceValue(textSlot));
     }

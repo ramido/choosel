@@ -42,9 +42,9 @@ import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.util.collections.LightweightList;
-import org.thechiselgroup.choosel.client.views.DefaultResourceItem;
+import org.thechiselgroup.choosel.client.views.DefaultViewItem;
 import org.thechiselgroup.choosel.client.views.HoverModel;
-import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.ViewItem;
 import org.thechiselgroup.choosel.client.views.slots.SlotMappingConfiguration;
 
 public final class ResourcesTestHelper {
@@ -56,18 +56,18 @@ public final class ResourcesTestHelper {
                 resourceSet.contains(createResource(resourceType, resourceId)));
     }
 
-    public static DefaultResourceItem createResourceItem(String groupId,
+    public static DefaultViewItem createResourceItem(String groupId,
             ResourceSet resources) {
 
         return createResourceItem(groupId, resources,
                 mock(SlotMappingConfiguration.class));
     }
 
-    public static DefaultResourceItem createResourceItem(String groupId,
+    public static DefaultViewItem createResourceItem(String groupId,
             ResourceSet resources,
             SlotMappingConfiguration slotMappingConfiguration) {
 
-        return spy(new DefaultResourceItem(groupId, resources,
+        return spy(new DefaultViewItem(groupId, resources,
                 mock(HoverModel.class), mock(PopupManager.class),
                 slotMappingConfiguration));
     }
@@ -76,10 +76,10 @@ public final class ResourcesTestHelper {
      * Creates list of resource items with using the label of the resource sets
      * as group ids.
      */
-    public static LightweightList<ResourceItem> createResourceItems(
+    public static LightweightList<ViewItem> createResourceItems(
             ResourceSet... resourceSets) {
 
-        LightweightList<ResourceItem> resourceItems = CollectionFactory
+        LightweightList<ViewItem> resourceItems = CollectionFactory
                 .createLightweightList();
         for (ResourceSet resourceSet : resourceSets) {
             resourceItems.add(createResourceItem(resourceSet.getLabel(),
@@ -117,13 +117,13 @@ public final class ResourcesTestHelper {
         return eq(Collections.<T> emptySet());
     }
 
-    public static LightweightCollection<ResourceItem> eqResourceItems(
-            final LightweightCollection<ResourceItem> resourceItems) {
+    public static LightweightCollection<ViewItem> eqResourceItems(
+            final LightweightCollection<ViewItem> resourceItems) {
 
-        return argThat(new ArgumentMatcher<LightweightCollection<ResourceItem>>() {
+        return argThat(new ArgumentMatcher<LightweightCollection<ViewItem>>() {
             @Override
             public boolean matches(Object o) {
-                LightweightCollection<ResourceItem> set = (LightweightCollection<ResourceItem>) o;
+                LightweightCollection<ViewItem> set = (LightweightCollection<ViewItem>) o;
 
                 if (set.size() != resourceItems.size()) {
                     return false;
@@ -151,13 +151,13 @@ public final class ResourcesTestHelper {
         });
     }
 
-    public static LightweightCollection<ResourceItem> resourceItemsForResourceSets(
+    public static LightweightCollection<ViewItem> resourceItemsForResourceSets(
             final ResourceSet... resourceSets) {
 
-        return argThat(new ArgumentMatcher<LightweightCollection<ResourceItem>>() {
+        return argThat(new ArgumentMatcher<LightweightCollection<ViewItem>>() {
             @Override
             public boolean matches(Object o) {
-                LightweightCollection<ResourceItem> set = (LightweightCollection<ResourceItem>) o;
+                LightweightCollection<ViewItem> set = (LightweightCollection<ViewItem>) o;
 
                 if (set.size() != resourceSets.length) {
                     return false;
@@ -165,7 +165,7 @@ public final class ResourcesTestHelper {
 
                 for (ResourceSet resourceSet : resourceSets) {
                     boolean found = false;
-                    for (ResourceItem item : set) {
+                    for (ViewItem item : set) {
                         ResourceSet itemSet = item.getResourceSet();
 
                         if (itemSet.size() == resourceSet.size()
@@ -221,7 +221,7 @@ public final class ResourcesTestHelper {
     private ResourcesTestHelper() {
     }
 
-    public static LightweightList<ResourceItem> createResourceItems(
+    public static LightweightList<ViewItem> createResourceItems(
             String... groupIds) {
         ResourceSet[] resourceSets = new ResourceSet[groupIds.length];
         for (int i = 0; i < resourceSets.length; i++) {

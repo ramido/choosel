@@ -47,7 +47,6 @@ import org.thechiselgroup.choosel.client.util.Delta;
 import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.util.HandlerRegistrationSet;
 import org.thechiselgroup.choosel.client.util.Initializable;
-import org.thechiselgroup.choosel.client.util.SingleItemIterable;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.CombinedIterable;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
@@ -120,10 +119,10 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     /**
      * Maps group ids (representing the resource sets that are calculated by the
-     * resource grouping) to the resource items that display the resource sets
-     * in the view.
+     * resource grouping, also used as view item ids) to the
+     * {@link DefaultViewItem}s that display the resource sets in the view.
      */
-    private Map<String, DefaultResourceItem> resourceItemsByGroupId = CollectionFactory
+    private Map<String, DefaultViewItem> viewItemsByGroupId = CollectionFactory
             .createStringMap();
 
     private SlotMappingConfiguration slotMappingConfiguration;
@@ -253,7 +252,7 @@ public class DefaultView extends AbstractWindowContent implements View {
         return popupManagerFactory.createPopupManager(widgetFactory);
     }
 
-    private DefaultResourceItem createResourceItem(String groupID,
+    private DefaultViewItem createViewItem(String groupID,
             ResourceSet resources,
             LightweightCollection<Resource> highlightedResources) {
 
@@ -261,13 +260,13 @@ public class DefaultView extends AbstractWindowContent implements View {
         // TODO use factory & dispose + clean up
 
         // TODO provide configuration to content display in callback
-        DefaultResourceItem resourceItem = new DefaultResourceItem(groupID,
-                resources, hoverModel, createPopupManager(resources),
+        DefaultViewItem resourceItem = new DefaultViewItem(groupID, resources,
+                hoverModel, createPopupManager(resources),
                 slotMappingConfiguration);
 
-        assert !resourceItemsByGroupId.containsKey(groupID) : "groupsToResourceItems already contains "
+        assert !viewItemsByGroupId.containsKey(groupID) : "groupsToViewItems already contains "
                 + groupID;
-        resourceItemsByGroupId.put(groupID, resourceItem);
+        viewItemsByGroupId.put(groupID, resourceItem);
 
         // TODO introduce partial selection
 
@@ -284,7 +283,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     @Override
     public void dispose() {
-        for (DefaultResourceItem resourceItem : resourceItemsByGroupId.values()) {
+        for (DefaultViewItem resourceItem : viewItemsByGroupId.values()) {
             resourceItem.dispose();
         }
 
@@ -361,40 +360,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         return resourceGrouping;
     }
 
-    public List<ResourceItem> getResourceItems() {
-        List<ResourceItem> result = new ArrayList<ResourceItem>();
-        for (DefaultResourceItem resourceItem : resourceItemsByGroupId.values()) {
-            result.add(resourceItem);
-        }
-        return result;
-    }
-
-    /**
-     * @return list of resource items that contain at least one of the
-     *         resources.
-     */
-    private LightweightList<ResourceItem> getResourceItems(
-            Iterable<Resource> resources) {
-
-        assert resources != null;
-
-        LightweightList<ResourceItem> result = CollectionFactory
-                .createLightweightList();
-        Set<String> groups = resourceGrouping.getGroups(resources);
-        for (String group : groups) {
-            assert resourceItemsByGroupId.containsKey(group);
-            result.add(resourceItemsByGroupId.get(group));
-        }
-        return result;
-    }
-
-    /**
-     * @return list of resource items that contain resource
-     */
-    private LightweightList<ResourceItem> getResourceItems(Resource resource) {
-        return getResourceItems(new SingleItemIterable<Resource>(resource));
-    }
-
     @Override
     public ResourceModel getResourceModel() {
         return resourceModel;
@@ -412,6 +377,32 @@ public class DefaultView extends AbstractWindowContent implements View {
     @Override
     public Slot[] getSlots() {
         return contentDisplay.getSlots();
+    }
+
+    public List<ViewItem> getViewItems() {
+        List<ViewItem> result = new ArrayList<ViewItem>();
+        for (DefaultViewItem resourceItem : viewItemsByGroupId.values()) {
+            result.add(resourceItem);
+        }
+        return result;
+    }
+
+    /**
+     * @return list of resource items that contain at least one of the
+     *         resources.
+     */
+    private LightweightList<ViewItem> getViewItems(Iterable<Resource> resources) {
+
+        assert resources != null;
+
+        LightweightList<ViewItem> result = CollectionFactory
+                .createLightweightList();
+        Set<String> groups = resourceGrouping.getGroups(resources);
+        for (String group : groups) {
+            assert viewItemsByGroupId.containsKey(group);
+            result.add(viewItemsByGroupId.get(group));
+        }
+        return result;
     }
 
     @Override
@@ -482,33 +473,13 @@ public class DefaultView extends AbstractWindowContent implements View {
         contentDisplayCallback = new ViewContentDisplayCallback() {
 
             @Override
-            public boolean containsResourceItem(String groupId) {
-                return resourceItemsByGroupId.containsKey(groupId);
+            public boolean containsViewItem(String groupId) {
+                return viewItemsByGroupId.containsKey(groupId);
             }
 
             @Override
             public ResourceSet getAutomaticResourceSet() {
                 return resourceModel.getAutomaticResourceSet();
-            }
-
-            @Override
-            public ResourceItem getResourceItemByGroupID(String groupId) {
-                return resourceItemsByGroupId.get(groupId);
-            }
-
-            @Override
-            public LightweightCollection<ResourceItem> getResourceItems() {
-                LightweightList<ResourceItem> result = CollectionFactory
-                        .createLightweightList();
-                result.addAll(resourceItemsByGroupId.values());
-                return result;
-            }
-
-            @Override
-            public LightweightCollection<ResourceItem> getResourceItems(
-                    Iterable<Resource> resources) {
-
-                return DefaultView.this.getResourceItems(resources);
             }
 
             @Override
@@ -518,6 +489,26 @@ public class DefaultView extends AbstractWindowContent implements View {
                 }
 
                 return slotMappingConfiguration.getResolver(slot).toString();
+            }
+
+            @Override
+            public ViewItem getViewItem(String groupId) {
+                return viewItemsByGroupId.get(groupId);
+            }
+
+            @Override
+            public LightweightCollection<ViewItem> getViewItems() {
+                LightweightList<ViewItem> result = CollectionFactory
+                        .createLightweightList();
+                result.addAll(viewItemsByGroupId.values());
+                return result;
+            }
+
+            @Override
+            public LightweightCollection<ViewItem> getViewItems(
+                    Iterable<Resource> resources) {
+
+                return DefaultView.this.getViewItems(resources);
             }
 
             @Override
@@ -568,7 +559,7 @@ public class DefaultView extends AbstractWindowContent implements View {
                     ResourceGroupingChangedEvent e) {
 
                 assert e != null;
-                updateResourceItemsOnModelChange(e.getChanges());
+                updateViewItemsOnModelChange(e.getChanges());
             }
         });
     }
@@ -643,9 +634,9 @@ public class DefaultView extends AbstractWindowContent implements View {
             @Override
             public void onResourceCategoriesChanged(SlotMappingChangedEvent e) {
                 contentDisplay.update(
-                        LightweightCollections.<ResourceItem> emptyCollection(),
-                        LightweightCollections.<ResourceItem> emptyCollection(),
-                        LightweightCollections.<ResourceItem> emptyCollection(),
+                        LightweightCollections.<ViewItem> emptyCollection(),
+                        LightweightCollections.<ViewItem> emptyCollection(),
+                        LightweightCollections.<ViewItem> emptyCollection(),
                         LightweightCollections.toCollection(e.getSlot()));
             }
         });
@@ -674,10 +665,10 @@ public class DefaultView extends AbstractWindowContent implements View {
     /**
      * Processes the added resource groups when the grouping changes.
      */
-    private LightweightCollection<ResourceItem> processAddChanges(
+    private LightweightCollection<ViewItem> processAddChanges(
             List<ResourceGroupingChange> changes) {
 
-        LightweightList<ResourceItem> addedResourceItems = CollectionFactory
+        LightweightList<ViewItem> addedResourceItems = CollectionFactory
                 .createLightweightList();
 
         /*
@@ -692,7 +683,7 @@ public class DefaultView extends AbstractWindowContent implements View {
                     highlightedResources.addAll(resourceModel
                             .getIntersection(hoverModel.getResources()));
                 }
-                DefaultResourceItem resourceItem = createResourceItem(
+                DefaultViewItem resourceItem = createViewItem(
                         change.getGroupID(), change.getResourceSet(),
                         highlightedResources);
 
@@ -703,17 +694,16 @@ public class DefaultView extends AbstractWindowContent implements View {
         return addedResourceItems;
     }
 
-    private LightweightCollection<ResourceItem> processRemoveChanges(
+    private LightweightCollection<ViewItem> processRemoveChanges(
             List<ResourceGroupingChange> changes) {
 
-        LightweightList<ResourceItem> removedResourceItems = CollectionFactory
+        LightweightList<ViewItem> removedResourceItems = CollectionFactory
                 .createLightweightList();
         for (ResourceGroupingChange change : changes) {
             switch (change.getDelta()) {
             case REMOVE: {
                 // XXX dispose should be done after method call...
-                removedResourceItems
-                        .add(removeResourceItem(change.getGroupID()));
+                removedResourceItems.add(removeViewItem(change.getGroupID()));
             }
                 break;
             }
@@ -722,7 +712,7 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     // TODO implement
-    private LightweightCollection<ResourceItem> processUpdates(
+    private LightweightCollection<ViewItem> processUpdates(
             List<ResourceGroupingChange> changes) {
 
         for (ResourceGroupingChange change : changes) {
@@ -734,19 +724,18 @@ public class DefaultView extends AbstractWindowContent implements View {
             }
         }
 
-        return LightweightCollections.<ResourceItem> emptyCollection();
+        return LightweightCollections.<ViewItem> emptyCollection();
     }
 
-    private DefaultResourceItem removeResourceItem(String groupID) {
+    private DefaultViewItem removeViewItem(String groupID) {
         assert groupID != null : "groupIDs must not be null";
-        assert resourceItemsByGroupId.containsKey(groupID) : "no resource item for "
+        assert viewItemsByGroupId.containsKey(groupID) : "no resource item for "
                 + groupID;
 
-        DefaultResourceItem resourceItem = resourceItemsByGroupId
-                .remove(groupID);
+        DefaultViewItem resourceItem = viewItemsByGroupId.remove(groupID);
         resourceItem.dispose();
 
-        assert !resourceItemsByGroupId.containsKey(groupID);
+        assert !viewItemsByGroupId.containsKey(groupID);
 
         return resourceItem;
     }
@@ -899,18 +888,40 @@ public class DefaultView extends AbstractWindowContent implements View {
             return;
         }
 
-        LightweightList<ResourceItem> affectedResourceItems = getResourceItems(new CombinedIterable<Resource>(
+        LightweightList<ViewItem> affectedResourceItems = getViewItems(new CombinedIterable<Resource>(
                 addedResources, removedResources));
 
-        for (ResourceItem resourceItem : affectedResourceItems) {
-            ((DefaultResourceItem) resourceItem).updateHighlightedResources(
+        for (ViewItem resourceItem : affectedResourceItems) {
+            ((DefaultViewItem) resourceItem).updateHighlightedResources(
                     addedResourcesInThisView, removedResourcesInThisView);
         }
 
         contentDisplay.update(
-                LightweightCollections.<ResourceItem> emptyCollection(),
+                LightweightCollections.<ViewItem> emptyCollection(),
                 affectedResourceItems,
-                LightweightCollections.<ResourceItem> emptyCollection(),
+                LightweightCollections.<ViewItem> emptyCollection(),
+                LightweightCollections.<Slot> emptyCollection());
+    }
+
+    private void updateSelection(LightweightCollection<Resource> resources,
+            boolean selected) {
+
+        LightweightList<ViewItem> resourceItems = getViewItems(resources);
+        for (ViewItem resourceItem : resourceItems) {
+            // TODO test case (similar to highlighting)
+            if (selected) {
+                ((DefaultViewItem) resourceItem)
+                        .addSelectedResources(resources);
+            } else {
+                ((DefaultViewItem) resourceItem)
+                        .removeSelectedResources(resources);
+            }
+        }
+
+        contentDisplay.update(
+                LightweightCollections.<ViewItem> emptyCollection(),
+                resourceItems,
+                LightweightCollections.<ViewItem> emptyCollection(),
                 LightweightCollections.<Slot> emptyCollection());
     }
 
@@ -921,7 +932,7 @@ public class DefaultView extends AbstractWindowContent implements View {
     // (c) update
     // (d) add + update
     // (e) remove + update
-    private void updateResourceItemsOnModelChange(
+    private void updateViewItemsOnModelChange(
             List<ResourceGroupingChange> changes) {
 
         assert changes != null;
@@ -931,34 +942,12 @@ public class DefaultView extends AbstractWindowContent implements View {
          * IMPORTANT: remove old items before adding new once (there might be
          * conflicts, i.e. groups with the same id)
          */
-        LightweightCollection<ResourceItem> removedResourceItems = processRemoveChanges(changes);
-        LightweightCollection<ResourceItem> addedResourceItems = processAddChanges(changes);
-        LightweightCollection<ResourceItem> updatedResourceItems = processUpdates(changes);
+        LightweightCollection<ViewItem> removedResourceItems = processRemoveChanges(changes);
+        LightweightCollection<ViewItem> addedResourceItems = processAddChanges(changes);
+        LightweightCollection<ViewItem> updatedResourceItems = processUpdates(changes);
 
         contentDisplay.update(addedResourceItems, updatedResourceItems,
                 removedResourceItems,
-                LightweightCollections.<Slot> emptyCollection());
-    }
-
-    private void updateSelection(LightweightCollection<Resource> resources,
-            boolean selected) {
-
-        LightweightList<ResourceItem> resourceItems = getResourceItems(resources);
-        for (ResourceItem resourceItem : resourceItems) {
-            // TODO test case (similar to highlighting)
-            if (selected) {
-                ((DefaultResourceItem) resourceItem)
-                        .addSelectedResources(resources);
-            } else {
-                ((DefaultResourceItem) resourceItem)
-                        .removeSelectedResources(resources);
-            }
-        }
-
-        contentDisplay.update(
-                LightweightCollections.<ResourceItem> emptyCollection(),
-                resourceItems,
-                LightweightCollections.<ResourceItem> emptyCollection(),
                 LightweightCollections.<Slot> emptyCollection());
     }
 }

@@ -24,8 +24,8 @@ import org.thechiselgroup.choosel.client.ui.widget.timeline.TimeLineEvent;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.IconResourceItem;
-import org.thechiselgroup.choosel.client.views.ResourceItem;
-import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
+import org.thechiselgroup.choosel.client.views.ViewItem;
+import org.thechiselgroup.choosel.client.views.ViewItem.Status;
 
 import com.google.gwt.query.client.Function;
 import com.google.gwt.query.client.GQuery;
@@ -80,7 +80,7 @@ public class TimeLineItem extends IconResourceItem {
 
     private String tickElementID;
 
-    public TimeLineItem(ResourceItem resourceItem,
+    public TimeLineItem(ViewItem resourceItem,
             TimeLineViewContentDisplay view,
             DragEnablerFactory dragEnablerFactory) {
 

@@ -19,7 +19,17 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.views.slots.Slot;
 
-public interface ResourceItem {
+/**
+ * Model of several resources that should be displayed as a visual item in the
+ * view. The <code>ViewItem</code> provides the highlighting and selection
+ * status, enables {@link ViewContentDisplay}s to store a display object, and
+ * facilitates the resolution of {@link Slot}s.
+ * 
+ * @author Lars Grammel
+ * 
+ * @see View
+ */
+public interface ViewItem {
 
     public static enum Status {
 
@@ -40,12 +50,6 @@ public interface ResourceItem {
     }
 
     Object getDisplayObject();
-
-    /**
-     * This is the view-specific resource item identifier. Refers to the
-     * identifier of the underlying group of resources.
-     */
-    String getGroupID();
 
     /**
      * @return all resources in this resource item that are highlighted.
@@ -79,6 +83,11 @@ public interface ResourceItem {
     SubsetStatus getSelectionStatus();
 
     Status getStatus();
+
+    /**
+     * Returns the identifier of the view item.
+     */
+    String getViewItemID();
 
     /**
      * The display object is an arbitrary objects that can be set by a view

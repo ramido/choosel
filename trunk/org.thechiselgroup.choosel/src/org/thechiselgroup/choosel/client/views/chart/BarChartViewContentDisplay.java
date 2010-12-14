@@ -30,9 +30,9 @@ import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunctionIntArg
 import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunctionNoArgs;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.ResourceItem;
-import org.thechiselgroup.choosel.client.views.ResourceItem.Subset;
-import org.thechiselgroup.choosel.client.views.ResourceItem.SubsetStatus;
+import org.thechiselgroup.choosel.client.views.ViewItem;
+import org.thechiselgroup.choosel.client.views.ViewItem.Subset;
+import org.thechiselgroup.choosel.client.views.ViewItem.SubsetStatus;
 import org.thechiselgroup.choosel.client.views.slots.Slot;
 import org.thechiselgroup.choosel.client.views.SidePanelSection;
 
@@ -466,9 +466,9 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     }
 
     @Override
-    public void update(LightweightCollection<ResourceItem> addedResourceItems,
-            LightweightCollection<ResourceItem> updatedResourceItems,
-            LightweightCollection<ResourceItem> removedResourceItems,
+    public void update(LightweightCollection<ViewItem> addedResourceItems,
+            LightweightCollection<ViewItem> updatedResourceItems,
+            LightweightCollection<ViewItem> removedResourceItems,
             LightweightCollection<Slot> changedSlots) {
 
         // TODO re-enable - might be wrong for initial configuration...
