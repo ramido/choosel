@@ -35,9 +35,9 @@ public abstract class IconResourceItem {
     private String selectedColor;
 
     // TODO pull up
-    protected ResourceItem resourceItem;
+    protected ViewItem resourceItem;
 
-    public IconResourceItem(ResourceItem resourceItem, Slot colorSlot) {
+    public IconResourceItem(ViewItem resourceItem, Slot colorSlot) {
         assert resourceItem != null;
         assert colorSlot != null;
         assert colorSlot.getDataType().equals(DataType.COLOR);

@@ -38,9 +38,9 @@ import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollections;
-import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
-import org.thechiselgroup.choosel.client.views.ResourceItem.Subset;
-import org.thechiselgroup.choosel.client.views.ResourceItem.SubsetStatus;
+import org.thechiselgroup.choosel.client.views.ViewItem.Status;
+import org.thechiselgroup.choosel.client.views.ViewItem.Subset;
+import org.thechiselgroup.choosel.client.views.ViewItem.SubsetStatus;
 import org.thechiselgroup.choosel.client.views.slots.Slot;
 import org.thechiselgroup.choosel.client.views.slots.SlotMappingChangedEvent;
 import org.thechiselgroup.choosel.client.views.slots.SlotMappingChangedHandler;
@@ -49,9 +49,9 @@ import org.thechiselgroup.choosel.client.views.slots.SlotMappingConfiguration;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 
-public class DefaultResourceItemTest {
+public class DefaultViewItemTest {
 
-    private static final String RESOURCE_ITEM_GROUP_ID = "resourceItemCategory";
+    private static final String VIEW_ITEM_ID = "viewItemCategory";
 
     private HoverModel hoverModel;
 
@@ -63,7 +63,7 @@ public class DefaultResourceItemTest {
 
     private ResourceSet resources;
 
-    private DefaultResourceItem underTest;
+    private DefaultViewItem underTest;
 
     private Slot numberSlot;
 
@@ -236,8 +236,7 @@ public class DefaultResourceItemTest {
 
         when(
                 slotMappingConfiguration.resolve(eq(numberSlot),
-                        eq(RESOURCE_ITEM_GROUP_ID), eq(resources))).thenReturn(
-                2d);
+                        eq(VIEW_ITEM_ID), eq(resources))).thenReturn(2d);
 
         Object result = underTest.getResourceValue(numberSlot);
         assertEquals(2d, result);
@@ -249,8 +248,7 @@ public class DefaultResourceItemTest {
 
         when(
                 slotMappingConfiguration.resolve(eq(numberSlot),
-                        eq(RESOURCE_ITEM_GROUP_ID), eq(resources))).thenReturn(
-                2d, 3d);
+                        eq(VIEW_ITEM_ID), eq(resources))).thenReturn(2d, 3d);
 
         underTest.getResourceValue(numberSlot);
         resources.removeAll(createResources(1));
@@ -266,8 +264,7 @@ public class DefaultResourceItemTest {
 
         when(
                 slotMappingConfiguration.resolve(eq(numberSlot),
-                        eq(RESOURCE_ITEM_GROUP_ID), eq(resources))).thenReturn(
-                2d, 3d);
+                        eq(VIEW_ITEM_ID), eq(resources))).thenReturn(2d, 3d);
 
         underTest.getResourceValue(numberSlot);
         handler.onResourceCategoriesChanged(new SlotMappingChangedEvent(
@@ -281,16 +278,16 @@ public class DefaultResourceItemTest {
 
         when(
                 slotMappingConfiguration.resolve(eq(numberSlot),
-                        eq(RESOURCE_ITEM_GROUP_ID),
-                        eqResources(createResources()))).thenReturn(0d);
+                        eq(VIEW_ITEM_ID), eqResources(createResources())))
+                .thenReturn(0d);
         when(
                 slotMappingConfiguration.resolve(eq(numberSlot),
-                        eq(RESOURCE_ITEM_GROUP_ID),
-                        eqResources(createResources(2, 3)))).thenReturn(2d);
+                        eq(VIEW_ITEM_ID), eqResources(createResources(2, 3))))
+                .thenReturn(2d);
         when(
                 slotMappingConfiguration.resolve(eq(numberSlot),
-                        eq(RESOURCE_ITEM_GROUP_ID),
-                        eqResources(createResources(3)))).thenReturn(3d);
+                        eq(VIEW_ITEM_ID), eqResources(createResources(3))))
+                .thenReturn(3d);
 
         underTest.getResourceValue(numberSlot, Subset.HIGHLIGHTED);
         underTest.updateHighlightedResources(createResources(2, 3),
@@ -310,8 +307,8 @@ public class DefaultResourceItemTest {
         resources.addAll(createResources(1, 2, 3, 4));
         when(
                 slotMappingConfiguration.resolve(eq(numberSlot),
-                        eq(RESOURCE_ITEM_GROUP_ID),
-                        eqResources(createResources(2, 3)))).thenReturn(2d, 3d);
+                        eq(VIEW_ITEM_ID), eqResources(createResources(2, 3))))
+                .thenReturn(2d, 3d);
 
         underTest.updateHighlightedResources(createResources(2, 3),
                 LightweightCollections.<Resource> emptyCollection());
@@ -328,16 +325,16 @@ public class DefaultResourceItemTest {
 
         when(
                 slotMappingConfiguration.resolve(eq(numberSlot),
-                        eq(RESOURCE_ITEM_GROUP_ID),
-                        eqResources(createResources()))).thenReturn(0d);
+                        eq(VIEW_ITEM_ID), eqResources(createResources())))
+                .thenReturn(0d);
         when(
                 slotMappingConfiguration.resolve(eq(numberSlot),
-                        eq(RESOURCE_ITEM_GROUP_ID),
-                        eqResources(createResources(2, 3)))).thenReturn(2d);
+                        eq(VIEW_ITEM_ID), eqResources(createResources(2, 3))))
+                .thenReturn(2d);
         when(
                 slotMappingConfiguration.resolve(eq(numberSlot),
-                        eq(RESOURCE_ITEM_GROUP_ID),
-                        eqResources(createResources(3)))).thenReturn(3d);
+                        eq(VIEW_ITEM_ID), eqResources(createResources(3))))
+                .thenReturn(3d);
 
         underTest.getResourceValue(numberSlot, Subset.SELECTED);
         underTest.addSelectedResources(createResources(2, 3));
@@ -354,8 +351,8 @@ public class DefaultResourceItemTest {
         resources.addAll(createResources(1, 2, 3, 4));
         when(
                 slotMappingConfiguration.resolve(eq(numberSlot),
-                        eq(RESOURCE_ITEM_GROUP_ID),
-                        eqResources(createResources(2, 3)))).thenReturn(2d, 3d);
+                        eq(VIEW_ITEM_ID), eqResources(createResources(2, 3))))
+                .thenReturn(2d, 3d);
 
         underTest.addSelectedResources(createResources(2, 3));
         underTest.getResourceValue(numberSlot, Subset.SELECTED);
@@ -542,8 +539,8 @@ public class DefaultResourceItemTest {
         numberSlot = new Slot("id-2", "number-slot", DataType.NUMBER);
         hoverModel = spy(new HoverModel());
         resources = new DefaultResourceSet();
-        underTest = spy(new DefaultResourceItem(RESOURCE_ITEM_GROUP_ID,
-                resources, hoverModel, popupManager, slotMappingConfiguration));
+        underTest = spy(new DefaultViewItem(VIEW_ITEM_ID, resources,
+                hoverModel, popupManager, slotMappingConfiguration));
     }
 
     @Test

@@ -27,7 +27,7 @@ import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunctionIntArg
 import org.thechiselgroup.choosel.client.util.collections.ArrayUtils;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.ViewItem;
 import org.thechiselgroup.choosel.client.views.slots.Slot;
 
 import com.google.inject.Inject;
@@ -257,9 +257,9 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
     }
 
     @Override
-    public void update(LightweightCollection<ResourceItem> addedResourceItems,
-            LightweightCollection<ResourceItem> updatedResourceItems,
-            LightweightCollection<ResourceItem> removedResourceItems,
+    public void update(LightweightCollection<ViewItem> addedResourceItems,
+            LightweightCollection<ViewItem> updatedResourceItems,
+            LightweightCollection<ViewItem> removedResourceItems,
             LightweightCollection<Slot> changedSlots) {
 
         // TODO re-enable

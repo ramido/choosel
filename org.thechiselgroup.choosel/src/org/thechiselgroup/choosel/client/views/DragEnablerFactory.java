@@ -34,7 +34,7 @@ public class DragEnablerFactory {
         this.dragController = dragController;
     }
 
-    public DragEnabler createDragEnabler(ResourceItem item) {
+    public DragEnabler createDragEnabler(ViewItem item) {
         return new DragEnabler(item, desktop, dragController);
     }
 

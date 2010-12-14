@@ -28,7 +28,6 @@ import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.client.util.event.EventHandlerPriority;
 import org.thechiselgroup.choosel.client.util.event.PrioritizedEventHandler;
 import org.thechiselgroup.choosel.client.views.slots.Slot;
@@ -42,14 +41,16 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 
 /**
- * Default implementation of {@link ResourceItem}. <b>PERFORMANCE NOTE</b>:
- * Provides caching for calculated slot values and for highlighting and
- * selection status.
+ * Default implementation of {@link ViewItem}.
+ * <p>
+ * <b>PERFORMANCE NOTE</b>: Provides caching for calculated slot values and for
+ * highlighting and selection status.
+ * </p>
  * 
  * @author Lars Grammel
  */
 // TODO separate out resource item controller part
-public class DefaultResourceItem implements Disposable, ResourceItem {
+public class DefaultViewItem implements Disposable, ViewItem {
 
     private final class CacheUpdateOnResourceSetChange implements
             ResourceSetChangedEventHandler, PrioritizedEventHandler {
@@ -83,7 +84,7 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
         }
     }
 
-    private String groupID;
+    private String viewItemID;
 
     protected final HoverModel hoverModel;
 
@@ -100,9 +101,8 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
      * The representation of this resource item in the specific display. This is
      * set by the display to enable fast reference to this display element, and
      * should be casted into the specific type.
-     * 
-     * TODO dispose
      */
+    // TODO dispose
     private Object displayObject;
 
     private ResourceSet highlightedResources;
@@ -136,17 +136,17 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
     private Map<String, Object> selectedSubsetSlotValueCache = CollectionFactory
             .createStringMap();
 
-    public DefaultResourceItem(String groupID, ResourceSet resources,
+    public DefaultViewItem(String viewItemID, ResourceSet resources,
             HoverModel hoverModel, PopupManager popupManager,
             SlotMappingConfiguration slotMappingConfiguration) {
 
-        assert groupID != null;
+        assert viewItemID != null;
         assert resources != null;
         assert hoverModel != null;
         assert popupManager != null;
         assert slotMappingConfiguration != null;
 
-        this.groupID = groupID;
+        this.viewItemID = viewItemID;
         this.resources = resources;
         this.popupManager = popupManager;
         this.hoverModel = hoverModel; // TODO separate controller
@@ -196,7 +196,7 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
             return cache.get(slotId);
         }
 
-        Object value = slotMappingConfiguration.resolve(slot, groupID,
+        Object value = slotMappingConfiguration.resolve(slot, viewItemID,
                 resources);
 
         cache.put(slotId, value);
@@ -207,11 +207,6 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
     @Override
     public Object getDisplayObject() {
         return displayObject;
-    }
-
-    @Override
-    public String getGroupID() {
-        return groupID;
     }
 
     @Override
@@ -337,6 +332,11 @@ public class DefaultResourceItem implements Disposable, ResourceItem {
         }
 
         return SubsetStatus.PARTIAL;
+    }
+
+    @Override
+    public String getViewItemID() {
+        return viewItemID;
     }
 
     public void initCacheCleaning(ResourceSet resources,

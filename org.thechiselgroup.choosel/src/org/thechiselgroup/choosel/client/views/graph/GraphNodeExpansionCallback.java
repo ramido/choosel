@@ -20,7 +20,7 @@ import org.thechiselgroup.choosel.client.resources.ResourceManager;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.ViewItem;
 
 // TODO better separation of concern - introduce factories for the expanders
 // TODO use resource items instead of single resources
@@ -39,7 +39,7 @@ public interface GraphNodeExpansionCallback {
 
     Resource getResourceByUri(String value);
 
-    LightweightCollection<ResourceItem> getResourceItems(
+    LightweightCollection<ViewItem> getResourceItems(
             Iterable<Resource> resources);
 
     ResourceManager getResourceManager();
@@ -47,6 +47,6 @@ public interface GraphNodeExpansionCallback {
     boolean isRestoring();
 
     void updateArcsForResourceItems(
-            LightweightCollection<ResourceItem> resourceItems);
+            LightweightCollection<ViewItem> resourceItems);
 
 }

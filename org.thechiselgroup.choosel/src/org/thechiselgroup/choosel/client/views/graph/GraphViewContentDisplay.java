@@ -57,7 +57,7 @@ import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.ViewItem;
 import org.thechiselgroup.choosel.client.views.SidePanelSection;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayAction;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
@@ -125,7 +125,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         @Override
         public void onMouseMove(MouseMoveEvent event) {
             // TODO restrict to mouse move for current graph item
-            for (ResourceItem item : getCallback().getResourceItems()) {
+            for (ViewItem item : getCallback().getViewItems()) {
                 // TODO relative to root pane instead of client area
                 item.getPopupManager().onMouseMove(event.getClientX(),
                         event.getClientY());
@@ -261,7 +261,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         return nodeResources.containsResourceWithUri(resourceUri);
     }
 
-    private GraphItem createGraphNodeItem(ResourceItem resourceItem) {
+    private GraphItem createGraphNodeItem(ViewItem resourceItem) {
         // TODO get from group id
         String type = getCategory(resourceItem.getResourceSet()
                 .getFirstResource());
@@ -298,7 +298,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     // default visibility for test case use
     List<Node> getAllNodes() {
         List<Node> result = new ArrayList<Node>();
-        for (ResourceItem resourceItem : getCallback().getResourceItems()) {
+        for (ViewItem resourceItem : getCallback().getViewItems()) {
             result.add(getNodeFromResourceItem(resourceItem));
         }
         return result;
@@ -330,15 +330,15 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         return graphDisplay;
     }
 
-    private ResourceItem getGraphItem(Node node) {
-        return getCallback().getResourceItemByGroupID(node.getId());
+    private ViewItem getGraphItem(Node node) {
+        return getCallback().getViewItem(node.getId());
     }
 
-    private ResourceItem getGraphItem(NodeEvent<?> event) {
+    private ViewItem getGraphItem(NodeEvent<?> event) {
         return getGraphItem(event.getNode());
     }
 
-    private Node getNodeFromResourceItem(ResourceItem resourceItem) {
+    private Node getNodeFromResourceItem(ViewItem resourceItem) {
         return ((GraphItem) resourceItem.getDisplayObject()).getNode();
     }
 
@@ -347,15 +347,15 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         return nodeResources.getByUri(value);
     }
 
-    private ResourceItem getResourceItem(Node node) {
+    private ViewItem getResourceItem(Node node) {
         return getGraphItem(node);
     }
 
     @Override
-    public LightweightCollection<ResourceItem> getResourceItems(
+    public LightweightCollection<ViewItem> getResourceItems(
             Iterable<Resource> resources) {
 
-        return getCallback().getResourceItems(resources);
+        return getCallback().getViewItems(resources);
     }
 
     @Override
@@ -479,7 +479,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
         assert node != null;
 
-        if (getCallback().getResourceItems().size() > 1) {
+        if (getCallback().getViewItems().size() > 1) {
             return;
         }
 
@@ -507,7 +507,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
                 }, category);
     }
 
-    private void removeNode(ResourceItem resourceItem) {
+    private void removeNode(ViewItem resourceItem) {
         Node node = getNodeFromResourceItem(resourceItem);
 
         nodeResources.removeResourceSet(resourceItem.getResourceSet());
@@ -526,11 +526,11 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
     @Override
     public void restore(Memento state) {
-        LightweightCollection<ResourceItem> resourceItems = getCallback()
-                .getResourceItems();
-        for (ResourceItem resourceItem : resourceItems) {
+        LightweightCollection<ViewItem> resourceItems = getCallback()
+                .getViewItems();
+        for (ViewItem resourceItem : resourceItems) {
             GraphItem item = (GraphItem) resourceItem.getDisplayObject();
-            Memento nodeMemento = state.getChild(resourceItem.getGroupID());
+            Memento nodeMemento = state.getChild(resourceItem.getViewItemID());
             Point location = new Point(
                     (Integer) nodeMemento.getValue(MEMENTO_X),
                     (Integer) nodeMemento.getValue(MEMENTO_Y));
@@ -542,9 +542,9 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     @Override
     public Memento save() {
         Memento state = new Memento();
-        LightweightCollection<ResourceItem> resourceItems = getCallback()
-                .getResourceItems();
-        for (ResourceItem resourceItem : resourceItems) {
+        LightweightCollection<ViewItem> resourceItems = getCallback()
+                .getViewItems();
+        for (ViewItem resourceItem : resourceItems) {
             GraphItem item = (GraphItem) resourceItem.getDisplayObject();
 
             Point location = graphDisplay.getLocation(item.getNode());
@@ -553,7 +553,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
             nodeMemento.setValue(MEMENTO_X, location.x);
             nodeMemento.setValue(MEMENTO_Y, location.y);
 
-            state.addChild(resourceItem.getGroupID(), nodeMemento);
+            state.addChild(resourceItem.getViewItemID(), nodeMemento);
         }
         return state;
     }
@@ -572,22 +572,22 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     }
 
     @Override
-    public void update(LightweightCollection<ResourceItem> addedResourceItems,
-            LightweightCollection<ResourceItem> updatedResourceItems,
-            LightweightCollection<ResourceItem> removedResourceItems,
+    public void update(LightweightCollection<ViewItem> addedResourceItems,
+            LightweightCollection<ViewItem> updatedResourceItems,
+            LightweightCollection<ViewItem> removedResourceItems,
             LightweightCollection<Slot> changedSlots) {
 
-        for (ResourceItem addedItem : addedResourceItems) {
+        for (ViewItem addedItem : addedResourceItems) {
             createGraphNodeItem(addedItem);
             updateNode(addedItem);
         }
         updateArcsForResourceItems(addedResourceItems);
 
-        for (ResourceItem updatedItem : updatedResourceItems) {
+        for (ViewItem updatedItem : updatedResourceItems) {
             updateNode(updatedItem);
         }
 
-        for (ResourceItem resourceItem : removedResourceItems) {
+        for (ViewItem resourceItem : removedResourceItems) {
             removeNode(resourceItem);
         }
     }
@@ -599,7 +599,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
      */
     @Override
     public void updateArcsForResourceItems(
-            LightweightCollection<ResourceItem> resourceItems) {
+            LightweightCollection<ViewItem> resourceItems) {
 
         assert resourceItems != null;
         for (ArcItemContainer container : arcItemContainersByArcTypeID.values()) {
@@ -607,7 +607,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         }
     }
 
-    private void updateNode(ResourceItem resourceItem) {
+    private void updateNode(ViewItem resourceItem) {
         ((GraphItem) resourceItem.getDisplayObject()).updateNode();
     }
 }

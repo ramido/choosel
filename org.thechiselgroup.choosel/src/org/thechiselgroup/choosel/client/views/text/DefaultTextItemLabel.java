@@ -20,7 +20,7 @@ import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarType;
 import org.thechiselgroup.choosel.client.ui.CSS;
 import org.thechiselgroup.choosel.client.ui.dnd.DragProxyEventReceiver;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
-import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.ViewItem;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -29,10 +29,10 @@ public class DefaultTextItemLabel extends ResourceSetAvatar implements
 
     private static final String CSS_AVATAR_RESOURCE_SET = "avatar-resourceSet";
 
-    private final ResourceItem resourceItem;
+    private final ViewItem resourceItem;
 
     public DefaultTextItemLabel(ResourceSetAvatarDragController dragController,
-            ResourceItem resourceItem) {
+            ViewItem resourceItem) {
 
         super("", CSS_AVATAR_RESOURCE_SET, resourceItem.getResourceSet(),
                 ResourceSetAvatarType.SET);
@@ -62,7 +62,7 @@ public class DefaultTextItemLabel extends ResourceSetAvatar implements
         resourceItem.getHighlightingManager().setHighlighting(false);
     }
 
-    public ResourceItem getResourceItem() {
+    public ViewItem getResourceItem() {
         return resourceItem;
     }
 

@@ -28,21 +28,21 @@ import org.thechiselgroup.choosel.client.views.slots.Slot;
 public class TestViewContentDisplayCallback implements
         ViewContentDisplayCallback {
 
-    private Map<String, ResourceItem> resourceItemsByGroupId = CollectionFactory
+    private Map<String, ViewItem> resourceItemsByGroupId = CollectionFactory
             .createStringMap();
 
-    public void addResourceItem(ResourceItem resourceItem) {
-        resourceItemsByGroupId.put(resourceItem.getGroupID(), resourceItem);
+    public void addResourceItem(ViewItem resourceItem) {
+        resourceItemsByGroupId.put(resourceItem.getViewItemID(), resourceItem);
     }
 
-    public void addResourceItems(Iterable<ResourceItem> resourceItems) {
-        for (ResourceItem resourceItem : resourceItems) {
+    public void addResourceItems(Iterable<ViewItem> resourceItems) {
+        for (ViewItem resourceItem : resourceItems) {
             addResourceItem(resourceItem);
         }
     }
 
     @Override
-    public boolean containsResourceItem(String groupId) {
+    public boolean containsViewItem(String groupId) {
         return resourceItemsByGroupId.containsKey(groupId);
     }
 
@@ -52,20 +52,20 @@ public class TestViewContentDisplayCallback implements
     }
 
     @Override
-    public ResourceItem getResourceItemByGroupID(String groupId) {
+    public ViewItem getViewItem(String groupId) {
         return resourceItemsByGroupId.get(groupId);
     }
 
     @Override
-    public LightweightCollection<ResourceItem> getResourceItems() {
-        LightweightList<ResourceItem> result = CollectionFactory
+    public LightweightCollection<ViewItem> getViewItems() {
+        LightweightList<ViewItem> result = CollectionFactory
                 .createLightweightList();
         result.addAll(resourceItemsByGroupId.values());
         return result;
     }
 
     @Override
-    public LightweightCollection<ResourceItem> getResourceItems(
+    public LightweightCollection<ViewItem> getViewItems(
             Iterable<Resource> resources) {
 
         return null;
@@ -76,8 +76,8 @@ public class TestViewContentDisplayCallback implements
         return null;
     }
 
-    public void removeResourceItem(ResourceItem resourceItem) {
-        resourceItemsByGroupId.remove(resourceItem.getGroupID());
+    public void removeResourceItem(ViewItem resourceItem) {
+        resourceItemsByGroupId.remove(resourceItem.getViewItemID());
     }
 
     @Override

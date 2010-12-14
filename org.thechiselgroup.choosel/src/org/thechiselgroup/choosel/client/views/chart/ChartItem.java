@@ -18,8 +18,8 @@ package org.thechiselgroup.choosel.client.views.chart;
 import org.thechiselgroup.choosel.client.ui.Colors;
 import org.thechiselgroup.choosel.client.views.DragEnabler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.ResourceItem;
-import org.thechiselgroup.choosel.client.views.ResourceItem.Subset;
+import org.thechiselgroup.choosel.client.views.ViewItem;
+import org.thechiselgroup.choosel.client.views.ViewItem.Subset;
 import org.thechiselgroup.choosel.client.views.slots.Slot;
 
 import com.google.gwt.user.client.Event;
@@ -30,10 +30,10 @@ public class ChartItem {
 
     private DragEnabler enabler;
 
-    private ResourceItem resourceItem;
+    private ViewItem resourceItem;
 
     public ChartItem(ChartViewContentDisplay view,
-            DragEnablerFactory dragEnablerFactory, ResourceItem resourceItem) {
+            DragEnablerFactory dragEnablerFactory, ViewItem resourceItem) {
 
         this.view = view;
         this.resourceItem = resourceItem;
@@ -56,7 +56,7 @@ public class ChartItem {
         throw new RuntimeException("No colour available");
     }
 
-    public ResourceItem getResourceItem() {
+    public ViewItem getResourceItem() {
         return resourceItem;
     }
 

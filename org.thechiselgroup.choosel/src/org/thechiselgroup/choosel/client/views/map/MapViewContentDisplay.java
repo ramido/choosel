@@ -22,7 +22,7 @@ import org.thechiselgroup.choosel.client.ui.CSS;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.ViewItem;
 import org.thechiselgroup.choosel.client.views.SidePanelSection;
 import org.thechiselgroup.choosel.client.views.slots.Slot;
 
@@ -147,7 +147,7 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
         return new Slot[] { DESCRIPTION_SLOT, COLOR_SLOT, LOCATION_SLOT };
     }
 
-    private void initMapItem(ResourceItem resourceItem) {
+    private void initMapItem(ViewItem resourceItem) {
         // TODO iterate over path
         // TODO resolve sets
         // TODO separate resolvers for latitude and longitude
@@ -170,7 +170,7 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
         resourceItem.setDisplayObject(mapItem);
     }
 
-    private void removeOverlay(ResourceItem resourceItem) {
+    private void removeOverlay(ViewItem resourceItem) {
         map.removeOverlay(((MapItem) resourceItem.getDisplayObject())
                 .getOverlay());
     }
@@ -251,22 +251,22 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     @Override
-    public void update(LightweightCollection<ResourceItem> addedResourceItems,
-            LightweightCollection<ResourceItem> updatedResourceItems,
-            LightweightCollection<ResourceItem> removedResourceItems,
+    public void update(LightweightCollection<ViewItem> addedResourceItems,
+            LightweightCollection<ViewItem> updatedResourceItems,
+            LightweightCollection<ViewItem> removedResourceItems,
             LightweightCollection<Slot> changedSlots) {
 
-        for (ResourceItem resourceItem : addedResourceItems) {
+        for (ViewItem resourceItem : addedResourceItems) {
             initMapItem(resourceItem);
         }
 
-        for (ResourceItem resourceItem : removedResourceItems) {
+        for (ViewItem resourceItem : removedResourceItems) {
             removeOverlay(resourceItem);
         }
 
         // XXX performance of toList
         if (changedSlots.toList().contains(DESCRIPTION_SLOT)) {
-            for (ResourceItem resourceItem : getCallback().getResourceItems()) {
+            for (ViewItem resourceItem : getCallback().getViewItems()) {
                 ((MapItem) resourceItem.getDisplayObject()).updateLabel();
             }
         }
@@ -275,9 +275,9 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     private void updateStatusStyling(
-            LightweightCollection<ResourceItem> resourceItems) {
+            LightweightCollection<ViewItem> resourceItems) {
 
-        for (ResourceItem resourceItem : resourceItems) {
+        for (ViewItem resourceItem : resourceItems) {
             ((MapItem) resourceItem.getDisplayObject())
                     .setStatusStyling(resourceItem.getStatus());
         }

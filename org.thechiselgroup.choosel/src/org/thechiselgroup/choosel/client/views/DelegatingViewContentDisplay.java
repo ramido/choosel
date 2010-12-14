@@ -95,9 +95,9 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
     }
 
     @Override
-    public void update(LightweightCollection<ResourceItem> addedResourceItems,
-            LightweightCollection<ResourceItem> updatedResourceItems,
-            LightweightCollection<ResourceItem> removedResourceItems,
+    public void update(LightweightCollection<ViewItem> addedResourceItems,
+            LightweightCollection<ViewItem> updatedResourceItems,
+            LightweightCollection<ViewItem> removedResourceItems,
             LightweightCollection<Slot> changedSlots) {
 
         delegate.update(addedResourceItems, updatedResourceItems,

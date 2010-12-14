@@ -39,11 +39,11 @@ public class DragEnabler {
     public static class InvisibleResourceSetAvatar extends ResourceSetAvatar
             implements DragProxyEventReceiver {
 
-        private final ResourceItem item;
+        private final ViewItem item;
 
         private String text;
 
-        public InvisibleResourceSetAvatar(ResourceItem item, String text,
+        public InvisibleResourceSetAvatar(ViewItem item, String text,
                 String enabledCSSClass, ResourceSetAvatarType type,
                 Element element) {
 
@@ -92,11 +92,11 @@ public class DragEnabler {
 
     private ResourceSetAvatarDragController dragController;
 
-    private ResourceItem item;
+    private ViewItem item;
 
     private ResourceSetAvatar panel;
 
-    public DragEnabler(ResourceItem item, Desktop desktop,
+    public DragEnabler(ViewItem item, Desktop desktop,
             ResourceSetAvatarDragController dragController) {
 
         assert item != null;

@@ -76,9 +76,9 @@ public class DefaultViewPersistenceTest {
         restoredView.restore(memento, collector);
 
         // 4. check resource items and control settings
-        List<ResourceItem> resourceItems = restoredView.getResourceItems();
+        List<ViewItem> resourceItems = restoredView.getViewItems();
         assertEquals(1, resourceItems.size());
-        ResourceItem resourceItem = resourceItems.get(0);
+        ViewItem resourceItem = resourceItems.get(0);
         assertEquals("value2", resourceItem.getResourceValue(textSlot));
     }
 
@@ -122,7 +122,7 @@ public class DefaultViewPersistenceTest {
         restoredView.restore(memento, collector);
 
         // 4. check resource items and control settings
-        List<ResourceItem> resourceItems = restoredView.getResourceItems();
+        List<ViewItem> resourceItems = restoredView.getViewItems();
         assertEquals(1, resourceItems.size());
         ResourceSet resourceItemResources = resourceItems.get(0)
                 .getResourceSet();
@@ -161,7 +161,7 @@ public class DefaultViewPersistenceTest {
         restoredView.restore(memento, collector);
 
         // 4. check resource items and control settings
-        List<ResourceItem> resourceItems = restoredView.getResourceItems();
+        List<ViewItem> resourceItems = restoredView.getViewItems();
         assertEquals(2, resourceItems.size());
     }
 
@@ -210,9 +210,9 @@ public class DefaultViewPersistenceTest {
         restoredView.restore(memento, collector);
 
         // 4. check resource items and control settings
-        List<ResourceItem> resourceItems = restoredView.getResourceItems();
+        List<ViewItem> resourceItems = restoredView.getViewItems();
         assertEquals(1, resourceItems.size());
-        ResourceItem resourceItem = resourceItems.get(0);
+        ViewItem resourceItem = resourceItems.get(0);
         assertEquals(expectedResult, resourceItem.getResourceValue(numberSlot));
     }
 

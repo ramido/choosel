@@ -16,7 +16,7 @@
 package org.thechiselgroup.choosel.client.views.text;
 
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
-import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.ViewItem;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RequiresResize;
@@ -52,7 +52,7 @@ public class DefaultTextItemContainer implements TextItemContainer {
     }
 
     @Override
-    public TextItemLabel createTextItemLabel(ResourceItem resourceItem) {
+    public TextItemLabel createTextItemLabel(ViewItem resourceItem) {
         return new DefaultTextItemLabel(dragController, resourceItem);
     }
 

@@ -38,8 +38,8 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollections;
-import org.thechiselgroup.choosel.client.views.DefaultResourceItem;
-import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.DefaultViewItem;
+import org.thechiselgroup.choosel.client.views.ViewItem;
 import org.thechiselgroup.choosel.client.views.ViewContentDisplayCallback;
 import org.thechiselgroup.choosel.client.views.slots.Slot;
 import org.thechiselgroup.choosel.client.views.slots.SlotMappingConfiguration;
@@ -67,7 +67,7 @@ public class TextViewContentDisplayTest {
         SlotMappingConfiguration slotMappingConfiguration = mock(SlotMappingConfiguration.class);
 
         // create resource item that contains 2 resources
-        DefaultResourceItem resourceItem = createResourceItem("",
+        DefaultViewItem resourceItem = createResourceItem("",
                 createResources(1, 2), slotMappingConfiguration);
 
         when(
@@ -77,26 +77,26 @@ public class TextViewContentDisplayTest {
                 new Double(2));
 
         underTest.update(LightweightCollections
-                .toCollection((ResourceItem) resourceItem),
-                LightweightCollections.<ResourceItem> emptySet(),
-                LightweightCollections.<ResourceItem> emptySet(),
+                .toCollection((ViewItem) resourceItem),
+                LightweightCollections.<ViewItem> emptySet(),
+                LightweightCollections.<ViewItem> emptySet(),
                 LightweightCollections.<Slot> emptySet());
 
         // both resources get highlighted as the selection is dragged
         resourceItem.updateHighlightedResources(createResources(1, 2),
                 LightweightCollections.<Resource> emptyCollection());
         underTest.update(LightweightCollections
-                .<ResourceItem> emptyCollection(), LightweightCollections
-                .toCollection((ResourceItem) resourceItem),
-                LightweightCollections.<ResourceItem> emptyCollection(),
+                .<ViewItem> emptyCollection(), LightweightCollections
+                .toCollection((ViewItem) resourceItem),
+                LightweightCollections.<ViewItem> emptyCollection(),
                 LightweightCollections.<Slot> emptyCollection());
 
         // create selection that contains one of those resources
         resourceItem.addSelectedResources(createResources(1));
-        underTest.update(LightweightCollections.<ResourceItem> emptySet(),
+        underTest.update(LightweightCollections.<ViewItem> emptySet(),
                 LightweightCollections
-                        .toCollection((ResourceItem) resourceItem),
-                LightweightCollections.<ResourceItem> emptySet(),
+                        .toCollection((ViewItem) resourceItem),
+                LightweightCollections.<ViewItem> emptySet(),
                 LightweightCollections.<Slot> emptySet());
 
         reset(itemLabel);
@@ -105,10 +105,10 @@ public class TextViewContentDisplayTest {
         resourceItem.updateHighlightedResources(
                 LightweightCollections.<Resource> emptyCollection(),
                 createResources(1, 2));
-        underTest.update(LightweightCollections.<ResourceItem> emptySet(),
+        underTest.update(LightweightCollections.<ViewItem> emptySet(),
                 LightweightCollections
-                        .toCollection((ResourceItem) resourceItem),
-                LightweightCollections.<ResourceItem> emptySet(),
+                        .toCollection((ViewItem) resourceItem),
+                LightweightCollections.<ViewItem> emptySet(),
                 LightweightCollections.<Slot> emptySet());
 
         // check label status (should be: partially selected, but not partially
@@ -126,7 +126,7 @@ public class TextViewContentDisplayTest {
 
         allResources = new DefaultResourceSet();
 
-        when(textItemContainer.createTextItemLabel(any(ResourceItem.class)))
+        when(textItemContainer.createTextItemLabel(any(ViewItem.class)))
                 .thenReturn(itemLabel);
 
         underTest = new TextViewContentDisplay(textItemContainer);

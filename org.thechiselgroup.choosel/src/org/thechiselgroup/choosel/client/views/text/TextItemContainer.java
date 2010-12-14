@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.text;
 
-import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.ViewItem;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -23,7 +23,7 @@ public interface TextItemContainer {
 
     void addStyleName(String cssClass);
 
-    TextItemLabel createTextItemLabel(ResourceItem resourceItem);
+    TextItemLabel createTextItemLabel(ViewItem resourceItem);
 
     Widget createWidget();
 

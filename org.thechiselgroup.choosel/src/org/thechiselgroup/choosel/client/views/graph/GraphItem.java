@@ -28,7 +28,7 @@ import static org.thechiselgroup.choosel.client.views.graph.GraphViewContentDisp
 import org.thechiselgroup.choosel.client.ui.Colors;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Node;
-import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.ViewItem;
 
 /**
  * Represents a resource item in the graph view.
@@ -41,9 +41,9 @@ public class GraphItem {
 
     private Node node;
 
-    private final ResourceItem resourceItem;
+    private final ViewItem resourceItem;
 
-    public GraphItem(ResourceItem resourceItem, String type,
+    public GraphItem(ViewItem resourceItem, String type,
             GraphDisplay display) {
 
         assert resourceItem != null;
@@ -53,7 +53,7 @@ public class GraphItem {
         this.resourceItem = resourceItem;
         this.display = display;
 
-        node = new Node(resourceItem.getGroupID(), getLabelValue(), type);
+        node = new Node(resourceItem.getViewItemID(), getLabelValue(), type);
     }
 
     public String getLabelValue() {
@@ -73,7 +73,7 @@ public class GraphItem {
         return (String) resourceItem.getResourceValue(NODE_BORDER_COLOR_SLOT);
     }
 
-    public ResourceItem getResourceItem() {
+    public ViewItem getResourceItem() {
         return resourceItem;
     }
 

@@ -60,9 +60,9 @@ public class DefaultViewIntegrationTest {
                 new CalculationResourceSetToValueResolver("property1",
                         new SumCalculation()));
 
-        List<ResourceItem> resourceItems = underTest.getResourceItems();
+        List<ViewItem> resourceItems = underTest.getViewItems();
         assertEquals(1, resourceItems.size());
-        ResourceItem resourceItem = resourceItems.get(0);
+        ViewItem resourceItem = resourceItems.get(0);
         resourceItem.getResourceValue(numberSlot);
 
         underTest.getSlotMappingConfiguration().setMapping(
@@ -128,9 +128,9 @@ public class DefaultViewIntegrationTest {
                 new CalculationResourceSetToValueResolver("property1",
                         calculation));
 
-        List<ResourceItem> resourceItems = underTest.getResourceItems();
+        List<ViewItem> resourceItems = underTest.getViewItems();
         assertEquals(1, resourceItems.size());
-        ResourceItem resourceItem = resourceItems.get(0);
+        ViewItem resourceItem = resourceItems.get(0);
         assertEquals(expectedResult, resourceItem.getResourceValue(numberSlot));
     }
 
@@ -147,9 +147,9 @@ public class DefaultViewIntegrationTest {
                 new CalculationResourceSetToValueResolver("property1",
                         new SumCalculation()));
 
-        List<ResourceItem> resourceItems = underTest.getResourceItems();
+        List<ViewItem> resourceItems = underTest.getViewItems();
         assertEquals(1, resourceItems.size());
-        final ResourceItem resourceItem = resourceItems.get(0);
+        final ViewItem resourceItem = resourceItems.get(0);
         resourceItem.getResourceValue(numberSlot);
 
         /*

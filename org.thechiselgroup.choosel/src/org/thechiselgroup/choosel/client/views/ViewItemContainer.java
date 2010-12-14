@@ -19,34 +19,33 @@ import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 
 /**
- * Provides read access to <code>ResourceItem</code>s.
+ * Provides read access to {@link ViewItem}s.
  * 
  * @author Lars Grammel
  * 
- * @see ResourceItem
+ * @see ViewItem
  */
-public interface ResourceItemContainer {
+public interface ViewItemContainer {
 
     /**
-     * Tests if the resource item with the given id exists in this container.
+     * Tests if the {@link ViewItem} with the given id exists in this container.
      */
-    boolean containsResourceItem(String groupId);
+    boolean containsViewItem(String viewItemId);
 
     /**
-     * Returns the resource item with the given group ID.
+     * Returns the {@link ViewItem} with the given ID.
      */
-    ResourceItem getResourceItemByGroupID(String groupId);
+    ViewItem getViewItem(String viewItemId);
 
     /**
-     * Returns all resource items in this container.
+     * Returns all {@link ViewItem}s in this container.
      */
-    LightweightCollection<ResourceItem> getResourceItems();
+    LightweightCollection<ViewItem> getViewItems();
 
     /**
-     * Returns the resource items that contain at least one of the given
-     * resources.
+     * Returns the {@link ViewItem}s that contain at least one of the given
+     * {@link Resource}s.
      */
-    LightweightCollection<ResourceItem> getResourceItems(
-            Iterable<Resource> resources);
+    LightweightCollection<ViewItem> getViewItems(Iterable<Resource> resources);
 
 }

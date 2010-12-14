@@ -33,9 +33,9 @@ import org.thechiselgroup.choosel.client.util.collections.ArrayUtils;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.ResourceItem;
-import org.thechiselgroup.choosel.client.views.ResourceItem.Status;
-import org.thechiselgroup.choosel.client.views.ResourceItem.Subset;
+import org.thechiselgroup.choosel.client.views.ViewItem;
+import org.thechiselgroup.choosel.client.views.ViewItem.Status;
+import org.thechiselgroup.choosel.client.views.ViewItem.Subset;
 import org.thechiselgroup.choosel.client.views.slots.Slot;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -268,7 +268,7 @@ public abstract class ChartViewContentDisplay extends
         return maxChartItemValue;
     }
 
-    protected ResourceItem getResourceItem(int chartItemIndex) {
+    protected ViewItem getResourceItem(int chartItemIndex) {
         return chartItems.get(chartItemIndex).getResourceItem();
     }
 
@@ -400,12 +400,12 @@ public abstract class ChartViewContentDisplay extends
      * situation) once no matter how many resource items are being affected.
      */
     @Override
-    public void update(LightweightCollection<ResourceItem> addedResourceItems,
-            LightweightCollection<ResourceItem> updatedResourceItems,
-            LightweightCollection<ResourceItem> removedResourceItems,
+    public void update(LightweightCollection<ViewItem> addedResourceItems,
+            LightweightCollection<ViewItem> updatedResourceItems,
+            LightweightCollection<ViewItem> removedResourceItems,
             LightweightCollection<Slot> changedSlots) {
 
-        for (ResourceItem resourceItem : addedResourceItems) {
+        for (ViewItem resourceItem : addedResourceItems) {
             ChartItem chartItem = new ChartItem(this, dragEnablerFactory,
                     resourceItem);
 
@@ -414,7 +414,7 @@ public abstract class ChartViewContentDisplay extends
             resourceItem.setDisplayObject(chartItem);
         }
 
-        for (ResourceItem resourceItem : removedResourceItems) {
+        for (ViewItem resourceItem : removedResourceItems) {
             ChartItem chartItem = (ChartItem) resourceItem.getDisplayObject();
 
             // TODO remove once dispose is in place

@@ -15,16 +15,16 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.graph;
 
-import org.thechiselgroup.choosel.client.views.ResourceItem;
+import org.thechiselgroup.choosel.client.views.ViewItem;
 
 public class ViewToIndividualItemEventForwarder {
 
-    protected final void onMouseOut(ResourceItem item, int x, int y) {
+    protected final void onMouseOut(ViewItem item, int x, int y) {
         item.getPopupManager().onMouseOut(x, y);
         item.getHighlightingManager().setHighlighting(false);
     }
 
-    protected final void onMouseOver(ResourceItem item, int x, int y) {
+    protected final void onMouseOver(ViewItem item, int x, int y) {
         item.getPopupManager().onMouseOver(x, y);
         item.getHighlightingManager().setHighlighting(true);
     }
