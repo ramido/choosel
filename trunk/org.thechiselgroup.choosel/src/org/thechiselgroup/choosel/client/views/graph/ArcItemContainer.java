@@ -42,6 +42,8 @@ public class ArcItemContainer {
 
     private final ViewItemContainer context;
 
+    private boolean visible;
+
     public ArcItemContainer(ArcType arcType, GraphDisplay graphDisplay,
             ViewItemContainer context) {
 
@@ -56,6 +58,8 @@ public class ArcItemContainer {
         arcStyle = arcType.getDefaultArcStyle();
         arcColor = arcType.getDefaultArcColor();
         arcThickness = arcType.getDefaultArcThickness();
+
+        visible = true;
     }
 
     public String getArcColor() {
@@ -120,9 +124,15 @@ public class ArcItemContainer {
     }
 
     public void setVisible(boolean visible) {
+        if (this.visible == visible) {
+            return;
+        }
+
         for (ArcItem arcItem : getArcItems()) {
             arcItem.setVisible(visible);
         }
+
+        this.visible = visible;
     }
 
     public void update(LightweightCollection<ViewItem> viewItems) {
@@ -146,7 +156,7 @@ public class ArcItemContainer {
 
                 ArcItem arcItem = new ArcItem(arc, arcColor, arcStyle,
                         arcThickness, graphDisplay);
-                arcItem.setVisible(true);
+                arcItem.setVisible(visible);
 
                 arcItemsById.put(arc.getId(), arcItem);
             }
