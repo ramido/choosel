@@ -139,20 +139,32 @@ public class ArcItem {
 
     public void setArcStyle(String arcStyle) {
         assert arcStyle != null;
+
         this.arcStyle = arcStyle;
-        applyArcStyle();
+
+        if (visible) {
+            applyArcStyle();
+        }
     }
 
     public void setArcThickness(int arcThickness) {
         assert arcThickness > 0;
+
         this.arcThickness = arcThickness;
-        applyArcThickness();
+
+        if (visible) {
+            applyArcThickness();
+        }
     }
 
     public void setColor(String arcColor) {
         assert arcColor != null;
+
         this.arcColor = arcColor;
-        applyArcColor();
+
+        if (visible) {
+            applyArcColor();
+        }
     }
 
     public void setVisible(boolean visible) {

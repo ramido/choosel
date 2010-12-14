@@ -24,7 +24,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.client.test.AdvancedAsserts.assertContentEquals;
 import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResourceItem;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResourceItems;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createViewItems;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.toResourceSet;
@@ -116,23 +116,19 @@ public class GraphViewContentDisplayTest {
 
     @Test
     public void addResourceItemsCallsArcTypeGetArcItems() {
-        String groupId1 = "1";
-        String groupId2 = "2";
-
         arcStyleProviderReturnArcType();
         init();
-        arcTypeReturnsNoArcs();
+        arcTypeReturnsArcs(any(ViewItem.class));
 
-        LightweightCollection<ViewItem> resourceItems = createResourceItems(
-                groupId1, groupId2);
+        LightweightCollection<ViewItem> viewItems = createViewItems(1, 2);
 
-        simulateAddResourceItems(resourceItems);
+        simulateAddViewItems(viewItems);
 
         ArgumentCaptor<ViewItem> captor = ArgumentCaptor
                 .forClass(ViewItem.class);
         verify(arcType, times(2)).getArcs(captor.capture(),
                 any(ViewItemContainer.class));
-        assertContentEquals(resourceItems.toList(), captor.getAllValues());
+        assertContentEquals(viewItems.toList(), captor.getAllValues());
     }
 
     @Test
@@ -166,17 +162,16 @@ public class GraphViewContentDisplayTest {
         String groupId1 = "1";
         String groupId2 = "2";
 
-        LightweightList<ViewItem> resourceItems = createResourceItems(groupId1,
-                groupId2);
+        LightweightList<ViewItem> viewItems = createViewItems(1, 2);
 
         arcStyleProviderReturnArcType();
         init();
 
-        arcTypeReturnsArcFor(resourceItems.get(0),
+        arcTypeReturnsArcs(eq(viewItems.get(0)),
                 createArc(arcId, groupId1, groupId2));
-        arcTypeReturnsNoArcsFor(resourceItems.get(1));
+        arcTypeReturnsArcs(eq(viewItems.get(1)));
 
-        simulateAddResourceItems(resourceItems);
+        simulateAddViewItems(viewItems);
 
         verifyArcShown(arcId, groupId1, groupId2);
     }
@@ -186,17 +181,15 @@ public class GraphViewContentDisplayTest {
         String arcId = "arcid";
         String groupId1 = "1";
         String groupId2 = "2";
-        LightweightList<ViewItem> resourceItems = createResourceItems(groupId1,
-                groupId2);
+        LightweightList<ViewItem> viewItems = createViewItems(1, 2);
 
         arcStyleProviderReturnArcType();
         init();
 
-        arcTypeReturnsArcFor(resourceItems.get(0),
-                createArc(arcId, groupId1, groupId2));
-        arcTypeReturnsNoArcsFor(resourceItems.get(1));
+        arcTypeReturnsArcs(eq(viewItems.get(0)), createArc(arcId, 1, 2));
+        arcTypeReturnsArcs(eq(viewItems.get(1)));
 
-        simulateAddResourceItems(resourceItems);
+        simulateAddViewItems(viewItems);
         when(graphDisplay.containsArc(arcId)).thenReturn(true);
 
         underTest.setArcTypeVisible(arcType.getArcTypeID(), false);
@@ -209,19 +202,13 @@ public class GraphViewContentDisplayTest {
                 LightweightCollections.toCollection(arcType));
     }
 
-    private void arcTypeReturnsArcFor(ViewItem resourceItem, Arc arc) {
-        when(arcType.getArcs(eq(resourceItem), any(ViewItemContainer.class)))
-                .thenReturn(LightweightCollections.toCollection(arc));
+    private void arcTypeReturnsArcs(ViewItem viewItem, Arc... arcs) {
+        when(arcType.getArcs(viewItem, any(ViewItemContainer.class)))
+                .thenReturn(LightweightCollections.toCollection(arcs));
     }
 
-    private void arcTypeReturnsNoArcs() {
-        when(arcType.getArcs(any(ViewItem.class), any(ViewItemContainer.class)))
-                .thenReturn(LightweightCollections.<Arc> emptyCollection());
-    }
-
-    private void arcTypeReturnsNoArcsFor(ViewItem resourceItem) {
-        when(arcType.getArcs(eq(resourceItem), any(ViewItemContainer.class)))
-                .thenReturn(LightweightCollections.<Arc> emptyCollection());
+    private Arc createArc(String arcId, int from, int to) {
+        return createArc(arcId, "" + from, "" + to);
     }
 
     private Arc createArc(String arcId, String from, String to) {
@@ -265,30 +252,26 @@ public class GraphViewContentDisplayTest {
     }
 
     @Test
-    public void doNotShowArcItemForUnknownResourceItems() {
+    public void doNotShowArcItemOnCreationIfContainerDisplaySetFalse() {
         init();
 
-        String arcId1 = "arcid1";
-        String arcId2 = "arcid2";
-        String groupId1 = "1";
-        String groupId2 = "2";
+        arcTypeReturnsArcs(any(ViewItem.class), createArc("arcid1", 1, 2));
 
-        // set up arc item response
-        Arc arcItem1 = createArc(arcId1, groupId1, groupId2);
-        Arc arcItem2 = createArc(arcId2, groupId2, groupId1);
-        when(arcType.getArcs(any(ViewItem.class), any(ViewItemContainer.class)))
-                .thenReturn(
-                        LightweightCollections.toCollection(arcItem1, arcItem2));
+        simulateAddViewItems(createViewItems(1, 2));
 
-        // simulate add
-        LightweightCollection<ViewItem> resourceItems = ResourcesTestHelper
-                .createResourceItems(groupId1);
-        when(callback.getViewItems()).thenReturn(resourceItems);
-        when(callback.containsViewItem(groupId1)).thenReturn(true);
-        addResourceItemToUnderTest(resourceItems);
+        verifyNoArcAdded();
+    }
 
-        // verify that no arc was created
-        verify(graphDisplay, times(0)).addArc(any(Arc.class));
+    @Test
+    public void doNotShowArcItemsThatRequireUnknownViewItems() {
+        init();
+
+        arcTypeReturnsArcs(any(ViewItem.class), createArc("arcid1", 1, 2),
+                createArc("arcid2", 2, 1));
+
+        simulateAddViewItems(createViewItems(1));
+
+        verifyNoArcAdded();
     }
 
     @Test
@@ -384,15 +367,15 @@ public class GraphViewContentDisplayTest {
         arcStyleProviderReturnArcType();
         init();
         Arc arc = createArc(arcId, groupId1, groupId2);
-        arcTypeReturnsArcFor(resourceItem1, arc);
-        arcTypeReturnsArcFor(resourceItem2, arc);
+        arcTypeReturnsArcs(eq(resourceItem1), arc);
+        arcTypeReturnsArcs(eq(resourceItem2), arc);
 
         // simulate add
         // when(graphDisplay.containsNode(groupId1)).thenReturn(true);
         // when(graphDisplay.containsNode(groupId2)).thenReturn(true);
         // callback.addResourceItems(resourceItems);
         // addResourceItemToUnderTest(resourceItems);
-        simulateAddResourceItems(resourceItems);
+        simulateAddViewItems(resourceItems);
         when(graphDisplay.containsArc(arcId)).thenReturn(true);
 
         // simulate remove
@@ -424,8 +407,8 @@ public class GraphViewContentDisplayTest {
         arcStyleProviderReturnArcType();
         init();
         Arc arc = createArc(arcId, groupId1, groupId2);
-        arcTypeReturnsArcFor(resourceItem1, arc);
-        arcTypeReturnsArcFor(resourceItem2, arc);
+        arcTypeReturnsArcs(eq(resourceItem1), arc);
+        arcTypeReturnsArcs(eq(resourceItem2), arc);
 
         // simulate add
         when(graphDisplay.containsNode(groupId1)).thenReturn(true);
@@ -447,20 +430,16 @@ public class GraphViewContentDisplayTest {
 
     @Test
     public void setArcColorOnContainerChangesColorOfExistingArcs() {
-        String arcId = "arcid";
-        String groupId1 = "1";
-        String groupId2 = "2";
-        LightweightList<ViewItem> resourceItems = ResourcesTestHelper
-                .createResourceItems(groupId1, groupId2);
+        LightweightList<ViewItem> resourceItems = createViewItems(1, 2);
 
         arcStyleProviderReturnArcType();
         init();
 
-        Arc arc = createArc(arcId, groupId1, groupId2);
-        arcTypeReturnsArcFor(resourceItems.get(0), arc);
-        arcTypeReturnsNoArcsFor(resourceItems.get(1));
+        Arc arc = createArc("arcid", 1, 2);
+        arcTypeReturnsArcs(eq(resourceItems.get(0)), arc);
+        arcTypeReturnsArcs(eq(resourceItems.get(1)));
 
-        simulateAddResourceItems(resourceItems);
+        simulateAddViewItems(resourceItems);
 
         verify(graphDisplay, times(1)).setArcStyle(eq(arc),
                 eq(ArcSettings.ARC_COLOR), eq(arcColor));
@@ -477,8 +456,7 @@ public class GraphViewContentDisplayTest {
         String arcId = "arcid";
         String groupId1 = "1";
         String groupId2 = "2";
-        LightweightList<ViewItem> resourceItems = ResourcesTestHelper
-                .createResourceItems(groupId1, groupId2);
+        LightweightList<ViewItem> resourceItems = createViewItems(1, 2);
 
         arcStyleProviderReturnArcType();
         init();
@@ -487,10 +465,10 @@ public class GraphViewContentDisplayTest {
         underTest.getArcItemContainer(arcTypeValue).setArcColor(newColor);
 
         Arc arc = createArc(arcId, groupId1, groupId2);
-        arcTypeReturnsArcFor(resourceItems.get(0), arc);
-        arcTypeReturnsNoArcsFor(resourceItems.get(1));
+        arcTypeReturnsArcs(eq(resourceItems.get(0)), arc);
+        arcTypeReturnsArcs(eq(resourceItems.get(1)));
 
-        simulateAddResourceItems(resourceItems);
+        simulateAddViewItems(resourceItems);
 
         verify(graphDisplay, times(1)).setArcStyle(eq(arc),
                 eq(ArcSettings.ARC_COLOR), eq(newColor));
@@ -498,20 +476,15 @@ public class GraphViewContentDisplayTest {
 
     @Test
     public void setArcStyleOnContainerChangesStyleOfExistingArcs() {
-        String arcId = "arcid";
-        String groupId1 = "1";
-        String groupId2 = "2";
-        LightweightList<ViewItem> resourceItems = ResourcesTestHelper
-                .createResourceItems(groupId1, groupId2);
-
         arcStyleProviderReturnArcType();
         init();
 
-        Arc arc = createArc(arcId, groupId1, groupId2);
-        arcTypeReturnsArcFor(resourceItems.get(0), arc);
-        arcTypeReturnsNoArcsFor(resourceItems.get(1));
+        LightweightList<ViewItem> viewItems = createViewItems(1, 2);
+        Arc arc = createArc("arcid", 1, 2);
+        arcTypeReturnsArcs(eq(viewItems.get(0)), arc);
+        arcTypeReturnsArcs(eq(viewItems.get(1)));
 
-        simulateAddResourceItems(resourceItems);
+        simulateAddViewItems(viewItems);
 
         verify(graphDisplay, times(1)).setArcStyle(eq(arc),
                 eq(ArcSettings.ARC_STYLE), eq(arcStyle));
@@ -525,23 +498,18 @@ public class GraphViewContentDisplayTest {
 
     @Test
     public void setArcStyleOnContainerChangesStyleOfNewArcs() {
-        String arcId = "arcid";
-        String groupId1 = "1";
-        String groupId2 = "2";
-        LightweightList<ViewItem> resourceItems = ResourcesTestHelper
-                .createResourceItems(groupId1, groupId2);
-
         arcStyleProviderReturnArcType();
         init();
 
+        LightweightList<ViewItem> viewItems = createViewItems(1, 2);
         String newStyle = ArcSettings.ARC_STYLE_DASHED;
         underTest.getArcItemContainer(arcTypeValue).setArcStyle(newStyle);
 
-        Arc arc = createArc(arcId, groupId1, groupId2);
-        arcTypeReturnsArcFor(resourceItems.get(0), arc);
-        arcTypeReturnsNoArcsFor(resourceItems.get(1));
+        Arc arc = createArc("arcid", 1, 2);
+        arcTypeReturnsArcs(eq(viewItems.get(0)), arc);
+        arcTypeReturnsArcs(eq(viewItems.get(1)));
 
-        simulateAddResourceItems(resourceItems);
+        simulateAddViewItems(viewItems);
 
         verify(graphDisplay, times(1)).setArcStyle(eq(arc),
                 eq(ArcSettings.ARC_STYLE), eq(newStyle));
@@ -549,20 +517,15 @@ public class GraphViewContentDisplayTest {
 
     @Test
     public void setArcThicknessOnContainerChangesThicknessOfExistingArcs() {
-        String arcId = "arcid";
-        String groupId1 = "1";
-        String groupId2 = "2";
-        LightweightList<ViewItem> resourceItems = ResourcesTestHelper
-                .createResourceItems(groupId1, groupId2);
-
         arcStyleProviderReturnArcType();
         init();
 
-        Arc arc = createArc(arcId, groupId1, groupId2);
-        arcTypeReturnsArcFor(resourceItems.get(0), arc);
-        arcTypeReturnsNoArcsFor(resourceItems.get(1));
+        LightweightList<ViewItem> viewItems = createViewItems(1, 2);
+        Arc arc = createArc("arcid", 1, 2);
+        arcTypeReturnsArcs(eq(viewItems.get(0)), arc);
+        arcTypeReturnsArcs(eq(viewItems.get(1)));
 
-        simulateAddResourceItems(resourceItems);
+        simulateAddViewItems(viewItems);
 
         verify(graphDisplay, times(1)).setArcStyle(eq(arc),
                 eq(ArcSettings.ARC_THICKNESS), eq("" + arcThickness));
@@ -577,24 +540,20 @@ public class GraphViewContentDisplayTest {
 
     @Test
     public void setArcThicknessOnContainerChangesThicknessOfNewArcs() {
-        String arcId = "arcid";
-        String groupId1 = "1";
-        String groupId2 = "2";
-        LightweightList<ViewItem> resourceItems = ResourcesTestHelper
-                .createResourceItems(groupId1, groupId2);
-
         arcStyleProviderReturnArcType();
         init();
 
+        LightweightList<ViewItem> viewItems = ResourcesTestHelper
+                .createViewItems(1, 2);
         int newThickness = 4;
         underTest.getArcItemContainer(arcTypeValue).setArcThickness(
                 newThickness);
 
-        Arc arc = createArc(arcId, groupId1, groupId2);
-        arcTypeReturnsArcFor(resourceItems.get(0), arc);
-        arcTypeReturnsNoArcsFor(resourceItems.get(1));
+        Arc arc = createArc("arcid", 1, 2);
+        arcTypeReturnsArcs(eq(viewItems.get(0)), arc);
+        arcTypeReturnsArcs(eq(viewItems.get(1)));
 
-        simulateAddResourceItems(resourceItems);
+        simulateAddViewItems(viewItems);
 
         verify(graphDisplay, times(1)).setArcStyle(eq(arc),
                 eq(ArcSettings.ARC_THICKNESS), eq("" + newThickness));
@@ -631,15 +590,13 @@ public class GraphViewContentDisplayTest {
                 automaticExpander);
     }
 
-    private void simulateAddResourceItems(
-            LightweightCollection<ViewItem> resourceItems) {
-
-        for (ViewItem resourceItem : resourceItems) {
-            when(graphDisplay.containsNode(resourceItem.getViewItemID()))
+    private void simulateAddViewItems(LightweightCollection<ViewItem> viewItems) {
+        for (ViewItem viewItem : viewItems) {
+            when(graphDisplay.containsNode(viewItem.getViewItemID()))
                     .thenReturn(true);
         }
-        callback.addResourceItems(resourceItems);
-        addResourceItemToUnderTest(resourceItems);
+        callback.addResourceItems(viewItems);
+        addResourceItemToUnderTest(viewItems);
     }
 
     @After
@@ -649,23 +606,18 @@ public class GraphViewContentDisplayTest {
 
     @Test
     public void updateArcsForResourceItems() {
-        String arcId = "arcid";
-        String groupId1 = "1";
-        String groupId2 = "2";
-        LightweightList<ViewItem> resourceItems = ResourcesTestHelper
-                .createResourceItems(groupId1, groupId2);
+        LightweightList<ViewItem> viewItems = createViewItems(1, 2);
 
         arcStyleProviderReturnArcType();
         init();
-        arcTypeReturnsNoArcs();
-        simulateAddResourceItems(resourceItems);
+        arcTypeReturnsArcs(any(ViewItem.class));
+        simulateAddViewItems(viewItems);
 
-        arcTypeReturnsArcFor(resourceItems.get(0),
-                createArc(arcId, groupId1, groupId2));
+        arcTypeReturnsArcs(eq(viewItems.get(0)), createArc("arcid", 1, 2));
 
-        underTest.updateArcsForResourceItems(resourceItems);
+        underTest.updateArcsForResourceItems(viewItems);
 
-        verifyArcShown(arcId, groupId1, groupId2);
+        verifyArcShown("arcid", "1", "2");
 
     }
 
@@ -691,6 +643,10 @@ public class GraphViewContentDisplayTest {
         assertEquals(sourceNodeId, result.getSourceNodeId());
         assertEquals(targetNodeId, result.getTargetNodeId());
         assertEquals(arcTypeValue, result.getType());
+    }
+
+    private void verifyNoArcAdded() {
+        verify(graphDisplay, times(0)).addArc(any(Arc.class));
     }
 
 }
