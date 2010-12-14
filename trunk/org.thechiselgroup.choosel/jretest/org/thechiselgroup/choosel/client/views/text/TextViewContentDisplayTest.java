@@ -22,7 +22,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createResourceItem;
+import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.createViewItem;
 import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.eqResources;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
 
@@ -67,7 +67,7 @@ public class TextViewContentDisplayTest {
         SlotMappingConfiguration slotMappingConfiguration = mock(SlotMappingConfiguration.class);
 
         // create resource item that contains 2 resources
-        DefaultViewItem resourceItem = createResourceItem("",
+        DefaultViewItem resourceItem = createViewItem("",
                 createResources(1, 2), slotMappingConfiguration);
 
         when(
