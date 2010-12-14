@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.graph;
 
+import java.util.Collection;
 import java.util.Map;
 
 import org.thechiselgroup.choosel.client.ui.widget.graph.Arc;
@@ -61,6 +62,10 @@ public class ArcItemContainer {
         return arcColor;
     }
 
+    private Collection<ArcItem> getArcItems() {
+        return arcItemsById.values();
+    }
+
     public String getArcStyle() {
         return arcStyle;
     }
@@ -79,7 +84,7 @@ public class ArcItemContainer {
         LightweightCollection<Arc> arcs = arcType.getArcs(viewItem, context);
         for (Arc arc : arcs) {
             if (arcItemsById.containsKey(arc.getId())) {
-                arcItemsById.get(arc.getId()).setVisible(false, graphDisplay);
+                arcItemsById.get(arc.getId()).setVisible(false);
                 arcItemsById.remove(arc.getId());
             }
         }
@@ -90,10 +95,8 @@ public class ArcItemContainer {
         assert arcColor != null;
 
         this.arcColor = arcColor;
-
-        for (ArcItem arcItem : arcItemsById.values()) {
+        for (ArcItem arcItem : getArcItems()) {
             arcItem.setColor(arcColor);
-            arcItem.applyArcColor(graphDisplay);
         }
     }
 
@@ -101,10 +104,8 @@ public class ArcItemContainer {
         assert arcStyle != null;
 
         this.arcStyle = arcStyle;
-
-        for (ArcItem arcItem : arcItemsById.values()) {
+        for (ArcItem arcItem : getArcItems()) {
             arcItem.setArcStyle(arcStyle);
-            arcItem.applyArcStyle(graphDisplay);
         }
     }
 
@@ -112,25 +113,25 @@ public class ArcItemContainer {
         assert arcThickness > 0;
 
         this.arcThickness = arcThickness;
-
-        for (ArcItem arcItem : arcItemsById.values()) {
+        for (ArcItem arcItem : getArcItems()) {
             arcItem.setArcThickness(arcThickness);
-            arcItem.applyArcThickness(graphDisplay);
         }
     }
 
     public void setVisible(boolean visible) {
-        for (ArcItem arcItem : arcItemsById.values()) {
-            arcItem.setVisible(visible, graphDisplay);
+        for (ArcItem arcItem : getArcItems()) {
+            arcItem.setVisible(visible);
         }
     }
 
+    // TODO eliminate
     private void showArcs() {
-        for (ArcItem arcItem : arcItemsById.values()) {
-            arcItem.addArcToDisplay(graphDisplay);
+        for (ArcItem arcItem : getArcItems()) {
+            arcItem.addArcToDisplay();
         }
     }
 
+    // TODO refactor
     public void update(LightweightCollection<ViewItem> resourceItems) {
         for (ViewItem resourceItem : resourceItems) {
             update(resourceItem);
@@ -144,7 +145,7 @@ public class ArcItemContainer {
             // XXX what about changes?
             if (!arcItemsById.containsKey(arc.getId())) {
                 arcItemsById.put(arc.getId(), new ArcItem(arc, arcColor,
-                        arcStyle, arcThickness));
+                        arcStyle, arcThickness, graphDisplay));
             }
         }
 
