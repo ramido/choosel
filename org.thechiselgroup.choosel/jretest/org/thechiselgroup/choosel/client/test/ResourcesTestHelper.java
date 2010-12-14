@@ -24,6 +24,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.thechiselgroup.choosel.client.test.AdvancedAsserts.assertContentEquals;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResource;
+import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.createResources;
 import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.toLabeledResourceSet;
 
 import java.util.Collections;
@@ -57,13 +58,6 @@ public final class ResourcesTestHelper {
     }
 
     public static DefaultViewItem createResourceItem(String groupId,
-            ResourceSet resources) {
-
-        return createResourceItem(groupId, resources,
-                mock(SlotMappingConfiguration.class));
-    }
-
-    public static DefaultViewItem createResourceItem(String groupId,
             ResourceSet resources,
             SlotMappingConfiguration slotMappingConfiguration) {
 
@@ -72,8 +66,19 @@ public final class ResourcesTestHelper {
                 slotMappingConfiguration));
     }
 
-    public static LightweightList<ViewItem> createViewItems(
-            int... viewItemId) {
+    public static DefaultViewItem createViewItem(int id) {
+        return createResourceItem("" + id, createResources(id),
+                mock(SlotMappingConfiguration.class));
+    }
+
+    public static DefaultViewItem createViewItem(String groupId,
+            ResourceSet resources) {
+
+        return createResourceItem(groupId, resources,
+                mock(SlotMappingConfiguration.class));
+    }
+
+    public static LightweightList<ViewItem> createViewItems(int... viewItemId) {
 
         ResourceSet[] resourceSets = new ResourceSet[viewItemId.length];
         for (int i = 0; i < resourceSets.length; i++) {
@@ -93,7 +98,7 @@ public final class ResourcesTestHelper {
         LightweightList<ViewItem> resourceItems = CollectionFactory
                 .createLightweightList();
         for (ResourceSet resourceSet : resourceSets) {
-            resourceItems.add(createResourceItem(resourceSet.getLabel(),
+            resourceItems.add(createViewItem(resourceSet.getLabel(),
                     resourceSet));
         }
 
