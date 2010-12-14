@@ -126,7 +126,8 @@ public class ViewFactory implements WindowContentFactory {
     protected LightweightCollection<SidePanelSection> createSidePanelSections(
             ViewContentDisplay contentDisplay,
             VisualMappingsControl visualMappingsControl,
-            ShareConfiguration shareConfiguration, ResourceModel resourceModel) {
+            ShareConfiguration shareConfiguration, ResourceModel resourceModel,
+            SlotMappingConfiguration slotMappingConfiguration) {
 
         LightweightList<SidePanelSection> sidePanelSections = CollectionFactory
                 .createLightweightList();
@@ -180,10 +181,10 @@ public class ViewFactory implements WindowContentFactory {
                 new ResourceSetAvatarResourceSetsPresenter(
                         selectionDragAvatarFactory), selectionModel);
 
-        SlotMappingConfiguration configuration = new SlotMappingConfiguration();
+        SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration();
 
         VisualMappingsControl visualMappingsControl = createVisualMappingsControl(
-                contentDisplay, resourceSplitter, configuration);
+                contentDisplay, resourceSplitter, slotMappingConfiguration);
 
         ShareConfiguration shareConfiguration = shareConfigurationFactory
                 .createShareConfiguration();
@@ -191,12 +192,12 @@ public class ViewFactory implements WindowContentFactory {
         // TODO more flexible builder pattern
         LightweightCollection<SidePanelSection> sidePanelSections = createSidePanelSections(
                 contentDisplay, visualMappingsControl, shareConfiguration,
-                resourceModel);
+                resourceModel, slotMappingConfiguration);
 
         SlotMappingInitializer slotMappingInitializer = createSlotMappingInitializer();
 
         return new DefaultView(resourceSplitter, contentDisplay, contentType,
-                contentType, configuration, selectionModel,
+                contentType, slotMappingConfiguration, selectionModel,
                 selectionModelPresenter, resourceModel, resourceModelPresenter,
                 hoverModel, popupManagerFactory, detailsWidgetHelper,
                 visualMappingsControl, shareConfiguration,
