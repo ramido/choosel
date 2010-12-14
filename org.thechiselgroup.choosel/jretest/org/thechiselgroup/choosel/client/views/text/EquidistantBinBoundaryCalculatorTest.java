@@ -29,10 +29,9 @@ public class EquidistantBinBoundaryCalculatorTest {
 
     @Test
     public void noDataValues() {
-        assertArrayEquals(
-                new double[] { 0, 0, 0 },
-                underTest.calculateBinBoundaries(
-                        MathUtils.createNumberArray(), 4), DELTA);
+        assertArrayEquals(new double[] { 0, 0, 0 },
+                underTest.calculateBinBoundaries(MathUtils.createNumberArray(),
+                        4), DELTA);
     }
 
     @Test
@@ -88,8 +87,7 @@ public class EquidistantBinBoundaryCalculatorTest {
         assertArrayEquals(
                 new double[] { -5, 0, 5 },
                 underTest.calculateBinBoundaries(
-                        MathUtils.createNumberArray(-10d, 10d), 4),
-                DELTA);
+                        MathUtils.createNumberArray(-10d, 10d), 4), DELTA);
     }
 
     @Before
