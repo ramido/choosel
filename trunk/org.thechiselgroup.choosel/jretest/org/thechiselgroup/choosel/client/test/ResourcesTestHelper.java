@@ -72,11 +72,22 @@ public final class ResourcesTestHelper {
                 slotMappingConfiguration));
     }
 
+    public static LightweightList<ViewItem> createViewItems(
+            int... viewItemId) {
+
+        ResourceSet[] resourceSets = new ResourceSet[viewItemId.length];
+        for (int i = 0; i < resourceSets.length; i++) {
+            resourceSets[i] = toLabeledResourceSet("" + viewItemId[i],
+                    createResource(viewItemId[i]));
+        }
+        return createViewItems(resourceSets);
+    }
+
     /**
      * Creates list of resource items with using the label of the resource sets
      * as group ids.
      */
-    public static LightweightList<ViewItem> createResourceItems(
+    public static LightweightList<ViewItem> createViewItems(
             ResourceSet... resourceSets) {
 
         LightweightList<ViewItem> resourceItems = CollectionFactory
@@ -219,15 +230,5 @@ public final class ResourcesTestHelper {
     }
 
     private ResourcesTestHelper() {
-    }
-
-    public static LightweightList<ViewItem> createResourceItems(
-            String... groupIds) {
-        ResourceSet[] resourceSets = new ResourceSet[groupIds.length];
-        for (int i = 0; i < resourceSets.length; i++) {
-            resourceSets[i] = toLabeledResourceSet(groupIds[i],
-                    createResource(i + 1));
-        }
-        return createResourceItems(resourceSets);
     }
 }
