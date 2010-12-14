@@ -20,6 +20,8 @@ import org.thechiselgroup.choosel.client.views.ViewContentDisplay;
 
 public interface SlotMappingInitializer {
 
-    void initializeMappings(ResourceSet resources, ViewContentDisplay contentDisplay,
+    void initializeMappings(ResourceSet resources,
+            ViewContentDisplay contentDisplay,
             SlotMappingConfiguration slotMappingConfiguration);
+
 }

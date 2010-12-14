@@ -44,7 +44,9 @@ public class DefaultDropTargetCapabilityChecker implements
         List<DataType> dataTypes = getDataTypes(slots);
 
         // XXX re-enable color resolver?
+        // TODO this should use the slot mapping initializer of the view somehow
         dataTypes.remove(DataType.COLOR);
+        dataTypes.remove(DataType.NUMBER);
 
         for (DataType dataType : dataTypes) {
             if (ResourceSetUtils.getPropertyNamesForDataType(resourceSet,
