@@ -18,10 +18,38 @@ package org.thechiselgroup.choosel.client.persistence;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
 
+/**
+ * Interface for objects that can be saved into {@link Memento}s and restored
+ * from saved {@link Memento}s. Each {@link Persistable} has a corresponding
+ * {@link PersistableObjectFactory} that can be used to create a new object from
+ * a {@link Memento}.
+ * 
+ * @author Lars Grammel
+ * 
+ * @see Memento
+ * @see PersistableObjectFactory
+ */
 public interface Persistable {
 
-    void restore(Memento state, ResourceSetAccessor accessor);
+    /**
+     * @return ID of the {@link PersistableObjectFactory} that can restore this
+     *         object from a {@link Memento}.
+     */
+    // String getFactoryId();
+    // TODO reactivate?
 
+    /**
+     * Restores the state for an existing object.
+     */
+    // TODO can we somehow remove accessor?
+    void restore(Memento state,
+            PersistableRestorationService restorationService,
+            ResourceSetAccessor accessor);
+
+    /**
+     * Saves the state of this {@link Persistable} into a {@link Memento}.
+     */
+    // TODO can we somehow remove resourceSetCollector?
     Memento save(ResourceSetCollector resourceSetCollector);
 
 }

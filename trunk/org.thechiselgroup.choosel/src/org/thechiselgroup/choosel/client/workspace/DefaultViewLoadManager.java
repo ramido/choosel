@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.thechiselgroup.choosel.client.persistence.Persistable;
+import org.thechiselgroup.choosel.client.persistence.PersistableRestorationService;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceManager;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
@@ -57,16 +58,20 @@ public class DefaultViewLoadManager implements ViewLoadManager {
 
     private final Desktop desktop;
 
+    private PersistableRestorationService restorationService;
+
     @Inject
     public DefaultViewLoadManager(ViewPersistenceServiceAsync service,
             ResourceManager resourceManager,
             ResourceSetFactory resourceSetFactory,
             WindowContentProducer windowContentProducer,
-            WorkspaceManager workspaceManager, Desktop desktop) {
+            WorkspaceManager workspaceManager, Desktop desktop,
+            PersistableRestorationService restorationService) {
 
         assert resourceManager != null;
         assert service != null;
         assert resourceSetFactory != null;
+        assert restorationService != null;
 
         this.desktop = desktop;
         this.workspaceManager = workspaceManager;
@@ -74,6 +79,7 @@ public class DefaultViewLoadManager implements ViewLoadManager {
         this.resourceSetFactory = resourceSetFactory;
         this.resourceManager = resourceManager;
         this.service = service;
+        this.restorationService = restorationService;
     }
 
     @Override
@@ -149,7 +155,8 @@ public class DefaultViewLoadManager implements ViewLoadManager {
          * the view to be attached to the DOM.
          */
         if (content instanceof Persistable) {
-            ((Persistable) content).restore(dto.getViewState(), accessor);
+            ((Persistable) content).restore(dto.getViewState(),
+                    restorationService, accessor);
         }
 
         return content;

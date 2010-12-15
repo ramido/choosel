@@ -32,6 +32,8 @@ import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.label.MappingCategoryLabelProvider;
 import org.thechiselgroup.choosel.client.label.ResourceSetLabelFactory;
 import org.thechiselgroup.choosel.client.label.SelectionModelLabelFactory;
+import org.thechiselgroup.choosel.client.persistence.PersistableRestorationService;
+import org.thechiselgroup.choosel.client.persistence.PersistableRestorationServiceProvider;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceManager;
 import org.thechiselgroup.choosel.client.resources.ManagedResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ResourceByUriMultiCategorizer;
@@ -314,6 +316,9 @@ public class ChooselClientModule extends AbstractGinModule implements
         bind(ResourceSetFactory.class).to(ManagedResourceSetFactory.class).in(
                 Singleton.class);
 
+        bind(PersistableRestorationService.class).toProvider(
+                getPersistableRestorationServiceProvider()).in(Singleton.class);
+
         bindHoverModel();
 
         bind(ResourceCategorizer.class).to(getResourceCategorizerClass()).in(
@@ -388,6 +393,10 @@ public class ChooselClientModule extends AbstractGinModule implements
 
     protected Class<? extends GraphExpansionRegistry> getGraphExpansionRegistryClass() {
         return DefaultGraphExpansionRegistry.class;
+    }
+
+    protected Class<? extends PersistableRestorationServiceProvider> getPersistableRestorationServiceProvider() {
+        return PersistableRestorationServiceProvider.class;
     }
 
     protected Class<? extends ResourceCategorizer> getResourceCategorizerClass() {

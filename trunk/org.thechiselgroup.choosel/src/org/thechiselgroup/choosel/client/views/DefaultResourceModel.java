@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.persistence.Persistable;
+import org.thechiselgroup.choosel.client.persistence.PersistableRestorationService;
 import org.thechiselgroup.choosel.client.resources.CombinedResourceSet;
 import org.thechiselgroup.choosel.client.resources.FilteredResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
@@ -163,7 +164,10 @@ public class DefaultResourceModel implements ResourceModel, Disposable,
     }
 
     @Override
-    public void restore(Memento state, ResourceSetAccessor accessor) {
+    public void restore(Memento state,
+            PersistableRestorationService restorationService,
+            ResourceSetAccessor accessor) {
+
         // TODO remove user sets, automatic resources
         addUnnamedResources(restoreAutomaticResources(state, accessor));
         restoreUserResourceSets(state, accessor);

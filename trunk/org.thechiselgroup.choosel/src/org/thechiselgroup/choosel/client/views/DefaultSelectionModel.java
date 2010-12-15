@@ -21,6 +21,7 @@ import java.util.List;
 import org.thechiselgroup.choosel.client.label.LabelProvider;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.persistence.Persistable;
+import org.thechiselgroup.choosel.client.persistence.PersistableRestorationService;
 import org.thechiselgroup.choosel.client.resources.NullResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetAddedEvent;
@@ -131,7 +132,10 @@ public class DefaultSelectionModel implements SelectionModel, Disposable,
     }
 
     @Override
-    public void restore(Memento state, ResourceSetAccessor accessor) {
+    public void restore(Memento state,
+            PersistableRestorationService restorationService,
+            ResourceSetAccessor accessor) {
+
         int selectionSetCount = (Integer) state
                 .getValue(MEMENTO_SELECTION_SET_COUNT);
         for (int i = 0; i < selectionSetCount; i++) {
@@ -183,6 +187,7 @@ public class DefaultSelectionModel implements SelectionModel, Disposable,
 
     private void storeResourceSet(ResourceSetCollector persistanceManager,
             Memento memento, String key, ResourceSet resources) {
+
         memento.setValue(key, persistanceManager.storeResourceSet(resources));
     }
 

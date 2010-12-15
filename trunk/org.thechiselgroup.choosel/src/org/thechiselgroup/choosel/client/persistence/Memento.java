@@ -21,6 +21,8 @@ import java.util.TreeMap;
 
 public class Memento implements Serializable {
 
+    private String factoryId;
+
     private static final long serialVersionUID = -4396834563728094108L;
 
     private TreeMap<String, Memento> children = new TreeMap<String, Memento>();
@@ -29,6 +31,10 @@ public class Memento implements Serializable {
 
     public Memento() {
         // for GWT
+    }
+
+    public Memento(String factoryId) {
+        this.factoryId = factoryId;
     }
 
     public void addChild(String key, Memento child) {
@@ -45,6 +51,10 @@ public class Memento implements Serializable {
         return children;
     }
 
+    public String getFactoryId() {
+        return factoryId;
+    }
+
     public Serializable getValue(String key) {
         return values.get(key);
     }
@@ -52,6 +62,10 @@ public class Memento implements Serializable {
     // TODO immutable
     public SortedMap<String, Serializable> getValues() {
         return values;
+    }
+
+    public void setFactoryId(String factoryId) {
+        this.factoryId = factoryId;
     }
 
     public Object setValue(String key, Serializable value) {
