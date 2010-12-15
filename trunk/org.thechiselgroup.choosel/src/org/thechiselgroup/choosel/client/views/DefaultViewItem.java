@@ -28,7 +28,6 @@ import org.thechiselgroup.choosel.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.client.util.event.EventHandlerPriority;
 import org.thechiselgroup.choosel.client.util.event.PrioritizedEventHandler;
 import org.thechiselgroup.choosel.client.views.slots.Slot;
@@ -248,8 +247,8 @@ public class DefaultViewItem implements Disposable, ViewItem {
 
     @Override
     public Object getResourceValue(Slot slot, Subset subset) {
-        assert slot != null;
-        assert subset != null;
+        assert slot != null : "slot must not be null";
+        assert subset != null : "subset must not be null";
 
         switch (subset) {
         case ALL:

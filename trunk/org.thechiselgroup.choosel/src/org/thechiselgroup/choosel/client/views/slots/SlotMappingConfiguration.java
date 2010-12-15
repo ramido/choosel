@@ -31,7 +31,6 @@ import org.thechiselgroup.choosel.client.util.event.PrioritizedEventHandler;
 import org.thechiselgroup.choosel.client.util.event.PrioritizedHandlerManager;
 import org.thechiselgroup.choosel.client.util.math.AverageCalculation;
 import org.thechiselgroup.choosel.client.util.math.Calculation;
-import org.thechiselgroup.choosel.client.util.math.CountCalculation;
 import org.thechiselgroup.choosel.client.util.math.MaxCalculation;
 import org.thechiselgroup.choosel.client.util.math.MinCalculation;
 import org.thechiselgroup.choosel.client.util.math.SumCalculation;
@@ -125,10 +124,7 @@ public class SlotMappingConfiguration implements Persistable {
                 String calculationType = (String) child
                         .getValue(MEMENTO_KEY_CALCULATION_TYPE);
 
-                if ("count".equals(calculationType)) {
-                    setMapping(slot, new CalculationResourceSetToValueResolver(
-                            property, new CountCalculation()));
-                } else if ("min".equals(calculationType)) {
+                if ("min".equals(calculationType)) {
                     setMapping(slot, new CalculationResourceSetToValueResolver(
                             property, new MinCalculation()));
                 } else if ("max".equals(calculationType)) {
@@ -172,9 +168,7 @@ public class SlotMappingConfiguration implements Persistable {
                         ((CalculationResourceSetToValueResolver) resolver)
                                 .getProperty());
 
-                if (calculation instanceof CountCalculation) {
-                    child.setValue(MEMENTO_KEY_CALCULATION_TYPE, "count");
-                } else if (calculation instanceof SumCalculation) {
+                if (calculation instanceof SumCalculation) {
                     child.setValue(MEMENTO_KEY_CALCULATION_TYPE, "sum");
                 } else if (calculation instanceof AverageCalculation) {
                     child.setValue(MEMENTO_KEY_CALCULATION_TYPE, "average");

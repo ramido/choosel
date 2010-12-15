@@ -79,8 +79,6 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
     }
 
-    public final static Slot VALUE_SLOT = BarChartViewContentDisplay.CHART_VALUE_SLOT;
-
     private static final int BORDER_BOTTOM = 35;
 
     private static final int BORDER_LEFT = 45;
@@ -141,7 +139,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         @Override
         public double f(ChartItem value, int i) {
             return calculateBarLength(value.getResourceValueAsNumber(
-                    VALUE_SLOT, Subset.HIGHLIGHTED));
+                    BarChartViewContentDisplay.CHART_VALUE_SLOT, Subset.HIGHLIGHTED));
         }
     };
 

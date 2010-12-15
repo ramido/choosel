@@ -29,7 +29,11 @@ public interface ListBoxPresenter extends HasChangeHandlers, WidgetAdaptable {
 
     String getValue(int index);
 
+    boolean isVisible();
+
     void setSelectedIndex(int index);
+
+    void setVisible(boolean visible);
 
     void setVisibleItemCount(int count);
 
