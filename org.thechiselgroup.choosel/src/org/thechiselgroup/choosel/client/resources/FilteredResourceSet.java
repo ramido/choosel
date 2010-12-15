@@ -88,6 +88,10 @@ public class FilteredResourceSet extends DelegatingResourceSet {
         return filteredResources;
     }
 
+    public Predicate<Resource> getFilterPredicate() {
+        return filterPredicate;
+    }
+
     @Override
     public void invert(Resource resource) {
         throw new UnsupportedOperationException(
