@@ -20,9 +20,19 @@ import com.google.inject.Provider;
 public class PersistableRestorationServiceProvider implements
         Provider<PersistableRestorationService> {
 
+    /**
+     * Override to add factories to the service.
+     */
+    protected void addPersistableObjectFactories(
+            PersistableRestorationService service) {
+
+    }
+
     @Override
     public PersistableRestorationService get() {
         PersistableRestorationService service = new PersistableRestorationService();
+
+        addPersistableObjectFactories(service);
 
         return service;
     }

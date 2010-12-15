@@ -322,12 +322,12 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         contentDisplay.startRestore();
 
+        restoreGrouping(state.getChild(MEMENTO_GROUPING));
         restore(resourceModel, state, MEMENTO_RESOURCE_MODEL,
                 restorationService, accessor);
         restore(selectionModel, state, MEMENTO_SELECTION_MODEL,
                 restorationService, accessor);
         contentDisplay.restore(state.getChild(MEMENTO_CONTENT_DISPLAY));
-        restoreGrouping(state.getChild(MEMENTO_GROUPING));
         restore(slotMappingConfiguration, state, MEMENTO_SLOT_MAPPINGS,
                 restorationService, accessor);
 
