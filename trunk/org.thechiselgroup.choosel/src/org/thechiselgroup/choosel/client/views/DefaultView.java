@@ -812,12 +812,12 @@ public class DefaultView extends AbstractWindowContent implements View {
     public Memento save(ResourceSetCollector resourceSetCollector) {
         Memento memento = new Memento();
 
+        saveGrouping(memento);
         save(selectionModel, memento, MEMENTO_SELECTION_MODEL,
                 resourceSetCollector);
         save(resourceModel, memento, MEMENTO_RESOURCE_MODEL,
                 resourceSetCollector);
         memento.addChild(MEMENTO_CONTENT_DISPLAY, contentDisplay.save());
-        saveGrouping(memento);
         save(slotMappingConfiguration, memento, MEMENTO_SLOT_MAPPINGS,
                 resourceSetCollector);
 

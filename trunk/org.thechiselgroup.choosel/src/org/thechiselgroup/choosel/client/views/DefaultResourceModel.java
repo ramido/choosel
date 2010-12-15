@@ -35,6 +35,8 @@ import org.thechiselgroup.choosel.client.util.predicates.Predicate;
 public class DefaultResourceModel implements ResourceModel, Disposable,
         Persistable {
 
+    private static final String MEMENTO_FILTER_PREDICATE = "filterPredicate";
+
     private CombinedResourceSet allResources;
 
     private ResourceSet automaticResources;
@@ -168,6 +170,8 @@ public class DefaultResourceModel implements ResourceModel, Disposable,
             PersistableRestorationService restorationService,
             ResourceSetAccessor accessor) {
 
+        restoreFilter(state, restorationService, accessor);
+
         // TODO remove user sets, automatic resources
         addUnnamedResources(restoreAutomaticResources(state, accessor));
         restoreUserResourceSets(state, accessor);
@@ -176,6 +180,17 @@ public class DefaultResourceModel implements ResourceModel, Disposable,
     private ResourceSet restoreAutomaticResources(Memento state,
             ResourceSetAccessor accessor) {
         return restoreResourceSet(state, accessor, MEMENTO_AUTOMATIC_RESOURCES);
+    }
+
+    private void restoreFilter(Memento state,
+            PersistableRestorationService restorationService,
+            ResourceSetAccessor accessor) {
+        Memento child = state.getChild(MEMENTO_FILTER_PREDICATE);
+        if (child != null) {
+            Predicate<Resource> filterPredicate = (Predicate<Resource>) restorationService
+                    .restoreFromMemento(child, accessor);
+            filteredResources.setFilterPredicate(filterPredicate);
+        }
     }
 
     private ResourceSet restoreResourceSet(Memento state,
@@ -187,6 +202,7 @@ public class DefaultResourceModel implements ResourceModel, Disposable,
 
     private void restoreUserResourceSets(Memento state,
             ResourceSetAccessor accessor) {
+
         int resourceSetCount = (Integer) state
                 .getValue(MEMENTO_RESOURCE_SET_COUNT);
         for (int i = 0; i < resourceSetCount; i++) {
@@ -198,8 +214,11 @@ public class DefaultResourceModel implements ResourceModel, Disposable,
     @Override
     public Memento save(ResourceSetCollector resourceSetCollector) {
         Memento memento = new Memento();
+
+        storeFilterPredicate(resourceSetCollector, memento);
         storeAutomaticResources(resourceSetCollector, memento);
         storeUserResourceSets(resourceSetCollector, memento);
+
         return memento;
     }
 
@@ -215,6 +234,18 @@ public class DefaultResourceModel implements ResourceModel, Disposable,
                 MEMENTO_AUTOMATIC_RESOURCES, automaticResources);
     }
 
+    private void storeFilterPredicate(
+            ResourceSetCollector resourceSetCollector, Memento memento) {
+
+        Predicate<Resource> filterPredicate = filteredResources
+                .getFilterPredicate();
+        if (filterPredicate instanceof Persistable) {
+            Memento save = ((Persistable) filterPredicate)
+                    .save(resourceSetCollector);
+            memento.addChild(MEMENTO_FILTER_PREDICATE, save);
+        }
+    }
+
     private void storeResourceSet(ResourceSetCollector persistanceManager,
             Memento memento, String key, ResourceSet resources) {
         memento.setValue(key, persistanceManager.storeResourceSet(resources));
@@ -222,6 +253,7 @@ public class DefaultResourceModel implements ResourceModel, Disposable,
 
     private void storeUserResourceSets(ResourceSetCollector persistanceManager,
             Memento memento) {
+
         List<ResourceSet> resourceSets = combinedUserResourceSets
                 .getResourceSets();
         memento.setValue(MEMENTO_RESOURCE_SET_COUNT, resourceSets.size());
