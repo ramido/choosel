@@ -21,6 +21,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.client.test.AdvancedAsserts.assertContentEquals;
 import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.emptyLightweightCollection;
 import static org.thechiselgroup.choosel.client.test.ResourcesTestHelper.eqResourceItems;
@@ -59,32 +60,7 @@ public class DefaultViewTest {
 
     private Slot slot;
 
-    @Test
-    public void addedSelectedResourcesToView() {
-        ResourceSet resources = createResources(1);
-
-        underTest.getSelectionModel().addSelectionSet(resources);
-
-        underTest.getResourceModel().addResourceSet(resources);
-
-        ArgumentCaptor<LightweightCollection> captor = ArgumentCaptor
-                .forClass(LightweightCollection.class);
-
-        verify(underTest.getContentDisplay(), times(1)).update(
-                captor.capture(), emptyLightweightCollection(ViewItem.class),
-                emptyLightweightCollection(ViewItem.class),
-                emptyLightweightCollection(Slot.class));
-
-        LightweightCollection<ViewItem> value = captor.getValue();
-
-        assertEquals(1, value.size());
-
-        ViewItem next = value.iterator().next();
-        assertEquals(SubsetStatus.COMPLETE, next.getSelectionStatus());
-        assertEquals(resources, next.getSelectedResources());
-    }
-
-    public LightweightCollection<ViewItem> captureAddedResourceItems() {
+    private LightweightCollection<ViewItem> captureAddedViewItems() {
         ArgumentCaptor<LightweightCollection> captor = ArgumentCaptor
                 .forClass(LightweightCollection.class);
         verify(underTest.getContentDisplay(), times(1)).update(
@@ -94,8 +70,8 @@ public class DefaultViewTest {
         return captor.getValue();
     }
 
-    private List<ViewItem> captureAddedResourceItemsAsList() {
-        return captureAddedResourceItems().toList();
+    private List<ViewItem> captureAddedViewItemsAsList() {
+        return captureAddedViewItems().toList();
     }
 
     // TODO move to resource splitter test
@@ -185,7 +161,7 @@ public class DefaultViewTest {
         ResourceSet resources = createResources(1);
 
         underTest.getResourceModel().addUnnamedResources(resources);
-        List<ViewItem> resourceItems = captureAddedResourceItemsAsList();
+        List<ViewItem> resourceItems = captureAddedViewItemsAsList();
 
         select(resources);
         deselect(resources);
@@ -295,7 +271,7 @@ public class DefaultViewTest {
 
         underTest.getHoverModel().setHighlightedResourceSet(resources);
         underTest.getResourceModel().addResourceSet(resources);
-        List<ViewItem> resourceItems = captureAddedResourceItemsAsList();
+        List<ViewItem> resourceItems = captureAddedViewItemsAsList();
 
         assertContentEquals(resources, resourceItems.get(0)
                 .getHighlightedResources());
@@ -306,7 +282,7 @@ public class DefaultViewTest {
         ResourceSet resources = createResources(1, 2);
 
         underTest.getResourceModel().addResourceSet(resources);
-        List<ViewItem> resourceItems = captureAddedResourceItemsAsList();
+        List<ViewItem> resourceItems = captureAddedViewItemsAsList();
 
         underTest.getHoverModel().setHighlightedResourceSet(resources);
 
@@ -322,7 +298,7 @@ public class DefaultViewTest {
         ResourceSet highlightedResources = toResourceSet(resource1, resource2);
 
         underTest.getResourceModel().addResourceSet(viewResources);
-        List<ViewItem> resourceItems = captureAddedResourceItemsAsList();
+        List<ViewItem> resourceItems = captureAddedViewItemsAsList();
 
         underTest.getHoverModel().setHighlightedResourceSet(
                 highlightedResources);
@@ -336,7 +312,7 @@ public class DefaultViewTest {
         ResourceSet resources = createResources(1);
 
         underTest.getResourceModel().addResourceSet(resources);
-        List<ViewItem> resourceItems = captureAddedResourceItemsAsList();
+        List<ViewItem> resourceItems = captureAddedViewItemsAsList();
 
         underTest.getHoverModel().setHighlightedResourceSet(resources);
 
@@ -349,7 +325,7 @@ public class DefaultViewTest {
         ResourceSet resources = createResources(1);
 
         underTest.getResourceModel().addResourceSet(resources);
-        List<ViewItem> resourceItems = captureAddedResourceItemsAsList();
+        List<ViewItem> resourceItems = captureAddedViewItemsAsList();
 
         underTest.getHoverModel().setHighlightedResourceSet(resources);
         underTest.getHoverModel().setHighlightedResourceSet(createResources());
@@ -382,15 +358,15 @@ public class DefaultViewTest {
     }
 
     @Test
-    public void selectResourceItemWhenResourceAddedToSelection() {
+    public void selectViewItemWhenResourceAddedToSelection() {
         ResourceSet resources = createResources(1);
 
         underTest.getResourceModel().addUnnamedResources(resources);
-        List<ViewItem> resourceItems = captureAddedResourceItemsAsList();
+        List<ViewItem> viewItems = captureAddedViewItemsAsList();
 
         select(createResources(1));
 
-        assertContentEquals(createResources(1), resourceItems.get(0)
+        assertContentEquals(createResources(1), viewItems.get(0)
                 .getSelectedResources());
     }
 
@@ -409,14 +385,14 @@ public class DefaultViewTest {
         ResourceSet highlightedResources = createResources(1);
 
         underTest.getResourceModel().addResourceSet(highlightedResources);
-        LightweightCollection<ViewItem> addedResourceItems = captureAddedResourceItems();
+        LightweightCollection<ViewItem> addedViewItems = captureAddedViewItems();
 
         underTest.getHoverModel().setHighlightedResourceSet(
                 highlightedResources);
 
         verify(underTest.getContentDisplay(), times(1)).update(
                 emptyLightweightCollection(ViewItem.class),
-                eqResourceItems(addedResourceItems),
+                eqResourceItems(addedViewItems),
                 emptyLightweightCollection(ViewItem.class),
                 emptyLightweightCollection(Slot.class));
     }
@@ -428,13 +404,13 @@ public class DefaultViewTest {
         ResourceSet resources = toLabeledResourceSet(resources1, resources2);
 
         underTest.getResourceModel().addResourceSet(resources);
-        LightweightCollection<ViewItem> addedResourceItems = captureAddedResourceItems();
+        LightweightCollection<ViewItem> addedViewItems = captureAddedViewItems();
 
         underTest.getResourceModel().removeResourceSet(resources);
         verify(underTest.getContentDisplay(), times(1)).update(
                 emptyLightweightCollection(ViewItem.class),
                 emptyLightweightCollection(ViewItem.class),
-                eqResourceItems(addedResourceItems),
+                eqResourceItems(addedViewItems),
                 emptyLightweightCollection(Slot.class));
     }
 
@@ -443,19 +419,19 @@ public class DefaultViewTest {
         ResourceSet resources = createResources(1);
 
         underTest.getResourceModel().addUnnamedResources(resources);
-        LightweightCollection<ViewItem> addedResourceItems = captureAddedResourceItems();
+        LightweightCollection<ViewItem> addedViewItems = captureAddedViewItems();
 
         select(createResources(1));
 
         verify(underTest.getContentDisplay(), times(1)).update(
                 emptyLightweightCollection(ViewItem.class),
-                eqResourceItems(addedResourceItems),
+                eqResourceItems(addedViewItems),
                 emptyLightweightCollection(ViewItem.class),
                 emptyLightweightCollection(Slot.class));
     }
 
     @Test
-    public void updateCalledWith2ResourceItemsWhenAddingMixedResourceSet() {
+    public void updateCalledWith2ViewItemsWhenAddingMixedResourceSet() {
         ResourceSet resources1 = createResources(TYPE_1, 1, 3, 4);
         ResourceSet resources2 = createResources(TYPE_2, 4, 2);
         ResourceSet resources = toResourceSet(resources1, resources2);
@@ -479,5 +455,26 @@ public class DefaultViewTest {
                 any(LightweightCollection.class),
                 emptyLightweightCollection(ViewItem.class),
                 emptyLightweightCollection(Slot.class));
+    }
+
+    /**
+     * @see <a
+     *      href="http://code.google.com/p/choosel/issues/detail?id=123">"Issue 123"</a>
+     */
+    @Test
+    public void viewItemIsSelectedWhenSelectionWasSetBeforeResourcesWereAdded() {
+        ResourceSet resources = createResources(1);
+
+        when(underTest.getSelectionModel().getSelection())
+                .thenReturn(resources);
+        underTest.getResourceModel().addResourceSet(resources);
+
+        List<ViewItem> addedViewItem = captureAddedViewItemsAsList();
+
+        assertEquals(1, addedViewItem.size());
+        assertEquals(SubsetStatus.COMPLETE, addedViewItem.get(0)
+                .getSelectionStatus());
+        assertContentEquals(resources, addedViewItem.get(0)
+                .getSelectedResources());
     }
 }
