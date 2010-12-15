@@ -34,7 +34,6 @@ import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.persistence.DefaultResourceSetCollector;
 import org.thechiselgroup.choosel.client.util.math.AverageCalculation;
 import org.thechiselgroup.choosel.client.util.math.Calculation;
-import org.thechiselgroup.choosel.client.util.math.CountCalculation;
 import org.thechiselgroup.choosel.client.util.math.MaxCalculation;
 import org.thechiselgroup.choosel.client.util.math.MinCalculation;
 import org.thechiselgroup.choosel.client.util.math.SumCalculation;
@@ -86,11 +85,6 @@ public class DefaultViewPersistenceTest {
         assertEquals(1, resourceItems.size());
         ViewItem resourceItem = resourceItems.get(0);
         assertEquals("value2", resourceItem.getResourceValue(textSlot));
-    }
-
-    @Test
-    public void restoreCountCalculationOverGroup() {
-        testRestoreCalculationOverGroup(3d, new CountCalculation());
     }
 
     @Test

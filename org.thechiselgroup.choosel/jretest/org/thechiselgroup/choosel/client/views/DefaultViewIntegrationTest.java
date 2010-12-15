@@ -33,7 +33,6 @@ import org.thechiselgroup.choosel.client.resources.ResourceByPropertyMultiCatego
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.util.math.AverageCalculation;
 import org.thechiselgroup.choosel.client.util.math.Calculation;
-import org.thechiselgroup.choosel.client.util.math.CountCalculation;
 import org.thechiselgroup.choosel.client.util.math.MaxCalculation;
 import org.thechiselgroup.choosel.client.util.math.MinCalculation;
 import org.thechiselgroup.choosel.client.util.math.SumCalculation;
@@ -68,14 +67,9 @@ public class DefaultViewIntegrationTest {
         underTest.getSlotMappingConfiguration().setMapping(
                 numberSlot,
                 new CalculationResourceSetToValueResolver("property1",
-                        new CountCalculation()));
+                        new MaxCalculation()));
 
-        assertEquals(3d, resourceItem.getResourceValue(numberSlot));
-    }
-
-    @Test
-    public void countCalculationOverGroup() {
-        testCalculationOverGroup(3d, new CountCalculation());
+        assertEquals(8d, resourceItem.getResourceValue(numberSlot));
     }
 
     @Test
@@ -160,7 +154,7 @@ public class DefaultViewIntegrationTest {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) {
-                assertEquals(3d, resourceItem.getResourceValue(numberSlot));
+                assertEquals(8d, resourceItem.getResourceValue(numberSlot));
                 return null;
             }
         }).when(contentDisplay).update(any(LightweightCollection.class),
@@ -171,6 +165,6 @@ public class DefaultViewIntegrationTest {
         underTest.getSlotMappingConfiguration().setMapping(
                 numberSlot,
                 new CalculationResourceSetToValueResolver("property1",
-                        new CountCalculation()));
+                        new MaxCalculation()));
     }
 }

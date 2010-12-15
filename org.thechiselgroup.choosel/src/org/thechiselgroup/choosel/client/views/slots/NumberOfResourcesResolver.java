@@ -18,11 +18,18 @@ package org.thechiselgroup.choosel.client.views.slots;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 
-public class ResourceSetToCountResolver implements ResourceSetToValueResolver {
+public class NumberOfResourcesResolver implements ResourceSetToValueResolver {
 
     @Override
     public Object resolve(LightweightCollection<Resource> resources,
             String category) {
-        return Integer.toString(resources.size());
+
+        return ((Number) resources.size()).doubleValue();
     }
+
+    @Override
+    public String toString() {
+        return "Count";
+    }
+
 }

@@ -38,4 +38,9 @@ public class FixedValuePropertyValueResolver implements
         return value;
     }
 
+    @Override
+    public String toString() {
+        return "Constant: " + value;
+    }
+
 }

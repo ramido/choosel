@@ -25,7 +25,6 @@ import org.thechiselgroup.choosel.client.util.Converter;
 import org.thechiselgroup.choosel.client.util.NullConverter;
 import org.thechiselgroup.choosel.client.util.math.AverageCalculation;
 import org.thechiselgroup.choosel.client.util.math.Calculation;
-import org.thechiselgroup.choosel.client.util.math.CountCalculation;
 import org.thechiselgroup.choosel.client.util.math.MaxCalculation;
 import org.thechiselgroup.choosel.client.util.math.MinCalculation;
 import org.thechiselgroup.choosel.client.util.math.SumCalculation;
@@ -37,11 +36,34 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class NumberSlotControl extends SlotControl {
 
+    public class CalculationResourceSetToValueResolverFactory implements
+            ResourceSetToValueResolverFactory {
+
+        private Calculation calculation;
+
+        public CalculationResourceSetToValueResolverFactory(
+                Calculation calculation) {
+
+            this.calculation = calculation;
+        }
+
+        @Override
+        public String getDescription() {
+            return calculation.getDescription();
+        }
+
+        @Override
+        public ResourceSetToValueResolver getResolver() {
+            return new CalculationResourceSetToValueResolver(
+                    propertySelector.getSelectedValue(), calculation);
+        }
+    }
+
     private VerticalPanel panel;
 
     private ListBoxControl<String> propertySelector;
 
-    private ListBoxControl<Calculation> calculationSelector;
+    private ListBoxControl<ResourceSetToValueResolverFactory> resolverFactorySelector;
 
     private ChangeHandler changeHandler;
 
@@ -57,39 +79,51 @@ public class NumberSlotControl extends SlotControl {
         changeHandler = new ChangeHandler() {
             @Override
             public void onChange(ChangeEvent event) {
-                String propertyName = propertySelector.getSelectedValue();
-                Calculation calculation = calculationSelector
+                ResourceSetToValueResolverFactory resolverFactory = resolverFactorySelector
                         .getSelectedValue();
 
+                propertySelector
+                        .setVisible(!(resolverFactory instanceof FixedResourceSetToValueResolverFactory));
+
                 slotMappingConfiguration.setMapping(getSlot(),
-                        new CalculationResourceSetToValueResolver(propertyName,
-                                calculation));
+                        resolverFactory.getResolver());
             }
         };
 
-        Calculation[] calculations = new Calculation[] { new SumCalculation(),
-                new CountCalculation(), new AverageCalculation(),
-                new MinCalculation(), new MaxCalculation() };
+        ResourceSetToValueResolverFactory[] calculations = new ResourceSetToValueResolverFactory[] {
+                new FixedResourceSetToValueResolverFactory(
+                        new FixedValuePropertyValueResolver(new Double(1))),
+                new FixedResourceSetToValueResolverFactory(
+                        new NumberOfResourcesResolver()),
+                new CalculationResourceSetToValueResolverFactory(
+                        new SumCalculation()),
+                new CalculationResourceSetToValueResolverFactory(
+                        new AverageCalculation()),
+                new CalculationResourceSetToValueResolverFactory(
+                        new MinCalculation()),
+                new CalculationResourceSetToValueResolverFactory(
+                        new MaxCalculation()) };
 
-        calculationSelector = new ListBoxControl<Calculation>(
+        resolverFactorySelector = new ListBoxControl<ResourceSetToValueResolverFactory>(
                 new ExtendedListBox(false),
-                new Converter<Calculation, String>() {
+                new Converter<ResourceSetToValueResolverFactory, String>() {
                     @Override
-                    public String convert(Calculation value)
+                    public String convert(
+                            ResourceSetToValueResolverFactory value)
                             throws ConversionException {
                         return value.getDescription();
                     }
                 });
-        calculationSelector.setValues(Arrays.asList(calculations));
-        calculationSelector.setSelectedValue(calculations[0]);
-        calculationSelector.setChangeHandler(changeHandler);
+        resolverFactorySelector.setValues(Arrays.asList(calculations));
+        resolverFactorySelector.setSelectedValue(calculations[0]);
+        resolverFactorySelector.setChangeHandler(changeHandler);
 
         propertySelector = new ListBoxControl<String>(
                 new ExtendedListBox(false), new NullConverter<String>());
         propertySelector.setChangeHandler(changeHandler);
 
         panel = new VerticalPanel();
-        panel.add(calculationSelector.asWidget());
+        panel.add(resolverFactorySelector.asWidget());
         panel.add(propertySelector.asWidget());
     }
 
@@ -106,6 +140,7 @@ public class NumberSlotControl extends SlotControl {
             ResourceSetToValueResolver resolver = slotMappingConfiguration
                     .getResolver(getSlot());
 
+            // TODO generic interface for resolvers that require property
             if (resolver instanceof CalculationResourceSetToValueResolver) {
                 String property = ((CalculationResourceSetToValueResolver) resolver)
                         .getProperty();

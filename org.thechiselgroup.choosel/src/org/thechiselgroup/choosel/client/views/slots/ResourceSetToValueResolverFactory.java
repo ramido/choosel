@@ -13,28 +13,12 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.util.math;
+package org.thechiselgroup.choosel.client.views.slots;
 
-public class CountCalculation implements Calculation {
+public interface ResourceSetToValueResolverFactory {
 
-    @Override
-    public double calculate(NumberArray values) {
-        return values.length();
-    }
+    String getDescription();
 
-    @Override
-    public String getDescription() {
-        return "Count";
-    }
-
-    @Override
-    public String getID() {
-        return "cnt";
-    }
-
-    @Override
-    public String toString() {
-        return getID();
-    }
+    ResourceSetToValueResolver getResolver();
 
 }

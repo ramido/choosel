@@ -154,7 +154,7 @@ public class ResourceGrouping implements ResourceContainer {
 
         for (Resource resource : resources) {
             for (String category : multiCategorizer.getCategories(resource)) {
-                assert category != null;
+                assert category != null : "category must not be null";
 
                 if (!resourcesPerCategory.containsKey(category)) {
                     resourcesPerCategory.put(category,

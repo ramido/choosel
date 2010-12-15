@@ -48,7 +48,6 @@ public class ListBoxControl<T> implements WidgetAdaptable {
         this.presenter = presenter;
 
         this.presenter.setVisibleItemCount(1);
-
     }
 
     @Override
@@ -67,6 +66,10 @@ public class ListBoxControl<T> implements WidgetAdaptable {
         }
 
         return values.get(selectedIndex);
+    }
+
+    public boolean isVisible() {
+        return presenter.isVisible();
     }
 
     // TODO allow for multiple change handlers
@@ -103,6 +106,10 @@ public class ListBoxControl<T> implements WidgetAdaptable {
             changeHandlerRegistration = presenter
                     .addChangeHandler(changeHandler);
         }
+    }
+
+    public void setVisible(boolean visible) {
+        presenter.setVisible(visible);
     }
 
 }
