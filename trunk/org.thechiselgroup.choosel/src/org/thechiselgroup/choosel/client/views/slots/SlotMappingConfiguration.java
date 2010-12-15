@@ -114,29 +114,43 @@ public class SlotMappingConfiguration implements Persistable {
                     + slotId;
 
             Slot slot = slotsByID.get(slotId);
-            String value = (String) child.getValue(MEMENTO_KEY_TYPE);
-            if (MEMENTO_VALUE_FIRST_RESOURCE_PROPERTY.equals(value)) {
-                String property = (String) child.getValue(MEMENTO_KEY_PROPERTY);
 
-                setMapping(slot, new FirstResourcePropertyResolver(property));
-            } else if (MEMENTO_VALUE_CALCULATION.equals(value)) {
-                String property = (String) child.getValue(MEMENTO_KEY_PROPERTY);
-                String calculationType = (String) child
-                        .getValue(MEMENTO_KEY_CALCULATION_TYPE);
+            if (child.getFactoryId() == null) {
+                String value = (String) child.getValue(MEMENTO_KEY_TYPE);
+                if (MEMENTO_VALUE_FIRST_RESOURCE_PROPERTY.equals(value)) {
+                    String property = (String) child
+                            .getValue(MEMENTO_KEY_PROPERTY);
 
-                if ("min".equals(calculationType)) {
-                    setMapping(slot, new CalculationResourceSetToValueResolver(
-                            property, new MinCalculation()));
-                } else if ("max".equals(calculationType)) {
-                    setMapping(slot, new CalculationResourceSetToValueResolver(
-                            property, new MaxCalculation()));
-                } else if ("sum".equals(calculationType)) {
-                    setMapping(slot, new CalculationResourceSetToValueResolver(
-                            property, new SumCalculation()));
-                } else if ("average".equals(calculationType)) {
-                    setMapping(slot, new CalculationResourceSetToValueResolver(
-                            property, new AverageCalculation()));
+                    setMapping(slot,
+                            new FirstResourcePropertyResolver(property));
+                } else if (MEMENTO_VALUE_CALCULATION.equals(value)) {
+                    String property = (String) child
+                            .getValue(MEMENTO_KEY_PROPERTY);
+                    String calculationType = (String) child
+                            .getValue(MEMENTO_KEY_CALCULATION_TYPE);
+
+                    if ("min".equals(calculationType)) {
+                        setMapping(slot,
+                                new CalculationResourceSetToValueResolver(
+                                        property, new MinCalculation()));
+                    } else if ("max".equals(calculationType)) {
+                        setMapping(slot,
+                                new CalculationResourceSetToValueResolver(
+                                        property, new MaxCalculation()));
+                    } else if ("sum".equals(calculationType)) {
+                        setMapping(slot,
+                                new CalculationResourceSetToValueResolver(
+                                        property, new SumCalculation()));
+                    } else if ("average".equals(calculationType)) {
+                        setMapping(slot,
+                                new CalculationResourceSetToValueResolver(
+                                        property, new AverageCalculation()));
+                    }
                 }
+            } else {
+                setMapping(slot,
+                        (ResourceSetToValueResolver) restorationService
+                                .restoreFromMemento(child, accessor));
             }
         }
     }
@@ -177,9 +191,9 @@ public class SlotMappingConfiguration implements Persistable {
                 } else if (calculation instanceof MaxCalculation) {
                     child.setValue(MEMENTO_KEY_CALCULATION_TYPE, "max");
                 }
+            } else if (resolver instanceof Persistable) {
+                child = ((Persistable) resolver).save(resourceSetCollector);
             }
-            // } else if (resolver instanceof Fixed)
-            // store details in child memento (i.e. type, property)
 
             memento.addChild(slot.getId(), child);
         }
