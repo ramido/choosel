@@ -18,7 +18,6 @@ package org.thechiselgroup.choosel.client.views.chart;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.ui.Colors;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.ChartWidget;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.ChartWidgetCallback;
@@ -201,8 +200,8 @@ public abstract class ChartViewContentDisplay extends
     }
 
     protected double calculateAllResources(int i) {
-        return calculateChartItemValue(i, BarChartViewContentDisplay.CHART_VALUE_SLOT,
-                Subset.ALL);
+        return calculateChartItemValue(i,
+                BarChartViewContentDisplay.CHART_VALUE_SLOT, Subset.ALL);
     }
 
     protected double calculateChartItemValue(int chartItemIndex, Slot slot,
@@ -212,8 +211,8 @@ public abstract class ChartViewContentDisplay extends
     }
 
     protected double calculateHighlightedResources(int i) {
-        return calculateChartItemValue(i, BarChartViewContentDisplay.CHART_VALUE_SLOT,
-                Subset.HIGHLIGHTED);
+        return calculateChartItemValue(i,
+                BarChartViewContentDisplay.CHART_VALUE_SLOT, Subset.HIGHLIGHTED);
     }
 
     protected int calculateHighlightedSelectedResources(int i) {
@@ -380,18 +379,6 @@ public abstract class ChartViewContentDisplay extends
         } finally {
             isRendering = false;
         }
-    }
-
-    // TODO implement
-    @Override
-    public void restore(Memento state) {
-    }
-
-    // TODO implement
-    @Override
-    public Memento save() {
-        Memento state = new Memento();
-        return state;
     }
 
     /**

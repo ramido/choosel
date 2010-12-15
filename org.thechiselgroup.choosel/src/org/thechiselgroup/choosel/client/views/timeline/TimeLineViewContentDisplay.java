@@ -18,7 +18,10 @@ package org.thechiselgroup.choosel.client.views.timeline;
 import java.util.Date;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
+import org.thechiselgroup.choosel.client.persistence.PersistableRestorationService;
 import org.thechiselgroup.choosel.client.resources.DataType;
+import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccessor;
+import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.client.ui.widget.timeline.TimeLineEvent;
 import org.thechiselgroup.choosel.client.ui.widget.timeline.TimeLineWidget;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
@@ -115,7 +118,10 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     @Override
-    public void restore(Memento state) {
+    public void restore(Memento state,
+            PersistableRestorationService restorationService,
+            ResourceSetAccessor accessor) {
+
         timelineWidget.setZoomIndex(0,
                 (Integer) state.getValue(MEMENTO_ZOOM_PREFIX + 0));
         timelineWidget.setZoomIndex(1,
@@ -127,7 +133,7 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     @Override
-    public Memento save() {
+    public Memento save(ResourceSetCollector resourceSetCollector) {
         Memento state = new Memento();
         state.setValue(MEMENTO_DATE, timelineWidget.getCenterVisibleDate());
         state.setValue(MEMENTO_ZOOM_PREFIX + 0, timelineWidget.getZoomIndex(0));

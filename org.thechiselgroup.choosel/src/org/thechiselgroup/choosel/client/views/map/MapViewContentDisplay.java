@@ -16,14 +16,17 @@
 package org.thechiselgroup.choosel.client.views.map;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
+import org.thechiselgroup.choosel.client.persistence.PersistableRestorationService;
 import org.thechiselgroup.choosel.client.resources.DataType;
 import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccessor;
+import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.client.ui.CSS;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.ViewItem;
 import org.thechiselgroup.choosel.client.views.SidePanelSection;
+import org.thechiselgroup.choosel.client.views.ViewItem;
 import org.thechiselgroup.choosel.client.views.slots.Slot;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -176,7 +179,10 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     @Override
-    public void restore(Memento state) {
+    public void restore(Memento state,
+            PersistableRestorationService restorationService,
+            ResourceSetAccessor accessor) {
+
         setMapType((String) state.getValue(MEMENTO_MAP_TYPE));
         restoreCenterPosition(state);
         restoreZoomLevel(state);
@@ -197,7 +203,7 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     @Override
-    public Memento save() {
+    public Memento save(ResourceSetCollector resourceSetCollector) {
         Memento state = new Memento();
 
         saveCenterPosition(state);

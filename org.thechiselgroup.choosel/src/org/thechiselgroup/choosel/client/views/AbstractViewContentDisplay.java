@@ -15,6 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
+import org.thechiselgroup.choosel.client.persistence.Memento;
+import org.thechiselgroup.choosel.client.persistence.PersistableRestorationService;
+import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccessor;
+import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.client.util.Disposable;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -79,6 +83,17 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
 
     public boolean isRestoring() {
         return restoring;
+    }
+
+    @Override
+    public void restore(Memento state,
+            PersistableRestorationService restorationService,
+            ResourceSetAccessor accessor) {
+    }
+
+    @Override
+    public Memento save(ResourceSetCollector resourceSetCollector) {
+        return new Memento();
     }
 
     @Override
