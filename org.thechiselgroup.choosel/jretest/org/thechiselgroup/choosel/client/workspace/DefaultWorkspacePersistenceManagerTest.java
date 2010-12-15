@@ -38,6 +38,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.persistence.Persistable;
+import org.thechiselgroup.choosel.client.persistence.PersistableRestorationService;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.DelegatingResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceManager;
@@ -106,6 +107,9 @@ public class DefaultWorkspacePersistenceManagerTest {
 
     @Mock
     private WorkspaceManager workspaceManager;
+
+    @Mock
+    private PersistableRestorationService restorationService;
 
     @Test
     public void changeWorkspaceSavingState() {
@@ -176,7 +180,7 @@ public class DefaultWorkspacePersistenceManagerTest {
         ArgumentCaptor<ResourceSetAccessor> argument = ArgumentCaptor
                 .forClass(ResourceSetAccessor.class);
         verify(restoredView, times(1)).restore(any(Memento.class),
-                argument.capture());
+                any(PersistableRestorationService.class), argument.capture());
 
         ResourceSet resourceSet = argument.getValue().getResourceSet(
                 Integer.parseInt(id.toString()));
@@ -205,7 +209,7 @@ public class DefaultWorkspacePersistenceManagerTest {
 
         underTest = new DefaultWorkspacePersistenceManager(workspaceManager,
                 desktop, persistenceService, viewFactory, resourceManager,
-                resourceSetFactory, sharingService);
+                resourceSetFactory, sharingService, restorationService);
 
         when(workspaceManager.getWorkspace()).thenReturn(workspace);
         when(window.getViewContent()).thenReturn(windowContent);

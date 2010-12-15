@@ -22,6 +22,7 @@ import java.util.Set;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.persistence.Persistable;
+import org.thechiselgroup.choosel.client.persistence.PersistableRestorationService;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceByPropertyMultiCategorizer;
@@ -313,13 +314,18 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     // protected for test access
-    protected void doRestore(Memento state, ResourceSetAccessor accessor) {
+    protected void doRestore(Memento state,
+            PersistableRestorationService restorationService,
+            ResourceSetAccessor accessor) {
+
         assert isInitialized : "view has to be initialized before restoring it";
 
         contentDisplay.startRestore();
 
-        restore(resourceModel, MEMENTO_RESOURCE_MODEL, state, accessor);
-        restore(selectionModel, MEMENTO_SELECTION_MODEL, state, accessor);
+        restore(resourceModel, state, MEMENTO_RESOURCE_MODEL,
+                restorationService, accessor);
+        restore(selectionModel, state, MEMENTO_SELECTION_MODEL,
+                restorationService, accessor);
         contentDisplay.restore(state.getChild(MEMENTO_CONTENT_DISPLAY));
         restoreGrouping(state.getChild(MEMENTO_GROUPING));
         slotMappingConfiguration.restore(state.getChild(MEMENTO_SLOT_MAPPINGS));
@@ -742,30 +748,36 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     @Override
-    public void restore(final Memento state, final ResourceSetAccessor accessor) {
+    public void restore(final Memento state,
+            final PersistableRestorationService restorationService,
+            final ResourceSetAccessor accessor) {
+
         /*
          * wait for content to be ready (needed for graph view swf loading on
          * restore)
          */
         // XXX this might be the cause for issue 25
         if (contentDisplay.isReady()) {
-            doRestore(state, accessor);
+            doRestore(state, restorationService, accessor);
         } else {
             new Timer() {
                 @Override
                 public void run() {
-                    restore(state, accessor);
+                    restore(state, restorationService, accessor);
                 }
             }.schedule(200);
         }
     }
 
-    private void restore(Object target, String mementoKey, Memento state,
+    private void restore(Object target, Memento parentMemento,
+            String targetMementoKey,
+            PersistableRestorationService restorationService,
             ResourceSetAccessor accessor) {
 
         if (target instanceof Persistable) {
-            ((Persistable) target)
-                    .restore(state.getChild(mementoKey), accessor);
+            ((Persistable) target).restore(
+                    parentMemento.getChild(targetMementoKey),
+                    restorationService, accessor);
         }
     }
 
@@ -786,22 +798,23 @@ public class DefaultView extends AbstractWindowContent implements View {
         }
     }
 
-    private void save(Object target, String mementoKey,
-            ResourceSetCollector persistanceManager, Memento memento) {
+    private void save(Object target, Memento parentMemento,
+            String targetMementoKey, ResourceSetCollector resourceSetCollector) {
 
         if (target instanceof Persistable) {
-            memento.addChild(mementoKey,
-                    ((Persistable) target).save(persistanceManager));
+            parentMemento.addChild(targetMementoKey,
+                    ((Persistable) target).save(resourceSetCollector));
         }
     }
 
     @Override
-    public Memento save(ResourceSetCollector persistanceManager) {
+    public Memento save(ResourceSetCollector resourceSetCollector) {
         Memento memento = new Memento();
 
-        save(selectionModel, MEMENTO_SELECTION_MODEL, persistanceManager,
-                memento);
-        save(resourceModel, MEMENTO_RESOURCE_MODEL, persistanceManager, memento);
+        save(selectionModel, memento, MEMENTO_SELECTION_MODEL,
+                resourceSetCollector);
+        save(resourceModel, memento, MEMENTO_RESOURCE_MODEL,
+                resourceSetCollector);
         memento.addChild(MEMENTO_CONTENT_DISPLAY, contentDisplay.save());
         saveGrouping(memento);
         memento.addChild(MEMENTO_SLOT_MAPPINGS, slotMappingConfiguration.save());

@@ -37,6 +37,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.label.SelectionModelLabelFactory;
 import org.thechiselgroup.choosel.client.persistence.Memento;
+import org.thechiselgroup.choosel.client.persistence.PersistableRestorationService;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.resources.ResourceSetAddedEvent;
@@ -64,6 +65,9 @@ public class DefaultSelectionModelTest {
     @Mock
     private ResourceSetActivatedEventHandler activatedHandler;
 
+    @Mock
+    private PersistableRestorationService restorationService;
+
     private DefaultSelectionModel createDefaultSelectionModel() {
         return spy(new DefaultSelectionModel(new SelectionModelLabelFactory(),
                 new DefaultResourceSetFactory()));
@@ -85,7 +89,7 @@ public class DefaultSelectionModelTest {
         Memento memento = underTest.save(resourceSetCollector);
         DefaultSelectionModel newModel = createDefaultSelectionModel();
         newModel.addEventHandler(activatedHandler);
-        newModel.restore(memento, resourceSetCollector);
+        newModel.restore(memento, restorationService, resourceSetCollector);
 
         verifyActivatedEventFired(selection1);
     }

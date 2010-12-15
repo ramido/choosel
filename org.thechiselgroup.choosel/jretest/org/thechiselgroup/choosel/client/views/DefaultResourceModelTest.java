@@ -26,8 +26,10 @@ import static org.thechiselgroup.choosel.client.test.TestResourceSetFactory.crea
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.persistence.Memento;
+import org.thechiselgroup.choosel.client.persistence.PersistableRestorationService;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.Resource;
@@ -38,6 +40,9 @@ import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccess
 public class DefaultResourceModelTest {
 
     private DefaultResourceModel underTest;
+
+    @Mock
+    private PersistableRestorationService restorationManager;
 
     @Test
     public void addResourcesAddsToAllResources() {
@@ -175,7 +180,7 @@ public class DefaultResourceModelTest {
         when(accessor.getResourceSet(0)).thenReturn(createResources(1));
         when(accessor.getResourceSet(1)).thenReturn(createResources());
 
-        underTest.restore(state, accessor);
+        underTest.restore(state, restorationManager, accessor);
 
         assertEquals(true, underTest.getResources().contains(createResource(1)));
     }

@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.thechiselgroup.choosel.client.persistence.Persistable;
+import org.thechiselgroup.choosel.client.persistence.PersistableRestorationService;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceManager;
@@ -59,13 +60,16 @@ public class DefaultWorkspacePersistenceManager implements
 
     private WorkspaceManager workspaceManager;
 
+    private PersistableRestorationService restorationService;
+
     @Inject
     public DefaultWorkspacePersistenceManager(
             WorkspaceManager workspaceManager, Desktop desktop,
             WorkspacePersistenceServiceAsync service,
             WindowContentProducer viewFactory, ResourceManager resourceManager,
             ResourceSetFactory resourceSetFactory,
-            WorkspaceSharingServiceAsync sharingService) {
+            WorkspaceSharingServiceAsync sharingService,
+            PersistableRestorationService restorationService) {
 
         assert resourceManager != null;
         assert workspaceManager != null;
@@ -74,6 +78,7 @@ public class DefaultWorkspacePersistenceManager implements
         assert viewFactory != null;
         assert resourceSetFactory != null;
         assert sharingService != null;
+        assert restorationService != null;
 
         this.sharingService = sharingService;
         this.resourceSetFactory = resourceSetFactory;
@@ -82,6 +87,7 @@ public class DefaultWorkspacePersistenceManager implements
         this.desktop = desktop;
         this.workspaceManager = workspaceManager;
         this.service = service;
+        this.restorationService = restorationService;
     }
 
     private WindowDTO createWindowDTO(
@@ -295,7 +301,8 @@ public class DefaultWorkspacePersistenceManager implements
              * require the view to be attached to the DOM.
              */
             if (content instanceof Persistable) {
-                ((Persistable) content).restore(wDTO.getViewState(), accessor);
+                ((Persistable) content).restore(wDTO.getViewState(),
+                        restorationService, accessor);
             }
         }
 

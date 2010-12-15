@@ -22,8 +22,10 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.client.persistence.Memento;
+import org.thechiselgroup.choosel.client.persistence.PersistableRestorationService;
 import org.thechiselgroup.choosel.client.resources.DataType;
 import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceByPropertyMultiCategorizer;
@@ -50,6 +52,9 @@ public class DefaultViewPersistenceTest {
 
     private Slot numberSlot;
 
+    @Mock
+    private PersistableRestorationService restorationService;
+
     @Test
     public void restoreAverageCalculationOverGroup() {
         testRestoreCalculationOverGroup(4d, new AverageCalculation());
@@ -64,7 +69,8 @@ public class DefaultViewPersistenceTest {
 
         originalView.getSlotMappingConfiguration().setMapping(textSlot,
                 new FirstResourcePropertyResolver("property1"));
-        originalView.getResourceModel().addUnnamedResources(toResourceSet(resource));
+        originalView.getResourceModel().addUnnamedResources(
+                toResourceSet(resource));
         originalView.getSlotMappingConfiguration().setMapping(textSlot,
                 new FirstResourcePropertyResolver("property2"));
 
@@ -73,7 +79,7 @@ public class DefaultViewPersistenceTest {
         Memento memento = originalView.save(collector);
 
         // 3. restore other view
-        restoredView.restore(memento, collector);
+        restoredView.restore(memento, restorationService, collector);
 
         // 4. check resource items and control settings
         List<ViewItem> resourceItems = restoredView.getViewItems();
@@ -108,7 +114,8 @@ public class DefaultViewPersistenceTest {
         r2.putValue("property1", "value1-2");
         r2.putValue("property2", "value2");
 
-        originalView.getResourceModel().addUnnamedResources(toResourceSet(r1, r2));
+        originalView.getResourceModel().addUnnamedResources(
+                toResourceSet(r1, r2));
         originalView.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("property2"));
 
@@ -119,7 +126,7 @@ public class DefaultViewPersistenceTest {
         // 3. restore other view - set by uri categorization first
         restoredView.getResourceGrouping().setCategorizer(
                 new ResourceByUriMultiCategorizer());
-        restoredView.restore(memento, collector);
+        restoredView.restore(memento, restorationService, collector);
 
         // 4. check resource items and control settings
         List<ViewItem> resourceItems = restoredView.getViewItems();
@@ -147,7 +154,8 @@ public class DefaultViewPersistenceTest {
         r2.putValue("property1", "value1-2");
         r2.putValue("property2", "value2");
 
-        originalView.getResourceModel().addUnnamedResources(toResourceSet(r1, r2));
+        originalView.getResourceModel().addUnnamedResources(
+                toResourceSet(r1, r2));
         originalView.getResourceGrouping().setCategorizer(
                 new ResourceByUriMultiCategorizer());
 
@@ -158,7 +166,7 @@ public class DefaultViewPersistenceTest {
         // 3. restore other view - set by uri categorization first
         restoredView.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("property2"));
-        restoredView.restore(memento, collector);
+        restoredView.restore(memento, restorationService, collector);
 
         // 4. check resource items and control settings
         List<ViewItem> resourceItems = restoredView.getViewItems();
@@ -192,7 +200,8 @@ public class DefaultViewPersistenceTest {
         r3.putValue("property1", new Double(8));
         r3.putValue("property2", "value2");
 
-        originalView.getResourceModel().addUnnamedResources(toResourceSet(r1, r2, r3));
+        originalView.getResourceModel().addUnnamedResources(
+                toResourceSet(r1, r2, r3));
         originalView.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("property2"));
         originalView.getSlotMappingConfiguration().setMapping(
@@ -207,7 +216,7 @@ public class DefaultViewPersistenceTest {
         // 3. restore other view - set by uri categorization first
         restoredView.getResourceGrouping().setCategorizer(
                 new ResourceByUriMultiCategorizer());
-        restoredView.restore(memento, collector);
+        restoredView.restore(memento, restorationService, collector);
 
         // 4. check resource items and control settings
         List<ViewItem> resourceItems = restoredView.getViewItems();

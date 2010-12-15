@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.client.ui;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.persistence.Persistable;
+import org.thechiselgroup.choosel.client.persistence.PersistableRestorationService;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.client.windows.AbstractWindowContent;
@@ -50,7 +51,10 @@ public class NoteWindowContent extends AbstractWindowContent implements
     }
 
     @Override
-    public void restore(Memento state, ResourceSetAccessor accessor) {
+    public void restore(Memento state,
+            PersistableRestorationService restorationService,
+            ResourceSetAccessor accessor) {
+
         noteArea.setText((String) state.getValue(MEMENTO_NOTE));
     }
 
