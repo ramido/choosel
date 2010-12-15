@@ -92,7 +92,8 @@ public class TextViewContentDisplayTest {
                 LightweightCollections.<Slot> emptyCollection());
 
         // create selection that contains one of those resources
-        resourceItem.addSelectedResources(createResources(1));
+        resourceItem.updateSelectedResources(createResources(1),
+        LightweightCollections.<Resource> emptyCollection());
         underTest.update(LightweightCollections.<ViewItem> emptySet(),
                 LightweightCollections
                         .toCollection((ViewItem) resourceItem),

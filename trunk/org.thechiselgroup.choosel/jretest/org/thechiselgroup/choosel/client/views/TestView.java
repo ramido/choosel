@@ -22,6 +22,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.mockito.ArgumentCaptor;
+import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.client.resources.ResourceByUriTypeCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizerToMultiCategorizerAdapter;
@@ -83,6 +84,9 @@ public class TestView extends DefaultView {
 
         when(contentDisplay.getSlots()).thenReturn(slots);
         when(contentDisplay.isReady()).thenReturn(true);
+
+        when(selectionModel.getSelection())
+                .thenReturn(new DefaultResourceSet());
 
         underTest.init();
 

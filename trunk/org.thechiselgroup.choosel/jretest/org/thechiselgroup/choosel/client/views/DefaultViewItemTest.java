@@ -337,9 +337,12 @@ public class DefaultViewItemTest {
                 .thenReturn(3d);
 
         underTest.getResourceValue(numberSlot, Subset.SELECTED);
-        underTest.addSelectedResources(createResources(2, 3));
+        underTest.updateSelectedResources(createResources(2, 3),
+        LightweightCollections.<Resource> emptyCollection());
         underTest.getResourceValue(numberSlot, Subset.SELECTED);
-        underTest.removeSelectedResources(createResources(2));
+        underTest.updateSelectedResources(
+        LightweightCollections.<Resource> emptyCollection(),
+        createResources(2));
         Object result = underTest.getResourceValue(numberSlot, Subset.SELECTED);
         assertEquals(3d, result);
     }
@@ -354,7 +357,8 @@ public class DefaultViewItemTest {
                         eq(VIEW_ITEM_ID), eqResources(createResources(2, 3))))
                 .thenReturn(2d, 3d);
 
-        underTest.addSelectedResources(createResources(2, 3));
+        underTest.updateSelectedResources(createResources(2, 3),
+        LightweightCollections.<Resource> emptyCollection());
         underTest.getResourceValue(numberSlot, Subset.SELECTED);
         handler.onResourceCategoriesChanged(new SlotMappingChangedEvent(
                 numberSlot));
@@ -365,14 +369,16 @@ public class DefaultViewItemTest {
     @Test
     public void getSelectedResourcesAfterAddSelectingNoContainedResource() {
         resources.addAll(createResources(1, 2, 3, 4));
-        underTest.addSelectedResources(createResources(5, 6));
+        underTest.updateSelectedResources(createResources(5, 6),
+        LightweightCollections.<Resource> emptyCollection());
         assertContentEquals(createResources(), underTest.getSelectedResources());
     }
 
     @Test
     public void getSelectedResourcesAfterAddSelectingOneContainedContainedResourceOutOfTwoResources() {
         resources.addAll(createResources(1, 2, 3, 4));
-        underTest.addSelectedResources(createResources(1, 5));
+        underTest.updateSelectedResources(createResources(1, 5),
+        LightweightCollections.<Resource> emptyCollection());
         assertContentEquals(createResources(1),
                 underTest.getSelectedResources());
     }
@@ -380,8 +386,10 @@ public class DefaultViewItemTest {
     @Test
     public void getSelectedResourcesAfterAddSelectingOnePlusOneContainedContainedResourceOutOfTwoResources() {
         resources.addAll(createResources(1, 2, 3, 4));
-        underTest.addSelectedResources(createResources(1));
-        underTest.addSelectedResources(createResources(2, 5));
+        underTest.updateSelectedResources(createResources(1),
+        LightweightCollections.<Resource> emptyCollection());
+        underTest.updateSelectedResources(createResources(2, 5),
+        LightweightCollections.<Resource> emptyCollection());
         assertContentEquals(createResources(1, 2),
                 underTest.getSelectedResources());
     }
@@ -389,8 +397,10 @@ public class DefaultViewItemTest {
     @Test
     public void getSelectedResourcesAfterAddSelectingOnePlusTwoContainedResources() {
         resources.addAll(createResources(1, 2, 3, 4));
-        underTest.addSelectedResources(createResources(1));
-        underTest.addSelectedResources(createResources(2, 3));
+        underTest.updateSelectedResources(createResources(1),
+        LightweightCollections.<Resource> emptyCollection());
+        underTest.updateSelectedResources(createResources(2, 3),
+        LightweightCollections.<Resource> emptyCollection());
         assertContentEquals(createResources(1, 2, 3),
                 underTest.getSelectedResources());
     }
@@ -398,8 +408,10 @@ public class DefaultViewItemTest {
     @Test
     public void getSelectedResourcesAfterAddSelectingOnePlusZeroContainedResources() {
         resources.addAll(createResources(1, 2, 3, 4));
-        underTest.addSelectedResources(createResources(1));
-        underTest.addSelectedResources(createResources(5, 6));
+        underTest.updateSelectedResources(createResources(1),
+        LightweightCollections.<Resource> emptyCollection());
+        underTest.updateSelectedResources(createResources(5, 6),
+        LightweightCollections.<Resource> emptyCollection());
         assertContentEquals(createResources(1),
                 underTest.getSelectedResources());
     }
@@ -407,7 +419,8 @@ public class DefaultViewItemTest {
     @Test
     public void getSelectedResourcesAfterAddSelectingTwoContainedResources() {
         resources.addAll(createResources(1, 2, 3, 4));
-        underTest.addSelectedResources(createResources(1, 2));
+        underTest.updateSelectedResources(createResources(1, 2),
+        LightweightCollections.<Resource> emptyCollection());
         assertContentEquals(createResources(1, 2),
                 underTest.getSelectedResources());
     }
@@ -415,23 +428,31 @@ public class DefaultViewItemTest {
     @Test
     public void getSelectedResourcesAfterRemoveSelectingNoContainedResource() {
         resources.addAll(createResources(1, 2, 3, 4));
-        underTest.removeSelectedResources(createResources(5, 6));
+        underTest.updateSelectedResources(
+        LightweightCollections.<Resource> emptyCollection(),
+        createResources(5, 6));
         assertContentEquals(createResources(), underTest.getSelectedResources());
     }
 
     @Test
     public void getSelectedResourcesAfterRemoveSelectingOneFromOneContainedResource() {
         resources.addAll(createResources(1, 2, 3, 4));
-        underTest.addSelectedResources(createResources(1));
-        underTest.removeSelectedResources(createResources(1, 6));
+        underTest.updateSelectedResources(createResources(1),
+        LightweightCollections.<Resource> emptyCollection());
+        underTest.updateSelectedResources(
+        LightweightCollections.<Resource> emptyCollection(),
+        createResources(1, 6));
         assertContentEquals(createResources(), underTest.getSelectedResources());
     }
 
     @Test
     public void getSelectedResourcesAfterRemoveSelectingOneFromTwoContainedResource() {
         resources.addAll(createResources(1, 2, 3, 4));
-        underTest.addSelectedResources(createResources(1, 2));
-        underTest.removeSelectedResources(createResources(2, 5));
+        underTest.updateSelectedResources(createResources(1, 2),
+        LightweightCollections.<Resource> emptyCollection());
+        underTest.updateSelectedResources(
+        LightweightCollections.<Resource> emptyCollection(),
+        createResources(2, 5));
         assertContentEquals(createResources(1),
                 underTest.getSelectedResources());
     }
@@ -439,16 +460,22 @@ public class DefaultViewItemTest {
     @Test
     public void getSelectedResourcesAfterRemoveSelectingTwoFromTwoContainedResource() {
         resources.addAll(createResources(1, 2, 3, 4));
-        underTest.addSelectedResources(createResources(1, 2));
-        underTest.removeSelectedResources(createResources(1, 2));
+        underTest.updateSelectedResources(createResources(1, 2),
+        LightweightCollections.<Resource> emptyCollection());
+        underTest.updateSelectedResources(
+        LightweightCollections.<Resource> emptyCollection(),
+        createResources(1, 2));
         assertContentEquals(createResources(), underTest.getSelectedResources());
     }
 
     @Test
     public void getSelectedResourcesAfterRemoveSelectingZeroFromOneContainedResource() {
         resources.addAll(createResources(1, 2, 3, 4));
-        underTest.addSelectedResources(createResources(1));
-        underTest.removeSelectedResources(createResources(5, 6));
+        underTest.updateSelectedResources(createResources(1),
+        LightweightCollections.<Resource> emptyCollection());
+        underTest.updateSelectedResources(
+        LightweightCollections.<Resource> emptyCollection(),
+        createResources(5, 6));
         assertContentEquals(createResources(1),
                 underTest.getSelectedResources());
     }
@@ -503,7 +530,8 @@ public class DefaultViewItemTest {
     @Test
     public void selectStatusCompleteWhenTwoOutOfTwoResourcesSelected() {
         resources.addAll(createResources(1, 2));
-        underTest.addSelectedResources(createResources(1, 2));
+        underTest.updateSelectedResources(createResources(1, 2),
+        LightweightCollections.<Resource> emptyCollection());
 
         assertEquals(SubsetStatus.COMPLETE, underTest.getSelectionStatus());
     }
@@ -511,7 +539,8 @@ public class DefaultViewItemTest {
     @Test
     public void selectStatusNoneWhenZeroOutOfTwoResourcesSelected() {
         resources.addAll(createResources(1, 2));
-        underTest.addSelectedResources(createResources());
+        underTest.updateSelectedResources(createResources(),
+        LightweightCollections.<Resource> emptyCollection());
 
         assertEquals(SubsetStatus.NONE, underTest.getSelectionStatus());
     }
@@ -519,7 +548,8 @@ public class DefaultViewItemTest {
     @Test
     public void selectStatusNoneWhenZeroOutOfZeroResourcesSelected() {
         resources.addAll(createResources());
-        underTest.addSelectedResources(createResources());
+        underTest.updateSelectedResources(createResources(),
+        LightweightCollections.<Resource> emptyCollection());
 
         assertEquals(SubsetStatus.NONE, underTest.getSelectionStatus());
     }
@@ -527,7 +557,8 @@ public class DefaultViewItemTest {
     @Test
     public void selectStatusPartialWhenOneOutOfTwoResourcesSelected() {
         resources.addAll(createResources(1, 2));
-        underTest.addSelectedResources(createResources(1));
+        underTest.updateSelectedResources(createResources(1),
+        LightweightCollections.<Resource> emptyCollection());
 
         assertEquals(SubsetStatus.PARTIAL, underTest.getSelectionStatus());
     }
@@ -561,7 +592,8 @@ public class DefaultViewItemTest {
         resources.addAll(createResources(1));
         underTest.updateHighlightedResources(createResources(1),
                 LightweightCollections.<Resource> emptyCollection());
-        underTest.addSelectedResources(createResources(1));
+        underTest.updateSelectedResources(createResources(1),
+        LightweightCollections.<Resource> emptyCollection());
         assertEquals(Status.HIGHLIGHTED_SELECTED, underTest.getStatus());
     }
 
@@ -587,22 +619,27 @@ public class DefaultViewItemTest {
     @Test
     public void statusIsNotSelectedAfterRemovingSelectedResources() {
         resources.addAll(createResources(1));
-        underTest.addSelectedResources(createResources(1));
-        underTest.removeSelectedResources(createResources(1));
+        underTest.updateSelectedResources(createResources(1),
+        LightweightCollections.<Resource> emptyCollection());
+        underTest.updateSelectedResources(
+        LightweightCollections.<Resource> emptyCollection(),
+        createResources(1));
         assertEquals(Status.DEFAULT, underTest.getStatus());
     }
 
     @Test
     public void statusIsNotSelectedOnEmptyAdd() {
         resources.addAll(createResources(1));
-        underTest.addSelectedResources(createResources(2));
+        underTest.updateSelectedResources(createResources(2),
+        LightweightCollections.<Resource> emptyCollection());
         assertEquals(Status.DEFAULT, underTest.getStatus());
     }
 
     @Test
     public void statusIsSelected() {
         resources.addAll(createResources(1));
-        underTest.addSelectedResources(createResources(1));
+        underTest.updateSelectedResources(createResources(1),
+        LightweightCollections.<Resource> emptyCollection());
         assertEquals(Status.SELECTED, underTest.getStatus());
     }
 
@@ -625,8 +662,11 @@ public class DefaultViewItemTest {
         underTest.updateHighlightedResources(
                 LightweightCollections.<Resource> emptyCollection(),
                 createResources(1));
-        underTest.addSelectedResources(createResources(1, 2));
-        underTest.removeSelectedResources(createResources(1));
+        underTest.updateSelectedResources(createResources(1, 2),
+        LightweightCollections.<Resource> emptyCollection());
+        underTest.updateSelectedResources(
+        LightweightCollections.<Resource> emptyCollection(),
+        createResources(1));
         assertEquals(Status.PARTIALLY_HIGHLIGHTED_SELECTED,
                 underTest.getStatus());
     }
@@ -634,8 +674,11 @@ public class DefaultViewItemTest {
     @Test
     public void statusPartiallySelectedAfterOneResourceIsRemovedFromSelect() {
         resources.addAll(createResources(1, 2));
-        underTest.addSelectedResources(createResources(1, 2));
-        underTest.removeSelectedResources(createResources(1));
+        underTest.updateSelectedResources(createResources(1, 2),
+        LightweightCollections.<Resource> emptyCollection());
+        underTest.updateSelectedResources(
+        LightweightCollections.<Resource> emptyCollection(),
+        createResources(1));
         assertEquals(Status.PARTIALLY_SELECTED, underTest.getStatus());
     }
 

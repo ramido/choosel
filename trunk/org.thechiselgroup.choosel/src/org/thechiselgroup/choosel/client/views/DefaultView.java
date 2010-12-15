@@ -254,31 +254,26 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private DefaultViewItem createViewItem(String groupID,
             ResourceSet resources,
-            LightweightCollection<Resource> highlightedResources) {
+            LightweightCollection<Resource> highlightedResources,
+            LightweightCollection<Resource> selectedResources) {
 
-        // Added when changing resource item to contain resource sets
         // TODO use factory & dispose + clean up
 
-        // TODO provide configuration to content display in callback
-        DefaultViewItem resourceItem = new DefaultViewItem(groupID, resources,
+        DefaultViewItem viewItem = new DefaultViewItem(groupID, resources,
                 hoverModel, createPopupManager(resources),
                 slotMappingConfiguration);
 
+        viewItem.updateHighlightedResources(highlightedResources,
+                LightweightCollections.<Resource> emptyCollection());
+
+        viewItem.updateSelectedResources(selectedResources,
+                LightweightCollections.<Resource> emptyCollection());
+
         assert !viewItemsByGroupId.containsKey(groupID) : "groupsToViewItems already contains "
                 + groupID;
-        viewItemsByGroupId.put(groupID, resourceItem);
+        viewItemsByGroupId.put(groupID, viewItem);
 
-        // TODO introduce partial selection
-
-        if (!highlightedResources.isEmpty()) {
-            resourceItem.updateHighlightedResources(highlightedResources,
-                    LightweightCollections.<Resource> emptyCollection());
-        }
-
-        // / TODO is this necessary?
-        // checkResize();
-
-        return resourceItem;
+        return viewItem;
     }
 
     @Override
@@ -578,10 +573,8 @@ public class DefaultView extends AbstractWindowContent implements View {
                     @Override
                     public void onResourceSetChanged(
                             ResourceSetChangedEvent event) {
-
-                        // TODO performance - single operation
-                        updateSelection(event.getAddedResources(), true);
-                        updateSelection(event.getRemovedResources(), false);
+                        updateSelection(event.getAddedResources(),
+                                event.getRemovedResources());
                     }
                 }));
     }
@@ -674,8 +667,11 @@ public class DefaultView extends AbstractWindowContent implements View {
         /*
          * PERFORMANCE: cache highlighted resources and use resource set to
          * enable fast containment checks in DefaultResourceItem
+         * 
+         * TODO refactor: use intersection resource sets instead.
          */
         ResourceSet highlightedResources = null;
+        ResourceSet selectedResources = null;
         for (ResourceGroupingChange change : changes) {
             if (change.getDelta() == Delta.ADD) {
                 if (highlightedResources == null) {
@@ -683,9 +679,14 @@ public class DefaultView extends AbstractWindowContent implements View {
                     highlightedResources.addAll(resourceModel
                             .getIntersection(hoverModel.getResources()));
                 }
+                if (selectedResources == null) {
+                    selectedResources = new DefaultResourceSet();
+                    selectedResources.addAll(resourceModel
+                            .getIntersection(selectionModel.getSelection()));
+                }
                 DefaultViewItem resourceItem = createViewItem(
                         change.getGroupID(), change.getResourceSet(),
-                        highlightedResources);
+                        highlightedResources, selectedResources);
 
                 addedResourceItems.add(resourceItem);
             }
@@ -888,39 +889,48 @@ public class DefaultView extends AbstractWindowContent implements View {
             return;
         }
 
-        LightweightList<ViewItem> affectedResourceItems = getViewItems(new CombinedIterable<Resource>(
+        LightweightList<ViewItem> affectedViewItems = getViewItems(new CombinedIterable<Resource>(
                 addedResources, removedResources));
 
-        for (ViewItem resourceItem : affectedResourceItems) {
-            ((DefaultViewItem) resourceItem).updateHighlightedResources(
+        for (ViewItem viewItem : affectedViewItems) {
+            ((DefaultViewItem) viewItem).updateHighlightedResources(
                     addedResourcesInThisView, removedResourcesInThisView);
         }
 
         contentDisplay.update(
                 LightweightCollections.<ViewItem> emptyCollection(),
-                affectedResourceItems,
+                affectedViewItems,
                 LightweightCollections.<ViewItem> emptyCollection(),
                 LightweightCollections.<Slot> emptyCollection());
     }
 
-    private void updateSelection(LightweightCollection<Resource> resources,
-            boolean selected) {
+    /*
+     * TODO refactor: updateHighlighting is similar (and the whole highlighting
+     * vs selection in ViewItem)
+     */
+    private void updateSelection(
+            LightweightCollection<Resource> addedResources,
+            LightweightCollection<Resource> removedResources) {
 
-        LightweightList<ViewItem> resourceItems = getViewItems(resources);
-        for (ViewItem resourceItem : resourceItems) {
-            // TODO test case (similar to highlighting)
-            if (selected) {
-                ((DefaultViewItem) resourceItem)
-                        .addSelectedResources(resources);
-            } else {
-                ((DefaultViewItem) resourceItem)
-                        .removeSelectedResources(resources);
-            }
+        ResourceSet addedResourcesInThisView = getIntersectionWithViewResources(addedResources);
+        ResourceSet removedResourcesInThisView = getIntersectionWithViewResources(removedResources);
+
+        if (addedResourcesInThisView.isEmpty()
+                && removedResourcesInThisView.isEmpty()) {
+            return;
+        }
+
+        LightweightList<ViewItem> affectedViewItems = getViewItems(new CombinedIterable<Resource>(
+                addedResources, removedResources));
+
+        for (ViewItem viewItem : affectedViewItems) {
+            ((DefaultViewItem) viewItem).updateSelectedResources(
+                    addedResourcesInThisView, removedResourcesInThisView);
         }
 
         contentDisplay.update(
                 LightweightCollections.<ViewItem> emptyCollection(),
-                resourceItems,
+                affectedViewItems,
                 LightweightCollections.<ViewItem> emptyCollection(),
                 LightweightCollections.<Slot> emptyCollection());
     }

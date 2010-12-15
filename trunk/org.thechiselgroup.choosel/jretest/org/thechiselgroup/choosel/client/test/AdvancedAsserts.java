@@ -46,25 +46,27 @@ public final class AdvancedAsserts {
     }
 
     public static <T> void assertContains(String failureMessage,
-            Collection<T> c, T value) {
-        Assert.assertEquals(failureMessage, true, c.contains(value));
+            Collection<T> collection, T value) {
+
+        Assert.assertEquals(failureMessage, true, collection.contains(value));
     }
 
-    public static <T> void assertContains(String failureMessage, ResourceSet r,
-            Resource value) {
+    public static <T> void assertContains(String failureMessage,
+            ResourceSet resourceSet, Resource resource) {
 
-        Assert.assertEquals(failureMessage, true, r.contains(value));
+        Assert.assertEquals(failureMessage, true,
+                resourceSet.contains(resource));
     }
 
     public static <T> void assertContentEquals(Collection<T> expected,
-            Collection<T> result) {
+            Collection<T> actual) {
 
         String failureMessage = "expected: " + expected + ", but was: "
-                + result;
+                + actual;
 
-        Assert.assertEquals(failureMessage, expected.size(), result.size());
+        Assert.assertEquals(failureMessage, expected.size(), actual.size());
         for (T expectedValue : expected) {
-            assertContains(failureMessage, result, expectedValue);
+            assertContains(failureMessage, actual, expectedValue);
         }
     }
 
@@ -75,26 +77,26 @@ public final class AdvancedAsserts {
     }
 
     public static <T> void assertContentEquals(ResourceSet expected,
-            Collection<Resource> result) {
+            Collection<Resource> actual) {
 
         String failureMessage = "expected: " + expected + ", but was: "
-                + result;
+                + actual;
 
-        Assert.assertEquals(failureMessage, expected.size(), result.size());
+        Assert.assertEquals(failureMessage, expected.size(), actual.size());
         for (Resource expectedValue : expected) {
-            assertContains(failureMessage, result, expectedValue);
+            assertContains(failureMessage, actual, expectedValue);
         }
     }
 
     public static <T> void assertContentEquals(ResourceSet expected,
-            ResourceSet result) {
+            ResourceSet actual) {
 
         String failureMessage = "expected: " + expected + ", but was: "
-                + result;
+                + actual;
 
-        Assert.assertEquals(failureMessage, expected.size(), result.size());
+        Assert.assertEquals(failureMessage, expected.size(), actual.size());
         for (Resource expectedValue : expected) {
-            assertContains(failureMessage, result, expectedValue);
+            assertContains(failureMessage, actual, expectedValue);
         }
     }
 
@@ -104,13 +106,13 @@ public final class AdvancedAsserts {
         assertContentEquals(toSet(expectedKeys), result.keySet());
     }
 
-    public static <T> void assertSortedEquals(List<T> expected, List<T> result) {
+    public static <T> void assertSortedEquals(List<T> expected, List<T> actual) {
         String failureMessage = "expected: " + expected + ", but was: "
-                + result;
+                + actual;
 
-        Assert.assertEquals(failureMessage, expected.size(), result.size());
+        Assert.assertEquals(failureMessage, expected.size(), actual.size());
         for (int i = 0; i < expected.size(); i++) {
-            Assert.assertEquals(failureMessage, expected.get(i), result.get(i));
+            Assert.assertEquals(failureMessage, expected.get(i), actual.get(i));
         }
     }
 
