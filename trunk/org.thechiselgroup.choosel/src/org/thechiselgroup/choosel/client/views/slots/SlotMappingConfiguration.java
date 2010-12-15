@@ -20,7 +20,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
+import org.thechiselgroup.choosel.client.persistence.Persistable;
+import org.thechiselgroup.choosel.client.persistence.PersistableRestorationService;
 import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccessor;
+import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.util.event.PrioritizedEventHandler;
@@ -34,7 +38,7 @@ import org.thechiselgroup.choosel.client.util.math.SumCalculation;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
-public class SlotMappingConfiguration {
+public class SlotMappingConfiguration implements Persistable {
 
     private static final String MEMENTO_KEY_CALCULATION_TYPE = "calculationType";
 
@@ -98,7 +102,11 @@ public class SlotMappingConfiguration {
         return getResolver(slot).resolve(resources, groupID);
     }
 
-    public void restore(Memento memento) {
+    @Override
+    public void restore(Memento memento,
+            PersistableRestorationService restorationService,
+            ResourceSetAccessor accessor) {
+
         for (Entry<String, Memento> entry : memento.getChildren().entrySet()) {
             String slotId = entry.getKey();
             Memento child = entry.getValue();
@@ -137,7 +145,8 @@ public class SlotMappingConfiguration {
         }
     }
 
-    public Memento save() {
+    @Override
+    public Memento save(ResourceSetCollector resourceSetCollector) {
         Memento memento = new Memento();
 
         for (Entry<Slot, ResourceSetToValueResolver> entry : slotsToValueResolvers
