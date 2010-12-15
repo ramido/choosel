@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.thechiselgroup.choosel.client.persistence.Memento;
 import org.thechiselgroup.choosel.client.resources.DataType;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
@@ -29,8 +28,8 @@ import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.util.math.MathUtils;
 import org.thechiselgroup.choosel.client.util.math.NumberArray;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
-import org.thechiselgroup.choosel.client.views.ViewItem;
 import org.thechiselgroup.choosel.client.views.SidePanelSection;
+import org.thechiselgroup.choosel.client.views.ViewItem;
 import org.thechiselgroup.choosel.client.views.slots.Slot;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -230,16 +229,6 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
         TextItemLabel label = textItem.getLabel();
         items.remove(textItem);
         textItemContainer.remove(label);
-    }
-
-    @Override
-    public void restore(Memento state) {
-        // TODO implement
-    }
-
-    @Override
-    public Memento save() {
-        return new Memento(); // TODO implement
     }
 
     private void setTagCloud(boolean tagCloud) {

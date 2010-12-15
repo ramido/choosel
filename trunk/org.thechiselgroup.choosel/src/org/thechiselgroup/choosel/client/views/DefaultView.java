@@ -327,7 +327,8 @@ public class DefaultView extends AbstractWindowContent implements View {
                 restorationService, accessor);
         restore(selectionModel, state, MEMENTO_SELECTION_MODEL,
                 restorationService, accessor);
-        contentDisplay.restore(state.getChild(MEMENTO_CONTENT_DISPLAY));
+        contentDisplay.restore(state.getChild(MEMENTO_CONTENT_DISPLAY),
+                restorationService, accessor);
         restore(slotMappingConfiguration, state, MEMENTO_SLOT_MAPPINGS,
                 restorationService, accessor);
 
@@ -817,7 +818,8 @@ public class DefaultView extends AbstractWindowContent implements View {
                 resourceSetCollector);
         save(resourceModel, memento, MEMENTO_RESOURCE_MODEL,
                 resourceSetCollector);
-        memento.addChild(MEMENTO_CONTENT_DISPLAY, contentDisplay.save());
+        memento.addChild(MEMENTO_CONTENT_DISPLAY,
+                contentDisplay.save(resourceSetCollector));
         save(slotMappingConfiguration, memento, MEMENTO_SLOT_MAPPINGS,
                 resourceSetCollector);
 

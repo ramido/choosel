@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views;
 
-import org.thechiselgroup.choosel.client.persistence.Memento;
+import org.thechiselgroup.choosel.client.persistence.Persistable;
 import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
 import org.thechiselgroup.choosel.client.util.Disposable;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
@@ -29,7 +29,8 @@ import org.thechiselgroup.choosel.client.views.slots.Slot;
  * @see View
  * @see ViewItem
  */
-public interface ViewContentDisplay extends WidgetAdaptable, Disposable {
+public interface ViewContentDisplay extends WidgetAdaptable, Disposable,
+        Persistable {
 
     void checkResize();
 
@@ -49,10 +50,6 @@ public interface ViewContentDisplay extends WidgetAdaptable, Disposable {
     void init(ViewContentDisplayCallback callback);
 
     boolean isReady();
-
-    void restore(Memento state);
-
-    Memento save();
 
     void startRestore();
 

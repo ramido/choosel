@@ -16,6 +16,9 @@
 package org.thechiselgroup.choosel.client.views;
 
 import org.thechiselgroup.choosel.client.persistence.Memento;
+import org.thechiselgroup.choosel.client.persistence.PersistableRestorationService;
+import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccessor;
+import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.slots.Slot;
 
@@ -80,13 +83,15 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
     }
 
     @Override
-    public void restore(Memento state) {
-        delegate.restore(state);
+    public void restore(Memento state,
+            PersistableRestorationService restorationService,
+            ResourceSetAccessor accessor) {
+        delegate.restore(state, restorationService, accessor);
     }
 
     @Override
-    public Memento save() {
-        return delegate.save();
+    public Memento save(ResourceSetCollector resourceSetCollector) {
+        return delegate.save(resourceSetCollector);
     }
 
     @Override

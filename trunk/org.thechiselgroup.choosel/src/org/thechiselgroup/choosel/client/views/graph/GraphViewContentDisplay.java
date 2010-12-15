@@ -23,6 +23,7 @@ import java.util.Map.Entry;
 import org.thechiselgroup.choosel.client.command.CommandManager;
 import org.thechiselgroup.choosel.client.geometry.Point;
 import org.thechiselgroup.choosel.client.persistence.Memento;
+import org.thechiselgroup.choosel.client.persistence.PersistableRestorationService;
 import org.thechiselgroup.choosel.client.resources.CombinedResourceSet;
 import org.thechiselgroup.choosel.client.resources.DataType;
 import org.thechiselgroup.choosel.client.resources.DefaultResourceSet;
@@ -30,6 +31,8 @@ import org.thechiselgroup.choosel.client.resources.Resource;
 import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.client.resources.ResourceManager;
 import org.thechiselgroup.choosel.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccessor;
+import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplayLoadingFailureEvent;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplayLoadingFailureEventHandler;
@@ -173,6 +176,10 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
             return layout;
         }
     }
+
+    private static final String MEMENTO_ARC_ITEM_CONTAINERS_CHILD = "arcItemContainers";
+
+    private static final String MEMENTO_NODE_LOCATIONS_CHILD = "nodeLocations";
 
     private static final String MEMENTO_X = "x";
 
@@ -543,7 +550,25 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     }
 
     @Override
-    public void restore(Memento state) {
+    public void restore(Memento state,
+            PersistableRestorationService restorationService,
+            ResourceSetAccessor accessor) {
+
+        restoreArcItemContainers(restorationService, accessor,
+                state.getChild(MEMENTO_ARC_ITEM_CONTAINERS_CHILD));
+        restoreNodeLocations(state.getChild(MEMENTO_NODE_LOCATIONS_CHILD));
+    }
+
+    private void restoreArcItemContainers(
+            PersistableRestorationService restorationService,
+            ResourceSetAccessor accessor, Memento child) {
+        for (Entry<String, Memento> entry : child.getChildren().entrySet()) {
+            arcItemContainersByArcTypeID.get(entry.getKey()).restore(
+                    entry.getValue(), restorationService, accessor);
+        }
+    }
+
+    private void restoreNodeLocations(Memento state) {
         LightweightCollection<ViewItem> resourceItems = getCallback()
                 .getViewItems();
         for (ViewItem resourceItem : resourceItems) {
@@ -558,8 +583,31 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     }
 
     @Override
-    public Memento save() {
+    public Memento save(ResourceSetCollector resourceSetCollector) {
+        Memento result = new Memento();
+
+        result.addChild(MEMENTO_NODE_LOCATIONS_CHILD, saveNodeLocations());
+        result.addChild(MEMENTO_ARC_ITEM_CONTAINERS_CHILD,
+                saveArcTypeContainers(resourceSetCollector));
+
+        return result;
+    }
+
+    private Memento saveArcTypeContainers(
+            ResourceSetCollector resourceSetCollector) {
+
+        Memento memento = new Memento();
+        for (Entry<String, ArcItemContainer> entry : arcItemContainersByArcTypeID
+                .entrySet()) {
+            memento.addChild(entry.getKey(),
+                    entry.getValue().save(resourceSetCollector));
+        }
+        return memento;
+    }
+
+    private Memento saveNodeLocations() {
         Memento state = new Memento();
+
         LightweightCollection<ViewItem> viewItems = getCallback()
                 .getViewItems();
         for (ViewItem viewItem : viewItems) {

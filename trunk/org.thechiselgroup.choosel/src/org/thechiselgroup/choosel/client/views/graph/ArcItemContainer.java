@@ -18,6 +18,11 @@ package org.thechiselgroup.choosel.client.views.graph;
 import java.util.Collection;
 import java.util.Map;
 
+import org.thechiselgroup.choosel.client.persistence.Memento;
+import org.thechiselgroup.choosel.client.persistence.Persistable;
+import org.thechiselgroup.choosel.client.persistence.PersistableRestorationService;
+import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccessor;
+import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.client.ui.widget.graph.Arc;
 import org.thechiselgroup.choosel.client.ui.widget.graph.GraphDisplay;
 import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
@@ -25,7 +30,15 @@ import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.ViewItem;
 import org.thechiselgroup.choosel.client.views.ViewItemContainer;
 
-public class ArcItemContainer {
+public class ArcItemContainer implements Persistable {
+
+    private static final String MEMENTO_ARC_COLOR = "arcColor";
+
+    private static final String MEMENTO_ARC_STYLE = "arcStTyle";
+
+    private static final String MEMENTO_VISIBLE = "visible";
+
+    private static final String MEMENTO_ARC_THICKNESS = "arcThickness";
 
     private final ArcType arcType;
 
@@ -94,6 +107,29 @@ public class ArcItemContainer {
             }
         }
 
+    }
+
+    @Override
+    public void restore(Memento state,
+            PersistableRestorationService restorationService,
+            ResourceSetAccessor accessor) {
+
+        setVisible((Boolean) state.getValue(MEMENTO_VISIBLE));
+        setArcColor((String) state.getValue(MEMENTO_ARC_COLOR));
+        setArcStyle((String) state.getValue(MEMENTO_ARC_STYLE));
+        setArcThickness((Integer) state.getValue(MEMENTO_ARC_THICKNESS));
+    }
+
+    @Override
+    public Memento save(ResourceSetCollector resourceSetCollector) {
+        Memento memento = new Memento();
+
+        memento.setValue(MEMENTO_VISIBLE, visible);
+        memento.setValue(MEMENTO_ARC_THICKNESS, arcThickness);
+        memento.setValue(MEMENTO_ARC_COLOR, arcColor);
+        memento.setValue(MEMENTO_ARC_STYLE, arcStyle);
+
+        return memento;
     }
 
     public void setArcColor(String arcColor) {
