@@ -328,7 +328,8 @@ public class DefaultView extends AbstractWindowContent implements View {
                 restorationService, accessor);
         contentDisplay.restore(state.getChild(MEMENTO_CONTENT_DISPLAY));
         restoreGrouping(state.getChild(MEMENTO_GROUPING));
-        slotMappingConfiguration.restore(state.getChild(MEMENTO_SLOT_MAPPINGS));
+        restore(slotMappingConfiguration, state, MEMENTO_SLOT_MAPPINGS,
+                restorationService, accessor);
 
         contentDisplay.endRestore();
     }
@@ -817,7 +818,8 @@ public class DefaultView extends AbstractWindowContent implements View {
                 resourceSetCollector);
         memento.addChild(MEMENTO_CONTENT_DISPLAY, contentDisplay.save());
         saveGrouping(memento);
-        memento.addChild(MEMENTO_SLOT_MAPPINGS, slotMappingConfiguration.save());
+        save(slotMappingConfiguration, memento, MEMENTO_SLOT_MAPPINGS,
+                resourceSetCollector);
 
         return memento;
     }
