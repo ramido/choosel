@@ -231,7 +231,7 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
         textItemContainer.remove(label);
     }
 
-    private void setTagCloud(boolean tagCloud) {
+    public void setTagCloud(boolean tagCloud) {
         if (tagCloud == this.tagCloud) {
             return;
         }
@@ -280,12 +280,31 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
         assert !items.isEmpty();
 
         NumberArray fontSizeValues = MathUtils.createNumberArray();
+        boolean sameValue = true;
+        double value = 0;
+        boolean first = true;
         for (TextItem textItem : items) {
-            fontSizeValues.push(textItem.getFontSizeValue());
+            double valueX = textItem.getFontSizeValue();
+
+            if (first) {
+                first = false;
+                value = valueX;
+            } else if (value != valueX) {
+                sameValue = false;
+            }
+
+            fontSizeValues.push(valueX);
         }
-        groupValueMapper.setNumberValues(fontSizeValues);
-        for (TextItem textItem : items) {
-            textItem.scaleFont(groupValueMapper);
+
+        if (!sameValue) {
+            groupValueMapper.setNumberValues(fontSizeValues);
+            for (TextItem textItem : items) {
+                textItem.scaleFont(groupValueMapper);
+            }
+        } else {
+            for (TextItem textItem : items) {
+                textItem.setFontSize("12px");
+            }
         }
     }
 }

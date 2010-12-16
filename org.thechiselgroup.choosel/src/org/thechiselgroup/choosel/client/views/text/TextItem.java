@@ -39,7 +39,7 @@ public class TextItem {
      */
     private boolean addedToPanel = false;
 
-    private String lastFontSizeLabelValue;
+    private String lastFontSize;
 
     private String cachedDescription;
 
@@ -94,15 +94,18 @@ public class TextItem {
         String newFontSizeLabelValue = groupValueMapper
                 .getGroupValue(getFontSizeValue());
 
-        if (lastFontSizeLabelValue == null
-                || newFontSizeLabelValue.compareTo(lastFontSizeLabelValue) != 0) {
-            label.setFontSize(newFontSizeLabelValue);
-            lastFontSizeLabelValue = newFontSizeLabelValue;
-        }
+        setFontSize(newFontSizeLabelValue);
     }
 
     public void setAddedToPanel(boolean addedToPanel) {
         this.addedToPanel = addedToPanel;
+    }
+
+    public void setFontSize(String newFontSize) {
+        if (lastFontSize == null || newFontSize.compareTo(lastFontSize) != 0) {
+            label.setFontSize(newFontSize);
+            lastFontSize = newFontSize;
+        }
     }
 
     public void updateContent() {
@@ -158,4 +161,5 @@ public class TextItem {
             break;
         }
     }
+
 }
