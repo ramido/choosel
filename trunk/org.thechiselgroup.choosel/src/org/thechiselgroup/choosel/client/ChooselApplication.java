@@ -415,7 +415,7 @@ public abstract class ChooselApplication {
         mainPanel.add(desktop.asWidget(), DockPanel.CENTER);
     }
 
-    private void initDeveloperModePanel() {
+    protected void initDeveloperModePanel() {
     }
 
     protected void initEditPanel() {
