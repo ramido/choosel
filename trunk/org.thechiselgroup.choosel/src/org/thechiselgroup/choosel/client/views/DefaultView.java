@@ -382,6 +382,10 @@ public class DefaultView extends AbstractWindowContent implements View {
         return contentDisplay.getSlots();
     }
 
+    public ViewContentDisplay getViewContentDisplay() {
+        return contentDisplay;
+    }
+
     public List<ViewItem> getViewItems() {
         List<ViewItem> result = new ArrayList<ViewItem>();
         for (DefaultViewItem resourceItem : viewItemsByGroupId.values()) {
