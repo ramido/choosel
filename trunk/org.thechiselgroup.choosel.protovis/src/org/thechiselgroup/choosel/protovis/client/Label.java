@@ -18,6 +18,9 @@ package org.thechiselgroup.choosel.protovis.client;
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**
+ * Wrapper for
+ * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Label.html">pv.Label</a></code>
+ * .
  * 
  * @author Bradley Blashko
  * @author Lars Grammel
@@ -73,147 +76,99 @@ public class Label extends Mark {
     public final native Label def(String name, String constant) /*-{
         return this.def(name, constant);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Label defaults(Mark mark) /*-{
         return this.defaults(mark);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Label event(String eventType, ProtovisEventHandler handler) /*-{
         return this.event(eventType, @org.thechiselgroup.choosel.protovis.client.Mark::registerEvent(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/ProtovisEventHandler;)(this, handler));
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Label events(String events) /*-{
         return this.events(events);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Label font(String font) /*-{
         return this.font(font);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Label index(int index) /*-{
         return this.index(index);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Label left(double left) /*-{
         return this.left(left);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Label left(DoubleFunction<?> f) /*-{
         return this.left(@org.thechiselgroup.choosel.protovis.client.Mark::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/DoubleFunction;)(this,f));
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Label parent(Panel panel) /*-{
         return this.parent(panel);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Label proto(Mark mark) /*-{
         return this.proto(mark);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native void render() /*-{
         return this.render();
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Label reverse(boolean reverse) /*-{
         return this.reverse(reverse);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Label right(double right) /*-{
         return this.right(right);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Label right(DoubleFunction<?> f) /*-{
         return this.right(@org.thechiselgroup.choosel.protovis.client.Mark::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/DoubleFunction;)(this,f));
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Label root(Panel panel) /*-{
         return this.root(panel);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Label scale(double scale) /*-{
         return this.scale(scale);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Label text(JavaScriptObject text) /*-{
         return this.text(text);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Label text(String text) /*-{
         return this.text(text);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Label text(StringFunction<?> f) /*-{
         return this.text(@org.thechiselgroup.choosel.protovis.client.Mark::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/StringFunction;)(this,f));
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Label text(StringFunctionIntArg f) /*-{
         return this.text(@org.thechiselgroup.choosel.protovis.client.Mark::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/StringFunctionIntArg;)(this,f));
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Label text(StringFunctionNoArgs f) /*-{
         return this.text(@org.thechiselgroup.choosel.protovis.client.Mark::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/StringFunctionNoArgs;)(f));
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Label textAlign(String textAlign) /*-{
         return this.textAlign(textAlign);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Label textAlign(StringFunction<?> f) /*-{
         return this.textAlign(@org.thechiselgroup.choosel.protovis.client.Mark::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/StringFunction;)(this,f));
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Label textAngle(double textAngle) /*-{
         return this.textAngle(textAngle);
     }-*/;
-    // @formatter:on
 
-    // @formatter:off
     public final native Label textBaseline(String textBaseline) /*-{
         return this.textBaseline(textBaseline);
     }-*/;

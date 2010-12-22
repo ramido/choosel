@@ -17,37 +17,42 @@ package org.thechiselgroup.choosel.protovis.client;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
-/**
- * Wrapper for
- * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.html">pv.Scale</a></code>
- * .
- * 
- * @author Bradley Blashko
- * @author Lars Grammel
- */
 // @formatter:off
-public class Scale extends JavaScriptObject {
+public class JsGenericArray<T> extends JavaScriptObject {
 
-    public final static native LinearScale linear() /*-{
-        return $wnd.pv.Scale.linear();
+    public static native <T> JsGenericArray<T> createGenericArray() /*-{
+        return [];
     }-*/;
 
-    public final static native OrdinalScale ordinal() /*-{
-        return $wnd.pv.Scale.ordinal();
-    }-*/;
-
-    public final static native LinearScale linear(double from, double to) /*-{
-        return $wnd.pv.Scale.linear(from, to);
-    }-*/;
-
-    protected Scale() {
+    protected JsGenericArray() {
     }
-    
-    /**
-     * Scales are functions.
-     */
-    public final native double f(double value) /*-{
-        return this(value);
+
+    public final native T get(int index) /*-{
+        return this[index];
+    }-*/;
+
+    public final native int length() /*-{
+        return this.length;
+    }-*/;
+
+    public final native void push(T value) /*-{
+        this[this.length] = value;
+    }-*/;
+
+    public final native void set(int index, T value) /*-{
+        this[index] = value;
+    }-*/;
+
+    public final native void setLength(int newLength) /*-{
+        this.length = newLength;
+    }-*/;
+
+    public final native T shift() /*-{
+        return this.shift();
+    }-*/;
+
+    public final native void unshift(T value) /*-{
+        this.unshift(value);
     }-*/;
     
 }

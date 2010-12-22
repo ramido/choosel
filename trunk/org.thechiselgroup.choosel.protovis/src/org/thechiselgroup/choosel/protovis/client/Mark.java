@@ -35,7 +35,7 @@ import com.google.gwt.core.client.JavaScriptObject;
  * Eclipse's auto-complete would be rendered unusable.
  * 
  * @author Bradley Blashko
- * 
+ * @author Lars Grammel
  */
 public abstract class Mark extends JavaScriptObject {
 
@@ -94,6 +94,12 @@ public abstract class Mark extends JavaScriptObject {
             JavaScriptObject _this, StringFunctionIntArg f) /*-{
         return function(d) 
             { return f.@org.thechiselgroup.choosel.protovis.client.StringFunctionIntArg::f(II)(d,_this.index); };
+    }-*/;
+    
+    public static final native JavaScriptObject toJavaScriptFunction(
+            JavaScriptObject _this, StringFunctionDoubleArg f) /*-{
+        return function(d) 
+            { return f.@org.thechiselgroup.choosel.protovis.client.StringFunctionDoubleArg::f(DI)(d,_this.index); };
     }-*/;
 
     public static final native JavaScriptObject toJavaScriptFunction(

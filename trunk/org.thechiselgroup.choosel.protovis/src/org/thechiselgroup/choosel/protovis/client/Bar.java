@@ -161,10 +161,29 @@ public class Bar extends Mark {
         return this.title(title);
     }-*/;
 
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Bar.html#top">top()</a></code>
+     * .
+     */
     public final native Bar top(double top) /*-{
         return this.top(top);
     }-*/;
 
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Bar.html#top">top()</a></code>
+     * .
+     */
+    public final native Bar top(DoubleFunctionDoubleArg f) /*-{
+        return this.top(@org.thechiselgroup.choosel.protovis.client.Mark::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/DoubleFunctionDoubleArg;)(this,f));
+    }-*/;
+    
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Bar.html#top">top()</a></code>
+     * .
+     */
     public final native Bar top(DoubleFunction<?> f) /*-{
         return this.top(@org.thechiselgroup.choosel.protovis.client.Mark::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/DoubleFunction;)(this,f));
     }-*/;
@@ -181,10 +200,29 @@ public class Bar extends Mark {
         return this.visible(@org.thechiselgroup.choosel.protovis.client.Mark::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/BooleanFunction;)(this,f));
     }-*/;
 
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Bar.html#width">width()</a></code>
+     * .
+     */
     public final native Bar width(double width) /*-{
         return this.width(width);
     }-*/;
     
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Bar.html#width">width()</a></code>
+     * .
+     */
+    public final native Bar width(Scale scale) /*-{
+        return this.width(scale);
+    }-*/;
+    
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Bar.html#width">width()</a></code>
+     * .
+     */
     public final native Bar width(DoubleFunction<?> f) /*-{
         return this.width(@org.thechiselgroup.choosel.protovis.client.Mark::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/DoubleFunction;)(this,f));
     }-*/;
