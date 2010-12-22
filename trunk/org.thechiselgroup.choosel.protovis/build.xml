@@ -1,6 +1,10 @@
 <project name="org.thechiselgroup.choosel.protovis" default="dist" basedir=".">
 	
-  <property name="version" value="0.1" />
+  <tstamp>
+    <format property="buildtime" pattern="yyyyMMddHHmmss" />
+  </tstamp>
+
+  <property name="version" value="b${buildtime}" />
   	
   <property name="dist" location="bin/dist"/>
   <property name="src" location="src"/>
