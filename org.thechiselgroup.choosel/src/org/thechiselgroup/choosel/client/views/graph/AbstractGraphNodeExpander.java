@@ -31,10 +31,15 @@ public abstract class AbstractGraphNodeExpander implements GraphNodeExpander {
         for (String uri : resourceUrisToAdd) {
             if (!expansionCallback.containsResourceWithUri(uri)) {
                 if (expansionCallback.getResourceManager().contains(uri)) {
-                    Resource r2 = expansionCallback.getResourceManager()
-                            .getByUri(uri);
-                    assert r2 != null;
-                    expansionCallback.addAutomaticResource(r2);
+                    /*
+                     * XXX we are ignoring resources that are not available in
+                     * the resource manager.
+                     */
+                    Resource resourceToAdd = expansionCallback
+                            .getResourceManager().getByUri(uri);
+                    assert resourceToAdd != null : "resource with uri '" + uri
+                            + "' must be available";
+                    expansionCallback.addAutomaticResource(resourceToAdd);
                     added.add(uri);
                 }
             }
