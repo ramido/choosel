@@ -18,6 +18,9 @@ package org.thechiselgroup.choosel.protovis.client;
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**
+ * Wrapper for
+ * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Rule.html">pv.Rule</a></code>
+ * .
  * 
  * @author Bradley Blashko
  * @author Lars Grammel
@@ -154,12 +157,31 @@ public class Rule extends Mark {
         return this.scale(scale);
     }-*/;
 
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Rule.html#strokeStyle">strokeStyle()</a></code>
+     * .
+     */
     public final native Rule strokeStyle(String strokeStyle) /*-{
         return this.strokeStyle(strokeStyle);
     }-*/;
 
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Rule.html#strokeStyle">strokeStyle()</a></code>
+     * .
+     */
     public final native Rule strokeStyle(StringFunctionIntArg f) /*-{
         return this.strokeStyle(@org.thechiselgroup.choosel.protovis.client.Mark::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/StringFunctionIntArg;)(this,f));
+    }-*/;
+
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Rule.html#strokeStyle">strokeStyle()</a></code>
+     * .
+     */
+    public final native Rule strokeStyle(StringFunctionDoubleArg f) /*-{
+        return this.strokeStyle(@org.thechiselgroup.choosel.protovis.client.Mark::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/StringFunctionDoubleArg;)(this,f));
     }-*/;
 
     public final native Rule title(String title) /*-{

@@ -15,40 +15,26 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
-import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArrayNumber;
 
 /**
  * Wrapper for
- * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.html">pv.Scale</a></code>
+ * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.html">pv</a></code>
  * .
  * 
- * @author Bradley Blashko
  * @author Lars Grammel
  */
-// @formatter:off
-public class Scale extends JavaScriptObject {
-
-    public final static native LinearScale linear() /*-{
-        return $wnd.pv.Scale.linear();
-    }-*/;
-
-    public final static native OrdinalScale ordinal() /*-{
-        return $wnd.pv.Scale.ordinal();
-    }-*/;
-
-    public final static native LinearScale linear(double from, double to) /*-{
-        return $wnd.pv.Scale.linear(from, to);
-    }-*/;
-
-    protected Scale() {
-    }
+//@formatter:off
+public class PV {
     
     /**
-     * Scales are functions.
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.html#.range">pv.range()</a></code>
+     * .
      */
-    public final native double f(double value) /*-{
-        return this(value);
+    public final static native JsArrayNumber range(double stop) /*-{
+        return $wnd.pv.range(stop);
     }-*/;
     
 }
-// @formatter:on
+//@formatter:on
