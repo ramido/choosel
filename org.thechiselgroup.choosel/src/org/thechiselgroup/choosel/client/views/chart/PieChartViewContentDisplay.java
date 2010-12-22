@@ -130,7 +130,7 @@ public class PieChartViewContentDisplay extends ChartViewContentDisplay {
         calculateAllResourcesSum();
 
         if (hasPartiallyHighlightedChartItems()) {
-            regularWedge = chart.add(Wedge.createWedge())
+            regularWedge = getChart().add(Wedge.createWedge())
                     .data(chartItemJsArray).left(wedgeLeft).bottom(wedgeBottom)
                     .innerRadius(highlightedWedgeOuterRadius)
                     .outerRadius(regularWedgeOuterRadius).angle(wedgeAngle)
@@ -150,7 +150,7 @@ public class PieChartViewContentDisplay extends ChartViewContentDisplay {
             return;
         }
 
-        regularWedge = chart.add(Wedge.createWedge()).data(chartItemJsArray)
+        regularWedge = getChart().add(Wedge.createWedge()).data(chartItemJsArray)
                 .left(wedgeLeft).bottom(wedgeBottom)
                 .outerRadius(regularWedgeOuterRadius).angle(wedgeAngle)
                 .fillStyle(chartFillStyle).strokeStyle(Colors.WHITE);

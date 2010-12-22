@@ -100,8 +100,11 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
     private StringFunction<ChartItem> baselineLabelText = new StringFunction<ChartItem>() {
         @Override
         public String f(ChartItem value, int i) {
-            return value.getResourceItem()
-                    .getResourceValue(BarChartViewContentDisplay.CHART_LABEL_SLOT).toString();
+            return value
+                    .getResourceItem()
+                    .getResourceValue(
+                            BarChartViewContentDisplay.CHART_LABEL_SLOT)
+                    .toString();
         }
     };
 
@@ -152,7 +155,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
     }
 
     private void drawDot() {
-        regularDot = chart
+        regularDot = getChart()
                 .add(Dot.createDot())
                 .data(chartItemJsArray)
                 .bottom(dotBottom)
@@ -169,18 +172,18 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
 
     protected void drawScales(Scale scale) {
         this.scale = scale;
-        chart.add(Rule.createRule()).data(scale.ticks()).bottom(scale)
+        getChart().add(Rule.createRule()).data(scale.ticks()).bottom(scale)
                 .strokeStyle(scaleStrokeStyle).width(chartWidth)
                 .anchor(Alignment.LEFT).add(Label.createLabel())
                 .text(scaleLabelText);
 
-        chart.add(Rule.createRule()).left(0).bottom(0)
+        getChart().add(Rule.createRule()).left(0).bottom(0)
                 .strokeStyle(AXIS_SCALE_COLOR).height(chartHeight);
     }
 
     // @formatter:off
     public native void drawSelectionBox() /*-{
-        var chart = this.@org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay::chart,
+        var chart = this.@org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay::getChart(),
         eventToggle = true,
         fade,
         s, 
@@ -371,7 +374,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
     }
 
     private void setChartParameters() {
-        chart.left(BORDER_WIDTH).bottom(BORDER_HEIGHT);
+        getChart().left(BORDER_WIDTH).bottom(BORDER_HEIGHT);
     }
 
 }

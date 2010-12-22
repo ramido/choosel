@@ -163,7 +163,7 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
         Scale scale = Scale.linear(0, getMaximumChartItemValue()).range(0,
                 Math.min(height, width) - MARGIN_SIZE);
 
-        chart.add(Dot.createDot()).data(scale.ticks()).left(width / 2)
+        getChart().add(Dot.createDot()).data(scale.ticks()).left(width / 2)
                 .bottom(height / 2).fillStyle("").strokeStyle(Colors.GRAY_1)
                 .lineWidth(scaleLineWidth).radius(scaleRadius);
     }
@@ -171,7 +171,7 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
     private void drawWedge() {
         calculateAllResourcesSum();
 
-        regularWedge = chart.add(Wedge.createWedge()).data(chartItemJsArray)
+        regularWedge = getChart().add(Wedge.createWedge()).data(chartItemJsArray)
                 .left(wedgeLeft).bottom(wedgeBottom)
                 .outerRadius(regularWedgeOuterRadius).angle(wedgeAngle)
                 .strokeStyle(Colors.WHITE);
