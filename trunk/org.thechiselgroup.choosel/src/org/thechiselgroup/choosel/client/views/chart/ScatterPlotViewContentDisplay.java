@@ -169,11 +169,11 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
     }
 
     private void drawAxisLabels() {
-        chart.add(Label.createLabel()).bottom(-BORDER_BOTTOM + 5)
+        getChart().add(Label.createLabel()).bottom(-BORDER_BOTTOM + 5)
                 .left(chartWidth / 2).text(xAxisLabel)
                 .textAlign(Alignment.CENTER);
 
-        chart.add(Label.createLabel()).bottom(chartHeight / 2)
+        getChart().add(Label.createLabel()).bottom(chartHeight / 2)
                 .left(-BORDER_LEFT + 20).text(yAxisLabel)
                 .textAngle(-Math.PI / 2).textAlign(Alignment.CENTER);
     }
@@ -195,26 +195,26 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
     }
 
     protected void drawScales(Scale scaleX, Scale scaleY) {
-        chart.add(Rule.createRule()).data(scaleX.ticks()).bottom(0)
+        getChart().add(Rule.createRule()).data(scaleX.ticks()).bottom(0)
                 .left(scaleX).strokeStyle(scaleStrokeStyle).height(chartHeight)
                 .anchor(Alignment.BOTTOM).add(Label.createLabel())
                 .text(scaleLabelTextX);
 
-        chart.add(Rule.createRule()).data(scaleY.ticks()).bottom(scaleY)
+        getChart().add(Rule.createRule()).data(scaleY.ticks()).bottom(scaleY)
                 .left(0).strokeStyle(scaleStrokeStyle).width(chartWidth)
                 .add(Label.createLabel()).text(scaleLabelTextY)
                 .textAngle(-Math.PI / 2).textAlign(Alignment.CENTER)
                 .textBaseline(Alignment.BOTTOM);
 
-        chart.add(Rule.createRule()).height(chartHeight).bottom(0).left(0)
+        getChart().add(Rule.createRule()).height(chartHeight).bottom(0).left(0)
                 .strokeStyle(AXIS_SCALE_COLOR);
 
-        chart.add(Rule.createRule()).width(chartWidth).bottom(0).left(0)
+        getChart().add(Rule.createRule()).width(chartWidth).bottom(0).left(0)
                 .strokeStyle(AXIS_SCALE_COLOR);
     }
 
     private void drawScatter() {
-        scatter = chart
+        scatter = getChart()
                 .add(Dot.createDot())
                 .data(chartItemJsArray)
                 .bottom(scatterBottom)
@@ -245,7 +245,7 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
     }
 
     private void setChartParameters() {
-        chart.left(BORDER_LEFT).bottom(BORDER_BOTTOM);
+        getChart().left(BORDER_LEFT).bottom(BORDER_BOTTOM);
     }
 
     public void setXAxisLabel(String xAxisLabel) {

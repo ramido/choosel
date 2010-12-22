@@ -30,11 +30,11 @@ import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunctionIntArg
 import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunctionNoArgs;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
+import org.thechiselgroup.choosel.client.views.SidePanelSection;
 import org.thechiselgroup.choosel.client.views.ViewItem;
 import org.thechiselgroup.choosel.client.views.ViewItem.Subset;
 import org.thechiselgroup.choosel.client.views.ViewItem.SubsetStatus;
 import org.thechiselgroup.choosel.client.views.slots.Slot;
-import org.thechiselgroup.choosel.client.views.SidePanelSection;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -139,7 +139,8 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         @Override
         public double f(ChartItem value, int i) {
             return calculateBarLength(value.getResourceValueAsNumber(
-                    BarChartViewContentDisplay.CHART_VALUE_SLOT, Subset.HIGHLIGHTED));
+                    BarChartViewContentDisplay.CHART_VALUE_SLOT,
+                    Subset.HIGHLIGHTED));
         }
     };
 
@@ -195,8 +196,11 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     private StringFunction<ChartItem> baselineLabelText = new StringFunction<ChartItem>() {
         @Override
         public String f(ChartItem value, int i) {
-            return value.getResourceItem()
-                    .getResourceValue(BarChartViewContentDisplay.CHART_LABEL_SLOT).toString();
+            return value
+                    .getResourceItem()
+                    .getResourceValue(
+                            BarChartViewContentDisplay.CHART_LABEL_SLOT)
+                    .toString();
         }
     };
 
@@ -266,9 +270,11 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         }
     };
 
-    public static final Slot CHART_LABEL_SLOT = new Slot("chart-label", "Label", DataType.TEXT);
+    public static final Slot CHART_LABEL_SLOT = new Slot("chart-label",
+            "Label", DataType.TEXT);
 
-    public static final Slot CHART_VALUE_SLOT = new Slot("chart-value", "Value", DataType.NUMBER);
+    public static final Slot CHART_VALUE_SLOT = new Slot("chart-value",
+            "Value", DataType.NUMBER);
 
     @Inject
     public BarChartViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
@@ -317,15 +323,15 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         calculateMaximumChartItemValue();
 
         if (layout.isVerticalBarChart(chartHeight, chartWidth)) {
-            chart.left(BORDER_LEFT).bottom(BORDER_BOTTOM);
+            getChart().left(BORDER_LEFT).bottom(BORDER_BOTTOM);
             Scale scale = Scale.linear(0, getMaximumChartItemValue()).range(0,
                     chartHeight);
             // TODO axis label
             drawVerticalBarChart();
             drawVerticalBarScales(scale);
         } else {
-            chart.left(BORDER_LEFT + HORIZONTAL_BAR_LABEL_EXTRA_MARGIN).bottom(
-                    BORDER_BOTTOM);
+            getChart().left(BORDER_LEFT + HORIZONTAL_BAR_LABEL_EXTRA_MARGIN)
+                    .bottom(BORDER_BOTTOM);
             Scale scale = Scale.linear(0, getMaximumChartItemValue()).range(0,
                     chartWidth);
             drawHorizontalBarMeasurementAxisLabel();
@@ -333,14 +339,14 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
             drawHorizontalBarScales(scale);
 
         }
-        chart.add(Rule.createRule()).bottom(0).left(0).width(chartWidth)
+        getChart().add(Rule.createRule()).bottom(0).left(0).width(chartWidth)
                 .strokeStyle(AXIS_SCALE_COLOR).lineWidth(barLineWidth);
-        chart.add(Rule.createRule()).left(0).bottom(0).height(chartHeight)
+        getChart().add(Rule.createRule()).left(0).bottom(0).height(chartHeight)
                 .strokeStyle(AXIS_SCALE_COLOR).lineWidth(barLineWidth);
     }
 
     private void drawHorizontalBarChart() {
-        regularBar = chart.add(Bar.createBar()).data(chartItemJsArray)
+        regularBar = getChart().add(Bar.createBar()).data(chartItemJsArray)
                 .left(barLineWidth).width(fullBarLength).bottom(barStart)
                 .height(barWidth).fillStyle(chartFillStyle)
                 .strokeStyle(Colors.STEELBLUE).lineWidth(barLineWidth);
@@ -354,7 +360,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
                 .textStyle(fullMarkTextStyle).textAlign(valueLabelAlignment);
 
         // TODO negative bars (in opposite direction)
-        highlightedBar = chart.add(Bar.createBar()).data(chartItemJsArray)
+        highlightedBar = getChart().add(Bar.createBar()).data(chartItemJsArray)
                 .left(barLineWidth).width(highlightedBarLength)
                 .bottom(highlightedBarStart).height(highlightedWidth)
                 .fillStyle(Colors.YELLOW).strokeStyle(Colors.STEELBLUE)
@@ -366,21 +372,21 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     }
 
     private void drawHorizontalBarMeasurementAxisLabel() {
-        chart.add(Label.createLabel()).bottom(-BORDER_BOTTOM + 5)
+        getChart().add(Label.createLabel()).bottom(-BORDER_BOTTOM + 5)
                 .left(chartWidth / 2).text(valueAxisLabelFunction)
                 .textAlign(Alignment.CENTER);
     }
 
     protected void drawHorizontalBarScales(Scale scale) {
         this.scale = scale;
-        chart.add(Rule.createRule()).data(scale.ticks(5)).left(scale).bottom(0)
-                .strokeStyle(scaleStrokeStyle).height(chartHeight)
+        getChart().add(Rule.createRule()).data(scale.ticks(5)).left(scale)
+                .bottom(0).strokeStyle(scaleStrokeStyle).height(chartHeight)
                 .anchor(Alignment.BOTTOM).add(Label.createLabel())
                 .text(scaleLabelText);
     }
 
     private void drawVerticalBarChart() {
-        regularBar = chart.add(Bar.createBar()).data(chartItemJsArray)
+        regularBar = getChart().add(Bar.createBar()).data(chartItemJsArray)
                 .bottom(barLineWidth - 1).height(fullBarLength).left(barStart)
                 .width(barWidth).fillStyle(chartFillStyle)
                 .strokeStyle(Colors.STEELBLUE).lineWidth(barLineWidth);
@@ -403,7 +409,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
                 .textAlign(valueLabelAlignment).textStyle(fullMarkTextStyle)
                 .text(fullMarkLabelText);
 
-        highlightedBar = chart.add(Bar.createBar()).data(chartItemJsArray)
+        highlightedBar = getChart().add(Bar.createBar()).data(chartItemJsArray)
                 .bottom(barLineWidth).height(highlightedBarLength)
                 .left(highlightedBarStart).width(highlightedWidth)
                 .fillStyle(Colors.YELLOW).strokeStyle(Colors.STEELBLUE)
@@ -417,8 +423,8 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     // TODO extract scale ticks # as property
     protected void drawVerticalBarScales(Scale scale) {
         this.scale = scale;
-        chart.add(Rule.createRule()).data(scale.ticks(5)).left(0).bottom(scale)
-                .strokeStyle(scaleStrokeStyle).width(chartWidth)
+        getChart().add(Rule.createRule()).data(scale.ticks(5)).left(0)
+                .bottom(scale).strokeStyle(scaleStrokeStyle).width(chartWidth)
                 .anchor(Alignment.LEFT).add(Label.createLabel())
                 .text(scaleLabelText);
     }

@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.client.ui.widget.protovis;
+package org.thechiselgroup.choosel.client.views.chart;
 
 import org.thechiselgroup.choosel.client.ui.CSS;
 import org.thechiselgroup.choosel.client.ui.Colors;
 import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
+import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisWidget;
 
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -29,31 +29,18 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Bradley Blashko
  * @author Lars Grammel
  */
-public final class ChartWidget extends Widget implements WidgetAdaptable {
+public final class ChartWidget extends ProtovisWidget implements
+        WidgetAdaptable {
 
     private ChartWidgetCallback callback;
 
     public ChartWidget() {
-        setElement(DOM.createDiv());
         CSS.setBackgroundColor(this, Colors.WHITE);
     }
 
     @Override
     public Widget asWidget() {
         return this;
-    }
-
-    // TODO check call tree and remove?
-    public void checkResize() {
-        callback.onResize(getOffsetWidth(), getOffsetHeight());
-    }
-
-    /**
-     * Returns new chart panel. The chart panel uses the element of this widget
-     * and replaces any previous chart rendered in this widget.
-     */
-    public Panel createChartPanel() {
-        return Panel.createPanel().canvas(getElement());
     }
 
     @Override

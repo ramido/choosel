@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.thechiselgroup.choosel.client.ui.Colors;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.ChartWidget;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.ChartWidgetCallback;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.EventTypes;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.Panel;
 import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisEventHandler;
@@ -153,8 +151,6 @@ public abstract class ChartViewContentDisplay extends
 
     int height;
 
-    protected Panel chart;
-
     @Inject
     public ChartViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
         this.dragEnablerFactory = dragEnablerFactory;
@@ -187,9 +183,9 @@ public abstract class ChartViewContentDisplay extends
      * panel is used.
      */
     protected void buildChart() {
-        chart = chartWidget.createChartPanel();
+        chartWidget.initChartPanel();
         if (chartItems.size() == 0) {
-            chart.height(height).width(width);
+            getChart().height(height).width(width);
         } else {
             drawChart();
             registerEventHandlers();
@@ -239,7 +235,21 @@ public abstract class ChartViewContentDisplay extends
 
     @Override
     public void checkResize() {
-        chartWidget.checkResize();
+        int width = chartWidget.getOffsetWidth();
+        int height = chartWidget.getOffsetHeight();
+
+        if (width == this.width && height == this.height) {
+            return;
+        }
+
+        this.width = width;
+        this.height = height;
+
+        /*
+         * TODO we could use renderChart() here to improve the performance. This
+         * would require several changes in the chart implementation, though.
+         */
+        buildChart();
     }
 
     @Override
@@ -254,6 +264,10 @@ public abstract class ChartViewContentDisplay extends
      * can be rendered ( jsChartItems.length >= 1 ).
      */
     protected abstract void drawChart();
+
+    protected Panel getChart() {
+        return chartWidget.getChartPanel();
+    }
 
     public ChartItem getChartItem(int index) {
         assert chartItems != null;
@@ -320,29 +334,11 @@ public abstract class ChartViewContentDisplay extends
 
     @Override
     public void onAttach() {
-        if (chart == null) {
-            buildChart();
-        }
+        buildChart();
     }
 
     protected void onEvent(Event e, int index) {
         getChartItem(index).onEvent(e);
-    }
-
-    @Override
-    public void onResize(int width, int height) {
-        if (width == this.width && height == this.height) {
-            return;
-        }
-
-        this.width = width;
-        this.height = height;
-
-        /*
-         * TODO we could use renderChart() here to improve the performance. This
-         * would require several changes in the chart implementation, though.
-         */
-        buildChart();
     }
 
     protected abstract void registerEventHandler(String eventType,
@@ -374,7 +370,7 @@ public abstract class ChartViewContentDisplay extends
         try {
             isRendering = true;
             beforeRender();
-            chart.render();
+            getChart().render();
             afterRender(); // TODO move into finally block?
         } finally {
             isRendering = false;
