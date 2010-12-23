@@ -22,158 +22,158 @@ import com.google.gwt.core.client.JavaScriptObject;
  * @author Bradley Blashko
  * 
  */
-public class Line extends Mark {
+public class PVLine extends PVMark {
 
     // @formatter:off        
-    public static native Line createLine() /*-{
+    public static native PVLine createLine() /*-{
         return $wnd.pv.Line;
     }-*/;
     // @formatter:on 
 
-    protected Line() {
+    protected PVLine() {
     }
 
     // @formatter:off
-    public final native <T extends Mark> T add(T mark) /*-{
+    public final native <T extends PVMark> T add(T mark) /*-{
         return this.add(mark);
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line anchor(String anchor) /*-{
+    public final native PVLine anchor(String anchor) /*-{
         return this.anchor(anchor);
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line bottom(double bottom) /*-{
+    public final native PVLine bottom(double bottom) /*-{
         return this.bottom(bottom);
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line bottom(DoubleFunction<?> f) /*-{
-        return this.bottom(@org.thechiselgroup.choosel.protovis.client.Mark::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/DoubleFunction;)(this,f));
+    public final native PVLine bottom(DoubleFunction<?> f) /*-{
+        return this.bottom(@org.thechiselgroup.choosel.protovis.client.PVMark::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/DoubleFunction;)(this,f));
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line childIndex(int childIndex) /*-{
+    public final native PVLine childIndex(int childIndex) /*-{
         return this.childIndex(childIndex);
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line cursor(String cursor) /*-{
+    public final native PVLine cursor(String cursor) /*-{
         return this.cursor(cursor);
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line data(JavaScriptObject data) /*-{
+    public final native PVLine data(JavaScriptObject data) /*-{
         return this.data(data);
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line def(String name) /*-{
+    public final native PVLine def(String name) /*-{
         return this.def(name);
     }-*/;
     // @formatter:on
 
     // TODO Likely needs some fixing
     // @formatter:off
-    public final native Line def(String name, DoubleFunction<?> f) /*-{
-        return this.def(name, @org.thechiselgroup.choosel.protovis.client.Mark::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/DoubleFunction;)(this,f));
+    public final native PVLine def(String name, DoubleFunction<?> f) /*-{
+        return this.def(name, @org.thechiselgroup.choosel.protovis.client.PVMark::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/DoubleFunction;)(this,f));
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line def(String name, String constant) /*-{
+    public final native PVLine def(String name, String constant) /*-{
         return this.def(name, constant);
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line defaults(Mark mark) /*-{
+    public final native PVLine defaults(PVMark mark) /*-{
         return this.defaults(mark);
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line eccentricity(double eccentricity) /*-{
+    public final native PVLine eccentricity(double eccentricity) /*-{
         return this.eccentricity(eccentricity);
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line event(String eventType, ProtovisEventHandler handler) /*-{
-        return this.event(eventType, @org.thechiselgroup.choosel.protovis.client.Mark::registerEvent(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/ProtovisEventHandler;)(this, handler));
+    public final native PVLine event(String eventType, ProtovisEventHandler handler) /*-{
+        return this.event(eventType, @org.thechiselgroup.choosel.protovis.client.PVMark::registerEvent(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/ProtovisEventHandler;)(this, handler));
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line events(String events) /*-{
+    public final native PVLine events(String events) /*-{
         return this.events(events);
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line fillStyle(StringFunction<?> f) /*-{
-        return this.fillStyle(@org.thechiselgroup.choosel.protovis.client.Mark::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/StringFunction;)(this,f));
+    public final native PVLine fillStyle(StringFunction<?> f) /*-{
+        return this.fillStyle(@org.thechiselgroup.choosel.protovis.client.PVMark::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/StringFunction;)(this,f));
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line fillStyle(String colour) /*-{
+    public final native PVLine fillStyle(String colour) /*-{
         return this.fillStyle(colour);
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line index(int index) /*-{
+    public final native PVLine index(int index) /*-{
         return this.index(index);
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line interpolate(String interpolate) /*-{
+    public final native PVLine interpolate(String interpolate) /*-{
         return this.interpolate(interpolate);
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line left(double left) /*-{
+    public final native PVLine left(double left) /*-{
         return this.left(left);
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line left(DoubleFunction<?> f) /*-{
-        return this.left(@org.thechiselgroup.choosel.protovis.client.Mark::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/DoubleFunction;)(this,f));
+    public final native PVLine left(DoubleFunction<?> f) /*-{
+        return this.left(@org.thechiselgroup.choosel.protovis.client.PVMark::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/DoubleFunction;)(this,f));
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line lineJoin(String lineJoin) /*-{
+    public final native PVLine lineJoin(String lineJoin) /*-{
         return this.lineJoin(lineJoin);
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line lineWidth(double lineWidth) /*-{
+    public final native PVLine lineWidth(double lineWidth) /*-{
         return this.lineWidth(lineWidth);
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line parent(Panel panel) /*-{
+    public final native PVLine parent(PVPanel panel) /*-{
         return this.parent(panel);
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line proto(Mark mark) /*-{
+    public final native PVLine proto(PVMark mark) /*-{
         return this.proto(mark);
     }-*/;
     // @formatter:on
@@ -185,79 +185,79 @@ public class Line extends Mark {
     // @formatter:on
 
     // @formatter:off
-    public final native Line reverse(boolean reverse) /*-{
+    public final native PVLine reverse(boolean reverse) /*-{
         return this.reverse(reverse);
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line right(double right) /*-{
+    public final native PVLine right(double right) /*-{
         return this.right(right);
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line right(DoubleFunction<?> f) /*-{
-        return this.right(@org.thechiselgroup.choosel.protovis.client.Mark::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/DoubleFunction;)(this,f));
+    public final native PVLine right(DoubleFunction<?> f) /*-{
+        return this.right(@org.thechiselgroup.choosel.protovis.client.PVMark::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/DoubleFunction;)(this,f));
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line root(Panel panel) /*-{
+    public final native PVLine root(PVPanel panel) /*-{
         return this.root(panel);
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line scale(double scale) /*-{
+    public final native PVLine scale(double scale) /*-{
         return this.scale(scale);
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line segmented(boolean segmented) /*-{
+    public final native PVLine segmented(boolean segmented) /*-{
         return this.segmented(segmented);
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line strokeStyle(String strokeStyle) /*-{
+    public final native PVLine strokeStyle(String strokeStyle) /*-{
         return this.strokeStyle(strokeStyle);
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line tension(double tension) /*-{
+    public final native PVLine tension(double tension) /*-{
         return this.tension(tension);
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line title(String title) /*-{
+    public final native PVLine title(String title) /*-{
         return this.title(title);
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line top(double top) /*-{
+    public final native PVLine top(double top) /*-{
         return this.top(top);
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line top(DoubleFunction<?> f) /*-{
-        return this.top(@org.thechiselgroup.choosel.protovis.client.Mark::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/DoubleFunction;)(this,f));
+    public final native PVLine top(DoubleFunction<?> f) /*-{
+        return this.top(@org.thechiselgroup.choosel.protovis.client.PVMark::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/DoubleFunction;)(this,f));
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line type(String type) /*-{
+    public final native PVLine type(String type) /*-{
         return this.type(type);
     }-*/;
     // @formatter:on
 
     // @formatter:off
-    public final native Line visible(boolean visible) /*-{
+    public final native PVLine visible(boolean visible) /*-{
         return this.visible(visible);
     }-*/;
     // @formatter:on

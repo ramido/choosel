@@ -26,9 +26,9 @@ import com.google.gwt.core.client.JsArrayNumber;
  * @author Lars Grammel
  */
 // @formatter:off
-public class OrdinalScale extends Scale {
+public class PVOrdinalScale extends PVScale {
 
-    protected OrdinalScale() {
+    protected PVOrdinalScale() {
     }
 
     /**
@@ -36,7 +36,7 @@ public class OrdinalScale extends Scale {
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.ordinal.html#splitBanded">splitBanded()</a></code>
      * .
      */  
-    public final native OrdinalScale splitBanded(double min, double max) /*-{
+    public final native PVOrdinalScale splitBanded(double min, double max) /*-{
         return this.splitBanded(min, max);
     }-*/;
     
@@ -45,13 +45,13 @@ public class OrdinalScale extends Scale {
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.ordinal.html#splitBanded">splitBanded()</a></code>
      * .
      */  
-    public final native OrdinalScale splitBanded(double min, double max, double band) /*-{
+    public final native PVOrdinalScale splitBanded(double min, double max, double band) /*-{
         return this.splitBanded(min, max, band);
     }-*/;
     
     // TODO 4 variants of domain method -- is this even possible?
     
-    public final native OrdinalScale domain(JavaScriptObject array) /*-{
+    public final native PVOrdinalScale domain(JavaScriptObject array) /*-{
         return this.domain(array);
     }-*/;
     

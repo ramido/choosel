@@ -26,16 +26,30 @@ import com.google.gwt.core.client.JavaScriptObject;
  * @author Lars Grammel
  */
 // @formatter:off
-public class LinearScale extends Scale {
+public class PVLinearScale extends PVScale {
 
-    protected LinearScale() {
+    protected PVLinearScale() {
     }
 
-    public final native LinearScale domain(double min, double max) /*-{
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.quantitative.html#domain">pv.Scale.quantitative.domain()</a></code>
+     * .
+     */  
+    public final native PVLinearScale domain(double min, double max) /*-{
         return this.domain(min, max);
     }-*/;
+    
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.quantitative.html#domain">pv.Scale.quantitative.domain()</a></code>
+     * .
+     */  
+    public final native PVLinearScale domain(JsGenericArray<?> array, DoubleFunction<?> f) /*-{
+        return this.domain(array, @org.thechiselgroup.choosel.protovis.client.PVMark::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/DoubleFunction;)(this,f));
+    }-*/;
 
-    public final native LinearScale range(int min, int max) /*-{
+    public final native PVLinearScale range(int min, int max) /*-{
         return this.range(min, max);
     }-*/;
 

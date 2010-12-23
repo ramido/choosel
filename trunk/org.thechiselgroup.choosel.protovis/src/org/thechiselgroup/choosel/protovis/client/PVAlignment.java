@@ -15,31 +15,18 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.Widget;
+public final class PVAlignment {
 
-public class ProtovisWidget extends Widget {
+    public static final String TOP = "top";
 
-    private PVPanel chartPanel;
+    public static final String MIDDLE = "middle";
 
-    public ProtovisWidget() {
-        setElement(DOM.createDiv());
-    }
+    public static final String BOTTOM = "bottom";
 
-    public PVPanel getChartPanel() {
-        return chartPanel;
-    }
+    public static final String LEFT = "left";
 
-    /**
-     * Initializes the chart panel. The chart panel uses the element of this
-     * widget and replaces any previous chart rendered in this widget.
-     */
-    public void initChartPanel() {
-        chartPanel = PVPanel.createPanel().canvas(getElement());
-    }
+    public static final String CENTER = "center";
 
-    public boolean isInitialized() {
-        return chartPanel != null;
-    }
+    public static final String RIGHT = "right";
 
 }
