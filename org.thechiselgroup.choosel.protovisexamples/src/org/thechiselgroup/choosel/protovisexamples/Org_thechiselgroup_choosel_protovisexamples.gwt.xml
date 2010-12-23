@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module rename-to='ProtovisGWT_Examples'>
+
+  <inherits name='com.google.gwt.user.User'/>
+  <inherits name='com.google.gwt.user.theme.standard.Standard'/>
+
+  <inherits name='org.thechiselgroup.choosel.protovis.ProtovisGWT'/>
+
+  <entry-point class='org.thechiselgroup.choosel.protovisexamples.client.ProtovisGWTExamples'/>
+
+  <source path='client'/>
+
+</module>
