@@ -26,21 +26,42 @@ import com.google.gwt.core.client.JavaScriptObject;
  * @author Lars Grammel
  */
 // @formatter:off
-public class Scale extends JavaScriptObject {
+public class PVScale extends JavaScriptObject {
 
-    public final static native LinearScale linear() /*-{
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.linear.html#constructor">pv.Scale.linear()</a></code>
+     * .
+     */
+    public final static native PVLinearScale linear() /*-{
         return $wnd.pv.Scale.linear();
     }-*/;
 
-    public final static native OrdinalScale ordinal() /*-{
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.linear.html#constructor">pv.Scale.linear()</a></code>
+     * .
+     */
+    public final static native PVLinearScale linear(double from, double to) /*-{
+        return $wnd.pv.Scale.linear(from, to);
+    }-*/;
+    
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.linear.html#constructor">pv.Scale.linear()</a></code>
+     * .
+     */
+    public final static native PVLinearScale linear(JsGenericArray<?> array, DoubleFunction<?> f) /*-{
+        var x = @org.thechiselgroup.choosel.protovis.client.PVMark::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/DoubleFunction;)(f);
+        $wnd.alert(x(array[4]));
+        return $wnd.pv.Scale.linear(array, x);
+    }-*/;
+
+    public final static native PVOrdinalScale ordinal() /*-{
         return $wnd.pv.Scale.ordinal();
     }-*/;
 
-    public final static native LinearScale linear(double from, double to) /*-{
-        return $wnd.pv.Scale.linear(from, to);
-    }-*/;
-
-    protected Scale() {
+    protected PVScale() {
     }
     
     /**

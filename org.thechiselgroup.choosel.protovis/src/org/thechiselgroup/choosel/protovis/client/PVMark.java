@@ -37,7 +37,7 @@ import com.google.gwt.core.client.JavaScriptObject;
  * @author Bradley Blashko
  * @author Lars Grammel
  */
-public abstract class Mark extends JavaScriptObject {
+public abstract class PVMark extends JavaScriptObject {
 
     /*
      * PERFORMANCE IMPORTANT $entry function usage
@@ -78,6 +78,11 @@ public abstract class Mark extends JavaScriptObject {
             { return f.@org.thechiselgroup.choosel.protovis.client.DoubleFunction::f(Ljava/lang/Object;I)(d,_this.index);};
     }-*/;
     
+    public static final native JavaScriptObject toJavaScriptFunction(DoubleFunction<?> f) /*-{
+        return function(d) 
+            { return f.@org.thechiselgroup.choosel.protovis.client.DoubleFunction::f(Ljava/lang/Object;I)(d,-1);};
+    }-*/;
+    
     public static final native JavaScriptObject toJavaScriptFunction(
             JavaScriptObject _this, DoubleFunctionDoubleArg f) /*-{
         return function(d) 
@@ -97,6 +102,12 @@ public abstract class Mark extends JavaScriptObject {
     }-*/;
     
     public static final native JavaScriptObject toJavaScriptFunction(
+            JavaScriptObject _this, BooleanFunctionDoubleArg f) /*-{
+        return function(d) 
+            { return f.@org.thechiselgroup.choosel.protovis.client.BooleanFunctionDoubleArg::f(DI)(d,_this.index); };
+    }-*/;
+    
+    public static final native JavaScriptObject toJavaScriptFunction(
             JavaScriptObject _this, StringFunctionDoubleArg f) /*-{
         return function(d) 
             { return f.@org.thechiselgroup.choosel.protovis.client.StringFunctionDoubleArg::f(DI)(d,_this.index); };
@@ -109,7 +120,7 @@ public abstract class Mark extends JavaScriptObject {
     }-*/;
     // @formatter:on
 
-    protected Mark() {
+    protected PVMark() {
     }
 
 }

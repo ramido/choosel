@@ -15,18 +15,22 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
-public final class Alignment {
+import com.google.gwt.core.client.JavaScriptObject;
 
-    public static final String TOP = "top";
+// @formatter:off
+/**
+ * 
+ * @author Bradley Blashko
+ * 
+ */
+public class PVBehavior extends JavaScriptObject {
 
-    public static final String MIDDLE = "middle";
+    public final static native PVBehavior select() /*-{
+        return $wnd.pv.Behavior.select();
+    }-*/;
 
-    public static final String BOTTOM = "bottom";
-
-    public static final String LEFT = "left";
-
-    public static final String CENTER = "center";
-
-    public static final String RIGHT = "right";
+    protected PVBehavior() {
+    }
 
 }
+// @formatter:on

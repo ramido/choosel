@@ -15,22 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
-import com.google.gwt.core.client.JavaScriptObject;
+public final class JsUtils {
 
-// @formatter:off
-/**
- * 
- * @author Bradley Blashko
- * 
- */
-public class Behavior extends JavaScriptObject {
-
-    public final static native Behavior select() /*-{
-        return $wnd.pv.Behavior.select();
-    }-*/;
-
-    protected Behavior() {
+    private JsUtils() {
     }
 
+    public final static native String toFixed(double d, int decimalPlaces) /*-{
+        return d.toFixed(decimalPlaces);
+    }-*/;
+
 }
-// @formatter:on

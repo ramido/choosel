@@ -15,31 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.Widget;
+public interface BooleanFunctionDoubleArg {
 
-public class ProtovisWidget extends Widget {
-
-    private PVPanel chartPanel;
-
-    public ProtovisWidget() {
-        setElement(DOM.createDiv());
-    }
-
-    public PVPanel getChartPanel() {
-        return chartPanel;
-    }
-
-    /**
-     * Initializes the chart panel. The chart panel uses the element of this
-     * widget and replaces any previous chart rendered in this widget.
-     */
-    public void initChartPanel() {
-        chartPanel = PVPanel.createPanel().canvas(getElement());
-    }
-
-    public boolean isInitialized() {
-        return chartPanel != null;
-    }
+    boolean f(double value, int i);
 
 }
