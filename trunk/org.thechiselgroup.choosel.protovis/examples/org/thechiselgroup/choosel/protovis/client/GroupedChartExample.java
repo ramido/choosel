@@ -26,6 +26,8 @@ import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionDoub
 import org.thechiselgroup.choosel.protovis.client.util.JsArrayGeneric;
 import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
 
+import com.google.gwt.user.client.ui.Widget;
+
 /**
  * Protovis/GWT implementation of <a
  * href="http://vis.stanford.edu/protovis/ex/group.html">Protovis grouped chart
@@ -35,6 +37,11 @@ import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
  */
 public class GroupedChartExample extends ProtovisWidget implements
         ProtovisExample {
+
+    @Override
+    public Widget asWidget() {
+        return this;
+    }
 
     private void createVisualization(
             final JsArrayGeneric<JsArrayGeneric<Double>> data) {
@@ -143,6 +150,10 @@ public class GroupedChartExample extends ProtovisWidget implements
 
     public String getProtovisExampleURL() {
         return "http://vis.stanford.edu/protovis/ex/group.html";
+    }
+
+    public String getSourceCodeFile() {
+        return "GroupedChartExample.java";
     }
 
     protected void onAttach() {

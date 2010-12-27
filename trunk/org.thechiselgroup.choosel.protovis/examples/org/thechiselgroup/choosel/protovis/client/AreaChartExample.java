@@ -26,6 +26,8 @@ import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionDoub
 import org.thechiselgroup.choosel.protovis.client.util.JsArrayGeneric;
 import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
 
+import com.google.gwt.user.client.ui.Widget;
+
 /**
  * Protovis/GWT implementation of <a
  * href="http://vis.stanford.edu/protovis/ex/area.html">Protovis area chart
@@ -46,6 +48,11 @@ public class AreaChartExample extends ProtovisWidget implements ProtovisExample 
             this.y = y;
         }
 
+    }
+
+    @Override
+    public Widget asWidget() {
+        return this;
     }
 
     private void createVisualization(JsArrayGeneric<Point> data) {
@@ -112,6 +119,10 @@ public class AreaChartExample extends ProtovisWidget implements ProtovisExample 
 
     public String getProtovisExampleURL() {
         return "http://vis.stanford.edu/protovis/ex/area.html";
+    }
+
+    public String getSourceCodeFile() {
+        return "AreaChartExample.java";
     }
 
     protected void onAttach() {

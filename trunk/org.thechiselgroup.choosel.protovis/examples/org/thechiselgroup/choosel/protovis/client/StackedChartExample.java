@@ -24,6 +24,8 @@ import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionDoub
 import org.thechiselgroup.choosel.protovis.client.util.JsArrayGeneric;
 import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
 
+import com.google.gwt.user.client.ui.Widget;
+
 /**
  * Protovis/GWT implementation of <a
  * href="http://vis.stanford.edu/protovis/ex/stack.html">Protovis stacked chart
@@ -45,6 +47,11 @@ public class StackedChartExample extends ProtovisWidget implements
             this.y = y;
         }
 
+    }
+
+    @Override
+    public Widget asWidget() {
+        return this;
     }
 
     private void createVisualization(JsArrayGeneric<JsArrayGeneric<Point>> data) {
@@ -109,6 +116,10 @@ public class StackedChartExample extends ProtovisWidget implements
 
     public String getProtovisExampleURL() {
         return "http://vis.stanford.edu/protovis/ex/stack.html";
+    }
+
+    public String getSourceCodeFile() {
+        return "StackedChartExample.java";
     }
 
     protected void onAttach() {

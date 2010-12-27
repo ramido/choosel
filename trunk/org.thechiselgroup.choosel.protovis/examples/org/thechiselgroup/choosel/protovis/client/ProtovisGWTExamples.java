@@ -15,35 +15,34 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class ProtovisGWTExamples implements EntryPoint {
 
-    public void onModuleLoad() {
-        VerticalPanel container = new VerticalPanel();
+    private List<ProtovisExample> examples;
 
-        // Conventional
-        addExample(container, new AreaChartExample());
-        addExample(container, new BarChartExample());
-        addExample(container, new PieChartExample());
-        addExample(container, new ScatterplotExample());
-        addExample(container, new LineChartExample());
-        addExample(container, new StackedChartExample());
-        addExample(container, new GroupedChartExample());
+    private DeckPanel deckPanel;
 
-        // Custom
-        addExample(container, new BulletChartExample());
-        addExample(container, new SeattleWeatherExample());
+    private Label visualizationTitle;
 
-        // Statistics
-        addExample(container, new BoxAndWhiskerPlotExample());
+    private Anchor protovisExampleLink;
 
-        RootPanel.get().add(container);
-    }
+    private Anchor sourceCodeLink;
+
+    private ListBox selectorList;
 
     public <T extends Widget & ProtovisExample> void addExample(
             VerticalPanel container, T example) {
@@ -54,4 +53,84 @@ public class ProtovisGWTExamples implements EntryPoint {
         container.add(example);
     }
 
+    private void initExampleVisualizations() {
+        examples = new ArrayList<ProtovisExample>();
+        examples.add(new AreaChartExample());
+        examples.add(new BarChartExample());
+        examples.add(new PieChartExample());
+        examples.add(new ScatterplotExample());
+        examples.add(new LineChartExample());
+        examples.add(new StackedChartExample());
+        examples.add(new GroupedChartExample());
+        examples.add(new BulletChartExample());
+        examples.add(new SeattleWeatherExample());
+        examples.add(new BoxAndWhiskerPlotExample());
+    }
+
+    private void initProtovisExampleLink() {
+        protovisExampleLink = new Anchor("Original Protovis Example");
+        protovisExampleLink.setTarget("_blank");
+        RootPanel.get("protovisExampleLink").add(protovisExampleLink);
+    }
+
+    private void initSourceCodeLink() {
+        sourceCodeLink = new Anchor("Protovis/GWT Example Source Code");
+        sourceCodeLink.setTarget("_blank");
+        RootPanel.get("sourceCodeLink").add(sourceCodeLink);
+    }
+
+    private void initVisualizationPanel() {
+        deckPanel = new DeckPanel();
+        for (ProtovisExample example : examples) {
+            deckPanel.add(example.asWidget());
+        }
+        RootPanel.get("visualization").add(deckPanel);
+    }
+
+    private void initVisualizationSelector() {
+        selectorList = new ListBox();
+        selectorList.setVisibleItemCount(10);
+        for (int i = 0; i < examples.size(); i++) {
+            selectorList.addItem(examples.get(i).toString());
+        }
+        selectorList.addChangeHandler(new ChangeHandler() {
+            @Override
+            public void onChange(ChangeEvent event) {
+                update();
+            }
+        });
+        selectorList.setSelectedIndex(0);
+
+        RootPanel.get("visualizationSelector").add(selectorList);
+    }
+
+    private void initVisualizationTitleLabel() {
+        visualizationTitle = new Label();
+        RootPanel.get("visualizationTitle").add(visualizationTitle);
+    }
+
+    public void onModuleLoad() {
+        initExampleVisualizations();
+        initVisualizationPanel();
+        initVisualizationTitleLabel();
+        initProtovisExampleLink();
+        initSourceCodeLink();
+        initVisualizationSelector();
+
+        update();
+    }
+
+    private void update() {
+        int i = selectorList.getSelectedIndex();
+        ProtovisExample example = examples.get(i);
+
+        deckPanel.showWidget(i);
+        visualizationTitle.setText(example.toString());
+        protovisExampleLink.setHref(example.getProtovisExampleURL());
+        sourceCodeLink
+                .setHref("http://code.google.com/p/choosel/source/browse/trunk/"
+                        + "org.thechiselgroup.choosel.protovis/examples/"
+                        + "org/thechiselgroup/choosel/protovis/client/"
+                        + example.getSourceCodeFile());
+    }
 }

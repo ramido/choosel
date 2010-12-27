@@ -5,7 +5,37 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <title>Protovis/GWT Examples</title>
     <script type="text/javascript" language="javascript" src="ProtovisGWT_Examples/ProtovisGWT_Examples.nocache.js"></script>
+	<style type="text/css">
+	  body { 
+	    padding: 20px; position: relative; 
+	    left: 25px; top: 15px;
+	    font-family: Arial, sans-serif; 
+	  }
+	  div#description { width: 600px; }
+	  div#visualizationTitle { font-weight: bold; font-size: 18px; }
+	  div#visualization { padding-top: 20px; }
+	</style>
   </head>
   <body>
+    <h1 id="header">Protovis/GWT Examples</h1>
+    <div id="description">
+      Protovis/GWT is a GWT wrapper for the open source 
+      <a href="http://vis.stanford.edu/protovis/">Protovis JavaScript Visualization library</a>. 
+      It can be used to visualize data in <a href="http://code.google.com/webtoolkit/">GWT</a>
+      applications. Protovis/GWT is being developed as part of the 
+      <a href="http://code.google.com/p/choosel/">Choosel Visual Data Exploration Framework</a>.       
+    </div>
+    <div style="padding-top: 15px;">
+      <div style="float: left; width: 200px;">
+      	<b>Select visualization:</b>
+      	<div id="visualizationSelector"></div>
+      </div>
+      <div>
+        <div id="visualizationTitle"></div>
+        <div id="protovisExampleLink"></div>
+        <div id="sourceCodeLink"></div>
+      	<div id="visualization"></div>
+      </div>
+    </div>
   </body>
 </html>

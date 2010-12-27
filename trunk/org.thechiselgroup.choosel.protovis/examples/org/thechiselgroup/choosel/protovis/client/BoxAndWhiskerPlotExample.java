@@ -30,6 +30,7 @@ import org.thechiselgroup.choosel.protovis.client.util.JsArrayGeneric;
 import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
 
 import com.google.gwt.core.client.JsArrayNumber;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Protovis/GWT implementation of <a
@@ -52,6 +53,11 @@ public class BoxAndWhiskerPlotExample extends ProtovisWidget implements
             this.y = y;
         }
 
+    }
+
+    @Override
+    public Widget asWidget() {
+        return this;
     }
 
     private void createVisualization(JsArrayGeneric<Experiment> experiments) {
@@ -193,6 +199,10 @@ public class BoxAndWhiskerPlotExample extends ProtovisWidget implements
 
     public String getProtovisExampleURL() {
         return "http://vis.stanford.edu/protovis/ex/box-and-whisker.html";
+    }
+
+    public String getSourceCodeFile() {
+        return "BoxAndWhiskerPlotExample.java";
     }
 
     protected void onAttach() {

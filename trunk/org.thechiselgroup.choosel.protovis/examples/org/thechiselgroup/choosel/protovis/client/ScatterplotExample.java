@@ -26,6 +26,8 @@ import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionDoub
 import org.thechiselgroup.choosel.protovis.client.util.JsArrayGeneric;
 import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
 
+import com.google.gwt.user.client.ui.Widget;
+
 /**
  * Protovis/GWT implementation of <a
  * href="http://vis.stanford.edu/protovis/ex/dot.html">Protovis scatterplot
@@ -50,6 +52,11 @@ public class ScatterplotExample extends ProtovisWidget implements
             this.z = z;
         }
 
+    }
+
+    @Override
+    public Widget asWidget() {
+        return this;
     }
 
     private void createVisualization(JsArrayGeneric<Triple> data) {
@@ -140,6 +147,10 @@ public class ScatterplotExample extends ProtovisWidget implements
 
     public String getProtovisExampleURL() {
         return "http://vis.stanford.edu/protovis/ex/dot.html";
+    }
+
+    public String getSourceCodeFile() {
+        return "ScatterplotExample.java";
     }
 
     protected void onAttach() {

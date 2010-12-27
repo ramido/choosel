@@ -27,6 +27,7 @@ import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
 
 import com.google.gwt.core.client.JsArrayNumber;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Protovis/GWT implementation of <a
@@ -36,6 +37,11 @@ import com.google.gwt.user.client.Event;
  * @author Lars Grammel
  */
 public class PieChartExample extends ProtovisWidget implements ProtovisExample {
+
+    @Override
+    public Widget asWidget() {
+        return this;
+    }
 
     private void createVisualization(JsArrayNumber data) {
         /* Sizing and scales. */
@@ -92,6 +98,10 @@ public class PieChartExample extends ProtovisWidget implements ProtovisExample {
 
     public String getProtovisExampleURL() {
         return "http://vis.stanford.edu/protovis/ex/pie.html";
+    }
+
+    public String getSourceCodeFile() {
+        return "PieChartExample.java";
     }
 
     protected void onAttach() {
