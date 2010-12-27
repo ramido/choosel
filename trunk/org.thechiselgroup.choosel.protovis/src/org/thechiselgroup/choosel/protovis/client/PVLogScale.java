@@ -15,47 +15,50 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
-import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunctionNoIndex;
+import org.thechiselgroup.choosel.protovis.client.functions.PVFunction;
 import org.thechiselgroup.choosel.protovis.client.util.JsArrayGeneric;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**
  * Wrapper for
- * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.linear.html">pv.Scale.linear</a></code>
+ * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.log.html">pv.Scale.log</a></code>
  * .
  * 
- * @author Bradley Blashko
  * @author Lars Grammel
  */
-public class PVLinearScale extends PVScale {
+// @formatter:off
+public class PVLogScale extends PVScale {
 
-    protected PVLinearScale() {
+    protected PVLogScale() {
     }
 
     /**
      * Wrapper for
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.quantitative.html#domain">pv.Scale.quantitative.domain()</a></code>
      * .
-     */
-    public final native PVLinearScale domain(double min, double max) /*-{
+     */  
+    public final native PVLogScale domain(double min, double max) /*-{
         return this.domain(min, max);
     }-*/;
-
+    
     /**
      * Wrapper for
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.quantitative.html#domain">pv.Scale.quantitative.domain()</a></code>
      * .
-     */
-    public final native PVLinearScale domain(JsArrayGeneric<?> array,
-            PVDoubleFunctionNoIndex<?> f) /*-{
-        return this.domain(array, @org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunctionNoIndex;)(f));
+     */  
+    public final native PVLogScale domain(JsArrayGeneric<?> array, PVFunction<PVLogScale, ?, ?> f) /*-{
+        return this.domain(array, @org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/functions/PVFunction;)(this, f));
     }-*/;
 
-    public final native PVLinearScale range(double min, double max) /*-{
-        return this.range(min, max);
+    public final native PVLogScale range(int from, int to) /*-{
+        return this.range(from, to);
     }-*/;
 
+    public final native PVLogScale range(String fromColor, String toColor) /*-{
+        return this.range(fromColor, toColor);
+    }-*/;
+    
     /**
      * Wrapper for
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.quantitative.html#tickFormat">tickFormat()</a></code>
@@ -73,7 +76,7 @@ public class PVLinearScale extends PVScale {
     public final native String tickFormat(int tick) /*-{
         return this.tickFormat(tick);
     }-*/;
-
+    
     public final native JavaScriptObject ticks() /*-{
         return this.ticks();
     }-*/;
@@ -82,4 +85,6 @@ public class PVLinearScale extends PVScale {
         return this.ticks(ticks);
     }-*/;
 
+
 }
+// @formatter:on

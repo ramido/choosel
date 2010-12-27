@@ -13,27 +13,10 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.protovis.client;
+package org.thechiselgroup.choosel.protovis.client.functions;
 
-public class BenchmarkingStringFunction<T> implements
-        StringFunction<T> {
+public interface PVIntFunctionNoArgs {
 
-    private StringFunction<T> delegate;
-
-    public BenchmarkingStringFunction(StringFunction<T> delegate) {
-        this.delegate = delegate;
-    }
-
-    @Override
-    public String f(T value, int i) {
-        long startTime = System.currentTimeMillis();
-        try {
-            return delegate.f(value, i);
-        } finally {
-            System.err.println(delegate.toString() + " took "
-                    + (System.currentTimeMillis() - startTime) + " ms -- "
-                    + System.currentTimeMillis());
-        }
-    }
+    int f();
 
 }

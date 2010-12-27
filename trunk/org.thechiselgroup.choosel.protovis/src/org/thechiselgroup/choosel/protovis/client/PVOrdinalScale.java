@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayNumber;
 
 /**
@@ -25,52 +24,52 @@ import com.google.gwt.core.client.JsArrayNumber;
  * 
  * @author Lars Grammel
  */
-// @formatter:off
 public class PVOrdinalScale extends PVScale {
 
     protected PVOrdinalScale() {
     }
 
-    /**
-     * Wrapper for
-     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.ordinal.html#splitBanded">splitBanded()</a></code>
-     * .
-     */  
-    public final native PVOrdinalScale splitBanded(double min, double max) /*-{
-        return this.splitBanded(min, max);
-    }-*/;
-    
-    /**
-     * Wrapper for
-     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.ordinal.html#splitBanded">splitBanded()</a></code>
-     * .
-     */  
-    public final native PVOrdinalScale splitBanded(double min, double max, double band) /*-{
-        return this.splitBanded(min, max, band);
-    }-*/;
-    
-    // TODO 4 variants of domain method -- is this even possible?
-    
-    public final native PVOrdinalScale domain(JavaScriptObject array) /*-{
+    public final native PVOrdinalScale domain(JsArrayNumber array) /*-{
         return this.domain(array);
     }-*/;
-    
+
     /**
      * Wrapper for
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.ordinal.html#range">range()</a></code>
      * .
-     */    
+     */
     public final native JsArrayNumber range() /*-{
         return this.range();
     }-*/;
- 
+
+    // TODO 4 variants of domain method -- is this even possible?
+
     /**
-     * Wrapper for <code>range().band</code>, as explained in <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.ordinal.html#splitBanded">splitBanded()</a></code>
+     * Wrapper for <code>range().band</code>, as explained in
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.ordinal.html#splitBanded">splitBanded()</a></code>
      * .
-     */    
+     */
     public final native double rangeBand() /*-{
         return this.range().band;
     }-*/;
-    
+
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.ordinal.html#splitBanded">splitBanded()</a></code>
+     * .
+     */
+    public final native PVOrdinalScale splitBanded(double min, double max) /*-{
+        return this.splitBanded(min, max);
+    }-*/;
+
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.ordinal.html#splitBanded">splitBanded()</a></code>
+     * .
+     */
+    public final native PVOrdinalScale splitBanded(double min, double max,
+            double band) /*-{
+        return this.splitBanded(min, max, band);
+    }-*/;
+
 }
-// @formatter:on

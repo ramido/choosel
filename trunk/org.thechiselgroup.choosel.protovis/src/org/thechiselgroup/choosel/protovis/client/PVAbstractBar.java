@@ -16,95 +16,70 @@
 package org.thechiselgroup.choosel.protovis.client;
 
 import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction;
+import org.thechiselgroup.choosel.protovis.client.functions.PVFunction;
 import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunction;
 
 /**
  * 
- * @author Bradley Blashko
- * 
+ * @author Lars Grammel
  */
-public final class PVArea extends PVAbstractMark<PVArea> {
+public abstract class PVAbstractBar<T extends PVAbstractBar<T>> extends
+        PVAbstractMark<T> {
 
-    protected PVArea() {
+    protected PVAbstractBar() {
     }
 
-    public final native PVArea fillStyle(PVStringFunction<PVArea, ?> f) /*-{
+    public final native T antialias(boolean antialias) /*-{
+        return this.antialias(antialias);
+    }-*/;
+
+    public final native T fillStyle(PVStringFunction<T, ?> f) /*-{
         return this.fillStyle(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunction;)(this,f));
     }-*/;
 
-    public final native PVArea fillStyle(String colour) /*-{
+    public final native T fillStyle(String colour) /*-{
         return this.fillStyle(colour);
     }-*/;
 
-    public final native PVArea font(String font) /*-{
-        return this.font(font);
+    public final native T fillStyle(PVFunction<T, ?, PVColor> f) /*-{
+        return this.fillStyle(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/functions/PVFunction;)(this,f));
     }-*/;
 
-    public final native PVArea height(double height) /*-{
+    public final native T height(double height) /*-{
         return this.height(height);
     }-*/;
 
-    public final native PVArea height(PVDoubleFunction<? extends PVArea, ?> f) /*-{
+    public final native T height(PVDoubleFunction<T, ?> f) /*-{
         return this.height(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunction;)(this,f));
     }-*/;
 
-    public final native PVArea interpolate(String interpolate) /*-{
-        return this.interpolate(interpolate);
-    }-*/;
-
-    public final native PVArea lineWidth(double lineWidth) /*-{
+    public final native T lineWidth(double lineWidth) /*-{
         return this.lineWidth(lineWidth);
     }-*/;
 
-    public final native PVArea segmented(boolean segmented) /*-{
-        return this.segmented(segmented);
+    public final native T strokeStyle(PVStringFunction<T, ?> f) /*-{
+        return this.fillStyle(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunction;)(this,f));
     }-*/;
 
-    public final native PVArea strokeStyle(String strokeStyle) /*-{
+    public final native T strokeStyle(String strokeStyle) /*-{
         return this.strokeStyle(strokeStyle);
     }-*/;
 
-    public final native PVArea tension(double tension) /*-{
-        return this.tension(tension);
-    }-*/;
-
-    public final native PVArea text(String text) /*-{
-        return this.text(text);
-    }-*/;
-
-    public final native PVArea textAlign(String textAlign) /*-{
-        return this.textAlign(textAlign);
-    }-*/;
-
-    public final native PVArea textAngle(double textAngle) /*-{
-        return this.textAngle(textAngle);
-    }-*/;
-
-    public final native PVArea textBaseline(String textBaseline) /*-{
-        return this.textBaseline(textBaseline);
-    }-*/;
-
-    public final native PVArea textDecoration(String textDecoration) /*-{
-        return this.textDecoration(textDecoration);
-    }-*/;
-
-    public final native PVArea textMargin(double textMargin) /*-{
-        return this.textMargin(textMargin);
-    }-*/;
-
-    public final native PVArea textShadow(String textShadow) /*-{
-        return this.textShadow(textShadow);
-    }-*/;
-
-    public final native PVArea textStyle(String textStyle) /*-{
-        return this.textStyle(textStyle);
-    }-*/;
-
-    public final native PVArea width(double width) /*-{
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Bar.html#width">width()</a></code>
+     * .
+     */
+    public final native T width(double width) /*-{
         return this.width(width);
     }-*/;
 
-    public final native PVArea width(PVDoubleFunction<? extends PVArea, ?> f) /*-{
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Bar.html#width">width()</a></code>
+     * .
+     */
+    public final native T width(PVDoubleFunction<T, ?> f) /*-{
         return this.width(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunction;)(this,f));
     }-*/;
 

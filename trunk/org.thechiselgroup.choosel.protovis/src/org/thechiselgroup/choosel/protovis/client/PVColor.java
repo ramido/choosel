@@ -15,13 +15,19 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
+import com.google.gwt.core.client.JavaScriptObject;
+
 /**
- * Function that return <code>String</code> and takes no arguments.
  * 
  * @author Lars Grammel
  */
-public interface StringFunctionNoArgs {
+public class PVColor extends JavaScriptObject {
 
-    String f();
+    protected PVColor() {
+    }
+
+    public final native PVColor alpha(double alpha) /*-{
+        return this.alpha(alpha);
+    }-*/;
 
 }

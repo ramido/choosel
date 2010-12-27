@@ -13,15 +13,11 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.protovis.client;
+package org.thechiselgroup.choosel.protovis.client.functions;
 
-public final class JsUtils {
+//cannot use 'S extends PVAbstractMark<S>' because of GWT
+public interface PVFunction<S, T, U> {
 
-    private JsUtils() {
-    }
-
-    public final static native String toFixed(double d, int decimalPlaces) /*-{
-        return d.toFixed(decimalPlaces);
-    }-*/;
+    U f(S _this, T d);
 
 }
