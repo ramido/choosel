@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.protovis.client;
+package org.thechiselgroup.choosel.protovis.client.functions;
 
-public interface BooleanFunction<T> {
+public interface PVDoubleFunctionDoubleArg<S> {
 
-    boolean f(T value, int i);
+    double f(S _this, double d);
 
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.protovis.client;
+package org.thechiselgroup.choosel.protovis.client.util;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -25,22 +25,9 @@ import com.google.gwt.core.client.JavaScriptObject;
  * 
  * @author Lars Grammel
  */
-// @formatter:off
-public class JsGenericArray<T> extends JavaScriptObject {
+public class JsArrayGeneric<T> extends JavaScriptObject {
 
-    /**
-     * Creates a new generic array using <code>new $wnd.Array()</code>. This array is part
-     * of the main frame and will thus get recognized as an array by external javascript libraries
-     * in an <code>instanceof Array</code> check.
-     * 
-     * @see <a href="http://groups.google.com/group/google-web-toolkit/browse_thread/thread/09d82fa9a8d87832?fwc=1&pli=1">Google Groups Thread</a>
-     * @see <a href="http://perfectionkills.com/instanceof-considered-harmful-or-how-to-write-a-robust-isarray/">Instanceof Considered Harmful</a> 
-     */
-    public static native <T> JsGenericArray<T> createGenericArray() /*-{
-        return new $wnd.Array();
-    }-*/;
-
-    protected JsGenericArray() {
+    protected JsArrayGeneric() {
     }
 
     public final native T get(int index) /*-{
@@ -70,6 +57,5 @@ public class JsGenericArray<T> extends JavaScriptObject {
     public final native void unshift(T value) /*-{
         this.unshift(value);
     }-*/;
-    
+
 }
-// @formatter:on

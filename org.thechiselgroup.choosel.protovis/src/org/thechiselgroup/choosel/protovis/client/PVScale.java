@@ -15,7 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
+import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunctionNoIndex;
+import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionNoIndex;
+import org.thechiselgroup.choosel.protovis.client.util.JsArrayGeneric;
+
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArrayNumber;
 
 /**
  * Wrapper for
@@ -25,7 +30,6 @@ import com.google.gwt.core.client.JavaScriptObject;
  * @author Bradley Blashko
  * @author Lars Grammel
  */
-// @formatter:off
 public class PVScale extends JavaScriptObject {
 
     /**
@@ -42,34 +46,66 @@ public class PVScale extends JavaScriptObject {
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.linear.html#constructor">pv.Scale.linear()</a></code>
      * .
      */
-    public final static native PVLinearScale linear(double from, double to) /*-{
-        return $wnd.pv.Scale.linear(from, to);
+    public final static native PVLinearScale linear(double min, double max) /*-{
+        return $wnd.pv.Scale.linear(min, max);
     }-*/;
-    
+
     /**
      * Wrapper for
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.linear.html#constructor">pv.Scale.linear()</a></code>
      * .
      */
-    public final static native PVLinearScale linear(JsGenericArray<?> array, DoubleFunction<?> f) /*-{
-        var x = @org.thechiselgroup.choosel.protovis.client.PVMark::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/DoubleFunction;)(f);
-        $wnd.alert(x(array[4]));
-        return $wnd.pv.Scale.linear(array, x);
+    public final static native PVLinearScale linear(JsArrayGeneric<?> array,
+            PVDoubleFunctionNoIndex<?> f) /*-{
+        return $wnd.pv.Scale.linear(array, @org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunctionNoIndex;)(f));
+    }-*/;
+
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.log.html#constructor">pv.Scale.log()</a></code>
+     * .
+     */
+    public final static native PVLogScale log(double min, double max) /*-{
+        return $wnd.pv.Scale.log(min, max);
     }-*/;
 
     public final static native PVOrdinalScale ordinal() /*-{
         return $wnd.pv.Scale.ordinal();
     }-*/;
 
+    public final static native PVOrdinalScale ordinal(JsArrayNumber array) /*-{
+        return $wnd.pv.Scale.ordinal(array);
+    }-*/;
+
+    public final static native PVOrdinalScale ordinal(JsArrayGeneric<?> array,
+            PVStringFunctionNoIndex<?> f) /*-{
+        return $wnd.pv.Scale.ordinal(array, @org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunctionNoIndex;)(f));
+    }-*/;
+
     protected PVScale() {
     }
-    
+
     /**
-     * Scales are functions.
+     * Scales are functions. Use this method if the scale returns a double
+     * value.
      */
-    public final native double f(double value) /*-{
+    public final native double fd(double value) /*-{
         return this(value);
     }-*/;
-    
+
+    /**
+     * Scales are functions. Use this method if the scale returns a double
+     * value.
+     */
+    public final native double fd(String value) /*-{
+        return this(value);
+    }-*/;
+
+    /**
+     * Scales are functions. Use this method if the scale returns a color value.
+     */
+    public final native PVColor fcolor(double value) /*-{
+        return this(value);
+    }-*/;
+
 }
-// @formatter:on

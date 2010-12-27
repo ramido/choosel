@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.protovis.client;
+package org.thechiselgroup.choosel.protovis.client.functions;
 
-public interface StringFunction<T> {
+public interface PVDoubleFunctionNoIndex<T> {
 
-    String f(T value, int i);
+    double f(T d);
 
 }

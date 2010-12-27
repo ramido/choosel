@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.protovis.client;
+package org.thechiselgroup.choosel.protovis.client.functions;
 
-public interface DoubleFunctionNoArgs {
+// cannot use 'S extends PVAbstractMark<S>' because of GWT
+public interface PVDoubleFunction<S, T> {
 
-    double f();
+    double f(S _this, T d);
 
 }

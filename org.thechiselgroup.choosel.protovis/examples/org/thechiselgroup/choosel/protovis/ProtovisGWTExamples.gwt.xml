@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module rename-to='ProtovisGWT_Examples'>
+
+  <inherits name='com.google.gwt.user.User'/>
+  <inherits name='com.google.gwt.user.theme.standard.Standard'/>
+
+  <entry-point class='org.thechiselgroup.choosel.protovis.client.ProtovisGWTExamples'/>
+
+  <!--
+    Other modules inheriting Protovis/GWT should use an inherits
+    expression instead of including the js script file 
+  -->
+  <script src="protovis-3.2/protovis-r3.2.js"/>
+
+  <source path='client'/>
+
+</module>

@@ -8,7 +8,7 @@
   	
   <property name="dist" location="bin/dist"/>
   <property name="src" location="src"/>
-  <property name="class-dir" location="bin/classes"/>
+  <property name="class-dir" location="war/WEB-INF/classes"/>
   <property name="app-lib" value="bin/build/lib"/>
 	
   <target name="dist"
@@ -19,10 +19,13 @@
   	      description="creates zipfile of project"
   	      depends="prepare">
   	
-    <zip destfile="${dist}/ProtovisGWT-${version}.zip">
+    <zip destfile="${dist}/ProtovisGWT-${version}-full.zip">
       <fileset dir="..">
       	<include name="org.thechiselgroup.choosel.protovis/**" />
     	<exclude name="org.thechiselgroup.choosel.protovis/bin/**"/>
+    	<exclude name="org.thechiselgroup.choosel.protovis/tomcat/**"/>
+    	<exclude name="org.thechiselgroup.choosel.protovis/war/WEB-INF/classes/**"/>
+    	<exclude name="org.thechiselgroup.choosel.protovis/war/WEB-INF/ProtovisGWT_Examples/**"/>
       </fileset>
     </zip> 
   </target>	
@@ -31,7 +34,7 @@
   	      description="creates the module jar file"
   	      depends="prepare">
   	
-    <jar destfile="${dist}/ProtovisGWT-${version}.jar">
+    <jar destfile="${dist}/ProtovisGWT-${version}-bin.jar">
       <fileset dir="${src}">
       	<exclude name="org/thechiselgroup/choosel/protovis/public/protovis-3.2/examples/**" />
       	<exclude name="org/thechiselgroup/choosel/protovis/public/protovis-3.2/jsdoc/**" />

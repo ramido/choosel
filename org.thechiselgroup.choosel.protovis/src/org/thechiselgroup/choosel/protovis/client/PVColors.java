@@ -15,21 +15,28 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
-public final class PVAlignment {
+/**
+ * Wrapper for
+ * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Colors.html">pv.Colors</a></code>
+ * .
+ * 
+ * @author Lars Grammel
+ */
+public final class PVColors {
 
-    private PVAlignment() {
+    public final static native PVOrdinalScale category10() /*-{
+        return $wnd.pv.Colors.category10();
+    }-*/;
+
+    public final static native PVOrdinalScale category19() /*-{
+        return $wnd.pv.Colors.category19();
+    }-*/;
+
+    public final static native PVOrdinalScale category20() /*-{
+        return $wnd.pv.Colors.category20();
+    }-*/;
+
+    private PVColors() {
     }
-
-    public static final String TOP = "top";
-
-    public static final String MIDDLE = "middle";
-
-    public static final String BOTTOM = "bottom";
-
-    public static final String LEFT = "left";
-
-    public static final String CENTER = "center";
-
-    public static final String RIGHT = "right";
 
 }

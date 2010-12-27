@@ -20,26 +20,26 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class ProtovisWidget extends Widget {
 
-    private PVPanel chartPanel;
+    private PVPanel pvPanel;
 
     public ProtovisWidget() {
         setElement(DOM.createDiv());
     }
 
-    public PVPanel getChartPanel() {
-        return chartPanel;
+    public PVPanel getPVPanel() {
+        return pvPanel;
     }
 
     /**
-     * Initializes the chart panel. The chart panel uses the element of this
-     * widget and replaces any previous chart rendered in this widget.
+     * Initializes the Protovis panel. The panel uses the element of this widget
+     * and replaces any previous visualization rendered in this widget.
      */
-    public void initChartPanel() {
-        chartPanel = PVPanel.createPanel().canvas(getElement());
+    public void initPVPanel() {
+        pvPanel = PV.createPanel(getElement());
     }
 
     public boolean isInitialized() {
-        return chartPanel != null;
+        return pvPanel != null;
     }
 
 }

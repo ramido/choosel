@@ -15,15 +15,26 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
-import com.google.gwt.user.client.Event;
-
 /**
+ * Wrapper for
+ * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Layout.html">pv.Layout</a></code>
+ * .
  * 
- * @author Bradley Blashko
- * 
+ * @author Lars Grammel
  */
-public interface ProtovisEventHandler {
-
-    void handleEvent(Event e, int i);
-
+//@formatter:off
+public final class PVLayout {
+    
+    public static native PVBulletLayout Bullet() /*-{
+        return $wnd.pv.Layout.Bullet;
+    }-*/;
+    
+    public static native PVStackLayout Stack() /*-{
+        return $wnd.pv.Layout.Stack;
+    }-*/;
+   
+    private PVLayout() {
+    }
+    
 }
+//@formatter:on

@@ -13,10 +13,15 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.protovis.client;
+package org.thechiselgroup.choosel.protovis.client.functions;
 
-public interface DoubleFunction<T> {
+/**
+ * Function that return <code>String</code> and takes no arguments.
+ * 
+ * @author Lars Grammel
+ */
+public interface PVStringFunctionNoArgs {
 
-    double f(T value, int i);
+    String f();
 
 }
