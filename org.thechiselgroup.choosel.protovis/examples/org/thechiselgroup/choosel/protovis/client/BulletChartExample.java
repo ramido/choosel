@@ -28,6 +28,7 @@ import org.thechiselgroup.choosel.protovis.client.util.JsArrayGeneric;
 import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
 
 import com.google.gwt.core.client.JsArrayNumber;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Protovis/GWT implementation of <a
@@ -61,6 +62,11 @@ public class BulletChartExample extends ProtovisWidget implements
             this.markers = markers;
         }
 
+    }
+
+    @Override
+    public Widget asWidget() {
+        return this;
     }
 
     private void createVisualization(JsArrayGeneric<Bullet> bullets) {
@@ -142,6 +148,10 @@ public class BulletChartExample extends ProtovisWidget implements
 
     public String getProtovisExampleURL() {
         return "http://vis.stanford.edu/protovis/ex/bullet.html";
+    }
+
+    public String getSourceCodeFile() {
+        return "BulletChartExample.java";
     }
 
     protected void onAttach() {

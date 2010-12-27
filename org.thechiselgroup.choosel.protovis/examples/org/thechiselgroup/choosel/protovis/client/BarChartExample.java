@@ -25,6 +25,8 @@ import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionDoub
 import org.thechiselgroup.choosel.protovis.client.util.JsArrayGeneric;
 import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
 
+import com.google.gwt.user.client.ui.Widget;
+
 /**
  * Protovis/GWT implementation of <a
  * href="http://vis.stanford.edu/protovis/ex/bar.html">Protovis bar chart
@@ -33,6 +35,11 @@ import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
  * @author Lars Grammel
  */
 public class BarChartExample extends ProtovisWidget implements ProtovisExample {
+
+    @Override
+    public Widget asWidget() {
+        return this;
+    }
 
     private void createVisualization(JsArrayGeneric<Double> data) {
         /* Sizing and scales. */
@@ -105,6 +112,10 @@ public class BarChartExample extends ProtovisWidget implements ProtovisExample {
 
     public String getProtovisExampleURL() {
         return "http://vis.stanford.edu/protovis/ex/bar.html";
+    }
+
+    public String getSourceCodeFile() {
+        return "BarChartExample.java";
     }
 
     protected void onAttach() {

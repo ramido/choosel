@@ -26,6 +26,8 @@ import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionIntA
 import org.thechiselgroup.choosel.protovis.client.util.JsArrayGeneric;
 import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
 
+import com.google.gwt.user.client.ui.Widget;
+
 /**
  * Protovis/GWT implementation of <a
  * href="http://vis.stanford.edu/protovis/ex/weather.html">Protovis Seattle
@@ -106,6 +108,11 @@ public class SeattleWeatherExample extends ProtovisWidget implements
             return forecast != null;
         }
 
+    }
+
+    @Override
+    public Widget asWidget() {
+        return this;
     }
 
     private void createVisualization(JsArrayGeneric<WeatherRecord> weather) {
@@ -271,6 +278,10 @@ public class SeattleWeatherExample extends ProtovisWidget implements
 
     public String getProtovisExampleURL() {
         return "http://vis.stanford.edu/protovis/ex/weather.html";
+    }
+
+    public String getSourceCodeFile() {
+        return "SeattleWeatherExample.java";
     }
 
     protected void onAttach() {
