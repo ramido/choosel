@@ -5,6 +5,6 @@
 	
 	<source path='client'/>
 	
-	<script src="protovis-3.2-PATCHED/protovis-d3.2-PATCHED.js"/>
+	<script src="protovis-3.2-PATCHED/protovis-d3.2-PATCHED-COMPRESSED.js"/>
 
 </module>
