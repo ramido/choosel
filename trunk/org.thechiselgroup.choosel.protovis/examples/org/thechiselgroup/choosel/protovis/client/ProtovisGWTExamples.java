@@ -79,14 +79,6 @@ public class ProtovisGWTExamples implements EntryPoint {
         RootPanel.get("sourceCodeLink").add(sourceCodeLink);
     }
 
-    private void initVisualizationPanel() {
-        deckPanel = new DeckPanel();
-        for (ProtovisExample example : examples) {
-            deckPanel.add(example.asWidget());
-        }
-        RootPanel.get("visualization").add(deckPanel);
-    }
-
     private void initVisualizationSelector() {
         selectorList = new ListBox();
         selectorList.setVisibleItemCount(10);
@@ -111,7 +103,6 @@ public class ProtovisGWTExamples implements EntryPoint {
 
     public void onModuleLoad() {
         initExampleVisualizations();
-        initVisualizationPanel();
         initVisualizationTitleLabel();
         initProtovisExampleLink();
         initSourceCodeLink();
@@ -124,7 +115,6 @@ public class ProtovisGWTExamples implements EntryPoint {
         int i = selectorList.getSelectedIndex();
         ProtovisExample example = examples.get(i);
 
-        deckPanel.showWidget(i);
         visualizationTitle.setText(example.toString());
         protovisExampleLink.setHref(example.getProtovisExampleURL());
         sourceCodeLink
@@ -132,5 +122,11 @@ public class ProtovisGWTExamples implements EntryPoint {
                         + "org.thechiselgroup.choosel.protovis/examples/"
                         + "org/thechiselgroup/choosel/protovis/client/"
                         + example.getSourceCodeFile());
+
+        RootPanel rootPanel = RootPanel.get("visualization");
+        if (rootPanel.getWidgetCount() > 0) {
+            rootPanel.remove(0);
+        }
+        rootPanel.add(example.asWidget());
     }
 }

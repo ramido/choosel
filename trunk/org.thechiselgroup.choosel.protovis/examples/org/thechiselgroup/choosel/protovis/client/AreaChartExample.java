@@ -59,8 +59,8 @@ public class AreaChartExample extends ProtovisWidget implements ProtovisExample 
         int w = 400;
         int h = 200;
 
-        final PVLinearScale x = PVScale.linear()
-                .domain(data, new PVDoubleFunctionNoIndex<Point>() {
+        final PVLinearScale x = PVScale.linear(data,
+                new PVDoubleFunctionNoIndex<Point>() {
                     @Override
                     public double f(Point d) {
                         return d.x;
