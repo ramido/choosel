@@ -27,39 +27,45 @@ import com.google.gwt.core.client.JavaScriptObject;
 public final class JsFunctionUtils {
 
     public static final native JavaScriptObject toJavaScriptEventFunction(
-            JavaScriptObject _this, PVEventHandler<?> handler) /*-{
+            PVEventHandler<?> handler) /*-{
         return function() 
-        { return handler.@org.thechiselgroup.choosel.protovis.client.functions.PVEventHandler::onEvent(Ljava/lang/Object;Lcom/google/gwt/user/client/Event;)(_this, $wnd.pv.event);};
+        { return handler.@org.thechiselgroup.choosel.protovis.client.functions.PVEventHandler::onEvent(Ljava/lang/Object;Lcom/google/gwt/user/client/Event;)(this, $wnd.pv.event);};
     }-*/;
 
     public static final native JavaScriptObject toJavaScriptFunction(
-            JavaScriptObject _this, PVBooleanFunction<?, ?> f) /*-{
+            PVBooleanFunction<?, ?> f) /*-{
         return function(d) 
-        { return f.@org.thechiselgroup.choosel.protovis.client.functions.PVBooleanFunction::f(Ljava/lang/Object;Ljava/lang/Object;)(_this, d);};
+        { return f.@org.thechiselgroup.choosel.protovis.client.functions.PVBooleanFunction::f(Ljava/lang/Object;Ljava/lang/Object;)(this, d);};
     }-*/;
 
     public static final native JavaScriptObject toJavaScriptFunction(
-            JavaScriptObject _this, PVBooleanFunctionDoubleArg<?> f) /*-{
+            PVBooleanFunctionDoubleArg<?> f) /*-{
         return function(d) 
-        { return f.@org.thechiselgroup.choosel.protovis.client.functions.PVBooleanFunctionDoubleArg::f(Ljava/lang/Object;D)(_this,d); };
+        { return f.@org.thechiselgroup.choosel.protovis.client.functions.PVBooleanFunctionDoubleArg::f(Ljava/lang/Object;D)(this,d); };
     }-*/;
 
     public static final native JavaScriptObject toJavaScriptFunction(
-            JavaScriptObject _this, PVDoubleFunction<?, ?> f) /*-{
+            PVDoubleFunction<?, ?> f) /*-{
         return function(d) 
-        { return f.@org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction::f(Ljava/lang/Object;Ljava/lang/Object;)(_this, d);};
+        { return f.@org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction::f(Ljava/lang/Object;Ljava/lang/Object;)(this, d);};
     }-*/;
 
     public static final native JavaScriptObject toJavaScriptFunction(
-            JavaScriptObject _this, PVDoubleFunctionDoubleArg<?> f) /*-{
+            PVDoubleFunctionDoubleArg<?> f) /*-{
         return function(d) 
-        { return f.@org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunctionDoubleArg::f(Ljava/lang/Object;D)(_this, d);};
+        { return f.@org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunctionDoubleArg::f(Ljava/lang/Object;D)(this, d);};
     }-*/;
 
     public static final native JavaScriptObject toJavaScriptFunction(
             PVDoubleFunctionWithoutThis<?> f) /*-{
         return function(d) 
         { return f.@org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunctionWithoutThis::f(Ljava/lang/Object;)(d);};
+    }-*/;
+
+    public static final native JavaScriptObject toJavaScriptFunction(
+            PVFunctionDoubleArg<?, ?> f) /*-{
+        return function(d) 
+        { return f.@org.thechiselgroup.choosel.protovis.client.functions.PVFunctionDoubleArg::f(Ljava/lang/Object;D)(this, d);};
     }-*/;
 
     public static final native JavaScriptObject toJavaScriptFunction(
@@ -74,28 +80,27 @@ public final class JsFunctionUtils {
         { return f.@org.thechiselgroup.choosel.protovis.client.functions.PVFunctionWithoutThis::f(Ljava/lang/Object;)(d);};
     }-*/;
 
-    public static final native Object toJavaScriptFunction(
-            JavaScriptObject _this, PVFunction<?, ?, ?> f) /*-{
+    public static final native Object toJavaScriptFunction(PVFunction<?, ?, ?> f) /*-{
         return function(d) 
-        { return f.@org.thechiselgroup.choosel.protovis.client.functions.PVFunction::f(Ljava/lang/Object;Ljava/lang/Object;)(_this, d);};
+        { return f.@org.thechiselgroup.choosel.protovis.client.functions.PVFunction::f(Ljava/lang/Object;Ljava/lang/Object;)(this, d);};
     }-*/;
 
     public static final native JavaScriptObject toJavaScriptFunction(
-            JavaScriptObject _this, PVStringFunction<?, ?> f) /*-{
+            PVStringFunction<?, ?> f) /*-{
         return function(d) 
-        { return f.@org.thechiselgroup.choosel.protovis.client.functions.PVStringFunction::f(Ljava/lang/Object;Ljava/lang/Object;)(_this, d); };
+        { return f.@org.thechiselgroup.choosel.protovis.client.functions.PVStringFunction::f(Ljava/lang/Object;Ljava/lang/Object;)(this, d); };
     }-*/;
 
     public static final native JavaScriptObject toJavaScriptFunction(
-            JavaScriptObject _this, PVStringFunctionDoubleArg<?> f) /*-{
+            PVStringFunctionDoubleArg<?> f) /*-{
         return function(d) 
-        { return f.@org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionDoubleArg::f(Ljava/lang/Object;D)(_this, d); };
+        { return f.@org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionDoubleArg::f(Ljava/lang/Object;D)(this, d); };
     }-*/;
 
     public static final native JavaScriptObject toJavaScriptFunction(
-            JavaScriptObject _this, PVStringFunctionIntArg<?> f) /*-{
+            PVStringFunctionIntArg<?> f) /*-{
         return function(d) 
-        { return f.@org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionIntArg::f(Ljava/lang/Object;I)(_this, d); };
+        { return f.@org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionIntArg::f(Ljava/lang/Object;I)(this, d); };
     }-*/;
 
     public static final native JavaScriptObject toJavaScriptFunction(

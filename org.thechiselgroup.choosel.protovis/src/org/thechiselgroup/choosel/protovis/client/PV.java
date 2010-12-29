@@ -86,6 +86,10 @@ public final class PV {
         return data.sort(comparator);
     }-*/;
 
+    public static native PVOrdinalScale ramp(String start, String end) /*-{
+        return $wnd.pv.ramp(start, end);
+    }-*/;
+
     public static native double sum(JsArrayNumber data) /*-{
         return $wnd.pv.sum(data);
     }-*/;

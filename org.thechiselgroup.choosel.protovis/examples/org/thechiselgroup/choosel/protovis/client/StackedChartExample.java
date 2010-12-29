@@ -76,12 +76,12 @@ public class StackedChartExample extends ProtovisWidget implements
 
         /* The stack layout. */
         vis.add(PVLayout.Stack()).layers(data)
-                .x(new PVDoubleFunction<PVStackLayout, Point>() {
-                    public double f(PVStackLayout _this, Point d) {
+                .x(new PVDoubleFunction<PVMark, Point>() {
+                    public double f(PVMark _this, Point d) {
                         return x.fd(d.x);
                     }
-                }).y(new PVDoubleFunction<PVStackLayout, Point>() {
-                    public double f(PVStackLayout _this, Point d) {
+                }).y(new PVDoubleFunction<PVMark, Point>() {
+                    public double f(PVMark _this, Point d) {
                         return y.fd(d.y);
                     }
                 }).layer().add(PV.Area());

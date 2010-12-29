@@ -34,7 +34,7 @@ public abstract class PVAbstractBar<T extends PVAbstractBar<T>> extends
     }-*/;
 
     public final native T fillStyle(PVStringFunction<T, ?> f) /*-{
-        return this.fillStyle(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunction;)(this,f));
+        return this.fillStyle(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunction;)(f));
     }-*/;
 
     public final native T fillStyle(String colour) /*-{
@@ -42,7 +42,7 @@ public abstract class PVAbstractBar<T extends PVAbstractBar<T>> extends
     }-*/;
 
     public final native T fillStyle(PVFunction<T, ?, PVColor> f) /*-{
-        return this.fillStyle(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/functions/PVFunction;)(this,f));
+        return this.fillStyle(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVFunction;)(f));
     }-*/;
 
     public final native T height(double height) /*-{
@@ -50,7 +50,7 @@ public abstract class PVAbstractBar<T extends PVAbstractBar<T>> extends
     }-*/;
 
     public final native T height(PVDoubleFunction<T, ?> f) /*-{
-        return this.height(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunction;)(this,f));
+        return this.height(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunction;)(f));
     }-*/;
 
     public final native T lineWidth(double lineWidth) /*-{
@@ -58,7 +58,7 @@ public abstract class PVAbstractBar<T extends PVAbstractBar<T>> extends
     }-*/;
 
     public final native T strokeStyle(PVStringFunction<T, ?> f) /*-{
-        return this.fillStyle(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunction;)(this,f));
+        return this.fillStyle(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunction;)(f));
     }-*/;
 
     public final native T strokeStyle(String strokeStyle) /*-{
@@ -80,7 +80,7 @@ public abstract class PVAbstractBar<T extends PVAbstractBar<T>> extends
      * .
      */
     public final native T width(PVDoubleFunction<T, ?> f) /*-{
-        return this.width(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunction;)(this,f));
+        return this.width(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunction;)(f));
     }-*/;
 
 }

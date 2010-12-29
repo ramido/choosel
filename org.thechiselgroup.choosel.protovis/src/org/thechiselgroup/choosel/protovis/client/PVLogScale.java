@@ -48,7 +48,7 @@ public class PVLogScale extends PVScale {
      * .
      */  
     public final native PVLogScale domain(JsArrayGeneric<?> array, PVFunction<PVLogScale, ?, ?> f) /*-{
-        return this.domain(array, @org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/functions/PVFunction;)(this, f));
+        return this.domain(array, @org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVFunction;)( f));
     }-*/;
 
     public final native PVLogScale range(int from, int to) /*-{

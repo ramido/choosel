@@ -31,7 +31,7 @@ public final class PVLine extends PVAbstractMark<PVLine> {
     }-*/;
 
     public final native PVLine fillStyle(PVStringFunction<PVLine, ?> f) /*-{
-        return this.fillStyle(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunction;)(this,f));
+        return this.fillStyle(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunction;)(f));
     }-*/;
 
     public final native PVLine fillStyle(String colour) /*-{
