@@ -52,6 +52,7 @@ public class ProtovisGWTExamples implements EntryPoint {
 
     private void initExampleVisualizations() {
         examples = new ArrayList<ProtovisExample>();
+        examples.add(new GasAndDrivingExample());
         examples.add(new AreaChartExample());
         examples.add(new BarChartExample());
         examples.add(new PieChartExample());
