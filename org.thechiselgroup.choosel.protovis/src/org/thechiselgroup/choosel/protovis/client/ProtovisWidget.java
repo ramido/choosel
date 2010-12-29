@@ -28,7 +28,6 @@ public class ProtovisWidget extends Widget {
 
     public ProtovisWidget() {
         setElement(DOM.createDiv());
-        getElement().getStyle().setPosition(Position.RELATIVE);
     }
 
     protected Element addDescriptionElement(int topPx, int leftPx, String html,
@@ -47,6 +46,12 @@ public class ProtovisWidget extends Widget {
 
     public PVPanel getPVPanel() {
         return pvPanel;
+    }
+
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+        getElement().getStyle().setPosition(Position.RELATIVE);
     }
 
     /**
