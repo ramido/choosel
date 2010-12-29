@@ -57,6 +57,10 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
         return this.add(mark);
     }-*/;
 
+    public final native T anchor(PVStringFunction<T, ?> f) /*-{
+        return this.anchor(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunction;)(this,f));
+    }-*/;
+
     public final native T anchor(String anchor) /*-{
         return this.anchor(anchor);
     }-*/;
