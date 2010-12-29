@@ -23,8 +23,6 @@ import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunctionDoubleArg;
 import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunction;
 import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionIntArg;
-import org.thechiselgroup.choosel.protovis.client.util.JsArrayGeneric;
-import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -115,14 +113,14 @@ public class SeattleWeatherExample extends ProtovisWidget implements
         return this;
     }
 
-    private void createVisualization(JsArrayGeneric<WeatherRecord> weather) {
+    private void createVisualization(WeatherRecord[] weatherRecords) {
         final int w = 18;
         final int h = 3;
 
         PVPanel vis = getPVPanel().width(200).height(250);
 
         /* Record range. */
-        PVBar record = vis.add(PV.Bar()).data(weather)
+        PVBar record = vis.add(PV.Bar()).data(weatherRecords)
                 .bottom(new PVDoubleFunction<PVBar, WeatherRecord>() {
                     @Override
                     public double f(PVBar _this, WeatherRecord d) {
@@ -251,29 +249,28 @@ public class SeattleWeatherExample extends ProtovisWidget implements
                 .font("bold 10pt Sans-Serif").text("Seattle ");
     }
 
-    private JsArrayGeneric<WeatherRecord> generateData() {
-        JsArrayGeneric<WeatherRecord> weather = JsUtils.createJsArrayGeneric();
-        weather.push(new WeatherRecord("M", new Range(62, 15),
-                new Range(50, 38), new Range(48, 36)));
-        weather.push(new WeatherRecord("T", new Range(62, 23),
-                new Range(50, 38), new Range(50, 40)));
-        weather.push(new WeatherRecord("W", new Range(61, 20),
-                new Range(50, 38), new Range(55, 36)));
-        weather.push(new WeatherRecord("T", new Range(67, 21),
-                new Range(50, 38), new Range(51, 33)));
-        weather.push(new WeatherRecord("F", new Range(61, 23),
-                new Range(50, 38), new Range(50, 30)));
-        weather.push(new WeatherRecord("S", new Range(67, 20),
-                new Range(50, 38), new Forecast(53, 49, 40, 35)));
-        weather.push(new WeatherRecord("S", new Range(63, 23),
-                new Range(50, 39), new Forecast(55, 49, 42, 37)));
-        weather.push(new WeatherRecord("M", new Range(61, 26),
-                new Range(51, 39), new Forecast(53, 49, 43, 40)));
-        weather.push(new WeatherRecord("T", new Range(61, 24),
-                new Range(51, 39), new Forecast(52, 46, 44, 40)));
-        weather.push(new WeatherRecord("W", new Range(63, 20),
-                new Range(51, 39), new Forecast(53, 46, 43, 38)));
-        return weather;
+    private WeatherRecord[] generateData() {
+        return new WeatherRecord[] {
+                new WeatherRecord("M", new Range(62, 15), new Range(50, 38),
+                        new Range(48, 36)),
+                new WeatherRecord("T", new Range(62, 23), new Range(50, 38),
+                        new Range(50, 40)),
+                new WeatherRecord("W", new Range(61, 20), new Range(50, 38),
+                        new Range(55, 36)),
+                new WeatherRecord("T", new Range(67, 21), new Range(50, 38),
+                        new Range(51, 33)),
+                new WeatherRecord("F", new Range(61, 23), new Range(50, 38),
+                        new Range(50, 30)),
+                new WeatherRecord("S", new Range(67, 20), new Range(50, 38),
+                        new Forecast(53, 49, 40, 35)),
+                new WeatherRecord("S", new Range(63, 23), new Range(50, 39),
+                        new Forecast(55, 49, 42, 37)),
+                new WeatherRecord("M", new Range(61, 26), new Range(51, 39),
+                        new Forecast(53, 49, 43, 40)),
+                new WeatherRecord("T", new Range(61, 24), new Range(51, 39),
+                        new Forecast(52, 46, 44, 40)),
+                new WeatherRecord("W", new Range(63, 20), new Range(51, 39),
+                        new Forecast(53, 46, 43, 38)), };
     }
 
     public String getProtovisExampleURL() {

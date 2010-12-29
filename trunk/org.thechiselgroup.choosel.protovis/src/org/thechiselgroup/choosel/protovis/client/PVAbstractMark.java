@@ -85,12 +85,8 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
         return this.cursor(cursor);
     }-*/;
 
-    public final T dataDouble(double... data) {
-        return this.data(JsUtils.toJsArrayNumber(data));
-    }
-
-    public final T dataInt(int... data) {
-        return this.data(JsUtils.toJsArrayInteger(data));
+    public final <S> T data(Iterable<S> data) {
+        return this.data(JsUtils.toJsArrayGeneric(data));
     }
 
     public final native T data(JavaScriptObject data) /*-{
@@ -100,6 +96,18 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
     public final native T data(PVFunction<T, ?, ?> f) /*-{
         return this.data(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/functions/PVFunction;)(this,f));
     }-*/;
+
+    public final <S> T data(S[] data) {
+        return this.data(JsUtils.toJsArrayGeneric(data));
+    }
+
+    public final T dataDouble(double... data) {
+        return this.data(JsUtils.toJsArrayNumber(data));
+    }
+
+    public final T dataInt(int... data) {
+        return this.data(JsUtils.toJsArrayInteger(data));
+    }
 
     public final native JavaScriptObject def(String name) /*-{
         return this.def(name);
@@ -199,12 +207,12 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
         return this.scale(scale);
     }-*/;
 
-    public final native T title(String title) /*-{
-        return this.title(title);
-    }-*/;
-
     public final native T title(PVStringFunction<T, ?> f) /*-{
         return this.title(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunction;)(this,f));
+    }-*/;
+
+    public final native T title(String title) /*-{
+        return this.title(title);
     }-*/;
 
     /**

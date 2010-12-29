@@ -49,6 +49,24 @@ public final class JsUtils {
         return d.toFixed(decimalPlaces);
     }-*/;
 
+    public final static <S> JsArrayGeneric<S> toJsArrayGeneric(
+            Iterable<S> values) {
+
+        JsArrayGeneric<S> array = createJsArrayGeneric();
+        for (S value : values) {
+            array.push(value);
+        }
+        return array;
+    }
+
+    public final static <S> JsArrayGeneric<S> toJsArrayGeneric(S... values) {
+        JsArrayGeneric<S> array = createJsArrayGeneric();
+        for (S value : values) {
+            array.push(value);
+        }
+        return array;
+    }
+
     public final static JsArrayInteger toJsArrayInteger(int... values) {
         JsArrayInteger array = createJsArrayInteger();
         for (int value : values) {
