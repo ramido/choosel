@@ -271,4 +271,5 @@ public class SeattleWeatherExample extends ProtovisWidget implements
     public String toString() {
         return "Seattle Weather";
     }
+
 }

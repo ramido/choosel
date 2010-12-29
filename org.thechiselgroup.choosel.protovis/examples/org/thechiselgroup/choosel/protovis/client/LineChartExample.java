@@ -128,4 +128,5 @@ public class LineChartExample extends ProtovisWidget implements ProtovisExample 
     public String toString() {
         return "Line Chart";
     }
+
 }

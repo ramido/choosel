@@ -109,4 +109,5 @@ public class PieChartExample extends ProtovisWidget implements ProtovisExample {
     public String toString() {
         return "Pie/Donut Chart";
     }
+
 }

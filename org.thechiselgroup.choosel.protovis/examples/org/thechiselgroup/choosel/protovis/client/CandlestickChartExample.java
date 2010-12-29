@@ -210,4 +210,5 @@ public class CandlestickChartExample extends ProtovisWidget implements
     public String toString() {
         return "Candlestick Chart";
     }
+
 }

@@ -11,7 +11,7 @@
     expression instead of including the js script file 
   -->
   <script src="protovis-3.2-PATCHED/protovis-d3.2-PATCHED.js"/>
-
   <source path='client'/>
+  <stylesheet src="css/gasAndDrivingExample.css" />
 
 </module>

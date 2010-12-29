@@ -128,4 +128,5 @@ public class AreaChartExample extends ProtovisWidget implements ProtovisExample 
     public String toString() {
         return "Area Chart";
     }
+
 }

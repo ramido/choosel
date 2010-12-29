@@ -24,6 +24,8 @@ import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunction;
 import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionDoubleArg;
 import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
 
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -35,6 +37,8 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class GasAndDrivingExample extends ProtovisWidget implements
         ProtovisExample {
+
+    private static final String CSS_CLASS = "gasAndDrivingExample-caption";
 
     public static class DrivingStats {
 
@@ -61,10 +65,6 @@ public class GasAndDrivingExample extends ProtovisWidget implements
     }
 
     private void createVisualization(DrivingStats[] driving) {
-        // Element div = DOM.createDiv();
-        // div.
-        // getElement().appendChild(div);
-
         int w = 900;
         int h = 590;
         final PVLinearScale x = PVScale.linear(3380, 10500).range(0, w);
@@ -86,7 +86,7 @@ public class GasAndDrivingExample extends ProtovisWidget implements
                 .textMargin(6).textAlign(LEFT).textBaseline(TOP)
                 .text(new PVStringFunctionDoubleArg<PVLabel>() {
                     public String f(PVLabel _this, double d) {
-                        return d + " mi"; // pv.Format.number()(d)
+                        return PVFormat.number().format(d) + " mi";
                     }
                 });
 
@@ -113,6 +113,24 @@ public class GasAndDrivingExample extends ProtovisWidget implements
                 });
     }
 
+    private void addDescriptions() {
+        addDescriptionElement(320, 150, "Cheap gas,<br/>longer commutes",
+                CSS_CLASS);
+        addDescriptionElement(350, 350, "The Arab<br/>oil embargo", CSS_CLASS);
+        addDescriptionElement(100, 440, "Energy crisis</p>", CSS_CLASS);
+        addDescriptionElement(430, 670, "Record low prices", CSS_CLASS);
+
+        Element div = addDescriptionElement(
+                86,
+                660,
+                "The swing backward"
+                        + "<p>The average number of miles that Americans drive annually beings to"
+                        + "fall, so the chart appears to turn around.</p>",
+                CSS_CLASS);
+        div.getStyle().setWidth(110, Unit.PX);
+        div.getStyle().setPadding(10, Unit.PX);
+    }
+
     /**
      * This data was extracted from the New York Times article "Driving Shifts
      * Into Reverse" by Hannah Fairfield, published on May 2, 2010. The original
@@ -130,7 +148,7 @@ public class GasAndDrivingExample extends ProtovisWidget implements
                 new DrivingStats("right", 1960, 3935, 2.27),
                 new DrivingStats("bottom", 1961, 3977, 2.25),
                 new DrivingStats("right", 1962, 4085, 2.22),
-                new DrivingStats("bottom", 1963, 4218, 2.12),
+                new DrivingStats("left", 1963, 4218, 2.12),
                 new DrivingStats("bottom", 1964, 4369, 2.11),
                 new DrivingStats("bottom", 1965, 4538, 2.14),
                 new DrivingStats("top", 1966, 4676, 2.14),
@@ -144,7 +162,7 @@ public class GasAndDrivingExample extends ProtovisWidget implements
                 new DrivingStats("left", 1974, 5943, 2.34),
                 new DrivingStats("bottom", 1975, 6111, 2.31),
                 new DrivingStats("bottom", 1976, 6389, 2.32),
-                new DrivingStats("right", 1977, 6630, 2.36),
+                new DrivingStats("top", 1977, 6630, 2.36),
                 new DrivingStats("bottom", 1978, 6883, 2.23),
                 new DrivingStats("left", 1979, 6744, 2.68),
                 new DrivingStats("left", 1980, 6672, 3.30),
@@ -193,6 +211,8 @@ public class GasAndDrivingExample extends ProtovisWidget implements
         initPVPanel();
         createVisualization(generateData());
         getPVPanel().render();
+
+        addDescriptions();
     }
 
     public String toString() {

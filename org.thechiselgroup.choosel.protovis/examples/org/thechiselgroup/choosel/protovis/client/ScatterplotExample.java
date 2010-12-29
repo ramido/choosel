@@ -153,4 +153,5 @@ public class ScatterplotExample extends ProtovisWidget implements
     public String toString() {
         return "Scatter Plot";
     }
+
 }

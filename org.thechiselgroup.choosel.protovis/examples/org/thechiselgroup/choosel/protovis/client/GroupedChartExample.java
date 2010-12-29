@@ -156,4 +156,5 @@ public class GroupedChartExample extends ProtovisWidget implements
     public String toString() {
         return "Grouped Bar Chart";
     }
+
 }
