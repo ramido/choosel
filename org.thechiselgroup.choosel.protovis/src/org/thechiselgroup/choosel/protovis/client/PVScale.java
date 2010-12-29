@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.protovis.client;
 import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunctionNoIndex;
 import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionNoIndex;
 import org.thechiselgroup.choosel.protovis.client.util.JsArrayGeneric;
+import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayNumber;
@@ -62,6 +63,16 @@ public class PVScale extends JavaScriptObject {
 
     /**
      * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.linear.html#constructor">pv.Scale.linear()</a></code>
+     * .
+     */
+    public final static <S> PVLinearScale linear(S[] array,
+            PVDoubleFunctionNoIndex<?> f) {
+        return linear(JsUtils.toJsArrayGeneric(array), f);
+    }
+
+    /**
+     * Wrapper for
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.log.html#constructor">pv.Scale.log()</a></code>
      * .
      */
@@ -81,6 +92,16 @@ public class PVScale extends JavaScriptObject {
             PVStringFunctionNoIndex<?> f) /*-{
         return $wnd.pv.Scale.ordinal(array, @org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunctionNoIndex;)(f));
     }-*/;
+
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.ordinal.html#constructor">pv.Scale.ordinal()</a></code>
+     * .
+     */
+    public final static <S> PVOrdinalScale ordinal(S[] array,
+            PVStringFunctionNoIndex<?> f) {
+        return ordinal(JsUtils.toJsArrayGeneric(array), f);
+    }
 
     protected PVScale() {
     }

@@ -23,8 +23,6 @@ import org.thechiselgroup.choosel.protovis.client.functions.PVBooleanFunctionDou
 import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunctionNoIndex;
 import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionDoubleArg;
-import org.thechiselgroup.choosel.protovis.client.util.JsArrayGeneric;
-import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -55,11 +53,11 @@ public class AreaChartExample extends ProtovisWidget implements ProtovisExample 
         return this;
     }
 
-    private void createVisualization(JsArrayGeneric<Point> data) {
+    private void createVisualization(Point[] points) {
         int w = 400;
         int h = 200;
 
-        final PVLinearScale x = PVScale.linear(data,
+        final PVLinearScale x = PVScale.linear(points,
                 new PVDoubleFunctionNoIndex<Point>() {
                     @Override
                     public double f(Point d) {
@@ -92,7 +90,7 @@ public class AreaChartExample extends ProtovisWidget implements ProtovisExample 
                 .text(x.tickFormat());
 
         /* The area with top line. */
-        vis.add(PV.Area()).data(data).bottom(1)
+        vis.add(PV.Area()).data(points).bottom(1)
                 .left(new PVDoubleFunction<PVArea, Point>() {
                     @Override
                     public double f(PVArea _this, Point d) {
@@ -107,12 +105,12 @@ public class AreaChartExample extends ProtovisWidget implements ProtovisExample 
                 .lineWidth(3);
     }
 
-    private JsArrayGeneric<Point> generateData() {
-        JsArrayGeneric<Point> data = JsUtils.createJsArrayGeneric();
-        for (int i = 0; i < 100; i++) {
+    private Point[] generateData() {
+        Point[] data = new Point[100];
+        for (int i = 0; i < data.length; i++) {
             double xValue = i / 10d;
-            data.push(new Point(xValue, Math.sin(xValue) + Math.random() * .5
-                    + 2));
+            data[i] = new Point(xValue, Math.sin(xValue) + Math.random() * .5
+                    + 2);
         }
         return data;
     }
