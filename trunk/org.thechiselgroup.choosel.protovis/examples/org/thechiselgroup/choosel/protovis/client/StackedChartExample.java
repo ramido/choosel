@@ -128,4 +128,5 @@ public class StackedChartExample extends ProtovisWidget implements
     public String toString() {
         return "Stacked Area Chart";
     }
+
 }

@@ -204,4 +204,5 @@ public class BoxAndWhiskerPlotExample extends ProtovisWidget implements
     public String toString() {
         return "Box-and-Whisker Plot";
     }
+
 }

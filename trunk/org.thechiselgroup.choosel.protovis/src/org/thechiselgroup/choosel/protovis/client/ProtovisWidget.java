@@ -15,6 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -24,6 +28,21 @@ public class ProtovisWidget extends Widget {
 
     public ProtovisWidget() {
         setElement(DOM.createDiv());
+        getElement().getStyle().setPosition(Position.RELATIVE);
+    }
+
+    protected Element addDescriptionElement(int topPx, int leftPx, String html,
+            String cssClass) {
+
+        Element div = DOM.createDiv();
+        div.setInnerHTML(html);
+        Style style = div.getStyle();
+        style.setTop(topPx, Unit.PX);
+        style.setLeft(leftPx, Unit.PX);
+        style.setPosition(Position.ABSOLUTE);
+        div.setClassName(cssClass);
+        getElement().appendChild(div);
+        return div;
     }
 
     public PVPanel getPVPanel() {

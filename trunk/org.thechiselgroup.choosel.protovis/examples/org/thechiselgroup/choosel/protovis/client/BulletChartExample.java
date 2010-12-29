@@ -159,4 +159,5 @@ public class BulletChartExample extends ProtovisWidget implements
     public String toString() {
         return "Bullet Chart";
     }
+
 }

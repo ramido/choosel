@@ -122,4 +122,5 @@ public class BarChartExample extends ProtovisWidget implements ProtovisExample {
     public String toString() {
         return "Bar Chart";
     }
+
 }
