@@ -38,7 +38,7 @@ public class PVRule extends PVAbstractMark<PVRule> {
     }-*/;
 
     public final native PVRule height(PVDoubleFunction<PVRule, ?> f) /*-{
-        return this.height(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunction;)(this,f));
+        return this.height(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunction;)(f));
     }-*/;
 
     public final native PVRule lineWidth(double lineWidth) /*-{
@@ -60,7 +60,7 @@ public class PVRule extends PVAbstractMark<PVRule> {
      * .
      */
     public final native PVRule strokeStyle(PVStringFunction<PVRule, ?> f) /*-{
-        return this.strokeStyle(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunction;)(this,f));
+        return this.strokeStyle(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunction;)(f));
     }-*/;
 
     /**
@@ -69,7 +69,7 @@ public class PVRule extends PVAbstractMark<PVRule> {
      * .
      */
     public final native PVRule strokeStyle(PVStringFunctionIntArg<PVRule> f) /*-{
-        return this.strokeStyle(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunctionIntArg;)(this,f));
+        return this.strokeStyle(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunctionIntArg;)(f));
     }-*/;
 
     /**
@@ -78,7 +78,7 @@ public class PVRule extends PVAbstractMark<PVRule> {
      * .
      */
     public final native PVRule strokeStyle(PVStringFunctionDoubleArg<PVRule> f) /*-{
-        return this.strokeStyle(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunctionDoubleArg;)(this,f));
+        return this.strokeStyle(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunctionDoubleArg;)(f));
     }-*/;
 
     public final native PVRule width(double width) /*-{
@@ -86,7 +86,7 @@ public class PVRule extends PVAbstractMark<PVRule> {
     }-*/;
 
     public final native PVRule width(PVDoubleFunction<PVRule, ?> f) /*-{
-        return this.width(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunction;)(this,f));
+        return this.width(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunction;)(f));
     }-*/;
 
 }

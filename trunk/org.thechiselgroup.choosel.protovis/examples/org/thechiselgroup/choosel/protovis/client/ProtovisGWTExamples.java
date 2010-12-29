@@ -52,6 +52,7 @@ public class ProtovisGWTExamples implements EntryPoint {
 
     private void initExampleVisualizations() {
         examples = new ArrayList<ProtovisExample>();
+
         examples.add(new AreaChartExample());
         examples.add(new BarChartExample());
         examples.add(new PieChartExample());
@@ -59,6 +60,7 @@ public class ProtovisGWTExamples implements EntryPoint {
         examples.add(new LineChartExample());
         examples.add(new StackedChartExample());
         examples.add(new GroupedChartExample());
+        examples.add(new StreamgraphExample());
         examples.add(new BulletChartExample());
         examples.add(new CandlestickChartExample());
         examples.add(new GasAndDrivingExample());
