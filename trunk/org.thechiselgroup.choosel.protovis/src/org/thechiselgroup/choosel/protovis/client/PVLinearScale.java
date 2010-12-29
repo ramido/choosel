@@ -15,10 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
-import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunctionNoIndex;
+import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunctionWithoutThis;
+import org.thechiselgroup.choosel.protovis.client.functions.PVFunctionWithoutThis;
 import org.thechiselgroup.choosel.protovis.client.util.JsArrayGeneric;
+import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsDate;
 
 /**
  * Wrapper for
@@ -47,9 +50,68 @@ public class PVLinearScale extends PVScale {
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.quantitative.html#domain">pv.Scale.quantitative.domain()</a></code>
      * .
      */
-    public final native PVLinearScale domain(JsArrayGeneric<?> array,
-            PVDoubleFunctionNoIndex<?> f) /*-{
-        return this.domain(array, @org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunctionNoIndex;)(f));
+    public final native <S> PVLinearScale domain(JsArrayGeneric<S> array,
+            PVDoubleFunctionWithoutThis<S> f) /*-{
+        return this.domain(array, @org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunctionWithoutThis;)(f));
+    }-*/;
+
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.quantitative.html#domain">pv.Scale.quantitative.domain()</a></code>
+     * .
+     */
+    public final native <S> PVLinearScale domain(JsArrayGeneric<S> array,
+            PVDoubleFunctionWithoutThis<S> min,
+            PVDoubleFunctionWithoutThis<S> max) /*-{
+        return this.domain(array, 
+        @org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunctionWithoutThis;)(min), 
+        @org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunctionWithoutThis;)(max));
+    }-*/;
+
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.quantitative.html#domain">pv.Scale.quantitative.domain()</a></code>
+     * .
+     */
+    public final native <S> PVLinearScale domain(JsArrayGeneric<S> array,
+            PVFunctionWithoutThis<S, JsDate> f) /*-{
+        return this.domain(array, @org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVFunctionWithoutThis;)(f));
+    }-*/;
+
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.quantitative.html#domain">pv.Scale.quantitative.domain()</a></code>
+     * .
+     */
+    public final <S> PVLinearScale domain(S[] array,
+            PVDoubleFunctionWithoutThis<S> f) {
+        return this.domain(JsUtils.toJsArrayGeneric(array), f);
+    }
+
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.quantitative.html#domain">pv.Scale.quantitative.domain()</a></code>
+     * .
+     */
+    public final <S> PVLinearScale domain(S[] array,
+            PVDoubleFunctionWithoutThis<S> min,
+            PVDoubleFunctionWithoutThis<S> max) {
+
+        return this.domain(JsUtils.toJsArrayGeneric(array), min, max);
+    }
+
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.quantitative.html#domain">pv.Scale.quantitative.domain()</a></code>
+     * .
+     */
+    public final <S> PVLinearScale domain(S[] array,
+            PVFunctionWithoutThis<S, JsDate> f) {
+        return this.domain(JsUtils.toJsArrayGeneric(array), f);
+    }
+
+    public final native PVLinearScale nice() /*-{
+        return this.nice();
     }-*/;
 
     public final native PVLinearScale range(double min, double max) /*-{

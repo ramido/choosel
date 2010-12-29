@@ -74,13 +74,11 @@ public class ScatterplotExample extends ProtovisWidget implements
         /* Y-axis and ticks. */
         vis.add(PV.Rule()).data(y.ticks()).bottom(y)
                 .strokeStyle(new PVStringFunctionDoubleArg<PVRule>() {
-                    @Override
                     public String f(PVRule _this, double d) {
                         return d != 0 ? "#eee" : "#000";
                     }
                 }).anchor(LEFT).add(PV.Label())
                 .visible(new PVBooleanFunctionDoubleArg<PVLabel>() {
-                    @Override
                     public boolean f(PVLabel _this, double d) {
                         return d > 0 && d < 1;
                     }
@@ -89,13 +87,11 @@ public class ScatterplotExample extends ProtovisWidget implements
         /* X-axis and ticks. */
         vis.add(PV.Rule()).data(x.ticks()).left(x)
                 .strokeStyle(new PVStringFunctionDoubleArg<PVRule>() {
-                    @Override
                     public String f(PVRule _this, double d) {
                         return d != 0 ? "#eee" : "#000";
                     }
                 }).anchor(BOTTOM).add(PV.Label())
                 .visible(new PVBooleanFunctionDoubleArg<PVLabel>() {
-                    @Override
                     public boolean f(PVLabel _this, double d) {
                         return d > 0 && d < 100;
                     }
@@ -104,32 +100,26 @@ public class ScatterplotExample extends ProtovisWidget implements
         /* The dot plot! */
         vis.add(PV.Panel()).data(data).add(PV.Dot())
                 .left(new PVDoubleFunction<PVDot, Triple>() {
-                    @Override
                     public double f(PVDot _this, Triple d) {
                         return x.fd(d.x);
                     }
                 }).bottom(new PVDoubleFunction<PVDot, Triple>() {
-                    @Override
                     public double f(PVDot _this, Triple d) {
                         return y.fd(d.y);
                     }
                 }).strokeStyle(new PVFunction<PVDot, Triple, PVColor>() {
-                    @Override
                     public PVColor f(PVDot _this, Triple d) {
                         return c.fcolor(d.z);
                     }
                 }).fillStyle(new PVFunction<PVDot, Triple, PVColor>() {
-                    @Override
                     public PVColor f(PVDot _this, Triple d) {
                         return c.fcolor(d.z).alpha(0.2d);
                     }
                 }).size(new PVDoubleFunction<PVDot, Triple>() {
-                    @Override
                     public double f(PVDot _this, Triple d) {
                         return d.z;
                     }
                 }).title(new PVStringFunction<PVDot, Triple>() {
-                    @Override
                     public String f(PVDot _this, Triple d) {
                         return JsUtils.toFixed(d.z, 1);
                     }

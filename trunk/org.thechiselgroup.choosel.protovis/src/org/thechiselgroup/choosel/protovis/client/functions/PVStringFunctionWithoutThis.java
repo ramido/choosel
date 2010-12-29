@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client.functions;
 
-public interface PVStringFunctionNoIndex<T> {
+public interface PVStringFunctionWithoutThis<T> {
 
     String f(T d);
 

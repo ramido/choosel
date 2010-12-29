@@ -20,7 +20,7 @@ import static org.thechiselgroup.choosel.protovis.client.PVAlignment.LEFT;
 
 import org.thechiselgroup.choosel.protovis.client.functions.PVBooleanFunctionDoubleArg;
 import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunctionNoIndex;
+import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunctionWithoutThis;
 import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionDoubleArg;
 import org.thechiselgroup.choosel.protovis.client.util.JsArrayGeneric;
 import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
@@ -59,8 +59,7 @@ public class LineChartExample extends ProtovisWidget implements ProtovisExample 
         int w = 400;
         int h = 200;
         final PVLinearScale x = PVScale.linear(data,
-                new PVDoubleFunctionNoIndex<Point>() {
-                    @Override
+                new PVDoubleFunctionWithoutThis<Point>() {
                     public double f(Point d) {
                         return d.x;
                     }
@@ -74,7 +73,6 @@ public class LineChartExample extends ProtovisWidget implements ProtovisExample 
         /* X-axis ticks. */
         vis.add(PV.Rule()).data(x.ticks())
                 .visible(new PVBooleanFunctionDoubleArg<PVRule>() {
-                    @Override
                     public boolean f(PVRule _this, double d) {
                         return d > 0;
                     }
@@ -85,7 +83,6 @@ public class LineChartExample extends ProtovisWidget implements ProtovisExample 
         /* Y-axis ticks. */
         vis.add(PV.Rule()).data(y.ticks(5)).bottom(y)
                 .strokeStyle(new PVStringFunctionDoubleArg<PVRule>() {
-                    @Override
                     public String f(PVRule _this, double d) {
                         return d != 0 ? "#eee" : "#000";
                     }
@@ -94,12 +91,10 @@ public class LineChartExample extends ProtovisWidget implements ProtovisExample 
         /* The line. */
         vis.add(PV.Line()).data(data).interpolate("step-after")
                 .left(new PVDoubleFunction<PVLine, Point>() {
-                    @Override
                     public double f(PVLine _this, Point d) {
                         return x.fd(d.x);
                     }
                 }).bottom(new PVDoubleFunction<PVLine, Point>() {
-                    @Override
                     public double f(PVLine _this, Point d) {
                         return y.fd(d.y);
                     }

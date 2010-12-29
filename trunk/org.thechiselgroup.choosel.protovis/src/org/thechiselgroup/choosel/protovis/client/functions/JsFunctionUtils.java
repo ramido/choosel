@@ -57,15 +57,21 @@ public final class JsFunctionUtils {
     }-*/;
 
     public static final native JavaScriptObject toJavaScriptFunction(
-            PVDoubleFunctionNoIndex<?> f) /*-{
+            PVDoubleFunctionWithoutThis<?> f) /*-{
         return function(d) 
-        { return f.@org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunctionNoIndex::f(Ljava/lang/Object;)(d);};
+        { return f.@org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunctionWithoutThis::f(Ljava/lang/Object;)(d);};
     }-*/;
 
     public static final native JavaScriptObject toJavaScriptFunction(
-            PVStringFunctionNoIndex<?> f) /*-{
+            PVStringFunctionWithoutThis<?> f) /*-{
         return function(d) 
-        { return f.@org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionNoIndex::f(Ljava/lang/Object;)(d);};
+        { return f.@org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionWithoutThis::f(Ljava/lang/Object;)(d);};
+    }-*/;
+
+    public static final native JavaScriptObject toJavaScriptFunction(
+            PVFunctionWithoutThis<?, ?> f) /*-{
+        return function(d)  
+        { return f.@org.thechiselgroup.choosel.protovis.client.functions.PVFunctionWithoutThis::f(Ljava/lang/Object;)(d);};
     }-*/;
 
     public static final native Object toJavaScriptFunction(

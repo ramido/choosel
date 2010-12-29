@@ -58,30 +58,25 @@ public class PieChartExample extends ProtovisWidget implements ProtovisExample {
         vis.add(PV.Wedge()).data(PV.sort(data, PV.reverseOrder()))
                 .bottom(w / 2).left(w / 2).innerRadius(r - 40).outerRadius(r)
                 .angle(new PVDoubleFunctionDoubleArg<PVWedge>() {
-                    @Override
                     public double f(PVWedge _this, double d) {
                         return a.fd(d);
                     }
                 }).event(MOUSEOVER, new PVEventHandler<PVWedge>() {
-                    @Override
                     public void onEvent(PVWedge _this, Event e) {
                         _this.innerRadius(0);
                         _this.render();
                     }
                 }).event(MOUSEOUT, new PVEventHandler<PVWedge>() {
-                    @Override
                     public void onEvent(PVWedge _this, Event e) {
                         _this.innerRadius(r - 40);
                         _this.render();
                     }
                 }).anchor(CENTER).add(PV.Label())
                 .visible(new PVBooleanFunctionDoubleArg<PVLabel>() {
-                    @Override
                     public boolean f(PVLabel _this, double d) {
                         return d > .15;
                     }
                 }).textAngle(0).text(new PVStringFunctionDoubleArg<PVLabel>() {
-                    @Override
                     public String f(PVLabel _this, double d) {
                         return JsUtils.toFixed(d, 2);
                     }

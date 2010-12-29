@@ -22,7 +22,6 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
@@ -33,8 +32,6 @@ import com.google.gwt.user.client.ui.Widget;
 public class ProtovisGWTExamples implements EntryPoint {
 
     private List<ProtovisExample> examples;
-
-    private DeckPanel deckPanel;
 
     private Label visualizationTitle;
 
@@ -63,6 +60,7 @@ public class ProtovisGWTExamples implements EntryPoint {
         examples.add(new StackedChartExample());
         examples.add(new GroupedChartExample());
         examples.add(new BulletChartExample());
+        examples.add(new CandlestickChartExample());
         examples.add(new SeattleWeatherExample());
         examples.add(new BoxAndWhiskerPlotExample());
     }

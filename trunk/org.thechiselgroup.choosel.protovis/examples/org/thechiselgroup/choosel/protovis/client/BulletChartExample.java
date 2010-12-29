@@ -73,7 +73,6 @@ public class BulletChartExample extends ProtovisWidget implements
         PVPanel vis = getPVPanel().data(bullets).width(400).height(30)
                 .margin(20).left(100)
                 .top(new PVDoubleFunction<PVPanel, Bullet>() {
-                    @Override
                     public double f(PVPanel _this, Bullet d) {
                         return 10 + _this.index() * 60;
                     }
@@ -90,7 +89,6 @@ public class BulletChartExample extends ProtovisWidget implements
                 })
                 .measures(
                         new PVFunction<PVBulletLayout, Bullet, JsArrayNumber>() {
-                            @Override
                             public JsArrayNumber f(PVBulletLayout _this,
                                     Bullet d) {
                                 return JsUtils.toJsArrayNumber(d.measures);
@@ -98,7 +96,6 @@ public class BulletChartExample extends ProtovisWidget implements
                         })
                 .markers(
                         new PVFunction<PVBulletLayout, Bullet, JsArrayNumber>() {
-                            @Override
                             public JsArrayNumber f(PVBulletLayout _this,
                                     Bullet d) {
                                 return JsUtils.toJsArrayNumber(d.markers);
@@ -115,7 +112,6 @@ public class BulletChartExample extends ProtovisWidget implements
         bullet.anchor(LEFT).add(PV.Label()).font("bold 12px sans-serif")
                 .textAlign(RIGHT).textBaseline(BOTTOM)
                 .text(new PVStringFunction<PVLabel, Bullet>() {
-                    @Override
                     public String f(PVLabel _this, Bullet d) {
                         return d.title;
                     }
@@ -124,7 +120,6 @@ public class BulletChartExample extends ProtovisWidget implements
         bullet.anchor(LEFT).add(PV.Label()).textStyle("#666").textAlign(RIGHT)
                 .textBaseline(TOP)
                 .text(new PVStringFunction<PVLabel, Bullet>() {
-                    @Override
                     public String f(PVLabel _this, Bullet d) {
                         return d.subtitle;
                     }
