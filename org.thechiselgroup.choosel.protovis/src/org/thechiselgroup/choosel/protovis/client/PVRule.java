@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.protovis.client;
 
 import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction;
+import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunction;
 import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionDoubleArg;
 import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionIntArg;
 
@@ -51,6 +52,15 @@ public class PVRule extends PVAbstractMark<PVRule> {
      */
     public final native PVRule strokeStyle(String strokeStyle) /*-{
         return this.strokeStyle(strokeStyle);
+    }-*/;
+
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Rule.html#strokeStyle">strokeStyle()</a></code>
+     * .
+     */
+    public final native PVRule strokeStyle(PVStringFunction<PVRule, ?> f) /*-{
+        return this.strokeStyle(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunction;)(this,f));
     }-*/;
 
     /**

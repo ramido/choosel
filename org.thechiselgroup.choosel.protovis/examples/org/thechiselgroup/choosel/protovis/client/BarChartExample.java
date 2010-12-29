@@ -56,17 +56,14 @@ public class BarChartExample extends ProtovisWidget implements ProtovisExample {
         /* The bars. */
         PVBar bar = vis.add(PV.Bar()).data(data)
                 .top(new PVDoubleFunction<PVBar, Double>() {
-                    @Override
                     public double f(PVBar _this, Double d) {
                         return y.fd(_this.index());
                     }
                 }).height(new PVDoubleFunction<PVBar, Double>() {
-                    @Override
                     public double f(PVBar _this, Double d) {
                         return y.rangeBand();
                     }
                 }).left(0).width(new PVDoubleFunction<PVBar, Double>() {
-                    @Override
                     public double f(PVBar _this, Double d) {
                         return x.fd(d);
                     }
@@ -75,7 +72,6 @@ public class BarChartExample extends ProtovisWidget implements ProtovisExample {
         /* The value label. */
         bar.anchor(RIGHT).add(PV.Label()).textStyle("white")
                 .text(new PVStringFunction<PVLabel, Double>() {
-                    @Override
                     public String f(PVLabel _this, Double d) {
                         return JsUtils.toFixed(d, 1);
                     }
@@ -84,7 +80,6 @@ public class BarChartExample extends ProtovisWidget implements ProtovisExample {
         /* The variable label. */
         bar.anchor(LEFT).add(PV.Label()).textMargin(5).textAlign(RIGHT)
                 .text(new PVStringFunction<PVLabel, Double>() {
-                    @Override
                     public String f(PVLabel _this, Double d) {
                         return "ABCDEFGHIJK".substring(_this.index(),
                                 _this.index() + 1);
@@ -94,7 +89,6 @@ public class BarChartExample extends ProtovisWidget implements ProtovisExample {
         /* X-axis ticks. */
         vis.add(PV.Rule()).data(x.ticks(5)).left(x)
                 .strokeStyle(new PVStringFunctionDoubleArg<PVRule>() {
-                    @Override
                     public String f(PVRule _this, double d) {
                         return d != 0 ? "rgba(255,255,255,.3)" : "#000";
                     }

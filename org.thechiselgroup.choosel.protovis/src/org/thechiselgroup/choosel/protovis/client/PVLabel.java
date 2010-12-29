@@ -43,44 +43,44 @@ public final class PVLabel extends PVAbstractMark<PVLabel> {
         return this.text(text);
     }-*/;
 
-    public final native PVLabel text(String text) /*-{
-        return this.text(text);
-    }-*/;
-
     public final native PVLabel text(PVStringFunction<PVLabel, ?> f) /*-{
         return this.text(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunction;)(this,f));
-    }-*/;
-
-    public final native PVLabel text(PVStringFunctionIntArg<PVLabel> f) /*-{
-        return this.text(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunctionIntArg;)(this,f));
     }-*/;
 
     public final native PVLabel text(PVStringFunctionDoubleArg<PVLabel> f) /*-{
         return this.text(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunctionDoubleArg;)(this,f));
     }-*/;
 
+    public final native PVLabel text(PVStringFunctionIntArg<PVLabel> f) /*-{
+        return this.text(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunctionIntArg;)(this,f));
+    }-*/;
+
     public final native PVLabel text(PVStringFunctionNoArgs f) /*-{
         return this.text(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunctionNoArgs;)(f));
     }-*/;
 
-    public final native PVLabel textAlign(String textAlign) /*-{
-        return this.textAlign(textAlign);
+    public final native PVLabel text(String text) /*-{
+        return this.text(text);
     }-*/;
 
     public final native PVLabel textAlign(PVStringFunction<PVLabel, ?> f) /*-{
         return this.textAlign(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunction;)(this,f));
     }-*/;
 
+    public final native PVLabel textAlign(String textAlign) /*-{
+        return this.textAlign(textAlign);
+    }-*/;
+
     public final native PVLabel textAngle(double textAngle) /*-{
         return this.textAngle(textAngle);
     }-*/;
 
-    public final native PVLabel textBaseline(String textBaseline) /*-{
-        return this.textBaseline(textBaseline);
-    }-*/;
-
     public final native PVLabel textBaseline(PVStringFunction<PVLabel, ?> f) /*-{
         return this.textBaseline(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunction;)(this,f));
+    }-*/;
+
+    public final native PVLabel textBaseline(String textBaseline) /*-{
+        return this.textBaseline(textBaseline);
     }-*/;
 
     public final native PVLabel textDecoration(String textDecoration) /*-{
@@ -95,12 +95,16 @@ public final class PVLabel extends PVAbstractMark<PVLabel> {
         return this.textShadow(textShadow);
     }-*/;
 
-    public final native PVLabel textStyle(String textStyle) /*-{
-        return this.textStyle(textStyle);
-    }-*/;
-
     public final native PVLabel textStyle(PVStringFunction<PVLabel, ?> f) /*-{
         return this.textStyle(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunction;)(this,f));
+    }-*/;
+
+    public final native PVLabel textStyle(PVStringFunctionDoubleArg<PVLabel> f) /*-{
+        return this.textStyle(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunctionDoubleArg;)(this,f));
+    }-*/;
+
+    public final native PVLabel textStyle(String textStyle) /*-{
+        return this.textStyle(textStyle);
     }-*/;
 
 }

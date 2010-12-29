@@ -68,7 +68,6 @@ public class StackedChartExample extends ProtovisWidget implements
         /* X-axis and ticks. */
         vis.add(PV.Rule()).data(x.ticks())
                 .visible(new PVBooleanFunctionDoubleArg<PVRule>() {
-                    @Override
                     public boolean f(PVRule _this, double d) {
                         return d != 0;
                     }
@@ -78,12 +77,10 @@ public class StackedChartExample extends ProtovisWidget implements
         /* The stack layout. */
         vis.add(PVLayout.Stack()).layers(data)
                 .x(new PVDoubleFunction<PVStackLayout, Point>() {
-                    @Override
                     public double f(PVStackLayout _this, Point d) {
                         return x.fd(d.x);
                     }
                 }).y(new PVDoubleFunction<PVStackLayout, Point>() {
-                    @Override
                     public double f(PVStackLayout _this, Point d) {
                         return y.fd(d.y);
                     }
@@ -92,7 +89,6 @@ public class StackedChartExample extends ProtovisWidget implements
         /* Y-axis and ticks. */
         vis.add(PV.Rule()).data(y.ticks(3)).bottom(y)
                 .strokeStyle(new PVStringFunctionDoubleArg<PVRule>() {
-                    @Override
                     public String f(PVRule _this, double d) {
                         return d != 0 ? "rgba(128,128,128,.2)" : "#000";
                     }

@@ -146,11 +146,16 @@ pv.version = {
 };
 
 /**
- * isArray function for robust array detection across frames.
+ * isArray function for robust array detection across frames. Use instead of 'instanceof Array'.
  * 
  * @see http://perfectionkills.com/instanceof-considered-harmful-or-how-to-write-a-robust-isarray/
  */
 pv.isArray = function(o) { return Object.prototype.toString.call(o) === '[object Array]'; }
+
+/**
+ * isDate function for robust date detection across frames. Use instead of 'instanceof Date'.
+ */ 
+pv.isDate = function(o) { return Object.prototype.toString.call(o) === '[object Date]'; }
 
 /**
  * Returns the passed-in argument, <tt>x</tt>; the identity function. This method
@@ -3094,7 +3099,7 @@ pv.Scale.quantitative = function() {
       else if (d.length == 1) d = [d[0], d[0]];
       n = (d[0] || d[d.length - 1]) < 0;
       l = d.map(f);
-      type = (o instanceof Date) ? newDate : Number;
+      type = pv.isDate(o) ? newDate : Number;
       return this;
     }
     return d.map(type);

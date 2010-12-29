@@ -15,13 +15,15 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
-import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunctionNoIndex;
-import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionNoIndex;
+import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunctionWithoutThis;
+import org.thechiselgroup.choosel.protovis.client.functions.PVFunctionWithoutThis;
+import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionWithoutThis;
 import org.thechiselgroup.choosel.protovis.client.util.JsArrayGeneric;
 import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayNumber;
+import com.google.gwt.core.client.JsDate;
 
 /**
  * Wrapper for
@@ -47,19 +49,29 @@ public class PVScale extends JavaScriptObject {
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.linear.html#constructor">pv.Scale.linear()</a></code>
      * .
      */
-    public final static native PVLinearScale linear(double min, double max) /*-{
-        return $wnd.pv.Scale.linear(min, max);
-    }-*/;
+    public final static PVLinearScale linear(double min, double max) {
+        return linear().domain(min, max);
+    }
 
     /**
      * Wrapper for
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.linear.html#constructor">pv.Scale.linear()</a></code>
      * .
      */
-    public final static native PVLinearScale linear(JsArrayGeneric<?> array,
-            PVDoubleFunctionNoIndex<?> f) /*-{
-        return $wnd.pv.Scale.linear(array, @org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunctionNoIndex;)(f));
-    }-*/;
+    public final static <S> PVLinearScale linear(JsArrayGeneric<S> array,
+            PVDoubleFunctionWithoutThis<S> f) {
+        return linear().domain(array, f);
+    }
+
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.linear.html#constructor">pv.Scale.linear()</a></code>
+     * .
+     */
+    public final static <S> PVLinearScale linear(JsArrayGeneric<S> array,
+            PVFunctionWithoutThis<S, JsDate> f) {
+        return linear().domain(array, f);
+    }
 
     /**
      * Wrapper for
@@ -67,8 +79,40 @@ public class PVScale extends JavaScriptObject {
      * .
      */
     public final static <S> PVLinearScale linear(S[] array,
-            PVDoubleFunctionNoIndex<?> f) {
-        return linear(JsUtils.toJsArrayGeneric(array), f);
+            PVDoubleFunctionWithoutThis<S> f) {
+        return linear().domain(array, f);
+    }
+
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.linear.html#constructor">pv.Scale.linear()</a></code>
+     * .
+     */
+    public final static <S> PVLinearScale linear(S[] array,
+            PVFunctionWithoutThis<S, JsDate> f) {
+        return linear().domain(array, f);
+    }
+
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.linear.html#constructor">pv.Scale.linear()</a></code>
+     * .
+     */
+    public final static <S> PVLinearScale linear(JsArrayGeneric<S> array,
+            PVDoubleFunctionWithoutThis<S> min,
+            PVDoubleFunctionWithoutThis<S> max) {
+        return linear().domain(array, min, max);
+    }
+
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.linear.html#constructor">pv.Scale.linear()</a></code>
+     * .
+     */
+    public final static <S> PVLinearScale linear(S[] array,
+            PVDoubleFunctionWithoutThis<S> min,
+            PVDoubleFunctionWithoutThis<S> max) {
+        return linear().domain(array, min, max);
     }
 
     /**
@@ -84,13 +128,13 @@ public class PVScale extends JavaScriptObject {
         return $wnd.pv.Scale.ordinal();
     }-*/;
 
-    public final static native PVOrdinalScale ordinal(JsArrayNumber array) /*-{
-        return $wnd.pv.Scale.ordinal(array);
+    public final static native PVOrdinalScale ordinal(JsArrayGeneric<?> array,
+            PVStringFunctionWithoutThis<?> f) /*-{
+        return $wnd.pv.Scale.ordinal(array, @org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunctionWithoutThis;)(f));
     }-*/;
 
-    public final static native PVOrdinalScale ordinal(JsArrayGeneric<?> array,
-            PVStringFunctionNoIndex<?> f) /*-{
-        return $wnd.pv.Scale.ordinal(array, @org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunctionNoIndex;)(f));
+    public final static native PVOrdinalScale ordinal(JsArrayNumber array) /*-{
+        return $wnd.pv.Scale.ordinal(array);
     }-*/;
 
     /**
@@ -99,12 +143,19 @@ public class PVScale extends JavaScriptObject {
      * .
      */
     public final static <S> PVOrdinalScale ordinal(S[] array,
-            PVStringFunctionNoIndex<?> f) {
+            PVStringFunctionWithoutThis<?> f) {
         return ordinal(JsUtils.toJsArrayGeneric(array), f);
     }
 
     protected PVScale() {
     }
+
+    /**
+     * Scales are functions. Use this method if the scale returns a color value.
+     */
+    public final native PVColor fcolor(double value) /*-{
+        return this(value);
+    }-*/;
 
     /**
      * Scales are functions. Use this method if the scale returns a double
@@ -123,9 +174,10 @@ public class PVScale extends JavaScriptObject {
     }-*/;
 
     /**
-     * Scales are functions. Use this method if the scale returns a color value.
+     * Scales are functions. Use this method if the scale returns a double
+     * value.
      */
-    public final native PVColor fcolor(double value) /*-{
+    public final native double fd(JsDate value) /*-{
         return this(value);
     }-*/;
 

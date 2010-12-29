@@ -21,7 +21,7 @@ import static org.thechiselgroup.choosel.protovis.client.PVAlignment.TOP;
 
 import org.thechiselgroup.choosel.protovis.client.functions.PVBooleanFunctionDoubleArg;
 import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunctionNoIndex;
+import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunctionWithoutThis;
 import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionDoubleArg;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -58,8 +58,7 @@ public class AreaChartExample extends ProtovisWidget implements ProtovisExample 
         int h = 200;
 
         final PVLinearScale x = PVScale.linear(points,
-                new PVDoubleFunctionNoIndex<Point>() {
-                    @Override
+                new PVDoubleFunctionWithoutThis<Point>() {
                     public double f(Point d) {
                         return d.x;
                     }
@@ -73,7 +72,6 @@ public class AreaChartExample extends ProtovisWidget implements ProtovisExample 
         /* Y-axis and ticks. */
         vis.add(PV.Rule()).data(y.ticks(5)).bottom(y)
                 .strokeStyle(new PVStringFunctionDoubleArg<PVRule>() {
-                    @Override
                     public String f(PVRule _this, double d) {
                         return d != 0 ? "#eee" : "#000";
                     }
@@ -82,7 +80,6 @@ public class AreaChartExample extends ProtovisWidget implements ProtovisExample 
         /* X-axis and ticks. */
         vis.add(PV.Rule()).data(x.ticks())
                 .visible(new PVBooleanFunctionDoubleArg<PVRule>() {
-                    @Override
                     public boolean f(PVRule _this, double d) {
                         return d != 0;
                     }
@@ -92,12 +89,10 @@ public class AreaChartExample extends ProtovisWidget implements ProtovisExample 
         /* The area with top line. */
         vis.add(PV.Area()).data(points).bottom(1)
                 .left(new PVDoubleFunction<PVArea, Point>() {
-                    @Override
                     public double f(PVArea _this, Point d) {
                         return x.fd(d.x);
                     }
                 }).height(new PVDoubleFunction<PVArea, Point>() {
-                    @Override
                     public double f(PVArea _this, Point d) {
                         return y.fd(d.y);
                     }

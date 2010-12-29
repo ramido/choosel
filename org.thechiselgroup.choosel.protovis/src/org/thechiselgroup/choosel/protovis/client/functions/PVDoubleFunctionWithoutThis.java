@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client.functions;
 
-public interface PVDoubleFunctionNoIndex<T> {
+public interface PVDoubleFunctionWithoutThis<T> {
 
     double f(T d);
 

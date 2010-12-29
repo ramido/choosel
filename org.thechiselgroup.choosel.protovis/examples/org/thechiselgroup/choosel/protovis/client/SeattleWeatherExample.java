@@ -122,17 +122,14 @@ public class SeattleWeatherExample extends ProtovisWidget implements
         /* Record range. */
         PVBar record = vis.add(PV.Bar()).data(weatherRecords)
                 .bottom(new PVDoubleFunction<PVBar, WeatherRecord>() {
-                    @Override
                     public double f(PVBar _this, WeatherRecord d) {
                         return d.record.low * h;
                     }
                 }).height(new PVDoubleFunction<PVBar, WeatherRecord>() {
-                    @Override
                     public double f(PVBar _this, WeatherRecord d) {
                         return (d.record.high - d.record.low) * h;
                     }
                 }).left(new PVDoubleFunction<PVBar, WeatherRecord>() {
-                    @Override
                     public double f(PVBar _this, WeatherRecord d) {
                         return _this.index() * w;
                     }
@@ -141,12 +138,10 @@ public class SeattleWeatherExample extends ProtovisWidget implements
         /* Normal range. */
         record.add(PV.Bar())
                 .bottom(new PVDoubleFunction<PVBar, WeatherRecord>() {
-                    @Override
                     public double f(PVBar _this, WeatherRecord d) {
                         return d.normal.low * h;
                     }
                 }).height(new PVDoubleFunction<PVBar, WeatherRecord>() {
-                    @Override
                     public double f(PVBar _this, WeatherRecord d) {
                         return (d.normal.high - d.normal.low) * h;
                     }
@@ -155,14 +150,12 @@ public class SeattleWeatherExample extends ProtovisWidget implements
         /* White grid lines. */
         vis.add(PV.Rule()).dataInt(20, 40, 60)
                 .bottom(new PVDoubleFunctionDoubleArg<PVRule>() {
-                    @Override
                     public double f(PVRule _this, double d) {
                         return d * h + 1;
                     }
                 }).left(0).right(20).lineWidth(2).strokeStyle("white")
                 .anchor(RIGHT).add(PV.Label())
                 .text(new PVStringFunctionIntArg<PVLabel>() {
-                    @Override
                     public String f(PVLabel _this, int d) {
                         return d + "\u00b0";
                     }
@@ -171,65 +164,53 @@ public class SeattleWeatherExample extends ProtovisWidget implements
         /* Actual and forecast range. */
         record.add(PV.Bar())
                 .visible(new PVBooleanFunction<PVBar, WeatherRecord>() {
-                    @Override
                     public boolean f(PVBar _this, WeatherRecord d) {
                         return d.hasActual();
                     }
                 }).bottom(new PVDoubleFunction<PVBar, WeatherRecord>() {
-                    @Override
                     public double f(PVBar _this, WeatherRecord d) {
                         return d.actual.low * h;
                     }
                 }).height(new PVDoubleFunction<PVBar, WeatherRecord>() {
-                    @Override
                     public double f(PVBar _this, WeatherRecord d) {
                         return (d.actual.high - d.actual.low) * h;
                     }
                 }).left(new PVDoubleFunction<PVBar, WeatherRecord>() {
-                    @Override
                     public double f(PVBar _this, WeatherRecord d) {
                         return _this.index() * w + 3;
                     }
                 }).width(w - 8).fillStyle("black").add(PV.Bar())
                 .visible(new PVBooleanFunction<PVBar, WeatherRecord>() {
-                    @Override
                     public boolean f(PVBar _this, WeatherRecord d) {
                         return d.hasForecast();
                     }
                 }).bottom(new PVDoubleFunction<PVBar, WeatherRecord>() {
-                    @Override
                     public double f(PVBar _this, WeatherRecord d) {
                         return d.forecast.highMin * h;
                     }
                 }).height(new PVDoubleFunction<PVBar, WeatherRecord>() {
-                    @Override
                     public double f(PVBar _this, WeatherRecord d) {
                         return (d.forecast.highMax - d.forecast.highMin) * h;
                     }
                 }).add(PV.Bar())
                 .bottom(new PVDoubleFunction<PVBar, WeatherRecord>() {
-                    @Override
                     public double f(PVBar _this, WeatherRecord d) {
                         return d.forecast.lowMin * h;
                     }
                 }).height(new PVDoubleFunction<PVBar, WeatherRecord>() {
-                    @Override
                     public double f(PVBar _this, WeatherRecord d) {
                         return (d.forecast.lowMax - d.forecast.lowMin) * h;
                     }
                 }).add(PV.Bar())
                 .bottom(new PVDoubleFunction<PVBar, WeatherRecord>() {
-                    @Override
                     public double f(PVBar _this, WeatherRecord d) {
                         return d.forecast.lowMin * h;
                     }
                 }).height(new PVDoubleFunction<PVBar, WeatherRecord>() {
-                    @Override
                     public double f(PVBar _this, WeatherRecord d) {
                         return (d.forecast.highMax - d.forecast.lowMin) * h;
                     }
                 }).left(new PVDoubleFunction<PVBar, WeatherRecord>() {
-                    @Override
                     public double f(PVBar _this, WeatherRecord d) {
                         return _this.index() * w + 3 + Math.floor((w - 8) / 3);
                     }
@@ -238,7 +219,6 @@ public class SeattleWeatherExample extends ProtovisWidget implements
         /* Day labels. */
         record.anchor(TOP).add(PV.Label()).top(16)
                 .text(new PVStringFunction<PVLabel, WeatherRecord>() {
-                    @Override
                     public String f(PVLabel _this, WeatherRecord d) {
                         return d.day;
                     }
