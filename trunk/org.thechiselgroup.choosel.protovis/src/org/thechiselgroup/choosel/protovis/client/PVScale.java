@@ -59,7 +59,7 @@ public class PVScale extends JavaScriptObject {
      * .
      */
     public final static <S> PVLinearScale linear(JsArrayGeneric<S> array,
-            PVDoubleFunctionWithoutThis<S> f) {
+            PVDoubleFunctionWithoutThis f) {
         return linear().domain(array, f);
     }
 
@@ -69,7 +69,7 @@ public class PVScale extends JavaScriptObject {
      * .
      */
     public final static <S> PVLinearScale linear(JsArrayGeneric<S> array,
-            PVFunctionWithoutThis<S, JsDate> f) {
+            PVFunctionWithoutThis<JsDate> f) {
         return linear().domain(array, f);
     }
 
@@ -79,7 +79,7 @@ public class PVScale extends JavaScriptObject {
      * .
      */
     public final static <S> PVLinearScale linear(S[] array,
-            PVDoubleFunctionWithoutThis<S> f) {
+            PVDoubleFunctionWithoutThis f) {
         return linear().domain(array, f);
     }
 
@@ -89,7 +89,7 @@ public class PVScale extends JavaScriptObject {
      * .
      */
     public final static <S> PVLinearScale linear(S[] array,
-            PVFunctionWithoutThis<S, JsDate> f) {
+            PVFunctionWithoutThis<JsDate> f) {
         return linear().domain(array, f);
     }
 
@@ -99,8 +99,7 @@ public class PVScale extends JavaScriptObject {
      * .
      */
     public final static <S> PVLinearScale linear(JsArrayGeneric<S> array,
-            PVDoubleFunctionWithoutThis<S> min,
-            PVDoubleFunctionWithoutThis<S> max) {
+            PVDoubleFunctionWithoutThis min, PVDoubleFunctionWithoutThis max) {
         return linear().domain(array, min, max);
     }
 
@@ -110,8 +109,7 @@ public class PVScale extends JavaScriptObject {
      * .
      */
     public final static <S> PVLinearScale linear(S[] array,
-            PVDoubleFunctionWithoutThis<S> min,
-            PVDoubleFunctionWithoutThis<S> max) {
+            PVDoubleFunctionWithoutThis min, PVDoubleFunctionWithoutThis max) {
         return linear().domain(array, min, max);
     }
 
@@ -129,7 +127,7 @@ public class PVScale extends JavaScriptObject {
     }-*/;
 
     public final static native PVOrdinalScale ordinal(JsArrayGeneric<?> array,
-            PVStringFunctionWithoutThis<?> f) /*-{
+            PVStringFunctionWithoutThis f) /*-{
         return $wnd.pv.Scale.ordinal(array, @org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunctionWithoutThis;)(f));
     }-*/;
 
@@ -143,7 +141,7 @@ public class PVScale extends JavaScriptObject {
      * .
      */
     public final static <S> PVOrdinalScale ordinal(S[] array,
-            PVStringFunctionWithoutThis<?> f) {
+            PVStringFunctionWithoutThis f) {
         return ordinal(JsUtils.toJsArrayGeneric(array), f);
     }
 
@@ -154,6 +152,13 @@ public class PVScale extends JavaScriptObject {
      * Scales are functions. Use this method if the scale returns a color value.
      */
     public final native PVColor fcolor(double value) /*-{
+        return this(value);
+    }-*/;
+
+    /**
+     * Scales are functions. Use this method if the scale returns a color value.
+     */
+    public final native PVColor fcolor(String value) /*-{
         return this(value);
     }-*/;
 

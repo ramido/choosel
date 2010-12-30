@@ -51,7 +51,7 @@ public class PVLinearScale extends PVScale {
      * .
      */
     public final native <S> PVLinearScale domain(JsArrayGeneric<S> array,
-            PVDoubleFunctionWithoutThis<S> f) /*-{
+            PVDoubleFunctionWithoutThis f) /*-{
         return this.domain(array, @org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunctionWithoutThis;)(f));
     }-*/;
 
@@ -61,8 +61,7 @@ public class PVLinearScale extends PVScale {
      * .
      */
     public final native <S> PVLinearScale domain(JsArrayGeneric<S> array,
-            PVDoubleFunctionWithoutThis<S> min,
-            PVDoubleFunctionWithoutThis<S> max) /*-{
+            PVDoubleFunctionWithoutThis min, PVDoubleFunctionWithoutThis max) /*-{
         return this.domain(array, 
         @org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunctionWithoutThis;)(min), 
         @org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunctionWithoutThis;)(max));
@@ -74,7 +73,7 @@ public class PVLinearScale extends PVScale {
      * .
      */
     public final native <S> PVLinearScale domain(JsArrayGeneric<S> array,
-            PVFunctionWithoutThis<S, JsDate> f) /*-{
+            PVFunctionWithoutThis<JsDate> f) /*-{
         return this.domain(array, @org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVFunctionWithoutThis;)(f));
     }-*/;
 
@@ -84,7 +83,7 @@ public class PVLinearScale extends PVScale {
      * .
      */
     public final <S> PVLinearScale domain(S[] array,
-            PVDoubleFunctionWithoutThis<S> f) {
+            PVDoubleFunctionWithoutThis f) {
         return this.domain(JsUtils.toJsArrayGeneric(array), f);
     }
 
@@ -94,8 +93,7 @@ public class PVLinearScale extends PVScale {
      * .
      */
     public final <S> PVLinearScale domain(S[] array,
-            PVDoubleFunctionWithoutThis<S> min,
-            PVDoubleFunctionWithoutThis<S> max) {
+            PVDoubleFunctionWithoutThis min, PVDoubleFunctionWithoutThis max) {
 
         return this.domain(JsUtils.toJsArrayGeneric(array), min, max);
     }
@@ -106,7 +104,7 @@ public class PVLinearScale extends PVScale {
      * .
      */
     public final <S> PVLinearScale domain(S[] array,
-            PVFunctionWithoutThis<S, JsDate> f) {
+            PVFunctionWithoutThis<JsDate> f) {
         return this.domain(JsUtils.toJsArrayGeneric(array), f);
     }
 
@@ -132,7 +130,16 @@ public class PVLinearScale extends PVScale {
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.quantitative.html#tickFormat">tickFormat()</a></code>
      * .
      */
-    public final native String tickFormat(int tick) /*-{
+    public final native String tickFormatInt(int tick) /*-{
+        return this.tickFormat(tick);
+    }-*/;
+
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.quantitative.html#tickFormat">tickFormat()</a></code>
+     * .
+     */
+    public final native String tickFormatDouble(double tick) /*-{
         return this.tickFormat(tick);
     }-*/;
 

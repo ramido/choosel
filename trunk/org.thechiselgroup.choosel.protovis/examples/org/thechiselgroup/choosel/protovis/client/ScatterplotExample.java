@@ -18,11 +18,10 @@ package org.thechiselgroup.choosel.protovis.client;
 import static org.thechiselgroup.choosel.protovis.client.PVAlignment.BOTTOM;
 import static org.thechiselgroup.choosel.protovis.client.PVAlignment.LEFT;
 
-import org.thechiselgroup.choosel.protovis.client.functions.PVBooleanFunctionDoubleArg;
+import org.thechiselgroup.choosel.protovis.client.functions.PVBooleanFunction;
 import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.functions.PVFunction;
 import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionDoubleArg;
 import org.thechiselgroup.choosel.protovis.client.util.JsArrayGeneric;
 import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
 
@@ -73,54 +72,64 @@ public class ScatterplotExample extends ProtovisWidget implements
 
         /* Y-axis and ticks. */
         vis.add(PV.Rule()).data(y.ticks()).bottom(y)
-                .strokeStyle(new PVStringFunctionDoubleArg<PVRule>() {
-                    public String f(PVRule _this, double d) {
+                .strokeStyle(new PVStringFunction<PVRule>() {
+                    public String f(PVRule _this, PVArgs args) {
+                        double d = args.getDouble(0);
                         return d != 0 ? "#eee" : "#000";
                     }
                 }).anchor(LEFT).add(PV.Label())
-                .visible(new PVBooleanFunctionDoubleArg<PVLabel>() {
-                    public boolean f(PVLabel _this, double d) {
+                .visible(new PVBooleanFunction<PVLabel>() {
+                    public boolean f(PVLabel _this, PVArgs args) {
+                        double d = args.getDouble(0);
                         return d > 0 && d < 1;
                     }
                 }).text(y.tickFormat());
 
         /* X-axis and ticks. */
         vis.add(PV.Rule()).data(x.ticks()).left(x)
-                .strokeStyle(new PVStringFunctionDoubleArg<PVRule>() {
-                    public String f(PVRule _this, double d) {
+                .strokeStyle(new PVStringFunction<PVRule>() {
+                    public String f(PVRule _this, PVArgs args) {
+                        double d = args.getDouble(0);
                         return d != 0 ? "#eee" : "#000";
                     }
                 }).anchor(BOTTOM).add(PV.Label())
-                .visible(new PVBooleanFunctionDoubleArg<PVLabel>() {
-                    public boolean f(PVLabel _this, double d) {
+                .visible(new PVBooleanFunction<PVLabel>() {
+                    public boolean f(PVLabel _this, PVArgs args) {
+                        double d = args.getDouble(0);
                         return d > 0 && d < 100;
                     }
                 }).text(x.tickFormat());
 
         /* The dot plot! */
         vis.add(PV.Panel()).data(data).add(PV.Dot())
-                .left(new PVDoubleFunction<PVDot, Triple>() {
-                    public double f(PVDot _this, Triple d) {
+                .left(new PVDoubleFunction<PVDot>() {
+                    public double f(PVDot _this, PVArgs args) {
+                        Triple d = args.getObject(0);
                         return x.fd(d.x);
                     }
-                }).bottom(new PVDoubleFunction<PVDot, Triple>() {
-                    public double f(PVDot _this, Triple d) {
+                }).bottom(new PVDoubleFunction<PVDot>() {
+                    public double f(PVDot _this, PVArgs args) {
+                        Triple d = args.getObject(0);
                         return y.fd(d.y);
                     }
-                }).strokeStyle(new PVFunction<PVDot, Triple, PVColor>() {
-                    public PVColor f(PVDot _this, Triple d) {
+                }).strokeStyle(new PVFunction<PVDot, PVColor>() {
+                    public PVColor f(PVDot _this, PVArgs args) {
+                        Triple d = args.getObject(0);
                         return c.fcolor(d.z);
                     }
-                }).fillStyle(new PVFunction<PVDot, Triple, PVColor>() {
-                    public PVColor f(PVDot _this, Triple d) {
+                }).fillStyle(new PVFunction<PVDot, PVColor>() {
+                    public PVColor f(PVDot _this, PVArgs args) {
+                        Triple d = args.getObject(0);
                         return c.fcolor(d.z).alpha(0.2d);
                     }
-                }).size(new PVDoubleFunction<PVDot, Triple>() {
-                    public double f(PVDot _this, Triple d) {
+                }).size(new PVDoubleFunction<PVDot>() {
+                    public double f(PVDot _this, PVArgs args) {
+                        Triple d = args.getObject(0);
                         return d.z;
                     }
-                }).title(new PVStringFunction<PVDot, Triple>() {
-                    public String f(PVDot _this, Triple d) {
+                }).title(new PVStringFunction<PVDot>() {
+                    public String f(PVDot _this, PVArgs args) {
+                        Triple d = args.getObject(0);
                         return JsUtils.toFixed(d.z, 1);
                     }
                 });

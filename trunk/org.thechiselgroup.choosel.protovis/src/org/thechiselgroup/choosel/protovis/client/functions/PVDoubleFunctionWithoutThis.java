@@ -15,8 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client.functions;
 
-public interface PVDoubleFunctionWithoutThis<T> {
+import org.thechiselgroup.choosel.protovis.client.PVArgs;
 
-    double f(T d);
+public interface PVDoubleFunctionWithoutThis {
+
+    double f(PVArgs args);
 
 }

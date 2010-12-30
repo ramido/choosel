@@ -19,10 +19,10 @@ import static org.thechiselgroup.choosel.protovis.client.PVAlignment.BOTTOM;
 import static org.thechiselgroup.choosel.protovis.client.PVAlignment.LEFT;
 import static org.thechiselgroup.choosel.protovis.client.PVAlignment.TOP;
 
-import org.thechiselgroup.choosel.protovis.client.functions.PVBooleanFunctionDoubleArg;
+import org.thechiselgroup.choosel.protovis.client.functions.PVBooleanFunction;
 import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunctionWithoutThis;
-import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionDoubleArg;
+import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunction;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -58,8 +58,9 @@ public class AreaChartExample extends ProtovisWidget implements ProtovisExample 
         int h = 200;
 
         final PVLinearScale x = PVScale.linear(points,
-                new PVDoubleFunctionWithoutThis<Point>() {
-                    public double f(Point d) {
+                new PVDoubleFunctionWithoutThis() {
+                    public double f(PVArgs args) {
+                        Point d = args.getObject(0);
                         return d.x;
                     }
                 }).range(0, w);
@@ -71,16 +72,18 @@ public class AreaChartExample extends ProtovisWidget implements ProtovisExample 
 
         /* Y-axis and ticks. */
         vis.add(PV.Rule()).data(y.ticks(5)).bottom(y)
-                .strokeStyle(new PVStringFunctionDoubleArg<PVRule>() {
-                    public String f(PVRule _this, double d) {
+                .strokeStyle(new PVStringFunction<PVRule>() {
+                    public String f(PVRule _this, PVArgs args) {
+                        double d = args.getDouble(0);
                         return d != 0 ? "#eee" : "#000";
                     }
                 }).anchor(LEFT).add(PV.Label()).text(y.tickFormat());
 
         /* X-axis and ticks. */
         vis.add(PV.Rule()).data(x.ticks())
-                .visible(new PVBooleanFunctionDoubleArg<PVRule>() {
-                    public boolean f(PVRule _this, double d) {
+                .visible(new PVBooleanFunction<PVRule>() {
+                    public boolean f(PVRule _this, PVArgs args) {
+                        double d = args.getDouble(0);
                         return d != 0;
                     }
                 }).left(x).bottom(-5).height(5).anchor(BOTTOM).add(PV.Label())
@@ -88,12 +91,14 @@ public class AreaChartExample extends ProtovisWidget implements ProtovisExample 
 
         /* The area with top line. */
         vis.add(PV.Area()).data(points).bottom(1)
-                .left(new PVDoubleFunction<PVArea, Point>() {
-                    public double f(PVArea _this, Point d) {
+                .left(new PVDoubleFunction<PVArea>() {
+                    public double f(PVArea _this, PVArgs args) {
+                        Point d = args.getObject(0);
                         return x.fd(d.x);
                     }
-                }).height(new PVDoubleFunction<PVArea, Point>() {
-                    public double f(PVArea _this, Point d) {
+                }).height(new PVDoubleFunction<PVArea>() {
+                    public double f(PVArea _this, PVArgs args) {
+                        Point d = args.getObject(0);
                         return y.fd(d.y);
                     }
                 }).fillStyle("rgb(121,173,210)").anchor(TOP).add(PV.Line())

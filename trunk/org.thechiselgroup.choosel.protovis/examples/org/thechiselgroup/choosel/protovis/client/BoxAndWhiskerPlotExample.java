@@ -24,7 +24,6 @@ import java.util.Arrays;
 import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.functions.PVFunction;
 import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionDoubleArg;
 import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionWithoutThis;
 import org.thechiselgroup.choosel.protovis.client.util.JsArrayGeneric;
 import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
@@ -64,8 +63,9 @@ public class BoxAndWhiskerPlotExample extends ProtovisWidget implements
         int w = 860;
         int h = 300;
         final PVOrdinalScale x = PVScale.ordinal(experiments,
-                new PVStringFunctionWithoutThis<Experiment>() {
-                    public String f(Experiment d) {
+                new PVStringFunctionWithoutThis() {
+                    public String f(PVArgs args) {
+                        Experiment d = args.getObject(0);
                         return d.id;
                     }
                 }).splitBanded(0, w, 3d / 5d);
@@ -76,70 +76,77 @@ public class BoxAndWhiskerPlotExample extends ProtovisWidget implements
 
         /* Add the y-axis rules */
         vis.add(PV.Rule()).data(y.ticks()).bottom(y)
-                .strokeStyle(new PVStringFunctionDoubleArg<PVRule>() {
-                    public String f(PVRule _this, double d) {
+                .strokeStyle(new PVStringFunction<PVRule>() {
+                    public String f(PVRule _this, PVArgs args) {
+                        double d = args.getDouble(0);
                         return (d == 0 || d == 1) ? "#000" : "#ccc";
                     }
                 }).anchor(LEFT).add(PV.Label()).text(y.tickFormat());
 
         /* Add a panel for each data point */
         PVPanel points = vis.add(PV.Panel()).data(experiments)
-                .left(new PVDoubleFunction<PVPanel, Experiment>() {
-                    public double f(PVPanel _this, Experiment d) {
+                .left(new PVDoubleFunction<PVPanel>() {
+                    public double f(PVPanel _this, PVArgs args) {
+                        Experiment d = args.getObject(0);
                         return x.fd(d.id);
                     }
                 }).width(s * 2);
 
         /* Add the experiment id label */
         points.anchor(BOTTOM).add(PV.Label()).textBaseline(TOP)
-                .text(new PVStringFunction<PVLabel, Experiment>() {
-                    public String f(PVLabel _this, Experiment d) {
+                .text(new PVStringFunction<PVLabel>() {
+                    public String f(PVLabel _this, PVArgs args) {
+                        Experiment d = args.getObject(0);
                         return d.id;
                     }
                 });
 
         /* Add the range line */
-        points.add(PV.Rule()).left(s)
-                .bottom(new PVDoubleFunction<PVRule, Experiment>() {
-                    public double f(PVRule _this, Experiment d) {
-                        return y.fd(d.min);
-                    }
-                }).height(new PVDoubleFunction<PVRule, Experiment>() {
-                    public double f(PVRule _this, Experiment d) {
-                        return y.fd(d.max) - y.fd(d.min);
-                    }
-                });
+        points.add(PV.Rule()).left(s).bottom(new PVDoubleFunction<PVRule>() {
+            public double f(PVRule _this, PVArgs args) {
+                Experiment d = args.getObject(0);
+                return y.fd(d.min);
+            }
+        }).height(new PVDoubleFunction<PVRule>() {
+            public double f(PVRule _this, PVArgs args) {
+                Experiment d = args.getObject(0);
+                return y.fd(d.max) - y.fd(d.min);
+            }
+        });
 
         /* Add the min and max indicators */
-        points.add(PV.Rule())
-                .data(new PVFunction<PVRule, Experiment, JsArrayNumber>() {
-                    public JsArrayNumber f(PVRule _this, Experiment d) {
-                        return JsUtils.toJsArrayNumber(d.min, d.max);
-                    }
-                }).bottom(y).left(s / 2).width(s);
+        points.add(PV.Rule()).data(new PVFunction<PVRule, JsArrayNumber>() {
+            public JsArrayNumber f(PVRule _this, PVArgs args) {
+                Experiment d = args.getObject(0);
+                return JsUtils.toJsArrayNumber(d.min, d.max);
+            }
+        }).bottom(y).left(s / 2).width(s);
 
         /* Add the upper/lower quartile ranges */
-        points.add(PV.Bar()).bottom(new PVDoubleFunction<PVBar, Experiment>() {
-            public double f(PVBar _this, Experiment d) {
+        points.add(PV.Bar()).bottom(new PVDoubleFunction<PVBar>() {
+            public double f(PVBar _this, PVArgs args) {
+                Experiment d = args.getObject(0);
                 return y.fd(d.lq);
             }
-        }).height(new PVDoubleFunction<PVBar, Experiment>() {
-            public double f(PVBar _this, Experiment d) {
+        }).height(new PVDoubleFunction<PVBar>() {
+            public double f(PVBar _this, PVArgs args) {
+                Experiment d = args.getObject(0);
                 return y.fd(d.uq) - y.fd(d.lq);
             }
-        }).fillStyle(new PVStringFunction<PVBar, Experiment>() {
-            public String f(PVBar _this, Experiment d) {
+        }).fillStyle(new PVStringFunction<PVBar>() {
+            public String f(PVBar _this, PVArgs args) {
+                Experiment d = args.getObject(0);
                 return d.median > .5 ? "#aec7e8" : "#ffbb78";
             }
         }).strokeStyle("black").lineWidth(1).antialias(false);
 
         /* Add the median line */
-        points.add(PV.Rule()).bottom(
-                new PVDoubleFunction<PVRule, Experiment>() {
-                    public double f(PVRule _this, Experiment d) {
-                        return y.fd(d.median);
-                    }
-                });
+        points.add(PV.Rule()).bottom(new PVDoubleFunction<PVRule>() {
+            public double f(PVRule _this, PVArgs args) {
+                Experiment d = args.getObject(0);
+                return y.fd(d.median);
+            }
+        });
     }
 
     public static class Experiment {

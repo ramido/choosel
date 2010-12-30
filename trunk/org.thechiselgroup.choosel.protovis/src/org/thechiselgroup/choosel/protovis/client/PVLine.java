@@ -30,7 +30,7 @@ public final class PVLine extends PVAbstractMark<PVLine> {
         return this.eccentricity(eccentricity);
     }-*/;
 
-    public final native PVLine fillStyle(PVStringFunction<PVLine, ?> f) /*-{
+    public final native PVLine fillStyle(PVStringFunction<PVLine> f) /*-{
         return this.fillStyle(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunction;)(f));
     }-*/;
 

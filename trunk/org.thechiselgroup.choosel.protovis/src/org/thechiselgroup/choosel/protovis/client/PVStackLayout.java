@@ -16,7 +16,6 @@
 package org.thechiselgroup.choosel.protovis.client;
 
 import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunctionDoubleArg;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -68,20 +67,12 @@ public final class PVStackLayout extends PVAbstractBar<PVStackLayout> {
         return this.order(order);
     }-*/;
 
-    public final native PVStackLayout x(PVDoubleFunction<PVMark, ?> f) /*-{
+    public final native PVStackLayout x(PVDoubleFunction<PVMark> f) /*-{
         return this.x(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunction;)(f));
     }-*/;
 
-    public final native PVStackLayout x(PVDoubleFunctionDoubleArg<PVMark> f) /*-{
-        return this.x(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunctionDoubleArg;)(f));
-    }-*/;
-
-    public final native PVStackLayout y(PVDoubleFunction<PVMark, ?> f) /*-{
+    public final native PVStackLayout y(PVDoubleFunction<PVMark> f) /*-{
         return this.y(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunction;)(f));
-    }-*/;
-
-    public final native PVStackLayout y(PVDoubleFunctionDoubleArg<PVMark> f) /*-{
-        return this.y(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunctionDoubleArg;)(f));
     }-*/;
 
 }

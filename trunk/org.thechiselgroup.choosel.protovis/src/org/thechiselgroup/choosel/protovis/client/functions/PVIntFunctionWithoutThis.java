@@ -15,8 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client.functions;
 
-public interface PVBooleanFunctionDoubleArg<S> {
+import org.thechiselgroup.choosel.protovis.client.PVArgs;
 
-    boolean f(S _this, double d);
+public interface PVIntFunctionWithoutThis {
+
+    int f(PVArgs args);
 
 }

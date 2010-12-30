@@ -60,6 +60,7 @@ public class ProtovisGWTExamples implements EntryPoint {
         examples.add(new LineChartExample());
         examples.add(new StackedChartExample());
         examples.add(new GroupedChartExample());
+        examples.add(new AndersonsFlowersExample());
         examples.add(new StreamgraphExample());
         examples.add(new BulletChartExample());
         examples.add(new CandlestickChartExample());

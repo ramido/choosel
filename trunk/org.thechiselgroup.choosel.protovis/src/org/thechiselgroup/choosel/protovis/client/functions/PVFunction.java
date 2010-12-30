@@ -15,9 +15,11 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client.functions;
 
-//cannot use 'S extends PVAbstractMark<S>' because of GWT
-public interface PVFunction<S, T, U> {
+import org.thechiselgroup.choosel.protovis.client.PVArgs;
 
-    U f(S _this, T d);
+//cannot use 'S extends PVAbstractMark<S>' because of GWT
+public interface PVFunction<S, U> {
+
+    U f(S _this, PVArgs args);
 
 }
