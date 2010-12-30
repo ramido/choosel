@@ -22,7 +22,6 @@ import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunctionWithoutThis;
 import org.thechiselgroup.choosel.protovis.client.functions.PVFunctionWithoutThis;
 import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionDoubleArg;
 
 import com.google.gwt.core.client.JsDate;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -79,18 +78,21 @@ public class CandlestickChartExample extends ProtovisWidget implements
         int w = 840;
         int h = 200;
         final PVLinearScale x = PVScale.linear(days,
-                new PVFunctionWithoutThis<DaySummary, JsDate>() {
-                    public JsDate f(DaySummary d) {
+                new PVFunctionWithoutThis<JsDate>() {
+                    public JsDate f(PVArgs args) {
+                        DaySummary d = args.getObject(0);
                         return d.jsDate;
                     }
                 }).range(0, w);
         final PVLinearScale y = PVScale
-                .linear(days, new PVDoubleFunctionWithoutThis<DaySummary>() {
-                    public double f(DaySummary d) {
+                .linear(days, new PVDoubleFunctionWithoutThis() {
+                    public double f(PVArgs args) {
+                        DaySummary d = args.getObject(0);
                         return d.low;
                     }
-                }, new PVDoubleFunctionWithoutThis<DaySummary>() {
-                    public double f(DaySummary d) {
+                }, new PVDoubleFunctionWithoutThis() {
+                    public double f(PVArgs args) {
+                        DaySummary d = args.getObject(0);
                         return d.high;
                     }
                 }).range(0, h).nice();
@@ -103,45 +105,51 @@ public class CandlestickChartExample extends ProtovisWidget implements
 
         /* Prices. */
         vis.add(PV.Rule()).data(y.ticks(7)).bottom(y).left(-10).right(-10)
-                .strokeStyle(new PVStringFunctionDoubleArg<PVRule>() {
-                    public String f(PVRule _this, double d) {
+                .strokeStyle(new PVStringFunction<PVRule>() {
+                    public String f(PVRule _this, PVArgs args) {
+                        double d = args.getDouble(0);
                         return d % 10 != 0 ? "#ccc" : "#333";
                     }
                 }).anchor(LEFT).add(PV.Label())
-                .textStyle(new PVStringFunctionDoubleArg<PVLabel>() {
-                    public String f(PVLabel _this, double d) {
+                .textStyle(new PVStringFunction<PVLabel>() {
+                    public String f(PVLabel _this, PVArgs args) {
+                        double d = args.getDouble(0);
                         return d % 10 != 0 ? "#999" : "#333";
                     }
                 }).text(y.tickFormat());
 
         /* Candlestick. */
-        vis.add(PV.Rule()).data(days)
-                .left(new PVDoubleFunction<PVRule, DaySummary>() {
-                    public double f(PVRule _this, DaySummary d) {
-                        return x.fd(d.jsDate);
-                    }
-                }).bottom(new PVDoubleFunction<PVRule, DaySummary>() {
-                    public double f(PVRule _this, DaySummary d) {
-                        return y.fd(Math.min(d.high, d.low));
-                    }
-                }).height(new PVDoubleFunction<PVRule, DaySummary>() {
-                    public double f(PVRule _this, DaySummary d) {
-                        return Math.abs(y.fd(d.high) - y.fd(d.low));
-                    }
-                }).strokeStyle(new PVStringFunction<PVRule, DaySummary>() {
-                    public String f(PVRule _this, DaySummary d) {
-                        return d.open < d.close ? "#ae1325" : "#06982d";
-                    }
-                }).add(PV.Rule())
-                .bottom(new PVDoubleFunction<PVRule, DaySummary>() {
-                    public double f(PVRule _this, DaySummary d) {
-                        return y.fd(Math.min(d.open, d.close));
-                    }
-                }).height(new PVDoubleFunction<PVRule, DaySummary>() {
-                    public double f(PVRule _this, DaySummary d) {
-                        return Math.abs(y.fd(d.open) - y.fd(d.close));
-                    }
-                }).lineWidth(10);
+        vis.add(PV.Rule()).data(days).left(new PVDoubleFunction<PVRule>() {
+            public double f(PVRule _this, PVArgs args) {
+                DaySummary d = args.getObject(0);
+                return x.fd(d.jsDate);
+            }
+        }).bottom(new PVDoubleFunction<PVRule>() {
+            public double f(PVRule _this, PVArgs args) {
+                DaySummary d = args.getObject(0);
+                return y.fd(Math.min(d.high, d.low));
+            }
+        }).height(new PVDoubleFunction<PVRule>() {
+            public double f(PVRule _this, PVArgs args) {
+                DaySummary d = args.getObject(0);
+                return Math.abs(y.fd(d.high) - y.fd(d.low));
+            }
+        }).strokeStyle(new PVStringFunction<PVRule>() {
+            public String f(PVRule _this, PVArgs args) {
+                DaySummary d = args.getObject(0);
+                return d.open < d.close ? "#ae1325" : "#06982d";
+            }
+        }).add(PV.Rule()).bottom(new PVDoubleFunction<PVRule>() {
+            public double f(PVRule _this, PVArgs args) {
+                DaySummary d = args.getObject(0);
+                return y.fd(Math.min(d.open, d.close));
+            }
+        }).height(new PVDoubleFunction<PVRule>() {
+            public double f(PVRule _this, PVArgs args) {
+                DaySummary d = args.getObject(0);
+                return Math.abs(y.fd(d.open) - y.fd(d.close));
+            }
+        }).lineWidth(10);
     }
 
     private DaySummary[] generateData() {

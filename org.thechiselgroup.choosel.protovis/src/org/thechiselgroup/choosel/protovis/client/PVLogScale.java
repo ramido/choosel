@@ -47,7 +47,7 @@ public class PVLogScale extends PVScale {
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.quantitative.html#domain">pv.Scale.quantitative.domain()</a></code>
      * .
      */  
-    public final native PVLogScale domain(JsArrayGeneric<?> array, PVFunction<PVLogScale, ?, ?> f) /*-{
+    public final native PVLogScale domain(JsArrayGeneric<?> array, PVFunction<PVLogScale, ?> f) /*-{
         return this.domain(array, @org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVFunction;)( f));
     }-*/;
 

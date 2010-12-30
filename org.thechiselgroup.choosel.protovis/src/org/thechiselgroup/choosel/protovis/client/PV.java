@@ -15,8 +15,11 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
+import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
+
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayNumber;
+import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.user.client.Element;
 
 /**
@@ -62,6 +65,24 @@ public final class PV {
 
     public static native PVPanel Panel() /*-{
         return $wnd.pv.Panel;
+    }-*/;
+
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.html#.colors">pv.colors()</a></code>
+     * .
+     */
+    public static PVOrdinalScale colors(String... values) {
+        return colors(JsUtils.toJsArrayString(values));
+    }
+
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.html#.colors">pv.colors()</a></code>
+     * .
+     */
+    public static native PVOrdinalScale colors(JsArrayString values) /*-{
+        return $wnd.pv.colors(values);
     }-*/;
 
     /**

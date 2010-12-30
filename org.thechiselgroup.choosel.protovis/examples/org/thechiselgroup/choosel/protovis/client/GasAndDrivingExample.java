@@ -21,7 +21,6 @@ import static org.thechiselgroup.choosel.protovis.client.PVAlignment.TOP;
 
 import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionDoubleArg;
 import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
 
 import com.google.gwt.dom.client.Element;
@@ -75,8 +74,9 @@ public class GasAndDrivingExample extends ProtovisWidget implements
         vis.add(PV.Rule()).data(y.ticks(5)).bottom(y).strokeStyle("#ccc")
                 .anchor(LEFT).add(PV.Label()).font("bold 12px sans-serif")
                 .textMargin(6).textAlign(LEFT).textBaseline(BOTTOM)
-                .text(new PVStringFunctionDoubleArg<PVLabel>() {
-                    public String f(PVLabel _this, double d) {
+                .text(new PVStringFunction<PVLabel>() {
+                    public String f(PVLabel _this, PVArgs args) {
+                        double d = args.getDouble(0);
                         return "$" + JsUtils.toFixed(d, 2);
                     }
                 });
@@ -84,30 +84,33 @@ public class GasAndDrivingExample extends ProtovisWidget implements
         vis.add(PV.Rule()).data(x.ticks(5)).left(x).strokeStyle("#ccc")
                 .anchor(TOP).add(PV.Label()).font("bold 12px sans-serif")
                 .textMargin(6).textAlign(LEFT).textBaseline(TOP)
-                .text(new PVStringFunctionDoubleArg<PVLabel>() {
-                    public String f(PVLabel _this, double d) {
+                .text(new PVStringFunction<PVLabel>() {
+                    public String f(PVLabel _this, PVArgs args) {
+                        double d = args.getDouble(0);
                         return PVFormat.number().format(d) + " mi";
                     }
                 });
 
         vis.add(PV.Line()).data(driving).interpolate("cardinal").lineWidth(4)
-                .strokeStyle("black")
-                .left(new PVDoubleFunction<PVLine, DrivingStats>() {
-                    public double f(PVLine _this, DrivingStats d) {
+                .strokeStyle("black").left(new PVDoubleFunction<PVLine>() {
+                    public double f(PVLine _this, PVArgs args) {
+                        DrivingStats d = args.getObject(0);
                         return x.fd(d.miles);
                     }
-                }).bottom(new PVDoubleFunction<PVLine, DrivingStats>() {
-                    public double f(PVLine _this, DrivingStats d) {
+                }).bottom(new PVDoubleFunction<PVLine>() {
+                    public double f(PVLine _this, PVArgs args) {
+                        DrivingStats d = args.getObject(0);
                         return y.fd(d.gas);
                     }
                 }).add(PV.Dot()).lineWidth(1).fillStyle("white")
-                .anchor(new PVStringFunction<PVDot, DrivingStats>() {
-                    public String f(PVDot _this, DrivingStats d) {
+                .anchor(new PVStringFunction<PVDot>() {
+                    public String f(PVDot _this, PVArgs args) {
+                        DrivingStats d = args.getObject(0);
                         return d.side;
                     }
-                }).add(PV.Label())
-                .text(new PVStringFunction<PVLabel, DrivingStats>() {
-                    public String f(PVLabel _this, DrivingStats d) {
+                }).add(PV.Label()).text(new PVStringFunction<PVLabel>() {
+                    public String f(PVLabel _this, PVArgs args) {
+                        DrivingStats d = args.getObject(0);
                         return "" + d.year;
                     }
                 });

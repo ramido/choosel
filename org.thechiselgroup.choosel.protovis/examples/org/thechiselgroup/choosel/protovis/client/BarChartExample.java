@@ -21,8 +21,6 @@ import static org.thechiselgroup.choosel.protovis.client.PVAlignment.RIGHT;
 
 import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionDoubleArg;
-import org.thechiselgroup.choosel.protovis.client.util.JsArrayGeneric;
 import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -41,7 +39,7 @@ public class BarChartExample extends ProtovisWidget implements ProtovisExample {
         return this;
     }
 
-    private void createVisualization(JsArrayGeneric<Double> data) {
+    private void createVisualization(double[] data) {
         /* Sizing and scales. */
         int w = 400;
         int h = 250;
@@ -54,33 +52,35 @@ public class BarChartExample extends ProtovisWidget implements ProtovisExample {
                 .right(10).top(5);
 
         /* The bars. */
-        PVBar bar = vis.add(PV.Bar()).data(data)
-                .top(new PVDoubleFunction<PVBar, Double>() {
-                    public double f(PVBar _this, Double d) {
+        PVBar bar = vis.add(PV.Bar()).dataDouble(data)
+                .top(new PVDoubleFunction<PVBar>() {
+                    public double f(PVBar _this, PVArgs args) {
                         return y.fd(_this.index());
                     }
-                }).height(new PVDoubleFunction<PVBar, Double>() {
-                    public double f(PVBar _this, Double d) {
+                }).height(new PVDoubleFunction<PVBar>() {
+                    public double f(PVBar _this, PVArgs args) {
                         return y.rangeBand();
                     }
-                }).left(0).width(new PVDoubleFunction<PVBar, Double>() {
-                    public double f(PVBar _this, Double d) {
+                }).left(0).width(new PVDoubleFunction<PVBar>() {
+                    public double f(PVBar _this, PVArgs args) {
+                        double d = args.getDouble(0);
                         return x.fd(d);
                     }
                 });
 
         /* The value label. */
         bar.anchor(RIGHT).add(PV.Label()).textStyle("white")
-                .text(new PVStringFunction<PVLabel, Double>() {
-                    public String f(PVLabel _this, Double d) {
+                .text(new PVStringFunction<PVLabel>() {
+                    public String f(PVLabel _this, PVArgs args) {
+                        double d = args.getDouble(0);
                         return JsUtils.toFixed(d, 1);
                     }
                 });
 
         /* The variable label. */
         bar.anchor(LEFT).add(PV.Label()).textMargin(5).textAlign(RIGHT)
-                .text(new PVStringFunction<PVLabel, Double>() {
-                    public String f(PVLabel _this, Double d) {
+                .text(new PVStringFunction<PVLabel>() {
+                    public String f(PVLabel _this, PVArgs args) {
                         return "ABCDEFGHIJK".substring(_this.index(),
                                 _this.index() + 1);
                     }
@@ -88,18 +88,19 @@ public class BarChartExample extends ProtovisWidget implements ProtovisExample {
 
         /* X-axis ticks. */
         vis.add(PV.Rule()).data(x.ticks(5)).left(x)
-                .strokeStyle(new PVStringFunctionDoubleArg<PVRule>() {
-                    public String f(PVRule _this, double d) {
+                .strokeStyle(new PVStringFunction<PVRule>() {
+                    public String f(PVRule _this, PVArgs args) {
+                        double d = args.getDouble(0);
                         return d != 0 ? "rgba(255,255,255,.3)" : "#000";
                     }
                 }).add(PV.Rule()).bottom(0).height(5).strokeStyle("#000")
                 .anchor(BOTTOM).add(PV.Label()).text(x.tickFormat());
     }
 
-    private JsArrayGeneric<Double> generateData() {
-        JsArrayGeneric<Double> data = JsUtils.createJsArrayGeneric();
-        for (int i = 0; i < 10; i++) {
-            data.push(Math.random() + .1);
+    private double[] generateData() {
+        double[] data = new double[10];
+        for (int i = 0; i < data.length; i++) {
+            data[i] = Math.random() + .1;
         }
         return data;
     }

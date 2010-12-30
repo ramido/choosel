@@ -19,10 +19,10 @@ import static org.thechiselgroup.choosel.protovis.client.PVAlignment.CENTER;
 import static org.thechiselgroup.choosel.protovis.client.PVEventTypes.MOUSEOUT;
 import static org.thechiselgroup.choosel.protovis.client.PVEventTypes.MOUSEOVER;
 
-import org.thechiselgroup.choosel.protovis.client.functions.PVBooleanFunctionDoubleArg;
-import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunctionDoubleArg;
+import org.thechiselgroup.choosel.protovis.client.functions.PVBooleanFunction;
+import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.functions.PVEventHandler;
-import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionDoubleArg;
+import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunction;
 import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
 
 import com.google.gwt.core.client.JsArrayNumber;
@@ -57,8 +57,9 @@ public class PieChartExample extends ProtovisWidget implements ProtovisExample {
         /* The wedge, with centered label. */
         vis.add(PV.Wedge()).data(PV.sort(data, PV.reverseOrder()))
                 .bottom(w / 2).left(w / 2).innerRadius(r - 40).outerRadius(r)
-                .angle(new PVDoubleFunctionDoubleArg<PVWedge>() {
-                    public double f(PVWedge _this, double d) {
+                .angle(new PVDoubleFunction<PVWedge>() {
+                    public double f(PVWedge _this, PVArgs args) {
+                        double d = args.getDouble(0);
                         return a.fd(d);
                     }
                 }).event(MOUSEOVER, new PVEventHandler<PVWedge>() {
@@ -72,12 +73,14 @@ public class PieChartExample extends ProtovisWidget implements ProtovisExample {
                         _this.render();
                     }
                 }).anchor(CENTER).add(PV.Label())
-                .visible(new PVBooleanFunctionDoubleArg<PVLabel>() {
-                    public boolean f(PVLabel _this, double d) {
+                .visible(new PVBooleanFunction<PVLabel>() {
+                    public boolean f(PVLabel _this, PVArgs args) {
+                        double d = args.getDouble(0);
                         return d > .15;
                     }
-                }).textAngle(0).text(new PVStringFunctionDoubleArg<PVLabel>() {
-                    public String f(PVLabel _this, double d) {
+                }).textAngle(0).text(new PVStringFunction<PVLabel>() {
+                    public String f(PVLabel _this, PVArgs args) {
+                        double d = args.getDouble(0);
                         return JsUtils.toFixed(d, 2);
                     }
                 });

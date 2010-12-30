@@ -15,8 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client.functions;
 
-public interface PVStringFunctionWithoutThis<T> {
+import org.thechiselgroup.choosel.protovis.client.PVArgs;
 
-    String f(T d);
+public interface PVStringFunctionWithoutThis {
+
+    String f(PVArgs args);
 
 }

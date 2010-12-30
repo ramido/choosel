@@ -46,7 +46,7 @@ public final class PVBulletLayout extends PVAbstractBar<PVBulletLayout> {
      * .
      */
     public final native PVBulletLayout markers(
-            PVFunction<PVBulletLayout, ?, JsArrayNumber> f) /*-{
+            PVFunction<PVBulletLayout, JsArrayNumber> f) /*-{
         return this.markers(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVFunction;)(f));
     }-*/;
 
@@ -65,7 +65,7 @@ public final class PVBulletLayout extends PVAbstractBar<PVBulletLayout> {
      * .
      */
     public final native PVBulletLayout measures(
-            PVFunction<PVBulletLayout, ?, JsArrayNumber> f) /*-{
+            PVFunction<PVBulletLayout, JsArrayNumber> f) /*-{
         return this.measures(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVFunction;)(f));
     }-*/;
 
@@ -96,7 +96,7 @@ public final class PVBulletLayout extends PVAbstractBar<PVBulletLayout> {
      * .
      */
     public final native PVBulletLayout ranges(
-            PVFunction<PVBulletLayout, ?, JsArrayNumber> f) /*-{
+            PVFunction<PVBulletLayout, JsArrayNumber> f) /*-{
         return this.ranges(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVFunction;)(f));
     }-*/;
 

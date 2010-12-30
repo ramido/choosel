@@ -17,8 +17,6 @@ package org.thechiselgroup.choosel.protovis.client;
 
 import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionDoubleArg;
-import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionIntArg;
 
 /**
  * Wrapper for
@@ -37,7 +35,7 @@ public class PVRule extends PVAbstractMark<PVRule> {
         return this.height(height);
     }-*/;
 
-    public final native PVRule height(PVDoubleFunction<PVRule, ?> f) /*-{
+    public final native PVRule height(PVDoubleFunction<PVRule> f) /*-{
         return this.height(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunction;)(f));
     }-*/;
 
@@ -59,33 +57,15 @@ public class PVRule extends PVAbstractMark<PVRule> {
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Rule.html#strokeStyle">strokeStyle()</a></code>
      * .
      */
-    public final native PVRule strokeStyle(PVStringFunction<PVRule, ?> f) /*-{
+    public final native PVRule strokeStyle(PVStringFunction<PVRule> f) /*-{
         return this.strokeStyle(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunction;)(f));
-    }-*/;
-
-    /**
-     * Wrapper for
-     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Rule.html#strokeStyle">strokeStyle()</a></code>
-     * .
-     */
-    public final native PVRule strokeStyle(PVStringFunctionIntArg<PVRule> f) /*-{
-        return this.strokeStyle(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunctionIntArg;)(f));
-    }-*/;
-
-    /**
-     * Wrapper for
-     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Rule.html#strokeStyle">strokeStyle()</a></code>
-     * .
-     */
-    public final native PVRule strokeStyle(PVStringFunctionDoubleArg<PVRule> f) /*-{
-        return this.strokeStyle(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunctionDoubleArg;)(f));
     }-*/;
 
     public final native PVRule width(double width) /*-{
         return this.width(width);
     }-*/;
 
-    public final native PVRule width(PVDoubleFunction<PVRule, ?> f) /*-{
+    public final native PVRule width(PVDoubleFunction<PVRule> f) /*-{
         return this.width(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunction;)(f));
     }-*/;
 

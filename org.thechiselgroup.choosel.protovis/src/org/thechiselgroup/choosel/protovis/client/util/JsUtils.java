@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.protovis.client.util;
 
 import com.google.gwt.core.client.JsArrayInteger;
 import com.google.gwt.core.client.JsArrayNumber;
+import com.google.gwt.core.client.JsArrayString;
 
 public final class JsUtils {
 
@@ -45,6 +46,10 @@ public final class JsUtils {
         return new $wnd.Array();
     }-*/;
 
+    public final static native JsArrayString createJsArrayString() /*-{
+        return new $wnd.Array();
+    }-*/;
+
     public final static native String toFixed(double d, int decimalPlaces) /*-{
         return d.toFixed(decimalPlaces);
     }-*/;
@@ -54,6 +59,14 @@ public final class JsUtils {
 
         JsArrayGeneric<S> array = createJsArrayGeneric();
         for (S value : values) {
+            array.push(value);
+        }
+        return array;
+    }
+
+    public final static JsArrayString toJsArrayString(String... values) {
+        JsArrayString array = createJsArrayString();
+        for (String value : values) {
             array.push(value);
         }
         return array;

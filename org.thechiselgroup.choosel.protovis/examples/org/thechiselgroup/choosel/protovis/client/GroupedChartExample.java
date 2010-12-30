@@ -22,10 +22,10 @@ import static org.thechiselgroup.choosel.protovis.client.PVAlignment.RIGHT;
 import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.functions.PVFunction;
 import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionDoubleArg;
 import org.thechiselgroup.choosel.protovis.client.util.JsArrayGeneric;
 import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
 
+import com.google.gwt.core.client.JsArrayNumber;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -43,9 +43,7 @@ public class GroupedChartExample extends ProtovisWidget implements
         return this;
     }
 
-    private void createVisualization(
-            final JsArrayGeneric<JsArrayGeneric<Double>> data) {
-
+    private void createVisualization(final JsArrayGeneric<JsArrayNumber> data) {
         /* Sizing and scales. */
         final int m = 4;
         int w = 400;
@@ -60,56 +58,51 @@ public class GroupedChartExample extends ProtovisWidget implements
                 .right(10).top(5);
 
         /* The bars. */
-        PVBar bar = vis
-                .add(PV.Panel())
-                .data(data)
-                .top(new PVDoubleFunction<PVPanel, JsArrayGeneric<Double>>() {
-                    public double f(PVPanel _this, JsArrayGeneric<Double> d) {
+        PVBar bar = vis.add(PV.Panel()).data(data)
+                .top(new PVDoubleFunction<PVPanel>() {
+                    public double f(PVPanel _this, PVArgs args) {
                         return y.fd(_this.index());
                     }
-                })
-                .height(new PVDoubleFunction<PVPanel, JsArrayGeneric<Double>>() {
-                    public double f(PVPanel _this, JsArrayGeneric<Double> d) {
+                }).height(new PVDoubleFunction<PVPanel>() {
+                    public double f(PVPanel _this, PVArgs args) {
                         return y.rangeBand();
                     }
-                })
-                .add(PV.Bar())
-                .data(new PVFunction<PVBar, JsArrayGeneric<Double>, JsArrayGeneric<Double>>() {
-                    public JsArrayGeneric<Double> f(PVBar _this,
-                            JsArrayGeneric<Double> d) {
-                        return d;
+                }).add(PV.Bar()).data(new PVFunction<PVBar, JsArrayNumber>() {
+                    public JsArrayNumber f(PVBar _this, PVArgs args) {
+                        return args.getObject(0);
                     }
-                }).top(new PVDoubleFunction<PVBar, Double>() {
-                    public double f(PVBar _this, Double d) {
+                }).top(new PVDoubleFunction<PVBar>() {
+                    public double f(PVBar _this, PVArgs args) {
                         return _this.index() * y.rangeBand() / m;
                     }
-                }).height(new PVDoubleFunction<PVBar, Double>() {
-                    public double f(PVBar _this, Double d) {
+                }).height(new PVDoubleFunction<PVBar>() {
+                    public double f(PVBar _this, PVArgs args) {
                         return y.rangeBand() / m;
                     }
-                }).left(0).width(new PVDoubleFunction<PVBar, Double>() {
-                    public double f(PVBar _this, Double d) {
+                }).left(0).width(new PVDoubleFunction<PVBar>() {
+                    public double f(PVBar _this, PVArgs args) {
+                        double d = args.getDouble(0);
                         return x.fd(d);
                     }
-                }).fillStyle(new PVFunction<PVBar, Double, PVColor>() {
-                    public PVColor f(PVBar _this, Double d) {
+                }).fillStyle(new PVFunction<PVBar, PVColor>() {
+                    public PVColor f(PVBar _this, PVArgs args) {
                         return category20.fcolor(_this.index());
                     }
                 });
 
         /* The value label. */
         bar.anchor(RIGHT).add(PV.Label()).textStyle("white")
-                .text(new PVStringFunction<PVLabel, Double>() {
-                    public String f(PVLabel _this, Double d) {
+                .text(new PVStringFunction<PVLabel>() {
+                    public String f(PVLabel _this, PVArgs args) {
+                        double d = args.getDouble(0);
                         return JsUtils.toFixed(d, 1);
                     }
                 });
 
         /* The variable label. */
         bar.parent().anchor(LEFT).add(PV.Label()).textAlign(RIGHT)
-                .textMargin(5)
-                .text(new PVStringFunction<PVLabel, JsArrayGeneric<Double>>() {
-                    public String f(PVLabel _this, JsArrayGeneric<Double> d) {
+                .textMargin(5).text(new PVStringFunction<PVLabel>() {
+                    public String f(PVLabel _this, PVArgs args) {
                         int i = _this.parent().index();
                         return "ABCDEFGHIJK".substring(i, i + 1);
                     }
@@ -117,19 +110,19 @@ public class GroupedChartExample extends ProtovisWidget implements
 
         /* X-axis ticks. */
         vis.add(PV.Rule()).data(x.ticks(5)).left(x)
-                .strokeStyle(new PVStringFunctionDoubleArg<PVRule>() {
-                    public String f(PVRule _this, double d) {
+                .strokeStyle(new PVStringFunction<PVRule>() {
+                    public String f(PVRule _this, PVArgs args) {
+                        double d = args.getDouble(0);
                         return d != 0 ? "rgba(255,255,255,.3)" : "#000";
                     }
                 }).add(PV.Rule()).bottom(0).height(5).strokeStyle("#000")
                 .anchor(BOTTOM).add(PV.Label()).text(x.tickFormat());
     }
 
-    private JsArrayGeneric<JsArrayGeneric<Double>> generateData() {
-        JsArrayGeneric<JsArrayGeneric<Double>> data = JsUtils
-                .createJsArrayGeneric();
+    private JsArrayGeneric<JsArrayNumber> generateData() {
+        JsArrayGeneric<JsArrayNumber> data = JsUtils.createJsArrayGeneric();
         for (int j = 0; j < 3; j++) {
-            JsArrayGeneric<Double> series = JsUtils.createJsArrayGeneric();
+            JsArrayNumber series = JsUtils.createJsArrayNumber();
             for (int i = 0; i < 4; i++) {
                 series.push(Math.random() + .1);
             }

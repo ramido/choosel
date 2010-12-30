@@ -18,10 +18,10 @@ package org.thechiselgroup.choosel.protovis.client;
 import static org.thechiselgroup.choosel.protovis.client.PVAlignment.BOTTOM;
 import static org.thechiselgroup.choosel.protovis.client.PVAlignment.LEFT;
 
-import org.thechiselgroup.choosel.protovis.client.functions.PVBooleanFunctionDoubleArg;
+import org.thechiselgroup.choosel.protovis.client.functions.PVBooleanFunction;
 import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunctionWithoutThis;
-import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionDoubleArg;
+import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunction;
 import org.thechiselgroup.choosel.protovis.client.util.JsArrayGeneric;
 import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
 
@@ -59,8 +59,9 @@ public class LineChartExample extends ProtovisWidget implements ProtovisExample 
         int w = 400;
         int h = 200;
         final PVLinearScale x = PVScale.linear(data,
-                new PVDoubleFunctionWithoutThis<Point>() {
-                    public double f(Point d) {
+                new PVDoubleFunctionWithoutThis() {
+                    public double f(PVArgs args) {
+                        Point d = args.getObject(0);
                         return d.x;
                     }
                 }).range(0, w);
@@ -72,8 +73,9 @@ public class LineChartExample extends ProtovisWidget implements ProtovisExample 
 
         /* X-axis ticks. */
         vis.add(PV.Rule()).data(x.ticks())
-                .visible(new PVBooleanFunctionDoubleArg<PVRule>() {
-                    public boolean f(PVRule _this, double d) {
+                .visible(new PVBooleanFunction<PVRule>() {
+                    public boolean f(PVRule _this, PVArgs args) {
+                        double d = args.getDouble(0);
                         return d > 0;
                     }
                 }).left(x).strokeStyle("#eee").add(PV.Rule()).bottom(-5)
@@ -82,20 +84,23 @@ public class LineChartExample extends ProtovisWidget implements ProtovisExample 
 
         /* Y-axis ticks. */
         vis.add(PV.Rule()).data(y.ticks(5)).bottom(y)
-                .strokeStyle(new PVStringFunctionDoubleArg<PVRule>() {
-                    public String f(PVRule _this, double d) {
+                .strokeStyle(new PVStringFunction<PVRule>() {
+                    public String f(PVRule _this, PVArgs args) {
+                        double d = args.getDouble(0);
                         return d != 0 ? "#eee" : "#000";
                     }
                 }).anchor(LEFT).add(PV.Label()).text(y.tickFormat());
 
         /* The line. */
         vis.add(PV.Line()).data(data).interpolate("step-after")
-                .left(new PVDoubleFunction<PVLine, Point>() {
-                    public double f(PVLine _this, Point d) {
+                .left(new PVDoubleFunction<PVLine>() {
+                    public double f(PVLine _this, PVArgs args) {
+                        Point d = args.getObject(0);
                         return x.fd(d.x);
                     }
-                }).bottom(new PVDoubleFunction<PVLine, Point>() {
-                    public double f(PVLine _this, Point d) {
+                }).bottom(new PVDoubleFunction<PVLine>() {
+                    public double f(PVLine _this, PVArgs args) {
+                        Point d = args.getObject(0);
                         return y.fd(d.y);
                     }
                 }).lineWidth(3);

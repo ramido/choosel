@@ -33,7 +33,7 @@ public abstract class PVAbstractBar<T extends PVAbstractBar<T>> extends
         return this.antialias(antialias);
     }-*/;
 
-    public final native T fillStyle(PVStringFunction<T, ?> f) /*-{
+    public final native T fillStyle(PVStringFunction<T> f) /*-{
         return this.fillStyle(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunction;)(f));
     }-*/;
 
@@ -41,7 +41,7 @@ public abstract class PVAbstractBar<T extends PVAbstractBar<T>> extends
         return this.fillStyle(colour);
     }-*/;
 
-    public final native T fillStyle(PVFunction<T, ?, PVColor> f) /*-{
+    public final native T fillStyle(PVFunction<T, PVColor> f) /*-{
         return this.fillStyle(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVFunction;)(f));
     }-*/;
 
@@ -49,7 +49,7 @@ public abstract class PVAbstractBar<T extends PVAbstractBar<T>> extends
         return this.height(height);
     }-*/;
 
-    public final native T height(PVDoubleFunction<T, ?> f) /*-{
+    public final native T height(PVDoubleFunction<T> f) /*-{
         return this.height(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunction;)(f));
     }-*/;
 
@@ -57,7 +57,7 @@ public abstract class PVAbstractBar<T extends PVAbstractBar<T>> extends
         return this.lineWidth(lineWidth);
     }-*/;
 
-    public final native T strokeStyle(PVStringFunction<T, ?> f) /*-{
+    public final native T strokeStyle(PVStringFunction<T> f) /*-{
         return this.fillStyle(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunction;)(f));
     }-*/;
 
@@ -79,7 +79,7 @@ public abstract class PVAbstractBar<T extends PVAbstractBar<T>> extends
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Bar.html#width">width()</a></code>
      * .
      */
-    public final native T width(PVDoubleFunction<T, ?> f) /*-{
+    public final native T width(PVDoubleFunction<T> f) /*-{
         return this.width(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunction;)(f));
     }-*/;
 

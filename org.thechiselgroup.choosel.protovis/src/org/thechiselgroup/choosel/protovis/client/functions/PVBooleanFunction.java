@@ -15,8 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client.functions;
 
-public interface PVBooleanFunction<S, T> {
+import org.thechiselgroup.choosel.protovis.client.PVArgs;
 
-    boolean f(S _this, T d);
+public interface PVBooleanFunction<S> {
+
+    boolean f(S _this, PVArgs args);
 
 }
