@@ -38,6 +38,9 @@ public final class PVLine extends PVAbstractMark<PVLine> {
         return this.fillStyle(colour);
     }-*/;
 
+    /**
+     * @see PVInterpolationMethod
+     */
     public final native PVLine interpolate(String interpolate) /*-{
         return this.interpolate(interpolate);
     }-*/;

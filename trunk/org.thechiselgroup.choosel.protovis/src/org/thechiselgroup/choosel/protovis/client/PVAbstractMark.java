@@ -210,6 +210,15 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Mark.html#top">pv.Mark.top()</a></code>
      * .
      */
+    public final native double top() /*-{
+        return this.top();
+    }-*/;
+
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Mark.html#top">pv.Mark.top()</a></code>
+     * .
+     */
     public final native T top(double top) /*-{
         return this.top(top);
     }-*/;
@@ -221,10 +230,6 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
      */
     public final native T top(JsDoubleFunction f) /*-{
         return this.top(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
-    }-*/;
-
-    public final native T top(PVScale scale) /*-{
-        return this.top(scale);
     }-*/;
 
     public final native T type(String type) /*-{

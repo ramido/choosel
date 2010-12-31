@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.protovis.client;
 import static org.thechiselgroup.choosel.protovis.client.PVAlignment.BOTTOM;
 import static org.thechiselgroup.choosel.protovis.client.PVAlignment.LEFT;
 import static org.thechiselgroup.choosel.protovis.client.PVAlignment.TOP;
+import static org.thechiselgroup.choosel.protovis.client.PVInterpolationMethod.CARDINAL;
 
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
@@ -92,7 +93,7 @@ public class GasAndDrivingExample extends ProtovisWidget implements
                     }
                 });
 
-        vis.add(PV.Line()).data(driving).interpolate("cardinal").lineWidth(4)
+        vis.add(PV.Line()).data(driving).interpolate(CARDINAL).lineWidth(4)
                 .strokeStyle("black").left(new JsDoubleFunction() {
                     public double f(JsArgs args) {
                         DrivingStats d = args.getObject(0);
