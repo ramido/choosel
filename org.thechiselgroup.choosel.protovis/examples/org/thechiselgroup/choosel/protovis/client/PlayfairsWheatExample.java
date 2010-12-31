@@ -208,7 +208,6 @@ public class PlayfairsWheatExample extends ProtovisWidget implements
                         + " &amp; Wages of Labour by the Week,<br/>"
                         + "from The Year 1565 to 1821,<br/>"
                         + "by WILLIAM PLAYFAIR</center>", null);
-        div.getStyle().setProperty("font", "oblique small baskerville");
         div.getStyle().setPadding(10, Unit.PX);
     }
 
@@ -271,10 +270,11 @@ public class PlayfairsWheatExample extends ProtovisWidget implements
 
     protected void onAttach() {
         super.onAttach();
+        getElement().getStyle()
+                .setProperty("font", "oblique small baskerville");
         initPVPanel();
         createVisualization(wheatData(), monarchData());
         getPVPanel().render();
-
         addDescriptions();
     }
 
