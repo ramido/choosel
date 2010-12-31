@@ -24,13 +24,13 @@ import static org.thechiselgroup.choosel.protovis.client.PVAlignment.TOP;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.thechiselgroup.choosel.protovis.client.functions.PVBooleanFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunctionWithoutThis;
-import org.thechiselgroup.choosel.protovis.client.functions.PVFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunction;
-import org.thechiselgroup.choosel.protovis.client.util.JsArrayGeneric;
-import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsArrayGeneric;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsBooleanFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsUtils;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.ui.Widget;
@@ -142,17 +142,17 @@ public class AndersonsFlowersExample extends ProtovisWidget implements
                 .top(5);
 
         /* One cell per trait pair. */
-        PVDoubleFunction<PVPanel> panelPosition = new PVDoubleFunction<PVPanel>() {
-            public double f(PVPanel _this, PVArgs args) {
+        JsDoubleFunction panelPosition = new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                PVPanel _this = args.getThis();
                 return _this.index() * (size + padding) + padding / 2;
             }
         };
         final PVPanel cell = vis.add(PV.Panel()).data(traits)
                 .top(panelPosition).height(size).add(PV.Panel())
-                .data(new PVFunction<PVPanel, JsArrayGeneric<TraitPair>>() {
-                    public JsArrayGeneric<TraitPair> f(PVPanel _this,
-                            PVArgs args) {
-                        String d = args.getObject(0);
+                .data(new JsFunction<JsArrayGeneric<TraitPair>>() {
+                    public JsArrayGeneric<TraitPair> f(JsArgs args) {
+                        String d = args.getObject();
                         JsArrayGeneric<TraitPair> result = JsUtils
                                 .createJsArrayGeneric();
                         for (int i = 0; i < traits.length; i++) {
@@ -163,68 +163,64 @@ public class AndersonsFlowersExample extends ProtovisWidget implements
                 }).left(panelPosition).width(size);
 
         /* Framed dot plots not along the diagonal. */
-        PVPanel plot = cell.add(PV.Panel())
-                .visible(new PVBooleanFunction<PVPanel>() {
-                    public boolean f(PVPanel _this, PVArgs args) {
-                        TraitPair d = args.getObject(0);
-                        return !d.px.equals(d.py);
-                    }
-                }).strokeStyle("#aaa");
+        PVPanel plot = cell.add(PV.Panel()).visible(new JsBooleanFunction() {
+            public boolean f(JsArgs args) {
+                TraitPair d = args.getObject(0);
+                return !d.px.equals(d.py);
+            }
+        }).strokeStyle("#aaa");
 
         /* X-axis ticks. */
         PVRule xtick = plot.add(PV.Rule())
-                .data(new PVFunction<PVRule, JavaScriptObject>() {
-                    public JavaScriptObject f(PVRule _this, PVArgs args) {
-                        TraitPair t = args.getObject(0);
+                .data(new JsFunction<JavaScriptObject>() {
+                    public JavaScriptObject f(JsArgs args) {
+                        TraitPair t = args.getObject();
                         return position.get(t.px).ticks(5);
                     };
-                }).left(new PVDoubleFunction<PVRule>() {
-                    public double f(PVRule _this, PVArgs args) {
-                        double d = args.getDouble(0);
+                }).left(new JsDoubleFunction() {
+                    public double f(JsArgs args) {
+                        double d = args.getDouble();
                         TraitPair t = args.getObject(1);
                         return position.get(t.px).fd(d);
                     };
                 }).strokeStyle("#eee");
 
         /* Bottom label. */
-        xtick.anchor(BOTTOM).add(PV.Label())
-                .visible(new PVBooleanFunction<PVLabel>() {
-                    public boolean f(PVLabel _this, PVArgs args) {
-                        return (cell.parent().index() == traits.length - 1)
-                                && (cell.index() % 2 == 0);
-                    }
-                }).text(new PVStringFunction<PVLabel>() {
-                    public String f(PVLabel _this, PVArgs args) {
-                        double d = args.getDouble(0);
-                        TraitPair t = args.getObject(1);
-                        return position.get(t.px).tickFormatDouble(d);
-                    };
-                });
+        xtick.anchor(BOTTOM).add(PV.Label()).visible(new JsBooleanFunction() {
+            public boolean f(JsArgs args) {
+                return (cell.parent().index() == traits.length - 1)
+                        && (cell.index() % 2 == 0);
+            }
+        }).text(new JsStringFunction() {
+            public String f(JsArgs args) {
+                double d = args.getDouble();
+                TraitPair t = args.getObject(1);
+                return position.get(t.px).tickFormatDouble(d);
+            };
+        });
 
         /* Top label. */
-        xtick.anchor(TOP).add(PV.Label())
-                .visible(new PVBooleanFunction<PVLabel>() {
-                    public boolean f(PVLabel _this, PVArgs args) {
-                        return (cell.parent().index() == 0)
-                                && (cell.index() % 2 == 1);
-                    }
-                }).text(new PVStringFunction<PVLabel>() {
-                    public String f(PVLabel _this, PVArgs args) {
-                        double d = args.getDouble(0);
-                        TraitPair t = args.getObject(1);
-                        return position.get(t.px).tickFormatDouble(d);
-                    };
-                });
+        xtick.anchor(TOP).add(PV.Label()).visible(new JsBooleanFunction() {
+            public boolean f(JsArgs args) {
+                return (cell.parent().index() == 0) && (cell.index() % 2 == 1);
+            }
+        }).text(new JsStringFunction() {
+            public String f(JsArgs args) {
+                double d = args.getDouble(0);
+                TraitPair t = args.getObject(1);
+                return position.get(t.px).tickFormatDouble(d);
+            };
+        });
 
         /* Y-axis ticks. */
         PVRule ytick = plot.add(PV.Rule())
-                .data(new PVFunction<PVRule, JavaScriptObject>() {
-                    public JavaScriptObject f(PVRule _this, PVArgs args) {
+                .data(new JsFunction<JavaScriptObject>() {
+                    public JavaScriptObject f(JsArgs args) {
                         TraitPair t = args.getObject(0);
                         return position.get(t.py).ticks(5);
                     };
-                }).bottom(new PVDoubleFunction<PVRule>() {
-                    public double f(PVRule _this, PVArgs args) {
+                }).bottom(new JsDoubleFunction() {
+                    public double f(JsArgs args) {
                         double d = args.getDouble(0);
                         TraitPair t = args.getObject(1);
                         return position.get(t.py).fd(d);
@@ -232,80 +228,75 @@ public class AndersonsFlowersExample extends ProtovisWidget implements
                 }).strokeStyle("#eee");
 
         /* Left label. */
-        ytick.anchor(LEFT).add(PV.Label())
-                .visible(new PVBooleanFunction<PVLabel>() {
-                    public boolean f(PVLabel _this, PVArgs args) {
-                        return (cell.index() == 0)
-                                && (cell.parent().index() % 2 == 1);
-                    }
-                }).text(new PVStringFunction<PVLabel>() {
-                    public String f(PVLabel _this, PVArgs args) {
-                        double d = args.getDouble(0);
-                        TraitPair t = args.getObject(1);
-                        return position.get(t.py).tickFormatDouble(d);
-                    };
-                });
+        ytick.anchor(LEFT).add(PV.Label()).visible(new JsBooleanFunction() {
+            public boolean f(JsArgs args) {
+                return (cell.index() == 0) && (cell.parent().index() % 2 == 1);
+            }
+        }).text(new JsStringFunction() {
+            public String f(JsArgs args) {
+                double d = args.getDouble(0);
+                TraitPair t = args.getObject(1);
+                return position.get(t.py).tickFormatDouble(d);
+            };
+        });
 
         /* Right label. */
-        ytick.anchor(RIGHT).add(PV.Label())
-                .visible(new PVBooleanFunction<PVLabel>() {
-                    public boolean f(PVLabel _this, PVArgs args) {
-                        return (cell.index() == traits.length - 1)
-                                && (cell.parent().index() % 2 == 0);
-                    }
-                }).text(new PVStringFunction<PVLabel>() {
-                    public String f(PVLabel _this, PVArgs args) {
-                        double d = args.getDouble(0);
-                        TraitPair t = args.getObject(1);
-                        return position.get(t.py).tickFormatDouble(d);
-                    };
-                });
+        ytick.anchor(RIGHT).add(PV.Label()).visible(new JsBooleanFunction() {
+            public boolean f(JsArgs args) {
+                return (cell.index() == traits.length - 1)
+                        && (cell.parent().index() % 2 == 0);
+            }
+        }).text(new JsStringFunction() {
+            public String f(JsArgs args) {
+                double d = args.getDouble(0);
+                TraitPair t = args.getObject(1);
+                return position.get(t.py).tickFormatDouble(d);
+            };
+        });
 
         /* Frame and dot plot. */
-        plot.add(PV.Dot()).data(flowers).left(new PVDoubleFunction<PVDot>() {
-            public double f(PVDot _this, PVArgs args) {
+        plot.add(PV.Dot()).data(flowers).left(new JsDoubleFunction() {
+            public double f(JsArgs args) {
                 Flower d = args.getObject(0);
                 TraitPair t = args.getObject(1);
                 return position.get(t.px).fd(d.getTraitValue(t.px));
             };
-        }).bottom(new PVDoubleFunction<PVDot>() {
-            public double f(PVDot _this, PVArgs args) {
+        }).bottom(new JsDoubleFunction() {
+            public double f(JsArgs args) {
                 Flower d = args.getObject(0);
                 TraitPair t = args.getObject(1);
                 return position.get(t.py).fd(d.getTraitValue(t.py));
             };
         }).size(10).strokeStyle((String) null)
-                .fillStyle(new PVFunction<PVDot, PVColor>() {
-                    public PVColor f(PVDot _this, PVArgs args) {
+                .fillStyle(new JsFunction<PVColor>() {
+                    public PVColor f(JsArgs args) {
                         Flower d = args.getObject(0);
                         return color.fcolor(d.species);
                     }
                 });
 
         /* Labels along the diagonal. */
-        cell.anchor(CENTER).add(PV.Label())
-                .visible(new PVBooleanFunction<PVLabel>() {
-                    public boolean f(PVLabel _this, PVArgs args) {
-                        TraitPair t = args.getObject(0);
-                        return t.px.equals(t.py);
-                    }
-                }).font("bold 14px sans-serif")
-                .text(new PVStringFunction<PVLabel>() {
-                    public String f(PVLabel _this, PVArgs args) {
-                        TraitPair t = args.getObject(0);
-                        return t.px;
-                    }
-                });
+        cell.anchor(CENTER).add(PV.Label()).visible(new JsBooleanFunction() {
+            public boolean f(JsArgs args) {
+                TraitPair t = args.getObject(0);
+                return t.px.equals(t.py);
+            }
+        }).font("bold 14px sans-serif").text(new JsStringFunction() {
+            public String f(JsArgs args) {
+                TraitPair t = args.getObject(0);
+                return t.px;
+            }
+        });
 
         /* Legend. */
-        vis.add(PV.Dot()).data(species).bottom(10)
-                .left(new PVDoubleFunction<PVDot>() {
-                    public double f(PVDot _this, PVArgs args) {
-                        return 15 + _this.index() * 65;
-                    }
-                }).size(8).strokeStyle((String) null)
-                .fillStyle(new PVFunction<PVDot, PVColor>() {
-                    public PVColor f(PVDot _this, PVArgs args) {
+        vis.add(PV.Dot()).data(species).bottom(10).left(new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                PVMark _this = args.getThis();
+                return 15 + _this.index() * 65;
+            }
+        }).size(8).strokeStyle((String) null)
+                .fillStyle(new JsFunction<PVColor>() {
+                    public PVColor f(JsArgs args) {
                         String d = args.getObject(0);
                         return color.fcolor(d);
                     }
@@ -314,13 +305,12 @@ public class AndersonsFlowersExample extends ProtovisWidget implements
 
     private void putTraitScale(final Map<String, PVLinearScale> position,
             Flower[] flowers, final String trait, final int size) {
-        position.put(trait,
-                PVScale.linear(flowers, new PVDoubleFunctionWithoutThis() {
-                    public double f(PVArgs args) {
-                        Flower d = args.getObject(0);
-                        return d.getTraitValue(trait);
-                    }
-                }).range(0, size));
+        position.put(trait, PVScale.linear(flowers, new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                Flower d = args.getObject(0);
+                return d.getTraitValue(trait);
+            }
+        }).range(0, size));
     }
 
     private Flower[] generateFlowerData() {

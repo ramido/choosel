@@ -15,9 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
-import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 
 /**
  * 
@@ -29,12 +29,12 @@ public final class PVArea extends PVAbstractMark<PVArea> {
     protected PVArea() {
     }
 
-    public final native PVArea fillStyle(PVFunction<PVArea, PVColor> f) /*-{
-        return this.fillStyle(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVFunction;)(f));
+    public final native PVArea fillStyle(JsFunction<PVColor> f) /*-{
+        return this.fillStyle(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsFunction;)(f));
     }-*/;
 
-    public final native PVArea fillStyle(PVStringFunction<PVArea> f) /*-{
-        return this.fillStyle(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunction;)(f));
+    public final native PVArea fillStyle(JsStringFunction f) /*-{
+        return this.fillStyle(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsStringFunction;)(f));
     }-*/;
 
     public final native PVArea fillStyle(String colour) /*-{
@@ -53,8 +53,8 @@ public final class PVArea extends PVAbstractMark<PVArea> {
         return this.height(height);
     }-*/;
 
-    public final native PVArea height(PVDoubleFunction<PVArea> f) /*-{
-        return this.height(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunction;)(f));
+    public final native PVArea height(JsDoubleFunction f) /*-{
+        return this.height(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
     }-*/;
 
     public final native PVArea interpolate(String interpolate) /*-{
@@ -69,8 +69,8 @@ public final class PVArea extends PVAbstractMark<PVArea> {
         return this.segmented(segmented);
     }-*/;
 
-    public final native PVArea strokeStyle(PVFunction<PVArea, PVColor> f) /*-{
-        return this.strokeStyle(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVFunction;)(f));
+    public final native PVArea strokeStyle(JsFunction<PVColor> f) /*-{
+        return this.strokeStyle(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsFunction;)(f));
     }-*/;
 
     public final native PVArea strokeStyle(String strokeStyle) /*-{
@@ -117,8 +117,8 @@ public final class PVArea extends PVAbstractMark<PVArea> {
         return this.width(width);
     }-*/;
 
-    public final native PVArea width(PVDoubleFunction<PVArea> f) /*-{
-        return this.width(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunction;)(f));
+    public final native PVArea width(JsDoubleFunction f) /*-{
+        return this.width(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
     }-*/;
 
 }

@@ -19,9 +19,10 @@ import static org.thechiselgroup.choosel.protovis.client.PVAlignment.BOTTOM;
 import static org.thechiselgroup.choosel.protovis.client.PVAlignment.LEFT;
 import static org.thechiselgroup.choosel.protovis.client.PVAlignment.TOP;
 
-import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunction;
-import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsUtils;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
@@ -74,8 +75,8 @@ public class GasAndDrivingExample extends ProtovisWidget implements
         vis.add(PV.Rule()).data(y.ticks(5)).bottom(y).strokeStyle("#ccc")
                 .anchor(LEFT).add(PV.Label()).font("bold 12px sans-serif")
                 .textMargin(6).textAlign(LEFT).textBaseline(BOTTOM)
-                .text(new PVStringFunction<PVLabel>() {
-                    public String f(PVLabel _this, PVArgs args) {
+                .text(new JsStringFunction() {
+                    public String f(JsArgs args) {
                         double d = args.getDouble(0);
                         return "$" + JsUtils.toFixed(d, 2);
                     }
@@ -84,32 +85,32 @@ public class GasAndDrivingExample extends ProtovisWidget implements
         vis.add(PV.Rule()).data(x.ticks(5)).left(x).strokeStyle("#ccc")
                 .anchor(TOP).add(PV.Label()).font("bold 12px sans-serif")
                 .textMargin(6).textAlign(LEFT).textBaseline(TOP)
-                .text(new PVStringFunction<PVLabel>() {
-                    public String f(PVLabel _this, PVArgs args) {
+                .text(new JsStringFunction() {
+                    public String f(JsArgs args) {
                         double d = args.getDouble(0);
                         return PVFormat.number().format(d) + " mi";
                     }
                 });
 
         vis.add(PV.Line()).data(driving).interpolate("cardinal").lineWidth(4)
-                .strokeStyle("black").left(new PVDoubleFunction<PVLine>() {
-                    public double f(PVLine _this, PVArgs args) {
+                .strokeStyle("black").left(new JsDoubleFunction() {
+                    public double f(JsArgs args) {
                         DrivingStats d = args.getObject(0);
                         return x.fd(d.miles);
                     }
-                }).bottom(new PVDoubleFunction<PVLine>() {
-                    public double f(PVLine _this, PVArgs args) {
+                }).bottom(new JsDoubleFunction() {
+                    public double f(JsArgs args) {
                         DrivingStats d = args.getObject(0);
                         return y.fd(d.gas);
                     }
                 }).add(PV.Dot()).lineWidth(1).fillStyle("white")
-                .anchor(new PVStringFunction<PVDot>() {
-                    public String f(PVDot _this, PVArgs args) {
+                .anchor(new JsStringFunction() {
+                    public String f(JsArgs args) {
                         DrivingStats d = args.getObject(0);
                         return d.side;
                     }
-                }).add(PV.Label()).text(new PVStringFunction<PVLabel>() {
-                    public String f(PVLabel _this, PVArgs args) {
+                }).add(PV.Label()).text(new JsStringFunction() {
+                    public String f(JsArgs args) {
                         DrivingStats d = args.getObject(0);
                         return "" + d.year;
                     }

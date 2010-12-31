@@ -15,13 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
-import org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils;
-import org.thechiselgroup.choosel.protovis.client.functions.PVBooleanFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVEventHandler;
-import org.thechiselgroup.choosel.protovis.client.functions.PVFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunction;
-import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsBooleanFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsUtils;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -55,8 +54,8 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
         return this.add(mark);
     }-*/;
 
-    public final native T anchor(PVStringFunction<T> f) /*-{
-        return this.anchor(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunction;)(f));
+    public final native T anchor(JsStringFunction f) /*-{
+        return this.anchor(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsStringFunction;)(f));
     }-*/;
 
     public final native T anchor(String anchor) /*-{
@@ -67,8 +66,8 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
         return this.bottom(bottom);
     }-*/;
 
-    public final native T bottom(PVDoubleFunction<T> f) /*-{
-        return this.bottom(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunction;)(f));
+    public final native T bottom(JsDoubleFunction f) /*-{
+        return this.bottom(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
     }-*/;
 
     public final native T bottom(PVScale scale) /*-{
@@ -91,8 +90,8 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
         return this.data(data);
     }-*/;
 
-    public final native T data(PVFunction<T, ? extends JavaScriptObject> f) /*-{
-        return this.data(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVFunction;)(f));
+    public final native T data(JsFunction<? extends JavaScriptObject> f) /*-{
+        return this.data(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsFunction;)(f));
     }-*/;
 
     public final <S> T data(S[] data) {
@@ -112,8 +111,8 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
     }-*/;
 
     // XXX Likely needs some fixing
-    public final native T def(String name, PVDoubleFunction<T> f) /*-{
-        return this.def(name, @org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunction;)(f));
+    public final native T def(String name, JsDoubleFunction f) /*-{
+        return this.def(name, @org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
     }-*/;
 
     public final native T def(String name, String constant) /*-{
@@ -125,7 +124,9 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
     }-*/;
 
     public final native T event(String eventType, PVEventHandler<T> handler) /*-{
-        return this.event(eventType, @org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptEventFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVEventHandler;)( handler));
+        return this.event(eventType, function() { 
+        return handler.@org.thechiselgroup.choosel.protovis.client.PVEventHandler::onEvent(Ljava/lang/Object;Lcom/google/gwt/user/client/Event;)(this, $wnd.pv.event);
+        });
     }-*/;
 
     public final native T events(String events) /*-{
@@ -140,8 +141,8 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
         return this.left(left);
     }-*/;
 
-    public final native T left(PVDoubleFunction<T> f) /*-{
-        return this.left(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunction;)(f));
+    public final native T left(JsDoubleFunction f) /*-{
+        return this.left(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
     }-*/;
 
     public final native T left(PVScale scale) /*-{
@@ -177,8 +178,8 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
         return this.right(right);
     }-*/;
 
-    public final native T right(PVDoubleFunction<T> f) /*-{
-        return this.right(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunction;)(f));
+    public final native T right(JsDoubleFunction f) /*-{
+        return this.right(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
     }-*/;
 
     public final native T right(PVScale scale) /*-{
@@ -197,8 +198,8 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
         return this.scale(scale);
     }-*/;
 
-    public final native T title(PVStringFunction<T> f) /*-{
-        return this.title(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunction;)(f));
+    public final native T title(JsStringFunction f) /*-{
+        return this.title(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsStringFunction;)(f));
     }-*/;
 
     public final native T title(String title) /*-{
@@ -219,8 +220,8 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Mark.html#top">pv.Mark.top()</a></code>
      * .
      */
-    public final native T top(PVDoubleFunction<T> f) /*-{
-        return this.top(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunction;)(f));
+    public final native T top(JsDoubleFunction f) /*-{
+        return this.top(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
     }-*/;
 
     public final native T top(PVScale scale) /*-{
@@ -245,8 +246,8 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Mark.html#visible">pv.Mark.visible()</a></code>
      * .
      */
-    public final native T visible(PVBooleanFunction<T> f) /*-{
-        return this.visible(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVBooleanFunction;)(f));
+    public final native T visible(JsBooleanFunction f) /*-{
+        return this.visible(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsBooleanFunction;)(f));
     }-*/;
 
 }

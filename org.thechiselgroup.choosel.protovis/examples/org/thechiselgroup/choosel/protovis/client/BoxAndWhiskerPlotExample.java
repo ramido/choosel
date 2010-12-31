@@ -21,12 +21,12 @@ import static org.thechiselgroup.choosel.protovis.client.PVAlignment.TOP;
 
 import java.util.Arrays;
 
-import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionWithoutThis;
-import org.thechiselgroup.choosel.protovis.client.util.JsArrayGeneric;
-import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsArrayGeneric;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsUtils;
 
 import com.google.gwt.core.client.JsArrayNumber;
 import com.google.gwt.user.client.ui.Widget;
@@ -63,8 +63,8 @@ public class BoxAndWhiskerPlotExample extends ProtovisWidget implements
         int w = 860;
         int h = 300;
         final PVOrdinalScale x = PVScale.ordinal(experiments,
-                new PVStringFunctionWithoutThis() {
-                    public String f(PVArgs args) {
+                new JsStringFunction() {
+                    public String f(JsArgs args) {
                         Experiment d = args.getObject(0);
                         return d.id;
                     }
@@ -76,74 +76,74 @@ public class BoxAndWhiskerPlotExample extends ProtovisWidget implements
 
         /* Add the y-axis rules */
         vis.add(PV.Rule()).data(y.ticks()).bottom(y)
-                .strokeStyle(new PVStringFunction<PVRule>() {
-                    public String f(PVRule _this, PVArgs args) {
-                        double d = args.getDouble(0);
+                .strokeStyle(new JsStringFunction() {
+                    public String f(JsArgs args) {
+                        double d = args.getDouble();
                         return (d == 0 || d == 1) ? "#000" : "#ccc";
                     }
                 }).anchor(LEFT).add(PV.Label()).text(y.tickFormat());
 
         /* Add a panel for each data point */
         PVPanel points = vis.add(PV.Panel()).data(experiments)
-                .left(new PVDoubleFunction<PVPanel>() {
-                    public double f(PVPanel _this, PVArgs args) {
-                        Experiment d = args.getObject(0);
+                .left(new JsDoubleFunction() {
+                    public double f(JsArgs args) {
+                        Experiment d = args.getObject();
                         return x.fd(d.id);
                     }
                 }).width(s * 2);
 
         /* Add the experiment id label */
         points.anchor(BOTTOM).add(PV.Label()).textBaseline(TOP)
-                .text(new PVStringFunction<PVLabel>() {
-                    public String f(PVLabel _this, PVArgs args) {
-                        Experiment d = args.getObject(0);
+                .text(new JsStringFunction() {
+                    public String f(JsArgs args) {
+                        Experiment d = args.getObject();
                         return d.id;
                     }
                 });
 
         /* Add the range line */
-        points.add(PV.Rule()).left(s).bottom(new PVDoubleFunction<PVRule>() {
-            public double f(PVRule _this, PVArgs args) {
-                Experiment d = args.getObject(0);
+        points.add(PV.Rule()).left(s).bottom(new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                Experiment d = args.getObject();
                 return y.fd(d.min);
             }
-        }).height(new PVDoubleFunction<PVRule>() {
-            public double f(PVRule _this, PVArgs args) {
-                Experiment d = args.getObject(0);
+        }).height(new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                Experiment d = args.getObject();
                 return y.fd(d.max) - y.fd(d.min);
             }
         });
 
         /* Add the min and max indicators */
-        points.add(PV.Rule()).data(new PVFunction<PVRule, JsArrayNumber>() {
-            public JsArrayNumber f(PVRule _this, PVArgs args) {
-                Experiment d = args.getObject(0);
+        points.add(PV.Rule()).data(new JsFunction<JsArrayNumber>() {
+            public JsArrayNumber f(JsArgs args) {
+                Experiment d = args.getObject();
                 return JsUtils.toJsArrayNumber(d.min, d.max);
             }
         }).bottom(y).left(s / 2).width(s);
 
         /* Add the upper/lower quartile ranges */
-        points.add(PV.Bar()).bottom(new PVDoubleFunction<PVBar>() {
-            public double f(PVBar _this, PVArgs args) {
-                Experiment d = args.getObject(0);
+        points.add(PV.Bar()).bottom(new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                Experiment d = args.getObject();
                 return y.fd(d.lq);
             }
-        }).height(new PVDoubleFunction<PVBar>() {
-            public double f(PVBar _this, PVArgs args) {
-                Experiment d = args.getObject(0);
+        }).height(new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                Experiment d = args.getObject();
                 return y.fd(d.uq) - y.fd(d.lq);
             }
-        }).fillStyle(new PVStringFunction<PVBar>() {
-            public String f(PVBar _this, PVArgs args) {
-                Experiment d = args.getObject(0);
+        }).fillStyle(new JsStringFunction() {
+            public String f(JsArgs args) {
+                Experiment d = args.getObject();
                 return d.median > .5 ? "#aec7e8" : "#ffbb78";
             }
         }).strokeStyle("black").lineWidth(1).antialias(false);
 
         /* Add the median line */
-        points.add(PV.Rule()).bottom(new PVDoubleFunction<PVRule>() {
-            public double f(PVRule _this, PVArgs args) {
-                Experiment d = args.getObject(0);
+        points.add(PV.Rule()).bottom(new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                Experiment d = args.getObject();
                 return y.fd(d.median);
             }
         });

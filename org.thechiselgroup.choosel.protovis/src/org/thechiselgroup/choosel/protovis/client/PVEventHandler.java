@@ -13,12 +13,24 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.protovis.client.functions;
+package org.thechiselgroup.choosel.protovis.client;
 
-import org.thechiselgroup.choosel.protovis.client.PVArgs;
+import com.google.gwt.user.client.Event;
 
-public interface PVFunctionWithoutThis<U> {
+/**
+ * Event handler.
+ * 
+ * @author Bradley Blashko
+ * @author Lars Grammel
+ */
+// TODO move
+public interface PVEventHandler<T> {
 
-    U f(PVArgs args);
+    /**
+     * In Protovis-Javascript, re-rendering takes place automatically (assuming
+     * the function returns true). Protovis/GWT requires you to control
+     * rendering, e.g. using <code>_this.render();</code>.
+     */
+    void onEvent(T _this, Event e);
 
 }

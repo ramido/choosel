@@ -15,10 +15,11 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
-import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVFunction;
-import org.thechiselgroup.choosel.protovis.client.util.JsArrayGeneric;
-import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsArrayGeneric;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsUtils;
 
 import com.google.gwt.core.client.JsArrayNumber;
 import com.google.gwt.user.client.ui.Widget;
@@ -67,22 +68,23 @@ public class StreamgraphExample extends ProtovisWidget implements
         datax.push(JsUtils.toJsArrayNumber(.2, .5, .8, .9, 1));
 
         vis.add(PVLayout.Stack()).layers(data).order("inside-out")
-                .offset("wiggle").x(new PVDoubleFunction<PVMark>() {
-                    public double f(PVMark _this, PVArgs args) {
+                .offset("wiggle").x(new JsDoubleFunction() {
+                    public double f(JsArgs args) {
+                        PVMark _this = args.getThis();
                         return x.fd(_this.index());
                     }
-                }).y(new PVDoubleFunction<PVMark>() {
-                    public double f(PVMark _this, PVArgs args) {
+                }).y(new JsDoubleFunction() {
+                    public double f(JsArgs args) {
                         double d = args.getDouble(0);
                         return y.fd(d);
                     }
-                }).layer().add(PV.Area())
-                .fillStyle(new PVFunction<PVArea, PVColor>() {
-                    public PVColor f(PVArea _this, PVArgs args) {
+                }).layer().add(PV.Area()).fillStyle(new JsFunction<PVColor>() {
+                    public PVColor f(JsArgs args) {
                         return PV.ramp("#aad", "#556").fcolor(Math.random());
                     }
-                }).strokeStyle(new PVFunction<PVArea, PVColor>() {
-                    public PVColor f(PVArea _this, PVArgs args) {
+                }).strokeStyle(new JsFunction<PVColor>() {
+                    public PVColor f(JsArgs args) {
+                        PVArea _this = args.getThis();
                         return _this.fillStyle().alpha(.5);
                     }
                 });

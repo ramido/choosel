@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
-import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -67,12 +67,18 @@ public final class PVStackLayout extends PVAbstractBar<PVStackLayout> {
         return this.order(order);
     }-*/;
 
-    public final native PVStackLayout x(PVDoubleFunction<PVMark> f) /*-{
-        return this.x(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunction;)(f));
+    /**
+     * IMPORTANT: function args will have mark as this reference.
+     */
+    public final native PVStackLayout x(JsDoubleFunction f) /*-{
+        return this.x(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
     }-*/;
 
-    public final native PVStackLayout y(PVDoubleFunction<PVMark> f) /*-{
-        return this.y(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunction;)(f));
+    /**
+     * IMPORTANT: function args will have mark as this reference.
+     */
+    public final native PVStackLayout y(JsDoubleFunction f) /*-{
+        return this.y(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
     }-*/;
 
 }

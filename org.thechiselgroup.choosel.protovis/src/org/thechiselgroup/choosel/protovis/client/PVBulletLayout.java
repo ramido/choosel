@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
-import org.thechiselgroup.choosel.protovis.client.functions.PVFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsFunction;
 
 import com.google.gwt.core.client.JsArrayNumber;
 
@@ -45,9 +45,8 @@ public final class PVBulletLayout extends PVAbstractBar<PVBulletLayout> {
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Layout.Bullet.html#markers">markers</a></code>
      * .
      */
-    public final native PVBulletLayout markers(
-            PVFunction<PVBulletLayout, JsArrayNumber> f) /*-{
-        return this.markers(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVFunction;)(f));
+    public final native PVBulletLayout markers(JsFunction<JsArrayNumber> f) /*-{
+        return this.markers(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsFunction;)(f));
     }-*/;
 
     /**
@@ -64,9 +63,8 @@ public final class PVBulletLayout extends PVAbstractBar<PVBulletLayout> {
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Layout.Bullet.html#measures">measures</a></code>
      * .
      */
-    public final native PVBulletLayout measures(
-            PVFunction<PVBulletLayout, JsArrayNumber> f) /*-{
-        return this.measures(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVFunction;)(f));
+    public final native PVBulletLayout measures(JsFunction<JsArrayNumber> f) /*-{
+        return this.measures(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsFunction;)(f));
     }-*/;
 
     /**
@@ -95,9 +93,8 @@ public final class PVBulletLayout extends PVAbstractBar<PVBulletLayout> {
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Layout.Bullet.html#ranges">ranges</a></code>
      * .
      */
-    public final native PVBulletLayout ranges(
-            PVFunction<PVBulletLayout, JsArrayNumber> f) /*-{
-        return this.ranges(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVFunction;)(f));
+    public final native PVBulletLayout ranges(JsFunction<JsArrayNumber> f) /*-{
+        return this.ranges(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsFunction;)(f));
     }-*/;
 
     public final native PVMark tick() /*-{

@@ -18,11 +18,12 @@ package org.thechiselgroup.choosel.protovis.client;
 import static org.thechiselgroup.choosel.protovis.client.PVAlignment.BOTTOM;
 import static org.thechiselgroup.choosel.protovis.client.PVAlignment.LEFT;
 
-import org.thechiselgroup.choosel.protovis.client.functions.PVBooleanFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunction;
-import org.thechiselgroup.choosel.protovis.client.util.JsArrayGeneric;
-import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsArrayGeneric;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsBooleanFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsUtils;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -66,33 +67,31 @@ public class StackedChartExample extends ProtovisWidget implements
                 .right(10).top(5);
 
         /* X-axis and ticks. */
-        vis.add(PV.Rule()).data(x.ticks())
-                .visible(new PVBooleanFunction<PVRule>() {
-                    public boolean f(PVRule _this, PVArgs args) {
-                        double d = args.getDouble(0);
-                        return d != 0;
-                    }
-                }).left(x).bottom(-5).height(5).anchor(BOTTOM).add(PV.Label())
+        vis.add(PV.Rule()).data(x.ticks()).visible(new JsBooleanFunction() {
+            public boolean f(JsArgs args) {
+                double d = args.getDouble(0);
+                return d != 0;
+            }
+        }).left(x).bottom(-5).height(5).anchor(BOTTOM).add(PV.Label())
                 .text(x.tickFormat());
 
         /* The stack layout. */
-        vis.add(PVLayout.Stack()).layers(data)
-                .x(new PVDoubleFunction<PVMark>() {
-                    public double f(PVMark _this, PVArgs args) {
-                        Point d = args.getObject(0);
-                        return x.fd(d.x);
-                    }
-                }).y(new PVDoubleFunction<PVMark>() {
-                    public double f(PVMark _this, PVArgs args) {
-                        Point d = args.getObject(0);
-                        return y.fd(d.y);
-                    }
-                }).layer().add(PV.Area());
+        vis.add(PVLayout.Stack()).layers(data).x(new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                Point d = args.getObject(0);
+                return x.fd(d.x);
+            }
+        }).y(new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                Point d = args.getObject(0);
+                return y.fd(d.y);
+            }
+        }).layer().add(PV.Area());
 
         /* Y-axis and ticks. */
         vis.add(PV.Rule()).data(y.ticks(3)).bottom(y)
-                .strokeStyle(new PVStringFunction<PVRule>() {
-                    public String f(PVRule _this, PVArgs args) {
+                .strokeStyle(new JsStringFunction() {
+                    public String f(JsArgs args) {
                         double d = args.getDouble(0);
                         return d != 0 ? "rgba(128,128,128,.2)" : "#000";
                     }

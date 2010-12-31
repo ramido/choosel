@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.protovis.client.functions;
+package org.thechiselgroup.choosel.protovis.client.jsutil;
 
-import org.thechiselgroup.choosel.protovis.client.PVArgs;
+public interface JsFunction<U> {
 
-public interface PVStringFunction<S> {
-
-    String f(S _this, PVArgs args);
+    U f(JsArgs args);
 
 }

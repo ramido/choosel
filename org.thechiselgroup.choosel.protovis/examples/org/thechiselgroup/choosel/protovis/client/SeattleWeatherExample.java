@@ -18,9 +18,10 @@ package org.thechiselgroup.choosel.protovis.client;
 import static org.thechiselgroup.choosel.protovis.client.PVAlignment.RIGHT;
 import static org.thechiselgroup.choosel.protovis.client.PVAlignment.TOP;
 
-import org.thechiselgroup.choosel.protovis.client.functions.PVBooleanFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsBooleanFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -119,121 +120,121 @@ public class SeattleWeatherExample extends ProtovisWidget implements
 
         /* Record range. */
         PVBar record = vis.add(PV.Bar()).data(weatherRecords)
-                .bottom(new PVDoubleFunction<PVBar>() {
-                    public double f(PVBar _this, PVArgs args) {
-                        WeatherRecord d = args.getObject(0);
+                .bottom(new JsDoubleFunction() {
+                    public double f(JsArgs args) {
+                        WeatherRecord d = args.getObject();
                         return d.record.low * h;
                     }
-                }).height(new PVDoubleFunction<PVBar>() {
-                    public double f(PVBar _this, PVArgs args) {
-                        WeatherRecord d = args.getObject(0);
+                }).height(new JsDoubleFunction() {
+                    public double f(JsArgs args) {
+                        WeatherRecord d = args.getObject();
                         return (d.record.high - d.record.low) * h;
                     }
-                }).left(new PVDoubleFunction<PVBar>() {
-                    public double f(PVBar _this, PVArgs args) {
+                }).left(new JsDoubleFunction() {
+                    public double f(JsArgs args) {
+                        PVMark _this = args.getThis();
                         return _this.index() * w;
                     }
                 }).width(w - 2).fillStyle("#ccc");
 
         /* Normal range. */
-        record.add(PV.Bar()).bottom(new PVDoubleFunction<PVBar>() {
-            public double f(PVBar _this, PVArgs args) {
+        record.add(PV.Bar()).bottom(new JsDoubleFunction() {
+            public double f(JsArgs args) {
                 WeatherRecord d = args.getObject(0);
                 return d.normal.low * h;
             }
-        }).height(new PVDoubleFunction<PVBar>() {
-            public double f(PVBar _this, PVArgs args) {
+        }).height(new JsDoubleFunction() {
+            public double f(JsArgs args) {
                 WeatherRecord d = args.getObject(0);
                 return (d.normal.high - d.normal.low) * h;
             }
         }).fillStyle("#999");
 
         /* White grid lines. */
-        vis.add(PV.Rule()).dataInt(20, 40, 60)
-                .bottom(new PVDoubleFunction<PVRule>() {
-                    public double f(PVRule _this, PVArgs args) {
-                        double d = args.getDouble(0);
-                        return d * h + 1;
-                    }
-                }).left(0).right(20).lineWidth(2).strokeStyle("white")
-                .anchor(RIGHT).add(PV.Label())
-                .text(new PVStringFunction<PVLabel>() {
-                    public String f(PVLabel _this, PVArgs args) {
+        vis.add(PV.Rule()).dataInt(20, 40, 60).bottom(new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                double d = args.getDouble();
+                return d * h + 1;
+            }
+        }).left(0).right(20).lineWidth(2).strokeStyle("white").anchor(RIGHT)
+                .add(PV.Label()).text(new JsStringFunction() {
+                    public String f(JsArgs args) {
                         int d = args.getInt(0);
                         return d + "\u00b0";
                     }
                 });
 
         /* Actual and forecast range. */
-        record.add(PV.Bar()).visible(new PVBooleanFunction<PVBar>() {
-            public boolean f(PVBar _this, PVArgs args) {
-                WeatherRecord d = args.getObject(0);
+        record.add(PV.Bar()).visible(new JsBooleanFunction() {
+            public boolean f(JsArgs args) {
+                WeatherRecord d = args.getObject();
                 return d.hasActual();
             }
-        }).bottom(new PVDoubleFunction<PVBar>() {
-            public double f(PVBar _this, PVArgs args) {
-                WeatherRecord d = args.getObject(0);
+        }).bottom(new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                WeatherRecord d = args.getObject();
                 return d.actual.low * h;
             }
-        }).height(new PVDoubleFunction<PVBar>() {
-            public double f(PVBar _this, PVArgs args) {
-                WeatherRecord d = args.getObject(0);
+        }).height(new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                WeatherRecord d = args.getObject();
                 return (d.actual.high - d.actual.low) * h;
             }
-        }).left(new PVDoubleFunction<PVBar>() {
-            public double f(PVBar _this, PVArgs args) {
+        }).left(new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                PVMark _this = args.getThis();
                 return _this.index() * w + 3;
             }
         }).width(w - 8).fillStyle("black").add(PV.Bar())
-                .visible(new PVBooleanFunction<PVBar>() {
-                    public boolean f(PVBar _this, PVArgs args) {
-                        WeatherRecord d = args.getObject(0);
+                .visible(new JsBooleanFunction() {
+                    public boolean f(JsArgs args) {
+                        WeatherRecord d = args.getObject();
                         return d.hasForecast();
                     }
-                }).bottom(new PVDoubleFunction<PVBar>() {
-                    public double f(PVBar _this, PVArgs args) {
-                        WeatherRecord d = args.getObject(0);
+                }).bottom(new JsDoubleFunction() {
+                    public double f(JsArgs args) {
+                        WeatherRecord d = args.getObject();
                         return d.forecast.highMin * h;
                     }
-                }).height(new PVDoubleFunction<PVBar>() {
-                    public double f(PVBar _this, PVArgs args) {
-                        WeatherRecord d = args.getObject(0);
+                }).height(new JsDoubleFunction() {
+                    public double f(JsArgs args) {
+                        WeatherRecord d = args.getObject();
                         return (d.forecast.highMax - d.forecast.highMin) * h;
                     }
-                }).add(PV.Bar()).bottom(new PVDoubleFunction<PVBar>() {
-                    public double f(PVBar _this, PVArgs args) {
-                        WeatherRecord d = args.getObject(0);
+                }).add(PV.Bar()).bottom(new JsDoubleFunction() {
+                    public double f(JsArgs args) {
+                        WeatherRecord d = args.getObject();
                         return d.forecast.lowMin * h;
                     }
-                }).height(new PVDoubleFunction<PVBar>() {
-                    public double f(PVBar _this, PVArgs args) {
-                        WeatherRecord d = args.getObject(0);
+                }).height(new JsDoubleFunction() {
+                    public double f(JsArgs args) {
+                        WeatherRecord d = args.getObject();
                         return (d.forecast.lowMax - d.forecast.lowMin) * h;
                     }
-                }).add(PV.Bar()).bottom(new PVDoubleFunction<PVBar>() {
-                    public double f(PVBar _this, PVArgs args) {
-                        WeatherRecord d = args.getObject(0);
+                }).add(PV.Bar()).bottom(new JsDoubleFunction() {
+                    public double f(JsArgs args) {
+                        WeatherRecord d = args.getObject();
                         return d.forecast.lowMin * h;
                     }
-                }).height(new PVDoubleFunction<PVBar>() {
-                    public double f(PVBar _this, PVArgs args) {
-                        WeatherRecord d = args.getObject(0);
+                }).height(new JsDoubleFunction() {
+                    public double f(JsArgs args) {
+                        WeatherRecord d = args.getObject();
                         return (d.forecast.highMax - d.forecast.lowMin) * h;
                     }
-                }).left(new PVDoubleFunction<PVBar>() {
-                    public double f(PVBar _this, PVArgs args) {
+                }).left(new JsDoubleFunction() {
+                    public double f(JsArgs args) {
+                        PVMark _this = args.getThis();
                         return _this.index() * w + 3 + Math.floor((w - 8) / 3);
                     }
                 }).width(Math.ceil((w - 8) / 3));
 
         /* Day labels. */
-        record.anchor(TOP).add(PV.Label()).top(16)
-                .text(new PVStringFunction<PVLabel>() {
-                    public String f(PVLabel _this, PVArgs args) {
-                        WeatherRecord d = args.getObject(0);
-                        return d.day;
-                    }
-                });
+        record.anchor(TOP).add(PV.Label()).top(16).text(new JsStringFunction() {
+            public String f(JsArgs args) {
+                WeatherRecord d = args.getObject(0);
+                return d.day;
+            }
+        });
 
         /* Title. */
         vis.add(PV.Label()).top(0).left(0).textBaseline(TOP)

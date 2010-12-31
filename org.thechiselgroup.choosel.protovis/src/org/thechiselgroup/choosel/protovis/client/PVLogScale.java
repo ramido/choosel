@@ -15,8 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
-import org.thechiselgroup.choosel.protovis.client.functions.PVFunction;
-import org.thechiselgroup.choosel.protovis.client.util.JsArrayGeneric;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsArrayGeneric;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsFunction;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -47,8 +47,8 @@ public class PVLogScale extends PVScale {
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.quantitative.html#domain">pv.Scale.quantitative.domain()</a></code>
      * .
      */  
-    public final native PVLogScale domain(JsArrayGeneric<?> array, PVFunction<PVLogScale, ?> f) /*-{
-        return this.domain(array, @org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVFunction;)( f));
+    public final native PVLogScale domain(JsArrayGeneric<?> array, JsFunction<?> f) /*-{
+        return this.domain(array, @org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsFunction;)( f));
     }-*/;
 
     public final native PVLogScale range(int from, int to) /*-{
