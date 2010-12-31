@@ -103,6 +103,16 @@ public final class PV {
         return $wnd.pv.range(start, stop);
     }-*/;
 
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.html#.range">pv.range()</a></code>
+     * .
+     */
+    public static native JsArrayNumber range(double start, double stop,
+            double step) /*-{
+        return $wnd.pv.range(start, stop, step);
+    }-*/;
+
     public static native JavaScriptObject reverseOrder() /*-{
         return $wnd.pv.reverseOrder;
     }-*/;

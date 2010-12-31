@@ -15,23 +15,23 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
-public final class PVAlignment {
+public final class PVInterpolationMethod {
 
-    public static final String TOP = "top";
+    public static final String STEP_BEFORE = "step-before";
 
-    public static final String MIDDLE = "middle";
+    public static final String STEP_AFTER = "step-after";
 
-    public static final String BOTTOM = "bottom";
+    public static final String CARDINAL = "cardinal";
 
-    public static final String OUTER = "outer";
+    public static final String LINEAR = "linear";
 
-    public static final String LEFT = "left";
+    public static final String POLAR = "polar";
 
-    public static final String CENTER = "center";
+    public static final String POLAR_REVERSE = "polar-reverse";
 
-    public static final String RIGHT = "right";
+    public static final String BASIS = "basis";
 
-    private PVAlignment() {
+    private PVInterpolationMethod() {
     }
 
 }

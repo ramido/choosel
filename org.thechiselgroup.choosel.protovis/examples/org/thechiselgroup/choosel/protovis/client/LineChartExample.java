@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.protovis.client;
 
 import static org.thechiselgroup.choosel.protovis.client.PVAlignment.BOTTOM;
 import static org.thechiselgroup.choosel.protovis.client.PVAlignment.LEFT;
+import static org.thechiselgroup.choosel.protovis.client.PVInterpolationMethod.STEP_AFTER;
 
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArrayGeneric;
@@ -90,7 +91,7 @@ public class LineChartExample extends ProtovisWidget implements ProtovisExample 
                 }).anchor(LEFT).add(PV.Label()).text(y.tickFormat());
 
         /* The line. */
-        vis.add(PV.Line()).data(data).interpolate("step-after")
+        vis.add(PV.Line()).data(data).interpolate(STEP_AFTER)
                 .left(new JsDoubleFunction() {
                     public double f(JsArgs args) {
                         Point d = args.getObject(0);

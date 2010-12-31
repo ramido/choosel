@@ -39,7 +39,11 @@ public class ProtovisWidget extends Widget {
         style.setTop(topPx, Unit.PX);
         style.setLeft(leftPx, Unit.PX);
         style.setPosition(Position.ABSOLUTE);
-        div.setClassName(cssClass);
+
+        if (cssClass != null) {
+            div.setClassName(cssClass);
+        }
+
         getElement().appendChild(div);
         return div;
     }

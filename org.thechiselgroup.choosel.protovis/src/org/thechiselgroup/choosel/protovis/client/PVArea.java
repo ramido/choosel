@@ -57,6 +57,9 @@ public final class PVArea extends PVAbstractMark<PVArea> {
         return this.height(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
     }-*/;
 
+    /**
+     * @see PVInterpolationMethod
+     */
     public final native PVArea interpolate(String interpolate) /*-{
         return this.interpolate(interpolate);
     }-*/;
