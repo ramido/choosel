@@ -59,7 +59,7 @@ public class AreaChartExample extends ProtovisWidget implements ProtovisExample 
 
         final PVLinearScale x = PVScale.linear(points, new JsDoubleFunction() {
             public double f(JsArgs args) {
-                Point d = args.getObject(0);
+                Point d = args.getObject();
                 return d.x;
             }
         }).range(0, w);
@@ -73,7 +73,7 @@ public class AreaChartExample extends ProtovisWidget implements ProtovisExample 
         vis.add(PV.Rule()).data(y.ticks(5)).bottom(y)
                 .strokeStyle(new JsStringFunction() {
                     public String f(JsArgs args) {
-                        double d = args.getDouble(0);
+                        double d = args.getDouble();
                         return d != 0 ? "#eee" : "#000";
                     }
                 }).anchor(LEFT).add(PV.Label()).text(y.tickFormat());
@@ -81,7 +81,7 @@ public class AreaChartExample extends ProtovisWidget implements ProtovisExample 
         /* X-axis and ticks. */
         vis.add(PV.Rule()).data(x.ticks()).visible(new JsBooleanFunction() {
             public boolean f(JsArgs args) {
-                double d = args.getDouble(0);
+                double d = args.getDouble();
                 return d != 0;
             }
         }).left(x).bottom(-5).height(5).anchor(BOTTOM).add(PV.Label())
