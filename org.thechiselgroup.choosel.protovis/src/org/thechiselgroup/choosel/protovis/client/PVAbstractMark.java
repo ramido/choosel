@@ -18,7 +18,6 @@ package org.thechiselgroup.choosel.protovis.client;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsBooleanFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsFunction;
-import org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsUtils;
 
@@ -162,8 +161,8 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
         return this.parent;
     }-*/;
 
-    public final native PVMark proto(JsFunctionUtils mark) /*-{
-        return this.proto(mark);
+    public final native T proto() /*-{
+        return this.proto;
     }-*/;
 
     public final native void render() /*-{

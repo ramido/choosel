@@ -61,6 +61,10 @@ public final class PVWedge extends PVAbstractMark<PVWedge> {
         return this.outerRadius(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
     }-*/;
 
+    public final native double startAngle() /*-{
+        return this.startAngle();
+    }-*/;
+
     public final native PVWedge startAngle(double startAngle) /*-{
         return this.startAngle(startAngle);
     }-*/;

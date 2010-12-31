@@ -26,6 +26,8 @@ public final class PVAlignment {
 
     public static final String BOTTOM = "bottom";
 
+    public static final String OUTER = "outer";
+
     public static final String LEFT = "left";
 
     public static final String CENTER = "center";
