@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.protovis.client.functions;
+package org.thechiselgroup.choosel.protovis.client.jsutil;
 
-import org.thechiselgroup.choosel.protovis.client.PVArgs;
+/* 
+ * TODO can this be replaced by using the generic function? Check how this
+ * gets treated by GWT compiler.
+ */
+public interface JsStringFunction {
 
-public interface PVIntFunctionWithoutThis {
-
-    int f(PVArgs args);
+    String f(JsArgs args);
 
 }

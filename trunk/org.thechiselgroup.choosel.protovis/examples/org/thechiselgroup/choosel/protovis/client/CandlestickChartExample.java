@@ -18,10 +18,10 @@ package org.thechiselgroup.choosel.protovis.client;
 import static org.thechiselgroup.choosel.protovis.client.PVAlignment.BOTTOM;
 import static org.thechiselgroup.choosel.protovis.client.PVAlignment.LEFT;
 
-import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunctionWithoutThis;
-import org.thechiselgroup.choosel.protovis.client.functions.PVFunctionWithoutThis;
-import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 
 import com.google.gwt.core.client.JsDate;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -77,25 +77,23 @@ public class CandlestickChartExample extends ProtovisWidget implements
         /* Scales. */
         int w = 840;
         int h = 200;
-        final PVLinearScale x = PVScale.linear(days,
-                new PVFunctionWithoutThis<JsDate>() {
-                    public JsDate f(PVArgs args) {
-                        DaySummary d = args.getObject(0);
-                        return d.jsDate;
-                    }
-                }).range(0, w);
-        final PVLinearScale y = PVScale
-                .linear(days, new PVDoubleFunctionWithoutThis() {
-                    public double f(PVArgs args) {
-                        DaySummary d = args.getObject(0);
-                        return d.low;
-                    }
-                }, new PVDoubleFunctionWithoutThis() {
-                    public double f(PVArgs args) {
-                        DaySummary d = args.getObject(0);
-                        return d.high;
-                    }
-                }).range(0, h).nice();
+        final PVLinearScale x = PVScale.linear(days, new JsFunction<JsDate>() {
+            public JsDate f(JsArgs args) {
+                DaySummary d = args.getObject();
+                return d.jsDate;
+            }
+        }).range(0, w);
+        final PVLinearScale y = PVScale.linear(days, new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                DaySummary d = args.getObject();
+                return d.low;
+            }
+        }, new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                DaySummary d = args.getObject();
+                return d.high;
+            }
+        }).range(0, h).nice();
 
         PVPanel vis = getPVPanel().width(w).height(h).margin(10).left(30);
 
@@ -105,48 +103,48 @@ public class CandlestickChartExample extends ProtovisWidget implements
 
         /* Prices. */
         vis.add(PV.Rule()).data(y.ticks(7)).bottom(y).left(-10).right(-10)
-                .strokeStyle(new PVStringFunction<PVRule>() {
-                    public String f(PVRule _this, PVArgs args) {
-                        double d = args.getDouble(0);
+                .strokeStyle(new JsStringFunction() {
+                    public String f(JsArgs args) {
+                        double d = args.getDouble();
                         return d % 10 != 0 ? "#ccc" : "#333";
                     }
                 }).anchor(LEFT).add(PV.Label())
-                .textStyle(new PVStringFunction<PVLabel>() {
-                    public String f(PVLabel _this, PVArgs args) {
-                        double d = args.getDouble(0);
+                .textStyle(new JsStringFunction() {
+                    public String f(JsArgs args) {
+                        double d = args.getDouble();
                         return d % 10 != 0 ? "#999" : "#333";
                     }
                 }).text(y.tickFormat());
 
         /* Candlestick. */
-        vis.add(PV.Rule()).data(days).left(new PVDoubleFunction<PVRule>() {
-            public double f(PVRule _this, PVArgs args) {
-                DaySummary d = args.getObject(0);
+        vis.add(PV.Rule()).data(days).left(new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                DaySummary d = args.getObject();
                 return x.fd(d.jsDate);
             }
-        }).bottom(new PVDoubleFunction<PVRule>() {
-            public double f(PVRule _this, PVArgs args) {
-                DaySummary d = args.getObject(0);
+        }).bottom(new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                DaySummary d = args.getObject();
                 return y.fd(Math.min(d.high, d.low));
             }
-        }).height(new PVDoubleFunction<PVRule>() {
-            public double f(PVRule _this, PVArgs args) {
-                DaySummary d = args.getObject(0);
+        }).height(new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                DaySummary d = args.getObject();
                 return Math.abs(y.fd(d.high) - y.fd(d.low));
             }
-        }).strokeStyle(new PVStringFunction<PVRule>() {
-            public String f(PVRule _this, PVArgs args) {
-                DaySummary d = args.getObject(0);
+        }).strokeStyle(new JsStringFunction() {
+            public String f(JsArgs args) {
+                DaySummary d = args.getObject();
                 return d.open < d.close ? "#ae1325" : "#06982d";
             }
-        }).add(PV.Rule()).bottom(new PVDoubleFunction<PVRule>() {
-            public double f(PVRule _this, PVArgs args) {
-                DaySummary d = args.getObject(0);
+        }).add(PV.Rule()).bottom(new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                DaySummary d = args.getObject();
                 return y.fd(Math.min(d.open, d.close));
             }
-        }).height(new PVDoubleFunction<PVRule>() {
-            public double f(PVRule _this, PVArgs args) {
-                DaySummary d = args.getObject(0);
+        }).height(new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                DaySummary d = args.getObject();
                 return Math.abs(y.fd(d.open) - y.fd(d.close));
             }
         }).lineWidth(10);

@@ -15,11 +15,11 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
-import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunctionWithoutThis;
-import org.thechiselgroup.choosel.protovis.client.functions.PVFunctionWithoutThis;
-import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunctionWithoutThis;
-import org.thechiselgroup.choosel.protovis.client.util.JsArrayGeneric;
-import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsArrayGeneric;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsUtils;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayNumber;
@@ -59,7 +59,7 @@ public class PVScale extends JavaScriptObject {
      * .
      */
     public final static <S> PVLinearScale linear(JsArrayGeneric<S> array,
-            PVDoubleFunctionWithoutThis f) {
+            JsDoubleFunction f) {
         return linear().domain(array, f);
     }
 
@@ -69,7 +69,7 @@ public class PVScale extends JavaScriptObject {
      * .
      */
     public final static <S> PVLinearScale linear(JsArrayGeneric<S> array,
-            PVFunctionWithoutThis<JsDate> f) {
+            JsFunction<JsDate> f) {
         return linear().domain(array, f);
     }
 
@@ -78,8 +78,7 @@ public class PVScale extends JavaScriptObject {
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.linear.html#constructor">pv.Scale.linear()</a></code>
      * .
      */
-    public final static <S> PVLinearScale linear(S[] array,
-            PVDoubleFunctionWithoutThis f) {
+    public final static <S> PVLinearScale linear(S[] array, JsDoubleFunction f) {
         return linear().domain(array, f);
     }
 
@@ -88,8 +87,7 @@ public class PVScale extends JavaScriptObject {
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.linear.html#constructor">pv.Scale.linear()</a></code>
      * .
      */
-    public final static <S> PVLinearScale linear(S[] array,
-            PVFunctionWithoutThis<JsDate> f) {
+    public final static <S> PVLinearScale linear(S[] array, JsFunction<JsDate> f) {
         return linear().domain(array, f);
     }
 
@@ -99,7 +97,7 @@ public class PVScale extends JavaScriptObject {
      * .
      */
     public final static <S> PVLinearScale linear(JsArrayGeneric<S> array,
-            PVDoubleFunctionWithoutThis min, PVDoubleFunctionWithoutThis max) {
+            JsDoubleFunction min, JsDoubleFunction max) {
         return linear().domain(array, min, max);
     }
 
@@ -109,7 +107,7 @@ public class PVScale extends JavaScriptObject {
      * .
      */
     public final static <S> PVLinearScale linear(S[] array,
-            PVDoubleFunctionWithoutThis min, PVDoubleFunctionWithoutThis max) {
+            JsDoubleFunction min, JsDoubleFunction max) {
         return linear().domain(array, min, max);
     }
 
@@ -127,8 +125,8 @@ public class PVScale extends JavaScriptObject {
     }-*/;
 
     public final static native PVOrdinalScale ordinal(JsArrayGeneric<?> array,
-            PVStringFunctionWithoutThis f) /*-{
-        return $wnd.pv.Scale.ordinal(array, @org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunctionWithoutThis;)(f));
+            JsStringFunction f) /*-{
+        return $wnd.pv.Scale.ordinal(array, @org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsStringFunction;)(f));
     }-*/;
 
     public final static native PVOrdinalScale ordinal(JsArrayNumber array) /*-{
@@ -140,8 +138,7 @@ public class PVScale extends JavaScriptObject {
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.ordinal.html#constructor">pv.Scale.ordinal()</a></code>
      * .
      */
-    public final static <S> PVOrdinalScale ordinal(S[] array,
-            PVStringFunctionWithoutThis f) {
+    public final static <S> PVOrdinalScale ordinal(S[] array, JsStringFunction f) {
         return ordinal(JsUtils.toJsArrayGeneric(array), f);
     }
 

@@ -19,11 +19,12 @@ import static org.thechiselgroup.choosel.protovis.client.PVAlignment.BOTTOM;
 import static org.thechiselgroup.choosel.protovis.client.PVAlignment.LEFT;
 import static org.thechiselgroup.choosel.protovis.client.PVAlignment.RIGHT;
 
-import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunction;
-import org.thechiselgroup.choosel.protovis.client.util.JsArrayGeneric;
-import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsArrayGeneric;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsUtils;
 
 import com.google.gwt.core.client.JsArrayNumber;
 import com.google.gwt.user.client.ui.Widget;
@@ -58,42 +59,44 @@ public class GroupedChartExample extends ProtovisWidget implements
                 .right(10).top(5);
 
         /* The bars. */
-        PVBar bar = vis.add(PV.Panel()).data(data)
-                .top(new PVDoubleFunction<PVPanel>() {
-                    public double f(PVPanel _this, PVArgs args) {
-                        return y.fd(_this.index());
-                    }
-                }).height(new PVDoubleFunction<PVPanel>() {
-                    public double f(PVPanel _this, PVArgs args) {
-                        return y.rangeBand();
-                    }
-                }).add(PV.Bar()).data(new PVFunction<PVBar, JsArrayNumber>() {
-                    public JsArrayNumber f(PVBar _this, PVArgs args) {
-                        return args.getObject(0);
-                    }
-                }).top(new PVDoubleFunction<PVBar>() {
-                    public double f(PVBar _this, PVArgs args) {
-                        return _this.index() * y.rangeBand() / m;
-                    }
-                }).height(new PVDoubleFunction<PVBar>() {
-                    public double f(PVBar _this, PVArgs args) {
-                        return y.rangeBand() / m;
-                    }
-                }).left(0).width(new PVDoubleFunction<PVBar>() {
-                    public double f(PVBar _this, PVArgs args) {
-                        double d = args.getDouble(0);
-                        return x.fd(d);
-                    }
-                }).fillStyle(new PVFunction<PVBar, PVColor>() {
-                    public PVColor f(PVBar _this, PVArgs args) {
-                        return category20.fcolor(_this.index());
-                    }
-                });
+        PVBar bar = vis.add(PV.Panel()).data(data).top(new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                PVMark _this = args.getThis();
+                return y.fd(_this.index());
+            }
+        }).height(new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                return y.rangeBand();
+            }
+        }).add(PV.Bar()).data(new JsFunction<JsArrayNumber>() {
+            public JsArrayNumber f(JsArgs args) {
+                return args.getObject();
+            }
+        }).top(new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                PVMark _this = args.getThis();
+                return _this.index() * y.rangeBand() / m;
+            }
+        }).height(new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                return y.rangeBand() / m;
+            }
+        }).left(0).width(new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                double d = args.getDouble(0);
+                return x.fd(d);
+            }
+        }).fillStyle(new JsFunction<PVColor>() {
+            public PVColor f(JsArgs args) {
+                PVMark _this = args.getThis();
+                return category20.fcolor(_this.index());
+            }
+        });
 
         /* The value label. */
         bar.anchor(RIGHT).add(PV.Label()).textStyle("white")
-                .text(new PVStringFunction<PVLabel>() {
-                    public String f(PVLabel _this, PVArgs args) {
+                .text(new JsStringFunction() {
+                    public String f(JsArgs args) {
                         double d = args.getDouble(0);
                         return JsUtils.toFixed(d, 1);
                     }
@@ -101,8 +104,9 @@ public class GroupedChartExample extends ProtovisWidget implements
 
         /* The variable label. */
         bar.parent().anchor(LEFT).add(PV.Label()).textAlign(RIGHT)
-                .textMargin(5).text(new PVStringFunction<PVLabel>() {
-                    public String f(PVLabel _this, PVArgs args) {
+                .textMargin(5).text(new JsStringFunction() {
+                    public String f(JsArgs args) {
+                        PVMark _this = args.getThis();
                         int i = _this.parent().index();
                         return "ABCDEFGHIJK".substring(i, i + 1);
                     }
@@ -110,8 +114,8 @@ public class GroupedChartExample extends ProtovisWidget implements
 
         /* X-axis ticks. */
         vis.add(PV.Rule()).data(x.ticks(5)).left(x)
-                .strokeStyle(new PVStringFunction<PVRule>() {
-                    public String f(PVRule _this, PVArgs args) {
+                .strokeStyle(new JsStringFunction() {
+                    public String f(JsArgs args) {
                         double d = args.getDouble(0);
                         return d != 0 ? "rgba(255,255,255,.3)" : "#000";
                     }

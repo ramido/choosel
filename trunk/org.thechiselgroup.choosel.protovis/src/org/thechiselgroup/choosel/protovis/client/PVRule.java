@@ -15,8 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
-import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 
 /**
  * Wrapper for
@@ -35,8 +35,8 @@ public class PVRule extends PVAbstractMark<PVRule> {
         return this.height(height);
     }-*/;
 
-    public final native PVRule height(PVDoubleFunction<PVRule> f) /*-{
-        return this.height(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunction;)(f));
+    public final native PVRule height(JsDoubleFunction f) /*-{
+        return this.height(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
     }-*/;
 
     public final native PVRule lineWidth(double lineWidth) /*-{
@@ -57,16 +57,16 @@ public class PVRule extends PVAbstractMark<PVRule> {
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Rule.html#strokeStyle">strokeStyle()</a></code>
      * .
      */
-    public final native PVRule strokeStyle(PVStringFunction<PVRule> f) /*-{
-        return this.strokeStyle(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVStringFunction;)(f));
+    public final native PVRule strokeStyle(JsStringFunction f) /*-{
+        return this.strokeStyle(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsStringFunction;)(f));
     }-*/;
 
     public final native PVRule width(double width) /*-{
         return this.width(width);
     }-*/;
 
-    public final native PVRule width(PVDoubleFunction<PVRule> f) /*-{
-        return this.width(@org.thechiselgroup.choosel.protovis.client.functions.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/functions/PVDoubleFunction;)(f));
+    public final native PVRule width(JsDoubleFunction f) /*-{
+        return this.width(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
     }-*/;
 
 }

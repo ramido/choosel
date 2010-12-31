@@ -19,9 +19,10 @@ import static org.thechiselgroup.choosel.protovis.client.PVAlignment.BOTTOM;
 import static org.thechiselgroup.choosel.protovis.client.PVAlignment.LEFT;
 import static org.thechiselgroup.choosel.protovis.client.PVAlignment.RIGHT;
 
-import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunction;
-import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsUtils;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -53,16 +54,17 @@ public class BarChartExample extends ProtovisWidget implements ProtovisExample {
 
         /* The bars. */
         PVBar bar = vis.add(PV.Bar()).dataDouble(data)
-                .top(new PVDoubleFunction<PVBar>() {
-                    public double f(PVBar _this, PVArgs args) {
+                .top(new JsDoubleFunction() {
+                    public double f(JsArgs args) {
+                        PVMark _this = args.getThis();
                         return y.fd(_this.index());
                     }
-                }).height(new PVDoubleFunction<PVBar>() {
-                    public double f(PVBar _this, PVArgs args) {
+                }).height(new JsDoubleFunction() {
+                    public double f(JsArgs args) {
                         return y.rangeBand();
                     }
-                }).left(0).width(new PVDoubleFunction<PVBar>() {
-                    public double f(PVBar _this, PVArgs args) {
+                }).left(0).width(new JsDoubleFunction() {
+                    public double f(JsArgs args) {
                         double d = args.getDouble(0);
                         return x.fd(d);
                     }
@@ -70,8 +72,8 @@ public class BarChartExample extends ProtovisWidget implements ProtovisExample {
 
         /* The value label. */
         bar.anchor(RIGHT).add(PV.Label()).textStyle("white")
-                .text(new PVStringFunction<PVLabel>() {
-                    public String f(PVLabel _this, PVArgs args) {
+                .text(new JsStringFunction() {
+                    public String f(JsArgs args) {
                         double d = args.getDouble(0);
                         return JsUtils.toFixed(d, 1);
                     }
@@ -79,8 +81,9 @@ public class BarChartExample extends ProtovisWidget implements ProtovisExample {
 
         /* The variable label. */
         bar.anchor(LEFT).add(PV.Label()).textMargin(5).textAlign(RIGHT)
-                .text(new PVStringFunction<PVLabel>() {
-                    public String f(PVLabel _this, PVArgs args) {
+                .text(new JsStringFunction() {
+                    public String f(JsArgs args) {
+                        PVMark _this = args.getThis();
                         return "ABCDEFGHIJK".substring(_this.index(),
                                 _this.index() + 1);
                     }
@@ -88,8 +91,8 @@ public class BarChartExample extends ProtovisWidget implements ProtovisExample {
 
         /* X-axis ticks. */
         vis.add(PV.Rule()).data(x.ticks(5)).left(x)
-                .strokeStyle(new PVStringFunction<PVRule>() {
-                    public String f(PVRule _this, PVArgs args) {
+                .strokeStyle(new JsStringFunction() {
+                    public String f(JsArgs args) {
                         double d = args.getDouble(0);
                         return d != 0 ? "rgba(255,255,255,.3)" : "#000";
                     }

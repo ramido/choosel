@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.protovis.client.functions;
+package org.thechiselgroup.choosel.protovis.client.jsutil;
 
-import org.thechiselgroup.choosel.protovis.client.PVArgs;
+public interface JsDoubleFunction {
 
-public interface PVDoubleFunctionWithoutThis {
-
-    double f(PVArgs args);
+    double f(JsArgs args);
 
 }

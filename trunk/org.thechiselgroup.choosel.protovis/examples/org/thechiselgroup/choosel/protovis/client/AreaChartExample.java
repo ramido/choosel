@@ -19,10 +19,10 @@ import static org.thechiselgroup.choosel.protovis.client.PVAlignment.BOTTOM;
 import static org.thechiselgroup.choosel.protovis.client.PVAlignment.LEFT;
 import static org.thechiselgroup.choosel.protovis.client.PVAlignment.TOP;
 
-import org.thechiselgroup.choosel.protovis.client.functions.PVBooleanFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunctionWithoutThis;
-import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsBooleanFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -57,13 +57,12 @@ public class AreaChartExample extends ProtovisWidget implements ProtovisExample 
         int w = 400;
         int h = 200;
 
-        final PVLinearScale x = PVScale.linear(points,
-                new PVDoubleFunctionWithoutThis() {
-                    public double f(PVArgs args) {
-                        Point d = args.getObject(0);
-                        return d.x;
-                    }
-                }).range(0, w);
+        final PVLinearScale x = PVScale.linear(points, new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                Point d = args.getObject(0);
+                return d.x;
+            }
+        }).range(0, w);
         final PVLinearScale y = PVScale.linear(0, 4).range(0, h);
 
         /* The root panel. */
@@ -72,36 +71,34 @@ public class AreaChartExample extends ProtovisWidget implements ProtovisExample 
 
         /* Y-axis and ticks. */
         vis.add(PV.Rule()).data(y.ticks(5)).bottom(y)
-                .strokeStyle(new PVStringFunction<PVRule>() {
-                    public String f(PVRule _this, PVArgs args) {
+                .strokeStyle(new JsStringFunction() {
+                    public String f(JsArgs args) {
                         double d = args.getDouble(0);
                         return d != 0 ? "#eee" : "#000";
                     }
                 }).anchor(LEFT).add(PV.Label()).text(y.tickFormat());
 
         /* X-axis and ticks. */
-        vis.add(PV.Rule()).data(x.ticks())
-                .visible(new PVBooleanFunction<PVRule>() {
-                    public boolean f(PVRule _this, PVArgs args) {
-                        double d = args.getDouble(0);
-                        return d != 0;
-                    }
-                }).left(x).bottom(-5).height(5).anchor(BOTTOM).add(PV.Label())
+        vis.add(PV.Rule()).data(x.ticks()).visible(new JsBooleanFunction() {
+            public boolean f(JsArgs args) {
+                double d = args.getDouble(0);
+                return d != 0;
+            }
+        }).left(x).bottom(-5).height(5).anchor(BOTTOM).add(PV.Label())
                 .text(x.tickFormat());
 
         /* The area with top line. */
-        vis.add(PV.Area()).data(points).bottom(1)
-                .left(new PVDoubleFunction<PVArea>() {
-                    public double f(PVArea _this, PVArgs args) {
-                        Point d = args.getObject(0);
-                        return x.fd(d.x);
-                    }
-                }).height(new PVDoubleFunction<PVArea>() {
-                    public double f(PVArea _this, PVArgs args) {
-                        Point d = args.getObject(0);
-                        return y.fd(d.y);
-                    }
-                }).fillStyle("rgb(121,173,210)").anchor(TOP).add(PV.Line())
+        vis.add(PV.Area()).data(points).bottom(1).left(new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                Point d = args.getObject();
+                return x.fd(d.x);
+            }
+        }).height(new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                Point d = args.getObject();
+                return y.fd(d.y);
+            }
+        }).fillStyle("rgb(121,173,210)").anchor(TOP).add(PV.Line())
                 .lineWidth(3);
     }
 

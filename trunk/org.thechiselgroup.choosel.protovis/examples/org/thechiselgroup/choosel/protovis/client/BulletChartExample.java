@@ -21,11 +21,12 @@ import static org.thechiselgroup.choosel.protovis.client.PVAlignment.RIGHT;
 import static org.thechiselgroup.choosel.protovis.client.PVAlignment.TOP;
 
 import org.thechiselgroup.choosel.protovis.client.PVDot.Shape;
-import org.thechiselgroup.choosel.protovis.client.functions.PVDoubleFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVFunction;
-import org.thechiselgroup.choosel.protovis.client.functions.PVStringFunction;
-import org.thechiselgroup.choosel.protovis.client.util.JsArrayGeneric;
-import org.thechiselgroup.choosel.protovis.client.util.JsUtils;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsArrayGeneric;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsUtils;
 
 import com.google.gwt.core.client.JsArrayNumber;
 import com.google.gwt.user.client.ui.Widget;
@@ -71,26 +72,27 @@ public class BulletChartExample extends ProtovisWidget implements
 
     private void createVisualization(JsArrayGeneric<Bullet> bullets) {
         PVPanel vis = getPVPanel().data(bullets).width(400).height(30)
-                .margin(20).left(100).top(new PVDoubleFunction<PVPanel>() {
-                    public double f(PVPanel _this, PVArgs args) {
+                .margin(20).left(100).top(new JsDoubleFunction() {
+                    public double f(JsArgs args) {
+                        PVMark _this = args.getThis();
                         return 10 + _this.index() * 60;
                     }
                 });
 
         PVBulletLayout bullet = vis.add(PVLayout.Bullet()).orient(LEFT)
-                .ranges(new PVFunction<PVBulletLayout, JsArrayNumber>() {
-                    public JsArrayNumber f(PVBulletLayout _this, PVArgs args) {
-                        Bullet d = args.getObject(0);
+                .ranges(new JsFunction<JsArrayNumber>() {
+                    public JsArrayNumber f(JsArgs args) {
+                        Bullet d = args.getObject();
                         return JsUtils.toJsArrayNumber(d.ranges);
                     }
-                }).measures(new PVFunction<PVBulletLayout, JsArrayNumber>() {
-                    public JsArrayNumber f(PVBulletLayout _this, PVArgs args) {
-                        Bullet d = args.getObject(0);
+                }).measures(new JsFunction<JsArrayNumber>() {
+                    public JsArrayNumber f(JsArgs args) {
+                        Bullet d = args.getObject();
                         return JsUtils.toJsArrayNumber(d.measures);
                     }
-                }).markers(new PVFunction<PVBulletLayout, JsArrayNumber>() {
-                    public JsArrayNumber f(PVBulletLayout _this, PVArgs args) {
-                        Bullet d = args.getObject(0);
+                }).markers(new JsFunction<JsArrayNumber>() {
+                    public JsArrayNumber f(JsArgs args) {
+                        Bullet d = args.getObject();
                         return JsUtils.toJsArrayNumber(d.markers);
                     }
                 });
@@ -104,16 +106,16 @@ public class BulletChartExample extends ProtovisWidget implements
 
         bullet.anchor(LEFT).add(PV.Label()).font("bold 12px sans-serif")
                 .textAlign(RIGHT).textBaseline(BOTTOM)
-                .text(new PVStringFunction<PVLabel>() {
-                    public String f(PVLabel _this, PVArgs args) {
+                .text(new JsStringFunction() {
+                    public String f(JsArgs args) {
                         Bullet d = args.getObject(0);
                         return d.title;
                     }
                 });
 
         bullet.anchor(LEFT).add(PV.Label()).textStyle("#666").textAlign(RIGHT)
-                .textBaseline(TOP).text(new PVStringFunction<PVLabel>() {
-                    public String f(PVLabel _this, PVArgs args) {
+                .textBaseline(TOP).text(new JsStringFunction() {
+                    public String f(JsArgs args) {
                         Bullet d = args.getObject(0);
                         return d.subtitle;
                     }
