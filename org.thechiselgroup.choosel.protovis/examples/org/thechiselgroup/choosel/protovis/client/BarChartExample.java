@@ -65,7 +65,7 @@ public class BarChartExample extends ProtovisWidget implements ProtovisExample {
                     }
                 }).left(0).width(new JsDoubleFunction() {
                     public double f(JsArgs args) {
-                        double d = args.getDouble(0);
+                        double d = args.getDouble();
                         return x.fd(d);
                     }
                 });
@@ -74,7 +74,7 @@ public class BarChartExample extends ProtovisWidget implements ProtovisExample {
         bar.anchor(RIGHT).add(PV.Label()).textStyle("white")
                 .text(new JsStringFunction() {
                     public String f(JsArgs args) {
-                        double d = args.getDouble(0);
+                        double d = args.getDouble();
                         return JsUtils.toFixed(d, 1);
                     }
                 });
@@ -93,7 +93,7 @@ public class BarChartExample extends ProtovisWidget implements ProtovisExample {
         vis.add(PV.Rule()).data(x.ticks(5)).left(x)
                 .strokeStyle(new JsStringFunction() {
                     public String f(JsArgs args) {
-                        double d = args.getDouble(0);
+                        double d = args.getDouble();
                         return d != 0 ? "rgba(255,255,255,.3)" : "#000";
                     }
                 }).add(PV.Rule()).bottom(0).height(5).strokeStyle("#000")
