@@ -148,8 +148,8 @@ public class AndersonsFlowersExample extends ProtovisWidget implements
                 return _this.index() * (size + padding) + padding / 2;
             }
         };
-        final PVPanel cell = vis.add(PV.Panel()).data(traits)
-                .top(panelPosition).height(size).add(PV.Panel())
+        final PVPanel cell = vis.add(PV.Panel).data(traits).top(panelPosition)
+                .height(size).add(PV.Panel)
                 .data(new JsFunction<JsArrayGeneric<TraitPair>>() {
                     public JsArrayGeneric<TraitPair> f(JsArgs args) {
                         String d = args.getObject();
@@ -163,7 +163,7 @@ public class AndersonsFlowersExample extends ProtovisWidget implements
                 }).left(panelPosition).width(size);
 
         /* Framed dot plots not along the diagonal. */
-        PVPanel plot = cell.add(PV.Panel()).visible(new JsBooleanFunction() {
+        PVPanel plot = cell.add(PV.Panel).visible(new JsBooleanFunction() {
             public boolean f(JsArgs args) {
                 TraitPair d = args.getObject(0);
                 return !d.px.equals(d.py);
@@ -171,7 +171,7 @@ public class AndersonsFlowersExample extends ProtovisWidget implements
         }).strokeStyle("#aaa");
 
         /* X-axis ticks. */
-        PVRule xtick = plot.add(PV.Rule())
+        PVRule xtick = plot.add(PV.Rule)
                 .data(new JsFunction<JavaScriptObject>() {
                     public JavaScriptObject f(JsArgs args) {
                         TraitPair t = args.getObject();
@@ -186,7 +186,7 @@ public class AndersonsFlowersExample extends ProtovisWidget implements
                 }).strokeStyle("#eee");
 
         /* Bottom label. */
-        xtick.anchor(BOTTOM).add(PV.Label()).visible(new JsBooleanFunction() {
+        xtick.anchor(BOTTOM).add(PV.Label).visible(new JsBooleanFunction() {
             public boolean f(JsArgs args) {
                 return (cell.parent().index() == traits.length - 1)
                         && (cell.index() % 2 == 0);
@@ -200,7 +200,7 @@ public class AndersonsFlowersExample extends ProtovisWidget implements
         });
 
         /* Top label. */
-        xtick.anchor(TOP).add(PV.Label()).visible(new JsBooleanFunction() {
+        xtick.anchor(TOP).add(PV.Label).visible(new JsBooleanFunction() {
             public boolean f(JsArgs args) {
                 return (cell.parent().index() == 0) && (cell.index() % 2 == 1);
             }
@@ -213,7 +213,7 @@ public class AndersonsFlowersExample extends ProtovisWidget implements
         });
 
         /* Y-axis ticks. */
-        PVRule ytick = plot.add(PV.Rule())
+        PVRule ytick = plot.add(PV.Rule)
                 .data(new JsFunction<JavaScriptObject>() {
                     public JavaScriptObject f(JsArgs args) {
                         TraitPair t = args.getObject(0);
@@ -228,7 +228,7 @@ public class AndersonsFlowersExample extends ProtovisWidget implements
                 }).strokeStyle("#eee");
 
         /* Left label. */
-        ytick.anchor(LEFT).add(PV.Label()).visible(new JsBooleanFunction() {
+        ytick.anchor(LEFT).add(PV.Label).visible(new JsBooleanFunction() {
             public boolean f(JsArgs args) {
                 return (cell.index() == 0) && (cell.parent().index() % 2 == 1);
             }
@@ -241,7 +241,7 @@ public class AndersonsFlowersExample extends ProtovisWidget implements
         });
 
         /* Right label. */
-        ytick.anchor(RIGHT).add(PV.Label()).visible(new JsBooleanFunction() {
+        ytick.anchor(RIGHT).add(PV.Label).visible(new JsBooleanFunction() {
             public boolean f(JsArgs args) {
                 return (cell.index() == traits.length - 1)
                         && (cell.parent().index() % 2 == 0);
@@ -255,7 +255,7 @@ public class AndersonsFlowersExample extends ProtovisWidget implements
         });
 
         /* Frame and dot plot. */
-        plot.add(PV.Dot()).data(flowers).left(new JsDoubleFunction() {
+        plot.add(PV.Dot).data(flowers).left(new JsDoubleFunction() {
             public double f(JsArgs args) {
                 Flower d = args.getObject(0);
                 TraitPair t = args.getObject(1);
@@ -276,7 +276,7 @@ public class AndersonsFlowersExample extends ProtovisWidget implements
                 });
 
         /* Labels along the diagonal. */
-        cell.anchor(CENTER).add(PV.Label()).visible(new JsBooleanFunction() {
+        cell.anchor(CENTER).add(PV.Label).visible(new JsBooleanFunction() {
             public boolean f(JsArgs args) {
                 TraitPair t = args.getObject(0);
                 return t.px.equals(t.py);
@@ -289,7 +289,7 @@ public class AndersonsFlowersExample extends ProtovisWidget implements
         });
 
         /* Legend. */
-        vis.add(PV.Dot()).data(species).bottom(10).left(new JsDoubleFunction() {
+        vis.add(PV.Dot).data(species).bottom(10).left(new JsDoubleFunction() {
             public double f(JsArgs args) {
                 PVMark _this = args.getThis();
                 return 15 + _this.index() * 65;
@@ -300,7 +300,7 @@ public class AndersonsFlowersExample extends ProtovisWidget implements
                         String d = args.getObject(0);
                         return color.fcolor(d);
                     }
-                }).anchor(RIGHT).add(PV.Label());
+                }).anchor(RIGHT).add(PV.Label);
     }
 
     private void putTraitScale(final Map<String, PVLinearScale> position,

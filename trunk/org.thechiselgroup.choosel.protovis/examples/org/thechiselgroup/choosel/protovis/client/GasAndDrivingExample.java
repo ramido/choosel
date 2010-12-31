@@ -73,8 +73,8 @@ public class GasAndDrivingExample extends ProtovisWidget implements
 
         PVPanel vis = getPVPanel().width(w).height(h).top(10);
 
-        vis.add(PV.Rule()).data(y.ticks(5)).bottom(y).strokeStyle("#ccc")
-                .anchor(LEFT).add(PV.Label()).font("bold 12px sans-serif")
+        vis.add(PV.Rule).data(y.ticks(5)).bottom(y).strokeStyle("#ccc")
+                .anchor(LEFT).add(PV.Label).font("bold 12px sans-serif")
                 .textMargin(6).textAlign(LEFT).textBaseline(BOTTOM)
                 .text(new JsStringFunction() {
                     public String f(JsArgs args) {
@@ -83,8 +83,8 @@ public class GasAndDrivingExample extends ProtovisWidget implements
                     }
                 });
 
-        vis.add(PV.Rule()).data(x.ticks(5)).left(x).strokeStyle("#ccc")
-                .anchor(TOP).add(PV.Label()).font("bold 12px sans-serif")
+        vis.add(PV.Rule).data(x.ticks(5)).left(x).strokeStyle("#ccc")
+                .anchor(TOP).add(PV.Label).font("bold 12px sans-serif")
                 .textMargin(6).textAlign(LEFT).textBaseline(TOP)
                 .text(new JsStringFunction() {
                     public String f(JsArgs args) {
@@ -93,7 +93,7 @@ public class GasAndDrivingExample extends ProtovisWidget implements
                     }
                 });
 
-        vis.add(PV.Line()).data(driving).interpolate(CARDINAL).lineWidth(4)
+        vis.add(PV.Line).data(driving).interpolate(CARDINAL).lineWidth(4)
                 .strokeStyle("black").left(new JsDoubleFunction() {
                     public double f(JsArgs args) {
                         DrivingStats d = args.getObject(0);
@@ -104,13 +104,13 @@ public class GasAndDrivingExample extends ProtovisWidget implements
                         DrivingStats d = args.getObject(0);
                         return y.fd(d.gas);
                     }
-                }).add(PV.Dot()).lineWidth(1).fillStyle("white")
+                }).add(PV.Dot).lineWidth(1).fillStyle("white")
                 .anchor(new JsStringFunction() {
                     public String f(JsArgs args) {
                         DrivingStats d = args.getObject(0);
                         return d.side;
                     }
-                }).add(PV.Label()).text(new JsStringFunction() {
+                }).add(PV.Label).text(new JsStringFunction() {
                     public String f(JsArgs args) {
                         DrivingStats d = args.getObject(0);
                         return "" + d.year;

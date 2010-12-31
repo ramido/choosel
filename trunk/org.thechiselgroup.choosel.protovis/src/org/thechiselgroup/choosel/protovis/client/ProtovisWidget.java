@@ -63,7 +63,7 @@ public class ProtovisWidget extends Widget {
      * and replaces any previous visualization rendered in this widget.
      */
     public void initPVPanel() {
-        pvPanel = PV.createPanel(getElement());
+        pvPanel = PVPanel.create(getElement());
     }
 
     public boolean isInitialized() {

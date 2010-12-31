@@ -70,25 +70,25 @@ public class AreaChartExample extends ProtovisWidget implements ProtovisExample 
                 .right(10).top(5);
 
         /* Y-axis and ticks. */
-        vis.add(PV.Rule()).data(y.ticks(5)).bottom(y)
+        vis.add(PV.Rule).data(y.ticks(5)).bottom(y)
                 .strokeStyle(new JsStringFunction() {
                     public String f(JsArgs args) {
                         double d = args.getDouble();
                         return d != 0 ? "#eee" : "#000";
                     }
-                }).anchor(LEFT).add(PV.Label()).text(y.tickFormat());
+                }).anchor(LEFT).add(PV.Label).text(y.tickFormat());
 
         /* X-axis and ticks. */
-        vis.add(PV.Rule()).data(x.ticks()).visible(new JsBooleanFunction() {
+        vis.add(PV.Rule).data(x.ticks()).visible(new JsBooleanFunction() {
             public boolean f(JsArgs args) {
                 double d = args.getDouble();
                 return d != 0;
             }
-        }).left(x).bottom(-5).height(5).anchor(BOTTOM).add(PV.Label())
+        }).left(x).bottom(-5).height(5).anchor(BOTTOM).add(PV.Label)
                 .text(x.tickFormat());
 
         /* The area with top line. */
-        vis.add(PV.Area()).data(points).bottom(1).left(new JsDoubleFunction() {
+        vis.add(PV.Area).data(points).bottom(1).left(new JsDoubleFunction() {
             public double f(JsArgs args) {
                 Point d = args.getObject();
                 return x.fd(d.x);
@@ -98,8 +98,7 @@ public class AreaChartExample extends ProtovisWidget implements ProtovisExample 
                 Point d = args.getObject();
                 return y.fd(d.y);
             }
-        }).fillStyle("rgb(121,173,210)").anchor(TOP).add(PV.Line())
-                .lineWidth(3);
+        }).fillStyle("rgb(121,173,210)").anchor(TOP).add(PV.Line).lineWidth(3);
     }
 
     private Point[] generateData() {

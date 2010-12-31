@@ -26,6 +26,17 @@ import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
  */
 public final class PVArea extends PVAbstractMark<PVArea> {
 
+    public final static class Type extends PVMarkType<PVArea> {
+
+        protected Type() {
+        }
+
+    }
+
+    public static native PVArea create() /*-{
+        return new $wnd.pv.Area();
+    }-*/;
+
     protected PVArea() {
     }
 

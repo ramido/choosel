@@ -28,6 +28,17 @@ import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
  */
 public class PVRule extends PVAbstractMark<PVRule> {
 
+    public final static class Type extends PVMarkType<PVRule> {
+
+        protected Type() {
+        }
+
+    }
+
+    public static native PVRule create() /*-{
+        return new $wnd.pv.Rule();
+    }-*/;
+
     protected PVRule() {
     }
 

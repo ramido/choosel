@@ -55,8 +55,8 @@ public class PieChartExample extends ProtovisWidget implements ProtovisExample {
         PVPanel vis = getPVPanel().width(w).height(h);
 
         /* The wedge, with centered label. */
-        vis.add(PV.Wedge()).data(PV.sort(data, PV.reverseOrder()))
-                .bottom(w / 2).left(w / 2).innerRadius(r - 40).outerRadius(r)
+        vis.add(PV.Wedge).data(PV.sort(data, PV.reverseOrder())).bottom(w / 2)
+                .left(w / 2).innerRadius(r - 40).outerRadius(r)
                 .angle(new JsDoubleFunction() {
                     public double f(JsArgs args) {
                         double d = args.getDouble(0);
@@ -72,7 +72,7 @@ public class PieChartExample extends ProtovisWidget implements ProtovisExample {
                         _this.innerRadius(r - 40);
                         _this.render();
                     }
-                }).anchor(CENTER).add(PV.Label())
+                }).anchor(CENTER).add(PV.Label)
                 .visible(new JsBooleanFunction() {
                     public boolean f(JsArgs args) {
                         double d = args.getDouble(0);

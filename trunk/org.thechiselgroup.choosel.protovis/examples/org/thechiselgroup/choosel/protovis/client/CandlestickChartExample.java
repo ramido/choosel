@@ -98,18 +98,17 @@ public class CandlestickChartExample extends ProtovisWidget implements
         PVPanel vis = getPVPanel().width(w).height(h).margin(10).left(30);
 
         /* Dates. */
-        vis.add(PV.Rule()).data(x.ticks()).left(x).strokeStyle("#eee")
-                .anchor(BOTTOM).add(PV.Label()).text(x.tickFormat());
+        vis.add(PV.Rule).data(x.ticks()).left(x).strokeStyle("#eee")
+                .anchor(BOTTOM).add(PV.Label).text(x.tickFormat());
 
         /* Prices. */
-        vis.add(PV.Rule()).data(y.ticks(7)).bottom(y).left(-10).right(-10)
+        vis.add(PV.Rule).data(y.ticks(7)).bottom(y).left(-10).right(-10)
                 .strokeStyle(new JsStringFunction() {
                     public String f(JsArgs args) {
                         double d = args.getDouble();
                         return d % 10 != 0 ? "#ccc" : "#333";
                     }
-                }).anchor(LEFT).add(PV.Label())
-                .textStyle(new JsStringFunction() {
+                }).anchor(LEFT).add(PV.Label).textStyle(new JsStringFunction() {
                     public String f(JsArgs args) {
                         double d = args.getDouble();
                         return d % 10 != 0 ? "#999" : "#333";
@@ -117,7 +116,7 @@ public class CandlestickChartExample extends ProtovisWidget implements
                 }).text(y.tickFormat());
 
         /* Candlestick. */
-        vis.add(PV.Rule()).data(days).left(new JsDoubleFunction() {
+        vis.add(PV.Rule).data(days).left(new JsDoubleFunction() {
             public double f(JsArgs args) {
                 DaySummary d = args.getObject();
                 return x.fd(d.jsDate);
@@ -137,7 +136,7 @@ public class CandlestickChartExample extends ProtovisWidget implements
                 DaySummary d = args.getObject();
                 return d.open < d.close ? "#ae1325" : "#06982d";
             }
-        }).add(PV.Rule()).bottom(new JsDoubleFunction() {
+        }).add(PV.Rule).bottom(new JsDoubleFunction() {
             public double f(JsArgs args) {
                 DaySummary d = args.getObject();
                 return y.fd(Math.min(d.open, d.close));

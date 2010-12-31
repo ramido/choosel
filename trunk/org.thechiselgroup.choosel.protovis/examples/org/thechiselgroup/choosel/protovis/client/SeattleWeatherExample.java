@@ -119,7 +119,7 @@ public class SeattleWeatherExample extends ProtovisWidget implements
         PVPanel vis = getPVPanel().width(200).height(250);
 
         /* Record range. */
-        PVBar record = vis.add(PV.Bar()).data(weatherRecords)
+        PVBar record = vis.add(PV.Bar).data(weatherRecords)
                 .bottom(new JsDoubleFunction() {
                     public double f(JsArgs args) {
                         WeatherRecord d = args.getObject();
@@ -138,7 +138,7 @@ public class SeattleWeatherExample extends ProtovisWidget implements
                 }).width(w - 2).fillStyle("#ccc");
 
         /* Normal range. */
-        record.add(PV.Bar()).bottom(new JsDoubleFunction() {
+        record.add(PV.Bar).bottom(new JsDoubleFunction() {
             public double f(JsArgs args) {
                 WeatherRecord d = args.getObject(0);
                 return d.normal.low * h;
@@ -151,13 +151,13 @@ public class SeattleWeatherExample extends ProtovisWidget implements
         }).fillStyle("#999");
 
         /* White grid lines. */
-        vis.add(PV.Rule()).dataInt(20, 40, 60).bottom(new JsDoubleFunction() {
+        vis.add(PV.Rule).dataInt(20, 40, 60).bottom(new JsDoubleFunction() {
             public double f(JsArgs args) {
                 double d = args.getDouble();
                 return d * h + 1;
             }
         }).left(0).right(20).lineWidth(2).strokeStyle("white").anchor(RIGHT)
-                .add(PV.Label()).text(new JsStringFunction() {
+                .add(PV.Label).text(new JsStringFunction() {
                     public String f(JsArgs args) {
                         int d = args.getInt(0);
                         return d + "\u00b0";
@@ -165,7 +165,7 @@ public class SeattleWeatherExample extends ProtovisWidget implements
                 });
 
         /* Actual and forecast range. */
-        record.add(PV.Bar()).visible(new JsBooleanFunction() {
+        record.add(PV.Bar).visible(new JsBooleanFunction() {
             public boolean f(JsArgs args) {
                 WeatherRecord d = args.getObject();
                 return d.hasActual();
@@ -185,7 +185,7 @@ public class SeattleWeatherExample extends ProtovisWidget implements
                 PVMark _this = args.getThis();
                 return _this.index() * w + 3;
             }
-        }).width(w - 8).fillStyle("black").add(PV.Bar())
+        }).width(w - 8).fillStyle("black").add(PV.Bar)
                 .visible(new JsBooleanFunction() {
                     public boolean f(JsArgs args) {
                         WeatherRecord d = args.getObject();
@@ -201,7 +201,7 @@ public class SeattleWeatherExample extends ProtovisWidget implements
                         WeatherRecord d = args.getObject();
                         return (d.forecast.highMax - d.forecast.highMin) * h;
                     }
-                }).add(PV.Bar()).bottom(new JsDoubleFunction() {
+                }).add(PV.Bar).bottom(new JsDoubleFunction() {
                     public double f(JsArgs args) {
                         WeatherRecord d = args.getObject();
                         return d.forecast.lowMin * h;
@@ -211,7 +211,7 @@ public class SeattleWeatherExample extends ProtovisWidget implements
                         WeatherRecord d = args.getObject();
                         return (d.forecast.lowMax - d.forecast.lowMin) * h;
                     }
-                }).add(PV.Bar()).bottom(new JsDoubleFunction() {
+                }).add(PV.Bar).bottom(new JsDoubleFunction() {
                     public double f(JsArgs args) {
                         WeatherRecord d = args.getObject();
                         return d.forecast.lowMin * h;
@@ -229,7 +229,7 @@ public class SeattleWeatherExample extends ProtovisWidget implements
                 }).width(Math.ceil((w - 8) / 3));
 
         /* Day labels. */
-        record.anchor(TOP).add(PV.Label()).top(16).text(new JsStringFunction() {
+        record.anchor(TOP).add(PV.Label).top(16).text(new JsStringFunction() {
             public String f(JsArgs args) {
                 WeatherRecord d = args.getObject(0);
                 return d.day;
@@ -237,7 +237,7 @@ public class SeattleWeatherExample extends ProtovisWidget implements
         });
 
         /* Title. */
-        vis.add(PV.Label()).top(0).left(0).textBaseline(TOP)
+        vis.add(PV.Label).top(0).left(0).textBaseline(TOP)
                 .font("bold 10pt Sans-Serif").text("Seattle ");
     }
 

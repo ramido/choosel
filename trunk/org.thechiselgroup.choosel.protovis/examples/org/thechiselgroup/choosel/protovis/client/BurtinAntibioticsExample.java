@@ -110,7 +110,7 @@ public class BurtinAntibioticsExample extends ProtovisWidget implements
         PVPanel vis = getPVPanel().width(width).height(height).bottom(100);
 
         /* Background wedges to indicate gram staining color. */
-        PVWedge bg = vis.add(PV.Wedge())
+        PVWedge bg = vis.add(PV.Wedge)
                 .data(antibiotics)
                 // assumes Burtin's order
                 .left(width / 2).top(height / 2).innerRadius(innerRadius)
@@ -129,7 +129,7 @@ public class BurtinAntibioticsExample extends ProtovisWidget implements
                 });
 
         /* Antibiotics. */
-        bg.add(PV.Wedge()).angle(smallAngle).startAngle(new JsDoubleFunction() {
+        bg.add(PV.Wedge).angle(smallAngle).startAngle(new JsDoubleFunction() {
             public double f(JsArgs args) {
                 PVWedge _this = args.getThis();
                 return _this.proto().startAngle() + smallAngle;
@@ -139,7 +139,7 @@ public class BurtinAntibioticsExample extends ProtovisWidget implements
                 Antibiotics d = args.getObject();
                 return radius(d.penicillin, a, b);
             }
-        }).fillStyle(drugColor.get("Penicillin")).add(PV.Wedge())
+        }).fillStyle(drugColor.get("Penicillin")).add(PV.Wedge)
                 .startAngle(new JsDoubleFunction() {
                     public double f(JsArgs args) {
                         PVWedge _this = args.getThis();
@@ -150,7 +150,7 @@ public class BurtinAntibioticsExample extends ProtovisWidget implements
                         Antibiotics d = args.getObject();
                         return radius(d.streptomycin, a, b);
                     }
-                }).fillStyle(drugColor.get("Streptomycin")).add(PV.Wedge())
+                }).fillStyle(drugColor.get("Streptomycin")).add(PV.Wedge)
                 .outerRadius(new JsDoubleFunction() {
                     public double f(JsArgs args) {
                         Antibiotics d = args.getObject();
@@ -159,13 +159,13 @@ public class BurtinAntibioticsExample extends ProtovisWidget implements
                 }).fillStyle(drugColor.get("Neomycin"));
 
         /* Circular grid lines. */
-        bg.add(PV.Dot()).data(PV.range(-3, 4)).fillStyle((String) null)
+        bg.add(PV.Dot).data(PV.range(-3, 4)).fillStyle((String) null)
                 .strokeStyle("#eee").lineWidth(1).size(new JsDoubleFunction() {
                     public double f(JsArgs args) {
                         int i = args.getInt();
                         return Math.pow(radius(Math.pow(10, i), a, b), 2);
                     }
-                }).anchor(TOP).add(PV.Label()).visible(new JsBooleanFunction() {
+                }).anchor(TOP).add(PV.Label).visible(new JsBooleanFunction() {
                     public boolean f(JsArgs args) {
                         int i = args.getInt();
                         return i < 3;
@@ -179,12 +179,12 @@ public class BurtinAntibioticsExample extends ProtovisWidget implements
                 });
 
         /* Radial grid lines. */
-        bg.add(PV.Wedge()).data(PV.range(antibiotics.length + 1))
+        bg.add(PV.Wedge).data(PV.range(antibiotics.length + 1))
                 .innerRadius(innerRadius - 10).outerRadius(outerRadius + 10)
                 .fillStyle((String) null).strokeStyle("black").angle(0);
 
         /* Labels. */
-        bg.anchor(OUTER).add(PV.Label()).textAlign(CENTER)
+        bg.anchor(OUTER).add(PV.Label).textAlign(CENTER)
                 .text(new JsStringFunction() {
                     public String f(JsArgs args) {
                         Antibiotics d = args.getObject();
@@ -193,7 +193,7 @@ public class BurtinAntibioticsExample extends ProtovisWidget implements
                 });
 
         /* Antibiotic legend. */
-        vis.add(PV.Bar()).data(drugColor.keySet()).right(width / 2 + 3)
+        vis.add(PV.Bar).data(drugColor.keySet()).right(width / 2 + 3)
                 .top(new JsDoubleFunction() {
                     public double f(JsArgs args) {
                         PVMark _this = args.getThis();
@@ -204,11 +204,11 @@ public class BurtinAntibioticsExample extends ProtovisWidget implements
                         String d = args.getObject();
                         return drugColor.get(d);
                     }
-                }).width(36).height(12).anchor(RIGHT).add(PV.Label())
+                }).width(36).height(12).anchor(RIGHT).add(PV.Label)
                 .textMargin(6).textAlign(LEFT);
 
         /* Gram-stain legend. */
-        vis.add(PV.Dot()).data(gramColor.keySet()).left(width / 2 - 20)
+        vis.add(PV.Dot).data(gramColor.keySet()).left(width / 2 - 20)
                 .bottom(new JsDoubleFunction() {
                     public double f(JsArgs args) {
                         PVMark _this = args.getThis();
@@ -220,7 +220,7 @@ public class BurtinAntibioticsExample extends ProtovisWidget implements
                         return gramColor.get(d);
                     }
                 }).strokeStyle((String) null).size(30).anchor(RIGHT)
-                .add(PV.Label()).textMargin(6).textAlign(LEFT)
+                .add(PV.Label).textMargin(6).textAlign(LEFT)
                 .text(new JsStringFunction() {
                     public String f(JsArgs args) {
                         String d = args.getObject();

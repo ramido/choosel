@@ -26,6 +26,17 @@ import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
  */
 public final class PVWedge extends PVAbstractMark<PVWedge> {
 
+    public final static class Type extends PVMarkType<PVWedge> {
+
+        protected Type() {
+        }
+
+    }
+
+    public static native PVWedge create() /*-{
+        return new $wnd.pv.Wedge();
+    }-*/;
+
     protected PVWedge() {
     }
 

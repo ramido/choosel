@@ -78,7 +78,7 @@ public class StreamgraphExample extends ProtovisWidget implements
                         double d = args.getDouble(0);
                         return y.fd(d);
                     }
-                }).layer().add(PV.Area()).fillStyle(new JsFunction<PVColor>() {
+                }).layer().add(PV.Area).fillStyle(new JsFunction<PVColor>() {
                     public PVColor f(JsArgs args) {
                         return PV.ramp("#aad", "#556").fcolor(Math.random());
                     }

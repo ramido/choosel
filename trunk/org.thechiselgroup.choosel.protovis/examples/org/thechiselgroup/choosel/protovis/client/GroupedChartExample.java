@@ -59,7 +59,7 @@ public class GroupedChartExample extends ProtovisWidget implements
                 .right(10).top(5);
 
         /* The bars. */
-        PVBar bar = vis.add(PV.Panel()).data(data).top(new JsDoubleFunction() {
+        PVBar bar = vis.add(PV.Panel).data(data).top(new JsDoubleFunction() {
             public double f(JsArgs args) {
                 PVMark _this = args.getThis();
                 return y.fd(_this.index());
@@ -68,7 +68,7 @@ public class GroupedChartExample extends ProtovisWidget implements
             public double f(JsArgs args) {
                 return y.rangeBand();
             }
-        }).add(PV.Bar()).data(new JsFunction<JsArrayNumber>() {
+        }).add(PV.Bar).data(new JsFunction<JsArrayNumber>() {
             public JsArrayNumber f(JsArgs args) {
                 return args.getObject();
             }
@@ -94,7 +94,7 @@ public class GroupedChartExample extends ProtovisWidget implements
         });
 
         /* The value label. */
-        bar.anchor(RIGHT).add(PV.Label()).textStyle("white")
+        bar.anchor(RIGHT).add(PV.Label).textStyle("white")
                 .text(new JsStringFunction() {
                     public String f(JsArgs args) {
                         double d = args.getDouble(0);
@@ -103,8 +103,8 @@ public class GroupedChartExample extends ProtovisWidget implements
                 });
 
         /* The variable label. */
-        bar.parent().anchor(LEFT).add(PV.Label()).textAlign(RIGHT)
-                .textMargin(5).text(new JsStringFunction() {
+        bar.parent().anchor(LEFT).add(PV.Label).textAlign(RIGHT).textMargin(5)
+                .text(new JsStringFunction() {
                     public String f(JsArgs args) {
                         PVMark _this = args.getThis();
                         int i = _this.parent().index();
@@ -113,14 +113,14 @@ public class GroupedChartExample extends ProtovisWidget implements
                 });
 
         /* X-axis ticks. */
-        vis.add(PV.Rule()).data(x.ticks(5)).left(x)
+        vis.add(PV.Rule).data(x.ticks(5)).left(x)
                 .strokeStyle(new JsStringFunction() {
                     public String f(JsArgs args) {
                         double d = args.getDouble(0);
                         return d != 0 ? "rgba(255,255,255,.3)" : "#000";
                     }
-                }).add(PV.Rule()).bottom(0).height(5).strokeStyle("#000")
-                .anchor(BOTTOM).add(PV.Label()).text(x.tickFormat());
+                }).add(PV.Rule).bottom(0).height(5).strokeStyle("#000")
+                .anchor(BOTTOM).add(PV.Label).text(x.tickFormat());
     }
 
     private JsArrayGeneric<JsArrayNumber> generateData() {

@@ -72,26 +72,26 @@ public class LineChartExample extends ProtovisWidget implements ProtovisExample 
                 .right(10).top(5);
 
         /* X-axis ticks. */
-        vis.add(PV.Rule()).data(x.ticks()).visible(new JsBooleanFunction() {
+        vis.add(PV.Rule).data(x.ticks()).visible(new JsBooleanFunction() {
             public boolean f(JsArgs args) {
                 double d = args.getDouble(0);
                 return d > 0;
             }
-        }).left(x).strokeStyle("#eee").add(PV.Rule()).bottom(-5).height(5)
-                .strokeStyle("#000").anchor(BOTTOM).add(PV.Label())
+        }).left(x).strokeStyle("#eee").add(PV.Rule).bottom(-5).height(5)
+                .strokeStyle("#000").anchor(BOTTOM).add(PV.Label)
                 .text(x.tickFormat());
 
         /* Y-axis ticks. */
-        vis.add(PV.Rule()).data(y.ticks(5)).bottom(y)
+        vis.add(PV.Rule).data(y.ticks(5)).bottom(y)
                 .strokeStyle(new JsStringFunction() {
                     public String f(JsArgs args) {
                         double d = args.getDouble(0);
                         return d != 0 ? "#eee" : "#000";
                     }
-                }).anchor(LEFT).add(PV.Label()).text(y.tickFormat());
+                }).anchor(LEFT).add(PV.Label).text(y.tickFormat());
 
         /* The line. */
-        vis.add(PV.Line()).data(data).interpolate(STEP_AFTER)
+        vis.add(PV.Line).data(data).interpolate(STEP_AFTER)
                 .left(new JsDoubleFunction() {
                     public double f(JsArgs args) {
                         Point d = args.getObject(0);

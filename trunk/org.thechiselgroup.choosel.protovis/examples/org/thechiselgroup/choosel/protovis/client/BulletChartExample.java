@@ -20,7 +20,6 @@ import static org.thechiselgroup.choosel.protovis.client.PVAlignment.LEFT;
 import static org.thechiselgroup.choosel.protovis.client.PVAlignment.RIGHT;
 import static org.thechiselgroup.choosel.protovis.client.PVAlignment.TOP;
 
-import org.thechiselgroup.choosel.protovis.client.PVDot.Shape;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArrayGeneric;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
@@ -97,14 +96,14 @@ public class BulletChartExample extends ProtovisWidget implements
                     }
                 });
 
-        bullet.range().add(PV.Bar());
-        bullet.measure().add(PV.Bar());
+        bullet.range().add(PV.Bar);
+        bullet.measure().add(PV.Bar);
 
-        bullet.marker().add(PV.Dot()).shape(Shape.TRIANGLE).fillStyle("white");
-        bullet.tick().add(PV.Rule()).anchor(BOTTOM).add(PV.Label())
+        bullet.marker().add(PV.Dot).shape(PVShape.TRIANGLE).fillStyle("white");
+        bullet.tick().add(PV.Rule).anchor(BOTTOM).add(PV.Label)
                 .text(bullet.x().tickFormat());
 
-        bullet.anchor(LEFT).add(PV.Label()).font("bold 12px sans-serif")
+        bullet.anchor(LEFT).add(PV.Label).font("bold 12px sans-serif")
                 .textAlign(RIGHT).textBaseline(BOTTOM)
                 .text(new JsStringFunction() {
                     public String f(JsArgs args) {
@@ -113,7 +112,7 @@ public class BulletChartExample extends ProtovisWidget implements
                     }
                 });
 
-        bullet.anchor(LEFT).add(PV.Label()).textStyle("#666").textAlign(RIGHT)
+        bullet.anchor(LEFT).add(PV.Label).textStyle("#666").textAlign(RIGHT)
                 .textBaseline(TOP).text(new JsStringFunction() {
                     public String f(JsArgs args) {
                         Bullet d = args.getObject(0);

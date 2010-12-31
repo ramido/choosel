@@ -29,6 +29,17 @@ import com.google.gwt.core.client.JavaScriptObject;
  */
 public final class PVLabel extends PVAbstractMark<PVLabel> {
 
+    public final static class Type extends PVMarkType<PVLabel> {
+
+        protected Type() {
+        }
+
+    }
+
+    public static native PVLabel create() /*-{
+        return new $wnd.pv.Label();
+    }-*/;
+
     protected PVLabel() {
     }
 

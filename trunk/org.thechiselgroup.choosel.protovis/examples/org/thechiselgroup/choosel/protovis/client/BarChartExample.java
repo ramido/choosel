@@ -53,7 +53,7 @@ public class BarChartExample extends ProtovisWidget implements ProtovisExample {
                 .right(10).top(5);
 
         /* The bars. */
-        PVBar bar = vis.add(PV.Bar()).dataDouble(data)
+        PVBar bar = vis.add(PV.Bar).dataDouble(data)
                 .top(new JsDoubleFunction() {
                     public double f(JsArgs args) {
                         PVMark _this = args.getThis();
@@ -71,7 +71,7 @@ public class BarChartExample extends ProtovisWidget implements ProtovisExample {
                 });
 
         /* The value label. */
-        bar.anchor(RIGHT).add(PV.Label()).textStyle("white")
+        bar.anchor(RIGHT).add(PV.Label).textStyle("white")
                 .text(new JsStringFunction() {
                     public String f(JsArgs args) {
                         double d = args.getDouble();
@@ -80,7 +80,7 @@ public class BarChartExample extends ProtovisWidget implements ProtovisExample {
                 });
 
         /* The variable label. */
-        bar.anchor(LEFT).add(PV.Label()).textMargin(5).textAlign(RIGHT)
+        bar.anchor(LEFT).add(PV.Label).textMargin(5).textAlign(RIGHT)
                 .text(new JsStringFunction() {
                     public String f(JsArgs args) {
                         PVMark _this = args.getThis();
@@ -90,14 +90,14 @@ public class BarChartExample extends ProtovisWidget implements ProtovisExample {
                 });
 
         /* X-axis ticks. */
-        vis.add(PV.Rule()).data(x.ticks(5)).left(x)
+        vis.add(PV.Rule).data(x.ticks(5)).left(x)
                 .strokeStyle(new JsStringFunction() {
                     public String f(JsArgs args) {
                         double d = args.getDouble();
                         return d != 0 ? "rgba(255,255,255,.3)" : "#000";
                     }
-                }).add(PV.Rule()).bottom(0).height(5).strokeStyle("#000")
-                .anchor(BOTTOM).add(PV.Label()).text(x.tickFormat());
+                }).add(PV.Rule).bottom(0).height(5).strokeStyle("#000")
+                .anchor(BOTTOM).add(PV.Label).text(x.tickFormat());
     }
 
     private double[] generateData() {
