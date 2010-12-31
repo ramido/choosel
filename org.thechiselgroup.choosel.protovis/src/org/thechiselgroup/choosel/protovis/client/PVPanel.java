@@ -24,6 +24,25 @@ import com.google.gwt.user.client.Element;
  */
 public final class PVPanel extends PVAbstractBar<PVPanel> {
 
+    public final static class Type extends PVMarkType<PVPanel> {
+
+        protected Type() {
+        }
+
+    }
+
+    public static native PVPanel create() /*-{
+        return new $wnd.pv.Panel();
+    }-*/;
+
+    /**
+     * Creates a {@link PVPanel} that renders the visualization on
+     * <code>element</code>.
+     */
+    public static PVPanel create(Element element) {
+        return create().canvas(element);
+    }
+
     protected PVPanel() {
     }
 

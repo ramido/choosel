@@ -46,8 +46,19 @@ import com.google.gwt.core.client.JavaScriptObject;
 public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
         JavaScriptObject {
 
+    public static abstract class PVMarkType<T extends PVAbstractMark<T>>
+            extends JavaScriptObject {
+
+        protected PVMarkType() {
+        }
+    }
+
     protected PVAbstractMark() {
     }
+
+    public final native <S extends PVAbstractMark<S>> S add(PVMarkType<S> mark) /*-{
+        return this.add(mark);
+    }-*/;
 
     public final native <S extends PVAbstractMark<S>> S add(S mark) /*-{
         return this.add(mark);

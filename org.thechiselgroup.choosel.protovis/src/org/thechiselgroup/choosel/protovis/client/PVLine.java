@@ -23,6 +23,17 @@ import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
  */
 public final class PVLine extends PVAbstractMark<PVLine> {
 
+    public final static class Type extends PVMarkType<PVLine> {
+
+        protected Type() {
+        }
+
+    }
+
+    public static native PVLine create() /*-{
+        return new $wnd.pv.Line();
+    }-*/;
+
     protected PVLine() {
     }
 

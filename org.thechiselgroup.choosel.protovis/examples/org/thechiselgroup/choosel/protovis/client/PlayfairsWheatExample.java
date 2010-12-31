@@ -96,7 +96,7 @@ public class PlayfairsWheatExample extends ProtovisWidget implements
         PVPanel vis = getPVPanel().width(w).height(h).right(60).bottom(20);
 
         /* Price of The Quarter of Wheat. */
-        vis.add(PV.Area()).data(wheat).interpolate(STEP_AFTER).bottom(0)
+        vis.add(PV.Area).data(wheat).interpolate(STEP_AFTER).bottom(0)
                 .height(new JsDoubleFunction() {
                     public double f(JsArgs args) {
                         WheatPrice d = args.getObject();
@@ -107,10 +107,10 @@ public class PlayfairsWheatExample extends ProtovisWidget implements
                         WheatPrice d = args.getObject();
                         return x.fd(d.year);
                     }
-                }).fillStyle("#aaa").strokeStyle("#999").add(PV.Rule());
+                }).fillStyle("#aaa").strokeStyle("#999").add(PV.Rule);
 
         /* Weekly Wages of a Good Mechanic. */
-        vis.add(PV.Area())
+        vis.add(PV.Area)
                 .data(new JsFunction<JsArrayGeneric<WheatPrice>>() {
                     public JsArrayGeneric<WheatPrice> f(JsArgs args) {
                         JsArrayGeneric<WheatPrice> array = JsUtils
@@ -133,9 +133,9 @@ public class PlayfairsWheatExample extends ProtovisWidget implements
                         return y.fd(d.wages);
                     }
                 }).fillStyle("hsla(195, 50%, 80%, .75)").anchor(TOP)
-                .add(PV.Line())
+                .add(PV.Line)
                 .fillStyle((String) null).lineWidth(4)
-                .strokeStyle("lightcoral").add(PV.Line())
+                .strokeStyle("lightcoral").add(PV.Line)
                 .top(new JsDoubleFunction() {
                     public double f(JsArgs args) {
                         PVLine _this = args.getThis();
@@ -143,14 +143,13 @@ public class PlayfairsWheatExample extends ProtovisWidget implements
                     }
                 }).lineWidth(1.5).strokeStyle("black");
 
-        vis.add(PV.Label()).left(130).bottom(31).font("italic 10px serif")
+        vis.add(PV.Label).left(130).bottom(31).font("italic 10px serif")
                 .text("Weekly Wages of a Good Mechanic");
 
         /* Y-axis. */
-        vis.add(PV.Rule()).bottom(-.5).add(PV.Rule())
-                .data(PV.range(0, 100, 10)).bottom(y)
-                .strokeStyle("rgba(255, 255, 255, .2)").anchor(RIGHT)
-                .add(PV.Label()).visible(new JsBooleanFunction() {
+        vis.add(PV.Rule).bottom(-.5).add(PV.Rule).data(PV.range(0, 100, 10))
+                .bottom(y).strokeStyle("rgba(255, 255, 255, .2)").anchor(RIGHT)
+                .add(PV.Label).visible(new JsBooleanFunction() {
                     public boolean f(JsArgs args) {
                         PVMark _this = args.getThis();
                         return _this.index() % 2 == 0;
@@ -163,13 +162,13 @@ public class PlayfairsWheatExample extends ProtovisWidget implements
                 });
 
         /* X-axis. */
-        vis.add(PV.Rule()).data(PV.range(1560, 1830, 10)).bottom(0).left(x)
-                .height(-4).add(PV.Rule()).data(PV.range(1600, 1850, 50))
+        vis.add(PV.Rule).data(PV.range(1560, 1830, 10)).bottom(0).left(x)
+                .height(-4).add(PV.Rule).data(PV.range(1600, 1850, 50))
                 .bottom(0).height(h).strokeStyle("rgba(0, 0, 0, .2)")
-                .anchor(BOTTOM).add(PV.Label()).textMargin(8);
+                .anchor(BOTTOM).add(PV.Label).textMargin(8);
 
         /* Monarchs. */
-        vis.add(PV.Bar()).data(monarch).height(5).top(new JsDoubleFunction() {
+        vis.add(PV.Bar).data(monarch).height(5).top(new JsDoubleFunction() {
             public double f(JsArgs args) {
                 PVMark _this = args.getThis();
                 Monarch d = args.getObject();
@@ -190,7 +189,7 @@ public class PlayfairsWheatExample extends ProtovisWidget implements
                 Monarch d = args.getObject();
                 return x.fd(d.end) - x.fd(d.start);
             }
-        }).anchor(CENTER).add(PV.Label()).textBaseline(TOP).textMargin(6)
+        }).anchor(CENTER).add(PV.Label).textBaseline(TOP).textMargin(6)
                 .font("italic 10px serif").text(new JsStringFunction() {
                     public String f(JsArgs args) {
                         Monarch d = args.getObject();

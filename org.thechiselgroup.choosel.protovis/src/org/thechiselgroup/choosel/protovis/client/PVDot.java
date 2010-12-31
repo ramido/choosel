@@ -26,26 +26,16 @@ import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
  */
 public final class PVDot extends PVAbstractMark<PVDot> {
 
-    public final static class Shape {
+    public final static class Type extends PVMarkType<PVDot> {
 
-        private Shape() {
+        protected Type() {
         }
 
-        public final static String CROSS = "cross";
-
-        public final static String TRIANGLE = "triangle";
-
-        public final static String DIAMOND = "diamond";
-
-        public final static String SQUARE = "square";
-
-        public final static String CIRCLE = "circle";
-
-        public final static String TICK = "tick";
-
-        public final static String BAR = "bar";
-
     }
+
+    public static native PVDot create() /*-{
+        return new $wnd.pv.Dot();
+    }-*/;
 
     protected PVDot() {
     }
@@ -83,7 +73,7 @@ public final class PVDot extends PVAbstractMark<PVDot> {
     }-*/;
 
     /**
-     * @see Shape
+     * @see PVShape
      */
     public final native PVDot shape(String shape) /*-{
         return this.shape(shape);

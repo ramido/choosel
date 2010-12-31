@@ -15,25 +15,23 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
-/**
- * 
- * @author Bradley Blashko
- * @author Lars Grammel
- */
-public final class PVBar extends PVAbstractBar<PVBar> {
+public final class PVShape {
 
-    public final static class Type extends PVMarkType<PVBar> {
-
-        protected Type() {
-        }
-
+    private PVShape() {
     }
 
-    public static native PVBar create() /*-{
-        return new $wnd.pv.Bar();
-    }-*/;
+    public final static String CROSS = "cross";
 
-    protected PVBar() {
-    }
+    public final static String TRIANGLE = "triangle";
+
+    public final static String DIAMOND = "diamond";
+
+    public final static String SQUARE = "square";
+
+    public final static String CIRCLE = "circle";
+
+    public final static String TICK = "tick";
+
+    public final static String BAR = "bar";
 
 }

@@ -20,7 +20,6 @@ import org.thechiselgroup.choosel.protovis.client.jsutil.JsUtils;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayNumber;
 import com.google.gwt.core.client.JsArrayString;
-import com.google.gwt.user.client.Element;
 
 /**
  * Wrapper for
@@ -31,40 +30,37 @@ import com.google.gwt.user.client.Element;
  */
 public final class PV {
 
-    public static native PVArea Area() /*-{
+    public final static PVArea.Type Area = Area();
+
+    public final static PVBar.Type Bar = Bar();
+
+    public final static PVDot.Type Dot = Dot();
+
+    public final static PVLabel.Type Label = Label();
+
+    public final static PVLine.Type Line = Line();
+
+    public final static PVPanel.Type Panel = Panel();
+
+    public final static PVRule.Type Rule = Rule();
+
+    public final static PVWedge.Type Wedge = Wedge();
+
+    private static native PVArea.Type Area() /*-{
         return $wnd.pv.Area;
     }-*/;
 
-    public static native PVBar Bar() /*-{
+    private static native PVBar.Type Bar() /*-{
         return $wnd.pv.Bar;
     }-*/;
 
-    public static native PVPanel createPanel() /*-{
-        return new $wnd.pv.Panel();
-    }-*/;
-
     /**
-     * Creates a {@link PVPanel} that renders the visualization on
-     * <code>element</code>.
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.html#.colors">pv.colors()</a></code>
+     * .
      */
-    public static PVPanel createPanel(Element element) {
-        return createPanel().canvas(element);
-    }
-
-    public static native PVDot Dot() /*-{
-        return $wnd.pv.Dot;
-    }-*/;
-
-    public static native PVLabel Label() /*-{
-        return $wnd.pv.Label;
-    }-*/;
-
-    public static native PVLine Line() /*-{
-        return $wnd.pv.Line;
-    }-*/;
-
-    public static native PVPanel Panel() /*-{
-        return $wnd.pv.Panel;
+    public static native PVOrdinalScale colors(JsArrayString values) /*-{
+        return $wnd.pv.colors(values);
     }-*/;
 
     /**
@@ -76,13 +72,24 @@ public final class PV {
         return colors(JsUtils.toJsArrayString(values));
     }
 
-    /**
-     * Wrapper for
-     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.html#.colors">pv.colors()</a></code>
-     * .
-     */
-    public static native PVOrdinalScale colors(JsArrayString values) /*-{
-        return $wnd.pv.colors(values);
+    private static native PVDot.Type Dot() /*-{
+        return $wnd.pv.Dot;
+    }-*/;
+
+    private static native PVLabel.Type Label() /*-{
+        return $wnd.pv.Label;
+    }-*/;
+
+    private static native PVLine.Type Line() /*-{
+        return $wnd.pv.Line;
+    }-*/;
+
+    private static native PVPanel.Type Panel() /*-{
+        return $wnd.pv.Panel;
+    }-*/;
+
+    public static native PVOrdinalScale ramp(String start, String end) /*-{
+        return $wnd.pv.ramp(start, end);
     }-*/;
 
     /**
@@ -117,7 +124,7 @@ public final class PV {
         return $wnd.pv.reverseOrder;
     }-*/;
 
-    public static native PVRule Rule() /*-{
+    private static native PVRule.Type Rule() /*-{
         return $wnd.pv.Rule;
     }-*/;
 
@@ -126,15 +133,11 @@ public final class PV {
         return data.sort(comparator);
     }-*/;
 
-    public static native PVOrdinalScale ramp(String start, String end) /*-{
-        return $wnd.pv.ramp(start, end);
-    }-*/;
-
     public static native double sum(JsArrayNumber data) /*-{
         return $wnd.pv.sum(data);
     }-*/;
 
-    public static native PVWedge Wedge() /*-{
+    private static native PVWedge.Type Wedge() /*-{
         return $wnd.pv.Wedge;
     }-*/;
 

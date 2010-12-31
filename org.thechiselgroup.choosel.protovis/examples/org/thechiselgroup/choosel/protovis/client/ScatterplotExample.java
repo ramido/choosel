@@ -72,14 +72,13 @@ public class ScatterplotExample extends ProtovisWidget implements
                 .right(10).top(5);
 
         /* Y-axis and ticks. */
-        vis.add(PV.Rule()).data(y.ticks()).bottom(y)
+        vis.add(PV.Rule).data(y.ticks()).bottom(y)
                 .strokeStyle(new JsStringFunction() {
                     public String f(JsArgs args) {
                         double d = args.getDouble(0);
                         return d != 0 ? "#eee" : "#000";
                     }
-                }).anchor(LEFT).add(PV.Label())
-                .visible(new JsBooleanFunction() {
+                }).anchor(LEFT).add(PV.Label).visible(new JsBooleanFunction() {
                     public boolean f(JsArgs args) {
                         double d = args.getDouble(0);
                         return d > 0 && d < 1;
@@ -87,13 +86,13 @@ public class ScatterplotExample extends ProtovisWidget implements
                 }).text(y.tickFormat());
 
         /* X-axis and ticks. */
-        vis.add(PV.Rule()).data(x.ticks()).left(x)
+        vis.add(PV.Rule).data(x.ticks()).left(x)
                 .strokeStyle(new JsStringFunction() {
                     public String f(JsArgs args) {
                         double d = args.getDouble(0);
                         return d != 0 ? "#eee" : "#000";
                     }
-                }).anchor(BOTTOM).add(PV.Label())
+                }).anchor(BOTTOM).add(PV.Label)
                 .visible(new JsBooleanFunction() {
                     public boolean f(JsArgs args) {
                         double d = args.getDouble(0);
@@ -102,38 +101,37 @@ public class ScatterplotExample extends ProtovisWidget implements
                 }).text(x.tickFormat());
 
         /* The dot plot! */
-        vis.add(PV.Panel()).data(data).add(PV.Dot())
-                .left(new JsDoubleFunction() {
-                    public double f(JsArgs args) {
-                        Triple d = args.getObject();
-                        return x.fd(d.x);
-                    }
-                }).bottom(new JsDoubleFunction() {
-                    public double f(JsArgs args) {
-                        Triple d = args.getObject();
-                        return y.fd(d.y);
-                    }
-                }).strokeStyle(new JsFunction<PVColor>() {
-                    public PVColor f(JsArgs args) {
-                        Triple d = args.getObject();
-                        return c.fcolor(d.z);
-                    }
-                }).fillStyle(new JsFunction<PVColor>() {
-                    public PVColor f(JsArgs args) {
-                        Triple d = args.getObject();
-                        return c.fcolor(d.z).alpha(0.2d);
-                    }
-                }).size(new JsDoubleFunction() {
-                    public double f(JsArgs args) {
-                        Triple d = args.getObject();
-                        return d.z;
-                    }
-                }).title(new JsStringFunction() {
-                    public String f(JsArgs args) {
-                        Triple d = args.getObject();
-                        return JsUtils.toFixed(d.z, 1);
-                    }
-                });
+        vis.add(PV.Panel).data(data).add(PV.Dot).left(new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                Triple d = args.getObject();
+                return x.fd(d.x);
+            }
+        }).bottom(new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                Triple d = args.getObject();
+                return y.fd(d.y);
+            }
+        }).strokeStyle(new JsFunction<PVColor>() {
+            public PVColor f(JsArgs args) {
+                Triple d = args.getObject();
+                return c.fcolor(d.z);
+            }
+        }).fillStyle(new JsFunction<PVColor>() {
+            public PVColor f(JsArgs args) {
+                Triple d = args.getObject();
+                return c.fcolor(d.z).alpha(0.2d);
+            }
+        }).size(new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                Triple d = args.getObject();
+                return d.z;
+            }
+        }).title(new JsStringFunction() {
+            public String f(JsArgs args) {
+                Triple d = args.getObject();
+                return JsUtils.toFixed(d.z, 1);
+            }
+        });
     }
 
     private JsArrayGeneric<Triple> generateData() {

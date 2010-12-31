@@ -75,16 +75,16 @@ public class BoxAndWhiskerPlotExample extends ProtovisWidget implements
         PVPanel vis = getPVPanel().width(w).height(h).margin(20);
 
         /* Add the y-axis rules */
-        vis.add(PV.Rule()).data(y.ticks()).bottom(y)
+        vis.add(PV.Rule).data(y.ticks()).bottom(y)
                 .strokeStyle(new JsStringFunction() {
                     public String f(JsArgs args) {
                         double d = args.getDouble();
                         return (d == 0 || d == 1) ? "#000" : "#ccc";
                     }
-                }).anchor(LEFT).add(PV.Label()).text(y.tickFormat());
+                }).anchor(LEFT).add(PV.Label).text(y.tickFormat());
 
         /* Add a panel for each data point */
-        PVPanel points = vis.add(PV.Panel()).data(experiments)
+        PVPanel points = vis.add(PV.Panel).data(experiments)
                 .left(new JsDoubleFunction() {
                     public double f(JsArgs args) {
                         Experiment d = args.getObject();
@@ -93,7 +93,7 @@ public class BoxAndWhiskerPlotExample extends ProtovisWidget implements
                 }).width(s * 2);
 
         /* Add the experiment id label */
-        points.anchor(BOTTOM).add(PV.Label()).textBaseline(TOP)
+        points.anchor(BOTTOM).add(PV.Label).textBaseline(TOP)
                 .text(new JsStringFunction() {
                     public String f(JsArgs args) {
                         Experiment d = args.getObject();
@@ -102,7 +102,7 @@ public class BoxAndWhiskerPlotExample extends ProtovisWidget implements
                 });
 
         /* Add the range line */
-        points.add(PV.Rule()).left(s).bottom(new JsDoubleFunction() {
+        points.add(PV.Rule).left(s).bottom(new JsDoubleFunction() {
             public double f(JsArgs args) {
                 Experiment d = args.getObject();
                 return y.fd(d.min);
@@ -115,7 +115,7 @@ public class BoxAndWhiskerPlotExample extends ProtovisWidget implements
         });
 
         /* Add the min and max indicators */
-        points.add(PV.Rule()).data(new JsFunction<JsArrayNumber>() {
+        points.add(PV.Rule).data(new JsFunction<JsArrayNumber>() {
             public JsArrayNumber f(JsArgs args) {
                 Experiment d = args.getObject();
                 return JsUtils.toJsArrayNumber(d.min, d.max);
@@ -123,7 +123,7 @@ public class BoxAndWhiskerPlotExample extends ProtovisWidget implements
         }).bottom(y).left(s / 2).width(s);
 
         /* Add the upper/lower quartile ranges */
-        points.add(PV.Bar()).bottom(new JsDoubleFunction() {
+        points.add(PV.Bar).bottom(new JsDoubleFunction() {
             public double f(JsArgs args) {
                 Experiment d = args.getObject();
                 return y.fd(d.lq);
@@ -141,7 +141,7 @@ public class BoxAndWhiskerPlotExample extends ProtovisWidget implements
         }).strokeStyle("black").lineWidth(1).antialias(false);
 
         /* Add the median line */
-        points.add(PV.Rule()).bottom(new JsDoubleFunction() {
+        points.add(PV.Rule).bottom(new JsDoubleFunction() {
             public double f(JsArgs args) {
                 Experiment d = args.getObject();
                 return y.fd(d.median);
