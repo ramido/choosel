@@ -6,7 +6,7 @@ Protovis/GWT ([http://code.google.com/p/choosel/source/browse/trunk/org.thechise
 Protovis/GWT currently supports *Chrome*, *Firefox* and *Safari*. IE is not supported (see [http://code.google.com/p/protovis-js/issues/detail?id=15 Protovis Issue 15] for more information on Protovis support for IE). 
 
 == Protovis Modifications ==
-The Protovis !JavaScript code was patched to allow for `instanceof Array` and `instanceof date` tests across frames. This was necessary because the GWT scripts are loaded in a iframe, and the !JavaScript script files are loaded in the main page.
+The Protovis !JavaScript code was patched to allow for `instanceof Array` and `instanceof Date` tests across frames. This was necessary because the GWT scripts are loaded in a iframe, and the !JavaScript script files are loaded in the main page.
 
 ==Callback Methods==
 
