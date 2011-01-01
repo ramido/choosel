@@ -5,6 +5,6 @@
 *Developer*
 
 *Components*
-  * [ProtovisGWT Protovis/GWT module]
+  * [ProtovisGWT Protovis/GWT]
 
 *Project*
