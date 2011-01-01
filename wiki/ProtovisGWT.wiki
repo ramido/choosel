@@ -12,7 +12,7 @@ The Protovis !JavaScript code was patched to allow for `instanceof Array` and `i
 
 Javascript supports functions with varying arguments of varying types. This feature is heavily used in Protovis. However, Java (and therefore GWT) does not support flexible functions to the same extent. To address this problem, Protovis/GWT instead uses function interfaces, e.g. [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel.protovis/src/org/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction.java JsDoubleFunction], with a generic [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel.protovis/src/org/thechiselgroup/choosel/protovis/client/jsutil/JsArgs.java JsArgs] argument. 
 
-These functions can be used in anonymous inner classes. The inner classes can access final variables from the surrounding code, can access `this` used in Protovis via `args.getThis()`, and can access the arguments via `args.getObject`, `args.getDouble` etc.:
+Callback methods can defined by implementing these function interfaces in anonymous inner classes. The inner classes can access final variables from the surrounding code, can access `this` used in Protovis via `args.getThis()`, and can access the arguments via `args.getObject`, `args.getDouble` etc.:
 {{{
 final PVLinearScale x = ... // final variables can be accessed
 // ...
