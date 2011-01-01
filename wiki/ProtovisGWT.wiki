@@ -17,10 +17,10 @@ These functions can be used in anonymous inner classes. The inner classes can ac
 {{{
 final PVLinearScale x = ... // final variables can be accessed
 // ...
-.top(new JsDoubleFunction() {
+.width(new JsDoubleFunction() {
     public double f(JsArgs args) {
         PVMark _this = args.getThis();
-        return y.fd(_this.index());
+        return x.fd(_this.index());
         // Protovis: y(this.index)
     }
 })
