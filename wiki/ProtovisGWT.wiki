@@ -11,28 +11,33 @@ The current version of Protovis/GWT is an early development version. The goal wa
 
 ==Callback Methods==
 
-Javascript supports functions with varying arguments of varying types. This feature is heavily used in Protovis. However, Java (and therefore GWT) does not support flexible functions to the same extent. To address this problem, Protovis/GWT uses function interfaces, e.g. [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel.protovis/src/org/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction.java JsDoubleFunction], with a generic [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel.protovis/src/org/thechiselgroup/choosel/protovis/client/jsutil/JsArgs.java JsArgs] argument instead. These functions can be used in anonymous inner classes. The inner classes can access final variables from the surrounding code, access 'this' used in Protovis via 'args.getThis()', and access the argument list:
+Javascript supports functions with varying arguments of varying types. This feature is heavily used in Protovis. However, Java (and therefore GWT) does not support flexible functions to the same extent. To address this problem, Protovis/GWT uses function interfaces, e.g. [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel.protovis/src/org/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction.java JsDoubleFunction], with a generic [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel.protovis/src/org/thechiselgroup/choosel/protovis/client/jsutil/JsArgs.java JsArgs] argument instead. 
+
+These functions can be used in anonymous inner classes. The inner classes can access final variables from the surrounding code, access `this` used in Protovis via `args.getThis()`, and access the argument list via `args.getObject`, `args.getDouble` etc.:
 {{{
-final PVOrdinalScale y  = ...
-final PVLinearScale x = ...
-
+final PVLinearScale x = ... // final variables can be accessed
 // ...
-
 .top(new JsDoubleFunction() {
     public double f(JsArgs args) {
         PVMark _this = args.getThis();
         return y.fd(_this.index());
+        // Protovis: y(this.index)
     }
-}).height(new JsDoubleFunction() {
+})
+// ...
+.width(new JsDoubleFunction() {
     public double f(JsArgs args) {
-        return y.rangeBand();
-    }
-}).left(0).width(new JsDoubleFunction() {
-    public double f(JsArgs args) {
-        double d = args.getDouble();
-        Monarch t = args.getObject(1); // example
+        double d = args.getDouble(); 
         return x.fd(d);
+        // Protovis: x(d)
     }
 });
-
+// ...
+.visible(new JsBooleanFunction() {
+    public boolean f(JsArgs args) {
+        MyType d = args.getObject(1);
+        // ...
+    }
+});
 }}}
+Java generics are used to enable the assigning to the expected types when using `args.getThis()` and `args.getObject`. The `args.getObject`-methods (which are available for the different primitive types as well) optionally accept an int parameter that specifies the argument index, e.g. `1` for the second argument. If the argument index is omitted, the argument at index `0` is returned.
