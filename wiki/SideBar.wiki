@@ -1,6 +1,10 @@
 #summary Choosel Wiki SideBar
 
 *User*
+
 *Developer*
+
 *Components*
+  * [ProtovisGWT Protovis/GWT module]
+
 *Project*
