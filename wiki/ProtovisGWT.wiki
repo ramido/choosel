@@ -1,0 +1,4 @@
+#summary Protovis/GWT Component
+#labels Developer,Component
+
+Protovis/GWT ([http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel.protovis/ Source Code], [http://web.uvic.ca/~lgrammel/blog/protovis-gwt/index.html Examples]) is a GWT wrapper for the open source [http://vis.stanford.edu/protovis/ Protovis JavaScript Visualization library]. It can be used to visualize data in [http://code.google.com/webtoolkit/ GWT] applications. Protovis/GWT is a stand-alone GWT module being developed as part of the Choosel Visual Data Exploration Framework.
