@@ -1,7 +1,7 @@
 #summary Protovis/GWT Component
 #labels Developer,Component
 
-Protovis/GWT ([http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel.protovis/ Source Code], [http://web.uvic.ca/~lgrammel/blog/protovis-gwt/index.html Examples]) is a GWT wrapper for [http://vis.stanford.edu/protovis/ Protovis], a JavaScript visualization library. It can be used to visualize data in [http://code.google.com/webtoolkit/ GWT] applications. Protovis/GWT is a stand-alone GWT module being developed as part of the Choosel Visual Data Exploration Framework.
+Protovis/GWT ([http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel.protovis/ Source Code], [http://web.uvic.ca/~lgrammel/blog/protovis-gwt/index.html Examples]) is a GWT wrapper for [http://vis.stanford.edu/protovis/ Protovis], a !JavaScript visualization API. It can be used to visualize data in [http://code.google.com/webtoolkit/ GWT] applications. Protovis/GWT is a stand-alone GWT module being developed as part of Choosel.
 
 Protovis/GWT is based on Protovis 3.2. It currently supports Chrome, Firefox and Safari. IE is not supported (see [http://code.google.com/p/protovis-js/issues/detail?id=15 Protovis Issue 15] for more information). Protovis was patched to allow for 'instanceof' tests across frames, because the GWT scripts are loaded in a iframe.
 
