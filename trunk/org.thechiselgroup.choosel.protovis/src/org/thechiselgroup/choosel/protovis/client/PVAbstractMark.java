@@ -143,6 +143,10 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
         return this.events(events);
     }-*/;
 
+    public final native T extend(PVAbstractMark<?> proto) /*-{
+        return this.extend(proto);
+    }-*/;
+
     public final native int index() /*-{
         return this.index;
     }-*/;

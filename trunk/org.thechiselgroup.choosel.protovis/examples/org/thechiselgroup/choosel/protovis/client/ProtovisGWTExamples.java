@@ -61,6 +61,7 @@ public class ProtovisGWTExamples implements EntryPoint {
         examples.add(new StackedChartExample());
         examples.add(new GroupedChartExample());
         examples.add(new AndersonsFlowersExample());
+        examples.add(new BeckersBarleyExample());
         examples.add(new StreamgraphExample());
         examples.add(new BulletChartExample());
         examples.add(new CandlestickChartExample());
@@ -85,7 +86,7 @@ public class ProtovisGWTExamples implements EntryPoint {
 
     private void initVisualizationSelector() {
         selectorList = new ListBox();
-        selectorList.setVisibleItemCount(16);
+        selectorList.setVisibleItemCount(20);
         for (int i = 0; i < examples.size(); i++) {
             selectorList.addItem(examples.get(i).toString());
         }
