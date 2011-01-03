@@ -11,7 +11,7 @@ To use Protovis/GWT in a GWT project, you need to
 
   # [http://choosel.googlecode.com/files/ProtovisGWT-0.1.jar Download the Protovis/GWT module jar file]
   # Add the jar file to the build path of your GWT project
-  # Inherit `org.thechiselgroup.choosel.protovis.ProtovisGWT`" by adding {{{<inherits name='org.thechiselgroup.choosel.protovis.ProtovisGWT'/>}}} to your GWT module XML definition (`.gwt.xml`).
+  # Inherit `org.thechiselgroup.choosel.protovis.ProtovisGWT` by adding {{{<inherits name='org.thechiselgroup.choosel.protovis.ProtovisGWT'/>}}} to your GWT module XML definition (`.gwt.xml`).
   # Use the Protovis Widget in your code, e.g.
 {{{
 public void onModuleLoad() {
