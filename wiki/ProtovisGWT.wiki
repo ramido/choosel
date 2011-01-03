@@ -7,7 +7,7 @@ Protovis/GWT ([http://code.google.com/p/choosel/source/browse/trunk/org.thechise
 
 == Getting Started ==
 
-To use Protovis/GWT in a GWT project, you need to
+Setting up Protovis/GWT in your GWT project is easy:
 
   # [http://choosel.googlecode.com/files/ProtovisGWT-0.1.jar Download the Protovis/GWT module jar file]
   # Add the jar file to the build path of your GWT project
