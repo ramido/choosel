@@ -5,6 +5,25 @@ Protovis/GWT ([http://code.google.com/p/choosel/source/browse/trunk/org.thechise
 
 *The Protovis API has not been fully implemented in Protovis/GWT 0.1*. There is only limited support for interaction, and tree, graph and map visualizations are not supported. Protovis/GWT currently supports *Chrome*, *Firefox* and *Safari*. IE is not supported (see [http://code.google.com/p/protovis-js/issues/detail?id=15 Protovis Issue 15] for more information on Protovis support for IE). 
 
+== Getting Started ==
+
+To use Protovis/GWT in a GWT project, you need to
+
+  # [http://choosel.googlecode.com/files/ProtovisGWT-0.1.jar Download the Protovis/GWT module jar file]
+  # Add the jar file to the build path of your GWT project
+  # Inherit `org.thechiselgroup.choosel.protovis.ProtovisGWT`" by adding {{{<inherits name='org.thechiselgroup.choosel.protovis.ProtovisGWT'/>}}} to your GWT module XML definition (`.gwt.xml`).
+  # Use the Protovis Widget in your code, e.g.
+  {{{
+public void onModuleLoad() {
+  RootPanel.get().add(new ProtovisWidget() {
+    protected void onAttach() {
+      super.onAttach();
+      initPVPanel();
+      // create visualization here...
+      getPVPanel().render();
+    }
+  });
+}
 == Protovis Modifications ==
 The Protovis !JavaScript code was patched to allow for `instanceof Array` and `instanceof Date` tests across frames. This was necessary because the GWT scripts are loaded in a iframe, and the !JavaScript script files are loaded in the main page.
 
