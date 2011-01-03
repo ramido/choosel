@@ -22,7 +22,7 @@
   	      description="creates zipfile of project"
   	      depends="prepare">
   	
-    <zip destfile="${dist}/ProtovisGWT-${version}-full.zip">
+    <zip destfile="${dist}/ProtovisGWT-${version}-project.zip">
       <fileset dir="..">
       	<include name="org.thechiselgroup.choosel.protovis/**" />
     	<exclude name="org.thechiselgroup.choosel.protovis/bin/**"/>
