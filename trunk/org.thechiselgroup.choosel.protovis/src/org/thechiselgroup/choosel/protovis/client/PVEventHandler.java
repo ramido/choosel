@@ -15,6 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
+
 import com.google.gwt.user.client.Event;
 
 /**
@@ -23,14 +25,16 @@ import com.google.gwt.user.client.Event;
  * @author Bradley Blashko
  * @author Lars Grammel
  */
-// TODO move
-public interface PVEventHandler<T> {
+public interface PVEventHandler {
 
     /**
      * In Protovis-Javascript, re-rendering takes place automatically (assuming
      * the function returns true). Protovis/GWT requires you to control
      * rendering, e.g. using <code>_this.render();</code>.
+     * 
+     * @param pvEventType
+     *            see {@link PVEventTypes}
      */
-    void onEvent(T _this, Event e);
+    void onEvent(Event e, String pvEventType, JsArgs args);
 
 }
