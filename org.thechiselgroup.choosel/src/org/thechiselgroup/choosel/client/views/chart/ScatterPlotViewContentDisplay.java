@@ -17,18 +17,21 @@ package org.thechiselgroup.choosel.client.views.chart;
 
 import org.thechiselgroup.choosel.client.resources.DataType;
 import org.thechiselgroup.choosel.client.ui.Colors;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.Alignment;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.Dot;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.Label;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisEventHandler;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.Rule;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.Scale;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunctionIntArg;
 import org.thechiselgroup.choosel.client.util.collections.ArrayUtils;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.ViewItem;
 import org.thechiselgroup.choosel.client.views.slots.Slot;
+import org.thechiselgroup.choosel.protovis.client.PV;
+import org.thechiselgroup.choosel.protovis.client.PVAlignment;
+import org.thechiselgroup.choosel.protovis.client.PVDot;
+import org.thechiselgroup.choosel.protovis.client.PVEventHandler;
+import org.thechiselgroup.choosel.protovis.client.PVLinearScale;
+import org.thechiselgroup.choosel.protovis.client.PVMark;
+import org.thechiselgroup.choosel.protovis.client.PVScale;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 
 import com.google.inject.Inject;
 
@@ -62,73 +65,43 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
 
     private double maxX;
 
-    private Scale scaleX;
+    private PVLinearScale scaleX;
 
-    private Scale scaleY;
+    private PVLinearScale scaleY;
 
-    private ProtovisFunctionDoubleWithCache<ChartItem> scatterBottom = new ProtovisFunctionDoubleWithCache<ChartItem>() {
-
+    private JsDoubleFunction scatterBottom = new JsDoubleFunction() {
         @Override
-        public void beforeRender() {
-            if (chartItems.isEmpty()) {
-                return;
-            }
-
-            scatterCountsY = new double[chartItems.size()];
-
-            for (int i = 0; i < chartItems.size(); i++) {
-                scatterCountsY[i] = calculateAllResourcesY(i);
-            }
-
-            minY = ArrayUtils.min(scatterCountsY) - 1;
-            maxY = ArrayUtils.max(scatterCountsY) + 1;
-        }
-
-        @Override
-        public double f(ChartItem value, int i) {
-            return (scatterCountsY[i] - minY) * chartHeight / (maxY - minY);
+        public double f(JsArgs args) {
+            PVMark _this = args.getThis();
+            return (scatterCountsY[_this.index()] - minY) * chartHeight
+                    / (maxY - minY);
         }
     };
 
-    private ProtovisFunctionDoubleWithCache<ChartItem> scatterLeft = new ProtovisFunctionDoubleWithCache<ChartItem>() {
-
+    private JsDoubleFunction scatterLeft = new JsDoubleFunction() {
         @Override
-        public void beforeRender() {
-            if (chartItems.isEmpty()) {
-                return;
-            }
-
-            scatterCountsX = new double[chartItems.size()];
-
-            for (int i = 0; i < chartItems.size(); i++) {
-                scatterCountsX[i] = calculateAllResourcesX(i);
-            }
-
-            minX = ArrayUtils.min(scatterCountsX) - 1;
-            maxX = ArrayUtils.max(scatterCountsX) + 1;
-        }
-
-        @Override
-        public double f(ChartItem value, int i) {
-            return (scatterCountsX[i] - minX) * chartWidth / (maxX - minX);
+        public double f(JsArgs args) {
+            PVMark _this = args.getThis();
+            return (scatterCountsX[_this.index()] - minX) * chartWidth
+                    / (maxX - minX);
         }
     };
 
     private String scaleStrokeStyle = GRIDLINE_SCALE_COLOR;
 
-    private Dot scatter;
+    private PVDot scatter;
 
-    protected StringFunctionIntArg scaleLabelTextX = new StringFunctionIntArg() {
+    protected JsStringFunction scaleLabelTextX = new JsStringFunction() {
         @Override
-        public String f(int o, int index) {
-            return scaleX.tickFormat(o);
+        public String f(JsArgs args) {
+            return scaleX.tickFormatInt(args.getInt());
         }
     };
 
-    protected StringFunctionIntArg scaleLabelTextY = new StringFunctionIntArg() {
+    protected JsStringFunction scaleLabelTextY = new JsStringFunction() {
         @Override
-        public String f(int o, int index) {
-            return scaleY.tickFormat(o);
+        public String f(JsArgs args) {
+            return scaleY.tickFormatInt(args.getInt());
         }
     };
 
@@ -136,9 +109,18 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
 
     private String yAxisLabel = "Y-Axis";
 
-    public static final Slot Y_COORDINATE_SLOT = new Slot("y-coord", "Y-Axis", DataType.NUMBER);
+    public static final Slot Y_COORDINATE_SLOT = new Slot("y-coord", "Y-Axis",
+            DataType.NUMBER);
 
-    public static final Slot X_COORDINATE_SLOT = new Slot("x-coord", "X-Axis", DataType.NUMBER);
+    public static final Slot X_COORDINATE_SLOT = new Slot("x-coord", "X-Axis",
+            DataType.NUMBER);
+
+    protected JsStringFunction chartFillStyle = new JsStringFunction() {
+        @Override
+        public String f(JsArgs args) {
+            return args.<ChartItem> getObject().getColor();
+        }
+    };
 
     @Inject
     public ScatterPlotViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
@@ -147,20 +129,47 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
 
     @Override
     protected void beforeRender() {
-        scatterBottom.beforeRender();
-        scatterLeft.beforeRender();
+        if (chartItemsJsArray.length() == 0) {
+            return;
+        }
+
+        scatterCountsY = new double[chartItemsJsArray.length()];
+
+        for (int i = 0; i < chartItemsJsArray.length(); i++) {
+            scatterCountsY[i] = calculateAllResourcesY(i);
+        }
+
+        minY = ArrayUtils.min(scatterCountsY) - 1;
+        maxY = ArrayUtils.max(scatterCountsY) + 1;
+
+        scatterCountsX = new double[chartItemsJsArray.length()];
+
+        for (int i = 0; i < chartItemsJsArray.length(); i++) {
+            scatterCountsX[i] = calculateAllResourcesX(i);
+        }
+
+        minX = ArrayUtils.min(scatterCountsX) - 1;
+        maxX = ArrayUtils.max(scatterCountsX) + 1;
     }
 
     // TODO refactor
     protected double calculateAllResourcesX(int i) {
-        return Double.parseDouble(chartItems.get(i).getResourceItem()
-                .getResourceValue(ScatterPlotViewContentDisplay.X_COORDINATE_SLOT).toString());
+        return Double.parseDouble(chartItemsJsArray
+                .get(i)
+                .getViewItem()
+                .getResourceValue(
+                        ScatterPlotViewContentDisplay.X_COORDINATE_SLOT)
+                .toString());
     }
 
     // TODO refactor
     protected double calculateAllResourcesY(int i) {
-        return Double.parseDouble(chartItems.get(i).getResourceItem()
-                .getResourceValue(ScatterPlotViewContentDisplay.Y_COORDINATE_SLOT).toString());
+        return Double.parseDouble(chartItemsJsArray
+                .get(i)
+                .getViewItem()
+                .getResourceValue(
+                        ScatterPlotViewContentDisplay.Y_COORDINATE_SLOT)
+                .toString());
     }
 
     private void calculateChartVariables() {
@@ -169,59 +178,57 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
     }
 
     private void drawAxisLabels() {
-        getChart().add(Label.createLabel()).bottom(-BORDER_BOTTOM + 5)
+        getChart().add(PV.Label).bottom(-BORDER_BOTTOM + 5)
                 .left(chartWidth / 2).text(xAxisLabel)
-                .textAlign(Alignment.CENTER);
+                .textAlign(PVAlignment.CENTER);
 
-        getChart().add(Label.createLabel()).bottom(chartHeight / 2)
+        getChart().add(PV.Label).bottom(chartHeight / 2)
                 .left(-BORDER_LEFT + 20).text(yAxisLabel)
-                .textAngle(-Math.PI / 2).textAlign(Alignment.CENTER);
+                .textAngle(-Math.PI / 2).textAlign(PVAlignment.CENTER);
     }
 
     @Override
     public void drawChart() {
-        assert chartItems.size() >= 1;
+        assert chartItemsJsArray.length() >= 1;
 
         calculateChartVariables();
         setChartParameters();
 
         beforeRender();
 
-        scaleX = Scale.linear(minX, maxX).range(0, chartWidth);
-        scaleY = Scale.linear(minY, maxY).range(0, chartHeight);
+        scaleX = PVScale.linear(minX, maxX).range(0, chartWidth);
+        scaleY = PVScale.linear(minY, maxY).range(0, chartHeight);
         drawScales(scaleX, scaleY);
         drawScatter();
         drawAxisLabels();
     }
 
-    protected void drawScales(Scale scaleX, Scale scaleY) {
-        getChart().add(Rule.createRule()).data(scaleX.ticks()).bottom(0)
-                .left(scaleX).strokeStyle(scaleStrokeStyle).height(chartHeight)
-                .anchor(Alignment.BOTTOM).add(Label.createLabel())
-                .text(scaleLabelTextX);
+    protected void drawScales(PVLinearScale scaleX, PVLinearScale scaleY) {
+        getChart().add(PV.Rule).data(scaleX.ticks()).bottom(0).left(scaleX)
+                .strokeStyle(scaleStrokeStyle).height(chartHeight)
+                .anchor(PVAlignment.BOTTOM).add(PV.Label).text(scaleLabelTextX);
 
-        getChart().add(Rule.createRule()).data(scaleY.ticks()).bottom(scaleY)
-                .left(0).strokeStyle(scaleStrokeStyle).width(chartWidth)
-                .add(Label.createLabel()).text(scaleLabelTextY)
-                .textAngle(-Math.PI / 2).textAlign(Alignment.CENTER)
-                .textBaseline(Alignment.BOTTOM);
+        getChart().add(PV.Rule).data(scaleY.ticks()).bottom(scaleY).left(0)
+                .strokeStyle(scaleStrokeStyle).width(chartWidth).add(PV.Label)
+                .text(scaleLabelTextY).textAngle(-Math.PI / 2)
+                .textAlign(PVAlignment.CENTER).textBaseline(PVAlignment.BOTTOM);
 
-        getChart().add(Rule.createRule()).height(chartHeight).bottom(0).left(0)
+        getChart().add(PV.Rule).height(chartHeight).bottom(0).left(0)
                 .strokeStyle(AXIS_SCALE_COLOR);
 
-        getChart().add(Rule.createRule()).width(chartWidth).bottom(0).left(0)
+        getChart().add(PV.Rule).width(chartWidth).bottom(0).left(0)
                 .strokeStyle(AXIS_SCALE_COLOR);
     }
 
     private void drawScatter() {
         scatter = getChart()
-                .add(Dot.createDot())
-                .data(chartItemJsArray)
+                .add(PV.Dot)
+                .data(chartItemsJsArray)
                 .bottom(scatterBottom)
                 .left(scatterLeft)
                 .size(Math.min(chartHeight, chartWidth)
-                        / (chartItems.size() * 2)).fillStyle(chartFillStyle)
-                .strokeStyle(Colors.STEELBLUE);
+                        / (chartItemsJsArray.length() * 2))
+                .fillStyle(chartFillStyle).strokeStyle(Colors.STEELBLUE);
     }
 
     @Override
@@ -239,8 +246,7 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
     }
 
     @Override
-    protected void registerEventHandler(String eventType,
-            ProtovisEventHandler handler) {
+    protected void registerEventHandler(String eventType, PVEventHandler handler) {
         scatter.event(eventType, handler);
     }
 

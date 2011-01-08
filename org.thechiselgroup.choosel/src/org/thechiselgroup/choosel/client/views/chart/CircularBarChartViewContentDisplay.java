@@ -16,16 +16,17 @@
 package org.thechiselgroup.choosel.client.views.chart;
 
 import org.thechiselgroup.choosel.client.ui.Colors;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.Alignment;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.Dot;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.DoubleFunction;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.DoubleFunctionDoubleArg;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.Label;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisEventHandler;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.Scale;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.Wedge;
 import org.thechiselgroup.choosel.client.util.collections.ArrayUtils;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
+import org.thechiselgroup.choosel.protovis.client.PV;
+import org.thechiselgroup.choosel.protovis.client.PVAlignment;
+import org.thechiselgroup.choosel.protovis.client.PVEventHandler;
+import org.thechiselgroup.choosel.protovis.client.PVLinearScale;
+import org.thechiselgroup.choosel.protovis.client.PVMark;
+import org.thechiselgroup.choosel.protovis.client.PVScale;
+import org.thechiselgroup.choosel.protovis.client.PVWedge;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
 
 import com.google.inject.Inject;
 
@@ -40,88 +41,60 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
 
     private static final int MARGIN_SIZE = 15;
 
-    private ProtovisFunctionDoubleWithCache<ChartItem> highlightedWedgeOuterRadius = new ProtovisFunctionDoubleWithCache<ChartItem>() {
-
+    private JsDoubleFunction highlightedWedgeOuterRadius = new JsDoubleFunction() {
         @Override
-        public void beforeRender() {
-            if (chartItems.isEmpty()) {
-                return;
-            }
-
-            highlightedWedgeCounts = new double[chartItems.size()];
-
-            for (int i = 0; i < chartItems.size(); i++) {
-                highlightedWedgeCounts[i] = calculateHighlightedResources(i);
-            }
-
-        }
-
-        @Override
-        public double f(ChartItem value, int i) {
-            return regularWedgeOuterRadius.f(value, i)
+        public double f(JsArgs args) {
+            int i = args.<PVMark> getThis().index();
+            return calculateRegularWedgeOuterRadius(i)
                     * highlightedWedgeCounts[i] / regularWedgeCounts[i];
         }
     };
 
     private double sum;
 
-    private ProtovisFunctionDoubleWithCache<ChartItem> regularWedgeOuterRadius = new ProtovisFunctionDoubleWithCache<ChartItem>() {
+    private JsDoubleFunction regularWedgeOuterRadius = new JsDoubleFunction() {
         @Override
-        public void beforeRender() {
-            if (chartItems.isEmpty()) {
-                return;
-            }
-
-            regularWedgeCounts = new double[chartItems.size()];
-
-            for (int i = 0; i < chartItems.size(); i++) {
-                regularWedgeCounts[i] = calculateAllResources(i);
-            }
-
-        }
-
-        @Override
-        public double f(ChartItem value, int i) {
-            return regularWedgeCounts[i]
-                    * (Math.min(height, width) - MARGIN_SIZE)
-                    / (ArrayUtils.max(regularWedgeCounts) * 2);
+        public double f(JsArgs args) {
+            return calculateRegularWedgeOuterRadius(args.<PVMark> getThis()
+                    .index());
         }
     };
 
-    private Wedge regularWedge;
+    private PVWedge regularWedge;
 
-    private Wedge highlightedWedge;
+    private PVWedge highlightedWedge;
 
-    private DoubleFunction<ChartItem> wedgeLeft = new DoubleFunction<ChartItem>() {
+    private JsDoubleFunction wedgeLeft = new JsDoubleFunction() {
         @Override
-        public double f(ChartItem value, int i) {
+        public double f(JsArgs args) {
             return width / 2;
         }
     };
 
-    private DoubleFunction<ChartItem> wedgeBottom = new DoubleFunction<ChartItem>() {
+    private JsDoubleFunction wedgeBottom = new JsDoubleFunction() {
         @Override
-        public double f(ChartItem value, int i) {
+        public double f(JsArgs args) {
             return height / 2;
         }
     };
 
-    private DoubleFunction<ChartItem> wedgeAngle = new DoubleFunction<ChartItem>() {
+    private JsDoubleFunction wedgeAngle = new JsDoubleFunction() {
         @Override
-        public double f(ChartItem value, int i) {
-            return 2 * Math.PI / chartItems.size();
+        public double f(JsArgs args) {
+            return 2 * Math.PI / chartItemsJsArray.length();
         }
     };
 
-    private String wedgeLabelAnchor = Alignment.CENTER;
+    private String wedgeLabelAnchor = PVAlignment.CENTER;
 
     private int wedgeTextAngle = 0;
 
     private int highlightedWedgeInnerRadius = 0;
 
-    private DoubleFunctionDoubleArg scaleRadius = new DoubleFunctionDoubleArg() {
+    private JsDoubleFunction scaleRadius = new JsDoubleFunction() {
         @Override
-        public double f(double value, int i) {
+        public double f(JsArgs args) {
+            double value = args.getDouble();
             return value * (Math.min(height, width) - MARGIN_SIZE)
                     / (getMaximumChartItemValue() * 2);
         }
@@ -139,20 +112,41 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
     @Override
     protected void beforeRender() {
         super.beforeRender();
-        highlightedWedgeOuterRadius.beforeRender();
-        regularWedgeOuterRadius.beforeRender();
+
+        if (chartItemsJsArray.length() == 0) {
+            return;
+        }
+
+        highlightedWedgeCounts = new double[chartItemsJsArray.length()];
+
+        for (int i = 0; i < chartItemsJsArray.length(); i++) {
+            highlightedWedgeCounts[i] = calculateHighlightedResources(chartItemsJsArray
+                    .get(i));
+        }
+
+        regularWedgeCounts = new double[chartItemsJsArray.length()];
+
+        for (int i = 0; i < chartItemsJsArray.length(); i++) {
+            regularWedgeCounts[i] = calculateAllResources(chartItemsJsArray
+                    .get(i));
+        }
     }
 
     private void calculateAllResourcesSum() {
         sum = 0;
-        for (int i = 0; i < chartItems.size(); i++) {
-            sum += calculateAllResources(i);
+        for (int i = 0; i < chartItemsJsArray.length(); i++) {
+            sum += calculateAllResources(chartItemsJsArray.get(i));
         }
+    }
+
+    private double calculateRegularWedgeOuterRadius(int i) {
+        return regularWedgeCounts[i] * (Math.min(height, width) - MARGIN_SIZE)
+                / (ArrayUtils.max(regularWedgeCounts) * 2);
     }
 
     @Override
     public void drawChart() {
-        assert chartItems.size() >= 1;
+        assert chartItemsJsArray.length() > 0;
 
         calculateMaximumChartItemValue();
         drawScale();
@@ -160,10 +154,10 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
     }
 
     private void drawScale() {
-        Scale scale = Scale.linear(0, getMaximumChartItemValue()).range(0,
-                Math.min(height, width) - MARGIN_SIZE);
+        PVLinearScale scale = PVScale.linear(0, getMaximumChartItemValue())
+                .range(0, Math.min(height, width) - MARGIN_SIZE);
 
-        getChart().add(Dot.createDot()).data(scale.ticks()).left(width / 2)
+        getChart().add(PV.Dot).data(scale.ticks()).left(width / 2)
                 .bottom(height / 2).fillStyle("").strokeStyle(Colors.GRAY_1)
                 .lineWidth(scaleLineWidth).radius(scaleRadius);
     }
@@ -171,7 +165,7 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
     private void drawWedge() {
         calculateAllResourcesSum();
 
-        regularWedge = getChart().add(Wedge.createWedge()).data(chartItemJsArray)
+        regularWedge = getChart().add(PV.Wedge).data(chartItemsJsArray)
                 .left(wedgeLeft).bottom(wedgeBottom)
                 .outerRadius(regularWedgeOuterRadius).angle(wedgeAngle)
                 .strokeStyle(Colors.WHITE);
@@ -180,16 +174,16 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
             regularWedge.innerRadius(highlightedWedgeOuterRadius).fillStyle(
                     Colors.STEELBLUE);
 
-            regularWedge.anchor(wedgeLabelAnchor).add(Label.createLabel())
+            regularWedge.anchor(wedgeLabelAnchor).add(PV.Label)
                     .textAngle(wedgeTextAngle).text(regularMarkLabelText)
                     .textStyle(Colors.WHITE);
 
-            highlightedWedge = regularWedge.add(Wedge.createWedge())
+            highlightedWedge = regularWedge.add(PV.Wedge)
                     .innerRadius(highlightedWedgeInnerRadius)
                     .outerRadius(highlightedWedgeOuterRadius)
                     .fillStyle(Colors.YELLOW);
 
-            highlightedWedge.anchor(wedgeLabelAnchor).add(Label.createLabel())
+            highlightedWedge.anchor(wedgeLabelAnchor).add(PV.Label)
                     .textAngle(wedgeTextAngle).text(highlightedMarkLabelText);
 
             return;
@@ -197,15 +191,14 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
 
         regularWedge.innerRadius(0).fillStyle(chartFillStyle);
 
-        regularWedge.anchor(wedgeLabelAnchor).add(Label.createLabel())
+        regularWedge.anchor(wedgeLabelAnchor).add(PV.Label)
                 .textAngle(wedgeTextAngle).text(fullMarkLabelText)
                 .textStyle(fullMarkTextStyle);
 
     }
 
     @Override
-    protected void registerEventHandler(String eventType,
-            ProtovisEventHandler handler) {
+    protected void registerEventHandler(String eventType, PVEventHandler handler) {
         regularWedge.event(eventType, handler);
     }
 

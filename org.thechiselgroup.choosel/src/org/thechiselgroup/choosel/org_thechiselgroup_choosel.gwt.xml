@@ -65,7 +65,7 @@
   <script src="js/lib/timeline-2.3.0/timeline-api.js"/>
   
   <!-- View: Chart -->
-  <script src="js/lib/protovis-3.2/protovis-3.2/protovis-d3.2.js"/>
+  <inherits name="org.thechiselgroup.choosel.protovis.ProtovisGWT" />
   
   <!-- Client XPath/XSLT support via wrapping native browser support -->
   <script src="js/lib/sarissa-0.9.9.4/sarissa-compressed.js"/>

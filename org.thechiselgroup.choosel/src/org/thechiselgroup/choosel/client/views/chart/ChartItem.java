@@ -30,18 +30,18 @@ public class ChartItem {
 
     private DragEnabler enabler;
 
-    private ViewItem resourceItem;
+    private ViewItem viewItem;
 
     public ChartItem(ChartViewContentDisplay view,
-            DragEnablerFactory dragEnablerFactory, ViewItem resourceItem) {
+            DragEnablerFactory dragEnablerFactory, ViewItem viewItem) {
 
         this.view = view;
-        this.resourceItem = resourceItem;
-        enabler = dragEnablerFactory.createDragEnabler(resourceItem);
+        this.viewItem = viewItem;
+        enabler = dragEnablerFactory.createDragEnabler(viewItem);
     }
 
-    public String getColour() {
-        switch (resourceItem.getStatus()) {
+    public String getColor() {
+        switch (viewItem.getStatus()) {
         case PARTIALLY_HIGHLIGHTED:
         case PARTIALLY_HIGHLIGHTED_SELECTED:
         case HIGHLIGHTED_SELECTED:
@@ -56,12 +56,12 @@ public class ChartItem {
         throw new RuntimeException("No colour available");
     }
 
-    public ViewItem getResourceItem() {
-        return resourceItem;
+    public ViewItem getViewItem() {
+        return viewItem;
     }
 
-    public double getResourceValueAsNumber(Slot slot, Subset subset) {
-        return (Double) resourceItem.getResourceValue(slot, subset);
+    public double getViewItemValueAsNumber(Slot slot, Subset subset) {
+        return (Double) viewItem.getResourceValue(slot, subset);
     }
 
     public ChartViewContentDisplay getView() {
@@ -74,32 +74,32 @@ public class ChartItem {
         case Event.ONCLICK: {
             if (view != null) {
                 view.getCallback().switchSelection(
-                        resourceItem.getResourceSet());
+                        viewItem.getResourceSet());
             }
         }
             break;
         case Event.ONMOUSEMOVE: {
-            resourceItem.getPopupManager().onMouseMove(e.getClientX(),
+            viewItem.getPopupManager().onMouseMove(e.getClientX(),
                     e.getClientY());
             enabler.forwardMouseMove(e);
         }
             break;
         case Event.ONMOUSEDOWN: {
-            resourceItem.getPopupManager().onMouseDown(e);
+            viewItem.getPopupManager().onMouseDown(e);
             enabler.forwardMouseDownWithEventPosition(e);
         }
             break;
         case Event.ONMOUSEOUT: {
-            resourceItem.getPopupManager().onMouseOut(e.getClientX(),
+            viewItem.getPopupManager().onMouseOut(e.getClientX(),
                     e.getClientY());
-            resourceItem.getHighlightingManager().setHighlighting(false);
+            viewItem.getHighlightingManager().setHighlighting(false);
             enabler.forwardMouseOut(e);
         }
             break;
         case Event.ONMOUSEOVER: {
-            resourceItem.getPopupManager().onMouseOver(e.getClientX(),
+            viewItem.getPopupManager().onMouseOver(e.getClientX(),
                     e.getClientY());
-            resourceItem.getHighlightingManager().setHighlighting(true);
+            viewItem.getHighlightingManager().setHighlighting(true);
         }
             break;
         case Event.ONMOUSEUP: {

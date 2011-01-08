@@ -31,6 +31,8 @@ import org.thechiselgroup.choosel.client.test.DndTestHelpers;
 import org.thechiselgroup.choosel.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.client.util.Disposable;
 
+import com.google.gwt.user.client.Element;
+
 public class ResourceSetAvatarTest {
 
     private static class TestDragAvatar extends ResourceSetAvatar {
@@ -39,7 +41,8 @@ public class ResourceSetAvatarTest {
         String enabledCSSClass, ResourceSet resources,
                 ResourceSetAvatarType type) {
 
-            super(text, enabledCSSClass, resources, type, null);
+            super(text, enabledCSSClass, resources, type, new Element() {
+            });
         }
 
         @Override

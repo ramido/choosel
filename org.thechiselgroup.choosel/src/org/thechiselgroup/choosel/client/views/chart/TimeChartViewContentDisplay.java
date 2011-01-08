@@ -15,12 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.chart;
 
-import java.util.Collections;
-
-import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisEventHandler;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.text.TextViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.timeline.TimeLineViewContentDisplay;
+import org.thechiselgroup.choosel.protovis.client.PVEventHandler;
 
 import com.google.inject.Inject;
 
@@ -40,7 +38,7 @@ public class TimeChartViewContentDisplay extends ChartViewContentDisplay {
 
         this.@org.thechiselgroup.choosel.client.views.chart.TimeChartViewContentDisplay::sortByDate()();
 
-        for(var i = 0; i < this.@org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay::chartItems.@java.util.ArrayList::size()(); i++) {
+        for(var i = 0; i < this.@org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay::chartItemsJsArray.@java.util.ArrayList::size()(); i++) {
             var xCoord = this.@org.thechiselgroup.choosel.client.views.chart.TimeChartViewContentDisplay::getSlotValue(II)(i,0);
             val[i] = {x: new $wnd.Date(xCoord),
                 y: this.@org.thechiselgroup.choosel.client.views.chart.TimeChartViewContentDisplay::getSlotValue(II)(i,1)};
@@ -156,23 +154,22 @@ public class TimeChartViewContentDisplay extends ChartViewContentDisplay {
 
     private Object getSlotValue(int i, int coordinate) {
         if (coordinate == 0) {
-            return getChartItem(i).getResourceItem().getResourceValue(
+            return getChartItem(i).getViewItem().getResourceValue(
                     TimeLineViewContentDisplay.DATE_SLOT);
         } else if (coordinate == 1) {
-            return getChartItem(i).getResourceItem().getResourceValue(
+            return getChartItem(i).getViewItem().getResourceValue(
                     TextViewContentDisplay.FONT_SIZE_SLOT);
         }
         throw new RuntimeException("No slot value available");
     }
 
     @Override
-    protected void registerEventHandler(String eventType,
-            ProtovisEventHandler handler) {
+    protected void registerEventHandler(String eventType, PVEventHandler handler) {
     }
 
     private void sortByDate() {
-        Collections.sort(chartItems, new ChartItemComparator(
-                TimeLineViewContentDisplay.DATE_SLOT));
+        // XXX broken while switching to protovis-gwt
+        // PV.sort(chartItemsJsArray, new ChartItemComparator(
+        // TimeLineViewContentDisplay.DATE_SLOT));
     }
-
 }

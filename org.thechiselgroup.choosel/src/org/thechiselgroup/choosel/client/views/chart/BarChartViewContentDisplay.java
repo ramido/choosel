@@ -17,17 +17,7 @@ package org.thechiselgroup.choosel.client.views.chart;
 
 import org.thechiselgroup.choosel.client.resources.DataType;
 import org.thechiselgroup.choosel.client.ui.Colors;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.Alignment;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.Bar;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.BooleanFunction;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.DoubleFunction;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.Label;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisEventHandler;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.Rule;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.Scale;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunction;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunctionIntArg;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunctionNoArgs;
+import org.thechiselgroup.choosel.client.util.StringUtils;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.client.views.SidePanelSection;
@@ -35,6 +25,17 @@ import org.thechiselgroup.choosel.client.views.ViewItem;
 import org.thechiselgroup.choosel.client.views.ViewItem.Subset;
 import org.thechiselgroup.choosel.client.views.ViewItem.SubsetStatus;
 import org.thechiselgroup.choosel.client.views.slots.Slot;
+import org.thechiselgroup.choosel.protovis.client.PV;
+import org.thechiselgroup.choosel.protovis.client.PVAlignment;
+import org.thechiselgroup.choosel.protovis.client.PVBar;
+import org.thechiselgroup.choosel.protovis.client.PVEventHandler;
+import org.thechiselgroup.choosel.protovis.client.PVLinearScale;
+import org.thechiselgroup.choosel.protovis.client.PVMark;
+import org.thechiselgroup.choosel.protovis.client.PVScale;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsBooleanFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -99,112 +100,139 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
     protected int chartWidth;
 
-    private BooleanFunction<ChartItem> isPartiallyHighlighted = new BooleanFunction<ChartItem>() {
+    protected JsStringFunction highlightedLabelText = new JsStringFunction() {
         @Override
-        public boolean f(ChartItem chartValue, int i) {
-            return SubsetStatus.PARTIAL.equals(chartValue.getResourceItem()
+        public String f(JsArgs args) {
+            ChartItem chartItem = args.getObject();
+            return StringUtils.formatDecimal(
+                    calculateHighlightedResources(chartItem), 2);
+        }
+    };
+
+    private JsStringFunction fullMarkLabelText = new JsStringFunction() {
+        @Override
+        public String f(JsArgs args) {
+            ChartItem chartItem = args.getObject();
+            return StringUtils.formatDecimal(calculateAllResources(chartItem),
+                    2);
+        }
+    };
+
+    private JsBooleanFunction isPartiallyHighlighted = new JsBooleanFunction() {
+        @Override
+        public boolean f(JsArgs args) {
+            ChartItem d = args.getObject();
+            return SubsetStatus.PARTIAL.equals(d.getViewItem()
                     .getHighlightStatus());
         }
     };
 
-    // TODO refactor
-    private DoubleFunction<ChartItem> barStart = new DoubleFunction<ChartItem>() {
+    private JsDoubleFunction barStart = new JsDoubleFunction() {
         @Override
-        public double f(ChartItem value, int i) {
-            return barWidth.f(value, i) / 2 + i
-                    * layout.getBarWidthSpace(chartHeight, chartWidth)
-                    / chartItems.size();
+        public double f(JsArgs args) {
+            return calculateBarStart(args.<PVMark> getThis().index());
         }
     };
 
     // TODO refactor
-    private DoubleFunction<ChartItem> highlightedBarStart = new DoubleFunction<ChartItem>() {
+    private JsDoubleFunction highlightedBarStart = new JsDoubleFunction() {
         @Override
-        public double f(ChartItem value, int i) {
-            // TODO extract first part (reuse other function)
-            return (0.33 * layout.getBarWidthSpace(chartHeight, chartWidth) / (chartItems
-                    .size() * 2))
-                    + barWidth.f(value, i)
+        public double f(JsArgs args) {
+            PVMark _this = args.getThis();
+            return (0.33 * layout.getBarWidthSpace(chartHeight, chartWidth) / (chartItemsJsArray
+                    .length() * 2))
+                    + calculateBarWidth()
                     / 2
-                    + i
+                    + _this.index()
                     * layout.getBarWidthSpace(chartHeight, chartWidth)
-                    / chartItems.size();
+                    / chartItemsJsArray.length();
         }
     };
 
     /**
      * Calculates the length of the highlighted bar.
      */
-    private DoubleFunction<ChartItem> highlightedBarLength = new DoubleFunction<ChartItem>() {
+    private JsDoubleFunction highlightedBarLength = new JsDoubleFunction() {
         @Override
-        public double f(ChartItem value, int i) {
-            return calculateBarLength(value.getResourceValueAsNumber(
-                    BarChartViewContentDisplay.CHART_VALUE_SLOT,
-                    Subset.HIGHLIGHTED));
+        public double f(JsArgs args) {
+            return calculateHighlightedBarLength(args.<ChartItem> getObject());
         }
     };
 
-    private DoubleFunction<ChartItem> fullBarLength = new DoubleFunction<ChartItem>() {
+    private JsDoubleFunction fullBarLength = new JsDoubleFunction() {
         @Override
-        public double f(ChartItem value, int i) {
-            return calculateBarLength(regularValues[i]);
+        public double f(JsArgs args) {
+            PVMark _this = args.getThis();
+            return calculateBarLength(regularValues[_this.index()]);
         }
     };
 
-    private DoubleFunction<ChartItem> barWidth = new DoubleFunction<ChartItem>() {
+    protected JsStringFunction highlightedMarkLabelText = new JsStringFunction() {
         @Override
-        public double f(ChartItem value, int i) {
-            return layout.getBarWidthSpace(chartHeight, chartWidth)
-                    / (chartItems.size() * 2);
+        public String f(JsArgs args) {
+            ChartItem chartItem = args.getObject();
+            return calculateHighlightedResources(chartItem) <= 0 ? null
+                    : Double.toString(calculateHighlightedResources(chartItem));
         }
+    };
+
+    private JsDoubleFunction barWidth = new JsDoubleFunction() {
+        @Override
+        public double f(JsArgs args) {
+            return calculateBarWidth();
+        }
+
     };
 
     // TODO barWidth / 3
-    private DoubleFunction<ChartItem> highlightedWidth = new DoubleFunction<ChartItem>() {
+    private JsDoubleFunction highlightedWidth = new JsDoubleFunction() {
         @Override
-        public double f(ChartItem value, int i) {
+        public double f(JsArgs args) {
             return 0.33 * layout.getBarWidthSpace(chartHeight, chartWidth)
-                    / (chartItems.size() * 2);
+                    / (chartItemsJsArray.length() * 2);
         }
     };
 
-    private DoubleFunction<ChartItem> regularBarBase = new DoubleFunction<ChartItem>() {
+    private JsDoubleFunction regularBarBase = new JsDoubleFunction() {
         @Override
-        public double f(ChartItem value, int i) {
-            return highlightedBarLength.f(value, i) + barLineWidth;
+        public double f(JsArgs args) {
+            return calculateHighlightedBarLength(args.<ChartItem> getObject())
+                    + barLineWidth;
         }
     };
 
-    private StringFunctionIntArg scaleStrokeStyle = new StringFunctionIntArg() {
+    private JsStringFunction scaleStrokeStyle = new JsStringFunction() {
         @Override
-        public String f(int value, int i) {
-            return value == 0 ? AXIS_SCALE_COLOR : GRIDLINE_SCALE_COLOR;
+        public String f(JsArgs args) {
+            int d = args.getInt();
+            return d == 0 ? AXIS_SCALE_COLOR : GRIDLINE_SCALE_COLOR;
         }
     };
 
-    private Bar regularBar;
+    private PVBar regularBar;
 
-    private Bar highlightedBar;
+    private PVBar highlightedBar;
 
-    private DoubleFunction<ChartItem> baselineLabelStart = new DoubleFunction<ChartItem>() {
+    private JsDoubleFunction baselineLabelStart = new JsDoubleFunction() {
         @Override
-        public double f(ChartItem value, int i) {
-            return barStart.f(value, i) + barWidth.f(value, i) / 2;
+        public double f(JsArgs args) {
+            PVMark _this = args.getThis();
+            return calculateBarStart(_this.index()) + calculateBarWidth() / 2;
         }
     };
 
-    private StringFunction<ChartItem> baselineLabelText = new StringFunction<ChartItem>() {
+    private JsStringFunction baselineLabelText = new JsStringFunction() {
         @Override
-        public String f(ChartItem value, int i) {
-            return value
-                    .getResourceItem()
+        public String f(JsArgs args) {
+            ChartItem d = args.getObject();
+            return d.getViewItem()
                     .getResourceValue(
                             BarChartViewContentDisplay.CHART_LABEL_SLOT)
                     .toString();
         }
     };
 
-    private String barTextBaseline = Alignment.TOP;
+    private String barTextBaseline = PVAlignment.TOP;
 
     protected LayoutType layout = LayoutType.HORIZONTAL;
 
@@ -212,15 +240,16 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
     private double barLineWidth = 1;
 
-    protected StringFunction<ChartItem> chartFillStyle = new StringFunction<ChartItem>() {
+    protected JsStringFunction chartFillStyle = new JsStringFunction() {
         @Override
-        public String f(ChartItem chartItem, int i) {
-            if (SubsetStatus.COMPLETE.equals(chartItem.getResourceItem()
+        public String f(JsArgs args) {
+            ChartItem d = args.getObject();
+            if (SubsetStatus.COMPLETE.equals(d.getViewItem()
                     .getHighlightStatus())) {
                 return Colors.YELLOW; // TODO semantic color constants
             }
 
-            switch (chartItem.getResourceItem().getSelectionStatus()) {
+            switch (d.getViewItem().getSelectionStatus()) {
             case COMPLETE:
             case PARTIAL:
                 return Colors.ORANGE; // TODO semantic color constants
@@ -230,16 +259,19 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         }
     };
 
-    protected StringFunction<ChartItem> fullMarkTextStyle = new StringFunction<ChartItem>() {
+    protected JsStringFunction fullMarkTextStyle = new JsStringFunction() {
         @Override
-        public String f(ChartItem value, int i) {
-            if (SubsetStatus.COMPLETE.equals(value.getResourceItem()
+        public String f(JsArgs args) {
+            ChartItem d = args.getObject();
+            PVMark _this = args.getThis();
+
+            if (SubsetStatus.COMPLETE.equals(d.getViewItem()
                     .getHighlightStatus())) {
                 return Colors.BLACK;
             }
 
             // XXX calculate label size instead of using 60px
-            if (calculateBarLength(regularValues[i]) < 60) {
+            if (calculateBarLength(regularValues[_this.index()]) < 60) {
                 return Colors.GRAY_2;
             }
 
@@ -249,24 +281,24 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
     private String valueAxisLabel;
 
-    private StringFunctionNoArgs valueAxisLabelFunction = new StringFunctionNoArgs() {
+    private JsStringFunction valueAxisLabelFunction = new JsStringFunction() {
         @Override
-        public String f() {
+        public String f(JsArgs args) {
             return valueAxisLabel;
         }
     };
 
-    private StringFunction<ChartItem> valueLabelAlignment = new StringFunction<ChartItem>() {
-
+    private JsStringFunction valueLabelAlignment = new JsStringFunction() {
         @Override
-        public String f(ChartItem value, int i) {
+        public String f(JsArgs args) {
             // XXX pre-calculation should be done by methods in
             // chart..
             // XXX calculate label size instead of taking 60px
-            if (calculateBarLength(regularValues[i]) < 60) {
-                return Alignment.LEFT;
+            PVMark _this = args.getThis();
+            if (calculateBarLength(regularValues[_this.index()]) < 60) {
+                return PVAlignment.LEFT;
             }
-            return Alignment.RIGHT;
+            return PVAlignment.RIGHT;
         }
     };
 
@@ -285,19 +317,30 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     protected void beforeRender() {
         super.beforeRender();
 
-        if (chartItems.isEmpty()) {
+        if (chartItemsJsArray.length() == 0) {
             return;
         }
 
-        regularValues = new double[chartItems.size()];
-        for (int i = 0; i < chartItems.size(); i++) {
-            regularValues[i] = calculateAllResources(i);
+        regularValues = new double[chartItemsJsArray.length()];
+        for (int i = 0; i < chartItemsJsArray.length(); i++) {
+            regularValues[i] = calculateAllResources(chartItemsJsArray.get(i));
         }
     }
 
     private double calculateBarLength(double value) {
         return value * layout.getBarLengthSpace(chartHeight, chartWidth)
                 / getMaximumChartItemValue();
+    }
+
+    private double calculateBarStart(int index) {
+        return calculateBarWidth() / 2 + index
+                * layout.getBarWidthSpace(chartHeight, chartWidth)
+                / chartItemsJsArray.length();
+    }
+
+    private double calculateBarWidth() {
+        return layout.getBarWidthSpace(chartHeight, chartWidth)
+                / (chartItemsJsArray.length() * 2);
     }
 
     private void calculateChartVariables() {
@@ -311,9 +354,16 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         chartHeight = height - BORDER_BOTTOM - BORDER_TOP;
     }
 
+    private double calculateHighlightedBarLength(ChartItem d) {
+        return calculateBarLength(d
+                .getViewItemValueAsNumber(
+                        BarChartViewContentDisplay.CHART_VALUE_SLOT,
+                        Subset.HIGHLIGHTED));
+    }
+
     @Override
     public void drawChart() {
-        assert chartItems.size() >= 1;
+        assert chartItemsJsArray.length() >= 1;
 
         // TODO do we need sorting?
         // Collections.sort(chartItems, new ChartItemComparator(
@@ -324,109 +374,108 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
         if (layout.isVerticalBarChart(chartHeight, chartWidth)) {
             getChart().left(BORDER_LEFT).bottom(BORDER_BOTTOM);
-            Scale scale = Scale.linear(0, getMaximumChartItemValue()).range(0,
-                    chartHeight);
+            PVLinearScale scale = PVScale.linear(0, getMaximumChartItemValue())
+                    .range(0, chartHeight);
             // TODO axis label
             drawVerticalBarChart();
             drawVerticalBarScales(scale);
         } else {
             getChart().left(BORDER_LEFT + HORIZONTAL_BAR_LABEL_EXTRA_MARGIN)
                     .bottom(BORDER_BOTTOM);
-            Scale scale = Scale.linear(0, getMaximumChartItemValue()).range(0,
-                    chartWidth);
+            PVLinearScale scale = PVScale.linear(0, getMaximumChartItemValue())
+                    .range(0, chartWidth);
             drawHorizontalBarMeasurementAxisLabel();
             drawHorizontalBarChart();
             drawHorizontalBarScales(scale);
 
         }
-        getChart().add(Rule.createRule()).bottom(0).left(0).width(chartWidth)
+        getChart().add(PV.Rule).bottom(0).left(0).width(chartWidth)
                 .strokeStyle(AXIS_SCALE_COLOR).lineWidth(barLineWidth);
-        getChart().add(Rule.createRule()).left(0).bottom(0).height(chartHeight)
+        getChart().add(PV.Rule).left(0).bottom(0).height(chartHeight)
                 .strokeStyle(AXIS_SCALE_COLOR).lineWidth(barLineWidth);
     }
 
     private void drawHorizontalBarChart() {
-        regularBar = getChart().add(Bar.createBar()).data(chartItemJsArray)
+        regularBar = getChart().add(PV.Bar).data(chartItemsJsArray)
                 .left(barLineWidth).width(fullBarLength).bottom(barStart)
                 .height(barWidth).fillStyle(chartFillStyle)
                 .strokeStyle(Colors.STEELBLUE).lineWidth(barLineWidth);
 
-        regularBar.add(Label.createLabel()).bottom(baselineLabelStart)
-                .textAlign(Alignment.RIGHT).left(0).text(baselineLabelText)
-                .textBaseline(Alignment.MIDDLE);
+        regularBar.add(PV.Label).bottom(baselineLabelStart)
+                .textAlign(PVAlignment.RIGHT).left(0).text(baselineLabelText)
+                .textBaseline(PVAlignment.MIDDLE);
 
-        regularBar.anchor(Alignment.RIGHT).add(Label.createLabel())
-                .textBaseline(Alignment.MIDDLE).text(fullMarkLabelText)
+        regularBar.anchor(PVAlignment.RIGHT).add(PV.Label)
+                .textBaseline(PVAlignment.MIDDLE).text(fullMarkLabelText)
                 .textStyle(fullMarkTextStyle).textAlign(valueLabelAlignment);
 
         // TODO negative bars (in opposite direction)
-        highlightedBar = getChart().add(Bar.createBar()).data(chartItemJsArray)
+        highlightedBar = getChart().add(PV.Bar).data(chartItemsJsArray)
                 .left(barLineWidth).width(highlightedBarLength)
                 .bottom(highlightedBarStart).height(highlightedWidth)
                 .fillStyle(Colors.YELLOW).strokeStyle(Colors.STEELBLUE)
                 .lineWidth(barLineWidth).visible(isPartiallyHighlighted);
 
-        highlightedBar.anchor(Alignment.RIGHT).add(Label.createLabel())
+        highlightedBar.anchor(PVAlignment.RIGHT).add(PV.Label)
                 .textBaseline(barTextBaseline).text(highlightedLabelText)
-                .textStyle(Colors.BLACK).textBaseline(Alignment.MIDDLE);
+                .textStyle(Colors.BLACK).textBaseline(PVAlignment.MIDDLE);
     }
 
     private void drawHorizontalBarMeasurementAxisLabel() {
-        getChart().add(Label.createLabel()).bottom(-BORDER_BOTTOM + 5)
+        getChart().add(PV.Label).bottom(-BORDER_BOTTOM + 5)
                 .left(chartWidth / 2).text(valueAxisLabelFunction)
-                .textAlign(Alignment.CENTER);
+                .textAlign(PVAlignment.CENTER);
     }
 
-    protected void drawHorizontalBarScales(Scale scale) {
+    protected void drawHorizontalBarScales(PVLinearScale scale) {
         this.scale = scale;
-        getChart().add(Rule.createRule()).data(scale.ticks(5)).left(scale)
-                .bottom(0).strokeStyle(scaleStrokeStyle).height(chartHeight)
-                .anchor(Alignment.BOTTOM).add(Label.createLabel())
-                .text(scaleLabelText);
+        getChart().add(PV.Rule).data(scale.ticks(5)).left(scale).bottom(0)
+                .strokeStyle(scaleStrokeStyle).height(chartHeight)
+                .anchor(PVAlignment.BOTTOM).add(PV.Label).text(scaleLabelText);
     }
 
     private void drawVerticalBarChart() {
-        regularBar = getChart().add(Bar.createBar()).data(chartItemJsArray)
+        regularBar = getChart().add(PV.Bar).data(chartItemsJsArray)
                 .bottom(barLineWidth - 1).height(fullBarLength).left(barStart)
                 .width(barWidth).fillStyle(chartFillStyle)
                 .strokeStyle(Colors.STEELBLUE).lineWidth(barLineWidth);
 
-        regularBar.add(Label.createLabel()).left(baselineLabelStart)
-                .textAlign(Alignment.CENTER)
-                .bottom(new DoubleFunction<ChartItem>() {
+        regularBar.add(PV.Label).left(baselineLabelStart)
+                .textAlign(PVAlignment.CENTER).bottom(new JsDoubleFunction() {
                     @Override
-                    public double f(ChartItem value, int i) {
+                    public double f(JsArgs args) {
+                        ChartItem d = args.getObject();
+                        PVMark _this = args.getThis();
                         // TODO dynamic positioning depending on label size
                         if (chartWidth / regularValues.length > 60) {
                             return -10;
                         }
-                        return i % 2 == 0 ? -10 : -25;
+                        return _this.index() % 2 == 0 ? -10 : -25;
                     }
-                }).text(baselineLabelText).textBaseline(Alignment.MIDDLE);
+                }).text(baselineLabelText).textBaseline(PVAlignment.MIDDLE);
 
-        regularBar.anchor(Alignment.TOP).add(Label.createLabel())
-                .textAngle(-Math.PI / 2).textBaseline(Alignment.MIDDLE)
+        regularBar.anchor(PVAlignment.TOP).add(PV.Label)
+                .textAngle(-Math.PI / 2).textBaseline(PVAlignment.MIDDLE)
                 .textAlign(valueLabelAlignment).textStyle(fullMarkTextStyle)
                 .text(fullMarkLabelText);
 
-        highlightedBar = getChart().add(Bar.createBar()).data(chartItemJsArray)
+        highlightedBar = getChart().add(PV.Bar).data(chartItemsJsArray)
                 .bottom(barLineWidth).height(highlightedBarLength)
                 .left(highlightedBarStart).width(highlightedWidth)
                 .fillStyle(Colors.YELLOW).strokeStyle(Colors.STEELBLUE)
                 .lineWidth(barLineWidth).visible(isPartiallyHighlighted);
 
-        highlightedBar.anchor(Alignment.TOP).add(Label.createLabel())
-                .textBaseline(Alignment.MIDDLE).textAlign(Alignment.RIGHT)
+        highlightedBar.anchor(PVAlignment.TOP).add(PV.Label)
+                .textBaseline(PVAlignment.MIDDLE).textAlign(PVAlignment.RIGHT)
                 .text(highlightedMarkLabelText).textAngle(-Math.PI / 2);
     }
 
     // TODO extract scale ticks # as property
-    protected void drawVerticalBarScales(Scale scale) {
+    protected void drawVerticalBarScales(PVLinearScale scale) {
         this.scale = scale;
-        getChart().add(Rule.createRule()).data(scale.ticks(5)).left(0)
-                .bottom(scale).strokeStyle(scaleStrokeStyle).width(chartWidth)
-                .anchor(Alignment.LEFT).add(Label.createLabel())
-                .text(scaleLabelText);
+        getChart().add(PV.Rule).data(scale.ticks(5)).left(0).bottom(scale)
+                .strokeStyle(scaleStrokeStyle).width(chartWidth)
+                .anchor(PVAlignment.LEFT).add(PV.Label).text(scaleLabelText);
     }
 
     @Override
@@ -460,8 +509,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     }
 
     @Override
-    protected void registerEventHandler(String eventType,
-            ProtovisEventHandler handler) {
+    protected void registerEventHandler(String eventType, PVEventHandler handler) {
         regularBar.event(eventType, handler);
     }
 

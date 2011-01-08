@@ -16,12 +16,15 @@
 package org.thechiselgroup.choosel.client.views.chart;
 
 import org.thechiselgroup.choosel.client.ui.Colors;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.Alignment;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.DoubleFunction;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.Label;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisEventHandler;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.Wedge;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
+import org.thechiselgroup.choosel.protovis.client.PV;
+import org.thechiselgroup.choosel.protovis.client.PVAlignment;
+import org.thechiselgroup.choosel.protovis.client.PVEventHandler;
+import org.thechiselgroup.choosel.protovis.client.PVMark;
+import org.thechiselgroup.choosel.protovis.client.PVWedge;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 
 import com.google.inject.Inject;
 
@@ -34,71 +37,64 @@ public class PieChartViewContentDisplay extends ChartViewContentDisplay {
 
     private double[] regularWedgeCounts;
 
-    private ProtovisFunctionDoubleWithCache<ChartItem> highlightedWedgeOuterRadius = new ProtovisFunctionDoubleWithCache<ChartItem>() {
-
+    private JsDoubleFunction highlightedWedgeOuterRadius = new JsDoubleFunction() {
         @Override
-        public void beforeRender() {
-            if (chartItems.isEmpty()) {
-                return;
-            }
-
-            highlightedWedgeCounts = new double[chartItems.size()];
-            regularWedgeCounts = new double[chartItems.size()];
-
-            for (int i = 0; i < chartItems.size(); i++) {
-                highlightedWedgeCounts[i] = calculateHighlightedResources(i);
-                regularWedgeCounts[i] = calculateAllResources(i);
-            }
-
-        }
-
-        @Override
-        public double f(ChartItem value, int i) {
+        public double f(JsArgs args) {
+            int i = args.<PVMark> getThis().index();
             return (Math
                     .sqrt(highlightedWedgeCounts[i] / regularWedgeCounts[i])
-                    * regularWedgeOuterRadius.f(value, i) + highlightedWedgeCounts[i]
+                    * calculateRegularWedgeOuterRadius() + highlightedWedgeCounts[i]
                     / regularWedgeCounts[i]
-                    * regularWedgeOuterRadius.f(value, i)) / 2;
+                    * calculateRegularWedgeOuterRadius()) / 2;
         }
     };
 
     private double sum;
 
-    private DoubleFunction<ChartItem> regularWedgeOuterRadius = new DoubleFunction<ChartItem>() {
+    private JsDoubleFunction regularWedgeOuterRadius = new JsDoubleFunction() {
         @Override
-        public double f(ChartItem value, int i) {
-            return Math.min(height, width) / 2 - 5;
+        public double f(JsArgs args) {
+            return calculateRegularWedgeOuterRadius();
         }
+
     };
 
-    private Wedge regularWedge;
+    private PVWedge regularWedge;
 
-    private Wedge highlightedWedge;
+    private PVWedge highlightedWedge;
 
-    private DoubleFunction<ChartItem> wedgeLeft = new DoubleFunction<ChartItem>() {
+    private JsDoubleFunction wedgeLeft = new JsDoubleFunction() {
         @Override
-        public double f(ChartItem value, int i) {
+        public double f(JsArgs args) {
             return width / 2;
         }
     };
 
-    private DoubleFunction<ChartItem> wedgeBottom = new DoubleFunction<ChartItem>() {
+    private JsDoubleFunction wedgeBottom = new JsDoubleFunction() {
         @Override
-        public double f(ChartItem value, int i) {
+        public double f(JsArgs args) {
             return height / 2;
         }
     };
 
-    private DoubleFunction<ChartItem> wedgeAngle = new DoubleFunction<ChartItem>() {
+    private JsDoubleFunction wedgeAngle = new JsDoubleFunction() {
         @Override
-        public double f(ChartItem value, int i) {
-            return calculateAllResources(i) * 2 * Math.PI / sum;
+        public double f(JsArgs args) {
+            ChartItem chartItem = args.getObject();
+            return calculateAllResources(chartItem) * 2 * Math.PI / sum;
         }
     };
 
-    private String wedgeLabelAnchor = Alignment.CENTER;
+    private String wedgeLabelAnchor = PVAlignment.CENTER;
 
     private int wedgeTextAngle = 0;
+
+    private JsStringFunction chartFillStyle = new JsStringFunction() {
+        @Override
+        public String f(JsArgs args) {
+            return args.<ChartItem> getObject().getColor();
+        }
+    };
 
     @Inject
     public PieChartViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
@@ -109,19 +105,35 @@ public class PieChartViewContentDisplay extends ChartViewContentDisplay {
     @Override
     protected void beforeRender() {
         super.beforeRender();
-        highlightedWedgeOuterRadius.beforeRender();
+
+        if (chartItemsJsArray.length() == 0) {
+            return;
+        }
+
+        highlightedWedgeCounts = new double[chartItemsJsArray.length()];
+        regularWedgeCounts = new double[chartItemsJsArray.length()];
+
+        for (int i = 0; i < chartItemsJsArray.length(); i++) {
+            ChartItem chartItem = chartItemsJsArray.get(i);
+            highlightedWedgeCounts[i] = calculateHighlightedResources(chartItem);
+            regularWedgeCounts[i] = calculateAllResources(chartItem);
+        }
     }
 
     private void calculateAllResourcesSum() {
         sum = 0;
-        for (int i = 0; i < chartItems.size(); i++) {
-            sum += calculateAllResources(i);
+        for (int i = 0; i < chartItemsJsArray.length(); i++) {
+            sum += calculateAllResources(chartItemsJsArray.get(i));
         }
+    }
+
+    private int calculateRegularWedgeOuterRadius() {
+        return Math.min(height, width) / 2 - 5;
     }
 
     @Override
     public void drawChart() {
-        assert chartItems.size() >= 1;
+        assert chartItemsJsArray.length() >= 1;
 
         drawWedge();
     }
@@ -130,40 +142,39 @@ public class PieChartViewContentDisplay extends ChartViewContentDisplay {
         calculateAllResourcesSum();
 
         if (hasPartiallyHighlightedChartItems()) {
-            regularWedge = getChart().add(Wedge.createWedge())
-                    .data(chartItemJsArray).left(wedgeLeft).bottom(wedgeBottom)
+            regularWedge = getChart().add(PV.Wedge).data(chartItemsJsArray)
+                    .left(wedgeLeft).bottom(wedgeBottom)
                     .innerRadius(highlightedWedgeOuterRadius)
                     .outerRadius(regularWedgeOuterRadius).angle(wedgeAngle)
                     .fillStyle(partialHighlightingChartFillStyle)
                     .strokeStyle(Colors.WHITE);
 
-            regularWedge.anchor(wedgeLabelAnchor).add(Label.createLabel())
+            regularWedge.anchor(wedgeLabelAnchor).add(PV.Label)
                     .textAngle(wedgeTextAngle).text(regularMarkLabelText)
                     .textStyle(Colors.WHITE);
 
-            highlightedWedge = regularWedge.add(Wedge.createWedge())
-                    .innerRadius(0).outerRadius(highlightedWedgeOuterRadius)
+            highlightedWedge = regularWedge.add(PV.Wedge).innerRadius(0)
+                    .outerRadius(highlightedWedgeOuterRadius)
                     .fillStyle(Colors.YELLOW);
 
-            highlightedWedge.anchor(wedgeLabelAnchor).add(Label.createLabel())
+            highlightedWedge.anchor(wedgeLabelAnchor).add(PV.Label)
                     .textAngle(wedgeTextAngle).text(highlightedMarkLabelText);
             return;
         }
 
-        regularWedge = getChart().add(Wedge.createWedge()).data(chartItemJsArray)
+        regularWedge = getChart().add(PV.Wedge).data(chartItemsJsArray)
                 .left(wedgeLeft).bottom(wedgeBottom)
                 .outerRadius(regularWedgeOuterRadius).angle(wedgeAngle)
                 .fillStyle(chartFillStyle).strokeStyle(Colors.WHITE);
 
-        regularWedge.anchor(wedgeLabelAnchor).add(Label.createLabel())
+        regularWedge.anchor(wedgeLabelAnchor).add(PV.Label)
                 .textAngle(wedgeTextAngle).text(fullMarkLabelText)
                 .textStyle(fullMarkTextStyle);
 
     }
 
     @Override
-    protected void registerEventHandler(String eventType,
-            ProtovisEventHandler handler) {
+    protected void registerEventHandler(String eventType, PVEventHandler handler) {
         regularWedge.event(eventType, handler);
     }
 }
