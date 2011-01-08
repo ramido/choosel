@@ -133,9 +133,9 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
         return this.defaults;
     }-*/;
 
-    public final native T event(String eventType, PVEventHandler<T> handler) /*-{
+    public final native T event(String eventType, PVEventHandler handler) /*-{
         return this.event(eventType, function() { 
-        return handler.@org.thechiselgroup.choosel.protovis.client.PVEventHandler::onEvent(Ljava/lang/Object;Lcom/google/gwt/user/client/Event;)(this, $wnd.pv.event);
+        return handler.@org.thechiselgroup.choosel.protovis.client.PVEventHandler::onEvent(Lcom/google/gwt/user/client/Event;Ljava/lang/String;Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsArgs;)($wnd.pv.event, eventType, { _this: this, _args: arguments});
         });
     }-*/;
 
