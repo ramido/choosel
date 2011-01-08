@@ -16,16 +16,17 @@
 package org.thechiselgroup.choosel.client.views.chart;
 
 import org.thechiselgroup.choosel.client.ui.Colors;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.Alignment;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.Dot;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.DoubleFunction;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.Label;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisEventHandler;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.Rule;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.Scale;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunction;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunctionIntArg;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
+import org.thechiselgroup.choosel.protovis.client.PV;
+import org.thechiselgroup.choosel.protovis.client.PVAlignment;
+import org.thechiselgroup.choosel.protovis.client.PVDot;
+import org.thechiselgroup.choosel.protovis.client.PVEventHandler;
+import org.thechiselgroup.choosel.protovis.client.PVLinearScale;
+import org.thechiselgroup.choosel.protovis.client.PVMark;
+import org.thechiselgroup.choosel.protovis.client.PVScale;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 
 import com.google.inject.Inject;
 
@@ -45,63 +46,41 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
 
     protected int chartWidth;
 
-    private DoubleFunction<ChartItem> dotLeft = new DoubleFunction<ChartItem>() {
-
+    private JsDoubleFunction dotLeft = new JsDoubleFunction() {
         @Override
-        public double f(ChartItem value, int index) {
-            return index * chartWidth / chartItems.size() + chartWidth
-                    / (chartItems.size() * 2);
+        public double f(JsArgs args) {
+            return calculateDotX(args.<PVMark> getThis().index());
         }
     };
 
-    private ProtovisFunctionDoubleWithCache<ChartItem> dotBottom = new ProtovisFunctionDoubleWithCache<ChartItem>() {
-
+    private JsDoubleFunction dotBottom = new JsDoubleFunction() {
         @Override
-        public void beforeRender() {
-            if (chartItems.isEmpty()) {
-                return;
-            }
-
-            dotCounts = new double[chartItems.size()];
-
-            for (int i = 0; i < chartItems.size(); i++) {
-                dotCounts[i] = calculateAllResources(i);
-            }
-
+        public double f(JsArgs args) {
+            return calculateDotBottom(args.<PVMark> getThis().index());
         }
-
-        @Override
-        public double f(ChartItem value, int i) {
-            return dotCounts[i] * chartHeight / getMaximumChartItemValue();
-        }
-
     };
 
     private int baselineLabelBottom = -15;
 
-    private StringFunctionIntArg scaleStrokeStyle = new StringFunctionIntArg() {
+    private JsStringFunction scaleStrokeStyle = new JsStringFunction() {
         @Override
-        public String f(int value, int i) {
+        public String f(JsArgs args) {
+            int value = args.getInt();
             return value == 0 ? AXIS_SCALE_COLOR : GRIDLINE_SCALE_COLOR;
         }
     };
 
-    private Dot regularDot;
+    private PVDot regularDot;
 
-    private DoubleFunction<ChartItem> baselineLabelLeft = new DoubleFunction<ChartItem>() {
+    private String baselineLabelTextAlign = PVAlignment.CENTER;
+
+    private JsStringFunction baselineLabelText = new JsStringFunction() {
         @Override
-        public double f(ChartItem value, int i) {
-            return dotLeft.f(value, i);
-        }
-    };
-
-    private String baselineLabelTextAlign = Alignment.CENTER;
-
-    private StringFunction<ChartItem> baselineLabelText = new StringFunction<ChartItem>() {
-        @Override
-        public String f(ChartItem value, int i) {
+        public String f(JsArgs args) {
+            ChartItem value = args.getObject();
+            // TODO own slot
             return value
-                    .getResourceItem()
+                    .getViewItem()
                     .getResourceValue(
                             BarChartViewContentDisplay.CHART_LABEL_SLOT)
                     .toString();
@@ -116,7 +95,16 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
     @Override
     protected void beforeRender() {
         super.beforeRender();
-        dotBottom.beforeRender();
+
+        if (chartItemsJsArray.length() == 0) {
+            return;
+        }
+
+        dotCounts = new double[chartItemsJsArray.length()];
+
+        for (int i = 0; i < chartItemsJsArray.length(); i++) {
+            dotCounts[i] = calculateAllResources(chartItemsJsArray.get(i));
+        }
     }
 
     private void calculateChartVariables() {
@@ -124,30 +112,39 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
         chartHeight = height - BORDER_HEIGHT * 2;
     }
 
+    private double calculateDotBottom(int index) {
+        return dotCounts[index] * chartHeight / getMaximumChartItemValue();
+    }
+
+    private int calculateDotX(int index) {
+        return index * chartWidth / chartItemsJsArray.length() + chartWidth
+                / (chartItemsJsArray.length() * 2);
+    }
+
     private void dehighlightResources(int i) {
-        chartItems.get(i).getResourceItem().getHighlightingManager()
+        chartItemsJsArray.get(i).getViewItem().getHighlightingManager()
                 .setHighlighting(false);
     }
 
     private void deselectResources(int i) {
-        chartItems
+        chartItemsJsArray
                 .get(i)
                 .getView()
                 .getCallback()
                 .switchSelection(
-                        chartItems.get(i).getResourceItem().getResourceSet());
+                        chartItemsJsArray.get(i).getViewItem().getResourceSet());
     }
 
     @Override
     public void drawChart() {
-        assert chartItems.size() >= 1;
+        assert chartItemsJsArray.length() >= 1;
 
         calculateChartVariables();
         setChartParameters();
 
         calculateMaximumChartItemValue();
-        Scale scale = Scale.linear(0, getMaximumChartItemValue()).range(0,
-                chartHeight);
+        PVLinearScale scale = PVScale.linear(0, getMaximumChartItemValue())
+                .range(0, chartHeight);
         drawScales(scale);
         drawSelectionBox();
         drawDot();
@@ -156,29 +153,28 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
 
     private void drawDot() {
         regularDot = getChart()
-                .add(Dot.createDot())
-                .data(chartItemJsArray)
+                .add(PV.Dot)
+                .data(chartItemsJsArray)
                 .bottom(dotBottom)
                 .left(dotLeft)
                 .size(Math.min(chartHeight, chartWidth)
-                        / (chartItems.size() * 2)).fillStyle(chartFillStyle)
-                .strokeStyle(Colors.STEELBLUE);
+                        / (chartItemsJsArray.length() * 2))
+                .fillStyle(chartFillStyle).strokeStyle(Colors.STEELBLUE);
 
-        regularDot.add(Label.createLabel()).left(baselineLabelLeft)
+        regularDot.add(PV.Label).left(dotLeft)
                 .textAlign(baselineLabelTextAlign).bottom(baselineLabelBottom)
                 .text(baselineLabelText);
 
     }
 
-    protected void drawScales(Scale scale) {
+    protected void drawScales(PVLinearScale scale) {
         this.scale = scale;
-        getChart().add(Rule.createRule()).data(scale.ticks()).bottom(scale)
+        getChart().add(PV.Rule).data(scale.ticks()).bottom(scale)
                 .strokeStyle(scaleStrokeStyle).width(chartWidth)
-                .anchor(Alignment.LEFT).add(Label.createLabel())
-                .text(scaleLabelText);
+                .anchor(PVAlignment.LEFT).add(PV.Label).text(scaleLabelText);
 
-        getChart().add(Rule.createRule()).left(0).bottom(0)
-                .strokeStyle(AXIS_SCALE_COLOR).height(chartHeight);
+        getChart().add(PV.Rule).left(0).bottom(0).strokeStyle(AXIS_SCALE_COLOR)
+                .height(chartHeight);
     }
 
     // @formatter:off
@@ -218,7 +214,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
             .events("all")
             .event("mousedown", function(d) {
                 var doReturn;
-                for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay::chartItems.@java.util.ArrayList::size()(); i++) {
+                for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay::chartItemsJsArray.@java.util.ArrayList::size()(); i++) {
                     if(isInSelectionBox(d,i)) {
                         updateMinusPlus(d,i);
                         thisChart.@org.thechiselgroup.choosel.client.views.chart.DotChartViewContentDisplay::deselectResources(I)(i);
@@ -231,7 +227,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
                 }
             })
             .event("mouseover", function(d) {
-                for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay::chartItems.@java.util.ArrayList::size()(); i++) {
+                for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay::chartItemsJsArray.@java.util.ArrayList::size()(); i++) {
                     if(isInSelectionBox(d,i)) {
                         return this.fillStyle("FFFFE1");
                     }
@@ -255,7 +251,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
             .events("all")
             .event("mousedown", function(d) {
                 var doReturn;
-                for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay::chartItems.@java.util.ArrayList::size()(); i++) {
+                for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay::chartItemsJsArray.@java.util.ArrayList::size()(); i++) {
                     if(isInSelectionBox(d,i)) {
                         updateMinusPlus(d,i);
                         thisChart.@org.thechiselgroup.choosel.client.views.chart.DotChartViewContentDisplay::selectResources(I)(i);
@@ -268,7 +264,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
                 }
             })
             .event("mouseover", function(d) {
-                for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay::chartItems.@java.util.ArrayList::size()(); i++) {
+                for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay::chartItemsJsArray.@java.util.ArrayList::size()(); i++) {
                     if(isInSelectionBox(d,i)) {
                         return this.fillStyle("FFFFE1");
                     }
@@ -283,7 +279,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
             .font("bold");
 
         function addBoxes(d) {
-            for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay::chartItems.@java.util.ArrayList::size()(); i++) {
+            for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay::chartItemsJsArray.@java.util.ArrayList::size()(); i++) {
                 if(isInSelectionBox(d,i)) {
                     plusBox.visible(true);
                     plus.visible(true);
@@ -322,7 +318,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
             s.y1 = d.y;
             s.y2 = d.y + d.dy;
 
-            for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay::chartItems.@java.util.ArrayList::size()(); i++) {
+            for(var i = 0; i < thisChart.@org.thechiselgroup.choosel.client.views.chart.ChartViewContentDisplay::chartItemsJsArray.@java.util.ArrayList::size()(); i++) {
                 if(isInSelectionBox(d,i)) {
                     thisChart.@org.thechiselgroup.choosel.client.views.chart.DotChartViewContentDisplay::highlightResources(I)(i);
                 } else {
@@ -335,42 +331,40 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
 
         function updateMinusPlus(d,i) {
             update(d);
-            thisChart.@org.thechiselgroup.choosel.client.views.chart.DotChartViewContentDisplay::onEvent(Lcom/google/gwt/user/client/Event;I)($wnd.pv.event,i);
+            // XXX broken while changing event hanlder interface
+            // thisChart.@org.thechiselgroup.choosel.client.views.chart.DotChartViewContentDisplay::onEvent(Lcom/google/gwt/user/client/Event;I)($wnd.pv.event,i);
         }
     }-*/;
     // @formatter:on
 
     private void highlightResources(int i) {
-        chartItems.get(i).getResourceItem().getHighlightingManager()
+        chartItemsJsArray.get(i).getViewItem().getHighlightingManager()
                 .setHighlighting(true);
     }
 
     private boolean isInSelectionBox(int x, int y, int dx, int dy, int i) {
-        return dotLeft.f(chartItems.get(i), i) >= x
-                && dotLeft.f(chartItems.get(i), i) <= x + dx
-                && chartHeight - dotBottom.f(chartItems.get(i), i) + 20 >= y
-                && chartHeight - dotBottom.f(chartItems.get(i), i) + 20 <= y
-                        + dy;
+        double dotY = chartHeight - calculateDotBottom(i) + 20;
+        int dotX = calculateDotX(i);
+        return dotX >= x && dotX <= x + dx && dotY >= y && dotY <= y + dy;
     }
 
     private boolean isSelected(int i) {
-        return !chartItems.get(i).getResourceItem().getSelectedResources()
+        return !chartItemsJsArray.get(i).getViewItem().getSelectedResources()
                 .isEmpty();
     }
 
     @Override
-    protected void registerEventHandler(String eventType,
-            ProtovisEventHandler handler) {
+    protected void registerEventHandler(String eventType, PVEventHandler handler) {
         regularDot.event(eventType, handler);
     }
 
     private void selectResources(int i) {
-        chartItems
+        chartItemsJsArray
                 .get(i)
                 .getView()
                 .getCallback()
                 .switchSelection(
-                        chartItems.get(i).getResourceItem().getResourceSet());
+                        chartItemsJsArray.get(i).getViewItem().getResourceSet());
     }
 
     private void setChartParameters() {

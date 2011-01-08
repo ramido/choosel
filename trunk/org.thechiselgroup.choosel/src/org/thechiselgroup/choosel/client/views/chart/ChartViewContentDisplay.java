@@ -15,18 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.client.views.chart;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.thechiselgroup.choosel.client.ui.Colors;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.EventTypes;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.Panel;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisEventHandler;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.Scale;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunction;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.StringFunctionIntArg;
 import org.thechiselgroup.choosel.client.util.StringUtils;
-import org.thechiselgroup.choosel.client.util.collections.ArrayUtils;
 import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
@@ -34,8 +24,16 @@ import org.thechiselgroup.choosel.client.views.ViewItem;
 import org.thechiselgroup.choosel.client.views.ViewItem.Status;
 import org.thechiselgroup.choosel.client.views.ViewItem.Subset;
 import org.thechiselgroup.choosel.client.views.slots.Slot;
+import org.thechiselgroup.choosel.protovis.client.PVEventHandler;
+import org.thechiselgroup.choosel.protovis.client.PVEventTypes;
+import org.thechiselgroup.choosel.protovis.client.PVLinearScale;
+import org.thechiselgroup.choosel.protovis.client.PVMark;
+import org.thechiselgroup.choosel.protovis.client.PVPanel;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsArrayGeneric;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsUtils;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -50,28 +48,28 @@ import com.google.inject.Inject;
 public abstract class ChartViewContentDisplay extends
         AbstractViewContentDisplay implements ChartWidgetCallback {
 
-    protected JavaScriptObject chartItemJsArray = ArrayUtils.createArray();
+    // TODO wrapper for jsarraygeneric that implements java.util.List
+    protected JsArrayGeneric<ChartItem> chartItemsJsArray = JsUtils
+            .createJsArrayGeneric();
 
-    protected List<ChartItem> chartItems = new ArrayList<ChartItem>();
+    protected String[] eventTypes = { PVEventTypes.CLICK,
+            PVEventTypes.MOUSEDOWN, PVEventTypes.MOUSEMOVE,
+            PVEventTypes.MOUSEOUT, PVEventTypes.MOUSEOVER, PVEventTypes.MOUSEUP };
 
-    protected String[] eventTypes = { EventTypes.CLICK, EventTypes.MOUSEDOWN,
-            EventTypes.MOUSEMOVE, EventTypes.MOUSEOUT, EventTypes.MOUSEOVER,
-            EventTypes.MOUSEUP };
-
-    private ProtovisEventHandler handler = new ProtovisEventHandler() {
+    private PVEventHandler handler = new PVEventHandler() {
         @Override
-        public void handleEvent(Event e, int index) {
-            onEvent(e, index);
+        public void onEvent(Event e, String pvEventType, JsArgs args) {
+            ChartViewContentDisplay.this.onEvent(e, pvEventType, args);
         }
     };
 
-    protected Scale scale;
+    protected PVLinearScale scale;
 
     // XXX changing SVG tree structure in protovis function? not good
-    protected StringFunctionIntArg scaleLabelText = new StringFunctionIntArg() {
+    protected JsStringFunction scaleLabelText = new JsStringFunction() {
         @Override
-        public String f(int value, int i) {
-            return scale.tickFormat(value);
+        public String f(JsArgs args) {
+            return scale.tickFormatInt(args.getInt());
         }
     };
 
@@ -81,63 +79,70 @@ public abstract class ChartViewContentDisplay extends
      */
     protected boolean isRendering;
 
-    protected StringFunction<ChartItem> chartFillStyle = new StringFunction<ChartItem>() {
+    protected JsStringFunction chartFillStyle = new JsStringFunction() {
         @Override
-        public String f(ChartItem value, int i) {
-            return value.getColour();
+        public String f(JsArgs args) {
+            return args.<ChartItem> getObject().getColor();
         }
     };
 
-    protected StringFunction<ChartItem> partialHighlightingChartFillStyle = new StringFunction<ChartItem>() {
+    protected JsStringFunction partialHighlightingChartFillStyle = new JsStringFunction() {
         @Override
-        public String f(ChartItem value, int i) {
-            return value.getResourceItem().getStatus() == Status.PARTIALLY_HIGHLIGHTED ? Colors.STEELBLUE
-                    : value.getResourceItem().getStatus() == Status.PARTIALLY_HIGHLIGHTED_SELECTED ? Colors.ORANGE
-                            : value.getColour();
+        public String f(JsArgs args) {
+            ChartItem value = args.getObject();
+            return value.getViewItem().getStatus() == Status.PARTIALLY_HIGHLIGHTED ? Colors.STEELBLUE
+                    : value.getViewItem().getStatus() == Status.PARTIALLY_HIGHLIGHTED_SELECTED ? Colors.ORANGE
+                            : value.getColor();
         }
     };
 
-    protected StringFunction<ChartItem> fullMarkTextStyle = new StringFunction<ChartItem>() {
+    protected JsStringFunction fullMarkTextStyle = new JsStringFunction() {
         @Override
-        public String f(ChartItem value, int i) {
-            return calculateHighlightedResources(i) == 0 ? Colors.WHITE
+        public String f(JsArgs args) {
+            ChartItem chartItem = args.getObject();
+            return calculateHighlightedResources(chartItem) == 0 ? Colors.WHITE
                     : Colors.BLACK;
         }
     };
 
-    protected StringFunction<ChartItem> fullMarkLabelText = new StringFunction<ChartItem>() {
-
+    protected JsStringFunction fullMarkLabelText = new JsStringFunction() {
         @Override
-        public String f(ChartItem chartItem, int i) {
-            return StringUtils.formatDecimal(calculateAllResources(i), 2);
-        }
-
-    };
-
-    protected StringFunction<ChartItem> highlightedLabelText = new StringFunction<ChartItem>() {
-
-        @Override
-        public String f(ChartItem chartItem, int i) {
-            return StringUtils.formatDecimal(calculateHighlightedResources(i),
+        public String f(JsArgs args) {
+            ChartItem chartItem = args.getObject();
+            return StringUtils.formatDecimal(calculateAllResources(chartItem),
                     2);
         }
 
     };
 
-    protected StringFunction<ChartItem> regularMarkLabelText = new StringFunction<ChartItem>() {
+    protected JsStringFunction highlightedLabelText = new JsStringFunction() {
         @Override
-        public String f(ChartItem value, int i) {
-            return calculateAllResources(i) - calculateHighlightedResources(i) < 1 ? null
-                    : Double.toString(calculateAllResources(i)
-                            - calculateHighlightedResources(i));
+        public String f(JsArgs args) {
+            ChartItem chartItem = args.getObject();
+            return StringUtils.formatDecimal(
+                    calculateHighlightedResources(chartItem), 2);
+        }
+
+    };
+
+    protected JsStringFunction regularMarkLabelText = new JsStringFunction() {
+        @Override
+        public String f(JsArgs args) {
+            ChartItem chartItem = args.getObject();
+            PVMark _this = args.getThis();
+            return calculateAllResources(chartItem)
+                    - calculateHighlightedResources(chartItem) < 1 ? null
+                    : Double.toString(calculateAllResources(chartItem)
+                            - calculateHighlightedResources(chartItem));
         }
     };
 
-    protected StringFunction<ChartItem> highlightedMarkLabelText = new StringFunction<ChartItem>() {
+    protected JsStringFunction highlightedMarkLabelText = new JsStringFunction() {
         @Override
-        public String f(ChartItem value, int i) {
-            return calculateHighlightedResources(i) <= 0 ? null : Double
-                    .toString(calculateHighlightedResources(i));
+        public String f(JsArgs args) {
+            ChartItem chartItem = args.getObject();
+            return calculateHighlightedResources(chartItem) <= 0 ? null
+                    : Double.toString(calculateHighlightedResources(chartItem));
         }
     };
 
@@ -157,8 +162,7 @@ public abstract class ChartViewContentDisplay extends
     }
 
     public void addChartItem(ChartItem chartItem) {
-        chartItems.add(chartItem);
-        ArrayUtils.add(chartItem, chartItemJsArray);
+        chartItemsJsArray.push(chartItem);
     }
 
     /**
@@ -183,8 +187,8 @@ public abstract class ChartViewContentDisplay extends
      * panel is used.
      */
     protected void buildChart() {
-        chartWidget.initChartPanel();
-        if (chartItems.size() == 0) {
+        chartWidget.initPVPanel();
+        if (chartItemsJsArray.length() == 0) {
             getChart().height(height).width(width);
         } else {
             drawChart();
@@ -195,24 +199,24 @@ public abstract class ChartViewContentDisplay extends
         renderChart();
     }
 
-    protected double calculateAllResources(int i) {
-        return calculateChartItemValue(i,
+    protected double calculateAllResources(ChartItem chartItem) {
+        return calculateChartItemValue(chartItem,
                 BarChartViewContentDisplay.CHART_VALUE_SLOT, Subset.ALL);
     }
 
-    protected double calculateChartItemValue(int chartItemIndex, Slot slot,
+    // XXX fix -- move into chartitem
+    protected double calculateChartItemValue(ChartItem chartItem, Slot slot,
             Subset subset) {
-        return (Double) getResourceItem(chartItemIndex).getResourceValue(slot,
-                subset);
+        return (Double) chartItem.getViewItem().getResourceValue(slot, subset);
     }
 
-    protected double calculateHighlightedResources(int i) {
-        return calculateChartItemValue(i,
+    protected double calculateHighlightedResources(ChartItem chartItem) {
+        return calculateChartItemValue(chartItem,
                 BarChartViewContentDisplay.CHART_VALUE_SLOT, Subset.HIGHLIGHTED);
     }
 
-    protected int calculateHighlightedSelectedResources(int i) {
-        return getResourceItem(i).getHighlightedSelectedResources().size();
+    protected int calculateHighlightedSelectedResources(ChartItem chartItem) {
+        return chartItem.getViewItem().getHighlightedSelectedResources().size();
     }
 
     // TODO different slots
@@ -220,17 +224,19 @@ public abstract class ChartViewContentDisplay extends
     // XXX works only for integers
     protected void calculateMaximumChartItemValue() {
         maxChartItemValue = 0;
-        for (int i = 0; i < chartItems.size(); i++) {
-            double currentItemValue = calculateAllResources(i);
+        for (int i = 0; i < chartItemsJsArray.length(); i++) {
+            double currentItemValue = calculateAllResources(chartItemsJsArray
+                    .get(i));
             if (maxChartItemValue < currentItemValue) {
                 maxChartItemValue = currentItemValue;
             }
         }
     }
 
-    protected int calculateSelectedResources(int i) {
-        return getResourceItem(i).getSelectedResources().size()
-                - getResourceItem(i).getHighlightedSelectedResources().size();
+    protected int calculateSelectedResources(ChartItem chartItem) {
+        ViewItem viewItem = chartItem.getViewItem();
+        return viewItem.getSelectedResources().size()
+                - viewItem.getHighlightedSelectedResources().size();
     }
 
     @Override
@@ -265,24 +271,20 @@ public abstract class ChartViewContentDisplay extends
      */
     protected abstract void drawChart();
 
-    protected Panel getChart() {
-        return chartWidget.getChartPanel();
+    protected PVPanel getChart() {
+        return chartWidget.getPVPanel();
     }
 
     public ChartItem getChartItem(int index) {
-        assert chartItems != null;
+        assert chartItemsJsArray != null;
         assert 0 <= index;
-        assert index < chartItems.size();
+        assert index < chartItemsJsArray.length();
 
-        return chartItems.get(index);
+        return chartItemsJsArray.get(index);
     }
 
     protected double getMaximumChartItemValue() {
         return maxChartItemValue;
-    }
-
-    protected ViewItem getResourceItem(int chartItemIndex) {
-        return chartItems.get(chartItemIndex).getResourceItem();
     }
 
     // TODO push down: the actual chart needs to decide which slots are used
@@ -295,10 +297,11 @@ public abstract class ChartViewContentDisplay extends
 
     // XXX not called anywhere
     protected SlotValues getSlotValues(Slot slot) {
-        double[] slotValues = new double[chartItems.size()];
+        double[] slotValues = new double[chartItemsJsArray.length()];
 
-        for (int i = 0; i < chartItems.size(); i++) {
-            Object value = getResourceItem(i).getResourceValue(slot);
+        for (int i = 0; i < chartItemsJsArray.length(); i++) {
+            Object value = chartItemsJsArray.get(i).getViewItem()
+                    .getResourceValue(slot);
 
             if (value instanceof Double) {
                 slotValues[i] = (Double) value;
@@ -313,8 +316,9 @@ public abstract class ChartViewContentDisplay extends
     }
 
     public boolean hasPartiallyHighlightedChartItems() {
-        for (ChartItem chartItem : chartItems) {
-            Status status = chartItem.getResourceItem().getStatus();
+        for (int i = 0; i < chartItemsJsArray.length(); i++) {
+            ChartItem chartItem = chartItemsJsArray.get(i);
+            Status status = chartItem.getViewItem().getStatus();
             if ((status == Status.PARTIALLY_HIGHLIGHTED || status == Status.PARTIALLY_HIGHLIGHTED_SELECTED)) {
                 return true;
             }
@@ -323,8 +327,9 @@ public abstract class ChartViewContentDisplay extends
     }
 
     public boolean hasPartiallySelectedChartItems() {
-        for (ChartItem chartItem : chartItems) {
-            Status status = chartItem.getResourceItem().getStatus();
+        for (int i = 0; i < chartItemsJsArray.length(); i++) {
+            ChartItem chartItem = chartItemsJsArray.get(i);
+            Status status = chartItem.getViewItem().getStatus();
             if ((status == Status.PARTIALLY_SELECTED || status == Status.PARTIALLY_HIGHLIGHTED_SELECTED)) {
                 return true;
             }
@@ -337,12 +342,14 @@ public abstract class ChartViewContentDisplay extends
         buildChart();
     }
 
-    protected void onEvent(Event e, int index) {
+    protected void onEvent(Event e, String pvEventType, JsArgs args) {
+        PVMark mark = args.getThis();
+        int index = mark.index();
         getChartItem(index).onEvent(e);
     }
 
     protected abstract void registerEventHandler(String eventType,
-            ProtovisEventHandler handler);
+            PVEventHandler handler);
 
     private void registerEventHandlers() {
         for (String eventType : eventTypes) {
@@ -350,9 +357,18 @@ public abstract class ChartViewContentDisplay extends
         }
     }
 
+    // TODO move into js array to java.util.List wrapper
     public void removeChartItem(ChartItem chartItem) {
-        chartItems.remove(chartItem);
-        ArrayUtils.remove(chartItem, chartItemJsArray);
+        int occurences = 0;
+        for (int i = 0; i < chartItemsJsArray.length(); i++) {
+            ChartItem itemFromArray = chartItemsJsArray.get(i);
+            if (itemFromArray == chartItem) {
+                occurences++;
+            } else if (occurences > 0) {
+                chartItemsJsArray.set(i - occurences, itemFromArray);
+            }
+        }
+        chartItemsJsArray.setLength(chartItemsJsArray.length() - occurences);
     }
 
     /**

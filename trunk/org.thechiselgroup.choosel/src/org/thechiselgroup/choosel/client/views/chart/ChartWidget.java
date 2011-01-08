@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.client.views.chart;
 import org.thechiselgroup.choosel.client.ui.CSS;
 import org.thechiselgroup.choosel.client.ui.Colors;
 import org.thechiselgroup.choosel.client.ui.WidgetAdaptable;
-import org.thechiselgroup.choosel.client.ui.widget.protovis.ProtovisWidget;
+import org.thechiselgroup.choosel.protovis.client.ProtovisWidget;
 
 import com.google.gwt.user.client.ui.Widget;
 

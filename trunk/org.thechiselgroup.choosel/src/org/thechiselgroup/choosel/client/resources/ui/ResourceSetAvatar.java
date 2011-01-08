@@ -63,7 +63,7 @@ public class ResourceSetAvatar extends Label implements Disposable {
         assert resources != null;
         assert type != null;
 
-        this.resourceSet = resources;
+        resourceSet = resources;
         this.enabledCSSClass = enabledCSSClass;
         this.type = type;
 
@@ -81,7 +81,7 @@ public class ResourceSetAvatar extends Label implements Disposable {
         assert enabledCSSClass != null;
         assert type != null;
 
-        this.resourceSet = resources;
+        resourceSet = resources;
         this.enabledCSSClass = enabledCSSClass;
         this.type = type;
 
@@ -90,7 +90,7 @@ public class ResourceSetAvatar extends Label implements Disposable {
     }
 
     public void addDisposable(Disposable disposable) {
-        this.disposables.addDisposable(disposable);
+        disposables.addDisposable(disposable);
     }
 
     public HandlerRegistration addEnabledStatusHandler(
@@ -113,8 +113,8 @@ public class ResourceSetAvatar extends Label implements Disposable {
 
         CSS.setZIndex(clone.getElement(), ZIndex.DRAG_AVATAR);
 
-        this.latestProxy = clone;
-        return this.latestProxy;
+        latestProxy = clone;
+        return latestProxy;
     }
 
     @Override
@@ -142,7 +142,7 @@ public class ResourceSetAvatar extends Label implements Disposable {
     }
 
     public ResourceSet getResourceSet() {
-        return this.resourceSet;
+        return resourceSet;
     }
 
     public ResourceSetAvatarType getType() {
@@ -244,13 +244,13 @@ public class ResourceSetAvatar extends Label implements Disposable {
     }
 
     public void setResourceSet(ResourceSet newResourceSet) {
-        if (newResourceSet == this.resourceSet) {
+        if (newResourceSet == resourceSet) {
             return;
         }
 
-        ResourceSet oldResources = this.resourceSet;
+        ResourceSet oldResources = resourceSet;
 
-        this.resourceSet = newResourceSet;
+        resourceSet = newResourceSet;
 
         fireEvent(new ResourceSetAvatarResourcesChangedEvent(this,
                 newResourceSet, oldResources));

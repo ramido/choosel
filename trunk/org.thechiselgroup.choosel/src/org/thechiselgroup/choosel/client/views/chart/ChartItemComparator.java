@@ -34,6 +34,6 @@ public class ChartItemComparator implements Comparator<ChartItem> {
     }
 
     private String getDescriptionString(ChartItem item) {
-        return item.getResourceItem().getResourceValue(slot).toString();
+        return item.getViewItem().getResourceValue(slot).toString();
     }
 }
