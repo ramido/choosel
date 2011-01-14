@@ -490,10 +490,8 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         layoutBox.addChangeHandler(new ChangeHandler() {
             @Override
             public void onChange(ChangeEvent event) {
-                LayoutType layout = LayoutType.valueOf(layoutBox
-                        .getValue(layoutBox.getSelectedIndex()));
-                setLayout(layout);
-                buildChart();
+                setLayout(LayoutType.valueOf(layoutBox.getValue(layoutBox
+                        .getSelectedIndex())));
             }
         });
         settingsPanel.add(layoutBox);
@@ -514,7 +512,10 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     }
 
     public void setLayout(LayoutType layout) {
+        assert layout != null;
+
         this.layout = layout;
+        buildChart();
     }
 
     @Override
