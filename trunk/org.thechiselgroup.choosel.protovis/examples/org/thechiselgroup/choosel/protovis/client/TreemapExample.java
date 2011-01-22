@@ -15,22 +15,19 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
-import org.thechiselgroup.choosel.protovis.client.PVFillPartitionLayout.PVPartitionNode;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
-import org.thechiselgroup.choosel.protovis.client.jsutil.JsBooleanFunction;
-import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsFunction;
 
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Protovis/GWT implementation of <a
- * href="http://vis.stanford.edu/protovis/ex/icicle.html">Protovis icicle
+ * href="http://vis.stanford.edu/protovis/ex/treemap.html">Protovis treemap
  * example</a>.
  * 
  * @author Lars Grammel
  */
-public class IcicleExample extends ProtovisWidget implements ProtovisExample {
+public class TreemapExample extends ProtovisWidget implements ProtovisExample {
 
     @Override
     public Widget asWidget() {
@@ -38,22 +35,15 @@ public class IcicleExample extends ProtovisWidget implements ProtovisExample {
     }
 
     private void createVisualization(FlareData.Unit root) {
-        PVPanel vis = getPVPanel().width(900).height(300).bottom(30);
-
         final PVOrdinalScale category19 = PVColors.category19();
+        PVPanel vis = getPVPanel().width(860).height(568);
 
-        PVFillPartitionLayout layout = vis
-                .add(PVLayout.PartitionFill())
+        PVTreemapLayout treemap = vis
+                .add(PVLayout.Treemap())
                 .nodes(PVDom.create(root, new FlareData.UnitDomAdapter())
-                        .nodes()).order("descending").orient("top")
-                .size(new JsDoubleFunction() {
-                    public double f(JsArgs args) {
-                        PVDomNode d = args.getObject();
-                        return d.nodeValue();
-                    }
-                });
+                        .nodes()).round(true);
 
-        layout.node().add(PV.Bar).fillStyle(new JsFunction<PVColor>() {
+        treemap.leaf().add(PV.Panel).fillStyle(new JsFunction<PVColor>() {
             public PVColor f(JsArgs args) {
                 PVDomNode d = args.getObject();
                 if (d.parentNode() == null) {
@@ -61,24 +51,19 @@ public class IcicleExample extends ProtovisWidget implements ProtovisExample {
                 }
                 return category19.fcolor(d.parentNode().nodeName());
             }
-        }).strokeStyle("rgba(255,255,255,.5)").lineWidth(1).antialias(false);
+        }).strokeStyle("#fff").lineWidth(1d).antialias(false);
 
-        layout.label().add(PV.Label).textAngle(-Math.PI / 2)
-                .visible(new JsBooleanFunction() {
-                    public boolean f(JsArgs args) {
-                        PVPartitionNode d = args.getObject();
-                        return d.dx() > 6;
-                    }
-                });
+        treemap.label().add(PV.Label);
 
+        vis.render();
     }
 
     public String getProtovisExampleURL() {
-        return "http://vis.stanford.edu/protovis/ex/icicle.html";
+        return "http://vis.stanford.edu/protovis/ex/treemap.html";
     }
 
     public String getSourceCodeFile() {
-        return "IcicleExample.java";
+        return "TreemapExample.java";
     }
 
     protected void onAttach() {
@@ -89,7 +74,7 @@ public class IcicleExample extends ProtovisWidget implements ProtovisExample {
     }
 
     public String toString() {
-        return "Icicles";
+        return "Treemaps";
     }
 
 }

@@ -28,7 +28,8 @@ public final class PVDom {
         assert t != null;
         assert adapter != null;
 
-        PVDomNode node = PVDomNode.create(t, adapter.getNodeName(t));
+        PVDomNode node = PVDomNode.create(t, adapter.getNodeName(t),
+                adapter.getNodeValue(t));
         for (T child : adapter.getChildren(t)) {
             node.appendChild(create(child, adapter));
         }

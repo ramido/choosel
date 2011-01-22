@@ -15,36 +15,30 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
+import com.google.gwt.core.client.JavaScriptObject;
+
 /**
- * Wrapper for
- * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Layout.html">pv.Layout</a></code>
- * .
- * 
  * @author Lars Grammel
  */
-public final class PVLayout {
+public final class PVTreemapLayout extends PVAbstractBar<PVTreemapLayout> {
 
-    public static native PVBulletLayout Bullet() /*-{
-        return $wnd.pv.Layout.Bullet;
-    }-*/;
-
-    public static native PVFillPartitionLayout PartitionFill() /*-{
-        return $wnd.pv.Layout.Partition.Fill;
-    }-*/;
-
-    public static native PVStackLayout Stack() /*-{
-        return $wnd.pv.Layout.Stack;
-    }-*/;
-
-    public static native PVTreeLayout Tree() /*-{
-        return $wnd.pv.Layout.Tree;
-    }-*/;
-
-    public static native PVTreemapLayout Treemap() /*-{
-        return $wnd.pv.Layout.Treemap;
-    }-*/;
-
-    private PVLayout() {
+    protected PVTreemapLayout() {
     }
+
+    public final native PVTreemapLayout round(boolean round) /*-{
+        return this.round(round);
+    }-*/;
+
+    public final native PVMark label() /*-{
+        return this.label;
+    }-*/;
+
+    public final native PVMark leaf() /*-{
+        return this.leaf;
+    }-*/;
+
+    public final native PVTreemapLayout nodes(JavaScriptObject data) /*-{
+        return this.nodes(data);
+    }-*/;
 
 }

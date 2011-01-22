@@ -21,4 +21,6 @@ public interface PVDomAdapter<T> {
 
     String getNodeName(T t);
 
+    double getNodeValue(T t);
+
 }
