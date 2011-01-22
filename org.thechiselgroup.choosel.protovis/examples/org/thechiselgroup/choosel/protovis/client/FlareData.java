@@ -36,6 +36,20 @@ public final class FlareData {
         }
     }
 
+    public static class UnitDomAdapter implements PVDomAdapter<Unit> {
+        public Unit[] getChildren(Unit t) {
+            return t.children == null ? new Unit[0] : t.children;
+        }
+    
+        public String getNodeName(Unit t) {
+            return t.name;
+        }
+    
+        public double getNodeValue(Unit t) {
+            return t.value;
+        }
+    }
+
     public static Unit data() {
         return new Unit(
                 "flare",

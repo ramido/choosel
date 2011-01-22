@@ -38,17 +38,10 @@ public class TreeExample extends ProtovisWidget implements ProtovisExample {
         PVPanel vis = getPVPanel().width(800).height(800).left(75).right(-75)
                 .top(-30).bottom(-80);
 
-        PVTreeLayout tree = vis.add(PVLayout.Tree())
-                .nodes(PVDom.create(root, new PVDomAdapter<FlareData.Unit>() {
-                    public FlareData.Unit[] getChildren(FlareData.Unit t) {
-                        return t.children == null ? new FlareData.Unit[0]
-                                : t.children;
-                    }
-
-                    public String getNodeName(FlareData.Unit t) {
-                        return t.name;
-                    }
-                }).nodes()).depth(85).breadth(7.25).orient("radial");
+        PVTreeLayout tree = vis
+                .add(PVLayout.Tree())
+                .nodes(PVDom.create(root, new FlareData.UnitDomAdapter())
+                        .nodes()).depth(85).breadth(7.25).orient("radial");
 
         tree.link().add(PV.Line);
 

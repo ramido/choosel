@@ -23,14 +23,16 @@ import com.google.gwt.core.client.JavaScriptObject;
  */
 public class PVDomNode extends JavaScriptObject {
 
-    protected PVDomNode() {
-    }
-
-    public static final native PVDomNode create(Object o, String nodeName) /*-{
+    public static final native PVDomNode create(Object o, String nodeName,
+            double nodeValue) /*-{
         var node = new $wnd.pv.Dom.Node(o);
         node.nodeName = nodeName;
+        node.nodeValue = nodeValue;
         return node;
     }-*/;
+
+    protected PVDomNode() {
+    }
 
     public final native void appendChild(PVDomNode childNode) /*-{
         this.appendChild(childNode);
@@ -40,20 +42,27 @@ public class PVDomNode extends JavaScriptObject {
         return this.firstChild;
     }-*/;
 
-    public final native PVDomNode parentNode() /*-{
-        return this.parentNode;
-    }-*/;
-
     public final native String nodeName() /*-{
         return this.nodeName;
+    }-*/;
+
+    /**
+     * Returns the original object from which the node was constructed.
+     */
+    public final native <T> T nodeObject() /*-{
+        return this.nodeObject;
     }-*/;
 
     public final native JavaScriptObject nodes() /*-{
         return this.nodes();
     }-*/;
 
-    public final native <T> T nodeValue() /*-{
+    public final native double nodeValue() /*-{
         return this.nodeValue;
+    }-*/;
+
+    public final native PVDomNode parentNode() /*-{
+        return this.parentNode;
     }-*/;
 
 }

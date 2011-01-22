@@ -42,21 +42,13 @@ public class SunburstExample extends ProtovisWidget implements ProtovisExample {
 
         final PVOrdinalScale category19 = PVColors.category19();
 
-        PVFillPartitionLayout partition = vis.add(PVLayout.PartitionFill())
-                .nodes(PVDom.create(root, new PVDomAdapter<FlareData.Unit>() {
-                    public FlareData.Unit[] getChildren(FlareData.Unit t) {
-                        return t.children == null ? new FlareData.Unit[0]
-                                : t.children;
-                    }
-
-                    public String getNodeName(FlareData.Unit t) {
-                        return t.name;
-                    }
-                }).nodes()).size(new JsDoubleFunction() {
+        PVFillPartitionLayout partition = vis
+                .add(PVLayout.PartitionFill())
+                .nodes(PVDom.create(root, new FlareData.UnitDomAdapter())
+                        .nodes()).size(new JsDoubleFunction() {
                     public double f(JsArgs args) {
                         PVDomNode d = args.getObject();
-                        FlareData.Unit unit = d.nodeValue();
-                        return unit.value;
+                        return d.nodeValue();
                     }
                 }).order("descending").orient("radial");
 
