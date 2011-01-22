@@ -37,6 +37,10 @@ public final class PVLine extends PVAbstractMark<PVLine> {
     protected PVLine() {
     }
 
+    public final native PVLine antialias(boolean antialias) /*-{
+        return this.antialias(antialias);
+    }-*/;
+
     public final native PVLine eccentricity(double eccentricity) /*-{
         return this.eccentricity(eccentricity);
     }-*/;
