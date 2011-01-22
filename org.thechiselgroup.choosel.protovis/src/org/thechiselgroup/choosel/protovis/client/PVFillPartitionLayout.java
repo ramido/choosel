@@ -25,6 +25,56 @@ import com.google.gwt.core.client.JavaScriptObject;
 public final class PVFillPartitionLayout extends
         PVAbstractBar<PVFillPartitionLayout> {
 
+    public static class PVPartitionNode extends PVDomNode {
+
+        protected PVPartitionNode() {
+        }
+
+        public final native double dx() /*-{
+            return this.dx;
+        }-*/;
+
+        public final native double dy() /*-{
+            return this.dy;
+        }-*/;
+
+        public final native double midAngle() /*-{
+            return this.midAngle;
+        }-*/;
+
+        public final native double x() /*-{
+            return this.x;
+        }-*/;
+
+        public final native double y() /*-{
+            return this.y;
+        }-*/;
+
+    }
+
+    public static class PVRadialNode extends PVPartitionNode {
+
+        protected PVRadialNode() {
+        }
+
+        public final native double angle() /*-{
+            return this.angle;
+        }-*/;
+
+        public final native double innerRadius() /*-{
+            return this.innerRadius;
+        }-*/;
+
+        public final native double outerRadius() /*-{
+            return this.outerRadius;
+        }-*/;
+
+        public final native double startAngle() /*-{
+            return this.startAngle;
+        }-*/;
+
+    }
+
     protected PVFillPartitionLayout() {
     }
 

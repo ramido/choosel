@@ -70,6 +70,7 @@ public class ProtovisGWTExamples implements EntryPoint {
         examples.add(new GasAndDrivingExample());
         examples.add(new SeattleWeatherExample());
         examples.add(new SunburstExample());
+        examples.add(new IcicleExample());
         examples.add(new BoxAndWhiskerPlotExample());
     }
 
