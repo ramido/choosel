@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
-import org.thechiselgroup.choosel.protovis.client.PVFillPartitionLayout.PVRadialNode;
+import org.thechiselgroup.choosel.protovis.client.PVFillPartitionLayout.PVPartitionNode;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsBooleanFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
@@ -25,12 +25,12 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Protovis/GWT implementation of <a
- * href="http://vis.stanford.edu/protovis/ex/sunburst.html">Protovis sunburst
+ * href="http://vis.stanford.edu/protovis/ex/icicle.html">Protovis icicle
  * example</a>.
  * 
  * @author Lars Grammel
  */
-public class SunburstExample extends ProtovisWidget implements ProtovisExample {
+public class IcicleExample extends ProtovisWidget implements ProtovisExample {
 
     @Override
     public Widget asWidget() {
@@ -38,11 +38,12 @@ public class SunburstExample extends ProtovisWidget implements ProtovisExample {
     }
 
     private void createVisualization(FlareData.Unit root) {
-        PVPanel vis = getPVPanel().width(900).height(900).bottom(-80);
+        PVPanel vis = getPVPanel().width(900).height(300).bottom(30);
 
         final PVOrdinalScale category19 = PVColors.category19();
 
-        PVFillPartitionLayout partition = vis.add(PVLayout.PartitionFill())
+        PVFillPartitionLayout layout = vis
+                .add(PVLayout.PartitionFill())
                 .nodes(PVDom.create(root, new PVDomAdapter<FlareData.Unit>() {
                     public FlareData.Unit[] getChildren(FlareData.Unit t) {
                         return t.children == null ? new FlareData.Unit[0]
@@ -52,15 +53,16 @@ public class SunburstExample extends ProtovisWidget implements ProtovisExample {
                     public String getNodeName(FlareData.Unit t) {
                         return t.name;
                     }
-                }).nodes()).size(new JsDoubleFunction() {
+                }).nodes()).order("descending").orient("top")
+                .size(new JsDoubleFunction() {
                     public double f(JsArgs args) {
                         PVDomNode d = args.getObject();
                         FlareData.Unit unit = d.nodeValue();
                         return unit.value;
                     }
-                }).order("descending").orient("radial");
+                });
 
-        partition.node().add(PV.Wedge).fillStyle(new JsFunction<PVColor>() {
+        layout.node().add(PV.Bar).fillStyle(new JsFunction<PVColor>() {
             public PVColor f(JsArgs args) {
                 PVDomNode d = args.getObject();
                 if (d.parentNode() == null) {
@@ -68,22 +70,24 @@ public class SunburstExample extends ProtovisWidget implements ProtovisExample {
                 }
                 return category19.fcolor(d.parentNode().nodeName());
             }
-        }).strokeStyle("#fff").lineWidth(.5);
+        }).strokeStyle("rgba(255,255,255,.5)").lineWidth(1).antialias(false);
 
-        partition.label().add(PV.Label).visible(new JsBooleanFunction() {
-            public boolean f(JsArgs args) {
-                PVRadialNode d = args.getObject();
-                return d.angle() * d.outerRadius() >= 6;
-            }
-        });
+        layout.label().add(PV.Label).textAngle(-Math.PI / 2)
+                .visible(new JsBooleanFunction() {
+                    public boolean f(JsArgs args) {
+                        PVPartitionNode d = args.getObject();
+                        return d.dx() > 6;
+                    }
+                });
+
     }
 
     public String getProtovisExampleURL() {
-        return "http://vis.stanford.edu/protovis/ex/sunburst.html";
+        return "http://vis.stanford.edu/protovis/ex/icicle.html";
     }
 
     public String getSourceCodeFile() {
-        return "SunburstExample.java";
+        return "IcicleExample.java";
     }
 
     protected void onAttach() {
@@ -94,7 +98,7 @@ public class SunburstExample extends ProtovisWidget implements ProtovisExample {
     }
 
     public String toString() {
-        return "Sunbursts";
+        return "Icicles";
     }
 
 }
