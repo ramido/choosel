@@ -40,12 +40,20 @@ public final class PVWedge extends PVAbstractMark<PVWedge> {
     protected PVWedge() {
     }
 
+    public final native double angle() /*-{
+        return this.angle;
+    }-*/;
+
     public final native PVWedge angle(double angle) /*-{
         return this.angle(angle);
     }-*/;
 
     public final native PVWedge angle(JsDoubleFunction f) /*-{
         return this.angle(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
+    }-*/;
+
+    public final native PVWedge fillStyle(JsFunction<PVColor> f) /*-{
+        return this.fillStyle(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsFunction;)(f));
     }-*/;
 
     public final native PVWedge fillStyle(JsStringFunction f) /*-{
@@ -62,6 +70,14 @@ public final class PVWedge extends PVAbstractMark<PVWedge> {
 
     public final native PVWedge innerRadius(JsDoubleFunction f) /*-{
         return this.innerRadius(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
+    }-*/;
+
+    public final native PVWedge lineWidth(double lineWidth) /*-{
+        return this.lineWidth(lineWidth);
+    }-*/;
+
+    public final native double outerRadius() /*-{
+        return this.outerRadius;
     }-*/;
 
     public final native PVWedge outerRadius(double outerRadius) /*-{
