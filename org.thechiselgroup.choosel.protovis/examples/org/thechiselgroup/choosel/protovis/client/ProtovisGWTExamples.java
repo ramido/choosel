@@ -88,7 +88,7 @@ public class ProtovisGWTExamples implements EntryPoint {
     }
 
     private void initSourceCodeLink() {
-        sourceCodeLink = new Anchor("Protovis/GWT Example Source Code");
+        sourceCodeLink = new Anchor("Protovis-GWT Example Source Code");
         sourceCodeLink.setTarget("_blank");
         RootPanel.get("sourceCodeLink").add(sourceCodeLink);
     }
