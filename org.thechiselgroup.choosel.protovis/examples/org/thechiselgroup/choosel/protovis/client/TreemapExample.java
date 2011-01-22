@@ -54,8 +54,6 @@ public class TreemapExample extends ProtovisWidget implements ProtovisExample {
         }).strokeStyle("#fff").lineWidth(1d).antialias(false);
 
         treemap.label().add(PV.Label);
-
-        vis.render();
     }
 
     public String getProtovisExampleURL() {
