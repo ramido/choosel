@@ -15,28 +15,41 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
+import com.google.gwt.core.client.JavaScriptObject;
+
 /**
- * Wrapper for
- * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Layout.html">pv.Layout</a></code>
- * .
  * 
  * @author Lars Grammel
  */
-public final class PVLayout {
+public class PVDomNode extends JavaScriptObject {
 
-    public static native PVBulletLayout Bullet() /*-{
-        return $wnd.pv.Layout.Bullet;
-    }-*/;
-
-    public static native PVStackLayout Stack() /*-{
-        return $wnd.pv.Layout.Stack;
-    }-*/;
-
-    public static native PVFillPartitionLayout PartitionFill() /*-{
-        return $wnd.pv.Layout.Partition.Fill;
-    }-*/;
-
-    private PVLayout() {
+    protected PVDomNode() {
     }
+
+    public static final native PVDomNode create(Object o, String nodeName) /*-{
+        var node = new $wnd.pv.Dom.Node(o);
+        node.nodeName = nodeName;
+        return node;
+    }-*/;
+
+    public final native void appendChild(PVDomNode childNode) /*-{
+        this.appendChild(childNode);
+    }-*/;
+
+    public final native PVDomNode parentNode() /*-{
+        return this.parentNode;
+    }-*/;
+
+    public final native String nodeName() /*-{
+        return this.nodeName;
+    }-*/;
+
+    public final native JavaScriptObject nodes() /*-{
+        return this.nodes();
+    }-*/;
+
+    public final native <T> T nodeValue() /*-{
+        return this.nodeValue;
+    }-*/;
 
 }

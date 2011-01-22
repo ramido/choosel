@@ -15,28 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
-/**
- * Wrapper for
- * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Layout.html">pv.Layout</a></code>
- * .
- * 
- * @author Lars Grammel
- */
-public final class PVLayout {
+public interface PVDomAdapter<T> {
 
-    public static native PVBulletLayout Bullet() /*-{
-        return $wnd.pv.Layout.Bullet;
-    }-*/;
+    T[] getChildren(T t);
 
-    public static native PVStackLayout Stack() /*-{
-        return $wnd.pv.Layout.Stack;
-    }-*/;
-
-    public static native PVFillPartitionLayout PartitionFill() /*-{
-        return $wnd.pv.Layout.Partition.Fill;
-    }-*/;
-
-    private PVLayout() {
-    }
+    String getNodeName(T t);
 
 }
