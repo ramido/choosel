@@ -15,6 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client.jsutil;
 
+import java.util.Comparator;
+
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayInteger;
 import com.google.gwt.core.client.JsArrayNumber;
 import com.google.gwt.core.client.JsArrayString;
@@ -52,6 +55,13 @@ public final class JsUtils {
 
     public final static native String toFixed(double d, int decimalPlaces) /*-{
         return d.toFixed(decimalPlaces);
+    }-*/;
+
+    public final static native <T> JavaScriptObject toJsComparator(
+            Comparator<?> comparator) /*-{
+        return function(a,b) {
+        return comparator.@java.util.Comparator::compare(Ljava/lang/Object;Ljava/lang/Object;)(a, b);
+        };
     }-*/;
 
     public final static <S> JsArrayGeneric<S> toJsArrayGeneric(

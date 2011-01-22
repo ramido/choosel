@@ -15,6 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
+import java.util.Comparator;
+
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsUtils;
+
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**
@@ -55,6 +59,14 @@ public class PVDomNode extends JavaScriptObject {
 
     public final native JavaScriptObject nodes() /*-{
         return this.nodes();
+    }-*/;
+
+    public final PVDomNode sort(Comparator<PVDomNode> comparator) {
+        return sort(JsUtils.toJsComparator(comparator));
+    }
+
+    public final native PVDomNode sort(JavaScriptObject comparator) /*-{
+        return this.sort(comparator);
     }-*/;
 
     public final native double nodeValue() /*-{

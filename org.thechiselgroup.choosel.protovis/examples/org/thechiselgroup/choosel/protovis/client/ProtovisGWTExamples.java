@@ -53,8 +53,6 @@ public class ProtovisGWTExamples implements EntryPoint {
     private void initExampleVisualizations() {
         examples = new ArrayList<ProtovisExample>();
 
-        examples.add(new TreemapExample());
-
         examples.add(new AreaChartExample());
         examples.add(new BarChartExample());
         examples.add(new PieChartExample());
@@ -62,6 +60,7 @@ public class ProtovisGWTExamples implements EntryPoint {
         examples.add(new LineChartExample());
         examples.add(new StackedChartExample());
         examples.add(new GroupedChartExample());
+
         examples.add(new AndersonsFlowersExample());
         examples.add(new BeckersBarleyExample());
         examples.add(new StreamgraphExample());
@@ -71,9 +70,13 @@ public class ProtovisGWTExamples implements EntryPoint {
         examples.add(new PlayfairsWheatExample());
         examples.add(new GasAndDrivingExample());
         examples.add(new SeattleWeatherExample());
+
+        examples.add(new DendrogramExample());
         examples.add(new SunburstExample());
         examples.add(new IcicleExample());
         examples.add(new TreeExample());
+        examples.add(new TreemapExample());
+
         examples.add(new BoxAndWhiskerPlotExample());
     }
 
@@ -91,7 +94,7 @@ public class ProtovisGWTExamples implements EntryPoint {
 
     private void initVisualizationSelector() {
         selectorList = new ListBox();
-        selectorList.setVisibleItemCount(20);
+        selectorList.setVisibleItemCount(25);
         for (int i = 0; i < examples.size(); i++) {
             selectorList.addItem(examples.get(i).toString());
         }
