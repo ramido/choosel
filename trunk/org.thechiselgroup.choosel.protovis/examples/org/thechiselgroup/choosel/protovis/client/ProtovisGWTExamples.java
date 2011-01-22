@@ -74,6 +74,7 @@ public class ProtovisGWTExamples implements EntryPoint {
         examples.add(new DendrogramExample());
         examples.add(new SunburstExample());
         examples.add(new IcicleExample());
+        examples.add(new CirclePackingExample());
         examples.add(new TreeExample());
         examples.add(new TreemapExample());
 

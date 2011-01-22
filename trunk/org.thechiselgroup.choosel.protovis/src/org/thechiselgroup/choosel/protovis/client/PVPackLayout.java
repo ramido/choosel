@@ -15,44 +15,36 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
+
+import com.google.gwt.core.client.JavaScriptObject;
+
 /**
- * Wrapper for
- * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Layout.html">pv.Layout</a></code>
- * .
- * 
  * @author Lars Grammel
  */
-public final class PVLayout {
+public final class PVPackLayout extends PVAbstractBar<PVPackLayout> {
 
-    public static native PVBulletLayout Bullet() /*-{
-        return $wnd.pv.Layout.Bullet;
-    }-*/;
-
-    public static native PVClusterLayout Cluster() /*-{
-        return $wnd.pv.Layout.Cluster;
-    }-*/;
-
-    public static native PVPackLayout Pack() /*-{
-        return $wnd.pv.Layout.Pack;
-    }-*/;
-
-    public static native PVFillPartitionLayout PartitionFill() /*-{
-        return $wnd.pv.Layout.Partition.Fill;
-    }-*/;
-
-    public static native PVStackLayout Stack() /*-{
-        return $wnd.pv.Layout.Stack;
-    }-*/;
-
-    public static native PVTreeLayout Tree() /*-{
-        return $wnd.pv.Layout.Tree;
-    }-*/;
-
-    public static native PVTreemapLayout Treemap() /*-{
-        return $wnd.pv.Layout.Treemap;
-    }-*/;
-
-    private PVLayout() {
+    protected PVPackLayout() {
     }
+
+    public final native PVMark label() /*-{
+        return this.label;
+    }-*/;
+
+    public final native PVMark link() /*-{
+        return this.link;
+    }-*/;
+
+    public final native PVMark node() /*-{
+        return this.node;
+    }-*/;
+
+    public final native PVPackLayout nodes(JavaScriptObject data) /*-{
+        return this.nodes(data);
+    }-*/;
+
+    public final native PVPackLayout size(JsDoubleFunction f) /*-{
+        return this.size(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
+    }-*/;
 
 }
