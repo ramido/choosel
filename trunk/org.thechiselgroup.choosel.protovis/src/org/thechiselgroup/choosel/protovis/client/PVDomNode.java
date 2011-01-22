@@ -36,6 +36,10 @@ public class PVDomNode extends JavaScriptObject {
         this.appendChild(childNode);
     }-*/;
 
+    public final native PVDomNode firstChild() /*-{
+        return this.firstChild;
+    }-*/;
+
     public final native PVDomNode parentNode() /*-{
         return this.parentNode;
     }-*/;
