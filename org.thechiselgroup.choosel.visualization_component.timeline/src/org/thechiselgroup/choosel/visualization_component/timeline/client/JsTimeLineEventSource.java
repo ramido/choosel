@@ -19,24 +19,20 @@ import org.thechiselgroup.choosel.core.client.util.collections.ArrayUtils;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
-public class TimeLineEventSource extends JavaScriptObject {
+public class JsTimeLineEventSource extends JavaScriptObject {
 
-    // @formatter:off
-    public static native TimeLineEventSource create() /*-{
+    public static native JsTimeLineEventSource create() /*-{
         return new $wnd.Timeline.DefaultEventSource();
     }-*/;
-    // @formatter:on
 
-    protected TimeLineEventSource() {
+    protected JsTimeLineEventSource() {
     }
 
-    // @formatter:off
     private final native void addEvents(JavaScriptObject events) /*-{
         this.addMany(events);
     }-*/;
-    // @formatter:on
 
-    public final void addEvents(TimeLineEvent[] events) {
+    public final void addEvents(JsTimeLineEvent[] events) {
         addEvents(ArrayUtils.toJsArray(events));
     }
 
@@ -55,7 +51,7 @@ public class TimeLineEventSource extends JavaScriptObject {
     }-*/;
     // @formatter:on
 
-    public final void removeEvents(TimeLineEvent[] events) {
+    public final void removeEvents(JsTimeLineEvent[] events) {
         removeEvents(ArrayUtils.toJsArray(events));
     }
 

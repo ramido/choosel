@@ -15,29 +15,22 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.timeline.client;
 
-import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.core.client.views.ViewContentDisplay;
-import org.thechiselgroup.choosel.core.client.views.ViewContentDisplayFactory;
+import org.thechiselgroup.choosel.core.client.resources.DataType;
+import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 
-import com.google.inject.Inject;
+public final class TimelineVisualization {
 
-public class TimeLineViewContentDisplayFactory implements
-        ViewContentDisplayFactory {
+    public static final Slot DESCRIPTION_SLOT = new Slot("description",
+            "Label", DataType.TEXT);
 
-    @Inject
-    private DragEnablerFactory dragEnablerFactory;
+    public static final Slot DATE_SLOT = new Slot("date", "Date", DataType.DATE);
 
-    @Inject
-    public TimeLineViewContentDisplayFactory() {
+    public final static Slot COLOR_SLOT = new Slot("color", "Color",
+            DataType.COLOR);
+
+    public final static String ID = "org.thechiselgroup.choosel.visualization_component.Timeline";
+
+    private TimelineVisualization() {
     }
 
-    @Override
-    public ViewContentDisplay createViewContentDisplay() {
-        return new TimeLineViewContentDisplay(dragEnablerFactory);
-    }
-
-    @Override
-    public String getViewContentTypeID() {
-        return TimelineVisualization.ID;
-    }
 }

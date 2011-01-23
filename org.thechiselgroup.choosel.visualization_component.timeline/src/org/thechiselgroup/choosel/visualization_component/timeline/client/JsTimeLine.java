@@ -22,12 +22,12 @@ import com.google.gwt.user.client.Element;
  * {@linkplain http://code.google.com/p/simile-widgets/wiki/Timeline}
  * {@linkplain http://code.google.com/p/simile-widgets/wiki/Timeline_BandClass}
  */
-class TimeLine extends JavaScriptObject {
+class JsTimeLine extends JavaScriptObject {
 
     // TODO expose # of bands
     // @formatter:off
-    public static native TimeLine create(Element element,
-            TimeLineEventSource eventSource, String dateAsString) /*-{
+    public static native JsTimeLine create(Element element,
+            JsTimeLineEventSource eventSource, String dateAsString) /*-{
         var theme = $wnd.Timeline.ClassicTheme.create();
         theme.event.bubble.width = 350;
         theme.event.bubble.height = 300;
@@ -91,19 +91,18 @@ class TimeLine extends JavaScriptObject {
     // @formatter:on
 
     // called from JavaScript
-    private static final void onEventPainted(TimeLine timeLine, int bandIndex,
-            TimeLineEvent event) {
+    private static final void onEventPainted(JsTimeLine timeLine, int bandIndex,
+            JsTimeLineEvent event) {
         timeLine.onEventPainted(bandIndex, event);
     }
 
-    protected TimeLine() {
+    protected JsTimeLine() {
     }
 
     /**
      * Replaces the _showBubble function in the event painter with a null
      * functions, thus preventing info bubbles from being shown.
      */
-    // @formatter:off
     public final native void disableBubbles() /*-{
         for (var i = 0; i < this.getBandCount(); i++) {
         var eventPainter = this.getBand(i)._eventPainter;
@@ -111,22 +110,19 @@ class TimeLine extends JavaScriptObject {
         };
         }
     }-*/;
-    // @formatter:on
 
     /**
      * Returns getCenterVisibleDate() from the main (first) band as GMT String
      * in a form similar to "Fri, 29 Sep 2000 06:23:54 GMT"
      * ("EEE, d MMM yyyy HH:mm:ss Z")
      */
-    // @formatter:off
     public final native String getCenterVisibleDateAsGMTString() /*-{
         // TODO change if bands are not synchronized any more
         return this.getBand(0).getCenterVisibleDate().toGMTString();
     }-*/;
-    // @formatter:on
 
     public final String getEventElementID(int bandIndex, String elementType,
-            TimeLineEvent event) {
+            JsTimeLineEvent event) {
         /*
          * see Timeline.EventUtils.encodeEventElID = function(timeline, band,
          * elType, evt)
@@ -142,7 +138,7 @@ class TimeLine extends JavaScriptObject {
     /**
      * Returns the zoom index of a band. What time interval the zoom index
      * refers to depends on the band (defined in
-     * {@link #create(Element, TimeLineEventSource, String)}).
+     * {@link #create(Element, JsTimeLineEventSource, String)}).
      */
     public final native int getZoomIndex(int bandNumber) /*-{
         return this.getBand(bandNumber)._zoomIndex;
@@ -152,7 +148,7 @@ class TimeLine extends JavaScriptObject {
         this.layout();
     }-*/;
 
-    private final void onEventPainted(int bandIndex, final TimeLineEvent event) {
+    private final void onEventPainted(int bandIndex, final JsTimeLineEvent event) {
         String labelElementID = getEventElementID(bandIndex, "label", event);
         String iconElementID = getEventElementID(bandIndex, "icon", event);
 
@@ -164,7 +160,6 @@ class TimeLine extends JavaScriptObject {
         // 2. resolve timeline event from id
     }
 
-    // @formatter:off
     public final native void paint() /*-{
         this.paint();
     }-*/;
@@ -175,7 +170,7 @@ class TimeLine extends JavaScriptObject {
         var bandIndex = band.getIndex();
         var timeline = band.getTimeline();
 
-        @org.thechiselgroup.choosel.visualization_component.timeline.client.TimeLine::onEventPainted(Lorg/thechiselgroup/choosel/visualization_component/timeline/client/TimeLine;ILorg/thechiselgroup/choosel/visualization_component/timeline/client/TimeLineEvent;)(timeline, bandIndex, event);
+        @org.thechiselgroup.choosel.visualization_component.timeline.client.JsTimeLine::onEventPainted(Lorg/thechiselgroup/choosel/visualization_component/timeline/client/JsTimeLine;ILorg/thechiselgroup/choosel/visualization_component/timeline/client/JsTimeLineEvent;)(timeline, bandIndex, event);
         }
         };
         for (var i = 0; i < this.getBandCount(); i++) {
@@ -195,7 +190,7 @@ class TimeLine extends JavaScriptObject {
     /**
      * Sets the zoom index of a band. What time interval the zoom index refers
      * to depends on the band (defined in
-     * {@link #create(Element, TimeLineEventSource, String)}). WARNING: calling
+     * {@link #create(Element, JsTimeLineEventSource, String)}). WARNING: calling
      * this function will change the center date of the band, call
      * {@link #setCenterVisibleDate(String)} afterwards.
      */
@@ -214,6 +209,5 @@ class TimeLine extends JavaScriptObject {
         this.getBand(bandNumber).zoom(zoomIn, 0, 0, null);
         }
     }-*/;
-    // @formatter:on
 
 }
