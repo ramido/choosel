@@ -23,7 +23,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class TimeLineWidget extends Widget {
 
-    private TimeLineEventSource eventSource;
+    private JsTimeLineEventSource eventSource;
 
     private DateTimeFormat inputFormat = DateTimeFormat
             .getFormat("MMM d yyyy HH:mm:ss z");
@@ -33,13 +33,13 @@ public class TimeLineWidget extends Widget {
     private DateTimeFormat outputFormat = DateTimeFormat
             .getFormat("dd MMM yyyy HH:mm:ss z");
 
-    private TimeLine timeLine;
+    private JsTimeLine timeLine;
 
     public TimeLineWidget() {
         setElement(DOM.createDiv());
     }
 
-    public void addEvents(TimeLineEvent[] events) {
+    public void addEvents(JsTimeLineEvent[] events) {
         eventSource.addEvents(events);
         timeLine.paint();
     }
@@ -53,11 +53,11 @@ public class TimeLineWidget extends Widget {
     }
 
     public final String getEventElementID(int bandIndex, String elementType,
-            TimeLineEvent event) {
+            JsTimeLineEvent event) {
         return timeLine.getEventElementID(bandIndex, elementType, event);
     }
 
-    public TimeLine getTimeLine() {
+    public JsTimeLine getTimeLine() {
         return timeLine;
     }
 
@@ -76,9 +76,9 @@ public class TimeLineWidget extends Widget {
         super.onAttach();
 
         if (timeLine == null) {
-            eventSource = TimeLineEventSource.create();
+            eventSource = JsTimeLineEventSource.create();
 
-            timeLine = TimeLine.create(getElement(), eventSource,
+            timeLine = JsTimeLine.create(getElement(), eventSource,
                     inputFormat.format(new Date()));
 
             timeLine.disableBubbles();
@@ -86,7 +86,7 @@ public class TimeLineWidget extends Widget {
         }
     }
 
-    public void removeEvents(TimeLineEvent[] events) {
+    public void removeEvents(JsTimeLineEvent[] events) {
         eventSource.removeEvents(events);
         timeLine.paint();
     }

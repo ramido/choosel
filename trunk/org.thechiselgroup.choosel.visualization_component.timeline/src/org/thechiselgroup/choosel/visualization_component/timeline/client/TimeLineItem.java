@@ -69,7 +69,7 @@ public class TimeLineItem extends IconResourceItem {
         }
     };
 
-    private TimeLineEvent timeLineEvent;
+    private JsTimeLineEvent timeLineEvent;
 
     private final TimeLineViewContentDisplay view;
 
@@ -82,12 +82,12 @@ public class TimeLineItem extends IconResourceItem {
     public TimeLineItem(ViewItem resourceItem, TimeLineViewContentDisplay view,
             DragEnablerFactory dragEnablerFactory) {
 
-        super(resourceItem, TimeLineViewContentDisplay.COLOR_SLOT);
+        super(resourceItem, TimelineVisualization.COLOR_SLOT);
 
         this.view = view;
         this.dragEnablerFactory = dragEnablerFactory;
 
-        Object date = getResourceValue(TimeLineViewContentDisplay.DATE_SLOT);
+        Object date = getResourceValue(TimelineVisualization.DATE_SLOT);
         String dateString;
         if (date instanceof Date) {
             dateString = date.toString();
@@ -98,7 +98,7 @@ public class TimeLineItem extends IconResourceItem {
                     + " not an appropriate date");
         }
 
-        timeLineEvent = TimeLineEvent.create(dateString, null, "", this);
+        timeLineEvent = JsTimeLineEvent.create(dateString, null, "", this);
         tickElementID = view.getEventElementID(OVERVIEW_BAND_ID, TICK_ELEMENT,
                 timeLineEvent);
     }
@@ -123,7 +123,7 @@ public class TimeLineItem extends IconResourceItem {
         return $("#" + elementID);
     }
 
-    public TimeLineEvent getTimeLineEvent() {
+    public JsTimeLineEvent getTimeLineEvent() {
         return timeLineEvent;
     }
 
@@ -205,7 +205,7 @@ public class TimeLineItem extends IconResourceItem {
         Element element = DOM.getElementById(iconElementID);
 
         String color = getColor();
-        String label = (String) getResourceValue(TimeLineViewContentDisplay.DESCRIPTION_SLOT);
+        String label = (String) getResourceValue(TimelineVisualization.DESCRIPTION_SLOT);
 
         element.setInnerHTML("<div style='background-color: " + color
                 + "; border-color: " + calculateBorderColor(color)

@@ -19,7 +19,6 @@ import java.util.Date;
 
 import org.thechiselgroup.choosel.core.client.persistence.Memento;
 import org.thechiselgroup.choosel.core.client.persistence.PersistableRestorationService;
-import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
@@ -32,14 +31,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
-
-    public static final Slot DESCRIPTION_SLOT = new Slot("description",
-            "Label", DataType.TEXT);
-
-    public static final Slot DATE_SLOT = new Slot("date", "Date", DataType.DATE);
-
-    public final static Slot COLOR_SLOT = new Slot("color", "Color",
-            DataType.COLOR);
 
     private static final String MEMENTO_DATE = "date";
 
@@ -85,19 +76,19 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     public final String getEventElementID(int bandIndex, String elementType,
-            TimeLineEvent event) {
+            JsTimeLineEvent event) {
         return timelineWidget.getEventElementID(bandIndex, elementType, event);
     }
 
     @Override
     public Slot[] getSlots() {
-        return new Slot[] { DESCRIPTION_SLOT, COLOR_SLOT, DATE_SLOT };
+        return new Slot[] { TimelineVisualization.DESCRIPTION_SLOT, TimelineVisualization.COLOR_SLOT, TimelineVisualization.DATE_SLOT };
     }
 
-    private TimeLineEvent[] getTimeLineEvents(
+    private JsTimeLineEvent[] getTimeLineEvents(
             LightweightCollection<ViewItem> resourceItems) {
 
-        TimeLineEvent[] events = new TimeLineEvent[resourceItems.size()];
+        JsTimeLineEvent[] events = new JsTimeLineEvent[resourceItems.size()];
         int counter = 0;
         for (ViewItem item : resourceItems) {
             TimeLineItem timelineItem = (TimeLineItem) item.getDisplayObject();

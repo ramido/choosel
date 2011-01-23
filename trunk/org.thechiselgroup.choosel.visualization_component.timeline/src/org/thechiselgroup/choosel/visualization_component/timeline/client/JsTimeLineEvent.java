@@ -18,11 +18,11 @@ package org.thechiselgroup.choosel.visualization_component.timeline.client;
 import com.google.gwt.core.client.JavaScriptObject;
 
 // TODO remove TimeLineItem dependency --> use payload object instead
-public class TimeLineEvent extends JavaScriptObject {
+public class JsTimeLineEvent extends JavaScriptObject {
 
     // TODO document the expected date format
     // @formatter:off
-    public static native TimeLineEvent create(String date, String text,
+    public static native JsTimeLineEvent create(String date, String text,
             String icon, TimeLineItem timeLineItem) /*-{
         var parseDateTimeFunction = 
         $wnd.Timeline.NativeDateUnit.getParser(null);
@@ -50,7 +50,7 @@ public class TimeLineEvent extends JavaScriptObject {
     }-*/;
 
 
-    protected TimeLineEvent() {
+    protected JsTimeLineEvent() {
     }
 
     public final native String getID() /*-{
