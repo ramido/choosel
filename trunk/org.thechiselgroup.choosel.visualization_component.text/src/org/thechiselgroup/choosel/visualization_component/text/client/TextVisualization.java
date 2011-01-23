@@ -15,29 +15,20 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.text.client;
 
-import org.thechiselgroup.choosel.core.client.ui.dnd.ResourceSetAvatarDragController;
-import org.thechiselgroup.choosel.core.client.views.ViewContentDisplay;
-import org.thechiselgroup.choosel.core.client.views.ViewContentDisplayFactory;
+import org.thechiselgroup.choosel.core.client.resources.DataType;
+import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 
-import com.google.inject.Inject;
+public final class TextVisualization {
 
-public class TextViewContentDisplayFactory implements ViewContentDisplayFactory {
+    public final static String ID = "org.thechiselgroup.choosel.visualization_component.Text";
 
-    @Inject
-    private ResourceSetAvatarDragController dragController;
+    public final static Slot DESCRIPTION_SLOT = new Slot("description",
+            "Label", DataType.TEXT);
 
-    @Inject
-    public TextViewContentDisplayFactory() {
-    }
+    public static final Slot FONT_SIZE_SLOT = new Slot("font-size",
+            "Font Size", DataType.NUMBER);
 
-    @Override
-    public ViewContentDisplay createViewContentDisplay() {
-        return new TextViewContentDisplay(dragController);
-    }
-
-    @Override
-    public String getViewContentTypeID() {
-        return TextVisualization.ID;
+    private TextVisualization() {
     }
 
 }

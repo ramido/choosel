@@ -72,7 +72,7 @@ public class TextViewContentDisplayTest {
 
         when(
                 slotMappingConfiguration.resolve(
-                        eq(TextViewContentDisplay.FONT_SIZE_SLOT), eq(""),
+                        eq(TextVisualization.FONT_SIZE_SLOT), eq(""),
                         eqResources(createResources(1, 2)))).thenReturn(
                 new Double(2));
 
