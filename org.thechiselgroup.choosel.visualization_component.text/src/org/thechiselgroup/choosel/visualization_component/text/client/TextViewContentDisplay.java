@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionUtils;
@@ -75,12 +74,6 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
             getResourceItem(e).getHighlightingManager().setHighlighting(true);
         }
     }
-
-    public final static Slot DESCRIPTION_SLOT = new Slot("description",
-            "Label", DataType.TEXT);
-
-    public static final Slot FONT_SIZE_SLOT = new Slot("font-size",
-            "Font Size", DataType.NUMBER);
 
     private static final String CSS_TAG_CLOUD = "choosel-TextViewContentDisplay-TagCloud";
 
@@ -195,7 +188,7 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
     @Override
     public Slot[] getSlots() {
-        return new Slot[] { DESCRIPTION_SLOT, FONT_SIZE_SLOT };
+        return new Slot[] { TextVisualization.DESCRIPTION_SLOT, TextVisualization.FONT_SIZE_SLOT };
     }
 
     private void initGroupValueMapper() {
