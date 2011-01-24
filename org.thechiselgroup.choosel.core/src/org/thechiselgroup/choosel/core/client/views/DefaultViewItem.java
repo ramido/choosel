@@ -241,23 +241,23 @@ public class DefaultViewItem implements Disposable, ViewItem {
     }
 
     @Override
-    public Object getResourceValue(Slot slot) {
-        return getResourceValue(slot, Subset.ALL);
+    public <T> T getSlotValue(Slot slot) {
+        return getSlotValue(slot, Subset.ALL);
     }
 
     @Override
-    public Object getResourceValue(Slot slot, Subset subset) {
+    public <T> T getSlotValue(Slot slot, Subset subset) {
         assert slot != null : "slot must not be null";
         assert subset != null : "subset must not be null";
 
         switch (subset) {
         case ALL:
-            return doResolve(slot, resources, allSubsetSlotValueCache);
+            return (T) doResolve(slot, resources, allSubsetSlotValueCache);
         case SELECTED:
-            return doResolve(slot, selectedResources,
+            return (T) doResolve(slot, selectedResources,
                     selectedSubsetSlotValueCache);
         case HIGHLIGHTED:
-            return doResolve(slot, highlightedResources,
+            return (T) doResolve(slot, highlightedResources,
                     highlightedSubsetSlotValueCache);
         }
 

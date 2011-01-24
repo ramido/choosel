@@ -15,8 +15,16 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.chart.client.piechart;
 
+import org.thechiselgroup.choosel.core.client.resources.DataType;
+import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 
 public final class PieChartVisualization {
+
+    public static final Slot PIE_ANGLE_SLOT = new Slot("pie.angle",
+            "Pie Angle", DataType.NUMBER);
+
+    public static final Slot PIE_LABEL_SLOT = new Slot("pie.label", "Label",
+            DataType.TEXT);
 
     public final static String ID = "org.thechiselgroup.choosel.visualization_component.chart.PieChart";
 

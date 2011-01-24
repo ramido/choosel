@@ -18,7 +18,6 @@ package org.thechiselgroup.choosel.core.client.resources;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.inject.Inject;

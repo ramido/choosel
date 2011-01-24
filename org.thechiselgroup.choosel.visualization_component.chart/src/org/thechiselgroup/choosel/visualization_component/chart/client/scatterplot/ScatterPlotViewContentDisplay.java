@@ -92,14 +92,14 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
 
     private PVDot scatter;
 
-    protected JsStringFunction scaleLabelTextX = new JsStringFunction() {
+    private JsStringFunction scaleLabelTextX = new JsStringFunction() {
         @Override
         public String f(JsArgs args) {
             return scaleX.tickFormatInt(args.getInt());
         }
     };
 
-    protected JsStringFunction scaleLabelTextY = new JsStringFunction() {
+    private JsStringFunction scaleLabelTextY = new JsStringFunction() {
         @Override
         public String f(JsArgs args) {
             return scaleY.tickFormatInt(args.getInt());
@@ -110,7 +110,7 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
 
     private String yAxisLabel = "Y-Axis";
 
-    protected JsStringFunction chartFillStyle = new JsStringFunction() {
+    private JsStringFunction chartFillStyle = new JsStringFunction() {
         @Override
         public String f(JsArgs args) {
             return args.<ChartItem> getObject().getColor();
@@ -149,21 +149,15 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
 
     // TODO refactor
     protected double calculateAllResourcesX(int i) {
-        return Double.parseDouble(chartItemsJsArray
-                .get(i)
-                .getViewItem()
-                .getResourceValue(
-                        ScatterPlotVisualization.X_POSITION_SLOT)
+        return Double.parseDouble(chartItemsJsArray.get(i).getViewItem()
+                .getSlotValue(ScatterPlotVisualization.X_POSITION_SLOT)
                 .toString());
     }
 
     // TODO refactor
     protected double calculateAllResourcesY(int i) {
-        return Double.parseDouble(chartItemsJsArray
-                .get(i)
-                .getViewItem()
-                .getResourceValue(
-                        ScatterPlotVisualization.Y_POSITION_SLOT)
+        return Double.parseDouble(chartItemsJsArray.get(i).getViewItem()
+                .getSlotValue(ScatterPlotVisualization.Y_POSITION_SLOT)
                 .toString());
     }
 
@@ -274,4 +268,5 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
         super.update(addedResourceItems, updatedResourceItems,
                 removedResourceItems, changedSlots);
     }
+
 }

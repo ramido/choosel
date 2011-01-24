@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.core.client.views;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 
-public abstract class IconResourceItem {
+public abstract class IconViewItem {
 
     protected static final String CSS_RESOURCE_ITEM_ICON = "resourceItemIcon";
 
@@ -35,18 +35,18 @@ public abstract class IconResourceItem {
     private String selectedColor;
 
     // TODO pull up
-    protected ViewItem resourceItem;
+    protected ViewItem viewItem;
 
-    public IconResourceItem(ViewItem resourceItem, Slot colorSlot) {
-        assert resourceItem != null;
+    public IconViewItem(ViewItem viewItem, Slot colorSlot) {
+        assert viewItem != null;
         assert colorSlot != null;
         assert colorSlot.getDataType().equals(DataType.COLOR);
 
-        this.resourceItem = resourceItem;
+        this.viewItem = viewItem;
 
         // TODO move colors to color provider
         // TODO add border (should be automatically calculated based on color)
-        defaultColor = (String) getResourceValue(colorSlot);
+        defaultColor = (String) getSlotValue(colorSlot);
         if (defaultColor == null) {
             defaultColor = "#6495ed"; // XXX hack
         }
@@ -79,8 +79,8 @@ public abstract class IconResourceItem {
     }
 
     // TODO pull up
-    protected Object getResourceValue(Slot slot) {
-        return resourceItem.getResourceValue(slot);
+    protected Object getSlotValue(Slot slot) {
+        return viewItem.getSlotValue(slot);
     }
 
     protected String getSelectedColor() {

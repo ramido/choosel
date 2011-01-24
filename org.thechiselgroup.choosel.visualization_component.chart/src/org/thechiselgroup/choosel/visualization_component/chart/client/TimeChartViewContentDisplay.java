@@ -16,7 +16,10 @@
 package org.thechiselgroup.choosel.visualization_component.chart.client;
 
 import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
+import org.thechiselgroup.choosel.core.client.views.ViewItem.Subset;
+import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 import org.thechiselgroup.choosel.protovis.client.PVEventHandler;
+import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChartVisualization;
 
 import com.google.inject.Inject;
 
@@ -24,7 +27,6 @@ public class TimeChartViewContentDisplay extends ChartViewContentDisplay {
 
     @Inject
     public TimeChartViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
-
         super(dragEnablerFactory);
     }
 
@@ -170,5 +172,27 @@ public class TimeChartViewContentDisplay extends ChartViewContentDisplay {
         // XXX broken while switching to protovis-gwt
         // PV.sort(chartItemsJsArray, new ChartItemComparator(
         // TimeLineViewContentDisplay.DATE_SLOT));
+    }
+
+    @Override
+    public Slot[] getSlots() {
+        return new Slot[] { BarChartVisualization.BAR_LABEL_SLOT,
+                BarChartVisualization.BAR_LENGTH_SLOT };
+    }
+
+    protected void calculateMaximumChartItemValue() {
+        maxChartItemValue = 0;
+        for (int i = 0; i < chartItemsJsArray.length(); i++) {
+            double currentItemValue = calculateChartItemValue(
+                    chartItemsJsArray.get(i),
+                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
+            if (maxChartItemValue < currentItemValue) {
+                maxChartItemValue = currentItemValue;
+            }
+        }
+    }
+
+    protected void beforeRender() {
+        calculateMaximumChartItemValue();
     }
 }

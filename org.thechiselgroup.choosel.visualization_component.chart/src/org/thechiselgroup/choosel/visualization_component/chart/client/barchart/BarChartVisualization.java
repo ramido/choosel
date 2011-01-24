@@ -22,11 +22,11 @@ public final class BarChartVisualization {
 
     public final static String ID = "org.thechiselgroup.choosel.visualization_component.chart.BarChart";
 
-    public static final Slot BAR_LABEL_SLOT = new Slot("chart-label",
-            "Label", DataType.TEXT);
+    public static final Slot BAR_LABEL_SLOT = new Slot("bar.label", "Label",
+            DataType.TEXT);
 
-    public static final Slot BAR_LENGTH_SLOT = new Slot("chart-value",
-            "Value", DataType.NUMBER);
+    public static final Slot BAR_LENGTH_SLOT = new Slot("bar.length",
+            "Bar Length", DataType.NUMBER);
 
     public static final String LAYOUT_PROPERTY = "layout";
 

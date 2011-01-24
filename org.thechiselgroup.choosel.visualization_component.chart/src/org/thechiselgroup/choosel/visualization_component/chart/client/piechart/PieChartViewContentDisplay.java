@@ -17,6 +17,8 @@ package org.thechiselgroup.choosel.visualization_component.chart.client.piechart
 
 import org.thechiselgroup.choosel.core.client.ui.Colors;
 import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
+import org.thechiselgroup.choosel.core.client.views.ViewItem.Subset;
+import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 import org.thechiselgroup.choosel.protovis.client.PV;
 import org.thechiselgroup.choosel.protovis.client.PVAlignment;
 import org.thechiselgroup.choosel.protovis.client.PVEventHandler;
@@ -83,7 +85,10 @@ public class PieChartViewContentDisplay extends ChartViewContentDisplay {
         @Override
         public double f(JsArgs args) {
             ChartItem chartItem = args.getObject();
-            return calculateAllResources(chartItem) * 2 * Math.PI / sum;
+            return calculateChartItemValue(chartItem,
+                    PieChartVisualization.PIE_ANGLE_SLOT, Subset.ALL)
+                    * 2
+                    * Math.PI / sum;
         }
     };
 
@@ -98,15 +103,67 @@ public class PieChartViewContentDisplay extends ChartViewContentDisplay {
         }
     };
 
+    private JsStringFunction fullMarkTextStyle = new JsStringFunction() {
+        @Override
+        public String f(JsArgs args) {
+            ChartItem chartItem = args.getObject();
+            return calculateChartItemValue(chartItem,
+                    PieChartVisualization.PIE_ANGLE_SLOT, Subset.HIGHLIGHTED) == 0 ? Colors.WHITE
+                    : Colors.BLACK;
+        }
+    };
+
+    private JsStringFunction fullMarkLabelText = new JsStringFunction() {
+        @Override
+        public String f(JsArgs args) {
+            ChartItem chartItem = args.getObject();
+            return chartItem.getViewItem().getSlotValue(
+                    PieChartVisualization.PIE_LABEL_SLOT);
+        }
+
+    };
+
+    // XXX fix label
+    private JsStringFunction regularMarkLabelText = new JsStringFunction() {
+        @Override
+        public String f(JsArgs args) {
+            ChartItem chartItem = args.getObject();
+            return calculateChartItemValue(chartItem,
+                    PieChartVisualization.PIE_ANGLE_SLOT, Subset.ALL)
+                    - calculateChartItemValue(chartItem,
+                            PieChartVisualization.PIE_ANGLE_SLOT,
+                            Subset.HIGHLIGHTED) < 1 ? null : Double
+                    .toString(calculateChartItemValue(chartItem,
+                            PieChartVisualization.PIE_ANGLE_SLOT, Subset.ALL)
+                            - calculateChartItemValue(chartItem,
+                                    PieChartVisualization.PIE_ANGLE_SLOT,
+                                    Subset.HIGHLIGHTED));
+        }
+    };
+
+    // XXX fix label
+    private JsStringFunction highlightedMarkLabelText = new JsStringFunction() {
+        @Override
+        public String f(JsArgs args) {
+            ChartItem chartItem = args.getObject();
+            return calculateChartItemValue(chartItem,
+                    PieChartVisualization.PIE_ANGLE_SLOT, Subset.HIGHLIGHTED) <= 0 ? null
+                    : Double.toString(calculateChartItemValue(chartItem,
+                            PieChartVisualization.PIE_ANGLE_SLOT,
+                            Subset.HIGHLIGHTED));
+        }
+    };
+
     @Inject
     public PieChartViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
-
         super(dragEnablerFactory);
     }
 
     @Override
     protected void beforeRender() {
         super.beforeRender();
+
+        calculateMaximumChartItemValue();
 
         if (chartItemsJsArray.length() == 0) {
             return;
@@ -117,15 +174,18 @@ public class PieChartViewContentDisplay extends ChartViewContentDisplay {
 
         for (int i = 0; i < chartItemsJsArray.length(); i++) {
             ChartItem chartItem = chartItemsJsArray.get(i);
-            highlightedWedgeCounts[i] = calculateHighlightedResources(chartItem);
-            regularWedgeCounts[i] = calculateAllResources(chartItem);
+            highlightedWedgeCounts[i] = calculateChartItemValue(chartItem,
+                    PieChartVisualization.PIE_ANGLE_SLOT, Subset.HIGHLIGHTED);
+            regularWedgeCounts[i] = calculateChartItemValue(chartItem,
+                    PieChartVisualization.PIE_ANGLE_SLOT, Subset.ALL);
         }
     }
 
     private void calculateAllResourcesSum() {
         sum = 0;
         for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            sum += calculateAllResources(chartItemsJsArray.get(i));
+            sum += calculateChartItemValue(chartItemsJsArray.get(i),
+                    PieChartVisualization.PIE_ANGLE_SLOT, Subset.ALL);
         }
     }
 
@@ -179,4 +239,23 @@ public class PieChartViewContentDisplay extends ChartViewContentDisplay {
     protected void registerEventHandler(String eventType, PVEventHandler handler) {
         regularWedge.event(eventType, handler);
     }
+
+    @Override
+    public Slot[] getSlots() {
+        return new Slot[] { PieChartVisualization.PIE_LABEL_SLOT,
+                PieChartVisualization.PIE_ANGLE_SLOT };
+    }
+
+    protected void calculateMaximumChartItemValue() {
+        maxChartItemValue = 0;
+        for (int i = 0; i < chartItemsJsArray.length(); i++) {
+            double currentItemValue = calculateChartItemValue(
+                    chartItemsJsArray.get(i),
+                    PieChartVisualization.PIE_ANGLE_SLOT, Subset.ALL);
+            if (maxChartItemValue < currentItemValue) {
+                maxChartItemValue = currentItemValue;
+            }
+        }
+    }
+
 }

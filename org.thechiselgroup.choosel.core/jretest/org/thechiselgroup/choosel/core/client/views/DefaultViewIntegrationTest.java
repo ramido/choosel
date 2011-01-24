@@ -62,14 +62,14 @@ public class DefaultViewIntegrationTest {
         List<ViewItem> resourceItems = underTest.getViewItems();
         assertEquals(1, resourceItems.size());
         ViewItem resourceItem = resourceItems.get(0);
-        resourceItem.getResourceValue(numberSlot);
+        resourceItem.getSlotValue(numberSlot);
 
         underTest.getSlotMappingConfiguration().setMapping(
                 numberSlot,
                 new CalculationResourceSetToValueResolver("property1",
                         new MaxCalculation()));
 
-        assertEquals(8d, resourceItem.getResourceValue(numberSlot));
+        assertEquals(8d, resourceItem.getSlotValue(numberSlot));
     }
 
     @Test
@@ -125,7 +125,7 @@ public class DefaultViewIntegrationTest {
         List<ViewItem> resourceItems = underTest.getViewItems();
         assertEquals(1, resourceItems.size());
         ViewItem resourceItem = resourceItems.get(0);
-        assertEquals(expectedResult, resourceItem.getResourceValue(numberSlot));
+        assertEquals(expectedResult, resourceItem.getSlotValue(numberSlot));
     }
 
     /**
@@ -144,7 +144,7 @@ public class DefaultViewIntegrationTest {
         List<ViewItem> resourceItems = underTest.getViewItems();
         assertEquals(1, resourceItems.size());
         final ViewItem resourceItem = resourceItems.get(0);
-        resourceItem.getResourceValue(numberSlot);
+        resourceItem.getSlotValue(numberSlot);
 
         /*
          * XXX contentDisplay must not be inlined in when part, otherwise
@@ -154,7 +154,7 @@ public class DefaultViewIntegrationTest {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) {
-                assertEquals(8d, resourceItem.getResourceValue(numberSlot));
+                assertEquals(8d, resourceItem.getSlotValue(numberSlot));
                 return null;
             }
         }).when(contentDisplay).update(any(LightweightCollection.class),

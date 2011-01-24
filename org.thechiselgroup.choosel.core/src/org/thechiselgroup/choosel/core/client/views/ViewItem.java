@@ -73,14 +73,14 @@ public interface ViewItem {
 
     ResourceSet getResourceSet();
 
-    Object getResourceValue(Slot slot);
-
-    // TODO test
-    Object getResourceValue(Slot slot, Subset subset);
-
     ResourceSet getSelectedResources();
 
     SubsetStatus getSelectionStatus();
+
+    <T> T getSlotValue(Slot slot);
+
+    // TODO test
+    <T> T getSlotValue(Slot slot, Subset subset);
 
     Status getStatus();
 

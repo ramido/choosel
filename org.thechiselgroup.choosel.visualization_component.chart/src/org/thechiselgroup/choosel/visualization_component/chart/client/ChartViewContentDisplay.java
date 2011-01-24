@@ -16,7 +16,6 @@
 package org.thechiselgroup.choosel.visualization_component.chart.client;
 
 import org.thechiselgroup.choosel.core.client.ui.Colors;
-import org.thechiselgroup.choosel.core.client.util.StringUtils;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
@@ -33,7 +32,6 @@ import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArrayGeneric;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsUtils;
-import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChartVisualization;
 
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
@@ -97,56 +95,7 @@ public abstract class ChartViewContentDisplay extends
         }
     };
 
-    protected JsStringFunction fullMarkTextStyle = new JsStringFunction() {
-        @Override
-        public String f(JsArgs args) {
-            ChartItem chartItem = args.getObject();
-            return calculateHighlightedResources(chartItem) == 0 ? Colors.WHITE
-                    : Colors.BLACK;
-        }
-    };
-
-    protected JsStringFunction fullMarkLabelText = new JsStringFunction() {
-        @Override
-        public String f(JsArgs args) {
-            ChartItem chartItem = args.getObject();
-            return StringUtils.formatDecimal(calculateAllResources(chartItem),
-                    2);
-        }
-
-    };
-
-    protected JsStringFunction highlightedLabelText = new JsStringFunction() {
-        @Override
-        public String f(JsArgs args) {
-            ChartItem chartItem = args.getObject();
-            return StringUtils.formatDecimal(
-                    calculateHighlightedResources(chartItem), 2);
-        }
-
-    };
-
-    protected JsStringFunction regularMarkLabelText = new JsStringFunction() {
-        @Override
-        public String f(JsArgs args) {
-            ChartItem chartItem = args.getObject();
-            return calculateAllResources(chartItem)
-                    - calculateHighlightedResources(chartItem) < 1 ? null
-                    : Double.toString(calculateAllResources(chartItem)
-                            - calculateHighlightedResources(chartItem));
-        }
-    };
-
-    protected JsStringFunction highlightedMarkLabelText = new JsStringFunction() {
-        @Override
-        public String f(JsArgs args) {
-            ChartItem chartItem = args.getObject();
-            return calculateHighlightedResources(chartItem) <= 0 ? null
-                    : Double.toString(calculateHighlightedResources(chartItem));
-        }
-    };
-
-    private double maxChartItemValue;
+    protected double maxChartItemValue;
 
     protected ChartWidget chartWidget;
 
@@ -179,7 +128,6 @@ public abstract class ChartViewContentDisplay extends
      * calls from Protovis.
      */
     protected void beforeRender() {
-        calculateMaximumChartItemValue();
     }
 
     /**
@@ -199,38 +147,14 @@ public abstract class ChartViewContentDisplay extends
         renderChart();
     }
 
-    protected double calculateAllResources(ChartItem chartItem) {
-        return calculateChartItemValue(chartItem,
-                BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
-    }
-
     // XXX fix -- move into chartitem
     protected double calculateChartItemValue(ChartItem chartItem, Slot slot,
             Subset subset) {
-        return (Double) chartItem.getViewItem().getResourceValue(slot, subset);
-    }
-
-    protected double calculateHighlightedResources(ChartItem chartItem) {
-        return calculateChartItemValue(chartItem,
-                BarChartVisualization.BAR_LENGTH_SLOT, Subset.HIGHLIGHTED);
+        return (Double) chartItem.getViewItem().getSlotValue(slot, subset);
     }
 
     protected int calculateHighlightedSelectedResources(ChartItem chartItem) {
         return chartItem.getViewItem().getHighlightedSelectedResources().size();
-    }
-
-    // TODO different slots
-    // XXX does not work for negative numbers
-    // XXX works only for integers
-    protected void calculateMaximumChartItemValue() {
-        maxChartItemValue = 0;
-        for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            double currentItemValue = calculateAllResources(chartItemsJsArray
-                    .get(i));
-            if (maxChartItemValue < currentItemValue) {
-                maxChartItemValue = currentItemValue;
-            }
-        }
     }
 
     protected int calculateSelectedResources(ChartItem chartItem) {
@@ -285,34 +209,6 @@ public abstract class ChartViewContentDisplay extends
 
     protected double getMaximumChartItemValue() {
         return maxChartItemValue;
-    }
-
-    // TODO push down: the actual chart needs to decide which slots are used
-    // XXX currently inaccurate
-    @Override
-    public Slot[] getSlots() {
-        return new Slot[] { BarChartVisualization.BAR_LABEL_SLOT,
-                BarChartVisualization.BAR_LENGTH_SLOT };
-    }
-
-    // XXX not called anywhere
-    protected SlotValues getSlotValues(Slot slot) {
-        double[] slotValues = new double[chartItemsJsArray.length()];
-
-        for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            Object value = chartItemsJsArray.get(i).getViewItem()
-                    .getResourceValue(slot);
-
-            if (value instanceof Double) {
-                slotValues[i] = (Double) value;
-            } else if (value instanceof Number) {
-                slotValues[i] = ((Number) value).doubleValue();
-            } else {
-                slotValues[i] = Double.valueOf(value.toString());
-            }
-        }
-
-        return new SlotValues(slotValues);
     }
 
     public boolean hasPartiallyHighlightedChartItems() {

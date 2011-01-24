@@ -16,8 +16,11 @@
 package org.thechiselgroup.choosel.visualization_component.chart.client;
 
 import org.thechiselgroup.choosel.core.client.ui.Colors;
+import org.thechiselgroup.choosel.core.client.util.StringUtils;
 import org.thechiselgroup.choosel.core.client.util.collections.ArrayUtils;
 import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
+import org.thechiselgroup.choosel.core.client.views.ViewItem.Subset;
+import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 import org.thechiselgroup.choosel.protovis.client.PV;
 import org.thechiselgroup.choosel.protovis.client.PVAlignment;
 import org.thechiselgroup.choosel.protovis.client.PVEventHandler;
@@ -27,6 +30,8 @@ import org.thechiselgroup.choosel.protovis.client.PVScale;
 import org.thechiselgroup.choosel.protovis.client.PVWedge;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
+import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChartVisualization;
 
 import com.google.inject.Inject;
 
@@ -102,6 +107,57 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
 
     private int scaleLineWidth = 1;
 
+    private JsStringFunction fullMarkTextStyle = new JsStringFunction() {
+        @Override
+        public String f(JsArgs args) {
+            ChartItem chartItem = args.getObject();
+            return calculateChartItemValue(chartItem,
+                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.HIGHLIGHTED) == 0 ? Colors.WHITE
+                    : Colors.BLACK;
+        }
+    };
+
+    private JsStringFunction fullMarkLabelText = new JsStringFunction() {
+        @Override
+        public String f(JsArgs args) {
+            ChartItem chartItem = args.getObject();
+            return StringUtils.formatDecimal(
+                    calculateChartItemValue(chartItem,
+                            BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL),
+                    2);
+        }
+
+    };
+
+    private JsStringFunction regularMarkLabelText = new JsStringFunction() {
+        @Override
+        public String f(JsArgs args) {
+            ChartItem chartItem = args.getObject();
+            return calculateChartItemValue(chartItem,
+                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL)
+                    - calculateChartItemValue(chartItem,
+                            BarChartVisualization.BAR_LENGTH_SLOT,
+                            Subset.HIGHLIGHTED) < 1 ? null : Double
+                    .toString(calculateChartItemValue(chartItem,
+                            BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL)
+                            - calculateChartItemValue(chartItem,
+                                    BarChartVisualization.BAR_LENGTH_SLOT,
+                                    Subset.HIGHLIGHTED));
+        }
+    };
+
+    private JsStringFunction highlightedMarkLabelText = new JsStringFunction() {
+        @Override
+        public String f(JsArgs args) {
+            ChartItem chartItem = args.getObject();
+            return calculateChartItemValue(chartItem,
+                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.HIGHLIGHTED) <= 0 ? null
+                    : Double.toString(calculateChartItemValue(chartItem,
+                            BarChartVisualization.BAR_LENGTH_SLOT,
+                            Subset.HIGHLIGHTED));
+        }
+    };
+
     @Inject
     public CircularBarChartViewContentDisplay(
             DragEnablerFactory dragEnablerFactory) {
@@ -113,6 +169,8 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
     protected void beforeRender() {
         super.beforeRender();
 
+        calculateMaximumChartItemValue();
+
         if (chartItemsJsArray.length() == 0) {
             return;
         }
@@ -120,22 +178,25 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
         highlightedWedgeCounts = new double[chartItemsJsArray.length()];
 
         for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            highlightedWedgeCounts[i] = calculateHighlightedResources(chartItemsJsArray
-                    .get(i));
+            highlightedWedgeCounts[i] = calculateChartItemValue(
+                    chartItemsJsArray.get(i),
+                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.HIGHLIGHTED);
         }
 
         regularWedgeCounts = new double[chartItemsJsArray.length()];
 
         for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            regularWedgeCounts[i] = calculateAllResources(chartItemsJsArray
-                    .get(i));
+            regularWedgeCounts[i] = calculateChartItemValue(
+                    chartItemsJsArray.get(i),
+                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
         }
     }
 
     private void calculateAllResourcesSum() {
         sum = 0;
         for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            sum += calculateAllResources(chartItemsJsArray.get(i));
+            sum += calculateChartItemValue(chartItemsJsArray.get(i),
+                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
         }
     }
 
@@ -200,6 +261,24 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
     @Override
     protected void registerEventHandler(String eventType, PVEventHandler handler) {
         regularWedge.event(eventType, handler);
+    }
+
+    @Override
+    public Slot[] getSlots() {
+        return new Slot[] { BarChartVisualization.BAR_LABEL_SLOT,
+                BarChartVisualization.BAR_LENGTH_SLOT };
+    }
+
+    protected void calculateMaximumChartItemValue() {
+        maxChartItemValue = 0;
+        for (int i = 0; i < chartItemsJsArray.length(); i++) {
+            double currentItemValue = calculateChartItemValue(
+                    chartItemsJsArray.get(i),
+                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
+            if (maxChartItemValue < currentItemValue) {
+                maxChartItemValue = currentItemValue;
+            }
+        }
     }
 
 }

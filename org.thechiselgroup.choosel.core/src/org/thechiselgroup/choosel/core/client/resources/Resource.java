@@ -111,7 +111,7 @@ public class Resource implements Serializable {
 
     public static String getTypeFromURI(String uri) {
         assert uri != null;
-    
+
         int splitIndex = uri.indexOf(':');
         return uri.substring(0, splitIndex);
     }

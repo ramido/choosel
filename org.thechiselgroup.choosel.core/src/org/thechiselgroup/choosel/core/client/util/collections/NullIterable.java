@@ -17,7 +17,6 @@ package org.thechiselgroup.choosel.core.client.util.collections;
 
 import java.util.Iterator;
 
-
 public final class NullIterable<T> implements Iterable<T> {
 
     @SuppressWarnings("rawtypes")
