@@ -37,6 +37,13 @@ public interface ViewContentDisplay extends WidgetAdaptable, Disposable,
     void endRestore();
 
     /**
+     * Returns the current value of the property.
+     * 
+     * @see #setPropertyValue(String, Object)
+     */
+    <T> T getPropertyValue(String property);
+
+    /**
      * @return {@link SidePanelSection}s for configuring this view content
      *         display.
      */
@@ -50,6 +57,8 @@ public interface ViewContentDisplay extends WidgetAdaptable, Disposable,
     void init(ViewContentDisplayCallback callback);
 
     boolean isReady();
+
+    <T> void setPropertyValue(String property, T value);
 
     void startRestore();
 

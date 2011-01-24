@@ -63,6 +63,11 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
     }
 
     @Override
+    public <T> T getPropertyValue(String property) {
+        return delegate.getPropertyValue(property);
+    }
+
+    @Override
     public SidePanelSection[] getSidePanelSections() {
         return delegate.getSidePanelSections();
     }
@@ -92,6 +97,11 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
     @Override
     public Memento save(ResourceSetCollector resourceSetCollector) {
         return delegate.save(resourceSetCollector);
+    }
+
+    @Override
+    public <T> void setPropertyValue(String property, T value) {
+        delegate.setPropertyValue(property, value);
     }
 
     @Override

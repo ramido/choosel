@@ -15,11 +15,14 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views;
 
+import java.util.Map;
+
 import org.thechiselgroup.choosel.core.client.persistence.Memento;
 import org.thechiselgroup.choosel.core.client.persistence.PersistableRestorationService;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
+import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -30,6 +33,9 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
     private boolean restoring = false;
 
     private Widget widget;
+
+    private final Map<String, ViewContentDisplayProperty> properties = CollectionFactory
+            .createStringMap();
 
     @Override
     public Widget asWidget() {
@@ -54,7 +60,7 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
             ((Disposable) widget).dispose();
         }
         widget = null;
-    }
+    };
 
     @Override
     public void endRestore() {
@@ -63,6 +69,17 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
 
     public ViewContentDisplayCallback getCallback() {
         return callback;
+    }
+
+    @Override
+    public <T> T getPropertyValue(String property) {
+        // TODO NoSuchPropertyException extends RuntimeException
+        if (!properties.containsKey(property)) {
+            throw new IllegalArgumentException("Property '" + property
+                    + "' does not exist.");
+        }
+
+        return (T) properties.get(property).getValue();
     }
 
     @Override
@@ -85,6 +102,11 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
         return restoring;
     }
 
+    protected void registerProperty(ViewContentDisplayProperty property) {
+        assert property != null;
+        this.properties.put(property.getPropertyName(), property);
+    }
+
     @Override
     public void restore(Memento state,
             PersistableRestorationService restorationService,
@@ -94,6 +116,17 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
     @Override
     public Memento save(ResourceSetCollector resourceSetCollector) {
         return new Memento();
+    }
+
+    @Override
+    public <T> void setPropertyValue(String property, T value) {
+        // TODO NoSuchPropertyException extends RuntimeException
+        if (!properties.containsKey(property)) {
+            throw new IllegalArgumentException("Property '" + property
+                    + "' does not exist.");
+        }
+
+        properties.get(property).setValue(value);
     }
 
     @Override
