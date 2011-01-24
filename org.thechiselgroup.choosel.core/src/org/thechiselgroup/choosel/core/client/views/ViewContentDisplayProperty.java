@@ -13,27 +13,14 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.core.client.views.slots;
+package org.thechiselgroup.choosel.core.client.views;
 
-public class FixedResourceSetToValueResolverFactory implements
-        ResourceSetToValueResolverFactory {
+public interface ViewContentDisplayProperty<T> {
 
-    private ResourceSetToValueResolver resolver;
+    String getPropertyName();
 
-    public FixedResourceSetToValueResolverFactory(
-            ResourceSetToValueResolver resolver) {
+    T getValue();
 
-        this.resolver = resolver;
-    }
-
-    @Override
-    public String getDescription() {
-        return resolver.toString();
-    }
-
-    @Override
-    public ResourceSetToValueResolver getResolver() {
-        return resolver;
-    }
+    void setValue(T value);
 
 }
