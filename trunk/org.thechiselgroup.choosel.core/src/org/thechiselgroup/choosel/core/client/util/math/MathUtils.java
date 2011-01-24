@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.util.math;
 
-
 import com.google.gwt.core.client.GWT;
 
 /**

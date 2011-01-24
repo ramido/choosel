@@ -84,7 +84,7 @@ public class DefaultViewPersistenceTest {
         List<ViewItem> resourceItems = restoredView.getViewItems();
         assertEquals(1, resourceItems.size());
         ViewItem resourceItem = resourceItems.get(0);
-        assertEquals("value2", resourceItem.getResourceValue(textSlot));
+        assertEquals("value2", resourceItem.getSlotValue(textSlot));
     }
 
     @Test
@@ -216,7 +216,7 @@ public class DefaultViewPersistenceTest {
         List<ViewItem> resourceItems = restoredView.getViewItems();
         assertEquals(1, resourceItems.size());
         ViewItem resourceItem = resourceItems.get(0);
-        assertEquals(expectedResult, resourceItem.getResourceValue(numberSlot));
+        assertEquals(expectedResult, resourceItem.getSlotValue(numberSlot));
     }
 
 }

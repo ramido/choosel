@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.slots;
 
-
 import com.google.gwt.event.shared.GwtEvent;
 
 public class SlotMappingChangedEvent extends

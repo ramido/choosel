@@ -126,7 +126,9 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         public String f(JsArgs args) {
             ChartItem chartItem = args.getObject();
             return StringUtils.formatDecimal(
-                    calculateHighlightedResources(chartItem), 2);
+                    calculateChartItemValue(chartItem,
+                            BarChartVisualization.BAR_LENGTH_SLOT,
+                            Subset.HIGHLIGHTED), 2);
         }
     };
 
@@ -134,7 +136,9 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         @Override
         public String f(JsArgs args) {
             ChartItem chartItem = args.getObject();
-            return StringUtils.formatDecimal(calculateAllResources(chartItem),
+            return StringUtils.formatDecimal(
+                    calculateChartItemValue(chartItem,
+                            BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL),
                     2);
         }
     };
@@ -188,15 +192,6 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         }
     };
 
-    protected JsStringFunction highlightedMarkLabelText = new JsStringFunction() {
-        @Override
-        public String f(JsArgs args) {
-            ChartItem chartItem = args.getObject();
-            return calculateHighlightedResources(chartItem) <= 0 ? null
-                    : Double.toString(calculateHighlightedResources(chartItem));
-        }
-    };
-
     private JsDoubleFunction barWidth = new JsDoubleFunction() {
         @Override
         public double f(JsArgs args) {
@@ -247,7 +242,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         public String f(JsArgs args) {
             ChartItem d = args.getObject();
             return d.getViewItem()
-                    .getResourceValue(BarChartVisualization.BAR_LABEL_SLOT)
+                    .getSlotValue(BarChartVisualization.BAR_LABEL_SLOT)
                     .toString();
         }
     };
@@ -322,6 +317,35 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         }
     };
 
+    protected JsStringFunction regularMarkLabelText = new JsStringFunction() {
+        @Override
+        public String f(JsArgs args) {
+            ChartItem chartItem = args.getObject();
+            return calculateChartItemValue(chartItem,
+                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL)
+                    - calculateChartItemValue(chartItem,
+                            BarChartVisualization.BAR_LENGTH_SLOT,
+                            Subset.HIGHLIGHTED) < 1 ? null : Double
+                    .toString(calculateChartItemValue(chartItem,
+                            BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL)
+                            - calculateChartItemValue(chartItem,
+                                    BarChartVisualization.BAR_LENGTH_SLOT,
+                                    Subset.HIGHLIGHTED));
+        }
+    };
+
+    protected JsStringFunction highlightedMarkLabelText = new JsStringFunction() {
+        @Override
+        public String f(JsArgs args) {
+            ChartItem chartItem = args.getObject();
+            return calculateChartItemValue(chartItem,
+                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.HIGHLIGHTED) <= 0 ? null
+                    : Double.toString(calculateChartItemValue(chartItem,
+                            BarChartVisualization.BAR_LENGTH_SLOT,
+                            Subset.HIGHLIGHTED));
+        }
+    };
+
     @Inject
     public BarChartViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
         super(dragEnablerFactory);
@@ -333,13 +357,17 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     protected void beforeRender() {
         super.beforeRender();
 
+        calculateMaximumChartItemValue();
+
         if (chartItemsJsArray.length() == 0) {
             return;
         }
 
         regularValues = new double[chartItemsJsArray.length()];
         for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            regularValues[i] = calculateAllResources(chartItemsJsArray.get(i));
+            regularValues[i] = calculateChartItemValue(
+                    chartItemsJsArray.get(i),
+                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
         }
     }
 
@@ -547,4 +575,17 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         super.update(addedResourceItems, updatedResourceItems,
                 removedResourceItems, changedSlots);
     }
+
+    protected void calculateMaximumChartItemValue() {
+        maxChartItemValue = 0;
+        for (int i = 0; i < chartItemsJsArray.length(); i++) {
+            double currentItemValue = calculateChartItemValue(
+                    chartItemsJsArray.get(i),
+                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
+            if (maxChartItemValue < currentItemValue) {
+                maxChartItemValue = currentItemValue;
+            }
+        }
+    }
+
 }

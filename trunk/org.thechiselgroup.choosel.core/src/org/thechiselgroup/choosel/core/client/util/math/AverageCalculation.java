@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.util.math;
 
-
 /**
  * Calculates the average.
  * 

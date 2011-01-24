@@ -109,7 +109,7 @@ public class DefaultViewTest {
         assertEquals(1, resourceItems.size());
         ViewItem resourceItem = resourceItems.get(0);
 
-        assertEquals("t2", resourceItem.getResourceValue(slot));
+        assertEquals("t2", resourceItem.getSlotValue(slot));
     }
 
     @Test

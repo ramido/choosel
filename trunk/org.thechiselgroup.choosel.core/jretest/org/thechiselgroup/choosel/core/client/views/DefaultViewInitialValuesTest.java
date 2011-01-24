@@ -37,7 +37,7 @@ public class DefaultViewInitialValuesTest {
     private Slot numberSlot;
 
     @Test
-    public void initialResourceItemValueForNumberSlotIfNoNumberIsAvailable() {
+    public void initialSlotValueForNumberSlotIfNoNumberIsAvailable() {
         Resource resource = new Resource("test:1");
         resource.putValue("text1", "t1");
         resource.putValue("text2", "t2");
@@ -52,11 +52,11 @@ public class DefaultViewInitialValuesTest {
         assertEquals(1, resourceItems.size());
         ViewItem resourceItem = resourceItems.get(0);
 
-        assertEquals(new Double(0), resourceItem.getResourceValue(numberSlot));
+        assertEquals(new Double(0), resourceItem.getSlotValue(numberSlot));
     }
 
     @Test
-    public void initialResourceItemValueForTextSlot() {
+    public void initialSlotValueForTextSlot() {
         Resource resource = new Resource("test:1");
         resource.putValue("text1", "t1");
         resource.putValue("text2", "t2");
@@ -71,7 +71,7 @@ public class DefaultViewInitialValuesTest {
         assertEquals(1, resourceItems.size());
         ViewItem resourceItem = resourceItems.get(0);
 
-        assertEquals("t1", resourceItem.getResourceValue(textSlot));
+        assertEquals("t1", resourceItem.getSlotValue(textSlot));
     }
 
     @Before

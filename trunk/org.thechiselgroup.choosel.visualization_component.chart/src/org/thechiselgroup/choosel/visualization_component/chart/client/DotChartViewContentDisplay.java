@@ -17,6 +17,8 @@ package org.thechiselgroup.choosel.visualization_component.chart.client;
 
 import org.thechiselgroup.choosel.core.client.ui.Colors;
 import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
+import org.thechiselgroup.choosel.core.client.views.ViewItem.Subset;
+import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 import org.thechiselgroup.choosel.protovis.client.PV;
 import org.thechiselgroup.choosel.protovis.client.PVAlignment;
 import org.thechiselgroup.choosel.protovis.client.PVDot;
@@ -81,7 +83,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
             ChartItem value = args.getObject();
             // TODO own slot
             return value.getViewItem()
-                    .getResourceValue(BarChartVisualization.BAR_LABEL_SLOT)
+                    .getSlotValue(BarChartVisualization.BAR_LABEL_SLOT)
                     .toString();
         }
     };
@@ -95,6 +97,8 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
     protected void beforeRender() {
         super.beforeRender();
 
+        calculateMaximumChartItemValue();
+
         if (chartItemsJsArray.length() == 0) {
             return;
         }
@@ -102,7 +106,8 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
         dotCounts = new double[chartItemsJsArray.length()];
 
         for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            dotCounts[i] = calculateAllResources(chartItemsJsArray.get(i));
+            dotCounts[i] = calculateChartItemValue(chartItemsJsArray.get(i),
+                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
         }
     }
 
@@ -368,6 +373,24 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
 
     private void setChartParameters() {
         getChart().left(BORDER_WIDTH).bottom(BORDER_HEIGHT);
+    }
+
+    @Override
+    public Slot[] getSlots() {
+        return new Slot[] { BarChartVisualization.BAR_LABEL_SLOT,
+                BarChartVisualization.BAR_LENGTH_SLOT };
+    }
+
+    protected void calculateMaximumChartItemValue() {
+        maxChartItemValue = 0;
+        for (int i = 0; i < chartItemsJsArray.length(); i++) {
+            double currentItemValue = calculateChartItemValue(
+                    chartItemsJsArray.get(i),
+                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
+            if (maxChartItemValue < currentItemValue) {
+                maxChartItemValue = currentItemValue;
+            }
+        }
     }
 
 }

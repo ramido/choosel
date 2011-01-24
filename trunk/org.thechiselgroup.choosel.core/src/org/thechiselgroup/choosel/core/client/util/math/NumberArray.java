@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.util.math;
 
-
 /**
  * Array of numbers. This special representation is introduced to leverage
  * native JavaScript operations for max, min etc.

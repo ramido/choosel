@@ -61,7 +61,7 @@ public class ChartItem {
     }
 
     public double getViewItemValueAsNumber(Slot slot, Subset subset) {
-        return (Double) viewItem.getResourceValue(slot, subset);
+        return (Double) viewItem.getSlotValue(slot, subset);
     }
 
     public ChartViewContentDisplay getView() {
