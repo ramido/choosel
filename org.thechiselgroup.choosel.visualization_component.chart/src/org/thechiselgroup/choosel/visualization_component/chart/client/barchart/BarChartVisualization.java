@@ -28,6 +28,8 @@ public final class BarChartVisualization {
     public static final Slot BAR_LENGTH_SLOT = new Slot("chart-value",
             "Value", DataType.NUMBER);
 
+    public static final String LAYOUT_PROPERTY = "layout";
+
     private BarChartVisualization() {
     }
 

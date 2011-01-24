@@ -20,6 +20,7 @@ import org.thechiselgroup.choosel.core.client.util.StringUtils;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.core.client.views.SidePanelSection;
+import org.thechiselgroup.choosel.core.client.views.ViewContentDisplayProperty;
 import org.thechiselgroup.choosel.core.client.views.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.ViewItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.ViewItem.SubsetStatus;
@@ -49,6 +50,25 @@ import com.google.inject.Inject;
  */
 // TODO right side ticks
 public class BarChartViewContentDisplay extends ChartViewContentDisplay {
+
+    private class LayoutProperty implements
+            ViewContentDisplayProperty<LayoutType> {
+
+        @Override
+        public void setValue(LayoutType value) {
+            setLayout(value);
+        }
+
+        @Override
+        public LayoutType getValue() {
+            return layout;
+        }
+
+        @Override
+        public String getPropertyName() {
+            return BarChartVisualization.LAYOUT_PROPERTY;
+        }
+    }
 
     public static enum LayoutType {
 
@@ -227,8 +247,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         public String f(JsArgs args) {
             ChartItem d = args.getObject();
             return d.getViewItem()
-                    .getResourceValue(
-                            BarChartVisualization.BAR_LABEL_SLOT)
+                    .getResourceValue(BarChartVisualization.BAR_LABEL_SLOT)
                     .toString();
         }
     };
@@ -306,6 +325,8 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     @Inject
     public BarChartViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
         super(dragEnablerFactory);
+
+        registerProperty(new LayoutProperty());
     }
 
     @Override
@@ -350,10 +371,8 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     }
 
     private double calculateHighlightedBarLength(ChartItem d) {
-        return calculateBarLength(d
-                .getViewItemValueAsNumber(
-                        BarChartVisualization.BAR_LENGTH_SLOT,
-                        Subset.HIGHLIGHTED));
+        return calculateBarLength(d.getViewItemValueAsNumber(
+                BarChartVisualization.BAR_LENGTH_SLOT, Subset.HIGHLIGHTED));
     }
 
     @Override
@@ -506,7 +525,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         regularBar.event(eventType, handler);
     }
 
-    public void setLayout(LayoutType layout) {
+    private void setLayout(LayoutType layout) {
         assert layout != null;
 
         this.layout = layout;
