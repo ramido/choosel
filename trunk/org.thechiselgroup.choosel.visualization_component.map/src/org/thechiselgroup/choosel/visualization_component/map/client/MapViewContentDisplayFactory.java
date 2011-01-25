@@ -35,4 +35,9 @@ public class MapViewContentDisplayFactory implements ViewContentDisplayFactory {
         return new MapViewContentDisplay(dragEnablerFactory);
     }
 
+    @Override
+    public String getViewContentTypeID() {
+        return MapVisualization.ID;
+    }
+
 }
