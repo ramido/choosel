@@ -15,20 +15,19 @@
  *******************************************************************************/
 package org.thechiselgroup.chooselexample.client;
 
-import org.thechiselgroup.choosel.client.ChooselApplication;
-import org.thechiselgroup.choosel.client.ChooselClientModule;
-import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
-import org.thechiselgroup.choosel.client.views.graph.GraphExpansionRegistry;
+import org.thechiselgroup.choosel.core.client.resources.ui.DetailsWidgetHelper;
+import org.thechiselgroup.choosel.workbench.client.ChooselWorkbench;
+import org.thechiselgroup.choosel.workbench.client.ChooselWorkbenchClientModule;
 
-public class ChooselExampleClientModule extends ChooselClientModule {
+public class ChooselExampleClientModule extends ChooselWorkbenchClientModule {
 
     @Override
     protected void bindCustomServices() {
     }
 
     @Override
-    protected Class<? extends ChooselApplication> getApplicationClass() {
-        return ChooselExampleApplication.class;
+    protected Class<? extends ChooselWorkbench> getWorkbenchClass() {
+        return ChooselExampleWorkbench.class;
     }
 
     @Override

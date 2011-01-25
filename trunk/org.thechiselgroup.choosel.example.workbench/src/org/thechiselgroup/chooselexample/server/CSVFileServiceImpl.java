@@ -23,7 +23,7 @@ import java.util.Set;
 
 import javax.servlet.ServletContext;
 
-import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.chooselexample.client.services.CSVFileService;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -36,7 +36,7 @@ public class CSVFileServiceImpl extends RemoteServiceServlet implements
     public Set<Resource> getCSVResources(String filePath, String fileName)
             throws Exception {
 
-        ServletContext servletContext = this.getServletContext();
+        ServletContext servletContext = getServletContext();
         InputStream resourceAsStream = servletContext
                 .getResourceAsStream(filePath + fileName);
 

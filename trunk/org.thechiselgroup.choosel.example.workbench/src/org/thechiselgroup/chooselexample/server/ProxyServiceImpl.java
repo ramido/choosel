@@ -21,7 +21,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.thechiselgroup.choosel.client.services.ServiceException;
+import org.thechiselgroup.choosel.workbench.client.services.ServiceException;
 import org.thechiselgroup.chooselexample.client.services.ProxyService;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
