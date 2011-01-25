@@ -17,7 +17,7 @@ package org.thechiselgroup.chooselexample.client.services;
 
 import java.util.Set;
 
-import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.core.client.resources.Resource;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 

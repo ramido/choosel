@@ -112,7 +112,7 @@ public class ChooselWorkbenchClientModule extends AbstractGinModule implements
         ChooselInjectionConstants {
 
     private void bindApplication() {
-        bind(ChooselWorkbench.class).to(getApplicationClass()).in(
+        bind(ChooselWorkbench.class).to(getWorkbenchClass()).in(
                 Singleton.class);
     }
 
@@ -337,7 +337,7 @@ public class ChooselWorkbenchClientModule extends AbstractGinModule implements
         bindApplication();
     }
 
-    protected Class<? extends ChooselWorkbench> getApplicationClass() {
+    protected Class<? extends ChooselWorkbench> getWorkbenchClass() {
         return ChooselWorkbench.class;
     }
 

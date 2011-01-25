@@ -15,13 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.chooselexample.client;
 
-import org.thechiselgroup.choosel.client.resources.Resource;
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.resources.ResourceSetFactory;
-import org.thechiselgroup.choosel.client.resources.ui.DetailsWidgetHelper;
-import org.thechiselgroup.choosel.client.resources.ui.ResourceSetAvatarFactory;
-import org.thechiselgroup.choosel.client.ui.dnd.ResourceSetAvatarDragController;
-import org.thechiselgroup.choosel.client.views.slots.SlotMappingConfiguration;
+import org.thechiselgroup.choosel.core.client.resources.Resource;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetFactory;
+import org.thechiselgroup.choosel.core.client.resources.ui.DetailsWidgetHelper;
+import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarFactory;
+import org.thechiselgroup.choosel.core.client.ui.dnd.ResourceSetAvatarDragController;
+import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingConfiguration;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.HTML;
