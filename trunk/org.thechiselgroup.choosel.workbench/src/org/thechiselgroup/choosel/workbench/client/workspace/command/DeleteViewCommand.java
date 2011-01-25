@@ -1,0 +1,60 @@
+/*******************************************************************************
+ * Copyright 2009, 2010 Lars Grammel 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at 
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0 
+ *     
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ * See the License for the specific language governing permissions and 
+ * limitations under the License.  
+ *******************************************************************************/
+package org.thechiselgroup.choosel.workbench.client.workspace.command;
+
+import org.thechiselgroup.choosel.core.client.command.AsyncCommand;
+import org.thechiselgroup.choosel.core.client.util.HasDescription;
+import org.thechiselgroup.choosel.workbench.client.workspace.ViewLoader;
+
+import com.google.gwt.user.client.rpc.AsyncCallback;
+
+public class DeleteViewCommand implements AsyncCommand, HasDescription {
+
+    private ViewLoader persistenceManager;
+
+    private Long viewId;
+
+    public DeleteViewCommand(Long workspaceId, ViewLoader persistenceManager) {
+
+        assert workspaceId != null;
+        assert persistenceManager != null;
+
+        viewId = workspaceId;
+        this.persistenceManager = persistenceManager;
+    }
+
+    @Override
+    public void execute(final AsyncCallback<Void> callback) {
+        persistenceManager.deleteView(viewId, new AsyncCallback<Long>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                callback.onFailure(caught);
+            }
+
+            @Override
+            public void onSuccess(Long id) {
+                callback.onSuccess(null);
+            }
+        });
+    }
+
+    @Override
+    public String getDescription() {
+        String result = "Deleting View";
+
+        return result;
+    }
+}
