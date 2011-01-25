@@ -51,12 +51,12 @@ public class TextItem {
 
     public String getDescriptionValue() {
         return (String) resourceItem
-                .getResourceValue(TextVisualization.DESCRIPTION_SLOT);
+                .getSlotValue(TextVisualization.DESCRIPTION_SLOT);
     }
 
     public double getFontSizeValue() {
         return ((Double) resourceItem
-                .getResourceValue(TextVisualization.FONT_SIZE_SLOT))
+                .getSlotValue(TextVisualization.FONT_SIZE_SLOT))
                 .doubleValue();
     }
 
