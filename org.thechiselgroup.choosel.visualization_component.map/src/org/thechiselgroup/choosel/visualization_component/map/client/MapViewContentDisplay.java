@@ -17,7 +17,6 @@ package org.thechiselgroup.choosel.visualization_component.map.client;
 
 import org.thechiselgroup.choosel.core.client.persistence.Memento;
 import org.thechiselgroup.choosel.core.client.persistence.PersistableRestorationService;
-import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
@@ -42,15 +41,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 public class MapViewContentDisplay extends AbstractViewContentDisplay {
-
-    public final static Slot DESCRIPTION_SLOT = new Slot("description",
-            "Label", DataType.TEXT);
-
-    public final static Slot COLOR_SLOT = new Slot("color", "Color",
-            DataType.COLOR);
-
-    public final static Slot LOCATION_SLOT = new Slot("location", "Location",
-            DataType.LOCATION);
 
     public static final String LATITUDE = "latitude";
 
@@ -147,7 +137,7 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
 
     @Override
     public Slot[] getSlots() {
-        return new Slot[] { DESCRIPTION_SLOT, COLOR_SLOT, LOCATION_SLOT };
+        return new Slot[] { MapVisualization.LAB_SLOT, MapVisualization.COLOR_SLOT, MapVisualization.LOCATION_SLOT };
     }
 
     private void initMapItem(ViewItem resourceItem) {
@@ -156,7 +146,7 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
         // TODO separate resolvers for latitude and longitude
 
         Resource location = (Resource) resourceItem
-                .getResourceValue(MapViewContentDisplay.LOCATION_SLOT);
+                .getSlotValue(MapVisualization.LOCATION_SLOT);
 
         double latitude = toDouble(location.getValue(LATITUDE));
         double longitude = toDouble(location.getValue(LONGITUDE));
@@ -271,7 +261,7 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
         }
 
         // XXX performance of toList
-        if (changedSlots.toList().contains(DESCRIPTION_SLOT)) {
+        if (changedSlots.toList().contains(MapVisualization.LAB_SLOT)) {
             for (ViewItem resourceItem : getCallback().getViewItems()) {
                 ((MapItem) resourceItem.getDisplayObject()).updateLabel();
             }

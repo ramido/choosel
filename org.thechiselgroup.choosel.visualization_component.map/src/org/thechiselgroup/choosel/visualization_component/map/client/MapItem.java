@@ -17,7 +17,7 @@ package org.thechiselgroup.choosel.visualization_component.map.client;
 
 import org.thechiselgroup.choosel.core.client.views.DragEnabler;
 import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.core.client.views.IconResourceItem;
+import org.thechiselgroup.choosel.core.client.views.IconViewItem;
 import org.thechiselgroup.choosel.core.client.views.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.ViewItem.Status;
 import org.thechiselgroup.choosel.core.client.views.ViewContentDisplayCallback;
@@ -37,28 +37,28 @@ import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.geom.Point;
 
-public class MapItem extends IconResourceItem {
+public class MapItem extends IconViewItem {
 
     private class MarkerEventHandler implements ClickHandler, MouseOutHandler,
             MouseOverHandler {
 
         @Override
         public void onClick(ClickEvent event) {
-            callback.switchSelection(resourceItem.getResourceSet());
+            callback.switchSelection(viewItem.getResourceSet());
         }
 
         @Override
         public void onMouseOut(MouseOutEvent event) {
-            resourceItem.getPopupManager().onMouseOut(event.getClientX(),
+            viewItem.getPopupManager().onMouseOut(event.getClientX(),
                     event.getClientY());
-            resourceItem.getHighlightingManager().setHighlighting(false);
+            viewItem.getHighlightingManager().setHighlighting(false);
         }
 
         @Override
         public void onMouseOver(MouseOverEvent event) {
-            resourceItem.getPopupManager().onMouseOver(event.getClientX(),
+            viewItem.getPopupManager().onMouseOver(event.getClientX(),
                     event.getClientY());
-            resourceItem.getHighlightingManager().setHighlighting(true);
+            viewItem.getHighlightingManager().setHighlighting(true);
         }
     }
 
@@ -74,7 +74,7 @@ public class MapItem extends IconResourceItem {
             ViewContentDisplayCallback callback,
             DragEnablerFactory dragEnablerFactory) {
 
-        super(resourceItem, MapViewContentDisplay.COLOR_SLOT);
+        super(resourceItem, MapVisualization.COLOR_SLOT);
 
         this.callback = callback;
         this.dragEnablerFactory = dragEnablerFactory;
@@ -87,7 +87,7 @@ public class MapItem extends IconResourceItem {
     }
 
     public String getLabelValue() {
-        return (String) getResourceValue(MapViewContentDisplay.DESCRIPTION_SLOT);
+        return (String) getSlotValue(MapVisualization.LAB_SLOT);
     }
 
     public LabelOverlay getOverlay() {
@@ -100,7 +100,7 @@ public class MapItem extends IconResourceItem {
         overlay.addClickHandler(eventHandler);
 
         final DragEnabler enabler = dragEnablerFactory
-                .createDragEnabler(resourceItem);
+                .createDragEnabler(viewItem);
 
         overlay.addMouseUpHandler(new MouseUpHandler() {
             @Override
