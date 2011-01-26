@@ -63,6 +63,7 @@ import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.core.client.views.HoverModel;
 import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
 import org.thechiselgroup.choosel.core.client.views.ViewContentDisplayFactory;
+import org.thechiselgroup.choosel.core.client.views.ViewContentDisplaysConfiguration;
 import org.thechiselgroup.choosel.core.client.windows.Branding;
 import org.thechiselgroup.choosel.core.client.windows.DefaultDesktop;
 import org.thechiselgroup.choosel.core.client.windows.Desktop;
@@ -105,15 +106,16 @@ import org.thechiselgroup.choosel.workbench.client.workspace.command.LoadWorkspa
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 
-public class ChooselWorkbenchClientModule extends AbstractGinModule implements
-        ChooselInjectionConstants {
+public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
+        implements ChooselInjectionConstants {
 
     private void bindApplication() {
-        bind(ChooselWorkbench.class).to(getWorkbenchClass()).in(
-                Singleton.class);
+        bind(ChooselWorkbench.class).to(getWorkbenchClass())
+                .in(Singleton.class);
     }
 
     private void bindBranding() {
@@ -193,28 +195,7 @@ public class ChooselWorkbenchClientModule extends AbstractGinModule implements
                 .to(ResourceSetLabelFactory.class).in(Singleton.class);
     }
 
-    protected void bindViewContentDisplayFactories() {
-        bindViewContentDisplayFactory(TYPE_MAP,
-                MapViewContentDisplayFactory.class);
-        bindViewContentDisplayFactory(TYPE_TEXT,
-                TextViewContentDisplayFactory.class);
-        bindViewContentDisplayFactory(TYPE_GRAPH,
-                GraphViewContentDisplayFactory.class);
-        bindViewContentDisplayFactory(TYPE_TIMELINE,
-                TimeLineViewContentDisplayFactory.class);
-        bindViewContentDisplayFactory(TYPE_BAR,
-                BarChartViewContentDisplayFactory.class);
-        bindViewContentDisplayFactory(TYPE_PIE,
-                PieChartViewContentDisplayFactory.class);
-        bindViewContentDisplayFactory(TYPE_CIRCULAR_BAR,
-                CircularBarChartViewContentDisplayFactory.class);
-        bindViewContentDisplayFactory(TYPE_DOT,
-                DotChartViewContentDisplayFactory.class);
-        bindViewContentDisplayFactory(TYPE_SCATTER,
-                ScatterPlotViewContentDisplayFactory.class);
-        bindViewContentDisplayFactory(TYPE_TIME,
-                TimeChartViewContentDisplayFactory.class);
-    }
+    protected abstract Class<? extends Provider<ViewContentDisplaysConfiguration>> getViewContentDisplaysConfigurationProvider();
 
     protected void bindViewContentDisplayFactory(
             String type,
@@ -258,7 +239,9 @@ public class ChooselWorkbenchClientModule extends AbstractGinModule implements
         bind(AbsolutePanel.class).annotatedWith(Names.named(ROOT_PANEL))
                 .toProvider(RootPanelProvider.class);
 
-        bindViewContentDisplayFactories();
+        bind(ViewContentDisplaysConfiguration.class).toProvider(
+                getViewContentDisplaysConfigurationProvider()).in(
+                Singleton.class);
 
         bind(WindowContentProducer.class).toProvider(
                 getContentProducerProviderClass()).in(Singleton.class);
@@ -319,11 +302,11 @@ public class ChooselWorkbenchClientModule extends AbstractGinModule implements
         bind(DropTargetCapabilityChecker.class).to(
                 getDropTargetCapabilityCheckerClass()).in(Singleton.class);
 
-        bind(ArcTypeProvider.class).to(getArcStyleProviderClass()).in(
-                Singleton.class);
-
-        bind(GraphExpansionRegistry.class).to(getGraphExpansionRegistryClass())
-                .in(Singleton.class);
+        // XXX move to actual applications
+        // bind(ArcTypeProvider.class).to(getArcStyleProviderClass()).in(
+        // Singleton.class);
+        // bind(GraphExpansionRegistry.class).to(getGraphExpansionRegistryClass())
+        // .in(Singleton.class);
 
         bindDisplays();
 
@@ -341,9 +324,10 @@ public class ChooselWorkbenchClientModule extends AbstractGinModule implements
         return ChooselWorkbench.class;
     }
 
-    protected Class<? extends ArcTypeProvider> getArcStyleProviderClass() {
-        return DefaultArcTypeProvider.class;
-    }
+    // XXX move to actual applications
+    // protected Class<? extends ArcTypeProvider> getArcStyleProviderClass() {
+    // return DefaultArcTypeProvider.class;
+    // }
 
     /**
      * Applications can override this method to provide a custom authentication
@@ -377,9 +361,11 @@ public class ChooselWorkbenchClientModule extends AbstractGinModule implements
         return FeedbackDialogErrorHandler.class;
     }
 
-    protected Class<? extends GraphExpansionRegistry> getGraphExpansionRegistryClass() {
-        return DefaultGraphExpansionRegistry.class;
-    }
+    // XXX move to actual applications
+    // protected Class<? extends GraphExpansionRegistry>
+    // getGraphExpansionRegistryClass() {
+    // return DefaultGraphExpansionRegistry.class;
+    // }
 
     protected Class<? extends PersistableRestorationServiceProvider> getPersistableRestorationServiceProvider() {
         return PersistableRestorationServiceProvider.class;

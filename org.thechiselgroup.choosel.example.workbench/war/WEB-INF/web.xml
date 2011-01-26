@@ -7,11 +7,11 @@
   
   <servlet>
     <servlet-name>csvservice</servlet-name>
-    <servlet-class>org.thechiselgroup.chooselexample.server.CSVFileServiceImpl</servlet-class>
+    <servlet-class>org.thechiselgroup.choosel.example.workbench.server.CSVFileServiceImpl</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>csvservice</servlet-name>
-    <url-pattern>/org_thechiselgroup_chooselexample/csvservice</url-pattern>
+    <url-pattern>/org.thechiselgroup.choosel.example.workbench.ChooselExampleWorkbench/csvservice</url-pattern>
   </servlet-mapping>
 
   <!-- CHOOSEL framework servlets & configuration -->
@@ -22,43 +22,43 @@
 
   <servlet>
     <servlet-name>authentication</servlet-name>
-    <servlet-class>org.thechiselgroup.choosel.server.authentication.AuthenticationServiceServlet</servlet-class>
+    <servlet-class>org.thechiselgroup.choosel.workbench.server.authentication.AuthenticationServiceServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>authentication</servlet-name>
-    <url-pattern>/org_thechiselgroup_chooselexample/authentication</url-pattern>
+    <url-pattern>/org.thechiselgroup.choosel.example.workbench.ChooselExampleWorkbench/authentication</url-pattern>
   </servlet-mapping>  
 
   <servlet>
     <servlet-name>feedback</servlet-name>
-    <servlet-class>org.thechiselgroup.choosel.server.feedback.FeedbackServiceServlet</servlet-class>
+    <servlet-class>org.thechiselgroup.choosel.workbench.server.feedback.FeedbackServiceServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>feedback</servlet-name>
-    <url-pattern>/org_thechiselgroup_chooselexample/feedback</url-pattern>
+    <url-pattern>/org.thechiselgroup.choosel.example.workbench.ChooselExampleWorkbench/feedback</url-pattern>
   </servlet-mapping>  
 
   <servlet>
     <servlet-name>workspace</servlet-name>
-    <servlet-class>org.thechiselgroup.choosel.server.workspace.WorkspacePersistenceServiceServlet</servlet-class>
+    <servlet-class>org.thechiselgroup.choosel.workbench.server.workspace.WorkspacePersistenceServiceServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>workspace</servlet-name>
-    <url-pattern>/org_thechiselgroup_chooselexample/workspace</url-pattern>
+    <url-pattern>/org.thechiselgroup.choosel.example.workbench.ChooselExampleWorkbench/workspace</url-pattern>
   </servlet-mapping>
 
   <servlet>
     <servlet-name>workspace-sharing</servlet-name>
-    <servlet-class>org.thechiselgroup.choosel.server.workspace.WorkspaceSharingServiceServlet</servlet-class>
+    <servlet-class>org.thechiselgroup.choosel.workbench.server.workspace.WorkspaceSharingServiceServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>workspace-sharing</servlet-name>
-    <url-pattern>/org_thechiselgroup_chooselexample/workspace-sharing</url-pattern>
+    <url-pattern>/org.thechiselgroup.choosel.example.workbench.ChooselExampleWorkbench/workspace-sharing</url-pattern>
   </servlet-mapping>
   
   <servlet>
     <servlet-name>acceptInvitation</servlet-name>
-    <servlet-class>org.thechiselgroup.choosel.server.workspace.AcceptInvitationServlet</servlet-class>
+    <servlet-class>org.thechiselgroup.choosel.workbench.server.workspace.AcceptInvitationServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>acceptInvitation</servlet-name>
@@ -67,11 +67,11 @@
 
   <servlet>
     <servlet-name>view</servlet-name>
-    <servlet-class>org.thechiselgroup.choosel.server.workspace.ViewPersistenceServiceServlet</servlet-class>
+    <servlet-class>org.thechiselgroup.choosel.workbench.server.workspace.ViewPersistenceServiceServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>view</servlet-name>
-    <url-pattern>/org_thechiselgroup_chooselexample/view</url-pattern>
+    <url-pattern>/org.thechiselgroup.choosel.example.workbench.ChooselExampleWorkbench/view</url-pattern>
   </servlet-mapping>
 
 <!-- gwt-log remote logging service -->  
@@ -81,7 +81,7 @@
 </servlet>
 <servlet-mapping>
   <servlet-name>remoteLoggerServiceImpl</servlet-name>
-  <url-pattern>/org_thechiselgroup_chooselexample/gwt-log</url-pattern>
+  <url-pattern>/org.thechiselgroup.choosel.example.workbench.ChooselExampleWorkbench/gwt-log</url-pattern>
 </servlet-mapping>
  
 </web-app>

@@ -21,7 +21,6 @@ import static org.thechiselgroup.choosel.core.client.configuration.ChooselInject
 import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.AVATAR_FACTORY_SET;
 import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.DROP_TARGET_MANAGER_VIEW_CONTENT;
 import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.LABEL_PROVIDER_SELECTION_SET;
-import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.TYPE_TEXT;
 
 import java.util.Map;
 
@@ -37,6 +36,7 @@ import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory
 import org.thechiselgroup.choosel.core.client.views.DefaultWindowContentProducer;
 import org.thechiselgroup.choosel.core.client.views.HoverModel;
 import org.thechiselgroup.choosel.core.client.views.ViewContentDisplayFactory;
+import org.thechiselgroup.choosel.core.client.views.ViewContentDisplaysConfiguration;
 import org.thechiselgroup.choosel.core.client.views.ViewFactory;
 import org.thechiselgroup.choosel.core.client.windows.WindowContentFactory;
 import org.thechiselgroup.choosel.core.client.windows.WindowContentProducer;
@@ -84,6 +84,8 @@ public class ChooselWindowContentProducerProvider implements
 
     protected ShareConfigurationFactory shareConfigurationFactory;
 
+    private ViewContentDisplaysConfiguration viewContentDisplayConfiguration;
+
     @Inject
     public ChooselWindowContentProducerProvider(
             @Named(AVATAR_FACTORY_SET) ResourceSetAvatarFactory userSetsDragAvatarFactory,
@@ -97,7 +99,8 @@ public class ChooselWindowContentProducerProvider implements
             @Named(DROP_TARGET_MANAGER_VIEW_CONTENT) ResourceSetAvatarDropTargetManager contentDropTargetManager,
             HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
             DetailsWidgetHelper detailsWidgetHelper,
-            ShareConfigurationFactory shareConfigurationFactory) {
+            ShareConfigurationFactory shareConfigurationFactory,
+            ViewContentDisplaysConfiguration viewContentDisplayConfiguration) {
 
         assert userSetsDragAvatarFactory != null;
         assert allResourcesDragAvatarFactory != null;
@@ -112,6 +115,7 @@ public class ChooselWindowContentProducerProvider implements
         assert popupManagerFactory != null;
         assert detailsWidgetHelper != null;
         assert shareConfigurationFactory != null;
+        assert viewContentDisplayConfiguration != null;
 
         this.shareConfigurationFactory = shareConfigurationFactory;
         this.userSetsDragAvatarFactory = userSetsDragAvatarFactory;
@@ -126,10 +130,11 @@ public class ChooselWindowContentProducerProvider implements
         this.hoverModel = hoverModel;
         this.popupManagerFactory = popupManagerFactory;
         this.detailsWidgetHelper = detailsWidgetHelper;
+        this.viewContentDisplayConfiguration = viewContentDisplayConfiguration;
 
-        putWindowContentFactory(WINDOW_CONTENT_HELP,
+        putWindowContentFactory(ChooselWorkbench.WINDOW_CONTENT_HELP,
                 new HelpWindowContentFactory());
-        putWindowContentFactory(WINDOW_CONTENT_NOTE,
+        putWindowContentFactory(ChooselWorkbench.WINDOW_CONTENT_NOTE,
                 new NoteWindowContentFactory());
     }
 
@@ -139,6 +144,12 @@ public class ChooselWindowContentProducerProvider implements
         for (Map.Entry<String, WindowContentFactory> entry : windowContentFactories
                 .entrySet()) {
             contentProducer.register(entry.getKey(), entry.getValue());
+        }
+        for (String type : viewContentDisplayConfiguration.getRegisteredTypes()) {
+            contentProducer.register(
+                    type,
+                    createViewFactory(type,
+                            viewContentDisplayConfiguration.getFactory(type)));
         }
         return contentProducer;
     }
@@ -152,70 +163,14 @@ public class ChooselWindowContentProducerProvider implements
         windowContentFactories.put(contentType, factory);
     }
 
-    @Inject
-    public void registerBar(@Named(TYPE_BAR) ViewContentDisplayFactory factory) {
-        registerViewContentDisplayFactory(TYPE_BAR, factory);
-    }
-
-    @Inject
-    public void registerCircularBar(
-            @Named(TYPE_CIRCULAR_BAR) ViewContentDisplayFactory factory) {
-        registerViewContentDisplayFactory(TYPE_CIRCULAR_BAR, factory);
-    }
-
-    @Inject
-    public void registerDot(@Named(TYPE_DOT) ViewContentDisplayFactory factory) {
-        registerViewContentDisplayFactory(TYPE_DOT, factory);
-    }
-
-    @Inject
-    public void registerGraph(
-            @Named(TYPE_GRAPH) ViewContentDisplayFactory factory) {
-        registerViewContentDisplayFactory(TYPE_GRAPH, factory);
-    }
-
-    @Inject
-    public void registerMap(@Named(TYPE_MAP) ViewContentDisplayFactory factory) {
-        registerViewContentDisplayFactory(TYPE_MAP, factory);
-    }
-
-    @Inject
-    public void registerPie(@Named(TYPE_PIE) ViewContentDisplayFactory factory) {
-        registerViewContentDisplayFactory(TYPE_PIE, factory);
-    }
-
-    @Inject
-    public void registerScatter(
-            @Named(TYPE_SCATTER) ViewContentDisplayFactory factory) {
-        registerViewContentDisplayFactory(TYPE_SCATTER, factory);
-    }
-
-    @Inject
-    public void registerText(@Named(TYPE_TEXT) ViewContentDisplayFactory factory) {
-        registerViewContentDisplayFactory(TYPE_TEXT, factory);
-    }
-
-    @Inject
-    public void registerTime(@Named(TYPE_TIME) ViewContentDisplayFactory factory) {
-        registerViewContentDisplayFactory(TYPE_TIME, factory);
-    }
-
-    @Inject
-    public void registerTimeline(
-            @Named(TYPE_TIMELINE) ViewContentDisplayFactory factory) {
-        registerViewContentDisplayFactory(TYPE_TIMELINE, factory);
-    }
-
-    private void registerViewContentDisplayFactory(String contentType,
+    private ViewFactory createViewFactory(String contentType,
             ViewContentDisplayFactory contentDisplayFactory) {
 
-        putWindowContentFactory(contentType, new ViewFactory(contentType,
-                contentDisplayFactory, userSetsDragAvatarFactory,
-                allResourcesDragAvatarFactory, selectionDragAvatarFactory,
-                dropTargetFactory, resourceSetFactory,
-                selectionModelLabelFactory, categorizer, labelProvider,
-                contentDropTargetManager, hoverModel, popupManagerFactory,
-                detailsWidgetHelper, shareConfigurationFactory));
+        return new ViewFactory(contentType, contentDisplayFactory,
+                userSetsDragAvatarFactory, allResourcesDragAvatarFactory,
+                selectionDragAvatarFactory, dropTargetFactory,
+                resourceSetFactory, selectionModelLabelFactory, categorizer,
+                labelProvider, contentDropTargetManager, hoverModel,
+                popupManagerFactory, detailsWidgetHelper);
     }
-
 }
