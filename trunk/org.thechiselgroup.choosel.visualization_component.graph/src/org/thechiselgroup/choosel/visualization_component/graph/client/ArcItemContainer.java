@@ -18,15 +18,17 @@ package org.thechiselgroup.choosel.visualization_component.graph.client;
 import java.util.Collection;
 import java.util.Map;
 
-import org.thechiselgroup.choosel.client.persistence.Memento;
-import org.thechiselgroup.choosel.client.persistence.Persistable;
-import org.thechiselgroup.choosel.client.persistence.PersistableRestorationService;
-import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetAccessor;
-import org.thechiselgroup.choosel.client.resources.persistence.ResourceSetCollector;
-import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
-import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.client.views.ViewItem;
-import org.thechiselgroup.choosel.client.views.ViewItemContainer;
+import org.thechiselgroup.choosel.core.client.persistence.Memento;
+import org.thechiselgroup.choosel.core.client.persistence.Persistable;
+import org.thechiselgroup.choosel.core.client.persistence.PersistableRestorationService;
+import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetAccessor;
+import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
+import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.views.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.ViewItemContainer;
+import org.thechiselgroup.choosel.visualization_component.graph.client.widget.Arc;
+import org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay;
 
 public class ArcItemContainer implements Persistable {
 

@@ -13,15 +13,24 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.visualization_component.graph.client;
+package org.thechiselgroup.choosel.visualization_component.graph.client.widget;
 
-import org.thechiselgroup.choosel.core.client.resources.Resource;
+public class LayoutException extends RuntimeException {
 
-import com.google.gwt.dev.protobuf.ServiceException;
-import com.google.gwt.user.client.rpc.RemoteService;
+    private final String layout;
 
-public interface NeighbourhoodService extends RemoteService {
+    public LayoutException(String layout) {
+        super("Failed to layout graph with layout '" + layout + "'");
+        this.layout = layout;
+    }
 
-    NeighbourhoodServiceResult getNeighbourhood(Resource concept)
-            throws ServiceException;
+    public LayoutException(String layout, Throwable cause) {
+        super("Failed to layout graph with layout '" + layout + "'", cause);
+        this.layout = layout;
+    }
+
+    public String getLayout() {
+        return layout;
+    }
+
 }

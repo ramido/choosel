@@ -18,10 +18,12 @@ package org.thechiselgroup.choosel.visualization_component.graph.client;
 import java.util.List;
 import java.util.Map;
 
-import org.thechiselgroup.choosel.client.command.UndoableCommand;
-import org.thechiselgroup.choosel.client.geometry.Point;
-import org.thechiselgroup.choosel.client.util.HasDescription;
-import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.core.client.command.UndoableCommand;
+import org.thechiselgroup.choosel.core.client.geometry.Point;
+import org.thechiselgroup.choosel.core.client.util.HasDescription;
+import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay;
+import org.thechiselgroup.choosel.visualization_component.graph.client.widget.Node;
 
 // TODO store results after execute for redo because some graph layouts are non-deterministic
 // TODO use animations (requires extending the flex graph interface) 

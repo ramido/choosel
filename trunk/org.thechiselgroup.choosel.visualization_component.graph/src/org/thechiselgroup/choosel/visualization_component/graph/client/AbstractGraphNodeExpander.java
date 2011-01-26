@@ -18,8 +18,9 @@ package org.thechiselgroup.choosel.visualization_component.graph.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.thechiselgroup.choosel.client.geometry.Point;
-import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.core.client.geometry.Point;
+import org.thechiselgroup.choosel.core.client.resources.Resource;
+import org.thechiselgroup.choosel.visualization_component.graph.client.widget.Node;
 
 public abstract class AbstractGraphNodeExpander implements GraphNodeExpander {
 

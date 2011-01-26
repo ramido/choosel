@@ -13,15 +13,12 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.visualization_component.graph.client;
+package org.thechiselgroup.choosel.visualization_component.graph.client.widget;
 
-import org.thechiselgroup.choosel.core.client.resources.Resource;
+import com.google.gwt.event.shared.EventHandler;
 
-import com.google.gwt.dev.protobuf.ServiceException;
-import com.google.gwt.user.client.rpc.RemoteService;
+public interface NodeDragHandleMouseMoveHandler extends EventHandler {
 
-public interface NeighbourhoodService extends RemoteService {
+    void onMouseMove(NodeDragHandleMouseMoveEvent event);
 
-    NeighbourhoodServiceResult getNeighbourhood(Resource concept)
-            throws ServiceException;
 }

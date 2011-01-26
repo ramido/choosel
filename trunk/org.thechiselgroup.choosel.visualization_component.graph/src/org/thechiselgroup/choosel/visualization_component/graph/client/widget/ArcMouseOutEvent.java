@@ -13,15 +13,24 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.visualization_component.graph.client;
+package org.thechiselgroup.choosel.visualization_component.graph.client.widget;
 
-import org.thechiselgroup.choosel.core.client.resources.Resource;
+public class ArcMouseOutEvent extends ArcEvent<ArcMouseOutHandler> {
 
-import com.google.gwt.dev.protobuf.ServiceException;
-import com.google.gwt.user.client.rpc.RemoteService;
+    public static final Type<ArcMouseOutHandler> TYPE = new Type<ArcMouseOutHandler>();
 
-public interface NeighbourhoodService extends RemoteService {
+    public ArcMouseOutEvent(Arc arc, int mouseX, int mouseY) {
+        super(arc, mouseX, mouseY);
+    }
 
-    NeighbourhoodServiceResult getNeighbourhood(Resource concept)
-            throws ServiceException;
+    @Override
+    protected void dispatch(ArcMouseOutHandler handler) {
+        handler.onMouseOut(this);
+    }
+
+    @Override
+    public Type<ArcMouseOutHandler> getAssociatedType() {
+        return TYPE;
+    }
+
 }

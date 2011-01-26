@@ -17,7 +17,7 @@ package org.thechiselgroup.choosel.visualization_component.graph.client;
 
 import java.io.Serializable;
 
-import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.core.client.resources.Resource;
 
 public class Relationship implements Serializable {
 

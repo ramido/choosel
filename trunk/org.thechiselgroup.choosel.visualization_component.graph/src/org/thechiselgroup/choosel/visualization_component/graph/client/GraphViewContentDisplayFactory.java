@@ -15,12 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.graph.client;
 
-import org.thechiselgroup.choosel.client.command.CommandManager;
-import org.thechiselgroup.choosel.client.resources.ResourceCategorizer;
-import org.thechiselgroup.choosel.client.resources.ResourceManager;
-import org.thechiselgroup.choosel.client.views.DragEnablerFactory;
-import org.thechiselgroup.choosel.client.views.ViewContentDisplay;
-import org.thechiselgroup.choosel.client.views.ViewContentDisplayFactory;
+import org.thechiselgroup.choosel.core.client.command.CommandManager;
+import org.thechiselgroup.choosel.core.client.resources.ResourceCategorizer;
+import org.thechiselgroup.choosel.core.client.resources.ResourceManager;
+import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
+import org.thechiselgroup.choosel.core.client.views.ViewContentDisplay;
+import org.thechiselgroup.choosel.core.client.views.ViewContentDisplayFactory;
 
 import com.google.inject.Inject;
 
