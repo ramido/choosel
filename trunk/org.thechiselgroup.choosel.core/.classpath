@@ -4,10 +4,10 @@
 	<classpathentry kind="src" output="test-classes" path="jretest"/>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="lib/guice-2.0.jar"/>
-	<classpathentry kind="lib" path="lib/gwt-dnd-3.0.0-patched.jar"/>
-	<classpathentry kind="lib" path="lib/gwt-fx-0.5.0_m1.jar"/>
-	<classpathentry kind="lib" path="testlibs/mockito-all-1.8.2.jar"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry exported="true" kind="lib" path="lib/guice-2.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/gwt-dnd-3.0.0-patched.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/gwt-fx-0.5.0_m1.jar"/>
+	<classpathentry exported="true" kind="lib" path="testlibs/mockito-all-1.8.2.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

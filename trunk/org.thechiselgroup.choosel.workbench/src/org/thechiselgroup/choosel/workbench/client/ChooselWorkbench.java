@@ -86,6 +86,8 @@ public abstract class ChooselWorkbench {
 
     public static final String WINDOW_CONTENT_HELP = "help";
 
+    public static final String WINDOW_CONTENT_NOTE = "note";
+
     public static final String WORKSPACE_ID = "workspaceId";
 
     public static final String DATA_PANEL = "data";

@@ -17,8 +17,34 @@
 -->
 <module rename-to='org.thechiselgroup.choosel.workbench.Workbench'>
 
+  <!-- GWT basics --> 
   <inherits name='com.google.gwt.user.User'/>
+  <inherits name="com.google.gwt.user.theme.standard.StandardResources" />
+ 
+  <!-- Dependency injection: guice, gin -->
+  <inherits name="com.google.gwt.inject.Inject"/>
+  
+  <!-- Logging: gwt-log -->
+  <!--    <inherits name="com.allen_sauer.gwt.log.gwt-log-OFF" /> -->
+  <!--    <inherits name="com.allen_sauer.gwt.log.gwt-log-ERROR" /> -->
+  <inherits name="com.allen_sauer.gwt.log.gwt-log-DEBUG" /> 
+  <set-property name="log_ConsoleLogger" value="ENABLED" />
+  <set-property name="log_DivLogger" value="DISABLED" />
+  <set-property name="log_FirebugLogger" value="DISABLED" />
+  <set-property name="log_GWTLogger" value="ENABLED" />
+  <set-property name="log_SystemLogger" value="ENABLED" />
+  <set-property name="log_RemoteLogger" value="ENABLED" />
+  <set-property name="log_WindowLogger" value="DISABLED" />
+    
+  <!-- Choosel core -->
   <inherits name='org.thechiselgroup.choosel.core.Core'/>
+  
+  <!-- GWT SWF Bridge: gwt2swf -->
+  <inherits name='pl.rmalinowski.gwt2swf.GWT2SWF' /> 
+   
+  <!-- Client XPath/XSLT support via wrapping native browser support -->
+  <script src="js/lib/sarissa-0.9.9.4/sarissa-compressed.js"/>
+  <script src="js/lib/sarissa-0.9.9.4/sarissa_ieemu_xpath-compressed.js"/>
 
   <source path='client'/>
 
