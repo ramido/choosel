@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.graph.client;
 
-import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.core.client.resources.Resource;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -23,8 +23,8 @@ public class NeighbourhoodServiceAsyncNullImplementation implements
         NeighbourhoodServiceAsync {
 
     @Override
-    public void getNeighbourhood(final Resource inputConcept,
-            final AsyncCallback<NeighbourhoodServiceResult> callback) {
+    public void getNeighbourhood(Resource inputConcept,
+            AsyncCallback<NeighbourhoodServiceResult> callback) {
         callback.onSuccess(new NeighbourhoodServiceResult(inputConcept));
     }
 }

@@ -15,9 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.graph.client;
 
-import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.client.views.ViewItem;
-import org.thechiselgroup.choosel.client.views.ViewItemContainer;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.views.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.ViewItemContainer;
+import org.thechiselgroup.choosel.visualization_component.graph.client.widget.Arc;
 
 /**
  * A specific class of arcs. Calculates arc items for a given resource item.

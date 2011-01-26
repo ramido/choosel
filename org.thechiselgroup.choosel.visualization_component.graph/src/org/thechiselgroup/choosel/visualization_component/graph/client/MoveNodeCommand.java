@@ -15,9 +15,11 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.graph.client;
 
-import org.thechiselgroup.choosel.client.command.UndoableCommand;
-import org.thechiselgroup.choosel.client.geometry.Point;
-import org.thechiselgroup.choosel.client.util.HasDescription;
+import org.thechiselgroup.choosel.core.client.command.UndoableCommand;
+import org.thechiselgroup.choosel.core.client.geometry.Point;
+import org.thechiselgroup.choosel.core.client.util.HasDescription;
+import org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay;
+import org.thechiselgroup.choosel.visualization_component.graph.client.widget.Node;
 
 public class MoveNodeCommand implements UndoableCommand, HasDescription {
 

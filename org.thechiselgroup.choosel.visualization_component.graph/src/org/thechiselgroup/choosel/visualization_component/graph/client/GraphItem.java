@@ -15,18 +15,20 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.graph.client;
 
-import static org.thechiselgroup.choosel.visualization_component.graph.client.GraphDisplay.NODE_BACKGROUND_COLOR;
-import static org.thechiselgroup.choosel.visualization_component.graph.client.GraphDisplay.NODE_BORDER_COLOR;
-import static org.thechiselgroup.choosel.visualization_component.graph.client.GraphDisplay.NODE_FONT_COLOR;
-import static org.thechiselgroup.choosel.visualization_component.graph.client.GraphDisplay.NODE_FONT_WEIGHT;
-import static org.thechiselgroup.choosel.visualization_component.graph.client.GraphDisplay.NODE_FONT_WEIGHT_BOLD;
-import static org.thechiselgroup.choosel.visualization_component.graph.client.GraphDisplay.NODE_FONT_WEIGHT_NORMAL;
 import static org.thechiselgroup.choosel.visualization_component.graph.client.GraphViewContentDisplay.NODE_BACKGROUND_COLOR_SLOT;
 import static org.thechiselgroup.choosel.visualization_component.graph.client.GraphViewContentDisplay.NODE_BORDER_COLOR_SLOT;
 import static org.thechiselgroup.choosel.visualization_component.graph.client.GraphViewContentDisplay.NODE_LABEL_SLOT;
+import static org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay.NODE_BACKGROUND_COLOR;
+import static org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay.NODE_BORDER_COLOR;
+import static org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay.NODE_FONT_COLOR;
+import static org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay.NODE_FONT_WEIGHT;
+import static org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay.NODE_FONT_WEIGHT_BOLD;
+import static org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay.NODE_FONT_WEIGHT_NORMAL;
 
-import org.thechiselgroup.choosel.client.ui.Colors;
-import org.thechiselgroup.choosel.client.views.ViewItem;
+import org.thechiselgroup.choosel.core.client.ui.Colors;
+import org.thechiselgroup.choosel.core.client.views.ViewItem;
+import org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay;
+import org.thechiselgroup.choosel.visualization_component.graph.client.widget.Node;
 
 /**
  * Represents a resource item in the graph view.
@@ -41,8 +43,7 @@ public class GraphItem {
 
     private final ViewItem resourceItem;
 
-    public GraphItem(ViewItem resourceItem, String type,
-            GraphDisplay display) {
+    public GraphItem(ViewItem resourceItem, String type, GraphDisplay display) {
 
         assert resourceItem != null;
         assert type != null;
@@ -55,7 +56,7 @@ public class GraphItem {
     }
 
     public String getLabelValue() {
-        return (String) resourceItem.getResourceValue(NODE_LABEL_SLOT);
+        return resourceItem.getSlotValue(NODE_LABEL_SLOT);
     }
 
     public Node getNode() {
@@ -63,12 +64,11 @@ public class GraphItem {
     }
 
     public String getNodeBackgroundColorValue() {
-        return (String) resourceItem
-                .getResourceValue(NODE_BACKGROUND_COLOR_SLOT);
+        return resourceItem.getSlotValue(NODE_BACKGROUND_COLOR_SLOT);
     }
 
     public String getNodeBorderColorValue() {
-        return (String) resourceItem.getResourceValue(NODE_BORDER_COLOR_SLOT);
+        return resourceItem.getSlotValue(NODE_BORDER_COLOR_SLOT);
     }
 
     public ViewItem getResourceItem() {

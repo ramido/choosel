@@ -15,11 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.graph.client;
 
-import org.thechiselgroup.choosel.client.resources.Resource;
-import org.thechiselgroup.choosel.client.resources.ResourceManager;
-import org.thechiselgroup.choosel.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.client.views.ViewItem;
+import org.thechiselgroup.choosel.core.client.resources.Resource;
+import org.thechiselgroup.choosel.core.client.resources.ResourceManager;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.views.ViewItem;
+import org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay;
 
 // TODO better separation of concern - introduce factories for the expanders
 // TODO use resource items instead of single resources
@@ -45,7 +46,6 @@ public interface GraphNodeExpansionCallback {
 
     boolean isRestoring();
 
-    void updateArcsForViewItems(
-            LightweightCollection<ViewItem> resourceItems);
+    void updateArcsForViewItems(LightweightCollection<ViewItem> resourceItems);
 
 }

@@ -13,19 +13,47 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.visualization_component.graph.client;
+package org.thechiselgroup.choosel.visualization_component.graph.client.widget;
 
-import org.thechiselgroup.choosel.core.client.views.ViewItem;
+public class Node {
 
-public class ViewToIndividualItemEventForwarder {
+    private String id;
 
-    protected final void onMouseOut(ViewItem item, int x, int y) {
-        item.getPopupManager().onMouseOut(x, y);
-        item.getHighlightingManager().setHighlighting(false);
+    private String label;
+
+    private String type;
+
+    public Node(String id, String label, String type) {
+        assert id != null;
+        assert type != null;
+
+        this.id = id;
+        this.label = (label == null) ? "" : label;
+        this.type = type;
     }
 
-    protected final void onMouseOver(ViewItem item, int x, int y) {
-        item.getPopupManager().onMouseOver(x, y);
-        item.getHighlightingManager().setHighlighting(true);
+    public String getId() {
+        return id;
     }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
 }

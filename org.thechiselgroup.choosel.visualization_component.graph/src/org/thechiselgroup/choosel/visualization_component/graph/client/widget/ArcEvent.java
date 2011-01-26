@@ -13,25 +13,41 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.visualization_component.graph.client;
+package org.thechiselgroup.choosel.visualization_component.graph.client.widget;
 
-import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
+import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
 
-public class DefaultArcTypeProvider implements ArcTypeProvider {
+public abstract class ArcEvent<T extends EventHandler> extends GwtEvent<T> {
 
-    private final LightweightList<ArcType> arcTypes = CollectionFactory
-            .createLightweightList();
+    private final Arc arc;
 
-    protected void addArcType(ArcType arcType) {
-        assert arcType != null;
-        arcTypes.add(arcType);
+    private final int mouseX;
+
+    private final int mouseY;
+
+    public ArcEvent(Arc arc, int mouseX, int mouseY) {
+        this.arc = arc;
+        this.mouseX = mouseX;
+        this.mouseY = mouseY;
+    }
+
+    public Arc getArc() {
+        return arc;
+    }
+
+    public int getMouseX() {
+        return mouseX;
+    }
+
+    public int getMouseY() {
+        return mouseY;
     }
 
     @Override
-    public LightweightCollection<ArcType> getArcTypes() {
-        return arcTypes;
+    public String toString() {
+        return "ArcEvent [arc=" + arc + ", mouseX=" + mouseX + ", mouseY="
+                + mouseY + "]";
     }
 
 }

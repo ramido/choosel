@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.graph.client;
 
-import org.thechiselgroup.choosel.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 
 public interface ArcTypeProvider {
 

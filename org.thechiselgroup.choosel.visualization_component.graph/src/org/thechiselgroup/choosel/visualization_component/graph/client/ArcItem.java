@@ -15,6 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.graph.client;
 
+import org.thechiselgroup.choosel.visualization_component.graph.client.widget.Arc;
+import org.thechiselgroup.choosel.visualization_component.graph.client.widget.ArcSettings;
+import org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay;
 
 // TODO set visible method
 public class ArcItem {
