@@ -9,5 +9,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/org.thechiselgroup.choosel.visualization_component.text"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.thechiselgroup.choosel.visualization_component.timeline"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.thechiselgroup.choosel.workbench"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.thechiselgroup.choosel.visualization_component.graph"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

@@ -19,6 +19,10 @@
 
   <inherits name='org.thechiselgroup.choosel.workbench.Workbench'/>
   <inherits name='org.thechiselgroup.choosel.visualization_component.chart.Chart'/>
+  <inherits name='org.thechiselgroup.choosel.visualization_component.map.Map'/>
+  <inherits name='org.thechiselgroup.choosel.visualization_component.graph.Graph'/>
+  <inherits name='org.thechiselgroup.choosel.visualization_component.text.Text'/>
+  <inherits name='org.thechiselgroup.choosel.visualization_component.timeline.Timeline'/>
   
   <entry-point class='org.thechiselgroup.choosel.example.workbench.client.ChooselExampleWorkbenchEntryPoint'/>
   

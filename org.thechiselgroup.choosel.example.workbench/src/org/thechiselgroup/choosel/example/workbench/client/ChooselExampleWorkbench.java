@@ -21,6 +21,10 @@ import org.thechiselgroup.choosel.core.client.windows.WindowContent;
 import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChartVisualization;
 import org.thechiselgroup.choosel.visualization_component.chart.client.piechart.PieChartVisualization;
 import org.thechiselgroup.choosel.visualization_component.chart.client.scatterplot.ScatterPlotVisualization;
+import org.thechiselgroup.choosel.visualization_component.graph.client.GraphVisualization;
+import org.thechiselgroup.choosel.visualization_component.map.client.MapVisualization;
+import org.thechiselgroup.choosel.visualization_component.text.client.TextVisualization;
+import org.thechiselgroup.choosel.visualization_component.timeline.client.TimelineVisualization;
 import org.thechiselgroup.choosel.workbench.client.ChooselWorkbench;
 import org.thechiselgroup.choosel.workbench.client.RestrictImporterToOneDataSourceManager;
 import org.thechiselgroup.choosel.workbench.client.importer.ImportDialog;
@@ -64,8 +68,8 @@ public class ChooselExampleWorkbench extends ChooselWorkbench {
         // asyncCommandExecutor));
 
         if (runsInDevelopmentMode()) {
-            // addCreateWindowActionToToolbar(DEVELOPER_MODE_PANEL, "Graph",
-            // TYPE_GRAPH);
+            addCreateWindowActionToToolbar(DEVELOPER_MODE_PANEL, "Graph",
+                    GraphVisualization.ID);
             // addCreateWindowActionToToolbar(DEVELOPER_MODE_PANEL,
             // "Circular Bar", TYPE_CIRCULAR_BAR);
             // addCreateWindowActionToToolbar(DEVELOPER_MODE_PANEL, "Time",
@@ -77,10 +81,11 @@ public class ChooselExampleWorkbench extends ChooselWorkbench {
         }
 
         addCreateWindowActionToToolbar(VIEWS_PANEL, "Note", WINDOW_CONTENT_NOTE);
-        // addCreateWindowActionToToolbar(VIEWS_PANEL, "Text", TYPE_TEXT);
-        // addCreateWindowActionToToolbar(VIEWS_PANEL, "Map", TYPE_MAP);
-        // addCreateWindowActionToToolbar(VIEWS_PANEL, "Timeline",
-        // TYPE_TIMELINE);
+        addCreateWindowActionToToolbar(VIEWS_PANEL, "Text",
+                TextVisualization.ID);
+        addCreateWindowActionToToolbar(VIEWS_PANEL, "Map", MapVisualization.ID);
+        addCreateWindowActionToToolbar(VIEWS_PANEL, "Timeline",
+                TimelineVisualization.ID);
         addCreateWindowActionToToolbar(VIEWS_PANEL, "Bar Chart",
                 BarChartVisualization.ID);
         addCreateWindowActionToToolbar(VIEWS_PANEL, "Scatter Plot",
