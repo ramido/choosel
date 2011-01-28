@@ -16,8 +16,8 @@
 package org.thechiselgroup.choosel.visualization_component.graph.client;
 
 import org.thechiselgroup.choosel.core.client.resources.Resource;
+import org.thechiselgroup.choosel.core.client.util.ServiceException;
 
-import com.google.gwt.dev.protobuf.ServiceException;
 import com.google.gwt.user.client.rpc.RemoteService;
 
 public interface NeighbourhoodService extends RemoteService {
