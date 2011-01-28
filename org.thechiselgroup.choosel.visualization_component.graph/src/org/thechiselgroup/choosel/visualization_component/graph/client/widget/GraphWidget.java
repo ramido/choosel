@@ -19,9 +19,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.thechiselgroup.choosel.client.geometry.Point;
-import org.thechiselgroup.choosel.client.util.collections.ArrayUtils;
-import org.thechiselgroup.choosel.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.core.client.geometry.Point;
+import org.thechiselgroup.choosel.core.client.util.collections.ArrayUtils;
+import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 
 import pl.rmalinowski.gwt2swf.client.ui.SWFWidget;
 
@@ -260,38 +260,38 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
 
     private static native void exportStaticMethods() /*-{
         $wnd._flexvis_loaded=$entry(
-        @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onLoad(Ljava/lang/String;));
+        @org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphWidget::_onLoad(Ljava/lang/String;));
 
         $wnd._flexvis_log=$entry(
-        @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_log(Ljava/lang/String;));
+        @org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphWidget::_log(Ljava/lang/String;));
 
         $wnd._flexvis_nodeMouseOver=$entry(
-        @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onNodeMouseOver(Ljava/lang/String;IILjava/lang/String;));
+        @org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphWidget::_onNodeMouseOver(Ljava/lang/String;IILjava/lang/String;));
         $wnd._flexvis_nodeMouseOut=$entry(
-        @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onNodeMouseOut(Ljava/lang/String;IILjava/lang/String;));
+        @org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphWidget::_onNodeMouseOut(Ljava/lang/String;IILjava/lang/String;));
         $wnd._flexvis_nodeMouseClick=$entry(
-        @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onNodeMouseClick(Ljava/lang/String;IILjava/lang/String;));
+        @org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphWidget::_onNodeMouseClick(Ljava/lang/String;IILjava/lang/String;));
         $wnd._flexvis_nodeMouseDoubleClick=$entry(
-        @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onNodeMouseDoubleClick(Ljava/lang/String;IILjava/lang/String;));
+        @org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphWidget::_onNodeMouseDoubleClick(Ljava/lang/String;IILjava/lang/String;));
 
         $wnd._flexvis_arcMouseOver=$entry(
-        @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onArcMouseOver(Ljava/lang/String;IILjava/lang/String;));
+        @org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphWidget::_onArcMouseOver(Ljava/lang/String;IILjava/lang/String;));
         $wnd._flexvis_arcMouseOut=$entry(
-        @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onArcMouseOut(Ljava/lang/String;IILjava/lang/String;));
+        @org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphWidget::_onArcMouseOut(Ljava/lang/String;IILjava/lang/String;));
         $wnd._flexvis_arcMouseClick=$entry(
-        @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onArcMouseClick(Ljava/lang/String;IILjava/lang/String;));
+        @org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphWidget::_onArcMouseClick(Ljava/lang/String;IILjava/lang/String;));
         $wnd._flexvis_arcMouseDoubleClick=$entry(
-        @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onArcMouseDoubleClick(Ljava/lang/String;IILjava/lang/String;));
+        @org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphWidget::_onArcMouseDoubleClick(Ljava/lang/String;IILjava/lang/String;));
 
         $wnd._flexvis_onNodeMenuItemClicked=$entry(
-        @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onNodeMenuItemClicked(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IILjava/lang/String;));
+        @org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphWidget::_onNodeMenuItemClicked(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IILjava/lang/String;));
         $wnd._flexvis_onNodeDragHandleMouseDown=$entry(
-        @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onNodeDragHandleMouseDown(Ljava/lang/String;IILjava/lang/String;))
+        @org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphWidget::_onNodeDragHandleMouseDown(Ljava/lang/String;IILjava/lang/String;))
         $wnd._flexvis_onNodeDragHandleMouseMove=$entry(
-        @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onNodeDragHandleMouseMove(Ljava/lang/String;IILjava/lang/String;))
+        @org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphWidget::_onNodeDragHandleMouseMove(Ljava/lang/String;IILjava/lang/String;))
 
         $wnd._flexvis_nodeDrag=$entry(
-        @org.thechiselgroup.choosel.client.ui.widget.graph.GraphWidget::_onNodeDrag(Ljava/lang/String;IIIILjava/lang/String;));
+        @org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphWidget::_onNodeDrag(Ljava/lang/String;IIIILjava/lang/String;));
     }-*/;
     // @formatter:on
 

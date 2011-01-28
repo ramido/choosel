@@ -18,9 +18,11 @@ package org.thechiselgroup.choosel.visualization_component.graph.client;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.thechiselgroup.choosel.client.error_handling.ErrorHandler;
-import org.thechiselgroup.choosel.client.error_handling.ErrorHandlingAsyncCallback;
-import org.thechiselgroup.choosel.client.resources.Resource;
+import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
+import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandlingAsyncCallback;
+import org.thechiselgroup.choosel.core.client.resources.Resource;
+import org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay;
+import org.thechiselgroup.choosel.visualization_component.graph.client.widget.Node;
 
 public abstract class AbstractNeighbourhoodCallback extends
         ErrorHandlingAsyncCallback<NeighbourhoodServiceResult> {
