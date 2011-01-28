@@ -56,4 +56,9 @@ public class GraphViewContentDisplayFactory implements
                 resourceManager, dragEnablerFactory, resourceCategorizer,
                 arcStyleProvider, registry);
     }
+
+    @Override
+    public String getViewContentTypeID() {
+        return GraphVisualization.ID;
+    }
 }
