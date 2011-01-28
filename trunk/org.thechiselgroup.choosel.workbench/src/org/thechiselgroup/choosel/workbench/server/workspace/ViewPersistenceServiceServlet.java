@@ -17,7 +17,7 @@ package org.thechiselgroup.choosel.workbench.server.workspace;
 
 import java.util.List;
 
-import org.thechiselgroup.choosel.workbench.client.services.ServiceException;
+import org.thechiselgroup.choosel.core.client.util.ServiceException;
 import org.thechiselgroup.choosel.workbench.client.workspace.dto.ViewDTO;
 import org.thechiselgroup.choosel.workbench.client.workspace.dto.ViewPreviewDTO;
 import org.thechiselgroup.choosel.workbench.client.workspace.service.ViewPersistenceService;

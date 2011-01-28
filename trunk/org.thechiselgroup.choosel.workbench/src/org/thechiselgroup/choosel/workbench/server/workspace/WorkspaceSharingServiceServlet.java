@@ -21,8 +21,8 @@ import java.security.SecureRandom;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import org.thechiselgroup.choosel.core.client.util.ServiceException;
 import org.thechiselgroup.choosel.workbench.client.DefaultBranding;
-import org.thechiselgroup.choosel.workbench.client.services.ServiceException;
 import org.thechiselgroup.choosel.workbench.client.workspace.dto.WorkspaceDTO;
 import org.thechiselgroup.choosel.workbench.client.workspace.service.WorkspaceSharingService;
 import org.thechiselgroup.choosel.workbench.server.PMF;

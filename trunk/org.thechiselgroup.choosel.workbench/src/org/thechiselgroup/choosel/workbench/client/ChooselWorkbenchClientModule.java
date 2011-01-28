@@ -302,12 +302,6 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
         bind(DropTargetCapabilityChecker.class).to(
                 getDropTargetCapabilityCheckerClass()).in(Singleton.class);
 
-        // XXX move to actual applications
-        // bind(ArcTypeProvider.class).to(getArcStyleProviderClass()).in(
-        // Singleton.class);
-        // bind(GraphExpansionRegistry.class).to(getGraphExpansionRegistryClass())
-        // .in(Singleton.class);
-
         bindDisplays();
 
         bind(DocumentProcessor.class).to(SarissaDocumentProcessor.class).in(
@@ -323,11 +317,6 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
     protected Class<? extends ChooselWorkbench> getWorkbenchClass() {
         return ChooselWorkbench.class;
     }
-
-    // XXX move to actual applications
-    // protected Class<? extends ArcTypeProvider> getArcStyleProviderClass() {
-    // return DefaultArcTypeProvider.class;
-    // }
 
     /**
      * Applications can override this method to provide a custom authentication
@@ -360,12 +349,6 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
     protected Class<? extends ErrorHandler> getErrorHandlerClass() {
         return FeedbackDialogErrorHandler.class;
     }
-
-    // XXX move to actual applications
-    // protected Class<? extends GraphExpansionRegistry>
-    // getGraphExpansionRegistryClass() {
-    // return DefaultGraphExpansionRegistry.class;
-    // }
 
     protected Class<? extends PersistableRestorationServiceProvider> getPersistableRestorationServiceProvider() {
         return PersistableRestorationServiceProvider.class;

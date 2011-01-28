@@ -31,7 +31,7 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.thechiselgroup.choosel.core.client.resources.Resource;
-import org.thechiselgroup.choosel.workbench.client.services.ServiceException;
+import org.thechiselgroup.choosel.core.client.util.ServiceException;
 import org.thechiselgroup.choosel.workbench.server.urlfetch.DefaultDocumentFetchService;
 import org.thechiselgroup.choosel.workbench.server.urlfetch.DocumentFetchService;
 import org.w3c.dom.Document;

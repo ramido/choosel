@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.client.authentication;
 
-import org.thechiselgroup.choosel.workbench.client.services.ServiceException;
+import org.thechiselgroup.choosel.core.client.util.ServiceException;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;

@@ -34,7 +34,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.test.AdvancedAsserts;
-import org.thechiselgroup.choosel.workbench.client.services.ServiceException;
+import org.thechiselgroup.choosel.core.client.util.ServiceException;
 import org.thechiselgroup.choosel.workbench.client.workspace.dto.ResourceSetDTO;
 import org.thechiselgroup.choosel.workbench.client.workspace.dto.WindowDTO;
 import org.thechiselgroup.choosel.workbench.client.workspace.dto.WorkspaceDTO;

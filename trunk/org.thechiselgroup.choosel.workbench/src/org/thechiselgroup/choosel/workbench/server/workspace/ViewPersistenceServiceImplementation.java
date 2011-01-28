@@ -24,9 +24,9 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 
+import org.thechiselgroup.choosel.core.client.util.ServiceException;
 import org.thechiselgroup.choosel.workbench.client.authentication.AuthenticationException;
 import org.thechiselgroup.choosel.workbench.client.authentication.AuthorizationException;
-import org.thechiselgroup.choosel.workbench.client.services.ServiceException;
 import org.thechiselgroup.choosel.workbench.client.workspace.dto.ViewDTO;
 import org.thechiselgroup.choosel.workbench.client.workspace.dto.ViewPreviewDTO;
 import org.thechiselgroup.choosel.workbench.client.workspace.service.ViewPersistenceService;

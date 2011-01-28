@@ -15,9 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.server.authentication;
 
+import org.thechiselgroup.choosel.core.client.util.ServiceException;
 import org.thechiselgroup.choosel.workbench.client.authentication.Authentication;
 import org.thechiselgroup.choosel.workbench.client.authentication.AuthenticationService;
-import org.thechiselgroup.choosel.workbench.client.services.ServiceException;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.appengine.api.users.UserServiceFactory;
