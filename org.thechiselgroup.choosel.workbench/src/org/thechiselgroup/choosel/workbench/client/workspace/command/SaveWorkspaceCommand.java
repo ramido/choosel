@@ -15,8 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.client.workspace.command;
 
-import org.thechiselgroup.choosel.workbench.client.error_handling.ErrorHandler;
-import org.thechiselgroup.choosel.workbench.client.error_handling.ErrorHandlingAsyncCallback;
+import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
+import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandlingAsyncCallback;
 import org.thechiselgroup.choosel.workbench.client.workspace.WorkspacePersistenceManager;
 
 import com.google.gwt.user.client.Command;

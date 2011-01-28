@@ -15,8 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.client.workspace;
 
-import org.thechiselgroup.choosel.workbench.client.error_handling.ErrorHandler;
-import org.thechiselgroup.choosel.workbench.client.error_handling.ErrorHandlingAsyncCallback;
+import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
+import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandlingAsyncCallback;
 
 import com.google.inject.Inject;
 
