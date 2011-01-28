@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.client.workspace.service;
 
-import org.thechiselgroup.choosel.workbench.client.services.ServiceException;
+import org.thechiselgroup.choosel.core.client.util.ServiceException;
 import org.thechiselgroup.choosel.workbench.client.workspace.dto.WorkspaceDTO;
 
 import com.google.gwt.user.client.rpc.RemoteService;

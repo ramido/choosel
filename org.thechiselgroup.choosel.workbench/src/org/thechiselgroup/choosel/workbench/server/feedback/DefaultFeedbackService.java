@@ -17,8 +17,8 @@ package org.thechiselgroup.choosel.workbench.server.feedback;
 
 import java.io.IOException;
 
+import org.thechiselgroup.choosel.core.client.util.ServiceException;
 import org.thechiselgroup.choosel.workbench.client.feedback.FeedbackService;
-import org.thechiselgroup.choosel.workbench.client.services.ServiceException;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.appengine.api.mail.MailService;

@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.client.authentication;
 
-import org.thechiselgroup.choosel.workbench.client.services.ServiceException;
+import org.thechiselgroup.choosel.core.client.util.ServiceException;
 
 public class AuthorizationException extends ServiceException {
 

@@ -21,9 +21,9 @@ import java.util.Date;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 
+import org.thechiselgroup.choosel.core.client.util.ServiceException;
 import org.thechiselgroup.choosel.core.client.windows.Branding;
 import org.thechiselgroup.choosel.workbench.client.authentication.AuthorizationException;
-import org.thechiselgroup.choosel.workbench.client.services.ServiceException;
 import org.thechiselgroup.choosel.workbench.client.workspace.dto.WorkspaceDTO;
 import org.thechiselgroup.choosel.workbench.client.workspace.service.WorkspaceSharingService;
 import org.thechiselgroup.choosel.workbench.server.util.PasswordGenerator;
