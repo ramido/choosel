@@ -15,9 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.graph.client;
 
-import static org.thechiselgroup.choosel.visualization_component.graph.client.GraphViewContentDisplay.NODE_BACKGROUND_COLOR_SLOT;
-import static org.thechiselgroup.choosel.visualization_component.graph.client.GraphViewContentDisplay.NODE_BORDER_COLOR_SLOT;
-import static org.thechiselgroup.choosel.visualization_component.graph.client.GraphViewContentDisplay.NODE_LABEL_SLOT;
 import static org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay.NODE_BACKGROUND_COLOR;
 import static org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay.NODE_BORDER_COLOR;
 import static org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay.NODE_FONT_COLOR;
@@ -56,7 +53,7 @@ public class GraphItem {
     }
 
     public String getLabelValue() {
-        return resourceItem.getSlotValue(NODE_LABEL_SLOT);
+        return resourceItem.getSlotValue(GraphVisualization.NODE_LABEL_SLOT);
     }
 
     public Node getNode() {
@@ -64,11 +61,13 @@ public class GraphItem {
     }
 
     public String getNodeBackgroundColorValue() {
-        return resourceItem.getSlotValue(NODE_BACKGROUND_COLOR_SLOT);
+        return resourceItem
+                .getSlotValue(GraphVisualization.NODE_BACKGROUND_COLOR_SLOT);
     }
 
     public String getNodeBorderColorValue() {
-        return resourceItem.getSlotValue(NODE_BORDER_COLOR_SLOT);
+        return resourceItem
+                .getSlotValue(GraphVisualization.NODE_BORDER_COLOR_SLOT);
     }
 
     public ViewItem getResourceItem() {

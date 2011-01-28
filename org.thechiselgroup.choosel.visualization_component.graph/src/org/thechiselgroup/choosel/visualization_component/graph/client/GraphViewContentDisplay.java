@@ -25,7 +25,6 @@ import org.thechiselgroup.choosel.core.client.geometry.Point;
 import org.thechiselgroup.choosel.core.client.persistence.Memento;
 import org.thechiselgroup.choosel.core.client.persistence.PersistableRestorationService;
 import org.thechiselgroup.choosel.core.client.resources.CombinedResourceSet;
-import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceCategorizer;
@@ -213,15 +212,6 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     private CombinedResourceSet nodeResources = new CombinedResourceSet(
             new DefaultResourceSet());
 
-    public static final Slot NODE_BORDER_COLOR_SLOT = new Slot(
-            "nodeBorderColor", "Node Border Color", DataType.COLOR);
-
-    public static final Slot NODE_BACKGROUND_COLOR_SLOT = new Slot(
-            "nodeBackgroundColor", "Node Color", DataType.COLOR);
-
-    public static final Slot NODE_LABEL_SLOT = new Slot("nodeLabel",
-            "Node Label", DataType.TEXT);
-
     private Map<String, ArcItemContainer> arcItemContainersByArcTypeID = CollectionFactory
             .createStringMap();
 
@@ -407,9 +397,9 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
     @Override
     public Slot[] getSlots() {
-        return new Slot[] { GraphViewContentDisplay.NODE_LABEL_SLOT,
-                GraphViewContentDisplay.NODE_BORDER_COLOR_SLOT,
-                GraphViewContentDisplay.NODE_BACKGROUND_COLOR_SLOT };
+        return new Slot[] { GraphVisualization.NODE_LABEL_SLOT,
+                GraphVisualization.NODE_BORDER_COLOR_SLOT,
+                GraphVisualization.NODE_BACKGROUND_COLOR_SLOT };
     }
 
     @Override
