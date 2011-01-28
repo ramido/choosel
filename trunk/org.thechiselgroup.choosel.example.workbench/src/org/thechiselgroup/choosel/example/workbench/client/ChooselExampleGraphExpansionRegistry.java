@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.example.workbench.client.services;
+package org.thechiselgroup.choosel.example.workbench.client;
 
-import org.thechiselgroup.choosel.core.client.util.ServiceException;
+import org.thechiselgroup.choosel.visualization_component.graph.client.DefaultGraphExpansionRegistry;
 
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.google.inject.Inject;
 
-// TODO move to choosel framework
-@RemoteServiceRelativePath("proxy")
-public interface ProxyService extends RemoteService {
+public class ChooselExampleGraphExpansionRegistry extends
+        DefaultGraphExpansionRegistry {
 
-    String fetchURL(String url) throws ServiceException;
+    @Inject
+    public ChooselExampleGraphExpansionRegistry() {
+        putNodeMenuEntry("graphtest", "Graph Test Items",
+                new GraphTestGraphTestGraphNodeExpander());
+    }
 
 }
