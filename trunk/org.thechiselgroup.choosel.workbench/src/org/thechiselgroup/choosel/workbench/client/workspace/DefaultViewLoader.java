@@ -15,8 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.client.workspace;
 
+import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.core.client.views.DefaultView;
-import org.thechiselgroup.choosel.workbench.client.error_handling.ErrorHandler;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;

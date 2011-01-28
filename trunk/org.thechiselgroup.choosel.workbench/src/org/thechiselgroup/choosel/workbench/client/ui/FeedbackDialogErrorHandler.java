@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.workbench.client.error_handling;
+package org.thechiselgroup.choosel.workbench.client.ui;
 
 import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.LOG;
 
 import org.thechiselgroup.choosel.core.client.command.AsyncCommandExecutor;
+import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.workbench.client.feedback.FeedbackDialog;
 import org.thechiselgroup.choosel.workbench.client.feedback.FeedbackServiceAsync;
 import org.thechiselgroup.choosel.workbench.client.ui.dialog.DialogManager;
