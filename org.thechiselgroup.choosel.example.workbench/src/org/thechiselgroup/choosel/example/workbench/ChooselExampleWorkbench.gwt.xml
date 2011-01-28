@@ -26,8 +26,7 @@
   
   <entry-point class='org.thechiselgroup.choosel.example.workbench.client.ChooselExampleWorkbenchEntryPoint'/>
   
-  <!-- Google maps key for chisel-mashups.appspot.com 
+  <!-- Google maps key for chisel-mashups.appspot.com --> 
   <script src="http://maps.google.com/maps?gwt=1&amp;file=api&amp;v=2&amp;sensor=false&amp;key=ABQIAAAAUSQ19DnbWFmnXLrOTDG68hS6gHwS7rfd9W_WZd1hW4MpsPBDjBTFRjW7PcAbjSpbCyx5XB9rkd-paw" />
-  -->
 
 </module>
