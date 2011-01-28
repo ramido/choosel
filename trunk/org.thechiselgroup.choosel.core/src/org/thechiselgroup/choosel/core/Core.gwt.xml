@@ -39,6 +39,9 @@
   <!-- GWT effects: gwt-fx -->
   <inherits name='org.adamtacy.GWTEffects' /> 
   
+  <!-- Logging: gwt-log -->
+  <inherits name="com.allen_sauer.gwt.log.gwt-log-DEBUG" /> 
+  
   <source path='client'/>
   
 </module>
