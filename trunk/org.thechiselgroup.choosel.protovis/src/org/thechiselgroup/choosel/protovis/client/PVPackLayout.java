@@ -43,8 +43,16 @@ public final class PVPackLayout extends PVAbstractBar<PVPackLayout> {
         return this.nodes(data);
     }-*/;
 
+    public final native PVPackLayout order(String order) /*-{
+        return this.order(order);
+    }-*/;
+
     public final native PVPackLayout size(JsDoubleFunction f) /*-{
         return this.size(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
+    }-*/;
+
+    public final native PVPackLayout spacing(int spacing) /*-{
+        return this.spacing(spacing);
     }-*/;
 
 }

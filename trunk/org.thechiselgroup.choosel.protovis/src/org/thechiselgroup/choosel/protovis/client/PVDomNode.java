@@ -29,10 +29,14 @@ public class PVDomNode extends JavaScriptObject {
 
     public static final native PVDomNode create(Object o, String nodeName,
             double nodeValue) /*-{
-        var node = new $wnd.pv.Dom.Node(o);
+        var node = new $wnd.pv.Dom.Node(nodeValue);
         node.nodeName = nodeName;
-        node.nodeValue = nodeValue;
+        node.nodeObject = o;
         return node;
+    }-*/;
+
+    public static final native PVDomNode create() /*-{
+        return new $wnd.pv.Dom.Node(Number.NaN);
     }-*/;
 
     protected PVDomNode() {

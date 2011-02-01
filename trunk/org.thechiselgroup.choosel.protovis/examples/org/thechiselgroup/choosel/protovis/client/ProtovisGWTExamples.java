@@ -65,6 +65,7 @@ public class ProtovisGWTExamples implements EntryPoint {
         examples.add(new BeckersBarleyExample());
         examples.add(new StreamgraphExample());
         examples.add(new BulletChartExample());
+        examples.add(new BubbleChartExample());
         examples.add(new CandlestickChartExample());
         examples.add(new BurtinAntibioticsExample());
         examples.add(new PlayfairsWheatExample());

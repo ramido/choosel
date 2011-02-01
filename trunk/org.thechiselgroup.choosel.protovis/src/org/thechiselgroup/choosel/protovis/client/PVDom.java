@@ -36,4 +36,17 @@ public final class PVDom {
         return node;
     }
 
+    public static final <T> PVDomNode create(Iterable<T> ts,
+            PVDomAdapter<T> adapter) {
+
+        assert ts != null;
+        assert adapter != null;
+
+        PVDomNode root = PVDomNode.create();
+        for (T child : ts) {
+            root.appendChild(create(child, adapter));
+        }
+        return root;
+    }
+
 }
