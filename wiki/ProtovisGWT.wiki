@@ -64,3 +64,7 @@ final PVLinearScale x = ... // final variables can be accessed
 Java generics enable assigning the return values of `args.getThis()` and `args.getObject` to the expected types. The `args.getObject`-methods (which are available for the different primitive types as well) optionally accept an int parameter that specifies the argument index, e.g. `1` for the second argument. If the argument index is omitted, the argument at index `0` is returned.
 
 Using anonymous inner classes adds boilerplate code that leads to lower readability compared to the original Protovis code. One way to address this problem is by supporting the definition of anonymous property functions using String literals as in [http://vis.stanford.edu/files/2010-Protovis-InfoVis.pdf Protovis-Java]. However, regular Java code has several advantages compared to String literals. Modern IDEs provide content assist, syntax highlighting, refactoring and error checking. The inner classes can also be extracted and unit-tested, if desired. For these reasons, Protovis-GWT uses anonymous inner classes and does not support the definition of anonymous property functions using String literals.
+
+==Change Log==
+*0.2* improved event handler interface; support for tree visualization and bubble chart examples
+*0.1* initial release
