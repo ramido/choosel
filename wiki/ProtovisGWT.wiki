@@ -1,15 +1,15 @@
 #summary Protovis-GWT Component
 #labels Developer,Component,Featured
 
-Protovis-GWT ([http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel.protovis/ Source Code], [http://web.uvic.ca/~lgrammel/blog/protovis-gwt/index.html Examples]) is an *open source GWT data visualization module*. It wraps the [http://vis.stanford.edu/protovis/ Protovis] !JavaScript visualization API for usage in GWT. Protovis-GWT 0.1 ([http://choosel.googlecode.com/files/ProtovisGWT-0.1.jar Download Module], [http://choosel.googlecode.com/files/ProtovisGWT-0.1-project.zip Download Project (zip)], [http://code.google.com/p/choosel/source/browse/#svn%2Ftags%2Fprotovis-gwt%2F0.1%2Forg.thechiselgroup.choosel.protovis Source Code]) is an *early development version* based on Protovis 3.2 and GWT 2.1. Several [http://web.uvic.ca/~lgrammel/blog/protovis-gwt/index.html examples] from the [http://vis.stanford.edu/protovis/ex/ Protovis example gallery] have been [http://web.uvic.ca/~lgrammel/blog/protovis-gwt/index.html re-implemented using Protovis/GWT]. 
+Protovis-GWT ([http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel.protovis/ Source Code], [http://web.uvic.ca/~lgrammel/blog/protovis-gwt/index.html Examples]) is an *open source GWT data visualization module*. It wraps the [http://vis.stanford.edu/protovis/ Protovis] !JavaScript visualization API for usage in GWT. Protovis-GWT 0.2 ([http://choosel.googlecode.com/files/ProtovisGWT-0.2.jar Download Module], [http://choosel.googlecode.com/files/ProtovisGWT-0.2-project.zip Download Project (zip)], [http://code.google.com/p/choosel/source/browse/#svn%2Ftags%2Fprotovis-gwt%2F0.2%2Forg.thechiselgroup.choosel.protovis Source Code]) is an *early development version* based on Protovis 3.2 and GWT 2.1. Several [http://web.uvic.ca/~lgrammel/blog/protovis-gwt/index.html examples] from the [http://vis.stanford.edu/protovis/ex/ Protovis example gallery] have been [http://web.uvic.ca/~lgrammel/blog/protovis-gwt/index.html re-implemented using Protovis/GWT]. 
 
-*The Protovis API has not been fully implemented in Protovis-GWT 0.1*. Version 0.1 implements the Protovis functionality for most conventional and custom examples from the Protovis website. The support for tree, graph and map visualizations as well as for interaction is still limited. Protovis-GWT currently supports *Chrome*, *Firefox* and *Safari*. IE is not yet supported (see [http://code.google.com/p/protovis-js/issues/detail?id=15 Protovis Issue 15] for more information on Protovis support for IE).
+*The Protovis API has not been fully implemented in Protovis-GWT 0.2*. Version 0.2 implements the Protovis functionality for most conventional, custom and hierarchy examples from the Protovis website. The support for graph and map visualizations as well as for interaction is still limited. Protovis-GWT currently supports *Chrome*, *Firefox* and *Safari*. IE is not yet supported (see [http://code.google.com/p/protovis-js/issues/detail?id=15 Protovis Issue 15] for more information on Protovis support for IE).
 
 == Getting Started ==
 
 Setting up Protovis/GWT in your GWT project is easy:
 
-  # [http://choosel.googlecode.com/files/ProtovisGWT-0.1.jar Download the Protovis-GWT module jar file]
+  # [http://choosel.googlecode.com/files/ProtovisGWT-0.2.jar Download the Protovis-GWT module jar file]
   # Add the jar file to the build path of your GWT project
   # Inherit `org.thechiselgroup.choosel.protovis.ProtovisGWT` by adding {{{<inherits name='org.thechiselgroup.choosel.protovis.ProtovisGWT'/>}}} to your GWT module XML definition (`.gwt.xml`).
   # Use the Protovis Widget in your code, e.g.
