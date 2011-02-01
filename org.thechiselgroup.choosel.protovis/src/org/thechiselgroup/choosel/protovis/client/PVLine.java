@@ -68,6 +68,10 @@ public final class PVLine extends PVAbstractMark<PVLine> {
         return this.lineWidth(lineWidth);
     }-*/;
 
+    public final native PVLine lineWidth(int lineWidth) /*-{
+        return this.lineWidth(lineWidth);
+    }-*/;
+
     public final native PVLine segmented(boolean segmented) /*-{
         return this.segmented(segmented);
     }-*/;

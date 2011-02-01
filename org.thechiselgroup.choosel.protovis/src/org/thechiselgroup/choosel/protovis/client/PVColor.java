@@ -30,4 +30,8 @@ public class PVColor extends JavaScriptObject {
         return this.alpha(alpha);
     }-*/;
 
+    public final native PVColor darker() /*-{
+        return this.darker();
+    }-*/;
+
 }

@@ -48,12 +48,16 @@ public final class PVDot extends PVAbstractMark<PVDot> {
         return this.angle(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
     }-*/;
 
-    public final native PVDot fillStyle(JsStringFunction f) /*-{
-        return this.fillStyle(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsStringFunction;)(f));
+    public final native PVColor fillStyle() /*-{
+        return this.fillStyle();
     }-*/;
 
     public final native PVDot fillStyle(JsFunction<PVColor> f) /*-{
         return this.fillStyle(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsFunction;)(f));
+    }-*/;
+
+    public final native PVDot fillStyle(JsStringFunction f) /*-{
+        return this.fillStyle(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsStringFunction;)(f));
     }-*/;
 
     public final native PVDot fillStyle(String fillStyle) /*-{
@@ -87,12 +91,12 @@ public final class PVDot extends PVAbstractMark<PVDot> {
         return this.size(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
     }-*/;
 
-    public final native PVDot strokeStyle(String strokeStyle) /*-{
-        return this.strokeStyle(strokeStyle);
-    }-*/;
-
     public final native PVDot strokeStyle(JsFunction<PVColor> f) /*-{
         return this.strokeStyle(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsFunction;)(f));
+    }-*/;
+
+    public final native PVDot strokeStyle(String strokeStyle) /*-{
+        return this.strokeStyle(strokeStyle);
     }-*/;
 
 }
