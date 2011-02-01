@@ -1,0 +1,55 @@
+/*******************************************************************************
+ * Copyright 2009, 2010 Lars Grammel 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at 
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0 
+ *     
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ * See the License for the specific language governing permissions and 
+ * limitations under the License.  
+ *******************************************************************************/
+package org.thechiselgroup.choosel.protovis.client;
+
+import com.google.gwt.core.client.JavaScriptObject;
+
+/**
+ * @author Lars Grammel
+ */
+public final class PVTreeLayout extends PVAbstractBar<PVTreeLayout> {
+
+    protected PVTreeLayout() {
+    }
+
+    public final native PVTreeLayout breadth(double breadth) /*-{
+        return this.breadth(breadth);
+    }-*/;
+
+    public final native PVTreeLayout depth(double depth) /*-{
+        return this.depth(depth);
+    }-*/;
+
+    public final native PVMark label() /*-{
+        return this.label;
+    }-*/;
+
+    public final native PVMark link() /*-{
+        return this.link;
+    }-*/;
+
+    public final native PVMark node() /*-{
+        return this.node;
+    }-*/;
+
+    public final native PVTreeLayout nodes(JavaScriptObject data) /*-{
+        return this.nodes(data);
+    }-*/;
+
+    public final native PVTreeLayout orient(String orient) /*-{
+        return this.orient(orient);
+    }-*/;
+}
