@@ -238,7 +238,7 @@ public class DefaultResourceSetAvatarDragController extends
     @Override
     public void dragEnd() {
         setResourceSetHighlighted(false);
-        // removeShade();
+        removeShade();
         setTemporaryDropTargetsVisible(false);
         clearTemporaryDropTargets();
         clearDropAreas();
@@ -265,7 +265,7 @@ public class DefaultResourceSetAvatarDragController extends
         calculateTemporaryDropTargets();
         setTemporaryDropTargetsVisible(true);
         calculateDropAreas();
-        // addShade();
+        addShade();
         setResourceSetHighlighted(true);
     }
 
