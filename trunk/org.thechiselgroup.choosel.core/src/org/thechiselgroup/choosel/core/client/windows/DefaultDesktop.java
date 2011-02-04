@@ -29,6 +29,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -46,13 +47,11 @@ public class DefaultDesktop extends AbsolutePanel implements Desktop, HasSize {
     private Branding branding;
 
     @Inject
-    public DefaultDesktop(CommandManager commandManager) { // , Branding
-                                                           // branding) {
+    public DefaultDesktop(CommandManager commandManager, Branding branding) {
         addStyleName(CSS_DESKTOP);
 
-        // this.branding = branding;
+        this.branding = branding;
 
-        // TODO extract constants
         positionManager = new PositionManager(this, 7, 13, 10);
         windowController = new DesktopWindowManager(this, commandManager);
 
@@ -156,18 +155,17 @@ public class DefaultDesktop extends AbsolutePanel implements Desktop, HasSize {
 
     // TODO refactor: extract
     private void initBranding() {
-        // Label appTitleLabel = new Label(branding.getApplicationTitle());
-        // appTitleLabel.addStyleName("branding-app-title");
-        // add(appTitleLabel);
-        //
-        // Label minorTitleLabel = new
-        // Label(branding.getMinorApplicationTitle());
-        // minorTitleLabel.addStyleName("branding-minor-app-title");
-        // add(minorTitleLabel);
-        //
-        // Label copyRightLabel = new Label(branding.getCopyright());
-        // copyRightLabel.addStyleName("branding-copy-right");
-        // add(copyRightLabel);
+        Label appTitleLabel = new Label(branding.getApplicationTitle());
+        appTitleLabel.addStyleName("branding-app-title");
+        add(appTitleLabel);
+
+        Label minorTitleLabel = new Label(branding.getMinorApplicationTitle());
+        minorTitleLabel.addStyleName("branding-minor-app-title");
+        add(minorTitleLabel);
+
+        Label copyRightLabel = new Label(branding.getCopyright());
+        copyRightLabel.addStyleName("branding-copy-right");
+        add(copyRightLabel);
     }
 
     /**
