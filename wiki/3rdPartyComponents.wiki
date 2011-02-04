@@ -4,7 +4,7 @@
 The Choosel Mashup Framework includes and uses the following software components developed by various people and organizations:
 
 || *Component* || *Description* || *Version* || *Web Page* || *License* ||
-||Google Web Toolkit (GWT)||Web application framework||2.0.3||http://code.google.com/webtoolkit/||Apache 2.0||
+||Google Web Toolkit (GWT)||Web application framework||2.1.1||http://code.google.com/webtoolkit/||Apache 2.0||
 ||Google App Engine / Java (GAE/J)||Server-side web application framework||1.3.1||http://code.google.com/p/googleappengine/||Apache 2.0||
 ||Mockito||Testing with mock objects ||1.8.2||http://mockito.org/||MIT||
 ||GWT Log||Logging framework for GWT||3.0.1||http://code.google.com/p/gwt-log/||Apache 2.0||
