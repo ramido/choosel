@@ -46,12 +46,11 @@
 	      <fileset dir="${class-dir}">
 	    	<include name="**/*.class"/>
 	      </fileset>
-	      	<!--
 	      <metainf dir=""> 
 	    	<include name="LICENSE"/>
+	    	<include name="LICENSE-PROTOVIS"/>
 	    	<include name="NOTICE"/>
 	      </metainf>
-	    	-->
 	    </jar> 
 	  </target>
 		
