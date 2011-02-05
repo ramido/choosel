@@ -167,6 +167,11 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     @Override
+    public String getName() {
+        return "Text";
+    }
+
+    @Override
     public SidePanelSection[] getSidePanelSections() {
         FlowPanel settingsPanel = new FlowPanel();
 
@@ -188,7 +193,8 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
     @Override
     public Slot[] getSlots() {
-        return new Slot[] { TextVisualization.DESCRIPTION_SLOT, TextVisualization.FONT_SIZE_SLOT };
+        return new Slot[] { TextVisualization.DESCRIPTION_SLOT,
+                TextVisualization.FONT_SIZE_SLOT };
     }
 
     private void initGroupValueMapper() {

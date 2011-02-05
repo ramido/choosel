@@ -112,6 +112,11 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     @Override
+    public String getName() {
+        return "Map";
+    }
+
+    @Override
     public SidePanelSection[] getSidePanelSections() {
         FlowPanel mapSettingsMap = new FlowPanel();
 
@@ -137,7 +142,8 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
 
     @Override
     public Slot[] getSlots() {
-        return new Slot[] { MapVisualization.LAB_SLOT, MapVisualization.COLOR_SLOT, MapVisualization.LOCATION_SLOT };
+        return new Slot[] { MapVisualization.LAB_SLOT,
+                MapVisualization.COLOR_SLOT, MapVisualization.LOCATION_SLOT };
     }
 
     private void initMapItem(ViewItem resourceItem) {

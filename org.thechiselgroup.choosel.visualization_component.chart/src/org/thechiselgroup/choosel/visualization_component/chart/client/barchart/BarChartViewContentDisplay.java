@@ -55,8 +55,8 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
             ViewContentDisplayProperty<LayoutType> {
 
         @Override
-        public void setValue(LayoutType value) {
-            setLayout(value);
+        public String getPropertyName() {
+            return BarChartVisualization.LAYOUT_PROPERTY;
         }
 
         @Override
@@ -65,8 +65,8 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         }
 
         @Override
-        public String getPropertyName() {
-            return BarChartVisualization.LAYOUT_PROPERTY;
+        public void setValue(LayoutType value) {
+            setLayout(value);
         }
     }
 
@@ -403,6 +403,18 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
                 BarChartVisualization.BAR_LENGTH_SLOT, Subset.HIGHLIGHTED));
     }
 
+    protected void calculateMaximumChartItemValue() {
+        maxChartItemValue = 0;
+        for (int i = 0; i < chartItemsJsArray.length(); i++) {
+            double currentItemValue = calculateChartItemValue(
+                    chartItemsJsArray.get(i),
+                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
+            if (maxChartItemValue < currentItemValue) {
+                maxChartItemValue = currentItemValue;
+            }
+        }
+    }
+
     @Override
     public void drawChart() {
         assert chartItemsJsArray.length() >= 1;
@@ -521,6 +533,11 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     }
 
     @Override
+    public String getName() {
+        return "Bar Chart";
+    }
+
+    @Override
     public SidePanelSection[] getSidePanelSections() {
         FlowPanel settingsPanel = new FlowPanel();
 
@@ -574,18 +591,6 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
         super.update(addedResourceItems, updatedResourceItems,
                 removedResourceItems, changedSlots);
-    }
-
-    protected void calculateMaximumChartItemValue() {
-        maxChartItemValue = 0;
-        for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            double currentItemValue = calculateChartItemValue(
-                    chartItemsJsArray.get(i),
-                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
-            if (maxChartItemValue < currentItemValue) {
-                maxChartItemValue = currentItemValue;
-            }
-        }
     }
 
 }
