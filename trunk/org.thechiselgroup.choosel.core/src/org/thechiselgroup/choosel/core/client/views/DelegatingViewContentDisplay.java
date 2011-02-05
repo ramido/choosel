@@ -63,6 +63,11 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
     }
 
     @Override
+    public String getName() {
+        return delegate.getName();
+    }
+
+    @Override
     public <T> T getPropertyValue(String property) {
         return delegate.getPropertyValue(property);
     }

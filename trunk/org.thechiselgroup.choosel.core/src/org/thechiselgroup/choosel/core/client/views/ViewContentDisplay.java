@@ -37,6 +37,13 @@ public interface ViewContentDisplay extends WidgetAdaptable, Disposable,
     void endRestore();
 
     /**
+     * Returns a descriptive name of the visualization component, e.g.
+     * 'Scatterplot'. The name will be used to generate visualization
+     * descriptions.
+     */
+    String getName();
+
+    /**
      * Returns the current value of the property.
      * 
      * @see #setPropertyValue(String, Object)

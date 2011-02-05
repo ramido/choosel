@@ -197,7 +197,9 @@ public class ViewFactory implements WindowContentFactory {
 
         SlotMappingInitializer slotMappingInitializer = createSlotMappingInitializer();
 
-        return new DefaultView(resourceSplitter, contentDisplay, contentType,
+        String label = contentDisplay.getName();
+
+        return new DefaultView(resourceSplitter, contentDisplay, label,
                 contentType, slotMappingConfiguration, selectionModel,
                 selectionModelPresenter, resourceModel, resourceModelPresenter,
                 hoverModel, popupManagerFactory, detailsWidgetHelper,
