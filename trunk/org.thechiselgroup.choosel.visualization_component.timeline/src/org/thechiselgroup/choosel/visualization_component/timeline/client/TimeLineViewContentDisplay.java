@@ -81,8 +81,15 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     @Override
+    public String getName() {
+        return "Timeline";
+    }
+
+    @Override
     public Slot[] getSlots() {
-        return new Slot[] { TimelineVisualization.DESCRIPTION_SLOT, TimelineVisualization.COLOR_SLOT, TimelineVisualization.DATE_SLOT };
+        return new Slot[] { TimelineVisualization.DESCRIPTION_SLOT,
+                TimelineVisualization.COLOR_SLOT,
+                TimelineVisualization.DATE_SLOT };
     }
 
     private JsTimeLineEvent[] getTimeLineEvents(

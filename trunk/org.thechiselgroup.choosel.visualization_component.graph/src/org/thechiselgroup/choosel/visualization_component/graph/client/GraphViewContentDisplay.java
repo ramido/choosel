@@ -191,9 +191,9 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         return arcType + ":" + sourceId + "_" + targetId;
     }
 
-    // advanced node class: (incoming, outgoing, expanded: state machine)
-
     private ArcTypeProvider arcStyleProvider;
+
+    // advanced node class: (incoming, outgoing, expanded: state machine)
 
     private final CommandManager commandManager;
 
@@ -333,6 +333,11 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
     private ViewItem getGraphItem(NodeEvent<?> event) {
         return getGraphItem(event.getNode());
+    }
+
+    @Override
+    public String getName() {
+        return "Graph";
     }
 
     private Node getNodeFromResourceItem(ViewItem resourceItem) {

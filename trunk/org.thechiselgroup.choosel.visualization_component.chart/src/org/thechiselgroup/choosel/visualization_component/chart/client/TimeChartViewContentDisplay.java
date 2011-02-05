@@ -30,6 +30,23 @@ public class TimeChartViewContentDisplay extends ChartViewContentDisplay {
         super(dragEnablerFactory);
     }
 
+    @Override
+    protected void beforeRender() {
+        calculateMaximumChartItemValue();
+    }
+
+    protected void calculateMaximumChartItemValue() {
+        maxChartItemValue = 0;
+        for (int i = 0; i < chartItemsJsArray.length(); i++) {
+            double currentItemValue = calculateChartItemValue(
+                    chartItemsJsArray.get(i),
+                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
+            if (maxChartItemValue < currentItemValue) {
+                maxChartItemValue = currentItemValue;
+            }
+        }
+    }
+
     // @formatter:off
     @Override
     public native void drawChart() /*-{
@@ -152,6 +169,17 @@ public class TimeChartViewContentDisplay extends ChartViewContentDisplay {
     }-*/;
     // @formatter:on
 
+    @Override
+    public String getName() {
+        return "Time Chart";
+    }
+
+    @Override
+    public Slot[] getSlots() {
+        return new Slot[] { BarChartVisualization.BAR_LABEL_SLOT,
+                BarChartVisualization.BAR_LENGTH_SLOT };
+    }
+
     private Object getSlotValue(int i, int coordinate) {
         // XXX fixme
         // if (coordinate == 0) {
@@ -172,27 +200,5 @@ public class TimeChartViewContentDisplay extends ChartViewContentDisplay {
         // XXX broken while switching to protovis-gwt
         // PV.sort(chartItemsJsArray, new ChartItemComparator(
         // TimeLineViewContentDisplay.DATE_SLOT));
-    }
-
-    @Override
-    public Slot[] getSlots() {
-        return new Slot[] { BarChartVisualization.BAR_LABEL_SLOT,
-                BarChartVisualization.BAR_LENGTH_SLOT };
-    }
-
-    protected void calculateMaximumChartItemValue() {
-        maxChartItemValue = 0;
-        for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            double currentItemValue = calculateChartItemValue(
-                    chartItemsJsArray.get(i),
-                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
-            if (maxChartItemValue < currentItemValue) {
-                maxChartItemValue = currentItemValue;
-            }
-        }
-    }
-
-    protected void beforeRender() {
-        calculateMaximumChartItemValue();
     }
 }

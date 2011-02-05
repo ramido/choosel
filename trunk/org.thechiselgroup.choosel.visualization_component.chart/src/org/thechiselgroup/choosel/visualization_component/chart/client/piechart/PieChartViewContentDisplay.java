@@ -189,6 +189,18 @@ public class PieChartViewContentDisplay extends ChartViewContentDisplay {
         }
     }
 
+    protected void calculateMaximumChartItemValue() {
+        maxChartItemValue = 0;
+        for (int i = 0; i < chartItemsJsArray.length(); i++) {
+            double currentItemValue = calculateChartItemValue(
+                    chartItemsJsArray.get(i),
+                    PieChartVisualization.PIE_ANGLE_SLOT, Subset.ALL);
+            if (maxChartItemValue < currentItemValue) {
+                maxChartItemValue = currentItemValue;
+            }
+        }
+    }
+
     private int calculateRegularWedgeOuterRadius() {
         return Math.min(height, width) / 2 - 5;
     }
@@ -236,8 +248,8 @@ public class PieChartViewContentDisplay extends ChartViewContentDisplay {
     }
 
     @Override
-    protected void registerEventHandler(String eventType, PVEventHandler handler) {
-        regularWedge.event(eventType, handler);
+    public String getName() {
+        return "Pie Chart";
     }
 
     @Override
@@ -246,16 +258,9 @@ public class PieChartViewContentDisplay extends ChartViewContentDisplay {
                 PieChartVisualization.PIE_ANGLE_SLOT };
     }
 
-    protected void calculateMaximumChartItemValue() {
-        maxChartItemValue = 0;
-        for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            double currentItemValue = calculateChartItemValue(
-                    chartItemsJsArray.get(i),
-                    PieChartVisualization.PIE_ANGLE_SLOT, Subset.ALL);
-            if (maxChartItemValue < currentItemValue) {
-                maxChartItemValue = currentItemValue;
-            }
-        }
+    @Override
+    protected void registerEventHandler(String eventType, PVEventHandler handler) {
+        regularWedge.event(eventType, handler);
     }
 
 }

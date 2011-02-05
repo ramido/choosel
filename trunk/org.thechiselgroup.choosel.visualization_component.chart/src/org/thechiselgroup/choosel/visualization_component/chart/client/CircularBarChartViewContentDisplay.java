@@ -200,6 +200,18 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
         }
     }
 
+    protected void calculateMaximumChartItemValue() {
+        maxChartItemValue = 0;
+        for (int i = 0; i < chartItemsJsArray.length(); i++) {
+            double currentItemValue = calculateChartItemValue(
+                    chartItemsJsArray.get(i),
+                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
+            if (maxChartItemValue < currentItemValue) {
+                maxChartItemValue = currentItemValue;
+            }
+        }
+    }
+
     private double calculateRegularWedgeOuterRadius(int i) {
         return regularWedgeCounts[i] * (Math.min(height, width) - MARGIN_SIZE)
                 / (ArrayUtils.max(regularWedgeCounts) * 2);
@@ -259,8 +271,8 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
     }
 
     @Override
-    protected void registerEventHandler(String eventType, PVEventHandler handler) {
-        regularWedge.event(eventType, handler);
+    public String getName() {
+        return "Circular Bar Chart";
     }
 
     @Override
@@ -269,16 +281,9 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
                 BarChartVisualization.BAR_LENGTH_SLOT };
     }
 
-    protected void calculateMaximumChartItemValue() {
-        maxChartItemValue = 0;
-        for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            double currentItemValue = calculateChartItemValue(
-                    chartItemsJsArray.get(i),
-                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
-            if (maxChartItemValue < currentItemValue) {
-                maxChartItemValue = currentItemValue;
-            }
-        }
+    @Override
+    protected void registerEventHandler(String eventType, PVEventHandler handler) {
+        regularWedge.event(eventType, handler);
     }
 
 }

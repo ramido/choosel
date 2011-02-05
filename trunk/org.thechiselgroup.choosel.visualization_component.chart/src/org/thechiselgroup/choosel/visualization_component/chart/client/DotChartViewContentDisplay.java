@@ -125,6 +125,18 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
                 / (chartItemsJsArray.length() * 2);
     }
 
+    protected void calculateMaximumChartItemValue() {
+        maxChartItemValue = 0;
+        for (int i = 0; i < chartItemsJsArray.length(); i++) {
+            double currentItemValue = calculateChartItemValue(
+                    chartItemsJsArray.get(i),
+                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
+            if (maxChartItemValue < currentItemValue) {
+                maxChartItemValue = currentItemValue;
+            }
+        }
+    }
+
     private void dehighlightResources(int i) {
         chartItemsJsArray.get(i).getViewItem().getHighlightingManager()
                 .setHighlighting(false);
@@ -341,6 +353,17 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
     }-*/;
     // @formatter:on
 
+    @Override
+    public String getName() {
+        return "Dot Chart";
+    }
+
+    @Override
+    public Slot[] getSlots() {
+        return new Slot[] { BarChartVisualization.BAR_LABEL_SLOT,
+                BarChartVisualization.BAR_LENGTH_SLOT };
+    }
+
     private void highlightResources(int i) {
         chartItemsJsArray.get(i).getViewItem().getHighlightingManager()
                 .setHighlighting(true);
@@ -373,24 +396,6 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
 
     private void setChartParameters() {
         getChart().left(BORDER_WIDTH).bottom(BORDER_HEIGHT);
-    }
-
-    @Override
-    public Slot[] getSlots() {
-        return new Slot[] { BarChartVisualization.BAR_LABEL_SLOT,
-                BarChartVisualization.BAR_LENGTH_SLOT };
-    }
-
-    protected void calculateMaximumChartItemValue() {
-        maxChartItemValue = 0;
-        for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            double currentItemValue = calculateChartItemValue(
-                    chartItemsJsArray.get(i),
-                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
-            if (maxChartItemValue < currentItemValue) {
-                maxChartItemValue = currentItemValue;
-            }
-        }
     }
 
 }

@@ -221,6 +221,11 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
     }
 
     @Override
+    public String getName() {
+        return "Scatter Plot";
+    }
+
+    @Override
     public Slot[] getSlots() {
         return new Slot[] { ScatterPlotVisualization.X_POSITION_SLOT,
                 ScatterPlotVisualization.Y_POSITION_SLOT };
