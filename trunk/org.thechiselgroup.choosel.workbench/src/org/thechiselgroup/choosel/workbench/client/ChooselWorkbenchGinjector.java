@@ -15,17 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.client;
 
-import org.thechiselgroup.choosel.core.client.windows.ProxyWindowContentFactoryResolver;
-import org.thechiselgroup.choosel.core.client.windows.WindowContentProducer;
-
 import com.google.gwt.inject.client.Ginjector;
 
 public interface ChooselWorkbenchGinjector extends Ginjector {
 
     ChooselWorkbench getApplication();
-
-    ProxyWindowContentFactoryResolver getProxyViewFactoryResolver();
-
-    WindowContentProducer getViewFactory();
 
 }

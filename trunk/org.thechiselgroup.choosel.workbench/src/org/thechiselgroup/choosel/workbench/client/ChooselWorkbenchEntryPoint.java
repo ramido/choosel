@@ -36,14 +36,7 @@ public abstract class ChooselWorkbenchEntryPoint implements EntryPoint {
 
     @Override
     public final void onModuleLoad() {
-        ChooselWorkbenchGinjector injector = createChooselGinjector();
-
-        // TODO what is this for?
-        // resolves initialization cycles
-        injector.getProxyViewFactoryResolver().setDelegate(
-                injector.getViewFactory());
-
-        injector.getApplication().init();
+        createChooselGinjector().getApplication().init();
     }
 
 }
