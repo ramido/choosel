@@ -60,8 +60,6 @@ public class TestView extends DefaultView {
         Presenter resourceModelPresenter = mock(Presenter.class);
         HandlerRegistration selectionChangedHandlerRegistration = mock(HandlerRegistration.class);
         VisualMappingsControl visualMappingsControl = mock(VisualMappingsControl.class);
-        // ShareConfiguration shareConfiguration =
-        // mock(ShareConfiguration.class);
 
         // TODO change once relevant tests are migrated
         SlotMappingInitializer slotMappingInitializer = spy(new DefaultSlotMappingInitializer());
@@ -75,8 +73,7 @@ public class TestView extends DefaultView {
                 selectionModelPresenter, resourceModel, resourceModelPresenter,
                 hoverModel, popupManagerFactory, detailsWidgetHelper,
                 popupManager, selectionChangedHandlerRegistration,
-                visualMappingsControl, // shareConfiguration,
-                slotMappingInitializer));
+                visualMappingsControl, slotMappingInitializer));
 
         when(
                 selectionModel
@@ -122,15 +119,14 @@ public class TestView extends DefaultView {
             DetailsWidgetHelper detailsWidgetHelper, PopupManager popupManager,
             HandlerRegistration selectionChangedHandlerRegistration,
             VisualMappingsControl visualMappingsControl,
-            // ShareConfiguration shareConfiguration,
             SlotMappingInitializer slotMappingInitializer) {
 
         super(resourceSplitter, contentDisplay, label, contentType,
                 configuration, selectionModel, selectionModelPresenter,
                 resourceModel, resourceModelPresenter, hoverModel,
                 popupManagerFactory, detailsWidgetHelper,
-                visualMappingsControl, // shareConfiguration,
-                slotMappingInitializer, NullLightweightCollection
+                visualMappingsControl, slotMappingInitializer,
+                NullLightweightCollection
                         .<SidePanelSection> nullLightweightCollection());
 
         this.contentDisplay = contentDisplay;

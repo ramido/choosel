@@ -195,7 +195,9 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
     }
 
     protected void bindWindowContentProducer() {
-        bind(ViewWindowContentProducer.class).in(Singleton.class);
+        bind(ViewWindowContentProducer.class).to(
+                ChooselWorkbenchViewWindowContentProducer.class).in(
+                Singleton.class);
         bind(WindowContentProducer.class).toProvider(
                 DefaultWindowContentProducerProvider.class).in(Singleton.class);
     }

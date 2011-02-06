@@ -177,8 +177,6 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private boolean isInitialized;
 
-    // private final ShareConfiguration shareConfiguration;
-
     /**
      * Sections that will be displayed in the side panel. This is a lightweight
      * collections so we can check whether it is empty or not.
@@ -196,7 +194,6 @@ public class DefaultView extends AbstractWindowContent implements View {
             HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
             DetailsWidgetHelper detailsWidgetHelper,
             VisualMappingsControl visualMappingsControl,
-            // ShareConfiguration shareConfiguration,
             SlotMappingInitializer slotMappingInitializer,
             LightweightCollection<SidePanelSection> sidePanelSections) {
 
@@ -212,12 +209,10 @@ public class DefaultView extends AbstractWindowContent implements View {
         assert resourceModel != null;
         assert resourceModelPresenter != null;
         assert hoverModel != null;
-        // assert shareConfiguration != null;
         assert slotMappingInitializer != null;
         assert sidePanelSections != null;
 
         this.slotMappingInitializer = slotMappingInitializer;
-        // this.shareConfiguration = shareConfiguration;
         this.popupManagerFactory = popupManagerFactory;
         this.detailsWidgetHelper = detailsWidgetHelper;
         this.slotMappingConfiguration = slotMappingConfiguration;
@@ -645,8 +640,6 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     protected void initUI() {
-        // shareConfiguration.setView(this);
-
         initConfigurationPanelUI();
         initSideBar();
 
