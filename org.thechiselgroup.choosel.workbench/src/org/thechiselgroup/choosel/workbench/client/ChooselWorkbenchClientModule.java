@@ -70,7 +70,6 @@ import org.thechiselgroup.choosel.core.client.views.ViewWindowContentProducer;
 import org.thechiselgroup.choosel.core.client.windows.Branding;
 import org.thechiselgroup.choosel.core.client.windows.DefaultDesktop;
 import org.thechiselgroup.choosel.core.client.windows.Desktop;
-import org.thechiselgroup.choosel.core.client.windows.ProxyWindowContentFactory;
 import org.thechiselgroup.choosel.core.client.windows.WindowContentProducer;
 import org.thechiselgroup.choosel.workbench.client.authentication.AuthenticationManager;
 import org.thechiselgroup.choosel.workbench.client.authentication.DefaultAuthenticationManager;
@@ -199,9 +198,6 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
         bind(ViewWindowContentProducer.class).in(Singleton.class);
         bind(WindowContentProducer.class).toProvider(
                 DefaultWindowContentProducerProvider.class).in(Singleton.class);
-        // TODO check if proxy is still required
-        bind(WindowContentProducer.class).annotatedWith(Names.named(PROXY))
-                .to(ProxyWindowContentFactory.class).in(Singleton.class);
     }
 
     @Override
