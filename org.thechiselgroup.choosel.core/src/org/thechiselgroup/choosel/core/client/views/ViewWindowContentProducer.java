@@ -41,19 +41,18 @@ import org.thechiselgroup.choosel.core.client.views.slots.DefaultVisualMappingsC
 import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingConfiguration;
 import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.windows.WindowContent;
-import org.thechiselgroup.choosel.core.client.windows.WindowContentFactory;
+import org.thechiselgroup.choosel.core.client.windows.WindowContentProducer;
 
+import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-public class ViewFactory implements WindowContentFactory {
+public class ViewWindowContentProducer implements WindowContentProducer {
 
     private ResourceSetAvatarFactory allResourcesDragAvatarFactory;
 
     private ResourceMultiCategorizer categorizer;
 
     private ResourceSetAvatarDropTargetManager contentDropTargetManager;
-
-    private String contentType;
 
     private ResourceSetAvatarFactory dropTargetFactory;
 
@@ -65,7 +64,7 @@ public class ViewFactory implements WindowContentFactory {
 
     private ResourceSetAvatarFactory userSetsDragAvatarFactory;
 
-    private ViewContentDisplayFactory viewContentDisplayFactory;
+    private ViewContentDisplaysConfiguration viewContentDisplayConfiguration;
 
     private HoverModel hoverModel;
 
@@ -75,9 +74,9 @@ public class ViewFactory implements WindowContentFactory {
 
     // private final ShareConfigurationFactory shareConfigurationFactory;
 
-    public ViewFactory(
-            String contentType,
-            ViewContentDisplayFactory viewContentDisplayFactory,
+    @Inject
+    public ViewWindowContentProducer(
+            ViewContentDisplaysConfiguration viewContentDisplayConfiguration,
             @Named(AVATAR_FACTORY_SET) ResourceSetAvatarFactory userSetsDragAvatarFactory,
             @Named(AVATAR_FACTORY_ALL_RESOURCES) ResourceSetAvatarFactory allResourcesDragAvatarFactory,
             @Named(AVATAR_FACTORY_SELECTION) ResourceSetAvatarFactory selectionDragAvatarFactory,
@@ -91,8 +90,7 @@ public class ViewFactory implements WindowContentFactory {
             DetailsWidgetHelper detailsWidgetHelper) {
         // ShareConfigurationFactory shareConfigurationFactory) {
 
-        assert contentType != null;
-        assert viewContentDisplayFactory != null;
+        assert viewContentDisplayConfiguration != null;
         assert userSetsDragAvatarFactory != null;
         assert allResourcesDragAvatarFactory != null;
         assert selectionDragAvatarFactory != null;
@@ -109,8 +107,7 @@ public class ViewFactory implements WindowContentFactory {
 
         // this.shareConfigurationFactory = shareConfigurationFactory;
         this.hoverModel = hoverModel;
-        this.contentType = contentType;
-        this.viewContentDisplayFactory = viewContentDisplayFactory;
+        this.viewContentDisplayConfiguration = viewContentDisplayConfiguration;
         this.userSetsDragAvatarFactory = userSetsDragAvatarFactory;
         this.allResourcesDragAvatarFactory = allResourcesDragAvatarFactory;
         this.selectionDragAvatarFactory = selectionDragAvatarFactory;
@@ -121,6 +118,13 @@ public class ViewFactory implements WindowContentFactory {
         this.categorizer = categorizer;
         this.popupManagerFactory = popupManagerFactory;
         this.detailsWidgetHelper = detailsWidgetHelper;
+    }
+
+    /**
+     * Hook method that can be overridden to customize views after they have
+     * been created.
+     */
+    protected void afterCreation(View view) {
     }
 
     protected LightweightCollection<SidePanelSection> createSidePanelSections(
@@ -155,9 +159,11 @@ public class ViewFactory implements WindowContentFactory {
     }
 
     @Override
-    public WindowContent createWindowContent() {
-        ViewContentDisplay viewContentDisplay = viewContentDisplayFactory
-                .createViewContentDisplay();
+    public WindowContent createWindowContent(String contentType) {
+        assert contentType != null;
+
+        ViewContentDisplay viewContentDisplay = viewContentDisplayConfiguration
+                .getFactory(contentType).createViewContentDisplay();
 
         ViewContentDisplay contentDisplay = new DropEnabledViewContentDisplay(
                 viewContentDisplay, contentDropTargetManager);
@@ -199,11 +205,15 @@ public class ViewFactory implements WindowContentFactory {
 
         String label = contentDisplay.getName();
 
-        return new DefaultView(resourceSplitter, contentDisplay, label,
-                contentType, slotMappingConfiguration, selectionModel,
+        DefaultView view = new DefaultView(resourceSplitter, contentDisplay,
+                label, contentType, slotMappingConfiguration, selectionModel,
                 selectionModelPresenter, resourceModel, resourceModelPresenter,
                 hoverModel, popupManagerFactory, detailsWidgetHelper,
-                visualMappingsControl, // shareConfiguration,
-                slotMappingInitializer, sidePanelSections);
+                visualMappingsControl, slotMappingInitializer,
+                sidePanelSections);
+
+        afterCreation(view);
+
+        return view;
     }
 }
