@@ -65,8 +65,8 @@ import org.thechiselgroup.choosel.core.client.views.DefaultViewAccessor;
 import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.core.client.views.HoverModel;
 import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
-import org.thechiselgroup.choosel.core.client.views.ViewContentDisplayFactory;
 import org.thechiselgroup.choosel.core.client.views.ViewContentDisplaysConfiguration;
+import org.thechiselgroup.choosel.core.client.views.ViewWindowContentProducer;
 import org.thechiselgroup.choosel.core.client.windows.Branding;
 import org.thechiselgroup.choosel.core.client.windows.DefaultDesktop;
 import org.thechiselgroup.choosel.core.client.windows.Desktop;
@@ -195,13 +195,13 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
                 .to(ResourceSetLabelFactory.class).in(Singleton.class);
     }
 
-    protected abstract Class<? extends Provider<ViewContentDisplaysConfiguration>> getViewContentDisplaysConfigurationProvider();
-
-    protected void bindViewContentDisplayFactory(
-            String type,
-            Class<? extends ViewContentDisplayFactory> viewContentDisplayFactoryClass) {
-        bind(ViewContentDisplayFactory.class).annotatedWith(Names.named(type))
-                .to(viewContentDisplayFactoryClass).in(Singleton.class);
+    protected void bindWindowContentProducer() {
+        bind(ViewWindowContentProducer.class).in(Singleton.class);
+        bind(WindowContentProducer.class).toProvider(
+                DefaultWindowContentProducerProvider.class).in(Singleton.class);
+        // TODO check if proxy is still required
+        bind(WindowContentProducer.class).annotatedWith(Names.named(PROXY))
+                .to(ProxyWindowContentFactory.class).in(Singleton.class);
     }
 
     @Override
@@ -243,10 +243,7 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
                 getViewContentDisplaysConfigurationProvider()).in(
                 Singleton.class);
 
-        bind(WindowContentProducer.class).toProvider(
-                getContentProducerProviderClass()).in(Singleton.class);
-        bind(WindowContentProducer.class).annotatedWith(Names.named(PROXY))
-                .to(ProxyWindowContentFactory.class).in(Singleton.class);
+        bindWindowContentProducer();
 
         bind(ViewSaveManager.class).to(DefaultViewSaveManager.class).in(
                 Singleton.class);
@@ -314,10 +311,6 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
         bindApplication();
     }
 
-    protected Class<? extends ChooselWorkbench> getWorkbenchClass() {
-        return ChooselWorkbench.class;
-    }
-
     /**
      * Applications can override this method to provide a custom authentication
      * manager.
@@ -332,10 +325,6 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
 
     protected Class<? extends CategoryLabelProvider> getCategoryLabelProviderClass() {
         return MappingCategoryLabelProvider.class;
-    }
-
-    protected Class<? extends ChooselWindowContentProducerProvider> getContentProducerProviderClass() {
-        return ChooselWindowContentProducerProvider.class;
     }
 
     protected Class<? extends DetailsWidgetHelper> getDetailsWidgetHelperClass() {
@@ -356,6 +345,12 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
 
     protected Class<? extends ResourceCategorizer> getResourceCategorizerClass() {
         return ResourceByUriTypeCategorizer.class;
+    }
+
+    protected abstract Class<? extends Provider<ViewContentDisplaysConfiguration>> getViewContentDisplaysConfigurationProvider();
+
+    protected Class<? extends ChooselWorkbench> getWorkbenchClass() {
+        return ChooselWorkbench.class;
     }
 
 }

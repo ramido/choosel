@@ -13,19 +13,22 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.core.client.views;
+package org.thechiselgroup.choosel.core.client.windows;
 
 import java.util.Map;
 
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
-import org.thechiselgroup.choosel.core.client.windows.WindowContent;
-import org.thechiselgroup.choosel.core.client.windows.WindowContentFactory;
-import org.thechiselgroup.choosel.core.client.windows.WindowContentProducer;
 
 public class DefaultWindowContentProducer implements WindowContentProducer {
 
     private Map<String, WindowContentFactory> windowContentFactories = CollectionFactory
             .createStringMap();
+
+    public boolean containsWindowContentFactory(String contentType) {
+        assert contentType != null;
+
+        return windowContentFactories.containsKey(contentType);
+    }
 
     @Override
     public WindowContent createWindowContent(String contentType) {
