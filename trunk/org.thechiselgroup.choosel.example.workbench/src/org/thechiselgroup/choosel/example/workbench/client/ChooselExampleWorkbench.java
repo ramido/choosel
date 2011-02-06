@@ -57,10 +57,6 @@ public class ChooselExampleWorkbench extends ChooselWorkbench {
     }
 
     @Override
-    protected void initAuthenticationBar() {
-    }
-
-    @Override
     protected void initCustomActions() {
         // addActionToToolbar(WORKSPACE_PANEL, "Load Workspace",
         // "workspace-open",
