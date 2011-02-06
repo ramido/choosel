@@ -13,10 +13,14 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.workbench.client.workspace;
+package org.thechiselgroup.choosel.core.client.views;
 
-public interface ShareConfigurationFactory {
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 
-    public ShareConfiguration createShareConfiguration();
+public interface ViewPart {
+
+    void addSidePanelSections(LightweightList<SidePanelSection> sections);
+
+    void afterViewCreation(View view);
 
 }

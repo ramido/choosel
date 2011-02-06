@@ -34,7 +34,6 @@ import org.thechiselgroup.choosel.core.client.ui.dnd.DropEnabledViewContentDispl
 import org.thechiselgroup.choosel.core.client.ui.dnd.ResourceSetAvatarDropTargetManager;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.views.slots.DefaultSlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.views.slots.DefaultVisualMappingsControl;
@@ -72,8 +71,6 @@ public class ViewWindowContentProducer implements WindowContentProducer {
 
     private final DetailsWidgetHelper detailsWidgetHelper;
 
-    // private final ShareConfigurationFactory shareConfigurationFactory;
-
     @Inject
     public ViewWindowContentProducer(
             ViewContentDisplaysConfiguration viewContentDisplayConfiguration,
@@ -88,7 +85,6 @@ public class ViewWindowContentProducer implements WindowContentProducer {
             @Named(DROP_TARGET_MANAGER_VIEW_CONTENT) ResourceSetAvatarDropTargetManager contentDropTargetManager,
             HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
             DetailsWidgetHelper detailsWidgetHelper) {
-        // ShareConfigurationFactory shareConfigurationFactory) {
 
         assert viewContentDisplayConfiguration != null;
         assert userSetsDragAvatarFactory != null;
@@ -103,9 +99,7 @@ public class ViewWindowContentProducer implements WindowContentProducer {
         assert hoverModel != null;
         assert popupManagerFactory != null;
         assert detailsWidgetHelper != null;
-        // assert shareConfigurationFactory != null;
 
-        // this.shareConfigurationFactory = shareConfigurationFactory;
         this.hoverModel = hoverModel;
         this.viewContentDisplayConfiguration = viewContentDisplayConfiguration;
         this.userSetsDragAvatarFactory = userSetsDragAvatarFactory;
@@ -120,17 +114,9 @@ public class ViewWindowContentProducer implements WindowContentProducer {
         this.detailsWidgetHelper = detailsWidgetHelper;
     }
 
-    /**
-     * Hook method that can be overridden to customize views after they have
-     * been created.
-     */
-    protected void afterCreation(View view) {
-    }
-
-    protected LightweightCollection<SidePanelSection> createSidePanelSections(
+    protected LightweightList<SidePanelSection> createSidePanelSections(
             ViewContentDisplay contentDisplay,
             VisualMappingsControl visualMappingsControl,
-            // ShareConfiguration shareConfiguration,
             ResourceModel resourceModel,
             SlotMappingConfiguration slotMappingConfiguration) {
 
@@ -140,13 +126,19 @@ public class ViewWindowContentProducer implements WindowContentProducer {
         sidePanelSections.add(new SidePanelSection("Mappings",
                 visualMappingsControl.asWidget()));
         sidePanelSections.addAll(contentDisplay.getSidePanelSections());
-        // sidePanelSections.addAll(shareConfiguration.getSidePanelSections());
 
         return sidePanelSections;
     }
 
     protected SlotMappingInitializer createSlotMappingInitializer() {
         return new DefaultSlotMappingInitializer();
+    }
+
+    /**
+     * Hook method that should be overridden to provide customized view parts.
+     */
+    protected LightweightList<ViewPart> createViewParts(String contentType) {
+        return CollectionFactory.createLightweightList();
     }
 
     protected DefaultVisualMappingsControl createVisualMappingsControl(
@@ -193,13 +185,15 @@ public class ViewWindowContentProducer implements WindowContentProducer {
         VisualMappingsControl visualMappingsControl = createVisualMappingsControl(
                 contentDisplay, resourceSplitter, slotMappingConfiguration);
 
-        // ShareConfiguration shareConfiguration = shareConfigurationFactory
-        // .createShareConfiguration();
+        LightweightList<ViewPart> viewParts = createViewParts(contentType);
 
-        // TODO more flexible builder pattern
-        LightweightCollection<SidePanelSection> sidePanelSections = createSidePanelSections(
-                contentDisplay, visualMappingsControl, // shareConfiguration,
-                resourceModel, slotMappingConfiguration);
+        LightweightList<SidePanelSection> sidePanelSections = createSidePanelSections(
+                contentDisplay, visualMappingsControl, resourceModel,
+                slotMappingConfiguration);
+
+        for (ViewPart viewPart : viewParts) {
+            viewPart.addSidePanelSections(sidePanelSections);
+        }
 
         SlotMappingInitializer slotMappingInitializer = createSlotMappingInitializer();
 
@@ -212,7 +206,9 @@ public class ViewWindowContentProducer implements WindowContentProducer {
                 visualMappingsControl, slotMappingInitializer,
                 sidePanelSections);
 
-        afterCreation(view);
+        for (ViewPart viewPart : viewParts) {
+            viewPart.afterViewCreation(view);
+        }
 
         return view;
     }
