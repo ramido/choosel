@@ -1,0 +1,36 @@
+Index: src/com/allen_sauer/gwt/dnd/client/MouseDragHandler.java
+===================================================================
+--- src/com/allen_sauer/gwt/dnd/client/MouseDragHandler.java	(revision 922 + Performance.patch)
++++ src/com/allen_sauer/gwt/dnd/client/MouseDragHandler.java	(working copy)
+@@ -34,6 +34,7 @@
+ import com.google.gwt.user.client.DOM;
+ import com.google.gwt.user.client.DeferredCommand;
+ import com.google.gwt.user.client.Element;
++import com.google.gwt.user.client.Event;
+ import com.google.gwt.user.client.Window;
+ import com.google.gwt.user.client.ui.FocusPanel;
+ import com.google.gwt.user.client.ui.RootPanel;
+@@ -223,7 +224,10 @@
+           startDragging();
+         } else {
+           // prevent IE image drag when drag sensitivity > 5
+-          DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
++          Event currentEvent = DOM.eventGetCurrentEvent();
++          if (currentEvent != null) {
++            DOM.eventPreventDefault(currentEvent);
++          }
+         }
+       }
+       if (dragging == NOT_DRAGGING) {
+@@ -231,7 +232,10 @@
+       }
+     }
+     // proceed with the actual drag
+-    DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
++    Event currentEvent = DOM.eventGetCurrentEvent();
++    if (currentEvent != null) {
++      DOM.eventPreventDefault(currentEvent);
++    }
+     actualMove(x, y);
+   }
+ 
