@@ -4,13 +4,6 @@ by various people and organizations (further software components
 may be used by those components):
 
 
-Google App Engine / Java (GAE/J)
-Server-side web application framework
-Version: 1.4.0
-URL: http://code.google.com/p/googleappengine/
-License: Apache License 2.0
-
-
 Google Web Toolkit (GWT)
 Web application framework
 Version: 2.1.1
