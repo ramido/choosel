@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArrayGeneric;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsFunction;
@@ -153,11 +154,35 @@ public class PVScale extends JavaScriptObject {
     }-*/;
 
     /**
+     * Scales are functions. Use this method if the scale returns color values
+     * and you need to call it with a function.
+     */
+    public final JsFunction<PVColor> fcolor(final JsDoubleFunction f) {
+        return new JsFunction<PVColor>() {
+            public PVColor f(JsArgs args) {
+                return fcolor(f.f(args));
+            }
+        };
+    }
+
+    /**
      * Scales are functions. Use this method if the scale returns a color value.
      */
     public final native PVColor fcolor(String value) /*-{
         return this(value);
     }-*/;
+
+    /**
+     * Scales are functions. Use this method if the scale returns double values
+     * and you need to call it with a function.
+     */
+    public final JsFunction<PVColor> fcolor(final JsStringFunction f) {
+        return new JsFunction<PVColor>() {
+            public PVColor f(JsArgs args) {
+                return fcolor(f.f(args));
+            }
+        };
+    }
 
     /**
      * Scales are functions. Use this method if the scale returns a double
@@ -168,6 +193,18 @@ public class PVScale extends JavaScriptObject {
     }-*/;
 
     /**
+     * Scales are functions. Use this method if the scale returns double values
+     * and you need to call it with a function.
+     */
+    public final JsDoubleFunction fd(final JsDoubleFunction f) {
+        return new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                return fd(f.f(args));
+            }
+        };
+    }
+
+    /**
      * Scales are functions. Use this method if the scale returns a double
      * value.
      */
@@ -176,11 +213,35 @@ public class PVScale extends JavaScriptObject {
     }-*/;
 
     /**
+     * Scales are functions. Use this method if the scale returns double values
+     * and you need to call it with a function.
+     */
+    public final JsDoubleFunction fd(final JsStringFunction f) {
+        return new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                return fd(f.f(args));
+            }
+        };
+    }
+
+    /**
      * Scales are functions. Use this method if the scale returns a double
      * value.
      */
     public final native double fd(JsDate value) /*-{
         return this(value);
     }-*/;
+
+    /**
+     * Scales are functions. Use this method if the scale returns double values
+     * and you need to call it with a function.
+     */
+    public final JsDoubleFunction fd(final JsFunction<JsDate> f) {
+        return new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                return fd(f.f(args));
+            }
+        };
+    }
 
 }
