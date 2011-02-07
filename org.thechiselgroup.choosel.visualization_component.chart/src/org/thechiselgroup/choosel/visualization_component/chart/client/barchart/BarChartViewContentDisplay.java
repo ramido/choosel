@@ -125,10 +125,9 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         @Override
         public String f(JsArgs args) {
             ChartItem chartItem = args.getObject();
-            return StringUtils.formatDecimal(
-                    calculateChartItemValue(chartItem,
-                            BarChartVisualization.BAR_LENGTH_SLOT,
-                            Subset.HIGHLIGHTED), 2);
+            return StringUtils.formatDecimal(chartItem.getSlotValueAsDouble(
+                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.HIGHLIGHTED),
+                    2);
         }
     };
 
@@ -136,10 +135,8 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         @Override
         public String f(JsArgs args) {
             ChartItem chartItem = args.getObject();
-            return StringUtils.formatDecimal(
-                    calculateChartItemValue(chartItem,
-                            BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL),
-                    2);
+            return StringUtils.formatDecimal(chartItem.getSlotValueAsDouble(
+                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL), 2);
         }
     };
 
@@ -321,14 +318,14 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         @Override
         public String f(JsArgs args) {
             ChartItem chartItem = args.getObject();
-            return calculateChartItemValue(chartItem,
+            return chartItem.getSlotValueAsDouble(
                     BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL)
-                    - calculateChartItemValue(chartItem,
+                    - chartItem.getSlotValueAsDouble(
                             BarChartVisualization.BAR_LENGTH_SLOT,
                             Subset.HIGHLIGHTED) < 1 ? null : Double
-                    .toString(calculateChartItemValue(chartItem,
+                    .toString(chartItem.getSlotValueAsDouble(
                             BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL)
-                            - calculateChartItemValue(chartItem,
+                            - chartItem.getSlotValueAsDouble(
                                     BarChartVisualization.BAR_LENGTH_SLOT,
                                     Subset.HIGHLIGHTED));
         }
@@ -338,9 +335,9 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         @Override
         public String f(JsArgs args) {
             ChartItem chartItem = args.getObject();
-            return calculateChartItemValue(chartItem,
+            return chartItem.getSlotValueAsDouble(
                     BarChartVisualization.BAR_LENGTH_SLOT, Subset.HIGHLIGHTED) <= 0 ? null
-                    : Double.toString(calculateChartItemValue(chartItem,
+                    : Double.toString(chartItem.getSlotValueAsDouble(
                             BarChartVisualization.BAR_LENGTH_SLOT,
                             Subset.HIGHLIGHTED));
         }
@@ -365,8 +362,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
         regularValues = new double[chartItemsJsArray.length()];
         for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            regularValues[i] = calculateChartItemValue(
-                    chartItemsJsArray.get(i),
+            regularValues[i] = chartItemsJsArray.get(i).getSlotValueAsDouble(
                     BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
         }
     }
@@ -399,16 +395,15 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     }
 
     private double calculateHighlightedBarLength(ChartItem d) {
-        return calculateBarLength(d.getViewItemValueAsNumber(
-                BarChartVisualization.BAR_LENGTH_SLOT, Subset.HIGHLIGHTED));
+        return calculateBarLength(d.getSlotValueAsDouble(BarChartVisualization.BAR_LENGTH_SLOT, Subset.HIGHLIGHTED));
     }
 
     protected void calculateMaximumChartItemValue() {
         maxChartItemValue = 0;
         for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            double currentItemValue = calculateChartItemValue(
-                    chartItemsJsArray.get(i),
-                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
+            double currentItemValue = chartItemsJsArray.get(i)
+                    .getSlotValueAsDouble(
+                            BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
             if (maxChartItemValue < currentItemValue) {
                 maxChartItemValue = currentItemValue;
             }

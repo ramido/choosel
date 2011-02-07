@@ -56,16 +56,16 @@ public class ChartItem {
         throw new RuntimeException("No colour available");
     }
 
-    public ViewItem getViewItem() {
-        return viewItem;
-    }
-
-    public double getViewItemValueAsNumber(Slot slot, Subset subset) {
+    public double getSlotValueAsDouble(Slot slot, Subset subset) {
         return (Double) viewItem.getSlotValue(slot, subset);
     }
 
     public ChartViewContentDisplay getView() {
         return view;
+    }
+
+    public ViewItem getViewItem() {
+        return viewItem;
     }
 
     // TODO find better way to separate controller

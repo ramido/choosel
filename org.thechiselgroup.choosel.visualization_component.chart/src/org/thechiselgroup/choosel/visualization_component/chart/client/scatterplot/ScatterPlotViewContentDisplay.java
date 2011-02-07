@@ -15,8 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.chart.client.scatterplot;
 
+import static org.thechiselgroup.choosel.visualization_component.chart.client.scatterplot.ScatterPlotVisualization.X_POSITION_SLOT;
+import static org.thechiselgroup.choosel.visualization_component.chart.client.scatterplot.ScatterPlotVisualization.Y_POSITION_SLOT;
+
 import org.thechiselgroup.choosel.core.client.ui.Colors;
-import org.thechiselgroup.choosel.core.client.util.collections.ArrayUtils;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.core.client.views.ViewItem;
@@ -26,12 +28,12 @@ import org.thechiselgroup.choosel.protovis.client.PVAlignment;
 import org.thechiselgroup.choosel.protovis.client.PVDot;
 import org.thechiselgroup.choosel.protovis.client.PVEventHandler;
 import org.thechiselgroup.choosel.protovis.client.PVLinearScale;
-import org.thechiselgroup.choosel.protovis.client.PVMark;
 import org.thechiselgroup.choosel.protovis.client.PVScale;
+import org.thechiselgroup.choosel.protovis.client.PVShape;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
-import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItem;
+import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItemDoubleSlotAccessor;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay;
 
 import com.google.inject.Inject;
@@ -50,48 +52,19 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
 
     private static final String AXIS_SCALE_COLOR = Colors.GRAY_2;
 
-    private double[] scatterCountsX;
-
-    private double[] scatterCountsY;
-
     protected int chartHeight;
 
     protected int chartWidth;
-
-    private double minY;
-
-    private double maxY;
-
-    private double minX;
-
-    private double maxX;
 
     private PVLinearScale scaleX;
 
     private PVLinearScale scaleY;
 
-    private JsDoubleFunction scatterBottom = new JsDoubleFunction() {
-        @Override
-        public double f(JsArgs args) {
-            PVMark _this = args.getThis();
-            return (scatterCountsY[_this.index()] - minY) * chartHeight
-                    / (maxY - minY);
-        }
-    };
-
-    private JsDoubleFunction scatterLeft = new JsDoubleFunction() {
-        @Override
-        public double f(JsArgs args) {
-            PVMark _this = args.getThis();
-            return (scatterCountsX[_this.index()] - minX) * chartWidth
-                    / (maxX - minX);
-        }
-    };
-
     private String scaleStrokeStyle = GRIDLINE_SCALE_COLOR;
 
     private PVDot scatter;
 
+    // TODO extract class
     private JsStringFunction scaleLabelTextX = new JsStringFunction() {
         @Override
         public String f(JsArgs args) {
@@ -99,6 +72,7 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
         }
     };
 
+    // TODO extract class
     private JsStringFunction scaleLabelTextY = new JsStringFunction() {
         @Override
         public String f(JsArgs args) {
@@ -120,45 +94,6 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
     @Inject
     public ScatterPlotViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
         super(dragEnablerFactory);
-    }
-
-    @Override
-    protected void beforeRender() {
-        if (chartItemsJsArray.length() == 0) {
-            return;
-        }
-
-        scatterCountsY = new double[chartItemsJsArray.length()];
-
-        for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            scatterCountsY[i] = calculateAllResourcesY(i);
-        }
-
-        minY = ArrayUtils.min(scatterCountsY) - 1;
-        maxY = ArrayUtils.max(scatterCountsY) + 1;
-
-        scatterCountsX = new double[chartItemsJsArray.length()];
-
-        for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            scatterCountsX[i] = calculateAllResourcesX(i);
-        }
-
-        minX = ArrayUtils.min(scatterCountsX) - 1;
-        maxX = ArrayUtils.max(scatterCountsX) + 1;
-    }
-
-    // TODO refactor
-    protected double calculateAllResourcesX(int i) {
-        return Double.parseDouble(chartItemsJsArray.get(i).getViewItem()
-                .getSlotValue(ScatterPlotVisualization.X_POSITION_SLOT)
-                .toString());
-    }
-
-    // TODO refactor
-    protected double calculateAllResourcesY(int i) {
-        return Double.parseDouble(chartItemsJsArray.get(i).getViewItem()
-                .getSlotValue(ScatterPlotVisualization.Y_POSITION_SLOT)
-                .toString());
     }
 
     private void calculateChartVariables() {
@@ -183,10 +118,15 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
         calculateChartVariables();
         setChartParameters();
 
+        scaleX = PVScale.linear(chartItemsJsArray,
+                new ChartItemDoubleSlotAccessor(X_POSITION_SLOT)).range(0,
+                chartWidth);
+        scaleY = PVScale.linear(chartItemsJsArray,
+                new ChartItemDoubleSlotAccessor(Y_POSITION_SLOT)).range(0,
+                chartHeight);
+
         beforeRender();
 
-        scaleX = PVScale.linear(minX, maxX).range(0, chartWidth);
-        scaleY = PVScale.linear(minY, maxY).range(0, chartHeight);
         drawScales(scaleX, scaleY);
         drawScatter();
         drawAxisLabels();
@@ -212,9 +152,17 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
     private void drawScatter() {
         scatter = getChart()
                 .add(PV.Dot)
+                .shape(new JsStringFunction() {
+                    @Override
+                    public String f(JsArgs args) {
+                        return PVShape.CIRCLE; // TODO dynamic
+                    }
+                })
                 .data(chartItemsJsArray)
-                .bottom(scatterBottom)
-                .left(scatterLeft)
+                .bottom(scaleY.fd(new ChartItemDoubleSlotAccessor(
+                        Y_POSITION_SLOT)))
+                .left(scaleX
+                        .fd(new ChartItemDoubleSlotAccessor(X_POSITION_SLOT)))
                 .size(Math.min(chartHeight, chartWidth)
                         / (chartItemsJsArray.length() * 2))
                 .fillStyle(chartFillStyle).strokeStyle(Colors.STEELBLUE);

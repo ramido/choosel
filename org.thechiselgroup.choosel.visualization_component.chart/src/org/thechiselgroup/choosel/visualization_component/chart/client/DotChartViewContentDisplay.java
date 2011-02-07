@@ -106,8 +106,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
         dotCounts = new double[chartItemsJsArray.length()];
 
         for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            dotCounts[i] = calculateChartItemValue(chartItemsJsArray.get(i),
-                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
+            dotCounts[i] = chartItemsJsArray.get(i).getSlotValueAsDouble(BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
         }
     }
 
@@ -128,8 +127,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
     protected void calculateMaximumChartItemValue() {
         maxChartItemValue = 0;
         for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            double currentItemValue = calculateChartItemValue(
-                    chartItemsJsArray.get(i),
+            double currentItemValue = chartItemsJsArray.get(i).getSlotValueAsDouble(
                     BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
             if (maxChartItemValue < currentItemValue) {
                 maxChartItemValue = currentItemValue;

@@ -85,8 +85,7 @@ public class PieChartViewContentDisplay extends ChartViewContentDisplay {
         @Override
         public double f(JsArgs args) {
             ChartItem chartItem = args.getObject();
-            return calculateChartItemValue(chartItem,
-                    PieChartVisualization.PIE_ANGLE_SLOT, Subset.ALL)
+            return chartItem.getSlotValueAsDouble(PieChartVisualization.PIE_ANGLE_SLOT, Subset.ALL)
                     * 2
                     * Math.PI / sum;
         }
@@ -107,8 +106,7 @@ public class PieChartViewContentDisplay extends ChartViewContentDisplay {
         @Override
         public String f(JsArgs args) {
             ChartItem chartItem = args.getObject();
-            return calculateChartItemValue(chartItem,
-                    PieChartVisualization.PIE_ANGLE_SLOT, Subset.HIGHLIGHTED) == 0 ? Colors.WHITE
+            return chartItem.getSlotValueAsDouble(PieChartVisualization.PIE_ANGLE_SLOT, Subset.HIGHLIGHTED) == 0 ? Colors.WHITE
                     : Colors.BLACK;
         }
     };
@@ -128,15 +126,11 @@ public class PieChartViewContentDisplay extends ChartViewContentDisplay {
         @Override
         public String f(JsArgs args) {
             ChartItem chartItem = args.getObject();
-            return calculateChartItemValue(chartItem,
-                    PieChartVisualization.PIE_ANGLE_SLOT, Subset.ALL)
-                    - calculateChartItemValue(chartItem,
-                            PieChartVisualization.PIE_ANGLE_SLOT,
+            return chartItem.getSlotValueAsDouble(PieChartVisualization.PIE_ANGLE_SLOT, Subset.ALL)
+                    - chartItem.getSlotValueAsDouble(PieChartVisualization.PIE_ANGLE_SLOT,
                             Subset.HIGHLIGHTED) < 1 ? null : Double
-                    .toString(calculateChartItemValue(chartItem,
-                            PieChartVisualization.PIE_ANGLE_SLOT, Subset.ALL)
-                            - calculateChartItemValue(chartItem,
-                                    PieChartVisualization.PIE_ANGLE_SLOT,
+                    .toString(chartItem.getSlotValueAsDouble(PieChartVisualization.PIE_ANGLE_SLOT, Subset.ALL)
+                            - chartItem.getSlotValueAsDouble(PieChartVisualization.PIE_ANGLE_SLOT,
                                     Subset.HIGHLIGHTED));
         }
     };
@@ -146,10 +140,8 @@ public class PieChartViewContentDisplay extends ChartViewContentDisplay {
         @Override
         public String f(JsArgs args) {
             ChartItem chartItem = args.getObject();
-            return calculateChartItemValue(chartItem,
-                    PieChartVisualization.PIE_ANGLE_SLOT, Subset.HIGHLIGHTED) <= 0 ? null
-                    : Double.toString(calculateChartItemValue(chartItem,
-                            PieChartVisualization.PIE_ANGLE_SLOT,
+            return chartItem.getSlotValueAsDouble(PieChartVisualization.PIE_ANGLE_SLOT, Subset.HIGHLIGHTED) <= 0 ? null
+                    : Double.toString(chartItem.getSlotValueAsDouble(PieChartVisualization.PIE_ANGLE_SLOT,
                             Subset.HIGHLIGHTED));
         }
     };
@@ -174,26 +166,22 @@ public class PieChartViewContentDisplay extends ChartViewContentDisplay {
 
         for (int i = 0; i < chartItemsJsArray.length(); i++) {
             ChartItem chartItem = chartItemsJsArray.get(i);
-            highlightedWedgeCounts[i] = calculateChartItemValue(chartItem,
-                    PieChartVisualization.PIE_ANGLE_SLOT, Subset.HIGHLIGHTED);
-            regularWedgeCounts[i] = calculateChartItemValue(chartItem,
-                    PieChartVisualization.PIE_ANGLE_SLOT, Subset.ALL);
+            highlightedWedgeCounts[i] = chartItem.getSlotValueAsDouble(PieChartVisualization.PIE_ANGLE_SLOT, Subset.HIGHLIGHTED);
+            regularWedgeCounts[i] = chartItem.getSlotValueAsDouble(PieChartVisualization.PIE_ANGLE_SLOT, Subset.ALL);
         }
     }
 
     private void calculateAllResourcesSum() {
         sum = 0;
         for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            sum += calculateChartItemValue(chartItemsJsArray.get(i),
-                    PieChartVisualization.PIE_ANGLE_SLOT, Subset.ALL);
+            sum += chartItemsJsArray.get(i).getSlotValueAsDouble(PieChartVisualization.PIE_ANGLE_SLOT, Subset.ALL);
         }
     }
 
     protected void calculateMaximumChartItemValue() {
         maxChartItemValue = 0;
         for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            double currentItemValue = calculateChartItemValue(
-                    chartItemsJsArray.get(i),
+            double currentItemValue = chartItemsJsArray.get(i).getSlotValueAsDouble(
                     PieChartVisualization.PIE_ANGLE_SLOT, Subset.ALL);
             if (maxChartItemValue < currentItemValue) {
                 maxChartItemValue = currentItemValue;

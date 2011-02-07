@@ -21,7 +21,6 @@ import org.thechiselgroup.choosel.core.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.core.client.views.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.ViewItem.Status;
-import org.thechiselgroup.choosel.core.client.views.ViewItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 import org.thechiselgroup.choosel.protovis.client.PVEventHandler;
 import org.thechiselgroup.choosel.protovis.client.PVEventTypes;
@@ -89,8 +88,9 @@ public abstract class ChartViewContentDisplay extends
         @Override
         public String f(JsArgs args) {
             ChartItem value = args.getObject();
-            return value.getViewItem().getStatus() == Status.PARTIALLY_HIGHLIGHTED ? Colors.STEELBLUE
-                    : value.getViewItem().getStatus() == Status.PARTIALLY_HIGHLIGHTED_SELECTED ? Colors.ORANGE
+            Status status = value.getViewItem().getStatus();
+            return status == Status.PARTIALLY_HIGHLIGHTED ? Colors.STEELBLUE
+                    : status == Status.PARTIALLY_HIGHLIGHTED_SELECTED ? Colors.ORANGE
                             : value.getColor();
         }
     };
@@ -145,12 +145,6 @@ public abstract class ChartViewContentDisplay extends
 
         // XXX how often are event listeners assigned? are they removed?
         renderChart();
-    }
-
-    // XXX fix -- move into chartitem
-    protected double calculateChartItemValue(ChartItem chartItem, Slot slot,
-            Subset subset) {
-        return (Double) chartItem.getViewItem().getSlotValue(slot, subset);
     }
 
     protected int calculateHighlightedSelectedResources(ChartItem chartItem) {

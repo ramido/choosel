@@ -38,8 +38,7 @@ public class TimeChartViewContentDisplay extends ChartViewContentDisplay {
     protected void calculateMaximumChartItemValue() {
         maxChartItemValue = 0;
         for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            double currentItemValue = calculateChartItemValue(
-                    chartItemsJsArray.get(i),
+            double currentItemValue = chartItemsJsArray.get(i).getSlotValueAsDouble(
                     BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
             if (maxChartItemValue < currentItemValue) {
                 maxChartItemValue = currentItemValue;
