@@ -56,7 +56,7 @@ public class SunburstExample extends ProtovisWidget implements ProtovisExample {
             public PVColor f(JsArgs args) {
                 PVDomNode d = args.getObject();
                 if (d.parentNode() == null) {
-                    return category19.fcolor(null);
+                    return category19.fcolor((String) null);
                 }
                 return category19.fcolor(d.parentNode().nodeName());
             }

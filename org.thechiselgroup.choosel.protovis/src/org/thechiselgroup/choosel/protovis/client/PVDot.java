@@ -83,6 +83,16 @@ public final class PVDot extends PVAbstractMark<PVDot> {
         return this.shape(shape);
     }-*/;
 
+    /**
+     * @param f
+     *            Function that return shape String
+     * 
+     * @see PVShape
+     */
+    public final native PVDot shape(JsStringFunction f) /*-{
+        return this.shape(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsStringFunction;)(f));
+    }-*/;
+
     public final native PVDot size(double size) /*-{
         return this.size(size);
     }-*/;
