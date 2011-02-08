@@ -56,8 +56,12 @@ public class ChartItem {
         throw new RuntimeException("No colour available");
     }
 
+    public <T> T getSlotValue(Slot slot, Subset subset) {
+        return viewItem.getSlotValue(slot, subset);
+    }
+
     public double getSlotValueAsDouble(Slot slot, Subset subset) {
-        return (Double) viewItem.getSlotValue(slot, subset);
+        return (Double) getSlotValue(slot, subset);
     }
 
     public ChartViewContentDisplay getView() {

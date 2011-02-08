@@ -13,25 +13,35 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.visualization_component.chart.client.scatterplot;
+package org.thechiselgroup.choosel.visualization_component.chart.client;
 
-import org.thechiselgroup.choosel.core.client.resources.DataType;
+import org.thechiselgroup.choosel.core.client.views.ViewItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 
-public final class ScatterPlotVisualization {
+public class ChartItemStringSlotAccessor implements JsStringFunction {
 
-    public final static String ID = "org.thechiselgroup.choosel.visualization_component.chart.ScatterPlot";
+    private Subset subset;
 
-    public static final Slot Y_POSITION_SLOT = new Slot("y_position", "Y-Axis",
-            DataType.NUMBER);
+    private Slot slot;
 
-    public static final Slot X_POSITION_SLOT = new Slot("x_position", "X-Axis",
-            DataType.NUMBER);
+    public ChartItemStringSlotAccessor(Slot slot) {
+        this(slot, Subset.ALL);
+    }
 
-    public static final Slot SHAPE_SLOT = new Slot("shape", "Shape",
-            DataType.SHAPE);
+    public ChartItemStringSlotAccessor(Slot slot, Subset subset) {
+        assert subset != null;
+        assert slot != null;
 
-    private ScatterPlotVisualization() {
+        this.slot = slot;
+        this.subset = subset;
+    }
+
+    @Override
+    public String f(JsArgs args) {
+        ChartItem chartItem = args.getObject();
+        return chartItem.getSlotValue(slot, subset);
     }
 
 }
