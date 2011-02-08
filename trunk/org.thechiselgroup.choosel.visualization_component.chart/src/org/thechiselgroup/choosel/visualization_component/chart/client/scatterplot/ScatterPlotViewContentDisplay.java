@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.chart.client.scatterplot;
 
+import static org.thechiselgroup.choosel.visualization_component.chart.client.scatterplot.ScatterPlotVisualization.SHAPE_SLOT;
 import static org.thechiselgroup.choosel.visualization_component.chart.client.scatterplot.ScatterPlotVisualization.X_POSITION_SLOT;
 import static org.thechiselgroup.choosel.visualization_component.chart.client.scatterplot.ScatterPlotVisualization.Y_POSITION_SLOT;
 
@@ -29,11 +30,11 @@ import org.thechiselgroup.choosel.protovis.client.PVDot;
 import org.thechiselgroup.choosel.protovis.client.PVEventHandler;
 import org.thechiselgroup.choosel.protovis.client.PVLinearScale;
 import org.thechiselgroup.choosel.protovis.client.PVScale;
-import org.thechiselgroup.choosel.protovis.client.PVShape;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItem;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItemDoubleSlotAccessor;
+import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItemStringSlotAccessor;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay;
 
 import com.google.inject.Inject;
@@ -152,12 +153,7 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
     private void drawScatter() {
         scatter = getChart()
                 .add(PV.Dot)
-                .shape(new JsStringFunction() {
-                    @Override
-                    public String f(JsArgs args) {
-                        return PVShape.CIRCLE; // TODO dynamic
-                    }
-                })
+                .shape(new ChartItemStringSlotAccessor(SHAPE_SLOT))
                 .data(chartItemsJsArray)
                 .bottom(scaleY.fd(new ChartItemDoubleSlotAccessor(
                         Y_POSITION_SLOT)))
@@ -175,8 +171,7 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
 
     @Override
     public Slot[] getSlots() {
-        return new Slot[] { ScatterPlotVisualization.X_POSITION_SLOT,
-                ScatterPlotVisualization.Y_POSITION_SLOT };
+        return new Slot[] { X_POSITION_SLOT, Y_POSITION_SLOT, SHAPE_SLOT };
     }
 
     public String getXAxisLabel() {

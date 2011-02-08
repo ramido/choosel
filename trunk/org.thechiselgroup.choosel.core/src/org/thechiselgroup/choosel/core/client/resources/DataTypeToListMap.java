@@ -30,6 +30,8 @@ public class DataTypeToListMap<T> {
 
     private List<T> colorList = new ArrayList<T>();
 
+    private List<T> shapeList = new ArrayList<T>();
+
     public List<T> get(DataType dataType) {
         assert dataType != null;
 
@@ -44,6 +46,8 @@ public class DataTypeToListMap<T> {
             return locationList;
         case COLOR:
             return colorList;
+        case SHAPE:
+            return shapeList;
         }
 
         throw new IllegalArgumentException("unknown DataType: " + dataType);

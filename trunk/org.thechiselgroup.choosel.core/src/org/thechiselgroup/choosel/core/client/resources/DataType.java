@@ -15,8 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.resources;
 
+// TODO rename to slot type and change into extensible class (e.g. for custom enumerations)
 public enum DataType {
 
-    TEXT, DATE, NUMBER, LOCATION, COLOR;
+    TEXT, DATE, NUMBER, LOCATION, COLOR, SHAPE;
 
 }

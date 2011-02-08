@@ -49,6 +49,11 @@ public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
                     setToValueResolver = new FixedValuePropertyValueResolver(
                             "#6495ed");
                     break;
+                case SHAPE:
+                    setToValueResolver = new FixedValuePropertyValueResolver(
+                            "circle"); // XXX protovis constant - introduce
+                                       // better data type mechanism
+                    break;
                 }
 
                 slotMappingConfiguration.setMapping(slot, setToValueResolver);
