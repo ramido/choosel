@@ -55,6 +55,8 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
         }
     };
 
+    protected double maxChartItemValue;
+
     private double sum;
 
     private JsDoubleFunction regularWedgeOuterRadius = new JsDoubleFunction() {
@@ -101,7 +103,7 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
         public double f(JsArgs args) {
             double value = args.getDouble();
             return value * (Math.min(height, width) - MARGIN_SIZE)
-                    / (getMaximumChartItemValue() * 2);
+                    / (maxChartItemValue * 2);
         }
     };
 
@@ -111,7 +113,8 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
         @Override
         public String f(JsArgs args) {
             ChartItem chartItem = args.getObject();
-            return chartItem.getSlotValueAsDouble(BarChartVisualization.BAR_LENGTH_SLOT, Subset.HIGHLIGHTED) == 0 ? Colors.WHITE
+            return chartItem.getSlotValueAsDouble(
+                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.HIGHLIGHTED) == 0 ? Colors.WHITE
                     : Colors.BLACK;
         }
     };
@@ -120,9 +123,8 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
         @Override
         public String f(JsArgs args) {
             ChartItem chartItem = args.getObject();
-            return StringUtils.formatDecimal(
-                    chartItem.getSlotValueAsDouble(BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL),
-                    2);
+            return StringUtils.formatDecimal(chartItem.getSlotValueAsDouble(
+                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL), 2);
         }
 
     };
@@ -131,11 +133,15 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
         @Override
         public String f(JsArgs args) {
             ChartItem chartItem = args.getObject();
-            return chartItem.getSlotValueAsDouble(BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL)
-                    - chartItem.getSlotValueAsDouble(BarChartVisualization.BAR_LENGTH_SLOT,
+            return chartItem.getSlotValueAsDouble(
+                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL)
+                    - chartItem.getSlotValueAsDouble(
+                            BarChartVisualization.BAR_LENGTH_SLOT,
                             Subset.HIGHLIGHTED) < 1 ? null : Double
-                    .toString(chartItem.getSlotValueAsDouble(BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL)
-                            - chartItem.getSlotValueAsDouble(BarChartVisualization.BAR_LENGTH_SLOT,
+                    .toString(chartItem.getSlotValueAsDouble(
+                            BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL)
+                            - chartItem.getSlotValueAsDouble(
+                                    BarChartVisualization.BAR_LENGTH_SLOT,
                                     Subset.HIGHLIGHTED));
         }
     };
@@ -144,8 +150,10 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
         @Override
         public String f(JsArgs args) {
             ChartItem chartItem = args.getObject();
-            return chartItem.getSlotValueAsDouble(BarChartVisualization.BAR_LENGTH_SLOT, Subset.HIGHLIGHTED) <= 0 ? null
-                    : Double.toString(chartItem.getSlotValueAsDouble(BarChartVisualization.BAR_LENGTH_SLOT,
+            return chartItem.getSlotValueAsDouble(
+                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.HIGHLIGHTED) <= 0 ? null
+                    : Double.toString(chartItem.getSlotValueAsDouble(
+                            BarChartVisualization.BAR_LENGTH_SLOT,
                             Subset.HIGHLIGHTED));
         }
     };
@@ -170,30 +178,35 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
         highlightedWedgeCounts = new double[chartItemsJsArray.length()];
 
         for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            highlightedWedgeCounts[i] = chartItemsJsArray.get(i).getSlotValueAsDouble(
-                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.HIGHLIGHTED);
+            highlightedWedgeCounts[i] = chartItemsJsArray.get(i)
+                    .getSlotValueAsDouble(
+                            BarChartVisualization.BAR_LENGTH_SLOT,
+                            Subset.HIGHLIGHTED);
         }
 
         regularWedgeCounts = new double[chartItemsJsArray.length()];
 
         for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            regularWedgeCounts[i] = chartItemsJsArray.get(i).getSlotValueAsDouble(
-                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
+            regularWedgeCounts[i] = chartItemsJsArray.get(i)
+                    .getSlotValueAsDouble(
+                            BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
         }
     }
 
     private void calculateAllResourcesSum() {
         sum = 0;
         for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            sum += chartItemsJsArray.get(i).getSlotValueAsDouble(BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
+            sum += chartItemsJsArray.get(i).getSlotValueAsDouble(
+                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
         }
     }
 
     protected void calculateMaximumChartItemValue() {
         maxChartItemValue = 0;
         for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            double currentItemValue = chartItemsJsArray.get(i).getSlotValueAsDouble(
-                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
+            double currentItemValue = chartItemsJsArray.get(i)
+                    .getSlotValueAsDouble(
+                            BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
             if (maxChartItemValue < currentItemValue) {
                 maxChartItemValue = currentItemValue;
             }
@@ -215,8 +228,8 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
     }
 
     private void drawScale() {
-        PVLinearScale scale = PVScale.linear(0, getMaximumChartItemValue())
-                .range(0, Math.min(height, width) - MARGIN_SIZE);
+        PVLinearScale scale = PVScale.linear(0, maxChartItemValue).range(0,
+                Math.min(height, width) - MARGIN_SIZE);
 
         getChart().add(PV.Dot).data(scale.ticks()).left(width / 2)
                 .bottom(height / 2).fillStyle("").strokeStyle(Colors.GRAY_1)
@@ -250,7 +263,7 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
             return;
         }
 
-        regularWedge.innerRadius(0).fillStyle(chartFillStyle);
+        regularWedge.innerRadius(0).fillStyle(new ChartItemColorFunction());
 
         regularWedge.anchor(wedgeLabelAnchor).add(PV.Label)
                 .textAngle(wedgeTextAngle).text(fullMarkLabelText)

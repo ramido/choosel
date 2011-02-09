@@ -30,12 +30,11 @@ import org.thechiselgroup.choosel.protovis.client.PVDot;
 import org.thechiselgroup.choosel.protovis.client.PVEventHandler;
 import org.thechiselgroup.choosel.protovis.client.PVLinearScale;
 import org.thechiselgroup.choosel.protovis.client.PVScale;
-import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
-import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItemColorFunction;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItemDoubleSlotAccessor;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItemStringSlotAccessor;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay;
+import org.thechiselgroup.choosel.visualization_component.chart.client.TickFormatFunction;
 
 import com.google.inject.Inject;
 
@@ -72,22 +71,6 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
      */
     private PVDot dots;
 
-    // TODO extract class
-    private JsStringFunction scaleLabelTextX = new JsStringFunction() {
-        @Override
-        public String f(JsArgs args) {
-            return scaleX.tickFormatInt(args.getInt());
-        }
-    };
-
-    // TODO extract class
-    private JsStringFunction scaleLabelTextY = new JsStringFunction() {
-        @Override
-        public String f(JsArgs args) {
-            return scaleY.tickFormatInt(args.getInt());
-        }
-    };
-
     private String xAxisLabel = "";
 
     private String yAxisLabel = "";
@@ -103,14 +86,15 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
         // vertical grid lines and labels on x axis
         getChart().add(PV.Rule).data(scaleX.ticks()).bottom(0).left(scaleX)
                 .strokeStyle(GRIDLINE_COLOR).height(chartHeight)
-                .anchor(PVAlignment.BOTTOM).add(PV.Label).text(scaleLabelTextX);
+                .anchor(PVAlignment.BOTTOM).add(PV.Label)
+                .text(new TickFormatFunction(scaleX));
         getChart().add(PV.Rule).height(chartHeight).bottom(0).left(0)
                 .strokeStyle(AXIS_COLOR);
 
         // horizontal grid lines and labels on y axis
         getChart().add(PV.Rule).data(scaleY.ticks()).bottom(scaleY).left(0)
                 .strokeStyle(GRIDLINE_COLOR).width(chartWidth).add(PV.Label)
-                .text(scaleLabelTextY).textAngle(-Math.PI / 2)
+                .text(new TickFormatFunction(scaleY)).textAngle(-Math.PI / 2)
                 .textAlign(PVAlignment.CENTER).textBaseline(PVAlignment.BOTTOM);
         getChart().add(PV.Rule).width(chartWidth).bottom(0).left(0)
                 .strokeStyle(AXIS_COLOR);

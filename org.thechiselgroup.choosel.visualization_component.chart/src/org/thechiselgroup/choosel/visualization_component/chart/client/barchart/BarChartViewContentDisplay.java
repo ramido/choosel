@@ -38,6 +38,7 @@ import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItem;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay;
+import org.thechiselgroup.choosel.visualization_component.chart.client.TickFormatFunction;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -100,6 +101,8 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         }
 
     }
+
+    protected PVLinearScale scale;
 
     private static final int BORDER_BOTTOM = 35;
 
@@ -343,6 +346,8 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         }
     };
 
+    protected double maxChartItemValue;
+
     @Inject
     public BarChartViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
         super(dragEnablerFactory);
@@ -369,7 +374,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
     private double calculateBarLength(double value) {
         return value * layout.getBarLengthSpace(chartHeight, chartWidth)
-                / getMaximumChartItemValue();
+                / maxChartItemValue;
     }
 
     private double calculateBarStart(int index) {
@@ -395,7 +400,8 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     }
 
     private double calculateHighlightedBarLength(ChartItem d) {
-        return calculateBarLength(d.getSlotValueAsDouble(BarChartVisualization.BAR_LENGTH_SLOT, Subset.HIGHLIGHTED));
+        return calculateBarLength(d.getSlotValueAsDouble(
+                BarChartVisualization.BAR_LENGTH_SLOT, Subset.HIGHLIGHTED));
     }
 
     protected void calculateMaximumChartItemValue() {
@@ -423,16 +429,16 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
         if (layout.isVerticalBarChart(chartHeight, chartWidth)) {
             getChart().left(BORDER_LEFT).bottom(BORDER_BOTTOM);
-            PVLinearScale scale = PVScale.linear(0, getMaximumChartItemValue())
-                    .range(0, chartHeight);
+            PVLinearScale scale = PVScale.linear(0, maxChartItemValue).range(0,
+                    chartHeight);
             // TODO axis label
             drawVerticalBarChart();
             drawVerticalBarScales(scale);
         } else {
             getChart().left(BORDER_LEFT + HORIZONTAL_BAR_LABEL_EXTRA_MARGIN)
                     .bottom(BORDER_BOTTOM);
-            PVLinearScale scale = PVScale.linear(0, getMaximumChartItemValue())
-                    .range(0, chartWidth);
+            PVLinearScale scale = PVScale.linear(0, maxChartItemValue).range(0,
+                    chartWidth);
             drawHorizontalBarMeasurementAxisLabel();
             drawHorizontalBarChart();
             drawHorizontalBarScales(scale);
@@ -480,7 +486,8 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         this.scale = scale;
         getChart().add(PV.Rule).data(scale.ticks(5)).left(scale).bottom(0)
                 .strokeStyle(scaleStrokeStyle).height(chartHeight)
-                .anchor(PVAlignment.BOTTOM).add(PV.Label).text(scaleLabelText);
+                .anchor(PVAlignment.BOTTOM).add(PV.Label)
+                .text(new TickFormatFunction(scale));
     }
 
     private void drawVerticalBarChart() {
@@ -524,7 +531,8 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         this.scale = scale;
         getChart().add(PV.Rule).data(scale.ticks(5)).left(0).bottom(scale)
                 .strokeStyle(scaleStrokeStyle).width(chartWidth)
-                .anchor(PVAlignment.LEFT).add(PV.Label).text(scaleLabelText);
+                .anchor(PVAlignment.LEFT).add(PV.Label)
+                .text(new TickFormatFunction(scale));
     }
 
     @Override
