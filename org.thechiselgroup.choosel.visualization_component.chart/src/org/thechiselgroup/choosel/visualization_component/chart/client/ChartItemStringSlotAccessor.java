@@ -41,7 +41,7 @@ public class ChartItemStringSlotAccessor implements JsStringFunction {
     @Override
     public String f(JsArgs args) {
         ChartItem chartItem = args.getObject();
-        return chartItem.getSlotValue(slot, subset);
+        return chartItem.getSlotValue(slot, subset).toString();
     }
 
 }

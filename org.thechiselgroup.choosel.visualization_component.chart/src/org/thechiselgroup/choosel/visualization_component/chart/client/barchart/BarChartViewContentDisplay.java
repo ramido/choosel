@@ -15,6 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.chart.client.barchart;
 
+import static org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChartVisualization.BAR_LABEL_SLOT;
+import static org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChartVisualization.BAR_LENGTH_SLOT;
+
 import org.thechiselgroup.choosel.core.client.ui.Colors;
 import org.thechiselgroup.choosel.core.client.util.StringUtils;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
@@ -37,6 +40,7 @@ import org.thechiselgroup.choosel.protovis.client.jsutil.JsBooleanFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItem;
+import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItemStringSlotAccessor;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay;
 import org.thechiselgroup.choosel.visualization_component.chart.client.TickFormatFunction;
 
@@ -102,7 +106,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
     }
 
-    protected PVLinearScale scale;
+    private PVLinearScale scale;
 
     private static final int BORDER_BOTTOM = 35;
 
@@ -129,8 +133,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         public String f(JsArgs args) {
             ChartItem chartItem = args.getObject();
             return StringUtils.formatDecimal(chartItem.getSlotValueAsDouble(
-                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.HIGHLIGHTED),
-                    2);
+                    BAR_LENGTH_SLOT, Subset.HIGHLIGHTED), 2);
         }
     };
 
@@ -138,8 +141,9 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         @Override
         public String f(JsArgs args) {
             ChartItem chartItem = args.getObject();
-            return StringUtils.formatDecimal(chartItem.getSlotValueAsDouble(
-                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL), 2);
+            return StringUtils
+                    .formatDecimal(chartItem.getSlotValueAsDouble(
+                            BAR_LENGTH_SLOT, Subset.ALL), 2);
         }
     };
 
@@ -237,16 +241,6 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         }
     };
 
-    private JsStringFunction baselineLabelText = new JsStringFunction() {
-        @Override
-        public String f(JsArgs args) {
-            ChartItem d = args.getObject();
-            return d.getViewItem()
-                    .getSlotValue(BarChartVisualization.BAR_LABEL_SLOT)
-                    .toString();
-        }
-    };
-
     private String barTextBaseline = PVAlignment.TOP;
 
     protected LayoutType layout = LayoutType.HORIZONTAL;
@@ -321,15 +315,12 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         @Override
         public String f(JsArgs args) {
             ChartItem chartItem = args.getObject();
-            return chartItem.getSlotValueAsDouble(
-                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL)
-                    - chartItem.getSlotValueAsDouble(
-                            BarChartVisualization.BAR_LENGTH_SLOT,
+            return chartItem.getSlotValueAsDouble(BAR_LENGTH_SLOT, Subset.ALL)
+                    - chartItem.getSlotValueAsDouble(BAR_LENGTH_SLOT,
                             Subset.HIGHLIGHTED) < 1 ? null : Double
-                    .toString(chartItem.getSlotValueAsDouble(
-                            BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL)
-                            - chartItem.getSlotValueAsDouble(
-                                    BarChartVisualization.BAR_LENGTH_SLOT,
+                    .toString(chartItem.getSlotValueAsDouble(BAR_LENGTH_SLOT,
+                            Subset.ALL)
+                            - chartItem.getSlotValueAsDouble(BAR_LENGTH_SLOT,
                                     Subset.HIGHLIGHTED));
         }
     };
@@ -338,11 +329,9 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         @Override
         public String f(JsArgs args) {
             ChartItem chartItem = args.getObject();
-            return chartItem.getSlotValueAsDouble(
-                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.HIGHLIGHTED) <= 0 ? null
-                    : Double.toString(chartItem.getSlotValueAsDouble(
-                            BarChartVisualization.BAR_LENGTH_SLOT,
-                            Subset.HIGHLIGHTED));
+            return chartItem.getSlotValueAsDouble(BAR_LENGTH_SLOT,
+                    Subset.HIGHLIGHTED) <= 0 ? null : Double.toString(chartItem
+                    .getSlotValueAsDouble(BAR_LENGTH_SLOT, Subset.HIGHLIGHTED));
         }
     };
 
@@ -368,7 +357,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         regularValues = new double[chartItemsJsArray.length()];
         for (int i = 0; i < chartItemsJsArray.length(); i++) {
             regularValues[i] = chartItemsJsArray.get(i).getSlotValueAsDouble(
-                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
+                    BAR_LENGTH_SLOT, Subset.ALL);
         }
     }
 
@@ -434,16 +423,15 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     }
 
     private double calculateHighlightedBarLength(ChartItem d) {
-        return calculateBarLength(d.getSlotValueAsDouble(
-                BarChartVisualization.BAR_LENGTH_SLOT, Subset.HIGHLIGHTED));
+        return calculateBarLength(d.getSlotValueAsDouble(BAR_LENGTH_SLOT,
+                Subset.HIGHLIGHTED));
     }
 
     protected void calculateMaximumChartItemValue() {
         maxChartItemValue = 0;
         for (int i = 0; i < chartItemsJsArray.length(); i++) {
             double currentItemValue = chartItemsJsArray.get(i)
-                    .getSlotValueAsDouble(
-                            BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
+                    .getSlotValueAsDouble(BAR_LENGTH_SLOT, Subset.ALL);
             if (maxChartItemValue < currentItemValue) {
                 maxChartItemValue = currentItemValue;
             }
@@ -457,7 +445,8 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
                 .strokeStyle(Colors.STEELBLUE).lineWidth(barLineWidth);
 
         regularBar.add(PV.Label).bottom(baselineLabelStart)
-                .textAlign(PVAlignment.RIGHT).left(0).text(baselineLabelText)
+                .textAlign(PVAlignment.RIGHT).left(0)
+                .text(new ChartItemStringSlotAccessor(BAR_LABEL_SLOT))
                 .textBaseline(PVAlignment.MIDDLE);
 
         regularBar.anchor(PVAlignment.RIGHT).add(PV.Label)
@@ -508,7 +497,8 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
                         }
                         return _this.index() % 2 == 0 ? -10 : -25;
                     }
-                }).text(baselineLabelText).textBaseline(PVAlignment.MIDDLE);
+                }).text(new ChartItemStringSlotAccessor(BAR_LABEL_SLOT))
+                .textBaseline(PVAlignment.MIDDLE);
 
         regularBar.anchor(PVAlignment.TOP).add(PV.Label)
                 .textAngle(-Math.PI / 2).textBaseline(PVAlignment.MIDDLE)
@@ -564,8 +554,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
     @Override
     public Slot[] getSlots() {
-        return new Slot[] { BarChartVisualization.BAR_LABEL_SLOT,
-                BarChartVisualization.BAR_LENGTH_SLOT };
+        return new Slot[] { BAR_LABEL_SLOT, BAR_LENGTH_SLOT };
     }
 
     @Override
@@ -588,8 +577,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
         // TODO re-enable - might be wrong for initial configuration...
         // if (!changedSlots.isEmpty()) {
-        valueAxisLabel = callback
-                .getSlotResolverDescription(BarChartVisualization.BAR_LENGTH_SLOT);
+        valueAxisLabel = callback.getSlotResolverDescription(BAR_LENGTH_SLOT);
         // }
 
         super.update(addedResourceItems, updatedResourceItems,
