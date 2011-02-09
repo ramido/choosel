@@ -32,7 +32,7 @@ import org.thechiselgroup.choosel.protovis.client.PVLinearScale;
 import org.thechiselgroup.choosel.protovis.client.PVScale;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
-import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItem;
+import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItemColorFunction;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItemDoubleSlotAccessor;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItemStringSlotAccessor;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay;
@@ -49,9 +49,15 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
 
     private static final int BORDER_RIGHT = 5;
 
-    private static final String GRIDLINE_SCALE_COLOR = Colors.GRAY_1;
+    /**
+     * Color of the grid lines.
+     */
+    private static final String GRIDLINE_COLOR = Colors.GRAY_1;
 
-    private static final String AXIS_SCALE_COLOR = Colors.GRAY_2;
+    /**
+     * Color of the axis lines.
+     */
+    private static final String AXIS_COLOR = Colors.GRAY_2;
 
     protected int chartHeight;
 
@@ -61,9 +67,10 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
 
     private PVLinearScale scaleY;
 
-    private String scaleStrokeStyle = GRIDLINE_SCALE_COLOR;
-
-    private PVDot scatter;
+    /**
+     * Configuration of the dots that get painted in the scatter plot.
+     */
+    private PVDot dots;
 
     // TODO extract class
     private JsStringFunction scaleLabelTextX = new JsStringFunction() {
@@ -81,28 +88,36 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
         }
     };
 
-    private String xAxisLabel = "X-Axis";
+    private String xAxisLabel = "";
 
-    private String yAxisLabel = "Y-Axis";
-
-    private JsStringFunction chartFillStyle = new JsStringFunction() {
-        @Override
-        public String f(JsArgs args) {
-            return args.<ChartItem> getObject().getColor();
-        }
-    };
+    private String yAxisLabel = "";
 
     @Inject
     public ScatterPlotViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
         super(dragEnablerFactory);
     }
 
-    private void calculateChartVariables() {
-        chartWidth = width - BORDER_LEFT - BORDER_RIGHT;
-        chartHeight = height - BORDER_BOTTOM - BORDER_TOP;
+    // TODO convert grid line color into property
+    // TODO convert axis color into property
+    void drawAxesAndGrid() {
+        // vertical grid lines and labels on x axis
+        getChart().add(PV.Rule).data(scaleX.ticks()).bottom(0).left(scaleX)
+                .strokeStyle(GRIDLINE_COLOR).height(chartHeight)
+                .anchor(PVAlignment.BOTTOM).add(PV.Label).text(scaleLabelTextX);
+        getChart().add(PV.Rule).height(chartHeight).bottom(0).left(0)
+                .strokeStyle(AXIS_COLOR);
+
+        // horizontal grid lines and labels on y axis
+        getChart().add(PV.Rule).data(scaleY.ticks()).bottom(scaleY).left(0)
+                .strokeStyle(GRIDLINE_COLOR).width(chartWidth).add(PV.Label)
+                .text(scaleLabelTextY).textAngle(-Math.PI / 2)
+                .textAlign(PVAlignment.CENTER).textBaseline(PVAlignment.BOTTOM);
+        getChart().add(PV.Rule).width(chartWidth).bottom(0).left(0)
+                .strokeStyle(AXIS_COLOR);
     }
 
-    private void drawAxisLabels() {
+    // TODO remove magic constants
+    private void drawAxesLabels() {
         getChart().add(PV.Label).bottom(-BORDER_BOTTOM + 5)
                 .left(chartWidth / 2).text(xAxisLabel)
                 .textAlign(PVAlignment.CENTER);
@@ -116,52 +131,28 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
     public void drawChart() {
         assert chartItemsJsArray.length() >= 1;
 
-        calculateChartVariables();
-        setChartParameters();
+        initChart();
+        initScales();
 
-        scaleX = PVScale.linear(chartItemsJsArray,
-                new ChartItemDoubleSlotAccessor(X_POSITION_SLOT)).range(0,
-                chartWidth);
-        scaleY = PVScale.linear(chartItemsJsArray,
-                new ChartItemDoubleSlotAccessor(Y_POSITION_SLOT)).range(0,
-                chartHeight);
-
-        beforeRender();
-
-        drawScales(scaleX, scaleY);
-        drawScatter();
-        drawAxisLabels();
+        drawAxesAndGrid();
+        drawAxesLabels();
+        drawDots();
     }
 
-    protected void drawScales(PVLinearScale scaleX, PVLinearScale scaleY) {
-        getChart().add(PV.Rule).data(scaleX.ticks()).bottom(0).left(scaleX)
-                .strokeStyle(scaleStrokeStyle).height(chartHeight)
-                .anchor(PVAlignment.BOTTOM).add(PV.Label).text(scaleLabelTextX);
-
-        getChart().add(PV.Rule).data(scaleY.ticks()).bottom(scaleY).left(0)
-                .strokeStyle(scaleStrokeStyle).width(chartWidth).add(PV.Label)
-                .text(scaleLabelTextY).textAngle(-Math.PI / 2)
-                .textAlign(PVAlignment.CENTER).textBaseline(PVAlignment.BOTTOM);
-
-        getChart().add(PV.Rule).height(chartHeight).bottom(0).left(0)
-                .strokeStyle(AXIS_SCALE_COLOR);
-
-        getChart().add(PV.Rule).width(chartWidth).bottom(0).left(0)
-                .strokeStyle(AXIS_SCALE_COLOR);
-    }
-
-    private void drawScatter() {
-        scatter = getChart()
+    private void drawDots() {
+        dots = getChart()
                 .add(PV.Dot)
-                .shape(new ChartItemStringSlotAccessor(SHAPE_SLOT))
                 .data(chartItemsJsArray)
+                .shape(new ChartItemStringSlotAccessor(SHAPE_SLOT))
                 .bottom(scaleY.fd(new ChartItemDoubleSlotAccessor(
                         Y_POSITION_SLOT)))
                 .left(scaleX
                         .fd(new ChartItemDoubleSlotAccessor(X_POSITION_SLOT)))
+                // TODO extract size function
                 .size(Math.min(chartHeight, chartWidth)
                         / (chartItemsJsArray.length() * 2))
-                .fillStyle(chartFillStyle).strokeStyle(Colors.STEELBLUE);
+                .fillStyle(new ChartItemColorFunction())
+                .strokeStyle(Colors.STEELBLUE);
     }
 
     @Override
@@ -174,29 +165,25 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
         return new Slot[] { X_POSITION_SLOT, Y_POSITION_SLOT, SHAPE_SLOT };
     }
 
-    public String getXAxisLabel() {
-        return xAxisLabel;
+    private void initChart() {
+        chartWidth = width - BORDER_LEFT - BORDER_RIGHT;
+        chartHeight = height - BORDER_BOTTOM - BORDER_TOP;
+
+        getChart().left(BORDER_LEFT).bottom(BORDER_BOTTOM);
     }
 
-    public String getYAxisLabel() {
-        return yAxisLabel;
+    private void initScales() {
+        scaleX = PVScale.linear(chartItemsJsArray,
+                new ChartItemDoubleSlotAccessor(X_POSITION_SLOT)).range(0,
+                chartWidth);
+        scaleY = PVScale.linear(chartItemsJsArray,
+                new ChartItemDoubleSlotAccessor(Y_POSITION_SLOT)).range(0,
+                chartHeight);
     }
 
     @Override
     protected void registerEventHandler(String eventType, PVEventHandler handler) {
-        scatter.event(eventType, handler);
-    }
-
-    private void setChartParameters() {
-        getChart().left(BORDER_LEFT).bottom(BORDER_BOTTOM);
-    }
-
-    public void setXAxisLabel(String xAxisLabel) {
-        this.xAxisLabel = xAxisLabel;
-    }
-
-    public void setYAxisLabel(String yAxisLabel) {
-        this.yAxisLabel = yAxisLabel;
+        dots.event(eventType, handler);
     }
 
     @Override
@@ -207,10 +194,11 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
 
         // TODO re-enable
         // if (!changedSlots.isEmpty()) {
-        setYAxisLabel(callback
-                .getSlotResolverDescription(ScatterPlotVisualization.Y_POSITION_SLOT));
-        setXAxisLabel(callback
-                .getSlotResolverDescription(ScatterPlotVisualization.X_POSITION_SLOT));
+        // TODO expose protovis label and change immediately, if possible
+        this.yAxisLabel = callback
+                .getSlotResolverDescription(ScatterPlotVisualization.Y_POSITION_SLOT);
+        this.xAxisLabel = callback
+                .getSlotResolverDescription(ScatterPlotVisualization.X_POSITION_SLOT);
         // }
 
         super.update(addedResourceItems, updatedResourceItems,
