@@ -219,7 +219,7 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
     }
 
     @Override
-    public void drawChart() {
+    public void buildChart() {
         assert chartItemsJsArray.length() > 0;
 
         calculateMaximumChartItemValue();

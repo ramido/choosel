@@ -220,7 +220,7 @@ public class PieChartViewContentDisplay extends ChartViewContentDisplay {
     }
 
     @Override
-    public void drawChart() {
+    public void buildChart() {
         assert chartItemsJsArray.length() >= 1;
 
         drawWedge();

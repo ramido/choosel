@@ -98,21 +98,10 @@ public abstract class ChartViewContentDisplay extends
     }
 
     /**
-     * Builds a new chart. The current chart is abandoned and a new Protovis
-     * panel is used.
+     * Builds the visualization. <code>buildChart</code> is only called if there
+     * are actual data items that can be rendered ( jsChartItems.length >= 1 ).
      */
-    protected void buildChart() {
-        chartWidget.initPVPanel();
-        if (chartItemsJsArray.length() == 0) {
-            getChart().height(height).width(width);
-        } else {
-            drawChart();
-            registerEventHandlers();
-        }
-
-        // XXX how often are event listeners assigned? are they removed?
-        renderChart();
-    }
+    protected abstract void buildChart();
 
     @Override
     public void checkResize() {
@@ -127,10 +116,11 @@ public abstract class ChartViewContentDisplay extends
         this.height = height;
 
         /*
-         * TODO we could use renderChart() here to improve the performance. This
-         * would require several changes in the chart implementation, though.
+         * TODO we could use updateChart(false) here to improve the performance.
+         * This would require several changes in the chart implementation,
+         * though.
          */
-        buildChart();
+        updateChart(true);
     }
 
     @Override
@@ -139,13 +129,6 @@ public abstract class ChartViewContentDisplay extends
         chartWidget.setCallback(this);
         return chartWidget;
     }
-
-    /**
-     * <code>drawChart</code> is only called if there are actual data items that
-     * can be rendered ( jsChartItems.length >= 1 ).
-     */
-    // TODO rename
-    protected abstract void drawChart();
 
     protected PVPanel getChart() {
         return chartWidget.getPVPanel();
@@ -184,7 +167,7 @@ public abstract class ChartViewContentDisplay extends
 
     @Override
     public void onAttach() {
-        buildChart();
+        updateChart(true);
     }
 
     protected void onEvent(Event e, String pvEventType, JsArgs args) {
@@ -214,28 +197,6 @@ public abstract class ChartViewContentDisplay extends
             }
         }
         chartItemsJsArray.setLength(chartItemsJsArray.length() - occurences);
-    }
-
-    /**
-     * Renders the chart. The chart structure does not change, just the
-     * attributes of the SVG elements are updated.
-     */
-    protected void renderChart() {
-        /*
-         * XXX re-rendering with layout requires reset see
-         * "http://groups.google.com/group/protovis/browse_thread/thread/b9032215a2f5ac25"
-         * 
-         * TODO instead of isRendering flag, remove event listeners before
-         * rendering starts and add them again after rendering is finished.
-         */
-        try {
-            isRendering = true;
-            beforeRender();
-            getChart().render();
-            afterRender(); // TODO move into finally block?
-        } finally {
-            isRendering = false;
-        }
     }
 
     /**
@@ -272,17 +233,52 @@ public abstract class ChartViewContentDisplay extends
          * changes (i.e. resource items are added or removed), otherwise just
          * update their attributes.
          * 
-         * TODO check if rebuild is required if structure changes or if
-         * rendering is sufficient
+         * TODO check under which circumstances a rebuild is required if
+         * structure changes or if rendering is sufficient
          * 
          * TODO changing slots requires a rebuild because it affects the scales
          * and rulers - look for a better solution
          */
-        if (!addedResourceItems.isEmpty() || !removedResourceItems.isEmpty()
-                || !changedSlots.isEmpty()) {
-            buildChart();
-        } else {
-            renderChart();
+        updateChart(!addedResourceItems.isEmpty()
+                || !removedResourceItems.isEmpty() || !changedSlots.isEmpty());
+    }
+
+    /**
+     * Updates the visualization.
+     * 
+     * @param structuralChange
+     *            If <code>true</code>, the current chart is abandoned and a new
+     *            Protovis panel is used and a new visualization is build from
+     *            scratch and rendered. If <code>false</code>, the current
+     *            visualization is re-rendered and the chart structure will not
+     *            change, just the attributes of the SVG elements are updated.
+     */
+    protected final void updateChart(boolean structuralChange) {
+        if (structuralChange) {
+            chartWidget.initPVPanel();
+            if (chartItemsJsArray.length() == 0) {
+                getChart().height(height).width(width);
+            } else {
+                buildChart();
+                registerEventHandlers();
+            }
+        }
+
+        /*
+         * XXX re-rendering with layout requires reset see
+         * "http://groups.google.com/group/protovis/browse_thread/thread/b9032215a2f5ac25"
+         * 
+         * TODO instead of isRendering flag, remove event listeners before
+         * rendering starts and add them again after rendering is finished.
+         */
+        // XXX how often are event listeners assigned? are they removed?
+        try {
+            isRendering = true;
+            beforeRender();
+            getChart().render();
+            afterRender(); // TODO move into finally block?
+        } finally {
+            isRendering = false;
         }
     }
 }

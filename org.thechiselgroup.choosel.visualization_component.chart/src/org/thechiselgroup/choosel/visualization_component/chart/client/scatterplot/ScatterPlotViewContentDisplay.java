@@ -80,6 +80,18 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
         super(dragEnablerFactory);
     }
 
+    @Override
+    public void buildChart() {
+        assert chartItemsJsArray.length() >= 1;
+
+        initChart();
+        initScales();
+
+        drawAxesAndGrid();
+        drawAxesLabels();
+        drawDots();
+    }
+
     // TODO convert grid line color into property
     // TODO convert axis color into property
     void drawAxesAndGrid() {
@@ -109,18 +121,6 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
         getChart().add(PV.Label).bottom(chartHeight / 2)
                 .left(-BORDER_LEFT + 20).text(yAxisLabel)
                 .textAngle(-Math.PI / 2).textAlign(PVAlignment.CENTER);
-    }
-
-    @Override
-    public void drawChart() {
-        assert chartItemsJsArray.length() >= 1;
-
-        initChart();
-        initScales();
-
-        drawAxesAndGrid();
-        drawAxesLabels();
-        drawDots();
     }
 
     private void drawDots() {
