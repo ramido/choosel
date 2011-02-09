@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.chart.client;
 
-import org.thechiselgroup.choosel.core.client.ui.Colors;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
@@ -24,12 +23,10 @@ import org.thechiselgroup.choosel.core.client.views.ViewItem.Status;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 import org.thechiselgroup.choosel.protovis.client.PVEventHandler;
 import org.thechiselgroup.choosel.protovis.client.PVEventTypes;
-import org.thechiselgroup.choosel.protovis.client.PVLinearScale;
 import org.thechiselgroup.choosel.protovis.client.PVMark;
 import org.thechiselgroup.choosel.protovis.client.PVPanel;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArrayGeneric;
-import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsUtils;
 
 import com.google.gwt.user.client.Event;
@@ -61,41 +58,11 @@ public abstract class ChartViewContentDisplay extends
         }
     };
 
-    protected PVLinearScale scale;
-
-    // XXX changing SVG tree structure in protovis function? not good
-    protected JsStringFunction scaleLabelText = new JsStringFunction() {
-        @Override
-        public String f(JsArgs args) {
-            return scale.tickFormatInt(args.getInt());
-        }
-    };
-
     /**
      * Flags status that chart widget is rendering. While rendering, events are
      * discarded.
      */
     protected boolean isRendering;
-
-    protected JsStringFunction chartFillStyle = new JsStringFunction() {
-        @Override
-        public String f(JsArgs args) {
-            return args.<ChartItem> getObject().getColor();
-        }
-    };
-
-    protected JsStringFunction partialHighlightingChartFillStyle = new JsStringFunction() {
-        @Override
-        public String f(JsArgs args) {
-            ChartItem value = args.getObject();
-            Status status = value.getViewItem().getStatus();
-            return status == Status.PARTIALLY_HIGHLIGHTED ? Colors.STEELBLUE
-                    : status == Status.PARTIALLY_HIGHLIGHTED_SELECTED ? Colors.ORANGE
-                            : value.getColor();
-        }
-    };
-
-    protected double maxChartItemValue;
 
     protected ChartWidget chartWidget;
 
@@ -147,16 +114,6 @@ public abstract class ChartViewContentDisplay extends
         renderChart();
     }
 
-    protected int calculateHighlightedSelectedResources(ChartItem chartItem) {
-        return chartItem.getViewItem().getHighlightedSelectedResources().size();
-    }
-
-    protected int calculateSelectedResources(ChartItem chartItem) {
-        ViewItem viewItem = chartItem.getViewItem();
-        return viewItem.getSelectedResources().size()
-                - viewItem.getHighlightedSelectedResources().size();
-    }
-
     @Override
     public void checkResize() {
         int width = chartWidget.getOffsetWidth();
@@ -202,10 +159,7 @@ public abstract class ChartViewContentDisplay extends
         return chartItemsJsArray.get(index);
     }
 
-    protected double getMaximumChartItemValue() {
-        return maxChartItemValue;
-    }
-
+    // TODO refactoring: introduce view item list that offers this functionality
     public boolean hasPartiallyHighlightedChartItems() {
         for (int i = 0; i < chartItemsJsArray.length(); i++) {
             ChartItem chartItem = chartItemsJsArray.get(i);

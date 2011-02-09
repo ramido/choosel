@@ -56,6 +56,8 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
         }
     };
 
+    protected double maxChartItemValue;
+
     private JsDoubleFunction dotBottom = new JsDoubleFunction() {
         @Override
         public double f(JsArgs args) {
@@ -88,6 +90,8 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
         }
     };
 
+    protected PVLinearScale scale;
+
     @Inject
     public DotChartViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
         super(dragEnablerFactory);
@@ -106,7 +110,8 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
         dotCounts = new double[chartItemsJsArray.length()];
 
         for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            dotCounts[i] = chartItemsJsArray.get(i).getSlotValueAsDouble(BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
+            dotCounts[i] = chartItemsJsArray.get(i).getSlotValueAsDouble(
+                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
         }
     }
 
@@ -116,7 +121,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
     }
 
     private double calculateDotBottom(int index) {
-        return dotCounts[index] * chartHeight / getMaximumChartItemValue();
+        return dotCounts[index] * chartHeight / maxChartItemValue;
     }
 
     private int calculateDotX(int index) {
@@ -127,8 +132,9 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
     protected void calculateMaximumChartItemValue() {
         maxChartItemValue = 0;
         for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            double currentItemValue = chartItemsJsArray.get(i).getSlotValueAsDouble(
-                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
+            double currentItemValue = chartItemsJsArray.get(i)
+                    .getSlotValueAsDouble(
+                            BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
             if (maxChartItemValue < currentItemValue) {
                 maxChartItemValue = currentItemValue;
             }
@@ -157,8 +163,8 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
         setChartParameters();
 
         calculateMaximumChartItemValue();
-        PVLinearScale scale = PVScale.linear(0, getMaximumChartItemValue())
-                .range(0, chartHeight);
+        PVLinearScale scale = PVScale.linear(0, maxChartItemValue).range(0,
+                chartHeight);
         drawScales(scale);
         drawSelectionBox();
         drawDot();
@@ -173,7 +179,8 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
                 .left(dotLeft)
                 .size(Math.min(chartHeight, chartWidth)
                         / (chartItemsJsArray.length() * 2))
-                .fillStyle(chartFillStyle).strokeStyle(Colors.STEELBLUE);
+                .fillStyle(new ChartItemColorFunction())
+                .strokeStyle(Colors.STEELBLUE);
 
         regularDot.add(PV.Label).left(dotLeft)
                 .textAlign(baselineLabelTextAlign).bottom(baselineLabelBottom)
@@ -185,7 +192,8 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
         this.scale = scale;
         getChart().add(PV.Rule).data(scale.ticks()).bottom(scale)
                 .strokeStyle(scaleStrokeStyle).width(chartWidth)
-                .anchor(PVAlignment.LEFT).add(PV.Label).text(scaleLabelText);
+                .anchor(PVAlignment.LEFT).add(PV.Label)
+                .text(new TickFormatFunction(scale));
 
         getChart().add(PV.Rule).left(0).bottom(0).strokeStyle(AXIS_SCALE_COLOR)
                 .height(chartHeight);
