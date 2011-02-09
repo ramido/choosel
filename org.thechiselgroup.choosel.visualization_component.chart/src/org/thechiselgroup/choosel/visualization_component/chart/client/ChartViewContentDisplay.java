@@ -187,6 +187,7 @@ public abstract class ChartViewContentDisplay extends
      * <code>drawChart</code> is only called if there are actual data items that
      * can be rendered ( jsChartItems.length >= 1 ).
      */
+    // TODO rename
     protected abstract void drawChart();
 
     protected PVPanel getChart() {
