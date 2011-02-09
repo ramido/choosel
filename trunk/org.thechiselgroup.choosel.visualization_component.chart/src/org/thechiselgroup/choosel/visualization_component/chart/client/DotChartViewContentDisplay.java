@@ -156,7 +156,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
     }
 
     @Override
-    public void drawChart() {
+    public void buildChart() {
         assert chartItemsJsArray.length() >= 1;
 
         calculateChartVariables();

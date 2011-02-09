@@ -372,6 +372,40 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         }
     }
 
+    @Override
+    public void buildChart() {
+        assert chartItemsJsArray.length() >= 1;
+
+        // TODO do we need sorting?
+        // Collections.sort(chartItems, new ChartItemComparator(
+        // SlotResolver.CHART_LABEL_SLOT));
+
+        calculateChartVariables();
+        calculateMaximumChartItemValue();
+
+        if (layout.isVerticalBarChart(chartHeight, chartWidth)) {
+            getChart().left(BORDER_LEFT).bottom(BORDER_BOTTOM);
+            PVLinearScale scale = PVScale.linear(0, maxChartItemValue).range(0,
+                    chartHeight);
+            // TODO axis label
+            drawVerticalBarChart();
+            drawVerticalBarScales(scale);
+        } else {
+            getChart().left(BORDER_LEFT + HORIZONTAL_BAR_LABEL_EXTRA_MARGIN)
+                    .bottom(BORDER_BOTTOM);
+            PVLinearScale scale = PVScale.linear(0, maxChartItemValue).range(0,
+                    chartWidth);
+            drawHorizontalBarMeasurementAxisLabel();
+            drawHorizontalBarChart();
+            drawHorizontalBarScales(scale);
+
+        }
+        getChart().add(PV.Rule).bottom(0).left(0).width(chartWidth)
+                .strokeStyle(AXIS_SCALE_COLOR).lineWidth(barLineWidth);
+        getChart().add(PV.Rule).left(0).bottom(0).height(chartHeight)
+                .strokeStyle(AXIS_SCALE_COLOR).lineWidth(barLineWidth);
+    }
+
     private double calculateBarLength(double value) {
         return value * layout.getBarLengthSpace(chartHeight, chartWidth)
                 / maxChartItemValue;
@@ -414,40 +448,6 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
                 maxChartItemValue = currentItemValue;
             }
         }
-    }
-
-    @Override
-    public void drawChart() {
-        assert chartItemsJsArray.length() >= 1;
-
-        // TODO do we need sorting?
-        // Collections.sort(chartItems, new ChartItemComparator(
-        // SlotResolver.CHART_LABEL_SLOT));
-
-        calculateChartVariables();
-        calculateMaximumChartItemValue();
-
-        if (layout.isVerticalBarChart(chartHeight, chartWidth)) {
-            getChart().left(BORDER_LEFT).bottom(BORDER_BOTTOM);
-            PVLinearScale scale = PVScale.linear(0, maxChartItemValue).range(0,
-                    chartHeight);
-            // TODO axis label
-            drawVerticalBarChart();
-            drawVerticalBarScales(scale);
-        } else {
-            getChart().left(BORDER_LEFT + HORIZONTAL_BAR_LABEL_EXTRA_MARGIN)
-                    .bottom(BORDER_BOTTOM);
-            PVLinearScale scale = PVScale.linear(0, maxChartItemValue).range(0,
-                    chartWidth);
-            drawHorizontalBarMeasurementAxisLabel();
-            drawHorizontalBarChart();
-            drawHorizontalBarScales(scale);
-
-        }
-        getChart().add(PV.Rule).bottom(0).left(0).width(chartWidth)
-                .strokeStyle(AXIS_SCALE_COLOR).lineWidth(barLineWidth);
-        getChart().add(PV.Rule).left(0).bottom(0).height(chartHeight)
-                .strokeStyle(AXIS_SCALE_COLOR).lineWidth(barLineWidth);
     }
 
     private void drawHorizontalBarChart() {
@@ -577,7 +577,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         assert layout != null;
 
         this.layout = layout;
-        buildChart();
+        updateChart(true);
     }
 
     @Override

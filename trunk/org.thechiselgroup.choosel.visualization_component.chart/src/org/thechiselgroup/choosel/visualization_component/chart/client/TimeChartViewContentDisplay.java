@@ -51,7 +51,7 @@ public class TimeChartViewContentDisplay extends ChartViewContentDisplay {
 
     // @formatter:off
     @Override
-    public native void drawChart() /*-{
+    public native void buildChart() /*-{
         var chart = this.@org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay::getChart(),
         val = new Array();
 
