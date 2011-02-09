@@ -39,8 +39,4 @@ public interface ChooselInjectionConstants {
 
     String LOG = "log";
 
-    String RESOURCE_BY_DESCRIPTION_CATEGORIZER = "resource-by-description-categorizer";
-
-    String TYPE_TEXT = "Text";
-
 }
