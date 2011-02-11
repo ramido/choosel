@@ -4,8 +4,8 @@
 = Setting up Java, GAE/J & GWT =
 
    * Install [http://www.java.com/en/download/manual.jsp Java] (at least Java 6 is required because we @Override annotations for interface implementations. If you manually get rid of @Override annotations, Java 5 should work, too)
-   * Install [http://code.google.com/webtoolkit/download.html Google Web Toolkit] (Choosel requires GWT 2.1)
-   * Install [http://code.google.com/appengine/downloads.html Google App Engine SDK for Java]
+   * Install [http://code.google.com/webtoolkit/download.html Google Web Toolkit] (Choosel requires version 2.1 or newer)
+   * Install [http://code.google.com/appengine/downloads.html Google App Engine SDK for Java] (Version 1.4 or later is recommended)
 
 = Setting up Eclipse =
 
@@ -22,17 +22,19 @@ We recommend using [http://www.eclipse.org Eclipse] for working on Choosel. The 
 = Checking out Choosel and example application from SVN repository =
 
    * [http://code.google.com/p/choosel/source/checkout general project checkout information]
+   * Check out "org.thechiselgroup.choosel.core" as Eclipse project
    * Check out "org.thechiselgroup.choosel.protovis" as Eclipse project
-   * Check out "org.thechiselgroup.choosel" as Eclipse project
-   * Check out "org.thechiselgroup.chooselexample" as Eclipse project
-
-= Adjust launch configuration =
-
-   * Run configuration... --> choosel-example --> Arguments --> Adjust -javaagent part to use the app engine location on you computer
+   * Check out "org.thechiselgroup.choosel.visualization_component.chart" as Eclipse project
+   * Check out "org.thechiselgroup.choosel.visualization_component.graph" as Eclipse project
+   * Check out "org.thechiselgroup.choosel.visualization_component.map" as Eclipse project
+   * Check out "org.thechiselgroup.choosel.visualization_component.text" as Eclipse project
+   * Check out "org.thechiselgroup.choosel.visualization_component.timeline" as Eclipse project
+   * Check out "org.thechiselgroup.choosel.workbench" as Eclipse project
+   * Check out "org.thechiselgroup.choosel.example.workbench" as Eclipse project
 
 = That's it =
 
-You should be able to run choosel-example in your development development environment now - just run the choosel-example launch configuration.
+You should be able to run "choosel.example.workbench" in your development development environment now - just run the "choosel.example.workbench" launch configuration.
 
 If you encounter problems setting up choosel with this guide, complain on the [http://groups.google.com/group/choosel choosel mailing list] :-)
 
@@ -44,11 +46,5 @@ If you encounter problems setting up choosel with this guide, complain on the [h
    * If you work on choosel issue tracker items, you might want to consider using the [http://code.google.com/p/googlecode-mylyn-connector/ Mylin-Google Code bridge] to get issue tracker entries into Eclipse/Mylin.
    * If you use Eclipse 3.6 abbreviated package names (Preferences-->Java/Appearance), the following abbreviations might be useful for you: 
 {{{
-org.thechiselgroup.choosel.client=[client]
-org.thechiselgroup.choosel.server=[server]
 org.thechiselgroup.choosel=[choosel]
-
-org.thechiselgroup.chooselexample.client=[client]
-org.thechiselgroup.chooselexample.server=[server]
-org.thechiselgroup.chooselexample=[choosel-example]
 }}}
