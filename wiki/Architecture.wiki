@@ -26,18 +26,18 @@ Choosel provides several services such as view coordination and configuration, a
 
 http://choosel.googlecode.com/svn/wiki/choosel-ui-elements.png
 
-  * [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel/src/org/thechiselgroup/choosel/client/ui/ActionBar.java ActionBar source code]
-  * [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel/src/org/thechiselgroup/choosel/client/windows/Desktop.java Desktop Interface source code]
-  * [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel/src/org/thechiselgroup/choosel/client/windows/DefaultDesktop.java Desktop Implementation source code]
-  * [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel/src/org/thechiselgroup/choosel/client/windows/WindowPanel.java Window source code]
+  * [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel.core/src/org/thechiselgroup/choosel/core/client/ui/ActionBar.java ActionBar source code]
+  * [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel.core/src/org/thechiselgroup/choosel/core/client/windows/Desktop.java Desktop Interface source code]
+  * [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel.core/src/org/thechiselgroup/choosel/core/client/windows/DefaultDesktop.java Desktop Implementation source code]
+  * [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel.core/src/org/thechiselgroup/choosel/core/client/windows/WindowPanel.java Window source code]
 
 http://choosel.googlecode.com/svn/wiki/choosel-ui-window.png
 
-  * [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel/src/org/thechiselgroup/choosel/client/windows/WindowPanel.java Window source code]
-  * [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel/src/org/thechiselgroup/choosel/client/views/View.java View interface]
-  * [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel/src/org/thechiselgroup/choosel/client/views/DefaultView.java Default View implementation]
-  * [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel/src/org/thechiselgroup/choosel/client/views/ViewContentDisplay.java View Content Display interface]
+  * [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel.core/src/org/thechiselgroup/choosel/core/client/windows/WindowPanel.java Window source code]
+  * [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel.core/src/org/thechiselgroup/choosel/core/client/views/View.java View interface]
+  * [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel.core/src/org/thechiselgroup/choosel/core/client/views/DefaultView.java Default View implementation]
+  * [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel.core/src/org/thechiselgroup/choosel/core/client/views/ViewContentDisplay.java View Content Display interface]
 
 =Data Representation=
 
-The data is stored in [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel/src/org/thechiselgroup/choosel/client/resources/Resource.java Resource]s, which are essentially key-value maps with an id. [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel/src/org/thechiselgroup/choosel/client/resources/ResourceSet.java Resource Sets] combine several resources. There are multiple implementations of !ResourceSet, which are required for divserse purposes such as memory management.
+The data is stored in [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel.core/src/org/thechiselgroup/choosel/core/client/resources/Resource.java Resource]s, which are essentially key-value maps with an id. [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel.core/src/org/thechiselgroup/choosel/core/client/resources/ResourceSet.java Resource Sets] combine several resources. There are multiple implementations of !ResourceSet, which are required for divserse purposes such as memory management.
