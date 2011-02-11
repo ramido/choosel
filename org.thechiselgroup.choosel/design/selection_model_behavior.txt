@@ -1,5 +1,0 @@
-selection model behavior:
-
-(1) updating view when elements are added to selection model that are not 
-    available in view: ignore selection updates 
-    --> what about selection state (shading of elements)??
