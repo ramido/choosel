@@ -22,6 +22,10 @@ The client-side framework facilitates the interaction with *visualization compon
 
 Choosel provides several services such as view coordination and configuration, a desktop, undo/redo management, data management etc to make development of multi-view visualization environments easy.
 
+=Visualization Component Architecture=
+
+http://choosel.googlecode.com/svn/wiki/choosel-visualization_component_architecture.png
+
 =User Interface Elements=
 
 http://choosel.googlecode.com/svn/wiki/choosel-ui-elements.png
