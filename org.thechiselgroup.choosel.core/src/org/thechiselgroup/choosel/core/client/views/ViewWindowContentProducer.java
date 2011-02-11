@@ -22,7 +22,6 @@ import static org.thechiselgroup.choosel.core.client.configuration.ChooselInject
 import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.DROP_TARGET_MANAGER_VIEW_CONTENT;
 import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.LABEL_PROVIDER_SELECTION_SET;
 
-import org.thechiselgroup.choosel.core.client.label.CategoryLabelProvider;
 import org.thechiselgroup.choosel.core.client.label.LabelProvider;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.core.client.resources.ResourceMultiCategorizer;
@@ -47,75 +46,50 @@ import com.google.inject.name.Named;
 
 public class ViewWindowContentProducer implements WindowContentProducer {
 
+    @Inject
+    @Named(AVATAR_FACTORY_ALL_RESOURCES)
     private ResourceSetAvatarFactory allResourcesDragAvatarFactory;
 
+    @Inject
     private ResourceMultiCategorizer categorizer;
 
+    @Inject
+    @Named(DROP_TARGET_MANAGER_VIEW_CONTENT)
     private ResourceSetAvatarDropTargetManager contentDropTargetManager;
 
+    @Inject
+    @Named(AVATAR_FACTORY_SELECTION_DROP)
     private ResourceSetAvatarFactory dropTargetFactory;
 
+    @Inject
     private ResourceSetFactory resourceSetFactory;
 
+    @Inject
+    @Named(AVATAR_FACTORY_SELECTION)
     private ResourceSetAvatarFactory selectionDragAvatarFactory;
 
+    @Inject
+    @Named(LABEL_PROVIDER_SELECTION_SET)
     private LabelProvider selectionModelLabelFactory;
 
+    @Inject
+    @Named(AVATAR_FACTORY_SET)
     private ResourceSetAvatarFactory userSetsDragAvatarFactory;
 
+    @Inject
     private ViewContentDisplaysConfiguration viewContentDisplayConfiguration;
 
+    @Inject
     private HoverModel hoverModel;
 
-    private final PopupManagerFactory popupManagerFactory;
-
-    private final DetailsWidgetHelper detailsWidgetHelper;
+    @Inject
+    private PopupManagerFactory popupManagerFactory;
 
     @Inject
-    public ViewWindowContentProducer(
-            ViewContentDisplaysConfiguration viewContentDisplayConfiguration,
-            @Named(AVATAR_FACTORY_SET) ResourceSetAvatarFactory userSetsDragAvatarFactory,
-            @Named(AVATAR_FACTORY_ALL_RESOURCES) ResourceSetAvatarFactory allResourcesDragAvatarFactory,
-            @Named(AVATAR_FACTORY_SELECTION) ResourceSetAvatarFactory selectionDragAvatarFactory,
-            @Named(AVATAR_FACTORY_SELECTION_DROP) ResourceSetAvatarFactory dropTargetFactory,
-            ResourceSetFactory resourceSetFactory,
-            @Named(LABEL_PROVIDER_SELECTION_SET) LabelProvider selectionModelLabelFactory,
-            ResourceMultiCategorizer categorizer,
-            CategoryLabelProvider labelProvider,
-            @Named(DROP_TARGET_MANAGER_VIEW_CONTENT) ResourceSetAvatarDropTargetManager contentDropTargetManager,
-            HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper) {
-
-        assert viewContentDisplayConfiguration != null;
-        assert userSetsDragAvatarFactory != null;
-        assert allResourcesDragAvatarFactory != null;
-        assert selectionDragAvatarFactory != null;
-        assert dropTargetFactory != null;
-        assert contentDropTargetManager != null;
-        assert resourceSetFactory != null;
-        assert selectionModelLabelFactory != null;
-        assert categorizer != null;
-        assert labelProvider != null;
-        assert hoverModel != null;
-        assert popupManagerFactory != null;
-        assert detailsWidgetHelper != null;
-
-        this.hoverModel = hoverModel;
-        this.viewContentDisplayConfiguration = viewContentDisplayConfiguration;
-        this.userSetsDragAvatarFactory = userSetsDragAvatarFactory;
-        this.allResourcesDragAvatarFactory = allResourcesDragAvatarFactory;
-        this.selectionDragAvatarFactory = selectionDragAvatarFactory;
-        this.dropTargetFactory = dropTargetFactory;
-        this.contentDropTargetManager = contentDropTargetManager;
-        this.resourceSetFactory = resourceSetFactory;
-        this.selectionModelLabelFactory = selectionModelLabelFactory;
-        this.categorizer = categorizer;
-        this.popupManagerFactory = popupManagerFactory;
-        this.detailsWidgetHelper = detailsWidgetHelper;
-    }
+    private DetailsWidgetHelper detailsWidgetHelper;
 
     protected LightweightList<SidePanelSection> createSidePanelSections(
-            ViewContentDisplay contentDisplay,
+            String contentType, ViewContentDisplay contentDisplay,
             VisualMappingsControl visualMappingsControl,
             ResourceModel resourceModel,
             SlotMappingConfiguration slotMappingConfiguration) {
@@ -130,7 +104,8 @@ public class ViewWindowContentProducer implements WindowContentProducer {
         return sidePanelSections;
     }
 
-    protected SlotMappingInitializer createSlotMappingInitializer() {
+    protected SlotMappingInitializer createSlotMappingInitializer(
+            String contentType) {
         return new DefaultSlotMappingInitializer();
     }
 
@@ -142,7 +117,7 @@ public class ViewWindowContentProducer implements WindowContentProducer {
     }
 
     protected DefaultVisualMappingsControl createVisualMappingsControl(
-            ViewContentDisplay contentDisplay,
+            String contentType, ViewContentDisplay contentDisplay,
             ResourceGrouping resourceSplitter,
             SlotMappingConfiguration configuration) {
 
@@ -183,19 +158,20 @@ public class ViewWindowContentProducer implements WindowContentProducer {
         SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration();
 
         VisualMappingsControl visualMappingsControl = createVisualMappingsControl(
-                contentDisplay, resourceSplitter, slotMappingConfiguration);
+                contentType, contentDisplay, resourceSplitter,
+                slotMappingConfiguration);
 
         LightweightList<ViewPart> viewParts = createViewParts(contentType);
 
         LightweightList<SidePanelSection> sidePanelSections = createSidePanelSections(
-                contentDisplay, visualMappingsControl, resourceModel,
-                slotMappingConfiguration);
+                contentType, contentDisplay, visualMappingsControl,
+                resourceModel, slotMappingConfiguration);
 
         for (ViewPart viewPart : viewParts) {
             viewPart.addSidePanelSections(sidePanelSections);
         }
 
-        SlotMappingInitializer slotMappingInitializer = createSlotMappingInitializer();
+        SlotMappingInitializer slotMappingInitializer = createSlotMappingInitializer(contentType);
 
         String label = contentDisplay.getName();
 
