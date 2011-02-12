@@ -1,5 +1,6 @@
 #summary Overview of GWT modules provided by Choosel
 #labels Component
 
-||*Name*||*Description*|| *Source Code* ||
-||choosel.core||The choosel.core module contains the core functionality that is required by Choosel visualizations. This includes the resource (i.e. data) framework, the management of visualization states (e.g. data, highlighting, selection), the visualization component API, and also more general services such as logging (which wraps gwt-log). The choosel.core module needs to be inherited by any GWT module that uses Choosel, whether it is a visualization component, a GWT application or a Choosel workbench.||[http://code.google.com/p/choosel/source/browse/#svn%2Ftrunk%2Forg.thechiselgroup.choosel.core Browse SVN]||
+||*Name*||*Description*||*Wiki Page*||*Source Code* ||
+||choosel.core||The choosel.core module contains the core functionality that is required by Choosel visualizations. This includes the resource (i.e. data) framework, the management of visualization states (e.g. data, highlighting, selection), the visualization component API, and also more general services such as logging (which wraps gwt-log). The choosel.core module needs to be inherited by any GWT module that uses Choosel, whether it is a visualization component, a GWT application or a Choosel workbench.|| ||[http://code.google.com/p/choosel/source/browse/#svn%2Ftrunk%2Forg.thechiselgroup.choosel.core Browse SVN]||
+|||choosel.protovis||GWT Wrapper for the [http://vis.stanford.edu/protovis/ Protovis visualization library]||[ProtovisGWT More Information]||[http://code.google.com/p/choosel/source/browse/#svn%2Ftrunk%2Forg.thechiselgroup.choosel.protovis Browse SVN]||
