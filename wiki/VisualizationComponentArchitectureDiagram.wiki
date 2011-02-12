@@ -1,0 +1,4 @@
+#summary Visualization Component Architecture Diagram
+#labels Developer
+
+http://choosel.googlecode.com/svn/wiki/choosel-visualization_component_architecture.png
