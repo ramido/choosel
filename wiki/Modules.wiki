@@ -1,5 +1,5 @@
 #summary Overview of GWT modules provided by Choosel
 #labels Component
 
-|| *Short name* || *Source Code* ||
-|| choosel.core ||[http://code.google.com/p/choosel/source/browse/#svn%2Ftrunk%2Forg.thechiselgroup.choosel.core Browse SVN]||
+||*Name*||*Description*|| *Source Code* ||
+||choosel.core||bla||[http://code.google.com/p/choosel/source/browse/#svn%2Ftrunk%2Forg.thechiselgroup.choosel.core Browse SVN]||
