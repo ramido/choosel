@@ -24,7 +24,8 @@ Choosel provides several services such as view coordination and configuration, a
 
 =Visualization Component Architecture=
 
-[VisualizationComponentArchitectureDiagram http://choosel.googlecode.com/svn/wiki/choosel-visualization_component_architecture-thumbnail.png]
+http://choosel.googlecode.com/svn/wiki/choosel-visualization_component_architecture-thumbnail.png
+[VisualizationComponentArchitectureDiagram high resolution diagram]
 
 =User Interface Elements=
 
