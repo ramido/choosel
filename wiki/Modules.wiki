@@ -1,12 +1,12 @@
-#summary Overview of GWT modules provided by Choosel
-#labels Component
+#summary Overview of Choosel GWT modules
+#labels Developer,Featured,Component
 
 || *Name* || *Description* || *Wiki Page* || *Source Code* || 
-||choosel.core||The choosel.core module contains the core functionality that is required by Choosel visualizations. This includes the resource (i.e. data) framework, the management of visualization states (e.g. data, highlighting, selection), the visualization component API, and also more general services such as logging.|| ||[http://code.google.com/p/choosel/source/browse/#svn%2Ftrunk%2Forg.thechiselgroup.choosel.core Browse SVN]||
-||choosel.protovis||GWT Wrapper for the [http://vis.stanford.edu/protovis/ Protovis visualization library]||[ProtovisGWT More Information]||[http://code.google.com/p/choosel/source/browse/#svn%2Ftrunk%2Forg.thechiselgroup.choosel.protovis Browse SVN]||
-||choosel.visualization_component.chart|| Bar Chart, Pie Chart, Scatter Plot visualizations || || [http://code.google.com/p/choosel/source/browse/#svn%2Ftrunk%2Forg.thechiselgroup.choosel.visualization_component.chart Browse SVN]||
+||choosel.core||Core functionality that is required by Choosel visualizations. This includes the resource (i.e. data) framework, the management of visualization states (e.g. data, highlighting, selection), the visualization component API, and also more general services such as logging.|| ||[http://code.google.com/p/choosel/source/browse/#svn%2Ftrunk%2Forg.thechiselgroup.choosel.core Browse SVN]||
+||choosel.protovis (i.e. protovis-gwt)||GWT Wrapper for the [http://vis.stanford.edu/protovis/ Protovis visualization library]||[ProtovisGWT More Information]||[http://code.google.com/p/choosel/source/browse/#svn%2Ftrunk%2Forg.thechiselgroup.choosel.protovis Browse SVN]||
+||choosel.visualization_component.chart|| Bar Chart, Pie Chart, Scatter Plot visualizations (uses protovis-gwt) || || [http://code.google.com/p/choosel/source/browse/#svn%2Ftrunk%2Forg.thechiselgroup.choosel.visualization_component.chart Browse SVN]||
 ||choosel.visualization_component.graph|| Graph visualization (based on [http://sourceforge.net/projects/flexviz/ FlexViz]) || || [http://code.google.com/p/choosel/source/browse/#svn%2Ftrunk%2Forg.thechiselgroup.choosel.visualization_component.chart Browse SVN]||
 ||choosel.visualization_component.map|| Map visualization (based on the [http://code.google.com/p/gwt-google-apis/wiki/MapsGettingStarted Google Maps API]) || || [http://code.google.com/p/choosel/source/browse/#svn%2Ftrunk%2Forg.thechiselgroup.choosel.visualization_component.chart Browse SVN]||
 ||choosel.visualization_component.text|| Text visualization that can be used as tag cloud or sized list || || [http://code.google.com/p/choosel/source/browse/#svn%2Ftrunk%2Forg.thechiselgroup.choosel.visualization_component.chart Browse SVN]||
 ||choosel.visualization_component.timeline|| Timeline visualization (based on [http://www.simile-widgets.org/timeline/ SIMILE timeline widget])  || || [http://code.google.com/p/choosel/source/browse/#svn%2Ftrunk%2Forg.thechiselgroup.choosel.visualization_component.chart Browse SVN]||
-||choosel.workbench||The choosel.workbench module provides the persistence and sharing facilities as well as the visualization workspace.|| ||[http://code.google.com/p/choosel/source/browse/#svn%2Ftrunk%2Forg.thechiselgroup.choosel.workbench Browse SVN]||
+||choosel.workbench||Persistence and sharing facilities as well as the visualization workspace.|| ||[http://code.google.com/p/choosel/source/browse/#svn%2Ftrunk%2Forg.thechiselgroup.choosel.workbench Browse SVN]||
