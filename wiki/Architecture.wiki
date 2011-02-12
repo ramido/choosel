@@ -41,6 +41,8 @@ This separation of concerns makes reusing and extending Choosel easier. It enabl
 
 _Please note that while the modularization itself is complete, the visualization component API is still under development. We plan to release a first stable version in the next few months._
 
+Related Blog Post: [http://lgrammel.blogspot.com/2011/02/choosel-visualization-component.html Lars' Notes: Choosel Visualization Component Architecture]
+
 =User Interface Elements=
 
 http://choosel.googlecode.com/svn/wiki/choosel-ui-elements.png
