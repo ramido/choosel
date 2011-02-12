@@ -28,10 +28,10 @@ http://choosel.googlecode.com/svn/wiki/choosel-visualization_component_architect
 
 [VisualizationComponentArchitectureDiagram View high resolution diagram]
 
-The Choosel visualization component architecture separates the core functionality required to use Choosel visualization in GWT from the workbench functionality. The visualizations are extracted into separate visualization modules. The visualization component architecture makes reusing and extending Choosel easier. It enables three ways to leverage Choosel in your own projects:
+The Choosel visualization component architecture separates the core functionality required to use Choosel visualizations in GWT from the workbench functionality. The visualizations are extracted into separate visualization modules. The visualization component architecture makes reusing and extending Choosel easier. It enables three ways to leverage Choosel in your own projects:
 
-  * *Developing your own visualization components*: You can implement visualization components that adher the Choosel visualization component API. These visualization components can then be used by yourself or others while taking advantage of Choosel feature such as management of view synchronization, management of selections, and support for hovering and details on demand. 
-  * *Using Choosel visualization components in GWT applications*: You can use one or several Choosel visualization components in your GWT application to visualize your data.
+  * *Developing your own visualization components*: You can implement visualization components that adher to the Choosel visualization component API. These visualization components can then be used by yourself and others to take advantage of Choosel features such as management of view synchronization, management of selections, and support for hovering and details on demand. 
+  * *Using Choosel visualization components in your GWT application*: You can use one or several Choosel visualization components as widgets in your GWT application to visualize your data.
   * *Creating a Choosel-based workbench*: You can extend the whole Choosel framework to develop your own visualization workbench, for example for a specific application domain.     
 
 _Please note that while the modularization itself is complete, the visualization component API is still under development. We plan to release a first stable version in the next few months._
