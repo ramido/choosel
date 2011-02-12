@@ -12,7 +12,7 @@ Choosel is built on top of [http://code.google.com/webtoolkit/ GWT] and the [htt
 
 For more details on the design decisions, see the [http://lgrammel.blogspot.com/2010/09/why-choosel-is-based-on-gwt.html blog post on the design decisions (Why Choosel is based on GWT)].
 
-=Architecture Diagram=
+=Architecture Overview=
 
 http://choosel.googlecode.com/svn/wiki/choosel-architecture.png
 
@@ -25,7 +25,16 @@ Choosel provides several services such as view coordination and configuration, a
 =Visualization Component Architecture=
 
 http://choosel.googlecode.com/svn/wiki/choosel-visualization_component_architecture-thumbnail.png
-[VisualizationComponentArchitectureDiagram high resolution diagram]
+
+[VisualizationComponentArchitectureDiagram View high resolution diagram]
+
+The Choosel visualization component architecture separates the core functionality required to use Choosel visualization in GWT from the workbench functionality. The visualizations are extracted into separate visualization modules. The visualization component architecture makes reusing and extending Choosel easier. It enables three ways to leverage Choosel in your own projects:
+
+  * *Developing your own visualization components*: You can implement visualization components that adher the Choosel visualization component API. These visualization components can then be used by yourself or others while taking advantage of Choosel feature such as management of view synchronization, management of selections, and support for hovering and details on demand. 
+  * *Using Choosel visualization components in GWT applications*: You can use one or several Choosel visualization components in your GWT application to visualize your data.
+  * *Creating a Choosel-based workbench*: You can extend the whole Choosel framework to develop your own visualization workbench, for example for a specific application domain.     
+
+_Please note that while the modularization itself is complete, the visualization component API is still under development. We plan to release a first stable version in the next few months._
 
 =User Interface Elements=
 
