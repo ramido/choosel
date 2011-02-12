@@ -19,7 +19,7 @@ We recommend using [http://www.eclipse.org Eclipse] for working on Choosel. The 
       * Change Setting in Eclipse Preferences: Window/Preferences-->Team/SVN-->SVN Connector-->SVN Connector = SVNKit 1.3.0
    * [http://code.google.com/eclipse/ Google Plugin for Eclipse]
 
-= Checking out Choosel and example application from SVN repository =
+= Checking out Choosel and the example workbench from the SVN repository =
 
    * [http://code.google.com/p/choosel/source/checkout general project checkout information]
    * Check out "org.thechiselgroup.choosel.core" as Eclipse project
