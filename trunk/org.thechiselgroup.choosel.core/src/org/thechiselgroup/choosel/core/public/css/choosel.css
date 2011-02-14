@@ -374,16 +374,6 @@ table.choosel-ImportPanel tbody tr td:first-child {
 	font-weight: bold;
 }
 
-.choosel-TextWidthEstimator {
-	position: absolute;
-	left: 0px;
-	top: 0px;
-	z-index: -1000;
-	border: 0px none;
-	padding: 0px;
-	margin: 0px;
-}
-
 /*
  * general styling of input elements
  */

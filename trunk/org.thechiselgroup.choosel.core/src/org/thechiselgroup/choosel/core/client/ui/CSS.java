@@ -17,7 +17,6 @@ package org.thechiselgroup.choosel.core.client.ui;
 
 import static com.google.gwt.user.client.DOM.getElementById;
 import static com.google.gwt.user.client.DOM.getIntStyleAttribute;
-import static com.google.gwt.user.client.DOM.setIntStyleAttribute;
 import static com.google.gwt.user.client.DOM.setStyleAttribute;
 
 import com.google.gwt.user.client.Element;
@@ -87,6 +86,18 @@ public final class CSS {
 
     public static final String BORDER_BOTTOM = "borderBottom";
 
+    public static final String FONT_WEIGHT = "fontWeight";
+
+    public static final String FONT_STYLE = "fontStyle";
+
+    public static final String FONT_FAMILY = "fontFamily";
+
+    public static final String BORDER = "border";
+
+    public static final String PADDING = "padding";
+
+    public static final String MARGIN = "margin";
+
     public static void addClass(String elementID, String cssClass) {
         Element element = getElementById(elementID);
         /*
@@ -102,6 +113,35 @@ public final class CSS {
     public static void clearHeight(Widget widget) {
         widget.getElement().getStyle().clearHeight();
     }
+
+    // TODO move to CSS class
+    /**
+     * Returns the actual (computed) style for an element. This is necessary,
+     * because the regular style accessor returns an empty String if the style
+     * was not explicitly set on the corresponding element.
+     * 
+     * @param el
+     *            DOM element
+     * @param styleProp
+     *            Camelized style property (i.e. like 'fontStyle')
+     */
+    // @formatter:off
+    public static native String getComputedStyle(Element el, String styleProp)/*-{
+        var dash = function(str){
+          return str.replace(/[A-Z]/g, function(str) {
+            return "-" + str.toLowerCase();
+          });
+        }
+
+        if (el.currentStyle) {
+          return el.currentStyle[styleProp];
+        } else if ($wnd.document.defaultView && $wnd.document.defaultView.getComputedStyle) {
+          return $wnd.document.defaultView.getComputedStyle(el, null).getPropertyValue(dash(styleProp));
+        } else {
+          return el.style[styleProp]; 
+        }
+    }-*/;
+    // @formatter:on
 
     public static int getZIndex(Element element) {
         return getIntStyleAttribute(element, Z_INDEX);
@@ -138,6 +178,10 @@ public final class CSS {
         setBackgroundColor(widget.getElement(), color);
     }
 
+    public static void setBorder(Element element, String border) {
+        element.getStyle().setProperty(BORDER, border);
+    }
+
     public static void setBorderBottom(Element element, String borderBottom) {
         setStyleAttribute(element, BORDER_BOTTOM, borderBottom);
     }
@@ -155,7 +199,7 @@ public final class CSS {
     }
 
     public static void setColor(Element element, String color) {
-        setStyleAttribute(element, COLOR, color);
+        element.getStyle().setProperty(COLOR, color);
     }
 
     public static void setColor(String id, String color) {
@@ -167,15 +211,27 @@ public final class CSS {
     }
 
     public static void setDisplay(Element element, String value) {
-        setStyleAttribute(element, DISPLAY, value);
+        element.getStyle().setProperty(DISPLAY, value);
     }
 
     public static void setFloat(Element element, String value) {
-        setStyleAttribute(element, FLOAT, value);
+        element.getStyle().setProperty(FLOAT, value);
+    }
+
+    public static void setFontFamily(Element estimatorElement, String fontFamily) {
+        estimatorElement.getStyle().setProperty(FONT_FAMILY, fontFamily);
     }
 
     public static void setFontSize(Element element, String fontSize) {
-        setStyleAttribute(element, FONT_SIZE, fontSize);
+        element.getStyle().setProperty(FONT_SIZE, fontSize);
+    }
+
+    public static void setFontStyle(Element estimatorElement, String fontStyle) {
+        estimatorElement.getStyle().setProperty(FONT_STYLE, fontStyle);
+    }
+
+    public static void setFontWeight(Element estimatorElement, String fontWeight) {
+        estimatorElement.getStyle().setProperty(FONT_WEIGHT, fontWeight);
     }
 
     public static void setHeight(Element element, int heightPx) {
@@ -203,6 +259,10 @@ public final class CSS {
         setLocation(widget.getElement(), left, top);
     }
 
+    public static void setMargin(Element element, int margin) {
+        element.getStyle().setProperty(MARGIN, margin + PX);
+    }
+
     public static void setMarginRightPx(Widget widget, int marginPx) {
         setStyleAttribute(widget.getElement(), MARGIN_RIGHT, marginPx + PX);
     }
@@ -219,6 +279,10 @@ public final class CSS {
         setMaxWidth(widget.getElement(), maxWidth);
     }
 
+    public static void setPadding(Element element, int padding) {
+        element.getStyle().setProperty(PADDING, padding + PX);
+    }
+
     public static void setPosition(Element element, String position) {
         setStyleAttribute(element, POSITION, position);
     }
@@ -229,15 +293,15 @@ public final class CSS {
     }
 
     public static void setTop(Element element, int top) {
-        setStyleAttribute(element, TOP, top + PX);
+        element.getStyle().setProperty(TOP, (top + PX));
     }
 
     public static void setWhitespace(Element element, String value) {
-        setStyleAttribute(element, WHITE_SPACE, value);
+        element.getStyle().setProperty(WHITE_SPACE, value);
     }
 
     public static void setWidth(Element element, int width) {
-        setStyleAttribute(element, WIDTH, width + PX);
+        element.getStyle().setProperty(WIDTH, (width + PX));
     }
 
     public static void setWidth(Widget widget, int width) {
@@ -245,11 +309,11 @@ public final class CSS {
     }
 
     public static void setZIndex(Element element, int zIndex) {
-        setIntStyleAttribute(element, Z_INDEX, zIndex);
+        element.getStyle().setProperty(Z_INDEX, Integer.toString(zIndex));
     }
 
     public static void setZIndex(String elementID, int zIndex) {
-        setIntStyleAttribute(getElementById(elementID), Z_INDEX, zIndex);
+        setZIndex(getElementById(elementID), zIndex);
     }
 
     public static void setZIndex(Widget widget, int zIndex) {
