@@ -19,6 +19,7 @@ import static org.thechiselgroup.choosel.visualization_component.chart.client.ba
 import static org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChartVisualization.BAR_LENGTH_SLOT;
 
 import org.thechiselgroup.choosel.core.client.ui.Colors;
+import org.thechiselgroup.choosel.core.client.ui.TextBoundsEstimator;
 import org.thechiselgroup.choosel.core.client.util.StringUtils;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
@@ -110,7 +111,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
     private static final int BORDER_BOTTOM = 35;
 
-    private static final int BORDER_LEFT = 45;
+    private static final int BORDER_LEFT = 5;
 
     private static final int BORDER_TOP = 5;
 
@@ -119,6 +120,16 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     private static final String GRIDLINE_SCALE_COLOR = "rgba(255,255,255,.3)";
 
     private static final String AXIS_SCALE_COLOR = Colors.GRAY_1;
+
+    private static final String FONT_WEIGHT = "normal";
+
+    private static final String FONT_SIZE = "10px";
+
+    private static final String FONT_STYLE = "normal";
+
+    private static final String FONT_FAMILY = "sans-serif";
+
+    private static final String FONT = FONT_SIZE + " " + FONT_FAMILY;
 
     private double[] regularValues;
 
@@ -244,8 +255,6 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     private String barTextBaseline = PVAlignment.TOP;
 
     protected LayoutType layout = LayoutType.HORIZONTAL;
-
-    private static final int HORIZONTAL_BAR_LABEL_EXTRA_MARGIN = 20;
 
     private double barLineWidth = 1;
 
@@ -373,14 +382,14 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         calculateMaximumChartItemValue();
 
         if (layout.isVerticalBarChart(chartHeight, chartWidth)) {
-            getChart().left(BORDER_LEFT).bottom(BORDER_BOTTOM);
+            getChart().left(BORDER_LEFT + 40).bottom(BORDER_BOTTOM);
             PVLinearScale scale = PVScale.linear(0, maxChartItemValue).range(0,
                     chartHeight);
             // TODO axis label
             drawVerticalBarChart();
             drawVerticalBarScales(scale);
         } else {
-            getChart().left(BORDER_LEFT + HORIZONTAL_BAR_LABEL_EXTRA_MARGIN)
+            getChart().left(BORDER_LEFT + calculateHorizontalLabelSpace())
                     .bottom(BORDER_BOTTOM);
             PVLinearScale scale = PVScale.linear(0, maxChartItemValue).range(0,
                     chartWidth);
@@ -413,10 +422,10 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
     private void calculateChartVariables() {
         if (layout.isVerticalBarChart(chartHeight, chartWidth)) {
-            chartWidth = width - BORDER_LEFT - BORDER_RIGHT;
+            chartWidth = width - BORDER_LEFT - 40 - BORDER_RIGHT;
         } else {
             chartWidth = width - BORDER_LEFT - BORDER_RIGHT
-                    - HORIZONTAL_BAR_LABEL_EXTRA_MARGIN;
+                    - calculateHorizontalLabelSpace();
         }
 
         chartHeight = height - BORDER_BOTTOM - BORDER_TOP;
@@ -425,6 +434,27 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     private double calculateHighlightedBarLength(ChartItem d) {
         return calculateBarLength(d.getSlotValueAsDouble(BAR_LENGTH_SLOT,
                 Subset.HIGHLIGHTED));
+    }
+
+    private int calculateHorizontalLabelSpace() {
+        TextBoundsEstimator estimator = new TextBoundsEstimator();
+        estimator.applyFontSettings(FONT_FAMILY, FONT_STYLE, FONT_WEIGHT,
+                FONT_SIZE);
+
+        // max over widths for labels
+        int maxWidth = 0;
+        for (int i = 0; i < chartItemsJsArray.length(); i++) {
+            String label = chartItemsJsArray.get(i).getSlotValue(
+                    BAR_LABEL_SLOT, Subset.ALL);
+            estimator.setText(label);
+            int width = estimator.getTextWidth();
+
+            if (maxWidth < width) {
+                maxWidth = width;
+            }
+        }
+
+        return maxWidth;
     }
 
     protected void calculateMaximumChartItemValue() {
