@@ -108,7 +108,7 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
         return this.anchorTarget();
     }-*/;
 
-    public final native int bottom() /*-{
+    public final native double bottom() /*-{
         return this.bottom();
     }-*/;
 
@@ -220,7 +220,7 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
         return this.index;
     }-*/;
 
-    public final native int left() /*-{
+    public final native double left() /*-{
         return this.left();
     }-*/;
 
@@ -265,7 +265,7 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
         return this.reverse(reverse);
     }-*/;
 
-    public final native int right() /*-{
+    public final native double right() /*-{
         return this.right();
     }-*/;
 
@@ -314,7 +314,7 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Mark.html#top">pv.Mark.top()</a></code>
      * .
      */
-    public final native int top() /*-{
+    public final native double top() /*-{
         return this.top();
     }-*/;
 
