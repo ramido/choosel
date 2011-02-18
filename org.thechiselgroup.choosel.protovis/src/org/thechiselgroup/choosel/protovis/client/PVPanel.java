@@ -46,6 +46,10 @@ public final class PVPanel extends PVAbstractBar<PVPanel> {
     protected PVPanel() {
     }
 
+    public final native PVPanel canvas(String elementId) /*-{
+        return this.canvas(element);
+    }-*/;
+
     public final native PVPanel canvas(Element element) /*-{
         return this.canvas(element);
     }-*/;
