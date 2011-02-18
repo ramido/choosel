@@ -40,6 +40,10 @@ public final class PVDot extends PVAbstractMark<PVDot> {
     protected PVDot() {
     }
 
+    public final native double angle() /*-{
+        return this.angle();
+    }-*/;
+
     public final native PVDot angle(double angle) /*-{
         return this.angle(angle);
     }-*/;
@@ -60,12 +64,28 @@ public final class PVDot extends PVAbstractMark<PVDot> {
         return this.fillStyle(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsStringFunction;)(f));
     }-*/;
 
-    public final native PVDot fillStyle(String fillStyle) /*-{
-        return this.fillStyle(fillStyle);
+    public final native PVDot fillStyle(PVColor color) /*-{
+        return this.fillStyle(color);
+    }-*/;
+
+    public final native PVDot fillStyle(String color) /*-{
+        return this.fillStyle(color);
+    }-*/;
+
+    public final native double lineWidth() /*-{
+        return this.lineWidth();
     }-*/;
 
     public final native PVDot lineWidth(double lineWidth) /*-{
         return this.lineWidth(lineWidth);
+    }-*/;
+
+    public final native PVDot lineWidth(JsDoubleFunction f) /*-{
+        return this.lineWidth(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
+    }-*/;
+
+    public final native double radius() /*-{
+        return this.radius();
     }-*/;
 
     public final native PVDot radius(double radius) /*-{
@@ -74,6 +94,13 @@ public final class PVDot extends PVAbstractMark<PVDot> {
 
     public final native PVDot radius(JsDoubleFunction f) /*-{
         return this.radius(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
+    }-*/;
+
+    /**
+     * @see PVShape
+     */
+    public final native String shape() /*-{
+        return this.shape();
     }-*/;
 
     /**
@@ -93,6 +120,10 @@ public final class PVDot extends PVAbstractMark<PVDot> {
         return this.shape(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsStringFunction;)(f));
     }-*/;
 
+    public final native double size() /*-{
+        return this.size();
+    }-*/;
+
     public final native PVDot size(double size) /*-{
         return this.size(size);
     }-*/;
@@ -101,8 +132,20 @@ public final class PVDot extends PVAbstractMark<PVDot> {
         return this.size(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
     }-*/;
 
+    public final native PVColor strokeStyle() /*-{
+        return this.strokeStyle();
+    }-*/;
+
     public final native PVDot strokeStyle(JsFunction<PVColor> f) /*-{
         return this.strokeStyle(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsFunction;)(f));
+    }-*/;
+
+    public final native PVDot strokeStyle(JsStringFunction f) /*-{
+        return this.strokeStyle(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsStringFunction;)(f));
+    }-*/;
+
+    public final native PVDot strokeStyle(PVColor strokeStyle) /*-{
+        return this.strokeStyle(strokeStyle);
     }-*/;
 
     public final native PVDot strokeStyle(String strokeStyle) /*-{
