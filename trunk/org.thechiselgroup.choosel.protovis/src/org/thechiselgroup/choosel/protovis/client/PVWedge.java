@@ -41,7 +41,7 @@ public final class PVWedge extends PVAbstractMark<PVWedge> {
     }
 
     public final native double angle() /*-{
-        return this.angle;
+        return this.angle();
     }-*/;
 
     public final native PVWedge angle(double angle) /*-{
@@ -52,6 +52,22 @@ public final class PVWedge extends PVAbstractMark<PVWedge> {
         return this.angle(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
     }-*/;
 
+    public final native double endAngle() /*-{
+        return this.endAngle();
+    }-*/;
+
+    public final native PVWedge endAngle(double endAngle) /*-{
+        return this.endAngle(angle);
+    }-*/;
+
+    public final native PVWedge endAngle(JsDoubleFunction f) /*-{
+        return this.endAngle(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
+    }-*/;
+
+    public final native PVColor fillStyle() /*-{
+        return this.fillStyle();
+    }-*/;
+
     public final native PVWedge fillStyle(JsFunction<PVColor> f) /*-{
         return this.fillStyle(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsFunction;)(f));
     }-*/;
@@ -60,8 +76,16 @@ public final class PVWedge extends PVAbstractMark<PVWedge> {
         return this.fillStyle(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsStringFunction;)(f));
     }-*/;
 
-    public final native PVWedge fillStyle(String colour) /*-{
-        return this.fillStyle(colour);
+    public final native PVWedge fillStyle(PVColor color) /*-{
+        return this.fillStyle(color);
+    }-*/;
+
+    public final native PVWedge fillStyle(String color) /*-{
+        return this.fillStyle(color);
+    }-*/;
+
+    public final native double innerRadius() /*-{
+        return this.innerRadius();
     }-*/;
 
     public final native PVWedge innerRadius(double innerRadius) /*-{
@@ -72,12 +96,28 @@ public final class PVWedge extends PVAbstractMark<PVWedge> {
         return this.innerRadius(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
     }-*/;
 
+    public final native double lineWidth() /*-{
+        return this.lineWidth();
+    }-*/;
+
     public final native PVWedge lineWidth(double lineWidth) /*-{
         return this.lineWidth(lineWidth);
     }-*/;
 
+    public final native PVWedge lineWidth(JsDoubleFunction f) /*-{
+        return this.lineWidth(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
+    }-*/;
+
+    public final native double midAngle() /*-{
+        return this.midAngle();
+    }-*/;
+
+    public final native double midRadius() /*-{
+        return this.midRadius();
+    }-*/;
+
     public final native double outerRadius() /*-{
-        return this.outerRadius;
+        return this.outerRadius();
     }-*/;
 
     public final native PVWedge outerRadius(double outerRadius) /*-{
@@ -100,8 +140,20 @@ public final class PVWedge extends PVAbstractMark<PVWedge> {
         return this.startAngle(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
     }-*/;
 
+    public final native PVColor strokeStyle() /*-{
+        return this.strokeStyle();
+    }-*/;
+
     public final native PVWedge strokeStyle(JsFunction<PVColor> f) /*-{
         return this.strokeStyle(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsFunction;)(f));
+    }-*/;
+
+    public final native PVWedge strokeStyle(JsStringFunction f) /*-{
+        return this.strokeStyle(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsStringFunction;)(f));
+    }-*/;
+
+    public final native PVWedge strokeStyle(PVColor strokeStyle) /*-{
+        return this.strokeStyle(strokeStyle);
     }-*/;
 
     public final native PVWedge strokeStyle(String strokeStyle) /*-{
