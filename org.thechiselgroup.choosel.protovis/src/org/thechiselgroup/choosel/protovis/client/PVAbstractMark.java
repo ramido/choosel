@@ -53,6 +53,21 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
         }
     }
 
+    /**
+     * @see #events(String)
+     */
+    public final static String EVENTS_PAINTED = "painted";
+
+    /**
+     * @see #events(String)
+     */
+    public final static String EVENTS_ALL = "all";
+
+    /**
+     * @see #events(String)
+     */
+    public final static String EVENTS_NONE = "none";
+
     protected PVAbstractMark() {
     }
 
@@ -70,6 +85,10 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
 
     public final native T anchor(String anchor) /*-{
         return this.anchor(anchor);
+    }-*/;
+
+    public final native int bottom() /*-{
+        return this.bottom();
     }-*/;
 
     public final native T bottom(double bottom) /*-{
@@ -133,12 +152,41 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
         return this.defaults;
     }-*/;
 
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Mark.html#event">pv.Mark.event</a></code>
+     * .
+     * 
+     * @see PVEventType
+     */
     public final native T event(String eventType, PVEventHandler handler) /*-{
         return this.event(eventType, function() { 
         return handler.@org.thechiselgroup.choosel.protovis.client.PVEventHandler::onEvent(Lcom/google/gwt/user/client/Event;Ljava/lang/String;Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsArgs;)($wnd.pv.event, eventType, { _this: this, _args: arguments});
         });
     }-*/;
 
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Mark.html#events">pv.Mark.events</a></code>
+     * .
+     * 
+     * @see #EVENTS_PAINTED
+     * @see #EVENTS_ALL
+     * @see #EVENTS_NONE
+     */
+    public final native String events() /*-{
+        return this.events();
+    }-*/;
+
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Mark.html#events">pv.Mark.events</a></code>
+     * .
+     * 
+     * @see #EVENTS_PAINTED
+     * @see #EVENTS_ALL
+     * @see #EVENTS_NONE
+     */
     public final native T events(String events) /*-{
         return this.events(events);
     }-*/;
@@ -149,6 +197,10 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
 
     public final native int index() /*-{
         return this.index;
+    }-*/;
+
+    public final native int left() /*-{
+        return this.left();
     }-*/;
 
     public final native T left(double left) /*-{
@@ -184,8 +236,16 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
         return this.render();
     }-*/;
 
+    public final native boolean reverse() /*-{
+        return this.reverse();
+    }-*/;
+
     public final native T reverse(boolean reverse) /*-{
         return this.reverse(reverse);
+    }-*/;
+
+    public final native int right() /*-{
+        return this.right();
     }-*/;
 
     public final native T right(double right) /*-{
@@ -212,6 +272,14 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
         return this.scale(scale);
     }-*/;
 
+    public final native T scale(JsDoubleFunction f) /*-{
+        return this.scale(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
+    }-*/;
+
+    public final native String title() /*-{
+        return this.title();
+    }-*/;
+
     public final native T title(JsStringFunction f) /*-{
         return this.title(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsStringFunction;)(f));
     }-*/;
@@ -225,7 +293,7 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Mark.html#top">pv.Mark.top()</a></code>
      * .
      */
-    public final native double top() /*-{
+    public final native int top() /*-{
         return this.top();
     }-*/;
 
@@ -247,8 +315,16 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
         return this.top(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
     }-*/;
 
-    public final native T type(String type) /*-{
-        return this.type(type);
+    public final native T top(PVScale scale) /*-{
+        return this.top(scale);
+    }-*/;
+
+    public final native String type() /*-{
+        return this.type();
+    }-*/;
+
+    public final native boolean visible() /*-{
+        return this.visible();
     }-*/;
 
     /**

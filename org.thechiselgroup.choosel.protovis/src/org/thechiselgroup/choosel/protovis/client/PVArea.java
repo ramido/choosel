@@ -21,8 +21,9 @@ import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 
 /**
  * 
- * @author Bradley Blashko
  * 
+ * @author Bradley Blashko
+ * @author Lars Grammel
  */
 public final class PVArea extends PVAbstractMark<PVArea> {
 

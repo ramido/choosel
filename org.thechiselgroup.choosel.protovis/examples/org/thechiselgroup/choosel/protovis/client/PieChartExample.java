@@ -16,8 +16,8 @@
 package org.thechiselgroup.choosel.protovis.client;
 
 import static org.thechiselgroup.choosel.protovis.client.PVAlignment.CENTER;
-import static org.thechiselgroup.choosel.protovis.client.PVEventTypes.MOUSEOUT;
-import static org.thechiselgroup.choosel.protovis.client.PVEventTypes.MOUSEOVER;
+import static org.thechiselgroup.choosel.protovis.client.PVEventType.MOUSEOUT;
+import static org.thechiselgroup.choosel.protovis.client.PVEventType.MOUSEOVER;
 
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsBooleanFunction;
