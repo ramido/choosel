@@ -15,9 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
-public final class PVEventTypes {
+public final class PVEventType {
 
-    private PVEventTypes() {
+    private PVEventType() {
     }
 
     public static final String MOUSEUP = "mouseup";

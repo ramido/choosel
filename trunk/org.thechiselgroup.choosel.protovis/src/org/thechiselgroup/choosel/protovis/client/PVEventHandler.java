@@ -33,7 +33,7 @@ public interface PVEventHandler {
      * rendering, e.g. using <code>_this.render();</code>.
      * 
      * @param pvEventType
-     *            see {@link PVEventTypes}
+     *            see {@link PVEventType}
      */
     void onEvent(Event e, String pvEventType, JsArgs args);
 
