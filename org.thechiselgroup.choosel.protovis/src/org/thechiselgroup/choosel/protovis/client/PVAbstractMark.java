@@ -79,12 +79,33 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
         return this.add(mark);
     }-*/;
 
-    public final native T anchor(JsStringFunction f) /*-{
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Mark.html#anchor">pv.Mark.anchor</a></code>
+     * . Please note that Protovis-GWT does not have an explicit Anchor class.
+     * The anchor methods are inlined in PVAbstractMark instead.
+     */
+    public final native PVMark anchor(JsStringFunction f) /*-{
         return this.anchor(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsStringFunction;)(f));
     }-*/;
 
-    public final native T anchor(String anchor) /*-{
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Mark.html#anchor">pv.Mark.anchor</a></code>
+     * . Please note that Protovis-GWT does not have an explicit Anchor class.
+     * The anchor methods are inlined in PVAbstractMark instead.
+     */
+    public final native PVMark anchor(String anchor) /*-{
         return this.anchor(anchor);
+    }-*/;
+
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Anchor.html#anchorTarget">pv.Anchor.anchorTarget()</a></code>
+     * .
+     */
+    public final native <S extends PVAbstractMark<S>> S anchorTarget() /*-{
+        return this.anchorTarget();
     }-*/;
 
     public final native int bottom() /*-{
@@ -123,7 +144,7 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
         return this.data(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsFunction;)(f));
     }-*/;
 
-    public final <S> T data(S[] data) {
+    public final <S> T data(S... data) {
         return this.data(JsUtils.toJsArrayGeneric(data));
     }
 

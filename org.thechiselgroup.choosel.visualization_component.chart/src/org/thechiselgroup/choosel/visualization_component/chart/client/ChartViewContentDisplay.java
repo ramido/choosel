@@ -22,7 +22,7 @@ import org.thechiselgroup.choosel.core.client.views.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.ViewItem.Status;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 import org.thechiselgroup.choosel.protovis.client.PVEventHandler;
-import org.thechiselgroup.choosel.protovis.client.PVEventTypes;
+import org.thechiselgroup.choosel.protovis.client.PVEventType;
 import org.thechiselgroup.choosel.protovis.client.PVMark;
 import org.thechiselgroup.choosel.protovis.client.PVPanel;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
@@ -47,9 +47,9 @@ public abstract class ChartViewContentDisplay extends
     protected JsArrayGeneric<ChartItem> chartItemsJsArray = JsUtils
             .createJsArrayGeneric();
 
-    protected String[] eventTypes = { PVEventTypes.CLICK,
-            PVEventTypes.MOUSEDOWN, PVEventTypes.MOUSEMOVE,
-            PVEventTypes.MOUSEOUT, PVEventTypes.MOUSEOVER, PVEventTypes.MOUSEUP };
+    protected String[] eventTypes = { PVEventType.CLICK,
+            PVEventType.MOUSEDOWN, PVEventType.MOUSEMOVE,
+            PVEventType.MOUSEOUT, PVEventType.MOUSEOVER, PVEventType.MOUSEUP };
 
     private PVEventHandler handler = new PVEventHandler() {
         @Override
