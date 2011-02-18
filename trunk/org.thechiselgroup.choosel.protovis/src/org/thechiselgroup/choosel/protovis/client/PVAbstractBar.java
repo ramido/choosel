@@ -33,16 +33,28 @@ public abstract class PVAbstractBar<T extends PVAbstractBar<T>> extends
         return this.antialias(antialias);
     }-*/;
 
-    public final native T fillStyle(JsStringFunction f) /*-{
-        return this.fillStyle(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsStringFunction;)(f));
-    }-*/;
-
-    public final native T fillStyle(String colour) /*-{
-        return this.fillStyle(colour);
+    public final native PVColor fillStyle() /*-{
+        return this.fillStyle();
     }-*/;
 
     public final native T fillStyle(JsFunction<PVColor> f) /*-{
         return this.fillStyle(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsFunction;)(f));
+    }-*/;
+
+    public final native T fillStyle(JsStringFunction f) /*-{
+        return this.fillStyle(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsStringFunction;)(f));
+    }-*/;
+
+    public final native T fillStyle(PVColor color) /*-{
+        return this.fillStyle(color);
+    }-*/;
+
+    public final native T fillStyle(String color) /*-{
+        return this.fillStyle(color);
+    }-*/;
+
+    public final native double height() /*-{
+        return this.height();
     }-*/;
 
     public final native T height(double height) /*-{
@@ -53,16 +65,40 @@ public abstract class PVAbstractBar<T extends PVAbstractBar<T>> extends
         return this.height(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
     }-*/;
 
+    public final native double lineWidth() /*-{
+        return this.lineWidth();
+    }-*/;
+
     public final native T lineWidth(double lineWidth) /*-{
         return this.lineWidth(lineWidth);
     }-*/;
 
+    public final native T lineWidth(JsDoubleFunction f) /*-{
+        return this.lineWidth(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
+    }-*/;
+
+    public final native PVColor strokeStyle() /*-{
+        return this.strokeStyle();
+    }-*/;
+
+    public final native T strokeStyle(JsFunction<PVColor> f) /*-{
+        return this.strokeStyle(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsFunction;)(f));
+    }-*/;
+
     public final native T strokeStyle(JsStringFunction f) /*-{
-        return this.fillStyle(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsStringFunction;)(f));
+        return this.strokeStyle(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsStringFunction;)(f));
+    }-*/;
+
+    public final native T strokeStyle(PVColor strokeStyle) /*-{
+        return this.strokeStyle(strokeStyle);
     }-*/;
 
     public final native T strokeStyle(String strokeStyle) /*-{
         return this.strokeStyle(strokeStyle);
+    }-*/;
+
+    public final native double width() /*-{
+        return this.width();
     }-*/;
 
     /**
