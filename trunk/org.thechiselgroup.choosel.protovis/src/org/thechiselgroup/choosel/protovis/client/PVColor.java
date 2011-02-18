@@ -26,12 +26,25 @@ public class PVColor extends JavaScriptObject {
     protected PVColor() {
     }
 
+    // not part of pv.Color, but exists in both pv.Color.Hsl and Rgb
     public final native PVColor alpha(double alpha) /*-{
         return this.alpha(alpha);
     }-*/;
 
+    public final native PVColor brighter() /*-{
+        return this.brighter();
+    }-*/;
+
+    public final native PVColor brighter(double k) /*-{
+        return this.brighter(k);
+    }-*/;
+
     public final native PVColor darker() /*-{
         return this.darker();
+    }-*/;
+
+    public final native PVColor darker(double k) /*-{
+        return this.darker(k);
     }-*/;
 
 }
