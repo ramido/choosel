@@ -54,20 +54,12 @@ public final class PVArea extends PVAbstractMark<PVArea> {
         return this.fillStyle(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsStringFunction;)(f));
     }-*/;
 
-    public final native PVArea fillStyle(String colour) /*-{
-        return this.fillStyle(colour);
+    public final native PVArea fillStyle(PVColor color) /*-{
+        return this.fillStyle(color);
     }-*/;
 
-    public final native String font() /*-{
-        return this.font();
-    }-*/;
-
-    public final native PVArea font(JsStringFunction f) /*-{
-        return this.font(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsStringFunction;)(f));
-    }-*/;
-
-    public final native PVArea font(String font) /*-{
-        return this.font(font);
+    public final native PVArea fillStyle(String color) /*-{
+        return this.fillStyle(color);
     }-*/;
 
     public final native double height() /*-{
