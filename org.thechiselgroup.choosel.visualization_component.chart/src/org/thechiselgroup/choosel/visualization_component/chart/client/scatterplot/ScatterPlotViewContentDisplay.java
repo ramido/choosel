@@ -19,17 +19,27 @@ import static org.thechiselgroup.choosel.visualization_component.chart.client.sc
 import static org.thechiselgroup.choosel.visualization_component.chart.client.scatterplot.ScatterPlotVisualization.X_POSITION_SLOT;
 import static org.thechiselgroup.choosel.visualization_component.chart.client.scatterplot.ScatterPlotVisualization.Y_POSITION_SLOT;
 
+import java.util.Map;
+
 import org.thechiselgroup.choosel.core.client.ui.Colors;
+import org.thechiselgroup.choosel.core.client.ui.TextBoundsEstimator;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
+import org.thechiselgroup.choosel.core.client.views.ViewContentDisplayProperty;
 import org.thechiselgroup.choosel.core.client.views.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 import org.thechiselgroup.choosel.protovis.client.PV;
 import org.thechiselgroup.choosel.protovis.client.PVAlignment;
 import org.thechiselgroup.choosel.protovis.client.PVDot;
 import org.thechiselgroup.choosel.protovis.client.PVEventHandler;
+import org.thechiselgroup.choosel.protovis.client.PVLabel;
 import org.thechiselgroup.choosel.protovis.client.PVLinearScale;
+import org.thechiselgroup.choosel.protovis.client.PVMark;
+import org.thechiselgroup.choosel.protovis.client.PVPanel;
 import org.thechiselgroup.choosel.protovis.client.PVScale;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItemColorFunction;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItemDoubleSlotAccessor;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItemStringSlotAccessor;
@@ -38,15 +48,59 @@ import org.thechiselgroup.choosel.visualization_component.chart.client.TickForma
 
 import com.google.inject.Inject;
 
+// TODO refactoring: use separate panel for dots that are added to scatter plot
 public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
 
-    private static final int BORDER_BOTTOM = 35;
+    private class ShapeLegendProperty implements
+            ViewContentDisplayProperty<Map<String, String>> {
 
-    private static final int BORDER_TOP = 5;
+        @Override
+        public String getPropertyName() {
+            return ScatterPlotVisualization.SHAPE_LEGEND_PROPERTY;
+        }
 
-    private static final int BORDER_LEFT = 35;
+        @Override
+        public Map<String, String> getValue() {
+            return getShapeLegend();
+        }
 
-    private static final int BORDER_RIGHT = 5;
+        @Override
+        public void setValue(Map<String, String> value) {
+            setShapeLegend(value);
+        }
+    }
+
+    private static final int SHAPE_LEGEND_PANEL_PADDING = 2;
+
+    private static final int SHAPE_LEGEND_LABEL_SPACING = 20;
+
+    /**
+     * Offset that moves the y-axis label closer to the y-axis. This is required
+     * because the label is rotate by 90 degrees and the text would only be half
+     * visible without the offset.
+     */
+    private static final int Y_AXIS_LABEL_OFFSET = 10;
+
+    // TODO move
+    private static final double ANGLE_90_DEGREES = -Math.PI / 2;
+
+    private static final int SHAPE_SIZE = 15;
+
+    private static final int OUTER_BORDER = 5;
+
+    private static final int AXIS_LEGEND_SPACE = 30;
+
+    /**
+     * Height of the shape legend in pixels. This is only relevant if the shape
+     * legend is actually displayed. Use {@link #getShapeLegendVerticalSpace()}
+     * instead.
+     */
+    private static final int SHAPE_LEGEND_HEIGHT = 35;
+
+    /**
+     * Distance between X axis label and shape legend.
+     */
+    private static final int SHAPE_LEGEND_OFFSET = 5;
 
     /**
      * Color of the grid lines.
@@ -57,6 +111,20 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
      * Color of the axis lines.
      */
     private static final String AXIS_COLOR = Colors.GRAY_2;
+
+    private static final String SHAPE_LEGEND_BACKGROUND_COLOR = "#EEE";
+
+    private static final String FONT_WEIGHT = "normal";
+
+    private static final String FONT_SIZE = "10px";
+
+    private static final String FONT_STYLE = "normal";
+
+    private static final String FONT_FAMILY = "sans-serif";
+
+    private static final String FONT = FONT_SIZE + " " + FONT_FAMILY;
+
+    private Map<String, String> shapeLegend;
 
     protected int chartHeight;
 
@@ -75,9 +143,13 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
 
     private String yAxisLabel = "";
 
+    private String shapeLegendLabel = "";
+
     @Inject
     public ScatterPlotViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
         super(dragEnablerFactory);
+
+        registerProperty(new ShapeLegendProperty());
     }
 
     @Override
@@ -87,40 +159,10 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
         initChart();
         initScales();
 
-        drawAxesAndGrid();
-        drawAxesLabels();
+        drawXAxisAndVerticalGridlines();
+        drawYAxisAndHorizontalGridlines();
+        drawShapeLegend();
         drawDots();
-    }
-
-    // TODO convert grid line color into property
-    // TODO convert axis color into property
-    void drawAxesAndGrid() {
-        // vertical grid lines and labels on x axis
-        getChart().add(PV.Rule).data(scaleX.ticks()).bottom(0).left(scaleX)
-                .strokeStyle(GRIDLINE_COLOR).height(chartHeight)
-                .anchor(PVAlignment.BOTTOM).add(PV.Label)
-                .text(new TickFormatFunction(scaleX));
-        getChart().add(PV.Rule).height(chartHeight).bottom(0).left(0)
-                .strokeStyle(AXIS_COLOR);
-
-        // horizontal grid lines and labels on y axis
-        getChart().add(PV.Rule).data(scaleY.ticks()).bottom(scaleY).left(0)
-                .strokeStyle(GRIDLINE_COLOR).width(chartWidth).add(PV.Label)
-                .text(new TickFormatFunction(scaleY)).textAngle(-Math.PI / 2)
-                .textAlign(PVAlignment.CENTER).textBaseline(PVAlignment.BOTTOM);
-        getChart().add(PV.Rule).width(chartWidth).bottom(0).left(0)
-                .strokeStyle(AXIS_COLOR);
-    }
-
-    // TODO remove magic constants
-    private void drawAxesLabels() {
-        getChart().add(PV.Label).bottom(-BORDER_BOTTOM + 5)
-                .left(chartWidth / 2).text(xAxisLabel)
-                .textAlign(PVAlignment.CENTER);
-
-        getChart().add(PV.Label).bottom(chartHeight / 2)
-                .left(-BORDER_LEFT + 20).text(yAxisLabel)
-                .textAngle(-Math.PI / 2).textAlign(PVAlignment.CENTER);
     }
 
     private void drawDots() {
@@ -132,16 +174,150 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
                         Y_POSITION_SLOT)))
                 .left(scaleX
                         .fd(new ChartItemDoubleSlotAccessor(X_POSITION_SLOT)))
-                // TODO extract size function
-                .size(Math.min(chartHeight, chartWidth)
-                        / (chartItemsJsArray.length() * 2))
-                .fillStyle(new ChartItemColorFunction())
+                .size(SHAPE_SIZE).fillStyle(new ChartItemColorFunction())
                 .strokeStyle(Colors.STEELBLUE);
+    }
+
+    private void drawShapeLegend() {
+        if (shapeLegend == null) {
+            return;
+        }
+
+        // calculate widths
+        TextBoundsEstimator estimator = new TextBoundsEstimator(FONT_FAMILY,
+                FONT_STYLE, FONT_WEIGHT, FONT_SIZE);
+
+        final Map<String, Integer> textWidths = estimator
+                .getTextWidths(shapeLegend.values());
+
+        int descriptionsWidth = 0;
+        for (Integer integer : textWidths.values()) {
+            descriptionsWidth += integer;
+        }
+        descriptionsWidth += textWidths.size()
+                * (SHAPE_SIZE + SHAPE_LEGEND_LABEL_SPACING);
+        int legendLabelWidth = estimator.getTextWidth(shapeLegendLabel);
+        int shapePanelWidth = legendLabelWidth > descriptionsWidth ? legendLabelWidth
+                : descriptionsWidth;
+
+        // panel for legend
+        PVPanel shapePanel = getChart()
+                .add(PV.Panel)
+                .bottom(-AXIS_LEGEND_SPACE - SHAPE_LEGEND_HEIGHT
+                        - SHAPE_LEGEND_OFFSET).left(0)
+                .fillStyle(SHAPE_LEGEND_BACKGROUND_COLOR)
+                .height(SHAPE_LEGEND_HEIGHT).width(shapePanelWidth);
+
+        // shape legend title
+        shapePanel.add(PV.Label).bottom(SHAPE_LEGEND_PANEL_PADDING)
+                .left(shapePanelWidth / 2).font(FONT).text(shapeLegendLabel)
+                .textAlign(PVAlignment.CENTER);
+
+        shapePanel
+                .add(PV.Dot)
+                .data(shapeLegend.entrySet())
+                .top(2 + (SHAPE_SIZE / 2))
+                .shape(new JsStringFunction() {
+                    @Override
+                    public String f(JsArgs args) {
+                        Map.Entry<String, String> entry = args.getObject();
+                        return entry.getKey();
+                    }
+                })
+                .size(SHAPE_SIZE)
+                .left(new JsDoubleFunction() {
+
+                    private int currentWidth = 0;
+
+                    @Override
+                    public double f(JsArgs args) {
+                        PVMark _this = args.getThis();
+                        Map.Entry<String, String> entry = args.getObject();
+
+                        if (_this.index() == 0) {
+                            currentWidth = 0;
+                        }
+
+                        int left = currentWidth + SHAPE_SIZE;
+
+                        currentWidth += textWidths.get(entry.getValue())
+                                + SHAPE_SIZE + SHAPE_LEGEND_LABEL_SPACING;
+
+                        return left;
+                    }
+                }).anchor(PVAlignment.RIGHT).add(PV.Label).font(FONT)
+                .text(new JsStringFunction() {
+                    @Override
+                    public String f(JsArgs args) {
+                        Map.Entry<String, String> entry = args.getObject();
+                        return entry.getValue();
+                    }
+                });
+
+        // TODO leverage knowledge about text widths
+        // --> calculation
+        // TODO Shapes + attached labels
+        // getChart().add(PV.Dot)
+        // .bottom(-AXIS_LEGEND_SPACE - getShapeLegendHeight())
+        // .left(-AXIS_LEGEND_SPACE);
+    }
+
+    // TODO convert grid line color into property
+    // TODO convert axis color into property
+    private void drawXAxisAndVerticalGridlines() {
+        // x axis label
+        getChart().add(PV.Label).bottom(-AXIS_LEGEND_SPACE)
+                .left(chartWidth / 2).text(xAxisLabel)
+                .textAlign(PVAlignment.CENTER).textBaseline(PVLabel.BOTTOM);
+
+        // x axis grid labels
+        getChart().add(PV.Rule).data(scaleX.ticks()).bottom(0).left(scaleX)
+                .strokeStyle(GRIDLINE_COLOR).height(chartHeight)
+                .anchor(PVAlignment.BOTTOM).add(PV.Label)
+                .text(new TickFormatFunction(scaleX));
+
+        // vertical grid lines
+        getChart().add(PV.Rule).height(chartHeight).bottom(0).left(0)
+                .strokeStyle(AXIS_COLOR);
+
+    }
+
+    private void drawYAxisAndHorizontalGridlines() {
+        // y axis label
+        getChart().add(PV.Label).bottom(chartHeight / 2)
+                .left(-AXIS_LEGEND_SPACE)
+                // + Y_AXIS_LABEL_OFFSET
+                .text(yAxisLabel).textAngle(ANGLE_90_DEGREES)
+                .textAlign(PVAlignment.CENTER).textBaseline(PVLabel.TOP);
+
+        // y axis grid labels
+        getChart().add(PV.Rule).data(scaleY.ticks()).bottom(scaleY).left(0)
+                .strokeStyle(GRIDLINE_COLOR).width(chartWidth).add(PV.Label)
+                .text(new TickFormatFunction(scaleY))
+                .textAngle(ANGLE_90_DEGREES).textAlign(PVAlignment.CENTER)
+                .textBaseline(PVAlignment.BOTTOM);
+
+        // horizontal grid lines
+        getChart().add(PV.Rule).width(chartWidth).bottom(0).left(0)
+                .strokeStyle(AXIS_COLOR);
     }
 
     @Override
     public String getName() {
         return "Scatter Plot";
+    }
+
+    public Map<String, String> getShapeLegend() {
+        return shapeLegend;
+    }
+
+    /**
+     * @return vertical space consumed by the shape legend, or 0, if it is not
+     *         displayed.
+     */
+    private int getShapeLegendVerticalSpace() {
+        return shapeLegend == null ? 0 : SHAPE_LEGEND_HEIGHT
+                + SHAPE_LEGEND_OFFSET;
     }
 
     @Override
@@ -150,10 +326,13 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
     }
 
     private void initChart() {
-        chartWidth = width - BORDER_LEFT - BORDER_RIGHT;
-        chartHeight = height - BORDER_BOTTOM - BORDER_TOP;
+        chartWidth = width - AXIS_LEGEND_SPACE - 2 * OUTER_BORDER;
+        chartHeight = height - AXIS_LEGEND_SPACE - 2 * OUTER_BORDER
+                - getShapeLegendVerticalSpace();
 
-        getChart().left(BORDER_LEFT).bottom(BORDER_BOTTOM);
+        getChart().left(AXIS_LEGEND_SPACE + OUTER_BORDER).bottom(
+                AXIS_LEGEND_SPACE + OUTER_BORDER
+                        + getShapeLegendVerticalSpace());
     }
 
     private void initScales() {
@@ -170,6 +349,11 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
         dots.event(eventType, handler);
     }
 
+    public void setShapeLegend(Map<String, String> shapeLegend) {
+        this.shapeLegend = shapeLegend;
+        updateChart(true);
+    }
+
     @Override
     public void update(LightweightCollection<ViewItem> addedResourceItems,
             LightweightCollection<ViewItem> updatedResourceItems,
@@ -179,10 +363,9 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
         // TODO re-enable
         // if (!changedSlots.isEmpty()) {
         // TODO expose protovis label and change immediately, if possible
-        this.yAxisLabel = callback
-                .getSlotResolverDescription(ScatterPlotVisualization.Y_POSITION_SLOT);
-        this.xAxisLabel = callback
-                .getSlotResolverDescription(ScatterPlotVisualization.X_POSITION_SLOT);
+        this.yAxisLabel = callback.getSlotResolverDescription(Y_POSITION_SLOT);
+        this.xAxisLabel = callback.getSlotResolverDescription(X_POSITION_SLOT);
+        this.shapeLegendLabel = callback.getSlotResolverDescription(SHAPE_SLOT);
         // }
 
         super.update(addedResourceItems, updatedResourceItems,

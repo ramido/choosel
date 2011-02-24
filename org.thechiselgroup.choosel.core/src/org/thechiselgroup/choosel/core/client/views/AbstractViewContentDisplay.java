@@ -102,7 +102,11 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
         return restoring;
     }
 
-    protected void registerProperty(ViewContentDisplayProperty property) {
+    /**
+     * Adds a {@link ViewContentDisplayProperty} to the properties of this
+     * {@link ViewContentDisplay}.
+     */
+    protected void registerProperty(ViewContentDisplayProperty<?> property) {
         assert property != null;
         this.properties.put(property.getPropertyName(), property);
     }
