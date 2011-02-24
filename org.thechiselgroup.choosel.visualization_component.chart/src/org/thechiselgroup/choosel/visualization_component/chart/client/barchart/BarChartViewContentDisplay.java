@@ -67,7 +67,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
         @Override
         public LayoutType getValue() {
-            return layout;
+            return getLayout();
         }
 
         @Override
@@ -254,7 +254,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
     private String barTextBaseline = PVAlignment.TOP;
 
-    protected LayoutType layout = LayoutType.HORIZONTAL;
+    private LayoutType layout = LayoutType.HORIZONTAL;
 
     private double barLineWidth = 1;
 
@@ -555,6 +555,10 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
                 .text(new TickFormatFunction(scale));
     }
 
+    public LayoutType getLayout() {
+        return layout;
+    }
+
     @Override
     public String getName() {
         return "Bar Chart";
@@ -592,8 +596,12 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         regularBar.event(eventType, handler);
     }
 
-    private void setLayout(LayoutType layout) {
+    public void setLayout(LayoutType layout) {
         assert layout != null;
+
+        if (this.layout.equals(layout)) {
+            return;
+        }
 
         this.layout = layout;
         updateChart(true);
