@@ -38,6 +38,27 @@ public final class PVLabel extends PVAbstractMark<PVLabel> {
 
     }
 
+    /**
+     * @see #textBaseline()
+     * @see #textBaseline(JsStringFunction)
+     * @see #textBaseline(String)
+     */
+    public final static String TOP = "top";
+
+    /**
+     * @see #textBaseline()
+     * @see #textBaseline(JsStringFunction)
+     * @see #textBaseline(String)
+     */
+    public final static String MIDDLE = "middle";
+
+    /**
+     * @see #textBaseline()
+     * @see #textBaseline(JsStringFunction)
+     * @see #textBaseline(String)
+     */
+    public final static String BOTTOM = "bottom";
+
     public static native PVLabel create() /*-{
         return new $wnd.pv.Label();
     }-*/;
@@ -97,14 +118,38 @@ public final class PVLabel extends PVAbstractMark<PVLabel> {
         return this.textAngle(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
     }-*/;
 
+    /**
+     * @return text baseline. The default text baseline is
+     *         {@link #BOTTOM}.
+     * 
+     * @see #BOTTOM
+     * @see #MIDDLE
+     * @see #TOP
+     */
     public final native double textBaseline() /*-{
         return this.textBaseline();
     }-*/;
 
+    /**
+     * Changes text baseline property. The default text baseline is
+     * {@link #BOTTOM}.
+     * 
+     * @see #BOTTOM
+     * @see #MIDDLE
+     * @see #TOP
+     */
     public final native PVLabel textBaseline(JsStringFunction f) /*-{
         return this.textBaseline(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsStringFunction;)(f));
     }-*/;
 
+    /**
+     * Changes text baseline property. The default text baseline is
+     * {@link #BOTTOM}.
+     * 
+     * @see #BOTTOM
+     * @see #MIDDLE
+     * @see #TOP
+     */
     public final native PVLabel textBaseline(String textBaseline) /*-{
         return this.textBaseline(textBaseline);
     }-*/;
@@ -113,12 +158,12 @@ public final class PVLabel extends PVAbstractMark<PVLabel> {
         return this.textDecoration();
     }-*/;
 
-    public final native PVLabel textDecoration(String textDecoration) /*-{
-        return this.textDecoration(textDecoration);
-    }-*/;
-
     public final native PVLabel textDecoration(JsStringFunction f) /*-{
         return this.textDecoration(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsStringFunction;)(f));
+    }-*/;
+
+    public final native PVLabel textDecoration(String textDecoration) /*-{
+        return this.textDecoration(textDecoration);
     }-*/;
 
     public final native double textMargin() /*-{
@@ -137,12 +182,12 @@ public final class PVLabel extends PVAbstractMark<PVLabel> {
         return this.textShadow();
     }-*/;
 
-    public final native PVLabel textShadow(String textShadow) /*-{
-        return this.textShadow(textShadow);
-    }-*/;
-
     public final native PVLabel textShadow(JsStringFunction f) /*-{
         return this.textShadow(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsStringFunction;)(f));
+    }-*/;
+
+    public final native PVLabel textShadow(String textShadow) /*-{
+        return this.textShadow(textShadow);
     }-*/;
 
     public final native PVColor textStyle() /*-{
