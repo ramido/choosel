@@ -91,11 +91,21 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         view.getSlotMappingConfiguration().setMapping(
                 ScatterPlotVisualization.X_POSITION_SLOT,
                 new FirstResourcePropertyResolver(
-                        BenchmarkResourceSetFactory.NUMBER_1));
+                        BenchmarkResourceSetFactory.NUMBER_1) {
+                    @Override
+                    public String toString() {
+                        return "my x axis label";
+                    }
+                });
         view.getSlotMappingConfiguration().setMapping(
                 ScatterPlotVisualization.Y_POSITION_SLOT,
                 new FirstResourcePropertyResolver(
-                        BenchmarkResourceSetFactory.NUMBER_2));
+                        BenchmarkResourceSetFactory.NUMBER_2) {
+                    @Override
+                    public String toString() {
+                        return "my y axis label";
+                    }
+                });
         view.getSlotMappingConfiguration().setMapping(
                 ScatterPlotVisualization.SHAPE_SLOT,
                 new ResourceSetToValueResolver() {
@@ -121,6 +131,11 @@ public class ComponentExampleEntryPoint implements EntryPoint {
                         }
 
                         return PVShape.TRIANGLE;
+                    }
+
+                    @Override
+                    public String toString() {
+                        return "my shape legend title";
                     }
                 });
 

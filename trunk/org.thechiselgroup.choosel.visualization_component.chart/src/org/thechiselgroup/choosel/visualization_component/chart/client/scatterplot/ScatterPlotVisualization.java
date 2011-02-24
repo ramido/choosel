@@ -15,8 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.chart.client.scatterplot;
 
+import java.util.Map;
+
 import org.thechiselgroup.choosel.core.client.resources.DataType;
+import org.thechiselgroup.choosel.core.client.views.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
+import org.thechiselgroup.choosel.protovis.client.PVShape;
 
 public final class ScatterPlotVisualization {
 
@@ -28,8 +32,19 @@ public final class ScatterPlotVisualization {
     public static final Slot X_POSITION_SLOT = new Slot("x_position", "X-Axis",
             DataType.NUMBER);
 
+    /**
+     * The shape slot should return a shape value (Strings, see {@link PVShape})
+     * per {@link ViewItem}.
+     */
     public static final Slot SHAPE_SLOT = new Slot("shape", "Shape",
             DataType.SHAPE);
+
+    /**
+     * Shape legends are {@link Map}s of shape values (Strings, see
+     * {@link PVShape}) to explaining texts. If the shape legend property is set
+     * to <code>null</code>, no legend is displayed.
+     */
+    public static final String SHAPE_LEGEND_PROPERTY = "shapeLegend";
 
     private ScatterPlotVisualization() {
     }
