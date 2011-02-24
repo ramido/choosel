@@ -15,11 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.example.components.client;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.test.BenchmarkResourceSetFactory;
+import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.DefaultView;
 import org.thechiselgroup.choosel.core.client.views.slots.FirstResourcePropertyResolver;
@@ -139,11 +140,12 @@ public class ComponentExampleEntryPoint implements EntryPoint {
                     }
                 });
 
-        HashMap<String, String> shapeLegend = new HashMap<String, String>();
+        Map<String, String> shapeLegend = CollectionFactory.createStringMap();
         shapeLegend.put(PVShape.DIAMOND, "Description A");
         shapeLegend.put(PVShape.SQUARE, "Description B");
         shapeLegend.put(PVShape.CROSS, "Description C");
         shapeLegend.put(PVShape.CIRCLE, "Test");
+        shapeLegend.put(PVShape.TRIANGLE, "Another Description");
 
         view.getViewContentDisplay().setPropertyValue(
                 ScatterPlotVisualization.SHAPE_LEGEND_PROPERTY, shapeLegend);
