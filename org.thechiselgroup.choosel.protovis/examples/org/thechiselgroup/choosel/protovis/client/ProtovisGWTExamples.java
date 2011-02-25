@@ -22,12 +22,9 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 public class ProtovisGWTExamples implements EntryPoint {
 
@@ -40,15 +37,6 @@ public class ProtovisGWTExamples implements EntryPoint {
     private Anchor sourceCodeLink;
 
     private ListBox selectorList;
-
-    public <T extends Widget & ProtovisExample> void addExample(
-            VerticalPanel container, T example) {
-
-        container.add(new HTML("<b><a target='_blank' href='"
-                + example.getProtovisExampleURL() + "'>" + example.toString()
-                + "</a></b>"));
-        container.add(example);
-    }
 
     private void initExampleVisualizations() {
         examples = new ArrayList<ProtovisExample>();
@@ -78,6 +66,7 @@ public class ProtovisGWTExamples implements EntryPoint {
         examples.add(new CirclePackingExample());
         examples.add(new TreeExample());
         examples.add(new TreemapExample());
+        examples.add(new TreemapExample2());
 
         examples.add(new BoxAndWhiskerPlotExample());
     }
@@ -131,7 +120,14 @@ public class ProtovisGWTExamples implements EntryPoint {
         ProtovisExample example = examples.get(i);
 
         visualizationTitle.setText(example.toString());
-        protovisExampleLink.setHref(example.getProtovisExampleURL());
+
+        if (example.getProtovisExampleURL() != null) {
+            protovisExampleLink.setVisible(true);
+            protovisExampleLink.setHref(example.getProtovisExampleURL());
+        } else {
+            protovisExampleLink.setVisible(false);
+        }
+
         sourceCodeLink
                 .setHref("http://code.google.com/p/choosel/source/browse/trunk/"
                         + "org.thechiselgroup.choosel.protovis/examples/"
