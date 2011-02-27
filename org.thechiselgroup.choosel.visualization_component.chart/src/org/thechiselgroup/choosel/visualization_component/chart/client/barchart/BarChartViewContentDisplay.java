@@ -47,7 +47,11 @@ import org.thechiselgroup.choosel.visualization_component.chart.client.TickForma
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.inject.Inject;
 
@@ -55,7 +59,27 @@ import com.google.inject.Inject;
  * are extracted and the commonalities are kept.
  */
 // TODO right side ticks
+// TODO leverage scales
 public class BarChartViewContentDisplay extends ChartViewContentDisplay {
+
+    private class BarSpacingProperty implements
+            ViewContentDisplayProperty<Boolean> {
+
+        @Override
+        public String getPropertyName() {
+            return BarChartVisualization.BAR_SPACING_PROPERTY;
+        }
+
+        @Override
+        public Boolean getValue() {
+            return getBarSpacing();
+        }
+
+        @Override
+        public void setValue(Boolean value) {
+            setBarSpacing(value);
+        }
+    }
 
     private class LayoutProperty implements
             ViewContentDisplayProperty<LayoutType> {
@@ -86,11 +110,17 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
             this.name = name;
         }
 
+        /**
+         * @return space that is available for the bar height.
+         */
         private double getBarLengthSpace(int chartHeight, int chartWidth) {
             return isVerticalBarChart(chartHeight, chartWidth) ? chartHeight
                     : chartWidth;
         }
 
+        /**
+         * @return space that is available for the bar width.
+         */
         private double getBarWidthSpace(int chartHeight, int chartWidth) {
             return isVerticalBarChart(chartHeight, chartWidth) ? chartWidth
                     : chartHeight;
@@ -107,8 +137,6 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
     }
 
-    private PVLinearScale scale;
-
     private static final int BORDER_BOTTOM = 35;
 
     private static final int BORDER_LEFT = 5;
@@ -120,6 +148,8 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     private static final String GRIDLINE_SCALE_COLOR = "rgba(255,255,255,.3)";
 
     private static final String AXIS_SCALE_COLOR = Colors.GRAY_1;
+
+    private static final double BAR_STROKE_WIDTH = 0.5d;
 
     private static final String FONT_WEIGHT = "normal";
 
@@ -179,13 +209,11 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         @Override
         public double f(JsArgs args) {
             PVMark _this = args.getThis();
-            return (0.33 * layout.getBarWidthSpace(chartHeight, chartWidth) / (chartItemsJsArray
-                    .length() * 2))
+            return (0.33 * getBarWidthSpace() / (chartItemsJsArray.length() * 2))
                     + calculateBarWidth()
                     / 2
                     + _this.index()
-                    * layout.getBarWidthSpace(chartHeight, chartWidth)
-                    / chartItemsJsArray.length();
+                    * getBarWidthSpace() / chartItemsJsArray.length();
         }
     };
 
@@ -219,8 +247,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     private JsDoubleFunction highlightedWidth = new JsDoubleFunction() {
         @Override
         public double f(JsArgs args) {
-            return 0.33 * layout.getBarWidthSpace(chartHeight, chartWidth)
-                    / (chartItemsJsArray.length() * 2);
+            return 0.33 * getBarWidthSpace() / (chartItemsJsArray.length() * 2);
         }
     };
 
@@ -228,7 +255,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         @Override
         public double f(JsArgs args) {
             return calculateHighlightedBarLength(args.<ChartItem> getObject())
-                    + barLineWidth;
+                    + BAR_STROKE_WIDTH;
         }
     };
 
@@ -255,8 +282,6 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     private String barTextBaseline = PVAlignment.TOP;
 
     private LayoutType layout = LayoutType.HORIZONTAL;
-
-    private double barLineWidth = 1;
 
     protected JsStringFunction chartFillStyle = new JsStringFunction() {
         @Override
@@ -346,6 +371,8 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
     protected double maxChartItemValue;
 
+    private boolean barSpacing = true;
+
     @Inject
     public BarChartViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
         super(dragEnablerFactory);
@@ -383,41 +410,44 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
         if (layout.isVerticalBarChart(chartHeight, chartWidth)) {
             getChart().left(BORDER_LEFT + 40).bottom(BORDER_BOTTOM);
-            PVLinearScale scale = PVScale.linear(0, maxChartItemValue).range(0,
-                    chartHeight);
             // TODO axis label
             drawVerticalBarChart();
-            drawVerticalBarScales(scale);
+            drawVerticalBarScales();
         } else {
             getChart().left(BORDER_LEFT + calculateHorizontalLabelSpace())
                     .bottom(BORDER_BOTTOM);
-            PVLinearScale scale = PVScale.linear(0, maxChartItemValue).range(0,
-                    chartWidth);
             drawHorizontalBarMeasurementAxisLabel();
             drawHorizontalBarChart();
-            drawHorizontalBarScales(scale);
+            drawHorizontalBarScales();
 
         }
         getChart().add(PV.Rule).bottom(0).left(0).width(chartWidth)
-                .strokeStyle(AXIS_SCALE_COLOR).lineWidth(barLineWidth);
+                .strokeStyle(AXIS_SCALE_COLOR).lineWidth(BAR_STROKE_WIDTH);
         getChart().add(PV.Rule).left(0).bottom(0).height(chartHeight)
-                .strokeStyle(AXIS_SCALE_COLOR).lineWidth(barLineWidth);
+                .strokeStyle(AXIS_SCALE_COLOR).lineWidth(BAR_STROKE_WIDTH);
     }
 
     private double calculateBarLength(double value) {
-        return value * layout.getBarLengthSpace(chartHeight, chartWidth)
-                / maxChartItemValue;
+        return value * getBarLengthSpace() / maxChartItemValue;
     }
 
     private double calculateBarStart(int index) {
-        return calculateBarWidth() / 2 + index
-                * layout.getBarWidthSpace(chartHeight, chartWidth)
+        double barAreaStart = index * getBarWidthSpace()
                 / chartItemsJsArray.length();
+
+        double barOffset = barSpacing ? calculateBarWidth() / 2 : 0;
+
+        return barAreaStart + barOffset;
     }
 
     private double calculateBarWidth() {
-        return layout.getBarWidthSpace(chartHeight, chartWidth)
-                / (chartItemsJsArray.length() * 2);
+        double spacePerBar = getBarWidthSpace() / chartItemsJsArray.length();
+
+        if (barSpacing) {
+            spacePerBar /= 2;
+        }
+
+        return spacePerBar;
     }
 
     private void calculateChartVariables() {
@@ -469,10 +499,10 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     }
 
     private void drawHorizontalBarChart() {
-        regularBar = getChart().add(PV.Bar).data(chartItemsJsArray)
-                .left(barLineWidth).width(fullBarLength).bottom(barStart)
-                .height(barWidth).fillStyle(chartFillStyle)
-                .strokeStyle(Colors.STEELBLUE).lineWidth(barLineWidth);
+        regularBar = getChart().add(PV.Bar).data(chartItemsJsArray).left(0)
+                .width(fullBarLength).bottom(barStart).height(barWidth)
+                .fillStyle(chartFillStyle).strokeStyle(Colors.STEELBLUE)
+                .lineWidth(BAR_STROKE_WIDTH);
 
         regularBar.add(PV.Label).bottom(baselineLabelStart)
                 .textAlign(PVAlignment.RIGHT).left(0)
@@ -484,11 +514,11 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
                 .textStyle(fullMarkTextStyle).textAlign(valueLabelAlignment);
 
         // TODO negative bars (in opposite direction)
-        highlightedBar = getChart().add(PV.Bar).data(chartItemsJsArray)
-                .left(barLineWidth).width(highlightedBarLength)
-                .bottom(highlightedBarStart).height(highlightedWidth)
-                .fillStyle(Colors.YELLOW).strokeStyle(Colors.STEELBLUE)
-                .lineWidth(barLineWidth).visible(isPartiallyHighlighted);
+        highlightedBar = getChart().add(PV.Bar).data(chartItemsJsArray).left(0)
+                .width(highlightedBarLength).bottom(highlightedBarStart)
+                .height(highlightedWidth).fillStyle(Colors.YELLOW)
+                .strokeStyle(Colors.STEELBLUE).lineWidth(BAR_STROKE_WIDTH)
+                .visible(isPartiallyHighlighted);
 
         highlightedBar.anchor(PVAlignment.RIGHT).add(PV.Label)
                 .textBaseline(barTextBaseline).text(highlightedLabelText)
@@ -501,8 +531,9 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
                 .textAlign(PVAlignment.CENTER);
     }
 
-    protected void drawHorizontalBarScales(PVLinearScale scale) {
-        this.scale = scale;
+    private void drawHorizontalBarScales() {
+        PVLinearScale scale = PVScale.linear(0, maxChartItemValue).range(0,
+                chartWidth);
         getChart().add(PV.Rule).data(scale.ticks(5)).left(scale).bottom(0)
                 .strokeStyle(scaleStrokeStyle).height(chartHeight)
                 .anchor(PVAlignment.BOTTOM).add(PV.Label)
@@ -510,10 +541,10 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     }
 
     private void drawVerticalBarChart() {
-        regularBar = getChart().add(PV.Bar).data(chartItemsJsArray)
-                .bottom(barLineWidth - 1).height(fullBarLength).left(barStart)
-                .width(barWidth).fillStyle(chartFillStyle)
-                .strokeStyle(Colors.STEELBLUE).lineWidth(barLineWidth);
+        regularBar = getChart().add(PV.Bar).data(chartItemsJsArray).bottom(0)
+                .height(fullBarLength).left(barStart).width(barWidth)
+                .fillStyle(chartFillStyle).strokeStyle(Colors.STEELBLUE)
+                .lineWidth(BAR_STROKE_WIDTH);
 
         regularBar.add(PV.Label).left(baselineLabelStart)
                 .textAlign(PVAlignment.CENTER).bottom(new JsDoubleFunction() {
@@ -536,10 +567,10 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
                 .text(fullMarkLabelText);
 
         highlightedBar = getChart().add(PV.Bar).data(chartItemsJsArray)
-                .bottom(barLineWidth).height(highlightedBarLength)
+                .bottom(0).height(highlightedBarLength)
                 .left(highlightedBarStart).width(highlightedWidth)
                 .fillStyle(Colors.YELLOW).strokeStyle(Colors.STEELBLUE)
-                .lineWidth(barLineWidth).visible(isPartiallyHighlighted);
+                .lineWidth(BAR_STROKE_WIDTH).visible(isPartiallyHighlighted);
 
         highlightedBar.anchor(PVAlignment.TOP).add(PV.Label)
                 .textBaseline(PVAlignment.MIDDLE).textAlign(PVAlignment.RIGHT)
@@ -547,12 +578,25 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     }
 
     // TODO extract scale ticks # as property
-    protected void drawVerticalBarScales(PVLinearScale scale) {
-        this.scale = scale;
+    protected void drawVerticalBarScales() {
+        PVLinearScale scale = PVScale.linear(0, maxChartItemValue).range(0,
+                chartHeight);
         getChart().add(PV.Rule).data(scale.ticks(5)).left(0).bottom(scale)
                 .strokeStyle(scaleStrokeStyle).width(chartWidth)
                 .anchor(PVAlignment.LEFT).add(PV.Label)
                 .text(new TickFormatFunction(scale));
+    }
+
+    private double getBarLengthSpace() {
+        return layout.getBarLengthSpace(chartHeight, chartWidth);
+    }
+
+    private boolean getBarSpacing() {
+        return barSpacing;
+    }
+
+    private double getBarWidthSpace() {
+        return layout.getBarWidthSpace(chartHeight, chartWidth);
     }
 
     public LayoutType getLayout() {
@@ -568,19 +612,40 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     public SidePanelSection[] getSidePanelSections() {
         FlowPanel settingsPanel = new FlowPanel();
 
-        final ListBox layoutBox = new ListBox(false);
-        layoutBox.setVisibleItemCount(1);
-        for (LayoutType layout : LayoutType.values()) {
-            layoutBox.addItem(layout.getName(), layout.toString());
-        }
-        layoutBox.addChangeHandler(new ChangeHandler() {
-            @Override
-            public void onChange(ChangeEvent event) {
-                setLayout(LayoutType.valueOf(layoutBox.getValue(layoutBox
-                        .getSelectedIndex())));
+        {
+            settingsPanel.add(new Label("Chart orientation"));
+            final ListBox layoutBox = new ListBox(false);
+            layoutBox.setVisibleItemCount(1);
+            for (LayoutType layout : LayoutType.values()) {
+                layoutBox.addItem(layout.getName(), layout.toString());
             }
-        });
-        settingsPanel.add(layoutBox);
+            layoutBox.setSelectedIndex(1);
+            layoutBox.addChangeHandler(new ChangeHandler() {
+                @Override
+                public void onChange(ChangeEvent event) {
+                    setLayout(LayoutType.valueOf(layoutBox.getValue(layoutBox
+                            .getSelectedIndex())));
+                }
+            });
+            settingsPanel.add(layoutBox);
+        }
+
+        {
+            settingsPanel.add(new Label("Bar spacing"));
+
+            CheckBox barSpacingCheckbox = new CheckBox();
+            barSpacingCheckbox.setText("separate");
+            barSpacingCheckbox.setValue(barSpacing);
+            barSpacingCheckbox
+                    .addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+                        @Override
+                        public void onValueChange(
+                                ValueChangeEvent<Boolean> event) {
+                            setBarSpacing(event.getValue());
+                        }
+                    });
+            settingsPanel.add(barSpacingCheckbox);
+        }
 
         return new SidePanelSection[] { new SidePanelSection("Settings",
                 settingsPanel), };
@@ -594,6 +659,15 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     @Override
     protected void registerEventHandler(String eventType, PVEventHandler handler) {
         regularBar.event(eventType, handler);
+    }
+
+    public void setBarSpacing(boolean barSpacing) {
+        if (this.barSpacing == barSpacing) {
+            return;
+        }
+
+        this.barSpacing = barSpacing;
+        updateChart(true);
     }
 
     public void setLayout(LayoutType layout) {
