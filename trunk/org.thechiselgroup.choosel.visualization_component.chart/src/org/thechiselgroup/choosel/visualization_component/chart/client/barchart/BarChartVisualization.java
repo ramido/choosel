@@ -30,6 +30,8 @@ public final class BarChartVisualization {
 
     public static final String LAYOUT_PROPERTY = "layout";
 
+    public static final String BAR_SPACING_PROPERTY = "barSpacing";
+
     private BarChartVisualization() {
     }
 
