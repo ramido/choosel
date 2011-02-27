@@ -15,6 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client.jsutil;
 
+import java.util.Comparator;
+
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**
@@ -32,6 +34,10 @@ public class JsArrayGeneric<T> extends JavaScriptObject {
 
     public final native T get(int index) /*-{
         return this[index];
+    }-*/;
+
+    private final native void jsSort(JavaScriptObject comparator) /*-{
+        this.sort(comparator);
     }-*/;
 
     public final native int length() /*-{
@@ -53,6 +59,10 @@ public class JsArrayGeneric<T> extends JavaScriptObject {
     public final native T shift() /*-{
         return this.shift();
     }-*/;
+
+    public final void sort(Comparator<T> comparator) {
+        jsSort(JsUtils.toJsComparator(comparator));
+    }
 
     public final native void unshift(T value) /*-{
         this.unshift(value);

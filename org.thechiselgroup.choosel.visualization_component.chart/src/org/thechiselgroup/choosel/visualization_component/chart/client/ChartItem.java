@@ -60,6 +60,10 @@ public class ChartItem {
         return viewItem.getSlotValue(slot, subset);
     }
 
+    public double getSlotValueAsDouble(Slot slot) {
+        return getSlotValueAsDouble(slot, Subset.ALL);
+    }
+
     public double getSlotValueAsDouble(Slot slot, Subset subset) {
         return (Double) getSlotValue(slot, subset);
     }
