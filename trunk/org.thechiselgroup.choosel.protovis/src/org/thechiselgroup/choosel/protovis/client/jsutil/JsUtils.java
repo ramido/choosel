@@ -57,7 +57,7 @@ public final class JsUtils {
         return d.toFixed(decimalPlaces);
     }-*/;
 
-    public final static native <T> JavaScriptObject toJsComparator(
+    public final static native JavaScriptObject toJsComparator(
             Comparator<?> comparator) /*-{
         return function(a,b) {
         return comparator.@java.util.Comparator::compare(Ljava/lang/Object;Ljava/lang/Object;)(a, b);
