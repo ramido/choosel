@@ -55,9 +55,8 @@ public class TextItem {
     }
 
     public double getFontSizeValue() {
-        return ((Double) resourceItem
-                .getSlotValue(TextVisualization.FONT_SIZE_SLOT))
-                .doubleValue();
+        return ((Number) resourceItem
+                .getSlotValue(TextVisualization.FONT_SIZE_SLOT)).doubleValue();
     }
 
     public TextItemLabel getLabel() {
