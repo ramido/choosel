@@ -61,9 +61,15 @@ public class TextSlotControl extends SlotControl {
         propertySelector.setValues(properties);
 
         if (propertySelector.getSelectedValue() == null) {
-            String property = ((TextResourceSetToValueResolver) slotMappingConfiguration
-                    .getResolver(getSlot())).getProperty();
-            propertySelector.setSelectedValue(property);
+            ResourceSetToValueResolver resolver = slotMappingConfiguration
+                    .getResolver(getSlot());
+
+            // TODO generic interface for resolvers that require property
+            if (resolver instanceof TextResourceSetToValueResolver) {
+                String property = ((TextResourceSetToValueResolver) resolver)
+                        .getProperty();
+                propertySelector.setSelectedValue(property);
+            }
         }
     }
 }
