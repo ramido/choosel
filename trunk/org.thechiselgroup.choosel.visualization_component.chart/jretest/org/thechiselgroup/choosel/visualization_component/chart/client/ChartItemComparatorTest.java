@@ -15,40 +15,30 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.chart.client;
 
-import java.util.Comparator;
+import static org.junit.Assert.assertEquals;
 
-import org.thechiselgroup.choosel.core.client.views.slots.Slot;
+import org.junit.Test;
 
-public class ChartItemComparator implements Comparator<ChartItem> {
+public class ChartItemComparatorTest {
 
-    // for test access
-    public static int compare(double value1, double value2) {
-        if (value1 > value2) {
-            return 1;
-        }
-
-        if (value1 < value2) {
-            return -1;
-        }
-
-        return 0;
+    @Test
+    public void greater() {
+        assertEquals(1, ChartItemComparator.compare(3, 1));
     }
 
-    private Slot slot;
-
-    public ChartItemComparator(Slot slot) {
-        assert slot != null;
-        this.slot = slot;
+    @Test
+    public void less() {
+        assertEquals(-1, ChartItemComparator.compare(-1, 2));
     }
 
-    @Override
-    public int compare(ChartItem o1, ChartItem o2) {
-        assert o1 != null;
-        assert o2 != null;
+    @Test
+    public void orderIsStable1() {
+        assertEquals(0, ChartItemComparator.compare(-1, -1));
+    }
 
-        double v1 = o1.getSlotValueAsDouble(slot);
-        double v2 = o2.getSlotValueAsDouble(slot);
-        return compare(v1, v2);
+    @Test
+    public void orderIsStable2() {
+        assertEquals(0, ChartItemComparator.compare(1, 1));
     }
 
 }
