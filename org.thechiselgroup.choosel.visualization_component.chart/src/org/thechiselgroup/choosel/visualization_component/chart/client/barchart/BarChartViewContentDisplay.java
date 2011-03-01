@@ -18,8 +18,6 @@ package org.thechiselgroup.choosel.visualization_component.chart.client.barchart
 import static org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChartVisualization.BAR_LABEL_SLOT;
 import static org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChartVisualization.BAR_LENGTH_SLOT;
 
-import java.util.Comparator;
-
 import org.thechiselgroup.choosel.core.client.ui.Colors;
 import org.thechiselgroup.choosel.core.client.ui.TextBoundsEstimator;
 import org.thechiselgroup.choosel.core.client.util.StringUtils;
@@ -43,6 +41,7 @@ import org.thechiselgroup.choosel.protovis.client.jsutil.JsBooleanFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItem;
+import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItemComparator;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItemStringSlotAccessor;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay;
 import org.thechiselgroup.choosel.visualization_component.chart.client.TickFormatFunction;
@@ -386,14 +385,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     protected void beforeRender() {
         super.beforeRender();
 
-        chartItemsJsArray.sort(new Comparator<ChartItem>() {
-            @Override
-            public int compare(ChartItem o1, ChartItem o2) {
-                double v1 = o1.getSlotValueAsDouble(BAR_LENGTH_SLOT);
-                double v2 = o2.getSlotValueAsDouble(BAR_LENGTH_SLOT);
-                return (int) Math.signum(v1 - v2) * -1;
-            }
-        });
+        chartItemsJsArray.sort(new ChartItemComparator(BAR_LENGTH_SLOT));
 
         calculateMaximumChartItemValue();
 
