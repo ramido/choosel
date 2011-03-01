@@ -60,6 +60,14 @@ public class JsArrayGeneric<T> extends JavaScriptObject {
         return this.shift();
     }-*/;
 
+    /**
+     * Sorts this array using the JavaScript array sort, which is not required
+     * to be stable according to the ECMA specification.
+     * 
+     * @see <a
+     *      href="http://stackoverflow.com/questions/3195941/sorting-an-array-of-objects-in-chrome">V8
+     *      Sorting Not Stable</a>
+     */
     public final void sort(Comparator<T> comparator) {
         jsSort(JsUtils.toJsComparator(comparator));
     }
