@@ -59,8 +59,11 @@ public final class JsUtils {
 
     public final static native JavaScriptObject toJsComparator(
             Comparator<?> comparator) /*-{
+        // NOTE: The comparison order in JavaScript array sort seems to be different from the order
+        // used in Java. We invert the order here to comply to the Java spec and to guarantee sort stability.
+
         return function(a,b) {
-        return comparator.@java.util.Comparator::compare(Ljava/lang/Object;Ljava/lang/Object;)(a, b);
+        return comparator.@java.util.Comparator::compare(Ljava/lang/Object;Ljava/lang/Object;)(b, a);
         };
     }-*/;
 

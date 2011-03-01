@@ -46,7 +46,7 @@ public class DendrogramExample extends ProtovisWidget implements
                 .nodes(PVDom.create(root, new FlareData.UnitDomAdapter())
                         .sort(new Comparator<PVDomNode>() {
                             public int compare(PVDomNode o1, PVDomNode o2) {
-                                return o1.nodeName().compareTo(o2.nodeName());
+                                return o2.nodeName().compareTo(o1.nodeName());
                             }
                         }).nodes()).group(true).orient("left");
 
