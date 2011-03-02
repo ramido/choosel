@@ -15,12 +15,16 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.example.workbench.client;
 
+import java.util.Set;
+
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.ui.DetailsWidgetHelper;
+import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.core.client.ui.dnd.ResourceSetAvatarDragController;
+import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingConfiguration;
 
 import com.google.gwt.core.client.GWT;
@@ -40,72 +44,46 @@ public class ChooselExampleDetailsWidgetHelper extends DetailsWidgetHelper {
     }
 
     @Override
-    public Widget createDetailsWidget(ResourceSet resources,
-            SlotMappingConfiguration resolver) {
+    public Widget createDetailsWidget(String groupID, ResourceSet resources,
+            SlotMappingConfiguration slotMappings) {
 
         VerticalPanel verticalPanel = GWT.create(VerticalPanel.class);
-        verticalPanel.add(avatarFactory.createAvatar(resources));
+        ResourceSetAvatar avatar = avatarFactory.createAvatar(resources);
+        if (!resources.hasLabel()) {
+            if (resources.size() == 1) {
+                avatar.setText(resources.size() + " item");
+            } else {
+                avatar.setText(resources.size() + " items");
+            }
+        }
+        verticalPanel.add(avatar);
 
-        for (Resource resource : resources) {
-            // resolver.get
-            // TODO create method in resolver
-
-            String value = "";
-            HTML html = GWT.create(HTML.class);
-            html.setHTML(value);
-            verticalPanel.add(html);
+        // try to resolve slot mappings first
+        Set<Slot> slots = slotMappings.getSlots();
+        for (Slot slot : slots) {
+            String label = slot.getName();
+            Object valueObject = slotMappings.resolve(slot, groupID, resources);
+            String value = valueObject != null ? valueObject.toString() + " ("
+                    + slotMappings.getResolver(slot).toString() + ")" : "";
+            addRow(label, value, true, verticalPanel);
         }
 
-        // for (Resource resource : resources) {
-        // // FIXME use generic way to put in custom widgets
-        // if (resource.getUri().startsWith("tsunami")) {
-        // ResourceSetAvatar avatar = new ResourceSetAvatar("Tsunami",
-        // "avatar-resourceSet", resources,
-        // ResourceSetAvatarType.SET);
-        // avatar.setEnabled(true);
-        // dragController.setDraggable(avatar, true);
-        // verticalPanel.add(avatar);
-        //
-        // String date = resource.getValue("date").toString();
-        // String evaluation = resource.getValue("evaluation").toString();
-        // if (evaluation.length() > 250) {
-        // int indexOfSpace = evaluation.indexOf(' ', 249);
-        // if (indexOfSpace != -1) {
-        // evaluation = evaluation.substring(0, indexOfSpace)
-        // + "...";
-        // }
-        // }
-        // evaluation = evaluation.replaceAll("<br>", "");
-        //
-        // HTML html = GWT.create(HTML.class);
-        // CSS.setWidth(html, 280);
-        // html.setHTML("<b>" + date + "</b><br/>" + evaluation);
-        // verticalPanel.add(html);
-        // } else if (resource.getUri().startsWith("earthquake")) {
-        // ResourceSetAvatar avatar = new ResourceSetAvatar("Earthquake",
-        // "avatar-resourceSet", resources,
-        // ResourceSetAvatarType.SET);
-        // avatar.setEnabled(true);
-        // dragController.setDraggable(avatar, true);
-        // verticalPanel.add(avatar);
-        //
-        // String description = resource.getValue("description")
-        // .toString();
-        // String details = resource.getValue("details").toString();
-        // HTML html = GWT.create(HTML.class);
-        // CSS.setWidth(html, 280);
-        // html.setHTML("<b>" + description + "</b><br/>" + details);
-        // verticalPanel.add(html);
-        // } else {
-        // // BUG SHOULD ONLY HAPPEN ONCE
-        // verticalPanel.add(avatarFactory.createAvatar(resources));
-        //
-        // String value = "";
-        // HTML html = GWT.create(HTML.class);
-        // html.setHTML(value);
-        // verticalPanel.add(html);
-        // }
-        // }
+        // single resource: show 5 properties
+        if (resources.size() == 1) {
+            Resource resource = resources.getFirstResource();
+
+            verticalPanel.add(new HTML("<br/><br/>"));
+
+            Set<String> entrySet = resource.getProperties().keySet();
+            for (String property : entrySet) {
+                addRow(resource, verticalPanel, property, property);
+            }
+
+            return verticalPanel;
+        }
+
+        // TODO implement display of resource previews if there are multiple
+        // resources
 
         return verticalPanel;
     }

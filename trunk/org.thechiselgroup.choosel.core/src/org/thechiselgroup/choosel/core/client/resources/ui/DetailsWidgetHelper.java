@@ -55,12 +55,17 @@ public abstract class DetailsWidgetHelper {
             String label, String property, boolean nowrap) {
         Object resourceValue = resource.getValue(property);
         String value = (resourceValue == null) ? "" : resourceValue.toString();
+        addRow(label, value, nowrap, verticalPanel);
+    }
+
+    protected void addRow(String label, String value, boolean nowrap,
+            VerticalPanel verticalPanel) {
         HTML html = GWT.create(HTML.class);
         html.setHTML("<span " + (nowrap ? "style='white-space:nowrap;'" : "")
                 + "><b>" + label + ":</b> " + value + " </span>");
         verticalPanel.add(html);
     }
 
-    public abstract Widget createDetailsWidget(ResourceSet resourceSet,
-            SlotMappingConfiguration resolver);
+    public abstract Widget createDetailsWidget(String groupID,
+            ResourceSet resourceSet, SlotMappingConfiguration slotMappings);
 }

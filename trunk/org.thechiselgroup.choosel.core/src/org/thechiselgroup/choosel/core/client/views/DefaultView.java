@@ -233,12 +233,14 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     // for test
-    protected PopupManager createPopupManager(final ResourceSet resources) {
+    protected PopupManager createPopupManager(final String groupID,
+            final ResourceSet resources) {
+
         WidgetFactory widgetFactory = new WidgetFactory() {
             @Override
             public Widget createWidget() {
-                return detailsWidgetHelper.createDetailsWidget(resources,
-                        slotMappingConfiguration);
+                return detailsWidgetHelper.createDetailsWidget(groupID,
+                        resources, slotMappingConfiguration);
             }
         };
 
@@ -253,7 +255,7 @@ public class DefaultView extends AbstractWindowContent implements View {
         // TODO use factory & dispose + clean up
 
         DefaultViewItem viewItem = new DefaultViewItem(groupID, resources,
-                hoverModel, createPopupManager(resources),
+                hoverModel, createPopupManager(groupID, resources),
                 slotMappingConfiguration);
 
         viewItem.updateHighlightedResources(highlightedResources,

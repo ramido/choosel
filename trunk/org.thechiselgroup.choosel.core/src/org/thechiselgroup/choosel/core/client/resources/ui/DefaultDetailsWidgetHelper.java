@@ -35,7 +35,7 @@ public class DefaultDetailsWidgetHelper extends DetailsWidgetHelper {
     }
 
     @Override
-    public Widget createDetailsWidget(ResourceSet resources,
+    public Widget createDetailsWidget(String groupID, ResourceSet resources,
             SlotMappingConfiguration resolver) {
 
         return GWT.<VerticalPanel> create(VerticalPanel.class);
