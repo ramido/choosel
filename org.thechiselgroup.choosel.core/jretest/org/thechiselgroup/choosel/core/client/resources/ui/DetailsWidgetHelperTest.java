@@ -57,15 +57,15 @@ public class DetailsWidgetHelperTest {
     @Ignore("reactivate once DefaultDetailsWidgetHelper is fixed")
     @Test
     public void createNewPresenterInCreateDetailsWidget() {
-        underTest.createDetailsWidget(createResources(1), resolver);
-        underTest.createDetailsWidget(createResources(2), resolver);
+        underTest.createDetailsWidget(null, createResources(1), resolver);
+        underTest.createDetailsWidget(null, createResources(2), resolver);
 
         verify(avatarFactory, times(2)).createAvatar(eq(resourceSet));
     }
 
     @Test
     public void doNotSetResourceSetLabel() {
-        underTest.createDetailsWidget(createResources(1), resolver);
+        underTest.createDetailsWidget(null, createResources(1), resolver);
 
         verify(resourceSet, never()).setLabel(any(String.class));
     }

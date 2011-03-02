@@ -138,7 +138,8 @@ public class TestView extends DefaultView {
     }
 
     @Override
-    protected PopupManager createPopupManager(ResourceSet resources) {
+    protected PopupManager createPopupManager(String groupID,
+            ResourceSet resources) {
         return popupManager;
     }
 

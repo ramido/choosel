@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.core.client.views.slots;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.thechiselgroup.choosel.core.client.persistence.Memento;
 import org.thechiselgroup.choosel.core.client.persistence.Persistable;
@@ -81,6 +82,10 @@ public class SlotMappingConfiguration implements Persistable {
                 + slot;
 
         return slotsToValueResolvers.get(slot);
+    }
+
+    public Set<Slot> getSlots() {
+        return slotsToValueResolvers.keySet();
     }
 
     public void initSlots(Slot[] slots) {
