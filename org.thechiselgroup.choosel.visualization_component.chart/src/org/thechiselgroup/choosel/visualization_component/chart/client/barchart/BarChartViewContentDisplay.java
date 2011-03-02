@@ -385,7 +385,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     protected void beforeRender() {
         super.beforeRender();
 
-        chartItemsJsArray.sort(new ChartItemComparator(BAR_LENGTH_SLOT));
+        chartItemsJsArray.sortStable(new ChartItemComparator(BAR_LENGTH_SLOT));
 
         calculateMaximumChartItemValue();
 
