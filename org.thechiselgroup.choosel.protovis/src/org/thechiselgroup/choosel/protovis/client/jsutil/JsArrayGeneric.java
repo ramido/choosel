@@ -40,6 +40,28 @@ public class JsArrayGeneric<T> extends JavaScriptObject {
         this.sort(comparator);
     }-*/;
 
+    private final native void jsSortStable(JavaScriptObject comparator) /*-{
+        // create temporary array
+        var tempArray =  new Array();
+        for (var i = 0; i < this.length; i++) {
+        tempArray.push({ value: this[i], index: i });
+        }
+
+        // sort temporary array (stable)
+        tempArray.sort(function(a,b) {
+        var valueComparison = comparator(a.value, b.value);
+        if (valueComparison != 0) {
+        return valueComparison;
+        }
+        return a.index > b.index ? 1 : -1;
+        });
+
+        // copy elements from temporary array back to main array
+        for (var j = 0; j < tempArray.length; j++) {
+        this[j] = tempArray[j].value;
+        }
+    }-*/;
+
     public final native int length() /*-{
         return this.length;
     }-*/;
@@ -70,6 +92,16 @@ public class JsArrayGeneric<T> extends JavaScriptObject {
      */
     public final void sort(Comparator<T> comparator) {
         jsSort(JsUtils.toJsComparator(comparator));
+    }
+
+    /**
+     * Sorts this array. This sort guarantees that the order if the elements is
+     * retained if their comparison value is 0. It uses a separate array and
+     * comparator and is thus slower and consumes more memory than the basic
+     * sort.
+     */
+    public final void sortStable(Comparator<T> comparator) {
+        jsSortStable(JsUtils.toJsComparator(comparator));
     }
 
     public final native void unshift(T value) /*-{
