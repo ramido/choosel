@@ -47,6 +47,7 @@ public class DefaultDropTargetCapabilityChecker implements
         // TODO this should use the slot mapping initializer of the view somehow
         dataTypes.remove(DataType.COLOR);
         dataTypes.remove(DataType.NUMBER);
+        dataTypes.remove(DataType.SHAPE);
 
         for (DataType dataType : dataTypes) {
             if (ResourceSetUtils.getPropertyNamesForDataType(resourceSet,
