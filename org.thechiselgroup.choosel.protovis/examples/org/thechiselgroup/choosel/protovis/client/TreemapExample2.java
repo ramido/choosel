@@ -19,6 +19,7 @@ import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -95,7 +96,8 @@ public class TreemapExample2 extends ProtovisWidget implements ProtovisExample {
 
     private void createVisualization(MyDataClass root) {
         final PVOrdinalScale category19 = PVColors.category19();
-        PVPanel vis = getPVPanel().width(860).height(568);
+        final PVPanel vis = getPVPanel().width(860).height(568);
+        vis.defInt("i", -1);
 
         PVTreemapLayout treemap = vis.add(PVLayout.Treemap())
                 .nodes(PVDom.create(root, new MyDomAdapter()).nodes())
@@ -104,12 +106,31 @@ public class TreemapExample2 extends ProtovisWidget implements ProtovisExample {
         treemap.leaf().add(PV.Panel).fillStyle(new JsFunction<PVColor>() {
             public PVColor f(JsArgs args) {
                 PVDomNode d = args.getObject();
+                PVMark _this = args.getThis();
+
+                if (vis.getInt("i") == _this.index()) {
+                    return PV.color("orange");
+                }
+
                 if (d.parentNode() == null) {
                     return category19.fcolor((String) null);
                 }
                 return category19.fcolor(d.parentNode().nodeName());
             }
-        }).strokeStyle("#fff").lineWidth(1d).antialias(false);
+        }).strokeStyle("#fff").lineWidth(1d).antialias(false)
+                .event(PVEventType.MOUSEOVER, new PVEventHandler() {
+                    public void onEvent(Event e, String pvEventType, JsArgs args) {
+                        PVMark _this = args.getThis();
+                        vis.setInt("i", _this.index());
+                        _this.render();
+                    }
+                }).event(PVEventType.MOUSEOUT, new PVEventHandler() {
+                    public void onEvent(Event e, String pvEventType, JsArgs args) {
+                        PVMark _this = args.getThis();
+                        vis.setInt("i", -1);
+                        _this.render();
+                    }
+                });
 
         treemap.label().add(PV.Label).font(new JsStringFunction() {
             public String f(JsArgs args) {
