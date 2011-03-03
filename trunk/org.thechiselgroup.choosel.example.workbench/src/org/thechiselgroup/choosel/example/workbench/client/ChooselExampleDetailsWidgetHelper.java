@@ -50,11 +50,7 @@ public class ChooselExampleDetailsWidgetHelper extends DetailsWidgetHelper {
         VerticalPanel verticalPanel = GWT.create(VerticalPanel.class);
         ResourceSetAvatar avatar = avatarFactory.createAvatar(resources);
         if (!resources.hasLabel()) {
-            if (resources.size() == 1) {
-                avatar.setText(resources.size() + " item");
-            } else {
-                avatar.setText(resources.size() + " items");
-            }
+            avatar.setText(groupID);
         }
         verticalPanel.add(avatar);
 
@@ -72,7 +68,7 @@ public class ChooselExampleDetailsWidgetHelper extends DetailsWidgetHelper {
         if (resources.size() == 1) {
             Resource resource = resources.getFirstResource();
 
-            verticalPanel.add(new HTML("<br/><br/>"));
+            verticalPanel.add(new HTML("<br/>"));
 
             Set<String> entrySet = resource.getProperties().keySet();
             for (String property : entrySet) {
