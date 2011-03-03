@@ -96,8 +96,7 @@ public class TreemapExample2 extends ProtovisWidget implements ProtovisExample {
 
     private void createVisualization(MyDataClass root) {
         final PVOrdinalScale category19 = PVColors.category19();
-        final PVPanel vis = getPVPanel().width(860).height(568);
-        vis.defInt("i", -1);
+        final PVPanel vis = getPVPanel().width(860).height(568).defInt("i", -1);
 
         PVTreemapLayout treemap = vis.add(PVLayout.Treemap())
                 .nodes(PVDom.create(root, new MyDomAdapter()).nodes())
@@ -158,7 +157,7 @@ public class TreemapExample2 extends ProtovisWidget implements ProtovisExample {
     }
 
     public String toString() {
-        return "Treemap  Example 2";
+        return "Treemap  Example (highlighting, font)";
     }
 
 }

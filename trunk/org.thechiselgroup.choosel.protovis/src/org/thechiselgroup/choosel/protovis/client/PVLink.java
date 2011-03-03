@@ -38,4 +38,20 @@ public class PVLink extends JavaScriptObject {
     protected PVLink() {
     }
 
+    public final native int source() /*-{
+        return this.source;
+    }-*/;
+
+    public final native PVNode sourceNode() /*-{
+        return this.sourceNode;
+    }-*/;
+
+    public final native int target() /*-{
+        return this.target;
+    }-*/;
+
+    public final native PVNode targetNode() /*-{
+        return this.targetNode;
+    }-*/;
+
 }

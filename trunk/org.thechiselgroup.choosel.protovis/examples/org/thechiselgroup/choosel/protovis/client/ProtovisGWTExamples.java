@@ -69,6 +69,7 @@ public class ProtovisGWTExamples implements EntryPoint {
         examples.add(new TreemapExample2());
 
         examples.add(new ArcDiagramExample());
+        examples.add(new ArcDiagramExample2());
 
         examples.add(new BoxAndWhiskerPlotExample());
     }
@@ -87,7 +88,7 @@ public class ProtovisGWTExamples implements EntryPoint {
 
     private void initVisualizationSelector() {
         selectorList = new ListBox();
-        selectorList.setVisibleItemCount(25);
+        selectorList.setVisibleItemCount(30);
         for (int i = 0; i < examples.size(); i++) {
             selectorList.addItem(examples.get(i).toString());
         }

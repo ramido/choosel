@@ -108,4 +108,15 @@ public final class JsUtils {
 
     private JsUtils() {
     }
+
+    public static native String toLogString(JavaScriptObject obj) /*-{
+        var result = "";
+        var key;
+        for (key in obj) {
+        if (obj.hasOwnProperty(key)) {
+        result += key + "=" + obj[key] + "; ";
+        }
+        }
+        return result;
+    }-*/;
 }
