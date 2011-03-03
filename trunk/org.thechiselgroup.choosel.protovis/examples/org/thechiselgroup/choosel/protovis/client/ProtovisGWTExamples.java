@@ -68,6 +68,8 @@ public class ProtovisGWTExamples implements EntryPoint {
         examples.add(new TreemapExample());
         examples.add(new TreemapExample2());
 
+        examples.add(new ArcDiagramExample());
+
         examples.add(new BoxAndWhiskerPlotExample());
     }
 

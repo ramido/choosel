@@ -52,6 +52,10 @@ public final class PVLayout {
         return $wnd.pv.Layout.Treemap;
     }-*/;
 
+    public static native PVArcLayout Arc() /*-{
+        return $wnd.pv.Layout.Arc;
+    }-*/;
+
     private PVLayout() {
     }
 
