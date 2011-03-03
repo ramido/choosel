@@ -54,6 +54,10 @@ public final class PV {
         return $wnd.pv.Bar;
     }-*/;
 
+    public static native PVColor color(String value) /*-{
+        return $wnd.pv.color(value);
+    }-*/;
+
     /**
      * Wrapper for
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.html#.colors">pv.colors()</a></code>

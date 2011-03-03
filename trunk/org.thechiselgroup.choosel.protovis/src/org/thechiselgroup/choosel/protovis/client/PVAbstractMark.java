@@ -156,21 +156,12 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
         return this.data(JsUtils.toJsArrayInteger(data));
     }
 
-    public final native JavaScriptObject def(String name) /*-{
-        return this.def(name);
-    }-*/;
-
-    // XXX Likely needs some fixing
-    public final native T def(String name, JsDoubleFunction f) /*-{
-        return this.def(name, @org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
-    }-*/;
-
-    public final native T def(String name, String constant) /*-{
-        return this.def(name, constant);
-    }-*/;
-
     public final native PVMark defaults() /*-{
         return this.defaults;
+    }-*/;
+
+    public final native T defInt(String propertyName, int value) /*-{
+        return this.def(propertyName, value);
     }-*/;
 
     /**
@@ -214,6 +205,10 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
 
     public final native T extend(PVAbstractMark<?> proto) /*-{
         return this.extend(proto);
+    }-*/;
+
+    public final native int getInt(String propertyName) /*-{
+        return this[propertyName]();
     }-*/;
 
     public final native int index() /*-{
@@ -295,6 +290,10 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
 
     public final native T scale(JsDoubleFunction f) /*-{
         return this.scale(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
+    }-*/;
+
+    public final native T setInt(String propertyName, int value) /*-{
+        return this[propertyName](value);
     }-*/;
 
     public final native String title() /*-{
