@@ -36,6 +36,10 @@ public class PVNode extends JavaScriptObject {
         return this.linkDegree;
     }-*/;
 
+    public final native String nodeName() /*-{
+        return this.nodeName;
+    }-*/;
+
     public final native PVNode nodeName(String nodeName) /*-{
         this.nodeName = nodeName;
         return this;
@@ -48,6 +52,20 @@ public class PVNode extends JavaScriptObject {
 
     public final native <T> T object() /*-{
         return this.object;
+    }-*/;
+
+    /**
+     * X coordinate of node.
+     */
+    public final native double x() /*-{
+        return this.x;
+    }-*/;
+
+    /**
+     * Y coordinate of node.
+     */
+    public final native double y() /*-{
+        return this.y;
     }-*/;
 
 }

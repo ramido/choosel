@@ -58,9 +58,6 @@ public final class PVArcLayout extends PVAbstractBar<PVArcLayout> {
         return this.node;
     }-*/;
 
-    // TODO String[] as nodes
-    // TODO double[] / int[] as nodes
-
     private final native PVArcLayout nodes(JavaScriptObject nodes) /*-{
         return this.nodes(nodes);
     }-*/;
@@ -86,12 +83,23 @@ public final class PVArcLayout extends PVAbstractBar<PVArcLayout> {
         return this.nodes(jsNodes);
     }
 
-    private final native PVArcLayout sort(JavaScriptObject comparator) /*-{
-        return this.sort(comparator);
+    // TODO String[] as nodes
+    // TODO double[] / int[] as nodes
+
+    public final native String orient() /*-{
+        return this.orient;
+    }-*/;
+
+    public final native PVArcLayout orient(String orient) /*-{
+        return this.orient(orient);
     }-*/;
 
     public PVArcLayout sort(Comparator<PVNode> comparator) {
         return this.sort(JsUtils.toJsComparator(comparator));
     }
+
+    private final native PVArcLayout sort(JavaScriptObject comparator) /*-{
+        return this.sort(comparator);
+    }-*/;
 
 }
