@@ -160,7 +160,11 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
         return this.defaults;
     }-*/;
 
-    public final native T defInt(String propertyName, int value) /*-{
+    public final native T def(String propertyName, int value) /*-{
+        return this.def(propertyName, value);
+    }-*/;
+
+    public final native <S> T def(String propertyName, S value) /*-{
         return this.def(propertyName, value);
     }-*/;
 
@@ -208,6 +212,10 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
     }-*/;
 
     public final native int getInt(String propertyName) /*-{
+        return this[propertyName]();
+    }-*/;
+
+    public final native <S> S getObject(String propertyName) /*-{
         return this[propertyName]();
     }-*/;
 
@@ -292,7 +300,11 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
         return this.scale(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
     }-*/;
 
-    public final native T setInt(String propertyName, int value) /*-{
+    public final native T set(String propertyName, int value) /*-{
+        return this[propertyName](value);
+    }-*/;
+
+    public final native <S> T set(String propertyName, S value) /*-{
         return this[propertyName](value);
     }-*/;
 

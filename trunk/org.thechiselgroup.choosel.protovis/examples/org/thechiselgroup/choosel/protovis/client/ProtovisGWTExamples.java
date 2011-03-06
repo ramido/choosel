@@ -41,6 +41,9 @@ public class ProtovisGWTExamples implements EntryPoint {
     private void initExampleVisualizations() {
         examples = new ArrayList<ProtovisExample>();
 
+        examples.add(new ArcDiagramExample2());
+        examples.add(new ArcDiagramExample());
+
         examples.add(new AreaChartExample());
         examples.add(new BarChartExample());
         examples.add(new PieChartExample());
@@ -67,9 +70,6 @@ public class ProtovisGWTExamples implements EntryPoint {
         examples.add(new TreeExample());
         examples.add(new TreemapExample());
         examples.add(new TreemapExample2());
-
-        examples.add(new ArcDiagramExample());
-        examples.add(new ArcDiagramExample2());
 
         examples.add(new BoxAndWhiskerPlotExample());
     }

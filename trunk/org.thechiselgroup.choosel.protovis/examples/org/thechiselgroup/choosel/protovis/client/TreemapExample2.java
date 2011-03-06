@@ -96,7 +96,7 @@ public class TreemapExample2 extends ProtovisWidget implements ProtovisExample {
 
     private void createVisualization(MyDataClass root) {
         final PVOrdinalScale category19 = PVColors.category19();
-        final PVPanel vis = getPVPanel().width(860).height(568).defInt("i", -1);
+        final PVPanel vis = getPVPanel().width(860).height(568).def("i", -1);
 
         PVTreemapLayout treemap = vis.add(PVLayout.Treemap())
                 .nodes(PVDom.create(root, new MyDomAdapter()).nodes())
@@ -120,13 +120,13 @@ public class TreemapExample2 extends ProtovisWidget implements ProtovisExample {
                 .event(PVEventType.MOUSEOVER, new PVEventHandler() {
                     public void onEvent(Event e, String pvEventType, JsArgs args) {
                         PVMark _this = args.getThis();
-                        vis.setInt("i", _this.index());
+                        vis.set("i", _this.index());
                         _this.render();
                     }
                 }).event(PVEventType.MOUSEOUT, new PVEventHandler() {
                     public void onEvent(Event e, String pvEventType, JsArgs args) {
                         PVMark _this = args.getThis();
-                        vis.setInt("i", -1);
+                        vis.set("i", -1);
                         _this.render();
                     }
                 });
@@ -157,7 +157,7 @@ public class TreemapExample2 extends ProtovisWidget implements ProtovisExample {
     }
 
     public String toString() {
-        return "Treemap  Example (highlighting, font)";
+        return "Treemaps (highlighting, font)";
     }
 
 }
