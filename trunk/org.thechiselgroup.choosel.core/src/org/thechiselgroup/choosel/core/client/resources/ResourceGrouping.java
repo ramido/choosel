@@ -70,7 +70,8 @@ public class ResourceGrouping implements ResourceContainer {
         List<Resource> newResources = filterAddedResources(resources);
         addResourcesToAllResources(newResources);
 
-        List<ResourceGroupingChange> changes = new ArrayList<ResourceGroupingChange>();
+        LightweightList<ResourceGroupingChange> changes = CollectionFactory
+                .createLightweightList();
         addResourcesToGrouping(newResources, changes);
         fireChanges(changes);
     }
@@ -109,7 +110,7 @@ public class ResourceGrouping implements ResourceContainer {
 
     private void addResourcesToGroup(String group,
             LightweightList<Resource> addedResources,
-            List<ResourceGroupingChange> changes) {
+            LightweightList<ResourceGroupingChange> changes) {
 
         assert group != null;
         assert addedResources != null;
@@ -133,7 +134,7 @@ public class ResourceGrouping implements ResourceContainer {
     }
 
     private void addResourcesToGrouping(Iterable<Resource> resources,
-            List<ResourceGroupingChange> changes) {
+            LightweightList<ResourceGroupingChange> changes) {
 
         Map<String, LightweightList<Resource>> resourcesPerCategory = categorize(resources);
         for (Map.Entry<String, LightweightList<Resource>> entry : resourcesPerCategory
@@ -172,7 +173,7 @@ public class ResourceGrouping implements ResourceContainer {
      * Clears the internal grouping structure. The grouping should be
      * recalculated after clearing to maintain a consistent state.
      */
-    private void clearGrouping(List<ResourceGroupingChange> changes) {
+    private void clearGrouping(LightweightList<ResourceGroupingChange> changes) {
         for (Entry<String, ResourceSet> entry : groupedResources.entrySet()) {
             changes.add(ResourceGroupingChange.newGroupRemovedDelta(
                     entry.getKey(), entry.getValue(), entry.getValue()));
@@ -201,7 +202,7 @@ public class ResourceGrouping implements ResourceContainer {
         return removedResources;
     }
 
-    private void fireChanges(List<ResourceGroupingChange> changes) {
+    private void fireChanges(LightweightList<ResourceGroupingChange> changes) {
         if (!changes.isEmpty()) {
             eventBus.fireEvent(new ResourceGroupingChangedEvent(changes));
         }
@@ -248,7 +249,8 @@ public class ResourceGrouping implements ResourceContainer {
         List<Resource> removedResources = filterRemovedResources(resources);
         removeResourcesFromAllResources(removedResources);
 
-        List<ResourceGroupingChange> changes = new ArrayList<ResourceGroupingChange>();
+        LightweightList<ResourceGroupingChange> changes = CollectionFactory
+                .createLightweightList();
         removeResourcesFromGrouping(removedResources, changes);
         fireChanges(changes);
     }
@@ -278,7 +280,7 @@ public class ResourceGrouping implements ResourceContainer {
 
     private void removeResourcesFromGroup(String group,
             LightweightList<Resource> removedResources,
-            List<ResourceGroupingChange> changes) {
+            LightweightList<ResourceGroupingChange> changes) {
 
         ResourceSet groupResources = groupedResources.get(group);
 
@@ -296,7 +298,7 @@ public class ResourceGrouping implements ResourceContainer {
     }
 
     private void removeResourcesFromGrouping(Iterable<Resource> resources,
-            List<ResourceGroupingChange> changes) {
+            LightweightList<ResourceGroupingChange> changes) {
 
         Map<String, LightweightList<Resource>> resourcesPerCategory = categorize(resources);
         for (Map.Entry<String, LightweightList<Resource>> entry : resourcesPerCategory
@@ -324,7 +326,8 @@ public class ResourceGrouping implements ResourceContainer {
 
         multiCategorizer = newCategorizer;
 
-        List<ResourceGroupingChange> changes = new ArrayList<ResourceGroupingChange>();
+        LightweightList<ResourceGroupingChange> changes = CollectionFactory
+                .createLightweightList();
         clearGrouping(changes);
         addResourcesToGrouping(allResources, changes);
         fireChanges(changes);

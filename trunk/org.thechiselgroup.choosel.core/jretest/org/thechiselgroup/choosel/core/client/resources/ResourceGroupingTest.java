@@ -88,7 +88,7 @@ public class ResourceGroupingTest {
                 .forClass(ResourceGroupingChangedEvent.class);
         verify(changeHandler, times(1)).onResourceCategoriesChanged(
                 eventCaptor.capture());
-        return eventCaptor.getValue().getChanges();
+        return eventCaptor.getValue().getChanges().toList();
     }
 
     @Test
@@ -263,7 +263,7 @@ public class ResourceGroupingTest {
 
                 assertContentEquals(
                         toSet(newGroupCreatedDelta(GROUP_1_1,
-                                createResources(1))), e.getChanges());
+                                createResources(1))), e.getChanges().toList());
 
                 called[0] = true;
             }
@@ -289,7 +289,8 @@ public class ResourceGroupingTest {
 
                 assertContentEquals(
                         toSet(newGroupCreatedDelta(GROUP_1_1,
-                                createResources(1, 2, 3))), e.getChanges());
+                                createResources(1, 2, 3))), e.getChanges()
+                                .toList());
 
                 called[0] = true;
             }
