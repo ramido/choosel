@@ -60,7 +60,7 @@ public class DefaultViewTest {
 
     private Slot slot;
 
-    private LightweightCollection<ViewItem> captureAddedViewItems() {
+    private LightweightCollection captureAddedViewItems() {
         ArgumentCaptor<LightweightCollection> captor = ArgumentCaptor
                 .forClass(LightweightCollection.class);
         verify(underTest.getContentDisplay(), times(1)).update(
@@ -72,6 +72,16 @@ public class DefaultViewTest {
 
     private List<ViewItem> captureAddedViewItemsAsList() {
         return captureAddedViewItems().toList();
+    }
+
+    private LightweightCollection captureUpdatedViewItems() {
+        ArgumentCaptor<LightweightCollection> captor = ArgumentCaptor
+                .forClass(LightweightCollection.class);
+        verify(underTest.getContentDisplay(), times(1)).update(
+                emptyLightweightCollection(ViewItem.class), captor.capture(),
+                emptyLightweightCollection(ViewItem.class),
+                emptyLightweightCollection(Slot.class));
+        return captor.getValue();
     }
 
     // TODO move to resource splitter test
@@ -459,10 +469,32 @@ public class DefaultViewTest {
 
     /**
      * @see <a
+     *      href="http://code.google.com/p/choosel/issues/detail?id=149">"Issue 149"</a>
+     */
+    @Test
+    public void viewItemIsHighlightedOnChangeWhenAddedResourcesAreAlreadyHighlighted() {
+        ResourceSet originalResources = createResources(TYPE_1, 1);
+        ResourceSet addedResources = createResources(TYPE_1, 2);
+
+        underTest.getResourceModel().addResourceSet(originalResources);
+        underTest.getHoverModel().setHighlightedResourceSet(addedResources);
+        underTest.getResourceModel().addResourceSet(addedResources);
+
+        List<ViewItem> updatedViewItem = captureUpdatedViewItems().toList();
+
+        assertEquals(1, updatedViewItem.size());
+        assertEquals(SubsetStatus.PARTIAL, updatedViewItem.get(0)
+                .getHighlightStatus());
+        assertContentEquals(addedResources, updatedViewItem.get(0)
+                .getHighlightedResources());
+    }
+
+    /**
+     * @see <a
      *      href="http://code.google.com/p/choosel/issues/detail?id=123">"Issue 123"</a>
      */
     @Test
-    public void viewItemIsSelectedWhenSelectionWasSetBeforeResourcesWereAdded() {
+    public void viewItemIsSelectedOnCreateWhenResourcesAreAlreadySelected() {
         ResourceSet resources = createResources(1);
 
         when(underTest.getSelectionModel().getSelection())

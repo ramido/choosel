@@ -15,12 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.resources;
 
-import java.util.Collections;
-
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionUtils;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 
 /**
- * Delta change to the resource groupings.
+ * Delta change to a group in {@link ResourceGrouping}.
  * 
  * @author Lars Grammel
  */
@@ -48,8 +48,9 @@ public class ResourceGroupingChange {
      *            <code>null</code> if no resources were removed.
      */
     public static ResourceGroupingChange newGroupChangedDelta(String groupID,
-            ResourceSet resourceSet, Iterable<Resource> addedResources,
-            Iterable<Resource> removedResources) {
+            ResourceSet resourceSet,
+            LightweightCollection<Resource> addedResources,
+            LightweightCollection<Resource> removedResources) {
 
         assert groupID != null;
         assert resourceSet != null;
@@ -61,10 +62,10 @@ public class ResourceGroupingChange {
 
         return new ResourceGroupingChange(Delta.GROUP_CHANGED, groupID,
                 resourceSet,
-                addedResources == null ? Collections.<Resource> emptyList()
-                        : addedResources,
-                removedResources == null ? Collections.<Resource> emptyList()
-                        : removedResources);
+                addedResources == null ? LightweightCollections
+                        .<Resource> emptyCollection() : addedResources,
+                removedResources == null ? LightweightCollections
+                        .<Resource> emptyCollection() : removedResources);
     }
 
     /**
@@ -89,7 +90,8 @@ public class ResourceGroupingChange {
      *            {@link Iterable} over added resources
      */
     public static ResourceGroupingChange newGroupCreatedDelta(String groupID,
-            ResourceSet resourceSet, Iterable<Resource> addedResources) {
+            ResourceSet resourceSet,
+            LightweightCollection<Resource> addedResources) {
 
         assert addedResources != null;
         assert resourceSet != null;
@@ -98,7 +100,8 @@ public class ResourceGroupingChange {
                 CollectionUtils.toList(addedResources));
 
         return new ResourceGroupingChange(Delta.GROUP_CREATED, groupID,
-                resourceSet, addedResources, Collections.<Resource> emptyList());
+                resourceSet, addedResources,
+                LightweightCollections.<Resource> emptyCollection());
     }
 
     /**
@@ -123,7 +126,8 @@ public class ResourceGroupingChange {
      *            {@link Iterable} over removed resources
      */
     public static ResourceGroupingChange newGroupRemovedDelta(String groupID,
-            ResourceSet resourceSet, Iterable<Resource> removedResources) {
+            ResourceSet resourceSet,
+            LightweightCollection<Resource> removedResources) {
 
         assert removedResources != null;
         assert resourceSet != null;
@@ -132,7 +136,8 @@ public class ResourceGroupingChange {
                 CollectionUtils.toList(removedResources));
 
         return new ResourceGroupingChange(Delta.GROUP_REMOVED, groupID,
-                resourceSet, Collections.<Resource> emptyList(),
+                resourceSet,
+                LightweightCollections.<Resource> emptyCollection(),
                 removedResources);
     }
 
@@ -142,13 +147,14 @@ public class ResourceGroupingChange {
 
     private ResourceSet resourceSet;
 
-    private Iterable<Resource> addedResources;
+    private LightweightCollection<Resource> addedResources;
 
-    private Iterable<Resource> removedResources;
+    private LightweightCollection<Resource> removedResources;
 
     private ResourceGroupingChange(Delta delta, String groupID,
-            ResourceSet resourceSet, Iterable<Resource> addedResources,
-            Iterable<Resource> removedResources) {
+            ResourceSet resourceSet,
+            LightweightCollection<Resource> addedResources,
+            LightweightCollection<Resource> removedResources) {
 
         assert delta != null;
         assert groupID != null;
@@ -199,12 +205,12 @@ public class ResourceGroupingChange {
         return true;
     }
 
-    public Iterable<Resource> getAddedResources() {
+    public LightweightCollection<Resource> getAddedResources() {
         return addedResources;
     }
 
     /**
-     * @return kind of change (ADD / UPDATE / REMOVE )
+     * @return {@link Delta} - type of change
      */
     public Delta getDelta() {
         return delta;
@@ -217,7 +223,7 @@ public class ResourceGroupingChange {
         return groupID;
     }
 
-    public Iterable<Resource> getRemovedResources() {
+    public LightweightCollection<Resource> getRemovedResources() {
         return removedResources;
     }
 
