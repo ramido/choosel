@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views;
 
-import org.thechiselgroup.choosel.core.client.resources.CombinedResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.UnionResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.CountingResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
@@ -31,7 +31,7 @@ public class HoverModel {
 
     private ResourceSet highlightedSingleResources;
 
-    private CombinedResourceSet combinedHighlightedResources;
+    private UnionResourceSet combinedHighlightedResources;
 
     public HoverModel() {
         highlightedResourceSetContainer = new ProxyResourceSet();
@@ -44,7 +44,7 @@ public class HoverModel {
          */
         highlightedSingleResources = new CountingResourceSet();
 
-        combinedHighlightedResources = new CombinedResourceSet(
+        combinedHighlightedResources = new UnionResourceSet(
                 new DefaultResourceSet());
         combinedHighlightedResources
                 .addResourceSet(highlightedResourceSetContainer);

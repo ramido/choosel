@@ -29,12 +29,12 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-public class CombinedResourceSetTest {
+public class UnionResourceSetTest {
 
     @Mock
     private ResourceSetChangedEventHandler resourceSetChangedHandler;
 
-    private CombinedResourceSet underTest;
+    private UnionResourceSet underTest;
 
     @Test
     public void addMultipleResourcesToContainedResourceSet() {
@@ -148,6 +148,6 @@ public class CombinedResourceSetTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        underTest = new CombinedResourceSet(new DefaultResourceSet());
+        underTest = new UnionResourceSet(new DefaultResourceSet());
     }
 }
