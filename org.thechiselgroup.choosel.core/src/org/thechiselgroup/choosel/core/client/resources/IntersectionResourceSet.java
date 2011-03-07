@@ -73,6 +73,12 @@ public class IntersectionResourceSet extends AbstractCombinedResourceSet {
     }
 
     @Override
+    public void dispose() {
+        allResources.dispose();
+        super.dispose();
+    }
+
+    @Override
     protected void doAdd(ResourceSet resourceSet) {
         allResources.addResourceSet(resourceSet);
         if (containedResourceSets.size() == 1) {

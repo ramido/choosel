@@ -3,17 +3,19 @@ package org.thechiselgroup.choosel.core.client.resources;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.thechiselgroup.choosel.core.client.util.Disposable;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 
-//TODO violates LSP --> need for ReadableResourceSet, WriteableResourceSet
-public abstract class AbstractCombinedResourceSet extends DelegatingResourceSet {
+// TODO violates LSP --> need for ReadableResourceSet, WriteableResourceSet
+public abstract class AbstractCombinedResourceSet extends DelegatingResourceSet
+        implements Disposable {
 
-    protected static class ResourceSetElement {
+    protected static class ResourceSetElement implements Disposable {
 
-        protected HandlerRegistration handlerRegistration;
+        private HandlerRegistration handlerRegistration;
 
         protected ResourceSet resourceSet;
 
@@ -21,8 +23,15 @@ public abstract class AbstractCombinedResourceSet extends DelegatingResourceSet 
             this.resourceSet = resourceSet;
         }
 
-        public void removeHandler() {
+        @Override
+        public void dispose() {
             handlerRegistration.removeHandler();
+        }
+
+        private void registerHandler(ResourceSet resourceSet,
+                ResourceSetChangedEventHandler handler) {
+
+            handlerRegistration = resourceSet.addEventHandler(handler);
         }
 
     }
@@ -68,8 +77,8 @@ public abstract class AbstractCombinedResourceSet extends DelegatingResourceSet 
 
         doAdd(resourceSet);
 
-        resourceSetElement.handlerRegistration = resourceSet
-                .addEventHandler(resourceSetChangedHandler);
+        resourceSetElement.registerHandler(resourceSet,
+                resourceSetChangedHandler);
 
         eventBus.fireEvent(new ResourceSetAddedEvent(resourceSet));
     }
@@ -119,6 +128,13 @@ public abstract class AbstractCombinedResourceSet extends DelegatingResourceSet 
         return getResourceSetElement(resourceSet) != null;
     }
 
+    @Override
+    public void dispose() {
+        for (ResourceSetElement resourceSetElement : containedResourceSets) {
+            resourceSetElement.dispose();
+        }
+    }
+
     protected abstract void doAdd(ResourceSet resourceSet);
 
     protected abstract void doRemove(ResourceSet resourceSet);
@@ -160,7 +176,7 @@ public abstract class AbstractCombinedResourceSet extends DelegatingResourceSet 
         }
 
         containedResourceSets.remove(resourceSetElement);
-        resourceSetElement.removeHandler();
+        resourceSetElement.dispose();
 
         doRemove(resourceSet);
 
