@@ -24,6 +24,7 @@ import org.thechiselgroup.choosel.core.client.persistence.Memento;
 import org.thechiselgroup.choosel.core.client.persistence.Persistable;
 import org.thechiselgroup.choosel.core.client.persistence.PersistableRestorationService;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.IntersectionResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByPropertyMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByUriMultiCategorizer;
@@ -184,6 +185,8 @@ public class DefaultView extends AbstractWindowContent implements View {
     private LightweightCollection<SidePanelSection> sidePanelSections;
 
     private SlotMappingInitializer slotMappingInitializer;
+
+    private IntersectionResourceSet highlightedResourcesIntersection;
 
     public DefaultView(ResourceGrouping resourceGrouping,
             ViewContentDisplay contentDisplay, String label,
@@ -421,7 +424,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         initResourceGrouping();
         initAllResourcesToResourceGroupingLink();
-        initHoverModelHooks();
+        initHighlightingModel();
 
         initUI();
 
@@ -520,13 +523,23 @@ public class DefaultView extends AbstractWindowContent implements View {
         contentDisplay.init(contentDisplayCallback);
     }
 
-    private void initHoverModelHooks() {
+    /**
+     * Creates an intersection of contained resources with highlighted resources
+     * and registers for changes.
+     */
+    private void initHighlightingModel() {
+        highlightedResourcesIntersection = new IntersectionResourceSet(
+                new DefaultResourceSet());
+        highlightedResourcesIntersection.addResourceSet(resourceModel
+                .getResources());
+        highlightedResourcesIntersection.addResourceSet(hoverModel
+                .getResources());
+
         handlerRegistrations.addHandlerRegistration(hoverModel
                 .addEventHandler(new ResourceSetChangedEventHandler() {
                     @Override
                     public void onResourceSetChanged(
                             ResourceSetChangedEvent event) {
-
                         updateHighlighting(event.getAddedResources(),
                                 event.getRemovedResources());
                     }
@@ -762,15 +775,15 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private DefaultViewItem removeViewItem(String groupID) {
         assert groupID != null : "groupIDs must not be null";
-        assert viewItemsByGroupId.containsKey(groupID) : "no resource item for "
+        assert viewItemsByGroupId.containsKey(groupID) : "no view item for "
                 + groupID;
 
-        DefaultViewItem resourceItem = viewItemsByGroupId.remove(groupID);
-        resourceItem.dispose();
+        DefaultViewItem viewItem = viewItemsByGroupId.remove(groupID);
+        viewItem.dispose();
 
         assert !viewItemsByGroupId.containsKey(groupID);
 
-        return resourceItem;
+        return viewItem;
     }
 
     @Override
@@ -909,12 +922,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         contentDisplay.checkResize();
     }
 
-    // TODO replace with add / remove of resources from item
-    // --> can we have filtered view on hover set instead??
-    // --> problem with the order of update calls
-    // ----> use view-internal hover model instead?
-    // TODO dispose resource items once filtered set is used
-    // TODO check that highlighting is right from the beginning
     private void updateHighlighting(
             LightweightCollection<Resource> addedResources,
             LightweightCollection<Resource> removedResources) {
