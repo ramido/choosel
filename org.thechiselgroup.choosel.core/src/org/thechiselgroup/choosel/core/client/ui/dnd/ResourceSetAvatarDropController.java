@@ -137,18 +137,20 @@ public class ResourceSetAvatarDropController extends SimpleDropController {
     // TODO support dragging multiple widgets?
     @Override
     public void onDrop(DragContext context) {
-        if (canDrop(context) || hasCommandBeenExecuted()) {
-            if (!hasCommandBeenExecuted()) {
-                executeCommand(createCommand(context));
+        // remove popup even if error occurs
+        try {
+            if (canDrop(context) || hasCommandBeenExecuted()) {
+                if (!hasCommandBeenExecuted()) {
+                    executeCommand(createCommand(context));
+                }
+
+                commandManager.addExecutedCommand(executedCommand);
+                executedCommand = null; // prevent undo from later onLeave
             }
-
-            commandManager.addExecutedCommand(executedCommand);
-            executedCommand = null; // prevent undo from later onLeave
+        } finally {
+            hidePopup();
+            super.onDrop(context);
         }
-
-        hidePopup();
-
-        super.onDrop(context);
     }
 
     @Override
@@ -170,10 +172,13 @@ public class ResourceSetAvatarDropController extends SimpleDropController {
     // TODO support dragging multiple widgets?
     @Override
     public void onLeave(DragContext context) {
-        undoCommand();
-        hidePopup();
-
-        super.onLeave(context);
+        // remove popup even if command execution fails
+        try {
+            undoCommand();
+        } finally {
+            hidePopup();
+            super.onLeave(context);
+        }
     }
 
     // TODO refactor
