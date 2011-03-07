@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.resources;
 
-import java.util.List;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -30,9 +30,11 @@ public class ResourceGroupingChangedEvent extends
      * a client class before similar elements are removed, this can cause
      * errors, and the unordered nature of sets allows for these errors.
      */
-    private final List<ResourceGroupingChange> changes;
+    private final LightweightList<ResourceGroupingChange> changes;
 
-    public ResourceGroupingChangedEvent(List<ResourceGroupingChange> changes) {
+    public ResourceGroupingChangedEvent(
+            LightweightList<ResourceGroupingChange> changes) {
+
         assert changes != null;
         assert !changes.isEmpty();
 
@@ -49,7 +51,7 @@ public class ResourceGroupingChangedEvent extends
         return TYPE;
     }
 
-    public List<ResourceGroupingChange> getChanges() {
+    public LightweightList<ResourceGroupingChange> getChanges() {
         return changes;
     }
 

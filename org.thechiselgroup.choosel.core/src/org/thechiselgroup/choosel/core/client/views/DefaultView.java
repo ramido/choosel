@@ -662,7 +662,7 @@ public class DefaultView extends AbstractWindowContent implements View {
      * Processes the added resource groups when the grouping changes.
      */
     private LightweightCollection<ViewItem> processAddChanges(
-            List<ResourceGroupingChange> changes) {
+            LightweightList<ResourceGroupingChange> changes) {
 
         LightweightList<ViewItem> addedResourceItems = CollectionFactory
                 .createLightweightList();
@@ -699,7 +699,7 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     private LightweightCollection<ViewItem> processRemoveChanges(
-            List<ResourceGroupingChange> changes) {
+            LightweightList<ResourceGroupingChange> changes) {
 
         LightweightList<ViewItem> removedViewItems = CollectionFactory
                 .createLightweightList();
@@ -717,7 +717,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     // TODO implement
     private LightweightCollection<ViewItem> processUpdates(
-            List<ResourceGroupingChange> changes) {
+            LightweightList<ResourceGroupingChange> changes) {
 
         LightweightList<ViewItem> updatedViewItems = CollectionFactory
                 .createLightweightList();
@@ -969,7 +969,7 @@ public class DefaultView extends AbstractWindowContent implements View {
     // (d) add + update
     // (e) remove + update
     private void updateViewItemsOnModelChange(
-            List<ResourceGroupingChange> changes) {
+            LightweightList<ResourceGroupingChange> changes) {
 
         assert changes != null;
         assert !changes.isEmpty();
