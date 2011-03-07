@@ -15,7 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.resources;
 
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
+import java.util.Collections;
+
+import org.thechiselgroup.choosel.core.client.util.collections.CollectionUtils;
 
 /**
  * Delta change to the resource groupings.
@@ -24,19 +26,13 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
  */
 public class ResourceGroupingChange {
 
-    private ResourceGroupingChangeDelta delta;
+    public static enum Delta {
 
-    private String groupID;
+        GROUP_CREATED, GROUP_REMOVED, GROUP_CHANGED
 
-    private ResourceSet resourceSet;
-
-    private LightweightList<Resource> addedResources;
-
-    private LightweightList<Resource> removedResources;
+    }
 
     /**
-     * @param delta
-     *            kind of change (ADD / UPDATE / REMOVE )
      * @param groupID
      *            identifier of the changed group. The identifier is local to
      *            the grouping.
@@ -44,17 +40,127 @@ public class ResourceGroupingChange {
      *            What is included here depends on the delta: Delta.ADD: new
      *            content (all resources in set); Delta.UPDATE: new content (all
      *            resources in set); Delta.REMOVE: old content
+     * @param addedResources
+     *            Resources that were added to the group. Can be
+     *            <code>null</code> if no resources were added.
+     * @param removedResources
+     *            Resources that were removed from the group. Can be
+     *            <code>null</code> if no resources were removed.
      */
-    public ResourceGroupingChange(ResourceGroupingChangeDelta delta,
-            String groupID, ResourceSet resourceSet) {
+    public static ResourceGroupingChange newGroupChangedDelta(String groupID,
+            ResourceSet resourceSet, Iterable<Resource> addedResources,
+            Iterable<Resource> removedResources) {
+
+        assert groupID != null;
+        assert resourceSet != null;
+        assert addedResources == null
+                || resourceSet.containsAll(addedResources);
+        assert removedResources == null
+                || CollectionUtils.containsNone(resourceSet.toList(),
+                        CollectionUtils.toList(removedResources));
+
+        return new ResourceGroupingChange(Delta.GROUP_CHANGED, groupID,
+                resourceSet,
+                addedResources == null ? Collections.<Resource> emptyList()
+                        : addedResources,
+                removedResources == null ? Collections.<Resource> emptyList()
+                        : removedResources);
+    }
+
+    /**
+     * @param groupID
+     *            identifier of the created group. The identifier is local to
+     *            the grouping.
+     * @param resourceSet
+     *            added {@link ResourceSet}
+     */
+    public static ResourceGroupingChange newGroupCreatedDelta(String groupID,
+            ResourceSet resourceSet) {
+        return newGroupCreatedDelta(groupID, resourceSet, resourceSet);
+    }
+
+    /**
+     * @param groupID
+     *            identifier of the created group. The identifier is local to
+     *            the grouping.
+     * @param resourceSet
+     *            added {@link ResourceSet}
+     * @param addedResources
+     *            {@link Iterable} over added resources
+     */
+    public static ResourceGroupingChange newGroupCreatedDelta(String groupID,
+            ResourceSet resourceSet, Iterable<Resource> addedResources) {
+
+        assert addedResources != null;
+        assert resourceSet != null;
+        assert groupID != null;
+        assert CollectionUtils.contentEquals(resourceSet,
+                CollectionUtils.toList(addedResources));
+
+        return new ResourceGroupingChange(Delta.GROUP_CREATED, groupID,
+                resourceSet, addedResources, Collections.<Resource> emptyList());
+    }
+
+    /**
+     * @param groupID
+     *            identifier of the created group. The identifier is local to
+     *            the grouping.
+     * @param resourceSet
+     *            added {@link ResourceSet}
+     */
+    public static ResourceGroupingChange newGroupRemovedDelta(String groupID,
+            ResourceSet resourceSet) {
+        return newGroupRemovedDelta(groupID, resourceSet, resourceSet);
+    }
+
+    /**
+     * @param groupID
+     *            identifier of the created group. The identifier is local to
+     *            the grouping.
+     * @param resourceSet
+     *            added {@link ResourceSet}
+     * @param removedResources
+     *            {@link Iterable} over removed resources
+     */
+    public static ResourceGroupingChange newGroupRemovedDelta(String groupID,
+            ResourceSet resourceSet, Iterable<Resource> removedResources) {
+
+        assert removedResources != null;
+        assert resourceSet != null;
+        assert groupID != null;
+        assert CollectionUtils.contentEquals(resourceSet,
+                CollectionUtils.toList(removedResources));
+
+        return new ResourceGroupingChange(Delta.GROUP_REMOVED, groupID,
+                resourceSet, Collections.<Resource> emptyList(),
+                removedResources);
+    }
+
+    private Delta delta;
+
+    private String groupID;
+
+    private ResourceSet resourceSet;
+
+    private Iterable<Resource> addedResources;
+
+    private Iterable<Resource> removedResources;
+
+    private ResourceGroupingChange(Delta delta, String groupID,
+            ResourceSet resourceSet, Iterable<Resource> addedResources,
+            Iterable<Resource> removedResources) {
 
         assert delta != null;
         assert groupID != null;
         assert resourceSet != null;
+        assert addedResources != null;
+        assert removedResources != null;
 
         this.delta = delta;
         this.groupID = groupID;
         this.resourceSet = resourceSet;
+        this.addedResources = addedResources;
+        this.removedResources = removedResources;
     }
 
     @Override
@@ -80,13 +186,27 @@ public class ResourceGroupingChange {
             return false;
         }
 
+        if (!CollectionUtils
+                .contentEquals(addedResources, other.addedResources)) {
+            return false;
+        }
+
+        if (!CollectionUtils.contentEquals(removedResources,
+                other.removedResources)) {
+            return false;
+        }
+
         return true;
+    }
+
+    public Iterable<Resource> getAddedResources() {
+        return addedResources;
     }
 
     /**
      * @return kind of change (ADD / UPDATE / REMOVE )
      */
-    public ResourceGroupingChangeDelta getDelta() {
+    public Delta getDelta() {
         return delta;
     }
 
@@ -95,6 +215,10 @@ public class ResourceGroupingChange {
      */
     public String getGroupID() {
         return groupID;
+    }
+
+    public Iterable<Resource> getRemovedResources() {
+        return removedResources;
     }
 
     /**

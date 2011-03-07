@@ -29,7 +29,6 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceByPropertyMultiC
 import org.thechiselgroup.choosel.core.client.resources.ResourceByUriMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChange;
-import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChangeDelta;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChangedEvent;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChangedHandler;
 import org.thechiselgroup.choosel.core.client.resources.ResourceMultiCategorizer;
@@ -677,7 +676,7 @@ public class DefaultView extends AbstractWindowContent implements View {
         ResourceSet highlightedResources = null;
         ResourceSet selectedResources = null;
         for (ResourceGroupingChange change : changes) {
-            if (change.getDelta() == ResourceGroupingChangeDelta.GROUP_CREATED) {
+            if (change.getDelta() == ResourceGroupingChange.Delta.GROUP_CREATED) {
                 if (highlightedResources == null) {
                     highlightedResources = new DefaultResourceSet();
                     highlightedResources.addAll(resourceModel
