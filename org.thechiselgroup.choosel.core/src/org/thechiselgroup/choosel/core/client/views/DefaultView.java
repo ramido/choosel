@@ -29,6 +29,7 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceByPropertyMultiC
 import org.thechiselgroup.choosel.core.client.resources.ResourceByUriMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChange;
+import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChange.Delta;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChangedEvent;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChangedHandler;
 import org.thechiselgroup.choosel.core.client.resources.ResourceMultiCategorizer;
@@ -557,9 +558,7 @@ public class DefaultView extends AbstractWindowContent implements View {
             @Override
             public void onResourceCategoriesChanged(
                     ResourceGroupingChangedEvent e) {
-
-                assert e != null;
-                updateViewItemsOnModelChange(e.getChanges());
+                updateViewItemsOnModelChange(e);
             }
         });
     }
@@ -664,7 +663,11 @@ public class DefaultView extends AbstractWindowContent implements View {
     private LightweightCollection<ViewItem> processAddChanges(
             LightweightList<ResourceGroupingChange> changes) {
 
-        LightweightList<ViewItem> addedResourceItems = CollectionFactory
+        if (changes.isEmpty()) {
+            return LightweightCollections.emptyCollection();
+        }
+
+        LightweightList<ViewItem> addedViewItems = CollectionFactory
                 .createLightweightList();
 
         /*
@@ -672,45 +675,39 @@ public class DefaultView extends AbstractWindowContent implements View {
          * enable fast containment checks in DefaultResourceItem
          * 
          * TODO refactor: use intersection resource sets instead.
+         * 
+         * TODO extract
          */
-        ResourceSet highlightedResources = null;
-        ResourceSet selectedResources = null;
-        for (ResourceGroupingChange change : changes) {
-            if (change.getDelta() == ResourceGroupingChange.Delta.GROUP_CREATED) {
-                if (highlightedResources == null) {
-                    highlightedResources = new DefaultResourceSet();
-                    highlightedResources.addAll(resourceModel
-                            .getIntersection(hoverModel.getResources()));
-                }
-                if (selectedResources == null) {
-                    selectedResources = new DefaultResourceSet();
-                    selectedResources.addAll(resourceModel
-                            .getIntersection(selectionModel.getSelection()));
-                }
-                DefaultViewItem resourceItem = createViewItem(
-                        change.getGroupID(), change.getResourceSet(),
-                        highlightedResources, selectedResources);
+        LightweightList<Resource> highlightedResources = resourceModel
+                .getIntersection(hoverModel.getResources());
+        LightweightList<Resource> selectedResources = resourceModel
+                .getIntersection(selectionModel.getSelection());
 
-                addedResourceItems.add(resourceItem);
-            }
+        for (ResourceGroupingChange change : changes) {
+            assert change.getDelta() == Delta.GROUP_CREATED;
+
+            addedViewItems.add(createViewItem(change.getGroupID(),
+                    change.getResourceSet(), highlightedResources,
+                    selectedResources));
         }
 
-        return addedResourceItems;
+        return addedViewItems;
     }
 
     private LightweightCollection<ViewItem> processRemoveChanges(
             LightweightList<ResourceGroupingChange> changes) {
 
+        if (changes.isEmpty()) {
+            return LightweightCollections.emptyCollection();
+        }
+
         LightweightList<ViewItem> removedViewItems = CollectionFactory
                 .createLightweightList();
         for (ResourceGroupingChange change : changes) {
-            switch (change.getDelta()) {
-            case GROUP_REMOVED: {
-                // XXX dispose should be done after method call...
-                removedViewItems.add(removeViewItem(change.getGroupID()));
-            }
-                break;
-            }
+            assert change.getDelta() == Delta.GROUP_REMOVED;
+
+            // XXX dispose should be done after method call...
+            removedViewItems.add(removeViewItem(change.getGroupID()));
         }
         return removedViewItems;
     }
@@ -719,26 +716,25 @@ public class DefaultView extends AbstractWindowContent implements View {
     private LightweightCollection<ViewItem> processUpdates(
             LightweightList<ResourceGroupingChange> changes) {
 
+        if (changes.isEmpty()) {
+            return LightweightCollections.emptyCollection();
+        }
+
         LightweightList<ViewItem> updatedViewItems = CollectionFactory
                 .createLightweightList();
         for (ResourceGroupingChange change : changes) {
-            switch (change.getDelta()) {
-            case GROUP_CHANGED: {
-                DefaultViewItem viewItem = viewItemsByGroupId.get(change
-                        .getGroupID());
+            assert change.getDelta() == Delta.GROUP_CHANGED;
+            DefaultViewItem viewItem = viewItemsByGroupId.get(change
+                    .getGroupID());
 
-                // intersect added with highlighting set - TODO extract
-                LightweightList<Resource> highlightedAdded = hoverModel
-                        .getResources().getIntersection(
-                                change.getAddedResources());
+            // intersect added with highlighting set - TODO extract
+            LightweightList<Resource> highlightedAdded = hoverModel
+                    .getResources().getIntersection(change.getAddedResources());
 
-                if (!highlightedAdded.isEmpty()) {
-                    viewItem.updateHighlightedResources(highlightedAdded,
-                            LightweightCollections.<Resource> emptyCollection());
-                    updatedViewItems.add(viewItem);
-                }
-            }
-                break;
+            if (!highlightedAdded.isEmpty()) {
+                viewItem.updateHighlightedResources(highlightedAdded,
+                        LightweightCollections.<Resource> emptyCollection());
+                updatedViewItems.add(viewItem);
             }
         }
 
@@ -968,19 +964,19 @@ public class DefaultView extends AbstractWindowContent implements View {
     // (c) update
     // (d) add + update
     // (e) remove + update
-    private void updateViewItemsOnModelChange(
-            LightweightList<ResourceGroupingChange> changes) {
-
-        assert changes != null;
-        assert !changes.isEmpty();
+    private void updateViewItemsOnModelChange(ResourceGroupingChangedEvent e) {
+        assert e != null;
 
         /*
          * IMPORTANT: remove old items before adding new once (there might be
          * conflicts, i.e. groups with the same id)
          */
-        LightweightCollection<ViewItem> removedResourceItems = processRemoveChanges(changes);
-        LightweightCollection<ViewItem> addedResourceItems = processAddChanges(changes);
-        LightweightCollection<ViewItem> updatedResourceItems = processUpdates(changes);
+        LightweightCollection<ViewItem> removedResourceItems = processRemoveChanges(e
+                .getChanges(Delta.GROUP_REMOVED));
+        LightweightCollection<ViewItem> addedResourceItems = processAddChanges(e
+                .getChanges(Delta.GROUP_CREATED));
+        LightweightCollection<ViewItem> updatedResourceItems = processUpdates(e
+                .getChanges(Delta.GROUP_CHANGED));
 
         contentDisplay.update(addedResourceItems, updatedResourceItems,
                 removedResourceItems,
