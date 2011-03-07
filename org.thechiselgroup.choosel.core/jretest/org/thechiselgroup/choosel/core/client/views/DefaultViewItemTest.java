@@ -173,6 +173,16 @@ public class DefaultViewItemTest {
     }
 
     @Test
+    public void getHighlightedResourcesAfterHighlightedSubsetIsRemoved() {
+        resources.addAll(createResources(1, 2, 3, 4));
+        underTest.updateHighlightedResources(createResources(1, 2),
+                LightweightCollections.<Resource> emptyCollection());
+        resources.removeAll(createResources(1, 2));
+        assertContentEquals(createResources(),
+                underTest.getHighlightedResources());
+    }
+
+    @Test
     public void getHighlightedResourcesAfterRemoveHighlightingNoContainedResource() {
         resources.addAll(createResources(1, 2, 3, 4));
         underTest.updateHighlightedResources(
@@ -436,6 +446,15 @@ public class DefaultViewItemTest {
     }
 
     @Test
+    public void getSelectedResourcesAfterSelectedSubsetIsRemoved() {
+        resources.addAll(createResources(1, 2, 3, 4));
+        underTest.updateSelectedResources(createResources(1, 2),
+                LightweightCollections.<Resource> emptyCollection());
+        resources.removeAll(createResources(1, 2));
+        assertContentEquals(createResources(), underTest.getSelectedResources());
+    }
+
+    @Test
     public void getSlotValue() {
         resources.addAll(createResources(1, 2, 3, 4));
 
@@ -475,6 +494,15 @@ public class DefaultViewItemTest {
         handler.onResourceCategoriesChanged(new SlotMappingChangedEvent(
                 numberSlot));
         assertEquals(3d, underTest.getSlotValue(numberSlot));
+    }
+
+    @Test
+    public void highlightStatusAfterHighlightedSubsetIsRemoved() {
+        resources.addAll(createResources(1, 2, 3, 4));
+        underTest.updateHighlightedResources(createResources(1, 2),
+                LightweightCollections.<Resource> emptyCollection());
+        resources.removeAll(createResources(1, 2));
+        assertEquals(SubsetStatus.NONE, underTest.getHighlightStatus());
     }
 
     @Test
@@ -521,6 +549,15 @@ public class DefaultViewItemTest {
     @Test
     public void isSelectedIsFalseAfterInit() {
         // assertEquals(false, underTest.isSelected());
+        assertEquals(SubsetStatus.NONE, underTest.getSelectionStatus());
+    }
+
+    @Test
+    public void selectionStatusAfterSelectedSubsetIsRemoved() {
+        resources.addAll(createResources(1, 2, 3, 4));
+        underTest.updateSelectedResources(createResources(1, 2),
+                LightweightCollections.<Resource> emptyCollection());
+        resources.removeAll(createResources(1, 2));
         assertEquals(SubsetStatus.NONE, underTest.getSelectionStatus());
     }
 

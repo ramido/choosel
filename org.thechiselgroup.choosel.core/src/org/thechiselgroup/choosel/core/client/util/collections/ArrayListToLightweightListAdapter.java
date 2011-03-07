@@ -72,4 +72,8 @@ public class ArrayListToLightweightListAdapter<T> implements LightweightList<T> 
         return delegate;
     }
 
+    @Override
+    public String toString() {
+        return delegate.toString();
+    }
 }

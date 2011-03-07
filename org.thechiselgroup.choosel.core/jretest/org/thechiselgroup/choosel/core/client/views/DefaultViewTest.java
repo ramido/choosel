@@ -494,6 +494,51 @@ public class DefaultViewTest {
      *      href="http://code.google.com/p/choosel/issues/detail?id=149">"Issue 149"</a>
      */
     @Test
+    public void viewItemIsNotHighlightedOnChangeWhenOnlyRemovedResourcesAreHighlighted() {
+        ResourceSet originalResources = createLabeledResources(TYPE_1, 1, 2);
+        ResourceSet removedResources = createResources(TYPE_1, 2);
+
+        underTest.getHoverModel().setHighlightedResourceSet(removedResources);
+        underTest.getResourceModel().addResourceSet(originalResources);
+        originalResources.removeAll(removedResources);
+
+        List<ViewItem> updatedViewItem = captureUpdatedViewItems().toList();
+
+        assertEquals(1, updatedViewItem.size());
+        assertEquals(SubsetStatus.NONE, updatedViewItem.get(0)
+                .getHighlightStatus());
+        assertEquals(true, updatedViewItem.get(0).getHighlightedResources()
+                .isEmpty());
+    }
+
+    /**
+     * @see <a
+     *      href="http://code.google.com/p/choosel/issues/detail?id=149">"Issue 149"</a>
+     */
+    @Test
+    public void viewItemIsNotSelectedOnChangeWhenOnlyRemovedResourcesAreSelected() {
+        ResourceSet originalResources = createLabeledResources(TYPE_1, 1, 2);
+        ResourceSet removedResources = createResources(TYPE_1, 2);
+
+        when(underTest.getSelectionModel().getSelection()).thenReturn(
+                removedResources);
+        underTest.getResourceModel().addResourceSet(originalResources);
+        originalResources.removeAll(removedResources);
+
+        List<ViewItem> updatedViewItem = captureUpdatedViewItems().toList();
+
+        assertEquals(1, updatedViewItem.size());
+        assertEquals(SubsetStatus.NONE, updatedViewItem.get(0)
+                .getSelectionStatus());
+        assertEquals(true, updatedViewItem.get(0).getSelectedResources()
+                .isEmpty());
+    }
+
+    /**
+     * @see <a
+     *      href="http://code.google.com/p/choosel/issues/detail?id=149">"Issue 149"</a>
+     */
+    @Test
     public void viewItemIsSelectedOnChangeWhenAddedResourcesAreAlreadySelected() {
         ResourceSet originalResources = createResources(TYPE_1, 1);
         ResourceSet addedResources = createResources(TYPE_1, 2);

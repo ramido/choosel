@@ -730,18 +730,23 @@ public class DefaultView extends AbstractWindowContent implements View {
             // intersect added with highlighting set - TODO extract
             LightweightList<Resource> highlightedAdded = hoverModel
                     .getResources().getIntersection(change.getAddedResources());
+            LightweightList<Resource> highlightedRemoved = hoverModel
+                    .getResources().getIntersection(
+                            change.getRemovedResources());
 
-            if (!highlightedAdded.isEmpty()) {
+            if (!highlightedAdded.isEmpty() || !highlightedRemoved.isEmpty()) {
                 viewItem.updateHighlightedResources(highlightedAdded,
-                        LightweightCollections.<Resource> emptyCollection());
+                        highlightedRemoved);
                 updatedViewItems.add(viewItem);
             }
 
             LightweightList<Resource> selectedAdded = selectionModel
                     .getSelection().getIntersection(change.getAddedResources());
-            if (!selectedAdded.isEmpty()) {
-                viewItem.updateSelectedResources(selectedAdded,
-                        LightweightCollections.<Resource> emptyCollection());
+            LightweightList<Resource> selectedRemoved = selectionModel
+                    .getSelection().getIntersection(
+                            change.getRemovedResources());
+            if (!selectedAdded.isEmpty() || !selectedRemoved.isEmpty()) {
+                viewItem.updateSelectedResources(selectedAdded, selectedRemoved);
                 updatedViewItems.add(viewItem);
             }
         }

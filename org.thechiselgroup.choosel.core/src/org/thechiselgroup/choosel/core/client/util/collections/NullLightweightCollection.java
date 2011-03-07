@@ -58,4 +58,9 @@ public final class NullLightweightCollection<T> implements
         return Collections.emptyList();
     }
 
+    @Override
+    public String toString() {
+        return "[]";
+    }
+
 }

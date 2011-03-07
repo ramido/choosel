@@ -62,6 +62,7 @@ public interface ResourceSet extends HasLabel, LightweightCollection<Resource> {
      * 
      * @return handler registration for removing the event handler
      */
+    // TODO rename
     HandlerRegistration addEventHandler(ResourceSetChangedEventHandler handler);
 
     /**
