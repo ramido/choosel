@@ -19,7 +19,6 @@ import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 
-// TODO violates LSP --> need for ReadableResourceSet, WriteableResourceSet
 public class IntersectionResourceSet extends AbstractCombinedResourceSet {
 
     private UnionResourceSet allResources = new UnionResourceSet(
