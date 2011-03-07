@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.core.client.geometry.Rectangle;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.core.client.ui.CSS;
@@ -123,19 +124,25 @@ public class DefaultResourceSetAvatarDragController extends
 
     private HoverModel hoverModel;
 
+    private ErrorHandler errorHandler;
+
     @Inject
     public DefaultResourceSetAvatarDragController(
             @Named(ROOT_PANEL) AbsolutePanel panel, Desktop desktop,
-            ShadeManager shadeManager, HoverModel hoverModel) {
+            ShadeManager shadeManager, HoverModel hoverModel,
+            ErrorHandler errorHandler) {
 
         super(panel);
 
-        assert hoverModel != null;
         assert shadeManager != null;
+        assert hoverModel != null;
+        assert errorHandler != null;
 
         this.hoverModel = hoverModel;
         this.shadeManager = shadeManager;
         this.desktop = desktop;
+        this.errorHandler = errorHandler;
+
         this.boundaryDropController = new BoundaryDropController(panel, false);
 
         setBehaviorDragStartSensitivity(2);
@@ -509,21 +516,28 @@ public class DefaultResourceSetAvatarDragController extends
     }
 
     private void updateDropController() {
-        DropController newDropController = getDropControllerForLocation(
-                context.mouseX, context.mouseY);
+        try {
+            DropController newDropController = getDropControllerForLocation(
+                    context.mouseX, context.mouseY);
 
-        if (context.dropController != newDropController) {
-            if (context.dropController != null) {
-                context.dropController.onLeave(context);
+            if (context.dropController != newDropController) {
+                if (context.dropController != null) {
+                    context.dropController.onLeave(context);
+                }
+                context.dropController = newDropController;
+                if (context.dropController != null) {
+                    context.dropController.onEnter(context);
+                }
             }
-            context.dropController = newDropController;
-            if (context.dropController != null) {
-                context.dropController.onEnter(context);
-            }
-        }
 
-        if (context.dropController != null) {
-            context.dropController.onMove(context);
+            if (context.dropController != null) {
+                context.dropController.onMove(context);
+            }
+        } catch (Exception ex) {
+            // abort drop operation and show dialog if exception occurs
+            // TODO abort drop operation
+
+            errorHandler.handleError(ex);
         }
     }
 
