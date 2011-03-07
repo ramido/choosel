@@ -173,4 +173,9 @@ public class DelegatingResourceSet implements ResourceSet {
         return delegate.toList();
     }
 
+    @Override
+    public String toString() {
+        return delegate.toString();
+    }
+
 }
