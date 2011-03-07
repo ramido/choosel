@@ -21,20 +21,20 @@ import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEventHandler;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetDelegateChangedEventHandler;
-import org.thechiselgroup.choosel.core.client.resources.SwitchingResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.ProxyResourceSet;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
 public class HoverModel {
 
-    private SwitchingResourceSet highlightedResourceSetContainer;
+    private ProxyResourceSet highlightedResourceSetContainer;
 
     private ResourceSet highlightedSingleResources;
 
     private CombinedResourceSet combinedHighlightedResources;
 
     public HoverModel() {
-        highlightedResourceSetContainer = new SwitchingResourceSet();
+        highlightedResourceSetContainer = new ProxyResourceSet();
 
         /*
          * We use a counting resource set, because elements might get removed
