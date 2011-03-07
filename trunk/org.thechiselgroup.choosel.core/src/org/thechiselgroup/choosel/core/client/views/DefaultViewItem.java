@@ -241,6 +241,21 @@ public class DefaultViewItem implements Disposable, ViewItem {
     }
 
     @Override
+    public ResourceSet getSelectedResources() {
+        assert resources.containsAll(selectedResources);
+        return selectedResources;
+    }
+
+    @Override
+    public SubsetStatus getSelectionStatus() {
+        if (cachedSelectedStatus == null) {
+            cachedSelectedStatus = getSubsetStatus(selectedResources);
+        }
+
+        return cachedSelectedStatus;
+    }
+
+    @Override
     public <T> T getSlotValue(Slot slot) {
         return getSlotValue(slot, Subset.ALL);
     }
@@ -263,21 +278,6 @@ public class DefaultViewItem implements Disposable, ViewItem {
 
         throw new IllegalArgumentException("invalid slot / sub combination "
                 + slot + " " + subset);
-    }
-
-    @Override
-    public ResourceSet getSelectedResources() {
-        assert resources.containsAll(selectedResources);
-        return selectedResources;
-    }
-
-    @Override
-    public SubsetStatus getSelectionStatus() {
-        if (cachedSelectedStatus == null) {
-            cachedSelectedStatus = getSubsetStatus(selectedResources);
-        }
-
-        return cachedSelectedStatus;
     }
 
     @Override
@@ -369,7 +369,7 @@ public class DefaultViewItem implements Disposable, ViewItem {
 
     @Override
     public String toString() {
-        return "ResourceItem[" + resources.toString() + "]";
+        return "ViewItem[" + resources.toString() + "]";
     }
 
     public void updateHighlightedResources(

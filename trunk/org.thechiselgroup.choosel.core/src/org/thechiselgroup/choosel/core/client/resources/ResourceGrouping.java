@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.thechiselgroup.choosel.core.client.util.Delta;
 import org.thechiselgroup.choosel.core.client.util.SingleItemCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 
@@ -66,10 +65,11 @@ public class ResourceGrouping implements ResourceContainer {
     public void addAll(Iterable<Resource> resources) {
         assert resources != null;
 
-        addResourcesToAllResources(resources);
+        List<Resource> newResources = filterAddedResources(resources);
+        addResourcesToAllResources(newResources);
 
         List<ResourceGroupingChange> changes = new ArrayList<ResourceGroupingChange>();
-        addResourcesToGrouping(resources, changes);
+        addResourcesToGrouping(newResources, changes);
         fireChanges(changes);
     }
 
@@ -100,12 +100,7 @@ public class ResourceGrouping implements ResourceContainer {
         return eventBus.addHandler(ResourceGroupingChangedEvent.TYPE, handler);
     }
 
-    private void addResourcesToAllResources(Iterable<Resource> resources) {
-        List<Resource> newResources = new ArrayList<Resource>();
-        for (Resource resource : resources) {
-            newResources.add(resource);
-        }
-        newResources.removeAll(allResources);
+    private void addResourcesToAllResources(List<Resource> newResources) {
         allResources.addAll(newResources);
     }
 
@@ -120,7 +115,8 @@ public class ResourceGrouping implements ResourceContainer {
             ResourceSet groupResources = groupedResources.get(group);
             groupResources.addAll(addedResources);
 
-            changes.add(new ResourceGroupingChange(Delta.UPDATE, group,
+            changes.add(new ResourceGroupingChange(
+                    ResourceGroupingChangeDelta.GROUP_CHANGED, group,
                     groupResources));
         } else {
             ResourceSet groupResources = resourceSetFactory.createResourceSet();
@@ -128,7 +124,8 @@ public class ResourceGrouping implements ResourceContainer {
 
             groupedResources.put(group, groupResources);
 
-            changes.add(new ResourceGroupingChange(Delta.ADD, group,
+            changes.add(new ResourceGroupingChange(
+                    ResourceGroupingChangeDelta.GROUP_CREATED, group,
                     groupResources));
         }
     }
@@ -173,11 +170,32 @@ public class ResourceGrouping implements ResourceContainer {
      */
     private void clearGrouping(List<ResourceGroupingChange> changes) {
         for (Entry<String, ResourceSet> entry : groupedResources.entrySet()) {
-            changes.add(new ResourceGroupingChange(Delta.REMOVE,
-                    entry.getKey(), entry.getValue()));
+            changes.add(new ResourceGroupingChange(
+                    ResourceGroupingChangeDelta.GROUP_REMOVED, entry.getKey(),
+                    entry.getValue()));
         }
         groupedResources.clear();
         resourceIdToGroups.clear();
+    }
+
+    private List<Resource> filterAddedResources(Iterable<Resource> resources) {
+        List<Resource> addedResources = new ArrayList<Resource>();
+        for (Resource resource : resources) {
+            if (!allResources.contains(resource)) {
+                addedResources.add(resource);
+            }
+        }
+        return addedResources;
+    }
+
+    private List<Resource> filterRemovedResources(Iterable<Resource> resources) {
+        List<Resource> removedResources = new ArrayList<Resource>();
+        for (Resource resource : resources) {
+            if (allResources.contains(resource)) {
+                removedResources.add(resource);
+            }
+        }
+        return removedResources;
     }
 
     private void fireChanges(List<ResourceGroupingChange> changes) {
@@ -224,10 +242,11 @@ public class ResourceGrouping implements ResourceContainer {
     public void removeAll(Iterable<Resource> resources) {
         assert resources != null;
 
-        removeResourcesFromAllResources(resources);
+        List<Resource> removedResources = filterRemovedResources(resources);
+        removeResourcesFromAllResources(removedResources);
 
         List<ResourceGroupingChange> changes = new ArrayList<ResourceGroupingChange>();
-        removeResourcesFromGrouping(resources, changes);
+        removeResourcesFromGrouping(removedResources, changes);
         fireChanges(changes);
     }
 
@@ -249,10 +268,8 @@ public class ResourceGrouping implements ResourceContainer {
         }
     }
 
-    private void removeResourcesFromAllResources(Iterable<Resource> resources) {
-        for (Resource resource : resources) {
-            allResources.remove(resource);
-        }
+    private void removeResourcesFromAllResources(List<Resource> resources) {
+        allResources.removeAll(resources);
     }
 
     private void removeResourcesFromGroup(String group,
@@ -265,11 +282,13 @@ public class ResourceGrouping implements ResourceContainer {
                 && groupResources.containsAll(removedResources)) {
 
             groupedResources.remove(group);
-            changes.add(new ResourceGroupingChange(Delta.REMOVE, group,
+            changes.add(new ResourceGroupingChange(
+                    ResourceGroupingChangeDelta.GROUP_REMOVED, group,
                     groupResources));
         } else {
             groupResources.removeAll(removedResources);
-            changes.add(new ResourceGroupingChange(Delta.UPDATE, group,
+            changes.add(new ResourceGroupingChange(
+                    ResourceGroupingChangeDelta.GROUP_CHANGED, group,
                     groupResources));
         }
     }
