@@ -734,10 +734,12 @@ public class DefaultView extends AbstractWindowContent implements View {
                     .getResources().getIntersection(
                             change.getRemovedResources());
 
+            boolean add = false;
+
             if (!highlightedAdded.isEmpty() || !highlightedRemoved.isEmpty()) {
                 viewItem.updateHighlightedResources(highlightedAdded,
                         highlightedRemoved);
-                updatedViewItems.add(viewItem);
+                add = true;
             }
 
             LightweightList<Resource> selectedAdded = selectionModel
@@ -747,6 +749,10 @@ public class DefaultView extends AbstractWindowContent implements View {
                             change.getRemovedResources());
             if (!selectedAdded.isEmpty() || !selectedRemoved.isEmpty()) {
                 viewItem.updateSelectedResources(selectedAdded, selectedRemoved);
+                add = true;
+            }
+
+            if (add) {
                 updatedViewItems.add(viewItem);
             }
         }
