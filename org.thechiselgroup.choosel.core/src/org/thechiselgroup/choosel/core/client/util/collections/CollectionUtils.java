@@ -25,6 +25,29 @@ import java.util.Set;
 
 public final class CollectionUtils {
 
+    public static <T> boolean containsNone(Collection<T> container,
+            Collection<T> other) {
+
+        assert container != null;
+        assert other != null;
+
+        for (T t : other) {
+            if (container.contains(t)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static <T> boolean contentEquals(Collection<T> l1, Collection<T> l2) {
+        return l1.containsAll(l2) && l1.size() == l2.size();
+    }
+
+    public static <T> boolean contentEquals(Iterable<T> i1, Iterable<T> i2) {
+        return contentEquals(toList(i1), toList(i2));
+    }
+
     public static String deliminateIterableStringCollection(
             Iterable<String> values, String delimeter) {
 

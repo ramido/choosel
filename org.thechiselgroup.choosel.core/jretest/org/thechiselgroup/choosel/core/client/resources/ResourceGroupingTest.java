@@ -22,6 +22,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChange.newGroupChangedDelta;
+import static org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChange.newGroupCreatedDelta;
+import static org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChange.newGroupRemovedDelta;
 import static org.thechiselgroup.choosel.core.client.test.AdvancedAsserts.assertContentEquals;
 import static org.thechiselgroup.choosel.core.client.test.AdvancedAsserts.assertMapKeysEqual;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.verifyOnResourceSetChanged;
@@ -97,19 +100,13 @@ public class ResourceGroupingTest {
         List<ResourceGroupingChange> changes = captureChanges();
 
         assertContentEquals(
-                toSet(new ResourceGroupingChange(
-                        ResourceGroupingChangeDelta.GROUP_REMOVED, GROUP_1_1,
-                        createResources(1, 2, 3)), new ResourceGroupingChange(
-                        ResourceGroupingChangeDelta.GROUP_REMOVED, GROUP_1_2,
-                        createResources(4, 5)), new ResourceGroupingChange(
-                        ResourceGroupingChangeDelta.GROUP_CREATED, GROUP_2_1,
-                        createResources(1)), new ResourceGroupingChange(
-                        ResourceGroupingChangeDelta.GROUP_CREATED, GROUP_2_2,
-                        createResources(2)), new ResourceGroupingChange(
-                        ResourceGroupingChangeDelta.GROUP_CREATED, GROUP_2_3,
-                        createResources(3, 4)), new ResourceGroupingChange(
-                        ResourceGroupingChangeDelta.GROUP_CREATED, GROUP_2_4,
-                        createResources(4, 5))), changes);
+                toSet(newGroupRemovedDelta(GROUP_1_1, createResources(1, 2, 3)),
+                        newGroupRemovedDelta(GROUP_1_2, createResources(4, 5)),
+                        newGroupCreatedDelta(GROUP_2_1, createResources(1)),
+                        newGroupCreatedDelta(GROUP_2_2, createResources(2)),
+                        newGroupCreatedDelta(GROUP_2_3, createResources(3, 4)),
+                        newGroupCreatedDelta(GROUP_2_4, createResources(4, 5))),
+                changes);
     }
 
     @Test
@@ -122,19 +119,13 @@ public class ResourceGroupingTest {
         List<ResourceGroupingChange> changes = captureChanges();
 
         assertContentEquals(
-                toSet(new ResourceGroupingChange(
-                        ResourceGroupingChangeDelta.GROUP_CREATED, GROUP_1_1,
-                        createResources(1, 2, 3)), new ResourceGroupingChange(
-                        ResourceGroupingChangeDelta.GROUP_CREATED, GROUP_1_2,
-                        createResources(4, 5)), new ResourceGroupingChange(
-                        ResourceGroupingChangeDelta.GROUP_REMOVED, GROUP_2_1,
-                        createResources(1)), new ResourceGroupingChange(
-                        ResourceGroupingChangeDelta.GROUP_REMOVED, GROUP_2_2,
-                        createResources(2)), new ResourceGroupingChange(
-                        ResourceGroupingChangeDelta.GROUP_REMOVED, GROUP_2_3,
-                        createResources(3, 4)), new ResourceGroupingChange(
-                        ResourceGroupingChangeDelta.GROUP_REMOVED, GROUP_2_4,
-                        createResources(4, 5))), changes);
+                toSet(newGroupCreatedDelta(GROUP_1_1, createResources(1, 2, 3)),
+                        newGroupCreatedDelta(GROUP_1_2, createResources(4, 5)),
+                        newGroupRemovedDelta(GROUP_2_1, createResources(1)),
+                        newGroupRemovedDelta(GROUP_2_2, createResources(2)),
+                        newGroupRemovedDelta(GROUP_2_3, createResources(3, 4)),
+                        newGroupRemovedDelta(GROUP_2_4, createResources(4, 5))),
+                changes);
     }
 
     @Test
@@ -235,9 +226,9 @@ public class ResourceGroupingTest {
 
         List<ResourceGroupingChange> changes = captureChanges();
 
-        assertContentEquals(toSet(new ResourceGroupingChange(
-                ResourceGroupingChangeDelta.GROUP_CREATED, GROUP_1_1,
-                toResourceSet(resource))), changes);
+        assertContentEquals(
+                toSet(newGroupCreatedDelta(GROUP_1_1, toResourceSet(resource))),
+                changes);
     }
 
     // TODO test for add all --> multiple categories
@@ -251,11 +242,10 @@ public class ResourceGroupingTest {
         List<ResourceGroupingChange> changes = captureChanges();
 
         assertContentEquals(
-                toSet(new ResourceGroupingChange(
-                        ResourceGroupingChangeDelta.GROUP_CHANGED, GROUP_1_1,
-                        createResources(1, 2, 3)), new ResourceGroupingChange(
-                        ResourceGroupingChangeDelta.GROUP_CREATED, GROUP_1_2,
-                        createResources(4, 5))), changes);
+                toSet(newGroupChangedDelta(GROUP_1_1, createResources(1, 2, 3),
+                        createResources(3), null),
+                        newGroupCreatedDelta(GROUP_1_2, createResources(4, 5))),
+                changes);
     }
 
     /**
@@ -271,9 +261,9 @@ public class ResourceGroupingTest {
             public void onResourceCategoriesChanged(
                     ResourceGroupingChangedEvent e) {
 
-                assertContentEquals(toSet(new ResourceGroupingChange(
-                        ResourceGroupingChangeDelta.GROUP_CREATED, GROUP_1_1,
-                        createResources(1))), e.getChanges());
+                assertContentEquals(
+                        toSet(newGroupCreatedDelta(GROUP_1_1,
+                                createResources(1))), e.getChanges());
 
                 called[0] = true;
             }
@@ -297,9 +287,9 @@ public class ResourceGroupingTest {
             public void onResourceCategoriesChanged(
                     ResourceGroupingChangedEvent e) {
 
-                assertContentEquals(toSet(new ResourceGroupingChange(
-                        ResourceGroupingChangeDelta.GROUP_CREATED, GROUP_1_1,
-                        createResources(1, 2, 3))), e.getChanges());
+                assertContentEquals(
+                        toSet(newGroupCreatedDelta(GROUP_1_1,
+                                createResources(1, 2, 3))), e.getChanges());
 
                 called[0] = true;
             }
@@ -322,11 +312,10 @@ public class ResourceGroupingTest {
         List<ResourceGroupingChange> changes = captureChanges();
 
         Set<ResourceGroupingChange> expectedChanges = toSet(
-                new ResourceGroupingChange(
-                        ResourceGroupingChangeDelta.GROUP_REMOVED, GROUP_1_1,
-                        createResources(1, 2, 3)), new ResourceGroupingChange(
-                        ResourceGroupingChangeDelta.GROUP_CHANGED, GROUP_1_2,
-                        createResources(5)));
+                ResourceGroupingChange.newGroupRemovedDelta(GROUP_1_1,
+                        createResources(1, 2, 3)),
+                newGroupChangedDelta(GROUP_1_2, createResources(5), null,
+                        createResources(4)));
 
         assertContentEquals(expectedChanges, changes);
     }
@@ -341,9 +330,8 @@ public class ResourceGroupingTest {
 
         List<ResourceGroupingChange> changes = captureChanges();
 
-        assertContentEquals(toSet(new ResourceGroupingChange(
-                ResourceGroupingChangeDelta.GROUP_REMOVED, GROUP_1_1,
-                toResourceSet(resource))), changes);
+        assertContentEquals(toSet(ResourceGroupingChange.newGroupRemovedDelta(
+                GROUP_1_1, toResourceSet(resource))), changes);
     }
 
     @Test
@@ -354,9 +342,8 @@ public class ResourceGroupingTest {
 
         List<ResourceGroupingChange> changes = captureChanges();
 
-        assertContentEquals(toSet(new ResourceGroupingChange(
-                ResourceGroupingChangeDelta.GROUP_REMOVED, GROUP_1_1,
-                createResources(1, 2, 3))), changes);
+        assertContentEquals(toSet(ResourceGroupingChange.newGroupRemovedDelta(
+                GROUP_1_1, createResources(1, 2, 3))), changes);
     }
 
     @Test
@@ -371,10 +358,9 @@ public class ResourceGroupingTest {
         List<ResourceGroupingChange> changes = captureChanges();
 
         Set<ResourceGroupingChange> expectedChanges = toSet(
-                new ResourceGroupingChange(
-                        ResourceGroupingChangeDelta.GROUP_REMOVED, GROUP_1_1,
-                        createResources(1, 2, 3)), new ResourceGroupingChange(
-                        ResourceGroupingChangeDelta.GROUP_REMOVED, GROUP_1_2,
+                ResourceGroupingChange.newGroupRemovedDelta(GROUP_1_1,
+                        createResources(1, 2, 3)),
+                ResourceGroupingChange.newGroupRemovedDelta(GROUP_1_2,
                         createResources(4, 5)));
 
         assertContentEquals(expectedChanges, changes);

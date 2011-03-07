@@ -24,6 +24,7 @@ import java.util.Set;
 
 import org.thechiselgroup.choosel.core.client.util.SingleItemCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.core.client.util.collections.CollectionUtils;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -101,6 +102,7 @@ public class ResourceGrouping implements ResourceContainer {
     }
 
     private void addResourcesToAllResources(List<Resource> newResources) {
+        assert CollectionUtils.containsNone(allResources, newResources);
         allResources.addAll(newResources);
     }
 
@@ -115,18 +117,16 @@ public class ResourceGrouping implements ResourceContainer {
             ResourceSet groupResources = groupedResources.get(group);
             groupResources.addAll(addedResources);
 
-            changes.add(new ResourceGroupingChange(
-                    ResourceGroupingChangeDelta.GROUP_CHANGED, group,
-                    groupResources));
+            changes.add(ResourceGroupingChange.newGroupChangedDelta(group,
+                    groupResources, addedResources, null));
         } else {
             ResourceSet groupResources = resourceSetFactory.createResourceSet();
             groupResources.addAll(addedResources);
 
             groupedResources.put(group, groupResources);
 
-            changes.add(new ResourceGroupingChange(
-                    ResourceGroupingChangeDelta.GROUP_CREATED, group,
-                    groupResources));
+            changes.add(ResourceGroupingChange.newGroupCreatedDelta(group,
+                    groupResources, addedResources));
         }
     }
 
@@ -170,9 +170,8 @@ public class ResourceGrouping implements ResourceContainer {
      */
     private void clearGrouping(List<ResourceGroupingChange> changes) {
         for (Entry<String, ResourceSet> entry : groupedResources.entrySet()) {
-            changes.add(new ResourceGroupingChange(
-                    ResourceGroupingChangeDelta.GROUP_REMOVED, entry.getKey(),
-                    entry.getValue()));
+            changes.add(ResourceGroupingChange.newGroupRemovedDelta(
+                    entry.getKey(), entry.getValue(), entry.getValue()));
         }
         groupedResources.clear();
         resourceIdToGroups.clear();
@@ -269,6 +268,7 @@ public class ResourceGrouping implements ResourceContainer {
     }
 
     private void removeResourcesFromAllResources(List<Resource> resources) {
+        assert allResources.containsAll(resources);
         allResources.removeAll(resources);
     }
 
@@ -282,14 +282,12 @@ public class ResourceGrouping implements ResourceContainer {
                 && groupResources.containsAll(removedResources)) {
 
             groupedResources.remove(group);
-            changes.add(new ResourceGroupingChange(
-                    ResourceGroupingChangeDelta.GROUP_REMOVED, group,
-                    groupResources));
+            changes.add(ResourceGroupingChange.newGroupRemovedDelta(group,
+                    groupResources, removedResources));
         } else {
             groupResources.removeAll(removedResources);
-            changes.add(new ResourceGroupingChange(
-                    ResourceGroupingChangeDelta.GROUP_CHANGED, group,
-                    groupResources));
+            changes.add(ResourceGroupingChange.newGroupChangedDelta(group,
+                    groupResources, null, removedResources));
         }
     }
 
