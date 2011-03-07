@@ -15,6 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.resources;
 
+import java.util.Map;
+
+import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChange.Delta;
+import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 
 import com.google.gwt.event.shared.GwtEvent;
@@ -32,6 +36,11 @@ public class ResourceGroupingChangedEvent extends
      */
     private final LightweightList<ResourceGroupingChange> changes;
 
+    /**
+     * Alternatively, the changes can be retrieved based on their type.
+     */
+    private final Map<String, LightweightList<ResourceGroupingChange>> changesByDeltaType;
+
     public ResourceGroupingChangedEvent(
             LightweightList<ResourceGroupingChange> changes) {
 
@@ -39,6 +48,15 @@ public class ResourceGroupingChangedEvent extends
         assert !changes.isEmpty();
 
         this.changes = changes;
+
+        this.changesByDeltaType = CollectionFactory.createStringMap();
+        for (Delta deltaType : Delta.values()) {
+            changesByDeltaType.put(deltaType.name(), CollectionFactory
+                    .<ResourceGroupingChange> createLightweightList());
+        }
+        for (ResourceGroupingChange change : changes) {
+            changesByDeltaType.get(change.getDelta().name()).add(change);
+        }
     }
 
     @Override
@@ -53,6 +71,13 @@ public class ResourceGroupingChangedEvent extends
 
     public LightweightList<ResourceGroupingChange> getChanges() {
         return changes;
+    }
+
+    /**
+     * Return the changes for the given {@link Delta}.
+     */
+    public LightweightList<ResourceGroupingChange> getChanges(Delta deltaType) {
+        return changesByDeltaType.get(deltaType.name());
     }
 
 }
