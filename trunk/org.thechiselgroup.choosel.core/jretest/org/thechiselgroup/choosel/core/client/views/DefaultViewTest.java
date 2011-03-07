@@ -491,6 +491,29 @@ public class DefaultViewTest {
 
     /**
      * @see <a
+     *      href="http://code.google.com/p/choosel/issues/detail?id=149">"Issue 149"</a>
+     */
+    @Test
+    public void viewItemIsSelectedOnChangeWhenAddedResourcesAreAlreadySelected() {
+        ResourceSet originalResources = createResources(TYPE_1, 1);
+        ResourceSet addedResources = createResources(TYPE_1, 2);
+
+        underTest.getResourceModel().addResourceSet(originalResources);
+        when(underTest.getSelectionModel().getSelection()).thenReturn(
+                addedResources);
+        underTest.getResourceModel().addResourceSet(addedResources);
+
+        List<ViewItem> updatedViewItem = captureUpdatedViewItems().toList();
+
+        assertEquals(1, updatedViewItem.size());
+        assertEquals(SubsetStatus.PARTIAL, updatedViewItem.get(0)
+                .getSelectionStatus());
+        assertContentEquals(addedResources, updatedViewItem.get(0)
+                .getSelectedResources());
+    }
+
+    /**
+     * @see <a
      *      href="http://code.google.com/p/choosel/issues/detail?id=123">"Issue 123"</a>
      */
     @Test

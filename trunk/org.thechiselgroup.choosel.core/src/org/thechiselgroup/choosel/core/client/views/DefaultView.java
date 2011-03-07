@@ -736,6 +736,14 @@ public class DefaultView extends AbstractWindowContent implements View {
                         LightweightCollections.<Resource> emptyCollection());
                 updatedViewItems.add(viewItem);
             }
+
+            LightweightList<Resource> selectedAdded = selectionModel
+                    .getSelection().getIntersection(change.getAddedResources());
+            if (!selectedAdded.isEmpty()) {
+                viewItem.updateSelectedResources(selectedAdded,
+                        LightweightCollections.<Resource> emptyCollection());
+                updatedViewItems.add(viewItem);
+            }
         }
 
         return updatedViewItems;
