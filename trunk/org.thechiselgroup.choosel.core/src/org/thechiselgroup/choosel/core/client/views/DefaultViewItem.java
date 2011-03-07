@@ -156,6 +156,18 @@ public class DefaultViewItem implements Disposable, ViewItem {
         selectedResources = new DefaultResourceSet();
 
         initCacheCleaning(resources, slotMappingConfiguration);
+
+        resources.addEventHandler(new ResourceSetChangedEventHandler() {
+            @Override
+            public void onResourceSetChanged(ResourceSetChangedEvent event) {
+                LightweightCollection<Resource> removedResources = event
+                        .getRemovedResources();
+
+                highlightedResources.removeAll(removedResources);
+                selectedResources.removeAll(removedResources);
+            }
+        });
+
         initHighlighting();
         initPopupHighlighting();
     }
