@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views;
 
-import org.thechiselgroup.choosel.core.client.resources.CombinedResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.UnionResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
@@ -51,7 +51,7 @@ public interface ResourceModel {
     ResourceSet getAutomaticResourceSet();
 
     // TODO document
-    CombinedResourceSet getCombinedUserResourceSets();
+    UnionResourceSet getCombinedUserResourceSets();
 
     /**
      * Calculates the intersection, i.e. those resources that are both in the

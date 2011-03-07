@@ -20,7 +20,7 @@ import java.util.List;
 import org.thechiselgroup.choosel.core.client.persistence.Memento;
 import org.thechiselgroup.choosel.core.client.persistence.Persistable;
 import org.thechiselgroup.choosel.core.client.persistence.PersistableRestorationService;
-import org.thechiselgroup.choosel.core.client.resources.CombinedResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.UnionResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.FilteredResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
@@ -37,11 +37,11 @@ public class DefaultResourceModel implements ResourceModel, Disposable,
 
     private static final String MEMENTO_FILTER_PREDICATE = "filterPredicate";
 
-    private CombinedResourceSet allResources;
+    private UnionResourceSet allResources;
 
     private ResourceSet automaticResources;
 
-    private CombinedResourceSet combinedUserResourceSets;
+    private UnionResourceSet combinedUserResourceSets;
 
     private FilteredResourceSet filteredResources;
 
@@ -112,7 +112,7 @@ public class DefaultResourceModel implements ResourceModel, Disposable,
     }
 
     @Override
-    public CombinedResourceSet getCombinedUserResourceSets() {
+    public UnionResourceSet getCombinedUserResourceSets() {
         return combinedUserResourceSets;
     }
 
@@ -130,7 +130,7 @@ public class DefaultResourceModel implements ResourceModel, Disposable,
     }
 
     private void initAllResources() {
-        allResources = new CombinedResourceSet(
+        allResources = new UnionResourceSet(
                 resourceSetFactory.createResourceSet());
         allResources.addResourceSet(automaticResources);
         allResources.addResourceSet(combinedUserResourceSets);
@@ -147,7 +147,7 @@ public class DefaultResourceModel implements ResourceModel, Disposable,
     }
 
     private void initResourceCombinator() {
-        combinedUserResourceSets = new CombinedResourceSet(
+        combinedUserResourceSets = new UnionResourceSet(
                 resourceSetFactory.createResourceSet());
     }
 
