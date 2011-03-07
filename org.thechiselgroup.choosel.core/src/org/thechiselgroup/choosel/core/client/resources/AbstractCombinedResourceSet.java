@@ -8,7 +8,9 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 
+//TODO violates LSP --> need for ReadableResourceSet, WriteableResourceSet
 public abstract class AbstractCombinedResourceSet extends DelegatingResourceSet {
+
     protected static class ResourceSetElement {
 
         protected HandlerRegistration handlerRegistration;
