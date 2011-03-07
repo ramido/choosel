@@ -29,6 +29,7 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceByPropertyMultiC
 import org.thechiselgroup.choosel.core.client.resources.ResourceByUriMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChange;
+import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChangeDelta;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChangedEvent;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChangedHandler;
 import org.thechiselgroup.choosel.core.client.resources.ResourceMultiCategorizer;
@@ -44,7 +45,6 @@ import org.thechiselgroup.choosel.core.client.ui.Presenter;
 import org.thechiselgroup.choosel.core.client.ui.WidgetFactory;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
-import org.thechiselgroup.choosel.core.client.util.Delta;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
 import org.thechiselgroup.choosel.core.client.util.HandlerRegistrationSet;
 import org.thechiselgroup.choosel.core.client.util.Initializable;
@@ -677,7 +677,7 @@ public class DefaultView extends AbstractWindowContent implements View {
         ResourceSet highlightedResources = null;
         ResourceSet selectedResources = null;
         for (ResourceGroupingChange change : changes) {
-            if (change.getDelta() == Delta.ADD) {
+            if (change.getDelta() == ResourceGroupingChangeDelta.GROUP_CREATED) {
                 if (highlightedResources == null) {
                     highlightedResources = new DefaultResourceSet();
                     highlightedResources.addAll(resourceModel
@@ -706,7 +706,7 @@ public class DefaultView extends AbstractWindowContent implements View {
                 .createLightweightList();
         for (ResourceGroupingChange change : changes) {
             switch (change.getDelta()) {
-            case REMOVE: {
+            case GROUP_REMOVED: {
                 // XXX dispose should be done after method call...
                 removedResourceItems.add(removeViewItem(change.getGroupID()));
             }
@@ -722,7 +722,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         for (ResourceGroupingChange change : changes) {
             switch (change.getDelta()) {
-            case UPDATE: {
+            case GROUP_CHANGED: {
                 // TODO implement
             }
                 break;

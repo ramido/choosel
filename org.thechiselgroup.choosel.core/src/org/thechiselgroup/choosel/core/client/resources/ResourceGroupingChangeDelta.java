@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.core.client.util;
+package org.thechiselgroup.choosel.core.client.resources;
 
-public enum Delta {
+public enum ResourceGroupingChangeDelta {
 
-    ADD, REMOVE, UPDATE
+    GROUP_CREATED, GROUP_REMOVED, GROUP_CHANGED
 
 }

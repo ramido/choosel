@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.resources;
 
-import org.thechiselgroup.choosel.core.client.util.Delta;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 
 /**
  * Delta change to the resource groupings.
@@ -24,11 +24,15 @@ import org.thechiselgroup.choosel.core.client.util.Delta;
  */
 public class ResourceGroupingChange {
 
-    private Delta delta;
+    private ResourceGroupingChangeDelta delta;
 
     private String groupID;
 
     private ResourceSet resourceSet;
+
+    private LightweightList<Resource> addedResources;
+
+    private LightweightList<Resource> removedResources;
 
     /**
      * @param delta
@@ -41,8 +45,8 @@ public class ResourceGroupingChange {
      *            content (all resources in set); Delta.UPDATE: new content (all
      *            resources in set); Delta.REMOVE: old content
      */
-    public ResourceGroupingChange(Delta delta, String groupID,
-            ResourceSet resourceSet) {
+    public ResourceGroupingChange(ResourceGroupingChangeDelta delta,
+            String groupID, ResourceSet resourceSet) {
 
         assert delta != null;
         assert groupID != null;
@@ -82,7 +86,7 @@ public class ResourceGroupingChange {
     /**
      * @return kind of change (ADD / UPDATE / REMOVE )
      */
-    public Delta getDelta() {
+    public ResourceGroupingChangeDelta getDelta() {
         return delta;
     }
 
