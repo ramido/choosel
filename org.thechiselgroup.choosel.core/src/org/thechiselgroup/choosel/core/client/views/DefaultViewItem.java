@@ -174,6 +174,9 @@ public class DefaultViewItem implements Disposable, ViewItem {
 
     @Override
     public void dispose() {
+        // XXX deregister event listeners
+        // XXX dispose intersection sets
+
         highlightingManager.dispose();
         popupHighlightingManager.dispose();
     }

@@ -15,13 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views;
 
-import org.thechiselgroup.choosel.core.client.resources.UnionResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.CountingResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.ProxyResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEventHandler;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetDelegateChangedEventHandler;
-import org.thechiselgroup.choosel.core.client.resources.ProxyResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.UnionResourceSet;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
