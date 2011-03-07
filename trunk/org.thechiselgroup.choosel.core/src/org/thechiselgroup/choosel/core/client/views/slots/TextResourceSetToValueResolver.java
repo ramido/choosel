@@ -43,4 +43,9 @@ public class TextResourceSetToValueResolver implements
         return ResourceSetUtils.firstResource(resources).getValue(property);
     }
 
+    @Override
+    public String toString() {
+        return property + " (text)";
+    }
+
 }

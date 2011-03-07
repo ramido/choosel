@@ -38,4 +38,9 @@ public class FirstResourcePropertyResolver implements
 
         return ResourceSetUtils.firstResource(resources).getValue(property);
     }
+
+    @Override
+    public String toString() {
+        return property + " (first item)";
+    }
 }
