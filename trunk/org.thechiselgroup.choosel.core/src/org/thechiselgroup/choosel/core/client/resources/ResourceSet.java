@@ -93,9 +93,19 @@ public interface ResourceSet extends HasLabel, LightweightCollection<Resource> {
     @Override
     boolean contains(Resource resource);
 
+    /**
+     * Tests that all {@link Resource}s from <code>resources</code> are
+     * contained in this {@link ResourceSet}.
+     */
     boolean containsAll(Iterable<Resource> resources);
 
     boolean containsEqualResources(ResourceSet other);
+
+    /**
+     * Tests that no {@link Resource} from <code>resources</code> is contained
+     * in this {@link ResourceSet}.
+     */
+    boolean containsNone(Iterable<Resource> resources);
 
     /**
      * <p>

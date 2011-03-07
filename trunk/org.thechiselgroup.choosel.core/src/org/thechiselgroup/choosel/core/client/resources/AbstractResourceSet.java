@@ -159,6 +159,17 @@ public abstract class AbstractResourceSet implements ResourceSet {
         return containsAll(other);
     }
 
+    @Override
+    public boolean containsNone(Iterable<Resource> resources) {
+        for (Resource resource : resources) {
+            if (contains(resource)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     protected abstract void doAdd(Resource resource,
             LightweightList<Resource> addedResources);
 

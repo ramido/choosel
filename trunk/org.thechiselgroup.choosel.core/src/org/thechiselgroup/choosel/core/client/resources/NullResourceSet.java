@@ -90,6 +90,11 @@ public final class NullResourceSet implements ResourceSet {
     }
 
     @Override
+    public boolean containsNone(Iterable<Resource> resources) {
+        return true;
+    }
+
+    @Override
     public boolean containsResourceWithUri(String uri) {
         return false;
     }

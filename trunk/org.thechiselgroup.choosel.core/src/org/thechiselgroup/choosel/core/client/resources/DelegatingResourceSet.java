@@ -84,6 +84,11 @@ public class DelegatingResourceSet implements ResourceSet {
     }
 
     @Override
+    public boolean containsNone(Iterable<Resource> resources) {
+        return delegate.containsNone(resources);
+    }
+
+    @Override
     public boolean containsResourceWithUri(String uri) {
         return delegate.containsResourceWithUri(uri);
     }
