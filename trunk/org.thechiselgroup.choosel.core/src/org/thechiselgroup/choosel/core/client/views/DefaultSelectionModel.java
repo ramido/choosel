@@ -30,7 +30,7 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEventH
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetRemovedEvent;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetRemovedEventHandler;
-import org.thechiselgroup.choosel.core.client.resources.SwitchingResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.ProxyResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
@@ -49,7 +49,7 @@ public class DefaultSelectionModel implements SelectionModel, Disposable,
 
     private List<ResourceSet> selectionSets = new ArrayList<ResourceSet>();
 
-    private SwitchingResourceSet selection = new SwitchingResourceSet();
+    private ProxyResourceSet selection = new ProxyResourceSet();
 
     private LabelProvider selectionModelLabelFactory;
 

@@ -39,7 +39,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * @author Lars Grammel
  */
 // TODO separate labeling concept from resource set
-public class SwitchingResourceSet extends DelegatingResourceSet implements
+public class ProxyResourceSet extends DelegatingResourceSet implements
         Disposable {
 
     protected transient HandlerManager eventBus;
@@ -53,7 +53,7 @@ public class SwitchingResourceSet extends DelegatingResourceSet implements
 
     private HandlerRegistration delegateResourcesChangedHandlerRegistration;
 
-    public SwitchingResourceSet() {
+    public ProxyResourceSet() {
         super(NullResourceSet.NULL_RESOURCE_SET);
         eventBus = new HandlerManager(this);
     }

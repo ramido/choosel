@@ -31,12 +31,12 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-public class SwitchingResourceSetTest {
+public class ProxyResourceSetTest {
 
     @Mock
     private ResourceSetDelegateChangedEventHandler delegateChangedHandler;
 
-    private SwitchingResourceSet underTest;
+    private ProxyResourceSet underTest;
 
     private ResourceSet[] resourceSets;
 
@@ -242,7 +242,7 @@ public class SwitchingResourceSetTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        underTest = new SwitchingResourceSet();
+        underTest = new ProxyResourceSet();
 
         resourceSets = new ResourceSet[4];
         resourceSets[0] = createResources(1, 2);
