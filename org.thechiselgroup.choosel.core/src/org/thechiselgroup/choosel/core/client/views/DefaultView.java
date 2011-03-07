@@ -701,34 +701,48 @@ public class DefaultView extends AbstractWindowContent implements View {
     private LightweightCollection<ViewItem> processRemoveChanges(
             List<ResourceGroupingChange> changes) {
 
-        LightweightList<ViewItem> removedResourceItems = CollectionFactory
+        LightweightList<ViewItem> removedViewItems = CollectionFactory
                 .createLightweightList();
         for (ResourceGroupingChange change : changes) {
             switch (change.getDelta()) {
             case GROUP_REMOVED: {
                 // XXX dispose should be done after method call...
-                removedResourceItems.add(removeViewItem(change.getGroupID()));
+                removedViewItems.add(removeViewItem(change.getGroupID()));
             }
                 break;
             }
         }
-        return removedResourceItems;
+        return removedViewItems;
     }
 
     // TODO implement
     private LightweightCollection<ViewItem> processUpdates(
             List<ResourceGroupingChange> changes) {
 
+        LightweightList<ViewItem> updatedViewItems = CollectionFactory
+                .createLightweightList();
         for (ResourceGroupingChange change : changes) {
             switch (change.getDelta()) {
             case GROUP_CHANGED: {
-                // TODO implement
+                DefaultViewItem viewItem = viewItemsByGroupId.get(change
+                        .getGroupID());
+
+                // intersect added with highlighting set - TODO extract
+                LightweightList<Resource> highlightedAdded = hoverModel
+                        .getResources().getIntersection(
+                                change.getAddedResources());
+
+                if (!highlightedAdded.isEmpty()) {
+                    viewItem.updateHighlightedResources(highlightedAdded,
+                            LightweightCollections.<Resource> emptyCollection());
+                    updatedViewItems.add(viewItem);
+                }
             }
                 break;
             }
         }
 
-        return LightweightCollections.<ViewItem> emptyCollection();
+        return updatedViewItems;
     }
 
     private DefaultViewItem removeViewItem(String groupID) {

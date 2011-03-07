@@ -25,6 +25,7 @@ import java.util.Set;
 import org.thechiselgroup.choosel.core.client.util.SingleItemCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionUtils;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -80,7 +81,7 @@ public class ResourceGrouping implements ResourceContainer {
      * @see #resourceIdToGroups
      */
     private void addGroupToResources(String group,
-            List<Resource> addedGroupResources) {
+            LightweightList<Resource> addedGroupResources) {
 
         for (Resource resource : addedGroupResources) {
             String resourceId = resource.getUri();
@@ -107,7 +108,8 @@ public class ResourceGrouping implements ResourceContainer {
     }
 
     private void addResourcesToGroup(String group,
-            List<Resource> addedResources, List<ResourceGroupingChange> changes) {
+            LightweightList<Resource> addedResources,
+            List<ResourceGroupingChange> changes) {
 
         assert group != null;
         assert addedResources != null;
@@ -133,20 +135,22 @@ public class ResourceGrouping implements ResourceContainer {
     private void addResourcesToGrouping(Iterable<Resource> resources,
             List<ResourceGroupingChange> changes) {
 
-        Map<String, List<Resource>> resourcesPerCategory = categorize(resources);
-        for (Map.Entry<String, List<Resource>> entry : resourcesPerCategory
+        Map<String, LightweightList<Resource>> resourcesPerCategory = categorize(resources);
+        for (Map.Entry<String, LightweightList<Resource>> entry : resourcesPerCategory
                 .entrySet()) {
 
             String group = entry.getKey();
-            List<Resource> addedGroupResources = entry.getValue();
+            LightweightList<Resource> addedGroupResources = entry.getValue();
 
             addResourcesToGroup(group, addedGroupResources, changes);
             addGroupToResources(group, addedGroupResources);
         }
     }
 
-    private Map<String, List<Resource>> categorize(Iterable<Resource> resources) {
-        Map<String, List<Resource>> resourcesPerCategory = CollectionFactory
+    private Map<String, LightweightList<Resource>> categorize(
+            Iterable<Resource> resources) {
+
+        Map<String, LightweightList<Resource>> resourcesPerCategory = CollectionFactory
                 .createStringMap();
 
         for (Resource resource : resources) {
@@ -154,8 +158,8 @@ public class ResourceGrouping implements ResourceContainer {
                 assert category != null : "category must not be null";
 
                 if (!resourcesPerCategory.containsKey(category)) {
-                    resourcesPerCategory.put(category,
-                            new ArrayList<Resource>());
+                    resourcesPerCategory.put(category, CollectionFactory
+                            .<Resource> createLightweightList());
                 }
 
                 resourcesPerCategory.get(category).add(resource);
@@ -255,7 +259,7 @@ public class ResourceGrouping implements ResourceContainer {
      * @see #resourceIdToGroups
      */
     private void removeGroupFromResources(String group,
-            List<Resource> removedGroupResources) {
+            LightweightList<Resource> removedGroupResources) {
 
         for (Resource resource : removedGroupResources) {
             String resourceId = resource.getUri();
@@ -273,7 +277,7 @@ public class ResourceGrouping implements ResourceContainer {
     }
 
     private void removeResourcesFromGroup(String group,
-            List<Resource> removedResources,
+            LightweightList<Resource> removedResources,
             List<ResourceGroupingChange> changes) {
 
         ResourceSet groupResources = groupedResources.get(group);
@@ -294,12 +298,12 @@ public class ResourceGrouping implements ResourceContainer {
     private void removeResourcesFromGrouping(Iterable<Resource> resources,
             List<ResourceGroupingChange> changes) {
 
-        Map<String, List<Resource>> resourcesPerCategory = categorize(resources);
-        for (Map.Entry<String, List<Resource>> entry : resourcesPerCategory
+        Map<String, LightweightList<Resource>> resourcesPerCategory = categorize(resources);
+        for (Map.Entry<String, LightweightList<Resource>> entry : resourcesPerCategory
                 .entrySet()) {
 
             String group = entry.getKey();
-            List<Resource> removedGroupResources = entry.getValue();
+            LightweightList<Resource> removedGroupResources = entry.getValue();
 
             removeResourcesFromGroup(group, removedGroupResources, changes);
             removeGroupFromResources(group, removedGroupResources);
