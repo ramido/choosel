@@ -15,6 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.test;
 
+import static org.junit.Assert.assertThat;
+import static org.thechiselgroup.choosel.core.client.test.ResourcesMatchers.containsEqualResources;
 import static org.thechiselgroup.choosel.core.client.util.collections.CollectionUtils.toSet;
 
 import java.util.Collection;
@@ -78,18 +80,6 @@ public final class AdvancedAsserts {
 
     public static <T> void assertContentEquals(ResourceSet expected,
             Collection<Resource> actual) {
-
-        String failureMessage = "expected: " + expected + ", but was: "
-                + actual;
-
-        Assert.assertEquals(failureMessage, expected.size(), actual.size());
-        for (Resource expectedValue : expected) {
-            assertContains(failureMessage, actual, expectedValue);
-        }
-    }
-
-    public static <T> void assertContentEquals(ResourceSet expected,
-            ResourceSet actual) {
 
         String failureMessage = "expected: " + expected + ", but was: "
                 + actual;

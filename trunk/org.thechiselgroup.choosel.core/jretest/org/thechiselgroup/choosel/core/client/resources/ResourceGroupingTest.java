@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.core.client.resources;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -27,6 +28,7 @@ import static org.thechiselgroup.choosel.core.client.resources.ResourceGroupingC
 import static org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChange.newGroupRemovedDelta;
 import static org.thechiselgroup.choosel.core.client.test.AdvancedAsserts.assertContentEquals;
 import static org.thechiselgroup.choosel.core.client.test.AdvancedAsserts.assertMapKeysEqual;
+import static org.thechiselgroup.choosel.core.client.test.ResourcesMatchers.containsEqualResources;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.verifyOnResourceSetChanged;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
@@ -79,8 +81,8 @@ public class ResourceGroupingTest {
                 .getCategorizedResourceSets();
 
         assertMapKeysEqual(result, GROUP_1_1, GROUP_1_2);
-        assertContentEquals(createResources(1), result.get(GROUP_1_1));
-        assertContentEquals(createResources(1), result.get(GROUP_1_2));
+        assertThat(result.get(GROUP_1_1), containsEqualResources(createResources(1)));
+        assertThat(result.get(GROUP_1_2), containsEqualResources(createResources(1)));
     }
 
     public List<ResourceGroupingChange> captureChanges() {
@@ -137,10 +139,10 @@ public class ResourceGroupingTest {
                 .getCategorizedResourceSets();
 
         assertMapKeysEqual(result, GROUP_2_1, GROUP_2_2, GROUP_2_3, GROUP_2_4);
-        assertContentEquals(createResources(1), result.get(GROUP_2_1));
-        assertContentEquals(createResources(2), result.get(GROUP_2_2));
-        assertContentEquals(createResources(3, 4), result.get(GROUP_2_3));
-        assertContentEquals(createResources(4, 5), result.get(GROUP_2_4));
+        assertThat(result.get(GROUP_2_1), containsEqualResources(createResources(1)));
+        assertThat(result.get(GROUP_2_2), containsEqualResources(createResources(2)));
+        assertThat(result.get(GROUP_2_3), containsEqualResources(createResources(3, 4)));
+        assertThat(result.get(GROUP_2_4), containsEqualResources(createResources(4, 5)));
     }
 
     @Test
@@ -153,8 +155,8 @@ public class ResourceGroupingTest {
                 .getCategorizedResourceSets();
 
         assertMapKeysEqual(result, GROUP_1_1, GROUP_1_2);
-        assertContentEquals(createResources(1, 2, 3), result.get(GROUP_1_1));
-        assertContentEquals(createResources(4, 5), result.get(GROUP_1_2));
+        assertThat(result.get(GROUP_1_1), containsEqualResources(createResources(1, 2, 3)));
+        assertThat(result.get(GROUP_1_2), containsEqualResources(createResources(4, 5)));
     }
 
     @Test
@@ -168,8 +170,8 @@ public class ResourceGroupingTest {
                 .getCategorizedResourceSets();
 
         assertMapKeysEqual(result, GROUP_2_3, GROUP_2_4);
-        assertContentEquals(createResources(3, 4), result.get(GROUP_2_3));
-        assertContentEquals(createResources(4, 5), result.get(GROUP_2_4));
+        assertThat(result.get(GROUP_2_3), containsEqualResources(createResources(3, 4)));
+        assertThat(result.get(GROUP_2_4), containsEqualResources(createResources(4, 5)));
     }
 
     @Test
@@ -182,8 +184,8 @@ public class ResourceGroupingTest {
                 .getCategorizedResourceSets();
 
         assertMapKeysEqual(result, GROUP_2_3, GROUP_2_4);
-        assertContentEquals(createResources(3, 4), result.get(GROUP_2_3));
-        assertContentEquals(createResources(4, 5), result.get(GROUP_2_4));
+        assertThat(result.get(GROUP_2_3), containsEqualResources(createResources(3, 4)));
+        assertThat(result.get(GROUP_2_4), containsEqualResources(createResources(4, 5)));
     }
 
     @Test
@@ -204,8 +206,8 @@ public class ResourceGroupingTest {
                 .getCategorizedResourceSets();
 
         assertMapKeysEqual(result, GROUP_1_1, GROUP_1_2);
-        assertContentEquals(createResources(1, 2, 3), result.get(GROUP_1_1));
-        assertContentEquals(createResources(4, 5), result.get(GROUP_1_2));
+        assertThat(result.get(GROUP_1_1), containsEqualResources(createResources(1, 2, 3)));
+        assertThat(result.get(GROUP_1_2), containsEqualResources(createResources(4, 5)));
     }
 
     @Test
