@@ -39,6 +39,7 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.user.client.Event;
 
 /**
  * Default implementation of {@link ViewItem}.
@@ -51,7 +52,6 @@ import com.google.gwt.event.dom.client.MouseOverHandler;
  */
 // TODO separate out resource item controller part
 public class DefaultViewItem implements Disposable, ViewItem {
-
     private final class CacheUpdateOnResourceSetChange implements
             ResourceSetChangedEventHandler, PrioritizedEventHandler {
 
@@ -83,6 +83,8 @@ public class DefaultViewItem implements Disposable, ViewItem {
             highlightedSubsetSlotValueCache.remove(slotId);
         }
     }
+
+    private DragEnabler enabler;
 
     private String viewItemID;
 
@@ -136,9 +138,15 @@ public class DefaultViewItem implements Disposable, ViewItem {
     private Map<String, Object> selectedSubsetSlotValueCache = CollectionFactory
             .createStringMap();
 
+    private final View view;
+
+    private final ViewContentDisplayCallback callback;
+
     public DefaultViewItem(String viewItemID, ResourceSet resources,
             HoverModel hoverModel, PopupManager popupManager,
-            SlotMappingConfiguration slotMappingConfiguration) {
+            SlotMappingConfiguration slotMappingConfiguration,
+            DragEnablerFactory dragEnablerFactory, View view,
+            ViewContentDisplayCallback callback) {
 
         assert viewItemID != null;
         assert resources != null;
@@ -170,6 +178,11 @@ public class DefaultViewItem implements Disposable, ViewItem {
 
         initHighlighting();
         initPopupHighlighting();
+
+        // TODO move
+        this.callback = callback;
+        this.view = view;
+        this.enabler = dragEnablerFactory.createDragEnabler(this);
     }
 
     @Override
@@ -375,6 +388,46 @@ public class DefaultViewItem implements Disposable, ViewItem {
                 popupHighlightingManager.setHighlighting(false);
             }
         });
+    }
+
+    @Override
+    public void onEvent(Event event) {
+        switch (event.getTypeInt()) {
+        case Event.ONCLICK: {
+            if (view != null) {
+                callback.switchSelection(getResourceSet());
+            }
+        }
+            break;
+        case Event.ONMOUSEMOVE: {
+            getPopupManager().onMouseMove(event.getClientX(),
+                    event.getClientY());
+            enabler.forwardMouseMove(event);
+        }
+            break;
+        case Event.ONMOUSEDOWN: {
+            getPopupManager().onMouseDown(event);
+            enabler.forwardMouseDownWithEventPosition(event);
+        }
+            break;
+        case Event.ONMOUSEOUT: {
+            getPopupManager()
+                    .onMouseOut(event.getClientX(), event.getClientY());
+            getHighlightingManager().setHighlighting(false);
+            enabler.forwardMouseOut(event);
+        }
+            break;
+        case Event.ONMOUSEOVER: {
+            getPopupManager().onMouseOver(event.getClientX(),
+                    event.getClientY());
+            getHighlightingManager().setHighlighting(true);
+        }
+            break;
+        case Event.ONMOUSEUP: {
+            enabler.forwardMouseUp(event);
+        }
+            break;
+        }
     }
 
     @Override

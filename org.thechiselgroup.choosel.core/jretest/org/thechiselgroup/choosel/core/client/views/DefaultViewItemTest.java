@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.core.client.views;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -605,7 +606,8 @@ public class DefaultViewItemTest {
         hoverModel = spy(new HoverModel());
         resources = new DefaultResourceSet();
         underTest = spy(new DefaultViewItem(VIEW_ITEM_ID, resources,
-                hoverModel, popupManager, slotMappingConfiguration));
+                hoverModel, popupManager, slotMappingConfiguration,
+                mock(DragEnablerFactory.class), null, null));
     }
 
     @Test

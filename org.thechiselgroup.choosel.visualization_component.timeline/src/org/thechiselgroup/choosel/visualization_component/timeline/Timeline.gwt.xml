@@ -19,7 +19,6 @@
   <inherits name='com.google.gwt.user.User'/>
   <inherits name='org.thechiselgroup.choosel.core.Core'/>
 
-  <inherits name='com.google.gwt.query.Query'/>
   <script src="js/lib/simile-ajax-api-2.2.0/simile-ajax-api.js"/>
   <script src="js/lib/timeline-2.3.0/timeline-api.js"/>  
 

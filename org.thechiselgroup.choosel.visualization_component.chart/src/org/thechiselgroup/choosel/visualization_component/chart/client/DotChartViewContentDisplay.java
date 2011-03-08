@@ -16,7 +16,6 @@
 package org.thechiselgroup.choosel.visualization_component.chart.client;
 
 import org.thechiselgroup.choosel.core.client.ui.Colors;
-import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.core.client.views.ViewItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 import org.thechiselgroup.choosel.protovis.client.PV;
@@ -30,8 +29,6 @@ import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChartVisualization;
-
-import com.google.inject.Inject;
 
 public class DotChartViewContentDisplay extends ChartViewContentDisplay {
 
@@ -92,11 +89,6 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
 
     protected PVLinearScale scale;
 
-    @Inject
-    public DotChartViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
-        super(dragEnablerFactory);
-    }
-
     @Override
     protected void beforeRender() {
         super.beforeRender();
@@ -113,6 +105,22 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
             dotCounts[i] = chartItemsJsArray.get(i).getSlotValueAsDouble(
                     BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
         }
+    }
+
+    @Override
+    public void buildChart() {
+        assert chartItemsJsArray.length() >= 1;
+
+        calculateChartVariables();
+        setChartParameters();
+
+        calculateMaximumChartItemValue();
+        PVLinearScale scale = PVScale.linear(0, maxChartItemValue).range(0,
+                chartHeight);
+        drawScales(scale);
+        drawSelectionBox();
+        drawDot();
+
     }
 
     private void calculateChartVariables() {
@@ -153,22 +161,6 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
                 .getCallback()
                 .switchSelection(
                         chartItemsJsArray.get(i).getViewItem().getResourceSet());
-    }
-
-    @Override
-    public void buildChart() {
-        assert chartItemsJsArray.length() >= 1;
-
-        calculateChartVariables();
-        setChartParameters();
-
-        calculateMaximumChartItemValue();
-        PVLinearScale scale = PVScale.linear(0, maxChartItemValue).range(0,
-                chartHeight);
-        drawScales(scale);
-        drawSelectionBox();
-        drawDot();
-
     }
 
     private void drawDot() {

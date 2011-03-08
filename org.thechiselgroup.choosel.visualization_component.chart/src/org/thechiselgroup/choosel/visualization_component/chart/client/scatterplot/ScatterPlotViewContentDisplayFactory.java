@@ -15,25 +15,15 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.chart.client.scatterplot;
 
-import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.core.client.views.ViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.views.ViewContentDisplayFactory;
-
-import com.google.inject.Inject;
 
 public class ScatterPlotViewContentDisplayFactory implements
         ViewContentDisplayFactory {
 
-    @Inject
-    private DragEnablerFactory dragEnablerFactory;
-
-    @Inject
-    public ScatterPlotViewContentDisplayFactory() {
-    }
-
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-        return new ScatterPlotViewContentDisplay(dragEnablerFactory);
+        return new ScatterPlotViewContentDisplay();
     }
 
     @Override

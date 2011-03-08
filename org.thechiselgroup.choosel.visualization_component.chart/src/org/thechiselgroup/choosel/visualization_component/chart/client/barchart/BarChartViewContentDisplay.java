@@ -22,7 +22,6 @@ import org.thechiselgroup.choosel.core.client.ui.Colors;
 import org.thechiselgroup.choosel.core.client.ui.TextBoundsEstimator;
 import org.thechiselgroup.choosel.core.client.util.StringUtils;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.core.client.views.SidePanelSection;
 import org.thechiselgroup.choosel.core.client.views.ViewContentDisplayProperty;
 import org.thechiselgroup.choosel.core.client.views.ViewItem;
@@ -375,9 +374,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     private boolean barSpacing = true;
 
     @Inject
-    public BarChartViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
-        super(dragEnablerFactory);
-
+    public BarChartViewContentDisplay() {
         registerProperty(new LayoutProperty());
     }
 

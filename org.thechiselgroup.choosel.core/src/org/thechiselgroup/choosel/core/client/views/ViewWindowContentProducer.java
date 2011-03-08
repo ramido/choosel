@@ -88,6 +88,9 @@ public class ViewWindowContentProducer implements WindowContentProducer {
     @Inject
     private DetailsWidgetHelper detailsWidgetHelper;
 
+    @Inject
+    private DragEnablerFactory dragEnablerFactory;
+
     protected LightweightList<SidePanelSection> createSidePanelSections(
             String contentType, ViewContentDisplay contentDisplay,
             VisualMappingsControl visualMappingsControl,
@@ -180,7 +183,7 @@ public class ViewWindowContentProducer implements WindowContentProducer {
                 selectionModelPresenter, resourceModel, resourceModelPresenter,
                 hoverModel, popupManagerFactory, detailsWidgetHelper,
                 visualMappingsControl, slotMappingInitializer,
-                sidePanelSections);
+                sidePanelSections, dragEnablerFactory);
 
         for (ViewPart viewPart : viewParts) {
             viewPart.afterViewCreation(view);

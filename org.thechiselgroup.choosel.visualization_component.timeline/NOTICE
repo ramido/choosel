@@ -30,10 +30,3 @@ Required for Simile Timeline integration
 Version: 2.2.0
 URL: http://code.google.com/p/simile-widgets/
 License: New BSD License
-
-
-GWT Query
-JQuery functionality within GWT
-Version: 1.0-PATCHED
-URL: http://code.google.com/p/gwtquery/
-License: MIT License

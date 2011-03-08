@@ -15,38 +15,18 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.chart.client;
 
-import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.core.client.views.ViewItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 import org.thechiselgroup.choosel.protovis.client.PVEventHandler;
 import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChartVisualization;
 
-import com.google.inject.Inject;
-
 public class TimeChartViewContentDisplay extends ChartViewContentDisplay {
 
     protected double maxChartItemValue;
 
-    @Inject
-    public TimeChartViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
-        super(dragEnablerFactory);
-    }
-
     @Override
     protected void beforeRender() {
         calculateMaximumChartItemValue();
-    }
-
-    protected void calculateMaximumChartItemValue() {
-        maxChartItemValue = 0;
-        for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            double currentItemValue = chartItemsJsArray.get(i)
-                    .getSlotValueAsDouble(
-                            BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
-            if (maxChartItemValue < currentItemValue) {
-                maxChartItemValue = currentItemValue;
-            }
-        }
     }
 
     // @formatter:off
@@ -170,6 +150,18 @@ public class TimeChartViewContentDisplay extends ChartViewContentDisplay {
          dot.render();
     }-*/;
     // @formatter:on
+
+    protected void calculateMaximumChartItemValue() {
+        maxChartItemValue = 0;
+        for (int i = 0; i < chartItemsJsArray.length(); i++) {
+            double currentItemValue = chartItemsJsArray.get(i)
+                    .getSlotValueAsDouble(
+                            BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
+            if (maxChartItemValue < currentItemValue) {
+                maxChartItemValue = currentItemValue;
+            }
+        }
+    }
 
     @Override
     public String getName() {

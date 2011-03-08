@@ -15,25 +15,15 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.chart.client;
 
-import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.core.client.views.ViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.views.ViewContentDisplayFactory;
-
-import com.google.inject.Inject;
 
 public class CircularBarChartViewContentDisplayFactory implements
         ViewContentDisplayFactory {
 
-    @Inject
-    private DragEnablerFactory dragEnablerFactory;
-
-    @Inject
-    public CircularBarChartViewContentDisplayFactory() {
-    }
-
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-        return new CircularBarChartViewContentDisplay(dragEnablerFactory);
+        return new CircularBarChartViewContentDisplay();
     }
 
     @Override

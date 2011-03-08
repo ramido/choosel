@@ -24,7 +24,7 @@ import org.thechiselgroup.choosel.core.client.command.CommandManager;
 import org.thechiselgroup.choosel.core.client.geometry.Point;
 import org.thechiselgroup.choosel.core.client.persistence.Memento;
 import org.thechiselgroup.choosel.core.client.persistence.PersistableRestorationService;
-import org.thechiselgroup.choosel.core.client.resources.CombinedResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.UnionResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceCategorizer;
@@ -209,7 +209,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
     private ResourceManager resourceManager;
 
-    private CombinedResourceSet nodeResources = new CombinedResourceSet(
+    private UnionResourceSet nodeResources = new UnionResourceSet(
             new DefaultResourceSet());
 
     private Map<String, ArcItemContainer> arcItemContainersByArcTypeID = CollectionFactory

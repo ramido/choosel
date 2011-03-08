@@ -18,7 +18,6 @@ package org.thechiselgroup.choosel.visualization_component.chart.client;
 import org.thechiselgroup.choosel.core.client.ui.Colors;
 import org.thechiselgroup.choosel.core.client.util.StringUtils;
 import org.thechiselgroup.choosel.core.client.util.collections.ArrayUtils;
-import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.core.client.views.ViewItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 import org.thechiselgroup.choosel.protovis.client.PV;
@@ -32,8 +31,6 @@ import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChartVisualization;
-
-import com.google.inject.Inject;
 
 //Version of Pie chart with the average of the area 
 //and the radius calculations for proportional highlighting.
@@ -158,13 +155,6 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
         }
     };
 
-    @Inject
-    public CircularBarChartViewContentDisplay(
-            DragEnablerFactory dragEnablerFactory) {
-
-        super(dragEnablerFactory);
-    }
-
     @Override
     protected void beforeRender() {
         super.beforeRender();
@@ -193,6 +183,15 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
         }
     }
 
+    @Override
+    public void buildChart() {
+        assert chartItemsJsArray.length() > 0;
+
+        calculateMaximumChartItemValue();
+        drawScale();
+        drawWedge();
+    }
+
     private void calculateAllResourcesSum() {
         sum = 0;
         for (int i = 0; i < chartItemsJsArray.length(); i++) {
@@ -216,15 +215,6 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
     private double calculateRegularWedgeOuterRadius(int i) {
         return regularWedgeCounts[i] * (Math.min(height, width) - MARGIN_SIZE)
                 / (ArrayUtils.max(regularWedgeCounts) * 2);
-    }
-
-    @Override
-    public void buildChart() {
-        assert chartItemsJsArray.length() > 0;
-
-        calculateMaximumChartItemValue();
-        drawScale();
-        drawWedge();
     }
 
     private void drawScale() {

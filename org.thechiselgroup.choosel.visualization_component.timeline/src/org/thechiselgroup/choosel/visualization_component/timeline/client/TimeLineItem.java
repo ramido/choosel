@@ -15,22 +15,17 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.timeline.client;
 
-import static com.google.gwt.query.client.GQuery.$;
-
 import java.util.Date;
 
 import org.thechiselgroup.choosel.core.client.ui.CSS;
-import org.thechiselgroup.choosel.core.client.views.DragEnabler;
-import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.core.client.views.IconViewItem;
 import org.thechiselgroup.choosel.core.client.views.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.ViewItem.Status;
 
-import com.google.gwt.query.client.Function;
-import com.google.gwt.query.client.GQuery;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
 
 public class TimeLineItem extends IconViewItem {
 
@@ -43,35 +38,7 @@ public class TimeLineItem extends IconViewItem {
 
     private static final String CSS_SELECTED_CLASS = "selected";
 
-    private DragEnablerFactory dragEnablerFactory;
-
-    private final Function mouseClickListener = new Function() {
-        @Override
-        public boolean f(Event e) {
-            onMouseClick(e);
-            return true;
-        }
-    };
-
-    private final Function mouseOutListener = new Function() {
-        @Override
-        public boolean f(Event e) {
-            onMouseOut(e);
-            return true;
-        }
-    };
-
-    private final Function mouseOverListener = new Function() {
-        @Override
-        public boolean f(Event e) {
-            onMouseOver(e);
-            return true;
-        }
-    };
-
     private JsTimeLineEvent timeLineEvent;
-
-    private final TimeLineViewContentDisplay view;
 
     private String iconElementID;
 
@@ -79,13 +46,8 @@ public class TimeLineItem extends IconViewItem {
 
     private String tickElementID;
 
-    public TimeLineItem(ViewItem resourceItem, TimeLineViewContentDisplay view,
-            DragEnablerFactory dragEnablerFactory) {
-
+    public TimeLineItem(ViewItem resourceItem, TimeLineViewContentDisplay view) {
         super(resourceItem, TimelineVisualization.COLOR_SLOT);
-
-        this.view = view;
-        this.dragEnablerFactory = dragEnablerFactory;
 
         Object date = getSlotValue(TimelineVisualization.DATE_SLOT);
         String dateString;
@@ -119,28 +81,8 @@ public class TimeLineItem extends IconViewItem {
         throw new RuntimeException("this point should never be reached");
     }
 
-    private GQuery getGElement(String elementID) {
-        return $("#" + elementID);
-    }
-
     public JsTimeLineEvent getTimeLineEvent() {
         return timeLineEvent;
-    }
-
-    private void onMouseClick(Event e) {
-        view.getCallback().switchSelection(viewItem.getResourceSet());
-    }
-
-    public void onMouseOut(Event e) {
-        viewItem.getPopupManager().onMouseOut(e.getClientX(),
-                e.getClientY());
-        viewItem.getHighlightingManager().setHighlighting(false);
-    }
-
-    public void onMouseOver(Event e) {
-        viewItem.getPopupManager().onMouseOver(e.getClientX(),
-                e.getClientY());
-        viewItem.getHighlightingManager().setHighlighting(true);
     }
 
     public void onPainted(String labelElementID, String iconElementID) {
@@ -162,41 +104,13 @@ public class TimeLineItem extends IconViewItem {
     }
 
     private void registerListeners(String elementID) {
-        GQuery element = getGElement(elementID);
+        Element element = DOM.getElementById(elementID);
 
-        element.mouseover(mouseOverListener);
-        element.mouseout(mouseOutListener);
-        element.click(mouseClickListener);
-
-        final DragEnabler enabler = dragEnablerFactory
-                .createDragEnabler(viewItem);
-
-        element.mouseup(new Function() {
+        DOM.sinkEvents(element, Event.MOUSEEVENTS | Event.ONCLICK);
+        DOM.setEventListener(element, new EventListener() {
             @Override
-            public boolean f(Event e) {
-                enabler.forwardMouseUp(e);
-                return false;
-            }
-        });
-        element.mouseout(new Function() {
-            @Override
-            public boolean f(Event e) {
-                enabler.forwardMouseOut(e);
-                return false;
-            }
-        });
-        element.mousemove(new Function() {
-            @Override
-            public boolean f(Event e) {
-                enabler.forwardMouseMove(e);
-                return false;
-            }
-        });
-        element.mousedown(new Function() {
-            @Override
-            public boolean f(Event e) {
-                enabler.forwardMouseDownWithTargetElementPosition(e);
-                return false;
+            public void onBrowserEvent(Event event) {
+                viewItem.onEvent(event);
             }
         });
     }

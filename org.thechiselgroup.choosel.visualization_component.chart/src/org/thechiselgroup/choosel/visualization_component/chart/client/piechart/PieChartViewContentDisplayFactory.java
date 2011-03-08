@@ -15,25 +15,15 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.chart.client.piechart;
 
-import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.core.client.views.ViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.views.ViewContentDisplayFactory;
-
-import com.google.inject.Inject;
 
 public class PieChartViewContentDisplayFactory implements
         ViewContentDisplayFactory {
 
-    @Inject
-    private DragEnablerFactory dragEnablerFactory;
-
-    @Inject
-    public PieChartViewContentDisplayFactory() {
-    }
-
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-        return new PieChartViewContentDisplay(dragEnablerFactory);
+        return new PieChartViewContentDisplay();
     }
 
     @Override
