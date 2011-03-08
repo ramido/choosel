@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.visualization_component.graph.client;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.spy;
@@ -23,6 +24,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.core.client.test.AdvancedAsserts.assertContentEquals;
+import static org.thechiselgroup.choosel.core.client.test.ResourcesMatchers.containsEqualResources;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.createViewItem;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.createViewItems;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
@@ -138,7 +140,7 @@ public class GraphViewContentDisplayTest {
 
         resourceSet.add(createResource(2));
 
-        assertContentEquals(resourceSet, underTest.getAllResources());
+        assertThat(underTest.getAllResources(), containsEqualResources(resourceSet));
     }
 
     private void addViewItemToUnderTest(
@@ -342,7 +344,7 @@ public class GraphViewContentDisplayTest {
                 LightweightCollections.toCollection(resourceItem),
                 LightweightCollections.<Slot> emptyCollection());
 
-        assertContentEquals(createResources(), underTest.getAllResources());
+        assertThat(underTest.getAllResources(), containsEqualResources(createResources()));
 
     }
 
