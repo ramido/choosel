@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.visualization_component.chart.client;
 import org.thechiselgroup.choosel.core.client.ui.Colors;
 import org.thechiselgroup.choosel.core.client.views.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.ViewItem.Subset;
+import org.thechiselgroup.choosel.core.client.views.ViewItemInteraction;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 
 import com.google.gwt.user.client.Event;
@@ -70,7 +71,7 @@ public class ChartItem {
     }
 
     public void onEvent(Event e) {
-        viewItem.onEvent(e);
+        viewItem.reportInteraction(new ViewItemInteraction(e));
     }
 
 }

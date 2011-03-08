@@ -335,7 +335,7 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
         assert handler != null;
 
         if (type instanceof DomEvent.Type) {
-            return addDomHandler(handler, (DomEvent.Type) type);
+            return addDomHandler(handler, (DomEvent.Type<T>) type);
         } else {
             return addHandler(handler, type);
         }

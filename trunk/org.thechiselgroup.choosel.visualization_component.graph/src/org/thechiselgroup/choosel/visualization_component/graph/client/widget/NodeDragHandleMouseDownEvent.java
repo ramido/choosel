@@ -15,26 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.graph.client.widget;
 
-import com.google.gwt.event.shared.GwtEvent;
-
 public class NodeDragHandleMouseDownEvent extends
-        GwtEvent<NodeDragHandleMouseDownHandler> {
+        NodeEvent<NodeDragHandleMouseDownHandler> {
 
     public static final Type<NodeDragHandleMouseDownHandler> TYPE = new Type<NodeDragHandleMouseDownHandler>();
 
-    private final int mouseX;
-
-    private final int mouseY;
-
-    private final Node node;
-
     public NodeDragHandleMouseDownEvent(Node node, int mouseX, int mouseY) {
-        assert node != null;
-
-        this.node = node;
-        this.mouseX = mouseX;
-        this.mouseY = mouseY;
-
+        super(node, mouseX, mouseY);
     }
 
     @Override
@@ -45,24 +32,6 @@ public class NodeDragHandleMouseDownEvent extends
     @Override
     public Type<NodeDragHandleMouseDownHandler> getAssociatedType() {
         return TYPE;
-    }
-
-    public int getMouseX() {
-        return mouseX;
-    }
-
-    public int getMouseY() {
-        return mouseY;
-    }
-
-    public Node getNode() {
-        return node;
-    }
-
-    @Override
-    public String toString() {
-        return "NodeDragHandleMouseDownEvent [mouseX=" + mouseX + ", mouseY="
-                + mouseY + ", node=" + node + "]";
     }
 
 }

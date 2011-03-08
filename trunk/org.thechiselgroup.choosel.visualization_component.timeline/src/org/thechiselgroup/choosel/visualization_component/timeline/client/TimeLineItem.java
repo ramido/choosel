@@ -21,6 +21,7 @@ import org.thechiselgroup.choosel.core.client.ui.CSS;
 import org.thechiselgroup.choosel.core.client.views.IconViewItem;
 import org.thechiselgroup.choosel.core.client.views.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.ViewItem.Status;
+import org.thechiselgroup.choosel.core.client.views.ViewItemInteraction;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -110,7 +111,7 @@ public class TimeLineItem extends IconViewItem {
         DOM.setEventListener(element, new EventListener() {
             @Override
             public void onBrowserEvent(Event event) {
-                viewItem.onEvent(event);
+                viewItem.reportInteraction(new ViewItemInteraction(event));
             }
         });
     }

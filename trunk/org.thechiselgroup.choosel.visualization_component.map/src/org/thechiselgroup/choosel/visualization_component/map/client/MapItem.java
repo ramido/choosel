@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.visualization_component.map.client;
 import org.thechiselgroup.choosel.core.client.views.IconViewItem;
 import org.thechiselgroup.choosel.core.client.views.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.ViewItem.Status;
+import org.thechiselgroup.choosel.core.client.views.ViewItemInteraction;
 
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.geom.Point;
@@ -42,7 +43,9 @@ public class MapItem extends IconViewItem {
                         }
 
                         // forward
-                        MapItem.this.viewItem.onEvent(event);
+                        MapItem.this.viewItem
+                                .reportInteraction(new ViewItemInteraction(
+                                        event));
                     }
                 });
     }

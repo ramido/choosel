@@ -18,7 +18,6 @@ package org.thechiselgroup.choosel.visualization_component.graph.client;
 import org.thechiselgroup.choosel.core.client.command.CommandManager;
 import org.thechiselgroup.choosel.core.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceManager;
-import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.core.client.views.ViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.views.ViewContentDisplayFactory;
 
@@ -32,9 +31,6 @@ public class GraphViewContentDisplayFactory implements
 
     @Inject
     private CommandManager commandManager;
-
-    @Inject
-    private DragEnablerFactory dragEnablerFactory;
 
     @Inject
     private GraphExpansionRegistry registry;
@@ -53,8 +49,8 @@ public class GraphViewContentDisplayFactory implements
     public ViewContentDisplay createViewContentDisplay() {
         return new GraphViewContentDisplay(
                 new GraphViewContentDisplay.DefaultDisplay(), commandManager,
-                resourceManager, dragEnablerFactory, resourceCategorizer,
-                arcStyleProvider, registry);
+                resourceManager, resourceCategorizer, arcStyleProvider,
+                registry);
     }
 
     @Override
