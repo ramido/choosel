@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.example.workbench.client;
 
-import org.thechiselgroup.choosel.core.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.core.client.views.ViewContentDisplaysConfiguration;
 import org.thechiselgroup.choosel.visualization_component.graph.client.ArcTypeProvider;
 import org.thechiselgroup.choosel.visualization_component.graph.client.DefaultArcTypeProvider;
@@ -35,11 +34,6 @@ public class ChooselExampleClientModule extends ChooselWorkbenchClientModule {
                 Singleton.class);
         bind(GraphExpansionRegistry.class).to(
                 ChooselExampleGraphExpansionRegistry.class).in(Singleton.class);
-    }
-
-    @Override
-    protected Class<? extends DetailsWidgetHelper> getDetailsWidgetHelperClass() {
-        return ChooselExampleDetailsWidgetHelper.class;
     }
 
     @Override

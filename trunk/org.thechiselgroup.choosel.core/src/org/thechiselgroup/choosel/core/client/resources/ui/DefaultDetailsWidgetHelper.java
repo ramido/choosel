@@ -15,16 +15,27 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.resources.ui;
 
+import java.util.Set;
+
+import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.ui.dnd.ResourceSetAvatarDragController;
+import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingConfiguration;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
+/**
+ * {@link DetailsWidgetHelper} that shows information from the view item as well
+ * as from the underlying resources.
+ * 
+ * @author Lars Grammel
+ */
 public class DefaultDetailsWidgetHelper extends DetailsWidgetHelper {
 
     @Inject
@@ -36,9 +47,43 @@ public class DefaultDetailsWidgetHelper extends DetailsWidgetHelper {
 
     @Override
     public Widget createDetailsWidget(String groupID, ResourceSet resources,
-            SlotMappingConfiguration resolver) {
+            SlotMappingConfiguration slotMappings) {
 
-        return GWT.<VerticalPanel> create(VerticalPanel.class);
+        VerticalPanel verticalPanel = GWT.create(VerticalPanel.class);
+        ResourceSetAvatar avatar = avatarFactory.createAvatar(resources);
+        if (!resources.hasLabel()) {
+            avatar.setText(groupID);
+        }
+        verticalPanel.add(avatar);
+
+        // try to resolve slot mappings first
+        Set<Slot> slots = slotMappings.getSlots();
+        for (Slot slot : slots) {
+            String label = slot.getName();
+            Object valueObject = slotMappings.resolve(slot, groupID, resources);
+            String value = valueObject != null ? valueObject.toString() + " ("
+                    + slotMappings.getResolver(slot).toString() + ")" : "";
+            addRow(label, value, true, verticalPanel);
+        }
+
+        // single resource: show properties
+        if (resources.size() == 1) {
+            Resource resource = resources.getFirstResource();
+
+            verticalPanel.add(new HTML("<br/><b>One item</b>"));
+            Set<String> entrySet = resource.getProperties().keySet();
+            for (String property : entrySet) {
+                addRow(resource, verticalPanel, property, property);
+            }
+
+            return verticalPanel;
+        }
+
+        // multiple resources: show numbers
+        verticalPanel
+                .add(new HTML("<br/><b>" + resources.size() + " items</b>"));
+
+        return verticalPanel;
     }
 
 }
