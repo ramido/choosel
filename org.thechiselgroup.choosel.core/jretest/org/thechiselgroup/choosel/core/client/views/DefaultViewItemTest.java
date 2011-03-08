@@ -606,8 +606,7 @@ public class DefaultViewItemTest {
         hoverModel = spy(new HoverModel());
         resources = new DefaultResourceSet();
         underTest = spy(new DefaultViewItem(VIEW_ITEM_ID, resources,
-                hoverModel, popupManager, slotMappingConfiguration,
-                mock(DragEnablerFactory.class), null, null));
+                hoverModel, slotMappingConfiguration, mock(ViewItemInteractionHandler.class)));
     }
 
     @Test

@@ -22,9 +22,6 @@ import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEvent;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEventHandler;
-import org.thechiselgroup.choosel.core.client.ui.popup.PopupClosingEvent;
-import org.thechiselgroup.choosel.core.client.ui.popup.PopupClosingHandler;
-import org.thechiselgroup.choosel.core.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
@@ -34,12 +31,6 @@ import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingChangedEvent;
 import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingChangedHandler;
 import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingConfiguration;
-
-import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOutHandler;
-import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseOverHandler;
-import com.google.gwt.user.client.Event;
 
 /**
  * Default implementation of {@link ViewItem}.
@@ -52,6 +43,7 @@ import com.google.gwt.user.client.Event;
  */
 // TODO separate out resource item controller part
 public class DefaultViewItem implements Disposable, ViewItem {
+
     private final class CacheUpdateOnResourceSetChange implements
             ResourceSetChangedEventHandler, PrioritizedEventHandler {
 
@@ -84,20 +76,14 @@ public class DefaultViewItem implements Disposable, ViewItem {
         }
     }
 
-    private DragEnabler enabler;
-
     private String viewItemID;
 
     protected final HoverModel hoverModel;
-
-    protected final PopupManager popupManager;
 
     // TODO update & paint on changes in resources!!!
     private final ResourceSet resources;
 
     private final SlotMappingConfiguration slotMappingConfiguration;
-
-    private HighlightingManager highlightingManager;
 
     /**
      * The representation of this resource item in the specific display. This is
@@ -110,8 +96,6 @@ public class DefaultViewItem implements Disposable, ViewItem {
     private ResourceSet highlightedResources;
 
     private ResourceSet selectedResources;
-
-    private HighlightingManager popupHighlightingManager;
 
     private SubsetStatus cachedHighlightStatus = null;
 
@@ -138,27 +122,24 @@ public class DefaultViewItem implements Disposable, ViewItem {
     private Map<String, Object> selectedSubsetSlotValueCache = CollectionFactory
             .createStringMap();
 
-    private final View view;
-
-    private final ViewContentDisplayCallback callback;
+    private final ViewItemInteractionHandler interactionHandler;
 
     public DefaultViewItem(String viewItemID, ResourceSet resources,
-            HoverModel hoverModel, PopupManager popupManager,
+            HoverModel hoverModel,
             SlotMappingConfiguration slotMappingConfiguration,
-            DragEnablerFactory dragEnablerFactory, View view,
-            ViewContentDisplayCallback callback) {
+            ViewItemInteractionHandler interactionHandler) {
 
         assert viewItemID != null;
         assert resources != null;
         assert hoverModel != null;
-        assert popupManager != null;
         assert slotMappingConfiguration != null;
+        assert interactionHandler != null;
 
         this.viewItemID = viewItemID;
         this.resources = resources;
-        this.popupManager = popupManager;
         this.hoverModel = hoverModel; // TODO separate controller
         this.slotMappingConfiguration = slotMappingConfiguration;
+        this.interactionHandler = interactionHandler;
 
         highlightedResources = new DefaultResourceSet();
         selectedResources = new DefaultResourceSet();
@@ -175,14 +156,6 @@ public class DefaultViewItem implements Disposable, ViewItem {
                 selectedResources.removeAll(removedResources);
             }
         });
-
-        initHighlighting();
-        initPopupHighlighting();
-
-        // TODO move
-        this.callback = callback;
-        this.view = view;
-        this.enabler = dragEnablerFactory.createDragEnabler(this);
     }
 
     @Override
@@ -190,8 +163,6 @@ public class DefaultViewItem implements Disposable, ViewItem {
         // XXX deregister event listeners
         // XXX dispose intersection sets
 
-        highlightingManager.dispose();
-        popupHighlightingManager.dispose();
     }
 
     /**
@@ -245,22 +216,12 @@ public class DefaultViewItem implements Disposable, ViewItem {
     }
 
     @Override
-    public HighlightingManager getHighlightingManager() {
-        return highlightingManager;
-    }
-
-    @Override
     public SubsetStatus getHighlightStatus() {
         if (cachedHighlightStatus == null) {
             cachedHighlightStatus = getSubsetStatus(highlightedResources);
         }
 
         return cachedHighlightStatus;
-    }
-
-    @Override
-    public final PopupManager getPopupManager() {
-        return popupManager;
     }
 
     @Override
@@ -362,81 +323,10 @@ public class DefaultViewItem implements Disposable, ViewItem {
         slotMappingConfiguration.addHandler(new CacheUpdateOnSlotChange());
     }
 
-    private void initHighlighting() {
-        highlightingManager = new HighlightingManager(hoverModel, resources);
-    }
-
-    private void initPopupHighlighting() {
-        popupHighlightingManager = new HighlightingManager(hoverModel,
-                resources);
-
-        popupManager.addPopupMouseOverHandler(new MouseOverHandler() {
-            @Override
-            public void onMouseOver(MouseOverEvent e) {
-                popupHighlightingManager.setHighlighting(true);
-            }
-        });
-        popupManager.addPopupMouseOutHandler(new MouseOutHandler() {
-            @Override
-            public void onMouseOut(MouseOutEvent event) {
-                popupHighlightingManager.setHighlighting(false);
-            }
-        });
-        popupManager.addPopupClosingHandler(new PopupClosingHandler() {
-            @Override
-            public void onPopupClosing(PopupClosingEvent event) {
-                popupHighlightingManager.setHighlighting(false);
-            }
-        });
-    }
-
     @Override
     public void reportInteraction(ViewItemInteraction interaction) {
-        switch (interaction.getEventType()) {
-        case Event.ONCLICK: {
-            if (view != null) {
-                callback.switchSelection(getResourceSet());
-            }
-        }
-            break;
-        case Event.ONMOUSEMOVE: {
-            getPopupManager().onMouseMove(interaction.getClientX(),
-                    interaction.getClientY());
-            enabler.onMoveInteraction(interaction);
-        }
-            break;
-        case Event.ONMOUSEDOWN: {
-            if (interaction.hasNativeEvent()) {
-                getPopupManager().onMouseDown(interaction.getNativeEvent());
-                enabler.forwardMouseDownWithEventPosition(interaction
-                        .getNativeEvent());
-            }
-        }
-            break;
-        case Event.ONMOUSEOUT: {
-            getPopupManager().onMouseOut(interaction.getClientX(),
-                    interaction.getClientY());
-            getHighlightingManager().setHighlighting(false);
-            if (interaction.hasNativeEvent()) {
-                enabler.forwardMouseOut(interaction.getNativeEvent());
-            }
-        }
-            break;
-        case Event.ONMOUSEOVER: {
-            getPopupManager().onMouseOver(interaction.getClientX(),
-                    interaction.getClientY());
-            getHighlightingManager().setHighlighting(true);
-        }
-            break;
-        case Event.ONMOUSEUP: {
-            if (interaction.hasNativeEvent()) {
-                enabler.forwardMouseUp(interaction.getNativeEvent());
-            } else {
-                // TODO enabler.forwardMouseUp(e);
-            }
-        }
-            break;
-        }
+        assert interaction != null;
+        interactionHandler.onInteraction(this, interaction);
     }
 
     @Override

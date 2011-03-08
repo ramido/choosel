@@ -40,12 +40,8 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEventH
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetEventForwarder;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
-import org.thechiselgroup.choosel.core.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.core.client.ui.ImageButton;
 import org.thechiselgroup.choosel.core.client.ui.Presenter;
-import org.thechiselgroup.choosel.core.client.ui.WidgetFactory;
-import org.thechiselgroup.choosel.core.client.ui.popup.PopupManager;
-import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
 import org.thechiselgroup.choosel.core.client.util.HandlerRegistrationSet;
 import org.thechiselgroup.choosel.core.client.util.Initializable;
@@ -157,10 +153,6 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private Presenter selectionModelPresenter;
 
-    private DetailsWidgetHelper detailsWidgetHelper;
-
-    private PopupManagerFactory popupManagerFactory;
-
     private int width;
 
     private int height;
@@ -188,7 +180,7 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private IntersectionResourceSet highlightedResourcesIntersection;
 
-    private final DragEnablerFactory dragEnablerFactory;
+    private final ViewItemBehavior viewItemBehavior;
 
     public DefaultView(ResourceGrouping resourceGrouping,
             ViewContentDisplay contentDisplay, String label,
@@ -196,17 +188,13 @@ public class DefaultView extends AbstractWindowContent implements View {
             SlotMappingConfiguration slotMappingConfiguration,
             SelectionModel selectionModel, Presenter selectionModelPresenter,
             ResourceModel resourceModel, Presenter resourceModelPresenter,
-            HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper,
-            VisualMappingsControl visualMappingsControl,
+            HoverModel hoverModel, VisualMappingsControl visualMappingsControl,
             SlotMappingInitializer slotMappingInitializer,
             LightweightCollection<SidePanelSection> sidePanelSections,
-            DragEnablerFactory dragEnablerFactory) {
+            ViewItemBehavior viewItemBehavior) {
 
         super(label, contentType);
 
-        assert popupManagerFactory != null;
-        assert detailsWidgetHelper != null;
         assert slotMappingConfiguration != null;
         assert resourceGrouping != null;
         assert contentDisplay != null;
@@ -217,11 +205,9 @@ public class DefaultView extends AbstractWindowContent implements View {
         assert hoverModel != null;
         assert slotMappingInitializer != null;
         assert sidePanelSections != null;
-        assert dragEnablerFactory != null;
+        assert viewItemBehavior != null;
 
         this.slotMappingInitializer = slotMappingInitializer;
-        this.popupManagerFactory = popupManagerFactory;
-        this.detailsWidgetHelper = detailsWidgetHelper;
         this.slotMappingConfiguration = slotMappingConfiguration;
         this.resourceGrouping = resourceGrouping;
         this.contentDisplay = contentDisplay;
@@ -232,27 +218,12 @@ public class DefaultView extends AbstractWindowContent implements View {
         this.hoverModel = hoverModel;
         this.visualMappingsControl = visualMappingsControl;
         this.sidePanelSections = sidePanelSections;
-        this.dragEnablerFactory = dragEnablerFactory;
+        this.viewItemBehavior = viewItemBehavior;
     }
 
     @Override
     public Widget asWidget() {
         return viewPanel;
-    }
-
-    // for test
-    protected PopupManager createPopupManager(final String groupID,
-            final ResourceSet resources) {
-
-        WidgetFactory widgetFactory = new WidgetFactory() {
-            @Override
-            public Widget createWidget() {
-                return detailsWidgetHelper.createDetailsWidget(groupID,
-                        resources, slotMappingConfiguration);
-            }
-        };
-
-        return popupManagerFactory.createPopupManager(widgetFactory);
     }
 
     private DefaultViewItem createViewItem(String groupID,
@@ -263,9 +234,9 @@ public class DefaultView extends AbstractWindowContent implements View {
         // TODO use factory & dispose + clean up
 
         DefaultViewItem viewItem = new DefaultViewItem(groupID, resources,
-                hoverModel, createPopupManager(groupID, resources),
-                slotMappingConfiguration, dragEnablerFactory, this,
-                contentDisplayCallback);
+                hoverModel, slotMappingConfiguration, viewItemBehavior);
+
+        viewItemBehavior.onViewItemCreated(viewItem);
 
         viewItem.updateHighlightedResources(highlightedResources,
                 LightweightCollections.<Resource> emptyCollection());
@@ -282,8 +253,9 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     @Override
     public void dispose() {
-        for (DefaultViewItem resourceItem : viewItemsByGroupId.values()) {
-            resourceItem.dispose();
+        for (DefaultViewItem viewItem : viewItemsByGroupId.values()) {
+            viewItemBehavior.onViewItemRemoved(viewItem);
+            viewItem.dispose();
         }
 
         dispose(resourceModel);
@@ -302,9 +274,6 @@ public class DefaultView extends AbstractWindowContent implements View {
         selectionModelPresenter = null;
 
         hoverModel = null;
-
-        popupManagerFactory = null;
-        detailsWidgetHelper = null;
 
         handlerRegistrations.dispose();
         handlerRegistrations = null;
@@ -521,10 +490,6 @@ public class DefaultView extends AbstractWindowContent implements View {
                 return DefaultView.this.getViewItems(resources);
             }
 
-            @Override
-            public void switchSelection(ResourceSet resources) {
-                selectionModel.switchSelection(resources);
-            }
         };
         contentDisplay.init(contentDisplayCallback);
     }
@@ -785,6 +750,7 @@ public class DefaultView extends AbstractWindowContent implements View {
                 + groupID;
 
         DefaultViewItem viewItem = viewItemsByGroupId.remove(groupID);
+        viewItemBehavior.onViewItemRemoved(viewItem);
         viewItem.dispose();
 
         assert !viewItemsByGroupId.containsKey(groupID);

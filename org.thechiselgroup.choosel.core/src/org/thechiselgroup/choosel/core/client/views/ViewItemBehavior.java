@@ -15,13 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views;
 
-import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.core.client.views.slots.Slot;
+public interface ViewItemBehavior extends ViewItemInteractionHandler {
 
-public interface ViewContentDisplayCallback extends ViewItemContainer {
+    void onViewItemCreated(ViewItem viewItem);
 
-    ResourceSet getAutomaticResourceSet();
-
-    String getSlotResolverDescription(Slot slot);
+    void onViewItemRemoved(ViewItem viewItem);
 
 }

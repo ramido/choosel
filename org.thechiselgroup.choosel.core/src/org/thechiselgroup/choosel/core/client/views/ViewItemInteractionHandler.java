@@ -15,13 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views;
 
-import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.core.client.views.slots.Slot;
+public interface ViewItemInteractionHandler {
 
-public interface ViewContentDisplayCallback extends ViewItemContainer {
-
-    ResourceSet getAutomaticResourceSet();
-
-    String getSlotResolverDescription(Slot slot);
+    void onInteraction(ViewItem viewItem, ViewItemInteraction interaction);
 
 }
