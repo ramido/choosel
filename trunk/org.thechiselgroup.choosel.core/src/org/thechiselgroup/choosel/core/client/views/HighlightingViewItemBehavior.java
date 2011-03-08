@@ -19,8 +19,6 @@ import java.util.Map;
 
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 
-import com.google.gwt.user.client.Event;
-
 /**
  * Manages {@link ViewItem} highlighting in a single view.
  */
@@ -50,10 +48,11 @@ public class HighlightingViewItemBehavior implements ViewItemBehavior {
                 .get(viewItem.getViewItemID());
 
         switch (interaction.getEventType()) {
-        case Event.ONMOUSEOUT:
+        case DRAG_END:
+        case MOUSE_OUT:
             highlightingManager.setHighlighting(false);
             break;
-        case Event.ONMOUSEOVER:
+        case MOUSE_OVER:
             highlightingManager.setHighlighting(true);
             break;
         }

@@ -15,6 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.Event;
 
@@ -26,19 +29,75 @@ import com.google.gwt.user.client.Event;
  */
 public class ViewItemInteraction {
 
+    /**
+     * Separate event types are used to enable simulation of events that are not
+     * supported by the GWT event library (as of GWT 2.1), e.g. HTML5 events
+     * such as DRAG_START.
+     */
+    public static enum Type {
+
+        CLICK(Event.ONCLICK), DOUBLE_CLICK(Event.ONDBLCLICK), MOUSE_OVER(
+                Event.ONMOUSEOVER), MOUSE_MOVE(Event.ONMOUSEMOVE), MOUSE_OUT(
+                Event.ONMOUSEOUT), MOUSE_DOWN(Event.ONMOUSEDOWN), MOUSE_UP(
+                Event.ONMOUSEUP), DRAG_START, DRAG_END, UNDEFINED;
+
+        private static final Map<Integer, Type> typesByCode = new HashMap<Integer, ViewItemInteraction.Type>();
+
+        static {
+            Type[] values = values();
+            for (Type type : values) {
+                if (type.getEventCode() != -1) {
+                    typesByCode.put(type.getEventCode(), type);
+                }
+            }
+        }
+
+        /**
+         * @return Type or {@link #UNDEFINED}, if there is no such event.
+         * 
+         * @see Event
+         */
+        private static Type byCode(int eventCode) {
+            if (!typesByCode.containsKey(eventCode)) {
+                return UNDEFINED;
+            }
+            return typesByCode.get(eventCode);
+        }
+
+        /**
+         * Event code from {@link Event}, if available, -1 otherwise.
+         */
+        private int eventCode;
+
+        private Type() {
+            this(-1);
+        }
+
+        private Type(int eventCode) {
+            this.eventCode = eventCode;
+        }
+
+        public int getEventCode() {
+            return eventCode;
+        }
+
+    }
+
+    /**
+     * Unknown coordinate.
+     * 
+     * @see #getClientX()
+     * @see #getClientY()
+     */
+    public final static int UNKNOWN = -2;
+
     private NativeEvent nativeEvent;
 
     private int clientX;
 
     private int clientY;
 
-    private int eventType;
-
-    public ViewItemInteraction(int eventType, int clientX, int clientY) {
-        this.eventType = eventType;
-        this.clientX = clientX;
-        this.clientY = clientY;
-    }
+    private Type eventType;
 
     public ViewItemInteraction(NativeEvent e) {
         assert e != null;
@@ -46,30 +105,41 @@ public class ViewItemInteraction {
         this.nativeEvent = e;
         this.clientX = e.getClientX();
         this.clientY = e.getClientY();
-        this.eventType = Event.as(e).getTypeInt();
+        this.eventType = Type.byCode(Event.as(e).getTypeInt());
+    }
+
+    public ViewItemInteraction(Type eventType) {
+        this(eventType, UNKNOWN, UNKNOWN);
+    }
+
+    public ViewItemInteraction(Type eventType, int clientX, int clientY) {
+        this.eventType = eventType;
+        this.clientX = clientX;
+        this.clientY = clientY;
     }
 
     /**
-     * X-Coordinate of the event in the browser client area.
+     * X-Coordinate of the event in the browser client area.Can be
+     * {@link #UNKNOWN}.
      */
     public int getClientX() {
         return clientX;
     }
 
     /**
-     * Y-Coordinate of the event in the browser client area.
+     * Y-Coordinate of the event in the browser client area. Can be
+     * {@link #UNKNOWN}.
      */
     public int getClientY() {
         return clientY;
     }
 
     /**
-     * Int flag representing the event type. See {@link Event} for the
-     * constants.
+     * Type of this event.
      * 
-     * @see Event
+     * @see Type
      */
-    public int getEventType() {
+    public Type getEventType() {
         return eventType;
     }
 

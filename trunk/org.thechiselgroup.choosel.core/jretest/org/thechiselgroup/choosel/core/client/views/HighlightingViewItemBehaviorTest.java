@@ -26,8 +26,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
-
-import com.google.gwt.user.client.Event;
+import org.thechiselgroup.choosel.core.client.views.ViewItemInteraction.Type;
 
 public class HighlightingViewItemBehaviorTest {
 
@@ -50,8 +49,25 @@ public class HighlightingViewItemBehaviorTest {
     public void disposeRemovesHighlighting() {
         underTest.onViewItemCreated(viewItem);
         underTest.onInteraction(viewItem, new ViewItemInteraction(
-                Event.ONMOUSEOVER, 0, 0));
+                Type.MOUSE_OVER));
         underTest.onViewItemRemoved(viewItem);
+
+        assertThat(hoverModel.getResources(),
+                containsEqualResources(createResources()));
+    }
+
+    /**
+     * Remove highlighting on drag end.
+     */
+    @Test
+    public void dragEndRemovesHighlighting() {
+        underTest.onViewItemCreated(viewItem);
+        underTest.onInteraction(viewItem, new ViewItemInteraction(
+                Type.MOUSE_OVER));
+        underTest.onInteraction(viewItem, new ViewItemInteraction(
+                Type.DRAG_START));
+        underTest.onInteraction(viewItem,
+                new ViewItemInteraction(Type.DRAG_END));
 
         assertThat(hoverModel.getResources(),
                 containsEqualResources(createResources()));
@@ -61,7 +77,7 @@ public class HighlightingViewItemBehaviorTest {
     public void mouseOverAddsResourcesToHoverModel() {
         underTest.onViewItemCreated(viewItem);
         underTest.onInteraction(viewItem, new ViewItemInteraction(
-                Event.ONMOUSEOVER, 0, 0));
+                Type.MOUSE_OVER));
         assertThat(hoverModel.getResources(),
                 containsEqualResources(createResources(1, 2)));
     }

@@ -19,8 +19,6 @@ import java.util.Map;
 
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 
-import com.google.gwt.user.client.Event;
-
 /**
  * Manages dragging of {@link ViewItem}.
  */
@@ -49,21 +47,21 @@ public class DragViewItemBehavior implements ViewItemBehavior {
         DragEnabler enabler = dragEnablers.get(viewItem.getViewItemID());
 
         switch (interaction.getEventType()) {
-        case Event.ONMOUSEMOVE:
+        case MOUSE_MOVE:
             enabler.onMoveInteraction(interaction);
             break;
-        case Event.ONMOUSEDOWN:
+        case MOUSE_DOWN:
             if (interaction.hasNativeEvent()) {
                 enabler.forwardMouseDownWithEventPosition(interaction
                         .getNativeEvent());
             }
             break;
-        case Event.ONMOUSEOUT:
+        case MOUSE_OUT:
             if (interaction.hasNativeEvent()) {
                 enabler.forwardMouseOut(interaction.getNativeEvent());
             }
             break;
-        case Event.ONMOUSEUP:
+        case MOUSE_UP:
             if (interaction.hasNativeEvent()) {
                 enabler.forwardMouseUp(interaction.getNativeEvent());
             }
