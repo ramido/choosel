@@ -61,7 +61,8 @@ public class DragEnabler {
 
         @Override
         public ResourceSetAvatar createProxy() {
-            item.getPopupManager().hidePopup();
+            // XXX move into dnd handling once there is a single popup manager
+            // item.getPopupManager().hidePopup();
             return super.createProxy();
         }
 
@@ -75,7 +76,8 @@ public class DragEnabler {
              * The highlighting remains active during the dnd operation. At the
              * end of the dnd operation, the highlighting is removed.
              */
-            item.getHighlightingManager().setHighlighting(false);
+            // XXX move into dnd handling
+            // item.getHighlightingManager().setHighlighting(false);
             dragEnabler.removeAvatar();
         }
 

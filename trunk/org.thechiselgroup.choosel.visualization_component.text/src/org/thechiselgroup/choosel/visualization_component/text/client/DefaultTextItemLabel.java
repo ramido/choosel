@@ -27,7 +27,7 @@ public class DefaultTextItemLabel implements TextItemLabel {
     private Element element;
 
     public DefaultTextItemLabel() {
-        this.element = DOM.createSpan();
+        this.element = DOM.createDiv();
     }
 
     @Override

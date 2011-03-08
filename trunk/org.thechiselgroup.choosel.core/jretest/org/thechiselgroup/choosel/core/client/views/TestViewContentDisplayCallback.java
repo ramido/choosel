@@ -80,8 +80,4 @@ public class TestViewContentDisplayCallback implements
         viewItemsByGroupId.remove(viewItem.getViewItemID());
     }
 
-    @Override
-    public void switchSelection(ResourceSet resources) {
-    }
-
 }

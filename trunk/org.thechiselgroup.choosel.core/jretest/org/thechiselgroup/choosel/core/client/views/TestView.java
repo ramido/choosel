@@ -27,12 +27,8 @@ import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactor
 import org.thechiselgroup.choosel.core.client.resources.ResourceByUriTypeCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceCategorizerToMultiCategorizerAdapter;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
-import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEventHandler;
-import org.thechiselgroup.choosel.core.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.core.client.ui.Presenter;
-import org.thechiselgroup.choosel.core.client.ui.popup.PopupManager;
-import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.NullLightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.slots.DefaultSlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
@@ -54,9 +50,6 @@ public class TestView extends DefaultView {
         SlotMappingConfiguration resourceSetToValueResolver = spy(new SlotMappingConfiguration());
         SelectionModel selectionModel = mock(SelectionModel.class);
         Presenter selectionModelPresenter = mock(Presenter.class);
-        DetailsWidgetHelper detailsWidgetHelper = mock(DetailsWidgetHelper.class);
-        PopupManagerFactory popupManagerFactory = mock(PopupManagerFactory.class);
-        PopupManager popupManager = mock(PopupManager.class);
         Presenter resourceModelPresenter = mock(Presenter.class);
         HandlerRegistration selectionChangedHandlerRegistration = mock(HandlerRegistration.class);
         VisualMappingsControl visualMappingsControl = mock(VisualMappingsControl.class);
@@ -71,10 +64,9 @@ public class TestView extends DefaultView {
         TestView underTest = spy(new TestView(resourceGrouping, contentDisplay,
                 "", "", resourceSetToValueResolver, selectionModel,
                 selectionModelPresenter, resourceModel, resourceModelPresenter,
-                hoverModel, popupManagerFactory, detailsWidgetHelper,
-                popupManager, selectionChangedHandlerRegistration,
+                hoverModel, selectionChangedHandlerRegistration,
                 visualMappingsControl, slotMappingInitializer,
-                mock(DragEnablerFactory.class)));
+                mock(ViewItemBehavior.class)));
 
         when(
                 selectionModel
@@ -97,8 +89,6 @@ public class TestView extends DefaultView {
         return underTest;
     }
 
-    private final PopupManager popupManager;
-
     private final ViewContentDisplay contentDisplay;
 
     private final HoverModel hoverModel;
@@ -116,34 +106,25 @@ public class TestView extends DefaultView {
             String contentType, SlotMappingConfiguration configuration,
             SelectionModel selectionModel, Presenter selectionModelPresenter,
             ResourceModel resourceModel, Presenter resourceModelPresenter,
-            HoverModel hoverModel, PopupManagerFactory popupManagerFactory,
-            DetailsWidgetHelper detailsWidgetHelper, PopupManager popupManager,
+            HoverModel hoverModel,
             HandlerRegistration selectionChangedHandlerRegistration,
             VisualMappingsControl visualMappingsControl,
             SlotMappingInitializer slotMappingInitializer,
-            DragEnablerFactory dragEnablerFactory) {
+            ViewItemBehavior viewItemBehavior) {
 
         super(resourceSplitter, contentDisplay, label, contentType,
                 configuration, selectionModel, selectionModelPresenter,
                 resourceModel, resourceModelPresenter, hoverModel,
-                popupManagerFactory, detailsWidgetHelper,
                 visualMappingsControl, slotMappingInitializer,
                 NullLightweightCollection
                         .<SidePanelSection> nullLightweightCollection(),
-                dragEnablerFactory);
+                viewItemBehavior);
 
         this.contentDisplay = contentDisplay;
         this.selectionModelPresenter = selectionModelPresenter;
         this.resourceModelPresenter = resourceModelPresenter;
         this.hoverModel = hoverModel;
-        this.popupManager = popupManager;
         this.selectionChangedHandlerRegistration = selectionChangedHandlerRegistration;
-    }
-
-    @Override
-    protected PopupManager createPopupManager(String groupID,
-            ResourceSet resources) {
-        return popupManager;
     }
 
     public ViewContentDisplayCallback getCallback() {

@@ -16,7 +16,6 @@
 package org.thechiselgroup.choosel.core.client.views;
 
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.core.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 
 /**
@@ -49,6 +48,9 @@ public interface ViewItem {
 
     }
 
+    /**
+     * @see #setDisplayObject(Object)
+     */
     Object getDisplayObject();
 
     /**
@@ -65,11 +67,11 @@ public interface ViewItem {
      *         visual representation of the resource item. For the popup, there
      *         is a separate highlighting manager.
      */
-    HighlightingManager getHighlightingManager();
+    // HighlightingManager getHighlightingManager();
 
     SubsetStatus getHighlightStatus();
 
-    PopupManager getPopupManager();
+    // PopupManager getPopupManager();
 
     ResourceSet getResourceSet();
 

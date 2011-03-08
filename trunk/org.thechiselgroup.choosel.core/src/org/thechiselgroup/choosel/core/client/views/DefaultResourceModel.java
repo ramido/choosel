@@ -20,11 +20,11 @@ import java.util.List;
 import org.thechiselgroup.choosel.core.client.persistence.Memento;
 import org.thechiselgroup.choosel.core.client.persistence.Persistable;
 import org.thechiselgroup.choosel.core.client.persistence.PersistableRestorationService;
-import org.thechiselgroup.choosel.core.client.resources.UnionResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.FilteredResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetFactory;
+import org.thechiselgroup.choosel.core.client.resources.UnionResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
@@ -102,7 +102,6 @@ public class DefaultResourceModel implements ResourceModel, Disposable,
 
     @Override
     public void dispose() {
-        combinedUserResourceSets.clear();
         combinedUserResourceSets = null;
     }
 

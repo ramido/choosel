@@ -150,17 +150,19 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
     }
 
     private void dehighlightResources(int i) {
-        chartItemsJsArray.get(i).getViewItem().getHighlightingManager()
-                .setHighlighting(false);
+        // XXX outdated - forward events instead
+        // chartItemsJsArray.get(i).getViewItem().getHighlightingManager()
+        // .setHighlighting(false);
     }
 
     private void deselectResources(int i) {
-        chartItemsJsArray
-                .get(i)
-                .getView()
-                .getCallback()
-                .switchSelection(
-                        chartItemsJsArray.get(i).getViewItem().getResourceSet());
+        // XXX outdated - forward events instead
+        // chartItemsJsArray
+        // .get(i)
+        // .getView()
+        // .getCallback()
+        // .switchSelection(
+        // chartItemsJsArray.get(i).getViewItem().getResourceSet());
     }
 
     private void drawDot() {
@@ -363,8 +365,9 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
     }
 
     private void highlightResources(int i) {
-        chartItemsJsArray.get(i).getViewItem().getHighlightingManager()
-                .setHighlighting(true);
+        // XXX outdated - forward events instead
+        // chartItemsJsArray.get(i).getViewItem().getHighlightingManager()
+        // .setHighlighting(true);
     }
 
     private boolean isInSelectionBox(int x, int y, int dx, int dy, int i) {
@@ -384,12 +387,13 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
     }
 
     private void selectResources(int i) {
-        chartItemsJsArray
-                .get(i)
-                .getView()
-                .getCallback()
-                .switchSelection(
-                        chartItemsJsArray.get(i).getViewItem().getResourceSet());
+        // XXX outdated - forward events instead
+        // chartItemsJsArray
+        // .get(i)
+        // .getView()
+        // .getCallback()
+        // .switchSelection(
+        // chartItemsJsArray.get(i).getViewItem().getResourceSet());
     }
 
     private void setChartParameters() {

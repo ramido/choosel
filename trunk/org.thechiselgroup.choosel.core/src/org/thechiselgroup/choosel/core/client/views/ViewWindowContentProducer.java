@@ -178,12 +178,20 @@ public class ViewWindowContentProducer implements WindowContentProducer {
 
         String label = contentDisplay.getName();
 
+        CompositeViewItemBehavior behaviors = new CompositeViewItemBehavior();
+        behaviors.add(new HighlightingViewItemBehavior(hoverModel));
+        behaviors.add(new DragViewItemBehavior(dragEnablerFactory));
+        behaviors.add(new PopupViewItemBehavior(hoverModel,
+                detailsWidgetHelper, popupManagerFactory,
+                slotMappingConfiguration));
+        behaviors
+                .add(new SwitchSelectionOnClickViewItemBehavior(selectionModel));
+
         DefaultView view = new DefaultView(resourceSplitter, contentDisplay,
                 label, contentType, slotMappingConfiguration, selectionModel,
                 selectionModelPresenter, resourceModel, resourceModelPresenter,
-                hoverModel, popupManagerFactory, detailsWidgetHelper,
-                visualMappingsControl, slotMappingInitializer,
-                sidePanelSections, dragEnablerFactory);
+                hoverModel, visualMappingsControl, slotMappingInitializer,
+                sidePanelSections, behaviors);
 
         for (ViewPart viewPart : viewParts) {
             viewPart.afterViewCreation(view);
