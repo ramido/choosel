@@ -64,12 +64,11 @@ public class ChooselExampleDetailsWidgetHelper extends DetailsWidgetHelper {
             addRow(label, value, true, verticalPanel);
         }
 
-        // single resource: show 5 properties
+        // single resource: show properties
         if (resources.size() == 1) {
             Resource resource = resources.getFirstResource();
 
-            verticalPanel.add(new HTML("<br/>"));
-
+            verticalPanel.add(new HTML("<br/><b>One item</b>"));
             Set<String> entrySet = resource.getProperties().keySet();
             for (String property : entrySet) {
                 addRow(resource, verticalPanel, property, property);
@@ -78,8 +77,9 @@ public class ChooselExampleDetailsWidgetHelper extends DetailsWidgetHelper {
             return verticalPanel;
         }
 
-        // TODO implement display of resource previews if there are multiple
-        // resources
+        // multiple resources: show numbers
+        verticalPanel
+                .add(new HTML("<br/><b>" + resources.size() + " items</b>"));
 
         return verticalPanel;
     }

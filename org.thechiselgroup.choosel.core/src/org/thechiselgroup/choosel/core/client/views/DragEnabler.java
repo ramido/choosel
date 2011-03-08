@@ -90,7 +90,7 @@ public class DragEnabler {
 
     private ResourceSetAvatarDragController dragController;
 
-    private ViewItem item;
+    private ViewItem viewItem;
 
     /**
      * Invisible {@link ResourceSetAvatar} that receives events.
@@ -104,7 +104,7 @@ public class DragEnabler {
 
         this.desktop = desktop;
         this.dragController = dragController;
-        this.item = item;
+        this.viewItem = item;
     }
 
     private void createDragWidget(int absoluteLeft, int absoluteTop) {
@@ -124,20 +124,18 @@ public class DragEnabler {
         CSS.setLocation(span, left, top);
         CSS.setZIndex(span, -1);
 
-        // FIXME: we are not at the correct part of the widget hierarchy
-        // --> this can cause event forwarding (i.e. to windows) to fail
-        // TODO title
-        // TODO we need a global configuration for the detail slots...
-        final String text = "TODO";// (String)
-                                   // item.getResourceValue(descriptionSlot);
-        hiddenAvatar = new InvisibleResourceSetAvatar(item, text,
+        /*
+         * XXX using the view item ID as text is problematic, because it is not
+         * a good description if there is no aggregation.
+         */
+        final String text = viewItem.getViewItemID();
+        hiddenAvatar = new InvisibleResourceSetAvatar(viewItem, text,
                 "avatar-resourceSet", ResourceSetAvatarType.SET, span, this);
 
         span.setClassName("avatar-invisible");
 
         desktopWidget.add(hiddenAvatar);
 
-        // make it draggable
         dragController.setDraggable(hiddenAvatar, true);
     }
 
