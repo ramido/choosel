@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.core.client.views;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.never;
@@ -23,6 +24,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.core.client.test.AdvancedAsserts.assertContentEquals;
+import static org.thechiselgroup.choosel.core.client.test.ResourcesMatchers.containsEqualResources;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.emptyLightweightCollection;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.eqResourceItems;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.resourceItemsForResourceSets;
@@ -139,13 +141,11 @@ public class DefaultViewTest {
 
         List<ViewItem> set1 = captor.getAllValues().get(0).toList();
         assertEquals(1, set1.size());
-        assertContentEquals(createResources(TYPE_1, 1),
-                ((ViewItem) set1.toArray()[0]).getResourceSet());
+        assertThat(((ViewItem) set1.toArray()[0]).getResourceSet(), containsEqualResources(createResources(TYPE_1, 1)));
 
         List<ViewItem> set2 = captor.getAllValues().get(1).toList();
         assertEquals(1, set2.size());
-        assertContentEquals(createResources(TYPE_2, 2),
-                ((ViewItem) set2.toArray()[0]).getResourceSet());
+        assertThat(((ViewItem) set2.toArray()[0]).getResourceSet(), containsEqualResources(createResources(TYPE_2, 2)));
     }
 
     private void deselect(ResourceSet resources) {
@@ -176,8 +176,8 @@ public class DefaultViewTest {
         select(resources);
         deselect(resources);
 
-        assertContentEquals(createResources(), resourceItems.get(0)
-                .getSelectedResources());
+        assertThat(resourceItems.get(0)
+        .getSelectedResources(), containsEqualResources(createResources()));
     }
 
     @Test
@@ -283,8 +283,8 @@ public class DefaultViewTest {
         underTest.getResourceModel().addResourceSet(resources);
         List<ViewItem> resourceItems = captureAddedViewItemsAsList();
 
-        assertContentEquals(resources, resourceItems.get(0)
-                .getHighlightedResources());
+        assertThat(resourceItems.get(0)
+        .getHighlightedResources(), containsEqualResources(resources));
     }
 
     @Test
@@ -296,8 +296,8 @@ public class DefaultViewTest {
 
         underTest.getHoverModel().setHighlightedResourceSet(resources);
 
-        assertContentEquals(resources, resourceItems.get(0)
-                .getHighlightedResources());
+        assertThat(resourceItems.get(0)
+        .getHighlightedResources(), containsEqualResources(resources));
     }
 
     @Test
@@ -313,8 +313,8 @@ public class DefaultViewTest {
         underTest.getHoverModel().setHighlightedResourceSet(
                 highlightedResources);
 
-        assertContentEquals(viewResources, resourceItems.get(0)
-                .getHighlightedResources());
+        assertThat(resourceItems.get(0)
+        .getHighlightedResources(), containsEqualResources(viewResources));
     }
 
     @Test
@@ -326,8 +326,8 @@ public class DefaultViewTest {
 
         underTest.getHoverModel().setHighlightedResourceSet(resources);
 
-        assertContentEquals(createResources(1), resourceItems.get(0)
-                .getHighlightedResources());
+        assertThat(resourceItems.get(0)
+        .getHighlightedResources(), containsEqualResources(createResources(1)));
     }
 
     @Test
@@ -340,8 +340,8 @@ public class DefaultViewTest {
         underTest.getHoverModel().setHighlightedResourceSet(resources);
         underTest.getHoverModel().setHighlightedResourceSet(createResources());
 
-        assertContentEquals(createResources(), resourceItems.get(0)
-                .getHighlightedResources());
+        assertThat(resourceItems.get(0)
+        .getHighlightedResources(), containsEqualResources(createResources()));
     }
 
     @Test
@@ -376,8 +376,8 @@ public class DefaultViewTest {
 
         select(createResources(1));
 
-        assertContentEquals(createResources(1), viewItems.get(0)
-                .getSelectedResources());
+        assertThat(viewItems.get(0)
+        .getSelectedResources(), containsEqualResources(createResources(1)));
     }
 
     @Before
@@ -485,8 +485,8 @@ public class DefaultViewTest {
         assertEquals(1, updatedViewItem.size());
         assertEquals(SubsetStatus.PARTIAL, updatedViewItem.get(0)
                 .getHighlightStatus());
-        assertContentEquals(addedResources, updatedViewItem.get(0)
-                .getHighlightedResources());
+        assertThat(updatedViewItem.get(0)
+        .getHighlightedResources(), containsEqualResources(addedResources));
     }
 
     /**
@@ -554,12 +554,12 @@ public class DefaultViewTest {
         assertEquals(1, updatedViewItem.size());
         assertEquals(SubsetStatus.PARTIAL, updatedViewItem.get(0)
                 .getSelectionStatus());
-        assertContentEquals(addedResources, updatedViewItem.get(0)
-                .getSelectedResources());
+        assertThat(updatedViewItem.get(0)
+        .getSelectedResources(), containsEqualResources(addedResources));
         assertEquals(SubsetStatus.PARTIAL, updatedViewItem.get(0)
                 .getHighlightStatus());
-        assertContentEquals(addedResources, updatedViewItem.get(0)
-                .getHighlightedResources());
+        assertThat(updatedViewItem.get(0)
+        .getHighlightedResources(), containsEqualResources(addedResources));
 
     }
 
@@ -582,8 +582,8 @@ public class DefaultViewTest {
         assertEquals(1, updatedViewItem.size());
         assertEquals(SubsetStatus.PARTIAL, updatedViewItem.get(0)
                 .getSelectionStatus());
-        assertContentEquals(addedResources, updatedViewItem.get(0)
-                .getSelectedResources());
+        assertThat(updatedViewItem.get(0)
+        .getSelectedResources(), containsEqualResources(addedResources));
     }
 
     /**
@@ -603,7 +603,7 @@ public class DefaultViewTest {
         assertEquals(1, addedViewItem.size());
         assertEquals(SubsetStatus.COMPLETE, addedViewItem.get(0)
                 .getSelectionStatus());
-        assertContentEquals(resources, addedViewItem.get(0)
-                .getSelectedResources());
+        assertThat(addedViewItem.get(0)
+        .getSelectedResources(), containsEqualResources(resources));
     }
 }

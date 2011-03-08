@@ -16,17 +16,16 @@
 package org.thechiselgroup.choosel.core.client.views;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.test.AdvancedAsserts.assertContentEquals;
+import static org.thechiselgroup.choosel.core.client.test.ResourcesMatchers.containsEqualResources;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.eqResources;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
-
-import java.util.Collections;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +36,6 @@ import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.core.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.views.ViewItem.Status;
 import org.thechiselgroup.choosel.core.client.views.ViewItem.Subset;
@@ -47,9 +45,6 @@ import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingChangedEven
 import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingChangedHandler;
 import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingConfiguration;
 
-import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseOverHandler;
-
 public class DefaultViewItemTest {
 
     private static final String VIEW_ITEM_ID = "viewItemCategory";
@@ -58,9 +53,6 @@ public class DefaultViewItemTest {
 
     @Mock
     private SlotMappingConfiguration slotMappingConfiguration;
-
-    @Mock
-    private PopupManager popupManager;
 
     private ResourceSet resources;
 
@@ -75,51 +67,13 @@ public class DefaultViewItemTest {
         return captor.getValue();
     }
 
-    /**
-     * remove highlighting on disposal (issue 65: highlighting remains after
-     * window is closed)
-     */
-    @Test
-    public void disposeRemovesHighlighting() {
-        resources.addAll(createResources(1, 2));
-        underTest.getHighlightingManager().setHighlighting(true);
-        assertContentEquals(createResources(1, 2), hoverModel.getResources());
-
-        underTest.dispose();
-
-        assertContentEquals(Collections.<Resource> emptyList(), hoverModel
-                .getResources().toList());
-    }
-
-    /**
-     * remove highlighting on disposal (issue 65: highlighting remains after
-     * window is closed)
-     */
-    @Test
-    public void disposeRemovesPopupHighlighting() {
-        resources.addAll(createResources(1, 2));
-        underTest.popupManager.onMouseOver(0, 0);
-        ArgumentCaptor<MouseOverHandler> argument = ArgumentCaptor
-                .forClass(MouseOverHandler.class);
-        verify(popupManager, times(1)).addPopupMouseOverHandler(
-                argument.capture());
-        argument.getValue().onMouseOver(new MouseOverEvent() {
-        });
-        assertContentEquals(createResources(1, 2), hoverModel.getResources());
-
-        underTest.dispose();
-
-        assertContentEquals(Collections.<Resource> emptyList(), hoverModel
-                .getResources().toList());
-    }
-
     @Test
     public void getHighlightedResourcesAfterAddHighlightingNoContainedResource() {
         resources.addAll(createResources(1, 2, 3, 4));
         underTest.updateHighlightedResources(createResources(5, 6),
                 LightweightCollections.<Resource> emptyCollection());
-        assertContentEquals(createResources(),
-                underTest.getHighlightedResources());
+        assertThat(underTest.getHighlightedResources(),
+                containsEqualResources(createResources()));
     }
 
     @Test
@@ -127,8 +81,8 @@ public class DefaultViewItemTest {
         resources.addAll(createResources(1, 2, 3, 4));
         underTest.updateHighlightedResources(createResources(1, 5),
                 LightweightCollections.<Resource> emptyCollection());
-        assertContentEquals(createResources(1),
-                underTest.getHighlightedResources());
+        assertThat(underTest.getHighlightedResources(),
+                containsEqualResources(createResources(1)));
     }
 
     @Test
@@ -138,8 +92,8 @@ public class DefaultViewItemTest {
                 LightweightCollections.<Resource> emptyCollection());
         underTest.updateHighlightedResources(createResources(2, 5),
                 LightweightCollections.<Resource> emptyCollection());
-        assertContentEquals(createResources(1, 2),
-                underTest.getHighlightedResources());
+        assertThat(underTest.getHighlightedResources(),
+                containsEqualResources(createResources(1, 2)));
     }
 
     @Test
@@ -149,8 +103,8 @@ public class DefaultViewItemTest {
                 LightweightCollections.<Resource> emptyCollection());
         underTest.updateHighlightedResources(createResources(2, 3),
                 LightweightCollections.<Resource> emptyCollection());
-        assertContentEquals(createResources(1, 2, 3),
-                underTest.getHighlightedResources());
+        assertThat(underTest.getHighlightedResources(),
+                containsEqualResources(createResources(1, 2, 3)));
     }
 
     @Test
@@ -160,8 +114,8 @@ public class DefaultViewItemTest {
                 LightweightCollections.<Resource> emptyCollection());
         underTest.updateHighlightedResources(createResources(5, 6),
                 LightweightCollections.<Resource> emptyCollection());
-        assertContentEquals(createResources(1),
-                underTest.getHighlightedResources());
+        assertThat(underTest.getHighlightedResources(),
+                containsEqualResources(createResources(1)));
     }
 
     @Test
@@ -169,8 +123,8 @@ public class DefaultViewItemTest {
         resources.addAll(createResources(1, 2, 3, 4));
         underTest.updateHighlightedResources(createResources(1, 2),
                 LightweightCollections.<Resource> emptyCollection());
-        assertContentEquals(createResources(1, 2),
-                underTest.getHighlightedResources());
+        assertThat(underTest.getHighlightedResources(),
+                containsEqualResources(createResources(1, 2)));
     }
 
     @Test
@@ -179,8 +133,8 @@ public class DefaultViewItemTest {
         underTest.updateHighlightedResources(createResources(1, 2),
                 LightweightCollections.<Resource> emptyCollection());
         resources.removeAll(createResources(1, 2));
-        assertContentEquals(createResources(),
-                underTest.getHighlightedResources());
+        assertThat(underTest.getHighlightedResources(),
+                containsEqualResources(createResources()));
     }
 
     @Test
@@ -189,8 +143,8 @@ public class DefaultViewItemTest {
         underTest.updateHighlightedResources(
                 LightweightCollections.<Resource> emptyCollection(),
                 createResources(5, 6));
-        assertContentEquals(createResources(),
-                underTest.getHighlightedResources());
+        assertThat(underTest.getHighlightedResources(),
+                containsEqualResources(createResources()));
     }
 
     @Test
@@ -201,8 +155,8 @@ public class DefaultViewItemTest {
         underTest.updateHighlightedResources(
                 LightweightCollections.<Resource> emptyCollection(),
                 createResources(1, 6));
-        assertContentEquals(createResources(),
-                underTest.getHighlightedResources());
+        assertThat(underTest.getHighlightedResources(),
+                containsEqualResources(createResources()));
     }
 
     @Test
@@ -213,8 +167,8 @@ public class DefaultViewItemTest {
         underTest.updateHighlightedResources(
                 LightweightCollections.<Resource> emptyCollection(),
                 createResources(2, 5));
-        assertContentEquals(createResources(1),
-                underTest.getHighlightedResources());
+        assertThat(underTest.getHighlightedResources(),
+                containsEqualResources(createResources(1)));
     }
 
     @Test
@@ -225,8 +179,8 @@ public class DefaultViewItemTest {
         underTest.updateHighlightedResources(
                 LightweightCollections.<Resource> emptyCollection(),
                 createResources(1, 2));
-        assertContentEquals(createResources(),
-                underTest.getHighlightedResources());
+        assertThat(underTest.getHighlightedResources(),
+                containsEqualResources(createResources()));
     }
 
     @Test
@@ -237,8 +191,8 @@ public class DefaultViewItemTest {
         underTest.updateHighlightedResources(
                 LightweightCollections.<Resource> emptyCollection(),
                 createResources(5, 6));
-        assertContentEquals(createResources(1),
-                underTest.getHighlightedResources());
+        assertThat(underTest.getHighlightedResources(),
+                containsEqualResources(createResources(1)));
     }
 
     @Test
@@ -337,7 +291,8 @@ public class DefaultViewItemTest {
         resources.addAll(createResources(1, 2, 3, 4));
         underTest.updateSelectedResources(createResources(5, 6),
                 LightweightCollections.<Resource> emptyCollection());
-        assertContentEquals(createResources(), underTest.getSelectedResources());
+        assertThat(underTest.getSelectedResources(),
+                containsEqualResources(createResources()));
     }
 
     @Test
@@ -345,8 +300,8 @@ public class DefaultViewItemTest {
         resources.addAll(createResources(1, 2, 3, 4));
         underTest.updateSelectedResources(createResources(1, 5),
                 LightweightCollections.<Resource> emptyCollection());
-        assertContentEquals(createResources(1),
-                underTest.getSelectedResources());
+        assertThat(underTest.getSelectedResources(),
+                containsEqualResources(createResources(1)));
     }
 
     @Test
@@ -356,8 +311,8 @@ public class DefaultViewItemTest {
                 LightweightCollections.<Resource> emptyCollection());
         underTest.updateSelectedResources(createResources(2, 5),
                 LightweightCollections.<Resource> emptyCollection());
-        assertContentEquals(createResources(1, 2),
-                underTest.getSelectedResources());
+        assertThat(underTest.getSelectedResources(),
+                containsEqualResources(createResources(1, 2)));
     }
 
     @Test
@@ -367,8 +322,8 @@ public class DefaultViewItemTest {
                 LightweightCollections.<Resource> emptyCollection());
         underTest.updateSelectedResources(createResources(2, 3),
                 LightweightCollections.<Resource> emptyCollection());
-        assertContentEquals(createResources(1, 2, 3),
-                underTest.getSelectedResources());
+        assertThat(underTest.getSelectedResources(),
+                containsEqualResources(createResources(1, 2, 3)));
     }
 
     @Test
@@ -378,8 +333,8 @@ public class DefaultViewItemTest {
                 LightweightCollections.<Resource> emptyCollection());
         underTest.updateSelectedResources(createResources(5, 6),
                 LightweightCollections.<Resource> emptyCollection());
-        assertContentEquals(createResources(1),
-                underTest.getSelectedResources());
+        assertThat(underTest.getSelectedResources(),
+                containsEqualResources(createResources(1)));
     }
 
     @Test
@@ -387,8 +342,8 @@ public class DefaultViewItemTest {
         resources.addAll(createResources(1, 2, 3, 4));
         underTest.updateSelectedResources(createResources(1, 2),
                 LightweightCollections.<Resource> emptyCollection());
-        assertContentEquals(createResources(1, 2),
-                underTest.getSelectedResources());
+        assertThat(underTest.getSelectedResources(),
+                containsEqualResources(createResources(1, 2)));
     }
 
     @Test
@@ -397,7 +352,8 @@ public class DefaultViewItemTest {
         underTest.updateSelectedResources(
                 LightweightCollections.<Resource> emptyCollection(),
                 createResources(5, 6));
-        assertContentEquals(createResources(), underTest.getSelectedResources());
+        assertThat(underTest.getSelectedResources(),
+                containsEqualResources(createResources()));
     }
 
     @Test
@@ -408,7 +364,8 @@ public class DefaultViewItemTest {
         underTest.updateSelectedResources(
                 LightweightCollections.<Resource> emptyCollection(),
                 createResources(1, 6));
-        assertContentEquals(createResources(), underTest.getSelectedResources());
+        assertThat(underTest.getSelectedResources(),
+                containsEqualResources(createResources()));
     }
 
     @Test
@@ -419,8 +376,8 @@ public class DefaultViewItemTest {
         underTest.updateSelectedResources(
                 LightweightCollections.<Resource> emptyCollection(),
                 createResources(2, 5));
-        assertContentEquals(createResources(1),
-                underTest.getSelectedResources());
+        assertThat(underTest.getSelectedResources(),
+                containsEqualResources(createResources(1)));
     }
 
     @Test
@@ -431,7 +388,8 @@ public class DefaultViewItemTest {
         underTest.updateSelectedResources(
                 LightweightCollections.<Resource> emptyCollection(),
                 createResources(1, 2));
-        assertContentEquals(createResources(), underTest.getSelectedResources());
+        assertThat(underTest.getSelectedResources(),
+                containsEqualResources(createResources()));
     }
 
     @Test
@@ -442,8 +400,8 @@ public class DefaultViewItemTest {
         underTest.updateSelectedResources(
                 LightweightCollections.<Resource> emptyCollection(),
                 createResources(5, 6));
-        assertContentEquals(createResources(1),
-                underTest.getSelectedResources());
+        assertThat(underTest.getSelectedResources(),
+                containsEqualResources(createResources(1)));
     }
 
     @Test
@@ -452,7 +410,8 @@ public class DefaultViewItemTest {
         underTest.updateSelectedResources(createResources(1, 2),
                 LightweightCollections.<Resource> emptyCollection());
         resources.removeAll(createResources(1, 2));
-        assertContentEquals(createResources(), underTest.getSelectedResources());
+        assertThat(underTest.getSelectedResources(),
+                containsEqualResources(createResources()));
     }
 
     @Test
@@ -606,7 +565,8 @@ public class DefaultViewItemTest {
         hoverModel = spy(new HoverModel());
         resources = new DefaultResourceSet();
         underTest = spy(new DefaultViewItem(VIEW_ITEM_ID, resources,
-                hoverModel, slotMappingConfiguration, mock(ViewItemInteractionHandler.class)));
+                hoverModel, slotMappingConfiguration,
+                mock(ViewItemInteractionHandler.class)));
     }
 
     @Test

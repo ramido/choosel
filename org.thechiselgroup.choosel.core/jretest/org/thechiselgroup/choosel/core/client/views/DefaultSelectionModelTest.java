@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.core.client.views;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -23,6 +24,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.core.client.test.AdvancedAsserts.assertContentEquals;
+import static org.thechiselgroup.choosel.core.client.test.ResourcesMatchers.containsEqualResources;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.verifyOnResourcesAdded;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.verifyOnResourcesRemoved;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
@@ -153,7 +155,7 @@ public class DefaultSelectionModelTest {
                 .forClass(ResourceSetAddedEvent.class);
         verify(resourceSetAddedHandler, times(1)).onResourceSetAdded(
                 captor.capture());
-        assertContentEquals(selection, captor.getValue().getResourceSet());
+        assertThat(captor.getValue().getResourceSet(), containsEqualResources(selection));
     }
 
     @Test
@@ -169,7 +171,7 @@ public class DefaultSelectionModelTest {
                 .forClass(ResourceSetRemovedEvent.class);
         verify(resourceSetaddedHandler, times(1)).onResourceSetRemoved(
                 captor.capture());
-        assertContentEquals(selection, captor.getValue().getResourceSet());
+        assertThat(captor.getValue().getResourceSet(), containsEqualResources(selection));
     }
 
     @Test
@@ -228,6 +230,6 @@ public class DefaultSelectionModelTest {
                 .forClass(ResourceSetActivatedEvent.class);
         verify(activatedHandler, times(1)).onResourceSetActivated(
                 captor.capture());
-        assertContentEquals(selection, captor.getValue().getResourceSet());
+        assertThat(captor.getValue().getResourceSet(), containsEqualResources(selection));
     }
 }
