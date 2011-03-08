@@ -36,21 +36,24 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 
 public class DragEnabler {
 
-    public static class InvisibleResourceSetAvatar extends ResourceSetAvatar
+    private static class InvisibleResourceSetAvatar extends ResourceSetAvatar
             implements DragProxyEventReceiver {
 
         private final ViewItem item;
 
         private String text;
 
+        private DragEnabler dragEnabler;
+
         public InvisibleResourceSetAvatar(ViewItem item, String text,
                 String enabledCSSClass, ResourceSetAvatarType type,
-                Element element) {
+                Element element, DragEnabler dragEnabler) {
 
             super(text, enabledCSSClass, item.getResourceSet(), type, element);
 
             this.text = text;
             this.item = item;
+            this.dragEnabler = dragEnabler;
         }
 
         @Override
@@ -65,7 +68,6 @@ public class DragEnabler {
 
         @Override
         public void dragProxyAttached() {
-
         }
 
         @Override
@@ -75,7 +77,7 @@ public class DragEnabler {
              * end of the dnd operation, the highlighting is removed.
              */
             item.getHighlightingManager().setHighlighting(false);
-            removeFromParent();
+            dragEnabler.removeAvatar();
         }
 
         @Override
@@ -94,7 +96,10 @@ public class DragEnabler {
 
     private ViewItem item;
 
-    private ResourceSetAvatar panel;
+    /**
+     * Invisible {@link ResourceSetAvatar} that receives events.
+     */
+    private ResourceSetAvatar hiddenAvatar;
 
     public DragEnabler(ViewItem item, Desktop desktop,
             ResourceSetAvatarDragController dragController) {
@@ -107,7 +112,8 @@ public class DragEnabler {
     }
 
     private void createDragWidget(int absoluteLeft, int absoluteTop) {
-        assert panel == null : "panel was not null " + panel;
+        assert hiddenAvatar == null : "hidden avatar was not null "
+                + hiddenAvatar;
 
         // add to desktop - need widget container
         // FIXME use dependency injection
@@ -128,15 +134,15 @@ public class DragEnabler {
         // TODO we need a global configuration for the detail slots...
         final String text = "TODO";// (String)
                                    // item.getResourceValue(descriptionSlot);
-        panel = new InvisibleResourceSetAvatar(item, text,
-                "avatar-resourceSet", ResourceSetAvatarType.SET, span);
+        hiddenAvatar = new InvisibleResourceSetAvatar(item, text,
+                "avatar-resourceSet", ResourceSetAvatarType.SET, span, this);
 
         span.setClassName("avatar-invisible");
 
-        desktopWidget.add(panel);
+        desktopWidget.add(hiddenAvatar);
 
         // make it draggable
-        dragController.setDraggable(panel, true);
+        dragController.setDraggable(hiddenAvatar, true);
     }
 
     public void createTransparentDragProxy(final int absoluteLeft,
@@ -148,17 +154,17 @@ public class DragEnabler {
         int left = absoluteLeft - desktopWidget.getAbsoluteLeft() - 5;
         int top = absoluteTop - desktopWidget.getAbsoluteTop() - 5;
 
-        Element element = panel.getElement();
+        Element element = hiddenAvatar.getElement();
 
         CSS.setLocation(element, left, top);
         CSS.setSize(element, 10, 10);
         CSS.setZIndex(element, ZIndex.POPUP - 1);
 
-        panel.addMouseUpHandler(new MouseUpHandler() {
+        hiddenAvatar.addMouseUpHandler(new MouseUpHandler() {
 
             @Override
             public void onMouseUp(MouseUpEvent event) {
-                removePanel();
+                removeAvatar();
             }
 
         });
@@ -196,7 +202,7 @@ public class DragEnabler {
 
             @Override
             public Object getSource() {
-                return panel;
+                return hiddenAvatar;
             }
 
             @Override
@@ -210,7 +216,7 @@ public class DragEnabler {
             }
         };
         mouseEvent.setRelativeElement(element);
-        panel.fireEvent(mouseEvent);
+        hiddenAvatar.fireEvent(mouseEvent);
     }
 
     public void forwardMouseDown(NativeEvent e, int absoluteLeft,
@@ -222,14 +228,14 @@ public class DragEnabler {
         MouseDownEvent mouseEvent = new MouseDownEvent() {
             @Override
             public Object getSource() {
-                return panel;
+                return hiddenAvatar;
             }
         };
 
-        mouseEvent.setRelativeElement(panel.getElement());
+        mouseEvent.setRelativeElement(hiddenAvatar.getElement());
         mouseEvent.setNativeEvent(e);
 
-        panel.fireEvent(mouseEvent);
+        hiddenAvatar.fireEvent(mouseEvent);
     }
 
     public void forwardMouseDownWithEventPosition(Event e) {
@@ -245,7 +251,7 @@ public class DragEnabler {
     }
 
     public void forwardMouseMove(final int absoluteLeft, final int absoluteTop) {
-        if (panel == null) {
+        if (hiddenAvatar == null) {
             return;
         }
 
@@ -276,68 +282,68 @@ public class DragEnabler {
 
             @Override
             public Object getSource() {
-                return panel;
+                return hiddenAvatar;
             }
 
         };
-        mouseEvent.setRelativeElement(panel.getElement());
-        panel.fireEvent(mouseEvent);
+        mouseEvent.setRelativeElement(hiddenAvatar.getElement());
+        hiddenAvatar.fireEvent(mouseEvent);
     }
 
     public void forwardMouseMove(NativeEvent e) {
-        if (panel == null) {
+        if (hiddenAvatar == null) {
             return;
         }
 
         MouseMoveEvent mouseEvent = new MouseMoveEvent() {
             @Override
             public Object getSource() {
-                return panel;
+                return hiddenAvatar;
             }
         };
-        mouseEvent.setRelativeElement(panel.getElement());
+        mouseEvent.setRelativeElement(hiddenAvatar.getElement());
         mouseEvent.setNativeEvent(e);
-        panel.fireEvent(mouseEvent);
+        hiddenAvatar.fireEvent(mouseEvent);
     }
 
     public void forwardMouseOut(NativeEvent e) {
-        if (panel == null) {
+        if (hiddenAvatar == null) {
             return;
         }
 
         MouseOutEvent mouseEvent = new MouseOutEvent() {
             @Override
             public Object getSource() {
-                return panel;
+                return hiddenAvatar;
             }
         };
-        mouseEvent.setRelativeElement(panel.getElement());
+        mouseEvent.setRelativeElement(hiddenAvatar.getElement());
         mouseEvent.setNativeEvent(e);
-        panel.fireEvent(mouseEvent);
+        hiddenAvatar.fireEvent(mouseEvent);
     }
 
     public void forwardMouseUp(NativeEvent e) {
-        if (panel == null) {
+        if (hiddenAvatar == null) {
             return;
         }
 
         MouseUpEvent mouseEvent = new MouseUpEvent() {
             @Override
             public Object getSource() {
-                return panel;
+                return hiddenAvatar;
             }
         };
-        mouseEvent.setRelativeElement(panel.getElement());
+        mouseEvent.setRelativeElement(hiddenAvatar.getElement());
         mouseEvent.setNativeEvent(e);
-        panel.fireEvent(mouseEvent);
+        hiddenAvatar.fireEvent(mouseEvent);
 
-        removePanel();
+        removeAvatar();
     }
 
-    private void removePanel() {
-        if (panel != null) {
-            panel.removeFromParent();
-            panel = null;
+    private void removeAvatar() {
+        if (hiddenAvatar != null) {
+            hiddenAvatar.removeFromParent();
+            hiddenAvatar = null;
         }
     }
 }

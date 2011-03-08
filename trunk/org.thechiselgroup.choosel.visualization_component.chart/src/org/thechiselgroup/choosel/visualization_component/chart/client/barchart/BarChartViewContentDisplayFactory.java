@@ -15,29 +15,19 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.chart.client.barchart;
 
-import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.core.client.views.ViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.views.ViewContentDisplayFactory;
-
-import com.google.inject.Inject;
 
 public class BarChartViewContentDisplayFactory implements
         ViewContentDisplayFactory {
 
-    @Inject
-    private DragEnablerFactory dragEnablerFactory;
-
-    @Inject
-    public BarChartViewContentDisplayFactory() {
+    @Override
+    public ViewContentDisplay createViewContentDisplay() {
+        return new BarChartViewContentDisplay();
     }
 
     @Override
     public String getViewContentTypeID() {
         return BarChartVisualization.ID;
-    }
-
-    @Override
-    public ViewContentDisplay createViewContentDisplay() {
-        return new BarChartViewContentDisplay(dragEnablerFactory);
     }
 }

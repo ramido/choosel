@@ -15,25 +15,15 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.timeline.client;
 
-import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.core.client.views.ViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.views.ViewContentDisplayFactory;
-
-import com.google.inject.Inject;
 
 public class TimeLineViewContentDisplayFactory implements
         ViewContentDisplayFactory {
 
-    @Inject
-    private DragEnablerFactory dragEnablerFactory;
-
-    @Inject
-    public TimeLineViewContentDisplayFactory() {
-    }
-
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-        return new TimeLineViewContentDisplay(dragEnablerFactory);
+        return new TimeLineViewContentDisplay();
     }
 
     @Override

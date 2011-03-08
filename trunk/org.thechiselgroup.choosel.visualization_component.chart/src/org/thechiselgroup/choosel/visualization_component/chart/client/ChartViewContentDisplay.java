@@ -17,7 +17,6 @@ package org.thechiselgroup.choosel.visualization_component.chart.client;
 
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.AbstractViewContentDisplay;
-import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.core.client.views.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.ViewItem.Status;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
@@ -31,7 +30,6 @@ import org.thechiselgroup.choosel.protovis.client.jsutil.JsUtils;
 
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.inject.Inject;
 
 /**
  * An abstract ViewContentDisplay class which any Protovis chart's specific
@@ -47,9 +45,9 @@ public abstract class ChartViewContentDisplay extends
     protected JsArrayGeneric<ChartItem> chartItemsJsArray = JsUtils
             .createJsArrayGeneric();
 
-    protected String[] eventTypes = { PVEventType.CLICK,
-            PVEventType.MOUSEDOWN, PVEventType.MOUSEMOVE,
-            PVEventType.MOUSEOUT, PVEventType.MOUSEOVER, PVEventType.MOUSEUP };
+    protected String[] eventTypes = { PVEventType.CLICK, PVEventType.MOUSEDOWN,
+            PVEventType.MOUSEMOVE, PVEventType.MOUSEOUT, PVEventType.MOUSEOVER,
+            PVEventType.MOUSEUP };
 
     private PVEventHandler handler = new PVEventHandler() {
         @Override
@@ -66,16 +64,9 @@ public abstract class ChartViewContentDisplay extends
 
     protected ChartWidget chartWidget;
 
-    private DragEnablerFactory dragEnablerFactory;
-
     protected int width;
 
     protected int height;
-
-    @Inject
-    public ChartViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
-        this.dragEnablerFactory = dragEnablerFactory;
-    }
 
     public void addChartItem(ChartItem chartItem) {
         chartItemsJsArray.push(chartItem);
@@ -205,21 +196,20 @@ public abstract class ChartViewContentDisplay extends
      * situation) once no matter how many resource items are being affected.
      */
     @Override
-    public void update(LightweightCollection<ViewItem> addedResourceItems,
-            LightweightCollection<ViewItem> updatedResourceItems,
-            LightweightCollection<ViewItem> removedResourceItems,
+    public void update(LightweightCollection<ViewItem> addedViewItems,
+            LightweightCollection<ViewItem> updatedViewItems,
+            LightweightCollection<ViewItem> removedViewItems,
             LightweightCollection<Slot> changedSlots) {
 
-        for (ViewItem resourceItem : addedResourceItems) {
-            ChartItem chartItem = new ChartItem(this, dragEnablerFactory,
-                    resourceItem);
+        for (ViewItem viewItem : addedViewItems) {
+            ChartItem chartItem = new ChartItem(viewItem, this);
 
             addChartItem(chartItem);
 
-            resourceItem.setDisplayObject(chartItem);
+            viewItem.setDisplayObject(chartItem);
         }
 
-        for (ViewItem resourceItem : removedResourceItems) {
+        for (ViewItem resourceItem : removedViewItems) {
             ChartItem chartItem = (ChartItem) resourceItem.getDisplayObject();
 
             // TODO remove once dispose is in place
@@ -239,8 +229,8 @@ public abstract class ChartViewContentDisplay extends
          * TODO changing slots requires a rebuild because it affects the scales
          * and rulers - look for a better solution
          */
-        updateChart(!addedResourceItems.isEmpty()
-                || !removedResourceItems.isEmpty() || !changedSlots.isEmpty());
+        updateChart(!addedViewItems.isEmpty() || !removedViewItems.isEmpty()
+                || !changedSlots.isEmpty());
     }
 
     /**

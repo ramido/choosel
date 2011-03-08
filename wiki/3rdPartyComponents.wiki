@@ -17,7 +17,6 @@ The Choosel Mashup Framework includes and uses the following software components
 ||GWT FX||Visual Effects||0.5.0-m1||http://code.google.com/p/gwt-fx/||Apache 2.0||
 ||GWT Maps||Google Maps API||1.0||http://code.google.com/p/gwt-google-apis/||Apache 2.0||
 ||GWT 2 SWF||Flash/Flex integration into GWT||0.6.0||http://code.google.com/p/gwt2swf/||Apache 2.0||
-||GWT Query||JQuery functionality within GWT||1.0-PATCHED||http://code.google.com/p/gwtquery/||MIT||
 ||Apache Xalan||Server-side XSLT Processor||2.7.1||http://xml.apache.org/xalan-j/||Apache 2.0||
 ||Sarissa||Client-side XSLT Processor||0.9.9.4||http://dev.abiss.gr/sarissa/||Apache 2.0||
 ||Protovis||!JavaScript Visualization Library||3.2||http://vis.stanford.edu/protovis/||BSD||

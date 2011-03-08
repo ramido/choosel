@@ -19,7 +19,6 @@ import static org.thechiselgroup.choosel.visualization_component.chart.client.pi
 import static org.thechiselgroup.choosel.visualization_component.chart.client.piechart.PieChartVisualization.PIE_LABEL_SLOT;
 
 import org.thechiselgroup.choosel.core.client.ui.Colors;
-import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.core.client.views.ViewItem.Status;
 import org.thechiselgroup.choosel.core.client.views.ViewItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
@@ -35,8 +34,6 @@ import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItem
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItemColorFunction;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItemStringSlotAccessor;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay;
-
-import com.google.inject.Inject;
 
 //Version of Pie chart with the average of the area 
 //and the radius calculations for proportional highlighting.
@@ -151,11 +148,6 @@ public class PieChartViewContentDisplay extends ChartViewContentDisplay {
     };
 
     private double maxChartItemValue;
-
-    @Inject
-    public PieChartViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
-        super(dragEnablerFactory);
-    }
 
     @Override
     protected void beforeRender() {

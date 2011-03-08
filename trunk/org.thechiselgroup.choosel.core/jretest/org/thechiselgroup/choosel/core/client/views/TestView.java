@@ -73,7 +73,8 @@ public class TestView extends DefaultView {
                 selectionModelPresenter, resourceModel, resourceModelPresenter,
                 hoverModel, popupManagerFactory, detailsWidgetHelper,
                 popupManager, selectionChangedHandlerRegistration,
-                visualMappingsControl, slotMappingInitializer));
+                visualMappingsControl, slotMappingInitializer,
+                mock(DragEnablerFactory.class)));
 
         when(
                 selectionModel
@@ -119,7 +120,8 @@ public class TestView extends DefaultView {
             DetailsWidgetHelper detailsWidgetHelper, PopupManager popupManager,
             HandlerRegistration selectionChangedHandlerRegistration,
             VisualMappingsControl visualMappingsControl,
-            SlotMappingInitializer slotMappingInitializer) {
+            SlotMappingInitializer slotMappingInitializer,
+            DragEnablerFactory dragEnablerFactory) {
 
         super(resourceSplitter, contentDisplay, label, contentType,
                 configuration, selectionModel, selectionModelPresenter,
@@ -127,7 +129,8 @@ public class TestView extends DefaultView {
                 popupManagerFactory, detailsWidgetHelper,
                 visualMappingsControl, slotMappingInitializer,
                 NullLightweightCollection
-                        .<SidePanelSection> nullLightweightCollection());
+                        .<SidePanelSection> nullLightweightCollection(),
+                dragEnablerFactory);
 
         this.contentDisplay = contentDisplay;
         this.selectionModelPresenter = selectionModelPresenter;

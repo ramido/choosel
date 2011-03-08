@@ -44,6 +44,7 @@ import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.views.DefaultViewItem;
+import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.core.client.views.HoverModel;
 import org.thechiselgroup.choosel.core.client.views.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingConfiguration;
@@ -75,7 +76,8 @@ public final class ResourcesTestHelper {
 
         return spy(new DefaultViewItem(groupId, resources,
                 mock(HoverModel.class), mock(PopupManager.class),
-                slotMappingConfiguration));
+                slotMappingConfiguration, mock(DragEnablerFactory.class), null,
+                null));
     }
 
     public static LightweightList<ViewItem> createViewItems(int... viewItemId) {

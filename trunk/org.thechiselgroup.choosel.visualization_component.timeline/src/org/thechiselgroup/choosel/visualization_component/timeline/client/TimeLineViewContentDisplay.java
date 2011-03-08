@@ -23,12 +23,10 @@ import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetA
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.AbstractViewContentDisplay;
-import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.core.client.views.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 
 import com.google.gwt.user.client.ui.Widget;
-import com.google.inject.Inject;
 
 public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
 
@@ -36,14 +34,7 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
 
     private static final String MEMENTO_ZOOM_PREFIX = "zoom-band-";
 
-    private DragEnablerFactory dragEnablerFactory;
-
     private TimeLineWidget timelineWidget;
-
-    @Inject
-    public TimeLineViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
-        this.dragEnablerFactory = dragEnablerFactory;
-    }
 
     private void addEventsToTimeline(
             LightweightCollection<ViewItem> addedResourceItems) {
@@ -60,8 +51,7 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
             LightweightCollection<ViewItem> addedResourceItems) {
 
         for (ViewItem resourceItem : addedResourceItems) {
-            resourceItem.setDisplayObject(new TimeLineItem(resourceItem, this,
-                    dragEnablerFactory));
+            resourceItem.setDisplayObject(new TimeLineItem(resourceItem, this));
         }
     }
 

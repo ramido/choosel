@@ -16,8 +16,6 @@
 package org.thechiselgroup.choosel.visualization_component.chart.client;
 
 import org.thechiselgroup.choosel.core.client.ui.Colors;
-import org.thechiselgroup.choosel.core.client.views.DragEnabler;
-import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.core.client.views.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.ViewItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
@@ -26,18 +24,13 @@ import com.google.gwt.user.client.Event;
 
 public class ChartItem {
 
-    private ChartViewContentDisplay view;
-
-    private DragEnabler enabler;
-
     private ViewItem viewItem;
 
-    public ChartItem(ChartViewContentDisplay view,
-            DragEnablerFactory dragEnablerFactory, ViewItem viewItem) {
+    private ChartViewContentDisplay view;
 
-        this.view = view;
+    public ChartItem(ViewItem viewItem, ChartViewContentDisplay view) {
         this.viewItem = viewItem;
-        enabler = dragEnablerFactory.createDragEnabler(viewItem);
+        this.view = view;
     }
 
     public String getColor() {
@@ -76,44 +69,8 @@ public class ChartItem {
         return viewItem;
     }
 
-    // TODO find better way to separate controller
     public void onEvent(Event e) {
-        switch (e.getTypeInt()) {
-        case Event.ONCLICK: {
-            if (view != null) {
-                view.getCallback().switchSelection(viewItem.getResourceSet());
-            }
-        }
-            break;
-        case Event.ONMOUSEMOVE: {
-            viewItem.getPopupManager().onMouseMove(e.getClientX(),
-                    e.getClientY());
-            enabler.forwardMouseMove(e);
-        }
-            break;
-        case Event.ONMOUSEDOWN: {
-            viewItem.getPopupManager().onMouseDown(e);
-            enabler.forwardMouseDownWithEventPosition(e);
-        }
-            break;
-        case Event.ONMOUSEOUT: {
-            viewItem.getPopupManager().onMouseOut(e.getClientX(),
-                    e.getClientY());
-            viewItem.getHighlightingManager().setHighlighting(false);
-            enabler.forwardMouseOut(e);
-        }
-            break;
-        case Event.ONMOUSEOVER: {
-            viewItem.getPopupManager().onMouseOver(e.getClientX(),
-                    e.getClientY());
-            viewItem.getHighlightingManager().setHighlighting(true);
-        }
-            break;
-        case Event.ONMOUSEUP: {
-            enabler.forwardMouseUp(e);
-        }
-            break;
-        }
+        viewItem.onEvent(e);
     }
 
 }

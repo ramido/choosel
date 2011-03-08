@@ -188,6 +188,8 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private IntersectionResourceSet highlightedResourcesIntersection;
 
+    private final DragEnablerFactory dragEnablerFactory;
+
     public DefaultView(ResourceGrouping resourceGrouping,
             ViewContentDisplay contentDisplay, String label,
             String contentType,
@@ -198,7 +200,8 @@ public class DefaultView extends AbstractWindowContent implements View {
             DetailsWidgetHelper detailsWidgetHelper,
             VisualMappingsControl visualMappingsControl,
             SlotMappingInitializer slotMappingInitializer,
-            LightweightCollection<SidePanelSection> sidePanelSections) {
+            LightweightCollection<SidePanelSection> sidePanelSections,
+            DragEnablerFactory dragEnablerFactory) {
 
         super(label, contentType);
 
@@ -214,6 +217,7 @@ public class DefaultView extends AbstractWindowContent implements View {
         assert hoverModel != null;
         assert slotMappingInitializer != null;
         assert sidePanelSections != null;
+        assert dragEnablerFactory != null;
 
         this.slotMappingInitializer = slotMappingInitializer;
         this.popupManagerFactory = popupManagerFactory;
@@ -228,6 +232,7 @@ public class DefaultView extends AbstractWindowContent implements View {
         this.hoverModel = hoverModel;
         this.visualMappingsControl = visualMappingsControl;
         this.sidePanelSections = sidePanelSections;
+        this.dragEnablerFactory = dragEnablerFactory;
     }
 
     @Override
@@ -259,7 +264,8 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         DefaultViewItem viewItem = new DefaultViewItem(groupID, resources,
                 hoverModel, createPopupManager(groupID, resources),
-                slotMappingConfiguration);
+                slotMappingConfiguration, dragEnablerFactory, this,
+                contentDisplayCallback);
 
         viewItem.updateHighlightedResources(highlightedResources,
                 LightweightCollections.<Resource> emptyCollection());

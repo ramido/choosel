@@ -24,7 +24,6 @@ import java.util.Map;
 import org.thechiselgroup.choosel.core.client.ui.Colors;
 import org.thechiselgroup.choosel.core.client.ui.TextBoundsEstimator;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.core.client.views.ViewContentDisplayProperty;
 import org.thechiselgroup.choosel.core.client.views.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
@@ -45,8 +44,6 @@ import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItem
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItemStringSlotAccessor;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay;
 import org.thechiselgroup.choosel.visualization_component.chart.client.TickFormatFunction;
-
-import com.google.inject.Inject;
 
 // TODO refactoring: use separate panel for dots that are added to scatter plot
 public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
@@ -145,10 +142,7 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
 
     private String shapeLegendLabel = "";
 
-    @Inject
-    public ScatterPlotViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
-        super(dragEnablerFactory);
-
+    public ScatterPlotViewContentDisplay() {
         registerProperty(new ShapeLegendProperty());
     }
 
