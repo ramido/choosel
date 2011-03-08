@@ -19,8 +19,6 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 
-import com.google.gwt.user.client.Event;
-
 /**
  * Model of several resources that should be displayed as a visual item in the
  * view. The <code>ViewItem</code> provides the highlighting and selection
@@ -98,7 +96,7 @@ public interface ViewItem {
      * Separating the visual representation from the event handling facilitates
      * customization and maintenance.
      */
-    void onEvent(Event event);
+    void reportInteraction(ViewItemInteraction interaction);
 
     /**
      * The display object is an arbitrary objects that can be set by a view

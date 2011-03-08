@@ -50,7 +50,6 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.views.DefaultViewItem;
-import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.core.client.views.TestViewContentDisplayCallback;
 import org.thechiselgroup.choosel.core.client.views.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.ViewItemContainer;
@@ -81,9 +80,6 @@ public class GraphViewContentDisplayTest {
 
     @Mock
     private GraphDisplay graphDisplay;
-
-    @Mock
-    private DragEnablerFactory dragEnablerFactory;
 
     @Mock
     private Node node;
@@ -299,8 +295,8 @@ public class GraphViewContentDisplayTest {
 
     private void init() {
         underTest = new GraphViewContentDisplay(graphDisplay, commandManager,
-                resourceManager, dragEnablerFactory, resourceCategorizer,
-                arcStyleProvider, registry);
+                resourceManager, resourceCategorizer, arcStyleProvider,
+                registry);
         underTest.init(callback);
         ArgumentCaptor<GraphDisplayReadyEventHandler> argument = ArgumentCaptor
                 .forClass(GraphDisplayReadyEventHandler.class);

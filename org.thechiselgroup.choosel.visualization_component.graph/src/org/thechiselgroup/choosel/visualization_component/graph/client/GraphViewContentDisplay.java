@@ -24,24 +24,23 @@ import org.thechiselgroup.choosel.core.client.command.CommandManager;
 import org.thechiselgroup.choosel.core.client.geometry.Point;
 import org.thechiselgroup.choosel.core.client.persistence.Memento;
 import org.thechiselgroup.choosel.core.client.persistence.PersistableRestorationService;
-import org.thechiselgroup.choosel.core.client.resources.UnionResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceManager;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.UnionResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.AbstractViewContentDisplay;
-import org.thechiselgroup.choosel.core.client.views.DragEnabler;
-import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.core.client.views.SidePanelSection;
 import org.thechiselgroup.choosel.core.client.views.ViewContentDisplayAction;
 import org.thechiselgroup.choosel.core.client.views.ViewContentDisplayCallback;
 import org.thechiselgroup.choosel.core.client.views.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.ViewItemContainer;
+import org.thechiselgroup.choosel.core.client.views.ViewItemInteraction;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplayLoadingFailureEvent;
@@ -70,6 +69,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -94,13 +94,16 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
     }
 
-    private class GraphEventHandler extends ViewToIndividualItemEventForwarder
-            implements NodeMouseOverHandler, NodeMouseOutHandler,
-            NodeMouseClickHandler, MouseMoveHandler, NodeDragHandler,
-            NodeDragHandleMouseDownHandler, NodeDragHandleMouseMoveHandler {
+    private class GraphEventHandler implements NodeMouseOverHandler,
+            NodeMouseOutHandler, NodeMouseClickHandler, MouseMoveHandler,
+            NodeDragHandler, NodeDragHandleMouseDownHandler,
+            NodeDragHandleMouseMoveHandler {
 
-        // XXX find cleaner solution that maps to nodes
-        private DragEnabler dragEnabler;
+        /**
+         * Node that the mouse is currently over. Set by mouse out and mouse
+         * over. Not over a node if null.
+         */
+        private Node currentNode = null;
 
         @Override
         public void onDrag(NodeDragEvent event) {
@@ -112,46 +115,46 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
         @Override
         public void onMouseClick(NodeMouseClickEvent event) {
-            getCallback().switchSelection(getGraphItem(event).getResourceSet());
+            reportInteraction(Event.ONCLICK, event);
         }
 
         @Override
         public void onMouseDown(NodeDragHandleMouseDownEvent event) {
-            dragEnabler = dragEnablerFactory
-                    .createDragEnabler(getGraphItem(event.getNode()));
-
-            dragEnabler.createTransparentDragProxy(event.getMouseX()
-                    + asWidget().getAbsoluteLeft(), event.getMouseY()
-                    + asWidget().getAbsoluteTop());
+            reportInteraction(Event.ONMOUSEDOWN, event);
         }
 
         @Override
         public void onMouseMove(MouseMoveEvent event) {
-            // TODO restrict to mouse move for current graph item
-            for (ViewItem item : getCallback().getViewItems()) {
-                // TODO relative to root pane instead of client area
-                item.getPopupManager().onMouseMove(event.getClientX(),
-                        event.getClientY());
+            if (currentNode != null) {
+                getViewItem(currentNode).reportInteraction(
+                        new ViewItemInteraction(Event.ONMOUSEMOVE, event
+                                .getClientX(), event.getClientY()));
             }
         }
 
         @Override
         public void onMouseMove(NodeDragHandleMouseMoveEvent event) {
-            dragEnabler.forwardMouseMove(event.getMouseX()
-                    + asWidget().getAbsoluteLeft(), event.getMouseY()
-                    + asWidget().getAbsoluteTop());
+            reportInteraction(Event.ONMOUSEMOVE, event);
         }
 
         @Override
         public void onMouseOut(NodeMouseOutEvent event) {
-            onMouseOut(getGraphItem(event), event.getMouseX(),
-                    event.getMouseY());
+            currentNode = null;
+            reportInteraction(Event.ONMOUSEOUT, event);
         }
 
         @Override
         public void onMouseOver(NodeMouseOverEvent event) {
-            onMouseOver(getGraphItem(event), event.getMouseX(),
-                    event.getMouseY());
+            currentNode = event.getNode();
+            reportInteraction(Event.ONMOUSEOVER, event);
+        }
+
+        private void reportInteraction(int eventType, NodeEvent<?> event) {
+            int clientX = event.getMouseX() + asWidget().getAbsoluteLeft();
+            int clientY = event.getMouseY() + asWidget().getAbsoluteTop();
+
+            getViewItem(event).reportInteraction(
+                    new ViewItemInteraction(eventType, clientX, clientY));
         }
 
     }
@@ -199,8 +202,6 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
     private final GraphDisplay graphDisplay;
 
-    public DragEnablerFactory dragEnablerFactory;
-
     private boolean ready = false;
 
     private GraphExpansionRegistry registry;
@@ -218,14 +219,12 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     @Inject
     public GraphViewContentDisplay(GraphDisplay display,
             CommandManager commandManager, ResourceManager resourceManager,
-            DragEnablerFactory dragEnablerFactory,
             ResourceCategorizer resourceCategorizer,
             ArcTypeProvider arcStyleProvider, GraphExpansionRegistry registry) {
 
         assert display != null;
         assert commandManager != null;
         assert resourceManager != null;
-        assert dragEnablerFactory != null;
         assert resourceCategorizer != null;
         assert arcStyleProvider != null;
         assert registry != null;
@@ -235,7 +234,6 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         graphDisplay = display;
         this.commandManager = commandManager;
         this.resourceManager = resourceManager;
-        this.dragEnablerFactory = dragEnablerFactory;
         this.registry = registry;
 
         /*
@@ -327,14 +325,6 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         return graphDisplay;
     }
 
-    private ViewItem getGraphItem(Node node) {
-        return getCallback().getViewItem(node.getId());
-    }
-
-    private ViewItem getGraphItem(NodeEvent<?> event) {
-        return getGraphItem(event.getNode());
-    }
-
     @Override
     public String getName() {
         return "Graph";
@@ -347,10 +337,6 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     @Override
     public Resource getResourceByUri(String value) {
         return nodeResources.getByUri(value);
-    }
-
-    private ViewItem getResourceItem(Node node) {
-        return getGraphItem(node);
     }
 
     @Override
@@ -405,6 +391,14 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         return new Slot[] { GraphVisualization.NODE_LABEL_SLOT,
                 GraphVisualization.NODE_BORDER_COLOR_SLOT,
                 GraphVisualization.NODE_BACKGROUND_COLOR_SLOT };
+    }
+
+    private ViewItem getViewItem(Node node) {
+        return getCallback().getViewItem(node.getId());
+    }
+
+    private ViewItem getViewItem(NodeEvent<?> event) {
+        return getViewItem(event.getNode());
     }
 
     @Override
@@ -527,7 +521,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
                 new NodeMenuItemClickedHandler() {
                     @Override
                     public void onNodeMenuItemClicked(Node node) {
-                        nodeExpander.expand(getResourceItem(node),
+                        nodeExpander.expand(getViewItem(node),
                                 GraphViewContentDisplay.this);
                     }
                 }, category);

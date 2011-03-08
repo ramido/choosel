@@ -31,7 +31,6 @@ import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 
 public class DragEnabler {
@@ -238,7 +237,7 @@ public class DragEnabler {
         hiddenAvatar.fireEvent(mouseEvent);
     }
 
-    public void forwardMouseDownWithEventPosition(Event e) {
+    public void forwardMouseDownWithEventPosition(NativeEvent e) {
         forwardMouseDown(e, e.getClientX(), e.getClientY());
     }
 
@@ -250,7 +249,7 @@ public class DragEnabler {
         forwardMouseDown(e, absoluteLeft, absoluteTop);
     }
 
-    public void forwardMouseMove(final int absoluteLeft, final int absoluteTop) {
+    public void forwardMouseMove(final int clientX, final int clientY) {
         if (hiddenAvatar == null) {
             return;
         }
@@ -258,12 +257,12 @@ public class DragEnabler {
         MouseMoveEvent mouseEvent = new MouseMoveEvent() {
             @Override
             public int getClientX() {
-                return absoluteLeft;
+                return clientX;
             }
 
             @Override
             public int getClientY() {
-                return absoluteTop;
+                return clientY;
             }
 
             @Override
@@ -338,6 +337,14 @@ public class DragEnabler {
         hiddenAvatar.fireEvent(mouseEvent);
 
         removeAvatar();
+    }
+
+    public void onMoveInteraction(ViewItemInteraction interaction) {
+        if (interaction.hasNativeEvent()) {
+            forwardMouseMove(interaction.getNativeEvent());
+        } else {
+            forwardMouseMove(interaction.getClientX(), interaction.getClientY());
+        }
     }
 
     private void removeAvatar() {

@@ -391,8 +391,8 @@ public class DefaultViewItem implements Disposable, ViewItem {
     }
 
     @Override
-    public void onEvent(Event event) {
-        switch (event.getTypeInt()) {
+    public void reportInteraction(ViewItemInteraction interaction) {
+        switch (interaction.getEventType()) {
         case Event.ONCLICK: {
             if (view != null) {
                 callback.switchSelection(getResourceSet());
@@ -400,31 +400,40 @@ public class DefaultViewItem implements Disposable, ViewItem {
         }
             break;
         case Event.ONMOUSEMOVE: {
-            getPopupManager().onMouseMove(event.getClientX(),
-                    event.getClientY());
-            enabler.forwardMouseMove(event);
+            getPopupManager().onMouseMove(interaction.getClientX(),
+                    interaction.getClientY());
+            enabler.onMoveInteraction(interaction);
         }
             break;
         case Event.ONMOUSEDOWN: {
-            getPopupManager().onMouseDown(event);
-            enabler.forwardMouseDownWithEventPosition(event);
+            if (interaction.hasNativeEvent()) {
+                getPopupManager().onMouseDown(interaction.getNativeEvent());
+                enabler.forwardMouseDownWithEventPosition(interaction
+                        .getNativeEvent());
+            }
         }
             break;
         case Event.ONMOUSEOUT: {
-            getPopupManager()
-                    .onMouseOut(event.getClientX(), event.getClientY());
+            getPopupManager().onMouseOut(interaction.getClientX(),
+                    interaction.getClientY());
             getHighlightingManager().setHighlighting(false);
-            enabler.forwardMouseOut(event);
+            if (interaction.hasNativeEvent()) {
+                enabler.forwardMouseOut(interaction.getNativeEvent());
+            }
         }
             break;
         case Event.ONMOUSEOVER: {
-            getPopupManager().onMouseOver(event.getClientX(),
-                    event.getClientY());
+            getPopupManager().onMouseOver(interaction.getClientX(),
+                    interaction.getClientY());
             getHighlightingManager().setHighlighting(true);
         }
             break;
         case Event.ONMOUSEUP: {
-            enabler.forwardMouseUp(event);
+            if (interaction.hasNativeEvent()) {
+                enabler.forwardMouseUp(interaction.getNativeEvent());
+            } else {
+                // TODO enabler.forwardMouseUp(e);
+            }
         }
             break;
         }
