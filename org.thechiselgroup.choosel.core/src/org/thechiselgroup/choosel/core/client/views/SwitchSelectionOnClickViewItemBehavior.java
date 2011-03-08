@@ -15,8 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views;
 
-import com.google.gwt.user.client.Event;
-
 /**
  * Manages {@link ViewItem} highlighting in a single view.
  */
@@ -36,7 +34,7 @@ public class SwitchSelectionOnClickViewItemBehavior implements ViewItemBehavior 
         assert interaction != null;
 
         switch (interaction.getEventType()) {
-        case Event.ONCLICK:
+        case CLICK:
             selectionModel.switchSelection(viewItem.getResourceSet());
             break;
         }

@@ -251,6 +251,7 @@ button.popup-content-action:active {
     padding: 2px;
     border: 0px;
     margin: 2px;
+    cursor: default;
 }
 
 .textItemSelected {

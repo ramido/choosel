@@ -21,6 +21,7 @@ import org.thechiselgroup.choosel.core.client.ui.CSS;
 import org.thechiselgroup.choosel.core.client.ui.ZIndex;
 import org.thechiselgroup.choosel.core.client.ui.dnd.DragProxyEventReceiver;
 import org.thechiselgroup.choosel.core.client.ui.dnd.ResourceSetAvatarDragController;
+import org.thechiselgroup.choosel.core.client.views.ViewItemInteraction.Type;
 import org.thechiselgroup.choosel.core.client.windows.Desktop;
 
 import com.google.gwt.dom.client.NativeEvent;
@@ -61,8 +62,7 @@ public class DragEnabler {
 
         @Override
         public ResourceSetAvatar createProxy() {
-            // XXX move into dnd handling once there is a single popup manager
-            // item.getPopupManager().hidePopup();
+            item.reportInteraction(new ViewItemInteraction(Type.DRAG_START));
             return super.createProxy();
         }
 
@@ -72,12 +72,7 @@ public class DragEnabler {
 
         @Override
         public void dragProxyDetached() {
-            /*
-             * The highlighting remains active during the dnd operation. At the
-             * end of the dnd operation, the highlighting is removed.
-             */
-            // XXX move into dnd handling
-            // item.getHighlightingManager().setHighlighting(false);
+            item.reportInteraction(new ViewItemInteraction(Type.DRAG_END));
             dragEnabler.removeAvatar();
         }
 

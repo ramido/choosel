@@ -41,6 +41,7 @@ import org.thechiselgroup.choosel.core.client.views.ViewContentDisplayCallback;
 import org.thechiselgroup.choosel.core.client.views.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.ViewItemContainer;
 import org.thechiselgroup.choosel.core.client.views.ViewItemInteraction;
+import org.thechiselgroup.choosel.core.client.views.ViewItemInteraction.Type;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplayLoadingFailureEvent;
@@ -69,7 +70,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -115,41 +115,41 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
         @Override
         public void onMouseClick(NodeMouseClickEvent event) {
-            reportInteraction(Event.ONCLICK, event);
+            reportInteraction(Type.CLICK, event);
         }
 
         @Override
         public void onMouseDown(NodeDragHandleMouseDownEvent event) {
-            reportInteraction(Event.ONMOUSEDOWN, event);
+            reportInteraction(Type.MOUSE_DOWN, event);
         }
 
         @Override
         public void onMouseMove(MouseMoveEvent event) {
             if (currentNode != null) {
                 getViewItem(currentNode).reportInteraction(
-                        new ViewItemInteraction(Event.ONMOUSEMOVE, event
+                        new ViewItemInteraction(Type.MOUSE_MOVE, event
                                 .getClientX(), event.getClientY()));
             }
         }
 
         @Override
         public void onMouseMove(NodeDragHandleMouseMoveEvent event) {
-            reportInteraction(Event.ONMOUSEMOVE, event);
+            reportInteraction(Type.MOUSE_MOVE, event);
         }
 
         @Override
         public void onMouseOut(NodeMouseOutEvent event) {
             currentNode = null;
-            reportInteraction(Event.ONMOUSEOUT, event);
+            reportInteraction(Type.MOUSE_OUT, event);
         }
 
         @Override
         public void onMouseOver(NodeMouseOverEvent event) {
             currentNode = event.getNode();
-            reportInteraction(Event.ONMOUSEOVER, event);
+            reportInteraction(Type.MOUSE_OVER, event);
         }
 
-        private void reportInteraction(int eventType, NodeEvent<?> event) {
+        private void reportInteraction(Type eventType, NodeEvent<?> event) {
             int clientX = event.getMouseX() + asWidget().getAbsoluteLeft();
             int clientY = event.getMouseY() + asWidget().getAbsoluteTop();
 

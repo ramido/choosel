@@ -374,9 +374,9 @@ public class DefaultPopupManager implements Opacity, PopupManager {
 
     protected int hideDelay = DEFAULT_HIDE_DELAY;
 
-    private int mouseXInClientArea = -1;
+    private int clientX = -1;
 
-    private int mouseYInBrowserClientArea = -1;
+    private int clientY = -1;
 
     private NMorphScalar nextEffect;
 
@@ -443,8 +443,8 @@ public class DefaultPopupManager implements Opacity, PopupManager {
         Style style = popup.getElement().getStyle();
         style.setProperty(CSS.POSITION, CSS.ABSOLUTE);
         style.setProperty(CSS.Z_INDEX, Integer.toString(ZIndex.POPUP));
-        style.setPropertyPx(CSS.LEFT, mouseXInClientArea + POPUP_OFFSET_X);
-        style.setPropertyPx(CSS.TOP, mouseYInBrowserClientArea + POPUP_OFFSET_Y);
+        style.setPropertyPx(CSS.LEFT, clientX + POPUP_OFFSET_X);
+        style.setPropertyPx(CSS.TOP, clientY + POPUP_OFFSET_Y);
 
         getRootPanel().add(popup);
     }
@@ -587,6 +587,15 @@ public class DefaultPopupManager implements Opacity, PopupManager {
 
     @Override
     public void onMouseMove(int clientX, int clientY) {
+        /*
+         * Some browsers (e.g. Safari 5.0.3, Chome 10.0.648.127 beta) seem to
+         * fire mouse move events continously under certain circumstance even
+         * though the mouse was not moved.
+         */
+        if ((clientX == this.clientX) && (clientY == this.clientY)) {
+            return;
+        }
+
         updateMousePosition(clientX, clientY);
         state.onSourceMouseMove(this);
     }
@@ -704,8 +713,8 @@ public class DefaultPopupManager implements Opacity, PopupManager {
     }
 
     private void updateMousePosition(int clientX, int clientY) {
-        this.mouseXInClientArea = clientX;
-        this.mouseYInBrowserClientArea = clientY;
+        this.clientX = clientX;
+        this.clientY = clientY;
     }
 
 }

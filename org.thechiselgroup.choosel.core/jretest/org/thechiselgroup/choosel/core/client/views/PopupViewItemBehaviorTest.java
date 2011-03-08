@@ -33,11 +33,11 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
+import org.thechiselgroup.choosel.core.client.views.ViewItemInteraction.Type;
 import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingConfiguration;
 
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
-import com.google.gwt.user.client.Event;
 
 public class PopupViewItemBehaviorTest {
 
@@ -63,7 +63,7 @@ public class PopupViewItemBehaviorTest {
     public void disposeRemovesPopupHighlighting() {
         underTest.onViewItemCreated(viewItem);
         underTest.onInteraction(viewItem, new ViewItemInteraction(
-                Event.ONMOUSEOVER, 0, 0));
+                Type.MOUSE_OVER));
         simulateMouseOverPopup();
         underTest.onViewItemRemoved(viewItem);
 
@@ -75,9 +75,33 @@ public class PopupViewItemBehaviorTest {
     public void mouseOverPopupAddsResourcesToHoverModel() {
         underTest.onViewItemCreated(viewItem);
         underTest.onInteraction(viewItem, new ViewItemInteraction(
-                Event.ONMOUSEOVER, 0, 0));
+                Type.MOUSE_OVER));
         simulateMouseOverPopup();
         assertThat(hoverModel.getResources(), containsEqualResources(resources));
+    }
+
+    @Test
+    public void popupClosedOnDragStart() {
+        underTest.onViewItemCreated(viewItem);
+        underTest.onInteraction(viewItem, new ViewItemInteraction(
+                Type.MOUSE_OVER));
+        simulateMouseOverPopup();
+        underTest.onInteraction(viewItem, new ViewItemInteraction(
+                Type.DRAG_START));
+
+        verify(popupManager, times(1)).hidePopup();
+    }
+
+    @Test
+    public void popupManagerNotifiedOnMouseOver() {
+        int clientX = 10;
+        int clientY = 20;
+
+        underTest.onViewItemCreated(viewItem);
+        underTest.onInteraction(viewItem, new ViewItemInteraction(
+                Type.MOUSE_OVER, clientX, clientY));
+
+        verify(popupManager, times(1)).onMouseOver(clientX, clientY);
     }
 
     @Before

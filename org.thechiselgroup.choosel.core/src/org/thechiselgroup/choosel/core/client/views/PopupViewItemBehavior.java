@@ -31,7 +31,6 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -95,26 +94,25 @@ public class PopupViewItemBehavior implements ViewItemBehavior {
         PopupManager popupManager = popupManagers.get(viewItem.getViewItemID());
 
         switch (interaction.getEventType()) {
-        case Event.ONMOUSEMOVE: {
+        case DRAG_START:
+            popupManager.hidePopup();
+            break;
+        case MOUSE_MOVE:
             popupManager.onMouseMove(interaction.getClientX(),
                     interaction.getClientY());
-        }
             break;
-        case Event.ONMOUSEDOWN: {
+        case MOUSE_DOWN:
             if (interaction.hasNativeEvent()) {
                 popupManager.onMouseDown(interaction.getNativeEvent());
             }
-        }
             break;
-        case Event.ONMOUSEOUT: {
+        case MOUSE_OUT:
             popupManager.onMouseOut(interaction.getClientX(),
                     interaction.getClientY());
-        }
             break;
-        case Event.ONMOUSEOVER: {
+        case MOUSE_OVER:
             popupManager.onMouseOver(interaction.getClientX(),
                     interaction.getClientY());
-        }
             break;
         }
     }
