@@ -17,24 +17,20 @@ package org.thechiselgroup.choosel.visualization_component.map.client;
 
 import org.thechiselgroup.choosel.core.client.ui.CSS;
 
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.MouseDownHandler;
-import com.google.gwt.event.dom.client.MouseMoveHandler;
-import com.google.gwt.event.dom.client.MouseOutHandler;
-import com.google.gwt.event.dom.client.MouseOverHandler;
-import com.google.gwt.event.dom.client.MouseUpHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.maps.client.MapPane;
 import com.google.gwt.maps.client.MapPaneType;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.geom.Point;
 import com.google.gwt.maps.client.overlay.Overlay;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
 
 public class LabelOverlay extends Overlay {
 
-    private Label label;
+    private Element label;
 
     private LatLng latLng;
 
@@ -46,48 +42,37 @@ public class LabelOverlay extends Overlay {
 
     private Point locationPoint;
 
+    private EventListener eventListener;
+
+    private String text;
+
     public LabelOverlay(LatLng latLng, Point offset, String text,
-            String styleName) {
+            String styleName, EventListener eventListener) {
 
         assert latLng != null;
         assert offset != null;
         assert text != null;
         assert styleName != null;
+        assert eventListener != null;
+        assert text != null;
 
+        this.text = text;
         this.latLng = latLng;
         this.offset = offset;
-        this.label = new Label(text);
-        this.label.setStyleName(styleName);
-    }
+        this.label = DOM.createDiv();
+        this.label.setClassName(styleName);
+        this.eventListener = eventListener;
 
-    public HandlerRegistration addClickHandler(ClickHandler handler) {
-        return label.addClickHandler(handler);
-    }
-
-    public HandlerRegistration addMouseDownHandler(MouseDownHandler handler) {
-        return label.addMouseDownHandler(handler);
-    }
-
-    public HandlerRegistration addMouseMoveHandler(MouseMoveHandler handler) {
-        return label.addMouseMoveHandler(handler);
-    }
-
-    public HandlerRegistration addMouseOutHandler(MouseOutHandler handler) {
-        return label.addMouseOutHandler(handler);
-    }
-
-    public HandlerRegistration addMouseOverHandler(MouseOverHandler handler) {
-        return label.addMouseOverHandler(handler);
-    }
-
-    public HandlerRegistration addMouseUpHandler(MouseUpHandler handler) {
-        return label.addMouseUpHandler(handler);
+        DOM.sinkEvents(label, Event.MOUSEEVENTS | Event.ONCLICK);
+        DOM.setEventListener(label, eventListener);
+        CSS.setPosition(label, CSS.ABSOLUTE);
+        label.setInnerText(text);
     }
 
     @Override
     protected final Overlay copy() {
-        return new LabelOverlay(latLng, offset, label.getText(),
-                label.getStyleName());
+        return new LabelOverlay(latLng, offset, text, label.getClassName(),
+                eventListener);
     }
 
     @Override
@@ -95,7 +80,7 @@ public class LabelOverlay extends Overlay {
         this.map = map;
 
         pane = map.getPane(MapPaneType.MARKER_PANE);
-        pane.add(label);
+        pane.getElement().appendChild(label);
 
         updatePosition(map.convertLatLngToDivPixel(latLng));
     }
@@ -115,6 +100,10 @@ public class LabelOverlay extends Overlay {
         }
 
         updatePosition(newLocationPoint);
+    }
+
+    public void registerEventListener() {
+
     }
 
     @Override
@@ -141,7 +130,8 @@ public class LabelOverlay extends Overlay {
 
     public void setLabel(String labelText) {
         assert labelText != null;
-        this.label.setText(labelText);
+        this.text = labelText;
+        this.label.setInnerText(labelText);
     }
 
     public void setZIndex(int zIndex) {
@@ -151,8 +141,8 @@ public class LabelOverlay extends Overlay {
     private void updatePosition(Point newLocationPoint) {
         assert newLocationPoint != null;
         locationPoint = newLocationPoint;
-        pane.setWidgetPosition(label, locationPoint.getX() + offset.getX(),
-                locationPoint.getY() + offset.getY());
+        CSS.setLeft(label, locationPoint.getX() + offset.getX());
+        CSS.setTop(label, locationPoint.getY() + offset.getY());
     }
 
 }

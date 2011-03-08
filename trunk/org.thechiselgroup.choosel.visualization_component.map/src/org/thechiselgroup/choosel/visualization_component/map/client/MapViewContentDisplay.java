@@ -23,7 +23,6 @@ import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetC
 import org.thechiselgroup.choosel.core.client.ui.CSS;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.AbstractViewContentDisplay;
-import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.core.client.views.SidePanelSection;
 import org.thechiselgroup.choosel.core.client.views.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
@@ -38,7 +37,6 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.inject.Inject;
 
 public class MapViewContentDisplay extends AbstractViewContentDisplay {
 
@@ -62,14 +60,7 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
 
     private static final String MEMENTO_ZOOM_LEVEL = "zoom-level";
 
-    private DragEnablerFactory dragEnablerFactory;
-
     private MapWidget map;
-
-    @Inject
-    public MapViewContentDisplay(DragEnablerFactory dragEnablerFactory) {
-        this.dragEnablerFactory = dragEnablerFactory;
-    }
 
     @Override
     public void checkResize() {
@@ -159,8 +150,7 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
 
         LatLng latLng = LatLng.newInstance(latitude, longitude);
 
-        MapItem mapItem = new MapItem(resourceItem, latLng, getCallback(),
-                dragEnablerFactory);
+        MapItem mapItem = new MapItem(resourceItem, latLng);
 
         mapItem.setStatusStyling(resourceItem.getStatus());
 
