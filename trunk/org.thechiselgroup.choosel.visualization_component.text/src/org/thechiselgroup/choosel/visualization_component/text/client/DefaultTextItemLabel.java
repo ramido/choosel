@@ -15,68 +15,58 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.text.client;
 
-import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatar;
-import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarType;
 import org.thechiselgroup.choosel.core.client.ui.CSS;
-import org.thechiselgroup.choosel.core.client.ui.dnd.DragProxyEventReceiver;
-import org.thechiselgroup.choosel.core.client.ui.dnd.ResourceSetAvatarDragController;
-import org.thechiselgroup.choosel.core.client.views.ViewItem;
 
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
 
-public class DefaultTextItemLabel extends ResourceSetAvatar implements
-        DragProxyEventReceiver, TextItemLabel {
+public class DefaultTextItemLabel implements TextItemLabel {
 
-    private static final String CSS_AVATAR_RESOURCE_SET = "avatar-resourceSet";
+    private Element element;
 
-    private final ViewItem resourceItem;
-
-    public DefaultTextItemLabel(ResourceSetAvatarDragController dragController,
-            ViewItem resourceItem) {
-
-        super("", CSS_AVATAR_RESOURCE_SET, resourceItem.getResourceSet(),
-                ResourceSetAvatarType.SET);
-
-        this.resourceItem = resourceItem;
-
-        removeStyleName(CSS_CLASS);
-        setEnabled(true);
-        dragController.setDraggable(this, true);
+    public DefaultTextItemLabel() {
+        this.element = DOM.createSpan();
     }
 
     @Override
-    public Widget asWidget() {
-        return this;
+    public void addStyleName(String cssClass) {
+        assert cssClass != null;
+        element.addClassName(cssClass);
     }
 
     @Override
-    public void dragProxyAttached() {
+    public Element getElement() {
+        return element;
     }
 
     @Override
-    public void dragProxyDetached() {
-        /*
-         * The highlighting remains active during the dnd operation. At the end
-         * of the dnd operation, the highlighting is removed.
-         */
-        resourceItem.getHighlightingManager().setHighlighting(false);
-    }
-
-    public ViewItem getResourceItem() {
-        return resourceItem;
+    public String getText() {
+        return element.getInnerText();
     }
 
     @Override
-    public void setEnabled(boolean dragEnabled) {
-        super.setEnabled(dragEnabled);
+    public void registerHandler(EventListener eventListener) {
+        DOM.sinkEvents(element, Event.MOUSEEVENTS | Event.ONCLICK);
+        DOM.setEventListener(element, eventListener);
+    }
 
-        removeStyleName(CSS_AVATAR_DISABLED);
-        removeStyleName(CSS_AVATAR_RESOURCE_SET);
+    @Override
+    public void removeStyleName(String cssClass) {
+        assert cssClass != null;
+        element.removeClassName(cssClass);
     }
 
     @Override
     public void setFontSize(String fontSize) {
         CSS.setFontSize(getElement(), fontSize);
+    }
+
+    @Override
+    public void setText(String text) {
+        assert text != null;
+        element.setInnerText(text);
     }
 
 }

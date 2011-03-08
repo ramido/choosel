@@ -15,17 +15,18 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.text.client;
 
-import org.thechiselgroup.choosel.core.client.ui.WidgetAdaptable;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.EventListener;
 
-import com.google.gwt.event.dom.client.HasAllMouseHandlers;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-
-public interface TextItemLabel extends HasAllMouseHandlers, HasClickHandlers,
-        WidgetAdaptable {
+public interface TextItemLabel {
 
     void addStyleName(String cssClass);
 
+    Element getElement();
+
     String getText();
+
+    void registerHandler(EventListener eventListener);
 
     void removeStyleName(String cssClass);
 

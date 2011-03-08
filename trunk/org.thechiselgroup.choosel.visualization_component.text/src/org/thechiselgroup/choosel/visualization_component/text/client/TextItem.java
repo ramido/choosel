@@ -15,8 +15,11 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.text.client;
 
-import org.thechiselgroup.choosel.core.client.ui.popup.DefaultPopupManager;
 import org.thechiselgroup.choosel.core.client.views.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.ViewItemInteraction;
+
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
 
 public class TextItem {
 
@@ -30,7 +33,7 @@ public class TextItem {
 
     private TextItemLabel label;
 
-    private ViewItem resourceItem;
+    private ViewItem viewItem;
 
     /**
      * Flag that marks if the label of this text item has already been added to
@@ -43,19 +46,19 @@ public class TextItem {
 
     private String cachedDescription;
 
-    public TextItem(ViewItem resourceItem) {
-        assert resourceItem != null;
+    public TextItem(ViewItem viewItem) {
+        assert viewItem != null;
 
-        this.resourceItem = resourceItem;
+        this.viewItem = viewItem;
     }
 
     public String getDescriptionValue() {
-        return (String) resourceItem
+        return (String) viewItem
                 .getSlotValue(TextVisualization.DESCRIPTION_SLOT);
     }
 
     public double getFontSizeValue() {
-        return ((Number) resourceItem
+        return ((Number) viewItem
                 .getSlotValue(TextVisualization.FONT_SIZE_SLOT)).doubleValue();
     }
 
@@ -64,16 +67,19 @@ public class TextItem {
     }
 
     public ViewItem getResourceItem() {
-        return resourceItem;
+        return viewItem;
     }
 
     public void init(TextItemLabel label) {
         this.label = label;
 
+        label.registerHandler(new EventListener() {
+            @Override
+            public void onBrowserEvent(Event event) {
+                viewItem.reportInteraction(new ViewItemInteraction(event));
+            }
+        });
         label.addStyleName(CSS_LIST);
-
-        DefaultPopupManager.linkManagerToSource(resourceItem.getPopupManager(),
-                getLabel());
 
         updateContent();
     }
@@ -127,7 +133,7 @@ public class TextItem {
     }
 
     public void updateStatusStyling() {
-        switch (resourceItem.getHighlightStatus()) {
+        switch (viewItem.getHighlightStatus()) {
         case COMPLETE: {
             label.addStyleName(CSS_HIGHLIGHTED);
             label.removeStyleName(CSS_PARTIALLY_HIGHLIGHTED);
@@ -145,7 +151,7 @@ public class TextItem {
             break;
         }
 
-        switch (resourceItem.getSelectionStatus()) {
+        switch (viewItem.getSelectionStatus()) {
         case COMPLETE: {
             label.addStyleName(CSS_SELECTED);
         }

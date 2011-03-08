@@ -29,7 +29,7 @@ public interface TextItemContainer {
 
     void insert(TextItemLabel label, int row);
 
-    boolean remove(TextItemLabel itemLabel);
+    void remove(TextItemLabel itemLabel);
 
     void removeStyleName(String cssClass);
 
