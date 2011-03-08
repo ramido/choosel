@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.text.client;
 
-import org.thechiselgroup.choosel.core.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.core.client.views.ViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.views.ViewContentDisplayFactory;
 
@@ -24,15 +23,12 @@ import com.google.inject.Inject;
 public class TextViewContentDisplayFactory implements ViewContentDisplayFactory {
 
     @Inject
-    private ResourceSetAvatarDragController dragController;
-
-    @Inject
     public TextViewContentDisplayFactory() {
     }
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-        return new TextViewContentDisplay(dragController);
+        return new TextViewContentDisplay();
     }
 
     @Override

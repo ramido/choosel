@@ -15,9 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.text.client;
 
-import org.thechiselgroup.choosel.core.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.core.client.views.ViewItem;
 
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -36,15 +36,7 @@ public class DefaultTextItemContainer implements TextItemContainer {
 
     private ScrollPanel scrollPanel;
 
-    private ResourceSetAvatarDragController dragController;
-
     private FlowPanel itemPanel;
-
-    public DefaultTextItemContainer(
-            ResourceSetAvatarDragController dragController) {
-
-        this.dragController = dragController;
-    }
 
     @Override
     public void addStyleName(String cssClass) {
@@ -53,7 +45,7 @@ public class DefaultTextItemContainer implements TextItemContainer {
 
     @Override
     public TextItemLabel createTextItemLabel(ViewItem resourceItem) {
-        return new DefaultTextItemLabel(dragController, resourceItem);
+        return new DefaultTextItemLabel();
     }
 
     @Override
@@ -69,12 +61,17 @@ public class DefaultTextItemContainer implements TextItemContainer {
 
     @Override
     public void insert(TextItemLabel label, int row) {
-        itemPanel.insert(label.asWidget(), row);
+        Element element = itemPanel.getElement();
+        if (row == 0) {
+            element.appendChild(label.getElement());
+        } else {
+            element.insertAfter(label.getElement(), element.getChild(row - 1));
+        }
     }
 
     @Override
-    public boolean remove(TextItemLabel itemLabel) {
-        return itemPanel.remove(itemLabel.asWidget());
+    public void remove(TextItemLabel itemLabel) {
+        itemLabel.getElement().removeFromParent();
     }
 
     @Override

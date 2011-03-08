@@ -20,8 +20,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.core.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionUtils;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.math.MathUtils;
@@ -31,15 +29,8 @@ import org.thechiselgroup.choosel.core.client.views.SidePanelSection;
 import org.thechiselgroup.choosel.core.client.views.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOutHandler;
-import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -47,33 +38,6 @@ import com.google.gwt.user.client.ui.Widget;
 // XXX memento not implemented
 // XXX order does not update when description property changes
 public class TextViewContentDisplay extends AbstractViewContentDisplay {
-
-    private class LabelEventHandler implements ClickHandler, MouseOutHandler,
-            MouseOverHandler {
-
-        private ResourceSet getResource(GwtEvent<?> event) {
-            return getResourceItem(event).getResourceSet();
-        }
-
-        private ViewItem getResourceItem(GwtEvent<?> event) {
-            return ((DefaultTextItemLabel) event.getSource()).getResourceItem();
-        }
-
-        @Override
-        public void onClick(ClickEvent e) {
-            getCallback().switchSelection(getResource(e));
-        }
-
-        @Override
-        public void onMouseOut(MouseOutEvent e) {
-            getResourceItem(e).getHighlightingManager().setHighlighting(false);
-        }
-
-        @Override
-        public void onMouseOver(MouseOverEvent e) {
-            getResourceItem(e).getHighlightingManager().setHighlighting(true);
-        }
-    }
 
     private static final String CSS_TAG_CLOUD = "choosel-TextViewContentDisplay-TagCloud";
 
@@ -84,8 +48,6 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
     public static final String CSS_LIST_VIEW_SCROLLBAR = "listViewScrollbar";
 
     private final TextItemContainer textItemContainer;
-
-    private LabelEventHandler labelEventHandler;
 
     private DoubleToGroupValueMapper<String> groupValueMapper;
 
@@ -99,8 +61,8 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
         }
     };
 
-    public TextViewContentDisplay(ResourceSetAvatarDragController dragController) {
-        this(new DefaultTextItemContainer(dragController));
+    public TextViewContentDisplay() {
+        this(new DefaultTextItemContainer());
     }
 
     // for test: can change container
@@ -108,8 +70,6 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
         assert textItemContainer != null;
 
         this.textItemContainer = textItemContainer;
-
-        labelEventHandler = new LabelEventHandler();
 
         initGroupValueMapper();
     }
@@ -136,7 +96,7 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
         }
 
         for (ViewItem resourceItem : addedResourceItems) {
-            TextItem textItem = initTextItem(resourceItem);
+            TextItem textItem = createTextItem(resourceItem);
             items.add(textItem);
         }
 
@@ -157,6 +117,19 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
                 textItem.setAddedToPanel(true);
             }
         }
+    }
+
+    private TextItem createTextItem(ViewItem viewItem) {
+        TextItem textItem = new TextItem(viewItem);
+
+        TextItemLabel label = textItemContainer.createTextItemLabel(textItem
+                .getResourceItem());
+
+        textItem.init(label);
+
+        viewItem.setDisplayObject(textItem);
+
+        return textItem;
     }
 
     @Override
@@ -201,23 +174,6 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
         groupValueMapper = new DoubleToGroupValueMapper<String>(
                 new EquidistantBinBoundaryCalculator(), CollectionUtils.toList(
                         "10px", "14px", "18px", "22px", "26px"));
-    }
-
-    private TextItem initTextItem(ViewItem resourceItem) {
-        TextItem textItem = new TextItem(resourceItem);
-
-        TextItemLabel label = textItemContainer.createTextItemLabel(textItem
-                .getResourceItem());
-
-        label.addMouseOverHandler(labelEventHandler);
-        label.addMouseOutHandler(labelEventHandler);
-        label.addClickHandler(labelEventHandler);
-
-        textItem.init(label);
-
-        resourceItem.setDisplayObject(textItem);
-
-        return textItem;
     }
 
     private void removeTextItem(TextItem textItem) {
@@ -279,23 +235,24 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
         assert !items.isEmpty();
 
         NumberArray fontSizeValues = MathUtils.createNumberArray();
-        boolean sameValue = true;
-        double value = 0;
+
+        boolean onlyOneValue = true;
         boolean first = true;
+        double firstValue = 0;
         for (TextItem textItem : items) {
-            double valueX = textItem.getFontSizeValue();
+            double itemValue = textItem.getFontSizeValue();
 
             if (first) {
                 first = false;
-                value = valueX;
-            } else if (value != valueX) {
-                sameValue = false;
+                firstValue = itemValue;
+            } else if (firstValue != itemValue) {
+                onlyOneValue = false;
             }
 
-            fontSizeValues.push(valueX);
+            fontSizeValues.push(itemValue);
         }
 
-        if (!sameValue) {
+        if (!onlyOneValue) {
             groupValueMapper.setNumberValues(fontSizeValues);
             for (TextItem textItem : items) {
                 textItem.scaleFont(groupValueMapper);
