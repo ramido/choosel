@@ -15,75 +15,36 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.map.client;
 
-import org.thechiselgroup.choosel.core.client.views.DragEnabler;
-import org.thechiselgroup.choosel.core.client.views.DragEnablerFactory;
 import org.thechiselgroup.choosel.core.client.views.IconViewItem;
 import org.thechiselgroup.choosel.core.client.views.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.ViewItem.Status;
-import org.thechiselgroup.choosel.core.client.views.ViewContentDisplayCallback;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseDownHandler;
-import com.google.gwt.event.dom.client.MouseMoveEvent;
-import com.google.gwt.event.dom.client.MouseMoveHandler;
-import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOutHandler;
-import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseOverHandler;
-import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.geom.Point;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
 
 public class MapItem extends IconViewItem {
 
-    private class MarkerEventHandler implements ClickHandler, MouseOutHandler,
-            MouseOverHandler {
-
-        @Override
-        public void onClick(ClickEvent event) {
-            callback.switchSelection(viewItem.getResourceSet());
-        }
-
-        @Override
-        public void onMouseOut(MouseOutEvent event) {
-            viewItem.getPopupManager().onMouseOut(event.getClientX(),
-                    event.getClientY());
-            viewItem.getHighlightingManager().setHighlighting(false);
-        }
-
-        @Override
-        public void onMouseOver(MouseOverEvent event) {
-            viewItem.getPopupManager().onMouseOver(event.getClientX(),
-                    event.getClientY());
-            viewItem.getHighlightingManager().setHighlighting(true);
-        }
-    }
-
-    private final ViewContentDisplayCallback callback;
-
-    private DragEnablerFactory dragEnablerFactory;
-
-    private MarkerEventHandler eventHandler;
-
     private LabelOverlay overlay;
 
-    public MapItem(ViewItem resourceItem, LatLng point,
-            ViewContentDisplayCallback callback,
-            DragEnablerFactory dragEnablerFactory) {
+    public MapItem(ViewItem viewItem, LatLng point) {
+        super(viewItem, MapVisualization.COLOR_SLOT);
 
-        super(resourceItem, MapVisualization.COLOR_SLOT);
-
-        this.callback = callback;
-        this.dragEnablerFactory = dragEnablerFactory;
-
+        // -10 = - (width /2)
         overlay = new LabelOverlay(point, Point.newInstance(-10, -10),
-                getLabelValue(), CSS_RESOURCE_ITEM_ICON); // -10 = - (width /2)
-        eventHandler = new MarkerEventHandler();
+                getLabelValue(), CSS_RESOURCE_ITEM_ICON, new EventListener() {
+                    @Override
+                    public void onBrowserEvent(Event event) {
+                        // prevent standard map drag on item
+                        if (event.getTypeInt() == Event.ONMOUSEDOWN) {
+                            event.stopPropagation();
+                        }
 
-        initEventHandlers();
+                        // forward
+                        MapItem.this.viewItem.onEvent(event);
+                    }
+                });
     }
 
     public String getLabelValue() {
@@ -92,42 +53,6 @@ public class MapItem extends IconViewItem {
 
     public LabelOverlay getOverlay() {
         return overlay;
-    }
-
-    private void initEventHandlers() {
-        overlay.addMouseOverHandler(eventHandler);
-        overlay.addMouseOutHandler(eventHandler);
-        overlay.addClickHandler(eventHandler);
-
-        final DragEnabler enabler = dragEnablerFactory
-                .createDragEnabler(viewItem);
-
-        overlay.addMouseUpHandler(new MouseUpHandler() {
-            @Override
-            public void onMouseUp(MouseUpEvent event) {
-                enabler.forwardMouseUp(event.getNativeEvent());
-            }
-        });
-        overlay.addMouseOutHandler(new MouseOutHandler() {
-            @Override
-            public void onMouseOut(MouseOutEvent event) {
-                enabler.forwardMouseOut(event.getNativeEvent());
-            }
-        });
-        overlay.addMouseMoveHandler(new MouseMoveHandler() {
-            @Override
-            public void onMouseMove(MouseMoveEvent event) {
-                enabler.forwardMouseMove(event.getNativeEvent());
-            }
-        });
-        overlay.addMouseDownHandler(new MouseDownHandler() {
-            @Override
-            public void onMouseDown(MouseDownEvent event) {
-                enabler.forwardMouseDownWithTargetElementPosition(event
-                        .getNativeEvent());
-                event.stopPropagation(); // to prevent standard map drag
-            }
-        });
     }
 
     public void setDefaultStyle() {
