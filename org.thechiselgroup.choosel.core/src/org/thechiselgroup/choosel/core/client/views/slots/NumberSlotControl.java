@@ -91,10 +91,6 @@ public class NumberSlotControl extends SlotControl {
         };
 
         ResourceSetToValueResolverFactory[] calculations = new ResourceSetToValueResolverFactory[] {
-                new FixedResourceSetToValueResolverFactory(
-                        new FixedValuePropertyValueResolver(new Double(1))),
-                new FixedResourceSetToValueResolverFactory(
-                        new NumberOfResourcesResolver()),
                 new CalculationResourceSetToValueResolverFactory(
                         new SumCalculation()),
                 new CalculationResourceSetToValueResolverFactory(
@@ -102,7 +98,11 @@ public class NumberSlotControl extends SlotControl {
                 new CalculationResourceSetToValueResolverFactory(
                         new MinCalculation()),
                 new CalculationResourceSetToValueResolverFactory(
-                        new MaxCalculation()) };
+                        new MaxCalculation()),
+                new FixedResourceSetToValueResolverFactory(
+                        new NumberOfResourcesResolver()),
+                new FixedResourceSetToValueResolverFactory(
+                        new FixedValuePropertyValueResolver(new Double(1))) };
 
         resolverFactorySelector = new ListBoxControl<ResourceSetToValueResolverFactory>(
                 new ExtendedListBox(false),

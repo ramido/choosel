@@ -144,7 +144,6 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
                     .getCategorizer()).getProperty();
             groupingBox.setSelectedValue(property);
         }
-
     }
 
     private void updateSlotControls(
