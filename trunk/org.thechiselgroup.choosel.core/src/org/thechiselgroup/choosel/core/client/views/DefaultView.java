@@ -231,10 +231,8 @@ public class DefaultView extends AbstractWindowContent implements View {
             LightweightCollection<Resource> highlightedResources,
             LightweightCollection<Resource> selectedResources) {
 
-        // TODO use factory & dispose + clean up
-
         DefaultViewItem viewItem = new DefaultViewItem(groupID, resources,
-                hoverModel, slotMappingConfiguration, viewItemBehavior);
+                slotMappingConfiguration, viewItemBehavior);
 
         viewItemBehavior.onViewItemCreated(viewItem);
 
