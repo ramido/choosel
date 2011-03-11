@@ -49,8 +49,6 @@ public class DefaultViewItemTest {
 
     private static final String VIEW_ITEM_ID = "viewItemCategory";
 
-    private HoverModel hoverModel;
-
     @Mock
     private SlotMappingConfiguration slotMappingConfiguration;
 
@@ -562,10 +560,9 @@ public class DefaultViewItemTest {
         MockitoAnnotations.initMocks(this);
 
         numberSlot = new Slot("id-2", "number-slot", DataType.NUMBER);
-        hoverModel = spy(new HoverModel());
         resources = new DefaultResourceSet();
         underTest = spy(new DefaultViewItem(VIEW_ITEM_ID, resources,
-                hoverModel, slotMappingConfiguration,
+                slotMappingConfiguration,
                 mock(ViewItemInteractionHandler.class)));
     }
 

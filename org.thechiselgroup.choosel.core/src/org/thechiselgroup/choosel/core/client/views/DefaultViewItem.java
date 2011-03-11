@@ -78,8 +78,6 @@ public class DefaultViewItem implements Disposable, ViewItem {
 
     private String viewItemID;
 
-    protected final HoverModel hoverModel;
-
     // TODO update & paint on changes in resources!!!
     private final ResourceSet resources;
 
@@ -125,19 +123,16 @@ public class DefaultViewItem implements Disposable, ViewItem {
     private final ViewItemInteractionHandler interactionHandler;
 
     public DefaultViewItem(String viewItemID, ResourceSet resources,
-            HoverModel hoverModel,
             SlotMappingConfiguration slotMappingConfiguration,
             ViewItemInteractionHandler interactionHandler) {
 
         assert viewItemID != null;
         assert resources != null;
-        assert hoverModel != null;
         assert slotMappingConfiguration != null;
         assert interactionHandler != null;
 
         this.viewItemID = viewItemID;
         this.resources = resources;
-        this.hoverModel = hoverModel; // TODO separate controller
         this.slotMappingConfiguration = slotMappingConfiguration;
         this.interactionHandler = interactionHandler;
 
