@@ -35,6 +35,7 @@ import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.core.client.views.ResourceModel;
 import org.thechiselgroup.choosel.core.client.views.View;
 import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
+import org.thechiselgroup.choosel.core.client.views.ViewModel;
 
 public class ResourceSetPresenterDropCommandFactoryTest {
 
@@ -60,6 +61,9 @@ public class ResourceSetPresenterDropCommandFactoryTest {
 
     @Mock
     private ResourceModel resourceModel;
+
+    @Mock
+    private ViewModel viewModel;
 
     @Test
     public void canDropByDefault() {
@@ -151,7 +155,8 @@ public class ResourceSetPresenterDropCommandFactoryTest {
         when(targetDragAvatar.getResourceSet()).thenReturn(targetSet);
         when(dragAvatar.getResourceSet()).thenReturn(sourceSet);
         when(accessor.findView(targetDragAvatar)).thenReturn(view);
-        when(view.getResourceModel()).thenReturn(resourceModel);
+        when(view.getModel()).thenReturn(viewModel);
+        when(viewModel.getResourceModel()).thenReturn(resourceModel);
 
         dropCommandFactory = new ResourceSetPresenterDropCommandFactory(
                 targetDragAvatar, accessor);

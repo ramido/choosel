@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -15,16 +15,18 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.error_handling;
 
-import com.allen_sauer.gwt.log.client.Log;
+import com.google.gwt.event.shared.UmbrellaException;
 
-public class LoggingErrorHandler implements ErrorHandler {
+public final class ExceptionUtil {
 
-    @Override
-    public void handleError(Throwable error) {
-        assert error != null;
-
-        error = ExceptionUtil.unwrapCause(error);
-
-        Log.error(error.getMessage(), error);
+    private ExceptionUtil() {
     }
+
+    public static Throwable unwrapCause(Throwable error) {
+        while (error instanceof UmbrellaException) {
+            error = ((UmbrellaException) error).getCause();
+        }
+        return error;
+    }
+
 }

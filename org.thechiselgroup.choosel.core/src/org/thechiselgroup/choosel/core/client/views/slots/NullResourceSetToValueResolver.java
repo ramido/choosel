@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -13,18 +13,19 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.core.client.error_handling;
+package org.thechiselgroup.choosel.core.client.views.slots;
 
-import com.allen_sauer.gwt.log.client.Log;
+import org.thechiselgroup.choosel.core.client.resources.Resource;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 
-public class LoggingErrorHandler implements ErrorHandler {
+public class NullResourceSetToValueResolver implements
+        ResourceSetToValueResolver {
 
     @Override
-    public void handleError(Throwable error) {
-        assert error != null;
+    public Object resolve(LightweightCollection<Resource> resources,
+            String category) {
 
-        error = ExceptionUtil.unwrapCause(error);
-
-        Log.error(error.getMessage(), error);
+        return null;
     }
+
 }

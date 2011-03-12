@@ -23,6 +23,7 @@ import org.thechiselgroup.choosel.core.client.test.BenchmarkResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.DefaultView;
+import org.thechiselgroup.choosel.core.client.views.ViewModel;
 import org.thechiselgroup.choosel.core.client.views.slots.FirstResourcePropertyResolver;
 import org.thechiselgroup.choosel.core.client.views.slots.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.core.client.windows.WindowContentProducer;
@@ -51,26 +52,27 @@ public class ComponentExampleEntryPoint implements EntryPoint {
                 .createResourceSet(20, injector.getResourceSetFactory());
 
         // un-comment as needed - only one can be active at a time
-        // initBarChartView(contentProducer, resourceSet);
+        initBarChartView(contentProducer, resourceSet);
         // initPieChartView(contentProducer, resourceSet);
-        initScatterPlotView(contentProducer, resourceSet);
+        // initScatterPlotView(contentProducer, resourceSet);
     }
 
     private void initBarChartView(WindowContentProducer contentProducer,
             ResourceSet resourceSet) {
 
         DefaultView view = createView(contentProducer, BarChartVisualization.ID);
+        ViewModel model = view.getModel();
 
         // view.getViewContentDisplay().setPropertyValue(
         // BarChartVisualization.LAYOUT_PROPERTY, LayoutType.VERTICAL);
 
-        view.getResourceModel().addResourceSet(resourceSet);
+        model.getResourceModel().addResourceSet(resourceSet);
 
-        view.getSlotMappingConfiguration().setMapping(
+        model.getSlotMappingConfiguration().setMapping(
                 BarChartVisualization.BAR_LABEL_SLOT,
                 new FirstResourcePropertyResolver(
                         BenchmarkResourceSetFactory.TEXT_2));
-        view.getSlotMappingConfiguration().setMapping(
+        model.getSlotMappingConfiguration().setMapping(
                 BarChartVisualization.BAR_LENGTH_SLOT,
                 new FirstResourcePropertyResolver(
                         BenchmarkResourceSetFactory.NUMBER_2) {
@@ -86,10 +88,11 @@ public class ComponentExampleEntryPoint implements EntryPoint {
 
         DefaultView view = createView(contentProducer,
                 ScatterPlotVisualization.ID);
+        ViewModel model = view.getModel();
 
-        view.getResourceModel().addResourceSet(resourceSet);
+        model.getResourceModel().addResourceSet(resourceSet);
 
-        view.getSlotMappingConfiguration().setMapping(
+        model.getSlotMappingConfiguration().setMapping(
                 ScatterPlotVisualization.X_POSITION_SLOT,
                 new FirstResourcePropertyResolver(
                         BenchmarkResourceSetFactory.NUMBER_1) {
@@ -98,7 +101,7 @@ public class ComponentExampleEntryPoint implements EntryPoint {
                         return "my x axis label";
                     }
                 });
-        view.getSlotMappingConfiguration().setMapping(
+        model.getSlotMappingConfiguration().setMapping(
                 ScatterPlotVisualization.Y_POSITION_SLOT,
                 new FirstResourcePropertyResolver(
                         BenchmarkResourceSetFactory.NUMBER_2) {
@@ -107,7 +110,7 @@ public class ComponentExampleEntryPoint implements EntryPoint {
                         return "my y axis label";
                     }
                 });
-        view.getSlotMappingConfiguration().setMapping(
+        model.getSlotMappingConfiguration().setMapping(
                 ScatterPlotVisualization.SHAPE_SLOT,
                 new ResourceSetToValueResolver() {
                     public Object resolve(
@@ -147,7 +150,7 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         shapeLegend.put(PVShape.CIRCLE, "Test");
         shapeLegend.put(PVShape.TRIANGLE, "Another Description");
 
-        view.getViewContentDisplay().setPropertyValue(
+        model.getViewContentDisplay().setPropertyValue(
                 ScatterPlotVisualization.SHAPE_LEGEND_PROPERTY, shapeLegend);
     }
 
@@ -155,18 +158,19 @@ public class ComponentExampleEntryPoint implements EntryPoint {
             ResourceSet resourceSet) {
 
         DefaultView view = createView(contentProducer, PieChartVisualization.ID);
+        ViewModel model = view.getModel();
 
         // NOTE: the view is configured BEFORE the resources are added
-        view.getSlotMappingConfiguration().setMapping(
+        model.getSlotMappingConfiguration().setMapping(
                 PieChartVisualization.PIE_LABEL_SLOT,
                 new FirstResourcePropertyResolver(
                         BenchmarkResourceSetFactory.TEXT_2));
-        view.getSlotMappingConfiguration().setMapping(
+        model.getSlotMappingConfiguration().setMapping(
                 PieChartVisualization.PIE_ANGLE_SLOT,
                 new FirstResourcePropertyResolver(
                         BenchmarkResourceSetFactory.NUMBER_2));
 
-        view.getResourceModel().addResourceSet(resourceSet);
+        model.getResourceModel().addResourceSet(resourceSet);
     }
 
     private DefaultView createView(WindowContentProducer contentProducer,

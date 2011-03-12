@@ -20,13 +20,12 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.core.client.util.HasDescription;
 import org.thechiselgroup.choosel.core.client.views.SelectionModel;
-import org.thechiselgroup.choosel.core.client.views.View;
 import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
 
 import com.google.gwt.user.client.ui.Widget;
 
-public class SelectionPresenterDropCommandFactory implements
-        ResourceSetAvatarDropCommandFactory {
+public class SelectionPresenterDropCommandFactory extends
+        AbstractResourceSetAvatarDropCommandFactory {
 
     // TODO refactor (replace avatar with resource set)
     private class AddSelectionSetCommand implements UndoableCommand,
@@ -58,18 +57,10 @@ public class SelectionPresenterDropCommandFactory implements
         }
     }
 
-    private Widget dropTarget;
-
-    private final ViewAccessor viewAccessor;
-
     public SelectionPresenterDropCommandFactory(Widget dropTarget,
             ViewAccessor viewAccessor) {
 
-        assert dropTarget != null;
-        assert viewAccessor != null;
-
-        this.viewAccessor = viewAccessor;
-        this.dropTarget = dropTarget;
+        super(dropTarget, viewAccessor);
     }
 
     @Override
@@ -83,7 +74,8 @@ public class SelectionPresenterDropCommandFactory implements
             return false;
         }
 
-        ResourceSet viewResources = getView().getResourceModel().getResources();
+        ResourceSet viewResources = getTargetView().getModel()
+                .getResourceModel().getResources();
 
         return !viewResources.getIntersection(avatarResources).isEmpty();
     }
@@ -96,11 +88,7 @@ public class SelectionPresenterDropCommandFactory implements
     }
 
     private SelectionModel getSelectionModel() {
-        return getView().getSelectionModel();
-    }
-
-    private View getView() {
-        return viewAccessor.findView(dropTarget);
+        return getTargetView().getModel().getSelectionModel();
     }
 
 }

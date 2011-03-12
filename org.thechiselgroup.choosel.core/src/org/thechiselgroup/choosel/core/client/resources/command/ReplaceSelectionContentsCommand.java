@@ -21,7 +21,7 @@ import org.thechiselgroup.choosel.core.client.command.UndoableCommand;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.HasDescription;
-import org.thechiselgroup.choosel.core.client.views.View;
+import org.thechiselgroup.choosel.core.client.views.ViewModel;
 
 public class ReplaceSelectionContentsCommand implements UndoableCommand,
         HasDescription {
@@ -30,14 +30,16 @@ public class ReplaceSelectionContentsCommand implements UndoableCommand,
 
     protected ResourceSet resources;
 
-    private final View view;
+    private final ViewModel viewModel;
 
-    public ReplaceSelectionContentsCommand(ResourceSet resources, View view) {
+    public ReplaceSelectionContentsCommand(ResourceSet resources,
+            ViewModel viewModel) {
+
         assert resources != null;
-        assert view != null;
+        assert viewModel != null;
 
         this.resources = resources;
-        this.view = view;
+        this.viewModel = viewModel;
     }
 
     @Override
@@ -49,7 +51,7 @@ public class ReplaceSelectionContentsCommand implements UndoableCommand,
         getSelection().clear();
 
         ResourceSet selectedResourcesFromView = resources;
-        selectedResourcesFromView.retainAll(view.getResourceModel()
+        selectedResourcesFromView.retainAll(viewModel.getResourceModel()
                 .getResources());
 
         getSelection().addAll(selectedResourcesFromView);
@@ -70,11 +72,11 @@ public class ReplaceSelectionContentsCommand implements UndoableCommand,
     }
 
     private ResourceSet getSelection() {
-        return view.getSelectionModel().getSelection();
+        return viewModel.getSelectionModel().getSelection();
     }
 
-    public View getView() {
-        return view;
+    public ViewModel getViewModel() {
+        return viewModel;
     }
 
     @Override

@@ -30,6 +30,7 @@ import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.core.client.views.ResourceModel;
 import org.thechiselgroup.choosel.core.client.views.View;
 import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
+import org.thechiselgroup.choosel.core.client.views.ViewModel;
 
 public class AllSetCommandFactoryTest {
 
@@ -52,6 +53,9 @@ public class AllSetCommandFactoryTest {
 
     @Mock
     private View view;
+
+    @Mock
+    private ViewModel viewModel;
 
     @Test
     public void cannotDropIfAllResourcesAreAlreadyContainedInView() {
@@ -77,7 +81,8 @@ public class AllSetCommandFactoryTest {
 
         when(dragAvatar.getResourceSet()).thenReturn(resources);
         when(accessor.findView(targetDragAvatar)).thenReturn(view);
-        when(view.getResourceModel()).thenReturn(resourceModel);
+        when(view.getModel()).thenReturn(viewModel);
+        when(viewModel.getResourceModel()).thenReturn(resourceModel);
     }
 
     @After

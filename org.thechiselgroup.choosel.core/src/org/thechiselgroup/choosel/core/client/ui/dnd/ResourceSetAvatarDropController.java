@@ -130,7 +130,7 @@ public class ResourceSetAvatarDropController extends SimpleDropController {
     private boolean isValidDrop(ResourceSetAvatar avatar) {
         View view = viewAccessor.findView(getDropTarget());
 
-        return capabilityChecker.isValidDrop(view.getSlots(),
+        return capabilityChecker.isValidDrop(view.getModel().getSlots(),
                 avatar.getResourceSet());
     }
 

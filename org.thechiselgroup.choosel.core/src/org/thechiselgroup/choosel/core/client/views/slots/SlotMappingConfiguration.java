@@ -93,6 +93,8 @@ public class SlotMappingConfiguration implements Persistable {
 
         for (Slot slot : slots) {
             slotsByID.put(slot.getId(), slot);
+            slotsToValueResolvers.put(slot,
+                    new NullResourceSetToValueResolver());
         }
     }
 

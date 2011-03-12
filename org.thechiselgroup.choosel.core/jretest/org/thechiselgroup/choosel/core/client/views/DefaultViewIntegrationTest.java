@@ -41,7 +41,7 @@ import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 
 public class DefaultViewIntegrationTest {
 
-    private TestView underTest;
+    private TestViewModel underTest;
 
     private Slot textSlot;
 
@@ -89,7 +89,7 @@ public class DefaultViewIntegrationTest {
         textSlot = new Slot("id-1", "text-slot", DataType.TEXT);
         numberSlot = new Slot("id-2", "number-slot", DataType.NUMBER);
 
-        underTest = TestView.createTestView(textSlot, numberSlot);
+        underTest = TestViewModel.createTestViewModel(textSlot, numberSlot);
 
         Resource r1 = new Resource("test:1");
         r1.putValue("property1", new Double(0));

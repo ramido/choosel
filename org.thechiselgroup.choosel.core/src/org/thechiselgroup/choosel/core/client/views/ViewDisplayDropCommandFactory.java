@@ -21,31 +21,24 @@ import org.thechiselgroup.choosel.core.client.resources.command.AddResourceSetTo
 import org.thechiselgroup.choosel.core.client.resources.command.AddResourcesToResourceModelCommand;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarType;
-import org.thechiselgroup.choosel.core.client.ui.dnd.ResourceSetAvatarDropCommandFactory;
+import org.thechiselgroup.choosel.core.client.ui.dnd.AbstractResourceSetAvatarDropCommandFactory;
 
 import com.google.gwt.user.client.ui.Widget;
 
-public class ViewDisplayDropCommandFactory implements
-        ResourceSetAvatarDropCommandFactory {
-
-    private final Widget dropTarget;
-
-    private final ViewAccessor viewAccessor;
+public class ViewDisplayDropCommandFactory extends
+        AbstractResourceSetAvatarDropCommandFactory {
 
     public ViewDisplayDropCommandFactory(Widget dropTarget,
             ViewAccessor viewAccessor) {
 
-        assert viewAccessor != null;
-        assert dropTarget != null;
-
-        this.viewAccessor = viewAccessor;
-        this.dropTarget = dropTarget;
+        super(dropTarget, viewAccessor);
     }
 
     @Override
     public boolean canDrop(ResourceSetAvatar dragAvatar) {
         assert dragAvatar != null;
-        return !isFromSameView(dragAvatar) && !isAlreadyContained(dragAvatar);
+        return !isDragAvatarFromTargetView(dragAvatar)
+                && !isAlreadyContained(dragAvatar);
     }
 
     @Override
@@ -73,11 +66,7 @@ public class ViewDisplayDropCommandFactory implements
     }
 
     private ResourceModel getResourceModel() {
-        return getTargetView().getResourceModel();
-    }
-
-    private View getTargetView() {
-        return viewAccessor.findView(dropTarget);
+        return getTargetView().getModel().getResourceModel();
     }
 
     private boolean isAlreadyContained(ResourceSetAvatar dragAvatar) {
@@ -89,9 +78,5 @@ public class ViewDisplayDropCommandFactory implements
         }
 
         return getResourceModel().containsResourceSet(resources);
-    }
-
-    private boolean isFromSameView(ResourceSetAvatar dragAvatar) {
-        return getTargetView() == viewAccessor.findView(dragAvatar);
     }
 }

@@ -22,7 +22,7 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.command.AddResourceSetToViewCommand;
 import org.thechiselgroup.choosel.core.client.resources.ui.popup.PopupResourceSetAvatarFactory.Action;
-import org.thechiselgroup.choosel.core.client.views.View;
+import org.thechiselgroup.choosel.core.client.views.ViewModel;
 
 public class CreateSetAction implements Action {
 
@@ -41,26 +41,26 @@ public class CreateSetAction implements Action {
     }
 
     protected UndoableCommand createCommand(ResourceSet resources,
-            final View view) {
+            final ViewModel viewModel) {
 
         final ResourceSet newResources = resourceSetFactory.createResourceSet();
         newResources.setLabel(resourceSetLabelFactory.nextLabel());
         newResources.addAll(resources);
 
-        return new AddResourceSetToViewCommand(view.getResourceModel(),
+        return new AddResourceSetToViewCommand(viewModel.getResourceModel(),
                 newResources, "Create set '" + newResources.getLabel()
                         + "' from selection") {
 
             @Override
             public void execute() {
-                view.getSelectionModel().addSelectionSet(newResources);
+                viewModel.getSelectionModel().addSelectionSet(newResources);
             }
         };
     }
 
     @Override
-    public void execute(ResourceSet resources, View view) {
-        commandManager.execute(createCommand(resources, view));
+    public void execute(ResourceSet resources, ViewModel viewModel) {
+        commandManager.execute(createCommand(resources, viewModel));
     }
 
     @Override

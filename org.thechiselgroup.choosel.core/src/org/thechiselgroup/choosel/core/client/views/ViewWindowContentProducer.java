@@ -25,6 +25,8 @@ import static org.thechiselgroup.choosel.core.client.configuration.ChooselInject
 import org.thechiselgroup.choosel.core.client.label.LabelProvider;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.core.client.resources.ResourceMultiCategorizer;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEvent;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEventHandler;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarFactory;
@@ -138,7 +140,7 @@ public class ViewWindowContentProducer implements WindowContentProducer {
         ViewContentDisplay contentDisplay = new DropEnabledViewContentDisplay(
                 viewContentDisplay, contentDropTargetManager);
 
-        ResourceGrouping resourceSplitter = new ResourceGrouping(categorizer,
+        ResourceGrouping resourceGrouping = new ResourceGrouping(categorizer,
                 resourceSetFactory);
 
         ResourceModel resourceModel = new DefaultResourceModel(
@@ -160,8 +162,8 @@ public class ViewWindowContentProducer implements WindowContentProducer {
 
         SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration();
 
-        VisualMappingsControl visualMappingsControl = createVisualMappingsControl(
-                contentType, contentDisplay, resourceSplitter,
+        final VisualMappingsControl visualMappingsControl = createVisualMappingsControl(
+                contentType, contentDisplay, resourceGrouping,
                 slotMappingConfiguration);
 
         LightweightList<ViewPart> viewParts = createViewParts(contentType);
@@ -184,14 +186,27 @@ public class ViewWindowContentProducer implements WindowContentProducer {
         viewItemBehaviors.add(new PopupViewItemBehavior(hoverModel,
                 detailsWidgetHelper, popupManagerFactory,
                 slotMappingConfiguration));
-        viewItemBehaviors
-                .add(new SwitchSelectionOnClickViewItemBehavior(selectionModel));
+        viewItemBehaviors.add(new SwitchSelectionOnClickViewItemBehavior(
+                selectionModel));
 
-        DefaultView view = new DefaultView(resourceSplitter, contentDisplay,
-                label, contentType, slotMappingConfiguration, selectionModel,
-                selectionModelPresenter, resourceModel, resourceModelPresenter,
-                hoverModel, visualMappingsControl, slotMappingInitializer,
-                sidePanelSections, viewItemBehaviors);
+        resourceModel.getResources().addEventHandler(
+                new ResourceSetChangedEventHandler() {
+                    @Override
+                    public void onResourceSetChanged(
+                            ResourceSetChangedEvent event) {
+                        visualMappingsControl.updateConfiguration(event
+                                .getTarget());
+                    }
+                });
+
+        DefaultViewModel viewModel = new DefaultViewModel(resourceGrouping,
+                contentDisplay, slotMappingConfiguration, selectionModel,
+                resourceModel, hoverModel, slotMappingInitializer,
+                viewItemBehaviors);
+
+        DefaultView view = new DefaultView(contentDisplay, label, contentType,
+                selectionModelPresenter, resourceModelPresenter,
+                visualMappingsControl, sidePanelSections, viewModel);
 
         for (ViewPart viewPart : viewParts) {
             viewPart.afterViewCreation(view);

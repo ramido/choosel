@@ -19,6 +19,7 @@ import static org.thechiselgroup.choosel.core.client.configuration.ChooselInject
 
 import org.thechiselgroup.choosel.core.client.command.AsyncCommandExecutor;
 import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
+import org.thechiselgroup.choosel.core.client.error_handling.ExceptionUtil;
 import org.thechiselgroup.choosel.workbench.client.feedback.FeedbackDialog;
 import org.thechiselgroup.choosel.workbench.client.feedback.FeedbackServiceAsync;
 import org.thechiselgroup.choosel.workbench.client.ui.dialog.DialogManager;
@@ -52,9 +53,12 @@ public class FeedbackDialogErrorHandler implements ErrorHandler {
     }
 
     @Override
-    public void handleError(final Throwable error) {
+    public void handleError(Throwable error) {
         assert error != null;
 
+        error = ExceptionUtil.unwrapCause(error);
+
+        // TODO extract - composite error handler
         Log.error(error.getMessage(), error);
 
         dialogManager

@@ -44,7 +44,7 @@ public class SelectionResourceSetAvatarFactory extends
             @Override
             public void onClick(ClickEvent event) {
                 SelectionModel selectionModel = viewAccessor.findView(avatar)
-                        .getSelectionModel();
+                        .getModel().getSelectionModel();
                 if (avatar.getResourceSet().equals(
                         selectionModel.getSelection())) {
                     selectionModel.setSelection(null);

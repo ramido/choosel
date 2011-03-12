@@ -22,28 +22,17 @@ import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarType;
 import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
 
-public class ResourceSetPresenterDropCommandFactory implements
-        ResourceSetAvatarDropCommandFactory {
+public class ResourceSetPresenterDropCommandFactory extends
+        AbstractResourceSetAvatarDropCommandFactory {
 
     private ResourceSetAvatar targetDragAvatar;
-
-    private final ViewAccessor viewAccessor;
 
     public ResourceSetPresenterDropCommandFactory(
             ResourceSetAvatar targetDragAvatar, ViewAccessor viewAccessor) {
 
-        assert targetDragAvatar != null;
-        assert viewAccessor != null;
+        super(targetDragAvatar, viewAccessor);
 
-        this.viewAccessor = viewAccessor;
         this.targetDragAvatar = targetDragAvatar;
-    }
-
-    private boolean areDragAvatarFromSameView(ResourceSetAvatar dragAvatar) {
-        assert viewAccessor.findView(targetDragAvatar) != null;
-
-        return viewAccessor.findView(dragAvatar) == viewAccessor
-                .findView(targetDragAvatar);
     }
 
     private boolean areResourcesDifferentFromTarget(ResourceSetAvatar dragAvatar) {
@@ -62,12 +51,12 @@ public class ResourceSetPresenterDropCommandFactory implements
     public UndoableCommand createCommand(ResourceSetAvatar dragAvatar) {
         assert dragAvatar != null;
 
-        if (areDragAvatarFromSameView(dragAvatar)
+        if (isDragAvatarFromTargetView(dragAvatar)
                 && (dragAvatar.getType() == ResourceSetAvatarType.SET)) {
 
             return new MergeResourceSetsCommand(dragAvatar.getResourceSet(),
-                    targetDragAvatar.getResourceSet(), viewAccessor.findView(
-                            dragAvatar).getResourceModel());
+                    targetDragAvatar.getResourceSet(), findView(dragAvatar)
+                            .getModel().getResourceModel());
         }
 
         return new AddResourceSetToResourceSetCommand(
