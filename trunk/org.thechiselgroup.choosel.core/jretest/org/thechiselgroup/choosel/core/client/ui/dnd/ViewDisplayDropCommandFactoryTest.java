@@ -37,6 +37,7 @@ import org.thechiselgroup.choosel.core.client.views.ResourceModel;
 import org.thechiselgroup.choosel.core.client.views.View;
 import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
 import org.thechiselgroup.choosel.core.client.views.ViewDisplayDropCommandFactory;
+import org.thechiselgroup.choosel.core.client.views.ViewModel;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -60,6 +61,9 @@ public class ViewDisplayDropCommandFactoryTest {
 
     @Mock
     private ResourceModel resourceModel;
+
+    @Mock
+    private ViewModel viewModel;
 
     @Ignore
     @Test
@@ -88,7 +92,7 @@ public class ViewDisplayDropCommandFactoryTest {
 
     @Test
     public void cannotDropIfResourcesAlreadyContained() {
-        when(view.getResourceModel().containsResourceSet(resources))
+        when(viewModel.getResourceModel().containsResourceSet(resources))
                 .thenReturn(true);
 
         assertEquals(false, underTest.canDrop(dragAvatar));
@@ -96,8 +100,8 @@ public class ViewDisplayDropCommandFactoryTest {
 
     @Test
     public void cannotDropIfResourcesAlreadyContainedForUnlabeledSet() {
-        when(view.getResourceModel().containsResources(resources)).thenReturn(
-                true);
+        when(viewModel.getResourceModel().containsResources(resources))
+                .thenReturn(true);
         when(dragAvatar.getType()).thenReturn(ResourceSetAvatarType.SET);
         resources.setLabel(null);
 
@@ -123,7 +127,8 @@ public class ViewDisplayDropCommandFactoryTest {
 
         when(accessor.findView(eq(dropTarget))).thenReturn(view);
         when(dragAvatar.getResourceSet()).thenReturn(resources);
-        when(view.getResourceModel()).thenReturn(resourceModel);
+        when(view.getModel()).thenReturn(viewModel);
+        when(viewModel.getResourceModel()).thenReturn(resourceModel);
     }
 
     @After

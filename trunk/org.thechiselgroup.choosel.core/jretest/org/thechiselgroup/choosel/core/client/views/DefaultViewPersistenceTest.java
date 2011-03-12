@@ -43,9 +43,9 @@ import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 
 public class DefaultViewPersistenceTest {
 
-    private TestView originalView;
+    private TestViewModel originalView;
 
-    private TestView restoredView;
+    private TestViewModel restoredView;
 
     private Slot textSlot;
 
@@ -174,8 +174,8 @@ public class DefaultViewPersistenceTest {
         textSlot = new Slot("id-1", "text-slot", DataType.TEXT);
         numberSlot = new Slot("id-2", "number-slot", DataType.NUMBER);
 
-        originalView = TestView.createTestView(textSlot, numberSlot);
-        restoredView = TestView.createTestView(textSlot, numberSlot);
+        originalView = TestViewModel.createTestViewModel(textSlot, numberSlot);
+        restoredView = TestViewModel.createTestViewModel(textSlot, numberSlot);
     }
 
     protected void testRestoreCalculationOverGroup(double expectedResult,

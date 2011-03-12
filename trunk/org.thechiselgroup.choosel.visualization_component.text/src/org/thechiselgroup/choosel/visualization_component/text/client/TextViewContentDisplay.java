@@ -166,7 +166,7 @@ public class TextViewContentDisplay extends AbstractViewContentDisplay {
 
     @Override
     public Slot[] getSlots() {
-        return new Slot[] { TextVisualization.DESCRIPTION_SLOT,
+        return new Slot[] { TextVisualization.LABEL_SLOT,
                 TextVisualization.FONT_SIZE_SLOT };
     }
 

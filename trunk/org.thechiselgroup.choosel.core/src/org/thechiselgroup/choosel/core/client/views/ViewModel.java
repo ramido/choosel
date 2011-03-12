@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -13,22 +13,26 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.visualization_component.text.client;
+package org.thechiselgroup.choosel.core.client.views;
 
-import org.thechiselgroup.choosel.core.client.resources.DataType;
+import org.thechiselgroup.choosel.core.client.persistence.Persistable;
+import org.thechiselgroup.choosel.core.client.util.Disposable;
+import org.thechiselgroup.choosel.core.client.util.Initializable;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
+import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingConfiguration;
 
-public final class TextVisualization {
+public interface ViewModel extends Initializable, Disposable, Persistable {
 
-    public final static String ID = "org.thechiselgroup.choosel.visualization_component.Text";
+    // TODO Type mapping operations
 
-    public final static Slot LABEL_SLOT = new Slot("label", "Label",
-            DataType.TEXT);
+    ResourceModel getResourceModel();
 
-    public static final Slot FONT_SIZE_SLOT = new Slot("font-size",
-            "Font Size", DataType.NUMBER);
+    SelectionModel getSelectionModel();
 
-    private TextVisualization() {
-    }
+    SlotMappingConfiguration getSlotMappingConfiguration();
+
+    Slot[] getSlots();
+
+    ViewContentDisplay getViewContentDisplay();
 
 }

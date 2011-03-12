@@ -37,6 +37,7 @@ import org.thechiselgroup.choosel.core.client.test.TestUndoableCommandWithDescri
 import org.thechiselgroup.choosel.core.client.ui.popup.DelayedPopup;
 import org.thechiselgroup.choosel.core.client.views.View;
 import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
+import org.thechiselgroup.choosel.core.client.views.ViewModel;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 
 import com.allen_sauer.gwt.dnd.client.DragContext;
@@ -94,6 +95,9 @@ public class ResourceSetAvatarDropControllerTest {
 
     @Mock
     private ViewAccessor viewAccessor;
+
+    @Mock
+    private ViewModel viewModel;
 
     @Test
     public void addExecutedCommandToCommandManager() {
@@ -162,6 +166,7 @@ public class ResourceSetAvatarDropControllerTest {
                 capabilityChecker.isValidDrop(any(Slot[].class),
                         any(ResourceSet.class))).thenReturn(true);
         when(viewAccessor.findView(any(Widget.class))).thenReturn(view);
+        when(view.getModel()).thenReturn(viewModel);
         resources = TestResourceSetFactory.createResources(1, 2);
         when(dragAvatar.getResourceSet()).thenReturn(resources);
     }

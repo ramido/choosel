@@ -30,7 +30,7 @@ import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 // TODO migrate to change default slot mapping initializer
 public class DefaultViewInitialValuesTest {
 
-    private TestView underTest;
+    private TestViewModel underTest;
 
     private Slot textSlot;
 
@@ -81,7 +81,7 @@ public class DefaultViewInitialValuesTest {
         textSlot = new Slot("id-1", "text-slot", DataType.TEXT);
         numberSlot = new Slot("id-2", "number-slot", DataType.NUMBER);
 
-        underTest = TestView.createTestView(textSlot, numberSlot);
+        underTest = TestViewModel.createTestViewModel(textSlot, numberSlot);
     }
 
 }

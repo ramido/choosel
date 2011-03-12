@@ -16,15 +16,14 @@
 package org.thechiselgroup.choosel.core.client.windows;
 
 import org.thechiselgroup.choosel.core.client.ui.WidgetAdaptable;
+import org.thechiselgroup.choosel.core.client.util.Initializable;
 
-public interface WindowContent extends WidgetAdaptable {
+public interface WindowContent extends WidgetAdaptable, Initializable {
 
     String getContentType();
 
     // TODO extend HasLabel
     String getLabel();
-
-    void init();
 
     void setLabel(String label);
 

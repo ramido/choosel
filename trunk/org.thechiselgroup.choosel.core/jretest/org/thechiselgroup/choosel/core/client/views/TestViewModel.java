@@ -28,8 +28,6 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceByUriTypeCategor
 import org.thechiselgroup.choosel.core.client.resources.ResourceCategorizerToMultiCategorizerAdapter;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEventHandler;
-import org.thechiselgroup.choosel.core.client.ui.Presenter;
-import org.thechiselgroup.choosel.core.client.util.collections.NullLightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.slots.DefaultSlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingConfiguration;
@@ -37,9 +35,9 @@ import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingInitializer
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
-public class TestView extends DefaultView {
+public class TestViewModel extends DefaultViewModel {
 
-    public static TestView createTestView(Slot... slots) {
+    public static TestViewModel createTestViewModel(Slot... slots) {
         DefaultResourceSetFactory resourceSetFactory = new DefaultResourceSetFactory();
 
         DefaultResourceModel resourceModel = new DefaultResourceModel(
@@ -49,10 +47,7 @@ public class TestView extends DefaultView {
         ViewContentDisplay contentDisplay = mock(ViewContentDisplay.class);
         SlotMappingConfiguration resourceSetToValueResolver = spy(new SlotMappingConfiguration());
         SelectionModel selectionModel = mock(SelectionModel.class);
-        Presenter selectionModelPresenter = mock(Presenter.class);
-        Presenter resourceModelPresenter = mock(Presenter.class);
         HandlerRegistration selectionChangedHandlerRegistration = mock(HandlerRegistration.class);
-        VisualMappingsControl visualMappingsControl = mock(VisualMappingsControl.class);
 
         // TODO change once relevant tests are migrated
         SlotMappingInitializer slotMappingInitializer = spy(new DefaultSlotMappingInitializer());
@@ -61,12 +56,10 @@ public class TestView extends DefaultView {
                 new ResourceCategorizerToMultiCategorizerAdapter(
                         new ResourceByUriTypeCategorizer()), resourceSetFactory);
 
-        TestView underTest = spy(new TestView(resourceGrouping, contentDisplay,
-                "", "", resourceSetToValueResolver, selectionModel,
-                selectionModelPresenter, resourceModel, resourceModelPresenter,
-                hoverModel, selectionChangedHandlerRegistration,
-                visualMappingsControl, slotMappingInitializer,
-                mock(ViewItemBehavior.class)));
+        TestViewModel underTest = spy(new TestViewModel(resourceGrouping,
+                contentDisplay, resourceSetToValueResolver, selectionModel,
+                resourceModel, hoverModel, selectionChangedHandlerRegistration,
+                slotMappingInitializer, mock(ViewItemBehavior.class)));
 
         when(
                 selectionModel
@@ -95,34 +88,22 @@ public class TestView extends DefaultView {
 
     private final HandlerRegistration selectionChangedHandlerRegistration;
 
-    private final Presenter resourceModelPresenter;
-
-    private final Presenter selectionModelPresenter;
-
     private ViewContentDisplayCallback callback;
 
-    public TestView(ResourceGrouping resourceSplitter,
-            ViewContentDisplay contentDisplay, String label,
-            String contentType, SlotMappingConfiguration configuration,
-            SelectionModel selectionModel, Presenter selectionModelPresenter,
-            ResourceModel resourceModel, Presenter resourceModelPresenter,
+    public TestViewModel(ResourceGrouping resourceSplitter,
+            ViewContentDisplay contentDisplay,
+            SlotMappingConfiguration configuration,
+            SelectionModel selectionModel, ResourceModel resourceModel,
             HoverModel hoverModel,
             HandlerRegistration selectionChangedHandlerRegistration,
-            VisualMappingsControl visualMappingsControl,
             SlotMappingInitializer slotMappingInitializer,
             ViewItemBehavior viewItemBehavior) {
 
-        super(resourceSplitter, contentDisplay, label, contentType,
-                configuration, selectionModel, selectionModelPresenter,
-                resourceModel, resourceModelPresenter, hoverModel,
-                visualMappingsControl, slotMappingInitializer,
-                NullLightweightCollection
-                        .<SidePanelSection> nullLightweightCollection(),
+        super(resourceSplitter, contentDisplay, configuration, selectionModel,
+                resourceModel, hoverModel, slotMappingInitializer,
                 viewItemBehavior);
 
         this.contentDisplay = contentDisplay;
-        this.selectionModelPresenter = selectionModelPresenter;
-        this.resourceModelPresenter = resourceModelPresenter;
         this.hoverModel = hoverModel;
         this.selectionChangedHandlerRegistration = selectionChangedHandlerRegistration;
     }
@@ -139,20 +120,8 @@ public class TestView extends DefaultView {
         return hoverModel;
     }
 
-    public Presenter getTestResourceModelPresenter() {
-        return resourceModelPresenter;
-    }
-
     public HandlerRegistration getTestSelectionChangedHandlerRegistration() {
         return selectionChangedHandlerRegistration;
-    }
-
-    public Presenter getTestSelectionModelPresenter() {
-        return selectionModelPresenter;
-    }
-
-    @Override
-    protected void initUI() {
     }
 
     public void setCallback(ViewContentDisplayCallback callback) {

@@ -54,7 +54,7 @@ public class TextItem {
 
     public String getDescriptionValue() {
         return (String) viewItem
-                .getSlotValue(TextVisualization.DESCRIPTION_SLOT);
+                .getSlotValue(TextVisualization.LABEL_SLOT);
     }
 
     public double getFontSizeValue() {

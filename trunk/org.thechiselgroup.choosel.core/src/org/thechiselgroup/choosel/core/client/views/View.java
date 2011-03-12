@@ -17,17 +17,13 @@ package org.thechiselgroup.choosel.core.client.views;
 
 import org.thechiselgroup.choosel.core.client.persistence.Persistable;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
-import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 import org.thechiselgroup.choosel.core.client.windows.WindowContent;
 
 public interface View extends WindowContent, Disposable, Persistable {
 
-    // TODO Type mapping operations
-
-    ResourceModel getResourceModel();
-
-    SelectionModel getSelectionModel();
-
-    Slot[] getSlots();
+    /**
+     * @return {@link ViewModel} that is used in this {@link View}.
+     */
+    ViewModel getModel();
 
 }
