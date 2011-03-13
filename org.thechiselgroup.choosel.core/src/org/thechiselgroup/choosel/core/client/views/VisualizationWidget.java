@@ -15,13 +15,16 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views;
 
+import org.thechiselgroup.choosel.core.client.resources.HasResourceCategorizer;
+import org.thechiselgroup.choosel.core.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.views.slots.DefaultSlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingConfiguration;
 
 import com.google.gwt.user.client.ui.SimplePanel;
 
-public class VisualizationWidget extends SimplePanel {
+public class VisualizationWidget extends SimplePanel implements
+        HasResourceCategorizer {
 
     private ViewModel viewModel;
 
@@ -40,6 +43,16 @@ public class VisualizationWidget extends SimplePanel {
                 new DefaultSlotMappingInitializer(), viewItemBehavior);
 
         setWidget(contentDisplay.asWidget());
+    }
+
+    @Override
+    public ResourceMultiCategorizer getCategorizer() {
+        return viewModel.getCategorizer();
+    }
+
+    @Override
+    public void setCategorizer(ResourceMultiCategorizer newCategorizer) {
+        viewModel.setCategorizer(newCategorizer);
     }
 
     @Override

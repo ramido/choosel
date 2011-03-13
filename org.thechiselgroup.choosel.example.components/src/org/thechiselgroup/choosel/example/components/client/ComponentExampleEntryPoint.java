@@ -21,6 +21,7 @@ import org.thechiselgroup.choosel.core.client.label.IncrementingSuffixLabelFacto
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
+import org.thechiselgroup.choosel.core.client.resources.ResourceByPropertyMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.test.BenchmarkResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
@@ -88,6 +89,9 @@ public class ComponentExampleEntryPoint implements EntryPoint {
                 new ScatterPlotViewContentDisplay(),
                 selectionModel.getSelectionProxy(), b,
                 hoverModel.getResources(), viewItemBehavior);
+
+        scatterPlot.setCategorizer(new ResourceByPropertyMultiCategorizer(
+                BenchmarkResourceSetFactory.TEXT_2));
 
         b.addAll(resourceSet);
 

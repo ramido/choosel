@@ -93,12 +93,30 @@ public class DefaultViewModel implements ViewModel, Disposable {
 
     private HandlerRegistrationSet handlerRegistrations = new HandlerRegistrationSet();
 
+    /**
+     * Creates a {@link DefaultViewModel} that groups per resource uri by
+     * default.
+     */
     public DefaultViewModel(ViewContentDisplay contentDisplay,
             SlotMappingConfiguration slotMappingConfiguration,
             ResourceSet selectedResources, ResourceSet containedResources,
             ResourceSet highlightedResources,
             SlotMappingInitializer slotMappingInitializer,
             ViewItemBehavior viewItemBehavior) {
+
+        this(contentDisplay, slotMappingConfiguration, selectedResources,
+                containedResources, highlightedResources,
+                slotMappingInitializer, viewItemBehavior, new ResourceGrouping(
+                        new ResourceByUriMultiCategorizer(),
+                        new DefaultResourceSetFactory()));
+    }
+
+    public DefaultViewModel(ViewContentDisplay contentDisplay,
+            SlotMappingConfiguration slotMappingConfiguration,
+            ResourceSet selectedResources, ResourceSet containedResources,
+            ResourceSet highlightedResources,
+            SlotMappingInitializer slotMappingInitializer,
+            ViewItemBehavior viewItemBehavior, ResourceGrouping resourceGrouping) {
 
         assert slotMappingConfiguration != null;
         assert contentDisplay != null;
@@ -107,6 +125,7 @@ public class DefaultViewModel implements ViewModel, Disposable {
         assert highlightedResources != null;
         assert slotMappingInitializer != null;
         assert viewItemBehavior != null;
+        assert resourceGrouping != null;
 
         this.slotMappingInitializer = slotMappingInitializer;
         this.slotMappingConfiguration = slotMappingConfiguration;
@@ -115,15 +134,7 @@ public class DefaultViewModel implements ViewModel, Disposable {
         this.containedResources = containedResources;
         this.highlightedResources = highlightedResources;
         this.viewItemBehavior = viewItemBehavior;
-
-        /*
-         * Groups are transient --> we can use DefaultResourceSetFactory
-         * 
-         * Categorize per resource by default
-         */
-        this.resourceGrouping = new ResourceGrouping(
-                new ResourceByUriMultiCategorizer(),
-                new DefaultResourceSetFactory());
+        this.resourceGrouping = resourceGrouping;
 
         slotMappingConfiguration.initSlots(contentDisplay.getSlots());
         init(containedResources);

@@ -24,13 +24,16 @@ public interface ViewModel extends HasResourceCategorizer {
 
     // TODO Type mapping operations
 
+    // TODO set
     // TODO ReadableResourcesSet
     ResourceSet getContainedResources();
 
+    // TODO set
     // TODO rename: global highlighting
     // TODO ReadableResourcesSet
     ResourceSet getHighlightedResources();
 
+    // TODO set
     // TODO rename: global selection
     // TODO ReadableResourceSet
     ResourceSet getSelectedResources();
