@@ -21,68 +21,55 @@ import org.thechiselgroup.choosel.core.client.command.UndoableCommand;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.HasDescription;
-import org.thechiselgroup.choosel.core.client.views.ViewModel;
 
-public class ReplaceSelectionContentsCommand implements UndoableCommand,
+/**
+ * {@link UndoableCommand} that replaces the resources in one
+ * {@link ResourceSet} with the resource from another {@link ResourceSet}.
+ * 
+ * @author Lars Grammel
+ */
+public class ReplaceResourceSetContentCommand implements UndoableCommand,
         HasDescription {
 
     private List<Resource> originalTargetResources;
 
-    protected ResourceSet resources;
+    private ResourceSet newContent;
 
-    private final ViewModel viewModel;
+    private ResourceSet resourceSet;
 
-    public ReplaceSelectionContentsCommand(ResourceSet resources,
-            ViewModel viewModel) {
+    public ReplaceResourceSetContentCommand(ResourceSet resourceSet,
+            ResourceSet newContent) {
 
-        assert resources != null;
-        assert viewModel != null;
+        assert newContent != null;
+        assert resourceSet != null;
 
-        this.resources = resources;
-        this.viewModel = viewModel;
+        this.newContent = newContent;
+        this.resourceSet = resourceSet;
     }
 
     @Override
     public void execute() {
         if (originalTargetResources == null) {
-            originalTargetResources = getSelection().toList();
+            originalTargetResources = resourceSet.toList();
         }
 
-        getSelection().clear();
+        resourceSet.clear();
+        resourceSet.addAll(newContent);
 
-        ResourceSet selectedResourcesFromView = resources;
-        selectedResourcesFromView.retainAll(viewModel.getResourceModel()
-                .getResources());
-
-        getSelection().addAll(selectedResourcesFromView);
-
-        assert getSelection().containsAll(selectedResourcesFromView);
-        assert getSelection().size() == selectedResourcesFromView.size();
+        assert resourceSet.containsAll(newContent);
+        assert resourceSet.size() == newContent.size();
     }
 
-    // TODO add view name once available
     @Override
     public String getDescription() {
-        return "Replace selection in view with resources from '"
-                + resources.getLabel() + "'";
-    }
-
-    public ResourceSet getResources() {
-        return resources;
-    }
-
-    private ResourceSet getSelection() {
-        return viewModel.getSelectionModel().getSelection();
-    }
-
-    public ViewModel getViewModel() {
-        return viewModel;
+        return "Replace content of resource set '" + resourceSet.getLabel()
+                + "' with content from '" + newContent.getLabel() + "'";
     }
 
     @Override
     public void undo() {
-        getSelection().clear();
-        getSelection().addAll(originalTargetResources);
+        resourceSet.clear();
+        resourceSet.addAll(originalTargetResources);
     }
 
 }

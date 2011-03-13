@@ -82,7 +82,7 @@ public class AllSetCommandFactoryTest {
         when(dragAvatar.getResourceSet()).thenReturn(resources);
         when(accessor.findView(targetDragAvatar)).thenReturn(view);
         when(view.getModel()).thenReturn(viewModel);
-        when(viewModel.getResourceModel()).thenReturn(resourceModel);
+        when(view.getResourceModel()).thenReturn(resourceModel);
     }
 
     @After

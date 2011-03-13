@@ -146,6 +146,12 @@ public class ViewWindowContentProducer implements WindowContentProducer {
         ResourceModel resourceModel = new DefaultResourceModel(
                 resourceSetFactory);
 
+        if (viewContentDisplay instanceof RequiresAutomaticResourceSet) {
+            ((RequiresAutomaticResourceSet) viewContentDisplay)
+                    .setAutomaticResources(resourceModel
+                            .getAutomaticResourceSet());
+        }
+
         DefaultResourceModelPresenter resourceModelPresenter = new DefaultResourceModelPresenter(
                 new ResourceSetAvatarResourceSetsPresenter(
                         allResourcesDragAvatarFactory),
@@ -200,13 +206,15 @@ public class ViewWindowContentProducer implements WindowContentProducer {
                 });
 
         DefaultViewModel viewModel = new DefaultViewModel(resourceGrouping,
-                contentDisplay, slotMappingConfiguration, selectionModel,
-                resourceModel, hoverModel, slotMappingInitializer,
+                contentDisplay, slotMappingConfiguration,
+                selectionModel.getSelection(), resourceModel.getResources(),
+                hoverModel.getResources(), slotMappingInitializer,
                 viewItemBehaviors);
 
         DefaultView view = new DefaultView(contentDisplay, label, contentType,
                 selectionModelPresenter, resourceModelPresenter,
-                visualMappingsControl, sidePanelSections, viewModel);
+                visualMappingsControl, sidePanelSections, viewModel,
+                resourceModel, selectionModel);
 
         for (ViewPart viewPart : viewParts) {
             viewPart.afterViewCreation(view);

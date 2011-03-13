@@ -66,7 +66,7 @@ public class ViewDisplayDropCommandFactory extends
     }
 
     private ResourceModel getResourceModel() {
-        return getTargetView().getModel().getResourceModel();
+        return getTargetView().getResourceModel();
     }
 
     private boolean isAlreadyContained(ResourceSetAvatar dragAvatar) {

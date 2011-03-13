@@ -156,7 +156,7 @@ public class ResourceSetPresenterDropCommandFactoryTest {
         when(dragAvatar.getResourceSet()).thenReturn(sourceSet);
         when(accessor.findView(targetDragAvatar)).thenReturn(view);
         when(view.getModel()).thenReturn(viewModel);
-        when(viewModel.getResourceModel()).thenReturn(resourceModel);
+        when(view.getResourceModel()).thenReturn(resourceModel);
 
         dropCommandFactory = new ResourceSetPresenterDropCommandFactory(
                 targetDragAvatar, accessor);

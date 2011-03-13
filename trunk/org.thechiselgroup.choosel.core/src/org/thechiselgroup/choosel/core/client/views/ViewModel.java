@@ -15,19 +15,28 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views;
 
-import org.thechiselgroup.choosel.core.client.persistence.Persistable;
-import org.thechiselgroup.choosel.core.client.util.Disposable;
-import org.thechiselgroup.choosel.core.client.util.Initializable;
+import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingConfiguration;
 
-public interface ViewModel extends Initializable, Disposable, Persistable {
+public interface ViewModel {
 
     // TODO Type mapping operations
 
-    ResourceModel getResourceModel();
+    // TODO ReadableResourcesSet
+    ResourceSet getContainedResources();
 
-    SelectionModel getSelectionModel();
+    // TODO rename: global highlighting
+    // TODO ReadableResourcesSet
+    ResourceSet getHighlightedResources();
+
+    // TODO get / set categorizer instead
+    ResourceGrouping getResourceGrouping();
+
+    // TODO rename: global selection
+    // TODO ReadableResourceSet
+    ResourceSet getSelectedResources();
 
     SlotMappingConfiguration getSlotMappingConfiguration();
 

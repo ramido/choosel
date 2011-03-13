@@ -35,6 +35,7 @@ import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetC
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.AbstractViewContentDisplay;
+import org.thechiselgroup.choosel.core.client.views.RequiresAutomaticResourceSet;
 import org.thechiselgroup.choosel.core.client.views.SidePanelSection;
 import org.thechiselgroup.choosel.core.client.views.ViewContentDisplayAction;
 import org.thechiselgroup.choosel.core.client.views.ViewContentDisplayCallback;
@@ -78,7 +79,7 @@ import com.google.inject.Inject;
 // TODO separate out ncbo specific stuff and service calls
 // TODO register listener for double click on node --> change expansion state
 public class GraphViewContentDisplay extends AbstractViewContentDisplay
-        implements GraphNodeExpansionCallback {
+        implements GraphNodeExpansionCallback, RequiresAutomaticResourceSet {
 
     public static class DefaultDisplay extends GraphWidget implements
             GraphDisplay {
@@ -216,6 +217,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     private Map<String, ArcItemContainer> arcItemContainersByArcTypeID = CollectionFactory
             .createStringMap();
 
+    private ResourceSet automaticResources;
+
     @Inject
     public GraphViewContentDisplay(GraphDisplay display,
             CommandManager commandManager, ResourceManager resourceManager,
@@ -245,7 +248,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
     @Override
     public void addAutomaticResource(Resource resource) {
-        getCallback().getAutomaticResourceSet().add(resource);
+        automaticResources.add(resource);
     }
 
     @Override
@@ -624,6 +627,11 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         assert arcItemContainersByArcTypeID.containsKey(arcTypeId);
 
         arcItemContainersByArcTypeID.get(arcTypeId).setVisible(visible);
+    }
+
+    @Override
+    public void setAutomaticResources(ResourceSet automaticResources) {
+        this.automaticResources = automaticResources;
     }
 
     @Override

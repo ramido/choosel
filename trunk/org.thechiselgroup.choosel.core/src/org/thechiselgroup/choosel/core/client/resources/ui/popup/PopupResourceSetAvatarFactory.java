@@ -30,8 +30,8 @@ import org.thechiselgroup.choosel.core.client.ui.popup.DefaultPopupManager;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
+import org.thechiselgroup.choosel.core.client.views.View;
 import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
-import org.thechiselgroup.choosel.core.client.views.ViewModel;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
@@ -40,7 +40,7 @@ public class PopupResourceSetAvatarFactory extends
 
     public static interface Action {
 
-        void execute(ResourceSet resources, ViewModel viewModel);
+        void execute(ResourceSet resources, View view);
 
         String getLabel();
 
@@ -69,7 +69,7 @@ public class PopupResourceSetAvatarFactory extends
         @Override
         public void execute() {
             delegate.execute(avatar.getResourceSet(),
-                    viewAccessor.findView(avatar).getModel());
+                    viewAccessor.findView(avatar));
             popupManager.hidePopup();
         }
 

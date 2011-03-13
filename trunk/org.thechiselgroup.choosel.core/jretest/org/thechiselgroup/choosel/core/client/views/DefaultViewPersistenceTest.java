@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.core.client.views;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.toResourceSet;
 
 import java.util.List;
@@ -24,14 +25,20 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.thechiselgroup.choosel.core.client.label.LabelProvider;
 import org.thechiselgroup.choosel.core.client.persistence.Memento;
 import org.thechiselgroup.choosel.core.client.persistence.PersistableRestorationService;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
+import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByPropertyMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByUriMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.persistence.DefaultResourceSetCollector;
+import org.thechiselgroup.choosel.core.client.ui.Presenter;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.util.math.AverageCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.Calculation;
 import org.thechiselgroup.choosel.core.client.util.math.MaxCalculation;
@@ -43,9 +50,13 @@ import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 
 public class DefaultViewPersistenceTest {
 
-    private TestViewModel originalView;
+    private DefaultView originalView;
 
-    private TestViewModel restoredView;
+    private DefaultViewModel originalViewModel;
+
+    private DefaultView restoredView;
+
+    private DefaultViewModel restoredViewModel;
 
     private Slot textSlot;
 
@@ -53,6 +64,23 @@ public class DefaultViewPersistenceTest {
 
     @Mock
     private PersistableRestorationService restorationService;
+
+    public DefaultView createView(DefaultViewModel viewModel,
+            DefaultResourceModel resourceModel,
+            DefaultSelectionModel selectionModel) {
+
+        DefaultView view = new DefaultView(mock(ViewContentDisplay.class),
+                "label", "contentType", mock(Presenter.class),
+                mock(Presenter.class), mock(VisualMappingsControl.class),
+                LightweightCollections.<SidePanelSection> emptyCollection(),
+                viewModel, resourceModel, selectionModel) {
+            @Override
+            protected void initUI() {
+            };
+        };
+        view.init();
+        return view;
+    }
 
     @Test
     public void restoreAverageCalculationOverGroup() {
@@ -66,11 +94,11 @@ public class DefaultViewPersistenceTest {
         resource.putValue("property1", "value1");
         resource.putValue("property2", "value2");
 
-        originalView.getSlotMappingConfiguration().setMapping(textSlot,
+        originalViewModel.getSlotMappingConfiguration().setMapping(textSlot,
                 new FirstResourcePropertyResolver("property1"));
         originalView.getResourceModel().addUnnamedResources(
                 toResourceSet(resource));
-        originalView.getSlotMappingConfiguration().setMapping(textSlot,
+        originalViewModel.getSlotMappingConfiguration().setMapping(textSlot,
                 new FirstResourcePropertyResolver("property2"));
 
         // 2. save first view
@@ -78,10 +106,10 @@ public class DefaultViewPersistenceTest {
         Memento memento = originalView.save(collector);
 
         // 3. restore other view
-        restoredView.restore(memento, restorationService, collector);
+        restoredView.doRestore(memento, restorationService, collector);
 
         // 4. check resource items and control settings
-        List<ViewItem> resourceItems = restoredView.getViewItems();
+        List<ViewItem> resourceItems = restoredViewModel.getViewItems();
         assertEquals(1, resourceItems.size());
         ViewItem resourceItem = resourceItems.get(0);
         assertEquals("value2", resourceItem.getSlotValue(textSlot));
@@ -110,7 +138,7 @@ public class DefaultViewPersistenceTest {
 
         originalView.getResourceModel().addUnnamedResources(
                 toResourceSet(r1, r2));
-        originalView.getResourceGrouping().setCategorizer(
+        originalViewModel.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("property2"));
 
         // 2. save first view
@@ -118,12 +146,12 @@ public class DefaultViewPersistenceTest {
         Memento memento = originalView.save(collector);
 
         // 3. restore other view - set by uri categorization first
-        restoredView.getResourceGrouping().setCategorizer(
+        restoredViewModel.getResourceGrouping().setCategorizer(
                 new ResourceByUriMultiCategorizer());
-        restoredView.restore(memento, restorationService, collector);
+        restoredView.doRestore(memento, restorationService, collector);
 
         // 4. check resource items and control settings
-        List<ViewItem> resourceItems = restoredView.getViewItems();
+        List<ViewItem> resourceItems = restoredViewModel.getViewItems();
         assertEquals(1, resourceItems.size());
         ResourceSet resourceItemResources = resourceItems.get(0)
                 .getResourceSet();
@@ -150,7 +178,7 @@ public class DefaultViewPersistenceTest {
 
         originalView.getResourceModel().addUnnamedResources(
                 toResourceSet(r1, r2));
-        originalView.getResourceGrouping().setCategorizer(
+        originalViewModel.getResourceGrouping().setCategorizer(
                 new ResourceByUriMultiCategorizer());
 
         // 2. save first view
@@ -158,12 +186,12 @@ public class DefaultViewPersistenceTest {
         Memento memento = originalView.save(collector);
 
         // 3. restore other view - set by uri categorization first
-        restoredView.getResourceGrouping().setCategorizer(
+        restoredViewModel.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("property2"));
-        restoredView.restore(memento, restorationService, collector);
+        restoredView.doRestore(memento, restorationService, collector);
 
         // 4. check resource items and control settings
-        List<ViewItem> resourceItems = restoredView.getViewItems();
+        List<ViewItem> resourceItems = restoredViewModel.getViewItems();
         assertEquals(2, resourceItems.size());
     }
 
@@ -174,8 +202,32 @@ public class DefaultViewPersistenceTest {
         textSlot = new Slot("id-1", "text-slot", DataType.TEXT);
         numberSlot = new Slot("id-2", "number-slot", DataType.NUMBER);
 
-        originalView = TestViewModel.createTestViewModel(textSlot, numberSlot);
-        restoredView = TestViewModel.createTestViewModel(textSlot, numberSlot);
+        {
+            ResourceSetFactory resourceSetFactory = new DefaultResourceSetFactory();
+            DefaultResourceModel resourceModel = new DefaultResourceModel(
+                    resourceSetFactory);
+            DefaultSelectionModel selectionModel = new DefaultSelectionModel(
+                    mock(LabelProvider.class), resourceSetFactory);
+
+            originalViewModel = DefaultViewModelTestHelper.createTestViewModel(
+                    resourceModel.getResources(), new DefaultResourceSet(),
+                    selectionModel.getSelection(), textSlot, numberSlot);
+            originalView = createView(originalViewModel, resourceModel,
+                    selectionModel);
+        }
+        {
+            ResourceSetFactory resourceSetFactory = new DefaultResourceSetFactory();
+            DefaultResourceModel resourceModel = new DefaultResourceModel(
+                    resourceSetFactory);
+            DefaultSelectionModel selectionModel = new DefaultSelectionModel(
+                    mock(LabelProvider.class), resourceSetFactory);
+
+            restoredViewModel = DefaultViewModelTestHelper.createTestViewModel(
+                    resourceModel.getResources(), new DefaultResourceSet(),
+                    selectionModel.getSelection(), textSlot, numberSlot);
+            restoredView = createView(restoredViewModel, resourceModel,
+                    selectionModel);
+        }
     }
 
     protected void testRestoreCalculationOverGroup(double expectedResult,
@@ -196,9 +248,9 @@ public class DefaultViewPersistenceTest {
 
         originalView.getResourceModel().addUnnamedResources(
                 toResourceSet(r1, r2, r3));
-        originalView.getResourceGrouping().setCategorizer(
+        originalViewModel.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("property2"));
-        originalView.getSlotMappingConfiguration().setMapping(
+        originalViewModel.getSlotMappingConfiguration().setMapping(
                 numberSlot,
                 new CalculationResourceSetToValueResolver("property1",
                         calculation));
@@ -208,12 +260,12 @@ public class DefaultViewPersistenceTest {
         Memento memento = originalView.save(collector);
 
         // 3. restore other view - set by uri categorization first
-        restoredView.getResourceGrouping().setCategorizer(
+        restoredViewModel.getResourceGrouping().setCategorizer(
                 new ResourceByUriMultiCategorizer());
-        restoredView.restore(memento, restorationService, collector);
+        restoredView.doRestore(memento, restorationService, collector);
 
         // 4. check resource items and control settings
-        List<ViewItem> resourceItems = restoredView.getViewItems();
+        List<ViewItem> resourceItems = restoredViewModel.getViewItems();
         assertEquals(1, resourceItems.size());
         ViewItem resourceItem = resourceItems.get(0);
         assertEquals(expectedResult, resourceItem.getSlotValue(numberSlot));

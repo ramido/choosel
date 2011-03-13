@@ -56,7 +56,7 @@ public class ResourceSetPresenterDropCommandFactory extends
 
             return new MergeResourceSetsCommand(dragAvatar.getResourceSet(),
                     targetDragAvatar.getResourceSet(), findView(dragAvatar)
-                            .getModel().getResourceModel());
+                            .getResourceModel());
         }
 
         return new AddResourceSetToResourceSetCommand(

@@ -66,7 +66,7 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         // view.getViewContentDisplay().setPropertyValue(
         // BarChartVisualization.LAYOUT_PROPERTY, LayoutType.VERTICAL);
 
-        model.getResourceModel().addResourceSet(resourceSet);
+        view.getResourceModel().addResourceSet(resourceSet);
 
         model.getSlotMappingConfiguration().setMapping(
                 BarChartVisualization.BAR_LABEL_SLOT,
@@ -90,7 +90,7 @@ public class ComponentExampleEntryPoint implements EntryPoint {
                 ScatterPlotVisualization.ID);
         ViewModel model = view.getModel();
 
-        model.getResourceModel().addResourceSet(resourceSet);
+        view.getResourceModel().addResourceSet(resourceSet);
 
         model.getSlotMappingConfiguration().setMapping(
                 ScatterPlotVisualization.X_POSITION_SLOT,
@@ -170,7 +170,7 @@ public class ComponentExampleEntryPoint implements EntryPoint {
                 new FirstResourcePropertyResolver(
                         BenchmarkResourceSetFactory.NUMBER_2));
 
-        model.getResourceModel().addResourceSet(resourceSet);
+        view.getResourceModel().addResourceSet(resourceSet);
     }
 
     private DefaultView createView(WindowContentProducer contentProducer,

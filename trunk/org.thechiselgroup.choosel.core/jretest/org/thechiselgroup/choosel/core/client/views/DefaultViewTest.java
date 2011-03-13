@@ -24,14 +24,18 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.ui.Presenter;
+import org.thechiselgroup.choosel.core.client.util.Disposable;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 
 public class DefaultViewTest {
 
+    public static interface DisposableViewModel extends ViewModel, Disposable {
+    }
+
     private DefaultView underTest;
 
     @Mock
-    private ViewModel viewModel;
+    private DisposableViewModel viewModel;
 
     @Mock
     private Presenter resourceModelPresenter;
@@ -68,7 +72,8 @@ public class DefaultViewTest {
                 "contentType", selectionModelPresenter, resourceModelPresenter,
                 mock(VisualMappingsControl.class),
                 LightweightCollections.<SidePanelSection> emptyCollection(),
-                viewModel);
+                viewModel, mock(ResourceModel.class),
+                mock(SelectionModel.class));
     }
 
 }

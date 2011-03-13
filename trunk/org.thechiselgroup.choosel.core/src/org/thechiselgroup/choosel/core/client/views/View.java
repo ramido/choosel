@@ -26,4 +26,8 @@ public interface View extends WindowContent, Disposable, Persistable {
      */
     ViewModel getModel();
 
+    ResourceModel getResourceModel();
+
+    SelectionModel getSelectionModel();
+
 }

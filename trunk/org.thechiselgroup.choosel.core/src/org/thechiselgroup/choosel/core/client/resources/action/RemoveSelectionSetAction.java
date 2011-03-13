@@ -21,7 +21,7 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.command.RemoveSelectionSetFromViewCommand;
 import org.thechiselgroup.choosel.core.client.resources.ui.popup.PopupResourceSetAvatarFactory.Action;
 import org.thechiselgroup.choosel.core.client.views.SelectionModel;
-import org.thechiselgroup.choosel.core.client.views.ViewModel;
+import org.thechiselgroup.choosel.core.client.views.View;
 
 public class RemoveSelectionSetAction implements Action {
 
@@ -39,9 +39,9 @@ public class RemoveSelectionSetAction implements Action {
     }
 
     @Override
-    public void execute(ResourceSet resources, ViewModel viewModel) {
+    public void execute(ResourceSet resources, View view) {
         commandManager.execute(createCommand(resources,
-                viewModel.getSelectionModel()));
+                view.getSelectionModel()));
     }
 
     @Override

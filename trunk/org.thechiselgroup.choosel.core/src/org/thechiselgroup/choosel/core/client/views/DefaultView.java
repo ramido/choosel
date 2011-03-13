@@ -16,17 +16,23 @@
 package org.thechiselgroup.choosel.core.client.views;
 
 import org.thechiselgroup.choosel.core.client.persistence.Memento;
+import org.thechiselgroup.choosel.core.client.persistence.Persistable;
 import org.thechiselgroup.choosel.core.client.persistence.PersistableRestorationService;
+import org.thechiselgroup.choosel.core.client.resources.ResourceByPropertyMultiCategorizer;
+import org.thechiselgroup.choosel.core.client.resources.ResourceByUriMultiCategorizer;
+import org.thechiselgroup.choosel.core.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.core.client.ui.ImageButton;
 import org.thechiselgroup.choosel.core.client.ui.Presenter;
+import org.thechiselgroup.choosel.core.client.util.DisposeUtil;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.windows.AbstractWindowContent;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.RequiresResize;
@@ -97,6 +103,22 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private ViewModel model;
 
+    private ResourceModel resourceModel;
+
+    private SelectionModel selectionModel;
+
+    private boolean isInitialized;
+
+    private static final String MEMENTO_CONTENT_DISPLAY = "content-display";
+
+    private static final String MEMENTO_RESOURCE_MODEL = "resource-model";
+
+    private static final String MEMENTO_SELECTION_MODEL = "selection-model";
+
+    private static final String MEMENTO_SLOT_MAPPINGS = "slot-mappings";
+
+    private static final String MEMENTO_GROUPING = "grouping";
+
     // TODO change parameter order in constructor
     // TODO change contentDisplay to more restricted interface
     public DefaultView(ViewContentDisplay contentDisplay, String label,
@@ -104,7 +126,8 @@ public class DefaultView extends AbstractWindowContent implements View {
             Presenter resourceModelPresenter,
             VisualMappingsControl visualMappingsControl,
             LightweightCollection<SidePanelSection> sidePanelSections,
-            ViewModel viewModel) {
+            ViewModel viewModel, ResourceModel resourceModel,
+            SelectionModel selectionModel) {
 
         super(label, contentType);
 
@@ -113,12 +136,16 @@ public class DefaultView extends AbstractWindowContent implements View {
         assert resourceModelPresenter != null;
         assert sidePanelSections != null;
         assert viewModel != null;
+        assert resourceModel != null;
+        assert selectionModel != null;
 
         this.contentDisplay = contentDisplay;
         this.selectionModelPresenter = selectionModelPresenter;
         this.resourceModelPresenter = resourceModelPresenter;
         this.sidePanelSections = sidePanelSections;
         this.model = viewModel;
+        this.selectionModel = selectionModel;
+        this.resourceModel = resourceModel;
     }
 
     @Override
@@ -134,8 +161,31 @@ public class DefaultView extends AbstractWindowContent implements View {
         selectionModelPresenter.dispose();
         selectionModelPresenter = null;
 
-        model.dispose();
+        DisposeUtil.dispose(model);
         model = null;
+    }
+
+    // protected for test access
+    protected void doRestore(Memento state,
+            PersistableRestorationService restorationService,
+            ResourceSetAccessor accessor) {
+
+        assert isInitialized : "view has to be initialized before restoring it";
+
+        contentDisplay.startRestore();
+
+        // restoreGrouping(state.getChild(MEMENTO_GROUPING));
+        restoreGrouping(state.getChild(MEMENTO_GROUPING));
+        restore(resourceModel, state, MEMENTO_RESOURCE_MODEL,
+                restorationService, accessor);
+        restore(selectionModel, state, MEMENTO_SELECTION_MODEL,
+                restorationService, accessor);
+        contentDisplay.restore(state.getChild(MEMENTO_CONTENT_DISPLAY),
+                restorationService, accessor);
+        restore(model.getSlotMappingConfiguration(), state,
+                MEMENTO_SLOT_MAPPINGS, restorationService, accessor);
+
+        contentDisplay.endRestore();
     }
 
     @Override
@@ -148,10 +198,23 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     @Override
+    public ResourceModel getResourceModel() {
+        return resourceModel;
+    }
+
+    @Override
+    public SelectionModel getSelectionModel() {
+        return selectionModel;
+    }
+
+    @Override
     public void init() {
-        model.init();
+        assert !isInitialized : "view has already been initialized";
+
         resourceModelPresenter.init();
         initUI();
+
+        isInitialized = true;
     }
 
     private void initConfigurationPanelUI() {
@@ -234,15 +297,97 @@ public class DefaultView extends AbstractWindowContent implements View {
     }
 
     @Override
-    public void restore(Memento state,
+    public void restore(final Memento state,
+            final PersistableRestorationService restorationService,
+            final ResourceSetAccessor accessor) {
+
+        /*
+         * wait for content to be ready (needed for graph view swf loading on
+         * restore)
+         */
+        // XXX this might be the cause for issue 25
+        if (contentDisplay.isReady()) {
+            doRestore(state, restorationService, accessor);
+        } else {
+            new Timer() {
+                @Override
+                public void run() {
+                    restore(state, restorationService, accessor);
+                }
+            }.schedule(200);
+        }
+    }
+
+    private void restore(Object target, Memento parentMemento,
+            String targetMementoKey,
             PersistableRestorationService restorationService,
             ResourceSetAccessor accessor) {
-        model.restore(state, restorationService, accessor);
+
+        if (target instanceof Persistable) {
+            ((Persistable) target).restore(
+                    parentMemento.getChild(targetMementoKey),
+                    restorationService, accessor);
+        }
+    }
+
+    // TODO extract constants
+    private void restoreGrouping(Memento groupingMemento) {
+        assert groupingMemento != null;
+
+        String categorizerType = (String) groupingMemento.getValue("type");
+
+        if ("byProperty".equals(categorizerType)) {
+            String property = (String) groupingMemento.getValue("property");
+            model.getResourceGrouping().setCategorizer(
+                    new ResourceByPropertyMultiCategorizer(property));
+        } else if ("byUri".equals(categorizerType)) {
+            model.getResourceGrouping().setCategorizer(
+                    new ResourceByUriMultiCategorizer());
+        }
+    }
+
+    private void save(Object target, Memento parentMemento,
+            String targetMementoKey, ResourceSetCollector resourceSetCollector) {
+
+        if (target instanceof Persistable) {
+            parentMemento.addChild(targetMementoKey,
+                    ((Persistable) target).save(resourceSetCollector));
+        }
     }
 
     @Override
     public Memento save(ResourceSetCollector resourceSetCollector) {
-        return model.save(resourceSetCollector);
+        Memento memento = new Memento();
+
+        saveGrouping(memento);
+        save(selectionModel, memento, MEMENTO_SELECTION_MODEL,
+                resourceSetCollector);
+        save(resourceModel, memento, MEMENTO_RESOURCE_MODEL,
+                resourceSetCollector);
+        memento.addChild(MEMENTO_CONTENT_DISPLAY,
+                contentDisplay.save(resourceSetCollector));
+        save(model.getSlotMappingConfiguration(), memento,
+                MEMENTO_SLOT_MAPPINGS, resourceSetCollector);
+
+        return memento;
+    }
+
+    // TODO extract constants
+    private void saveGrouping(Memento memento) {
+        Memento groupingMemento = new Memento();
+
+        ResourceMultiCategorizer categorizer = model.getResourceGrouping()
+                .getCategorizer();
+        if (categorizer instanceof ResourceByPropertyMultiCategorizer) {
+            groupingMemento.setValue("type", "byProperty");
+            groupingMemento.setValue("property",
+                    ((ResourceByPropertyMultiCategorizer) categorizer)
+                            .getProperty());
+        } else if (categorizer instanceof ResourceByUriMultiCategorizer) {
+            groupingMemento.setValue("type", "byUri");
+        }
+
+        memento.addChild(MEMENTO_GROUPING, groupingMemento);
     }
 
     /**

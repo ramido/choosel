@@ -20,26 +20,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.thechiselgroup.choosel.core.client.persistence.Memento;
-import org.thechiselgroup.choosel.core.client.persistence.Persistable;
-import org.thechiselgroup.choosel.core.client.persistence.PersistableRestorationService;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.IntersectionResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
-import org.thechiselgroup.choosel.core.client.resources.ResourceByPropertyMultiCategorizer;
-import org.thechiselgroup.choosel.core.client.resources.ResourceByUriMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChange;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChange.Delta;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChangedEvent;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChangedHandler;
-import org.thechiselgroup.choosel.core.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEvent;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEventHandler;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetEventForwarder;
-import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetAccessor;
-import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
+import org.thechiselgroup.choosel.core.client.util.Disposable;
 import org.thechiselgroup.choosel.core.client.util.DisposeUtil;
 import org.thechiselgroup.choosel.core.client.util.HandlerRegistrationSet;
 import org.thechiselgroup.choosel.core.client.util.Initializable;
@@ -54,19 +47,7 @@ import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingChangedHand
 import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingConfiguration;
 import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingInitializer;
 
-import com.google.gwt.user.client.Timer;
-
-public class DefaultViewModel implements ViewModel {
-
-    private static final String MEMENTO_CONTENT_DISPLAY = "content-display";
-
-    private static final String MEMENTO_SLOT_MAPPINGS = "slot-mappings";
-
-    private static final String MEMENTO_RESOURCE_MODEL = "resource-model";
-
-    private static final String MEMENTO_SELECTION_MODEL = "selection-model";
-
-    private static final String MEMENTO_GROUPING = "grouping";
+public class DefaultViewModel implements ViewModel, Disposable {
 
     private ResourceSetEventForwarder allResourcesToGroupingForwarder;
 
@@ -84,24 +65,22 @@ public class DefaultViewModel implements ViewModel {
 
     private ViewContentDisplayCallback contentDisplayCallback;
 
-    private HoverModel hoverModel;
-
     private ResourceGrouping resourceGrouping;
-
-    private ResourceModel resourceModel;
 
     /*
      * Boolean flag that indicates if the configuration part of the view has
-     * been created.
+     * been created. Protected for test usage.
      * 
      * XXX This solution breaks down when there is more than one kind of
      * resource (i.e. with different properties)
      */
-    private boolean isConfigurationAvailable = false;
+    protected boolean isConfigurationAvailable = false;
 
-    private boolean isInitialized;
+    private ResourceSet containedResources;
 
-    private SelectionModel selectionModel;
+    private ResourceSet selectedResources;
+
+    private ResourceSet highlightedResources;
 
     private SlotMappingInitializer slotMappingInitializer;
 
@@ -114,17 +93,17 @@ public class DefaultViewModel implements ViewModel {
     public DefaultViewModel(ResourceGrouping resourceGrouping,
             ViewContentDisplay contentDisplay,
             SlotMappingConfiguration slotMappingConfiguration,
-            SelectionModel selectionModel, ResourceModel resourceModel,
-            HoverModel hoverModel,
+            ResourceSet selectedResources, ResourceSet containedResources,
+            ResourceSet highlightedResources,
             SlotMappingInitializer slotMappingInitializer,
             ViewItemBehavior viewItemBehavior) {
 
         assert slotMappingConfiguration != null;
         assert resourceGrouping != null;
         assert contentDisplay != null;
-        assert selectionModel != null;
-        assert resourceModel != null;
-        assert hoverModel != null;
+        assert selectedResources != null;
+        assert containedResources != null;
+        assert highlightedResources != null;
         assert slotMappingInitializer != null;
         assert viewItemBehavior != null;
 
@@ -132,16 +111,29 @@ public class DefaultViewModel implements ViewModel {
         this.slotMappingConfiguration = slotMappingConfiguration;
         this.resourceGrouping = resourceGrouping;
         this.contentDisplay = contentDisplay;
-        this.selectionModel = selectionModel;
-        this.resourceModel = resourceModel;
-        this.hoverModel = hoverModel;
+        this.selectedResources = selectedResources;
+        this.containedResources = containedResources;
+        this.highlightedResources = highlightedResources;
         this.viewItemBehavior = viewItemBehavior;
+
+        slotMappingConfiguration.initSlots(contentDisplay.getSlots());
+        init(containedResources);
+        init(selectedResources);
+        initSelectionModelEventHandlers();
+        initResourceGrouping();
+        initAllResourcesToResourceGroupingLink();
+        initHighlightingModel();
+        initContentDisplay();
+        initSlotMappingChangeHandler();
     }
 
     private DefaultViewItem createViewItem(String groupID,
             ResourceSet resources,
             LightweightCollection<Resource> highlightedResources,
             LightweightCollection<Resource> selectedResources) {
+
+        assert !viewItemsByGroupId.containsKey(groupID) : "viewItemsByGroupId ( "
+                + viewItemsByGroupId + " ) already contains " + groupID;
 
         DefaultViewItem viewItem = new DefaultViewItem(groupID, resources,
                 slotMappingConfiguration, viewItemBehavior);
@@ -154,8 +146,6 @@ public class DefaultViewModel implements ViewModel {
         viewItem.updateSelectedResources(selectedResources,
                 LightweightCollections.<Resource> emptyCollection());
 
-        assert !viewItemsByGroupId.containsKey(groupID) : "groupsToViewItems already contains "
-                + groupID;
         viewItemsByGroupId.put(groupID, viewItem);
 
         return viewItem;
@@ -168,47 +158,35 @@ public class DefaultViewModel implements ViewModel {
             viewItem.dispose();
         }
 
-        DisposeUtil.dispose(resourceModel);
-        resourceModel = null;
+        DisposeUtil.dispose(containedResources);
+        containedResources = null;
 
-        DisposeUtil.dispose(selectionModel);
-        selectionModel = null;
+        DisposeUtil.dispose(selectedResources);
+        selectedResources = null;
 
         allResourcesToGroupingForwarder.dispose();
         allResourcesToGroupingForwarder = null;
         contentDisplay.dispose();
         contentDisplay = null;
 
-        hoverModel = null;
+        highlightedResources = null;
 
         handlerRegistrations.dispose();
         handlerRegistrations = null;
     }
 
-    // protected for test access
-    protected void doRestore(Memento state,
-            PersistableRestorationService restorationService,
-            ResourceSetAccessor accessor) {
-
-        assert isInitialized : "view has to be initialized before restoring it";
-
-        contentDisplay.startRestore();
-
-        restoreGrouping(state.getChild(MEMENTO_GROUPING));
-        restore(resourceModel, state, MEMENTO_RESOURCE_MODEL,
-                restorationService, accessor);
-        restore(selectionModel, state, MEMENTO_SELECTION_MODEL,
-                restorationService, accessor);
-        contentDisplay.restore(state.getChild(MEMENTO_CONTENT_DISPLAY),
-                restorationService, accessor);
-        restore(slotMappingConfiguration, state, MEMENTO_SLOT_MAPPINGS,
-                restorationService, accessor);
-
-        contentDisplay.endRestore();
-    }
-
     public Map<String, ResourceSet> getCategorizedResourceSets() {
         return resourceGrouping.getCategorizedResourceSets();
+    }
+
+    @Override
+    public ResourceSet getContainedResources() {
+        return containedResources;
+    }
+
+    @Override
+    public ResourceSet getHighlightedResources() {
+        return highlightedResources;
     }
 
     /**
@@ -223,22 +201,19 @@ public class DefaultViewModel implements ViewModel {
             LightweightCollection<Resource> resources) {
 
         ResourceSet resourcesInThisView = new DefaultResourceSet();
-        resourcesInThisView.addAll(resourceModel.getIntersection(resources));
+        resourcesInThisView.addAll(containedResources
+                .getIntersection(resources));
         return resourcesInThisView;
     }
 
+    @Override
     public ResourceGrouping getResourceGrouping() {
         return resourceGrouping;
     }
 
     @Override
-    public ResourceModel getResourceModel() {
-        return resourceModel;
-    }
-
-    @Override
-    public SelectionModel getSelectionModel() {
-        return selectionModel;
+    public ResourceSet getSelectedResources() {
+        return selectedResources;
     }
 
     @Override
@@ -282,27 +257,6 @@ public class DefaultViewModel implements ViewModel {
         return result;
     }
 
-    @Override
-    public void init() {
-        assert !isInitialized : "view has already been initialized";
-
-        slotMappingConfiguration.initSlots(contentDisplay.getSlots());
-
-        init(resourceModel);
-
-        init(selectionModel);
-        initSelectionModelEventHandlers();
-
-        initResourceGrouping();
-        initAllResourcesToResourceGroupingLink();
-        initHighlightingModel();
-
-        initContentDisplay();
-        initSlotMappingChangeHandler();
-
-        isInitialized = true;
-    }
-
     private void init(Object target) {
         if (target instanceof Initializable) {
             ((Initializable) target).init();
@@ -311,7 +265,7 @@ public class DefaultViewModel implements ViewModel {
 
     private void initAllResourcesToResourceGroupingLink() {
         allResourcesToGroupingForwarder = new ResourceSetEventForwarder(
-                resourceModel.getResources(), resourceGrouping) {
+                containedResources, resourceGrouping) {
 
             @Override
             public void onResourceSetChanged(ResourceSetChangedEvent event) {
@@ -330,11 +284,6 @@ public class DefaultViewModel implements ViewModel {
             @Override
             public boolean containsViewItem(String groupId) {
                 return viewItemsByGroupId.containsKey(groupId);
-            }
-
-            @Override
-            public ResourceSet getAutomaticResourceSet() {
-                return resourceModel.getAutomaticResourceSet();
             }
 
             @Override
@@ -377,12 +326,10 @@ public class DefaultViewModel implements ViewModel {
     private void initHighlightingModel() {
         highlightedResourcesIntersection = new IntersectionResourceSet(
                 new DefaultResourceSet());
-        highlightedResourcesIntersection.addResourceSet(resourceModel
-                .getResources());
-        highlightedResourcesIntersection.addResourceSet(hoverModel
-                .getResources());
+        highlightedResourcesIntersection.addResourceSet(containedResources);
+        highlightedResourcesIntersection.addResourceSet(highlightedResources);
 
-        handlerRegistrations.addHandlerRegistration(hoverModel
+        handlerRegistrations.addHandlerRegistration(highlightedResources
                 .addEventHandler(new ResourceSetChangedEventHandler() {
                     @Override
                     public void onResourceSetChanged(
@@ -424,7 +371,7 @@ public class DefaultViewModel implements ViewModel {
     }
 
     private void initSelectionModelEventHandlers() {
-        handlerRegistrations.addHandlerRegistration(selectionModel
+        handlerRegistrations.addHandlerRegistration(selectedResources
                 .addEventHandler(new ResourceSetChangedEventHandler() {
                     @Override
                     public void onResourceSetChanged(
@@ -469,10 +416,10 @@ public class DefaultViewModel implements ViewModel {
          * 
          * TODO extract
          */
-        LightweightList<Resource> highlightedResources = resourceModel
-                .getIntersection(hoverModel.getResources());
-        LightweightList<Resource> selectedResources = resourceModel
-                .getIntersection(selectionModel.getSelection());
+        LightweightList<Resource> highlightedResources = containedResources
+                .getIntersection(this.highlightedResources);
+        LightweightList<Resource> selectedResources = containedResources
+                .getIntersection(this.selectedResources);
 
         for (ResourceGroupingChange change : changes) {
             assert change.getDelta() == Delta.GROUP_CREATED;
@@ -519,11 +466,10 @@ public class DefaultViewModel implements ViewModel {
                     .getGroupID());
 
             // intersect added with highlighting set - TODO extract
-            LightweightList<Resource> highlightedAdded = hoverModel
-                    .getResources().getIntersection(change.getAddedResources());
-            LightweightList<Resource> highlightedRemoved = hoverModel
-                    .getResources().getIntersection(
-                            change.getRemovedResources());
+            LightweightList<Resource> highlightedAdded = highlightedResources
+                    .getIntersection(change.getAddedResources());
+            LightweightList<Resource> highlightedRemoved = highlightedResources
+                    .getIntersection(change.getRemovedResources());
 
             boolean add = false;
 
@@ -533,11 +479,10 @@ public class DefaultViewModel implements ViewModel {
                 add = true;
             }
 
-            LightweightList<Resource> selectedAdded = selectionModel
-                    .getSelection().getIntersection(change.getAddedResources());
-            LightweightList<Resource> selectedRemoved = selectionModel
-                    .getSelection().getIntersection(
-                            change.getRemovedResources());
+            LightweightList<Resource> selectedAdded = selectedResources
+                    .getIntersection(change.getAddedResources());
+            LightweightList<Resource> selectedRemoved = selectedResources
+                    .getIntersection(change.getRemovedResources());
             if (!selectedAdded.isEmpty() || !selectedRemoved.isEmpty()) {
                 viewItem.updateSelectedResources(selectedAdded, selectedRemoved);
                 add = true;
@@ -563,101 +508,6 @@ public class DefaultViewModel implements ViewModel {
         assert !viewItemsByGroupId.containsKey(groupID);
 
         return viewItem;
-    }
-
-    @Override
-    public void restore(final Memento state,
-            final PersistableRestorationService restorationService,
-            final ResourceSetAccessor accessor) {
-
-        /*
-         * wait for content to be ready (needed for graph view swf loading on
-         * restore)
-         */
-        // XXX this might be the cause for issue 25
-        if (contentDisplay.isReady()) {
-            doRestore(state, restorationService, accessor);
-        } else {
-            new Timer() {
-                @Override
-                public void run() {
-                    restore(state, restorationService, accessor);
-                }
-            }.schedule(200);
-        }
-    }
-
-    private void restore(Object target, Memento parentMemento,
-            String targetMementoKey,
-            PersistableRestorationService restorationService,
-            ResourceSetAccessor accessor) {
-
-        if (target instanceof Persistable) {
-            ((Persistable) target).restore(
-                    parentMemento.getChild(targetMementoKey),
-                    restorationService, accessor);
-        }
-    }
-
-    // TODO extract constants
-    private void restoreGrouping(Memento groupingMemento) {
-        assert groupingMemento != null : "The grouping memento you're trying to get a result from wasn't set";
-
-        String categorizerType = (String) groupingMemento.getValue("type");
-
-        if ("byProperty".equals(categorizerType)) {
-            String property = (String) groupingMemento.getValue("property");
-            resourceGrouping
-                    .setCategorizer(new ResourceByPropertyMultiCategorizer(
-                            property));
-        } else if ("byUri".equals(categorizerType)) {
-            resourceGrouping
-                    .setCategorizer(new ResourceByUriMultiCategorizer());
-        }
-    }
-
-    private void save(Object target, Memento parentMemento,
-            String targetMementoKey, ResourceSetCollector resourceSetCollector) {
-
-        if (target instanceof Persistable) {
-            parentMemento.addChild(targetMementoKey,
-                    ((Persistable) target).save(resourceSetCollector));
-        }
-    }
-
-    @Override
-    public Memento save(ResourceSetCollector resourceSetCollector) {
-        Memento memento = new Memento();
-
-        saveGrouping(memento);
-        save(selectionModel, memento, MEMENTO_SELECTION_MODEL,
-                resourceSetCollector);
-        save(resourceModel, memento, MEMENTO_RESOURCE_MODEL,
-                resourceSetCollector);
-        memento.addChild(MEMENTO_CONTENT_DISPLAY,
-                contentDisplay.save(resourceSetCollector));
-        save(slotMappingConfiguration, memento, MEMENTO_SLOT_MAPPINGS,
-                resourceSetCollector);
-
-        return memento;
-    }
-
-    // TODO extract constants
-    private void saveGrouping(Memento memento) {
-        Memento groupingMemento = new Memento();
-
-        ResourceMultiCategorizer categorizer = resourceGrouping
-                .getCategorizer();
-        if (categorizer instanceof ResourceByPropertyMultiCategorizer) {
-            groupingMemento.setValue("type", "byProperty");
-            groupingMemento.setValue("property",
-                    ((ResourceByPropertyMultiCategorizer) categorizer)
-                            .getProperty());
-        } else if (categorizer instanceof ResourceByUriMultiCategorizer) {
-            groupingMemento.setValue("type", "byUri");
-        }
-
-        memento.addChild(MEMENTO_GROUPING, groupingMemento);
     }
 
     private void updateHighlighting(
@@ -721,13 +571,6 @@ public class DefaultViewModel implements ViewModel {
                 LightweightCollections.<Slot> emptyCollection());
     }
 
-    // TODO use viewContentDisplay.update to perform single update
-    // TODO test update gets called with the right sets
-    // (a) add
-    // (b) remove
-    // (c) update
-    // (d) add + update
-    // (e) remove + update
     private void updateViewItemsOnModelChange(ResourceGroupingChangedEvent e) {
         assert e != null;
 

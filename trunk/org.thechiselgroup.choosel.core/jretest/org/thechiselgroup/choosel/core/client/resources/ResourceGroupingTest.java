@@ -30,6 +30,8 @@ import static org.thechiselgroup.choosel.core.client.test.AdvancedAsserts.assert
 import static org.thechiselgroup.choosel.core.client.test.AdvancedAsserts.assertMapKeysEqual;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesMatchers.containsEqualResources;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.verifyOnResourceSetChanged;
+import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.TYPE_1;
+import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.TYPE_2;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.toResourceSet;
@@ -81,8 +83,10 @@ public class ResourceGroupingTest {
                 .getCategorizedResourceSets();
 
         assertMapKeysEqual(result, GROUP_1_1, GROUP_1_2);
-        assertThat(result.get(GROUP_1_1), containsEqualResources(createResources(1)));
-        assertThat(result.get(GROUP_1_2), containsEqualResources(createResources(1)));
+        assertThat(result.get(GROUP_1_1),
+                containsEqualResources(createResources(1)));
+        assertThat(result.get(GROUP_1_2),
+                containsEqualResources(createResources(1)));
     }
 
     public List<ResourceGroupingChange> captureChanges() {
@@ -91,6 +95,34 @@ public class ResourceGroupingTest {
         verify(changeHandler, times(1)).onResourceCategoriesChanged(
                 eventCaptor.capture());
         return eventCaptor.getValue().getChanges().toList();
+    }
+
+    @Test
+    public void categorizeResources() {
+        /*
+         * TODO: This test was migrated here. Check if case is already covered
+         * by other tests.
+         */
+        ResourceSet resources1 = createResources(TYPE_1, 1, 3, 4);
+        setUpCategory(categorizer1, createResource(TYPE_1, 1), GROUP_1_1);
+        setUpCategory(categorizer1, createResource(TYPE_1, 3), GROUP_1_1);
+        setUpCategory(categorizer1, createResource(TYPE_1, 4), GROUP_1_1);
+
+        ResourceSet resources2 = createResources(TYPE_2, 2, 4);
+        setUpCategory(categorizer1, createResource(TYPE_2, 2), GROUP_1_2);
+        setUpCategory(categorizer1, createResource(TYPE_2, 4), GROUP_1_2);
+
+        ResourceSet resources = toResourceSet(resources1, resources2);
+
+        underTest.addAll(resources);
+        Map<String, ResourceSet> result = underTest
+                .getCategorizedResourceSets();
+
+        assertEquals(2, result.size());
+        assertTrue(result.containsKey(GROUP_1_1));
+        assertTrue(result.get(GROUP_1_1).containsEqualResources(resources1));
+        assertTrue(result.containsKey(GROUP_1_2));
+        assertTrue(result.get(GROUP_1_2).containsEqualResources(resources2));
     }
 
     @Test
@@ -139,10 +171,14 @@ public class ResourceGroupingTest {
                 .getCategorizedResourceSets();
 
         assertMapKeysEqual(result, GROUP_2_1, GROUP_2_2, GROUP_2_3, GROUP_2_4);
-        assertThat(result.get(GROUP_2_1), containsEqualResources(createResources(1)));
-        assertThat(result.get(GROUP_2_2), containsEqualResources(createResources(2)));
-        assertThat(result.get(GROUP_2_3), containsEqualResources(createResources(3, 4)));
-        assertThat(result.get(GROUP_2_4), containsEqualResources(createResources(4, 5)));
+        assertThat(result.get(GROUP_2_1),
+                containsEqualResources(createResources(1)));
+        assertThat(result.get(GROUP_2_2),
+                containsEqualResources(createResources(2)));
+        assertThat(result.get(GROUP_2_3),
+                containsEqualResources(createResources(3, 4)));
+        assertThat(result.get(GROUP_2_4),
+                containsEqualResources(createResources(4, 5)));
     }
 
     @Test
@@ -155,8 +191,10 @@ public class ResourceGroupingTest {
                 .getCategorizedResourceSets();
 
         assertMapKeysEqual(result, GROUP_1_1, GROUP_1_2);
-        assertThat(result.get(GROUP_1_1), containsEqualResources(createResources(1, 2, 3)));
-        assertThat(result.get(GROUP_1_2), containsEqualResources(createResources(4, 5)));
+        assertThat(result.get(GROUP_1_1),
+                containsEqualResources(createResources(1, 2, 3)));
+        assertThat(result.get(GROUP_1_2),
+                containsEqualResources(createResources(4, 5)));
     }
 
     @Test
@@ -170,8 +208,10 @@ public class ResourceGroupingTest {
                 .getCategorizedResourceSets();
 
         assertMapKeysEqual(result, GROUP_2_3, GROUP_2_4);
-        assertThat(result.get(GROUP_2_3), containsEqualResources(createResources(3, 4)));
-        assertThat(result.get(GROUP_2_4), containsEqualResources(createResources(4, 5)));
+        assertThat(result.get(GROUP_2_3),
+                containsEqualResources(createResources(3, 4)));
+        assertThat(result.get(GROUP_2_4),
+                containsEqualResources(createResources(4, 5)));
     }
 
     @Test
@@ -184,8 +224,10 @@ public class ResourceGroupingTest {
                 .getCategorizedResourceSets();
 
         assertMapKeysEqual(result, GROUP_2_3, GROUP_2_4);
-        assertThat(result.get(GROUP_2_3), containsEqualResources(createResources(3, 4)));
-        assertThat(result.get(GROUP_2_4), containsEqualResources(createResources(4, 5)));
+        assertThat(result.get(GROUP_2_3),
+                containsEqualResources(createResources(3, 4)));
+        assertThat(result.get(GROUP_2_4),
+                containsEqualResources(createResources(4, 5)));
     }
 
     @Test
@@ -206,8 +248,10 @@ public class ResourceGroupingTest {
                 .getCategorizedResourceSets();
 
         assertMapKeysEqual(result, GROUP_1_1, GROUP_1_2);
-        assertThat(result.get(GROUP_1_1), containsEqualResources(createResources(1, 2, 3)));
-        assertThat(result.get(GROUP_1_2), containsEqualResources(createResources(4, 5)));
+        assertThat(result.get(GROUP_1_1),
+                containsEqualResources(createResources(1, 2, 3)));
+        assertThat(result.get(GROUP_1_2),
+                containsEqualResources(createResources(4, 5)));
     }
 
     @Test
@@ -523,7 +567,12 @@ public class ResourceGroupingTest {
     private void setUpCategory(ResourceMultiCategorizer categorizer,
             int resourceId, String... category) {
 
-        when(categorizer.getCategories(createResource(resourceId))).thenReturn(
-                toSet(category));
+        setUpCategory(categorizer, createResource(resourceId), category);
+    }
+
+    public void setUpCategory(ResourceMultiCategorizer categorizer,
+            Resource resource, String... category) {
+
+        when(categorizer.getCategories(resource)).thenReturn(toSet(category));
     }
 }
