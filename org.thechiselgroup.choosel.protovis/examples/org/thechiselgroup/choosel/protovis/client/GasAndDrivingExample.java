@@ -36,8 +36,8 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @author Lars Grammel
  */
-public class GasAndDrivingExample extends ProtovisWidget implements
-        ProtovisExample {
+public class GasAndDrivingExample extends ProtovisWidgetWithAnnotations
+        implements ProtovisExample {
 
     private static final String CSS_CLASS = "gasAndDrivingExample-caption";
 

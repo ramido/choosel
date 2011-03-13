@@ -40,8 +40,8 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @author Lars Grammel
  */
-public class PlayfairsWheatExample extends ProtovisWidget implements
-        ProtovisExample {
+public class PlayfairsWheatExample extends ProtovisWidgetWithAnnotations
+        implements ProtovisExample {
 
     public static class WheatPrice {
 
