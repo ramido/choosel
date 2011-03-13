@@ -28,16 +28,14 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
 import org.thechiselgroup.choosel.core.client.views.CompositeViewItemBehavior;
 import org.thechiselgroup.choosel.core.client.views.DefaultSelectionModel;
 import org.thechiselgroup.choosel.core.client.views.DefaultView;
-import org.thechiselgroup.choosel.core.client.views.DefaultViewModel;
 import org.thechiselgroup.choosel.core.client.views.HighlightingViewItemBehavior;
 import org.thechiselgroup.choosel.core.client.views.HoverModel;
 import org.thechiselgroup.choosel.core.client.views.SelectionModel;
 import org.thechiselgroup.choosel.core.client.views.SwitchSelectionOnClickViewItemBehavior;
 import org.thechiselgroup.choosel.core.client.views.ViewModel;
-import org.thechiselgroup.choosel.core.client.views.slots.DefaultSlotMappingInitializer;
+import org.thechiselgroup.choosel.core.client.views.VisualizationWidget;
 import org.thechiselgroup.choosel.core.client.views.slots.FirstResourcePropertyResolver;
 import org.thechiselgroup.choosel.core.client.views.slots.ResourceSetToValueResolver;
-import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingConfiguration;
 import org.thechiselgroup.choosel.core.client.windows.WindowContentProducer;
 import org.thechiselgroup.choosel.protovis.client.PVShape;
 import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChartViewContentDisplay;
@@ -74,8 +72,6 @@ public class ComponentExampleEntryPoint implements EntryPoint {
     }
 
     private void initMultipleViews(ResourceSet resourceSet) {
-        final ScatterPlotViewContentDisplay scatterPlot = new ScatterPlotViewContentDisplay();
-
         HoverModel hoverModel = new HoverModel();
         SelectionModel selectionModel = new DefaultSelectionModel(
                 new IncrementingSuffixLabelFactory("test"),
@@ -88,14 +84,12 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         viewItemBehavior.add(new SwitchSelectionOnClickViewItemBehavior(
                 selectionModel));
 
-        DefaultViewModel viewModel = new DefaultViewModel(scatterPlot, new SlotMappingConfiguration(),
-                selectionModel.getSelectionProxy(),
-                b, hoverModel.getResources(),
-                new DefaultSlotMappingInitializer(), viewItemBehavior);
+        VisualizationWidget scatterPlot = new VisualizationWidget(
+                new ScatterPlotViewContentDisplay(),
+                selectionModel.getSelectionProxy(), b,
+                hoverModel.getResources(), viewItemBehavior);
 
         b.addAll(resourceSet);
-
-        final BarChartViewContentDisplay barChart = new BarChartViewContentDisplay();
 
         DefaultResourceSet b2 = new DefaultResourceSet();
         CompositeViewItemBehavior behaviors2 = new CompositeViewItemBehavior();
@@ -103,27 +97,18 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         behaviors2.add(new SwitchSelectionOnClickViewItemBehavior(
                 selectionModel));
 
-        DefaultViewModel viewModel2 = new DefaultViewModel(
-                barChart, new SlotMappingConfiguration(),
-                selectionModel.getSelectionProxy(),
-                b2, hoverModel.getResources(),
-                new DefaultSlotMappingInitializer(), behaviors2);
+        VisualizationWidget barChart = new VisualizationWidget(
+                new BarChartViewContentDisplay(),
+                selectionModel.getSelectionProxy(), b2,
+                hoverModel.getResources(), behaviors2);
 
         b2.addAll(resourceSet);
 
-        RootPanel.get().add(scatterPlot.asWidget());
-        RootPanel.get().add(barChart.asWidget());
+        RootPanel.get().add(scatterPlot);
+        RootPanel.get().add(barChart);
 
         scatterPlot.setSize("400px", "300px");
         barChart.setSize("400px", "300px");
-
-        Window.addResizeHandler(new ResizeHandler() {
-            @Override
-            public void onResize(ResizeEvent event) {
-                scatterPlot.checkResize();
-                barChart.checkResize();
-            }
-        });
     }
 
     private void initBarChartView(WindowContentProducer contentProducer,

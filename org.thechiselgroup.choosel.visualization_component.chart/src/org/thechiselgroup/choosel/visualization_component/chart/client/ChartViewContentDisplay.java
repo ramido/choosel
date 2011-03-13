@@ -190,16 +190,6 @@ public abstract class ChartViewContentDisplay extends
         chartItemsJsArray.setLength(chartItemsJsArray.length() - occurences);
     }
 
-    public void setSize(String width, String height) {
-        assert width != null;
-        assert height != null;
-
-        chartWidget.setWidth(width);
-        chartWidget.setHeight(height);
-
-        checkResize();
-    }
-
     /**
      * A method that listens for any updates on any resource items relevant to
      * the chart. Chart only will get rendered or updated (depending on the
