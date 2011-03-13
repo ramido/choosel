@@ -44,7 +44,8 @@ import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingChangedHand
 import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingConfiguration;
 import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingInitializer;
 
-public class DefaultViewModel implements ViewModel, Disposable {
+public class DefaultViewModel implements ViewModel, Disposable,
+        ViewContentDisplayCallback {
 
     /**
      * Maps group ids (representing the resource sets that are calculated by the
@@ -217,6 +218,15 @@ public class DefaultViewModel implements ViewModel, Disposable {
     }
 
     @Override
+    public String getSlotResolverDescription(Slot slot) {
+        if (!slotMappingConfiguration.containsResolver(slot)) {
+            return "N/A";
+        }
+
+        return slotMappingConfiguration.getResolver(slot).toString();
+    }
+
+    @Override
     public Slot[] getSlots() {
         return contentDisplay.getSlots();
     }
@@ -263,47 +273,8 @@ public class DefaultViewModel implements ViewModel, Disposable {
         }
     }
 
-    // TODO eliminate inner class, implement methods in DefaultViewModel
-    // TODO test
     private void initContentDisplay() {
-        contentDisplayCallback = new ViewContentDisplayCallback() {
-
-            @Override
-            public boolean containsViewItem(String groupId) {
-                return viewItemsByGroupId.containsKey(groupId);
-            }
-
-            @Override
-            public String getSlotResolverDescription(Slot slot) {
-                if (!slotMappingConfiguration.containsResolver(slot)) {
-                    return "N/A";
-                }
-
-                return slotMappingConfiguration.getResolver(slot).toString();
-            }
-
-            @Override
-            public ViewItem getViewItem(String groupId) {
-                return viewItemsByGroupId.get(groupId);
-            }
-
-            @Override
-            public LightweightCollection<ViewItem> getViewItems() {
-                LightweightList<ViewItem> result = CollectionFactory
-                        .createLightweightList();
-                result.addAll(viewItemsByGroupId.values());
-                return result;
-            }
-
-            @Override
-            public LightweightCollection<ViewItem> getViewItems(
-                    Iterable<Resource> resources) {
-
-                return DefaultViewModel.this.getViewItems(resources);
-            }
-
-        };
-        contentDisplay.init(contentDisplayCallback);
+        contentDisplay.init(this);
     }
 
     /**
