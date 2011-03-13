@@ -45,7 +45,7 @@ public class TextSlotControl extends SlotControl {
             public void onChange(ChangeEvent event) {
                 String propertyName = propertySelector.getSelectedValue();
 
-                slotMappingConfiguration.setMapping(getSlot(),
+                slotMappingConfiguration.setResolver(getSlot(),
                         new TextResourceSetToValueResolver(propertyName));
             }
         });

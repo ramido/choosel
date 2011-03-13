@@ -128,7 +128,7 @@ public class SlotMappingConfiguration implements Persistable {
                     String property = (String) child
                             .getValue(MEMENTO_KEY_PROPERTY);
 
-                    setMapping(slot,
+                    setResolver(slot,
                             new FirstResourcePropertyResolver(property));
                 } else if (MEMENTO_VALUE_CALCULATION.equals(value)) {
                     String property = (String) child
@@ -137,25 +137,25 @@ public class SlotMappingConfiguration implements Persistable {
                             .getValue(MEMENTO_KEY_CALCULATION_TYPE);
 
                     if ("min".equals(calculationType)) {
-                        setMapping(slot,
+                        setResolver(slot,
                                 new CalculationResourceSetToValueResolver(
                                         property, new MinCalculation()));
                     } else if ("max".equals(calculationType)) {
-                        setMapping(slot,
+                        setResolver(slot,
                                 new CalculationResourceSetToValueResolver(
                                         property, new MaxCalculation()));
                     } else if ("sum".equals(calculationType)) {
-                        setMapping(slot,
+                        setResolver(slot,
                                 new CalculationResourceSetToValueResolver(
                                         property, new SumCalculation()));
                     } else if ("average".equals(calculationType)) {
-                        setMapping(slot,
+                        setResolver(slot,
                                 new CalculationResourceSetToValueResolver(
                                         property, new AverageCalculation()));
                     }
                 }
             } else {
-                setMapping(slot,
+                setResolver(slot,
                         (ResourceSetToValueResolver) restorationService
                                 .restoreFromMemento(child, accessor));
             }
@@ -208,7 +208,7 @@ public class SlotMappingConfiguration implements Persistable {
         return memento;
     }
 
-    public void setMapping(Slot slot, ResourceSetToValueResolver resolver) {
+    public void setResolver(Slot slot, ResourceSetToValueResolver resolver) {
         assert slot != null : "slot must not be null";
         assert resolver != null;
 

@@ -66,7 +66,7 @@ public class DefaultViewModelSlotMappingTest {
 
     @Test
     public void changeSlotMapping() {
-        underTest.getSlotMappingConfiguration().setMapping(
+        underTest.getSlotMappingConfiguration().setResolver(
                 numberSlot,
                 new CalculationResourceSetToValueResolver("property1",
                         new SumCalculation()));
@@ -76,7 +76,7 @@ public class DefaultViewModelSlotMappingTest {
         ViewItem resourceItem = resourceItems.get(0);
         resourceItem.getSlotValue(numberSlot);
 
-        underTest.getSlotMappingConfiguration().setMapping(
+        underTest.getSlotMappingConfiguration().setResolver(
                 numberSlot,
                 new CalculationResourceSetToValueResolver("property1",
                         new MaxCalculation()));
@@ -134,7 +134,7 @@ public class DefaultViewModelSlotMappingTest {
     private void testCalculationOverGroup(double expectedResult,
             Calculation calculation) {
 
-        underTest.getSlotMappingConfiguration().setMapping(
+        underTest.getSlotMappingConfiguration().setResolver(
                 numberSlot,
                 new CalculationResourceSetToValueResolver("property1",
                         calculation));
@@ -153,7 +153,7 @@ public class DefaultViewModelSlotMappingTest {
      */
     @Test
     public void viewContentUpdateAfterChangedSlotMapping() {
-        underTest.getSlotMappingConfiguration().setMapping(
+        underTest.getSlotMappingConfiguration().setResolver(
                 numberSlot,
                 new CalculationResourceSetToValueResolver("property1",
                         new SumCalculation()));
@@ -178,7 +178,7 @@ public class DefaultViewModelSlotMappingTest {
                 any(LightweightCollection.class),
                 any(LightweightCollection.class));
 
-        underTest.getSlotMappingConfiguration().setMapping(
+        underTest.getSlotMappingConfiguration().setResolver(
                 numberSlot,
                 new CalculationResourceSetToValueResolver("property1",
                         new MaxCalculation()));

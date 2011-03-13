@@ -73,11 +73,13 @@ public class ResourceGroupingTest {
 
     private ResourceGrouping underTest;
 
+    private DefaultResourceSet testResources;
+
     @Test
     public void addResourceWithMultipleCategoriesCreatesMultipleCategories() {
         setUpCategory(categorizer1, 1, GROUP_1_1, GROUP_1_2);
 
-        underTest.add(createResource(1));
+        testResources.add(createResource(1));
 
         Map<String, ResourceSet> result = underTest
                 .getCategorizedResourceSets();
@@ -114,7 +116,7 @@ public class ResourceGroupingTest {
 
         ResourceSet resources = toResourceSet(resources1, resources2);
 
-        underTest.addAll(resources);
+        testResources.addAll(resources);
         Map<String, ResourceSet> result = underTest
                 .getCategorizedResourceSets();
 
@@ -127,7 +129,7 @@ public class ResourceGroupingTest {
 
     @Test
     public void changeCategorizerFiresEvents1() {
-        underTest.addAll(createResources(1, 2, 3, 4, 5));
+        testResources.addAll(createResources(1, 2, 3, 4, 5));
         underTest.addHandler(changeHandler);
         underTest.setCategorizer(categorizer2);
 
@@ -145,7 +147,7 @@ public class ResourceGroupingTest {
 
     @Test
     public void changeCategorizerFiresEvents2() {
-        underTest.addAll(createResources(1, 2, 3, 4, 5));
+        testResources.addAll(createResources(1, 2, 3, 4, 5));
         underTest.setCategorizer(categorizer2);
         underTest.addHandler(changeHandler);
         underTest.setCategorizer(categorizer1);
@@ -164,7 +166,7 @@ public class ResourceGroupingTest {
 
     @Test
     public void changeCategorizerUpdatesCategories1() {
-        underTest.addAll(createResources(1, 2, 3, 4, 5));
+        testResources.addAll(createResources(1, 2, 3, 4, 5));
         underTest.setCategorizer(categorizer2);
 
         Map<String, ResourceSet> result = underTest
@@ -183,7 +185,7 @@ public class ResourceGroupingTest {
 
     @Test
     public void changeCategorizerUpdatesCategories2() {
-        underTest.addAll(createResources(1, 2, 3, 4, 5));
+        testResources.addAll(createResources(1, 2, 3, 4, 5));
         underTest.setCategorizer(categorizer2);
         underTest.setCategorizer(categorizer1);
 
@@ -199,9 +201,9 @@ public class ResourceGroupingTest {
 
     @Test
     public void changeCategorizerUpdatesCategoriesAfterAddAllTwiceAndRemoveAll() {
-        underTest.addAll(createResources(1, 2, 3, 4, 5));
-        underTest.addAll(createResources(1, 2));
-        underTest.removeAll(createResources(1, 2));
+        testResources.addAll(createResources(1, 2, 3, 4, 5));
+        testResources.addAll(createResources(1, 2));
+        testResources.removeAll(createResources(1, 2));
         underTest.setCategorizer(categorizer2);
 
         Map<String, ResourceSet> result = underTest
@@ -216,8 +218,8 @@ public class ResourceGroupingTest {
 
     @Test
     public void changeCategorizerUpdatesCategoriesAfterRemoveAll() {
-        underTest.addAll(createResources(1, 2, 3, 4, 5));
-        underTest.removeAll(createResources(1, 2));
+        testResources.addAll(createResources(1, 2, 3, 4, 5));
+        testResources.removeAll(createResources(1, 2));
         underTest.setCategorizer(categorizer2);
 
         Map<String, ResourceSet> result = underTest
@@ -232,7 +234,7 @@ public class ResourceGroupingTest {
 
     @Test
     public void changeToSameCategorizerDoesNotFireEvent() {
-        underTest.addAll(createResources(1, 2, 3, 4, 5));
+        testResources.addAll(createResources(1, 2, 3, 4, 5));
         underTest.addHandler(changeHandler);
         underTest.setCategorizer(categorizer1);
 
@@ -242,7 +244,7 @@ public class ResourceGroupingTest {
 
     @Test
     public void createCategories() {
-        underTest.addAll(createResources(1, 2, 3, 4, 5));
+        testResources.addAll(createResources(1, 2, 3, 4, 5));
 
         Map<String, ResourceSet> result = underTest
                 .getCategorizedResourceSets();
@@ -257,7 +259,7 @@ public class ResourceGroupingTest {
     @Test
     public void doNotFireResourceCategoryChangesWhenNothingChangesOnRemove() {
         underTest.addHandler(changeHandler);
-        underTest.removeAll(Collections.<Resource> emptyList());
+        testResources.removeAll(Collections.<Resource> emptyList());
 
         verify(changeHandler, times(0)).onResourceCategoriesChanged(
                 any(ResourceGroupingChangedEvent.class));
@@ -268,7 +270,7 @@ public class ResourceGroupingTest {
         Resource resource = createResource(1);
 
         underTest.addHandler(changeHandler);
-        underTest.add(resource);
+        testResources.add(resource);
 
         List<ResourceGroupingChange> changes = captureChanges();
 
@@ -281,9 +283,9 @@ public class ResourceGroupingTest {
 
     @Test
     public void fireResourceCategoryAddedAndChangedOnAddAll() {
-        underTest.addAll(createResources(1, 2));
+        testResources.addAll(createResources(1, 2));
         underTest.addHandler(changeHandler);
-        underTest.addAll(createResources(3, 4, 5));
+        testResources.addAll(createResources(3, 4, 5));
 
         List<ResourceGroupingChange> changes = captureChanges();
 
@@ -315,7 +317,7 @@ public class ResourceGroupingTest {
             }
         });
 
-        underTest.add(createResource(1));
+        testResources.add(createResource(1));
 
         assertEquals(true, called[0]);
     }
@@ -342,7 +344,7 @@ public class ResourceGroupingTest {
             }
         });
 
-        underTest.addAll(createResources(1, 2, 3));
+        testResources.addAll(createResources(1, 2, 3));
 
         assertEquals(true, called[0]);
     }
@@ -352,9 +354,9 @@ public class ResourceGroupingTest {
         ResourceSet allResources = new DefaultResourceSet();
         allResources.addAll(createResources(1, 2, 3, 4));
 
-        underTest.addAll(createResources(1, 2, 3, 4, 5));
+        testResources.addAll(createResources(1, 2, 3, 4, 5));
         underTest.addHandler(changeHandler);
-        underTest.removeAll(allResources);
+        testResources.removeAll(allResources);
 
         List<ResourceGroupingChange> changes = captureChanges();
 
@@ -371,9 +373,9 @@ public class ResourceGroupingTest {
     public void fireResourceCategoryRemovedChangeOnRemove() {
         Resource resource = createResource(1);
 
-        underTest.add(resource);
+        testResources.add(resource);
         underTest.addHandler(changeHandler);
-        underTest.remove(resource);
+        testResources.remove(resource);
 
         List<ResourceGroupingChange> changes = captureChanges();
 
@@ -383,9 +385,9 @@ public class ResourceGroupingTest {
 
     @Test
     public void fireResourceCategoryRemovedChangeOnRemoveAll() {
-        underTest.addAll(createResources(1, 2, 3));
+        testResources.addAll(createResources(1, 2, 3));
         underTest.addHandler(changeHandler);
-        underTest.removeAll(createResources(1, 2, 3));
+        testResources.removeAll(createResources(1, 2, 3));
 
         List<ResourceGroupingChange> changes = captureChanges();
 
@@ -398,9 +400,9 @@ public class ResourceGroupingTest {
         ResourceSet allResources = new DefaultResourceSet();
         allResources.addAll(createResources(1, 2, 3, 4, 5));
 
-        underTest.addAll(createResources(1, 2, 3, 4, 5));
+        testResources.addAll(createResources(1, 2, 3, 4, 5));
         underTest.addHandler(changeHandler);
-        underTest.removeAll(allResources);
+        testResources.removeAll(allResources);
 
         List<ResourceGroupingChange> changes = captureChanges();
 
@@ -424,7 +426,7 @@ public class ResourceGroupingTest {
         setUpCategory(categorizer2, 3, GROUP_2_1);
 
         ResourceSet resources = createResources(1, 2, 3);
-        underTest.addAll(resources);
+        testResources.addAll(resources);
 
         underTest.setCategorizer(categorizer2);
 
@@ -439,8 +441,8 @@ public class ResourceGroupingTest {
         setUpCategory(categorizer1, 2, GROUP_1_2);
         setUpCategory(categorizer1, 3, GROUP_1_1);
         ResourceSet resources = createResources(1, 2, 3);
-        underTest.addAll(resources);
-        underTest.remove(createResource(3));
+        testResources.addAll(resources);
+        testResources.remove(createResource(3));
 
         // 3 is not contained any more
         Set<String> result = underTest.getGroups(createResources(2, 3));
@@ -453,7 +455,7 @@ public class ResourceGroupingTest {
         setUpCategory(categorizer1, 1, GROUP_1_1);
         setUpCategory(categorizer1, 2, GROUP_1_2);
         ResourceSet resources = createResources(1, 2);
-        underTest.addAll(resources);
+        testResources.addAll(resources);
 
         Set<String> result = underTest.getGroups(createResources(1));
 
@@ -464,7 +466,7 @@ public class ResourceGroupingTest {
     public void getGroupsAfterAddAllReturningNothingForNotIncludedResource() {
         setUpCategory(categorizer1, 1, GROUP_1_1);
         ResourceSet resources = createResources(1);
-        underTest.addAll(resources);
+        resources.addAll(resources);
 
         Set<String> result = underTest.getGroups(createResources(2));
 
@@ -476,7 +478,7 @@ public class ResourceGroupingTest {
         setUpCategory(categorizer1, 1, GROUP_1_1);
         setUpCategory(categorizer1, 2, GROUP_1_1);
         ResourceSet resources = createResources(1, 2);
-        underTest.addAll(resources);
+        testResources.addAll(resources);
 
         Set<String> result = underTest.getGroups(resources);
 
@@ -487,7 +489,7 @@ public class ResourceGroupingTest {
     public void getGroupsAfterAddAllReturningSingleGroupForSingleResource() {
         setUpCategory(categorizer1, 1, GROUP_1_1);
         ResourceSet resources = createResources(1);
-        underTest.addAll(resources);
+        testResources.addAll(resources);
 
         Set<String> result = underTest.getGroups(resources);
 
@@ -498,7 +500,7 @@ public class ResourceGroupingTest {
     public void getGroupsAfterAddAllReturningTwoGroupsForSingleResource() {
         setUpCategory(categorizer1, 1, GROUP_1_1, GROUP_1_2);
         ResourceSet resources = createResources(1);
-        underTest.addAll(resources);
+        testResources.addAll(resources);
 
         Set<String> result = underTest.getGroups(resources);
 
@@ -507,32 +509,32 @@ public class ResourceGroupingTest {
 
     @Test
     public void noResourceSetEventsFiredOnCompleteCategoryRemovalViaRemove() {
-        underTest.add(createResource(1));
+        testResources.add(createResource(1));
         ResourceSet categorizedResources = underTest
                 .getCategorizedResourceSets().get(GROUP_1_1);
         ResourceSetChangedEventHandler resourcesChangedHandler = mock(ResourceSetChangedEventHandler.class);
         categorizedResources.addEventHandler(resourcesChangedHandler);
-        underTest.remove(createResource(1));
+        testResources.remove(createResource(1));
 
         verifyOnResourceSetChanged(0, resourcesChangedHandler);
     }
 
     @Test
     public void noResourceSetEventsFiredOnCompleteCategoryRemovalViaRemoveAll() {
-        underTest.addAll(createResources(1, 2, 3));
+        testResources.addAll(createResources(1, 2, 3));
         ResourceSet categorizedResources = underTest
                 .getCategorizedResourceSets().get(GROUP_1_1);
         ResourceSetChangedEventHandler resourcesChangedHandler = mock(ResourceSetChangedEventHandler.class);
         categorizedResources.addEventHandler(resourcesChangedHandler);
-        underTest.removeAll(createResources(1, 2, 3));
+        testResources.removeAll(createResources(1, 2, 3));
 
         verifyOnResourceSetChanged(0, resourcesChangedHandler);
     }
 
     @Test
     public void removeResourceSet() {
-        underTest.addAll(createResources(1, 2, 3, 4, 5));
-        underTest.removeAll(createResources(1, 2, 3));
+        testResources.addAll(createResources(1, 2, 3, 4, 5));
+        testResources.removeAll(createResources(1, 2, 3));
 
         Map<String, ResourceSet> result = underTest
                 .getCategorizedResourceSets();
@@ -549,6 +551,9 @@ public class ResourceGroupingTest {
 
         underTest = new ResourceGrouping(categorizer1,
                 new DefaultResourceSetFactory());
+
+        testResources = new DefaultResourceSet();
+        underTest.setResourceSet(testResources);
 
         setUpCategory(categorizer1, 1, GROUP_1_1);
         setUpCategory(categorizer1, 2, GROUP_1_1);

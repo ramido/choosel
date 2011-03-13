@@ -40,7 +40,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
  */
 // TODO separate labeling concept from resource set
 public class ProxyResourceSet extends DelegatingResourceSet implements
-        Disposable {
+        Disposable, ContainsSingleResourceSet {
 
     protected transient HandlerManager eventBus;
 
@@ -133,6 +133,11 @@ public class ProxyResourceSet extends DelegatingResourceSet implements
         fireResourcesChanged(e.getAddedResources(), e.getRemovedResources());
     }
 
+    @Override
+    public ResourceSet getResourceSet() {
+        return getDelegate();
+    }
+
     public boolean hasDelegate() {
         return !NullResourceSet.isNullResourceSet(delegate);
     }
@@ -163,5 +168,10 @@ public class ProxyResourceSet extends DelegatingResourceSet implements
         fireResourceChanges(newDelegate, oldDelegate);
 
         addEventHandlersToDelegate();
+    }
+
+    @Override
+    public void setResourceSet(ResourceSet newResourceSet) {
+        setDelegate(newResourceSet);
     }
 }
