@@ -19,6 +19,8 @@ import org.thechiselgroup.choosel.core.client.command.CommandManager;
 import org.thechiselgroup.choosel.core.client.command.DefaultCommandManager;
 import org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.core.client.configuration.RootPanelProvider;
+import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
+import org.thechiselgroup.choosel.core.client.error_handling.NullErrorHandler;
 import org.thechiselgroup.choosel.core.client.label.CategoryLabelProvider;
 import org.thechiselgroup.choosel.core.client.label.LabelProvider;
 import org.thechiselgroup.choosel.core.client.label.MappingCategoryLabelProvider;
@@ -215,6 +217,7 @@ public class ComponentExampleClientModule extends AbstractGinModule implements
                 getDropTargetCapabilityCheckerClass()).in(Singleton.class);
 
         bind(Branding.class).to(NullBranding.class).in(Singleton.class);
+        bind(ErrorHandler.class).to(NullErrorHandler.class).in(Singleton.class);
 
         bindWindowContentProducer();
     }
