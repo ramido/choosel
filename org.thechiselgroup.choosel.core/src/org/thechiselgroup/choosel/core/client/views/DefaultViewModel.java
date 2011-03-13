@@ -15,22 +15,17 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
-import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.IntersectionResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
-import org.thechiselgroup.choosel.core.client.resources.ResourceByUriMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChange;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChange.Delta;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChangedEvent;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChangedHandler;
-import org.thechiselgroup.choosel.core.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEvent;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEventHandler;
@@ -76,8 +71,6 @@ public class DefaultViewModel implements ViewModel, Disposable {
      */
     protected boolean isConfigurationAvailable = false;
 
-    private ResourceSet containedResources;
-
     private ResourceSet selectedResources;
 
     private ResourceSet highlightedResources;
@@ -90,35 +83,15 @@ public class DefaultViewModel implements ViewModel, Disposable {
 
     private HandlerRegistrationSet handlerRegistrations = new HandlerRegistrationSet();
 
-    /**
-     * Creates a {@link DefaultViewModel} that groups per resource uri by
-     * default.
-     */
     public DefaultViewModel(ViewContentDisplay contentDisplay,
             SlotMappingConfiguration slotMappingConfiguration,
-            ResourceSet selectedResources, ResourceSet containedResources,
-            ResourceSet highlightedResources,
-            SlotMappingInitializer slotMappingInitializer,
-            ViewItemBehavior viewItemBehavior) {
-
-        this(contentDisplay, slotMappingConfiguration, selectedResources,
-                containedResources, highlightedResources,
-                slotMappingInitializer, viewItemBehavior, new ResourceGrouping(
-                        new ResourceByUriMultiCategorizer(),
-                        new DefaultResourceSetFactory()));
-    }
-
-    public DefaultViewModel(ViewContentDisplay contentDisplay,
-            SlotMappingConfiguration slotMappingConfiguration,
-            ResourceSet selectedResources, ResourceSet containedResources,
-            ResourceSet highlightedResources,
+            ResourceSet selectedResources, ResourceSet highlightedResources,
             SlotMappingInitializer slotMappingInitializer,
             ViewItemBehavior viewItemBehavior, ResourceGrouping resourceGrouping) {
 
         assert slotMappingConfiguration != null;
         assert contentDisplay != null;
         assert selectedResources != null;
-        assert containedResources != null;
         assert highlightedResources != null;
         assert slotMappingInitializer != null;
         assert viewItemBehavior != null;
@@ -128,20 +101,22 @@ public class DefaultViewModel implements ViewModel, Disposable {
         this.slotMappingConfiguration = slotMappingConfiguration;
         this.contentDisplay = contentDisplay;
         this.selectedResources = selectedResources;
-        this.containedResources = containedResources;
         this.highlightedResources = highlightedResources;
         this.viewItemBehavior = viewItemBehavior;
         this.resourceGrouping = resourceGrouping;
 
         slotMappingConfiguration.initSlots(contentDisplay.getSlots());
-        init(containedResources);
         init(selectedResources);
         initSelectionModelEventHandlers();
         initResourceGrouping();
-        initAllResourcesToResourceGroupingLink();
         initHighlightingModel();
         initContentDisplay();
         initSlotMappingChangeHandler();
+    }
+
+    @Override
+    public boolean containsViewItem(String groupId) {
+        return viewItemsByGroupId.containsKey(groupId);
     }
 
     private DefaultViewItem createViewItem(String groupID,
@@ -180,9 +155,6 @@ public class DefaultViewModel implements ViewModel, Disposable {
          * handlers should get removed and references should be set to null.
          */
 
-        DisposeUtil.dispose(containedResources);
-        containedResources = null;
-
         DisposeUtil.dispose(selectedResources);
         selectedResources = null;
 
@@ -203,13 +175,8 @@ public class DefaultViewModel implements ViewModel, Disposable {
     }
 
     @Override
-    public ResourceMultiCategorizer getCategorizer() {
-        return resourceGrouping.getCategorizer();
-    }
-
-    @Override
-    public ResourceSet getContainedResources() {
-        return containedResources;
+    public ResourceSet getContentResourceSet() {
+        return resourceGrouping.getResourceSet();
     }
 
     @Override
@@ -229,9 +196,14 @@ public class DefaultViewModel implements ViewModel, Disposable {
             LightweightCollection<Resource> resources) {
 
         ResourceSet resourcesInThisView = new DefaultResourceSet();
-        resourcesInThisView.addAll(containedResources
+        resourcesInThisView.addAll(resourceGrouping.getResourceSet()
                 .getIntersection(resources));
         return resourcesInThisView;
+    }
+
+    @Override
+    public ResourceGrouping getResourceGrouping() {
+        return resourceGrouping;
     }
 
     @Override
@@ -254,20 +226,25 @@ public class DefaultViewModel implements ViewModel, Disposable {
         return contentDisplay;
     }
 
-    public List<ViewItem> getViewItems() {
-        List<ViewItem> result = new ArrayList<ViewItem>();
-        for (DefaultViewItem resourceItem : viewItemsByGroupId.values()) {
-            result.add(resourceItem);
-        }
+    @Override
+    public ViewItem getViewItem(String viewItemId) {
+        return viewItemsByGroupId.get(viewItemId);
+    }
+
+    @Override
+    public LightweightCollection<ViewItem> getViewItems() {
+        LightweightList<ViewItem> result = CollectionFactory
+                .createLightweightList();
+        result.addAll(viewItemsByGroupId.values());
         return result;
     }
 
     /**
-     * @return list of resource items that contain at least one of the
-     *         resources.
+     * @return List of {@link ViewItem}s that contain at least one of the
+     *         {@link Resource}s.
      */
-    private LightweightList<ViewItem> getViewItems(Iterable<Resource> resources) {
-
+    @Override
+    public LightweightList<ViewItem> getViewItems(Iterable<Resource> resources) {
         assert resources != null;
 
         LightweightList<ViewItem> result = CollectionFactory
@@ -286,19 +263,8 @@ public class DefaultViewModel implements ViewModel, Disposable {
         }
     }
 
-    private void initAllResourcesToResourceGroupingLink() {
-        containedResources
-                .addEventHandler(new ResourceSetChangedEventHandler() {
-                    @Override
-                    public void onResourceSetChanged(
-                            ResourceSetChangedEvent event) {
-                        initializeVisualMappings(event.getTarget());
-                    }
-                });
-        resourceGrouping.setResourceSet(containedResources);
-    }
-
-    // TODO eliminate inner class, implement methods in DefaultView & test them
+    // TODO eliminate inner class, implement methods in DefaultViewModel
+    // TODO test
     private void initContentDisplay() {
         contentDisplayCallback = new ViewContentDisplayCallback() {
 
@@ -347,7 +313,8 @@ public class DefaultViewModel implements ViewModel, Disposable {
     private void initHighlightingModel() {
         highlightedResourcesIntersection = new IntersectionResourceSet(
                 new DefaultResourceSet());
-        highlightedResourcesIntersection.addResourceSet(containedResources);
+        highlightedResourcesIntersection
+                .addResourceSet(getContentResourceSet());
         highlightedResourcesIntersection.addResourceSet(highlightedResources);
 
         handlerRegistrations.addHandlerRegistration(highlightedResources
@@ -382,10 +349,10 @@ public class DefaultViewModel implements ViewModel, Disposable {
 
     private void initResourceGrouping() {
         resourceGrouping.addHandler(new ResourceGroupingChangedHandler() {
-
             @Override
             public void onResourceCategoriesChanged(
                     ResourceGroupingChangedEvent e) {
+                initializeVisualMappings(getContentResourceSet());
                 updateViewItemsOnModelChange(e);
             }
         });
@@ -437,9 +404,9 @@ public class DefaultViewModel implements ViewModel, Disposable {
          * 
          * TODO extract
          */
-        LightweightList<Resource> highlightedResources = containedResources
+        LightweightList<Resource> highlightedResources = getContentResourceSet()
                 .getIntersection(this.highlightedResources);
-        LightweightList<Resource> selectedResources = containedResources
+        LightweightList<Resource> selectedResources = getContentResourceSet()
                 .getIntersection(this.selectedResources);
 
         for (ResourceGroupingChange change : changes) {
@@ -471,7 +438,6 @@ public class DefaultViewModel implements ViewModel, Disposable {
         return removedViewItems;
     }
 
-    // TODO implement
     private LightweightCollection<ViewItem> processUpdates(
             LightweightList<ResourceGroupingChange> changes) {
 
@@ -532,8 +498,10 @@ public class DefaultViewModel implements ViewModel, Disposable {
     }
 
     @Override
-    public void setCategorizer(ResourceMultiCategorizer newCategorizer) {
-        resourceGrouping.setCategorizer(newCategorizer);
+    public void setResourceGrouping(ResourceGrouping resourceGrouping) {
+        // TODO Auto-generated method stub
+        // XXX test --> remove handler, add handler, change grouping, update
+        // view items(remove,add)
     }
 
     private void updateHighlighting(
@@ -615,4 +583,5 @@ public class DefaultViewModel implements ViewModel, Disposable {
                 removedResourceItems,
                 LightweightCollections.<Slot> emptyCollection());
     }
+
 }

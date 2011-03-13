@@ -78,7 +78,7 @@ public class DefaultViewModelTest {
         underTest.getSlotMappingConfiguration().setResolver(slot,
                 new FirstResourcePropertyResolver("text2"));
 
-        List<ViewItem> resourceItems = underTest.getViewItems();
+        List<ViewItem> resourceItems = underTest.getViewItems().toList();
         assertEquals(1, resourceItems.size());
         ViewItem resourceItem = resourceItems.get(0);
 
@@ -129,10 +129,10 @@ public class DefaultViewModelTest {
         r2.putValue("property2", "value2");
 
         containedResources.addAll(toResourceSet(r1, r2));
-        underTest.setCategorizer(new ResourceByPropertyMultiCategorizer(
-                "property2"));
+        underTest.getResourceGrouping().setCategorizer(
+                new ResourceByPropertyMultiCategorizer("property2"));
 
-        List<ViewItem> resourceItems = underTest.getViewItems();
+        List<ViewItem> resourceItems = underTest.getViewItems().toList();
         assertEquals(1, resourceItems.size());
         ResourceSet resourceItemResources = resourceItems.get(0)
                 .getResourceSet();
@@ -147,13 +147,13 @@ public class DefaultViewModelTest {
         resource.putValue("text1", "category1");
         resource.putValue("text2", "category2");
 
-        underTest
-                .setCategorizer(new ResourceByPropertyMultiCategorizer("text1"));
+        underTest.getResourceGrouping().setCategorizer(
+                new ResourceByPropertyMultiCategorizer("text1"));
         containedResources.add(resource);
-        underTest
-                .setCategorizer(new ResourceByPropertyMultiCategorizer("text2"));
+        underTest.getResourceGrouping().setCategorizer(
+                new ResourceByPropertyMultiCategorizer("text2"));
 
-        List<ViewItem> resourceItems = underTest.getViewItems();
+        List<ViewItem> resourceItems = underTest.getViewItems().toList();
         assertEquals(1, resourceItems.size());
         ViewItem resourceItem = resourceItems.get(0);
         assertEquals("category2", resourceItem.getViewItemID());
@@ -169,13 +169,13 @@ public class DefaultViewModelTest {
         resource.putValue("text1", "category1");
         resource.putValue("text2", "category1");
 
-        underTest
-                .setCategorizer(new ResourceByPropertyMultiCategorizer("text1"));
+        underTest.getResourceGrouping().setCategorizer(
+                new ResourceByPropertyMultiCategorizer("text1"));
         containedResources.add(resource);
-        underTest
-                .setCategorizer(new ResourceByPropertyMultiCategorizer("text2"));
+        underTest.getResourceGrouping().setCategorizer(
+                new ResourceByPropertyMultiCategorizer("text2"));
 
-        List<ViewItem> resourceItems = underTest.getViewItems();
+        List<ViewItem> resourceItems = underTest.getViewItems().toList();
         assertEquals(1, resourceItems.size());
         ViewItem resourceItem = resourceItems.get(0);
         assertEquals("category1", resourceItem.getViewItemID());

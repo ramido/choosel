@@ -15,44 +15,74 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views;
 
+import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.HasResourceCategorizer;
+import org.thechiselgroup.choosel.core.client.resources.ResourceByUriMultiCategorizer;
+import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.core.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.views.slots.DefaultSlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingConfiguration;
 
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * Facade that facilitates usage of {@link ViewContentDisplay} as {@link Widget}
+ * .
+ * 
+ * @author Lars Grammel
+ */
 public class VisualizationWidget extends SimplePanel implements
-        HasResourceCategorizer {
+        HasResourceCategorizer, ContainsResourceGrouping {
 
     private ViewModel viewModel;
 
     private ViewContentDisplay contentDisplay;
 
     public VisualizationWidget(ViewContentDisplay contentDisplay,
-            ResourceSet selectedResource, ResourceSet containedResources,
-            ResourceSet highlightedResources, ViewItemBehavior viewItemBehavior) {
+            ResourceSet selectedResource, ResourceSet highlightedResources,
+            ViewItemBehavior viewItemBehavior) {
 
         assert contentDisplay != null;
 
         this.contentDisplay = contentDisplay;
         this.viewModel = new DefaultViewModel(contentDisplay,
                 new SlotMappingConfiguration(), selectedResource,
-                containedResources, highlightedResources,
-                new DefaultSlotMappingInitializer(), viewItemBehavior);
+                highlightedResources, new DefaultSlotMappingInitializer(),
+                viewItemBehavior, new ResourceGrouping(
+                        new ResourceByUriMultiCategorizer(),
+                        new DefaultResourceSetFactory()));
 
         setWidget(contentDisplay.asWidget());
     }
 
     @Override
     public ResourceMultiCategorizer getCategorizer() {
-        return viewModel.getCategorizer();
+        return viewModel.getResourceGrouping().getCategorizer();
+    }
+
+    public ResourceSet getContentResourceSet() {
+        return viewModel.getResourceGrouping().getResourceSet();
+    }
+
+    @Override
+    public ResourceGrouping getResourceGrouping() {
+        return viewModel.getResourceGrouping();
     }
 
     @Override
     public void setCategorizer(ResourceMultiCategorizer newCategorizer) {
-        viewModel.setCategorizer(newCategorizer);
+        viewModel.getResourceGrouping().setCategorizer(newCategorizer);
+    }
+
+    public void setContentResourceSet(ResourceSet contentResourceSet) {
+        viewModel.getResourceGrouping().setResourceSet(contentResourceSet);
+    }
+
+    @Override
+    public void setResourceGrouping(ResourceGrouping resourceGrouping) {
+        viewModel.setResourceGrouping(resourceGrouping);
     }
 
     @Override

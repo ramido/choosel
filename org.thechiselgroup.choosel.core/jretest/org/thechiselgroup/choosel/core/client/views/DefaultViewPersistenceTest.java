@@ -109,7 +109,8 @@ public class DefaultViewPersistenceTest {
         restoredView.doRestore(memento, restorationService, collector);
 
         // 4. check resource items and control settings
-        List<ViewItem> resourceItems = restoredViewModel.getViewItems();
+        List<ViewItem> resourceItems = restoredViewModel.getViewItems()
+                .toList();
         assertEquals(1, resourceItems.size());
         ViewItem resourceItem = resourceItems.get(0);
         assertEquals("value2", resourceItem.getSlotValue(textSlot));
@@ -138,7 +139,7 @@ public class DefaultViewPersistenceTest {
 
         originalView.getResourceModel().addUnnamedResources(
                 toResourceSet(r1, r2));
-        originalViewModel.setCategorizer(
+        originalViewModel.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("property2"));
 
         // 2. save first view
@@ -146,12 +147,13 @@ public class DefaultViewPersistenceTest {
         Memento memento = originalView.save(collector);
 
         // 3. restore other view - set by uri categorization first
-        restoredViewModel.setCategorizer(
+        restoredViewModel.getResourceGrouping().setCategorizer(
                 new ResourceByUriMultiCategorizer());
         restoredView.doRestore(memento, restorationService, collector);
 
         // 4. check resource items and control settings
-        List<ViewItem> resourceItems = restoredViewModel.getViewItems();
+        List<ViewItem> resourceItems = restoredViewModel.getViewItems()
+                .toList();
         assertEquals(1, resourceItems.size());
         ResourceSet resourceItemResources = resourceItems.get(0)
                 .getResourceSet();
@@ -178,20 +180,21 @@ public class DefaultViewPersistenceTest {
 
         originalView.getResourceModel().addUnnamedResources(
                 toResourceSet(r1, r2));
-        originalViewModel.setCategorizer(new ResourceByUriMultiCategorizer());
+        originalViewModel.getResourceGrouping().setCategorizer(
+                new ResourceByUriMultiCategorizer());
 
         // 2. save first view
         DefaultResourceSetCollector collector = new DefaultResourceSetCollector();
         Memento memento = originalView.save(collector);
 
         // 3. restore other view - set by uri categorization first
-        restoredViewModel
-                .setCategorizer(new ResourceByPropertyMultiCategorizer(
-                        "property2"));
+        restoredViewModel.getResourceGrouping().setCategorizer(
+                new ResourceByPropertyMultiCategorizer("property2"));
         restoredView.doRestore(memento, restorationService, collector);
 
         // 4. check resource items and control settings
-        List<ViewItem> resourceItems = restoredViewModel.getViewItems();
+        List<ViewItem> resourceItems = restoredViewModel.getViewItems()
+                .toList();
         assertEquals(2, resourceItems.size());
     }
 
@@ -248,9 +251,8 @@ public class DefaultViewPersistenceTest {
 
         originalView.getResourceModel().addUnnamedResources(
                 toResourceSet(r1, r2, r3));
-        originalViewModel
-                .setCategorizer(new ResourceByPropertyMultiCategorizer(
-                        "property2"));
+        originalViewModel.getResourceGrouping().setCategorizer(
+                new ResourceByPropertyMultiCategorizer("property2"));
         originalViewModel.getSlotMappingConfiguration().setResolver(
                 numberSlot,
                 new CalculationResourceSetToValueResolver("property1",
@@ -261,11 +263,13 @@ public class DefaultViewPersistenceTest {
         Memento memento = originalView.save(collector);
 
         // 3. restore other view - set by uri categorization first
-        restoredViewModel.setCategorizer(new ResourceByUriMultiCategorizer());
+        restoredViewModel.getResourceGrouping().setCategorizer(
+                new ResourceByUriMultiCategorizer());
         restoredView.doRestore(memento, restorationService, collector);
 
         // 4. check resource items and control settings
-        List<ViewItem> resourceItems = restoredViewModel.getViewItems();
+        List<ViewItem> resourceItems = restoredViewModel.getViewItems()
+                .toList();
         assertEquals(1, resourceItems.size());
         ViewItem resourceItem = resourceItems.get(0);
         assertEquals(expectedResult, resourceItem.getSlotValue(numberSlot));

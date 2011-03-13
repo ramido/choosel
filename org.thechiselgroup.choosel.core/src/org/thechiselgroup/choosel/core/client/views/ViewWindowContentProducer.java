@@ -23,6 +23,9 @@ import static org.thechiselgroup.choosel.core.client.configuration.ChooselInject
 import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.LABEL_PROVIDER_SELECTION_SET;
 
 import org.thechiselgroup.choosel.core.client.label.LabelProvider;
+import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
+import org.thechiselgroup.choosel.core.client.resources.ResourceByUriMultiCategorizer;
+import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEvent;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEventHandler;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetFactory;
@@ -121,7 +124,7 @@ public class ViewWindowContentProducer implements WindowContentProducer {
             SlotMappingConfiguration configuration, ViewModel viewModel) {
 
         return new DefaultVisualMappingsControl(contentDisplay, configuration,
-                viewModel);
+                viewModel.getResourceGrouping());
     }
 
     @Override
@@ -170,11 +173,16 @@ public class ViewWindowContentProducer implements WindowContentProducer {
 
         SlotMappingInitializer slotMappingInitializer = createSlotMappingInitializer(contentType);
 
+        ResourceGrouping resourceGrouping = new ResourceGrouping(
+                new ResourceByUriMultiCategorizer(),
+                new DefaultResourceSetFactory());
+
+        resourceGrouping.setResourceSet(resourceModel.getResources());
+
         DefaultViewModel viewModel = new DefaultViewModel(contentDisplay,
                 slotMappingConfiguration, selectionModel.getSelectionProxy(),
-                resourceModel.getResources(),
                 hoverModel.getResources(), slotMappingInitializer,
-                viewItemBehaviors);
+                viewItemBehaviors, resourceGrouping);
 
         final VisualMappingsControl visualMappingsControl = createVisualMappingsControl(
                 contentType, contentDisplay, slotMappingConfiguration,

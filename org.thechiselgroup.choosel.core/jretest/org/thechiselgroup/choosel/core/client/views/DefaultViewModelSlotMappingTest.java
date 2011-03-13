@@ -71,7 +71,7 @@ public class DefaultViewModelSlotMappingTest {
                 new CalculationResourceSetToValueResolver("property1",
                         new SumCalculation()));
 
-        List<ViewItem> resourceItems = underTest.getViewItems();
+        List<ViewItem> resourceItems = underTest.getViewItems().toList();
         assertEquals(1, resourceItems.size());
         ViewItem resourceItem = resourceItems.get(0);
         resourceItem.getSlotValue(numberSlot);
@@ -122,8 +122,8 @@ public class DefaultViewModelSlotMappingTest {
         r3.putValue("property2", "value2");
 
         containedResources.addAll(toResourceSet(r1, r2, r3));
-        underTest.setCategorizer(new ResourceByPropertyMultiCategorizer(
-                "property2"));
+        underTest.getResourceGrouping().setCategorizer(
+                new ResourceByPropertyMultiCategorizer("property2"));
     }
 
     @Test
@@ -139,7 +139,7 @@ public class DefaultViewModelSlotMappingTest {
                 new CalculationResourceSetToValueResolver("property1",
                         calculation));
 
-        List<ViewItem> resourceItems = underTest.getViewItems();
+        List<ViewItem> resourceItems = underTest.getViewItems().toList();
         assertEquals(1, resourceItems.size());
         ViewItem resourceItem = resourceItems.get(0);
         assertEquals(expectedResult, resourceItem.getSlotValue(numberSlot));
@@ -158,7 +158,7 @@ public class DefaultViewModelSlotMappingTest {
                 new CalculationResourceSetToValueResolver("property1",
                         new SumCalculation()));
 
-        List<ViewItem> resourceItems = underTest.getViewItems();
+        List<ViewItem> resourceItems = underTest.getViewItems().toList();
         assertEquals(1, resourceItems.size());
         final ViewItem resourceItem = resourceItems.get(0);
         resourceItem.getSlotValue(numberSlot);

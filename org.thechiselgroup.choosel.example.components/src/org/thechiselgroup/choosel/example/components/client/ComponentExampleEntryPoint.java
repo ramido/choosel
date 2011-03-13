@@ -18,7 +18,6 @@ package org.thechiselgroup.choosel.example.components.client;
 import java.util.Map;
 
 import org.thechiselgroup.choosel.core.client.label.IncrementingSuffixLabelFactory;
-import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByPropertyMultiCategorizer;
@@ -78,8 +77,6 @@ public class ComponentExampleEntryPoint implements EntryPoint {
                 new IncrementingSuffixLabelFactory("test"),
                 new DefaultResourceSetFactory());
 
-        DefaultResourceSet b = new DefaultResourceSet();
-
         CompositeViewItemBehavior viewItemBehavior = new CompositeViewItemBehavior();
         viewItemBehavior.add(new HighlightingViewItemBehavior(hoverModel));
         viewItemBehavior.add(new SwitchSelectionOnClickViewItemBehavior(
@@ -87,15 +84,14 @@ public class ComponentExampleEntryPoint implements EntryPoint {
 
         VisualizationWidget scatterPlot = new VisualizationWidget(
                 new ScatterPlotViewContentDisplay(),
-                selectionModel.getSelectionProxy(), b,
-                hoverModel.getResources(), viewItemBehavior);
+                selectionModel.getSelectionProxy(), hoverModel.getResources(),
+                viewItemBehavior);
 
         scatterPlot.setCategorizer(new ResourceByPropertyMultiCategorizer(
                 BenchmarkResourceSetFactory.TEXT_2));
 
-        b.addAll(resourceSet);
+        scatterPlot.setContentResourceSet(resourceSet);
 
-        DefaultResourceSet b2 = new DefaultResourceSet();
         CompositeViewItemBehavior behaviors2 = new CompositeViewItemBehavior();
         behaviors2.add(new HighlightingViewItemBehavior(hoverModel));
         behaviors2.add(new SwitchSelectionOnClickViewItemBehavior(
@@ -103,10 +99,10 @@ public class ComponentExampleEntryPoint implements EntryPoint {
 
         VisualizationWidget barChart = new VisualizationWidget(
                 new BarChartViewContentDisplay(),
-                selectionModel.getSelectionProxy(), b2,
-                hoverModel.getResources(), behaviors2);
+                selectionModel.getSelectionProxy(), hoverModel.getResources(),
+                behaviors2);
 
-        b2.addAll(resourceSet);
+        barChart.setContentResourceSet(resourceSet);
 
         RootPanel.get().add(scatterPlot);
         RootPanel.get().add(barChart);

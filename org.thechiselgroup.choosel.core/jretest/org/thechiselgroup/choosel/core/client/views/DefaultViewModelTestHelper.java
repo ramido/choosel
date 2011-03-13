@@ -32,6 +32,7 @@ import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactor
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByUriTypeCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceCategorizerToMultiCategorizerAdapter;
+import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEventHandler;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
@@ -120,14 +121,17 @@ public final class DefaultViewModelTestHelper {
         when(contentDisplay.getSlots()).thenReturn(slots);
         when(contentDisplay.isReady()).thenReturn(true);
 
+        ResourceGrouping resourceGrouping = new ResourceGrouping(
+                new ResourceCategorizerToMultiCategorizerAdapter(
+                        new ResourceByUriTypeCategorizer()),
+                new DefaultResourceSetFactory());
+
+        resourceGrouping.setResourceSet(containedResources);
+
         DefaultViewModel underTest = spy(new DefaultViewModel(contentDisplay,
                 resourceSetToValueResolver, selectedResources,
-                containedResources, highlightedResources,
-                slotMappingInitializer, mock(ViewItemBehavior.class)));
-
-        underTest
-                .setCategorizer(new ResourceCategorizerToMultiCategorizerAdapter(
-                        new ResourceByUriTypeCategorizer()));
+                highlightedResources, slotMappingInitializer,
+                mock(ViewItemBehavior.class), resourceGrouping));
 
         // deactivate slot initialization
         underTest.isConfigurationAvailable = true;
