@@ -24,12 +24,15 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
+import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByPropertyMultiCategorizer;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.math.AverageCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.Calculation;
@@ -39,13 +42,22 @@ import org.thechiselgroup.choosel.core.client.util.math.SumCalculation;
 import org.thechiselgroup.choosel.core.client.views.slots.CalculationResourceSetToValueResolver;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 
-public class DefaultViewIntegrationTest {
-
-    private TestViewModel underTest;
+public class DefaultViewModelSlotMappingTest {
 
     private Slot textSlot;
 
     private Slot numberSlot;
+
+    private ResourceSet selectedResources;
+
+    private ResourceSet highlightedResources;
+
+    private ResourceSet containedResources;
+
+    private DefaultViewModel underTest;
+
+    @Mock
+    private ViewContentDisplay viewContentDisplay;
 
     @Test
     public void averageCalculationOverGroup() {
@@ -86,10 +98,16 @@ public class DefaultViewIntegrationTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
+        containedResources = new DefaultResourceSet();
+        highlightedResources = new DefaultResourceSet();
+        selectedResources = new DefaultResourceSet();
+
         textSlot = new Slot("id-1", "text-slot", DataType.TEXT);
         numberSlot = new Slot("id-2", "number-slot", DataType.NUMBER);
 
-        underTest = TestViewModel.createTestViewModel(textSlot, numberSlot);
+        underTest = DefaultViewModelTestHelper.createTestViewModel(containedResources,
+                highlightedResources, selectedResources, viewContentDisplay,
+                textSlot, numberSlot);
 
         Resource r1 = new Resource("test:1");
         r1.putValue("property1", new Double(0));
@@ -103,8 +121,7 @@ public class DefaultViewIntegrationTest {
         r3.putValue("property1", new Double(8));
         r3.putValue("property2", "value2");
 
-        underTest.getResourceModel().addUnnamedResources(
-                toResourceSet(r1, r2, r3));
+        containedResources.addAll(toResourceSet(r1, r2, r3));
         underTest.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("property2"));
     }
@@ -150,14 +167,13 @@ public class DefaultViewIntegrationTest {
          * XXX contentDisplay must not be inlined in when part, otherwise
          * Mockito will throw UnfinishedStubbingException.
          */
-        ViewContentDisplay contentDisplay = underTest.getContentDisplay();
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) {
                 assertEquals(8d, resourceItem.getSlotValue(numberSlot));
                 return null;
             }
-        }).when(contentDisplay).update(any(LightweightCollection.class),
+        }).when(viewContentDisplay).update(any(LightweightCollection.class),
                 any(LightweightCollection.class),
                 any(LightweightCollection.class),
                 any(LightweightCollection.class));

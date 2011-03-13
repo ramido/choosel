@@ -84,6 +84,7 @@ public class SelectionPresenterDropCommandFactoryTest {
     public void cannotDropIfNoResourcesFromSetAreContainedInView() {
         viewResources = spy(createResources(3, 4, 5));
         when(resourceModel.getResources()).thenReturn(viewResources);
+        when(viewModel.getContainedResources()).thenReturn(viewResources);
         assertEquals(false, dropCommandFactory.canDrop(dragAvatar));
     }
 
@@ -106,13 +107,14 @@ public class SelectionPresenterDropCommandFactoryTest {
         when(accessor.findView(dropTarget)).thenReturn(view);
         when(view.getModel()).thenReturn(viewModel);
 
-        when(viewModel.getSelectionModel()).thenReturn(selectionModel);
+        when(view.getSelectionModel()).thenReturn(selectionModel);
         when(selectionModel.getSelection()).thenReturn(selectionSet);
         when(selectionSet.isModifiable()).thenReturn(true);
-        when(viewModel.getResourceModel()).thenReturn(resourceModel);
+        when(view.getResourceModel()).thenReturn(resourceModel);
+        when(viewModel.getContainedResources()).thenReturn(viewResources);
         when(resourceModel.getResources()).thenReturn(viewResources);
         when(dragAvatar.getType()).thenReturn(ResourceSetAvatarType.SET);
-        when(viewModel.getResourceModel()).thenReturn(resourceModel);
+        when(view.getResourceModel()).thenReturn(resourceModel);
 
         dropCommandFactory = new SelectionPresenterDropCommandFactory(
                 dropTarget, accessor);

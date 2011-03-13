@@ -75,7 +75,9 @@ public class SelectionPresenterDropCommandFactory extends
         }
 
         ResourceSet viewResources = getTargetView().getModel()
-                .getResourceModel().getResources();
+                .getContainedResources();
+
+        assert viewResources != null;
 
         return !viewResources.getIntersection(avatarResources).isEmpty();
     }
@@ -88,7 +90,7 @@ public class SelectionPresenterDropCommandFactory extends
     }
 
     private SelectionModel getSelectionModel() {
-        return getTargetView().getModel().getSelectionModel();
+        return getTargetView().getSelectionModel();
     }
 
 }

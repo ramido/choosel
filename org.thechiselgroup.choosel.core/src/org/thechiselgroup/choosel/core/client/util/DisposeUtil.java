@@ -17,9 +17,9 @@ package org.thechiselgroup.choosel.core.client.util;
 
 public final class DisposeUtil {
 
-    public static void dispose(Object target) {
-        if (target != null && target instanceof Disposable) {
-            ((Disposable) target).dispose();
+    public static void dispose(Object o) {
+        if (o != null && o instanceof Disposable) {
+            ((Disposable) o).dispose();
         }
     }
 

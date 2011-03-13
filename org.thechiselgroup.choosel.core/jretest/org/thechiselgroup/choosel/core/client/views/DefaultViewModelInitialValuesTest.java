@@ -16,7 +16,6 @@
 package org.thechiselgroup.choosel.core.client.views;
 
 import static org.junit.Assert.assertEquals;
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.toResourceSet;
 
 import java.util.List;
 
@@ -24,17 +23,21 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
+import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 
 // TODO migrate to change default slot mapping initializer
-public class DefaultViewInitialValuesTest {
+public class DefaultViewModelInitialValuesTest {
 
-    private TestViewModel underTest;
+    private DefaultViewModel underTest;
 
     private Slot textSlot;
 
     private Slot numberSlot;
+
+    private ResourceSet containedResources;
 
     @Test
     public void initialSlotValueForNumberSlotIfNoNumberIsAvailable() {
@@ -42,8 +45,7 @@ public class DefaultViewInitialValuesTest {
         resource.putValue("text1", "t1");
         resource.putValue("text2", "t2");
 
-        underTest.getResourceModel().addUnnamedResources(
-                toResourceSet(resource));
+        containedResources.add(resource);
 
         assertEquals(true, underTest.getSlotMappingConfiguration()
                 .containsResolver(numberSlot));
@@ -61,8 +63,7 @@ public class DefaultViewInitialValuesTest {
         resource.putValue("text1", "t1");
         resource.putValue("text2", "t2");
 
-        underTest.getResourceModel().addUnnamedResources(
-                toResourceSet(resource));
+        containedResources.add(resource);
 
         assertEquals(true, underTest.getSlotMappingConfiguration()
                 .containsResolver(textSlot));
@@ -78,10 +79,16 @@ public class DefaultViewInitialValuesTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
+        containedResources = new DefaultResourceSet();
+
         textSlot = new Slot("id-1", "text-slot", DataType.TEXT);
         numberSlot = new Slot("id-2", "number-slot", DataType.NUMBER);
 
-        underTest = TestViewModel.createTestViewModel(textSlot, numberSlot);
+        underTest = DefaultViewModelTestHelper.createTestViewModel(
+                containedResources, new DefaultResourceSet(),
+                new DefaultResourceSet(), textSlot, numberSlot);
+
+        underTest.isConfigurationAvailable = false;
     }
 
 }

@@ -18,7 +18,6 @@ package org.thechiselgroup.choosel.core.client.views;
 import java.util.Map;
 
 import org.thechiselgroup.choosel.core.client.resources.Resource;
-import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
@@ -44,11 +43,6 @@ public class TestViewContentDisplayCallback implements
     @Override
     public boolean containsViewItem(String viewItemId) {
         return viewItemsByGroupId.containsKey(viewItemId);
-    }
-
-    @Override
-    public ResourceSet getAutomaticResourceSet() {
-        return null;
     }
 
     @Override

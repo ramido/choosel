@@ -40,12 +40,12 @@ public class AllSetDropCommandFactory extends
         assert dragAvatar != null;
 
         return new AddResourcesToResourceModelCommand(getTargetView()
-                .getModel().getResourceModel(), dragAvatar.getResourceSet());
+                .getResourceModel(), dragAvatar.getResourceSet());
     }
 
     private boolean targetContainsAllResources(ResourceSetAvatar dragAvatar) {
-        return getTargetView().getModel().getResourceModel()
-                .containsResources(dragAvatar.getResourceSet());
+        return getTargetView().getResourceModel().containsResources(
+                dragAvatar.getResourceSet());
     }
 
 }
