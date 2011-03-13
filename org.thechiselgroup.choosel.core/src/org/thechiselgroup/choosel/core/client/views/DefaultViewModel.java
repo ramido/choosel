@@ -21,13 +21,16 @@ import java.util.Map;
 import java.util.Set;
 
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.IntersectionResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
+import org.thechiselgroup.choosel.core.client.resources.ResourceByUriMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChange;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChange.Delta;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChangedEvent;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChangedHandler;
+import org.thechiselgroup.choosel.core.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEvent;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEventHandler;
@@ -90,8 +93,7 @@ public class DefaultViewModel implements ViewModel, Disposable {
 
     private HandlerRegistrationSet handlerRegistrations = new HandlerRegistrationSet();
 
-    public DefaultViewModel(ResourceGrouping resourceGrouping,
-            ViewContentDisplay contentDisplay,
+    public DefaultViewModel(ViewContentDisplay contentDisplay,
             SlotMappingConfiguration slotMappingConfiguration,
             ResourceSet selectedResources, ResourceSet containedResources,
             ResourceSet highlightedResources,
@@ -99,7 +101,6 @@ public class DefaultViewModel implements ViewModel, Disposable {
             ViewItemBehavior viewItemBehavior) {
 
         assert slotMappingConfiguration != null;
-        assert resourceGrouping != null;
         assert contentDisplay != null;
         assert selectedResources != null;
         assert containedResources != null;
@@ -109,12 +110,20 @@ public class DefaultViewModel implements ViewModel, Disposable {
 
         this.slotMappingInitializer = slotMappingInitializer;
         this.slotMappingConfiguration = slotMappingConfiguration;
-        this.resourceGrouping = resourceGrouping;
         this.contentDisplay = contentDisplay;
         this.selectedResources = selectedResources;
         this.containedResources = containedResources;
         this.highlightedResources = highlightedResources;
         this.viewItemBehavior = viewItemBehavior;
+
+        /*
+         * Groups are transient --> we can use DefaultResourceSetFactory
+         * 
+         * Categorize per resource by default
+         */
+        this.resourceGrouping = new ResourceGrouping(
+                new ResourceByUriMultiCategorizer(),
+                new DefaultResourceSetFactory());
 
         slotMappingConfiguration.initSlots(contentDisplay.getSlots());
         init(containedResources);
@@ -180,6 +189,11 @@ public class DefaultViewModel implements ViewModel, Disposable {
     }
 
     @Override
+    public ResourceMultiCategorizer getCategorizer() {
+        return resourceGrouping.getCategorizer();
+    }
+
+    @Override
     public ResourceSet getContainedResources() {
         return containedResources;
     }
@@ -204,11 +218,6 @@ public class DefaultViewModel implements ViewModel, Disposable {
         resourcesInThisView.addAll(containedResources
                 .getIntersection(resources));
         return resourcesInThisView;
-    }
-
-    @Override
-    public ResourceGrouping getResourceGrouping() {
-        return resourceGrouping;
     }
 
     @Override
@@ -508,6 +517,11 @@ public class DefaultViewModel implements ViewModel, Disposable {
         assert !viewItemsByGroupId.containsKey(groupID);
 
         return viewItem;
+    }
+
+    @Override
+    public void setCategorizer(ResourceMultiCategorizer newCategorizer) {
+        resourceGrouping.setCategorizer(newCategorizer);
     }
 
     private void updateHighlighting(

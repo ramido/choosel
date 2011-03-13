@@ -20,8 +20,8 @@ import java.util.Map;
 
 import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.DataTypeToListMap;
+import org.thechiselgroup.choosel.core.client.resources.HasResourceCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByPropertyMultiCategorizer;
-import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetUtils;
 import org.thechiselgroup.choosel.core.client.ui.ConfigurationPanel;
@@ -37,7 +37,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class DefaultVisualMappingsControl implements VisualMappingsControl {
 
-    private final ResourceGrouping resourceGrouping;
+    private final HasResourceCategorizer resourceGrouping;
 
     private final SlotMappingConfiguration resolver;
 
@@ -52,7 +52,8 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
     private Map<Slot, SlotControl> slotToSlotControls = new HashMap<Slot, SlotControl>();
 
     public DefaultVisualMappingsControl(ViewContentDisplay contentDisplay,
-            SlotMappingConfiguration resolver, ResourceGrouping resourceGrouping) {
+            SlotMappingConfiguration resolver,
+            HasResourceCategorizer resourceGrouping) {
 
         this.contentDisplay = contentDisplay;
         this.resolver = resolver;

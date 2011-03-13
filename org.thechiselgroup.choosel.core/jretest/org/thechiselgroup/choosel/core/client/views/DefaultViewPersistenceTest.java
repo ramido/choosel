@@ -138,7 +138,7 @@ public class DefaultViewPersistenceTest {
 
         originalView.getResourceModel().addUnnamedResources(
                 toResourceSet(r1, r2));
-        originalViewModel.getResourceGrouping().setCategorizer(
+        originalViewModel.setCategorizer(
                 new ResourceByPropertyMultiCategorizer("property2"));
 
         // 2. save first view
@@ -146,7 +146,7 @@ public class DefaultViewPersistenceTest {
         Memento memento = originalView.save(collector);
 
         // 3. restore other view - set by uri categorization first
-        restoredViewModel.getResourceGrouping().setCategorizer(
+        restoredViewModel.setCategorizer(
                 new ResourceByUriMultiCategorizer());
         restoredView.doRestore(memento, restorationService, collector);
 
@@ -178,16 +178,16 @@ public class DefaultViewPersistenceTest {
 
         originalView.getResourceModel().addUnnamedResources(
                 toResourceSet(r1, r2));
-        originalViewModel.getResourceGrouping().setCategorizer(
-                new ResourceByUriMultiCategorizer());
+        originalViewModel.setCategorizer(new ResourceByUriMultiCategorizer());
 
         // 2. save first view
         DefaultResourceSetCollector collector = new DefaultResourceSetCollector();
         Memento memento = originalView.save(collector);
 
         // 3. restore other view - set by uri categorization first
-        restoredViewModel.getResourceGrouping().setCategorizer(
-                new ResourceByPropertyMultiCategorizer("property2"));
+        restoredViewModel
+                .setCategorizer(new ResourceByPropertyMultiCategorizer(
+                        "property2"));
         restoredView.doRestore(memento, restorationService, collector);
 
         // 4. check resource items and control settings
@@ -248,8 +248,9 @@ public class DefaultViewPersistenceTest {
 
         originalView.getResourceModel().addUnnamedResources(
                 toResourceSet(r1, r2, r3));
-        originalViewModel.getResourceGrouping().setCategorizer(
-                new ResourceByPropertyMultiCategorizer("property2"));
+        originalViewModel
+                .setCategorizer(new ResourceByPropertyMultiCategorizer(
+                        "property2"));
         originalViewModel.getSlotMappingConfiguration().setMapping(
                 numberSlot,
                 new CalculationResourceSetToValueResolver("property1",
@@ -260,8 +261,7 @@ public class DefaultViewPersistenceTest {
         Memento memento = originalView.save(collector);
 
         // 3. restore other view - set by uri categorization first
-        restoredViewModel.getResourceGrouping().setCategorizer(
-                new ResourceByUriMultiCategorizer());
+        restoredViewModel.setCategorizer(new ResourceByUriMultiCategorizer());
         restoredView.doRestore(memento, restorationService, collector);
 
         // 4. check resource items and control settings

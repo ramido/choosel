@@ -338,11 +338,10 @@ public class DefaultView extends AbstractWindowContent implements View {
 
         if ("byProperty".equals(categorizerType)) {
             String property = (String) groupingMemento.getValue("property");
-            model.getResourceGrouping().setCategorizer(
-                    new ResourceByPropertyMultiCategorizer(property));
+            model.setCategorizer(new ResourceByPropertyMultiCategorizer(
+                    property));
         } else if ("byUri".equals(categorizerType)) {
-            model.getResourceGrouping().setCategorizer(
-                    new ResourceByUriMultiCategorizer());
+            model.setCategorizer(new ResourceByUriMultiCategorizer());
         }
     }
 
@@ -376,8 +375,7 @@ public class DefaultView extends AbstractWindowContent implements View {
     private void saveGrouping(Memento memento) {
         Memento groupingMemento = new Memento();
 
-        ResourceMultiCategorizer categorizer = model.getResourceGrouping()
-                .getCategorizer();
+        ResourceMultiCategorizer categorizer = model.getCategorizer();
         if (categorizer instanceof ResourceByPropertyMultiCategorizer) {
             groupingMemento.setValue("type", "byProperty");
             groupingMemento.setValue("property",

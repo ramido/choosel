@@ -129,8 +129,8 @@ public class DefaultViewModelTest {
         r2.putValue("property2", "value2");
 
         containedResources.addAll(toResourceSet(r1, r2));
-        underTest.getResourceGrouping().setCategorizer(
-                new ResourceByPropertyMultiCategorizer("property2"));
+        underTest.setCategorizer(new ResourceByPropertyMultiCategorizer(
+                "property2"));
 
         List<ViewItem> resourceItems = underTest.getViewItems();
         assertEquals(1, resourceItems.size());
@@ -147,11 +147,11 @@ public class DefaultViewModelTest {
         resource.putValue("text1", "category1");
         resource.putValue("text2", "category2");
 
-        underTest.getResourceGrouping().setCategorizer(
-                new ResourceByPropertyMultiCategorizer("text1"));
+        underTest
+                .setCategorizer(new ResourceByPropertyMultiCategorizer("text1"));
         containedResources.add(resource);
-        underTest.getResourceGrouping().setCategorizer(
-                new ResourceByPropertyMultiCategorizer("text2"));
+        underTest
+                .setCategorizer(new ResourceByPropertyMultiCategorizer("text2"));
 
         List<ViewItem> resourceItems = underTest.getViewItems();
         assertEquals(1, resourceItems.size());
@@ -169,11 +169,11 @@ public class DefaultViewModelTest {
         resource.putValue("text1", "category1");
         resource.putValue("text2", "category1");
 
-        underTest.getResourceGrouping().setCategorizer(
-                new ResourceByPropertyMultiCategorizer("text1"));
+        underTest
+                .setCategorizer(new ResourceByPropertyMultiCategorizer("text1"));
         containedResources.add(resource);
-        underTest.getResourceGrouping().setCategorizer(
-                new ResourceByPropertyMultiCategorizer("text2"));
+        underTest
+                .setCategorizer(new ResourceByPropertyMultiCategorizer("text2"));
 
         List<ViewItem> resourceItems = underTest.getViewItems();
         assertEquals(1, resourceItems.size());
@@ -276,9 +276,9 @@ public class DefaultViewModelTest {
 
         slot = new Slot("1", "Description", DataType.TEXT);
 
-        underTest = DefaultViewModelTestHelper.createTestViewModel(containedResources,
-                highlightedResources, selectedResources, viewContentDisplay,
-                slot);
+        underTest = DefaultViewModelTestHelper.createTestViewModel(
+                containedResources, highlightedResources, selectedResources,
+                viewContentDisplay, slot);
     }
 
     // TODO check highlighted resources in resource item
