@@ -17,19 +17,31 @@ package org.thechiselgroup.choosel.example.components.client;
 
 import java.util.Map;
 
+import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
+import org.thechiselgroup.choosel.core.client.resources.ResourceByUriMultiCategorizer;
+import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.test.BenchmarkResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.views.CompositeViewItemBehavior;
 import org.thechiselgroup.choosel.core.client.views.DefaultView;
+import org.thechiselgroup.choosel.core.client.views.DefaultViewModel;
+import org.thechiselgroup.choosel.core.client.views.HighlightingViewItemBehavior;
+import org.thechiselgroup.choosel.core.client.views.HoverModel;
 import org.thechiselgroup.choosel.core.client.views.ViewModel;
+import org.thechiselgroup.choosel.core.client.views.slots.DefaultSlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.views.slots.FirstResourcePropertyResolver;
 import org.thechiselgroup.choosel.core.client.views.slots.ResourceSetToValueResolver;
+import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingConfiguration;
 import org.thechiselgroup.choosel.core.client.windows.WindowContentProducer;
 import org.thechiselgroup.choosel.protovis.client.PVShape;
+import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChartViewContentDisplay;
 import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChartVisualization;
 import org.thechiselgroup.choosel.visualization_component.chart.client.piechart.PieChartVisualization;
+import org.thechiselgroup.choosel.visualization_component.chart.client.scatterplot.ScatterPlotViewContentDisplay;
 import org.thechiselgroup.choosel.visualization_component.chart.client.scatterplot.ScatterPlotVisualization;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -45,16 +57,65 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         ComponentExampleGinjector injector = GWT
                 .create(ComponentExampleGinjector.class);
 
-        WindowContentProducer contentProducer = injector
-                .getWindowContentProducer();
-
         ResourceSet resourceSet = BenchmarkResourceSetFactory
                 .createResourceSet(20, injector.getResourceSetFactory());
 
+        initMultipleViews(resourceSet);
+
+        // WindowContentProducer contentProducer = injector
+        // .getWindowContentProducer();
+
         // un-comment as needed - only one can be active at a time
-        initBarChartView(contentProducer, resourceSet);
+        // initBarChartView(contentProducer, resourceSet);
         // initPieChartView(contentProducer, resourceSet);
         // initScatterPlotView(contentProducer, resourceSet);
+    }
+
+    private void initMultipleViews(ResourceSet resourceSet) {
+        final ScatterPlotViewContentDisplay scatterPlot = new ScatterPlotViewContentDisplay();
+
+        DefaultResourceSet selectedResources = new DefaultResourceSet();
+        HoverModel hoverModel = new HoverModel();
+
+        DefaultResourceSet b = new DefaultResourceSet();
+
+        CompositeViewItemBehavior viewItemBehavior = new CompositeViewItemBehavior();
+        viewItemBehavior.add(new HighlightingViewItemBehavior(hoverModel));
+
+        DefaultViewModel viewModel = new DefaultViewModel(new ResourceGrouping(
+                new ResourceByUriMultiCategorizer(),
+                new DefaultResourceSetFactory()), scatterPlot,
+                new SlotMappingConfiguration(), selectedResources, b,
+                hoverModel.getResources(), new DefaultSlotMappingInitializer(),
+                viewItemBehavior);
+
+        b.addAll(resourceSet);
+
+        final BarChartViewContentDisplay barChart = new BarChartViewContentDisplay();
+
+        DefaultResourceSet b2 = new DefaultResourceSet();
+        DefaultViewModel viewModel2 = new DefaultViewModel(
+                new ResourceGrouping(new ResourceByUriMultiCategorizer(),
+                        new DefaultResourceSetFactory()), barChart,
+                new SlotMappingConfiguration(), selectedResources, b2,
+                hoverModel.getResources(), new DefaultSlotMappingInitializer(),
+                new CompositeViewItemBehavior());
+
+        b2.addAll(resourceSet);
+
+        RootPanel.get().add(scatterPlot.asWidget());
+        RootPanel.get().add(barChart.asWidget());
+
+        scatterPlot.setSize("400px", "300px");
+        barChart.setSize("400px", "300px");
+
+        Window.addResizeHandler(new ResizeHandler() {
+            @Override
+            public void onResize(ResizeEvent event) {
+                scatterPlot.checkResize();
+                barChart.checkResize();
+            }
+        });
     }
 
     private void initBarChartView(WindowContentProducer contentProducer,
@@ -81,6 +142,7 @@ public class ComponentExampleEntryPoint implements EntryPoint {
                         return "my axis label"; // example for axis labeling
                     }
                 });
+
     }
 
     private void initScatterPlotView(WindowContentProducer contentProducer,
@@ -183,8 +245,10 @@ public class ComponentExampleEntryPoint implements EntryPoint {
 
         // Set the size of the window, and listen for
         // changes in size.
+        Window.enableScrolling(false);
+
         view.asWidget().setPixelSize(Window.getClientWidth(),
-                Window.getClientHeight() - 5);
+                Window.getClientHeight());
 
         Window.addResizeHandler(new ResizeHandler() {
             @Override

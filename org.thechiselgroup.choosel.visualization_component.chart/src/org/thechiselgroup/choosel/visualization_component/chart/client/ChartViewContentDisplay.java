@@ -158,7 +158,7 @@ public abstract class ChartViewContentDisplay extends
 
     @Override
     public void onAttach() {
-        updateChart(true);
+        checkResize();
     }
 
     protected void onEvent(Event e, String pvEventType, JsArgs args) {
@@ -188,6 +188,16 @@ public abstract class ChartViewContentDisplay extends
             }
         }
         chartItemsJsArray.setLength(chartItemsJsArray.length() - occurences);
+    }
+
+    public void setSize(String width, String height) {
+        assert width != null;
+        assert height != null;
+
+        chartWidget.setWidth(width);
+        chartWidget.setHeight(height);
+
+        checkResize();
     }
 
     /**
@@ -244,10 +254,14 @@ public abstract class ChartViewContentDisplay extends
      *            change, just the attributes of the SVG elements are updated.
      */
     protected final void updateChart(boolean structuralChange) {
+        if (chartWidget == null || !chartWidget.isAttached()) {
+            return; // cannot render yet
+        }
+
         if (structuralChange) {
             chartWidget.initPVPanel();
             if (chartItemsJsArray.length() == 0) {
-                getChart().height(height).width(width);
+                getChart();
             } else {
                 buildChart();
                 registerEventHandlers();
