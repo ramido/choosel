@@ -105,9 +105,9 @@ public class DefaultViewModelSlotMappingTest {
         textSlot = new Slot("id-1", "text-slot", DataType.TEXT);
         numberSlot = new Slot("id-2", "number-slot", DataType.NUMBER);
 
-        underTest = DefaultViewModelTestHelper.createTestViewModel(containedResources,
-                highlightedResources, selectedResources, viewContentDisplay,
-                textSlot, numberSlot);
+        underTest = DefaultViewModelTestHelper.createTestViewModel(
+                containedResources, highlightedResources, selectedResources,
+                viewContentDisplay, textSlot, numberSlot);
 
         Resource r1 = new Resource("test:1");
         r1.putValue("property1", new Double(0));
@@ -122,8 +122,8 @@ public class DefaultViewModelSlotMappingTest {
         r3.putValue("property2", "value2");
 
         containedResources.addAll(toResourceSet(r1, r2, r3));
-        underTest.getResourceGrouping().setCategorizer(
-                new ResourceByPropertyMultiCategorizer("property2"));
+        underTest.setCategorizer(new ResourceByPropertyMultiCategorizer(
+                "property2"));
     }
 
     @Test

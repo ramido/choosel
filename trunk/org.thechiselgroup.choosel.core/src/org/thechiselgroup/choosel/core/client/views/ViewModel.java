@@ -15,12 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views;
 
-import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
+import org.thechiselgroup.choosel.core.client.resources.HasResourceCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingConfiguration;
 
-public interface ViewModel {
+public interface ViewModel extends HasResourceCategorizer {
 
     // TODO Type mapping operations
 
@@ -30,9 +30,6 @@ public interface ViewModel {
     // TODO rename: global highlighting
     // TODO ReadableResourcesSet
     ResourceSet getHighlightedResources();
-
-    // TODO get / set categorizer instead
-    ResourceGrouping getResourceGrouping();
 
     // TODO rename: global selection
     // TODO ReadableResourceSet

@@ -32,7 +32,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.inject.Inject;
 
 // TODO update & extend (1, many sets added / removed) test case
-public class ResourceGrouping implements ResourceContainer {
+public class ResourceGrouping implements ResourceContainer, HasResourceCategorizer {
 
     private Map<String, ResourceSet> groupedResources = CollectionFactory
             .createStringMap();
@@ -212,6 +212,7 @@ public class ResourceGrouping implements ResourceContainer {
         return new HashMap<String, ResourceSet>(groupedResources);
     }
 
+    @Override
     public ResourceMultiCategorizer getCategorizer() {
         return multiCategorizer;
     }
@@ -317,6 +318,7 @@ public class ResourceGrouping implements ResourceContainer {
      * whole grouping to be recalculated and triggers an event containining the
      * resulting changes.
      */
+    @Override
     public void setCategorizer(ResourceMultiCategorizer newCategorizer) {
         assert newCategorizer != null;
 

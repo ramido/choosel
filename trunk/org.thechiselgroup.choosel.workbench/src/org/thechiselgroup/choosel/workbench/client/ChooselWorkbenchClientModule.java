@@ -31,11 +31,9 @@ import org.thechiselgroup.choosel.core.client.persistence.PersistableRestoration
 import org.thechiselgroup.choosel.core.client.persistence.PersistableRestorationServiceProvider;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceManager;
 import org.thechiselgroup.choosel.core.client.resources.ManagedResourceSetFactory;
-import org.thechiselgroup.choosel.core.client.resources.ResourceByUriMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByUriTypeCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceManager;
-import org.thechiselgroup.choosel.core.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetContainer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.ui.DefaultDetailsWidgetHelper;
@@ -287,11 +285,6 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
 
         bind(ResourceCategorizer.class).to(getResourceCategorizerClass()).in(
                 Singleton.class);
-        // TODO please re-enable me?
-        // bind(ResourceMultiCategorizer.class).to(
-        // ResourceByUriTypeMultiCategorizer.class).in(Singleton.class);
-        bind(ResourceMultiCategorizer.class).to(
-                ResourceByUriMultiCategorizer.class).in(Singleton.class);
         bind(CategoryLabelProvider.class).to(getCategoryLabelProviderClass())
                 .in(Singleton.class);
         bind(DropTargetCapabilityChecker.class).to(

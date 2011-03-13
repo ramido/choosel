@@ -21,8 +21,6 @@ import org.thechiselgroup.choosel.core.client.label.IncrementingSuffixLabelFacto
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
-import org.thechiselgroup.choosel.core.client.resources.ResourceByUriMultiCategorizer;
-import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.test.BenchmarkResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
@@ -90,13 +88,10 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         viewItemBehavior.add(new SwitchSelectionOnClickViewItemBehavior(
                 selectionModel));
 
-        DefaultViewModel viewModel = new DefaultViewModel(new ResourceGrouping(
-                new ResourceByUriMultiCategorizer(),
-                new DefaultResourceSetFactory()), scatterPlot,
-                new SlotMappingConfiguration(),
-                selectionModel.getSelectionProxy(), b,
-                hoverModel.getResources(), new DefaultSlotMappingInitializer(),
-                viewItemBehavior);
+        DefaultViewModel viewModel = new DefaultViewModel(scatterPlot, new SlotMappingConfiguration(),
+                selectionModel.getSelectionProxy(),
+                b, hoverModel.getResources(),
+                new DefaultSlotMappingInitializer(), viewItemBehavior);
 
         b.addAll(resourceSet);
 
@@ -109,12 +104,10 @@ public class ComponentExampleEntryPoint implements EntryPoint {
                 selectionModel));
 
         DefaultViewModel viewModel2 = new DefaultViewModel(
-                new ResourceGrouping(new ResourceByUriMultiCategorizer(),
-                        new DefaultResourceSetFactory()), barChart,
-                new SlotMappingConfiguration(),
-                selectionModel.getSelectionProxy(), b2,
-                hoverModel.getResources(), new DefaultSlotMappingInitializer(),
-                behaviors2);
+                barChart, new SlotMappingConfiguration(),
+                selectionModel.getSelectionProxy(),
+                b2, hoverModel.getResources(),
+                new DefaultSlotMappingInitializer(), behaviors2);
 
         b2.addAll(resourceSet);
 
