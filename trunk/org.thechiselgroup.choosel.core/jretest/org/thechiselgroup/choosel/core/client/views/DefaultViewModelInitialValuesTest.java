@@ -50,7 +50,7 @@ public class DefaultViewModelInitialValuesTest {
         assertEquals(true, underTest.getSlotMappingConfiguration()
                 .containsResolver(numberSlot));
 
-        List<ViewItem> resourceItems = underTest.getViewItems();
+        List<ViewItem> resourceItems = underTest.getViewItems().toList();
         assertEquals(1, resourceItems.size());
         ViewItem resourceItem = resourceItems.get(0);
 
@@ -68,7 +68,7 @@ public class DefaultViewModelInitialValuesTest {
         assertEquals(true, underTest.getSlotMappingConfiguration()
                 .containsResolver(textSlot));
 
-        List<ViewItem> resourceItems = underTest.getViewItems();
+        List<ViewItem> resourceItems = underTest.getViewItems().toList();
         assertEquals(1, resourceItems.size());
         ViewItem resourceItem = resourceItems.get(0);
 

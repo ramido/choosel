@@ -75,7 +75,7 @@ public class SelectionPresenterDropCommandFactory extends
         }
 
         ResourceSet viewResources = getTargetView().getModel()
-                .getContainedResources();
+                .getContentResourceSet();
 
         assert viewResources != null;
 

@@ -28,23 +28,24 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
 public interface ViewItemContainer {
 
     /**
-     * Tests if the {@link ViewItem} with the given id exists in this container.
+     * @return <code>true</code>, if there is a {@link ViewItem} with the
+     *         specified <code>viewItemId</code> in this container.
      */
     boolean containsViewItem(String viewItemId);
 
     /**
-     * Returns the {@link ViewItem} with the given ID.
+     * @Return {@link ViewItem} with the given ID.
      */
     ViewItem getViewItem(String viewItemId);
 
     /**
-     * Returns all {@link ViewItem}s in this container.
+     * @return All {@link ViewItem}s in this container.
      */
     LightweightCollection<ViewItem> getViewItems();
 
     /**
-     * Returns the {@link ViewItem}s that contain at least one of the given
-     * {@link Resource}s.
+     * @return {@link ViewItem}s that contain at least one of the given
+     *         {@link Resource}s.
      */
     LightweightCollection<ViewItem> getViewItems(Iterable<Resource> resources);
 

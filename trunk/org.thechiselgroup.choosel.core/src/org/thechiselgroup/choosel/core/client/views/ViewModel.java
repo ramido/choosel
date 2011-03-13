@@ -15,18 +15,20 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views;
 
-import org.thechiselgroup.choosel.core.client.resources.HasResourceCategorizer;
+import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingConfiguration;
 
-public interface ViewModel extends HasResourceCategorizer {
+public interface ViewModel extends ViewItemContainer, ContainsResourceGrouping {
+
+    /**
+     * @return {@link ResourceSet} that the {@link ResourceGrouping} of this
+     *         {@link ViewModel} is based upon.
+     */
+    ResourceSet getContentResourceSet();
 
     // TODO Type mapping operations
-
-    // TODO set
-    // TODO ReadableResourcesSet
-    ResourceSet getContainedResources();
 
     // TODO set
     // TODO rename: global highlighting
