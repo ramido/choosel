@@ -17,6 +17,8 @@ package org.thechiselgroup.choosel.core.client.resources;
 
 public interface HasResourceCategorizer {
 
+    // TODO events for changes
+
     ResourceMultiCategorizer getCategorizer();
 
     void setCategorizer(ResourceMultiCategorizer newCategorizer);
