@@ -85,7 +85,7 @@ public class NumberSlotControl extends SlotControl {
                 propertySelector
                         .setVisible(!(resolverFactory instanceof FixedResourceSetToValueResolverFactory));
 
-                slotMappingConfiguration.setMapping(getSlot(),
+                slotMappingConfiguration.setResolver(getSlot(),
                         resolverFactory.getResolver());
             }
         };

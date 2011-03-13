@@ -34,7 +34,6 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceMultiCategorizer
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEvent;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEventHandler;
-import org.thechiselgroup.choosel.core.client.resources.ResourceSetEventForwarder;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
 import org.thechiselgroup.choosel.core.client.util.DisposeUtil;
 import org.thechiselgroup.choosel.core.client.util.HandlerRegistrationSet;
@@ -51,8 +50,6 @@ import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingConfigurati
 import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingInitializer;
 
 public class DefaultViewModel implements ViewModel, Disposable {
-
-    private ResourceSetEventForwarder allResourcesToGroupingForwarder;
 
     /**
      * Maps group ids (representing the resource sets that are calculated by the
@@ -178,14 +175,20 @@ public class DefaultViewModel implements ViewModel, Disposable {
             viewItem.dispose();
         }
 
+        /*
+         * XXX Shared objects should not be disposed. Instead, our event
+         * handlers should get removed and references should be set to null.
+         */
+
         DisposeUtil.dispose(containedResources);
         containedResources = null;
 
         DisposeUtil.dispose(selectedResources);
         selectedResources = null;
 
-        allResourcesToGroupingForwarder.dispose();
-        allResourcesToGroupingForwarder = null;
+        DisposeUtil.dispose(resourceGrouping);
+        resourceGrouping = null;
+
         contentDisplay.dispose();
         contentDisplay = null;
 
@@ -284,17 +287,15 @@ public class DefaultViewModel implements ViewModel, Disposable {
     }
 
     private void initAllResourcesToResourceGroupingLink() {
-        allResourcesToGroupingForwarder = new ResourceSetEventForwarder(
-                containedResources, resourceGrouping) {
-
-            @Override
-            public void onResourceSetChanged(ResourceSetChangedEvent event) {
-                initializeVisualMappings(event.getTarget());
-                super.onResourceSetChanged(event);
-            }
-
-        };
-        allResourcesToGroupingForwarder.init();
+        containedResources
+                .addEventHandler(new ResourceSetChangedEventHandler() {
+                    @Override
+                    public void onResourceSetChanged(
+                            ResourceSetChangedEvent event) {
+                        initializeVisualMappings(event.getTarget());
+                    }
+                });
+        resourceGrouping.setResourceSet(containedResources);
     }
 
     // TODO eliminate inner class, implement methods in DefaultView & test them

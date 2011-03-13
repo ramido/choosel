@@ -72,10 +72,10 @@ public class DefaultViewModelTest {
         resource.putValue("text1", "t1");
         resource.putValue("text2", "t2");
 
-        underTest.getSlotMappingConfiguration().setMapping(slot,
+        underTest.getSlotMappingConfiguration().setResolver(slot,
                 new FirstResourcePropertyResolver("text1"));
         containedResources.add(resource);
-        underTest.getSlotMappingConfiguration().setMapping(slot,
+        underTest.getSlotMappingConfiguration().setResolver(slot,
                 new FirstResourcePropertyResolver("text2"));
 
         List<ViewItem> resourceItems = underTest.getViewItems();

@@ -94,11 +94,11 @@ public class DefaultViewPersistenceTest {
         resource.putValue("property1", "value1");
         resource.putValue("property2", "value2");
 
-        originalViewModel.getSlotMappingConfiguration().setMapping(textSlot,
+        originalViewModel.getSlotMappingConfiguration().setResolver(textSlot,
                 new FirstResourcePropertyResolver("property1"));
         originalView.getResourceModel().addUnnamedResources(
                 toResourceSet(resource));
-        originalViewModel.getSlotMappingConfiguration().setMapping(textSlot,
+        originalViewModel.getSlotMappingConfiguration().setResolver(textSlot,
                 new FirstResourcePropertyResolver("property2"));
 
         // 2. save first view
@@ -251,7 +251,7 @@ public class DefaultViewPersistenceTest {
         originalViewModel
                 .setCategorizer(new ResourceByPropertyMultiCategorizer(
                         "property2"));
-        originalViewModel.getSlotMappingConfiguration().setMapping(
+        originalViewModel.getSlotMappingConfiguration().setResolver(
                 numberSlot,
                 new CalculationResourceSetToValueResolver("property1",
                         calculation));

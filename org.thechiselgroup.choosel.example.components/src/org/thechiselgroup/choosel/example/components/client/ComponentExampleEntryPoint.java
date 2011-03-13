@@ -126,11 +126,11 @@ public class ComponentExampleEntryPoint implements EntryPoint {
 
         view.getResourceModel().addResourceSet(resourceSet);
 
-        model.getSlotMappingConfiguration().setMapping(
+        model.getSlotMappingConfiguration().setResolver(
                 BarChartVisualization.BAR_LABEL_SLOT,
                 new FirstResourcePropertyResolver(
                         BenchmarkResourceSetFactory.TEXT_2));
-        model.getSlotMappingConfiguration().setMapping(
+        model.getSlotMappingConfiguration().setResolver(
                 BarChartVisualization.BAR_LENGTH_SLOT,
                 new FirstResourcePropertyResolver(
                         BenchmarkResourceSetFactory.NUMBER_2) {
@@ -151,7 +151,7 @@ public class ComponentExampleEntryPoint implements EntryPoint {
 
         view.getResourceModel().addResourceSet(resourceSet);
 
-        model.getSlotMappingConfiguration().setMapping(
+        model.getSlotMappingConfiguration().setResolver(
                 ScatterPlotVisualization.X_POSITION_SLOT,
                 new FirstResourcePropertyResolver(
                         BenchmarkResourceSetFactory.NUMBER_1) {
@@ -160,7 +160,7 @@ public class ComponentExampleEntryPoint implements EntryPoint {
                         return "my x axis label";
                     }
                 });
-        model.getSlotMappingConfiguration().setMapping(
+        model.getSlotMappingConfiguration().setResolver(
                 ScatterPlotVisualization.Y_POSITION_SLOT,
                 new FirstResourcePropertyResolver(
                         BenchmarkResourceSetFactory.NUMBER_2) {
@@ -169,7 +169,7 @@ public class ComponentExampleEntryPoint implements EntryPoint {
                         return "my y axis label";
                     }
                 });
-        model.getSlotMappingConfiguration().setMapping(
+        model.getSlotMappingConfiguration().setResolver(
                 ScatterPlotVisualization.SHAPE_SLOT,
                 new ResourceSetToValueResolver() {
                     public Object resolve(
@@ -220,11 +220,11 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         ViewModel model = view.getModel();
 
         // NOTE: the view is configured BEFORE the resources are added
-        model.getSlotMappingConfiguration().setMapping(
+        model.getSlotMappingConfiguration().setResolver(
                 PieChartVisualization.PIE_LABEL_SLOT,
                 new FirstResourcePropertyResolver(
                         BenchmarkResourceSetFactory.TEXT_2));
-        model.getSlotMappingConfiguration().setMapping(
+        model.getSlotMappingConfiguration().setResolver(
                 PieChartVisualization.PIE_ANGLE_SLOT,
                 new FirstResourcePropertyResolver(
                         BenchmarkResourceSetFactory.NUMBER_2));

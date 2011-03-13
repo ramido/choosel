@@ -15,24 +15,30 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.resources;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.thechiselgroup.choosel.core.client.util.SingleItemCollection;
+import org.thechiselgroup.choosel.core.client.util.Disposable;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionUtils;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.inject.Inject;
 
-// TODO update & extend (1, many sets added / removed) test case
-public class ResourceGrouping implements ResourceContainer, HasResourceCategorizer {
+/**
+ * Groups the {@link Resource}s contained in a {@link ResourceSet} which is set
+ * via {@link ContainsSingleResourceSet}. A {@link ResourceMultiCategorizer} is
+ * used for grouping and can be changed via {@link HasResourceCategorizer}.
+ * 
+ * @author Lars Grammel
+ */
+public class ResourceGrouping implements HasResourceCategorizer,
+        ContainsSingleResourceSet, Disposable {
 
     private Map<String, ResourceSet> groupedResources = CollectionFactory
             .createStringMap();
@@ -43,7 +49,7 @@ public class ResourceGrouping implements ResourceContainer, HasResourceCategoriz
 
     private final ResourceSetFactory resourceSetFactory;
 
-    private List<Resource> allResources = new ArrayList<Resource>();
+    private ProxyResourceSet allResources = new ProxyResourceSet();
 
     private Map<String, Set<String>> resourceIdToGroups = CollectionFactory
             .createStringMap();
@@ -56,24 +62,13 @@ public class ResourceGrouping implements ResourceContainer, HasResourceCategoriz
         this.resourceSetFactory = resourceSetFactory;
 
         eventBus = new HandlerManager(this);
-    }
 
-    @Override
-    public void add(Resource resource) {
-        addAll(new SingleItemCollection<Resource>(resource));
-    }
-
-    @Override
-    public void addAll(Iterable<Resource> resources) {
-        assert resources != null;
-
-        List<Resource> newResources = filterAddedResources(resources);
-        addResourcesToAllResources(newResources);
-
-        LightweightList<ResourceGroupingChange> changes = CollectionFactory
-                .createLightweightList();
-        addResourcesToGrouping(newResources, changes);
-        fireChanges(changes);
+        allResources.addEventHandler(new ResourceSetChangedEventHandler() {
+            @Override
+            public void onResourceSetChanged(ResourceSetChangedEvent event) {
+                change(event.getAddedResources(), event.getRemovedResources());
+            }
+        });
     }
 
     /**
@@ -101,11 +96,6 @@ public class ResourceGrouping implements ResourceContainer, HasResourceCategoriz
     public HandlerRegistration addHandler(ResourceGroupingChangedHandler handler) {
         assert handler != null;
         return eventBus.addHandler(ResourceGroupingChangedEvent.TYPE, handler);
-    }
-
-    private void addResourcesToAllResources(List<Resource> newResources) {
-        assert CollectionUtils.containsNone(allResources, newResources);
-        allResources.addAll(newResources);
     }
 
     private void addResourcesToGroup(String group,
@@ -169,6 +159,25 @@ public class ResourceGrouping implements ResourceContainer, HasResourceCategoriz
         return resourcesPerCategory;
     }
 
+    // TODO test with change to both added and removed resources
+    protected void change(LightweightCollection<Resource> addedResources,
+            LightweightCollection<Resource> removedResources) {
+
+        assert addedResources != null;
+        assert allResources.containsAll(addedResources);
+        assert removedResources != null;
+        assert CollectionUtils.containsNone(allResources.toList(),
+                removedResources.toList());
+
+        LightweightList<ResourceGroupingChange> changes = CollectionFactory
+                .createLightweightList();
+
+        removeResourcesFromGrouping(removedResources, changes);
+        addResourcesToGrouping(addedResources, changes);
+
+        fireChanges(changes);
+    }
+
     /**
      * Clears the internal grouping structure. The grouping should be
      * recalculated after clearing to maintain a consistent state.
@@ -182,24 +191,10 @@ public class ResourceGrouping implements ResourceContainer, HasResourceCategoriz
         resourceIdToGroups.clear();
     }
 
-    private List<Resource> filterAddedResources(Iterable<Resource> resources) {
-        List<Resource> addedResources = new ArrayList<Resource>();
-        for (Resource resource : resources) {
-            if (!allResources.contains(resource)) {
-                addedResources.add(resource);
-            }
-        }
-        return addedResources;
-    }
-
-    private List<Resource> filterRemovedResources(Iterable<Resource> resources) {
-        List<Resource> removedResources = new ArrayList<Resource>();
-        for (Resource resource : resources) {
-            if (allResources.contains(resource)) {
-                removedResources.add(resource);
-            }
-        }
-        return removedResources;
+    @Override
+    public void dispose() {
+        allResources.dispose();
+        allResources = null;
     }
 
     private void fireChanges(LightweightList<ResourceGroupingChange> changes) {
@@ -239,21 +234,8 @@ public class ResourceGrouping implements ResourceContainer, HasResourceCategoriz
     }
 
     @Override
-    public void remove(Resource resource) {
-        removeAll(new SingleItemCollection<Resource>(resource));
-    }
-
-    @Override
-    public void removeAll(Iterable<Resource> resources) {
-        assert resources != null;
-
-        List<Resource> removedResources = filterRemovedResources(resources);
-        removeResourcesFromAllResources(removedResources);
-
-        LightweightList<ResourceGroupingChange> changes = CollectionFactory
-                .createLightweightList();
-        removeResourcesFromGrouping(removedResources, changes);
-        fireChanges(changes);
+    public ResourceSet getResourceSet() {
+        return allResources.getResourceSet();
     }
 
     /**
@@ -272,11 +254,6 @@ public class ResourceGrouping implements ResourceContainer, HasResourceCategoriz
                 resourceIdToGroups.remove(resourceId);
             }
         }
-    }
-
-    private void removeResourcesFromAllResources(List<Resource> resources) {
-        assert allResources.containsAll(resources);
-        allResources.removeAll(resources);
     }
 
     private void removeResourcesFromGroup(String group,
@@ -333,5 +310,10 @@ public class ResourceGrouping implements ResourceContainer, HasResourceCategoriz
         clearGrouping(changes);
         addResourcesToGrouping(allResources, changes);
         fireChanges(changes);
+    }
+
+    @Override
+    public void setResourceSet(ResourceSet newResourceSet) {
+        allResources.setResourceSet(newResourceSet);
     }
 }

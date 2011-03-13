@@ -56,7 +56,7 @@ public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
                     break;
                 }
 
-                slotMappingConfiguration.setMapping(slot, setToValueResolver);
+                slotMappingConfiguration.setResolver(slot, setToValueResolver);
             }
 
             /*
@@ -91,7 +91,7 @@ public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
                 break;
             }
 
-            slotMappingConfiguration.setMapping(slot, setToValueResolver);
+            slotMappingConfiguration.setResolver(slot, setToValueResolver);
         }
 
     }
