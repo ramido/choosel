@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.example.components.client;
 
 import java.util.Map;
 
+import org.thechiselgroup.choosel.core.client.label.IncrementingSuffixLabelFactory;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
@@ -27,10 +28,13 @@ import org.thechiselgroup.choosel.core.client.test.BenchmarkResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.CompositeViewItemBehavior;
+import org.thechiselgroup.choosel.core.client.views.DefaultSelectionModel;
 import org.thechiselgroup.choosel.core.client.views.DefaultView;
 import org.thechiselgroup.choosel.core.client.views.DefaultViewModel;
 import org.thechiselgroup.choosel.core.client.views.HighlightingViewItemBehavior;
 import org.thechiselgroup.choosel.core.client.views.HoverModel;
+import org.thechiselgroup.choosel.core.client.views.SelectionModel;
+import org.thechiselgroup.choosel.core.client.views.SwitchSelectionOnClickViewItemBehavior;
 import org.thechiselgroup.choosel.core.client.views.ViewModel;
 import org.thechiselgroup.choosel.core.client.views.slots.DefaultSlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.views.slots.FirstResourcePropertyResolver;
@@ -74,18 +78,23 @@ public class ComponentExampleEntryPoint implements EntryPoint {
     private void initMultipleViews(ResourceSet resourceSet) {
         final ScatterPlotViewContentDisplay scatterPlot = new ScatterPlotViewContentDisplay();
 
-        DefaultResourceSet selectedResources = new DefaultResourceSet();
         HoverModel hoverModel = new HoverModel();
+        SelectionModel selectionModel = new DefaultSelectionModel(
+                new IncrementingSuffixLabelFactory("test"),
+                new DefaultResourceSetFactory());
 
         DefaultResourceSet b = new DefaultResourceSet();
 
         CompositeViewItemBehavior viewItemBehavior = new CompositeViewItemBehavior();
         viewItemBehavior.add(new HighlightingViewItemBehavior(hoverModel));
+        viewItemBehavior.add(new SwitchSelectionOnClickViewItemBehavior(
+                selectionModel));
 
         DefaultViewModel viewModel = new DefaultViewModel(new ResourceGrouping(
                 new ResourceByUriMultiCategorizer(),
                 new DefaultResourceSetFactory()), scatterPlot,
-                new SlotMappingConfiguration(), selectedResources, b,
+                new SlotMappingConfiguration(),
+                selectionModel.getSelectionProxy(), b,
                 hoverModel.getResources(), new DefaultSlotMappingInitializer(),
                 viewItemBehavior);
 
@@ -94,12 +103,18 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         final BarChartViewContentDisplay barChart = new BarChartViewContentDisplay();
 
         DefaultResourceSet b2 = new DefaultResourceSet();
+        CompositeViewItemBehavior behaviors2 = new CompositeViewItemBehavior();
+        behaviors2.add(new HighlightingViewItemBehavior(hoverModel));
+        behaviors2.add(new SwitchSelectionOnClickViewItemBehavior(
+                selectionModel));
+
         DefaultViewModel viewModel2 = new DefaultViewModel(
                 new ResourceGrouping(new ResourceByUriMultiCategorizer(),
                         new DefaultResourceSetFactory()), barChart,
-                new SlotMappingConfiguration(), selectedResources, b2,
+                new SlotMappingConfiguration(),
+                selectionModel.getSelectionProxy(), b2,
                 hoverModel.getResources(), new DefaultSlotMappingInitializer(),
-                new CompositeViewItemBehavior());
+                behaviors2);
 
         b2.addAll(resourceSet);
 

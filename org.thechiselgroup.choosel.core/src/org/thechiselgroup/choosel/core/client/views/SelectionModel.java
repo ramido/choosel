@@ -38,6 +38,8 @@ public interface SelectionModel {
 
     ResourceSet getSelection();
 
+    ResourceSet getSelectionProxy();
+
     void removeSelectionSet(ResourceSet selectionSet);
 
     void setSelection(ResourceSet newSelectionModel);

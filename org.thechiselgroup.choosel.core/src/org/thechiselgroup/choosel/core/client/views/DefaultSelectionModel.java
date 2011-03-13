@@ -23,6 +23,7 @@ import org.thechiselgroup.choosel.core.client.persistence.Memento;
 import org.thechiselgroup.choosel.core.client.persistence.Persistable;
 import org.thechiselgroup.choosel.core.client.persistence.PersistableRestorationService;
 import org.thechiselgroup.choosel.core.client.resources.NullResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.ProxyResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetAddedEvent;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetAddedEventHandler;
@@ -30,7 +31,6 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEventH
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetRemovedEvent;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetRemovedEventHandler;
-import org.thechiselgroup.choosel.core.client.resources.ProxyResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
@@ -116,6 +116,11 @@ public class DefaultSelectionModel implements SelectionModel, Disposable,
     @Override
     public ResourceSet getSelection() {
         return selection.getDelegate();
+    }
+
+    @Override
+    public ResourceSet getSelectionProxy() {
+        return selection;
     }
 
     public List<ResourceSet> getSelectionSets() {

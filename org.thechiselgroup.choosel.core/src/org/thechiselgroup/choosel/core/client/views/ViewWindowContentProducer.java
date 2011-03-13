@@ -207,9 +207,9 @@ public class ViewWindowContentProducer implements WindowContentProducer {
 
         DefaultViewModel viewModel = new DefaultViewModel(resourceGrouping,
                 contentDisplay, slotMappingConfiguration,
-                selectionModel.getSelection(), resourceModel.getResources(),
-                hoverModel.getResources(), slotMappingInitializer,
-                viewItemBehaviors);
+                selectionModel.getSelectionProxy(),
+                resourceModel.getResources(), hoverModel.getResources(),
+                slotMappingInitializer, viewItemBehaviors);
 
         DefaultView view = new DefaultView(contentDisplay, label, contentType,
                 selectionModelPresenter, resourceModelPresenter,
