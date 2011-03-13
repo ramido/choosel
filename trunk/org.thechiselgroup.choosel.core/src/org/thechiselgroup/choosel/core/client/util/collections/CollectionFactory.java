@@ -35,7 +35,7 @@ import com.google.gwt.core.client.GWT;
 public final class CollectionFactory {
 
     public static <T> LightweightList<T> createLightweightList() {
-        if (GWT.isScript() || GWT.isClient()) {
+        if (shouldUseJavaScriptImplementation()) {
             return new JavaScriptLightweightList<T>();
         }
 
@@ -50,7 +50,7 @@ public final class CollectionFactory {
      *         its iterator method is sorted.
      */
     public static <T> Map<String, T> createStringMap() {
-        if (GWT.isScript() || GWT.isClient()) {
+        if (shouldUseJavaScriptImplementation()) {
             return new JavaScriptStringToObjectMap<T>();
         }
 
@@ -59,11 +59,19 @@ public final class CollectionFactory {
     }
 
     public static Set<String> createStringSet() {
-        if (GWT.isScript() || GWT.isClient()) {
+        if (shouldUseJavaScriptImplementation()) {
             return new JavaScriptStringSet();
         }
 
         return new HashSet<String>();
+    }
+
+    /**
+     * This class does not use JavaScript code in OOMPH client mode for
+     * performance reasons.
+     */
+    private static boolean shouldUseJavaScriptImplementation() {
+        return GWT.isScript(); // add "|| GWT.isClient()" to test in hosted mode
     }
 
     private CollectionFactory() {
