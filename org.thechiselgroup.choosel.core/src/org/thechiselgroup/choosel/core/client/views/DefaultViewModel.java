@@ -59,8 +59,6 @@ public class DefaultViewModel implements ViewModel, Disposable,
 
     private ViewContentDisplay contentDisplay;
 
-    private ViewContentDisplayCallback contentDisplayCallback;
-
     private ResourceGrouping resourceGrouping;
 
     /*
