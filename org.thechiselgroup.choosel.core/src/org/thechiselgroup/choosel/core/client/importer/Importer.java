@@ -38,16 +38,66 @@ import com.google.gwt.i18n.client.DateTimeFormat;
  */
 public class Importer {
 
-    private static final String LOCATION_DETECTION_REGEX = "^[-+]?[0-9]*\\.?[0-9]+\\/[-+]?[0-9]*\\.?[0-9]+";
+    /**
+     * Format: "dd/MM/yyyy"
+     * 
+     * @see #DATE_FORMAT_1_PATTERN
+     * @see #dateFormat1
+     */
+    public static final String DATE_FORMAT_1_REGEX = "^(0[1-9]|[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012]|[1-9])/\\d{4}";
 
-    private static final String DATE_DETECTION_REGEX = "^(0[1-9]|[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012]|[1-9])/\\d{4}";
+    /**
+     * Format: "dd/MM/yyyy"
+     * 
+     * @see #DATE_FORMAT_1_REGEX
+     * @see #dateFormat1
+     */
+    public static final String DATE_FORMAT_1_PATTERN = "dd/MM/yyyy";
 
+    /**
+     * Format: "yyyy-MM-dd"
+     * 
+     * @see #DATE_FORMAT_2_PATTERN
+     * @see #dateFormat2
+     */
+    public static final String DATE_FORMAT_2_REGEX = "^\\d{4}-(0[1-9]|1[012]|[1-9])-(0[1-9]|[1-9]|[12][0-9]|3[01])";
+
+    /**
+     * Format: "yyyy-MM-dd"
+     * 
+     * @see #DATE_FORMAT_2_REGEX
+     * @see #dateFormat2
+     */
+    public static final String DATE_FORMAT_2_PATTERN = "yyyy-MM-dd";
+
+    /**
+     * Format: "lat/long" with +/- decimal coordinates
+     */
+    public static final String LOCATION_DETECTION_REGEX = "^[-+]?[0-9]*\\.?[0-9]+\\/[-+]?[0-9]*\\.?[0-9]+";
+
+    /**
+     * Format: "XXX.XXX"
+     */
     public static final String NUMBER_DETECTION_REGEX = "^[-+]?[0-9]*\\.?[0-9]+";
 
     private LabelProvider uriHeaderProvider;
 
+    /**
+     * @see #DATE_FORMAT_1_REGEX
+     * @see #DATE_FORMAT_1_PATTERN
+     */
+    private DateTimeFormat dateFormat1;
+
+    /**
+     * @see #DATE_FORMAT_2_PATTERN
+     * @see #DATE_FORMAT_2_REGEX
+     */
+    private DateTimeFormat dateFormat2;
+
     public Importer() {
         uriHeaderProvider = new IncrementingSuffixLabelFactory("import");
+
+        initDateFormats();
     }
 
     // TODO test
@@ -72,7 +122,9 @@ public class Importer {
 
             if (stringValue.matches(NUMBER_DETECTION_REGEX)) {
                 columnTypes[column] = DataType.NUMBER;
-            } else if (stringValue.matches(DATE_DETECTION_REGEX)) {
+            } else if (stringValue.matches(DATE_FORMAT_1_REGEX)) {
+                columnTypes[column] = DataType.DATE;
+            } else if (stringValue.matches(DATE_FORMAT_2_REGEX)) {
                 columnTypes[column] = DataType.DATE;
             } else if (stringValue.matches(LOCATION_DETECTION_REGEX)) {
                 columnTypes[column] = DataType.LOCATION;
@@ -103,11 +155,14 @@ public class Importer {
                     value = new Double(stringValue);
                     break;
                 case DATE:
-                    if (!stringValue.matches(DATE_DETECTION_REGEX)) {
+                    if (stringValue.matches(DATE_FORMAT_1_REGEX)) {
+                        value = parseDate1(stringValue);
+                    } else if (stringValue.matches(DATE_FORMAT_2_REGEX)) {
+                        value = parseDate2(stringValue);
+                    } else {
                         throw new ParseException("Invalid date", stringValue,
                                 row + 1);
                     }
-                    value = parseDate(stringValue);
                     break;
                 case LOCATION:
                     if (!stringValue.matches(LOCATION_DETECTION_REGEX)) {
@@ -137,8 +192,18 @@ public class Importer {
         return resources;
     }
 
-    protected Date parseDate(String stringValue) {
-        return DateTimeFormat.getFormat("dd/MM/yyyy").parse(stringValue);
+    // override in test enables GWT independence for JRE testing
+    protected void initDateFormats() {
+        dateFormat1 = DateTimeFormat.getFormat(DATE_FORMAT_1_PATTERN);
+        dateFormat2 = DateTimeFormat.getFormat(DATE_FORMAT_2_PATTERN);
+    }
+
+    protected Date parseDate1(String stringValue) {
+        return dateFormat1.parse(stringValue);
+    }
+
+    protected Date parseDate2(String stringValue) {
+        return dateFormat2.parse(stringValue);
     }
 
 }
