@@ -292,6 +292,17 @@ public final class JavaScriptStringToObjectMap<T> implements Map<String, T> {
             return a;
         }
 
+        @Override
+        public String toString() {
+            String result = "JavaScriptStringToObjectMap.EntrySet[";
+            for (Entry<String, T> entry : this) {
+                result += entry.getKey();
+                result += "=";
+                result += entry.getValue();
+                result += ";";
+            }
+            return result + "]";
+        }
     };
 
     private Collection<T> values = new Collection<T>() {
@@ -409,6 +420,15 @@ public final class JavaScriptStringToObjectMap<T> implements Map<String, T> {
             return a;
         }
 
+        @Override
+        public String toString() {
+            String result = "JavaScriptStringToObjectMap.Values[";
+            for (T value : this) {
+                result += value;
+                result += ";";
+            }
+            return result + "]";
+        }
     };
 
     private Set<String> keySet = new Set<String>() {
@@ -518,6 +538,15 @@ public final class JavaScriptStringToObjectMap<T> implements Map<String, T> {
             return a;
         }
 
+        @Override
+        public String toString() {
+            String result = "JavaScriptStringToObjectMap.KeySet[";
+            for (String key : this) {
+                result += key;
+                result += ";";
+            }
+            return result + "]";
+        }
     };
 
     private NativeMap<T> jsMap;

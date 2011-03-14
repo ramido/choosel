@@ -76,10 +76,14 @@ public class SlotMappingConfiguration implements Persistable {
     }
 
     // TODO search for calls from outside this class and remove
-    public ResourceSetToValueResolver getResolver(Slot slot) {
+    public ResourceSetToValueResolver getResolver(Slot slot)
+            throws NoResolverForSlotException {
+
         assert slot != null;
-        assert slotsToValueResolvers.containsKey(slot) : "no resolver for "
-                + slot;
+
+        if (!slotsToValueResolvers.containsKey(slot)) {
+            throw new NoResolverForSlotException(slot, slotsToValueResolvers);
+        }
 
         return slotsToValueResolvers.get(slot);
     }
@@ -98,14 +102,25 @@ public class SlotMappingConfiguration implements Persistable {
         }
     }
 
+    /**
+     * @throws SlotMappingResolutionException
+     *             Exception occurred while trying to resolve slot value
+     */
     /*
      * TODO add semantic meta-information as parameter, e.g. expected return
      * type or context (semantic description of slot?)
      */
+    // TODO use view item instead
     public Object resolve(Slot slot, String groupID,
-            LightweightCollection<Resource> resources) {
+            LightweightCollection<Resource> resources)
+            throws SlotMappingResolutionException {
 
-        return getResolver(slot).resolve(resources, groupID);
+        try {
+            return getResolver(slot).resolve(resources, groupID);
+        } catch (Exception ex) {
+            throw new SlotMappingResolutionException(slot, groupID, resources,
+                    ex);
+        }
     }
 
     @Override
@@ -128,8 +143,8 @@ public class SlotMappingConfiguration implements Persistable {
                     String property = (String) child
                             .getValue(MEMENTO_KEY_PROPERTY);
 
-                    setResolver(slot,
-                            new FirstResourcePropertyResolver(property));
+                    setResolver(slot, new FirstResourcePropertyResolver(
+                            property));
                 } else if (MEMENTO_VALUE_CALCULATION.equals(value)) {
                     String property = (String) child
                             .getValue(MEMENTO_KEY_PROPERTY);
@@ -209,8 +224,12 @@ public class SlotMappingConfiguration implements Persistable {
     }
 
     public void setResolver(Slot slot, ResourceSetToValueResolver resolver) {
-        assert slot != null : "slot must not be null";
-        assert resolver != null;
+        if (slot == null) {
+            throw new IllegalArgumentException("slot must not be null");
+        }
+        if (resolver == null) {
+            throw new IllegalArgumentException("resolver must not be null");
+        }
 
         slotsToValueResolvers.put(slot, resolver);
         handlerManager.fireEvent(new SlotMappingChangedEvent(slot));
