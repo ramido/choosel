@@ -17,31 +17,19 @@ package org.thechiselgroup.choosel.example.components.client;
 
 import java.util.Map;
 
-import org.thechiselgroup.choosel.core.client.label.IncrementingSuffixLabelFactory;
-import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
-import org.thechiselgroup.choosel.core.client.resources.ResourceByPropertyMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.test.BenchmarkResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.core.client.views.CompositeViewItemBehavior;
-import org.thechiselgroup.choosel.core.client.views.DefaultSelectionModel;
 import org.thechiselgroup.choosel.core.client.views.DefaultView;
-import org.thechiselgroup.choosel.core.client.views.HighlightingViewItemBehavior;
-import org.thechiselgroup.choosel.core.client.views.HoverModel;
-import org.thechiselgroup.choosel.core.client.views.SelectionModel;
-import org.thechiselgroup.choosel.core.client.views.SwitchSelectionOnClickViewItemBehavior;
 import org.thechiselgroup.choosel.core.client.views.ViewModel;
-import org.thechiselgroup.choosel.core.client.views.VisualizationWidget;
 import org.thechiselgroup.choosel.core.client.views.slots.FirstResourcePropertyResolver;
 import org.thechiselgroup.choosel.core.client.views.slots.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.core.client.windows.WindowContentProducer;
 import org.thechiselgroup.choosel.protovis.client.PVShape;
-import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChartViewContentDisplay;
 import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChartVisualization;
 import org.thechiselgroup.choosel.visualization_component.chart.client.piechart.PieChartVisualization;
-import org.thechiselgroup.choosel.visualization_component.chart.client.scatterplot.ScatterPlotViewContentDisplay;
 import org.thechiselgroup.choosel.visualization_component.chart.client.scatterplot.ScatterPlotVisualization;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -60,55 +48,13 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         ResourceSet resourceSet = BenchmarkResourceSetFactory
                 .createResourceSet(20, injector.getResourceSetFactory());
 
-        initMultipleViews(resourceSet);
-
-        // WindowContentProducer contentProducer = injector
-        // .getWindowContentProducer();
+        WindowContentProducer contentProducer = injector
+                .getWindowContentProducer();
 
         // un-comment as needed - only one can be active at a time
-        // initBarChartView(contentProducer, resourceSet);
+        initBarChartView(contentProducer, resourceSet);
         // initPieChartView(contentProducer, resourceSet);
         // initScatterPlotView(contentProducer, resourceSet);
-    }
-
-    private void initMultipleViews(ResourceSet resourceSet) {
-        HoverModel hoverModel = new HoverModel();
-        SelectionModel selectionModel = new DefaultSelectionModel(
-                new IncrementingSuffixLabelFactory("test"),
-                new DefaultResourceSetFactory());
-
-        CompositeViewItemBehavior viewItemBehavior = new CompositeViewItemBehavior();
-        viewItemBehavior.add(new HighlightingViewItemBehavior(hoverModel));
-        viewItemBehavior.add(new SwitchSelectionOnClickViewItemBehavior(
-                selectionModel));
-
-        VisualizationWidget scatterPlot = new VisualizationWidget(
-                new ScatterPlotViewContentDisplay(),
-                selectionModel.getSelectionProxy(), hoverModel.getResources(),
-                viewItemBehavior);
-
-        scatterPlot.setCategorizer(new ResourceByPropertyMultiCategorizer(
-                BenchmarkResourceSetFactory.TEXT_2));
-
-        scatterPlot.setContentResourceSet(resourceSet);
-
-        CompositeViewItemBehavior behaviors2 = new CompositeViewItemBehavior();
-        behaviors2.add(new HighlightingViewItemBehavior(hoverModel));
-        behaviors2.add(new SwitchSelectionOnClickViewItemBehavior(
-                selectionModel));
-
-        VisualizationWidget barChart = new VisualizationWidget(
-                new BarChartViewContentDisplay(),
-                selectionModel.getSelectionProxy(), hoverModel.getResources(),
-                behaviors2);
-
-        barChart.setContentResourceSet(resourceSet);
-
-        RootPanel.get().add(scatterPlot);
-        RootPanel.get().add(barChart);
-
-        scatterPlot.setSize("400px", "300px");
-        barChart.setSize("400px", "300px");
     }
 
     private void initBarChartView(WindowContentProducer contentProducer,
