@@ -50,13 +50,13 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
 
     private static final String MEMENTO_MAP_TYPE = "type";
 
-    private static final String MEMENTO_MAP_TYPE_HYBRID = "hybrid";
+    public static final String MAP_TYPE_HYBRID = "hybrid";
 
-    private static final String MEMENTO_MAP_TYPE_NORMAL = "normal";
+    public static final String MAP_TYPE_NORMAL = "normal";
 
-    private static final String MEMENTO_MAP_TYPE_PHYSICAL = "physical";
+    public static final String MAP_TYPE_PHYSICAL = "physical";
 
-    private static final String MEMENTO_MAP_TYPE_SATELLITE = "satellite";
+    public static final String MAP_TYPE_SATELLITE = "satellite";
 
     private static final String MEMENTO_ZOOM_LEVEL = "zoom-level";
 
@@ -88,13 +88,13 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
     public String getMapType() {
         MapType mapType = map.getCurrentMapType();
         if (MapType.getNormalMap().equals(mapType)) {
-            return MEMENTO_MAP_TYPE_NORMAL;
+            return MAP_TYPE_NORMAL;
         } else if (MapType.getSatelliteMap().equals(mapType)) {
-            return MEMENTO_MAP_TYPE_SATELLITE;
+            return MAP_TYPE_SATELLITE;
         } else if (MapType.getPhysicalMap().equals(mapType)) {
-            return MEMENTO_MAP_TYPE_PHYSICAL;
+            return MAP_TYPE_PHYSICAL;
         } else if (MapType.getHybridMap().equals(mapType)) {
-            return MEMENTO_MAP_TYPE_HYBRID;
+            return MAP_TYPE_HYBRID;
         } else {
             throw new RuntimeException(
                     "map type persistence not supported for type "
@@ -114,10 +114,10 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
         final ListBox layoutBox = new ListBox(false);
         layoutBox.setVisibleItemCount(1);
 
-        layoutBox.addItem("Hybrid", MEMENTO_MAP_TYPE_HYBRID);
-        layoutBox.addItem("Map", MEMENTO_MAP_TYPE_NORMAL);
-        layoutBox.addItem("Satellite", MEMENTO_MAP_TYPE_SATELLITE);
-        layoutBox.addItem("Terrain", MEMENTO_MAP_TYPE_PHYSICAL);
+        layoutBox.addItem("Hybrid", MAP_TYPE_HYBRID);
+        layoutBox.addItem("Map", MAP_TYPE_NORMAL);
+        layoutBox.addItem("Satellite", MAP_TYPE_SATELLITE);
+        layoutBox.addItem("Terrain", MAP_TYPE_PHYSICAL);
 
         layoutBox.addChangeHandler(new ChangeHandler() {
             @Override
@@ -212,13 +212,13 @@ public class MapViewContentDisplay extends AbstractViewContentDisplay {
     }
 
     public void setMapType(String mapTypeID) {
-        if (MEMENTO_MAP_TYPE_NORMAL.equals(mapTypeID)) {
+        if (MAP_TYPE_NORMAL.equals(mapTypeID)) {
             map.setCurrentMapType(MapType.getNormalMap());
-        } else if (MEMENTO_MAP_TYPE_SATELLITE.equals(mapTypeID)) {
+        } else if (MAP_TYPE_SATELLITE.equals(mapTypeID)) {
             map.setCurrentMapType(MapType.getSatelliteMap());
-        } else if (MEMENTO_MAP_TYPE_PHYSICAL.equals(mapTypeID)) {
+        } else if (MAP_TYPE_PHYSICAL.equals(mapTypeID)) {
             map.setCurrentMapType(MapType.getPhysicalMap());
-        } else if (MEMENTO_MAP_TYPE_HYBRID.equals(mapTypeID)) {
+        } else if (MAP_TYPE_HYBRID.equals(mapTypeID)) {
             map.setCurrentMapType(MapType.getHybridMap());
         } else {
             throw new RuntimeException(
