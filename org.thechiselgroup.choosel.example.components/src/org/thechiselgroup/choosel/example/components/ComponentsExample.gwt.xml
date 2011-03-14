@@ -20,8 +20,14 @@
   <inherits name='com.google.gwt.user.User'/>
   <inherits name='org.thechiselgroup.choosel.core.Core'/>
 
-  <!-- chart visualization component -->
+  <!-- visualization components -->
   <inherits name='org.thechiselgroup.choosel.visualization_component.chart.Chart'/>
+
+  <inherits name='org.thechiselgroup.choosel.visualization_component.map.Map'/>
+  <!-- Google maps key for chisel-mashups.appspot.com --> 
+  <script src="http://maps.google.com/maps?gwt=1&amp;file=api&amp;v=2&amp;sensor=false&amp;key=ABQIAAAAUSQ19DnbWFmnXLrOTDG68hS6gHwS7rfd9W_WZd1hW4MpsPBDjBTFRjW7PcAbjSpbCyx5XB9rkd-paw" />
+  
+  <inherits name='org.thechiselgroup.choosel.visualization_component.timeline.Timeline'/>
  
   <entry-point class='org.thechiselgroup.choosel.example.components.client.ComponentExampleEntryPoint'/>
 
