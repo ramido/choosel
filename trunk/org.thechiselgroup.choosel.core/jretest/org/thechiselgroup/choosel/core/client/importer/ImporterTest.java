@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.workbench.client.importer;
+package org.thechiselgroup.choosel.core.client.importer;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -27,6 +27,9 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
+import org.thechiselgroup.choosel.core.client.importer.Importer;
+import org.thechiselgroup.choosel.core.client.importer.ParseException;
+import org.thechiselgroup.choosel.core.client.importer.StringTable;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 

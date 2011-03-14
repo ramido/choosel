@@ -21,6 +21,7 @@ import org.thechiselgroup.choosel.core.client.command.AsyncCommandExecutor;
 import org.thechiselgroup.choosel.core.client.command.AsyncCommandToCommandAdapter;
 import org.thechiselgroup.choosel.core.client.command.CommandManager;
 import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
+import org.thechiselgroup.choosel.core.client.importer.Importer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetAddedEvent;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetAddedEventHandler;
@@ -47,7 +48,6 @@ import org.thechiselgroup.choosel.workbench.client.authentication.ui.Authenticat
 import org.thechiselgroup.choosel.workbench.client.authentication.ui.AuthenticationBasedEnablingStateWrapper;
 import org.thechiselgroup.choosel.workbench.client.command.ui.RedoActionStateController;
 import org.thechiselgroup.choosel.workbench.client.command.ui.UndoActionStateController;
-import org.thechiselgroup.choosel.workbench.client.importer.Importer;
 import org.thechiselgroup.choosel.workbench.client.ui.dialog.Dialog;
 import org.thechiselgroup.choosel.workbench.client.ui.dialog.DialogManager;
 import org.thechiselgroup.choosel.workbench.client.workspace.SaveActionStateController;
