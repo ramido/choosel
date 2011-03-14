@@ -3,9 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/aopalliance.jar"/>
-	<classpathentry kind="lib" path="lib/gin-20091021-src.jar"/>
-	<classpathentry kind="lib" path="lib/gin-20091021.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.thechiselgroup.choosel.core"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.thechiselgroup.choosel.protovis"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.thechiselgroup.choosel.visualization_component.chart"/>
