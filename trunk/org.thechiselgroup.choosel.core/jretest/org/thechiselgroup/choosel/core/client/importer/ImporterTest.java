@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -27,13 +28,53 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.core.client.importer.Importer;
-import org.thechiselgroup.choosel.core.client.importer.ParseException;
-import org.thechiselgroup.choosel.core.client.importer.StringTable;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 
+import com.ibm.icu.text.SimpleDateFormat;
+
 public class ImporterTest {
+
+    /**
+     * JRE testing compatible importer modification.
+     */
+    public static class TestImporter extends Importer {
+
+        private SimpleDateFormat dataFormat1;
+
+        private SimpleDateFormat dataFormat2;
+
+        @Override
+        protected void initDateFormats() {
+            dataFormat1 = new SimpleDateFormat(DATE_FORMAT_1_PATTERN);
+            dataFormat2 = new SimpleDateFormat(DATE_FORMAT_2_PATTERN);
+        }
+
+        @Override
+        protected Date parseDate1(String stringValue) {
+            try {
+                return dataFormat1.parse(stringValue);
+            } catch (java.text.ParseException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        @Override
+        protected Date parseDate2(String stringValue) {
+            try {
+                return dataFormat2.parse(stringValue);
+            } catch (java.text.ParseException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public static Date date(int year, int month, int day) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, month - 1, day, 0, 0, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
+    }
 
     private Importer underTest;
 
@@ -99,6 +140,25 @@ public class ImporterTest {
         }
     }
 
+    /**
+     * Test for "yyyy-MM-dd" and "dd/MM/yyyy" formats if mixed in column.
+     */
+    @Test
+    public void parsesMixedDateFormats() throws ParseException {
+        String[] columns = new String[] { "c1" };
+        List<String[]> values = new ArrayList<String[]>();
+        values.add(new String[] { "2011-10-08" });
+        values.add(new String[] { "08/10/2011" });
+
+        ResourceSet createdResources = underTest
+                .createResources(new StringTable(columns, values));
+
+        assertEquals(2, createdResources.size());
+        for (Resource resource : createdResources) {
+            assertEquals(date(2011, 10, 8), resource.getValue("c1"));
+        }
+    }
+
     @Test
     public void sameUriTypeInSameImport() throws Exception {
         String[] columns = new String[] { "c1" };
@@ -122,12 +182,7 @@ public class ImporterTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        underTest = new Importer() {
-            @Override
-            protected Date parseDate(String stringValue) {
-                return new Date();
-            }
-        };
+        underTest = new TestImporter();
     }
 
     @Test
