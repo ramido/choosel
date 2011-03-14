@@ -15,6 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.client.importer;
 
+import org.thechiselgroup.choosel.core.client.importer.CSVStringTableParser;
+import org.thechiselgroup.choosel.core.client.importer.Importer;
+import org.thechiselgroup.choosel.core.client.importer.ParseException;
+import org.thechiselgroup.choosel.core.client.importer.StringTable;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetContainer;
 import org.thechiselgroup.choosel.workbench.client.ui.dialog.AbstractDialog;

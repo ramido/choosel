@@ -22,6 +22,7 @@ import org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionCons
 import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandlingAsyncCommandExecutor;
 import org.thechiselgroup.choosel.core.client.error_handling.LoggingAsyncCommandExecutor;
+import org.thechiselgroup.choosel.core.client.importer.Importer;
 import org.thechiselgroup.choosel.core.client.label.CategoryLabelProvider;
 import org.thechiselgroup.choosel.core.client.label.LabelProvider;
 import org.thechiselgroup.choosel.core.client.label.MappingCategoryLabelProvider;
@@ -72,7 +73,6 @@ import org.thechiselgroup.choosel.core.client.windows.WindowContentProducer;
 import org.thechiselgroup.choosel.workbench.client.authentication.AuthenticationManager;
 import org.thechiselgroup.choosel.workbench.client.authentication.DefaultAuthenticationManager;
 import org.thechiselgroup.choosel.workbench.client.command.ui.CommandPresenterFactory;
-import org.thechiselgroup.choosel.workbench.client.importer.Importer;
 import org.thechiselgroup.choosel.workbench.client.ui.FeedbackDialogErrorHandler;
 import org.thechiselgroup.choosel.workbench.client.ui.dialog.DialogManager;
 import org.thechiselgroup.choosel.workbench.client.ui.messages.DefaultMessageManager;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.workbench.client.importer;
+package org.thechiselgroup.choosel.core.client.importer;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -21,6 +21,9 @@ import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
+import org.thechiselgroup.choosel.core.client.importer.CSVStringTableParser;
+import org.thechiselgroup.choosel.core.client.importer.ParseException;
+import org.thechiselgroup.choosel.core.client.importer.StringTable;
 
 public class CSVStringTableParserTest {
 
