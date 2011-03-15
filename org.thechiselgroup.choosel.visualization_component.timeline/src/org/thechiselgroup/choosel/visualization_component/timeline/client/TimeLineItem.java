@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.visualization_component.timeline.client;
 import java.util.Date;
 
 import org.thechiselgroup.choosel.core.client.ui.CSS;
-import org.thechiselgroup.choosel.core.client.views.IconViewItem;
+import org.thechiselgroup.choosel.core.client.views.IconItem;
 import org.thechiselgroup.choosel.core.client.views.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.ViewItem.Status;
 import org.thechiselgroup.choosel.core.client.views.ViewItemInteraction;
@@ -28,7 +28,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 
-public class TimeLineItem extends IconViewItem {
+public class TimeLineItem extends IconItem {
 
     private static final int OVERVIEW_BAND_ID = 1;
 
@@ -47,10 +47,10 @@ public class TimeLineItem extends IconViewItem {
 
     private String tickElementID;
 
-    public TimeLineItem(ViewItem resourceItem, TimeLineViewContentDisplay view) {
-        super(resourceItem, TimelineVisualization.COLOR_SLOT);
+    public TimeLineItem(ViewItem viewItem, TimeLine view) {
+        super(viewItem, TimeLine.COLOR_SLOT);
 
-        Object date = getSlotValue(TimelineVisualization.DATE_SLOT);
+        Object date = getSlotValue(TimeLine.DATE_SLOT);
         String dateString;
         if (date instanceof Date) {
             dateString = date.toString();
@@ -101,7 +101,7 @@ public class TimeLineItem extends IconViewItem {
         this.iconElementID = iconElementID;
 
         // fix icon representation
-        replaceIconImageWithDiv(iconElementID);
+        updateIconElement(iconElementID);
     }
 
     private void registerListeners(String elementID) {
@@ -114,18 +114,6 @@ public class TimeLineItem extends IconViewItem {
                 viewItem.reportInteraction(new ViewItemInteraction(event));
             }
         });
-    }
-
-    private void replaceIconImageWithDiv(String iconElementID) {
-        Element element = DOM.getElementById(iconElementID);
-
-        String color = getColor();
-        String label = (String) getSlotValue(TimelineVisualization.DESCRIPTION_SLOT);
-
-        element.setInnerHTML("<div style='background-color: " + color
-                + "; border-color: " + calculateBorderColor(color)
-                + ";' class='" + CSS_RESOURCE_ITEM_ICON + "'>" + label
-                + "</div>");
     }
 
     private void setIconColor(String color) {
@@ -237,4 +225,37 @@ public class TimeLineItem extends IconViewItem {
         }
 
     }
+
+    public void updateColor() {
+        String color = getColor();
+
+        setIconColor(color);
+
+        if (DOM.getElementById(tickElementID) == null) {
+            return;
+        }
+
+        setTickColor(color);
+    }
+
+    private void updateIconElement(String iconElementID) {
+        Element element = DOM.getElementById(iconElementID);
+
+        if (element == null) {
+            return;
+        }
+
+        String color = getColor();
+        String label = (String) getSlotValue(TimeLine.LABEL_SLOT);
+
+        element.setInnerHTML("<div style='background-color: " + color
+                + "; border-color: " + calculateBorderColor(color)
+                + ";' class='" + CSS_RESOURCE_ITEM_ICON + "'>" + label
+                + "</div>");
+    }
+
+    public void updateLabel() {
+        updateIconElement(iconElementID);
+    }
+
 }

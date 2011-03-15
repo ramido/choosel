@@ -23,11 +23,11 @@ public class TimeLineViewContentDisplayFactory implements
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-        return new TimeLineViewContentDisplay();
+        return new TimeLine();
     }
 
     @Override
     public String getViewContentTypeID() {
-        return TimelineVisualization.ID;
+        return TimeLine.ID;
     }
 }
