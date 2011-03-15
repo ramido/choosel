@@ -16,10 +16,9 @@
 package org.thechiselgroup.choosel.core.client.resources.ui;
 
 import org.thechiselgroup.choosel.core.client.resources.Resource;
-import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.ui.dnd.ResourceSetAvatarDragController;
-import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingConfiguration;
+import org.thechiselgroup.choosel.core.client.views.ViewItem;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.HTML;
@@ -66,6 +65,5 @@ public abstract class DetailsWidgetHelper {
         verticalPanel.add(html);
     }
 
-    public abstract Widget createDetailsWidget(String groupID,
-            ResourceSet resourceSet, SlotMappingConfiguration slotMappings);
+    public abstract Widget createDetailsWidget(ViewItem viewItem);
 }

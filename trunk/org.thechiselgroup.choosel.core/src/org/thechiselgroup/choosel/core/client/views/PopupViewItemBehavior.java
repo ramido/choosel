@@ -17,7 +17,6 @@ package org.thechiselgroup.choosel.core.client.views;
 
 import java.util.Map;
 
-import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.core.client.ui.WidgetFactory;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupClosingEvent;
@@ -70,15 +69,11 @@ public class PopupViewItemBehavior implements ViewItemBehavior {
     }
 
     // for test
-    protected PopupManager createPopupManager(final String viewItemID,
-            final ResourceSet resources) {
-
+    protected PopupManager createPopupManager(final ViewItem viewItem) {
         WidgetFactory widgetFactory = new WidgetFactory() {
-
             @Override
             public Widget createWidget() {
-                return detailsWidgetHelper.createDetailsWidget(viewItemID,
-                        resources, slotMappingConfiguration);
+                return detailsWidgetHelper.createDetailsWidget(viewItem);
             }
         };
 
@@ -126,8 +121,7 @@ public class PopupViewItemBehavior implements ViewItemBehavior {
         final HighlightingManager highlightingManager = new HighlightingManager(
                 hoverModel, viewItem.getResourceSet());
 
-        PopupManager popupManager = createPopupManager(
-                viewItem.getViewItemID(), viewItem.getResourceSet());
+        PopupManager popupManager = createPopupManager(viewItem);
 
         popupManager.addPopupMouseOverHandler(new MouseOverHandler() {
             @Override
