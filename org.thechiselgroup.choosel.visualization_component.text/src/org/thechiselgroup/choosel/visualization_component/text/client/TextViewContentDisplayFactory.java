@@ -28,7 +28,7 @@ public class TextViewContentDisplayFactory implements ViewContentDisplayFactory 
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-        return new TextViewContentDisplay();
+        return new TextVisualization();
     }
 
     @Override

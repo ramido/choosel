@@ -51,7 +51,7 @@ public class TextViewContentDisplayTest {
     @Mock
     private ViewContentDisplayCallback callback;
 
-    private TextViewContentDisplay underTest;
+    private TextVisualization underTest;
 
     @Mock
     private TextItemContainer textItemContainer;
@@ -127,7 +127,7 @@ public class TextViewContentDisplayTest {
         when(textItemContainer.createTextItemLabel(any(ViewItem.class)))
                 .thenReturn(itemLabel);
 
-        underTest = new TextViewContentDisplay(textItemContainer);
+        underTest = new TextVisualization(textItemContainer);
 
         underTest.init(callback);
 
