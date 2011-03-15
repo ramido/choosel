@@ -27,6 +27,7 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetUtils;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.regexp.shared.RegExp;
 
 /*
  * TODO revisit error handling 
@@ -44,7 +45,8 @@ public class Importer {
      * @see #DATE_FORMAT_1_PATTERN
      * @see #dateFormat1
      */
-    public static final String DATE_FORMAT_1_REGEX = "^(0[1-9]|[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012]|[1-9])/\\d{4}";
+    public static final RegExp DATE_FORMAT_1_REGEX = RegExp
+            .compile("^(0[1-9]|[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012]|[1-9])/\\d{4}$");
 
     /**
      * Format: "dd/MM/yyyy"
@@ -60,7 +62,8 @@ public class Importer {
      * @see #DATE_FORMAT_2_PATTERN
      * @see #dateFormat2
      */
-    public static final String DATE_FORMAT_2_REGEX = "^\\d{4}-(0[1-9]|1[012]|[1-9])-(0[1-9]|[1-9]|[12][0-9]|3[01])";
+    public static final RegExp DATE_FORMAT_2_REGEX = RegExp
+            .compile("^\\d{4}-(0[1-9]|1[012]|[1-9])-(0[1-9]|[1-9]|[12][0-9]|3[01])$");
 
     /**
      * Format: "yyyy-MM-dd"
@@ -73,12 +76,14 @@ public class Importer {
     /**
      * Format: "lat/long" with +/- decimal coordinates
      */
-    public static final String LOCATION_DETECTION_REGEX = "^[-+]?[0-9]*\\.?[0-9]+\\/[-+]?[0-9]*\\.?[0-9]+";
+    public static final RegExp LOCATION_DETECTION_REGEX = RegExp
+            .compile("^[-+]?[0-9]*\\.?[0-9]+\\/[-+]?[0-9]*\\.?[0-9]+$");
 
     /**
      * Format: "XXX.XXX"
      */
-    public static final String NUMBER_DETECTION_REGEX = "^[-+]?[0-9]*\\.?[0-9]+";
+    public static final RegExp NUMBER_DETECTION_REGEX = RegExp
+            .compile("^[-+]?[0-9]*\\.?[0-9]+$");
 
     private LabelProvider uriHeaderProvider;
 
@@ -120,13 +125,13 @@ public class Importer {
         for (int column = 0; column < table.getColumnCount(); column++) {
             String stringValue = table.getValue(0, column);
 
-            if (stringValue.matches(NUMBER_DETECTION_REGEX)) {
+            if (NUMBER_DETECTION_REGEX.test(stringValue)) {
                 columnTypes[column] = DataType.NUMBER;
-            } else if (stringValue.matches(DATE_FORMAT_1_REGEX)) {
+            } else if (DATE_FORMAT_1_REGEX.test(stringValue)) {
                 columnTypes[column] = DataType.DATE;
-            } else if (stringValue.matches(DATE_FORMAT_2_REGEX)) {
+            } else if (DATE_FORMAT_2_REGEX.test(stringValue)) {
                 columnTypes[column] = DataType.DATE;
-            } else if (stringValue.matches(LOCATION_DETECTION_REGEX)) {
+            } else if (LOCATION_DETECTION_REGEX.test(stringValue)) {
                 columnTypes[column] = DataType.LOCATION;
             } else {
                 columnTypes[column] = DataType.TEXT;
@@ -148,16 +153,16 @@ public class Importer {
 
                 switch (columnTypes[column]) {
                 case NUMBER:
-                    if (!stringValue.matches(NUMBER_DETECTION_REGEX)) {
+                    if (!NUMBER_DETECTION_REGEX.test(stringValue)) {
                         throw new ParseException("Invalid number", stringValue,
                                 row + 1);
                     }
                     value = new Double(stringValue);
                     break;
                 case DATE:
-                    if (stringValue.matches(DATE_FORMAT_1_REGEX)) {
+                    if (DATE_FORMAT_1_REGEX.test(stringValue)) {
                         value = parseDate1(stringValue);
-                    } else if (stringValue.matches(DATE_FORMAT_2_REGEX)) {
+                    } else if (DATE_FORMAT_2_REGEX.test(stringValue)) {
                         value = parseDate2(stringValue);
                     } else {
                         throw new ParseException("Invalid date", stringValue,
@@ -165,7 +170,7 @@ public class Importer {
                     }
                     break;
                 case LOCATION:
-                    if (!stringValue.matches(LOCATION_DETECTION_REGEX)) {
+                    if (!LOCATION_DETECTION_REGEX.test(stringValue)) {
                         throw new ParseException("Invalid location",
                                 stringValue, row + 1);
                     }
