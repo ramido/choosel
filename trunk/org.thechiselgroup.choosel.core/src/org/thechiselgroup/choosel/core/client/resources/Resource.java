@@ -24,6 +24,13 @@ public class Resource implements Serializable {
 
     private static final long serialVersionUID = 5652752520235015241L;
 
+    public static String getTypeFromURI(String uri) {
+        assert uri != null;
+
+        int splitIndex = uri.indexOf(':');
+        return uri.substring(0, splitIndex);
+    }
+
     // TODO find ways to use better map implementation
     // (CollectionFactory.createStringMap)
     private HashMap<String, Serializable> properties = new HashMap<String, Serializable>();
@@ -106,14 +113,7 @@ public class Resource implements Serializable {
 
     @Override
     public String toString() {
-        return "Resource [uri=" + uri + "]";
-    }
-
-    public static String getTypeFromURI(String uri) {
-        assert uri != null;
-
-        int splitIndex = uri.indexOf(':');
-        return uri.substring(0, splitIndex);
+        return "Resource [uri=" + uri + ";properties=" + properties + "]";
     }
 
 }
