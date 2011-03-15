@@ -19,16 +19,31 @@ import java.util.Date;
 
 import org.thechiselgroup.choosel.core.client.persistence.Memento;
 import org.thechiselgroup.choosel.core.client.persistence.PersistableRestorationService;
+import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.views.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 
+import com.google.gwt.event.logical.shared.AttachEvent;
+import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.user.client.ui.Widget;
 
-public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
+// TODO The zoom levels of the different bands should be configurable 
+public class TimeLine extends AbstractViewContentDisplay {
+
+    public static final Slot LABEL_SLOT = new Slot("label", "Label",
+            DataType.TEXT);
+
+    public static final Slot DATE_SLOT = new Slot("date", "Date", DataType.DATE);
+
+    public final static Slot COLOR_SLOT = new Slot("color", "Color",
+            DataType.COLOR);
+
+    public final static String ID = "org.thechiselgroup.choosel.visualization_component.Timeline";
 
     private static final String MEMENTO_DATE = "date";
 
@@ -62,7 +77,23 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
         timelineWidget.setHeight("100%");
         timelineWidget.setWidth("100%");
 
+        // TODO pull up
+        timelineWidget.addAttachHandler(new Handler() {
+            @Override
+            public void onAttachOrDetach(AttachEvent event) {
+                if (event.isAttached()) {
+                    onAttach();
+                } else {
+                    onDetach();
+                }
+            }
+        });
+
         return timelineWidget;
+    }
+
+    public Date getCenterVisibleDate() {
+        return timelineWidget.getCenterVisibleDate();
     }
 
     public final String getEventElementID(int bandIndex, String elementType,
@@ -70,16 +101,22 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
         return timelineWidget.getEventElementID(bandIndex, elementType, event);
     }
 
+    public int getMainBandZoomIndex() {
+        return timelineWidget.getZoomIndex(0);
+    }
+
     @Override
     public String getName() {
         return "Timeline";
     }
 
+    public int getOverviewBandZoomIndex() {
+        return timelineWidget.getZoomIndex(1);
+    }
+
     @Override
     public Slot[] getSlots() {
-        return new Slot[] { TimelineVisualization.DESCRIPTION_SLOT,
-                TimelineVisualization.COLOR_SLOT,
-                TimelineVisualization.DATE_SLOT };
+        return new Slot[] { LABEL_SLOT, COLOR_SLOT, DATE_SLOT };
     }
 
     private JsTimeLineEvent[] getTimeLineEvents(
@@ -98,6 +135,24 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
         return timelineWidget;
     }
 
+    // TODO pull up
+    protected void onAttach() {
+        // add all view items
+        update(callback.getViewItems(),
+                LightweightCollections.<ViewItem> emptyCollection(),
+                LightweightCollections.<ViewItem> emptyCollection(),
+                LightweightCollections.<Slot> emptyCollection());
+    }
+
+    // TODO pull up
+    protected void onDetach() {
+        // remove all view items
+        update(LightweightCollections.<ViewItem> emptyCollection(),
+                LightweightCollections.<ViewItem> emptyCollection(),
+                callback.getViewItems(),
+                LightweightCollections.<Slot> emptyCollection());
+    }
+
     private void removeEventsFromTimeline(
             LightweightCollection<ViewItem> removedResourceItems) {
         timelineWidget.removeEvents(getTimeLineEvents(removedResourceItems));
@@ -108,23 +163,33 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
             PersistableRestorationService restorationService,
             ResourceSetAccessor accessor) {
 
-        timelineWidget.setZoomIndex(0,
-                (Integer) state.getValue(MEMENTO_ZOOM_PREFIX + 0));
-        timelineWidget.setZoomIndex(1,
-                (Integer) state.getValue(MEMENTO_ZOOM_PREFIX + 1));
+        setMainBandZoomIndex((Integer) state.getValue(MEMENTO_ZOOM_PREFIX + 0));
+        setOverviewBandZoomIndex((Integer) state
+                .getValue(MEMENTO_ZOOM_PREFIX + 1));
 
-        // set date *AFTER* zoom restored
-        Date date = (Date) state.getValue(MEMENTO_DATE);
-        timelineWidget.setCenterVisibleDate(date);
+        // IMPORTANT: set date *AFTER* zoom restored
+        setCenterVisibleDate((Date) state.getValue(MEMENTO_DATE));
     }
 
     @Override
     public Memento save(ResourceSetCollector resourceSetCollector) {
         Memento state = new Memento();
-        state.setValue(MEMENTO_DATE, timelineWidget.getCenterVisibleDate());
-        state.setValue(MEMENTO_ZOOM_PREFIX + 0, timelineWidget.getZoomIndex(0));
-        state.setValue(MEMENTO_ZOOM_PREFIX + 1, timelineWidget.getZoomIndex(1));
+        state.setValue(MEMENTO_DATE, getCenterVisibleDate());
+        state.setValue(MEMENTO_ZOOM_PREFIX + 0, getMainBandZoomIndex());
+        state.setValue(MEMENTO_ZOOM_PREFIX + 1, getOverviewBandZoomIndex());
         return state;
+    }
+
+    public void setCenterVisibleDate(Date date) {
+        timelineWidget.setCenterVisibleDate(date);
+    }
+
+    public void setMainBandZoomIndex(int zoomIndex) {
+        timelineWidget.setZoomIndex(0, zoomIndex);
+    }
+
+    public void setOverviewBandZoomIndex(int zoomIndex) {
+        timelineWidget.setZoomIndex(1, zoomIndex);
     }
 
     @Override
@@ -132,6 +197,11 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
             LightweightCollection<ViewItem> updatedResourceItems,
             LightweightCollection<ViewItem> removedResourceItems,
             LightweightCollection<Slot> changedSlots) {
+
+        // TODO pull up
+        if (!timelineWidget.isAttached()) {
+            return;
+        }
 
         if (!addedResourceItems.isEmpty()) {
             createTimeLineItems(addedResourceItems);
@@ -146,13 +216,27 @@ public class TimeLineViewContentDisplay extends AbstractViewContentDisplay {
         if (!removedResourceItems.isEmpty()) {
             removeEventsFromTimeline(removedResourceItems);
         }
+
+        // TODO refactor
+        if (!changedSlots.isEmpty()) {
+            for (ViewItem resourceItem : getCallback().getViewItems()) {
+                TimeLineItem timelineItem = (TimeLineItem) resourceItem
+                        .getDisplayObject();
+                for (Slot slot : changedSlots) {
+                    if (slot.equals(LABEL_SLOT)) {
+                        timelineItem.updateLabel();
+                    } else if (slot.equals(COLOR_SLOT)) {
+                        timelineItem.updateColor();
+                    }
+                }
+            }
+        }
     }
 
-    private void updateStatusStyling(
-            LightweightCollection<ViewItem> resourceItems) {
-        for (ViewItem resourceItem : resourceItems) {
-            ((TimeLineItem) resourceItem.getDisplayObject())
-                    .setStatusStyling(resourceItem.getStatus());
+    private void updateStatusStyling(LightweightCollection<ViewItem> viewItems) {
+        for (ViewItem viewItem : viewItems) {
+            ((TimeLineItem) viewItem.getDisplayObject())
+                    .setStatusStyling(viewItem.getStatus());
         }
     }
 }
