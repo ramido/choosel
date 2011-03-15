@@ -134,7 +134,7 @@ public final class DefaultViewModelTestHelper {
                 mock(ViewItemBehavior.class), resourceGrouping));
 
         // deactivate slot initialization
-        underTest.isConfigurationAvailable = true;
+        underTest.setConfigured(true);
 
         return underTest;
     }

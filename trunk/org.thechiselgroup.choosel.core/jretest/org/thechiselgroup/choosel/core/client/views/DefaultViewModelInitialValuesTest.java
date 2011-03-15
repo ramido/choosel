@@ -88,7 +88,7 @@ public class DefaultViewModelInitialValuesTest {
                 containedResources, new DefaultResourceSet(),
                 new DefaultResourceSet(), textSlot, numberSlot);
 
-        underTest.isConfigurationAvailable = false;
+        underTest.setConfigured(false);
     }
 
 }
