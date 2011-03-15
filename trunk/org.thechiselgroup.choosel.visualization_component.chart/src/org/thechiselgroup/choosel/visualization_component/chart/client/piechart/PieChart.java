@@ -15,9 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.chart.client.piechart;
 
-import static org.thechiselgroup.choosel.visualization_component.chart.client.piechart.PieChartVisualization.PIE_ANGLE_SLOT;
-import static org.thechiselgroup.choosel.visualization_component.chart.client.piechart.PieChartVisualization.PIE_LABEL_SLOT;
-
+import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.ui.Colors;
 import org.thechiselgroup.choosel.core.client.views.ViewItem.Status;
 import org.thechiselgroup.choosel.core.client.views.ViewItem.Subset;
@@ -38,7 +36,7 @@ import org.thechiselgroup.choosel.visualization_component.chart.client.ChartView
 //Version of Pie chart with the average of the area 
 //and the radius calculations for proportional highlighting.
 //(i.e. ratio + sqrt(ratio) / 2)
-public class PieChartViewContentDisplay extends ChartViewContentDisplay {
+public class PieChart extends ChartViewContentDisplay {
 
     private double[] highlightedWedgeCounts;
 
@@ -99,8 +97,8 @@ public class PieChartViewContentDisplay extends ChartViewContentDisplay {
         @Override
         public double f(JsArgs args) {
             ChartItem chartItem = args.getObject();
-            return chartItem.getSlotValueAsDouble(PIE_ANGLE_SLOT, Subset.ALL)
-                    * 2 * Math.PI / sum;
+            return chartItem.getSlotValueAsDouble(PieChart.PIE_ANGLE_SLOT,
+                    Subset.ALL) * 2 * Math.PI / sum;
         }
     };
 
@@ -112,26 +110,29 @@ public class PieChartViewContentDisplay extends ChartViewContentDisplay {
         @Override
         public String f(JsArgs args) {
             ChartItem chartItem = args.getObject();
-            return chartItem.getSlotValueAsDouble(PIE_ANGLE_SLOT,
+            return chartItem.getSlotValueAsDouble(PieChart.PIE_ANGLE_SLOT,
                     Subset.HIGHLIGHTED) == 0 ? Colors.WHITE : Colors.BLACK;
         }
     };
 
     private JsStringFunction fullMarkLabelText = new ChartItemStringSlotAccessor(
-            PIE_LABEL_SLOT);
+            PieChart.PIE_LABEL_SLOT);
 
     // XXX fix label
     private JsStringFunction regularMarkLabelText = new JsStringFunction() {
         @Override
         public String f(JsArgs args) {
             ChartItem chartItem = args.getObject();
-            return chartItem.getSlotValueAsDouble(PIE_ANGLE_SLOT, Subset.ALL)
-                    - chartItem.getSlotValueAsDouble(PIE_ANGLE_SLOT,
+            return chartItem.getSlotValueAsDouble(PieChart.PIE_ANGLE_SLOT,
+                    Subset.ALL)
+                    - chartItem.getSlotValueAsDouble(PieChart.PIE_ANGLE_SLOT,
                             Subset.HIGHLIGHTED) < 1 ? null : Double
-                    .toString(chartItem.getSlotValueAsDouble(PIE_ANGLE_SLOT,
-                            Subset.ALL)
-                            - chartItem.getSlotValueAsDouble(PIE_ANGLE_SLOT,
-                                    Subset.HIGHLIGHTED));
+                    .toString(chartItem.getSlotValueAsDouble(
+                            PieChart.PIE_ANGLE_SLOT, Subset.ALL)
+                            - chartItem
+                                    .getSlotValueAsDouble(
+                                            PieChart.PIE_ANGLE_SLOT,
+                                            Subset.HIGHLIGHTED));
         }
     };
 
@@ -140,14 +141,22 @@ public class PieChartViewContentDisplay extends ChartViewContentDisplay {
         @Override
         public String f(JsArgs args) {
             ChartItem chartItem = args.getObject();
-            return chartItem.getSlotValueAsDouble(
-                    PieChartVisualization.PIE_ANGLE_SLOT, Subset.HIGHLIGHTED) <= 0 ? null
-                    : Double.toString(chartItem.getSlotValueAsDouble(
-                            PIE_ANGLE_SLOT, Subset.HIGHLIGHTED));
+            return chartItem.getSlotValueAsDouble(PieChart.PIE_ANGLE_SLOT,
+                    Subset.HIGHLIGHTED) <= 0 ? null : Double.toString(chartItem
+                    .getSlotValueAsDouble(PieChart.PIE_ANGLE_SLOT,
+                            Subset.HIGHLIGHTED));
         }
     };
 
     private double maxChartItemValue;
+
+    public static final Slot PIE_ANGLE_SLOT = new Slot("pie.angle",
+            "Pie Angle", DataType.NUMBER);
+
+    public static final Slot PIE_LABEL_SLOT = new Slot("pie.label", "Label",
+            DataType.TEXT);
+
+    public final static String ID = "org.thechiselgroup.choosel.visualization_component.chart.PieChart";
 
     @Override
     protected void beforeRender() {
@@ -165,9 +174,9 @@ public class PieChartViewContentDisplay extends ChartViewContentDisplay {
         for (int i = 0; i < chartItemsJsArray.length(); i++) {
             ChartItem chartItem = chartItemsJsArray.get(i);
             highlightedWedgeCounts[i] = chartItem.getSlotValueAsDouble(
-                    PIE_ANGLE_SLOT, Subset.HIGHLIGHTED);
+                    PieChart.PIE_ANGLE_SLOT, Subset.HIGHLIGHTED);
             regularWedgeCounts[i] = chartItem.getSlotValueAsDouble(
-                    PIE_ANGLE_SLOT, Subset.ALL);
+                    PieChart.PIE_ANGLE_SLOT, Subset.ALL);
         }
     }
 
@@ -182,7 +191,7 @@ public class PieChartViewContentDisplay extends ChartViewContentDisplay {
         sum = 0;
         for (int i = 0; i < chartItemsJsArray.length(); i++) {
             sum += chartItemsJsArray.get(i).getSlotValueAsDouble(
-                    PIE_ANGLE_SLOT, Subset.ALL);
+                    PieChart.PIE_ANGLE_SLOT, Subset.ALL);
         }
     }
 
@@ -190,7 +199,7 @@ public class PieChartViewContentDisplay extends ChartViewContentDisplay {
         maxChartItemValue = 0;
         for (int i = 0; i < chartItemsJsArray.length(); i++) {
             double currentItemValue = chartItemsJsArray.get(i)
-                    .getSlotValueAsDouble(PIE_ANGLE_SLOT, Subset.ALL);
+                    .getSlotValueAsDouble(PieChart.PIE_ANGLE_SLOT, Subset.ALL);
             if (maxChartItemValue < currentItemValue) {
                 maxChartItemValue = currentItemValue;
             }
@@ -244,7 +253,7 @@ public class PieChartViewContentDisplay extends ChartViewContentDisplay {
 
     @Override
     public Slot[] getSlots() {
-        return new Slot[] { PIE_LABEL_SLOT, PIE_ANGLE_SLOT };
+        return new Slot[] { PieChart.PIE_LABEL_SLOT, PieChart.PIE_ANGLE_SLOT };
     }
 
     @Override

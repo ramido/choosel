@@ -23,11 +23,11 @@ public class ScatterPlotViewContentDisplayFactory implements
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-        return new ScatterPlotViewContentDisplay();
+        return new ScatterPlot();
     }
 
     @Override
     public String getViewContentTypeID() {
-        return ScatterPlotVisualization.ID;
+        return ScatterPlot.ID;
     }
 }

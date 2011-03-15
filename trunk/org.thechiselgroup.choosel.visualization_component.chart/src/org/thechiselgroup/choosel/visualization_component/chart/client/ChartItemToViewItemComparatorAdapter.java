@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -15,30 +15,21 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.chart.client;
 
-import static org.junit.Assert.assertEquals;
+import java.util.Comparator;
 
-import org.junit.Test;
+import org.thechiselgroup.choosel.core.client.views.ViewItem;
 
-public class ChartItemComparatorTest {
+public class ChartItemToViewItemComparatorAdapter implements
+        Comparator<ChartItem> {
 
-    @Test
-    public void greater() {
-        assertEquals(1, ChartItemComparator.compare(3, 1));
+    private Comparator<ViewItem> delegate;
+
+    public ChartItemToViewItemComparatorAdapter(Comparator<ViewItem> delegate) {
+        this.delegate = delegate;
     }
 
-    @Test
-    public void less() {
-        assertEquals(-1, ChartItemComparator.compare(-1, 2));
+    @Override
+    public int compare(ChartItem o1, ChartItem o2) {
+        return delegate.compare(o1.getViewItem(), o2.getViewItem());
     }
-
-    @Test
-    public void orderIsStable1() {
-        assertEquals(0, ChartItemComparator.compare(-1, -1));
-    }
-
-    @Test
-    public void orderIsStable2() {
-        assertEquals(0, ChartItemComparator.compare(1, 1));
-    }
-
 }

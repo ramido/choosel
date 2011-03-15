@@ -23,11 +23,11 @@ public class BarChartViewContentDisplayFactory implements
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-        return new BarChartViewContentDisplay();
+        return new BarChart();
     }
 
     @Override
     public String getViewContentTypeID() {
-        return BarChartVisualization.ID;
+        return BarChart.ID;
     }
 }

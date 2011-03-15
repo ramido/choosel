@@ -23,11 +23,11 @@ public class PieChartViewContentDisplayFactory implements
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-        return new PieChartViewContentDisplay();
+        return new PieChart();
     }
 
     @Override
     public String getViewContentTypeID() {
-        return PieChartVisualization.ID;
+        return PieChart.ID;
     }
 }

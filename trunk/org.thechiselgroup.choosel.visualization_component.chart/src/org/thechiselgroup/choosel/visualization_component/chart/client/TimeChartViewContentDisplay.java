@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.visualization_component.chart.client;
 import org.thechiselgroup.choosel.core.client.views.ViewItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 import org.thechiselgroup.choosel.protovis.client.PVEventHandler;
-import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChartVisualization;
+import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChart;
 
 public class TimeChartViewContentDisplay extends ChartViewContentDisplay {
 
@@ -155,8 +155,7 @@ public class TimeChartViewContentDisplay extends ChartViewContentDisplay {
         maxChartItemValue = 0;
         for (int i = 0; i < chartItemsJsArray.length(); i++) {
             double currentItemValue = chartItemsJsArray.get(i)
-                    .getSlotValueAsDouble(
-                            BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
+                    .getSlotValueAsDouble(BarChart.BAR_LENGTH_SLOT, Subset.ALL);
             if (maxChartItemValue < currentItemValue) {
                 maxChartItemValue = currentItemValue;
             }
@@ -170,8 +169,7 @@ public class TimeChartViewContentDisplay extends ChartViewContentDisplay {
 
     @Override
     public Slot[] getSlots() {
-        return new Slot[] { BarChartVisualization.BAR_LABEL_SLOT,
-                BarChartVisualization.BAR_LENGTH_SLOT };
+        return new Slot[] { BarChart.BAR_LABEL_SLOT, BarChart.BAR_LENGTH_SLOT };
     }
 
     private Object getSlotValue(int i, int coordinate) {
