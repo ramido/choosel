@@ -54,7 +54,7 @@ public class DefaultTextItemContainer implements TextItemContainer {
 
         scrollPanel = new ResizableScrollPanel(itemPanel);
         scrollPanel
-                .addStyleName(TextViewContentDisplay.CSS_LIST_VIEW_SCROLLBAR);
+                .addStyleName(TextVisualization.CSS_LIST_VIEW_SCROLLBAR);
 
         return scrollPanel;
     }
