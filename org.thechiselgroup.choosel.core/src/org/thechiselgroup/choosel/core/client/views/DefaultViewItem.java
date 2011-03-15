@@ -239,6 +239,13 @@ public class DefaultViewItem implements Disposable, ViewItem {
         return cachedSelectedStatus;
     }
 
+    // TODO move, refactor
+    @Override
+    public Slot[] getSlots() {
+        return slotMappingConfiguration.getSlots().toArray(
+                new Slot[slotMappingConfiguration.getSlots().size()]);
+    }
+
     @Override
     public <T> T getSlotValue(Slot slot) {
         return getSlotValue(slot, Subset.ALL);

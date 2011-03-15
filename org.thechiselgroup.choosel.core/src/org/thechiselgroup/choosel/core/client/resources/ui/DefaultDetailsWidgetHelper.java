@@ -18,11 +18,10 @@ package org.thechiselgroup.choosel.core.client.resources.ui;
 import java.util.Set;
 
 import org.thechiselgroup.choosel.core.client.resources.Resource;
-import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.ui.dnd.ResourceSetAvatarDragController;
+import org.thechiselgroup.choosel.core.client.views.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
-import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingConfiguration;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.HTML;
@@ -46,29 +45,25 @@ public class DefaultDetailsWidgetHelper extends DetailsWidgetHelper {
     }
 
     @Override
-    public Widget createDetailsWidget(String groupID, ResourceSet resources,
-            SlotMappingConfiguration slotMappings) {
-
+    public Widget createDetailsWidget(ViewItem viewItem) {
         VerticalPanel verticalPanel = GWT.create(VerticalPanel.class);
-        ResourceSetAvatar avatar = avatarFactory.createAvatar(resources);
-        if (!resources.hasLabel()) {
-            avatar.setText(groupID);
-        }
+        ResourceSetAvatar avatar = avatarFactory.createAvatar(viewItem
+                .getResourceSet());
+        avatar.setText(viewItem.getViewItemID());
         verticalPanel.add(avatar);
 
         // try to resolve slot mappings first
-        Set<Slot> slots = slotMappings.getSlots();
+        Slot[] slots = viewItem.getSlots();
         for (Slot slot : slots) {
             String label = slot.getName();
-            Object valueObject = slotMappings.resolve(slot, groupID, resources);
-            String value = valueObject != null ? valueObject.toString() + " ("
-                    + slotMappings.getResolver(slot).toString() + ")" : "";
+            Object valueObject = viewItem.getSlotValue(slot);
+            String value = valueObject != null ? valueObject.toString() : "";
             addRow(label, value, true, verticalPanel);
         }
 
         // single resource: show properties
-        if (resources.size() == 1) {
-            Resource resource = resources.getFirstResource();
+        if (viewItem.getResourceSet().size() == 1) {
+            Resource resource = viewItem.getResourceSet().getFirstResource();
 
             verticalPanel.add(new HTML("<br/><b>One item</b>"));
             Set<String> entrySet = resource.getProperties().keySet();
@@ -80,8 +75,8 @@ public class DefaultDetailsWidgetHelper extends DetailsWidgetHelper {
         }
 
         // multiple resources: show numbers
-        verticalPanel
-                .add(new HTML("<br/><b>" + resources.size() + " items</b>"));
+        verticalPanel.add(new HTML("<br/><b>"
+                + viewItem.getResourceSet().size() + " items</b>"));
 
         return verticalPanel;
     }

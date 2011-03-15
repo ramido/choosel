@@ -79,6 +79,9 @@ public interface ViewItem {
 
     SubsetStatus getSelectionStatus();
 
+    // TODO move to super interface
+    Slot[] getSlots();
+
     <T> T getSlotValue(Slot slot);
 
     // TODO test

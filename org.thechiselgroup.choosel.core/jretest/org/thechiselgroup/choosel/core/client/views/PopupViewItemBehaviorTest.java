@@ -119,8 +119,7 @@ public class PopupViewItemBehaviorTest {
                 mock(PopupManagerFactory.class),
                 mock(SlotMappingConfiguration.class)) {
             @Override
-            protected PopupManager createPopupManager(String viewItemID,
-                    ResourceSet resources) {
+            protected PopupManager createPopupManager(ViewItem viewItem) {
                 return popupManager;
             }
         };
