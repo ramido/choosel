@@ -54,7 +54,12 @@ class JsTimeLine extends JavaScriptObject {
         {pixelsPerInterval: 100, unit: $wnd.Timeline.DateTime.MONTH},
         {pixelsPerInterval: 400, unit: $wnd.Timeline.DateTime.YEAR},
         {pixelsPerInterval: 200, unit: $wnd.Timeline.DateTime.YEAR},
-        {pixelsPerInterval: 100, unit: $wnd.Timeline.DateTime.YEAR})
+        {pixelsPerInterval: 100, unit: $wnd.Timeline.DateTime.YEAR},
+        {pixelsPerInterval: 50, unit: $wnd.Timeline.DateTime.YEAR},
+        {pixelsPerInterval: 400, unit: $wnd.Timeline.DateTime.DECADE},
+        {pixelsPerInterval: 200, unit: $wnd.Timeline.DateTime.DECADE},
+        {pixelsPerInterval: 100, unit: $wnd.Timeline.DateTime.DECADE},
+        {pixelsPerInterval: 50, unit: $wnd.Timeline.DateTime.DECADE})
         }),         
         $wnd.Timeline.createBandInfo({
         startsOn: dateAsString,
@@ -74,10 +79,12 @@ class JsTimeLine extends JavaScriptObject {
         {pixelsPerInterval: 400, unit: $wnd.Timeline.DateTime.YEAR},
         {pixelsPerInterval: 200, unit: $wnd.Timeline.DateTime.YEAR},
         {pixelsPerInterval: 100, unit: $wnd.Timeline.DateTime.YEAR},
-        {pixelsPerInterval: 50, unit: $wnd.Timeline.DateTime.YEAR},
-        {pixelsPerInterval: 400, unit: $wnd.Timeline.DateTime.DECADE},
+        {pixelsPerInterval: 40, unit: $wnd.Timeline.DateTime.YEAR},
         {pixelsPerInterval: 200, unit: $wnd.Timeline.DateTime.DECADE},
-        {pixelsPerInterval: 100, unit: $wnd.Timeline.DateTime.DECADE})
+        {pixelsPerInterval: 100, unit: $wnd.Timeline.DateTime.DECADE},
+        {pixelsPerInterval: 40, unit: $wnd.Timeline.DateTime.DECADE},
+        {pixelsPerInterval: 200, unit: $wnd.Timeline.DateTime.CENTURY},
+        {pixelsPerInterval: 100, unit: $wnd.Timeline.DateTime.CENTURY})
         })
         ];
 
@@ -91,8 +98,8 @@ class JsTimeLine extends JavaScriptObject {
     // @formatter:on
 
     // called from JavaScript
-    private static final void onEventPainted(JsTimeLine timeLine, int bandIndex,
-            JsTimeLineEvent event) {
+    private static final void onEventPainted(JsTimeLine timeLine,
+            int bandIndex, JsTimeLineEvent event) {
         timeLine.onEventPainted(bandIndex, event);
     }
 
@@ -190,8 +197,8 @@ class JsTimeLine extends JavaScriptObject {
     /**
      * Sets the zoom index of a band. What time interval the zoom index refers
      * to depends on the band (defined in
-     * {@link #create(Element, JsTimeLineEventSource, String)}). WARNING: calling
-     * this function will change the center date of the band, call
+     * {@link #create(Element, JsTimeLineEventSource, String)}). WARNING:
+     * calling this function will change the center date of the band, call
      * {@link #setCenterVisibleDate(String)} afterwards.
      */
     public final native void setZoomIndex(int bandNumber, int zoomIndex) /*-{
