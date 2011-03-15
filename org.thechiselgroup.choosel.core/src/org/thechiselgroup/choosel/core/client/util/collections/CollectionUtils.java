@@ -108,6 +108,14 @@ public final class CollectionUtils {
         return set;
     }
 
+    public static Set<String> toSet(String... ts) {
+        Set<String> set = CollectionFactory.createStringSet();
+        for (String s : ts) {
+            set.add(s);
+        }
+        return set;
+    }
+
     public static <T> Set<T> toSet(T... ts) {
         Set<T> set = new HashSet<T>();
         for (T t : ts) {
