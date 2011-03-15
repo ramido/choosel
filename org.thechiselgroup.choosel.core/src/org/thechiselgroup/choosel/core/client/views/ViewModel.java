@@ -46,4 +46,6 @@ public interface ViewModel extends ViewItemContainer, ContainsResourceGrouping {
 
     ViewContentDisplay getViewContentDisplay();
 
+    void setConfigured(boolean configured);
+
 }

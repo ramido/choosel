@@ -68,7 +68,7 @@ public class DefaultViewModel implements ViewModel, Disposable,
      * XXX This solution breaks down when there is more than one kind of
      * resource (i.e. with different properties)
      */
-    protected boolean isConfigurationAvailable = false;
+    private boolean isConfigurationAvailable = false;
 
     private ResourceSet selectedResources;
 
@@ -464,6 +464,11 @@ public class DefaultViewModel implements ViewModel, Disposable,
         assert !viewItemsByGroupId.containsKey(groupID);
 
         return viewItem;
+    }
+
+    // XXX remove
+    public void setConfigured(boolean configured) {
+        isConfigurationAvailable = configured;
     }
 
     @Override
