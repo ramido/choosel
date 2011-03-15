@@ -15,12 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.chart.client.scatterplot;
 
-import static org.thechiselgroup.choosel.visualization_component.chart.client.scatterplot.ScatterPlotVisualization.SHAPE_SLOT;
-import static org.thechiselgroup.choosel.visualization_component.chart.client.scatterplot.ScatterPlotVisualization.X_POSITION_SLOT;
-import static org.thechiselgroup.choosel.visualization_component.chart.client.scatterplot.ScatterPlotVisualization.Y_POSITION_SLOT;
-
 import java.util.Map;
 
+import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.ui.Colors;
 import org.thechiselgroup.choosel.core.client.ui.TextBoundsEstimator;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
@@ -36,6 +33,7 @@ import org.thechiselgroup.choosel.protovis.client.PVLinearScale;
 import org.thechiselgroup.choosel.protovis.client.PVMark;
 import org.thechiselgroup.choosel.protovis.client.PVPanel;
 import org.thechiselgroup.choosel.protovis.client.PVScale;
+import org.thechiselgroup.choosel.protovis.client.PVShape;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
@@ -46,14 +44,13 @@ import org.thechiselgroup.choosel.visualization_component.chart.client.ChartView
 import org.thechiselgroup.choosel.visualization_component.chart.client.TickFormatFunction;
 
 // TODO refactoring: use separate panel for dots that are added to scatter plot
-public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
-
+public class ScatterPlot extends ChartViewContentDisplay {
     private class ShapeLegendProperty implements
             ViewContentDisplayProperty<Map<String, String>> {
 
         @Override
         public String getPropertyName() {
-            return ScatterPlotVisualization.SHAPE_LEGEND_PROPERTY;
+            return SHAPE_LEGEND_PROPERTY;
         }
 
         @Override
@@ -66,6 +63,28 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
             setShapeLegend(value);
         }
     }
+
+    public final static String ID = "org.thechiselgroup.choosel.visualization_component.chart.ScatterPlot";
+
+    public static final Slot Y_POSITION_SLOT = new Slot("y_position", "Y-Axis",
+            DataType.NUMBER);
+
+    public static final Slot X_POSITION_SLOT = new Slot("x_position", "X-Axis",
+            DataType.NUMBER);
+
+    /**
+     * The shape slot should return a shape value (Strings, see {@link PVShape})
+     * per {@link ViewItem}.
+     */
+    public static final Slot SHAPE_SLOT = new Slot("shape", "Shape",
+            DataType.SHAPE);
+
+    /**
+     * Shape legends are {@link Map}s of shape values (Strings, see
+     * {@link PVShape}) to explaining texts. If the shape legend property is set
+     * to <code>null</code>, no legend is displayed.
+     */
+    public static final String SHAPE_LEGEND_PROPERTY = "shapeLegend";
 
     private static final int SHAPE_LEGEND_PANEL_PADDING = 2;
 
@@ -142,7 +161,7 @@ public class ScatterPlotViewContentDisplay extends ChartViewContentDisplay {
 
     private String shapeLegendLabel = "";
 
-    public ScatterPlotViewContentDisplay() {
+    public ScatterPlot() {
         registerProperty(new ShapeLegendProperty());
     }
 

@@ -28,7 +28,7 @@ import org.thechiselgroup.choosel.protovis.client.PVScale;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
-import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChartVisualization;
+import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChart;
 
 public class DotChartViewContentDisplay extends ChartViewContentDisplay {
 
@@ -81,8 +81,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
         public String f(JsArgs args) {
             ChartItem value = args.getObject();
             // TODO own slot
-            return value.getViewItem()
-                    .getSlotValue(BarChartVisualization.BAR_LABEL_SLOT)
+            return value.getViewItem().getSlotValue(BarChart.BAR_LABEL_SLOT)
                     .toString();
         }
     };
@@ -103,7 +102,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
 
         for (int i = 0; i < chartItemsJsArray.length(); i++) {
             dotCounts[i] = chartItemsJsArray.get(i).getSlotValueAsDouble(
-                    BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
+                    BarChart.BAR_LENGTH_SLOT, Subset.ALL);
         }
     }
 
@@ -141,8 +140,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
         maxChartItemValue = 0;
         for (int i = 0; i < chartItemsJsArray.length(); i++) {
             double currentItemValue = chartItemsJsArray.get(i)
-                    .getSlotValueAsDouble(
-                            BarChartVisualization.BAR_LENGTH_SLOT, Subset.ALL);
+                    .getSlotValueAsDouble(BarChart.BAR_LENGTH_SLOT, Subset.ALL);
             if (maxChartItemValue < currentItemValue) {
                 maxChartItemValue = currentItemValue;
             }
@@ -360,8 +358,7 @@ public class DotChartViewContentDisplay extends ChartViewContentDisplay {
 
     @Override
     public Slot[] getSlots() {
-        return new Slot[] { BarChartVisualization.BAR_LABEL_SLOT,
-                BarChartVisualization.BAR_LENGTH_SLOT };
+        return new Slot[] { BarChart.BAR_LABEL_SLOT, BarChart.BAR_LENGTH_SLOT };
     }
 
     private void highlightResources(int i) {

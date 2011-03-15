@@ -15,9 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.chart.client.barchart;
 
-import static org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChartVisualization.BAR_LABEL_SLOT;
-import static org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChartVisualization.BAR_LENGTH_SLOT;
+import java.util.Comparator;
 
+import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.ui.Colors;
 import org.thechiselgroup.choosel.core.client.ui.TextBoundsEstimator;
 import org.thechiselgroup.choosel.core.client.util.StringUtils;
@@ -27,6 +27,7 @@ import org.thechiselgroup.choosel.core.client.views.ViewContentDisplayProperty;
 import org.thechiselgroup.choosel.core.client.views.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.ViewItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.ViewItem.SubsetStatus;
+import org.thechiselgroup.choosel.core.client.views.ViewItemDoubleComparator;
 import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 import org.thechiselgroup.choosel.protovis.client.PV;
 import org.thechiselgroup.choosel.protovis.client.PVAlignment;
@@ -40,8 +41,8 @@ import org.thechiselgroup.choosel.protovis.client.jsutil.JsBooleanFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItem;
-import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItemComparator;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItemStringSlotAccessor;
+import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItemToViewItemComparatorAdapter;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay;
 import org.thechiselgroup.choosel.visualization_component.chart.client.TickFormatFunction;
 
@@ -60,14 +61,14 @@ import com.google.inject.Inject;
  */
 // TODO right side ticks
 // TODO leverage scales
-public class BarChartViewContentDisplay extends ChartViewContentDisplay {
+public class BarChart extends ChartViewContentDisplay {
 
     private class BarSpacingProperty implements
             ViewContentDisplayProperty<Boolean> {
 
         @Override
         public String getPropertyName() {
-            return BarChartVisualization.BAR_SPACING_PROPERTY;
+            return BAR_SPACING_PROPERTY;
         }
 
         @Override
@@ -86,7 +87,7 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
         @Override
         public String getPropertyName() {
-            return BarChartVisualization.LAYOUT_PROPERTY;
+            return LAYOUT_PROPERTY;
         }
 
         @Override
@@ -136,6 +137,18 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         }
 
     }
+
+    public final static String ID = "org.thechiselgroup.choosel.visualization_component.chart.BarChart";
+
+    public static final Slot BAR_LABEL_SLOT = new Slot("bar.label", "Label",
+            DataType.TEXT);
+
+    public static final Slot BAR_LENGTH_SLOT = new Slot("bar.length",
+            "Bar Length", DataType.NUMBER);
+
+    public static final String LAYOUT_PROPERTY = "layout";
+
+    public static final String BAR_SPACING_PROPERTY = "barSpacing";
 
     private static final int BORDER_BOTTOM = 35;
 
@@ -373,8 +386,11 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
     private boolean barSpacing = true;
 
+    private Comparator<ViewItem> viewItemComparator = new ViewItemDoubleComparator(
+            BAR_LENGTH_SLOT);
+
     @Inject
-    public BarChartViewContentDisplay() {
+    public BarChart() {
         registerProperty(new LayoutProperty());
     }
 
@@ -382,7 +398,8 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
     protected void beforeRender() {
         super.beforeRender();
 
-        chartItemsJsArray.sortStable(new ChartItemComparator(BAR_LENGTH_SLOT));
+        chartItemsJsArray.sortStable(new ChartItemToViewItemComparatorAdapter(
+                getViewItemComparator()));
 
         calculateMaximumChartItemValue();
 
@@ -656,6 +673,10 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
         return new Slot[] { BAR_LABEL_SLOT, BAR_LENGTH_SLOT };
     }
 
+    public Comparator<ViewItem> getViewItemComparator() {
+        return viewItemComparator;
+    }
+
     @Override
     protected void registerEventHandler(String eventType, PVEventHandler handler) {
         regularBar.event(eventType, handler);
@@ -679,6 +700,10 @@ public class BarChartViewContentDisplay extends ChartViewContentDisplay {
 
         this.layout = layout;
         updateChart(true);
+    }
+
+    public void setViewItemComparator(Comparator<ViewItem> viewItemComparator) {
+        this.viewItemComparator = viewItemComparator;
     }
 
     @Override
