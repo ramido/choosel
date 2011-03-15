@@ -53,7 +53,7 @@ public class GraphItem {
     }
 
     public String getLabelValue() {
-        return resourceItem.getSlotValue(GraphVisualization.NODE_LABEL_SLOT);
+        return resourceItem.getSlotValue(Graph.NODE_LABEL_SLOT);
     }
 
     public Node getNode() {
@@ -61,13 +61,11 @@ public class GraphItem {
     }
 
     public String getNodeBackgroundColorValue() {
-        return resourceItem
-                .getSlotValue(GraphVisualization.NODE_BACKGROUND_COLOR_SLOT);
+        return resourceItem.getSlotValue(Graph.NODE_BACKGROUND_COLOR_SLOT);
     }
 
     public String getNodeBorderColorValue() {
-        return resourceItem
-                .getSlotValue(GraphVisualization.NODE_BORDER_COLOR_SLOT);
+        return resourceItem.getSlotValue(Graph.NODE_BORDER_COLOR_SLOT);
     }
 
     public ViewItem getResourceItem() {
