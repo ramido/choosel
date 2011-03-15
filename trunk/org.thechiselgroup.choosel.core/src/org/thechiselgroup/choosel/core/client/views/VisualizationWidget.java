@@ -22,6 +22,8 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.core.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.views.slots.DefaultSlotMappingInitializer;
+import org.thechiselgroup.choosel.core.client.views.slots.ResourceSetToValueResolver;
+import org.thechiselgroup.choosel.core.client.views.slots.Slot;
 import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingConfiguration;
 
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -33,16 +35,15 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @author Lars Grammel
  */
-public class VisualizationWidget extends SimplePanel implements
-        HasResourceCategorizer, ContainsResourceGrouping {
+public class VisualizationWidget<T extends ViewContentDisplay> extends
+        SimplePanel implements HasResourceCategorizer, ContainsResourceGrouping {
 
     private ViewModel viewModel;
 
-    private ViewContentDisplay contentDisplay;
+    private T contentDisplay;
 
-    public VisualizationWidget(ViewContentDisplay contentDisplay,
-            ResourceSet selectedResource, ResourceSet highlightedResources,
-            ViewItemBehavior viewItemBehavior) {
+    public VisualizationWidget(T contentDisplay, ResourceSet selectedResource,
+            ResourceSet highlightedResources, ViewItemBehavior viewItemBehavior) {
 
         assert contentDisplay != null;
 
@@ -55,11 +56,16 @@ public class VisualizationWidget extends SimplePanel implements
                         new DefaultResourceSetFactory()));
 
         setWidget(contentDisplay.asWidget());
+        viewModel.setConfigured(true);
     }
 
     @Override
     public ResourceMultiCategorizer getCategorizer() {
         return viewModel.getResourceGrouping().getCategorizer();
+    }
+
+    public T getContentDisplay() {
+        return contentDisplay;
     }
 
     public ResourceSet getContentResourceSet() {
@@ -78,6 +84,10 @@ public class VisualizationWidget extends SimplePanel implements
 
     public void setContentResourceSet(ResourceSet contentResourceSet) {
         viewModel.getResourceGrouping().setResourceSet(contentResourceSet);
+    }
+
+    public void setResolver(Slot slot, ResourceSetToValueResolver resolver) {
+        viewModel.getSlotMappingConfiguration().setResolver(slot, resolver);
     }
 
     @Override
