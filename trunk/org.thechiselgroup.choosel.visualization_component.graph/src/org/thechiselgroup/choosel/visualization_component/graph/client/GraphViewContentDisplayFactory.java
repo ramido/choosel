@@ -47,14 +47,13 @@ public class GraphViewContentDisplayFactory implements
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-        return new GraphViewContentDisplay(
-                new GraphViewContentDisplay.DefaultDisplay(), commandManager,
+        return new Graph(new Graph.DefaultDisplay(), commandManager,
                 resourceManager, resourceCategorizer, arcStyleProvider,
                 registry);
     }
 
     @Override
     public String getViewContentTypeID() {
-        return GraphVisualization.ID;
+        return Graph.ID;
     }
 }

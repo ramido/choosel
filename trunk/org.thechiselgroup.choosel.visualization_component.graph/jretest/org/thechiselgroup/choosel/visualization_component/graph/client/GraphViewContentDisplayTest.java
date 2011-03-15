@@ -78,7 +78,7 @@ public class GraphViewContentDisplayTest {
     @Mock
     private CommandManager commandManager;
 
-    private GraphViewContentDisplay underTest;
+    private Graph underTest;
 
     @Mock
     private GraphDisplay graphDisplay;
@@ -296,7 +296,7 @@ public class GraphViewContentDisplayTest {
     }
 
     private void init() {
-        underTest = new GraphViewContentDisplay(graphDisplay, commandManager,
+        underTest = new Graph(graphDisplay, commandManager,
                 resourceManager, resourceCategorizer, arcStyleProvider,
                 registry);
         underTest.init(callback);

@@ -24,6 +24,7 @@ import org.thechiselgroup.choosel.core.client.command.CommandManager;
 import org.thechiselgroup.choosel.core.client.geometry.Point;
 import org.thechiselgroup.choosel.core.client.persistence.Memento;
 import org.thechiselgroup.choosel.core.client.persistence.PersistableRestorationService;
+import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceCategorizer;
@@ -78,8 +79,8 @@ import com.google.inject.Inject;
 
 // TODO separate out ncbo specific stuff and service calls
 // TODO register listener for double click on node --> change expansion state
-public class GraphViewContentDisplay extends AbstractViewContentDisplay
-        implements GraphNodeExpansionCallback, RequiresAutomaticResourceSet {
+public class Graph extends AbstractViewContentDisplay implements
+        GraphNodeExpansionCallback, RequiresAutomaticResourceSet {
 
     public static class DefaultDisplay extends GraphWidget implements
             GraphDisplay {
@@ -180,6 +181,17 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
         }
     }
 
+    public static final Slot NODE_BORDER_COLOR_SLOT = new Slot(
+            "nodeBorderColor", "Node Border Color", DataType.COLOR);
+
+    public static final Slot NODE_BACKGROUND_COLOR_SLOT = new Slot(
+            "nodeBackgroundColor", "Node Color", DataType.COLOR);
+
+    public static final Slot NODE_LABEL_SLOT = new Slot("nodeLabel",
+            "Node Label", DataType.TEXT);
+
+    public final static String ID = "org.thechiselgroup.choosel.visualization_component.graph.Graph";
+
     private static final String MEMENTO_ARC_ITEM_CONTAINERS_CHILD = "arcItemContainers";
 
     private static final String MEMENTO_NODE_LOCATIONS_CHILD = "nodeLocations";
@@ -220,8 +232,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
     private ResourceSet automaticResources;
 
     @Inject
-    public GraphViewContentDisplay(GraphDisplay display,
-            CommandManager commandManager, ResourceManager resourceManager,
+    public Graph(GraphDisplay display, CommandManager commandManager,
+            ResourceManager resourceManager,
             ResourceCategorizer resourceCategorizer,
             ArcTypeProvider arcStyleProvider, GraphExpansionRegistry registry) {
 
@@ -391,9 +403,8 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
 
     @Override
     public Slot[] getSlots() {
-        return new Slot[] { GraphVisualization.NODE_LABEL_SLOT,
-                GraphVisualization.NODE_BORDER_COLOR_SLOT,
-                GraphVisualization.NODE_BACKGROUND_COLOR_SLOT };
+        return new Slot[] { NODE_LABEL_SLOT, NODE_BORDER_COLOR_SLOT,
+                NODE_BACKGROUND_COLOR_SLOT };
     }
 
     private ViewItem getViewItem(Node node) {
@@ -524,8 +535,7 @@ public class GraphViewContentDisplay extends AbstractViewContentDisplay
                 new NodeMenuItemClickedHandler() {
                     @Override
                     public void onNodeMenuItemClicked(Node node) {
-                        nodeExpander.expand(getViewItem(node),
-                                GraphViewContentDisplay.this);
+                        nodeExpander.expand(getViewItem(node), Graph.this);
                     }
                 }, category);
     }
