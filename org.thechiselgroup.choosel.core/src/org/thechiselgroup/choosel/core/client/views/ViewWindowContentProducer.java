@@ -166,8 +166,7 @@ public class ViewWindowContentProducer implements WindowContentProducer {
         viewItemBehaviors.add(new HighlightingViewItemBehavior(hoverModel));
         viewItemBehaviors.add(new DragViewItemBehavior(dragEnablerFactory));
         viewItemBehaviors.add(new PopupViewItemBehavior(hoverModel,
-                detailsWidgetHelper, popupManagerFactory,
-                slotMappingConfiguration));
+                detailsWidgetHelper, popupManagerFactory));
         viewItemBehaviors.add(new SwitchSelectionOnClickViewItemBehavior(
                 selectionModel));
 
