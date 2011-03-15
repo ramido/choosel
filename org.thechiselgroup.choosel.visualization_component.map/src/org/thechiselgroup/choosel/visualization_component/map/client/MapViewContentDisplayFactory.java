@@ -22,12 +22,12 @@ public class MapViewContentDisplayFactory implements ViewContentDisplayFactory {
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-        return new MapViewContentDisplay();
+        return new Map();
     }
 
     @Override
     public String getViewContentTypeID() {
-        return MapVisualization.ID;
+        return Map.ID;
     }
 
 }
