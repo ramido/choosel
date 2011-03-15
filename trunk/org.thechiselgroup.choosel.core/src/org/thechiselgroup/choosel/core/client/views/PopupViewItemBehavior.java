@@ -24,7 +24,6 @@ import org.thechiselgroup.choosel.core.client.ui.popup.PopupClosingHandler;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
-import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingConfiguration;
 
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
@@ -55,17 +54,13 @@ public class PopupViewItemBehavior implements ViewItemBehavior {
 
     private PopupManagerFactory popupManagerFactory;
 
-    private SlotMappingConfiguration slotMappingConfiguration;
-
     public PopupViewItemBehavior(HoverModel hoverModel,
             DetailsWidgetHelper detailsWidgetHelper,
-            PopupManagerFactory popupManagerFactory,
-            SlotMappingConfiguration slotMappingConfiguration) {
+            PopupManagerFactory popupManagerFactory) {
 
         this.hoverModel = hoverModel;
         this.detailsWidgetHelper = detailsWidgetHelper;
         this.popupManagerFactory = popupManagerFactory;
-        this.slotMappingConfiguration = slotMappingConfiguration;
     }
 
     // for test

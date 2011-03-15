@@ -34,7 +34,6 @@ import org.thechiselgroup.choosel.core.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.core.client.views.ViewItemInteraction.Type;
-import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingConfiguration;
 
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
@@ -116,8 +115,7 @@ public class PopupViewItemBehaviorTest {
 
         underTest = new PopupViewItemBehavior(hoverModel,
                 mock(DetailsWidgetHelper.class),
-                mock(PopupManagerFactory.class),
-                mock(SlotMappingConfiguration.class)) {
+                mock(PopupManagerFactory.class)) {
             @Override
             protected PopupManager createPopupManager(ViewItem viewItem) {
                 return popupManager;

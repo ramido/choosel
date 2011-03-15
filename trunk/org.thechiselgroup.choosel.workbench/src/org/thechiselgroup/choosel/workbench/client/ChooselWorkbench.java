@@ -38,6 +38,7 @@ import org.thechiselgroup.choosel.core.client.ui.Action;
 import org.thechiselgroup.choosel.core.client.ui.ActionBar;
 import org.thechiselgroup.choosel.core.client.ui.TextCommandPresenter;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
+import org.thechiselgroup.choosel.core.client.util.BrowserDetect;
 import org.thechiselgroup.choosel.core.client.views.DefaultView;
 import org.thechiselgroup.choosel.core.client.windows.AbstractWindowContent;
 import org.thechiselgroup.choosel.core.client.windows.CreateWindowCommand;

@@ -30,12 +30,12 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 /**
- * {@link DetailsWidgetHelper} that shows information from the view item as well
+ * {@link AbstractDetailsWidgetHelper} that shows information from the view item as well
  * as from the underlying resources.
  * 
  * @author Lars Grammel
  */
-public class DefaultDetailsWidgetHelper extends DetailsWidgetHelper {
+public class DefaultDetailsWidgetHelper extends AbstractDetailsWidgetHelper {
 
     @Inject
     public DefaultDetailsWidgetHelper(ResourceSetFactory resourceSetFactory,
