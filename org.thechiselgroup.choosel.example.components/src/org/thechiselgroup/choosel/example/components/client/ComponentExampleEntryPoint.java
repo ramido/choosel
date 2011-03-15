@@ -28,9 +28,9 @@ import org.thechiselgroup.choosel.core.client.views.slots.FirstResourcePropertyR
 import org.thechiselgroup.choosel.core.client.views.slots.ResourceSetToValueResolver;
 import org.thechiselgroup.choosel.core.client.windows.WindowContentProducer;
 import org.thechiselgroup.choosel.protovis.client.PVShape;
-import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChartVisualization;
-import org.thechiselgroup.choosel.visualization_component.chart.client.piechart.PieChartVisualization;
-import org.thechiselgroup.choosel.visualization_component.chart.client.scatterplot.ScatterPlotVisualization;
+import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChart;
+import org.thechiselgroup.choosel.visualization_component.chart.client.piechart.PieChart;
+import org.thechiselgroup.choosel.visualization_component.chart.client.scatterplot.ScatterPlot;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -60,7 +60,7 @@ public class ComponentExampleEntryPoint implements EntryPoint {
     private void initBarChartView(WindowContentProducer contentProducer,
             ResourceSet resourceSet) {
 
-        DefaultView view = createView(contentProducer, BarChartVisualization.ID);
+        DefaultView view = createView(contentProducer, BarChart.ID);
         ViewModel model = view.getModel();
 
         // view.getViewContentDisplay().setPropertyValue(
@@ -69,11 +69,11 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         view.getResourceModel().addResourceSet(resourceSet);
 
         model.getSlotMappingConfiguration().setResolver(
-                BarChartVisualization.BAR_LABEL_SLOT,
+                BarChart.BAR_LABEL_SLOT,
                 new FirstResourcePropertyResolver(
                         BenchmarkResourceSetFactory.TEXT_2));
         model.getSlotMappingConfiguration().setResolver(
-                BarChartVisualization.BAR_LENGTH_SLOT,
+                BarChart.BAR_LENGTH_SLOT,
                 new FirstResourcePropertyResolver(
                         BenchmarkResourceSetFactory.NUMBER_2) {
                     @Override
@@ -87,14 +87,13 @@ public class ComponentExampleEntryPoint implements EntryPoint {
     private void initScatterPlotView(WindowContentProducer contentProducer,
             ResourceSet resourceSet) {
 
-        DefaultView view = createView(contentProducer,
-                ScatterPlotVisualization.ID);
+        DefaultView view = createView(contentProducer, ScatterPlot.ID);
         ViewModel model = view.getModel();
 
         view.getResourceModel().addResourceSet(resourceSet);
 
         model.getSlotMappingConfiguration().setResolver(
-                ScatterPlotVisualization.X_POSITION_SLOT,
+                ScatterPlot.X_POSITION_SLOT,
                 new FirstResourcePropertyResolver(
                         BenchmarkResourceSetFactory.NUMBER_1) {
                     @Override
@@ -103,7 +102,7 @@ public class ComponentExampleEntryPoint implements EntryPoint {
                     }
                 });
         model.getSlotMappingConfiguration().setResolver(
-                ScatterPlotVisualization.Y_POSITION_SLOT,
+                ScatterPlot.Y_POSITION_SLOT,
                 new FirstResourcePropertyResolver(
                         BenchmarkResourceSetFactory.NUMBER_2) {
                     @Override
@@ -111,8 +110,7 @@ public class ComponentExampleEntryPoint implements EntryPoint {
                         return "my y axis label";
                     }
                 });
-        model.getSlotMappingConfiguration().setResolver(
-                ScatterPlotVisualization.SHAPE_SLOT,
+        model.getSlotMappingConfiguration().setResolver(ScatterPlot.SHAPE_SLOT,
                 new ResourceSetToValueResolver() {
                     public Object resolve(
                             LightweightCollection<Resource> resources,
@@ -152,22 +150,22 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         shapeLegend.put(PVShape.TRIANGLE, "Another Description");
 
         model.getViewContentDisplay().setPropertyValue(
-                ScatterPlotVisualization.SHAPE_LEGEND_PROPERTY, shapeLegend);
+                ScatterPlot.SHAPE_LEGEND_PROPERTY, shapeLegend);
     }
 
     private void initPieChartView(WindowContentProducer contentProducer,
             ResourceSet resourceSet) {
 
-        DefaultView view = createView(contentProducer, PieChartVisualization.ID);
+        DefaultView view = createView(contentProducer, PieChart.ID);
         ViewModel model = view.getModel();
 
         // NOTE: the view is configured BEFORE the resources are added
         model.getSlotMappingConfiguration().setResolver(
-                PieChartVisualization.PIE_LABEL_SLOT,
+                PieChart.PIE_LABEL_SLOT,
                 new FirstResourcePropertyResolver(
                         BenchmarkResourceSetFactory.TEXT_2));
         model.getSlotMappingConfiguration().setResolver(
-                PieChartVisualization.PIE_ANGLE_SLOT,
+                PieChart.PIE_ANGLE_SLOT,
                 new FirstResourcePropertyResolver(
                         BenchmarkResourceSetFactory.NUMBER_2));
 
