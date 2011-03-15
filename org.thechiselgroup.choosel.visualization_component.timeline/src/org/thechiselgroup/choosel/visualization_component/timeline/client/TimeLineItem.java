@@ -122,6 +122,12 @@ public class TimeLineItem extends IconItem {
         }
 
         Element element = DOM.getElementById(iconElementID);
+
+        // can happen on resize
+        if (element == null) {
+            return;
+        }
+
         Element div = (Element) element.getFirstChild();
         if (div != null) {
             CSS.setBackgroundColor(div, color);
@@ -135,6 +141,11 @@ public class TimeLineItem extends IconItem {
         }
 
         Element element = DOM.getElementById(labelElementID);
+
+        // can happen on resize
+        if (element == null) {
+            return;
+        }
 
         /*
          * workaround for bug where class name is null
