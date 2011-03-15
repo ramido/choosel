@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.map.client;
 
-import org.thechiselgroup.choosel.core.client.views.IconViewItem;
+import org.thechiselgroup.choosel.core.client.views.IconItem;
 import org.thechiselgroup.choosel.core.client.views.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.ViewItem.Status;
 import org.thechiselgroup.choosel.core.client.views.ViewItemInteraction;
@@ -25,12 +25,12 @@ import com.google.gwt.maps.client.geom.Point;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 
-public class MapItem extends IconViewItem {
+public class MapItem extends IconItem {
 
     private LabelOverlay overlay;
 
     public MapItem(ViewItem viewItem, LatLng point) {
-        super(viewItem, MapVisualization.COLOR_SLOT);
+        super(viewItem, Map.COLOR_SLOT);
 
         // -10 = - (width /2)
         overlay = new LabelOverlay(point, Point.newInstance(-10, -10),
@@ -51,7 +51,7 @@ public class MapItem extends IconViewItem {
     }
 
     public String getLabelValue() {
-        return (String) getSlotValue(MapVisualization.LAB_SLOT);
+        return (String) getSlotValue(Map.LABEL_SLOT);
     }
 
     public LabelOverlay getOverlay() {
@@ -94,6 +94,10 @@ public class MapItem extends IconViewItem {
         }
             break;
         }
+    }
+
+    public void updateColor() {
+        overlay.setBackgroundColor(getDefaultColor());
     }
 
     public void updateLabel() {
