@@ -15,6 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
+import java.util.Date;
+
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArrayGeneric;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
@@ -130,6 +132,11 @@ public class PVScale extends JavaScriptObject {
         return $wnd.pv.Scale.ordinal(array, @org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsStringFunction;)(f));
     }-*/;
 
+    public final static native PVOrdinalScale ordinal(JsArrayGeneric<?> array,
+            JsFunction<JsDate> f) /*-{
+        return $wnd.pv.Scale.ordinal(array, @org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsFunction;)(f));
+    }-*/;
+
     public final static native PVOrdinalScale ordinal(JsArrayNumber array) /*-{
         return $wnd.pv.Scale.ordinal(array);
     }-*/;
@@ -140,6 +147,11 @@ public class PVScale extends JavaScriptObject {
      * .
      */
     public final static <S> PVOrdinalScale ordinal(S[] array, JsStringFunction f) {
+        return ordinal(JsUtils.toJsArrayGeneric(array), f);
+    }
+
+    public final static <S> PVOrdinalScale ordinal(S[] array,
+            JsFunction<JsDate> f) {
         return ordinal(JsUtils.toJsArrayGeneric(array), f);
     }
 
@@ -168,7 +180,7 @@ public class PVScale extends JavaScriptObject {
     /**
      * Scales are functions. Use this method if the scale returns a color value.
      */
-    public final native PVColor fcolor(String value) /*-{
+    public final native PVColor fcolor(Object value) /*-{
         return this(value);
     }-*/;
 
@@ -223,6 +235,14 @@ public class PVScale extends JavaScriptObject {
             }
         };
     }
+
+    /**
+     * Scales are functions. Use this method if the scale returns a double
+     * value.
+     */
+    public final double fd(Date value) {
+        return this.fd(JsDate.create(value.getTime()));
+    };
 
     /**
      * Scales are functions. Use this method if the scale returns a double
