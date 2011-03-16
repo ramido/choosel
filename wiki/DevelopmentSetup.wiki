@@ -38,6 +38,8 @@ You should be able to run "choosel.example.workbench" in your development develo
 
 If you encounter problems setting up choosel with this guide, complain on the [http://groups.google.com/group/choosel choosel mailing list] :-)
 
+*IMPORTANT*: Please be aware that Choosel is under active development and has not been released yet. Your code might break when updating Choosel due to changes that we make, and it is thus important to follow the [http://code.google.com/p/choosel/updates/list commits] that we make. If you're code break during a Choosel update and you can't figure out why, complain on the [http://groups.google.com/group/choosel choosel mailing list] :-)
+
 *More information and news on Choosel can be found at <a href="http://lgrammel.blogspot.com/search/label/choosel">lgrammel.blogspot.com</a>*.
 
 = Optional setup =
