@@ -17,8 +17,8 @@ package org.thechiselgroup.choosel.core.client.ui.popup;
 
 import com.google.gwt.event.shared.EventHandler;
 
-public interface PopupClosingHandler extends EventHandler {
+public interface PopupClosedHandler extends EventHandler {
 
-    void onPopupClosing(PopupClosingEvent event);
+    void onPopupClosing(PopupClosedEvent event);
 
 }
