@@ -21,7 +21,6 @@ import org.thechiselgroup.choosel.core.client.views.ViewItem.Status;
 import org.thechiselgroup.choosel.core.client.views.ViewItemInteraction;
 
 import com.google.gwt.maps.client.geom.LatLng;
-import com.google.gwt.maps.client.geom.Point;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 
@@ -32,9 +31,8 @@ public class MapItem extends IconItem {
     public MapItem(ViewItem viewItem, LatLng point) {
         super(viewItem, Map.COLOR_SLOT);
 
-        // -10 = - (width /2)
-        overlay = new LabelOverlay(point, Point.newInstance(-10, -10),
-                getLabelValue(), CSS_RESOURCE_ITEM_ICON, new EventListener() {
+        overlay = new LabelOverlay(point, getLabelValue(), getSize(),
+                CSS_RESOURCE_ITEM_ICON, new EventListener() {
                     @Override
                     public void onBrowserEvent(Event event) {
                         // prevent standard map drag on item
@@ -56,6 +54,10 @@ public class MapItem extends IconItem {
 
     public LabelOverlay getOverlay() {
         return overlay;
+    }
+
+    public int getSize() {
+        return ((Number) getSlotValue(Map.SIZE_SLOT)).intValue();
     }
 
     public void setDefaultStyle() {
@@ -102,5 +104,9 @@ public class MapItem extends IconItem {
 
     public void updateLabel() {
         overlay.setLabel(getLabelValue());
+    }
+
+    public void updateSize() {
+        overlay.setSize(getSize());
     }
 }

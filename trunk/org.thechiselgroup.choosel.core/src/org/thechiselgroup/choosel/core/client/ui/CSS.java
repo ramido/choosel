@@ -19,6 +19,7 @@ import static com.google.gwt.user.client.DOM.getElementById;
 import static com.google.gwt.user.client.DOM.getIntStyleAttribute;
 import static com.google.gwt.user.client.DOM.setStyleAttribute;
 
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -29,6 +30,12 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Lars Grammel
  */
 public final class CSS {
+
+    private static final String WEBKIT_BORDER_RADIUS = "WebkitBorderRadius";
+
+    private static final String MOZ_BORDER_RADIUS = "MozBorderRadius";
+
+    private static final String BORDER_RADIUS = "borderRadius";
 
     public static final String MARGIN_TOP = "marginTop";
 
@@ -97,6 +104,8 @@ public final class CSS {
     public static final String PADDING = "padding";
 
     public static final String MARGIN = "margin";
+
+    public static final String FIXED = "fixed";
 
     public static void addClass(String elementID, String cssClass) {
         Element element = getElementById(elementID);
@@ -196,6 +205,15 @@ public final class CSS {
 
     public static void setBorderColor(Widget widget, String borderColor) {
         setBorderColor(widget.getElement(), borderColor);
+    }
+
+    public static void setBorderRadius(Element element, int borderRadius) {
+        assert element != null;
+
+        String value = borderRadius + PX;
+        DOM.setStyleAttribute(element, BORDER_RADIUS, value);
+        DOM.setStyleAttribute(element, MOZ_BORDER_RADIUS, value);
+        DOM.setStyleAttribute(element, WEBKIT_BORDER_RADIUS, value);
     }
 
     public static void setColor(Element element, String color) {

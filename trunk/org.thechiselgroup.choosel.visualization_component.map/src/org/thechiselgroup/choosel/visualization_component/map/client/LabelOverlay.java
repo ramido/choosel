@@ -36,8 +36,6 @@ public class LabelOverlay extends Overlay {
 
     private MapWidget map;
 
-    private Point offset;
-
     private MapPane pane;
 
     private Point locationPoint;
@@ -46,19 +44,21 @@ public class LabelOverlay extends Overlay {
 
     private String text;
 
-    public LabelOverlay(LatLng latLng, Point offset, String text,
-            String styleName, EventListener eventListener) {
+    private int size;
+
+    public LabelOverlay(LatLng latLng, String text, int size, String styleName,
+            EventListener eventListener) {
 
         assert latLng != null;
-        assert offset != null;
         assert text != null;
         assert styleName != null;
         assert eventListener != null;
         assert text != null;
+        assert size >= 0;
 
+        this.size = size;
         this.text = text;
         this.latLng = latLng;
-        this.offset = offset;
         this.label = DOM.createDiv();
         this.label.setClassName(styleName);
         this.eventListener = eventListener;
@@ -66,12 +66,15 @@ public class LabelOverlay extends Overlay {
         DOM.sinkEvents(label, Event.MOUSEEVENTS | Event.ONCLICK);
         DOM.setEventListener(label, eventListener);
         CSS.setPosition(label, CSS.ABSOLUTE);
+
+        updateSizeCssProperties();
+
         label.setInnerText(text);
     }
 
     @Override
     protected final Overlay copy() {
-        return new LabelOverlay(latLng, offset, text, label.getClassName(),
+        return new LabelOverlay(latLng, text, size, label.getClassName(),
                 eventListener);
     }
 
@@ -134,6 +137,12 @@ public class LabelOverlay extends Overlay {
         this.label.setInnerText(labelText);
     }
 
+    public void setSize(int size) {
+        this.size = size;
+        updateSizeCssProperties();
+        updatePosition(map.convertLatLngToDivPixel(latLng));
+    }
+
     public void setZIndex(int zIndex) {
         CSS.setZIndex(label, zIndex);
     }
@@ -141,8 +150,13 @@ public class LabelOverlay extends Overlay {
     private void updatePosition(Point newLocationPoint) {
         assert newLocationPoint != null;
         locationPoint = newLocationPoint;
-        CSS.setLeft(label, locationPoint.getX() + offset.getX());
-        CSS.setTop(label, locationPoint.getY() + offset.getY());
+        CSS.setLeft(label, locationPoint.getX() - size / 2);
+        CSS.setTop(label, locationPoint.getY() - size / 2);
     }
 
+    public void updateSizeCssProperties() {
+        CSS.setWidth(label, size);
+        CSS.setHeight(label, size);
+        CSS.setBorderRadius(label, size / 2);
+    }
 }

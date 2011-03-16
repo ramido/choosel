@@ -49,6 +49,9 @@ public class Map extends AbstractViewContentDisplay {
     public final static Slot LABEL_SLOT = new Slot("label", "Label",
             DataType.TEXT);
 
+    public final static Slot SIZE_SLOT = new Slot("size", "Size",
+            DataType.NUMBER);
+
     public final static Slot COLOR_SLOT = new Slot("color", "Color",
             DataType.COLOR);
 
@@ -164,7 +167,7 @@ public class Map extends AbstractViewContentDisplay {
 
     @Override
     public Slot[] getSlots() {
-        return new Slot[] { LABEL_SLOT, COLOR_SLOT, LOCATION_SLOT };
+        return new Slot[] { LABEL_SLOT, COLOR_SLOT, LOCATION_SLOT, SIZE_SLOT };
     }
 
     public int getZoomLevel() {
@@ -338,6 +341,8 @@ public class Map extends AbstractViewContentDisplay {
                         mapItem.updateLabel();
                     } else if (slot.equals(COLOR_SLOT)) {
                         mapItem.updateColor();
+                    } else if (slot.equals(SIZE_SLOT)) {
+                        mapItem.updateSize();
                     }
                 }
             }
