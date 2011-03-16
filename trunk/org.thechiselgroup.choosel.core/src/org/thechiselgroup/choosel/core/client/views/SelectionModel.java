@@ -44,6 +44,11 @@ public interface SelectionModel {
 
     void setSelection(ResourceSet newSelectionModel);
 
+    /**
+     * Switches the containment of a {@link ResourceSet}. If a resource set is
+     * switched and some items are already contained, switch to full selection.
+     * This allows for consistent behavior of partially highlighted UI elements.
+     */
     void switchSelection(ResourceSet resources);
 
 }

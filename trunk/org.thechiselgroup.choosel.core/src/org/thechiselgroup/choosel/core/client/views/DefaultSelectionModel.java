@@ -211,6 +211,12 @@ public class DefaultSelectionModel implements SelectionModel, Disposable,
 
         assert selection != null;
 
-        getSelection().invertAll(resources);
+        // Partial selection: should be able to go to fully selected
+        if (selection.containsNone(resources)
+                || selection.containsAll(resources)) {
+            getSelection().invertAll(resources);
+        } else {
+            getSelection().addAll(resources);
+        }
     }
 }
