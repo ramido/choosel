@@ -207,7 +207,6 @@ public class DefaultPopupManager implements Opacity, PopupManager {
 
         @Override
         public void enter(DefaultPopupManager manager) {
-            manager.eventBus.fireEvent(new PopupClosingEvent(manager));
             manager.hide();
         }
 
@@ -217,7 +216,6 @@ public class DefaultPopupManager implements Opacity, PopupManager {
 
         @Override
         public void enter(DefaultPopupManager manager) {
-            manager.eventBus.fireEvent(new PopupClosingEvent(manager));
             manager.hide();
         }
 
@@ -413,9 +411,8 @@ public class DefaultPopupManager implements Opacity, PopupManager {
     }
 
     @Override
-    public HandlerRegistration addPopupClosingHandler(
-            PopupClosingHandler handler) {
-        return eventBus.addHandler(PopupClosingEvent.TYPE, handler);
+    public HandlerRegistration addPopupClosedHandler(PopupClosedHandler handler) {
+        return eventBus.addHandler(PopupClosedEvent.TYPE, handler);
     }
 
     private void addPopupMouseListeners() {
@@ -441,7 +438,12 @@ public class DefaultPopupManager implements Opacity, PopupManager {
         addPopupMouseListeners();
 
         Style style = popup.getElement().getStyle();
-        style.setProperty(CSS.POSITION, CSS.ABSOLUTE);
+
+        /*
+         * position should be fixed, not absolute (otherwise there are problems
+         * with positioning when the window is scrolled)
+         */
+        style.setProperty(CSS.POSITION, CSS.FIXED);
         style.setProperty(CSS.Z_INDEX, Integer.toString(ZIndex.POPUP));
         style.setPropertyPx(CSS.LEFT, clientX + POPUP_OFFSET_X);
         style.setPropertyPx(CSS.TOP, clientY + POPUP_OFFSET_Y);
@@ -478,6 +480,14 @@ public class DefaultPopupManager implements Opacity, PopupManager {
         popupMouseOutHandlerRegistration.removeHandler();
 
         getRootPanel().remove(getPopupPanel());
+
+        /*
+         * We fire a closed event this late, because otherwise the user might
+         * mouse over the popup and trigger other events while a potential
+         * client might believe the popup is closed. This led to problems with
+         * highlighting and popups.
+         */
+        eventBus.fireEvent(new PopupClosedEvent(this));
     }
 
     private void effectCompleted() {

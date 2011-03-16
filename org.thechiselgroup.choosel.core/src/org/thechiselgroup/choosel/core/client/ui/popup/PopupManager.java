@@ -24,7 +24,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 
 public interface PopupManager {
 
-    HandlerRegistration addPopupClosingHandler(PopupClosingHandler handler);
+    HandlerRegistration addPopupClosedHandler(PopupClosedHandler handler);
 
     HandlerRegistration addPopupMouseOutHandler(MouseOutHandler handler);
 

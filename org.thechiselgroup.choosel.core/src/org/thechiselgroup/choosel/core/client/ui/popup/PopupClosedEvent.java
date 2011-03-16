@@ -23,24 +23,24 @@ import com.google.gwt.event.shared.GwtEvent;
  * 
  * TODO replace with change state events??
  */
-public class PopupClosingEvent extends GwtEvent<PopupClosingHandler> {
+public class PopupClosedEvent extends GwtEvent<PopupClosedHandler> {
 
-    public static final GwtEvent.Type<PopupClosingHandler> TYPE = new GwtEvent.Type<PopupClosingHandler>();
+    public static final GwtEvent.Type<PopupClosedHandler> TYPE = new GwtEvent.Type<PopupClosedHandler>();
 
     private final PopupManager manager;
 
-    public PopupClosingEvent(PopupManager manager) {
+    public PopupClosedEvent(PopupManager manager) {
         assert manager != null;
         this.manager = manager;
     }
 
     @Override
-    protected void dispatch(PopupClosingHandler handler) {
+    protected void dispatch(PopupClosedHandler handler) {
         handler.onPopupClosing(this);
     }
 
     @Override
-    public GwtEvent.Type<PopupClosingHandler> getAssociatedType() {
+    public GwtEvent.Type<PopupClosedHandler> getAssociatedType() {
         return TYPE;
     }
 

@@ -19,8 +19,8 @@ import java.util.Map;
 
 import org.thechiselgroup.choosel.core.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.core.client.ui.WidgetFactory;
-import org.thechiselgroup.choosel.core.client.ui.popup.PopupClosingEvent;
-import org.thechiselgroup.choosel.core.client.ui.popup.PopupClosingHandler;
+import org.thechiselgroup.choosel.core.client.ui.popup.PopupClosedEvent;
+import org.thechiselgroup.choosel.core.client.ui.popup.PopupClosedHandler;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
@@ -130,9 +130,9 @@ public class PopupViewItemBehavior implements ViewItemBehavior {
                 highlightingManager.setHighlighting(false);
             }
         });
-        popupManager.addPopupClosingHandler(new PopupClosingHandler() {
+        popupManager.addPopupClosedHandler(new PopupClosedHandler() {
             @Override
-            public void onPopupClosing(PopupClosingEvent event) {
+            public void onPopupClosing(PopupClosedEvent event) {
                 highlightingManager.setHighlighting(false);
             }
         });
