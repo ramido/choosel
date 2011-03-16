@@ -21,7 +21,7 @@ We recommend using [http://www.eclipse.org Eclipse] for working on Choosel. The 
 
 = Checking out Choosel and the example workbench from the SVN repository =
 
-   * [http://code.google.com/p/choosel/source/checkout general project checkout information]
+   * [http://code.google.com/p/choosel/source/checkout General project checkout information]
    * Check out "org.thechiselgroup.choosel.core" as Eclipse project
    * Check out "org.thechiselgroup.choosel.protovis" as Eclipse project
    * Check out "org.thechiselgroup.choosel.visualization_component.chart" as Eclipse project
