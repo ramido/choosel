@@ -42,11 +42,13 @@ public class CSVStringTableParser implements StringTableParser {
                 String[] lineValues = parser.parseLine(lines[i]);
 
                 if (lineValues.length < columns.length) {
-                    throw new ParseException("Not enough values", i + 1);
+                    throw new ParseException("Not enough values in line '"
+                            + lines[i] + "'", i + 1);
                 }
 
                 if (lineValues.length > columns.length) {
-                    throw new ParseException("Too many values", i + 1);
+                    throw new ParseException("Too many values in line '"
+                            + lines[i] + "'", i + 1);
                 }
 
                 values.add(lineValues);
