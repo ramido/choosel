@@ -32,7 +32,7 @@ We recommend using [http://www.eclipse.org Eclipse] for working on Choosel. The 
    * Check out "org.thechiselgroup.choosel.workbench" as Eclipse project
    * Check out "org.thechiselgroup.choosel.example.workbench" as Eclipse project
 
-= That's it =
+= Run Choosel =
 
 You should be able to run "choosel.example.workbench" in your development development environment now - just run the "choosel.example.workbench" launch configuration.
 
