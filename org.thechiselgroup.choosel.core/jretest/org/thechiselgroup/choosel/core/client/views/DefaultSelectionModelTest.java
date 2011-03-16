@@ -23,7 +23,6 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.test.AdvancedAsserts.assertContentEquals;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesMatchers.containsEqualResources;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.verifyOnResourcesAdded;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.verifyOnResourcesRemoved;
@@ -155,7 +154,8 @@ public class DefaultSelectionModelTest {
                 .forClass(ResourceSetAddedEvent.class);
         verify(resourceSetAddedHandler, times(1)).onResourceSetAdded(
                 captor.capture());
-        assertThat(captor.getValue().getResourceSet(), containsEqualResources(selection));
+        assertThat(captor.getValue().getResourceSet(),
+                containsEqualResources(selection));
     }
 
     @Test
@@ -171,7 +171,8 @@ public class DefaultSelectionModelTest {
                 .forClass(ResourceSetRemovedEvent.class);
         verify(resourceSetaddedHandler, times(1)).onResourceSetRemoved(
                 captor.capture());
-        assertThat(captor.getValue().getResourceSet(), containsEqualResources(selection));
+        assertThat(captor.getValue().getResourceSet(),
+                containsEqualResources(selection));
     }
 
     @Test
@@ -190,16 +191,27 @@ public class DefaultSelectionModelTest {
     @Test
     public void fireResourcesRemoveEventWhenSelectionChanges() {
         ResourceSet resources1 = createResources(1);
-        ResourceSet resource2 = createResources();
+        ResourceSet resources2 = createResources();
 
         underTest.addSelectionSet(resources1);
-        underTest.addSelectionSet(resource2);
+        underTest.addSelectionSet(resources2);
 
         underTest.setSelection(resources1);
         underTest.addEventHandler(resourceSetChangedHandler);
-        underTest.setSelection(resource2);
+        underTest.setSelection(resources2);
 
         verifyOnResourcesRemoved(createResources(1), resourceSetChangedHandler);
+    }
+
+    @Test
+    public void partialSelectionIsChangedToFullSelectionOnSwitch() {
+        ResourceSet resources1 = createResources(1);
+        ResourceSet resources2 = createResources(1, 2);
+
+        underTest.switchSelection(resources1);
+        underTest.switchSelection(resources2);
+
+        assertThat(underTest.getSelection(), containsEqualResources(resources2));
     }
 
     @Before
@@ -230,6 +242,7 @@ public class DefaultSelectionModelTest {
                 .forClass(ResourceSetActivatedEvent.class);
         verify(activatedHandler, times(1)).onResourceSetActivated(
                 captor.capture());
-        assertThat(captor.getValue().getResourceSet(), containsEqualResources(selection));
+        assertThat(captor.getValue().getResourceSet(),
+                containsEqualResources(selection));
     }
 }
