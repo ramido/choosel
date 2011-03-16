@@ -16,6 +16,8 @@
 package org.thechiselgroup.choosel.protovis.client;
 
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsUtils;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -40,6 +42,10 @@ public final class PVStackLayout extends PVAbstractBar<PVStackLayout> {
         return this.layer;
     }-*/;
 
+    public final <S> PVStackLayout layers(Iterable<S> data) {
+        return this.layers(JsUtils.toJsArrayGeneric(data));
+    }
+
     /**
      * Wrapper for
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Layout.Stack.html#layers">pv.Layout.Stack.layers()</a></code>
@@ -48,6 +54,15 @@ public final class PVStackLayout extends PVAbstractBar<PVStackLayout> {
     public final native PVStackLayout layers(JavaScriptObject data) /*-{
         return this.layers(data);
     }-*/;
+
+    public final native PVStackLayout layers(
+            JsFunction<? extends JavaScriptObject> f) /*-{
+        return this.layers(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsFunction;)(f));
+    }-*/;
+
+    public final <S> PVStackLayout layers(S... data) {
+        return this.layers(JsUtils.toJsArrayGeneric(data));
+    }
 
     /**
      * Wrapper for
@@ -80,5 +95,13 @@ public final class PVStackLayout extends PVAbstractBar<PVStackLayout> {
     public final native PVStackLayout y(JsDoubleFunction f) /*-{
         return this.y(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
     }-*/;
+
+    public final native PVStackLayout values(JavaScriptObject data) /*-{
+        return this.values(data);
+    }-*/;
+
+    public final <S> PVStackLayout values(S... data) {
+        return this.values(JsUtils.toJsArrayGeneric(data));
+    }
 
 }

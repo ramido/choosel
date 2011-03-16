@@ -244,8 +244,12 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Mark.html#margin">pv.Mark.margin()</a></code>
      * .
      */
-    public final native T margin(int margin) /*-{
+    public final native T margin(double margin) /*-{
         return this.margin(margin);
+    }-*/;
+
+    public final native T margin(JsDoubleFunction f) /*-{
+        return this.margin(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
     }-*/;
 
     public final native PVPanel parent() /*-{
