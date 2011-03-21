@@ -41,10 +41,12 @@ public class ProtovisGWTExamples implements EntryPoint {
     private void initExampleVisualizations() {
         examples = new ArrayList<ProtovisExample>();
 
+        // networks
         examples.add(new ArcDiagramExample());
         examples.add(new ArcDiagramExample2());
         examples.add(new ForceDirectedLayoutExample());
 
+        // conventional
         examples.add(new AreaChartExample());
         examples.add(new BarChartExample());
         examples.add(new PieChartExample());
@@ -53,6 +55,7 @@ public class ProtovisGWTExamples implements EntryPoint {
         examples.add(new StackedChartExample());
         examples.add(new GroupedChartExample());
 
+        // custom
         examples.add(new AndersonsFlowersExample());
         examples.add(new BeckersBarleyExample());
         examples.add(new StreamgraphExample());
@@ -65,6 +68,7 @@ public class ProtovisGWTExamples implements EntryPoint {
         examples.add(new GasAndDrivingExample());
         examples.add(new SeattleWeatherExample());
 
+        // hierarchies
         examples.add(new DendrogramExample());
         examples.add(new SunburstExample());
         examples.add(new IcicleExample());
@@ -73,6 +77,7 @@ public class ProtovisGWTExamples implements EntryPoint {
         examples.add(new TreemapExample());
         examples.add(new TreemapExample2());
 
+        // statistics
         examples.add(new BoxAndWhiskerPlotExample());
     }
 
