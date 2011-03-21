@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright 2009, 2010 Lars Grammel, Nikita Zhiltsov
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -21,8 +21,13 @@ package org.thechiselgroup.choosel.protovis.client;
  * .
  * 
  * @author Lars Grammel
+ * @author Nikita Zhiltsov
  */
 public final class PVLayout {
+
+    public static native PVArcLayout Arc() /*-{
+        return $wnd.pv.Layout.Arc;
+    }-*/;
 
     public static native PVBulletLayout Bullet() /*-{
         return $wnd.pv.Layout.Bullet;
@@ -30,6 +35,10 @@ public final class PVLayout {
 
     public static native PVClusterLayout Cluster() /*-{
         return $wnd.pv.Layout.Cluster;
+    }-*/;
+
+    public static native PVForceLayout Force() /*-{
+        return $wnd.pv.Layout.Force;
     }-*/;
 
     public static native PVPackLayout Pack() /*-{
@@ -50,10 +59,6 @@ public final class PVLayout {
 
     public static native PVTreemapLayout Treemap() /*-{
         return $wnd.pv.Layout.Treemap;
-    }-*/;
-
-    public static native PVArcLayout Arc() /*-{
-        return $wnd.pv.Layout.Arc;
     }-*/;
 
     private PVLayout() {

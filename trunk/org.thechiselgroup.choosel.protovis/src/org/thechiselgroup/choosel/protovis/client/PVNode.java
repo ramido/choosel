@@ -32,6 +32,16 @@ public class PVNode extends JavaScriptObject {
     protected PVNode() {
     }
 
+    /**
+     * For force-direct layout.
+     */
+    public final native boolean fix() /*-{
+        if (this.fix == undefined) {
+        return false;
+        }
+        return this.fix;
+    }-*/;
+
     public final native int linkDegree() /*-{
         return this.linkDegree;
     }-*/;

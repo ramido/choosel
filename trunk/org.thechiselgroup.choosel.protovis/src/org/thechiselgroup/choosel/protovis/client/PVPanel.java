@@ -54,8 +54,4 @@ public final class PVPanel extends PVAbstractBar<PVPanel> {
         return this.canvas(element);
     }-*/;
 
-    public final native PVPanel event(String eventType, PVBehavior behavior) /*-{
-        return this.event(eventType, behavior);
-    }-*/;
-
 }

@@ -183,6 +183,28 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
 
     /**
      * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Mark.html#event">pv.Mark.event</a></code>
+     * .
+     * 
+     * @see PVEventType
+     */
+    public final native T event(String eventType, PVBehavior behavior) /*-{
+        return this.event(eventType, behavior);
+    }-*/;
+
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Mark.html#event">pv.Mark.event</a></code>
+     * .
+     * 
+     * @see PVEventType
+     */
+    public final native T event(String eventType, JavaScriptObject jsObject) /*-{
+        return this.event(eventType, jsObject);
+    }-*/;
+
+    /**
+     * Wrapper for
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Mark.html#events">pv.Mark.events</a></code>
      * .
      * 
