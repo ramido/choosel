@@ -41,11 +41,9 @@ public class ProtovisGWTExamples implements EntryPoint {
     private void initExampleVisualizations() {
         examples = new ArrayList<ProtovisExample>();
 
-        examples.add(new ForceDirectedLayoutExample());
-        examples.add(new CrimeaStackedBarChartExample());
-
-        examples.add(new ArcDiagramExample2());
         examples.add(new ArcDiagramExample());
+        examples.add(new ArcDiagramExample2());
+        examples.add(new ForceDirectedLayoutExample());
 
         examples.add(new AreaChartExample());
         examples.add(new BarChartExample());
@@ -62,6 +60,7 @@ public class ProtovisGWTExamples implements EntryPoint {
         examples.add(new BubbleChartExample());
         examples.add(new CandlestickChartExample());
         examples.add(new BurtinAntibioticsExample());
+        examples.add(new CrimeaStackedBarChartExample());
         examples.add(new PlayfairsWheatExample());
         examples.add(new GasAndDrivingExample());
         examples.add(new SeattleWeatherExample());
