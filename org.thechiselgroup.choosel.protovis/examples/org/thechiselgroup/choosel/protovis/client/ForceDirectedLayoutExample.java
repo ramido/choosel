@@ -34,11 +34,6 @@ import com.google.gwt.user.client.ui.Widget;
 public class ForceDirectedLayoutExample extends ProtovisWidget implements
         ProtovisExample {
 
-    /*
-     * Warning: This example is slow in OOMPH mode. Compile the example to
-     * JavaScript to estimate real performance.
-     */
-
     private PVForceLayout force;
 
     @Override
