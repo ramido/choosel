@@ -61,12 +61,12 @@ public class BubbleChartExample extends ProtovisWidget implements
     }
 
     private void createVisualization(FlareData.Unit root) {
-        final PVOrdinalScale category20 = PVColors.category20();
-        final PVNumberFormat format = PVFormat.number();
+        final PVOrdinalScale category20 = PV.Colors.category20();
+        final PVNumberFormat format = PV.Format.number();
 
         PVPanel vis = getPVPanel().width(800).height(600);
 
-        vis.add(PVLayout.Pack())
+        vis.add(PV.Layout.Pack())
                 .top(-50)
                 .bottom(-50)
                 .nodes(PVDom.create(flatten(root),

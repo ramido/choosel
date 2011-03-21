@@ -68,7 +68,7 @@ public class ArcDiagramExample2 extends ProtovisWidget implements
                 .def(selectedNodeIndexProperty, -1)
                 .def(selectedArcIndexProperty, null);
 
-        final PVArcLayout arc = vis.add(PVLayout.Arc())
+        final PVArcLayout arc = vis.add(PV.Layout.Arc())
                 .nodes(new NovelCharacterNodeAdapter(), nodes).links(links)
                 .sort(new Comparator<PVNode>() {
                     public int compare(PVNode a, PVNode b) {
@@ -106,13 +106,13 @@ public class ArcDiagramExample2 extends ProtovisWidget implements
                 }
                 return deemphasizedArcColor;
             }
-        }).event(PVEventType.MOUSEOVER, new PVEventHandler() {
+        }).event(PV.Event.MOUSEOVER, new PVEventHandler() {
             public void onEvent(Event e, String pvEventType, JsArgs args) {
                 PVLink d = args.getObject(1);
                 vis.set(selectedArcIndexProperty, d);
                 vis.render();
             }
-        }).event(PVEventType.MOUSEOUT, new PVEventHandler() {
+        }).event(PV.Event.MOUSEOUT, new PVEventHandler() {
             public void onEvent(Event e, String pvEventType, JsArgs args) {
                 vis.set(selectedArcIndexProperty, null);
                 vis.render();
@@ -133,7 +133,7 @@ public class ArcDiagramExample2 extends ProtovisWidget implements
             }
         };
 
-        final PVOrdinalScale barColorScale = PVColors.category19();
+        final PVOrdinalScale barColorScale = PV.Colors.category19();
         final PVColor nodeLabelColor = PV.color("#000");
         final PVColor selectedNodeColor = PV.color("#A00");
         final PVColor inactiveNodeColor = PV.color("#AAA");
@@ -185,8 +185,8 @@ public class ArcDiagramExample2 extends ProtovisWidget implements
                         PVDot _this = args.getThis();
                         return _this.fillStyle().darker();
                     }
-                }).event(PVEventType.MOUSEOVER, nodeMouseOverHandler)
-                .event(PVEventType.MOUSEOUT, nodeMouseOutHandler)
+                }).event(PV.Event.MOUSEOVER, nodeMouseOverHandler)
+                .event(PV.Event.MOUSEOUT, nodeMouseOutHandler)
                 .anchor(PVAlignment.BOTTOM).add(PV.Label)
                 .text(new JsStringFunction() {
                     public String f(JsArgs args) {
@@ -194,8 +194,8 @@ public class ArcDiagramExample2 extends ProtovisWidget implements
                         return d.nodeName();
                     }
                 }).events("all")
-                .event(PVEventType.MOUSEOVER, nodeMouseOverHandler)
-                .event(PVEventType.MOUSEOUT, nodeMouseOutHandler)
+                .event(PV.Event.MOUSEOVER, nodeMouseOverHandler)
+                .event(PV.Event.MOUSEOUT, nodeMouseOutHandler)
                 .textAlign(PVAlignment.RIGHT).textBaseline(PVAlignment.MIDDLE)
                 .textAngle(-Math.PI / 2).textStyle(new JsFunction<PVColor>() {
                     public PVColor f(JsArgs args) {

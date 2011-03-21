@@ -305,7 +305,7 @@ public class AndersonsFlowersExample extends ProtovisWidget implements
 
     private void putTraitScale(final Map<String, PVLinearScale> position,
             Flower[] flowers, final String trait, final int size) {
-        position.put(trait, PVScale.linear(flowers, new JsDoubleFunction() {
+        position.put(trait, PV.Scale.linear(flowers, new JsDoubleFunction() {
             public double f(JsArgs args) {
                 Flower d = args.getObject(0);
                 return d.getTraitValue(trait);

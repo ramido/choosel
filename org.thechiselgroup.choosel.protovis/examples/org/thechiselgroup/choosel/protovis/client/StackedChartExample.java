@@ -59,8 +59,8 @@ public class StackedChartExample extends ProtovisWidget implements
         /* Sizing and scales. */
         int w = 400;
         int h = 200;
-        final PVLinearScale x = PVScale.linear(0, 9.9).range(0, w);
-        final PVLinearScale y = PVScale.linear(0, 14).range(0, h);
+        final PVLinearScale x = PV.Scale.linear(0, 9.9).range(0, w);
+        final PVLinearScale y = PV.Scale.linear(0, 14).range(0, h);
 
         /* The root panel. */
         PVPanel vis = getPVPanel().width(w).height(h).bottom(20).left(20)
@@ -76,7 +76,7 @@ public class StackedChartExample extends ProtovisWidget implements
                 .text(x.tickFormat());
 
         /* The stack layout. */
-        vis.add(PVLayout.Stack()).layers(data).x(new JsDoubleFunction() {
+        vis.add(PV.Layout.Stack()).layers(data).x(new JsDoubleFunction() {
             public double f(JsArgs args) {
                 Point d = args.getObject(0);
                 return x.fd(d.x);

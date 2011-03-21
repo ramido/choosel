@@ -90,8 +90,8 @@ public class PlayfairsWheatExample extends ProtovisWidgetWithAnnotations
     private void createVisualization(final WheatPrice[] wheat, Monarch[] monarch) {
         int w = 860 - 60;
         int h = 465 - 20;
-        final PVLinearScale x = PVScale.linear(1565, 1821).range(0, w);
-        final PVLinearScale y = PVScale.linear(0, 100).range(0, h);
+        final PVLinearScale x = PV.Scale.linear(1565, 1821).range(0, w);
+        final PVLinearScale y = PV.Scale.linear(0, 100).range(0, h);
 
         PVPanel vis = getPVPanel().width(w).height(h).right(60).bottom(20);
 

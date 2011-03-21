@@ -39,7 +39,7 @@ public class TreeExample extends ProtovisWidget implements ProtovisExample {
                 .top(-30).bottom(-80);
 
         PVTreeLayout tree = vis
-                .add(PVLayout.Tree())
+                .add(PV.Layout.Tree())
                 .nodes(PVDom.create(root, new FlareData.UnitDomAdapter())
                         .nodes()).depth(85).breadth(7.25).orient("radial");
 

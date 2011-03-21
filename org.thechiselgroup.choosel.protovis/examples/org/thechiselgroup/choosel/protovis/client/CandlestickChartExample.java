@@ -77,13 +77,13 @@ public class CandlestickChartExample extends ProtovisWidget implements
         /* Scales. */
         int w = 840;
         int h = 200;
-        final PVLinearScale x = PVScale.linear(days, new JsFunction<JsDate>() {
+        final PVLinearScale x = PV.Scale.linear(days, new JsFunction<JsDate>() {
             public JsDate f(JsArgs args) {
                 DaySummary d = args.getObject();
                 return d.jsDate;
             }
         }).range(0, w);
-        final PVLinearScale y = PVScale.linear(days, new JsDoubleFunction() {
+        final PVLinearScale y = PV.Scale.linear(days, new JsDoubleFunction() {
             public double f(JsArgs args) {
                 DaySummary d = args.getObject();
                 return d.low;

@@ -188,7 +188,7 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
      * 
      * @see PVEventType
      */
-    public final native T event(String eventType, PVBehavior behavior) /*-{
+    public final native T event(String eventType, PV.Behavior behavior) /*-{
         return this.event(eventType, behavior);
     }-*/;
 

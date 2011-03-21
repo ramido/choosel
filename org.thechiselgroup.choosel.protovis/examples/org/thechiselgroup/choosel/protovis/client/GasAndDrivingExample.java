@@ -68,8 +68,8 @@ public class GasAndDrivingExample extends ProtovisWidgetWithAnnotations
     private void createVisualization(DrivingStats[] driving) {
         int w = 900;
         int h = 590;
-        final PVLinearScale x = PVScale.linear(3380, 10500).range(0, w);
-        final PVLinearScale y = PVScale.linear(1.25, 3.49).range(0, h);
+        final PVLinearScale x = PV.Scale.linear(3380, 10500).range(0, w);
+        final PVLinearScale y = PV.Scale.linear(1.25, 3.49).range(0, h);
 
         PVPanel vis = getPVPanel().width(w).height(h).top(10);
 
@@ -89,7 +89,7 @@ public class GasAndDrivingExample extends ProtovisWidgetWithAnnotations
                 .text(new JsStringFunction() {
                     public String f(JsArgs args) {
                         double d = args.getDouble(0);
-                        return PVFormat.number().format(d) + " mi";
+                        return PV.Format.number().format(d) + " mi";
                     }
                 });
 

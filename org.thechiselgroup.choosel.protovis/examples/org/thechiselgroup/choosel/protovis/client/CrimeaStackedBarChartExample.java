@@ -69,7 +69,7 @@ public class CrimeaStackedBarChartExample extends ProtovisWidget implements
 
         int w = 545;
         int h = 280;
-        final PVOrdinalScale x = PVScale.ordinal(crimea,
+        final PVOrdinalScale x = PV.Scale.ordinal(crimea,
                 new JsFunction<JsDate>() {
                     @Override
                     public JsDate f(JsArgs args) {
@@ -77,11 +77,11 @@ public class CrimeaStackedBarChartExample extends ProtovisWidget implements
                         return JsDate.create(d.getDate().getTime());
                     }
                 }).splitBanded(0, w);
-        final PVLinearScale y = PVScale.linear(0, 2200).range(0, h);
+        final PVLinearScale y = PV.Scale.linear(0, 2200).range(0, h);
 
         PVPanel vis = getPVPanel().width(w).height(h).margin(19.5).right(40);
 
-        vis.add(PVLayout.Stack()).layers(Cause.values()).values(crimea)
+        vis.add(PV.Layout.Stack()).layers(Cause.values()).values(crimea)
                 .x(new JsDoubleFunction() {
                     public double f(JsArgs args) {
                         CrimeanWarData d = args.getObject();

@@ -16,8 +16,6 @@
 package org.thechiselgroup.choosel.protovis.client;
 
 import static org.thechiselgroup.choosel.protovis.client.PVAlignment.CENTER;
-import static org.thechiselgroup.choosel.protovis.client.PVEventType.MOUSEOUT;
-import static org.thechiselgroup.choosel.protovis.client.PVEventType.MOUSEOVER;
 
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsBooleanFunction;
@@ -48,7 +46,7 @@ public class PieChartExample extends ProtovisWidget implements ProtovisExample {
         int w = 400;
         int h = 400;
         final int r = w / 2;
-        final PVLinearScale a = PVScale.linear(0, PV.sum(data)).range(0,
+        final PVLinearScale a = PV.Scale.linear(0, PV.sum(data)).range(0,
                 2 * Math.PI);
 
         /* The root panel. */
@@ -67,14 +65,14 @@ public class PieChartExample extends ProtovisWidget implements ProtovisExample {
                         return a.fd(d);
                     }
                 })
-                .event(MOUSEOVER, new PVEventHandler() {
+                .event(PV.Event.MOUSEOVER, new PVEventHandler() {
                     public void onEvent(Event e, String pvEventType, JsArgs args) {
                         PVWedge _this = args.getThis();
                         _this.innerRadius(0);
                         _this.render();
                     }
                 })
-                .event(MOUSEOUT, new PVEventHandler() {
+                .event(PV.Event.MOUSEOUT, new PVEventHandler() {
                     @Override
                     public void onEvent(Event e, String pvEventType, JsArgs args) {
                         PVWedge _this = args.getThis();

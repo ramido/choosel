@@ -35,11 +35,11 @@ public class TreemapExample extends ProtovisWidget implements ProtovisExample {
     }
 
     private void createVisualization(FlareData.Unit root) {
-        final PVOrdinalScale category19 = PVColors.category19();
+        final PVOrdinalScale category19 = PV.Colors.category19();
         PVPanel vis = getPVPanel().width(860).height(568);
 
         PVTreemapLayout treemap = vis
-                .add(PVLayout.Treemap())
+                .add(PV.Layout.Treemap())
                 .nodes(PVDom.create(root, new FlareData.UnitDomAdapter())
                         .nodes()).round(true);
 

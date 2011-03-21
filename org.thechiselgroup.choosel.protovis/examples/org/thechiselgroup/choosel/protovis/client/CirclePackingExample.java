@@ -38,12 +38,12 @@ public class CirclePackingExample extends ProtovisWidget implements
     }
 
     private void createVisualization(FlareData.Unit root) {
-        final PVNumberFormat format = PVFormat.number();
+        final PVNumberFormat format = PV.Format.number();
 
         PVPanel vis = getPVPanel().width(796).height(796).margin(2);
 
         PVPackLayout pack = vis
-                .add(PVLayout.Pack())
+                .add(PV.Layout.Pack())
                 .nodes(PVDom.create(root, new FlareData.UnitDomAdapter())
                         .nodes()).size(new JsDoubleFunction() {
                     public double f(JsArgs args) {

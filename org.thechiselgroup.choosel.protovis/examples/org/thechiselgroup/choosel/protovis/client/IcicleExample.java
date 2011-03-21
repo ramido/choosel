@@ -40,10 +40,10 @@ public class IcicleExample extends ProtovisWidget implements ProtovisExample {
     private void createVisualization(FlareData.Unit root) {
         PVPanel vis = getPVPanel().width(900).height(300).bottom(30);
 
-        final PVOrdinalScale category19 = PVColors.category19();
+        final PVOrdinalScale category19 = PV.Colors.category19();
 
         PVFillPartitionLayout layout = vis
-                .add(PVLayout.PartitionFill())
+                .add(PV.Layout.PartitionFill())
                 .nodes(PVDom.create(root, new FlareData.UnitDomAdapter())
                         .nodes()).order("descending").orient("top")
                 .size(new JsDoubleFunction() {

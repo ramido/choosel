@@ -160,8 +160,8 @@ public class BeckersBarleyExample extends ProtovisWidget implements
         /* Sizing and scales. */
         int w = 242;
         final int h = 132;
-        final PVLinearScale x = PVScale.linear(10, 70).range(0, w);
-        final PVOrdinalScale c = PVColors.category10();
+        final PVLinearScale x = PV.Scale.linear(10, 70).range(0, w);
+        final PVOrdinalScale c = PV.Colors.category10();
 
         /* The root panel. */
         PVPanel vis = getPVPanel().width(w).height(h * site.size()).top(15)

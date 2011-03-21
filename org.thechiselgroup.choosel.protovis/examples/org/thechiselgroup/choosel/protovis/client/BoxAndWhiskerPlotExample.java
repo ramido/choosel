@@ -62,14 +62,14 @@ public class BoxAndWhiskerPlotExample extends ProtovisWidget implements
     private void createVisualization(JsArrayGeneric<Experiment> experiments) {
         int w = 860;
         int h = 300;
-        final PVOrdinalScale x = PVScale.ordinal(experiments,
+        final PVOrdinalScale x = PV.Scale.ordinal(experiments,
                 new JsStringFunction() {
                     public String f(JsArgs args) {
                         Experiment d = args.getObject(0);
                         return d.id;
                     }
                 }).splitBanded(0, w, 3d / 5d);
-        final PVLinearScale y = PVScale.linear(0, 1).range(0, h);
+        final PVLinearScale y = PV.Scale.linear(0, 1).range(0, h);
         double s = x.rangeBand() / 2d;
 
         PVPanel vis = getPVPanel().width(w).height(h).margin(20);

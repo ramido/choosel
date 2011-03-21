@@ -44,8 +44,8 @@ public class BarChartExample extends ProtovisWidget implements ProtovisExample {
         /* Sizing and scales. */
         int w = 400;
         int h = 250;
-        final PVLinearScale x = PVScale.linear(0, 1.1).range(0, w);
-        final PVOrdinalScale y = PVScale.ordinal(PV.range(10)).splitBanded(0,
+        final PVLinearScale x = PV.Scale.linear(0, 1.1).range(0, w);
+        final PVOrdinalScale y = PV.Scale.ordinal(PV.range(10)).splitBanded(0,
                 h, 4d / 5d);
 
         /* The root panel. */
