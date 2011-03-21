@@ -42,10 +42,10 @@ public class ProtovisGWTExamples implements EntryPoint {
         examples = new ArrayList<ProtovisExample>();
 
         // networks
-        examples.add(new MatrixDiagramExample());
         examples.add(new ArcDiagramExample());
         examples.add(new ArcDiagramExample2());
         examples.add(new ForceDirectedLayoutExample());
+        examples.add(new MatrixDiagramExample());
 
         // conventional
         examples.add(new AreaChartExample());
