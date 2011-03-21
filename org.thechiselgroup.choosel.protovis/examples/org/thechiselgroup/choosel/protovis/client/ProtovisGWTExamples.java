@@ -41,6 +41,7 @@ public class ProtovisGWTExamples implements EntryPoint {
     private void initExampleVisualizations() {
         examples = new ArrayList<ProtovisExample>();
 
+        examples.add(new ForceDirectedLayoutExample());
         examples.add(new CrimeaStackedBarChartExample());
 
         examples.add(new ArcDiagramExample2());

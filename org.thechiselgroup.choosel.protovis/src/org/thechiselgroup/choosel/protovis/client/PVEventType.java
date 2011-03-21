@@ -17,8 +17,7 @@ package org.thechiselgroup.choosel.protovis.client;
 
 public final class PVEventType {
 
-    private PVEventType() {
-    }
+    public static final String MOUSEWHEEL = "mousewheel";
 
     public static final String MOUSEUP = "mouseup";
 
@@ -31,5 +30,10 @@ public final class PVEventType {
     public static final String MOUSEDOWN = "mousedown";
 
     public static final String CLICK = "click";
+
+    public static final String DRAG = "drag";
+
+    private PVEventType() {
+    }
 
 }
