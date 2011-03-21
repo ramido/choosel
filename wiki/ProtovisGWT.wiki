@@ -76,5 +76,7 @@ Using anonymous inner classes adds boilerplate code that leads to lower readabil
 
 ==Contributors==
 *Lars Grammel*: Main developer
+
 *Bradley Blashko*: Initial prototype implementation
+
 *Nikita Zhiltsov*: Force-directed Layout support
