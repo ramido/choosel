@@ -17,13 +17,11 @@ package org.thechiselgroup.choosel.protovis.client;
 
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
 
-import com.google.gwt.core.client.JavaScriptObject;
-
 /**
  * @author Lars Grammel
  */
 public final class PVFillPartitionLayout extends
-        PVAbstractBar<PVFillPartitionLayout> {
+        PVNetworkLayout<PVFillPartitionLayout> {
 
     public static class PVPartitionNode extends PVDomNode {
 
@@ -77,18 +75,6 @@ public final class PVFillPartitionLayout extends
 
     protected PVFillPartitionLayout() {
     }
-
-    public final native PVMark label() /*-{
-        return this.label;
-    }-*/;
-
-    public final native PVMark node() /*-{
-        return this.node;
-    }-*/;
-
-    public final native PVFillPartitionLayout nodes(JavaScriptObject data) /*-{
-        return this.nodes(data);
-    }-*/;
 
     public final native PVFillPartitionLayout order(String order) /*-{
         return this.order(order);

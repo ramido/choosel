@@ -15,12 +15,11 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
-import com.google.gwt.core.client.JavaScriptObject;
 
 /**
  * @author Lars Grammel
  */
-public final class PVTreemapLayout extends PVAbstractBar<PVTreemapLayout> {
+public final class PVTreemapLayout extends PVNetworkLayout<PVTreemapLayout> {
 
     protected PVTreemapLayout() {
     }
@@ -29,16 +28,8 @@ public final class PVTreemapLayout extends PVAbstractBar<PVTreemapLayout> {
         return this.round(round);
     }-*/;
 
-    public final native PVMark label() /*-{
-        return this.label;
-    }-*/;
-
     public final native PVMark leaf() /*-{
         return this.leaf;
-    }-*/;
-
-    public final native PVTreemapLayout nodes(JavaScriptObject data) /*-{
-        return this.nodes(data);
     }-*/;
 
 }
