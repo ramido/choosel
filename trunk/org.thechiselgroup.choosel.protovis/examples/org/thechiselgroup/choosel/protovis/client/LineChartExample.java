@@ -59,13 +59,13 @@ public class LineChartExample extends ProtovisWidget implements ProtovisExample 
         /* Sizing and scales. */
         int w = 400;
         int h = 200;
-        final PVLinearScale x = PVScale.linear(data, new JsDoubleFunction() {
+        final PVLinearScale x = PV.Scale.linear(data, new JsDoubleFunction() {
             public double f(JsArgs args) {
                 Point d = args.getObject(0);
                 return d.x;
             }
         }).range(0, w);
-        final PVLinearScale y = PVScale.linear(0, 4).range(0, h);
+        final PVLinearScale y = PV.Scale.linear(0, 4).range(0, h);
 
         /* The root panel. */
         PVPanel vis = getPVPanel().width(w).height(h).bottom(20).left(20)

@@ -42,7 +42,7 @@ public class DendrogramExample extends ProtovisWidget implements
                 .top(10).bottom(10);
 
         PVClusterLayout layout = vis
-                .add(PVLayout.Cluster())
+                .add(PV.Layout.Cluster())
                 .nodes(PVDom.create(root, new FlareData.UnitDomAdapter())
                         .sort(new Comparator<PVDomNode>() {
                             public int compare(PVDomNode o1, PVDomNode o2) {

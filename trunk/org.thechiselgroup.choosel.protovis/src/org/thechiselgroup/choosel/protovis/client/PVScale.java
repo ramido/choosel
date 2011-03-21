@@ -18,14 +18,11 @@ package org.thechiselgroup.choosel.protovis.client;
 import java.util.Date;
 
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
-import org.thechiselgroup.choosel.protovis.client.jsutil.JsArrayGeneric;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
-import org.thechiselgroup.choosel.protovis.client.jsutil.JsUtils;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArrayNumber;
 import com.google.gwt.core.client.JsDate;
 
 /**
@@ -37,123 +34,6 @@ import com.google.gwt.core.client.JsDate;
  * @author Lars Grammel
  */
 public class PVScale extends JavaScriptObject {
-
-    /**
-     * Wrapper for
-     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.linear.html#constructor">pv.Scale.linear()</a></code>
-     * .
-     */
-    public final static native PVLinearScale linear() /*-{
-        return $wnd.pv.Scale.linear();
-    }-*/;
-
-    /**
-     * Wrapper for
-     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.linear.html#constructor">pv.Scale.linear()</a></code>
-     * .
-     */
-    public final static PVLinearScale linear(double min, double max) {
-        return linear().domain(min, max);
-    }
-
-    /**
-     * Wrapper for
-     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.linear.html#constructor">pv.Scale.linear()</a></code>
-     * .
-     */
-    public final static <S> PVLinearScale linear(JsArrayGeneric<S> array,
-            JsDoubleFunction f) {
-        return linear().domain(array, f);
-    }
-
-    /**
-     * Wrapper for
-     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.linear.html#constructor">pv.Scale.linear()</a></code>
-     * .
-     */
-    public final static <S> PVLinearScale linear(JsArrayGeneric<S> array,
-            JsFunction<JsDate> f) {
-        return linear().domain(array, f);
-    }
-
-    /**
-     * Wrapper for
-     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.linear.html#constructor">pv.Scale.linear()</a></code>
-     * .
-     */
-    public final static <S> PVLinearScale linear(S[] array, JsDoubleFunction f) {
-        return linear().domain(array, f);
-    }
-
-    /**
-     * Wrapper for
-     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.linear.html#constructor">pv.Scale.linear()</a></code>
-     * .
-     */
-    public final static <S> PVLinearScale linear(S[] array, JsFunction<JsDate> f) {
-        return linear().domain(array, f);
-    }
-
-    /**
-     * Wrapper for
-     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.linear.html#constructor">pv.Scale.linear()</a></code>
-     * .
-     */
-    public final static <S> PVLinearScale linear(JsArrayGeneric<S> array,
-            JsDoubleFunction min, JsDoubleFunction max) {
-        return linear().domain(array, min, max);
-    }
-
-    /**
-     * Wrapper for
-     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.linear.html#constructor">pv.Scale.linear()</a></code>
-     * .
-     */
-    public final static <S> PVLinearScale linear(S[] array,
-            JsDoubleFunction min, JsDoubleFunction max) {
-        return linear().domain(array, min, max);
-    }
-
-    /**
-     * Wrapper for
-     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.log.html#constructor">pv.Scale.log()</a></code>
-     * .
-     */
-    public final static native PVLogScale log(double min, double max) /*-{
-        return $wnd.pv.Scale.log(min, max);
-    }-*/;
-
-    public final static native PVOrdinalScale ordinal() /*-{
-        return $wnd.pv.Scale.ordinal();
-    }-*/;
-
-    public final static native PVOrdinalScale ordinal(JsArrayGeneric<?> array,
-            JsStringFunction f) /*-{
-        return $wnd.pv.Scale.ordinal(array, @org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsStringFunction;)(f));
-    }-*/;
-
-    public final static native PVOrdinalScale ordinal(JsArrayGeneric<?> array,
-            JsFunction<JsDate> f) /*-{
-        return $wnd.pv.Scale.ordinal(array, @org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsFunction;)(f));
-    }-*/;
-
-    public final static native PVOrdinalScale ordinal(JsArrayNumber array) /*-{
-        return $wnd.pv.Scale.ordinal(array);
-    }-*/;
-
-    /**
-     * Wrapper for
-     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.ordinal.html#constructor">pv.Scale.ordinal()</a></code>
-     * .
-     */
-    public final static <S> PVOrdinalScale ordinal(S[] array, JsStringFunction f) {
-        return ordinal(JsUtils.toJsArrayGeneric(array), f);
-    }
-
-    public final static <S> PVOrdinalScale ordinal(S[] array,
-            JsFunction<JsDate> f) {
-        return ordinal(JsUtils.toJsArrayGeneric(array), f);
-    }
 
     protected PVScale() {
     }

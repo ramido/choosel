@@ -78,7 +78,7 @@ public class BulletChartExample extends ProtovisWidget implements
                     }
                 });
 
-        PVBulletLayout bullet = vis.add(PVLayout.Bullet()).orient(LEFT)
+        PVBulletLayout bullet = vis.add(PV.Layout.Bullet()).orient(LEFT)
                 .ranges(new JsFunction<JsArrayNumber>() {
                     public JsArrayNumber f(JsArgs args) {
                         Bullet d = args.getObject();

@@ -57,8 +57,8 @@ public class StreamgraphExample extends ProtovisWidget implements
 
         int w = 800;
         int h = 500;
-        final PVLinearScale x = PVScale.linear(0, m - 1).range(0, w);
-        final PVLinearScale y = PVScale.linear(0, 2 * n).range(0, h);
+        final PVLinearScale x = PV.Scale.linear(0, m - 1).range(0, w);
+        final PVLinearScale y = PV.Scale.linear(0, 2 * n).range(0, h);
 
         PVPanel vis = getPVPanel().width(w).height(h);
 
@@ -67,7 +67,7 @@ public class StreamgraphExample extends ProtovisWidget implements
         datax.push(JsUtils.toJsArrayNumber(.5, 1, .8, 1.1, 1.3));
         datax.push(JsUtils.toJsArrayNumber(.2, .5, .8, .9, 1));
 
-        vis.add(PVLayout.Stack()).layers(data).order("inside-out")
+        vis.add(PV.Layout.Stack()).layers(data).order("inside-out")
                 .offset("wiggle").x(new JsDoubleFunction() {
                     public double f(JsArgs args) {
                         PVMark _this = args.getThis();

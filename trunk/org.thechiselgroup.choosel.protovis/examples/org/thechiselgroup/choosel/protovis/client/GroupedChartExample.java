@@ -49,10 +49,10 @@ public class GroupedChartExample extends ProtovisWidget implements
         final int m = 4;
         int w = 400;
         int h = 250;
-        final PVLinearScale x = PVScale.linear(0, 1.1).range(0, w);
-        final PVOrdinalScale y = PVScale.ordinal(PV.range(data.length()))
+        final PVLinearScale x = PV.Scale.linear(0, 1.1).range(0, w);
+        final PVOrdinalScale y = PV.Scale.ordinal(PV.range(data.length()))
                 .splitBanded(0, h, 4d / 5d);
-        final PVOrdinalScale category20 = PVColors.category20();
+        final PVOrdinalScale category20 = PV.Colors.category20();
 
         /* The root panel. */
         PVPanel vis = getPVPanel().width(w).height(h).bottom(20).left(20)

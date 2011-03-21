@@ -63,9 +63,9 @@ public class ScatterplotExample extends ProtovisWidget implements
         /* Sizing and scales. */
         int w = 400;
         int h = 400;
-        final PVLinearScale x = PVScale.linear(0, 99).range(0, w);
-        final PVLinearScale y = PVScale.linear(0, 1).range(0, h);
-        final PVLogScale c = PVScale.log(1, 100).range("orange", "brown");
+        final PVLinearScale x = PV.Scale.linear(0, 99).range(0, w);
+        final PVLinearScale y = PV.Scale.linear(0, 1).range(0, h);
+        final PVLogScale c = PV.Scale.log(1, 100).range("orange", "brown");
 
         /* The root panel. */
         PVPanel vis = getPVPanel().width(w).height(h).bottom(20).left(20)

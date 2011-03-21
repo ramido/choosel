@@ -40,10 +40,10 @@ public class SunburstExample extends ProtovisWidget implements ProtovisExample {
     private void createVisualization(FlareData.Unit root) {
         PVPanel vis = getPVPanel().width(900).height(900).bottom(-80);
 
-        final PVOrdinalScale category19 = PVColors.category19();
+        final PVOrdinalScale category19 = PV.Colors.category19();
 
         PVFillPartitionLayout partition = vis
-                .add(PVLayout.PartitionFill())
+                .add(PV.Layout.PartitionFill())
                 .nodes(PVDom.create(root, new FlareData.UnitDomAdapter())
                         .nodes()).size(new JsDoubleFunction() {
                     public double f(JsArgs args) {

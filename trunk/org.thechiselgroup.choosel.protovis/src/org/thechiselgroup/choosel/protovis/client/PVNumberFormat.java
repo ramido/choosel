@@ -15,6 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
+import com.google.gwt.core.client.JavaScriptObject;
+
 /**
  * Wrapper for
  * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Format.number.html">pv.Format.number</a></code>
@@ -22,7 +24,7 @@ package org.thechiselgroup.choosel.protovis.client;
  * 
  * @author Lars Grammel
  */
-public class PVNumberFormat extends PVFormat {
+public class PVNumberFormat extends JavaScriptObject {
 
     protected PVNumberFormat() {
     }

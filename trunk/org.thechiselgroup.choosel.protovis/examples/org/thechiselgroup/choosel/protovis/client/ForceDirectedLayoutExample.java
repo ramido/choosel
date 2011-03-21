@@ -51,10 +51,10 @@ public class ForceDirectedLayoutExample extends ProtovisWidget implements
         int h = 400;
 
         PVPanel vis = getPVPanel().width(w).height(h).fillStyle("white")
-                .event(PVEventType.MOUSEDOWN, PVBehavior.pan())
-                .event(PVEventType.MOUSEWHEEL, PVBehavior.zoom());
+                .event(PV.Event.MOUSEDOWN, PV.Behavior.pan())
+                .event(PV.Event.MOUSEWHEEL, PV.Behavior.zoom());
 
-        force = vis.add(PVLayout.Force())
+        force = vis.add(PV.Layout.Force())
                 .nodes(new NovelCharacterNodeAdapter(), nodes).links(links);
 
         force.link().add(PV.Line);
@@ -63,14 +63,11 @@ public class ForceDirectedLayoutExample extends ProtovisWidget implements
             public double f(JsArgs args) {
                 PVNode d = args.getObject();
                 PVMark _this = args.<PVMark> getThis();
-
                 return (d.linkDegree() + 4) * (Math.pow(_this.scale(), -1.5));
             }
         }).fillStyle(new JsFunction<PVColor>() {
+            private PVOrdinalScale colors = PV.Colors.category19();
 
-            private PVOrdinalScale colors = PVColors.category19();
-
-            @Override
             public PVColor f(JsArgs args) {
                 PVNode d = args.getObject();
                 if (d.fix()) {
@@ -88,8 +85,8 @@ public class ForceDirectedLayoutExample extends ProtovisWidget implements
                 PVNode d = args.getObject();
                 return d.nodeName();
             }
-        }).event(PVEventType.MOUSEDOWN, PVBehavior.drag())
-                .event(PVEventType.DRAG, force);
+        }).event(PV.Event.MOUSEDOWN, PV.Behavior.drag())
+                .event(PV.Event.DRAG, force);
     }
 
     @Override

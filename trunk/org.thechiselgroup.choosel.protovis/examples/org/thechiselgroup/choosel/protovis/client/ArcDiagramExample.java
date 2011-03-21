@@ -43,7 +43,7 @@ public class ArcDiagramExample extends ProtovisWidget implements
     private void createVisualization(NovelCharacter[] nodes, Link[] links) {
         PVPanel vis = getPVPanel().width(880).height(310).bottom(90);
 
-        PVArcLayout arc = vis.add(PVLayout.Arc())
+        PVArcLayout arc = vis.add(PV.Layout.Arc())
                 .nodes(new NovelCharacterNodeAdapter(), nodes).links(links)
                 .sort(new Comparator<PVNode>() {
                     public int compare(PVNode a, PVNode b) {
@@ -65,7 +65,7 @@ public class ArcDiagramExample extends ProtovisWidget implements
             }
         }).fillStyle(new JsFunction<PVColor>() {
 
-            private PVOrdinalScale category19 = PVColors.category19();
+            private PVOrdinalScale category19 = PV.Colors.category19();
 
             public PVColor f(JsArgs args) {
                 PVNode d = args.getObject();
