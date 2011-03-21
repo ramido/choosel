@@ -15,51 +15,34 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
+import java.util.Comparator;
+
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsUtils;
+
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**
- * 
  * @author Lars Grammel
  */
-public class PVLink extends JavaScriptObject {
+public final class PVMatrixLayout extends PVNetworkLayout<PVMatrixLayout> {
 
-    public static native PVLink create(int source, int target, double value) /*-{
-        return {
-        'source': source,
-        'target': target,
-        'value': value
-        };
-    }-*/;
-
-    public static PVLink create(Link link) {
-        return create(link.getSource(), link.getTarget(), link.getValue());
+    protected PVMatrixLayout() {
     }
 
-    protected PVLink() {
+    public final native boolean directed() /*-{
+        return this.orient;
+    }-*/;
+
+    public final native PVMatrixLayout directed(boolean directed) /*-{
+        return this.directed(directed);
+    }-*/;
+
+    public PVMatrixLayout sort(Comparator<PVNode> comparator) {
+        return this.sort(JsUtils.toJsComparator(comparator));
     }
 
-    public final native double linkValue() /*-{
-        return this.linkValue;
-    }-*/;
-
-    public final native PVLink linkValue(double linkValue) /*-{
-        return this.linkValue(linkValue);
-    }-*/;
-
-    public final native int source() /*-{
-        return this.source;
-    }-*/;
-
-    public final native PVNode sourceNode() /*-{
-        return this.sourceNode;
-    }-*/;
-
-    public final native int target() /*-{
-        return this.target;
-    }-*/;
-
-    public final native PVNode targetNode() /*-{
-        return this.targetNode;
+    private final native PVMatrixLayout sort(JavaScriptObject comparator) /*-{
+        return this.sort(comparator);
     }-*/;
 
 }

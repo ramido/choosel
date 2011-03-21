@@ -20,19 +20,18 @@ import java.util.Comparator;
 import org.thechiselgroup.choosel.protovis.client.MiserablesData.NovelCharacter;
 import org.thechiselgroup.choosel.protovis.client.MiserablesData.NovelCharacterNodeAdapter;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
-import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsFunction;
 
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Protovis/GWT implementation of <a
- * href="http://vis.stanford.edu/protovis/ex/arc.html">Protovis arc diagram
- * example</a>.
+ * href="http://vis.stanford.edu/protovis/ex/matrix.html">Protovis matrix
+ * diagram example</a>.
  * 
  * @author Lars Grammel
  */
-public class ArcDiagramExample extends ProtovisWidget implements
+public class MatrixDiagramExample extends ProtovisWidget implements
         ProtovisExample {
 
     @Override
@@ -41,52 +40,47 @@ public class ArcDiagramExample extends ProtovisWidget implements
     }
 
     private void createVisualization(NovelCharacter[] nodes, Link[] links) {
-        PVPanel vis = getPVPanel().width(880).height(310).bottom(90);
+        final PVOrdinalScale color = PV.Colors.category19();
+        PVPanel vis = getPVPanel().width(693).height(693).top(90).left(90);
 
-        PVArcLayout arc = vis.add(PV.Layout.Arc())
+        PVMatrixLayout layout = vis.add(PV.Layout.Matrix())
                 .nodes(new NovelCharacterNodeAdapter(), nodes).links(links)
                 .sort(new Comparator<PVNode>() {
                     public int compare(PVNode a, PVNode b) {
                         NovelCharacter ac = a.object();
                         NovelCharacter bc = b.object();
-                        return ac.getGroup() == bc.getGroup() ? b.linkDegree()
-                                - a.linkDegree() : bc.getGroup()
-                                - ac.getGroup();
+                        return bc.getGroup() - ac.getGroup();
                     }
                 });
-
-        arc.link().add(PV.Line);
-
-        arc.node().add(PV.Dot).size(new JsDoubleFunction() {
-            public double f(JsArgs args) {
-                PVNode d = args.getObject();
-                return d.linkDegree() + 4;
-            }
-        }).fillStyle(new JsFunction<PVColor>() {
-
-            private PVOrdinalScale category19 = PV.Colors.category19();
-
+        layout.link().add(PV.Bar).fillStyle(new JsFunction<PVColor>() {
             public PVColor f(JsArgs args) {
-                PVNode d = args.getObject();
-                return category19
-                        .fcolor(d.<NovelCharacter> object().getGroup());
+                PVLink l = args.getObject();
+                if (l.linkValue() != 0) {
+                    int targetGroup = l.targetNode().<NovelCharacter> object()
+                            .getGroup();
+                    int sourceGroup = l.sourceNode().<NovelCharacter> object()
+                            .getGroup();
+                    return (targetGroup == sourceGroup) ? color
+                            .fcolor(sourceGroup) : PV.color("#555");
+                }
+                return PV.color("#eee");
             }
-        }).strokeStyle(new JsFunction<PVColor>() {
+        }).antialias(false).lineWidth(1);
+
+        layout.label().add(PV.Label).textStyle(new JsFunction<PVColor>() {
             public PVColor f(JsArgs args) {
-                PVDot _this = args.getThis();
-                return _this.fillStyle().darker();
+                PVNode node = args.getObject();
+                return color.fcolor(node.<NovelCharacter> object().getGroup());
             }
         });
-
-        arc.label().add(PV.Label);
     }
 
     public String getProtovisExampleURL() {
-        return "http://vis.stanford.edu/protovis/ex/arc.html";
+        return "http://vis.stanford.edu/protovis/ex/matrix.html";
     }
 
     public String getSourceCodeFile() {
-        return "ArcDiagramExample.java";
+        return "MatrixDiagramExample.java";
     }
 
     protected void onAttach() {
@@ -97,7 +91,7 @@ public class ArcDiagramExample extends ProtovisWidget implements
     }
 
     public String toString() {
-        return "Arc Diagram";
+        return "Matrix Diagram";
     }
 
 }

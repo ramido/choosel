@@ -36,6 +36,83 @@ import com.google.gwt.core.client.JsDate;
 public final class PV {
 
     /**
+     * @author Bradley Blashko
+     * @author Lars Grammel
+     * @author Nikita Zhiltsov
+     */
+    public final static class Behavior extends JavaScriptObject {
+
+        public final static native Behavior drag() /*-{
+            return $wnd.pv.Behavior.drag();
+        }-*/;
+
+        public final static native Behavior pan() /*-{
+            return $wnd.pv.Behavior.pan();
+        }-*/;
+
+        public final static native Behavior select() /*-{
+            return $wnd.pv.Behavior.select();
+        }-*/;
+
+        public final static native Behavior zoom() /*-{
+            return $wnd.pv.Behavior.zoom();
+        }-*/;
+
+        protected Behavior() {
+        }
+
+    }
+
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Colors.html">pv.Colors</a></code>
+     * .
+     * 
+     * @author Lars Grammel
+     */
+    public static final class Colors {
+
+        public final static native PVOrdinalScale category10() /*-{
+            return $wnd.pv.Colors.category10();
+        }-*/;
+
+        public final static native PVOrdinalScale category19() /*-{
+            return $wnd.pv.Colors.category19();
+        }-*/;
+
+        public final static native PVOrdinalScale category20() /*-{
+            return $wnd.pv.Colors.category20();
+        }-*/;
+
+        private Colors() {
+        }
+
+    }
+
+    public final static class Event {
+
+        public static final String MOUSEWHEEL = "mousewheel";
+
+        public static final String MOUSEUP = "mouseup";
+
+        public static final String MOUSEOVER = "mouseover";
+
+        public static final String MOUSEOUT = "mouseout";
+
+        public static final String MOUSEMOVE = "mousemove";
+
+        public static final String MOUSEDOWN = "mousedown";
+
+        public static final String CLICK = "click";
+
+        public static final String DRAG = "drag";
+
+        private Event() {
+        }
+
+    }
+
+    /**
      * Wrapper for
      * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Format.html">pv.Format</a></code>
      * .
@@ -44,12 +121,67 @@ public final class PV {
      */
     public final static class Format {
 
-        private Format() {
-        }
-
         public final native static PVNumberFormat number() /*-{
             return $wnd.pv.Format.number();
         }-*/;
+
+        private Format() {
+        }
+
+    }
+
+    /**
+     * Wrapper for
+     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Layout.html">pv.Layout</a></code>
+     * .
+     * 
+     * @author Lars Grammel
+     * @author Nikita Zhiltsov
+     */
+    public final static class Layout {
+
+        public static native PVArcLayout Arc() /*-{
+            return $wnd.pv.Layout.Arc;
+        }-*/;
+
+        public static native PVBulletLayout Bullet() /*-{
+            return $wnd.pv.Layout.Bullet;
+        }-*/;
+
+        public static native PVClusterLayout Cluster() /*-{
+            return $wnd.pv.Layout.Cluster;
+        }-*/;
+
+        public static native PVForceLayout Force() /*-{
+            return $wnd.pv.Layout.Force;
+        }-*/;
+
+        public static native PVMatrixLayout Matrix() /*-{
+            return $wnd.pv.Layout.Matrix;
+        }-*/;
+
+        public static native PVPackLayout Pack() /*-{
+            return $wnd.pv.Layout.Pack;
+        }-*/;
+
+        public static native PVFillPartitionLayout PartitionFill() /*-{
+            return $wnd.pv.Layout.Partition.Fill;
+        }-*/;
+
+        public static native PVStackLayout Stack() /*-{
+            return $wnd.pv.Layout.Stack;
+        }-*/;
+
+        public static native PVTreeLayout Tree() /*-{
+            return $wnd.pv.Layout.Tree;
+        }-*/;
+
+        public static native PVTreemapLayout Treemap() /*-{
+            return $wnd.pv.Layout.Treemap;
+        }-*/;
+
+        private Layout() {
+        }
 
     }
 
@@ -97,6 +229,16 @@ public final class PV {
          * .
          */
         public final static <S> PVLinearScale linear(JsArrayGeneric<S> array,
+                JsDoubleFunction min, JsDoubleFunction max) {
+            return linear().domain(array, min, max);
+        }
+
+        /**
+         * Wrapper for
+         * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.linear.html#constructor">pv.Scale.linear()</a></code>
+         * .
+         */
+        public final static <S> PVLinearScale linear(JsArrayGeneric<S> array,
                 JsFunction<JsDate> f) {
             return linear().domain(array, f);
         }
@@ -117,16 +259,6 @@ public final class PV {
          * .
          */
         public final static <S> PVLinearScale linear(S[] array,
-                JsFunction<JsDate> f) {
-            return linear().domain(array, f);
-        }
-
-        /**
-         * Wrapper for
-         * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Scale.linear.html#constructor">pv.Scale.linear()</a></code>
-         * .
-         */
-        public final static <S> PVLinearScale linear(JsArrayGeneric<S> array,
                 JsDoubleFunction min, JsDoubleFunction max) {
             return linear().domain(array, min, max);
         }
@@ -137,8 +269,8 @@ public final class PV {
          * .
          */
         public final static <S> PVLinearScale linear(S[] array,
-                JsDoubleFunction min, JsDoubleFunction max) {
-            return linear().domain(array, min, max);
+                JsFunction<JsDate> f) {
+            return linear().domain(array, f);
         }
 
         /**
@@ -155,18 +287,23 @@ public final class PV {
         }-*/;
 
         public final static native PVOrdinalScale ordinal(
-                JsArrayGeneric<?> array, JsStringFunction f) /*-{
-            return $wnd.pv.Scale.ordinal(array, @org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsStringFunction;)(f));
+                JsArrayGeneric<?> array, JsFunction<JsDate> f) /*-{
+            return $wnd.pv.Scale.ordinal(array, @org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsFunction;)(f));
         }-*/;
 
         public final static native PVOrdinalScale ordinal(
-                JsArrayGeneric<?> array, JsFunction<JsDate> f) /*-{
-            return $wnd.pv.Scale.ordinal(array, @org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsFunction;)(f));
+                JsArrayGeneric<?> array, JsStringFunction f) /*-{
+            return $wnd.pv.Scale.ordinal(array, @org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsStringFunction;)(f));
         }-*/;
 
         public final static native PVOrdinalScale ordinal(JsArrayNumber array) /*-{
             return $wnd.pv.Scale.ordinal(array);
         }-*/;
+
+        public final static <S> PVOrdinalScale ordinal(S[] array,
+                JsFunction<JsDate> f) {
+            return ordinal(JsUtils.toJsArrayGeneric(array), f);
+        }
 
         /**
          * Wrapper for
@@ -178,140 +315,7 @@ public final class PV {
             return ordinal(JsUtils.toJsArrayGeneric(array), f);
         }
 
-        public final static <S> PVOrdinalScale ordinal(S[] array,
-                JsFunction<JsDate> f) {
-            return ordinal(JsUtils.toJsArrayGeneric(array), f);
-        }
-
         private Scale() {
-        }
-
-    }
-
-    /**
-     * @author Bradley Blashko
-     * @author Lars Grammel
-     * @author Nikita Zhiltsov
-     */
-    public final static class Behavior extends JavaScriptObject {
-
-        public final static native Behavior drag() /*-{
-            return $wnd.pv.Behavior.drag();
-        }-*/;
-
-        public final static native Behavior pan() /*-{
-            return $wnd.pv.Behavior.pan();
-        }-*/;
-
-        public final static native Behavior select() /*-{
-            return $wnd.pv.Behavior.select();
-        }-*/;
-
-        public final static native Behavior zoom() /*-{
-            return $wnd.pv.Behavior.zoom();
-        }-*/;
-
-        protected Behavior() {
-        }
-
-    }
-
-    public final static class Event {
-
-        public static final String MOUSEWHEEL = "mousewheel";
-
-        public static final String MOUSEUP = "mouseup";
-
-        public static final String MOUSEOVER = "mouseover";
-
-        public static final String MOUSEOUT = "mouseout";
-
-        public static final String MOUSEMOVE = "mousemove";
-
-        public static final String MOUSEDOWN = "mousedown";
-
-        public static final String CLICK = "click";
-
-        public static final String DRAG = "drag";
-
-        private Event() {
-        }
-
-    }
-
-    /**
-     * Wrapper for
-     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Layout.html">pv.Layout</a></code>
-     * .
-     * 
-     * @author Lars Grammel
-     * @author Nikita Zhiltsov
-     */
-    public final static class Layout {
-
-        public static native PVArcLayout Arc() /*-{
-            return $wnd.pv.Layout.Arc;
-        }-*/;
-
-        public static native PVBulletLayout Bullet() /*-{
-            return $wnd.pv.Layout.Bullet;
-        }-*/;
-
-        public static native PVClusterLayout Cluster() /*-{
-            return $wnd.pv.Layout.Cluster;
-        }-*/;
-
-        public static native PVForceLayout Force() /*-{
-            return $wnd.pv.Layout.Force;
-        }-*/;
-
-        public static native PVPackLayout Pack() /*-{
-            return $wnd.pv.Layout.Pack;
-        }-*/;
-
-        public static native PVFillPartitionLayout PartitionFill() /*-{
-            return $wnd.pv.Layout.Partition.Fill;
-        }-*/;
-
-        public static native PVStackLayout Stack() /*-{
-            return $wnd.pv.Layout.Stack;
-        }-*/;
-
-        public static native PVTreeLayout Tree() /*-{
-            return $wnd.pv.Layout.Tree;
-        }-*/;
-
-        public static native PVTreemapLayout Treemap() /*-{
-            return $wnd.pv.Layout.Treemap;
-        }-*/;
-
-        private Layout() {
-        }
-
-    }
-
-    /**
-     * Wrapper for
-     * <code><a href="http://vis.stanford.edu/protovis/jsdoc/symbols/pv.Colors.html">pv.Colors</a></code>
-     * .
-     * 
-     * @author Lars Grammel
-     */
-    public static final class Colors {
-
-        public final static native PVOrdinalScale category10() /*-{
-            return $wnd.pv.Colors.category10();
-        }-*/;
-
-        public final static native PVOrdinalScale category19() /*-{
-            return $wnd.pv.Colors.category19();
-        }-*/;
-
-        public final static native PVOrdinalScale category20() /*-{
-            return $wnd.pv.Colors.category20();
-        }-*/;
-
-        private Colors() {
         }
 
     }
