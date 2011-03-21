@@ -15,12 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
-import com.google.gwt.core.client.JavaScriptObject;
-
 /**
  * @author Lars Grammel
  */
-public final class PVClusterLayout extends PVAbstractBar<PVClusterLayout> {
+public final class PVClusterLayout extends PVNetworkLayout<PVClusterLayout> {
 
     protected PVClusterLayout() {
     }
@@ -29,23 +27,8 @@ public final class PVClusterLayout extends PVAbstractBar<PVClusterLayout> {
         return this.group(group);
     }-*/;
 
-    public final native PVMark label() /*-{
-        return this.label;
-    }-*/;
-
-    public final native PVMark link() /*-{
-        return this.link;
-    }-*/;
-
-    public final native PVMark node() /*-{
-        return this.node;
-    }-*/;
-
-    public final native PVClusterLayout nodes(JavaScriptObject data) /*-{
-        return this.nodes(data);
-    }-*/;
-
     public final native PVClusterLayout orient(String orient) /*-{
         return this.orient(orient);
     }-*/;
+
 }
