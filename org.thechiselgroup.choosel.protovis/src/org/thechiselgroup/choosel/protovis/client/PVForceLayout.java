@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.protovis.client;
 
-
 /**
  * @author Lars Grammel
  * @author Nikita Zhiltsov
@@ -25,8 +24,76 @@ public class PVForceLayout extends PVNetworkLayout<PVForceLayout> {
     protected PVForceLayout() {
     }
 
+    public final native boolean bound() /*-{
+        return this.bound();
+    }-*/;
+
+    public final native PVForceLayout bound(boolean bound) /*-{
+        return this.bound(bound);
+    }-*/;
+
+    public final native double chargeConstant() /*-{
+        return this.chargeConstant();
+    }-*/;
+
+    public final native PVForceLayout chargeConstant(double chargeConstant) /*-{
+        return this.chargeConstant(chargeConstant);
+    }-*/;
+
+    public final native double chargeMaxDistance() /*-{
+        return this.chargeMaxDistance();
+    }-*/;
+
+    public final native PVForceLayout chargeMaxDistance(double chargeMaxDistance) /*-{
+        return this.chargeMaxDistance(chargeMaxDistance);
+    }-*/;
+
+    public final native double chargeTheta() /*-{
+        return this.chargeTheta();
+    }-*/;
+
+    public final native PVForceLayout chargeTheta(double chargeTheta) /*-{
+        return this.chargeTheta(chargeTheta);
+    }-*/;
+
+    public final native double dragConstant() /*-{
+        return this.dragConstant();
+    }-*/;
+
+    public final native PVForceLayout dragConstant(double dragConstant) /*-{
+        return this.dragConstant(dragConstant);
+    }-*/;
+
+    public final native int iterations() /*-{
+        return this.iterations();
+    }-*/;
+
     public final native PVForceLayout iterations(int iterations) /*-{
         return this.iterations(iterations);
+    }-*/;
+
+    public final native double springConstant() /*-{
+        return this.springConstant();
+    }-*/;
+
+    public final native PVForceLayout springConstant(double springConstant) /*-{
+        return this.springConstant(springConstant);
+    }-*/;
+
+    public final native double springDamping() /*-{
+        return this.springDamping();
+    }-*/;
+
+    public final native PVForceLayout springDamping(double springDamping) /*-{
+        return this.springDamping(springDamping);
+    }-*/;
+
+    public final native double springLength() /*-{
+        return this.springLength();
+    }-*/;
+
+    public final native PVForceLayout springLength(double springLength) /*-{
+        return this.springLength(springLength);
     }-*/;
 
     /**

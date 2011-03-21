@@ -156,7 +156,7 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
         return this.data(JsUtils.toJsArrayInteger(data));
     }
 
-    public final native PVMark defaults() /*-{
+    public final native T defaults() /*-{
         return this.defaults;
     }-*/;
 

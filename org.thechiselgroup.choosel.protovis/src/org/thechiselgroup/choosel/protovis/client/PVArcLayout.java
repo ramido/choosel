@@ -29,8 +29,13 @@ public final class PVArcLayout extends PVNetworkLayout<PVArcLayout> {
     protected PVArcLayout() {
     }
 
-    // TODO String[] as nodes
-    // TODO double[] / int[] as nodes
+    public final native boolean directed() /*-{
+        return this.orient;
+    }-*/;
+
+    public final native PVArcLayout directed(boolean directed) /*-{
+        return this.directed(directed);
+    }-*/;
 
     public final native String orient() /*-{
         return this.orient;
