@@ -1,0 +1,66 @@
+<project name="org.thechiselgroup.choosel.protovis" default="dist" basedir=".">
+	
+  <tstamp>
+    <format property="buildtime" pattern="yyyyMMddHHmmss" />
+  </tstamp>
+
+  <!--
+  <property name="version" value="b${buildtime}" />
+  -->
+  <property name="version" value="0.4" />
+  	
+  <property name="dist" location="bin/dist"/>
+  <property name="src" location="src"/>
+  <property name="class-dir" location="war/WEB-INF/classes"/>
+  <property name="app-lib" value="bin/build/lib"/>
+	
+  <target name="dist"
+	  	  description="creates distribution"
+	      depends="create-release-jar,create-project-zip" />
+	
+  <target name="create-project-zip"
+  	      description="creates zipfile of project"
+  	      depends="prepare">
+  	
+    <zip destfile="${dist}/ProtovisGWT-${version}-project.zip">
+      <fileset dir="..">
+      	<include name="org.thechiselgroup.choosel.protovis/**" />
+    	<exclude name="org.thechiselgroup.choosel.protovis/bin/**"/>
+    	<exclude name="org.thechiselgroup.choosel.protovis/tomcat/**"/>
+    	<exclude name="org.thechiselgroup.choosel.protovis/war/ProtovisGWT_Examples/**"/>
+    	<exclude name="org.thechiselgroup.choosel.protovis/war/WEB-INF/classes/**"/>
+      </fileset>
+    </zip> 
+  </target>	
+	
+  <target name="create-release-jar"
+  	      description="creates the module jar file"
+  	      depends="prepare">
+  	
+    <jar destfile="${dist}/ProtovisGWT-${version}.jar">
+      <fileset dir="${src}">
+      	<exclude name="org/thechiselgroup/choosel/protovis/public/protovis-3.2/examples/**" />
+      	<exclude name="org/thechiselgroup/choosel/protovis/public/protovis-3.2/jsdoc/**" />
+      </fileset>
+      <fileset dir="${class-dir}">
+    	<include name="**/*.class"/>
+      </fileset>
+      <metainf dir=""> 
+    	<include name="LICENSE"/>
+    	<include name="LICENSE-PROTOVIS"/>
+    	<include name="NOTICE"/>
+      </metainf>
+    </jar> 
+  </target>
+	
+  <target name="clean" description="clean automatically created resources">
+  	<delete dir="${dist}"/>
+  </target>
+	
+  <target name="prepare"
+  	      description="create folders required for build"
+          depends="clean">
+    <mkdir dir="${dist}"/>
+  </target>
+	  	
+</project>
