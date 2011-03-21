@@ -104,7 +104,7 @@ public class ForceDirectedLayoutExample extends ProtovisWidget implements
     }
 
     public String getSourceCodeFile() {
-        return "ForceDirectedLayoutExample";
+        return "ForceDirectedLayoutExample.java";
     }
 
     protected void onAttach() {
