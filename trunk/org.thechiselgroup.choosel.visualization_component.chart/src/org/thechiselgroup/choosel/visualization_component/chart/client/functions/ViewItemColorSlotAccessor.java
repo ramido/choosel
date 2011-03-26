@@ -13,35 +13,27 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.visualization_component.chart.client;
+package org.thechiselgroup.choosel.visualization_component.chart.client.functions;
 
-import org.thechiselgroup.choosel.core.client.views.ViewItem.Subset;
-import org.thechiselgroup.choosel.core.client.views.slots.Slot;
+import org.thechiselgroup.choosel.core.client.ui.Color;
+import org.thechiselgroup.choosel.core.client.views.model.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
-import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 
-public class ChartItemDoubleSlotAccessor implements JsDoubleFunction {
-
-    private Subset subset;
+public class ViewItemColorSlotAccessor implements JsStringFunction {
 
     private Slot slot;
 
-    public ChartItemDoubleSlotAccessor(Slot slot) {
-        this(slot, Subset.ALL);
-    }
-
-    public ChartItemDoubleSlotAccessor(Slot slot, Subset subset) {
-        assert subset != null;
+    public ViewItemColorSlotAccessor(Slot slot) {
         assert slot != null;
-
         this.slot = slot;
-        this.subset = subset;
     }
 
     @Override
-    public double f(JsArgs args) {
-        ChartItem chartItem = args.getObject();
-        return chartItem.getSlotValueAsDouble(slot, subset);
+    public String f(JsArgs args) {
+        ViewItem viewItem = args.getObject();
+        return viewItem.<Color> getValue(slot).toRGBa();
     }
 
 }

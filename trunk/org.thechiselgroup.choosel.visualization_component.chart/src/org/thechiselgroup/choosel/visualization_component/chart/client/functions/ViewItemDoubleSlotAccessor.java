@@ -13,21 +13,27 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.visualization_component.chart.client;
+package org.thechiselgroup.choosel.visualization_component.chart.client.functions;
 
-import org.thechiselgroup.choosel.core.client.views.ViewContentDisplay;
-import org.thechiselgroup.choosel.core.client.views.ViewContentDisplayFactory;
+import org.thechiselgroup.choosel.core.client.views.model.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
 
-public class CircularBarChartViewContentDisplayFactory implements
-        ViewContentDisplayFactory {
+public class ViewItemDoubleSlotAccessor implements JsDoubleFunction {
 
-    @Override
-    public ViewContentDisplay createViewContentDisplay() {
-        return new CircularBarChartViewContentDisplay();
+    private Slot slot;
+
+    public ViewItemDoubleSlotAccessor(Slot slot) {
+        assert slot != null;
+
+        this.slot = slot;
     }
 
     @Override
-    public String getViewContentTypeID() {
-        return "TODO - do not use";
+    public double f(JsArgs args) {
+        ViewItem viewItem = args.getObject();
+        return viewItem.getValueAsDouble(slot);
     }
+
 }

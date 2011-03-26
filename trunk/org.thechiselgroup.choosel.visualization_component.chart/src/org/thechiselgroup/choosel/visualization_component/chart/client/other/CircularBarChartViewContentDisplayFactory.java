@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.visualization_component.chart.client;
+package org.thechiselgroup.choosel.visualization_component.chart.client.other;
 
-import org.thechiselgroup.choosel.core.client.views.ViewContentDisplay;
-import org.thechiselgroup.choosel.core.client.views.ViewContentDisplayFactory;
+import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplay;
+import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplayFactory;
 
-public class TimeChartViewContentDisplayFactory implements
+public class CircularBarChartViewContentDisplayFactory implements
         ViewContentDisplayFactory {
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-        return new TimeChartViewContentDisplay();
+        return new CircularBarChartViewContentDisplay();
     }
 
     @Override

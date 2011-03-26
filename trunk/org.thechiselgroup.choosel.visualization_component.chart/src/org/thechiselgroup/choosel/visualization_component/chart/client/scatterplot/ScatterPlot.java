@@ -21,9 +21,9 @@ import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.ui.Colors;
 import org.thechiselgroup.choosel.core.client.ui.TextBoundsEstimator;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.core.client.views.ViewContentDisplayProperty;
-import org.thechiselgroup.choosel.core.client.views.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.slots.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplayProperty;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.protovis.client.PV;
 import org.thechiselgroup.choosel.protovis.client.PVAlignment;
 import org.thechiselgroup.choosel.protovis.client.PVDot;
@@ -32,19 +32,19 @@ import org.thechiselgroup.choosel.protovis.client.PVLabel;
 import org.thechiselgroup.choosel.protovis.client.PVLinearScale;
 import org.thechiselgroup.choosel.protovis.client.PVMark;
 import org.thechiselgroup.choosel.protovis.client.PVPanel;
-import org.thechiselgroup.choosel.protovis.client.PVScale;
 import org.thechiselgroup.choosel.protovis.client.PVShape;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
-import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItemColorFunction;
-import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItemDoubleSlotAccessor;
-import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItemStringSlotAccessor;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay;
-import org.thechiselgroup.choosel.visualization_component.chart.client.TickFormatFunction;
+import org.thechiselgroup.choosel.visualization_component.chart.client.functions.TickFormatFunction;
+import org.thechiselgroup.choosel.visualization_component.chart.client.functions.ViewItemColorSlotAccessor;
+import org.thechiselgroup.choosel.visualization_component.chart.client.functions.ViewItemDoubleSlotAccessor;
+import org.thechiselgroup.choosel.visualization_component.chart.client.functions.ViewItemStringSlotAccessor;
 
 // TODO refactoring: use separate panel for dots that are added to scatter plot
 public class ScatterPlot extends ChartViewContentDisplay {
+
     private class ShapeLegendProperty implements
             ViewContentDisplayProperty<Map<String, String>> {
 
@@ -64,20 +64,35 @@ public class ScatterPlot extends ChartViewContentDisplay {
         }
     }
 
+    private static final double BORDER_WIDTH = 1d;
+
+    private static final int MIN_DOT_SIZE = 10;
+
+    private static final int MAX_DOT_SIZE = 60;
+
     public final static String ID = "org.thechiselgroup.choosel.visualization_component.chart.ScatterPlot";
 
-    public static final Slot Y_POSITION_SLOT = new Slot("y_position", "Y-Axis",
+    public static final Slot Y_POSITION = new Slot("yPosition", "Y-Axis",
             DataType.NUMBER);
 
-    public static final Slot X_POSITION_SLOT = new Slot("x_position", "X-Axis",
+    public static final Slot X_POSITION = new Slot("xPosition", "X-Axis",
             DataType.NUMBER);
+
+    public static final Slot COLOR = new Slot("color", "Color", DataType.COLOR);
+
+    public static final Slot BORDER_COLOR = new Slot("borderColor",
+            "Border Color", DataType.COLOR);
+
+    public static final Slot SIZE = new Slot("size", "Size", DataType.NUMBER);
 
     /**
      * The shape slot should return a shape value (Strings, see {@link PVShape})
      * per {@link ViewItem}.
      */
-    public static final Slot SHAPE_SLOT = new Slot("shape", "Shape",
-            DataType.SHAPE);
+    public static final Slot SHAPE = new Slot("shape", "Shape", DataType.SHAPE);
+
+    public static final Slot[] SLOTS = new Slot[] { X_POSITION, Y_POSITION,
+            SHAPE, COLOR, BORDER_COLOR, SIZE };
 
     /**
      * Shape legends are {@link Map}s of shape values (Strings, see
@@ -100,8 +115,6 @@ public class ScatterPlot extends ChartViewContentDisplay {
     // TODO move
     private static final double ANGLE_90_DEGREES = -Math.PI / 2;
 
-    private static final int SHAPE_SIZE = 15;
-
     private static final int OUTER_BORDER = 5;
 
     private static final int AXIS_LEGEND_SPACE = 30;
@@ -117,6 +130,8 @@ public class ScatterPlot extends ChartViewContentDisplay {
      * Distance between X axis label and shape legend.
      */
     private static final int SHAPE_LEGEND_OFFSET = 5;
+
+    private static final int SHAPE_SIZE = 15;
 
     /**
      * Color of the grid lines.
@@ -167,7 +182,7 @@ public class ScatterPlot extends ChartViewContentDisplay {
 
     @Override
     public void buildChart() {
-        assert chartItemsJsArray.length() >= 1;
+        assert viewItemsJsArray.length() >= 1;
 
         initChart();
         initScales();
@@ -179,16 +194,18 @@ public class ScatterPlot extends ChartViewContentDisplay {
     }
 
     private void drawDots() {
-        dots = getChart()
-                .add(PV.Dot)
-                .data(chartItemsJsArray)
-                .shape(new ChartItemStringSlotAccessor(SHAPE_SLOT))
-                .bottom(scaleY.fd(new ChartItemDoubleSlotAccessor(
-                        Y_POSITION_SLOT)))
-                .left(scaleX
-                        .fd(new ChartItemDoubleSlotAccessor(X_POSITION_SLOT)))
-                .size(SHAPE_SIZE).fillStyle(new ChartItemColorFunction())
-                .strokeStyle(Colors.STEELBLUE);
+        /*
+         * TODO use scale for size; problem: PV.Scale.Linear did not work with
+         * single value.
+         */
+        dots = getChart().add(PV.Dot).data(viewItemsJsArray)
+                .shape(new ViewItemStringSlotAccessor(SHAPE))
+                .bottom(scaleY.fd(new ViewItemDoubleSlotAccessor(Y_POSITION)))
+                .left(scaleX.fd(new ViewItemDoubleSlotAccessor(X_POSITION)))
+                .size(new ViewItemDoubleSlotAccessor(SIZE))
+                .fillStyle(new ViewItemColorSlotAccessor(COLOR))
+                .strokeStyle(new ViewItemColorSlotAccessor(BORDER_COLOR))
+                .lineWidth(BORDER_WIDTH);
     }
 
     private void drawShapeLegend() {
@@ -266,13 +283,6 @@ public class ScatterPlot extends ChartViewContentDisplay {
                         return entry.getValue();
                     }
                 });
-
-        // TODO leverage knowledge about text widths
-        // --> calculation
-        // TODO Shapes + attached labels
-        // getChart().add(PV.Dot)
-        // .bottom(-AXIS_LEGEND_SPACE - getShapeLegendHeight())
-        // .left(-AXIS_LEGEND_SPACE);
     }
 
     // TODO convert grid line color into property
@@ -335,7 +345,7 @@ public class ScatterPlot extends ChartViewContentDisplay {
 
     @Override
     public Slot[] getSlots() {
-        return new Slot[] { X_POSITION_SLOT, Y_POSITION_SLOT, SHAPE_SLOT };
+        return SLOTS;
     }
 
     private void initChart() {
@@ -349,11 +359,11 @@ public class ScatterPlot extends ChartViewContentDisplay {
     }
 
     private void initScales() {
-        scaleX = PVScale.linear(chartItemsJsArray,
-                new ChartItemDoubleSlotAccessor(X_POSITION_SLOT)).range(0,
-                chartWidth);
-        scaleY = PVScale.linear(chartItemsJsArray,
-                new ChartItemDoubleSlotAccessor(Y_POSITION_SLOT)).range(0,
+        scaleX = PV.Scale.linear(viewItemsJsArray,
+                new ViewItemDoubleSlotAccessor(X_POSITION))
+                .range(0, chartWidth);
+        scaleY = PV.Scale.linear(viewItemsJsArray,
+                new ViewItemDoubleSlotAccessor(Y_POSITION)).range(0,
                 chartHeight);
     }
 
@@ -376,9 +386,9 @@ public class ScatterPlot extends ChartViewContentDisplay {
         // TODO re-enable
         // if (!changedSlots.isEmpty()) {
         // TODO expose protovis label and change immediately, if possible
-        this.yAxisLabel = callback.getSlotResolverDescription(Y_POSITION_SLOT);
-        this.xAxisLabel = callback.getSlotResolverDescription(X_POSITION_SLOT);
-        this.shapeLegendLabel = callback.getSlotResolverDescription(SHAPE_SLOT);
+        this.yAxisLabel = callback.getSlotResolverDescription(Y_POSITION);
+        this.xAxisLabel = callback.getSlotResolverDescription(X_POSITION);
+        this.shapeLegendLabel = callback.getSlotResolverDescription(SHAPE);
         // }
 
         super.update(addedResourceItems, updatedResourceItems,
