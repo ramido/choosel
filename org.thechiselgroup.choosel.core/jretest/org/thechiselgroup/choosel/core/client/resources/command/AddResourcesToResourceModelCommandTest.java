@@ -32,7 +32,7 @@ import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
-import org.thechiselgroup.choosel.core.client.views.ResourceModel;
+import org.thechiselgroup.choosel.core.client.views.model.ResourceModel;
 
 public class AddResourcesToResourceModelCommandTest {
 

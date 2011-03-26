@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.core.client.views.SelectionModel;
+import org.thechiselgroup.choosel.core.client.views.model.SelectionModel;
 
 public class ReplaceSelectionCommandTest {
 

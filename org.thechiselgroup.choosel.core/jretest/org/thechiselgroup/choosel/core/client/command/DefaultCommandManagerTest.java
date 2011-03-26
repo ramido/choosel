@@ -229,7 +229,7 @@ public class DefaultCommandManagerTest {
         verify(command1, times(1)).execute();
         underTest.redo();
         verify(command1, times(2)).execute();
-    }
+    } 
 
     @Before
     public void setUp() {

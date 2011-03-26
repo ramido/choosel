@@ -69,7 +69,7 @@ public class ImporterTest {
         }
     }
 
-    public static Date date(int year, int month, int day) {
+    public static Date getDate(int year, int month, int day) {
         Calendar cal = Calendar.getInstance();
         cal.set(year, month - 1, day, 0, 0, 0);
         cal.set(Calendar.MILLISECOND, 0);
@@ -155,7 +155,7 @@ public class ImporterTest {
 
         assertEquals(2, createdResources.size());
         for (Resource resource : createdResources) {
-            assertEquals(date(2011, 10, 8), resource.getValue("c1"));
+            assertEquals(getDate(2011, 10, 8), resource.getValue("c1"));
         }
     }
 

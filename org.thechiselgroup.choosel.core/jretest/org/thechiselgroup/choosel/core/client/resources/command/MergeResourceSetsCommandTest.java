@@ -27,7 +27,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.core.client.views.ResourceModel;
+import org.thechiselgroup.choosel.core.client.views.model.ResourceModel;
 
 public class MergeResourceSetsCommandTest {
 
