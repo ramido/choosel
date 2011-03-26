@@ -44,9 +44,16 @@ import org.thechiselgroup.choosel.core.client.util.math.Calculation;
 import org.thechiselgroup.choosel.core.client.util.math.MaxCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.MinCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.SumCalculation;
-import org.thechiselgroup.choosel.core.client.views.slots.CalculationResourceSetToValueResolver;
-import org.thechiselgroup.choosel.core.client.views.slots.FirstResourcePropertyResolver;
-import org.thechiselgroup.choosel.core.client.views.slots.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.DefaultResourceModel;
+import org.thechiselgroup.choosel.core.client.views.model.DefaultSelectionModel;
+import org.thechiselgroup.choosel.core.client.views.model.DefaultViewModel;
+import org.thechiselgroup.choosel.core.client.views.model.DefaultViewModelTestHelper;
+import org.thechiselgroup.choosel.core.client.views.model.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplay;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.resolvers.CalculationResolver;
+import org.thechiselgroup.choosel.core.client.views.resolvers.FirstResourcePropertyResolver;
+import org.thechiselgroup.choosel.core.client.views.ui.VisualMappingsControl;
 
 public class DefaultViewPersistenceTest {
 
@@ -113,7 +120,7 @@ public class DefaultViewPersistenceTest {
                 .toList();
         assertEquals(1, resourceItems.size());
         ViewItem resourceItem = resourceItems.get(0);
-        assertEquals("value2", resourceItem.getSlotValue(textSlot));
+        assertEquals("value2", resourceItem.getValue(textSlot));
     }
 
     @Test
@@ -155,8 +162,7 @@ public class DefaultViewPersistenceTest {
         List<ViewItem> resourceItems = restoredViewModel.getViewItems()
                 .toList();
         assertEquals(1, resourceItems.size());
-        ResourceSet resourceItemResources = resourceItems.get(0)
-                .getResourceSet();
+        ResourceSet resourceItemResources = resourceItems.get(0).getResources();
         assertEquals(2, resourceItemResources.size());
         assertEquals(true, resourceItemResources.contains(r1));
         assertEquals(true, resourceItemResources.contains(r2));
@@ -253,10 +259,8 @@ public class DefaultViewPersistenceTest {
                 toResourceSet(r1, r2, r3));
         originalViewModel.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("property2"));
-        originalViewModel.getSlotMappingConfiguration().setResolver(
-                numberSlot,
-                new CalculationResourceSetToValueResolver("property1",
-                        calculation));
+        originalViewModel.getSlotMappingConfiguration().setResolver(numberSlot,
+                new CalculationResolver("property1", calculation));
 
         // 2. save first view
         DefaultResourceSetCollector collector = new DefaultResourceSetCollector();
@@ -272,7 +276,7 @@ public class DefaultViewPersistenceTest {
                 .toList();
         assertEquals(1, resourceItems.size());
         ViewItem resourceItem = resourceItems.get(0);
-        assertEquals(expectedResult, resourceItem.getSlotValue(numberSlot));
+        assertEquals(expectedResult, resourceItem.getValue(numberSlot));
     }
 
 }
