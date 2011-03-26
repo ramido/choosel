@@ -68,6 +68,11 @@ public class ArrayListToLightweightListAdapter<T> implements LightweightList<T> 
     }
 
     @Override
+    public T[] toArray(T[] array) {
+        return delegate.toArray(array);
+    }
+
+    @Override
     public List<T> toList() {
         return delegate;
     }

@@ -51,4 +51,6 @@ public interface LightweightList<T> extends LightweightCollection<T> {
      */
     T get(int i);
 
+    T[] toArray(T[] array);
+
 }
