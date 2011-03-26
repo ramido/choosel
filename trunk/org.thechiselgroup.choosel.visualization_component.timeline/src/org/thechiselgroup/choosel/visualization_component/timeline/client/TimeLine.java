@@ -24,9 +24,9 @@ import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetA
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
-import org.thechiselgroup.choosel.core.client.views.AbstractViewContentDisplay;
-import org.thechiselgroup.choosel.core.client.views.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.slots.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.AbstractViewContentDisplay;
+import org.thechiselgroup.choosel.core.client.views.model.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.event.logical.shared.AttachEvent.Handler;
@@ -35,13 +35,14 @@ import com.google.gwt.user.client.ui.Widget;
 // TODO The zoom levels of the different bands should be configurable 
 public class TimeLine extends AbstractViewContentDisplay {
 
-    public static final Slot LABEL_SLOT = new Slot("label", "Label",
-            DataType.TEXT);
+    public static final Slot DATE = new Slot("date", "Date", DataType.DATE);
 
-    public static final Slot DATE_SLOT = new Slot("date", "Date", DataType.DATE);
+    public final static Slot COLOR = new Slot("color", "Color", DataType.COLOR);
 
-    public final static Slot COLOR_SLOT = new Slot("color", "Color",
-            DataType.COLOR);
+    public final static Slot BORDER_COLOR = new Slot("borderColor",
+            "Border Color", DataType.COLOR);
+
+    private static final Slot[] SLOTS = new Slot[] { BORDER_COLOR, COLOR, DATE };
 
     public final static String ID = "org.thechiselgroup.choosel.visualization_component.Timeline";
 
@@ -116,7 +117,7 @@ public class TimeLine extends AbstractViewContentDisplay {
 
     @Override
     public Slot[] getSlots() {
-        return new Slot[] { LABEL_SLOT, COLOR_SLOT, DATE_SLOT };
+        return SLOTS;
     }
 
     private JsTimeLineEvent[] getTimeLineEvents(
@@ -146,11 +147,14 @@ public class TimeLine extends AbstractViewContentDisplay {
 
     // TODO pull up
     protected void onDetach() {
-        // remove all view items
-        update(LightweightCollections.<ViewItem> emptyCollection(),
-                LightweightCollections.<ViewItem> emptyCollection(),
-                callback.getViewItems(),
-                LightweightCollections.<Slot> emptyCollection());
+        // might have been disposed (then callback would be null)
+        if (callback != null) {
+            // remove all view items
+            update(LightweightCollections.<ViewItem> emptyCollection(),
+                    LightweightCollections.<ViewItem> emptyCollection(),
+                    callback.getViewItems(),
+                    LightweightCollections.<Slot> emptyCollection());
+        }
     }
 
     private void removeEventsFromTimeline(
@@ -223,9 +227,9 @@ public class TimeLine extends AbstractViewContentDisplay {
                 TimeLineItem timelineItem = (TimeLineItem) resourceItem
                         .getDisplayObject();
                 for (Slot slot : changedSlots) {
-                    if (slot.equals(LABEL_SLOT)) {
-                        timelineItem.updateLabel();
-                    } else if (slot.equals(COLOR_SLOT)) {
+                    if (slot.equals(BORDER_COLOR)) {
+                        timelineItem.updateBorderColor();
+                    } else if (slot.equals(COLOR)) {
                         timelineItem.updateColor();
                     }
                 }
@@ -235,8 +239,7 @@ public class TimeLine extends AbstractViewContentDisplay {
 
     private void updateStatusStyling(LightweightCollection<ViewItem> viewItems) {
         for (ViewItem viewItem : viewItems) {
-            ((TimeLineItem) viewItem.getDisplayObject())
-                    .setStatusStyling(viewItem.getStatus());
+            ((TimeLineItem) viewItem.getDisplayObject()).setStatusStyling();
         }
     }
 }

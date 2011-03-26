@@ -18,39 +18,43 @@ package org.thechiselgroup.choosel.visualization_component.timeline.client;
 import java.util.Date;
 
 import org.thechiselgroup.choosel.core.client.ui.CSS;
-import org.thechiselgroup.choosel.core.client.views.IconItem;
-import org.thechiselgroup.choosel.core.client.views.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.ViewItem.Status;
-import org.thechiselgroup.choosel.core.client.views.ViewItemInteraction;
+import org.thechiselgroup.choosel.core.client.ui.Color;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Status;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 
-public class TimeLineItem extends IconItem {
+public class TimeLineItem {
+
+    protected static final String CSS_RESOURCE_ITEM_ICON = "resourceItemIcon";
+
+    protected static final int Z_INDEX_DEFAULT = 5;
+
+    protected static final int Z_INDEX_HIGHLIGHTED = 20;
+
+    protected static final int Z_INDEX_SELECTED = 10;
 
     private static final int OVERVIEW_BAND_ID = 1;
 
     private static final String TICK_ELEMENT = "tick";
 
-    // TODO move, combine with listview
-    private static final String CSS_HIGHLIGHT_CLASS = "hover";
-
-    private static final String CSS_SELECTED_CLASS = "selected";
-
     private JsTimeLineEvent timeLineEvent;
 
     private String iconElementID;
 
-    private String labelElementID;
-
     private String tickElementID;
 
-    public TimeLineItem(ViewItem viewItem, TimeLine view) {
-        super(viewItem, TimeLine.COLOR_SLOT);
+    private final ViewItem viewItem;
 
-        Object date = getSlotValue(TimeLine.DATE_SLOT);
+    public TimeLineItem(ViewItem viewItem, TimeLine view) {
+        this.viewItem = viewItem;
+
+        Object date = viewItem.getValue(TimeLine.DATE);
         String dateString;
         if (date instanceof Date) {
             dateString = date.toString();
@@ -66,20 +70,12 @@ public class TimeLineItem extends IconItem {
                 timeLineEvent);
     }
 
-    private String getColor() {
-        switch (viewItem.getStatus()) {
-        case PARTIALLY_HIGHLIGHTED_SELECTED:
-        case HIGHLIGHTED_SELECTED:
-        case PARTIALLY_HIGHLIGHTED:
-        case HIGHLIGHTED:
-            return getHighlightColor();
-        case DEFAULT:
-            return getDefaultColor();
-        case SELECTED:
-            return getSelectedColor();
-        }
+    private Color getBorderColor() {
+        return (Color) viewItem.getValue(TimeLine.BORDER_COLOR);
+    }
 
-        throw new RuntimeException("this point should never be reached");
+    private Color getColor() {
+        return (Color) viewItem.getValue(TimeLine.COLOR);
     }
 
     public JsTimeLineEvent getTimeLineEvent() {
@@ -97,7 +93,6 @@ public class TimeLineItem extends IconItem {
         registerListeners(labelElementID);
         registerListeners(iconElementID);
 
-        this.labelElementID = labelElementID;
         this.iconElementID = iconElementID;
 
         // fix icon representation
@@ -116,7 +111,7 @@ public class TimeLineItem extends IconItem {
         });
     }
 
-    private void setIconColor(String color) {
+    private void setIconColor(Color color, Color borderColor) {
         if (iconElementID == null) {
             return;
         }
@@ -130,123 +125,47 @@ public class TimeLineItem extends IconItem {
 
         Element div = (Element) element.getFirstChild();
         if (div != null) {
-            CSS.setBackgroundColor(div, color);
-            CSS.setBorderColor(div, calculateBorderColor(color));
+            CSS.setBackgroundColor(div, color.toRGBa());
+            CSS.setBorderColor(div, borderColor.toRGBa());
         }
     }
 
-    private void setLabelStyle(Status status) {
-        if (labelElementID == null) {
-            return;
-        }
+    public void setStatusStyling() {
+        Color color = getColor();
+        Color borderColor = getBorderColor();
 
-        Element element = DOM.getElementById(labelElementID);
-
-        // can happen on resize
-        if (element == null) {
-            return;
-        }
-
-        /*
-         * workaround for bug where class name is null
-         */
-        if (element.getClassName() == null) {
-            element.setClassName("");
-        }
-
-        switch (status) {
-        case PARTIALLY_HIGHLIGHTED_SELECTED:
-        case HIGHLIGHTED_SELECTED: {
-            element.addClassName(CSS_SELECTED_CLASS);
-            element.addClassName(CSS_HIGHLIGHT_CLASS);
-        }
-            break;
-        case PARTIALLY_HIGHLIGHTED:
-        case HIGHLIGHTED: {
-            element.removeClassName(CSS_SELECTED_CLASS);
-            element.addClassName(CSS_HIGHLIGHT_CLASS);
-        }
-            break;
-        case DEFAULT: {
-            element.removeClassName(CSS_SELECTED_CLASS);
-            element.removeClassName(CSS_HIGHLIGHT_CLASS);
-        }
-            break;
-        case SELECTED: {
-            element.removeClassName(CSS_HIGHLIGHT_CLASS);
-            element.addClassName(CSS_SELECTED_CLASS);
-        }
-            break;
-        }
-    }
-
-    public void setStatusStyling(Status status) {
-        String color = getColor();
-
-        setIconColor(color);
-        setLabelStyle(status);
+        setIconColor(color, borderColor);
 
         if (DOM.getElementById(tickElementID) == null) {
             return;
         }
 
-        setTickZIndex(status);
-        setTickColor(color);
+        updateTickZIndex();
+        updateTickColor(color);
     }
 
-    private void setTickColor(String color) {
-        Element tickElement = DOM.getElementById(tickElementID);
+    public void updateBorderColor() {
+        Color color = getColor();
 
-        CSS.setBackgroundColor(tickElement, color);
+        setIconColor(color, getBorderColor());
 
-        /*
-         * TODO refactor: this sets a bottom border on highlighted ticks,
-         * because they are otherwise hard to see
-         */
-        if (getHighlightColor().equals(color)) {
-            CSS.setBorderBottom(tickElement, "6px solid " + getDefaultColor());
-        } else {
-            CSS.setBorderBottom(tickElement, "0px solid black");
+        if (DOM.getElementById(tickElementID) == null) {
+            return;
         }
 
-        timeLineEvent.setTickBackgroundColor(color);
-    }
-
-    private void setTickZIndex(Status status) {
-        switch (status) {
-        case PARTIALLY_HIGHLIGHTED_SELECTED:
-        case HIGHLIGHTED_SELECTED:
-        case PARTIALLY_HIGHLIGHTED:
-        case HIGHLIGHTED: {
-            CSS.setZIndex(tickElementID, Z_INDEX_HIGHLIGHTED);
-            timeLineEvent.setTickZIndex("" + Z_INDEX_HIGHLIGHTED);
-        }
-            break;
-        case DEFAULT: {
-            CSS.setZIndex(tickElementID, Z_INDEX_DEFAULT);
-            timeLineEvent.setTickZIndex("" + Z_INDEX_DEFAULT);
-        }
-            break;
-        case SELECTED: {
-            CSS.setZIndex(tickElementID, Z_INDEX_SELECTED);
-            timeLineEvent.setTickZIndex("" + Z_INDEX_SELECTED);
-
-        }
-            break;
-        }
-
+        updateTickColor(color);
     }
 
     public void updateColor() {
-        String color = getColor();
+        Color color = getColor();
 
-        setIconColor(color);
+        setIconColor(color, getBorderColor());
 
         if (DOM.getElementById(tickElementID) == null) {
             return;
         }
 
-        setTickColor(color);
+        updateTickColor(color);
     }
 
     private void updateIconElement(String iconElementID) {
@@ -256,17 +175,43 @@ public class TimeLineItem extends IconItem {
             return;
         }
 
-        String color = getColor();
-        String label = (String) getSlotValue(TimeLine.LABEL_SLOT);
-
-        element.setInnerHTML("<div style='background-color: " + color
-                + "; border-color: " + calculateBorderColor(color)
-                + ";' class='" + CSS_RESOURCE_ITEM_ICON + "'>" + label
-                + "</div>");
+        element.setInnerHTML("<div style='background-color: "
+                + getColor().toRGBa() + "; border-color: "
+                + getBorderColor().toRGBa() + ";' class='"
+                + CSS_RESOURCE_ITEM_ICON + "'></div>");
     }
 
-    public void updateLabel() {
-        updateIconElement(iconElementID);
+    private void updateTickColor(Color color) {
+        Element tickElement = DOM.getElementById(tickElementID);
+
+        CSS.setBackgroundColor(tickElement, color.toRGBa());
+
+        // /*
+        // * TODO refactor: this sets a bottom border on highlighted ticks,
+        // * because they are otherwise hard to see
+        // */
+        // if (viewItem.isStatus(Subset.HIGHLIGHTED, Status.COMPLETE,
+        // Status.PARTIAL)) {
+        // CSS.setBorderBottom(tickElement, "6px solid black");
+        // } else {
+        // CSS.setBorderBottom(tickElement, "none");
+        // }
+
+        timeLineEvent.setTickBackgroundColor(color.toRGBa());
+    }
+
+    private void updateTickZIndex() {
+        if (viewItem.isStatus(Subset.HIGHLIGHTED, Status.FULL, Status.PARTIAL)) {
+            CSS.setZIndex(tickElementID, Z_INDEX_HIGHLIGHTED);
+            timeLineEvent.setTickZIndex("" + Z_INDEX_HIGHLIGHTED);
+        } else if (viewItem.isStatus(Subset.SELECTED, Status.FULL,
+                Status.PARTIAL)) {
+            CSS.setZIndex(tickElementID, Z_INDEX_SELECTED);
+            timeLineEvent.setTickZIndex("" + Z_INDEX_SELECTED);
+        } else {
+            CSS.setZIndex(tickElementID, Z_INDEX_DEFAULT);
+            timeLineEvent.setTickZIndex("" + Z_INDEX_DEFAULT);
+        }
     }
 
 }

@@ -100,7 +100,7 @@
 .timeline-event-tape,
 .timeline-small-event-tape,
 .timeline-small-event-icon{
-	background-color:#58A0DC;
+	background-color:rgba(18, 64, 171, 0.6);
 	overflow:hidden;
 }
 

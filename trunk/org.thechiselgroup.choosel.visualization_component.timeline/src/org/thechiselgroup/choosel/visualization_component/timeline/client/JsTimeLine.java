@@ -27,7 +27,8 @@ class JsTimeLine extends JavaScriptObject {
     // TODO expose # of bands
     // @formatter:off
     public static native JsTimeLine create(Element element,
-            JsTimeLineEventSource eventSource, String dateAsString) /*-{
+            JsTimeLineEventSource eventSource, String dateAsString, 
+            String mainBandWidth, String overviewBandWidth) /*-{
         var theme = $wnd.Timeline.ClassicTheme.create();
         theme.event.bubble.width = 350;
         theme.event.bubble.height = 300;
@@ -35,7 +36,7 @@ class JsTimeLine extends JavaScriptObject {
         var bandInfos = [
         $wnd.Timeline.createBandInfo({
         startsOn: dateAsString,
-        width: "80%",
+        width: mainBandWidth,
         intervalUnit: $wnd.Timeline.DateTime.DAY,
         intervalPixels: 50,
         eventSource: eventSource,
@@ -63,7 +64,7 @@ class JsTimeLine extends JavaScriptObject {
         }),         
         $wnd.Timeline.createBandInfo({
         startsOn: dateAsString,
-        width: "20%",
+        width: overviewBandWidth,
         intervalUnit: $wnd.Timeline.DateTime.MONTH,
         intervalPixels: 200,
         showEventText: false,
