@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.core.client.resources.command;
 import org.thechiselgroup.choosel.core.client.command.UndoableCommand;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.HasDescription;
-import org.thechiselgroup.choosel.core.client.views.ResourceModel;
+import org.thechiselgroup.choosel.core.client.views.model.ResourceModel;
 
 /**
  * Removes a labeled resource set from a view as an explicitly displayed
