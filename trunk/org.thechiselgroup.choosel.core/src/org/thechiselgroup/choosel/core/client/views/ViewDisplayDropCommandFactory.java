@@ -22,6 +22,7 @@ import org.thechiselgroup.choosel.core.client.resources.command.AddResourcesToRe
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarType;
 import org.thechiselgroup.choosel.core.client.ui.dnd.AbstractResourceSetAvatarDropCommandFactory;
+import org.thechiselgroup.choosel.core.client.views.model.ResourceModel;
 
 import com.google.gwt.user.client.ui.Widget;
 

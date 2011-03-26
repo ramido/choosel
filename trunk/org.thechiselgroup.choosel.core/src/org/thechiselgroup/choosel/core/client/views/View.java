@@ -17,6 +17,9 @@ package org.thechiselgroup.choosel.core.client.views;
 
 import org.thechiselgroup.choosel.core.client.persistence.Persistable;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
+import org.thechiselgroup.choosel.core.client.views.model.ResourceModel;
+import org.thechiselgroup.choosel.core.client.views.model.SelectionModel;
+import org.thechiselgroup.choosel.core.client.views.model.ViewModel;
 import org.thechiselgroup.choosel.core.client.windows.WindowContent;
 
 public interface View extends WindowContent, Disposable, Persistable {

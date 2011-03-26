@@ -15,16 +15,23 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views;
 
+import java.util.logging.Logger;
+
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.HasResourceCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByUriMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.core.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.core.client.views.slots.DefaultSlotMappingInitializer;
-import org.thechiselgroup.choosel.core.client.views.slots.ResourceSetToValueResolver;
-import org.thechiselgroup.choosel.core.client.views.slots.Slot;
-import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingConfiguration;
+import org.thechiselgroup.choosel.core.client.views.model.ContainsResourceGrouping;
+import org.thechiselgroup.choosel.core.client.views.model.DefaultSlotMappingInitializer;
+import org.thechiselgroup.choosel.core.client.views.model.DefaultViewModel;
+import org.thechiselgroup.choosel.core.client.views.model.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.SlotMappingConfiguration;
+import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplay;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItemBehavior;
+import org.thechiselgroup.choosel.core.client.views.model.ViewModel;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -53,7 +60,7 @@ public class VisualizationWidget<T extends ViewContentDisplay> extends
                 highlightedResources, new DefaultSlotMappingInitializer(),
                 viewItemBehavior, new ResourceGrouping(
                         new ResourceByUriMultiCategorizer(),
-                        new DefaultResourceSetFactory()));
+                        new DefaultResourceSetFactory()), Logger.getLogger(""));
 
         setWidget(contentDisplay.asWidget());
         viewModel.setConfigured(true);
@@ -86,7 +93,11 @@ public class VisualizationWidget<T extends ViewContentDisplay> extends
         viewModel.getResourceGrouping().setResourceSet(contentResourceSet);
     }
 
-    public void setResolver(Slot slot, ResourceSetToValueResolver resolver) {
+    public void setPropertyValue(String property, Object value) {
+        viewModel.getViewContentDisplay().setPropertyValue(property, value);
+    }
+
+    public void setResolver(Slot slot, ViewItemValueResolver resolver) {
         viewModel.getSlotMappingConfiguration().setResolver(slot, resolver);
     }
 
