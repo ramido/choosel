@@ -22,7 +22,7 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSetDelegateChang
 import org.thechiselgroup.choosel.core.client.resources.UnmodifiableResourceSet;
 import org.thechiselgroup.choosel.core.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
-import org.thechiselgroup.choosel.core.client.views.HoverModel;
+import org.thechiselgroup.choosel.core.client.views.model.HoverModel;
 
 import com.allen_sauer.gwt.dnd.client.DragEndEvent;
 import com.allen_sauer.gwt.dnd.client.DragHandler;
