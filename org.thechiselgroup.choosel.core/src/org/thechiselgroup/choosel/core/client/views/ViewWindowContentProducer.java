@@ -55,6 +55,7 @@ import org.thechiselgroup.choosel.core.client.views.model.ResourceModel;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingConfiguration;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplay;
+import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplaysConfiguration;
 import org.thechiselgroup.choosel.core.client.views.model.ViewModel;
 import org.thechiselgroup.choosel.core.client.views.ui.DefaultResourceModelPresenter;
 import org.thechiselgroup.choosel.core.client.views.ui.DefaultSelectionModelPresenter;

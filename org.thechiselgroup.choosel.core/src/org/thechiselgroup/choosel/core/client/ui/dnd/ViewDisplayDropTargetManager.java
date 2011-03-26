@@ -17,7 +17,6 @@ package org.thechiselgroup.choosel.core.client.ui.dnd;
 
 import org.thechiselgroup.choosel.core.client.command.CommandManager;
 import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
-import org.thechiselgroup.choosel.core.client.views.ViewDisplayDropCommandFactory;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
