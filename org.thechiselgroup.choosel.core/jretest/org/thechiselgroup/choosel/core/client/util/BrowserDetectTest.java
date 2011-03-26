@@ -18,7 +18,6 @@ package org.thechiselgroup.choosel.core.client.util;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.thechiselgroup.choosel.core.client.util.BrowserDetect;
 
 public class BrowserDetectTest {
 
