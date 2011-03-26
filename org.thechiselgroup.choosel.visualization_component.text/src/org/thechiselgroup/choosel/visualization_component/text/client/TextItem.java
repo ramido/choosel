@@ -15,8 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.text.client;
 
-import org.thechiselgroup.choosel.core.client.views.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.ViewItemInteraction;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
 
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
@@ -53,13 +54,12 @@ public class TextItem {
     }
 
     public String getDescriptionValue() {
-        return (String) viewItem
-                .getSlotValue(TextVisualization.LABEL_SLOT);
+        return (String) viewItem.getValue(TextVisualization.LABEL_SLOT);
     }
 
     public double getFontSizeValue() {
         return ((Number) viewItem
-                .getSlotValue(TextVisualization.FONT_SIZE_SLOT)).doubleValue();
+                .getValue(TextVisualization.FONT_SIZE_SLOT)).doubleValue();
     }
 
     public TextItemLabel getLabel() {
@@ -133,8 +133,8 @@ public class TextItem {
     }
 
     public void updateStatusStyling() {
-        switch (viewItem.getHighlightStatus()) {
-        case COMPLETE: {
+        switch (viewItem.getStatus(Subset.HIGHLIGHTED)) {
+        case FULL: {
             label.addStyleName(CSS_HIGHLIGHTED);
             label.removeStyleName(CSS_PARTIALLY_HIGHLIGHTED);
         }
@@ -151,8 +151,8 @@ public class TextItem {
             break;
         }
 
-        switch (viewItem.getSelectionStatus()) {
-        case COMPLETE: {
+        switch (viewItem.getStatus(Subset.SELECTED)) {
+        case FULL: {
             label.addStyleName(CSS_SELECTED);
         }
             break;

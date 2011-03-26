@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.text.client;
 
-import org.thechiselgroup.choosel.core.client.views.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;

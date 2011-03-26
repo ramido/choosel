@@ -15,8 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.text.client;
 
-import org.thechiselgroup.choosel.core.client.views.ViewContentDisplay;
-import org.thechiselgroup.choosel.core.client.views.ViewContentDisplayFactory;
+import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplay;
+import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplayFactory;
 
 import com.google.inject.Inject;
 
