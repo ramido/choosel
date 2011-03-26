@@ -16,7 +16,7 @@
 package org.thechiselgroup.choosel.example.workbench.client;
 
 import org.thechiselgroup.choosel.core.client.resources.Resource;
-import org.thechiselgroup.choosel.core.client.views.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.visualization_component.graph.client.AbstractGraphNodeExpander;
 import org.thechiselgroup.choosel.visualization_component.graph.client.GraphNodeExpander;
 import org.thechiselgroup.choosel.visualization_component.graph.client.GraphNodeExpansionCallback;
@@ -29,7 +29,7 @@ public class GraphTestGraphTestGraphNodeExpander extends
             GraphNodeExpansionCallback expansionCallback) {
 
         // TODO better resource item handling
-        Resource resource = resourceItem.getResourceSet().getFirstResource();
+        Resource resource = resourceItem.getResources().getFirstResource();
 
         addResources(expansionCallback, calculateUrisToAdd(resource, "parent"),
                 resource);
