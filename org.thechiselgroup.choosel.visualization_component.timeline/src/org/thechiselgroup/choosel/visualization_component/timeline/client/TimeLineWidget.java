@@ -35,6 +35,10 @@ public class TimeLineWidget extends Widget {
 
     private JsTimeLine timeLine;
 
+    private String mainBandWidth = "80%";
+
+    private String overviewBandWidth = "20%";
+
     public TimeLineWidget() {
         setElement(DOM.createDiv());
     }
@@ -55,6 +59,14 @@ public class TimeLineWidget extends Widget {
     public final String getEventElementID(int bandIndex, String elementType,
             JsTimeLineEvent event) {
         return timeLine.getEventElementID(bandIndex, elementType, event);
+    }
+
+    public String getMainBandWidth() {
+        return mainBandWidth;
+    }
+
+    public String getOverviewBandWidth() {
+        return overviewBandWidth;
     }
 
     public JsTimeLine getTimeLine() {
@@ -79,7 +91,8 @@ public class TimeLineWidget extends Widget {
             eventSource = JsTimeLineEventSource.create();
 
             timeLine = JsTimeLine.create(getElement(), eventSource,
-                    inputFormat.format(new Date()));
+                    inputFormat.format(new Date()), mainBandWidth,
+                    overviewBandWidth);
 
             timeLine.disableBubbles();
             timeLine.registerPaintListener();
@@ -98,6 +111,14 @@ public class TimeLineWidget extends Widget {
         // is fixed.
         timeLine.setCenterVisibleDate(DateTimeFormat.getFormat(
                 "EEE, dd MMM yyyy HH:mm:ss z").format(date));
+    }
+
+    public void setMainBandWidth(String mainBandWidth) {
+        this.mainBandWidth = mainBandWidth;
+    }
+
+    public void setOverviewBandWidth(String overviewBandWidth) {
+        this.overviewBandWidth = overviewBandWidth;
     }
 
     public final void setZoomIndex(int bandNumber, int zoomIndex) {
