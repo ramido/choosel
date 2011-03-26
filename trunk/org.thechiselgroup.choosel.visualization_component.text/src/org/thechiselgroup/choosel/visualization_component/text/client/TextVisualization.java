@@ -25,10 +25,10 @@ import org.thechiselgroup.choosel.core.client.util.collections.CollectionUtils;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.math.MathUtils;
 import org.thechiselgroup.choosel.core.client.util.math.NumberArray;
-import org.thechiselgroup.choosel.core.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.views.SidePanelSection;
-import org.thechiselgroup.choosel.core.client.views.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.slots.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.AbstractViewContentDisplay;
+import org.thechiselgroup.choosel.core.client.views.model.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;

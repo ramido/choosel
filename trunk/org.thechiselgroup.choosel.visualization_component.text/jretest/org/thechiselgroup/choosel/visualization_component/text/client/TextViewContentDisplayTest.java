@@ -23,7 +23,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.createViewItem;
-import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.eqResources;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
 
 import org.junit.After;
@@ -38,11 +37,11 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
-import org.thechiselgroup.choosel.core.client.views.DefaultViewItem;
-import org.thechiselgroup.choosel.core.client.views.ViewContentDisplayCallback;
-import org.thechiselgroup.choosel.core.client.views.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.slots.Slot;
-import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingConfiguration;
+import org.thechiselgroup.choosel.core.client.views.model.DefaultViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.SlotMappingConfiguration;
+import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplayCallback;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 
 public class TextViewContentDisplayTest {
 
@@ -67,45 +66,44 @@ public class TextViewContentDisplayTest {
         SlotMappingConfiguration slotMappingConfiguration = mock(SlotMappingConfiguration.class);
 
         // create resource item that contains 2 resources
-        DefaultViewItem resourceItem = createViewItem("",
-                createResources(1, 2), slotMappingConfiguration);
+        DefaultViewItem viewItem = createViewItem("", createResources(1, 2),
+                slotMappingConfiguration);
 
         when(
                 slotMappingConfiguration.resolve(
-                        eq(TextVisualization.FONT_SIZE_SLOT), eq(""),
-                        eqResources(createResources(1, 2)))).thenReturn(
-                new Double(2));
+                        eq(TextVisualization.FONT_SIZE_SLOT), eq(viewItem)))
+                .thenReturn(new Double(2));
 
         underTest.update(
-                LightweightCollections.toCollection((ViewItem) resourceItem),
+                LightweightCollections.toCollection((ViewItem) viewItem),
                 LightweightCollections.<ViewItem> emptySet(),
                 LightweightCollections.<ViewItem> emptySet(),
                 LightweightCollections.<Slot> emptySet());
 
         // both resources get highlighted as the selection is dragged
-        resourceItem.updateHighlightedResources(createResources(1, 2),
+        viewItem.updateHighlightedResources(createResources(1, 2),
                 LightweightCollections.<Resource> emptyCollection());
         underTest.update(LightweightCollections.<ViewItem> emptyCollection(),
-                LightweightCollections.toCollection((ViewItem) resourceItem),
+                LightweightCollections.toCollection((ViewItem) viewItem),
                 LightweightCollections.<ViewItem> emptyCollection(),
                 LightweightCollections.<Slot> emptyCollection());
 
         // create selection that contains one of those resources
-        resourceItem.updateSelectedResources(createResources(1),
+        viewItem.updateSelectedResources(createResources(1),
                 LightweightCollections.<Resource> emptyCollection());
         underTest.update(LightweightCollections.<ViewItem> emptySet(),
-                LightweightCollections.toCollection((ViewItem) resourceItem),
+                LightweightCollections.toCollection((ViewItem) viewItem),
                 LightweightCollections.<ViewItem> emptySet(),
                 LightweightCollections.<Slot> emptySet());
 
         reset(itemLabel);
 
         // highlighting is removed after drag operation
-        resourceItem.updateHighlightedResources(
+        viewItem.updateHighlightedResources(
                 LightweightCollections.<Resource> emptyCollection(),
                 createResources(1, 2));
         underTest.update(LightweightCollections.<ViewItem> emptySet(),
-                LightweightCollections.toCollection((ViewItem) resourceItem),
+                LightweightCollections.toCollection((ViewItem) viewItem),
                 LightweightCollections.<ViewItem> emptySet(),
                 LightweightCollections.<Slot> emptySet());
 
