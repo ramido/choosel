@@ -13,33 +13,21 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.core.client.util;
+package org.thechiselgroup.choosel.core.client.util.collections;
 
 import java.util.Iterator;
 
-public class SingleItemIterator<T> implements Iterator<T> {
+public class SingleItemIterable<T> implements Iterable<T> {
 
-    private boolean hasNext = true;
+    protected final T t;
 
-    private T t;
-
-    public SingleItemIterator(T t) {
+    public SingleItemIterable(T t) {
         this.t = t;
     }
 
     @Override
-    public boolean hasNext() {
-        return hasNext;
+    public Iterator<T> iterator() {
+        return new SingleItemIterator<T>(t);
     }
 
-    @Override
-    public T next() {
-        hasNext = false;
-        return t;
-    }
-
-    @Override
-    public void remove() {
-        throw new UnsupportedOperationException();
-    }
 }

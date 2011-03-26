@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.core.client.util;
+package org.thechiselgroup.choosel.core.client.util.collections;
 
 import java.util.Collection;
 

@@ -18,12 +18,12 @@ package org.thechiselgroup.choosel.core.client.resources;
 import org.thechiselgroup.choosel.core.client.label.DefaultHasLabel;
 import org.thechiselgroup.choosel.core.client.label.HasLabel;
 import org.thechiselgroup.choosel.core.client.label.LabelChangedEventHandler;
-import org.thechiselgroup.choosel.core.client.util.SingleItemCollection;
-import org.thechiselgroup.choosel.core.client.util.SingleItemIterable;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.util.collections.NullIterable;
+import org.thechiselgroup.choosel.core.client.util.collections.SingleItemCollection;
+import org.thechiselgroup.choosel.core.client.util.collections.SingleItemIterable;
 import org.thechiselgroup.choosel.core.client.util.event.PrioritizedHandlerManager;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
