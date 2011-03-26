@@ -31,8 +31,8 @@ import org.thechiselgroup.choosel.core.client.ui.dnd.DropTargetResourceSetAvatar
 import org.thechiselgroup.choosel.core.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.core.client.ui.dnd.ResourceSetAvatarDropTargetManager;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
-import org.thechiselgroup.choosel.core.client.views.HoverModel;
 import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
+import org.thechiselgroup.choosel.core.client.views.model.HoverModel;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;

@@ -21,7 +21,7 @@ import java.util.List;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetUtils;
-import org.thechiselgroup.choosel.core.client.views.slots.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.Slot;
 
 public class DefaultDropTargetCapabilityChecker implements
         DropTargetCapabilityChecker {

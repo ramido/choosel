@@ -19,8 +19,8 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ui.DelegatingResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarFactory;
-import org.thechiselgroup.choosel.core.client.views.SelectionModel;
 import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
+import org.thechiselgroup.choosel.core.client.views.model.SelectionModel;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
