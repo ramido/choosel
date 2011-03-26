@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.visualization_component.map.client;
 
 import org.thechiselgroup.choosel.core.client.ui.CSS;
+import org.thechiselgroup.choosel.core.client.ui.Color;
 
 import com.google.gwt.maps.client.MapPane;
 import com.google.gwt.maps.client.MapPaneType;
@@ -28,11 +29,11 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 
-public class LabelOverlay extends Overlay {
+public class DefaultOverlay extends AbstractMapItemOverlay {
 
-    private Element label;
+    protected static final String CSS_RESOURCE_ITEM_ICON = "resourceItemIcon";
 
-    private LatLng latLng;
+    private Element element;
 
     private MapWidget map;
 
@@ -42,39 +43,40 @@ public class LabelOverlay extends Overlay {
 
     private EventListener eventListener;
 
-    private String text;
+    private int zIndex;
 
-    private int size;
+    public DefaultOverlay(LatLng location, int radius, Color color,
+            Color borderColor, int zIndex, EventListener eventListener) {
 
-    public LabelOverlay(LatLng latLng, String text, int size, String styleName,
-            EventListener eventListener) {
+        super(location, radius, color, borderColor);
 
-        assert latLng != null;
-        assert text != null;
-        assert styleName != null;
+        assert location != null;
         assert eventListener != null;
-        assert text != null;
-        assert size >= 0;
 
-        this.size = size;
-        this.text = text;
-        this.latLng = latLng;
-        this.label = DOM.createDiv();
-        this.label.setClassName(styleName);
+        this.zIndex = zIndex;
+        this.location = location;
         this.eventListener = eventListener;
 
-        DOM.sinkEvents(label, Event.MOUSEEVENTS | Event.ONCLICK);
-        DOM.setEventListener(label, eventListener);
-        CSS.setPosition(label, CSS.ABSOLUTE);
+        this.element = DOM.createDiv();
+        this.element.setClassName(CSS_RESOURCE_ITEM_ICON);
+
+        DOM.sinkEvents(element, Event.MOUSEEVENTS | Event.ONCLICK);
+        DOM.setEventListener(element, eventListener);
+        CSS.setPosition(element, CSS.ABSOLUTE);
 
         updateSizeCssProperties();
 
-        label.setInnerText(text);
+        updateColor();
+        updateBorderColor();
+
+        setZIndex(zIndex);
+
+        element.setInnerText("");
     }
 
     @Override
     protected final Overlay copy() {
-        return new LabelOverlay(latLng, text, size, label.getClassName(),
+        return new DefaultOverlay(location, radius, color, borderColor, zIndex,
                 eventListener);
     }
 
@@ -83,9 +85,9 @@ public class LabelOverlay extends Overlay {
         this.map = map;
 
         pane = map.getPane(MapPaneType.MARKER_PANE);
-        pane.getElement().appendChild(label);
+        pane.getElement().appendChild(element);
 
-        updatePosition(map.convertLatLngToDivPixel(latLng));
+        updatePosition(map.convertLatLngToDivPixel(location));
     }
 
     @Override
@@ -96,7 +98,7 @@ public class LabelOverlay extends Overlay {
          * an updated widget location in this case, although it will not force
          * redrawing.
          */
-        Point newLocationPoint = map.convertLatLngToDivPixel(latLng);
+        Point newLocationPoint = map.convertLatLngToDivPixel(location);
 
         if (!force && sameLocation(newLocationPoint)) {
             return;
@@ -105,13 +107,9 @@ public class LabelOverlay extends Overlay {
         updatePosition(newLocationPoint);
     }
 
-    public void registerEventListener() {
-
-    }
-
     @Override
     protected final void remove() {
-        label.removeFromParent();
+        element.removeFromParent();
     }
 
     private boolean sameLocation(Point newLocationPoint) {
@@ -121,42 +119,42 @@ public class LabelOverlay extends Overlay {
                 && locationPoint.getY() == newLocationPoint.getY();
     }
 
-    public void setBackgroundColor(String color) {
-        assert color != null;
-        CSS.setBackgroundColor(label, color);
-    }
-
-    public void setBorderColor(String color) {
-        assert color != null;
-        CSS.setBorderColor(label, color);
-    }
-
-    public void setLabel(String labelText) {
-        assert labelText != null;
-        this.text = labelText;
-        this.label.setInnerText(labelText);
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-        updateSizeCssProperties();
-        updatePosition(map.convertLatLngToDivPixel(latLng));
-    }
-
     public void setZIndex(int zIndex) {
-        CSS.setZIndex(label, zIndex);
+        this.zIndex = zIndex;
+        CSS.setZIndex(element, zIndex);
+    }
+
+    @Override
+    protected void updateBorderColor() {
+        CSS.setBorderColor(element, borderColor.toRGBa());
+    }
+
+    @Override
+    protected void updateColor() {
+        CSS.setBackgroundColor(element, color.toRGBa());
+    }
+
+    @Override
+    protected void updateLocation() {
+        redraw(true);
     }
 
     private void updatePosition(Point newLocationPoint) {
         assert newLocationPoint != null;
         locationPoint = newLocationPoint;
-        CSS.setLeft(label, locationPoint.getX() - size / 2);
-        CSS.setTop(label, locationPoint.getY() - size / 2);
+        CSS.setLeft(element, locationPoint.getX() - radius);
+        CSS.setTop(element, locationPoint.getY() - radius);
+    }
+
+    @Override
+    protected void updateRadius() {
+        updateSizeCssProperties();
+        updatePosition(map.convertLatLngToDivPixel(location));
     }
 
     public void updateSizeCssProperties() {
-        CSS.setWidth(label, size);
-        CSS.setHeight(label, size);
-        CSS.setBorderRadius(label, size / 2);
+        CSS.setWidth(element, radius * 2);
+        CSS.setHeight(element, radius * 2);
+        CSS.setBorderRadius(element, radius);
     }
 }
