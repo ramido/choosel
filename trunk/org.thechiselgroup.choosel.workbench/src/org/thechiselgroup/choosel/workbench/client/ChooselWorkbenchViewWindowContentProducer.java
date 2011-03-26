@@ -15,9 +15,16 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.client;
 
+import java.util.Date;
+
+import org.thechiselgroup.choosel.core.client.resources.DataType;
+import org.thechiselgroup.choosel.core.client.ui.Color;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.views.ViewPart;
 import org.thechiselgroup.choosel.core.client.views.ViewWindowContentProducer;
+import org.thechiselgroup.choosel.core.client.views.model.DefaultSlotMappingInitializer;
+import org.thechiselgroup.choosel.core.client.views.model.SlotMappingInitializer;
+import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueResolver;
 import org.thechiselgroup.choosel.workbench.client.workspace.ShareConfigurationFactory;
 import org.thechiselgroup.choosel.workbench.client.workspace.ShareConfigurationViewPart;
 
@@ -28,6 +35,26 @@ public class ChooselWorkbenchViewWindowContentProducer extends
 
     @Inject
     private ShareConfigurationFactory shareConfigurationFactory;
+
+    @Override
+    protected SlotMappingInitializer createSlotMappingInitializer(
+            String contentType) {
+
+        DefaultSlotMappingInitializer initializer = new DefaultSlotMappingInitializer();
+
+        initializer.putDefaultDataTypeValues(DataType.NUMBER,
+                new FixedValueResolver(new Double(0)));
+        initializer.putDefaultDataTypeValues(DataType.SHAPE,
+                new FixedValueResolver("circle")); // TODO PVShape.CIRCLE
+        initializer.putDefaultDataTypeValues(DataType.COLOR,
+                new FixedValueResolver(new Color(100, 149, 237)));
+        initializer.putDefaultDataTypeValues(DataType.DATE,
+                new FixedValueResolver(new Date()));
+        initializer.putDefaultDataTypeValues(DataType.TEXT,
+                new FixedValueResolver(""));
+
+        return initializer;
+    }
 
     @Override
     protected LightweightList<ViewPart> createViewParts(String contentType) {
