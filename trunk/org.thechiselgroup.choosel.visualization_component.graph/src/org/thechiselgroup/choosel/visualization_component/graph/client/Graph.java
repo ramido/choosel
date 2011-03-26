@@ -35,16 +35,15 @@ import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetA
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.core.client.views.AbstractViewContentDisplay;
-import org.thechiselgroup.choosel.core.client.views.RequiresAutomaticResourceSet;
 import org.thechiselgroup.choosel.core.client.views.SidePanelSection;
-import org.thechiselgroup.choosel.core.client.views.ViewContentDisplayAction;
-import org.thechiselgroup.choosel.core.client.views.ViewContentDisplayCallback;
-import org.thechiselgroup.choosel.core.client.views.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.ViewItemContainer;
-import org.thechiselgroup.choosel.core.client.views.ViewItemInteraction;
-import org.thechiselgroup.choosel.core.client.views.ViewItemInteraction.Type;
-import org.thechiselgroup.choosel.core.client.views.slots.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.AbstractViewContentDisplay;
+import org.thechiselgroup.choosel.core.client.views.model.RequiresAutomaticResourceSet;
+import org.thechiselgroup.choosel.core.client.views.model.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplayCallback;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItemContainer;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction.Type;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplayLoadingFailureEvent;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplayLoadingFailureEventHandler;
@@ -274,7 +273,7 @@ public class Graph extends AbstractViewContentDisplay implements
 
     private GraphItem createGraphNodeItem(ViewItem viewItem) {
         // TODO get from group id
-        String type = getCategory(viewItem.getResourceSet().getFirstResource());
+        String type = getCategory(viewItem.getResources().getFirstResource());
 
         GraphItem graphItem = new GraphItem(viewItem, type, graphDisplay);
 
@@ -291,7 +290,7 @@ public class Graph extends AbstractViewContentDisplay implements
 
         registry.getAutomaticExpander(type).expand(viewItem, this);
 
-        nodeResources.addResourceSet(viewItem.getResourceSet());
+        nodeResources.addResourceSet(viewItem.getResources());
 
         viewItem.setDisplayObject(graphItem);
 
@@ -543,7 +542,7 @@ public class Graph extends AbstractViewContentDisplay implements
     private void removeViewItem(ViewItem viewItem) {
         assert viewItem != null;
 
-        nodeResources.removeResourceSet(viewItem.getResourceSet());
+        nodeResources.removeResourceSet(viewItem.getResources());
         for (ArcItemContainer arcItemContainer : arcItemContainersByArcTypeID
                 .values()) {
             arcItemContainer.removeViewItem(viewItem);
