@@ -13,23 +13,21 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.visualization_component.chart.client;
+package org.thechiselgroup.choosel.visualization_component.chart.client.other;
 
 import org.thechiselgroup.choosel.core.client.ui.Colors;
-import org.thechiselgroup.choosel.core.client.util.StringUtils;
 import org.thechiselgroup.choosel.core.client.util.collections.ArrayUtils;
-import org.thechiselgroup.choosel.core.client.views.ViewItem.Subset;
-import org.thechiselgroup.choosel.core.client.views.slots.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
 import org.thechiselgroup.choosel.protovis.client.PV;
 import org.thechiselgroup.choosel.protovis.client.PVAlignment;
 import org.thechiselgroup.choosel.protovis.client.PVEventHandler;
 import org.thechiselgroup.choosel.protovis.client.PVLinearScale;
 import org.thechiselgroup.choosel.protovis.client.PVMark;
-import org.thechiselgroup.choosel.protovis.client.PVScale;
 import org.thechiselgroup.choosel.protovis.client.PVWedge;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
-import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
+import org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay;
 import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChart;
 
 //Version of Pie chart with the average of the area 
@@ -85,7 +83,7 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
     private JsDoubleFunction wedgeAngle = new JsDoubleFunction() {
         @Override
         public double f(JsArgs args) {
-            return 2 * Math.PI / chartItemsJsArray.length();
+            return 2 * Math.PI / viewItemsJsArray.length();
         }
     };
 
@@ -106,105 +104,105 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
 
     private int scaleLineWidth = 1;
 
-    private JsStringFunction fullMarkTextStyle = new JsStringFunction() {
-        @Override
-        public String f(JsArgs args) {
-            ChartItem chartItem = args.getObject();
-            return chartItem.getSlotValueAsDouble(BarChart.BAR_LENGTH_SLOT,
-                    Subset.HIGHLIGHTED) == 0 ? Colors.WHITE : Colors.BLACK;
-        }
-    };
-
-    private JsStringFunction fullMarkLabelText = new JsStringFunction() {
-        @Override
-        public String f(JsArgs args) {
-            ChartItem chartItem = args.getObject();
-            return StringUtils.formatDecimal(chartItem.getSlotValueAsDouble(
-                    BarChart.BAR_LENGTH_SLOT, Subset.ALL), 2);
-        }
-
-    };
-
-    private JsStringFunction regularMarkLabelText = new JsStringFunction() {
-        @Override
-        public String f(JsArgs args) {
-            ChartItem chartItem = args.getObject();
-            return chartItem.getSlotValueAsDouble(BarChart.BAR_LENGTH_SLOT,
-                    Subset.ALL)
-                    - chartItem.getSlotValueAsDouble(BarChart.BAR_LENGTH_SLOT,
-                            Subset.HIGHLIGHTED) < 1 ? null : Double
-                    .toString(chartItem.getSlotValueAsDouble(
-                            BarChart.BAR_LENGTH_SLOT, Subset.ALL)
-                            - chartItem.getSlotValueAsDouble(
-                                    BarChart.BAR_LENGTH_SLOT,
-                                    Subset.HIGHLIGHTED));
-        }
-    };
-
-    private JsStringFunction highlightedMarkLabelText = new JsStringFunction() {
-        @Override
-        public String f(JsArgs args) {
-            ChartItem chartItem = args.getObject();
-            return chartItem.getSlotValueAsDouble(BarChart.BAR_LENGTH_SLOT,
-                    Subset.HIGHLIGHTED) <= 0 ? null : Double.toString(chartItem
-                    .getSlotValueAsDouble(BarChart.BAR_LENGTH_SLOT,
-                            Subset.HIGHLIGHTED));
-        }
-    };
+    // private JsStringFunction fullMarkTextStyle = new JsStringFunction() {
+    // @Override
+    // public String f(JsArgs args) {
+    // ViewItem viewItem = args.getObject();
+    // return viewItem.getValueAsDouble(BarChart.BAR_LENGTH,
+    // Subset.HIGHLIGHTED) == 0 ? Colors.WHITE : Colors.BLACK;
+    // }
+    // };
+    //
+    // private JsStringFunction fullMarkLabelText = new JsStringFunction() {
+    // @Override
+    // public String f(JsArgs args) {
+    // ChartItem chartItem = args.getObject();
+    // return StringUtils.formatDecimal(chartItem.getSlotValueAsDouble(
+    // BarChart.BAR_LENGTH, Subset.ALL), 2);
+    // }
+    //
+    // };
+    //
+    // private JsStringFunction regularMarkLabelText = new JsStringFunction() {
+    // @Override
+    // public String f(JsArgs args) {
+    // ChartItem chartItem = args.getObject();
+    // return chartItem.getSlotValueAsDouble(BarChart.BAR_LENGTH,
+    // Subset.ALL)
+    // - chartItem.getSlotValueAsDouble(BarChart.BAR_LENGTH,
+    // Subset.HIGHLIGHTED) < 1 ? null : Double
+    // .toString(chartItem.getSlotValueAsDouble(
+    // BarChart.BAR_LENGTH, Subset.ALL)
+    // - chartItem.getSlotValueAsDouble(
+    // BarChart.BAR_LENGTH, Subset.HIGHLIGHTED));
+    // }
+    // };
+    //
+    // private JsStringFunction highlightedMarkLabelText = new
+    // JsStringFunction() {
+    // @Override
+    // public String f(JsArgs args) {
+    // ChartItem chartItem = args.getObject();
+    // return chartItem.getSlotValueAsDouble(BarChart.BAR_LENGTH,
+    // Subset.HIGHLIGHTED) <= 0 ? null : Double.toString(chartItem
+    // .getSlotValueAsDouble(BarChart.BAR_LENGTH,
+    // Subset.HIGHLIGHTED));
+    // }
+    // };
 
     @Override
     protected void beforeRender() {
         super.beforeRender();
 
-        calculateMaximumChartItemValue();
+        // calculateMaximumChartItemValue();
 
-        if (chartItemsJsArray.length() == 0) {
+        if (viewItemsJsArray.length() == 0) {
             return;
         }
 
-        highlightedWedgeCounts = new double[chartItemsJsArray.length()];
-
-        for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            highlightedWedgeCounts[i] = chartItemsJsArray.get(i)
-                    .getSlotValueAsDouble(BarChart.BAR_LENGTH_SLOT,
-                            Subset.HIGHLIGHTED);
-        }
-
-        regularWedgeCounts = new double[chartItemsJsArray.length()];
-
-        for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            regularWedgeCounts[i] = chartItemsJsArray.get(i)
-                    .getSlotValueAsDouble(BarChart.BAR_LENGTH_SLOT, Subset.ALL);
-        }
+        highlightedWedgeCounts = new double[viewItemsJsArray.length()];
+        //
+        // for (int i = 0; i < viewItemsJsArray.length(); i++) {
+        // highlightedWedgeCounts[i] = viewItemsJsArray.get(i)
+        // .getSlotValueAsDouble(BarChart.BAR_LENGTH,
+        // Subset.HIGHLIGHTED);
+        // }
+        //
+        // regularWedgeCounts = new double[viewItemsJsArray.length()];
+        //
+        // for (int i = 0; i < viewItemsJsArray.length(); i++) {
+        // regularWedgeCounts[i] = viewItemsJsArray.get(i)
+        // .getSlotValueAsDouble(BarChart.BAR_LENGTH, Subset.ALL);
+        // }
     }
 
     @Override
     public void buildChart() {
-        assert chartItemsJsArray.length() > 0;
+        assert viewItemsJsArray.length() > 0;
 
-        calculateMaximumChartItemValue();
+        // calculateMaximumChartItemValue();
         drawScale();
         drawWedge();
     }
 
-    private void calculateAllResourcesSum() {
-        sum = 0;
-        for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            sum += chartItemsJsArray.get(i).getSlotValueAsDouble(
-                    BarChart.BAR_LENGTH_SLOT, Subset.ALL);
-        }
-    }
-
-    protected void calculateMaximumChartItemValue() {
-        maxChartItemValue = 0;
-        for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            double currentItemValue = chartItemsJsArray.get(i)
-                    .getSlotValueAsDouble(BarChart.BAR_LENGTH_SLOT, Subset.ALL);
-            if (maxChartItemValue < currentItemValue) {
-                maxChartItemValue = currentItemValue;
-            }
-        }
-    }
+    // private void calculateAllResourcesSum() {
+    // sum = 0;
+    // for (int i = 0; i < viewItemsJsArray.length(); i++) {
+    // sum += viewItemsJsArray.get(i).getSlotValueAsDouble(
+    // BarChart.BAR_LENGTH, Subset.ALL);
+    // }
+    // }
+    //
+    // protected void calculateMaximumChartItemValue() {
+    // maxChartItemValue = 0;
+    // for (int i = 0; i < viewItemsJsArray.length(); i++) {
+    // double currentItemValue = viewItemsJsArray.get(i)
+    // .getSlotValueAsDouble(BarChart.BAR_LENGTH, Subset.ALL);
+    // if (maxChartItemValue < currentItemValue) {
+    // maxChartItemValue = currentItemValue;
+    // }
+    // }
+    // }
 
     private double calculateRegularWedgeOuterRadius(int i) {
         return regularWedgeCounts[i] * (Math.min(height, width) - MARGIN_SIZE)
@@ -212,7 +210,7 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
     }
 
     private void drawScale() {
-        PVLinearScale scale = PVScale.linear(0, maxChartItemValue).range(0,
+        PVLinearScale scale = PV.Scale.linear(0, maxChartItemValue).range(0,
                 Math.min(height, width) - MARGIN_SIZE);
 
         getChart().add(PV.Dot).data(scale.ticks()).left(width / 2)
@@ -221,19 +219,20 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
     }
 
     private void drawWedge() {
-        calculateAllResourcesSum();
+        // calculateAllResourcesSum();
 
-        regularWedge = getChart().add(PV.Wedge).data(chartItemsJsArray)
+        regularWedge = getChart().add(PV.Wedge).data(viewItemsJsArray)
                 .left(wedgeLeft).bottom(wedgeBottom)
                 .outerRadius(regularWedgeOuterRadius).angle(wedgeAngle)
                 .strokeStyle(Colors.WHITE);
 
-        if (hasPartiallyHighlightedChartItems()) {
+        if (hasViewItemsWithPartialSubset(Subset.HIGHLIGHTED)) {
             regularWedge.innerRadius(highlightedWedgeOuterRadius).fillStyle(
                     Colors.STEELBLUE);
 
             regularWedge.anchor(wedgeLabelAnchor).add(PV.Label)
-                    .textAngle(wedgeTextAngle).text(regularMarkLabelText)
+                    .textAngle(wedgeTextAngle)
+                    // .text(regularMarkLabelText)
                     .textStyle(Colors.WHITE);
 
             highlightedWedge = regularWedge.add(PV.Wedge)
@@ -242,16 +241,17 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
                     .fillStyle(Colors.YELLOW);
 
             highlightedWedge.anchor(wedgeLabelAnchor).add(PV.Label)
-                    .textAngle(wedgeTextAngle).text(highlightedMarkLabelText);
+                    .textAngle(wedgeTextAngle);
+            // .text(highlightedMarkLabelText);
 
             return;
         }
 
-        regularWedge.innerRadius(0).fillStyle(new ChartItemColorFunction());
-
-        regularWedge.anchor(wedgeLabelAnchor).add(PV.Label)
-                .textAngle(wedgeTextAngle).text(fullMarkLabelText)
-                .textStyle(fullMarkTextStyle);
+        // regularWedge.innerRadius(0).fillStyle(new ChartItemColorFunction());
+        //
+        // regularWedge.anchor(wedgeLabelAnchor).add(PV.Label)
+        // .textAngle(wedgeTextAngle).text(fullMarkLabelText)
+        // .textStyle(fullMarkTextStyle);
 
     }
 
@@ -262,7 +262,7 @@ public class CircularBarChartViewContentDisplay extends ChartViewContentDisplay 
 
     @Override
     public Slot[] getSlots() {
-        return new Slot[] { BarChart.BAR_LABEL_SLOT, BarChart.BAR_LENGTH_SLOT };
+        return new Slot[] { BarChart.BAR_LABEL, BarChart.BAR_LENGTH };
     }
 
     @Override

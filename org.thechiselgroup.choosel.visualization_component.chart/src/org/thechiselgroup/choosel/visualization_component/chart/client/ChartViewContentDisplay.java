@@ -16,12 +16,14 @@
 package org.thechiselgroup.choosel.visualization_component.chart.client;
 
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.core.client.views.AbstractViewContentDisplay;
-import org.thechiselgroup.choosel.core.client.views.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.ViewItem.Status;
-import org.thechiselgroup.choosel.core.client.views.slots.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.AbstractViewContentDisplay;
+import org.thechiselgroup.choosel.core.client.views.model.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Status;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
+import org.thechiselgroup.choosel.protovis.client.PV;
 import org.thechiselgroup.choosel.protovis.client.PVEventHandler;
-import org.thechiselgroup.choosel.protovis.client.PVEventType;
 import org.thechiselgroup.choosel.protovis.client.PVMark;
 import org.thechiselgroup.choosel.protovis.client.PVPanel;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
@@ -42,12 +44,12 @@ public abstract class ChartViewContentDisplay extends
         AbstractViewContentDisplay implements ChartWidgetCallback {
 
     // TODO wrapper for jsarraygeneric that implements java.util.List
-    protected JsArrayGeneric<ChartItem> chartItemsJsArray = JsUtils
+    protected JsArrayGeneric<ViewItem> viewItemsJsArray = JsUtils
             .createJsArrayGeneric();
 
-    protected String[] eventTypes = { PVEventType.CLICK, PVEventType.MOUSEDOWN,
-            PVEventType.MOUSEMOVE, PVEventType.MOUSEOUT, PVEventType.MOUSEOVER,
-            PVEventType.MOUSEUP };
+    protected String[] eventTypes = { PV.Event.CLICK, PV.Event.MOUSEDOWN,
+            PV.Event.MOUSEMOVE, PV.Event.MOUSEOUT, PV.Event.MOUSEOVER,
+            PV.Event.MOUSEUP };
 
     private PVEventHandler handler = new PVEventHandler() {
         @Override
@@ -68,8 +70,8 @@ public abstract class ChartViewContentDisplay extends
 
     protected int height;
 
-    public void addChartItem(ChartItem chartItem) {
-        chartItemsJsArray.push(chartItem);
+    public void addViewItem(ViewItem viewItem) {
+        viewItemsJsArray.push(viewItem);
     }
 
     /**
@@ -90,7 +92,7 @@ public abstract class ChartViewContentDisplay extends
 
     /**
      * Builds the visualization. <code>buildChart</code> is only called if there
-     * are actual data items that can be rendered ( jsChartItems.length >= 1 ).
+     * are actual data items that can be rendered ( jsViewItems.length >= 1 ).
      */
     protected abstract void buildChart();
 
@@ -125,31 +127,19 @@ public abstract class ChartViewContentDisplay extends
         return chartWidget.getPVPanel();
     }
 
-    public ChartItem getChartItem(int index) {
-        assert chartItemsJsArray != null;
+    public ViewItem getViewItem(int index) {
+        assert viewItemsJsArray != null;
         assert 0 <= index;
-        assert index < chartItemsJsArray.length();
+        assert index < viewItemsJsArray.length();
 
-        return chartItemsJsArray.get(index);
+        return viewItemsJsArray.get(index);
     }
 
     // TODO refactoring: introduce view item list that offers this functionality
-    public boolean hasPartiallyHighlightedChartItems() {
-        for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            ChartItem chartItem = chartItemsJsArray.get(i);
-            Status status = chartItem.getViewItem().getStatus();
-            if ((status == Status.PARTIALLY_HIGHLIGHTED || status == Status.PARTIALLY_HIGHLIGHTED_SELECTED)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean hasPartiallySelectedChartItems() {
-        for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            ChartItem chartItem = chartItemsJsArray.get(i);
-            Status status = chartItem.getViewItem().getStatus();
-            if ((status == Status.PARTIALLY_SELECTED || status == Status.PARTIALLY_HIGHLIGHTED_SELECTED)) {
+    public boolean hasViewItemsWithPartialSubset(Subset subset) {
+        for (int i = 0; i < viewItemsJsArray.length(); i++) {
+            ViewItem viewItem = viewItemsJsArray.get(i);
+            if (viewItem.isStatus(subset, Status.PARTIAL)) {
                 return true;
             }
         }
@@ -162,9 +152,8 @@ public abstract class ChartViewContentDisplay extends
     }
 
     protected void onEvent(Event e, String pvEventType, JsArgs args) {
-        PVMark mark = args.getThis();
-        int index = mark.index();
-        getChartItem(index).onEvent(e);
+        int index = args.<PVMark> getThis().index();
+        getViewItem(index).reportInteraction(new ViewItemInteraction(e));
     }
 
     protected abstract void registerEventHandler(String eventType,
@@ -177,17 +166,17 @@ public abstract class ChartViewContentDisplay extends
     }
 
     // TODO move into js array to java.util.List wrapper
-    public void removeChartItem(ChartItem chartItem) {
+    public void removeViewItem(ViewItem viewItem) {
         int occurences = 0;
-        for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            ChartItem itemFromArray = chartItemsJsArray.get(i);
-            if (itemFromArray == chartItem) {
+        for (int i = 0; i < viewItemsJsArray.length(); i++) {
+            ViewItem itemFromArray = viewItemsJsArray.get(i);
+            if (itemFromArray == viewItem) {
                 occurences++;
             } else if (occurences > 0) {
-                chartItemsJsArray.set(i - occurences, itemFromArray);
+                viewItemsJsArray.set(i - occurences, itemFromArray);
             }
         }
-        chartItemsJsArray.setLength(chartItemsJsArray.length() - occurences);
+        viewItemsJsArray.setLength(viewItemsJsArray.length() - occurences);
     }
 
     /**
@@ -202,20 +191,11 @@ public abstract class ChartViewContentDisplay extends
             LightweightCollection<Slot> changedSlots) {
 
         for (ViewItem viewItem : addedViewItems) {
-            ChartItem chartItem = new ChartItem(viewItem, this);
-
-            addChartItem(chartItem);
-
-            viewItem.setDisplayObject(chartItem);
+            addViewItem(viewItem);
         }
 
-        for (ViewItem resourceItem : removedViewItems) {
-            ChartItem chartItem = (ChartItem) resourceItem.getDisplayObject();
-
-            // TODO remove once dispose is in place
-            resourceItem.setDisplayObject(null);
-
-            removeChartItem(chartItem);
+        for (ViewItem viewItem : removedViewItems) {
+            removeViewItem(viewItem);
         }
 
         /*
@@ -250,7 +230,7 @@ public abstract class ChartViewContentDisplay extends
 
         if (structuralChange) {
             chartWidget.initPVPanel();
-            if (chartItemsJsArray.length() == 0) {
+            if (viewItemsJsArray.length() == 0) {
                 getChart();
             } else {
                 buildChart();

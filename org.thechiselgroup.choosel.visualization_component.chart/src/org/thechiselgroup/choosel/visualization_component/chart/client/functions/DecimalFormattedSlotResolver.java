@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -13,16 +13,29 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.visualization_component.chart.client;
+package org.thechiselgroup.choosel.visualization_component.chart.client.functions;
 
+import org.thechiselgroup.choosel.core.client.util.StringUtils;
+import org.thechiselgroup.choosel.core.client.views.model.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 
-public class ChartItemColorFunction implements JsStringFunction {
+public class DecimalFormattedSlotResolver implements JsStringFunction {
+
+    private Slot slot;
+
+    private int decimalPlaces;
+
+    public DecimalFormattedSlotResolver(Slot slot, int decimalPlaces) {
+        this.slot = slot;
+        this.decimalPlaces = decimalPlaces;
+    }
 
     @Override
     public String f(JsArgs args) {
-        return args.<ChartItem> getObject().getColor();
+        ViewItem viewItem = args.getObject();
+        double value = viewItem.getValueAsDouble(slot);
+        return StringUtils.formatDecimal(value, decimalPlaces);
     }
-
 }

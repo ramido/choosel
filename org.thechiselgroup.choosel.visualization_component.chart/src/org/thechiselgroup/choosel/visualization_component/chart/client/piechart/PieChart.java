@@ -17,67 +17,85 @@ package org.thechiselgroup.choosel.visualization_component.chart.client.piechart
 
 import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.ui.Colors;
-import org.thechiselgroup.choosel.core.client.views.ViewItem.Status;
-import org.thechiselgroup.choosel.core.client.views.ViewItem.Subset;
-import org.thechiselgroup.choosel.core.client.views.slots.Slot;
+import org.thechiselgroup.choosel.core.client.views.filter.GreaterThanSlotValuePredicate;
+import org.thechiselgroup.choosel.core.client.views.model.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.protovis.client.PV;
 import org.thechiselgroup.choosel.protovis.client.PVAlignment;
 import org.thechiselgroup.choosel.protovis.client.PVEventHandler;
-import org.thechiselgroup.choosel.protovis.client.PVMark;
 import org.thechiselgroup.choosel.protovis.client.PVWedge;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
-import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItem;
-import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItemColorFunction;
-import org.thechiselgroup.choosel.visualization_component.chart.client.ChartItemStringSlotAccessor;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay;
+import org.thechiselgroup.choosel.visualization_component.chart.client.functions.ViewItemColorSlotAccessor;
+import org.thechiselgroup.choosel.visualization_component.chart.client.functions.ViewItemPredicateJsBooleanFunction;
+import org.thechiselgroup.choosel.visualization_component.chart.client.functions.ViewItemStringSlotAccessor;
 
-//Version of Pie chart with the average of the area 
-//and the radius calculations for proportional highlighting.
-//(i.e. ratio + sqrt(ratio) / 2)
 public class PieChart extends ChartViewContentDisplay {
 
-    private double[] highlightedWedgeCounts;
+    public static final Slot ANGLE_VALUE = new Slot("angleValue",
+            "Angle Value", DataType.NUMBER);
 
-    private double[] regularWedgeCounts;
+    public static final Slot LABEL = new Slot("label", "Label", DataType.TEXT);
 
-    private JsStringFunction partialHighlightingChartFillStyle = new JsStringFunction() {
-        @Override
-        public String f(JsArgs args) {
-            ChartItem value = args.getObject();
-            Status status = value.getViewItem().getStatus();
-            return status == Status.PARTIALLY_HIGHLIGHTED ? Colors.STEELBLUE
-                    : status == Status.PARTIALLY_HIGHLIGHTED_SELECTED ? Colors.ORANGE
-                            : value.getColor();
-        }
-    };
+    public static final Slot PARTIAL_PERCENTAGE = new Slot("partialPercentage",
+            "PartialPercentage", DataType.NUMBER);
 
-    private JsDoubleFunction highlightedWedgeOuterRadius = new JsDoubleFunction() {
-        @Override
-        public double f(JsArgs args) {
-            int i = args.<PVMark> getThis().index();
-            return (Math
-                    .sqrt(highlightedWedgeCounts[i] / regularWedgeCounts[i])
-                    * calculateRegularWedgeOuterRadius() + highlightedWedgeCounts[i]
-                    / regularWedgeCounts[i]
-                    * calculateRegularWedgeOuterRadius()) / 2;
-        }
-    };
+    public static final Slot COLOR = new Slot("color", "Color", DataType.COLOR);
 
-    private double sum;
+    public static final Slot BORDER_COLOR = new Slot("borderColor",
+            "Border Color", DataType.COLOR);
 
-    private JsDoubleFunction regularWedgeOuterRadius = new JsDoubleFunction() {
+    public static final Slot PARTIAL_COLOR = new Slot("partialColor",
+            "Partial Color", DataType.COLOR);
+
+    public static final Slot PARTIAL_BORDER_COLOR = new Slot(
+            "partialBorderColor", "Partial Border Color", DataType.COLOR);
+
+    public static final Slot[] SLOTS = new Slot[] { LABEL, ANGLE_VALUE,
+            PARTIAL_PERCENTAGE, COLOR, BORDER_COLOR, PARTIAL_COLOR,
+            PARTIAL_BORDER_COLOR };
+
+    private final static int WEDGE_TEXT_ANGLE = 0;
+
+    private JsDoubleFunction partialWedgeRadius = new JsDoubleFunction() {
         @Override
         public double f(JsArgs args) {
-            return calculateRegularWedgeOuterRadius();
-        }
+            ViewItem viewItem = args.getObject();
+            double partialPercentage = viewItem
+                    .getValueAsDouble(PARTIAL_PERCENTAGE);
+            assert partialPercentage >= 0 && partialPercentage <= 1;
 
+            // performance optimization
+            if (partialPercentage == 0) {
+                return 0;
+            }
+
+            /*
+             * This was found to be a visually more accurate solution for both
+             * small and large percentages compared to 'partialPercentage *
+             * outerRadius' and to 'Math.sqrt(partialPercentage) * outerRadius'
+             */
+            return ((Math.sqrt(partialPercentage) + partialPercentage) / 2)
+                    * outerRadius;
+        }
     };
 
-    private PVWedge regularWedge;
+    private double sumOfAngleValues;
 
-    private PVWedge highlightedWedge;
+    private JsDoubleFunction outRadiusFunction = new JsDoubleFunction() {
+        @Override
+        public double f(JsArgs args) {
+            return outerRadius;
+        }
+    };
+
+    private int outerRadius;
+
+    private PVWedge mainWedge;
+
+    private PVWedge partialWedge;
 
     private JsDoubleFunction wedgeLeft = new JsDoubleFunction() {
         @Override
@@ -96,65 +114,50 @@ public class PieChart extends ChartViewContentDisplay {
     private JsDoubleFunction wedgeAngle = new JsDoubleFunction() {
         @Override
         public double f(JsArgs args) {
-            ChartItem chartItem = args.getObject();
-            return chartItem.getSlotValueAsDouble(PieChart.PIE_ANGLE_SLOT,
-                    Subset.ALL) * 2 * Math.PI / sum;
+            ViewItem viewItem = args.getObject();
+            return viewItem.getValueAsDouble(ANGLE_VALUE) * 2 * Math.PI
+                    / sumOfAngleValues;
         }
     };
 
     private String wedgeLabelAnchor = PVAlignment.CENTER;
 
-    private int wedgeTextAngle = 0;
+    private JsStringFunction fullMarkLabelText = new ViewItemStringSlotAccessor(
+            PieChart.LABEL);
 
-    private JsStringFunction fullMarkTextStyle = new JsStringFunction() {
-        @Override
-        public String f(JsArgs args) {
-            ChartItem chartItem = args.getObject();
-            return chartItem.getSlotValueAsDouble(PieChart.PIE_ANGLE_SLOT,
-                    Subset.HIGHLIGHTED) == 0 ? Colors.WHITE : Colors.BLACK;
-        }
-    };
-
-    private JsStringFunction fullMarkLabelText = new ChartItemStringSlotAccessor(
-            PieChart.PIE_LABEL_SLOT);
-
-    // XXX fix label
     private JsStringFunction regularMarkLabelText = new JsStringFunction() {
         @Override
         public String f(JsArgs args) {
-            ChartItem chartItem = args.getObject();
-            return chartItem.getSlotValueAsDouble(PieChart.PIE_ANGLE_SLOT,
-                    Subset.ALL)
-                    - chartItem.getSlotValueAsDouble(PieChart.PIE_ANGLE_SLOT,
-                            Subset.HIGHLIGHTED) < 1 ? null : Double
-                    .toString(chartItem.getSlotValueAsDouble(
-                            PieChart.PIE_ANGLE_SLOT, Subset.ALL)
-                            - chartItem
-                                    .getSlotValueAsDouble(
-                                            PieChart.PIE_ANGLE_SLOT,
-                                            Subset.HIGHLIGHTED));
+            ViewItem viewItem = args.getObject();
+
+            double partialPercentage = viewItem
+                    .getValueAsDouble(PARTIAL_PERCENTAGE);
+
+            if (partialPercentage == 1) {
+                return null;
+            }
+
+            return Double.toString(viewItem.getValueAsDouble(ANGLE_VALUE)
+                    * (1 - partialPercentage));
         }
     };
 
-    // XXX fix label
     private JsStringFunction highlightedMarkLabelText = new JsStringFunction() {
         @Override
         public String f(JsArgs args) {
-            ChartItem chartItem = args.getObject();
-            return chartItem.getSlotValueAsDouble(PieChart.PIE_ANGLE_SLOT,
-                    Subset.HIGHLIGHTED) <= 0 ? null : Double.toString(chartItem
-                    .getSlotValueAsDouble(PieChart.PIE_ANGLE_SLOT,
-                            Subset.HIGHLIGHTED));
+            ViewItem viewItem = args.getObject();
+
+            double partialPercentage = viewItem
+                    .getValueAsDouble(PARTIAL_PERCENTAGE);
+
+            if (partialPercentage == 0) {
+                return null;
+            }
+
+            return Double.toString(viewItem.getValueAsDouble(ANGLE_VALUE)
+                    * partialPercentage);
         }
     };
-
-    private double maxChartItemValue;
-
-    public static final Slot PIE_ANGLE_SLOT = new Slot("pie.angle",
-            "Pie Angle", DataType.NUMBER);
-
-    public static final Slot PIE_LABEL_SLOT = new Slot("pie.label", "Label",
-            DataType.TEXT);
 
     public final static String ID = "org.thechiselgroup.choosel.visualization_component.chart.PieChart";
 
@@ -162,88 +165,52 @@ public class PieChart extends ChartViewContentDisplay {
     protected void beforeRender() {
         super.beforeRender();
 
-        if (chartItemsJsArray.length() == 0) {
-            return;
-        }
-
-        calculateMaximumChartItemValue();
-
-        highlightedWedgeCounts = new double[chartItemsJsArray.length()];
-        regularWedgeCounts = new double[chartItemsJsArray.length()];
-
-        for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            ChartItem chartItem = chartItemsJsArray.get(i);
-            highlightedWedgeCounts[i] = chartItem.getSlotValueAsDouble(
-                    PieChart.PIE_ANGLE_SLOT, Subset.HIGHLIGHTED);
-            regularWedgeCounts[i] = chartItem.getSlotValueAsDouble(
-                    PieChart.PIE_ANGLE_SLOT, Subset.ALL);
-        }
+        calculateAllResourcesSum();
+        calculateRegularWedgeOuterRadius();
     }
 
     @Override
     public void buildChart() {
-        assert chartItemsJsArray.length() >= 1;
+        assert viewItemsJsArray.length() >= 1;
 
-        drawWedge();
+        mainWedge = getChart().add(PV.Wedge).data(viewItemsJsArray)
+                .left(wedgeLeft).bottom(wedgeBottom)
+                .innerRadius(partialWedgeRadius).outerRadius(outRadiusFunction)
+                .angle(wedgeAngle)
+                .fillStyle(new ViewItemColorSlotAccessor(COLOR))
+                .strokeStyle(new ViewItemColorSlotAccessor(BORDER_COLOR));
+
+        mainWedge.anchor(wedgeLabelAnchor).add(PV.Label)
+                .textAngle(WEDGE_TEXT_ANGLE).text(regularMarkLabelText)
+                .textStyle(Colors.WHITE);
+
+        partialWedge = mainWedge
+                .add(PV.Wedge)
+                .visible(
+                        new ViewItemPredicateJsBooleanFunction(
+                                new GreaterThanSlotValuePredicate(
+                                        PARTIAL_PERCENTAGE, 0)))
+                .innerRadius(0)
+                .outerRadius(partialWedgeRadius)
+                .fillStyle(new ViewItemColorSlotAccessor(PARTIAL_COLOR))
+                .strokeStyle(
+                        new ViewItemColorSlotAccessor(PARTIAL_BORDER_COLOR));
+
+        partialWedge.anchor(wedgeLabelAnchor).add(PV.Label)
+                .textAngle(WEDGE_TEXT_ANGLE).text(highlightedMarkLabelText);
+
     }
 
     private void calculateAllResourcesSum() {
-        sum = 0;
-        for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            sum += chartItemsJsArray.get(i).getSlotValueAsDouble(
-                    PieChart.PIE_ANGLE_SLOT, Subset.ALL);
+        sumOfAngleValues = 0;
+        for (int i = 0; i < viewItemsJsArray.length(); i++) {
+            sumOfAngleValues += viewItemsJsArray.get(i).getValueAsDouble(
+                    ANGLE_VALUE);
         }
     }
 
-    protected void calculateMaximumChartItemValue() {
-        maxChartItemValue = 0;
-        for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            double currentItemValue = chartItemsJsArray.get(i)
-                    .getSlotValueAsDouble(PieChart.PIE_ANGLE_SLOT, Subset.ALL);
-            if (maxChartItemValue < currentItemValue) {
-                maxChartItemValue = currentItemValue;
-            }
-        }
-    }
-
-    private int calculateRegularWedgeOuterRadius() {
-        return Math.min(height, width) / 2 - 5;
-    }
-
-    private void drawWedge() {
-        calculateAllResourcesSum();
-
-        if (hasPartiallyHighlightedChartItems()) {
-            regularWedge = getChart().add(PV.Wedge).data(chartItemsJsArray)
-                    .left(wedgeLeft).bottom(wedgeBottom)
-                    .innerRadius(highlightedWedgeOuterRadius)
-                    .outerRadius(regularWedgeOuterRadius).angle(wedgeAngle)
-                    .fillStyle(partialHighlightingChartFillStyle)
-                    .strokeStyle(Colors.WHITE);
-
-            regularWedge.anchor(wedgeLabelAnchor).add(PV.Label)
-                    .textAngle(wedgeTextAngle).text(regularMarkLabelText)
-                    .textStyle(Colors.WHITE);
-
-            highlightedWedge = regularWedge.add(PV.Wedge).innerRadius(0)
-                    .outerRadius(highlightedWedgeOuterRadius)
-                    .fillStyle(Colors.YELLOW);
-
-            highlightedWedge.anchor(wedgeLabelAnchor).add(PV.Label)
-                    .textAngle(wedgeTextAngle).text(highlightedMarkLabelText);
-            return;
-        }
-
-        regularWedge = getChart().add(PV.Wedge).data(chartItemsJsArray)
-                .left(wedgeLeft).bottom(wedgeBottom)
-                .outerRadius(regularWedgeOuterRadius).angle(wedgeAngle)
-                .fillStyle(new ChartItemColorFunction())
-                .strokeStyle(Colors.WHITE);
-
-        regularWedge.anchor(wedgeLabelAnchor).add(PV.Label)
-                .textAngle(wedgeTextAngle).text(fullMarkLabelText)
-                .textStyle(fullMarkTextStyle);
-
+    private void calculateRegularWedgeOuterRadius() {
+        outerRadius = Math.min(height, width) / 2 - 5;
     }
 
     @Override
@@ -253,12 +220,12 @@ public class PieChart extends ChartViewContentDisplay {
 
     @Override
     public Slot[] getSlots() {
-        return new Slot[] { PieChart.PIE_LABEL_SLOT, PieChart.PIE_ANGLE_SLOT };
+        return SLOTS;
     }
 
     @Override
     protected void registerEventHandler(String eventType, PVEventHandler handler) {
-        regularWedge.event(eventType, handler);
+        mainWedge.event(eventType, handler);
     }
 
 }

@@ -13,35 +13,23 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.visualization_component.chart.client;
+package org.thechiselgroup.choosel.visualization_component.chart.client.functions;
 
-import org.thechiselgroup.choosel.core.client.views.ViewItem.Subset;
-import org.thechiselgroup.choosel.core.client.views.slots.Slot;
+import org.thechiselgroup.choosel.protovis.client.PVLinearScale;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArgs;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 
-public class ChartItemStringSlotAccessor implements JsStringFunction {
+public class TickFormatFunction implements JsStringFunction {
 
-    private Subset subset;
+    private PVLinearScale scale;
 
-    private Slot slot;
-
-    public ChartItemStringSlotAccessor(Slot slot) {
-        this(slot, Subset.ALL);
-    }
-
-    public ChartItemStringSlotAccessor(Slot slot, Subset subset) {
-        assert subset != null;
-        assert slot != null;
-
-        this.slot = slot;
-        this.subset = subset;
+    public TickFormatFunction(PVLinearScale scale) {
+        this.scale = scale;
     }
 
     @Override
     public String f(JsArgs args) {
-        ChartItem chartItem = args.getObject();
-        return chartItem.getSlotValue(slot, subset).toString();
+        return scale.tickFormatDouble(args.getDouble());
     }
 
 }

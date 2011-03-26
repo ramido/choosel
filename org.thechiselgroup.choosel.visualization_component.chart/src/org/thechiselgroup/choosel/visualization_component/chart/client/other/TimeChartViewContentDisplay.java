@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.visualization_component.chart.client;
+package org.thechiselgroup.choosel.visualization_component.chart.client.other;
 
-import org.thechiselgroup.choosel.core.client.views.ViewItem.Subset;
-import org.thechiselgroup.choosel.core.client.views.slots.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.protovis.client.PVEventHandler;
+import org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay;
 import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChart;
 
 public class TimeChartViewContentDisplay extends ChartViewContentDisplay {
@@ -35,12 +35,12 @@ public class TimeChartViewContentDisplay extends ChartViewContentDisplay {
         var chart = this.@org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay::getChart(),
         val = new Array();
 
-        this.@org.thechiselgroup.choosel.visualization_component.chart.client.TimeChartViewContentDisplay::sortByDate()();
+        this.@org.thechiselgroup.choosel.visualization_component.chart.client.other.TimeChartViewContentDisplay::sortByDate()();
 
-        for(var i = 0; i < this.@org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay::chartItemsJsArray.@java.util.ArrayList::size()(); i++) {
-            var xCoord = this.@org.thechiselgroup.choosel.visualization_component.chart.client.TimeChartViewContentDisplay::getSlotValue(II)(i,0);
+        for(var i = 0; i < this.@org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay::viewItemsJsArray.@java.util.ArrayList::size()(); i++) {
+            var xCoord = this.@org.thechiselgroup.choosel.visualization_component.chart.client.other.TimeChartViewContentDisplay::getSlotValue(II)(i,0);
             val[i] = {x: new $wnd.Date(xCoord),
-                y: this.@org.thechiselgroup.choosel.visualization_component.chart.client.TimeChartViewContentDisplay::getSlotValue(II)(i,1)};
+                y: this.@org.thechiselgroup.choosel.visualization_component.chart.client.other.TimeChartViewContentDisplay::getSlotValue(II)(i,1)};
         }
 
         var start = val[0].x;
@@ -153,9 +153,9 @@ public class TimeChartViewContentDisplay extends ChartViewContentDisplay {
 
     protected void calculateMaximumChartItemValue() {
         maxChartItemValue = 0;
-        for (int i = 0; i < chartItemsJsArray.length(); i++) {
-            double currentItemValue = chartItemsJsArray.get(i)
-                    .getSlotValueAsDouble(BarChart.BAR_LENGTH_SLOT, Subset.ALL);
+        for (int i = 0; i < viewItemsJsArray.length(); i++) {
+            double currentItemValue = viewItemsJsArray.get(i).getValueAsDouble(
+                    BarChart.BAR_LENGTH);
             if (maxChartItemValue < currentItemValue) {
                 maxChartItemValue = currentItemValue;
             }
@@ -169,7 +169,7 @@ public class TimeChartViewContentDisplay extends ChartViewContentDisplay {
 
     @Override
     public Slot[] getSlots() {
-        return new Slot[] { BarChart.BAR_LABEL_SLOT, BarChart.BAR_LENGTH_SLOT };
+        return new Slot[] { BarChart.BAR_LABEL, BarChart.BAR_LENGTH };
     }
 
     private Object getSlotValue(int i, int coordinate) {
