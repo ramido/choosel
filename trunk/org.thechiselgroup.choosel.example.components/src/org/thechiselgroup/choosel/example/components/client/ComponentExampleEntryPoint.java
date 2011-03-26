@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.example.components.client;
 
-import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,7 +36,6 @@ import org.thechiselgroup.choosel.core.client.views.behaviors.SwitchSelectionOnC
 import org.thechiselgroup.choosel.core.client.views.model.DefaultSelectionModel;
 import org.thechiselgroup.choosel.core.client.views.model.HoverModel;
 import org.thechiselgroup.choosel.core.client.views.model.SelectionModel;
-import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FirstResourcePropertyResolver;
@@ -46,6 +44,7 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ResourceCountResol
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemStatusResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemStatusResolver.StatusRule;
 import org.thechiselgroup.choosel.core.client.views.sorting.ViewItemDoubleComparator;
+import org.thechiselgroup.choosel.core.client.views.sorting.ViewItemStringSlotComparator;
 import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChart;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -62,23 +61,6 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class ComponentExampleEntryPoint implements EntryPoint {
-
-    public static class ViewItemStringSlotComparator implements
-            Comparator<ViewItem> {
-
-        private Slot slot;
-
-        public ViewItemStringSlotComparator(Slot slot) {
-            this.slot = slot;
-        }
-
-        @Override
-        public int compare(ViewItem o1, ViewItem o2) {
-            String s1 = o1.<String> getValue(slot);
-            String s2 = o2.<String> getValue(slot);
-            return s1.compareTo(s2);
-        }
-    }
 
     private static final Color COLOR_DEFAULT = new Color(18, 64, 171, 0.6);
 
