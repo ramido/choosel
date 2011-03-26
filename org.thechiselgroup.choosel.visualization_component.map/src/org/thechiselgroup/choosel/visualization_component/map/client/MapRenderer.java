@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -15,19 +15,17 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.map.client;
 
-import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplay;
-import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplayFactory;
+import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplayCallback;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItemRenderer;
 
-public class MapViewContentDisplayFactory implements ViewContentDisplayFactory {
+import com.google.gwt.maps.client.MapWidget;
 
-    @Override
-    public ViewContentDisplay createViewContentDisplay() {
-        return new Map(new DefaultMapRenderer());
-    }
+public interface MapRenderer extends ViewItemRenderer {
 
-    @Override
-    public String getViewContentTypeID() {
-        return Map.ID;
-    }
+    void init(MapWidget map, ViewContentDisplayCallback callback);
+
+    void onAttach();
+
+    void onDetach();
 
 }

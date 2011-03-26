@@ -18,16 +18,15 @@ package org.thechiselgroup.choosel.visualization_component.map.client;
 import org.thechiselgroup.choosel.core.client.persistence.Memento;
 import org.thechiselgroup.choosel.core.client.persistence.PersistableRestorationService;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
-import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.core.client.ui.CSS;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
-import org.thechiselgroup.choosel.core.client.views.AbstractViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.views.SidePanelSection;
-import org.thechiselgroup.choosel.core.client.views.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.slots.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.AbstractViewContentDisplay;
+import org.thechiselgroup.choosel.core.client.views.model.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -46,17 +45,24 @@ public class Map extends AbstractViewContentDisplay {
 
     public final static String ID = "org.thechiselgroup.choosel.visualization_component.Map";
 
-    public final static Slot LABEL_SLOT = new Slot("label", "Label",
-            DataType.TEXT);
-
-    public final static Slot SIZE_SLOT = new Slot("size", "Size",
+    public final static Slot RADIUS = new Slot("radius", "Radius",
             DataType.NUMBER);
 
-    public final static Slot COLOR_SLOT = new Slot("color", "Color",
-            DataType.COLOR);
+    public final static Slot COLOR = new Slot("color", "Color", DataType.COLOR);
 
-    public final static Slot LOCATION_SLOT = new Slot("location", "Location",
+    public final static Slot BORDER_COLOR = new Slot("borderColor",
+            "Border Color", DataType.COLOR);
+
+    public final static Slot LOCATION = new Slot("location", "Location",
             DataType.LOCATION);
+
+    // TODO should just be a comparator
+    // positive integer
+    public final static Slot Z_INDEX = new Slot("zIndex", "Z Index",
+            DataType.NUMBER);
+
+    public static final Slot[] SLOTS = new Slot[] { LOCATION, COLOR,
+            BORDER_COLOR, RADIUS, Z_INDEX };
 
     public static final String LATITUDE = "latitude";
 
@@ -79,6 +85,12 @@ public class Map extends AbstractViewContentDisplay {
     private static final String MEMENTO_ZOOM_LEVEL = "zoom-level";
 
     private MapWidget map;
+
+    private MapRenderer renderer;
+
+    public Map(MapRenderer renderer) {
+        this.renderer = renderer;
+    }
 
     @Override
     public void checkResize() {
@@ -112,6 +124,8 @@ public class Map extends AbstractViewContentDisplay {
             }
         });
 
+        renderer.init(map, callback);
+
         return map;
     }
 
@@ -134,6 +148,10 @@ public class Map extends AbstractViewContentDisplay {
                     "map type persistence not supported for type "
                             + mapType.getName(false));
         }
+    }
+
+    public MapWidget getMapWidget() {
+        return map;
     }
 
     @Override
@@ -167,36 +185,17 @@ public class Map extends AbstractViewContentDisplay {
 
     @Override
     public Slot[] getSlots() {
-        return new Slot[] { LABEL_SLOT, COLOR_SLOT, LOCATION_SLOT, SIZE_SLOT };
+        return SLOTS;
     }
 
     public int getZoomLevel() {
         return map.getZoomLevel();
     }
 
-    private void initMapItem(ViewItem resourceItem) {
-        // TODO iterate over path
-        // TODO resolve sets
-        // TODO separate resolvers for latitude and longitude
-
-        Resource location = (Resource) resourceItem.getSlotValue(LOCATION_SLOT);
-
-        double latitude = toDouble(location.getValue(LATITUDE));
-        double longitude = toDouble(location.getValue(LONGITUDE));
-
-        LatLng latLng = LatLng.newInstance(latitude, longitude);
-
-        MapItem mapItem = new MapItem(resourceItem, latLng);
-
-        mapItem.setStatusStyling(resourceItem.getStatus());
-
-        map.addOverlay(mapItem.getOverlay());
-
-        resourceItem.setDisplayObject(mapItem);
-    }
-
     // TODO pull up
     protected void onAttach() {
+        renderer.onAttach();
+
         // add all view items
         update(callback.getViewItems(),
                 LightweightCollections.<ViewItem> emptyCollection(),
@@ -206,16 +205,16 @@ public class Map extends AbstractViewContentDisplay {
 
     // TODO pull up
     protected void onDetach() {
-        // remove all view items
-        update(LightweightCollections.<ViewItem> emptyCollection(),
-                LightweightCollections.<ViewItem> emptyCollection(),
-                callback.getViewItems(),
-                LightweightCollections.<Slot> emptyCollection());
-    }
+        renderer.onDetach();
 
-    private void removeOverlay(ViewItem resourceItem) {
-        map.removeOverlay(((MapItem) resourceItem.getDisplayObject())
-                .getOverlay());
+        // might have been disposed (then callback would be null)
+        if (callback != null) {
+            // remove all view items
+            update(LightweightCollections.<ViewItem> emptyCollection(),
+                    LightweightCollections.<ViewItem> emptyCollection(),
+                    callback.getViewItems(),
+                    LightweightCollections.<Slot> emptyCollection());
+        }
     }
 
     @Override
@@ -289,7 +288,7 @@ public class Map extends AbstractViewContentDisplay {
      * 
      * @see <a href=
      *      "http://code.google.com/apis/maps/documentation/staticmaps/#Zoomlevels"
-     *      >Google Mas API Zoom Levels</a>
+     *      >Google Maps API Zoom Levels</a>
      */
     public void setZoomLevel(int zoomLevel) {
         LatLng center = getCenter();
@@ -297,26 +296,10 @@ public class Map extends AbstractViewContentDisplay {
         setCenter(center);
     }
 
-    // TODO move to library class
-    private double toDouble(Object value) {
-        assert value != null;
-
-        if (value instanceof Number) {
-            return ((Number) value).doubleValue();
-        }
-
-        if (value instanceof String) {
-            return Double.parseDouble((String) value);
-        }
-
-        throw new IllegalArgumentException("" + value
-                + " could not be converted to double");
-    }
-
     @Override
-    public void update(LightweightCollection<ViewItem> addedResourceItems,
-            LightweightCollection<ViewItem> updatedResourceItems,
-            LightweightCollection<ViewItem> removedResourceItems,
+    public void update(LightweightCollection<ViewItem> addedViewItems,
+            LightweightCollection<ViewItem> updatedViewItems,
+            LightweightCollection<ViewItem> removedViewItems,
             LightweightCollection<Slot> changedSlots) {
 
         // TODO pull up
@@ -324,39 +307,9 @@ public class Map extends AbstractViewContentDisplay {
             return;
         }
 
-        for (ViewItem resourceItem : addedResourceItems) {
-            initMapItem(resourceItem);
-        }
+        renderer.update(addedViewItems, updatedViewItems, removedViewItems,
+                changedSlots);
 
-        for (ViewItem resourceItem : removedResourceItems) {
-            removeOverlay(resourceItem);
-        }
-
-        // TODO refactor
-        if (!changedSlots.isEmpty()) {
-            for (ViewItem resourceItem : getCallback().getViewItems()) {
-                MapItem mapItem = (MapItem) resourceItem.getDisplayObject();
-                for (Slot slot : changedSlots) {
-                    if (slot.equals(LABEL_SLOT)) {
-                        mapItem.updateLabel();
-                    } else if (slot.equals(COLOR_SLOT)) {
-                        mapItem.updateColor();
-                    } else if (slot.equals(SIZE_SLOT)) {
-                        mapItem.updateSize();
-                    }
-                }
-            }
-        }
-
-        updateStatusStyling(updatedResourceItems);
     }
 
-    private void updateStatusStyling(
-            LightweightCollection<ViewItem> resourceItems) {
-
-        for (ViewItem resourceItem : resourceItems) {
-            ((MapItem) resourceItem.getDisplayObject())
-                    .setStatusStyling(resourceItem.getStatus());
-        }
-    }
 }
