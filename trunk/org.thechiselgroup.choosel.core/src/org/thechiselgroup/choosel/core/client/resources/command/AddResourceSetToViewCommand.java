@@ -23,7 +23,7 @@ import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.test.Benchmark;
 import org.thechiselgroup.choosel.core.client.util.HasDescription;
-import org.thechiselgroup.choosel.core.client.views.ResourceModel;
+import org.thechiselgroup.choosel.core.client.views.model.ResourceModel;
 
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.user.client.Window;

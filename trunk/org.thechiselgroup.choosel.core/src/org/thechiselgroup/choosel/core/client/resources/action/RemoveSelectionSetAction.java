@@ -20,8 +20,8 @@ import org.thechiselgroup.choosel.core.client.command.UndoableCommand;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.command.RemoveSelectionSetFromViewCommand;
 import org.thechiselgroup.choosel.core.client.resources.ui.popup.PopupResourceSetAvatarFactory.Action;
-import org.thechiselgroup.choosel.core.client.views.SelectionModel;
 import org.thechiselgroup.choosel.core.client.views.View;
+import org.thechiselgroup.choosel.core.client.views.model.SelectionModel;
 
 public class RemoveSelectionSetAction implements Action {
 
