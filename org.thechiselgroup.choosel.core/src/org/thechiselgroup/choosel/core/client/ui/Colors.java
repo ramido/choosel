@@ -19,7 +19,11 @@ public final class Colors {
 
     public static final String ORANGE = "#E7B076";
 
+    public static final Color ORANGE_C = new Color(227, 176, 118);
+
     public static final String YELLOW = "#FDF49A";
+
+    public static final Color YELLOW_C = new Color(253, 243, 154);
 
     public static final String BLACK = "#000000";
 
@@ -37,9 +41,13 @@ public final class Colors {
 
     public static final String YELLOW_2 = "#D4D0C8";
 
+    public static final Color YELLOW_2_C = new Color(212, 208, 200);
+
     public static final String WHITE = "#FFFFFF";
 
     public static final String STEELBLUE = "#6495ED";
+
+    public static final Color STEELBLUE_C = new Color(100, 149, 237);
 
     private Colors() {
 
