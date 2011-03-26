@@ -18,10 +18,8 @@ package org.thechiselgroup.choosel.core.client.ui.dnd;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.thechiselgroup.choosel.core.client.resources.action.RemoveSelectionSetAction;
-import org.thechiselgroup.choosel.core.client.views.HoverModel;
-import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
 import org.thechiselgroup.choosel.core.client.command.CommandManager;
+import org.thechiselgroup.choosel.core.client.resources.action.RemoveSelectionSetAction;
 import org.thechiselgroup.choosel.core.client.resources.ui.DefaultResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.core.client.resources.ui.HighlightingResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarFactory;
@@ -31,6 +29,8 @@ import org.thechiselgroup.choosel.core.client.resources.ui.UpdateResourceSetAvat
 import org.thechiselgroup.choosel.core.client.resources.ui.popup.PopupResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.core.client.resources.ui.popup.PopupResourceSetAvatarFactory.Action;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
+import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
+import org.thechiselgroup.choosel.core.client.views.model.HoverModel;
 
 import com.google.inject.Inject;
 

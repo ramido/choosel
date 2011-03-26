@@ -24,7 +24,7 @@ import org.thechiselgroup.choosel.core.client.ui.dnd.DragEnableResourceSetAvatar
 import org.thechiselgroup.choosel.core.client.ui.dnd.DropTargetResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.core.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.core.client.ui.dnd.ResourceSetAvatarDropTargetManager;
-import org.thechiselgroup.choosel.core.client.views.HoverModel;
+import org.thechiselgroup.choosel.core.client.views.model.HoverModel;
 
 import com.google.inject.Inject;
 
