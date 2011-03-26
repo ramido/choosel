@@ -70,11 +70,16 @@ public final class BenchmarkResourceSetFactory {
         return new Date(timestamp - randomValue);
     }
 
+    /**
+     * Because the Mercator projection used in many maps gets useless for
+     * extreme values and these are often not displayed, the latitude values are
+     * limited to +/- 85 degrees.
+     */
     private static Resource createRandomLocation() {
         Resource locationResource = new Resource();
 
-        int randomLatitudeValue = Random.nextInt(100 * 90 * 2);
-        double latitude = (randomLatitudeValue / 100d) - 90;
+        int randomLatitudeValue = Random.nextInt(100 * 85 * 2);
+        double latitude = (randomLatitudeValue / 100d) - 85;
         locationResource.putValue(ResourceSetUtils.LATITUDE, latitude);
 
         int randomLongitudeValue = Random.nextInt(100 * 180 * 2);
