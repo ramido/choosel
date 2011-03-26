@@ -15,65 +15,198 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.example.components.client;
 
-import java.util.Map;
+import java.util.Comparator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.thechiselgroup.choosel.core.client.resources.Resource;
+import org.thechiselgroup.choosel.core.client.label.IncrementingSuffixLabelFactory;
+import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
+import org.thechiselgroup.choosel.core.client.resources.ResourceByPropertyMultiCategorizer;
+import org.thechiselgroup.choosel.core.client.resources.ResourceByUriMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.core.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.core.client.test.BenchmarkResourceSetFactory;
-import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.core.client.views.DefaultView;
-import org.thechiselgroup.choosel.core.client.views.ViewModel;
-import org.thechiselgroup.choosel.core.client.views.slots.FirstResourcePropertyResolver;
-import org.thechiselgroup.choosel.core.client.views.slots.ResourceSetToValueResolver;
-import org.thechiselgroup.choosel.core.client.windows.WindowContentProducer;
-import org.thechiselgroup.choosel.protovis.client.PVShape;
+import org.thechiselgroup.choosel.core.client.ui.CSS;
+import org.thechiselgroup.choosel.core.client.ui.Color;
+import org.thechiselgroup.choosel.core.client.ui.popup.DefaultPopupManagerFactory;
+import org.thechiselgroup.choosel.core.client.views.VisualizationWidget;
+import org.thechiselgroup.choosel.core.client.views.behaviors.CompositeViewItemBehavior;
+import org.thechiselgroup.choosel.core.client.views.behaviors.HighlightingViewItemBehavior;
+import org.thechiselgroup.choosel.core.client.views.behaviors.PopupViewItemBehavior;
+import org.thechiselgroup.choosel.core.client.views.behaviors.SwitchSelectionOnClickViewItemBehavior;
+import org.thechiselgroup.choosel.core.client.views.model.DefaultSelectionModel;
+import org.thechiselgroup.choosel.core.client.views.model.HoverModel;
+import org.thechiselgroup.choosel.core.client.views.model.SelectionModel;
+import org.thechiselgroup.choosel.core.client.views.model.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
+import org.thechiselgroup.choosel.core.client.views.resolvers.FirstResourcePropertyResolver;
+import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueResolver;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ResourceCountResolver;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemStatusResolver;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemStatusResolver.StatusRule;
+import org.thechiselgroup.choosel.core.client.views.sorting.ViewItemDoubleComparator;
 import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChart;
-import org.thechiselgroup.choosel.visualization_component.chart.client.piechart.PieChart;
-import org.thechiselgroup.choosel.visualization_component.chart.client.scatterplot.ScatterPlot;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.UmbrellaException;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 public class ComponentExampleEntryPoint implements EntryPoint {
 
-    public void onModuleLoad() {
-        ComponentExampleGinjector injector = GWT
-                .create(ComponentExampleGinjector.class);
+    public static class ViewItemStringSlotComparator implements
+            Comparator<ViewItem> {
 
-        ResourceSet resourceSet = BenchmarkResourceSetFactory
-                .createResourceSet(20, injector.getResourceSetFactory());
+        private Slot slot;
 
-        WindowContentProducer contentProducer = injector
-                .getWindowContentProducer();
+        public ViewItemStringSlotComparator(Slot slot) {
+            this.slot = slot;
+        }
 
-        // un-comment as needed - only one can be active at a time
-        initBarChartView(contentProducer, resourceSet);
-        // initPieChartView(contentProducer, resourceSet);
-        // initScatterPlotView(contentProducer, resourceSet);
+        @Override
+        public int compare(ViewItem o1, ViewItem o2) {
+            String s1 = o1.<String> getValue(slot);
+            String s2 = o2.<String> getValue(slot);
+            return s1.compareTo(s2);
+        }
     }
 
-    private void initBarChartView(WindowContentProducer contentProducer,
-            ResourceSet resourceSet) {
+    private static final Color COLOR_DEFAULT = new Color(18, 64, 171, 0.6);
 
-        DefaultView view = createView(contentProducer, BarChart.ID);
-        ViewModel model = view.getModel();
+    private static final Color COLOR_DEFAULT_BORDER = new Color(6, 38, 111);
 
-        // view.getViewContentDisplay().setPropertyValue(
-        // BarChartVisualization.LAYOUT_PROPERTY, LayoutType.VERTICAL);
+    private static final Color COLOR_SELECTION = new Color(255, 19, 0, 0.8);
 
-        view.getResourceModel().addResourceSet(resourceSet);
+    private static final Color COLOR_SELECTION_BORDER = new Color(166, 12, 0);
 
-        model.getSlotMappingConfiguration().setResolver(
-                BarChart.BAR_LABEL_SLOT,
+    private static final Color COLOR_HIGHLIGHTED = new Color(255, 250, 0, 0.9);
+
+    private static final Color COLOR_HIGHLIGHTED_BORDER = new Color(166, 163, 0);
+
+    private static final ViewItemStatusResolver COLOR_RESOLVER = new ViewItemStatusResolver(
+            COLOR_DEFAULT, StatusRule.fullOrPartial(COLOR_HIGHLIGHTED,
+                    Subset.HIGHLIGHTED), StatusRule.fullOrPartial(
+                    COLOR_SELECTION, Subset.SELECTED));
+
+    // height of control element in px, also in index.html
+    private static final int CONTROL_HEIGHT = 25;
+
+    private VisualizationWidget<BarChart> barChart;
+
+    private void createBarChart(ResourceSet resourceSet, HoverModel hoverModel,
+            SelectionModel selectionModel) {
+
+        // behaviors: how the view reacts to user interactions
+        CompositeViewItemBehavior barChartBehaviors = new CompositeViewItemBehavior();
+        barChartBehaviors.add(new HighlightingViewItemBehavior(hoverModel));
+        barChartBehaviors.add(new SwitchSelectionOnClickViewItemBehavior(
+                selectionModel));
+        barChartBehaviors.add(new PopupViewItemBehavior(hoverModel,
+                new DetailsWidgetHelper() {
+                    public Widget createDetailsWidget(ViewItem viewItem) {
+                        return new HTML(
+                                "<b style='white-space: nowrap;'>"
+                                        + viewItem.getViewItemID()
+                                        + "</b><br/><span style='white-space: nowrap;'>"
+                                        + viewItem.getResources().size()
+                                        + " items<span>");
+                    }
+                }, new DefaultPopupManagerFactory()));
+
+        // create visualization
+        barChart = new VisualizationWidget<BarChart>(new BarChart(),
+                selectionModel.getSelectionProxy(), hoverModel.getResources(),
+                barChartBehaviors);
+
+        // configure visual mappings
+        barChart.setResolver(
+                BarChart.BAR_COLOR,
+                new ViewItemStatusResolver(COLOR_DEFAULT, StatusRule
+                        .fullOrPartial(COLOR_HIGHLIGHTED, Subset.HIGHLIGHTED),
+                        StatusRule.full(COLOR_SELECTION, Subset.SELECTED)));
+        barChart.setResolver(
+                BarChart.BAR_BORDER_COLOR,
+                new ViewItemStatusResolver(COLOR_DEFAULT_BORDER, StatusRule
+                        .full(COLOR_SELECTION_BORDER, Subset.SELECTED),
+                        StatusRule.fullOrPartial(COLOR_HIGHLIGHTED_BORDER,
+                                Subset.HIGHLIGHTED)));
+        barChart.setResolver(BarChart.PARTIAL_BAR_LENGTH,
+                new ResourceCountResolver(Subset.SELECTED));
+        barChart.setResolver(BarChart.PARTIAL_BAR_COLOR, COLOR_RESOLVER);
+        barChart.setResolver(BarChart.PARTIAL_BAR_BORDER_COLOR,
+                new FixedValueResolver(COLOR_SELECTION_BORDER));
+
+        // default settings
+        doNotGroupBarChart();
+
+        // configure properties
+        // barChart.setPropertyValue(BarChart.LAYOUT_PROPERTY,
+        // LayoutType.VERTICAL);
+
+        // set resources
+        barChart.setContentResourceSet(resourceSet);
+    }
+
+    private FlowPanel createChartControl() {
+        FlowPanel panel = new FlowPanel();
+        panel.add(createDoNotGroupBarChartButton());
+        panel.add(createGroupBarChartByText2Button());
+        return panel;
+    }
+
+    private RadioButton createDoNotGroupBarChartButton() {
+        RadioButton button = new RadioButton("chartSettings",
+                "do not group, show NUMBER_2");
+        button.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<Boolean> event) {
+                if (event.getValue()) {
+                    doNotGroupBarChart();
+                }
+            }
+        });
+        button.setValue(true);
+        return button;
+    }
+
+    private RadioButton createGroupBarChartByText2Button() {
+        RadioButton button = new RadioButton("chartSettings", "group by TEXT_2");
+        button.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<Boolean> event) {
+                if (event.getValue()) {
+                    groupBarChartByText2();
+                }
+            }
+        });
+        return button;
+    }
+
+    private ResourceSet createResourceSet() {
+        return BenchmarkResourceSetFactory.createResourceSet(20,
+                new DefaultResourceSetFactory());
+    }
+
+    private void doNotGroupBarChart() {
+        // grouping
+        barChart.setCategorizer(new ResourceByUriMultiCategorizer());
+        // sorting by value
+        barChart.getContentDisplay().setViewItemComparator(
+                new ViewItemDoubleComparator(BarChart.BAR_LENGTH));
+        // mappings
+        barChart.setResolver(BarChart.BAR_LABEL,
                 new FirstResourcePropertyResolver(
                         BenchmarkResourceSetFactory.TEXT_2));
-        model.getSlotMappingConfiguration().setResolver(
-                BarChart.BAR_LENGTH_SLOT,
+        barChart.setResolver(BarChart.BAR_LENGTH,
                 new FirstResourcePropertyResolver(
                         BenchmarkResourceSetFactory.NUMBER_2) {
                     @Override
@@ -81,120 +214,59 @@ public class ComponentExampleEntryPoint implements EntryPoint {
                         return "my axis label"; // example for axis labeling
                     }
                 });
-
     }
 
-    private void initScatterPlotView(WindowContentProducer contentProducer,
-            ResourceSet resourceSet) {
-
-        DefaultView view = createView(contentProducer, ScatterPlot.ID);
-        ViewModel model = view.getModel();
-
-        view.getResourceModel().addResourceSet(resourceSet);
-
-        model.getSlotMappingConfiguration().setResolver(
-                ScatterPlot.X_POSITION_SLOT,
-                new FirstResourcePropertyResolver(
-                        BenchmarkResourceSetFactory.NUMBER_1) {
-                    @Override
-                    public String toString() {
-                        return "my x axis label";
-                    }
-                });
-        model.getSlotMappingConfiguration().setResolver(
-                ScatterPlot.Y_POSITION_SLOT,
-                new FirstResourcePropertyResolver(
-                        BenchmarkResourceSetFactory.NUMBER_2) {
-                    @Override
-                    public String toString() {
-                        return "my y axis label";
-                    }
-                });
-        model.getSlotMappingConfiguration().setResolver(ScatterPlot.SHAPE_SLOT,
-                new ResourceSetToValueResolver() {
-                    public Object resolve(
-                            LightweightCollection<Resource> resources,
-                            String category) {
-
-                        Resource r = resources.iterator().next();
-                        Object value = r
-                                .getValue(BenchmarkResourceSetFactory.TEXT_2);
-
-                        if (value.equals("category-0")) {
-                            return PVShape.DIAMOND;
-                        }
-                        if (value.equals("category-1")) {
-                            return PVShape.SQUARE;
-                        }
-                        if (value.equals("category-2")) {
-                            return PVShape.CIRCLE;
-                        }
-                        if (value.equals("category-3")) {
-                            return PVShape.CROSS;
-                        }
-
-                        return PVShape.TRIANGLE;
-                    }
-
-                    @Override
-                    public String toString() {
-                        return "my shape legend title";
-                    }
-                });
-
-        Map<String, String> shapeLegend = CollectionFactory.createStringMap();
-        shapeLegend.put(PVShape.DIAMOND, "Description A");
-        shapeLegend.put(PVShape.SQUARE, "Description B");
-        shapeLegend.put(PVShape.CROSS, "Description C");
-        shapeLegend.put(PVShape.CIRCLE, "Test");
-        shapeLegend.put(PVShape.TRIANGLE, "Another Description");
-
-        model.getViewContentDisplay().setPropertyValue(
-                ScatterPlot.SHAPE_LEGEND_PROPERTY, shapeLegend);
-    }
-
-    private void initPieChartView(WindowContentProducer contentProducer,
-            ResourceSet resourceSet) {
-
-        DefaultView view = createView(contentProducer, PieChart.ID);
-        ViewModel model = view.getModel();
-
-        // NOTE: the view is configured BEFORE the resources are added
-        model.getSlotMappingConfiguration().setResolver(
-                PieChart.PIE_LABEL_SLOT,
+    protected void groupBarChartByText2() {
+        // grouping
+        barChart.setCategorizer(new ResourceByPropertyMultiCategorizer(
+                BenchmarkResourceSetFactory.TEXT_2));
+        // sorting by label
+        barChart.getContentDisplay().setViewItemComparator(
+                new ViewItemStringSlotComparator(BarChart.BAR_LABEL));
+        // slot mappings
+        barChart.setResolver(BarChart.BAR_LABEL,
                 new FirstResourcePropertyResolver(
                         BenchmarkResourceSetFactory.TEXT_2));
-        model.getSlotMappingConfiguration().setResolver(
-                PieChart.PIE_ANGLE_SLOT,
-                new FirstResourcePropertyResolver(
-                        BenchmarkResourceSetFactory.NUMBER_2));
-
-        view.getResourceModel().addResourceSet(resourceSet);
+        barChart.setResolver(BarChart.BAR_LENGTH, new ResourceCountResolver());
     }
 
-    private DefaultView createView(WindowContentProducer contentProducer,
-            String visualizationTypeId) {
+    private void handle(Throwable ex) {
+        // TODO use error handler
+        while (ex instanceof UmbrellaException) {
+            ex = ex.getCause();
+        }
+        Logger.getLogger("").log(Level.SEVERE, ex.getMessage(), ex);
+    }
 
-        final DefaultView view = (DefaultView) contentProducer
-                .createWindowContent(visualizationTypeId);
-        view.init();
-        RootPanel.get().add(view.asWidget());
+    public void onModuleLoad() {
+        try {
+            ResourceSet resourceSet = createResourceSet();
 
-        // Set the size of the window, and listen for
-        // changes in size.
-        Window.enableScrolling(false);
+            // init highlighting and selection models
+            HoverModel hoverModel = new HoverModel();
+            SelectionModel selectionModel = new DefaultSelectionModel(
+                    new IncrementingSuffixLabelFactory(""),
+                    new DefaultResourceSetFactory());
 
-        view.asWidget().setPixelSize(Window.getClientWidth(),
-                Window.getClientHeight());
+            createBarChart(resourceSet, hoverModel, selectionModel);
 
-        Window.addResizeHandler(new ResizeHandler() {
-            @Override
-            public void onResize(ResizeEvent event) {
-                view.asWidget().setPixelSize(event.getWidth(),
-                        event.getHeight());
-            }
-        });
+            RootPanel.get("control").add(createChartControl());
+            RootPanel.get("chart").add(barChart);
 
-        return view;
+            // Set the size of the window, and listen for
+            // changes in size.
+            Window.enableScrolling(false);
+            barChart.setSize(Window.getClientWidth() + CSS.PX,
+                    Window.getClientHeight() - CONTROL_HEIGHT + CSS.PX);
+            Window.addResizeHandler(new ResizeHandler() {
+                @Override
+                public void onResize(ResizeEvent event) {
+                    barChart.setSize(event.getWidth() + CSS.PX,
+                            event.getHeight() - CONTROL_HEIGHT + CSS.PX);
+                }
+            });
+        } catch (Throwable ex) {
+            handle(ex);
+        }
     }
 }
