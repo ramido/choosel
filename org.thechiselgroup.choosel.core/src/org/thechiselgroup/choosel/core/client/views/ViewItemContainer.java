@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.core.client.views;
 
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 
 /**
  * Provides read access to {@link ViewItem}s.

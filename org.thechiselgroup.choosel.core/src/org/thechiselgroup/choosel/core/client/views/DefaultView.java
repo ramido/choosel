@@ -27,6 +27,11 @@ import org.thechiselgroup.choosel.core.client.ui.ImageButton;
 import org.thechiselgroup.choosel.core.client.ui.Presenter;
 import org.thechiselgroup.choosel.core.client.util.DisposeUtil;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.views.model.ResourceModel;
+import org.thechiselgroup.choosel.core.client.views.model.SelectionModel;
+import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplay;
+import org.thechiselgroup.choosel.core.client.views.model.ViewModel;
+import org.thechiselgroup.choosel.core.client.views.ui.VisualMappingsControl;
 import org.thechiselgroup.choosel.core.client.windows.AbstractWindowContent;
 
 import com.google.gwt.core.client.GWT;

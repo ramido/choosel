@@ -22,6 +22,8 @@ import static org.thechiselgroup.choosel.core.client.configuration.ChooselInject
 import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.DROP_TARGET_MANAGER_VIEW_CONTENT;
 import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.LABEL_PROVIDER_SELECTION_SET;
 
+import java.util.logging.Logger;
+
 import org.thechiselgroup.choosel.core.client.label.LabelProvider;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByUriMultiCategorizer;
@@ -37,10 +39,27 @@ import org.thechiselgroup.choosel.core.client.ui.dnd.ResourceSetAvatarDropTarget
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
-import org.thechiselgroup.choosel.core.client.views.slots.DefaultSlotMappingInitializer;
-import org.thechiselgroup.choosel.core.client.views.slots.DefaultVisualMappingsControl;
-import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingConfiguration;
-import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingInitializer;
+import org.thechiselgroup.choosel.core.client.views.behaviors.CompositeViewItemBehavior;
+import org.thechiselgroup.choosel.core.client.views.behaviors.DragEnablerFactory;
+import org.thechiselgroup.choosel.core.client.views.behaviors.DragViewItemBehavior;
+import org.thechiselgroup.choosel.core.client.views.behaviors.HighlightingViewItemBehavior;
+import org.thechiselgroup.choosel.core.client.views.behaviors.PopupViewItemBehavior;
+import org.thechiselgroup.choosel.core.client.views.behaviors.SwitchSelectionOnClickViewItemBehavior;
+import org.thechiselgroup.choosel.core.client.views.model.DefaultResourceModel;
+import org.thechiselgroup.choosel.core.client.views.model.DefaultSelectionModel;
+import org.thechiselgroup.choosel.core.client.views.model.DefaultSlotMappingInitializer;
+import org.thechiselgroup.choosel.core.client.views.model.DefaultViewModel;
+import org.thechiselgroup.choosel.core.client.views.model.HoverModel;
+import org.thechiselgroup.choosel.core.client.views.model.RequiresAutomaticResourceSet;
+import org.thechiselgroup.choosel.core.client.views.model.ResourceModel;
+import org.thechiselgroup.choosel.core.client.views.model.SlotMappingConfiguration;
+import org.thechiselgroup.choosel.core.client.views.model.SlotMappingInitializer;
+import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplay;
+import org.thechiselgroup.choosel.core.client.views.model.ViewModel;
+import org.thechiselgroup.choosel.core.client.views.ui.DefaultResourceModelPresenter;
+import org.thechiselgroup.choosel.core.client.views.ui.DefaultSelectionModelPresenter;
+import org.thechiselgroup.choosel.core.client.views.ui.DefaultVisualMappingsControl;
+import org.thechiselgroup.choosel.core.client.views.ui.VisualMappingsControl;
 import org.thechiselgroup.choosel.core.client.windows.WindowContent;
 import org.thechiselgroup.choosel.core.client.windows.WindowContentProducer;
 
@@ -163,6 +182,9 @@ public class ViewWindowContentProducer implements WindowContentProducer {
         SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration();
 
         CompositeViewItemBehavior viewItemBehaviors = new CompositeViewItemBehavior();
+        // TODO inject logger
+        // viewItemBehaviors.add(new
+        // ViewInteractionLogger(Logger.getLogger("")));
         viewItemBehaviors.add(new HighlightingViewItemBehavior(hoverModel));
         viewItemBehaviors.add(new DragViewItemBehavior(dragEnablerFactory));
         viewItemBehaviors.add(new PopupViewItemBehavior(hoverModel,
@@ -178,10 +200,11 @@ public class ViewWindowContentProducer implements WindowContentProducer {
 
         resourceGrouping.setResourceSet(resourceModel.getResources());
 
+        // TODO inject logger
         DefaultViewModel viewModel = new DefaultViewModel(contentDisplay,
                 slotMappingConfiguration, selectionModel.getSelectionProxy(),
                 hoverModel.getResources(), slotMappingInitializer,
-                viewItemBehaviors, resourceGrouping);
+                viewItemBehaviors, resourceGrouping, Logger.getLogger(""));
 
         final VisualMappingsControl visualMappingsControl = createVisualMappingsControl(
                 contentType, contentDisplay, slotMappingConfiguration,
