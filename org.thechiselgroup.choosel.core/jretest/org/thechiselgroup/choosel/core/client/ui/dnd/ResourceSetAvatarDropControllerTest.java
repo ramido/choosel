@@ -37,8 +37,8 @@ import org.thechiselgroup.choosel.core.client.test.TestUndoableCommandWithDescri
 import org.thechiselgroup.choosel.core.client.ui.popup.DelayedPopup;
 import org.thechiselgroup.choosel.core.client.views.View;
 import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
-import org.thechiselgroup.choosel.core.client.views.ViewModel;
-import org.thechiselgroup.choosel.core.client.views.slots.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.ViewModel;
 
 import com.allen_sauer.gwt.dnd.client.DragContext;
 import com.google.gwt.user.client.ui.Widget;

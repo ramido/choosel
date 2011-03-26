@@ -42,10 +42,10 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEventH
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
-import org.thechiselgroup.choosel.core.client.views.DefaultViewItem;
-import org.thechiselgroup.choosel.core.client.views.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.ViewItemBehavior;
-import org.thechiselgroup.choosel.core.client.views.slots.SlotMappingConfiguration;
+import org.thechiselgroup.choosel.core.client.views.model.DefaultViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.SlotMappingConfiguration;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItemBehavior;
 
 public final class ResourcesTestHelper {
 
@@ -180,7 +180,7 @@ public final class ResourcesTestHelper {
                 for (ResourceSet resourceSet : resourceSets) {
                     boolean found = false;
                     for (ViewItem item : set) {
-                        ResourceSet itemSet = item.getResourceSet();
+                        ResourceSet itemSet = item.getResources();
 
                         if (itemSet.size() == resourceSet.size()
                                 && itemSet.containsAll(resourceSet)) {

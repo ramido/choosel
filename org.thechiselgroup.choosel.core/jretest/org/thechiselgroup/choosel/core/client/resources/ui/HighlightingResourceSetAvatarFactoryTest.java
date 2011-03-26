@@ -37,7 +37,7 @@ import org.thechiselgroup.choosel.core.client.test.DndTestHelpers;
 import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.core.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
-import org.thechiselgroup.choosel.core.client.views.HoverModel;
+import org.thechiselgroup.choosel.core.client.views.model.HoverModel;
 
 import com.allen_sauer.gwt.dnd.client.DragEndEvent;
 import com.allen_sauer.gwt.dnd.client.DragHandler;
