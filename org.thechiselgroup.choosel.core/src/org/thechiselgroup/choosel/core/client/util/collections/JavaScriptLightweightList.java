@@ -146,6 +146,14 @@ public final class JavaScriptLightweightList<T> implements LightweightList<T> {
     }
 
     @Override
+    public T[] toArray(T[] array) {
+        for (int i = 0; i < size(); i++) {
+            array[i] = get(i);
+        }
+        return array;
+    }
+
+    @Override
     public List<T> toList() {
         List<T> result = new ArrayList<T>();
 
