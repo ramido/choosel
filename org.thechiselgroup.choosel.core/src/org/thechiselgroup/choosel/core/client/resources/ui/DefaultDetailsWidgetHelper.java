@@ -20,8 +20,8 @@ import java.util.Set;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.ui.dnd.ResourceSetAvatarDragController;
-import org.thechiselgroup.choosel.core.client.views.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.slots.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.HTML;
@@ -30,8 +30,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 /**
- * {@link AbstractDetailsWidgetHelper} that shows information from the view item as well
- * as from the underlying resources.
+ * {@link AbstractDetailsWidgetHelper} that shows information from the view item
+ * as well as from the underlying resources.
  * 
  * @author Lars Grammel
  */
@@ -48,7 +48,7 @@ public class DefaultDetailsWidgetHelper extends AbstractDetailsWidgetHelper {
     public Widget createDetailsWidget(ViewItem viewItem) {
         VerticalPanel verticalPanel = GWT.create(VerticalPanel.class);
         ResourceSetAvatar avatar = avatarFactory.createAvatar(viewItem
-                .getResourceSet());
+                .getResources());
         avatar.setText(viewItem.getViewItemID());
         verticalPanel.add(avatar);
 
@@ -56,14 +56,14 @@ public class DefaultDetailsWidgetHelper extends AbstractDetailsWidgetHelper {
         Slot[] slots = viewItem.getSlots();
         for (Slot slot : slots) {
             String label = slot.getName();
-            Object valueObject = viewItem.getSlotValue(slot);
+            Object valueObject = viewItem.getValue(slot);
             String value = valueObject != null ? valueObject.toString() : "";
             addRow(label, value, true, verticalPanel);
         }
 
         // single resource: show properties
-        if (viewItem.getResourceSet().size() == 1) {
-            Resource resource = viewItem.getResourceSet().getFirstResource();
+        if (viewItem.getResources().size() == 1) {
+            Resource resource = viewItem.getResources().getFirstResource();
 
             verticalPanel.add(new HTML("<br/><b>One item</b>"));
             Set<String> entrySet = resource.getProperties().keySet();
@@ -75,8 +75,8 @@ public class DefaultDetailsWidgetHelper extends AbstractDetailsWidgetHelper {
         }
 
         // multiple resources: show numbers
-        verticalPanel.add(new HTML("<br/><b>"
-                + viewItem.getResourceSet().size() + " items</b>"));
+        verticalPanel.add(new HTML("<br/><b>" + viewItem.getResources().size()
+                + " items</b>"));
 
         return verticalPanel;
     }
