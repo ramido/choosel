@@ -51,11 +51,11 @@ import org.thechiselgroup.choosel.core.client.util.collections.CollectionUtils;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
-import org.thechiselgroup.choosel.core.client.views.DefaultViewItem;
-import org.thechiselgroup.choosel.core.client.views.TestViewContentDisplayCallback;
-import org.thechiselgroup.choosel.core.client.views.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.ViewItemContainer;
-import org.thechiselgroup.choosel.core.client.views.slots.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.DefaultViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.TestViewContentDisplayCallback;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItemContainer;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.Arc;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.ArcSettings;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay;
@@ -140,7 +140,8 @@ public class GraphViewContentDisplayTest {
 
         resourceSet.add(createResource(2));
 
-        assertThat(underTest.getAllResources(), containsEqualResources(resourceSet));
+        assertThat(underTest.getAllResources(),
+                containsEqualResources(resourceSet));
     }
 
     private void addViewItemToUnderTest(
@@ -296,9 +297,8 @@ public class GraphViewContentDisplayTest {
     }
 
     private void init() {
-        underTest = new Graph(graphDisplay, commandManager,
-                resourceManager, resourceCategorizer, arcStyleProvider,
-                registry);
+        underTest = new Graph(graphDisplay, commandManager, resourceManager,
+                resourceCategorizer, arcStyleProvider, registry);
         underTest.init(callback);
         ArgumentCaptor<GraphDisplayReadyEventHandler> argument = ArgumentCaptor
                 .forClass(GraphDisplayReadyEventHandler.class);
@@ -324,8 +324,8 @@ public class GraphViewContentDisplayTest {
                 any(GraphNodeExpansionCallback.class));
 
         ViewItem result = argument.getValue();
-        assertEquals(1, result.getResourceSet().size());
-        assertEquals(resource, result.getResourceSet().getFirstResource());
+        assertEquals(1, result.getResources().size());
+        assertEquals(resource, result.getResources().getFirstResource());
     }
 
     @Test
@@ -344,7 +344,8 @@ public class GraphViewContentDisplayTest {
                 LightweightCollections.toCollection(resourceItem),
                 LightweightCollections.<Slot> emptyCollection());
 
-        assertThat(underTest.getAllResources(), containsEqualResources(createResources()));
+        assertThat(underTest.getAllResources(),
+                containsEqualResources(createResources()));
 
     }
 

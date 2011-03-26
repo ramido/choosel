@@ -23,7 +23,9 @@ import static org.thechiselgroup.choosel.visualization_component.graph.client.wi
 import static org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay.NODE_FONT_WEIGHT_NORMAL;
 
 import org.thechiselgroup.choosel.core.client.ui.Colors;
-import org.thechiselgroup.choosel.core.client.views.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Status;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.Node;
 
@@ -53,7 +55,7 @@ public class GraphItem {
     }
 
     public String getLabelValue() {
-        return resourceItem.getSlotValue(Graph.NODE_LABEL_SLOT);
+        return resourceItem.getValue(Graph.NODE_LABEL_SLOT);
     }
 
     public Node getNode() {
@@ -61,11 +63,11 @@ public class GraphItem {
     }
 
     public String getNodeBackgroundColorValue() {
-        return resourceItem.getSlotValue(Graph.NODE_BACKGROUND_COLOR_SLOT);
+        return resourceItem.getValue(Graph.NODE_BACKGROUND_COLOR_SLOT);
     }
 
     public String getNodeBorderColorValue() {
-        return resourceItem.getSlotValue(Graph.NODE_BORDER_COLOR_SLOT);
+        return resourceItem.getValue(Graph.NODE_BORDER_COLOR_SLOT);
     }
 
     public ViewItem getResourceItem() {
@@ -76,43 +78,39 @@ public class GraphItem {
      * Updates the graph node to reflect the style and values of the underlying
      * resource item.
      */
+    // TODO expose border color, node color, font weight, font color as slots
     public void updateNode() {
-        switch (resourceItem.getStatus()) {
-        case PARTIALLY_HIGHLIGHTED_SELECTED:
-        case HIGHLIGHTED_SELECTED: {
+        Status highlighStatus = resourceItem.getStatus(Subset.HIGHLIGHTED);
+        Status selectionStatus = resourceItem.getStatus(Subset.SELECTED);
+
+        boolean isHighlighted = Status.PARTIAL == highlighStatus
+                || Status.FULL == highlighStatus;
+        boolean isSelected = Status.PARTIAL == selectionStatus
+                || Status.FULL == selectionStatus;
+
+        if (isHighlighted) {
             display.setNodeStyle(node, NODE_BACKGROUND_COLOR, Colors.YELLOW_1);
-            display.setNodeStyle(node, NODE_BORDER_COLOR, Colors.ORANGE);
+        } else {
+            display.setNodeStyle(node, NODE_BACKGROUND_COLOR,
+                    getNodeBackgroundColorValue());
+        }
+
+        if (isSelected) {
             display.setNodeStyle(node, NODE_FONT_COLOR, Colors.ORANGE);
             display.setNodeStyle(node, NODE_FONT_WEIGHT, NODE_FONT_WEIGHT_BOLD);
-        }
-            break;
-        case PARTIALLY_HIGHLIGHTED:
-        case HIGHLIGHTED: {
-            display.setNodeStyle(node, NODE_BACKGROUND_COLOR, Colors.YELLOW_1);
-            display.setNodeStyle(node, NODE_BORDER_COLOR, Colors.YELLOW_2);
+        } else {
             display.setNodeStyle(node, NODE_FONT_COLOR, Colors.BLACK);
             display.setNodeStyle(node, NODE_FONT_WEIGHT,
                     NODE_FONT_WEIGHT_NORMAL);
         }
-            break;
-        case DEFAULT: {
-            display.setNodeStyle(node, NODE_BACKGROUND_COLOR,
-                    getNodeBackgroundColorValue());
+
+        if (isHighlighted && !isSelected) {
+            display.setNodeStyle(node, NODE_BORDER_COLOR, Colors.YELLOW_2);
+        } else if (isSelected) {
+            display.setNodeStyle(node, NODE_BORDER_COLOR, Colors.ORANGE);
+        } else {
             display.setNodeStyle(node, NODE_BORDER_COLOR,
                     getNodeBorderColorValue());
-            display.setNodeStyle(node, NODE_FONT_COLOR, Colors.BLACK);
-            display.setNodeStyle(node, NODE_FONT_WEIGHT,
-                    NODE_FONT_WEIGHT_NORMAL);
-        }
-            break;
-        case SELECTED: {
-            display.setNodeStyle(node, NODE_BACKGROUND_COLOR,
-                    getNodeBackgroundColorValue());
-            display.setNodeStyle(node, NODE_BORDER_COLOR, Colors.ORANGE);
-            display.setNodeStyle(node, NODE_FONT_COLOR, Colors.ORANGE);
-            display.setNodeStyle(node, NODE_FONT_WEIGHT, NODE_FONT_WEIGHT_BOLD);
-        }
-            break;
         }
     }
 
