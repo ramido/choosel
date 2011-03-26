@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.example.workbench.client;
 
-import org.thechiselgroup.choosel.core.client.views.ViewContentDisplaysConfiguration;
+import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplaysConfiguration;
 import org.thechiselgroup.choosel.visualization_component.graph.client.ArcTypeProvider;
 import org.thechiselgroup.choosel.visualization_component.graph.client.DefaultArcTypeProvider;
 import org.thechiselgroup.choosel.visualization_component.graph.client.GraphExpansionRegistry;
