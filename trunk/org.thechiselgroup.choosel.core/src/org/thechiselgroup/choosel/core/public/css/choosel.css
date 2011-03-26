@@ -316,14 +316,16 @@ button.popup-content-action:active {
 .resourceItemIcon {
 	width: 16px;
 	height: 16px;
-	border: 1px solid darkgray;
-	text-align:center;
-	vertical-align:middle;
-	font-weight:bold;
-	font-size: 12px;	
-	-moz-border-radius: 10px;
-	-webkit-border-radius: 10px;
+	border-width: 1px;
+	border-style: solid;
 	padding: 0px;	
+	/*
+	 * take border into account. Safari does not support
+	 * % values.
+	 */
+	border-radius: 9px;
+	-moz-border-radius: 9px;
+	-webkit-border-radius: 9px;
 }
 
 .choosel-ImportPanel {
