@@ -34,6 +34,7 @@ import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.maps.client.MapType;
 import com.google.gwt.maps.client.MapWidget;
+import com.google.gwt.maps.client.control.MapTypeControl;
 import com.google.gwt.maps.client.control.SmallMapControl;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.user.client.DOM;
@@ -107,9 +108,10 @@ public class Map extends AbstractViewContentDisplay {
         map.setHeight("100%");
 
         map.addControl(new SmallMapControl());
+        map.addControl(new MapTypeControl());
 
         map.addMapType(MapType.getPhysicalMap());
-        map.setCurrentMapType(MapType.getHybridMap());
+        map.setCurrentMapType(MapType.getPhysicalMap());
         map.setScrollWheelZoomEnabled(true);
 
         // TODO pull up
