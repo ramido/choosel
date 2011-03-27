@@ -27,12 +27,8 @@ public class BrowserDetect {
         }
     }
 
-    public static native String getUserAgent() /*-{
-        return navigator.userAgent.toLowerCase();
-    }-*/;
-
     public static boolean isValidBrowser() {
-        return isValidBrowser(getUserAgent());
+        return isValidBrowser(Window.Navigator.getUserAgent());
     }
 
     public static boolean isValidBrowser(String userAgent) {
@@ -88,7 +84,6 @@ public class BrowserDetect {
             }
 
             if (userAgent.contains("safari")) {
-                System.out.println(userAgent);
                 int index = userAgent.indexOf("version");
                 index += "version".length();
                 int firstDot = userAgent.indexOf(".", index);
