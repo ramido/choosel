@@ -49,10 +49,11 @@ import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetA
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.core.client.views.View;
-import org.thechiselgroup.choosel.core.client.windows.Desktop;
-import org.thechiselgroup.choosel.core.client.windows.WindowContent;
-import org.thechiselgroup.choosel.core.client.windows.WindowContentProducer;
-import org.thechiselgroup.choosel.core.client.windows.WindowPanel;
+import org.thechiselgroup.choosel.dnd.client.windows.Desktop;
+import org.thechiselgroup.choosel.dnd.client.windows.WindowContent;
+import org.thechiselgroup.choosel.dnd.client.windows.WindowContentProducer;
+import org.thechiselgroup.choosel.dnd.client.windows.WindowPanel;
+import org.thechiselgroup.choosel.workbench.client.views.ViewWindowContent;
 import org.thechiselgroup.choosel.workbench.client.workspace.dto.WorkspaceDTO;
 import org.thechiselgroup.choosel.workbench.client.workspace.service.WorkspacePersistenceServiceAsync;
 import org.thechiselgroup.choosel.workbench.client.workspace.service.WorkspaceSharingServiceAsync;
@@ -215,7 +216,7 @@ public class DefaultWorkspacePersistenceManagerTest {
         when(window.getViewContent()).thenReturn(windowContent);
         when(windowContent.getContentType()).thenReturn(CONTENT_TYPE);
         when(viewFactory.createWindowContent(CONTENT_TYPE)).thenReturn(
-                restoredView);
+                new ViewWindowContent(restoredView));
 
         windows = new ArrayList<WindowPanel>();
         windows.add(window);
@@ -255,7 +256,10 @@ public class DefaultWorkspacePersistenceManagerTest {
         WorkspaceDTO dto = doSave();
         doLoad(dto);
 
-        verify(desktop).createWindow(eq(restoredView), eq(0), eq(0), eq(width),
-                eq(height));
+        ArgumentCaptor<ViewWindowContent> argument = ArgumentCaptor
+                .forClass(ViewWindowContent.class);
+        verify(desktop).createWindow(argument.capture(), eq(0), eq(0),
+                eq(width), eq(height));
+        assertEquals(restoredView, argument.getValue().getView());
     }
 }

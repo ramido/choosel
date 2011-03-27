@@ -28,21 +28,18 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.core.client.test.DndTestHelpers;
 import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
 
 import com.google.gwt.user.client.Element;
 
-// ignored because GWT 2.1 update introduced DOM access in constructor
-@Ignore
+@Ignore("ignored because GWT 2.1 update introduced DOM access in constructor")
 public class ResourceSetAvatarTest {
 
-    private static class TestDragAvatar extends ResourceSetAvatar {
-        private TestDragAvatar(String text,
+    private static class TestResourceSetAvatar extends ResourceSetAvatar {
 
-        String enabledCSSClass, ResourceSet resources,
-                ResourceSetAvatarType type) {
+        private TestResourceSetAvatar(String text, String enabledCSSClass,
+                ResourceSet resources, ResourceSetAvatarType type) {
 
             super(text, enabledCSSClass, resources, type, new Element() {
             });
@@ -129,11 +126,10 @@ public class ResourceSetAvatarTest {
 
     @Before
     public void setUp() throws Exception {
-        MockitoGWTBridge bridge = MockitoGWTBridge.setUp();
+        MockitoGWTBridge.setUp();
         MockitoAnnotations.initMocks(this);
-        DndTestHelpers.mockDragClientBundle(bridge);
 
-        dragAvatar = spy(new TestDragAvatar("text", "enabledCSSClass",
+        dragAvatar = spy(new TestResourceSetAvatar("text", "enabledCSSClass",
                 resources, ResourceSetAvatarType.SET));
     }
 

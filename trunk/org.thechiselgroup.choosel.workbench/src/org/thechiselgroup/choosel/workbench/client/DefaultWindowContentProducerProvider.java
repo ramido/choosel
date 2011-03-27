@@ -15,11 +15,11 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.client;
 
-import org.thechiselgroup.choosel.core.client.views.ViewWindowContentProducer;
-import org.thechiselgroup.choosel.core.client.windows.OverlayWindowContentProducer;
-import org.thechiselgroup.choosel.core.client.windows.WindowContentProducer;
+import org.thechiselgroup.choosel.dnd.client.windows.OverlayWindowContentProducer;
+import org.thechiselgroup.choosel.dnd.client.windows.WindowContentProducer;
 import org.thechiselgroup.choosel.workbench.client.ui.HelpWindowContentFactory;
 import org.thechiselgroup.choosel.workbench.client.ui.NoteWindowContentFactory;
+import org.thechiselgroup.choosel.workbench.client.ui.configuration.ViewWindowContentProducer;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;

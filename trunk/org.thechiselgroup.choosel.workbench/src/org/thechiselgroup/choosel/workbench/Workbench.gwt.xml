@@ -38,6 +38,9 @@
     
   <!-- Choosel core -->
   <inherits name='org.thechiselgroup.choosel.core.Core'/>
+
+  <!-- Choosel dnd & windows -->
+  <inherits name='org.thechiselgroup.choosel.dnd.Dnd'/>
   
   <!-- GWT SWF Bridge: gwt2swf -->
   <inherits name='pl.rmalinowski.gwt2swf.GWT2SWF' /> 

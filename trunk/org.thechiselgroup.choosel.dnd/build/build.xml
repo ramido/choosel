@@ -1,0 +1,146 @@
+<project name="org.thechiselgroup.choosel.dnd" 
+         default="dist" basedir=".">
+
+	  <tstamp>
+	    <format property="buildtime" pattern="yyyyMMddHHmmss" />
+	  </tstamp>
+
+	  <property name="version" value="b${buildtime}" />
+	  <!--
+	  <property name="version" value="0.1" />
+	  -->
+	
+	  <property name="name" value="choosel.dnd" />
+	  <property name="project-name" value="org.thechiselgroup.choosel.dnd" />
+	  	
+	  <property name="dist" location="bin/dist"/>
+	  <property name="src" location="src"/>
+	  <property name="class-dir" location="war/WEB-INF/classes"/>
+	  <property name="app-lib" value="bin/build/lib"/>
+		
+  	  <typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpath="svnant.jar" /> 
+	
+	  <target name="dist"
+		  	  description="creates distribution"
+		      depends="create-module-jar,create-project-zip" />
+		
+	  <target name="create-project-zip"
+	  	      description="creates zipfile of project"
+	  	      depends="prepare">
+	  	
+	    <zip destfile="${dist}/${name}-${version}-project.zip">
+	      <fileset dir="..">
+	      	<include name="${project-name}/**" />
+	    	<exclude name="${project-name}/bin/**"/>
+	    	<exclude name="${project-name}/tomcat/**"/>
+	    	<exclude name="${project-name}/war/WEB-INF/classes/**"/>
+	      </fileset>
+	    </zip> 
+	  </target>	
+		
+	  <target name="create-module-jar"
+	  	      description="creates the module jar file"
+	  	      depends="prepare">
+	  	
+	    <jar destfile="${dist}/${name}-${version}.jar">
+	      <fileset dir="${src}">
+	      </fileset>
+	      <fileset dir="${class-dir}">
+	    	<include name="**/*.class"/>
+	      </fileset>
+	      <metainf dir=""> 
+	    	<include name="LICENSE"/>
+	    	<include name="NOTICE"/>
+	      </metainf>
+	    </jar> 
+	  </target>
+		
+	  <target name="clean" description="clean automatically created resources">
+	  	<delete dir="${dist}"/>
+	  </target>
+		
+	  <target name="apidocs"
+		     description="updates the javadocs">
+	  	
+		  <path id="javadoc-lib">
+			<fileset dir="lib/">
+			  <include name="*.jar" />
+			</fileset>
+			<fileset dir="build/antlib/">
+			  <include name="*.jar" />
+			</fileset>
+	   	  </path>
+	  	
+		  <delete dir="docs/api"/>
+	  	  <mkdir dir="docs/api"/>
+		  <javadoc
+		           destdir="docs/api"
+		  		   classpathref="javadoc-lib"
+		           author="true"
+		           version="false"
+		           use="true"
+		           windowtitle="Choosel API"
+		  		   private="true">
+
+		  	<!-- 
+		  	  TODO check this - including the server causes problems because the classpath does
+		  	  not contain the required annotation classes
+		  	-->
+		    <packageset dir="src" defaultexcludes="yes">
+		      <include name="org/thechiselgroup/choosel/core/client/**"/>
+		    </packageset>
+
+		    <doctitle><![CDATA[<h1>Choosel API Documentation</h1>]]></doctitle>
+		    <bottom><![CDATA[(C) <a href="http://code.google.com/p/choosel/">Choosel Project</a> 2010]]></bottom>
+		    <link href="http://download.oracle.com/javase/6/docs/api/"/>
+		    <link href="http://google-web-toolkit.googlecode.com/svn/javadoc/2.0/index.html"/>
+		  </javadoc>
+	  </target>	
+	
+	  <target name="prepare"
+	  	      description="create folders required for build"
+	          depends="clean">
+	    <mkdir dir="${dist}"/>
+	  </target>
+	
+	  <!--
+	    Checks out gwt-dnd-3.0.0 and applies performance and null pointer exception patch.
+	  -->
+	  <target name="dnd-library">
+	  	<delete dir="bin/temp/gwt-dnd"/>
+	  	<delete dir="bin/temp/gwt-dnd-classes"/>
+	  	
+	  	<mkdir dir="bin/temp/gwt-dnd"/>
+	  	<mkdir dir="bin/temp/gwt-dnd-classes"/>
+	  	
+	  	<svn javahl="false" svnkit="true">
+	  	  <checkout url="http://gwt-dnd.googlecode.com/svn/tags/gwt-dnd-3.0.0-r997/DragDrop" 
+	  	  	        destPath="bin/temp/gwt-dnd" />
+	  	</svn>
+	  	
+	  	<!-- 
+	  	  Windows Installation: Use http://gnuwin32.sourceforge.net/packages/patch.htm 
+	  	  Windows Vista / 7: Full GnuWin32 Installation required
+	  	    see http://sourceforge.net/tracker/index.php?func=detail&aid=1890860&group_id=23617&atid=379173
+	  	-->
+	  	<!--
+	  	  NOTE: patch order important
+	  	-->
+	  	<patch patchfile="build/patches/MouseDragHandler.java-Performance.patch"
+	  	       originalfile="bin/temp/gwt-dnd/src/com/allen_sauer/gwt/dnd/client/MouseDragHandler.java" />
+	  	<patch patchfile="build/patches/MouseDragHandler.java-NullPointerException.patch"
+	  	       originalfile="bin/temp/gwt-dnd/src/com/allen_sauer/gwt/dnd/client/MouseDragHandler.java" />
+	  	
+	  	<javac srcdir="bin/temp/gwt-dnd/src"
+	  	       destdir="bin/temp/gwt-dnd-classes" />
+	  	
+	    <jar destfile="bin/temp/gwt-dnd-3.0.0-patched.jar">
+	      <fileset dir="bin/temp/gwt-dnd/src" />
+	      <fileset dir="bin/temp/gwt-dnd-classes"/>
+	    </jar>
+	  	
+	  	<copy file="bin/temp/gwt-dnd-3.0.0-patched.jar" todir="lib"/>
+	  	
+	  </target>
+	
+</project>

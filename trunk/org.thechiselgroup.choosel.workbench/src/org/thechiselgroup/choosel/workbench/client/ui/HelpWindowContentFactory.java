@@ -15,8 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.client.ui;
 
-import org.thechiselgroup.choosel.core.client.windows.WindowContent;
-import org.thechiselgroup.choosel.core.client.windows.WindowContentFactory;
+import org.thechiselgroup.choosel.dnd.client.windows.WindowContent;
+import org.thechiselgroup.choosel.dnd.client.windows.WindowContentFactory;
 
 public class HelpWindowContentFactory implements WindowContentFactory {
 

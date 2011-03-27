@@ -17,15 +17,12 @@ package org.thechiselgroup.choosel.core.client.resources.ui;
 
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.ui.CSS;
-import org.thechiselgroup.choosel.core.client.ui.ZIndex;
-import org.thechiselgroup.choosel.core.client.ui.dnd.DragProxyEventReceiver;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
 import org.thechiselgroup.choosel.core.client.util.DisposableComposite;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Widget;
 
 public class ResourceSetAvatar extends Label implements Disposable {
 
@@ -33,28 +30,19 @@ public class ResourceSetAvatar extends Label implements Disposable {
 
     protected static final String CSS_CLASS = "avatar";
 
-    private static final String CSS_DND_PROXY_ALPHA = "dndProxyAlpha";
-
     protected static final String CSS_HOVER = "avatar-hover";
 
     private DisposableComposite disposables = new DisposableComposite();
 
     private boolean enabled = true;
 
-    private String enabledCSSClass;
+    protected String enabledCSSClass;
 
-    private ResourceSetAvatar latestProxy = null;
-
-    /**
-     * For proxies, this points to the original avatar.
-     */
-    private ResourceSetAvatar originalAvatar = null;
-
-    private ResourceSet resourceSet;
+    protected ResourceSet resourceSet;
 
     private boolean showHover;
 
-    private final ResourceSetAvatarType type;
+    protected final ResourceSetAvatarType type;
 
     public ResourceSetAvatar(String text, String enabledCSSClass,
             ResourceSet resources, ResourceSetAvatarType type) {
@@ -103,34 +91,19 @@ public class ResourceSetAvatar extends Label implements Disposable {
         return addHandler(handler, ResourceSetAvatarResourcesChangedEvent.TYPE);
     }
 
-    public ResourceSetAvatar createProxy() {
-        ResourceSetAvatar clone = new ResourceSetAvatar(getText(),
-                enabledCSSClass, resourceSet, type);
-
-        clone.addStyleName(getEnabledCSSClass());
-        clone.addStyleName(CSS_DND_PROXY_ALPHA);
-        clone.originalAvatar = this;
-
-        CSS.setZIndex(clone.getElement(), ZIndex.DRAG_AVATAR);
-
-        latestProxy = clone;
-        return latestProxy;
-    }
-
     @Override
     public void dispose() {
         if (isDisposed()) {
             return;
         }
 
-        // disposables might rely on dragController etc, dispose them afterwards
         disposables.dispose();
         disposables = null;
 
-        originalAvatar = null;
-        latestProxy = null;
-        // we do not clear the resources on purpose, sometimes they are used
-        // after dispose
+        /*
+         * we do not clear the resources on purpose, sometimes they are used
+         * after dispose.
+         */
     }
 
     public String getDisabledCSSClass() {
@@ -155,54 +128,6 @@ public class ResourceSetAvatar extends Label implements Disposable {
 
     public boolean isEnabled() {
         return enabled;
-    }
-
-    private boolean isProxy() {
-        return originalAvatar != null;
-    }
-
-    @Override
-    protected void onAttach() {
-        super.onAttach();
-
-        /*
-         * Workaround for the problem that mouseout/over events do not get
-         * triggered if a HTML element is created below the cursor. Events would
-         * be hard to implement in this case, because the parent might not know
-         * about the child (e.g. window might not know about some widget created
-         * inside presenters).
-         */
-        if (isProxy()) {
-            Widget w = originalAvatar;
-            while (w != null) {
-                if (w instanceof DragProxyEventReceiver) {
-                    ((DragProxyEventReceiver) w).dragProxyAttached();
-                }
-                w = w.getParent();
-            }
-        }
-    }
-
-    @Override
-    protected void onDetach() {
-        super.onDetach();
-
-        /*
-         * Workaround for the problem that mouseout/over events do not get
-         * triggered if a HTML element is created below the cursor. Events would
-         * be hard to implement in this case, because the parent might not know
-         * about the child (e.g. window might not know about some widget created
-         * inside presenters).
-         */
-        if (isProxy()) {
-            Widget w = originalAvatar;
-            while (w != null) {
-                if (w instanceof DragProxyEventReceiver) {
-                    ((DragProxyEventReceiver) w).dragProxyDetached();
-                }
-                w = w.getParent();
-            }
-        }
     }
 
     public void setEnabled(boolean enabled) {

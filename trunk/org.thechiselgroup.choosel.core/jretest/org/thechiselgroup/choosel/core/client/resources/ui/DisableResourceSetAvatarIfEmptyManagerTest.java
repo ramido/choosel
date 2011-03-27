@@ -30,7 +30,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.core.client.test.DndTestHelpers;
 import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
 
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -81,9 +80,8 @@ public class DisableResourceSetAvatarIfEmptyManagerTest {
 
     @Before
     public void setUp() throws Exception {
-        MockitoGWTBridge bridge = MockitoGWTBridge.setUp();
+        MockitoGWTBridge.setUp();
         MockitoAnnotations.initMocks(this);
-        DndTestHelpers.mockDragClientBundle(bridge);
 
         resources = spy(createResources());
 

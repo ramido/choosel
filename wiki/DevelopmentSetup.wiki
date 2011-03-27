@@ -23,6 +23,7 @@ We recommend using [http://www.eclipse.org Eclipse] for working on Choosel. The 
 
    * [http://code.google.com/p/choosel/source/checkout General project checkout information]
    * Check out "org.thechiselgroup.choosel.core" as Eclipse project
+   * Check out "org.thechiselgroup.choosel.dnd" as Eclipse project
    * Check out "org.thechiselgroup.choosel.protovis" as Eclipse project
    * Check out "org.thechiselgroup.choosel.visualization_component.chart" as Eclipse project
    * Check out "org.thechiselgroup.choosel.visualization_component.graph" as Eclipse project

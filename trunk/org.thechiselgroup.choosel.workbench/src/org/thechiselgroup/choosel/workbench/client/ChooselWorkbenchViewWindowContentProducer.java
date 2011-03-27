@@ -21,10 +21,10 @@ import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.ui.Color;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.views.ViewPart;
-import org.thechiselgroup.choosel.core.client.views.ViewWindowContentProducer;
 import org.thechiselgroup.choosel.core.client.views.model.DefaultSlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueResolver;
+import org.thechiselgroup.choosel.workbench.client.ui.configuration.ViewWindowContentProducer;
 import org.thechiselgroup.choosel.workbench.client.workspace.ShareConfigurationFactory;
 import org.thechiselgroup.choosel.workbench.client.workspace.ShareConfigurationViewPart;
 

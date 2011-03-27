@@ -17,7 +17,7 @@ package org.thechiselgroup.choosel.example.workbench.client;
 
 import org.thechiselgroup.choosel.core.client.command.AsyncCommandExecutor;
 import org.thechiselgroup.choosel.core.client.ui.Action;
-import org.thechiselgroup.choosel.core.client.windows.WindowContent;
+import org.thechiselgroup.choosel.dnd.client.windows.WindowContent;
 import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChart;
 import org.thechiselgroup.choosel.visualization_component.chart.client.scatterplot.ScatterPlot;
 import org.thechiselgroup.choosel.visualization_component.map.client.Map;

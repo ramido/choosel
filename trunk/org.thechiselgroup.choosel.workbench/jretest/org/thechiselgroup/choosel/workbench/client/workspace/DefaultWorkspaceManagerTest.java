@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.command.CommandManager;
-import org.thechiselgroup.choosel.core.client.windows.Desktop;
+import org.thechiselgroup.choosel.dnd.client.windows.Desktop;
 
 public class DefaultWorkspaceManagerTest {
 

@@ -40,9 +40,6 @@
   <!-- Dependency injection: guice, gin -->
   <inherits name="com.google.gwt.inject.Inject"/>
     
-  <!-- Drag & drop: gwt-dnd -->
-  <inherits name='com.allen_sauer.gwt.dnd.gwt-dnd'/>
-  
   <!-- GWT effects: gwt-fx -->
   <inherits name='org.adamtacy.GWTEffects' /> 
   

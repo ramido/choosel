@@ -17,7 +17,7 @@ package org.thechiselgroup.choosel.workbench.client.ui.dialog;
 
 import org.thechiselgroup.choosel.core.client.ui.DialogPanel;
 import org.thechiselgroup.choosel.core.client.ui.ZIndex;
-import org.thechiselgroup.choosel.core.client.windows.WindowPanel;
+import org.thechiselgroup.choosel.dnd.client.windows.WindowPanel;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

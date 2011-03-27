@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.client;
 
-import org.thechiselgroup.choosel.core.client.windows.Branding;
+import org.thechiselgroup.choosel.dnd.client.windows.Branding;
 
 public class DefaultBranding implements Branding {
 

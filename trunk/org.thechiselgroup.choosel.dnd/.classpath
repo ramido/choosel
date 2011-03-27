@@ -4,5 +4,7 @@
 	<classpathentry kind="src" output="test-classes" path="jretest"/>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="lib" path="lib/gwt-dnd-3.0.0-patched.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.thechiselgroup.choosel.core"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
