@@ -16,7 +16,7 @@
 package org.thechiselgroup.choosel.workbench.client;
 
 import org.thechiselgroup.choosel.core.client.command.AsyncCommandExecutor;
-import org.thechiselgroup.choosel.core.client.windows.Branding;
+import org.thechiselgroup.choosel.dnd.client.windows.Branding;
 import org.thechiselgroup.choosel.workbench.client.feedback.FeedbackDialog;
 import org.thechiselgroup.choosel.workbench.client.feedback.FeedbackServiceAsync;
 

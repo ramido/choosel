@@ -32,7 +32,6 @@ import org.thechiselgroup.choosel.core.client.views.model.SelectionModel;
 import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.views.model.ViewModel;
 import org.thechiselgroup.choosel.core.client.views.ui.VisualMappingsControl;
-import org.thechiselgroup.choosel.core.client.windows.AbstractWindowContent;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -44,7 +43,7 @@ import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class DefaultView extends AbstractWindowContent implements View {
+public class DefaultView implements View {
 
     private class ViewPanel extends DockPanel implements ViewProvider {
 
@@ -114,6 +113,10 @@ public class DefaultView extends AbstractWindowContent implements View {
 
     private boolean isInitialized;
 
+    private String contentType;
+
+    private String label;
+
     private static final String MEMENTO_CONTENT_DISPLAY = "content-display";
 
     private static final String MEMENTO_RESOURCE_MODEL = "resource-model";
@@ -134,8 +137,8 @@ public class DefaultView extends AbstractWindowContent implements View {
             ViewModel viewModel, ResourceModel resourceModel,
             SelectionModel selectionModel) {
 
-        super(label, contentType);
-
+        assert label != null;
+        assert contentType != null;
         assert contentDisplay != null;
         assert selectionModelPresenter != null;
         assert resourceModelPresenter != null;
@@ -144,6 +147,8 @@ public class DefaultView extends AbstractWindowContent implements View {
         assert resourceModel != null;
         assert selectionModel != null;
 
+        this.label = label;
+        this.contentType = contentType;
         this.contentDisplay = contentDisplay;
         this.selectionModelPresenter = selectionModelPresenter;
         this.resourceModelPresenter = resourceModelPresenter;
@@ -191,6 +196,16 @@ public class DefaultView extends AbstractWindowContent implements View {
                 MEMENTO_SLOT_MAPPINGS, restorationService, accessor);
 
         contentDisplay.endRestore();
+    }
+
+    @Override
+    public String getContentType() {
+        return contentType;
+    }
+
+    @Override
+    public String getLabel() {
+        return label;
     }
 
     @Override
@@ -393,6 +408,11 @@ public class DefaultView extends AbstractWindowContent implements View {
         }
 
         memento.addChild(MEMENTO_GROUPING, groupingMemento);
+    }
+
+    @Override
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     /**

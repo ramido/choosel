@@ -33,14 +33,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.UnmodifiableResourceSet;
-import org.thechiselgroup.choosel.core.client.test.DndTestHelpers;
 import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
-import org.thechiselgroup.choosel.core.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
 import org.thechiselgroup.choosel.core.client.views.model.HoverModel;
 
-import com.allen_sauer.gwt.dnd.client.DragEndEvent;
-import com.allen_sauer.gwt.dnd.client.DragHandler;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
@@ -54,9 +50,6 @@ public class HighlightingResourceSetAvatarFactoryTest {
 
     @Mock
     private ResourceSetAvatarFactory delegate;
-
-    @Mock
-    private ResourceSetAvatarDragController dragController;
 
     @Mock
     private HandlerRegistration handlerRegistration;
@@ -77,8 +70,6 @@ public class HighlightingResourceSetAvatarFactoryTest {
 
         argument.getValue().dispose();
 
-        verify(dragController, times(1)).removeDragHandler(
-                any(DragHandler.class));
         verify(handlerRegistration, times(2)).removeHandler();
     }
 
@@ -127,22 +118,6 @@ public class HighlightingResourceSetAvatarFactoryTest {
         hoverModel.setHighlightedResourceSet(wrappedSet);
 
         verify(avatar, times(1)).setHover(true);
-    }
-
-    @Test
-    public void hoverClearedAtDragEnd() {
-        underTest.createAvatar(resources);
-
-        ArgumentCaptor<DragHandler> argument = ArgumentCaptor
-                .forClass(DragHandler.class);
-        verify(dragController, times(1)).addDragHandler(argument.capture());
-
-        DragHandler dragHandler = argument.getValue();
-
-        dragHandler.onDragEnd(mock(DragEndEvent.class));
-
-        verify(hoverModel, times(1)).setHighlightedResourceSet(
-                ((ResourceSet) isNull()));
     }
 
     @Test
@@ -200,15 +175,14 @@ public class HighlightingResourceSetAvatarFactoryTest {
 
     @Before
     public void setUp() throws Exception {
-        MockitoGWTBridge bridge = MockitoGWTBridge.setUp();
+        MockitoGWTBridge.setUp();
         MockitoAnnotations.initMocks(this);
-        DndTestHelpers.mockDragClientBundle(bridge);
 
         resources = spy(createResources(1));
         hoverModel = spy(new HoverModel());
 
         underTest = new HighlightingResourceSetAvatarFactory(delegate,
-                hoverModel, dragController);
+                hoverModel);
 
         when(delegate.createAvatar(any(ResourceSet.class))).thenReturn(avatar);
 

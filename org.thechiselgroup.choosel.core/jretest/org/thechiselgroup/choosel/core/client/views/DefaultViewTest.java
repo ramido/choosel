@@ -80,5 +80,4 @@ public class DefaultViewTest {
                 viewModel, mock(ResourceModel.class),
                 mock(SelectionModel.class));
     }
-
 }

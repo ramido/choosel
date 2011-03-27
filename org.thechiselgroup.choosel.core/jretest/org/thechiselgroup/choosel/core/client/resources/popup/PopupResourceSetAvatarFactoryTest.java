@@ -38,7 +38,6 @@ import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarEnab
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.core.client.resources.ui.popup.PopupResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.core.client.resources.ui.popup.PopupResourceSetAvatarFactory.Action;
-import org.thechiselgroup.choosel.core.client.test.DndTestHelpers;
 import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.core.client.test.TestMouseOverEvent;
 import org.thechiselgroup.choosel.core.client.ui.WidgetFactory;
@@ -103,9 +102,8 @@ public class PopupResourceSetAvatarFactoryTest {
 
     @Before
     public void setUp() throws Exception {
-        MockitoGWTBridge bridge = MockitoGWTBridge.setUp();
+        MockitoGWTBridge.setUp();
         MockitoAnnotations.initMocks(this);
-        DndTestHelpers.mockDragClientBundle(bridge);
 
         resources = spy(createResources(1));
 

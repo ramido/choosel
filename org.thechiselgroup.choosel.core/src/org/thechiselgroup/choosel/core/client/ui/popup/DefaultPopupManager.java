@@ -25,7 +25,6 @@ import org.thechiselgroup.choosel.core.client.geometry.Point;
 import org.thechiselgroup.choosel.core.client.ui.CSS;
 import org.thechiselgroup.choosel.core.client.ui.WidgetFactory;
 import org.thechiselgroup.choosel.core.client.ui.ZIndex;
-import org.thechiselgroup.choosel.core.client.ui.dnd.DragProxyEventReceiver;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
 
 import com.google.gwt.dom.client.NativeEvent;
@@ -110,8 +109,7 @@ public class DefaultPopupManager implements Opacity, PopupManager {
         }
     }
 
-    private class PopupPanel extends SimplePanel implements
-            DragProxyEventReceiver {
+    protected class PopupPanel extends SimplePanel {
 
         public HandlerRegistration addMouseOutHandler(MouseOutHandler handler) {
             return addDomHandler(handler, MouseOutEvent.getType());
@@ -121,19 +119,6 @@ public class DefaultPopupManager implements Opacity, PopupManager {
             return addDomHandler(handler, MouseOverEvent.getType());
         }
 
-        @Override
-        public void dragProxyAttached() {
-            // do nothing: popup should be visible during drop operation
-        }
-
-        @Override
-        public void dragProxyDetached() {
-            if (isEnabled()) {
-                // TODO use event instead that demands closing
-                // hide once drop operation is completed
-                setState(INACTIVE_STATE);
-            }
-        }
     }
 
     // separate from raw events --> onPopupGainsAttentation,
@@ -171,7 +156,7 @@ public class DefaultPopupManager implements Opacity, PopupManager {
 
     }
 
-    private final static State ACTIVE_STATE = new State() {
+    protected final static State ACTIVE_STATE = new State() {
 
         @Override
         public void enter(DefaultPopupManager manager) {
@@ -203,7 +188,7 @@ public class DefaultPopupManager implements Opacity, PopupManager {
      */
     public static final int DEFAULT_SHOW_DELAY = 1000;
 
-    private final static State DISABLED_STATE = new State() {
+    protected final static State DISABLED_STATE = new State() {
 
         @Override
         public void enter(DefaultPopupManager manager) {
@@ -212,7 +197,7 @@ public class DefaultPopupManager implements Opacity, PopupManager {
 
     };
 
-    private final static State INACTIVE_STATE = new State() {
+    protected final static State INACTIVE_STATE = new State() {
 
         @Override
         public void enter(DefaultPopupManager manager) {
@@ -234,7 +219,7 @@ public class DefaultPopupManager implements Opacity, PopupManager {
 
     private static final int POPUP_OFFSET_Y = 15;
 
-    private final static State SEMITRANSPARENT_STATE = new State() {
+    protected final static State SEMITRANSPARENT_STATE = new State() {
 
         @Override
         public void enter(DefaultPopupManager manager) {
@@ -257,7 +242,7 @@ public class DefaultPopupManager implements Opacity, PopupManager {
 
     };
 
-    private final static State SEMITRANSPARENT_WAITING_STATE = new State() {
+    protected final static State SEMITRANSPARENT_WAITING_STATE = new State() {
 
         @Override
         public void enter(DefaultPopupManager manager) {
@@ -287,7 +272,7 @@ public class DefaultPopupManager implements Opacity, PopupManager {
 
     };
 
-    private final static State WAITING_STATE = new State() {
+    protected final static State WAITING_STATE = new State() {
 
         @Override
         public void enter(DefaultPopupManager manager) {
@@ -329,6 +314,7 @@ public class DefaultPopupManager implements Opacity, PopupManager {
      * @param widgetFactory
      *            Factory that creates the content widget of the popup
      */
+    // XXX remove
     public static <T extends HasAllMouseHandlers & HasClickHandlers> DefaultPopupManager createPopupManager(
             T source, WidgetFactory widgetFactory) {
 
@@ -471,6 +457,10 @@ public class DefaultPopupManager implements Opacity, PopupManager {
         return morph;
     }
 
+    protected PopupPanel createPopupPanel() {
+        return new PopupPanel();
+    }
+
     private void detachPopup() {
         if (popupEffectsPanel == null) {
             return;
@@ -519,7 +509,7 @@ public class DefaultPopupManager implements Opacity, PopupManager {
 
     private NEffectPanel getPopupPanel() {
         if (popupEffectsPanel == null) {
-            popupContentPanel = new PopupPanel();
+            popupContentPanel = createPopupPanel();
             popupContentPanel.setStyleName(CSS_POPUP_CLASS);
             popupContentPanel.add(widgetFactory.createWidget());
 
@@ -710,7 +700,7 @@ public class DefaultPopupManager implements Opacity, PopupManager {
         this.showDelay = showDelay;
     }
 
-    private void setState(State newState) {
+    protected void setState(State newState) {
         assert newState != null;
 
         this.state.leave(this);

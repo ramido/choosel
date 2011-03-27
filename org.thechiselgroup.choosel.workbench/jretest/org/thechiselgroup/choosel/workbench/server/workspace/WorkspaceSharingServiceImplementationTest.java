@@ -27,7 +27,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.core.client.windows.Branding;
+import org.thechiselgroup.choosel.dnd.client.windows.Branding;
 import org.thechiselgroup.choosel.workbench.client.authentication.AuthorizationException;
 import org.thechiselgroup.choosel.workbench.client.workspace.dto.WorkspaceDTO;
 import org.thechiselgroup.choosel.workbench.server.util.PasswordGenerator;

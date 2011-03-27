@@ -17,7 +17,6 @@ package org.thechiselgroup.choosel.core.client.resources.ui;
 
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetFactory;
-import org.thechiselgroup.choosel.core.client.ui.dnd.ResourceSetAvatarDragController;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.HTML;
@@ -29,19 +28,15 @@ public abstract class AbstractDetailsWidgetHelper implements
 
     protected ResourceSetAvatarFactory avatarFactory;
 
-    protected ResourceSetAvatarDragController dragController;
-
     protected ResourceSetFactory resourceSetFactory;
 
     // TODO use dragavatarfactory instead of provider
     @Inject
     public AbstractDetailsWidgetHelper(ResourceSetFactory resourceSetFactory,
-            ResourceSetAvatarFactory dragAvatarFactory,
-            ResourceSetAvatarDragController dragController) {
+            ResourceSetAvatarFactory dragAvatarFactory) {
 
         this.resourceSetFactory = resourceSetFactory;
         this.avatarFactory = dragAvatarFactory;
-        this.dragController = dragController;
     }
 
     protected void addRow(Resource resource, VerticalPanel verticalPanel,

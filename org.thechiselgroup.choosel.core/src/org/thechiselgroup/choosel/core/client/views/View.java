@@ -16,13 +16,19 @@
 package org.thechiselgroup.choosel.core.client.views;
 
 import org.thechiselgroup.choosel.core.client.persistence.Persistable;
+import org.thechiselgroup.choosel.core.client.ui.WidgetAdaptable;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
+import org.thechiselgroup.choosel.core.client.util.Initializable;
 import org.thechiselgroup.choosel.core.client.views.model.ResourceModel;
 import org.thechiselgroup.choosel.core.client.views.model.SelectionModel;
 import org.thechiselgroup.choosel.core.client.views.model.ViewModel;
-import org.thechiselgroup.choosel.core.client.windows.WindowContent;
 
-public interface View extends WindowContent, Disposable, Persistable {
+public interface View extends WidgetAdaptable, Initializable, Disposable,
+        Persistable {
+
+    String getContentType();
+
+    String getLabel();
 
     /**
      * @return {@link ViewModel} that is used in this {@link View}.
@@ -32,5 +38,7 @@ public interface View extends WindowContent, Disposable, Persistable {
     ResourceModel getResourceModel();
 
     SelectionModel getSelectionModel();
+
+    void setLabel(String label);
 
 }

@@ -20,13 +20,9 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetDelegateChangedEvent;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetDelegateChangedEventHandler;
 import org.thechiselgroup.choosel.core.client.resources.UnmodifiableResourceSet;
-import org.thechiselgroup.choosel.core.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
 import org.thechiselgroup.choosel.core.client.views.model.HoverModel;
 
-import com.allen_sauer.gwt.dnd.client.DragEndEvent;
-import com.allen_sauer.gwt.dnd.client.DragHandler;
-import com.allen_sauer.gwt.dnd.client.DragHandlerAdapter;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
@@ -36,28 +32,17 @@ import com.google.gwt.event.shared.HandlerRegistration;
 public class HighlightingResourceSetAvatarFactory extends
         DelegatingResourceSetAvatarFactory {
 
-    private final ResourceSetAvatarDragController dragController;
-
     private HoverModel hoverModel;
 
     public HighlightingResourceSetAvatarFactory(
-            ResourceSetAvatarFactory delegate, HoverModel hoverModel,
-            ResourceSetAvatarDragController dragController) {
+            ResourceSetAvatarFactory delegate, HoverModel hoverModel) {
 
         super(delegate);
-
         assert hoverModel != null;
-        assert dragController != null;
-
-        this.dragController = dragController;
         this.hoverModel = hoverModel;
     }
 
-    public void addDragHandler(DragHandler handler) {
-        dragController.addDragHandler(handler);
-    }
-
-    private void addToHover(ResourceSetAvatar avatar) {
+    protected void addToHover(ResourceSetAvatar avatar) {
         hoverModel.setHighlightedResourceSet(avatar.getResourceSet());
     }
 
@@ -91,24 +76,9 @@ public class HighlightingResourceSetAvatarFactory extends
 
                 });
 
-        /**
-         * Removes the hover at the end of a drag and drop operation. Because
-         * the resource set is already hovered, this saves the effort of
-         * highlighting the resources again.
-         */
-        final DragHandlerAdapter dragHandler = new DragHandlerAdapter() {
-            @Override
-            public void onDragEnd(DragEndEvent event) {
-                removeFromHover();
-            }
-
-        };
-        addDragHandler(dragHandler);
-
         avatar.addDisposable(new Disposable() {
             @Override
             public void dispose() {
-                removeDragHandler(dragHandler);
                 mouseOverHandlerRegistration.removeHandler();
                 mouseOutHandlerRegistration.removeHandler();
                 containerChangedHandler.removeHandler();
@@ -118,15 +88,11 @@ public class HighlightingResourceSetAvatarFactory extends
         return avatar;
     }
 
-    public void removeDragHandler(DragHandler handler) {
-        dragController.removeDragHandler(handler);
-    }
-
-    private void removeFromHover() {
+    protected void removeFromHover() {
         hoverModel.setHighlightedResourceSet(null);
     }
 
-    private boolean shouldHighlight(ResourceSetAvatar avatar,
+    protected boolean shouldHighlight(ResourceSetAvatar avatar,
             ResourceSet resources) {
         ResourceSet dragAvatarResources = avatar.getResourceSet();
 

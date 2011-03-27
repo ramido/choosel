@@ -19,7 +19,6 @@ import java.util.Set;
 
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetFactory;
-import org.thechiselgroup.choosel.core.client.ui.dnd.ResourceSetAvatarDragController;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 
@@ -39,9 +38,8 @@ public class DefaultDetailsWidgetHelper extends AbstractDetailsWidgetHelper {
 
     @Inject
     public DefaultDetailsWidgetHelper(ResourceSetFactory resourceSetFactory,
-            ResourceSetAvatarFactory dragAvatarFactory,
-            ResourceSetAvatarDragController dragController) {
-        super(resourceSetFactory, dragAvatarFactory, dragController);
+            ResourceSetAvatarFactory dragAvatarFactory) {
+        super(resourceSetFactory, dragAvatarFactory);
     }
 
     @Override
