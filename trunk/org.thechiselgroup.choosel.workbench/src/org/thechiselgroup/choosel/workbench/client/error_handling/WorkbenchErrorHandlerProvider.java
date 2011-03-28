@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -13,29 +13,29 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.core.client.error_handling;
+package org.thechiselgroup.choosel.workbench.client.error_handling;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.thechiselgroup.choosel.core.client.error_handling.CompositeErrorHandler;
+import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
+import org.thechiselgroup.choosel.core.client.error_handling.LoggingErrorHandler;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
-public class LoggingErrorHandler implements ErrorHandler {
-
-    private final Logger logger;
+public class WorkbenchErrorHandlerProvider implements Provider<ErrorHandler> {
 
     @Inject
-    public LoggingErrorHandler(LoggerProvider logger) {
-        assert logger != null;
-        this.logger = logger.getLogger();
-    }
+    private FeedbackDialogErrorHandler feedbackDialogErrorHandler;
+
+    @Inject
+    private LoggingErrorHandler loggingErrorHandler;
 
     @Override
-    public void handleError(Throwable error) {
-        assert error != null;
-
-        error = ExceptionUtil.unwrapCause(error);
-
-        logger.log(Level.SEVERE, error.getMessage(), error);
+    public ErrorHandler get() {
+        CompositeErrorHandler composite = new CompositeErrorHandler();
+        composite.add(loggingErrorHandler);
+        composite.add(feedbackDialogErrorHandler);
+        return composite;
     }
+
 }

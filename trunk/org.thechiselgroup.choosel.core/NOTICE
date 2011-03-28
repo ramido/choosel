@@ -18,13 +18,6 @@ URL: http://mockito.org/
 License: MIT License
 
 
-GWT Log
-Logging framework for GWT
-Version: 3.0.1
-URL: http://code.google.com/p/gwt-log/
-License: Apache License 2.0
-
-
 Gin
 Dependency injection for GWT
 Version: 20091021

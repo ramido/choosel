@@ -18,6 +18,11 @@ package org.thechiselgroup.choosel.core.client.util;
 // TODO use more specific exception classes
 public class ServiceException extends Exception {
 
+    /*
+     * INFO: This class is included in Choosel.core to make it available to
+     * different components.
+     */
+
     private static final long serialVersionUID = 1L;
 
     public ServiceException() {

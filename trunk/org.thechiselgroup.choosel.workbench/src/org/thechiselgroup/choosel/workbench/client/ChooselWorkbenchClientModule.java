@@ -21,7 +21,10 @@ import org.thechiselgroup.choosel.core.client.command.DefaultCommandManager;
 import org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandlingAsyncCommandExecutor;
+import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandlingConstants;
+import org.thechiselgroup.choosel.core.client.error_handling.LoggerProvider;
 import org.thechiselgroup.choosel.core.client.error_handling.LoggingAsyncCommandExecutor;
+import org.thechiselgroup.choosel.core.client.error_handling.RootLoggerProvider;
 import org.thechiselgroup.choosel.core.client.importer.Importer;
 import org.thechiselgroup.choosel.core.client.label.CategoryLabelProvider;
 import org.thechiselgroup.choosel.core.client.label.LabelProvider;
@@ -68,7 +71,7 @@ import org.thechiselgroup.choosel.dnd.client.windows.WindowContentProducer;
 import org.thechiselgroup.choosel.workbench.client.authentication.AuthenticationManager;
 import org.thechiselgroup.choosel.workbench.client.authentication.DefaultAuthenticationManager;
 import org.thechiselgroup.choosel.workbench.client.command.ui.CommandPresenterFactory;
-import org.thechiselgroup.choosel.workbench.client.ui.FeedbackDialogErrorHandler;
+import org.thechiselgroup.choosel.workbench.client.error_handling.WorkbenchErrorHandlerProvider;
 import org.thechiselgroup.choosel.workbench.client.ui.configuration.AllResourceSetAvatarFactoryProvider;
 import org.thechiselgroup.choosel.workbench.client.ui.configuration.DefaultResourceSetAvatarFactoryProvider;
 import org.thechiselgroup.choosel.workbench.client.ui.configuration.ResourceSetsDragAvatarFactoryProvider;
@@ -179,6 +182,12 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
                 .to(ResourceSetContainer.class).in(Singleton.class);
     }
 
+    protected void bindErrorHandler() {
+        bind(ErrorHandler.class)
+                .toProvider(WorkbenchErrorHandlerProvider.class).in(
+                        Singleton.class);
+    }
+
     private void bindHoverModel() {
         bind(HoverModel.class).in(Singleton.class);
     }
@@ -192,6 +201,16 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
                 .to(ResourceSetLabelFactory.class).in(Singleton.class);
     }
 
+    /**
+     * We use the @Named(LOG) command executor to prevent infinite loops when
+     * the feedback dialog throws errors.
+     */
+    protected void bindLoggingCommandExecutor() {
+        bind(AsyncCommandExecutor.class)
+                .annotatedWith(Names.named(ErrorHandlingConstants.LOG))
+                .to(LoggingAsyncCommandExecutor.class).in(Singleton.class);
+    }
+
     protected void bindWindowContentProducer() {
         bind(ViewWindowContentProducer.class).to(
                 ChooselWorkbenchViewWindowContentProducer.class).in(
@@ -202,6 +221,9 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
 
     @Override
     protected void configure() {
+        bind(LoggerProvider.class).toProvider(RootLoggerProvider.class).in(
+                Singleton.class);
+
         bind(CommandManager.class).to(DefaultCommandManager.class).in(
                 Singleton.class);
         bind(Desktop.class).to(DefaultDesktop.class).in(Singleton.class);
@@ -218,7 +240,7 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
 
         bind(ShadeManager.class).in(Singleton.class);
         bind(DialogManager.class).in(Singleton.class);
-        bind(ErrorHandler.class).to(getErrorHandlerClass()).in(Singleton.class);
+        bindErrorHandler();
         bind(MessageManager.class).annotatedWith(Names.named(DEFAULT))
                 .to(DefaultMessageManager.class).in(Singleton.class);
         bind(MessageManager.class).to(ShadeMessageManager.class).in(
@@ -226,8 +248,9 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
         bind(AsyncCommandExecutor.class).annotatedWith(Names.named(DEFAULT))
                 .to(ErrorHandlingAsyncCommandExecutor.class)
                 .in(Singleton.class);
-        bind(AsyncCommandExecutor.class).annotatedWith(Names.named(LOG))
-                .to(LoggingAsyncCommandExecutor.class).in(Singleton.class);
+
+        bindLoggingCommandExecutor();
+
         bind(AsyncCommandExecutor.class).to(
                 MessageBlockingCommandExecutor.class).in(Singleton.class);
         bind(CommandPresenterFactory.class).in(Singleton.class);
@@ -324,10 +347,6 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
 
     protected Class<? extends DropTargetCapabilityChecker> getDropTargetCapabilityCheckerClass() {
         return DefaultDropTargetCapabilityChecker.class;
-    }
-
-    protected Class<? extends ErrorHandler> getErrorHandlerClass() {
-        return FeedbackDialogErrorHandler.class;
     }
 
     protected Class<? extends PersistableRestorationServiceProvider> getPersistableRestorationServiceProvider() {

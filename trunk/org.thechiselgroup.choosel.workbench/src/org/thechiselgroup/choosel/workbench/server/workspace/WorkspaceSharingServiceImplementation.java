@@ -28,7 +28,6 @@ import org.thechiselgroup.choosel.workbench.client.workspace.dto.WorkspaceDTO;
 import org.thechiselgroup.choosel.workbench.client.workspace.service.WorkspaceSharingService;
 import org.thechiselgroup.choosel.workbench.server.util.PasswordGenerator;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.appengine.api.mail.MailService;
 import com.google.appengine.api.users.UserService;
 
@@ -157,15 +156,12 @@ public class WorkspaceSharingServiceImplementation implements
                 + " workspace" + " \"" + workspaceDTO.getName()
                 + "\" with you. " + "You can open it at " + url;
 
-        Log.info(textBody);
-
         try {
             mailService.send(new MailService.Message(sender, to, subject,
                     textBody));
         } catch (IOException e) {
-            Log.error(e.getMessage(), e);
             throw new ServiceException(
-                    "Sending email with share notification failed.");
+                    "Sending email with share notification failed.", e);
         }
 
     }

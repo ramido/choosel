@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -13,29 +13,20 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.core.client.error_handling;
+package org.thechiselgroup.choosel.core.client.util.task;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+public class DelegatingTaskExecutor implements TaskExecutor {
 
-import com.google.inject.Inject;
+    protected final TaskExecutor delegate;
 
-public class LoggingErrorHandler implements ErrorHandler {
-
-    private final Logger logger;
-
-    @Inject
-    public LoggingErrorHandler(LoggerProvider logger) {
-        assert logger != null;
-        this.logger = logger.getLogger();
+    public DelegatingTaskExecutor(TaskExecutor delegate) {
+        assert delegate != null;
+        this.delegate = delegate;
     }
 
     @Override
-    public void handleError(Throwable error) {
-        assert error != null;
-
-        error = ExceptionUtil.unwrapCause(error);
-
-        logger.log(Level.SEVERE, error.getMessage(), error);
+    public <T> T execute(Task<T> task) throws Exception {
+        return delegate.execute(task);
     }
+
 }

@@ -24,6 +24,7 @@ import static org.thechiselgroup.choosel.core.client.configuration.ChooselInject
 
 import java.util.logging.Logger;
 
+import org.thechiselgroup.choosel.core.client.error_handling.LoggerProvider;
 import org.thechiselgroup.choosel.core.client.label.LabelProvider;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByUriMultiCategorizer;
@@ -115,6 +116,9 @@ public class ViewWindowContentProducer implements WindowContentProducer {
     @Inject
     private DragEnablerFactory dragEnablerFactory;
 
+    private Logger logger;
+
+    // XXX remove
     protected LightweightList<SidePanelSection> createSidePanelSections(
             String contentType, ViewContentDisplay contentDisplay,
             VisualMappingsControl visualMappingsControl,
@@ -209,7 +213,7 @@ public class ViewWindowContentProducer implements WindowContentProducer {
         DefaultViewModel viewModel = new DefaultViewModel(contentDisplay,
                 slotMappingConfiguration, selectionModel.getSelectionProxy(),
                 hoverModel.getResources(), slotMappingInitializer,
-                viewItemBehaviors, resourceGrouping, Logger.getLogger(""));
+                viewItemBehaviors, resourceGrouping, logger);
 
         final VisualMappingsControl visualMappingsControl = createVisualMappingsControl(
                 contentType, contentDisplay, slotMappingConfiguration,
@@ -237,8 +241,8 @@ public class ViewWindowContentProducer implements WindowContentProducer {
                     }
                 });
 
-        DefaultView view = new DefaultView(contentDisplay, "label",
-                "contentType", selectionModelPresenter, resourceModelPresenter,
+        DefaultView view = new DefaultView(contentDisplay, label, contentType,
+                selectionModelPresenter, resourceModelPresenter,
                 visualMappingsControl, sidePanelSections, viewModel,
                 resourceModel, selectionModel);
 
@@ -248,4 +252,11 @@ public class ViewWindowContentProducer implements WindowContentProducer {
 
         return new ViewWindowContent(view);
     }
+
+    @SuppressWarnings("unused")
+    @Inject
+    private void injectLogger(LoggerProvider logger) {
+        this.logger = logger.getLogger();
+    }
+
 }

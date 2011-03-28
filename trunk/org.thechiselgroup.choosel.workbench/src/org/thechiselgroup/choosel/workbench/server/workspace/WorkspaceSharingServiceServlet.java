@@ -22,19 +22,18 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.thechiselgroup.choosel.core.client.util.ServiceException;
+import org.thechiselgroup.choosel.core.client.util.task.Task;
 import org.thechiselgroup.choosel.workbench.client.DefaultBranding;
 import org.thechiselgroup.choosel.workbench.client.workspace.dto.WorkspaceDTO;
 import org.thechiselgroup.choosel.workbench.client.workspace.service.WorkspaceSharingService;
+import org.thechiselgroup.choosel.workbench.server.ChooselServiceServlet;
 import org.thechiselgroup.choosel.workbench.server.PMF;
 import org.thechiselgroup.choosel.workbench.server.util.PasswordGenerator;
-import org.thechiselgroup.choosel.workbench.server.util.StackTraceHelper;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.appengine.api.mail.MailServiceFactory;
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
-public class WorkspaceSharingServiceServlet extends RemoteServiceServlet
+public class WorkspaceSharingServiceServlet extends ChooselServiceServlet
         implements WorkspaceSharingService {
 
     // TODO move
@@ -77,34 +76,16 @@ public class WorkspaceSharingServiceServlet extends RemoteServiceServlet
     }
 
     @Override
-    public void shareWorkspace(WorkspaceDTO workspaceDTO, String emailAddress)
-            throws ServiceException {
+    public void shareWorkspace(final WorkspaceDTO workspaceDTO,
+            final String emailAddress) throws ServiceException {
 
-        long startTime = -1;
-        if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {
-            startTime = System.currentTimeMillis();
-        }
-
-        Log.debug("WorkspaceSharingServiceServlet.shareWorkspace - "
-                + workspaceDTO.getName() + " " + workspaceDTO.getId());
-
-        try {
-            getServiceDelegate().shareWorkspace(workspaceDTO, emailAddress);
-        } catch (ServiceException e) {
-            Log.error(
-                    "shareWorkspace failed: "
-                            + StackTraceHelper.getStackTraceAsString(e), e);
-            throw e;
-        } catch (Exception e) {
-            Log.error(
-                    "shareWorkspace failed: "
-                            + StackTraceHelper.getStackTraceAsString(e), e);
-            throw new ServiceException(e);
-        } finally {
-            if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {
-                Log.debug("shareWorkspace completed in "
-                        + (System.currentTimeMillis() - startTime) + " ms");
+        execute(new Task<Void>() {
+            @Override
+            public Void execute() throws ServiceException,
+                    NoSuchAlgorithmException {
+                getServiceDelegate().shareWorkspace(workspaceDTO, emailAddress);
+                return null;
             }
-        }
+        });
     }
 }

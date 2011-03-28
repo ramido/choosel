@@ -18,18 +18,17 @@ package org.thechiselgroup.choosel.workbench.server.workspace;
 import java.util.List;
 
 import org.thechiselgroup.choosel.core.client.util.ServiceException;
+import org.thechiselgroup.choosel.core.client.util.task.Task;
 import org.thechiselgroup.choosel.workbench.client.workspace.dto.WorkspaceDTO;
 import org.thechiselgroup.choosel.workbench.client.workspace.dto.WorkspacePreviewDTO;
 import org.thechiselgroup.choosel.workbench.client.workspace.service.WorkspacePersistenceService;
+import org.thechiselgroup.choosel.workbench.server.ChooselServiceServlet;
 import org.thechiselgroup.choosel.workbench.server.PMF;
-import org.thechiselgroup.choosel.workbench.server.util.StackTraceHelper;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 // TODO check if there is an aspect-oriented solution to this logging
-public class WorkspacePersistenceServiceServlet extends RemoteServiceServlet
+public class WorkspacePersistenceServiceServlet extends ChooselServiceServlet
         implements WorkspacePersistenceService {
 
     private WorkspacePersistenceService service = null;
@@ -45,96 +44,35 @@ public class WorkspacePersistenceServiceServlet extends RemoteServiceServlet
     }
 
     @Override
-    public WorkspaceDTO loadWorkspace(Long id) throws ServiceException {
-        long startTime = -1;
-        if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {
-            startTime = System.currentTimeMillis();
-        }
-
-        Log.debug("WorkspacePersistenceServiceServlet.loadWorkspace - " + id);
-
-        try {
-            return getServiceDelegate().loadWorkspace(id);
-        } catch (ServiceException e) {
-            Log.error(
-                    "loadWorkspace failed: "
-                            + StackTraceHelper.getStackTraceAsString(e), e);
-            throw e;
-        } catch (Exception e) {
-            Log.error(
-                    "loadWorkspace failed: "
-                            + StackTraceHelper.getStackTraceAsString(e), e);
-            throw new ServiceException(e);
-        } finally {
-            if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {
-                Log.debug("WorkspacePersistenceServiceServlet.loadWorkspace"
-                        + " completed in "
-                        + (System.currentTimeMillis() - startTime) + " ms");
+    public WorkspaceDTO loadWorkspace(final Long id) throws ServiceException {
+        return execute(new Task<WorkspaceDTO>() {
+            @Override
+            public WorkspaceDTO execute() throws ServiceException {
+                return getServiceDelegate().loadWorkspace(id);
             }
-        }
+        });
     }
 
     @Override
     public List<WorkspacePreviewDTO> loadWorkspacePreviews()
             throws ServiceException {
-
-        long startTime = -1;
-        if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {
-            startTime = System.currentTimeMillis();
-        }
-
-        Log.debug("WorkspacePersistenceServiceServlet.loadWorkspacePreviews");
-
-        try {
-            return getServiceDelegate().loadWorkspacePreviews();
-        } catch (ServiceException e) {
-            Log.error(
-                    "loadWorkspacePreviews failed: "
-                            + StackTraceHelper.getStackTraceAsString(e), e);
-            throw e;
-        } catch (Exception e) {
-            Log.error(
-                    "loadWorkspacePreviews failed: "
-                            + StackTraceHelper.getStackTraceAsString(e), e);
-            throw new ServiceException(e);
-        } finally {
-            if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {
-                Log.debug("WorkspacePersistenceServiceServlet.loadWorkspacePreviews"
-                        + " completed in "
-                        + (System.currentTimeMillis() - startTime) + " ms");
+        return execute(new Task<List<WorkspacePreviewDTO>>() {
+            @Override
+            public List<WorkspacePreviewDTO> execute() throws ServiceException {
+                return getServiceDelegate().loadWorkspacePreviews();
             }
-        }
+        });
     }
 
-    // TODO extract surrounding stuff into special executor
     @Override
-    public Long saveWorkspace(WorkspaceDTO workspace) throws ServiceException {
-        long startTime = -1;
-        if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {
-            startTime = System.currentTimeMillis();
-        }
+    public Long saveWorkspace(final WorkspaceDTO workspace)
+            throws ServiceException {
 
-        Log.debug("WorkspacePersistenceServiceServlet.saveWorkspace - "
-                + workspace.getName() + " " + workspace.getId());
-
-        try {
-            return getServiceDelegate().saveWorkspace(workspace);
-        } catch (ServiceException e) {
-            Log.error(
-                    "saveWorkspace failed: "
-                            + StackTraceHelper.getStackTraceAsString(e), e);
-            throw e;
-        } catch (Exception e) {
-            Log.error(
-                    "saveWorkspace failed: "
-                            + StackTraceHelper.getStackTraceAsString(e), e);
-            throw new ServiceException(e);
-        } finally {
-            if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {
-                Log.debug("WorkspacePersistenceServiceServlet.saveWorkspace"
-                        + " completed in "
-                        + (System.currentTimeMillis() - startTime) + " ms");
+        return execute(new Task<Long>() {
+            @Override
+            public Long execute() throws ServiceException {
+                return getServiceDelegate().saveWorkspace(workspace);
             }
-        }
+        });
     }
 }

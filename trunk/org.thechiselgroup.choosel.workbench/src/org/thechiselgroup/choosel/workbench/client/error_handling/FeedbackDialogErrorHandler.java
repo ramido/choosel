@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.workbench.client.ui;
+package org.thechiselgroup.choosel.workbench.client.error_handling;
 
-import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.LOG;
+import static org.thechiselgroup.choosel.core.client.error_handling.ErrorHandlingConstants.LOG;
 
 import org.thechiselgroup.choosel.core.client.command.AsyncCommandExecutor;
 import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
@@ -24,7 +24,6 @@ import org.thechiselgroup.choosel.workbench.client.feedback.FeedbackDialog;
 import org.thechiselgroup.choosel.workbench.client.feedback.FeedbackServiceAsync;
 import org.thechiselgroup.choosel.workbench.client.ui.dialog.DialogManager;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
@@ -36,12 +35,14 @@ public class FeedbackDialogErrorHandler implements ErrorHandler {
 
     private FeedbackServiceAsync feedbackService;
 
+    /*
+     * INFO: We use the @Named(LOG) command executor to prevent infinite loops
+     * when the feedback dialog throws errors.
+     */
     @Inject
     public FeedbackDialogErrorHandler(DialogManager dialogManager,
             @Named(LOG) AsyncCommandExecutor executor,
             FeedbackServiceAsync feedbackService) {
-
-        // we use the log command executor to prevent invite loops
 
         assert dialogManager != null;
         assert executor != null;
@@ -56,12 +57,7 @@ public class FeedbackDialogErrorHandler implements ErrorHandler {
     public void handleError(Throwable error) {
         assert error != null;
 
-        error = ExceptionUtil.unwrapCause(error);
-
-        // TODO extract - composite error handler
-        Log.error(error.getMessage(), error);
-
-        dialogManager
-                .show(new FeedbackDialog(error, executor, feedbackService));
+        dialogManager.show(new FeedbackDialog(ExceptionUtil.unwrapCause(error),
+                executor, feedbackService));
     }
 }

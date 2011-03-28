@@ -18,6 +18,8 @@ package org.thechiselgroup.choosel.visualization_component.graph.client.widget;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.thechiselgroup.choosel.core.client.geometry.Point;
 import org.thechiselgroup.choosel.core.client.util.collections.ArrayUtils;
@@ -25,7 +27,6 @@ import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory
 
 import pl.rmalinowski.gwt2swf.client.ui.SWFWidget;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptException;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -70,7 +71,8 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
         try {
             exportStaticMethods();
         } catch (Exception ex) {
-            Log.error(ex.getMessage(), ex);
+            // XXX use initializables & dependency injection
+            Logger.getLogger("").log(Level.SEVERE, ex.getMessage(), ex);
         }
     }
 
@@ -113,7 +115,8 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
     // @formatter:on
 
     public static void _log(String message) {
-        Log.debug(message);
+        // XXX use initializables & dependency injection
+        Logger.getLogger("").log(Level.WARNING, message);
     }
 
     public static void _onArcMouseClick(String arcID, int mouseX, int mouseY,
@@ -483,7 +486,6 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
     }
 
     private void onLoadFailure(Exception ex) {
-        Log.error("Loading SWF failed", ex);
         loadingInfoDiv.setInnerText("Loading SWF failed: " + ex.getMessage());
         fireEvent(new GraphDisplayLoadingFailureEvent(this, ex));
     }

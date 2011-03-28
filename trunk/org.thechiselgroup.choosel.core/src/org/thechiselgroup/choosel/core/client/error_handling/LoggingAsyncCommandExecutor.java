@@ -15,15 +15,23 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.error_handling;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.thechiselgroup.choosel.core.client.command.AsyncCommand;
 import org.thechiselgroup.choosel.core.client.command.AsyncCommandExecutor;
 import org.thechiselgroup.choosel.core.client.util.NullAsyncCallback;
 
-import com.allen_sauer.gwt.log.client.Log;
+import com.google.inject.Inject;
 
 public class LoggingAsyncCommandExecutor implements AsyncCommandExecutor {
 
-    public LoggingAsyncCommandExecutor() {
+    private final Logger logger;
+
+    @Inject
+    public LoggingAsyncCommandExecutor(LoggerProvider logger) {
+        assert logger != null;
+        this.logger = logger.getLogger();
     }
 
     @Override
@@ -31,8 +39,9 @@ public class LoggingAsyncCommandExecutor implements AsyncCommandExecutor {
         command.execute(new NullAsyncCallback<Void>() {
             @Override
             public void onFailure(Throwable caught) {
-                Log.error(caught.getMessage(), caught);
+                logger.log(Level.SEVERE, caught.getMessage(), caught);
             }
         });
     }
+
 }

@@ -19,13 +19,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.thechiselgroup.choosel.core.client.util.URLFetchService;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 
 import pl.rmalinowski.gwt2swf.client.ui.SWFWidget;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -49,7 +50,8 @@ public class FlashURLFetchService extends SWFWidget implements URLFetchService {
         try {
             exportStaticMethods();
         } catch (Exception ex) {
-            Log.error(ex.getMessage(), ex);
+            // XXX use initializables & dependency injection
+            Logger.getLogger("").log(Level.SEVERE, ex.getMessage(), ex);
         }
     }
 
@@ -62,7 +64,8 @@ public class FlashURLFetchService extends SWFWidget implements URLFetchService {
         try {
             widgets.get(swfID).onWidgetReady();
         } catch (Exception ex) {
-            Log.error(ex.getMessage(), ex);
+            // XXX use initializables & dependency injection
+            Logger.getLogger("").log(Level.SEVERE, ex.getMessage(), ex);
         }
     }
 

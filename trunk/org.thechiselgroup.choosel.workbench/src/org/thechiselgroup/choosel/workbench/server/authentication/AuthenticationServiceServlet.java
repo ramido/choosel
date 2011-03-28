@@ -16,28 +16,28 @@
 package org.thechiselgroup.choosel.workbench.server.authentication;
 
 import org.thechiselgroup.choosel.core.client.util.ServiceException;
+import org.thechiselgroup.choosel.core.client.util.task.Task;
 import org.thechiselgroup.choosel.workbench.client.authentication.Authentication;
 import org.thechiselgroup.choosel.workbench.client.authentication.AuthenticationService;
+import org.thechiselgroup.choosel.workbench.server.ChooselServiceServlet;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
-public class AuthenticationServiceServlet extends RemoteServiceServlet
+public class AuthenticationServiceServlet extends ChooselServiceServlet
         implements AuthenticationService {
 
     private AuthenticationService service = null;
 
     @Override
-    public Authentication getAuthentication(String moduleBaseURL)
+    public Authentication getAuthentication(final String moduleBaseURL)
             throws ServiceException {
 
-        try {
-            return getServiceDelegate().getAuthentication(moduleBaseURL);
-        } catch (RuntimeException e) {
-            Log.error("getAuthentication failed", e);
-            throw new ServiceException(e);
-        }
+        return execute(new Task<Authentication>() {
+            @Override
+            public Authentication execute() throws ServiceException {
+                return getServiceDelegate().getAuthentication(moduleBaseURL);
+            }
+        });
     }
 
     private AuthenticationService getServiceDelegate() {
