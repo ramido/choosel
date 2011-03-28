@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -15,27 +15,32 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.error_handling;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.google.inject.Inject;
+/**
+ * Combines several error handlers. Can be used to e.g. combine logging with
+ * showing a feedback dialog.
+ * 
+ * @author Lars Grammel
+ */
+public class CompositeErrorHandler implements ErrorHandler {
 
-public class LoggingErrorHandler implements ErrorHandler {
+    private List<ErrorHandler> errorHandlers = new ArrayList<ErrorHandler>();
 
-    private final Logger logger;
-
-    @Inject
-    public LoggingErrorHandler(LoggerProvider logger) {
-        assert logger != null;
-        this.logger = logger.getLogger();
+    public void add(ErrorHandler errorHandler) {
+        errorHandlers.add(errorHandler);
     }
 
     @Override
     public void handleError(Throwable error) {
-        assert error != null;
-
-        error = ExceptionUtil.unwrapCause(error);
-
-        logger.log(Level.SEVERE, error.getMessage(), error);
+        for (ErrorHandler errorHandler : errorHandlers) {
+            errorHandler.handleError(error);
+        }
     }
+
+    public void remove(ErrorHandler errorHandler) {
+        errorHandlers.remove(errorHandler);
+    }
+
 }

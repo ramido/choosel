@@ -25,6 +25,10 @@
  
   <entry-point class='org.thechiselgroup.choosel.example.components.client.ComponentExampleEntryPoint'/>
 
+  <!-- client-side logging configuration --> 
+  <set-property name="gwt.logging.popupHandler" value="DISABLED"/>
+  <set-property name="gwt.logging.consoleHandler" value="ENABLED"/>
+
   <source path='client'/>
 
 </module>

@@ -39,7 +39,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -70,8 +69,7 @@ public abstract class XMLCallServlet extends RemoteServiceServlet {
             return resources;
 
         } catch (Exception e) {
-            Log.error(e.getMessage(), e);
-            throw new ServiceException(e.getMessage());
+            throw new ServiceException(e.getMessage(), e);
         }
 
     }

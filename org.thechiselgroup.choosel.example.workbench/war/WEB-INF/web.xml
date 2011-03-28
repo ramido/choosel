@@ -74,14 +74,15 @@
     <url-pattern>/org.thechiselgroup.choosel.example.workbench.ChooselExampleWorkbench/view</url-pattern>
   </servlet-mapping>
 
-<!-- gwt-log remote logging service -->  
-<servlet>
-  <servlet-name>remoteLoggerServiceImpl</servlet-name>
-  <servlet-class>com.allen_sauer.gwt.log.server.RemoteLoggerServiceImpl</servlet-class>
-</servlet>
-<servlet-mapping>
-  <servlet-name>remoteLoggerServiceImpl</servlet-name>
-  <url-pattern>/org.thechiselgroup.choosel.example.workbench.ChooselExampleWorkbench/gwt-log</url-pattern>
-</servlet-mapping>
+  <!-- remote logging service -->  
+  <servlet>
+    <servlet-name>remoteLoggingServlet</servlet-name>
+    <servlet-class>com.google.gwt.logging.server.RemoteLoggingServiceImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>remoteLoggingServlet</servlet-name>
+    <url-pattern>/org.thechiselgroup.choosel.example.workbench.ChooselExampleWorkbench/remote_logging</url-pattern>
+  </servlet-mapping>
  
 </web-app>

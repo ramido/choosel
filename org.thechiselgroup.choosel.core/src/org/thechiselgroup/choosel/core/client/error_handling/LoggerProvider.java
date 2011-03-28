@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -15,27 +15,18 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.error_handling;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.google.inject.Inject;
+/**
+ * Google Gin does not support java.util.Logger injection right now: <a href=
+ * "http://groups.google.com/group/google-gin/browse_thread/thread/b41da0e0067b2bbd"
+ * >Gin Group Thread</a>. We therefore use an intermediate interface instead for
+ * now. This should be removed once Gin supports Logger injection.
+ * 
+ * @author Lars Grammel
+ */
+public interface LoggerProvider {
 
-public class LoggingErrorHandler implements ErrorHandler {
+    Logger getLogger();
 
-    private final Logger logger;
-
-    @Inject
-    public LoggingErrorHandler(LoggerProvider logger) {
-        assert logger != null;
-        this.logger = logger.getLogger();
-    }
-
-    @Override
-    public void handleError(Throwable error) {
-        assert error != null;
-
-        error = ExceptionUtil.unwrapCause(error);
-
-        logger.log(Level.SEVERE, error.getMessage(), error);
-    }
 }

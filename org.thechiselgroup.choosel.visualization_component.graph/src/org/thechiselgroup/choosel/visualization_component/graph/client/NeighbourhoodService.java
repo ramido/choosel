@@ -24,4 +24,5 @@ public interface NeighbourhoodService extends RemoteService {
 
     NeighbourhoodServiceResult getNeighbourhood(Resource concept)
             throws ServiceException;
+
 }

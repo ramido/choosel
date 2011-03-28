@@ -16,14 +16,14 @@
 package org.thechiselgroup.choosel.workbench.server.feedback;
 
 import org.thechiselgroup.choosel.core.client.util.ServiceException;
+import org.thechiselgroup.choosel.core.client.util.task.Task;
 import org.thechiselgroup.choosel.workbench.client.feedback.FeedbackService;
+import org.thechiselgroup.choosel.workbench.server.ChooselServiceServlet;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.appengine.api.mail.MailServiceFactory;
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
-public class FeedbackServiceServlet extends RemoteServiceServlet implements
+public class FeedbackServiceServlet extends ChooselServiceServlet implements
         FeedbackService {
 
     private FeedbackService service = null;
@@ -41,14 +41,15 @@ public class FeedbackServiceServlet extends RemoteServiceServlet implements
     }
 
     @Override
-    public void sendFeedback(String message, String errorMessage)
+    public void sendFeedback(final String message, final String errorMessage)
             throws ServiceException {
 
-        try {
-            getServiceDelegate().sendFeedback(message, errorMessage);
-        } catch (RuntimeException e) {
-            Log.error("sendFeedback failed", e);
-            throw new ServiceException(e);
-        }
+        execute(new Task<Void>() {
+            @Override
+            public Void execute() throws ServiceException {
+                getServiceDelegate().sendFeedback(message, errorMessage);
+                return null;
+            }
+        });
     }
 }

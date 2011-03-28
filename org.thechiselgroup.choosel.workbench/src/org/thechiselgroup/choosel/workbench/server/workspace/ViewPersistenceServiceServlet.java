@@ -18,50 +18,28 @@ package org.thechiselgroup.choosel.workbench.server.workspace;
 import java.util.List;
 
 import org.thechiselgroup.choosel.core.client.util.ServiceException;
+import org.thechiselgroup.choosel.core.client.util.task.Task;
 import org.thechiselgroup.choosel.workbench.client.workspace.dto.ViewDTO;
 import org.thechiselgroup.choosel.workbench.client.workspace.dto.ViewPreviewDTO;
 import org.thechiselgroup.choosel.workbench.client.workspace.service.ViewPersistenceService;
+import org.thechiselgroup.choosel.workbench.server.ChooselServiceServlet;
 import org.thechiselgroup.choosel.workbench.server.PMF;
-import org.thechiselgroup.choosel.workbench.server.util.StackTraceHelper;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
-public class ViewPersistenceServiceServlet extends RemoteServiceServlet
+public class ViewPersistenceServiceServlet extends ChooselServiceServlet
         implements ViewPersistenceService {
 
     private ViewPersistenceService service = null;
 
     @Override
-    public Long deleteView(Long viewId) throws ServiceException {
-
-        long startTime = -1;
-        if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {
-            startTime = System.currentTimeMillis();
-        }
-
-        Log.debug("ViewPersistenceServiceServlet.deleteView - " + viewId);
-
-        try {
-            return getServiceDelegate().deleteView(viewId);
-        } catch (ServiceException e) {
-            Log.error(
-                    "deleteView failed: "
-                            + StackTraceHelper.getStackTraceAsString(e), e);
-            throw e;
-        } catch (Exception e) {
-            Log.error(
-                    "deleteView failed: "
-                            + StackTraceHelper.getStackTraceAsString(e), e);
-            throw new ServiceException(e);
-        } finally {
-            if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {
-                Log.debug("ViewPersistenceServiceServlet.deleteView"
-                        + " completed in "
-                        + (System.currentTimeMillis() - startTime) + " ms");
+    public Long deleteView(final Long viewId) throws ServiceException {
+        return execute(new Task<Long>() {
+            @Override
+            public Long execute() throws ServiceException {
+                return getServiceDelegate().deleteView(viewId);
             }
-        }
+        });
     }
 
     private ViewPersistenceService getServiceDelegate() {
@@ -74,94 +52,32 @@ public class ViewPersistenceServiceServlet extends RemoteServiceServlet
     }
 
     @Override
-    public ViewDTO loadView(Long viewId) throws ServiceException {
-
-        long startTime = -1;
-        if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {
-            startTime = System.currentTimeMillis();
-        }
-
-        Log.debug("ViewPersistenceServiceServlet.loadView - " + viewId);
-
-        try {
-            return getServiceDelegate().loadView(viewId);
-        } catch (ServiceException e) {
-            Log.error(
-                    "loadView failed: "
-                            + StackTraceHelper.getStackTraceAsString(e), e);
-            throw e;
-        } catch (Exception e) {
-            Log.error(
-                    "loadView failed: "
-                            + StackTraceHelper.getStackTraceAsString(e), e);
-            throw new ServiceException(e);
-        } finally {
-            if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {
-                Log.debug("ViewPersistenceServiceServlet.loadView"
-                        + " completed in "
-                        + (System.currentTimeMillis() - startTime) + " ms");
+    public ViewDTO loadView(final Long viewId) throws ServiceException {
+        return execute(new Task<ViewDTO>() {
+            @Override
+            public ViewDTO execute() throws ServiceException {
+                return getServiceDelegate().loadView(viewId);
             }
-        }
+        });
     }
 
     @Override
     public List<ViewPreviewDTO> loadViewPreviews() throws ServiceException {
-        long startTime = -1;
-        if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {
-            startTime = System.currentTimeMillis();
-        }
-
-        Log.debug("ViewPersistenceServiceServlet.loadViewPreviews");
-
-        try {
-            return getServiceDelegate().loadViewPreviews();
-        } catch (ServiceException e) {
-            Log.error(
-                    "loadViewPreviews failed: "
-                            + StackTraceHelper.getStackTraceAsString(e), e);
-            throw e;
-        } catch (Exception e) {
-            Log.error(
-                    "loadViewPreviews failed: "
-                            + StackTraceHelper.getStackTraceAsString(e), e);
-            throw new ServiceException(e);
-        } finally {
-            if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {
-                Log.debug("ViewPersistenceServiceServlet.loadViewPreviews"
-                        + " completed in "
-                        + (System.currentTimeMillis() - startTime) + " ms");
+        return execute(new Task<List<ViewPreviewDTO>>() {
+            @Override
+            public List<ViewPreviewDTO> execute() throws ServiceException {
+                return getServiceDelegate().loadViewPreviews();
             }
-        }
+        });
     }
 
     @Override
-    public Long saveView(ViewDTO view) throws ServiceException {
-        long startTime = -1;
-        if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {
-            startTime = System.currentTimeMillis();
-        }
-
-        Log.debug("ViewPersistenceServiceServlet.saveView - Needs an ID");
-
-        try {
-            return getServiceDelegate().saveView(view);
-        } catch (ServiceException e) {
-            Log.error(
-                    "saveView failed: "
-                            + StackTraceHelper.getStackTraceAsString(e), e);
-            throw e;
-        } catch (Exception e) {
-            Log.error(
-                    "saveView failed: "
-                            + StackTraceHelper.getStackTraceAsString(e), e);
-            throw new ServiceException(e);
-        } finally {
-            if (Log.getCurrentLogLevel() <= Log.LOG_LEVEL_DEBUG) {
-                Log.debug("ViewPersistenceServiceServlet.saveView"
-                        + " completed in "
-                        + (System.currentTimeMillis() - startTime) + " ms");
+    public Long saveView(final ViewDTO view) throws ServiceException {
+        return execute(new Task<Long>() {
+            @Override
+            public Long execute() throws ServiceException {
+                return getServiceDelegate().saveView(view);
             }
-        }
+        });
     }
-
 }

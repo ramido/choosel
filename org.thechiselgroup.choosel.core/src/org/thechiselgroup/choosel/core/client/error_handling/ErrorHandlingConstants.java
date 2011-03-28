@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -15,27 +15,17 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.error_handling;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.thechiselgroup.choosel.core.client.command.AsyncCommandExecutor;
 
-import com.google.inject.Inject;
+public final class ErrorHandlingConstants {
 
-public class LoggingErrorHandler implements ErrorHandler {
+    /**
+     * Constant for {@link AsyncCommandExecutor} that should just log errors in
+     * the case of failure.
+     */
+    public static final String LOG = "log";
 
-    private final Logger logger;
-
-    @Inject
-    public LoggingErrorHandler(LoggerProvider logger) {
-        assert logger != null;
-        this.logger = logger.getLogger();
+    private ErrorHandlingConstants() {
     }
 
-    @Override
-    public void handleError(Throwable error) {
-        assert error != null;
-
-        error = ExceptionUtil.unwrapCause(error);
-
-        logger.log(Level.SEVERE, error.getMessage(), error);
-    }
 }

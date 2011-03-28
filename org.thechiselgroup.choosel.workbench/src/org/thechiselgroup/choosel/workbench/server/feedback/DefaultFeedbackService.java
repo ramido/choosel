@@ -20,7 +20,6 @@ import java.io.IOException;
 import org.thechiselgroup.choosel.core.client.util.ServiceException;
 import org.thechiselgroup.choosel.workbench.client.feedback.FeedbackService;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.appengine.api.mail.MailService;
 import com.google.appengine.api.mail.MailService.Message;
 import com.google.appengine.api.users.UserService;
@@ -63,8 +62,6 @@ public class DefaultFeedbackService implements FeedbackService {
             content.append("\n\n");
             content.append("Exception: " + errorMessage);
         }
-
-        Log.info(content.toString());
 
         try {
             mailService.send(new Message(sender, ADMIN, "[Bio-Mixer Feedback]",

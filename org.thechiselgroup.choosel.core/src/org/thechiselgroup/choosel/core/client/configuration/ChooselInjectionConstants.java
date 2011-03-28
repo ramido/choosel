@@ -37,6 +37,4 @@ public interface ChooselInjectionConstants {
 
     String LABEL_PROVIDER_SELECTION_SET = "label-provider-selection";
 
-    String LOG = "log";
-
 }

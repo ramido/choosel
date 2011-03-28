@@ -21,9 +21,11 @@ import static org.thechiselgroup.choosel.workbench.server.workspace.WorkspaceSha
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -33,7 +35,6 @@ import org.thechiselgroup.choosel.workbench.client.ChooselWorkbench;
 import org.thechiselgroup.choosel.workbench.client.authentication.AuthorizationException;
 import org.thechiselgroup.choosel.workbench.server.PMF;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.users.UserService;
@@ -41,6 +42,8 @@ import com.google.appengine.api.users.UserServiceFactory;
 
 // TODO refactor
 public class AcceptInvitationServlet extends HttpServlet {
+
+    private Logger logger;
 
     public void checkInvitation(Key invitationUid,
             PersistentWorkspace workspace, String password,
@@ -122,7 +125,7 @@ public class AcceptInvitationServlet extends HttpServlet {
 
             response.sendRedirect(response.encodeRedirectURL(targetURL));
         } catch (AuthorizationException e) {
-            Log.warn("AuthorizationException: "
+            logger.warning("AuthorizationException: "
                     + userService.getCurrentUser().getEmail() + " - "
                     + invitationUid + " - " + password);
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
@@ -136,6 +139,13 @@ public class AcceptInvitationServlet extends HttpServlet {
 
         return (Collection<PersistentSharingInvitation>) createInvitationQuery(
                 manager).execute(workspace, invitationUid, password);
+    }
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+
+        logger = Logger.getLogger(getClass().getName());
     }
 
     private void removeInvitation(Key invitationUid,
