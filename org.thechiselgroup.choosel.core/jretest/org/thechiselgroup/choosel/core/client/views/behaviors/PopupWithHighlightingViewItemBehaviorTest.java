@@ -122,9 +122,9 @@ public class PopupWithHighlightingViewItemBehaviorTest {
         when(viewItem.getResources()).thenReturn(resources);
         when(popupManager.getPopup()).thenReturn(popup);
 
-        underTest = new PopupWithHighlightingViewItemBehavior(hoverModel,
-                mock(DetailsWidgetHelper.class),
-                mock(PopupManagerFactory.class)) {
+        underTest = new PopupWithHighlightingViewItemBehavior(mock(DetailsWidgetHelper.class),
+                mock(PopupManagerFactory.class),
+                hoverModel) {
             @Override
             protected PopupManager createPopupManager(ViewItem viewItem) {
                 return popupManager;
