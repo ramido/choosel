@@ -196,8 +196,8 @@ public class ViewWindowContentProducer implements WindowContentProducer {
         // ViewInteractionLogger(Logger.getLogger("")));
         viewItemBehaviors.add(new HighlightingViewItemBehavior(hoverModel));
         viewItemBehaviors.add(new DragViewItemBehavior(dragEnablerFactory));
-        viewItemBehaviors.add(new PopupWithHighlightingViewItemBehavior(hoverModel,
-                detailsWidgetHelper, popupManagerFactory));
+        viewItemBehaviors.add(new PopupWithHighlightingViewItemBehavior(detailsWidgetHelper,
+                popupManagerFactory, hoverModel));
         viewItemBehaviors.add(new SwitchSelectionOnClickViewItemBehavior(
                 selectionModel));
 

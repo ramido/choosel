@@ -20,32 +20,20 @@ import java.util.Map;
 import org.thechiselgroup.choosel.core.client.fx.Opacity;
 import org.thechiselgroup.choosel.core.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.core.client.ui.popup.Popup;
-import org.thechiselgroup.choosel.core.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupOpacityChangedEvent;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupOpacityChangedEventHandler;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.views.model.HoverModel;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemBehavior;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction;
 
-import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 
-/**
- * Manages {@link ViewItem} popups in a single view.
- */
-public class PopupWithHighlightingViewItemBehavior implements ViewItemBehavior {
-
-    /**
-     * Maps view item ids to popup managers.
-     */
-    private Map<String, PopupManager> popupManagers = CollectionFactory
-            .createStringMap();
+public class PopupWithHighlightingViewItemBehavior extends
+        PopupViewItemBehavior {
 
     /**
      * Maps view item ids to popup highlighting managers.
@@ -55,69 +43,25 @@ public class PopupWithHighlightingViewItemBehavior implements ViewItemBehavior {
 
     private HoverModel hoverModel;
 
-    private DetailsWidgetHelper detailsWidgetHelper;
-
-    private PopupManagerFactory popupManagerFactory;
-
-    public PopupWithHighlightingViewItemBehavior(HoverModel hoverModel,
+    public PopupWithHighlightingViewItemBehavior(
             DetailsWidgetHelper detailsWidgetHelper,
-            PopupManagerFactory popupManagerFactory) {
+            PopupManagerFactory popupManagerFactory, HoverModel hoverModel) {
+
+        super(detailsWidgetHelper, popupManagerFactory);
 
         this.hoverModel = hoverModel;
-        this.detailsWidgetHelper = detailsWidgetHelper;
-        this.popupManagerFactory = popupManagerFactory;
-    }
-
-    // for test
-    protected PopupManager createPopupManager(final ViewItem viewItem) {
-        return popupManagerFactory.createPopupManager(detailsWidgetHelper
-                .createDetailsWidget(viewItem));
-    }
-
-    @Override
-    public void onInteraction(ViewItem viewItem, ViewItemInteraction interaction) {
-        assert viewItem != null;
-        assert popupManagers.containsKey(viewItem.getViewItemID());
-        assert interaction != null;
-
-        PopupManager popupManager = popupManagers.get(viewItem.getViewItemID());
-
-        switch (interaction.getEventType()) {
-        case DRAG_START:
-            popupManager.hidePopup();
-            break;
-        case MOUSE_MOVE:
-            popupManager.onMouseMove(interaction.getClientX(),
-                    interaction.getClientY());
-            break;
-        case MOUSE_DOWN:
-            if (interaction.hasNativeEvent()) {
-                NativeEvent nativeEvent = interaction.getNativeEvent();
-                popupManager.onMouseDown(nativeEvent);
-            }
-            break;
-        case MOUSE_OUT:
-            popupManager.onMouseOut(interaction.getClientX(),
-                    interaction.getClientY());
-            break;
-        case MOUSE_OVER:
-            popupManager.onMouseOver(interaction.getClientX(),
-                    interaction.getClientY());
-            break;
-        }
     }
 
     @Override
     public void onViewItemCreated(ViewItem viewItem) {
-        assert viewItem != null;
+        super.onViewItemCreated(viewItem);
+
         assert !highlightingManagers.containsKey(viewItem.getViewItemID());
-        assert !popupManagers.containsKey(viewItem.getViewItemID());
 
         final HighlightingManager highlightingManager = new HighlightingManager(
                 hoverModel, viewItem.getResources());
 
-        PopupManager popupManager = createPopupManager(viewItem);
-        Popup popup = popupManager.getPopup();
+        Popup popup = getPopupManager(viewItem).getPopup();
 
         popup.addDomHandler(new MouseOverHandler() {
             @Override
@@ -141,16 +85,14 @@ public class PopupWithHighlightingViewItemBehavior implements ViewItemBehavior {
         }, PopupOpacityChangedEvent.TYPE);
 
         highlightingManagers.put(viewItem.getViewItemID(), highlightingManager);
-        popupManagers.put(viewItem.getViewItemID(), popupManager);
     }
 
     @Override
     public void onViewItemRemoved(ViewItem viewItem) {
-        assert viewItem != null;
-        assert highlightingManagers.containsKey(viewItem.getViewItemID());
-        assert popupManagers.containsKey(viewItem.getViewItemID());
+        super.onViewItemRemoved(viewItem);
 
-        popupManagers.remove(viewItem.getViewItemID());
+        assert highlightingManagers.containsKey(viewItem.getViewItemID());
+
         HighlightingManager manager = highlightingManagers.remove(viewItem
                 .getViewItemID());
         manager.dispose();

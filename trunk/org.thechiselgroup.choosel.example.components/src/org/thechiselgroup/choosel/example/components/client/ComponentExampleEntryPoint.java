@@ -94,7 +94,7 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         barChartBehaviors.add(new SwitchSelectionOnClickViewItemBehavior(
                 selectionModel));
         barChartBehaviors.add(new PopupWithHighlightingViewItemBehavior(
-                hoverModel, new DetailsWidgetHelper() {
+                new DetailsWidgetHelper() {
                     public Widget createDetailsWidget(ViewItem viewItem) {
                         return new HTML(
                                 "<b style='white-space: nowrap;'>"
@@ -103,7 +103,7 @@ public class ComponentExampleEntryPoint implements EntryPoint {
                                         + viewItem.getResources().size()
                                         + " items<span>");
                     }
-                }, new DefaultPopupManagerFactory(new DefaultPopupFactory())));
+                }, new DefaultPopupManagerFactory(new DefaultPopupFactory()), hoverModel));
 
         // create visualization
         barChart = new VisualizationWidget<BarChart>(new BarChart(),
