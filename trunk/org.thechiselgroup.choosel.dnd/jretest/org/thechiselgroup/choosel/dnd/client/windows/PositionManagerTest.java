@@ -42,8 +42,8 @@ public class PositionManagerTest {
     public void firstPosition() {
         Point location = manager.getNextLocation(200, 200);
 
-        assertEquals(TEST_PADDING, location.x);
-        assertEquals(TEST_PADDING, location.y);
+        assertEquals(TEST_PADDING, location.getX());
+        assertEquals(TEST_PADDING, location.getY());
     }
 
     @Test
@@ -54,10 +54,10 @@ public class PositionManagerTest {
 
         assertEquals(TEST_PADDING
                 + ((500 - 200 - 2 * TEST_PADDING) / TEST_HORIZONTAL_STEPS),
-                location.x);
+                location.getX());
         assertEquals(TEST_PADDING
                 + ((400 - 200 - 2 * TEST_PADDING) / TEST_VERTICAL_STEPS),
-                location.y);
+                location.getY());
     }
 
     @Before

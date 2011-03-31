@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.dnd.client.resources;
 
 import org.thechiselgroup.choosel.core.client.command.CommandManager;
+import org.thechiselgroup.choosel.core.client.ui.popup.PopupFactory;
 import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -28,8 +29,10 @@ public class ViewDisplayDropTargetManager extends
     public ViewDisplayDropTargetManager(CommandManager commandManager,
             ResourceSetAvatarDragController dragController,
             ViewAccessor viewAccessor,
-            DropTargetCapabilityChecker capabilityChecker) {
-        super(commandManager, dragController, viewAccessor, capabilityChecker);
+            DropTargetCapabilityChecker capabilityChecker,
+            PopupFactory popupFactory) {
+        super(commandManager, dragController, viewAccessor, capabilityChecker,
+                popupFactory);
     }
 
     @Override

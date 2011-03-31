@@ -20,6 +20,7 @@ package org.thechiselgroup.choosel.workbench.client.ui.dialog;
 
 import org.thechiselgroup.choosel.core.client.command.NullCommandManager;
 import org.thechiselgroup.choosel.core.client.ui.ActionBar;
+import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.core.client.ui.shade.ShadeManager;
 import org.thechiselgroup.choosel.core.client.util.RemoveHandle;
 import org.thechiselgroup.choosel.dnd.client.windows.AbstractWindowManager;
@@ -37,13 +38,16 @@ public class DialogWindowManager extends AbstractWindowManager {
 
     private ShadeManager shadeManager;
 
+    private PopupManagerFactory popupManagerFactory;
+
     DialogWindowManager(AbsolutePanel boundaryPanel, Dialog dialog,
-            ShadeManager shadeManager) {
+            ShadeManager shadeManager, PopupManagerFactory popupManagerFactory) {
 
         super(boundaryPanel, new NullCommandManager());
 
         this.dialog = dialog;
         this.shadeManager = shadeManager;
+        this.popupManagerFactory = popupManagerFactory;
     }
 
     public void cancelDialog(DialogWindow window) {
@@ -72,7 +76,8 @@ public class DialogWindowManager extends AbstractWindowManager {
         try {
             showShade();
 
-            final DialogWindow dialogWindow = new DialogWindow();
+            final DialogWindow dialogWindow = new DialogWindow(
+                    popupManagerFactory);
 
             // initialization order important (breaks otherwise)
             dialogWindow.init(this, dialog);

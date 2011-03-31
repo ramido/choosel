@@ -61,7 +61,7 @@ public class DefaultWindowController implements WindowController {
             }
 
             Point location = callback.getLocation();
-            callback.setLocation(location.x + deltaX, location.y + deltaY);
+            callback.setLocation(location.getX() + deltaX, location.getY() + deltaY);
         }
     }
 

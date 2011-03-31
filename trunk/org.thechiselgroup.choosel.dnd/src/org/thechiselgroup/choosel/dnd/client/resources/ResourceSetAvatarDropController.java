@@ -17,10 +17,13 @@ package org.thechiselgroup.choosel.dnd.client.resources;
 
 import org.thechiselgroup.choosel.core.client.command.CommandManager;
 import org.thechiselgroup.choosel.core.client.command.UndoableCommand;
+import org.thechiselgroup.choosel.core.client.geometry.Point;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.core.client.ui.CSS;
-import org.thechiselgroup.choosel.core.client.ui.popup.DefaultDelayedPopup;
-import org.thechiselgroup.choosel.core.client.ui.popup.DelayedPopup;
+import org.thechiselgroup.choosel.core.client.ui.popup.DefaultDelayedPopupManager;
+import org.thechiselgroup.choosel.core.client.ui.popup.DelayedPopupManager;
+import org.thechiselgroup.choosel.core.client.ui.popup.Popup;
+import org.thechiselgroup.choosel.core.client.ui.popup.PopupFactory;
 import org.thechiselgroup.choosel.core.client.util.HasDescription;
 import org.thechiselgroup.choosel.core.client.views.View;
 import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
@@ -50,14 +53,17 @@ public class ResourceSetAvatarDropController extends SimpleDropController {
 
     private UndoableCommand executedCommand;
 
-    private DelayedPopup popup = null;
+    private DelayedPopupManager popup = null;
 
     private ViewAccessor viewAccessor;
+
+    private PopupFactory popupFactory;
 
     public ResourceSetAvatarDropController(Widget dropTarget,
             ResourceSetAvatarDropCommandFactory commandFactory,
             CommandManager commandManager, ViewAccessor viewAccessor,
-            DropTargetCapabilityChecker capabilityChecker) {
+            DropTargetCapabilityChecker capabilityChecker,
+            PopupFactory popupFactory) {
 
         super(dropTarget);
 
@@ -65,6 +71,7 @@ public class ResourceSetAvatarDropController extends SimpleDropController {
         this.commandManager = commandManager;
         this.viewAccessor = viewAccessor;
         this.capabilityChecker = capabilityChecker;
+        this.popupFactory = popupFactory;
     }
 
     // TODO prevent drag source self-drop
@@ -90,21 +97,28 @@ public class ResourceSetAvatarDropController extends SimpleDropController {
 
     // protected for testing only
     // TODO move to factory
-    protected DelayedPopup createPopup(final DragContext context, String message) {
-        DefaultDelayedPopup popup = new DefaultDelayedPopup(POPUP_SHOW_DELAY,
-                POPUP_HIDE_DELAY) {
+    // TODO refactor
+    protected DelayedPopupManager createPopup(final DragContext context,
+            String message) {
+
+        Popup popup = popupFactory.createPopup();
+
+        DelayedPopupManager popupManager = new DefaultDelayedPopupManager(
+                POPUP_SHOW_DELAY, POPUP_HIDE_DELAY, popup) {
 
             @Override
             protected void updatePosition() {
-                setPopupPosition(context.mouseX + POPUP_X_OFFSET,
-                        context.mouseY + POPUP_Y_OFFSET);
+                getPopup().setLocation(
+                        new Point(context.mouseX + POPUP_X_OFFSET,
+                                context.mouseY + POPUP_Y_OFFSET));
             }
         };
 
-        CSS.setMaxWidth(popup, MAX_POPUP_WIDTH);
-        popup.setWidget(new HTML(message));
+        HTML widget = new HTML(message);
+        CSS.setMaxWidth(widget, MAX_POPUP_WIDTH);
+        popupManager.getPopup().setContentWidget(widget);
 
-        return popup;
+        return popupManager;
     }
 
     private void executeCommand(UndoableCommand command) {

@@ -22,6 +22,7 @@ import org.thechiselgroup.choosel.core.client.resources.ui.HideIfEmptyResourceSe
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarFactoryProvider;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarType;
+import org.thechiselgroup.choosel.core.client.ui.popup.PopupFactory;
 import org.thechiselgroup.choosel.core.client.views.DefaultViewAccessor;
 
 import com.google.inject.Inject;
@@ -35,15 +36,19 @@ public class SelectionDropTargetFactoryProvider implements
 
     private final ResourceSetAvatarDragController dragController;
 
+    private final PopupFactory popupFactory;
+
     @Inject
     public SelectionDropTargetFactoryProvider(
             ResourceSetAvatarDragController dragController,
             CommandManager commandManager,
-            DropTargetCapabilityChecker capabilityChecker) {
+            DropTargetCapabilityChecker capabilityChecker,
+            PopupFactory popupFactory) {
 
         this.dragController = dragController;
         this.commandManager = commandManager;
         this.capabilityChecker = capabilityChecker;
+        this.popupFactory = popupFactory;
     }
 
     @Override
@@ -57,7 +62,8 @@ public class SelectionDropTargetFactoryProvider implements
 
         return new DropTargetResourceSetAvatarFactory(disablingFactory,
                 new SelectionDropTargetManager(commandManager, dragController,
-                        new DefaultViewAccessor(), capabilityChecker));
+                        new DefaultViewAccessor(), capabilityChecker,
+                        popupFactory));
 
     }
 }

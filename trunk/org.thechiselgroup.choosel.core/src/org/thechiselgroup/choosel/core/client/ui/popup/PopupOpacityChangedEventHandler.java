@@ -15,10 +15,10 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.ui.popup;
 
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.event.shared.EventHandler;
 
-public interface PopupManagerFactory {
+public interface PopupOpacityChangedEventHandler extends EventHandler {
 
-    PopupManager createPopupManager(Widget content);
+    void onOpacityChangeStarted(PopupOpacityChangedEvent event);
 
 }

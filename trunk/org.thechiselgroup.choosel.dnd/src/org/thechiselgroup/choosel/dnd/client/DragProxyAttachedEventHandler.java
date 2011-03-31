@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.core.client.ui.popup;
+package org.thechiselgroup.choosel.dnd.client;
 
 import com.google.gwt.event.shared.EventHandler;
 
-public interface PopupClosedHandler extends EventHandler {
+public interface DragProxyAttachedEventHandler extends EventHandler {
 
-    void onPopupClosing(PopupClosedEvent event);
+    void onDragProxyAttached(DragProxyAttachedEvent event);
 
 }

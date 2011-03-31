@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -15,15 +15,18 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.geometry;
 
-public class Point {
+public class Size implements HasSize {
 
-    private int x;
+    private int width;
 
-    private int y;
+    private int height;
 
-    public Point(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public Size(int width, int height) {
+        assert width >= 0;
+        assert height >= 0;
+
+        this.width = width;
+        this.height = height;
     }
 
     @Override
@@ -37,36 +40,38 @@ public class Point {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        Point other = (Point) obj;
-        if (x != other.x) {
+        Size other = (Size) obj;
+        if (width != other.width) {
             return false;
         }
-        if (y != other.y) {
+        if (height != other.height) {
             return false;
         }
         return true;
     }
 
-    public int getX() {
-        return x;
+    @Override
+    public int getHeight() {
+        return height;
     }
 
-    public int getY() {
-        return y;
+    @Override
+    public int getWidth() {
+        return width;
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + x;
-        result = prime * result + y;
+        result = prime * result + width;
+        result = prime * result + height;
         return result;
     }
 
     @Override
     public String toString() {
-        return "(" + x + ", " + y + ")";
+        return "(" + width + ", " + height + ")";
     }
 
 }

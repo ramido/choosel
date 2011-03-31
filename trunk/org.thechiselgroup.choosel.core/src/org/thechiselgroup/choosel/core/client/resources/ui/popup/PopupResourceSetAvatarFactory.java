@@ -26,7 +26,6 @@ import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarEnab
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.core.client.resources.ui.popup.ResourceSetAvatarPopupWidgetFactory.HeaderUpdatedEventHandler;
 import org.thechiselgroup.choosel.core.client.resources.ui.popup.ResourceSetAvatarPopupWidgetFactory.ResourceSetAvatarPopupWidgetFactoryAction;
-import org.thechiselgroup.choosel.core.client.ui.popup.DefaultPopupManager;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
@@ -34,6 +33,7 @@ import org.thechiselgroup.choosel.core.client.views.View;
 import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
 
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.Widget;
 
 public class PopupResourceSetAvatarFactory extends
         DelegatingResourceSetAvatarFactory {
@@ -121,25 +121,16 @@ public class PopupResourceSetAvatarFactory extends
                             viewAccessor, avatar, action));
         }
 
-        ResourceSetAvatarPopupWidgetFactory widgetFactory = new ResourceSetAvatarPopupWidgetFactory(
-                avatar.getText(), subHeaderText, actionAdapters, infoText,
-                resourceLabelModifiable ? new HeaderUpdatedEventHandler() {
-                    @Override
-                    public void headerLabelChanged(String newLabel) {
-                        resources.setLabel(newLabel);
-                    }
-                } : null);
-
         final PopupManager popupManager = popupManagerFactory
-                .createPopupManager(widgetFactory);
+                .createPopupManager(createWidget(resources, avatar,
+                        actionAdapters));
 
         for (ResourceSetAvatarPopupWidgetFactoryAction action : actionAdapters) {
             ((ActionToDragAvatarPopupWidgetFactoryActionAdapter) action)
                     .setPopupManager(popupManager);
         }
 
-        final Disposable link = DefaultPopupManager.linkManagerToSource(
-                popupManager, avatar);
+        final HandlerRegistration link = popupManager.linkToWidget(avatar);
 
         popupManager.setEnabled(avatar.isEnabled());
         final HandlerRegistration handlerRegistration = avatar
@@ -155,10 +146,27 @@ public class PopupResourceSetAvatarFactory extends
             @Override
             public void dispose() {
                 handlerRegistration.removeHandler();
-                link.dispose();
+                link.removeHandler();
             }
         });
 
         return avatar;
+    }
+
+    protected Widget createWidget(final ResourceSet resources,
+            final ResourceSetAvatar avatar,
+            List<ResourceSetAvatarPopupWidgetFactoryAction> actionAdapters) {
+
+        // TODO refactor - is a widgetFactory really required here?
+        ResourceSetAvatarPopupWidgetFactory widgetFactory = new ResourceSetAvatarPopupWidgetFactory(
+                avatar.getText(), subHeaderText, actionAdapters, infoText,
+                resourceLabelModifiable ? new HeaderUpdatedEventHandler() {
+                    @Override
+                    public void headerLabelChanged(String newLabel) {
+                        resources.setLabel(newLabel);
+                    }
+                } : null);
+
+        return widgetFactory.createWidget();
     }
 }

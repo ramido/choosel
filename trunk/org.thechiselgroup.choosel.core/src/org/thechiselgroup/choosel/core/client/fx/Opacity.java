@@ -15,14 +15,15 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.fx;
 
-public interface Opacity {
+public final class Opacity {
 
-    int OPACITY_80_PERCENT = 80;
+    public final static int OPAQUE = 100;
 
-    int OPACITY_OPAQUE = 100;
+    public final static int SEMI_TRANSPARENT = 80;
 
-    int OPACITY_SEMI_TRANSPARENT = OPACITY_80_PERCENT;
+    public final static int TRANSPARENT = 0;
 
-    int OPACITY_TRANSPARENT = 0;
+    private Opacity() {
+    }
 
 }

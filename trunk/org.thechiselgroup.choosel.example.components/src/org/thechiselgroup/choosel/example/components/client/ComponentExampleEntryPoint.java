@@ -27,11 +27,12 @@ import org.thechiselgroup.choosel.core.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.core.client.test.BenchmarkResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.ui.CSS;
 import org.thechiselgroup.choosel.core.client.ui.Color;
+import org.thechiselgroup.choosel.core.client.ui.popup.DefaultPopupFactory;
 import org.thechiselgroup.choosel.core.client.ui.popup.DefaultPopupManagerFactory;
 import org.thechiselgroup.choosel.core.client.views.VisualizationWidget;
 import org.thechiselgroup.choosel.core.client.views.behaviors.CompositeViewItemBehavior;
 import org.thechiselgroup.choosel.core.client.views.behaviors.HighlightingViewItemBehavior;
-import org.thechiselgroup.choosel.core.client.views.behaviors.PopupViewItemBehavior;
+import org.thechiselgroup.choosel.core.client.views.behaviors.PopupWithHighlightingViewItemBehavior;
 import org.thechiselgroup.choosel.core.client.views.behaviors.SwitchSelectionOnClickViewItemBehavior;
 import org.thechiselgroup.choosel.core.client.views.model.DefaultSelectionModel;
 import org.thechiselgroup.choosel.core.client.views.model.HoverModel;
@@ -92,8 +93,8 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         barChartBehaviors.add(new HighlightingViewItemBehavior(hoverModel));
         barChartBehaviors.add(new SwitchSelectionOnClickViewItemBehavior(
                 selectionModel));
-        barChartBehaviors.add(new PopupViewItemBehavior(hoverModel,
-                new DetailsWidgetHelper() {
+        barChartBehaviors.add(new PopupWithHighlightingViewItemBehavior(
+                hoverModel, new DetailsWidgetHelper() {
                     public Widget createDetailsWidget(ViewItem viewItem) {
                         return new HTML(
                                 "<b style='white-space: nowrap;'>"
@@ -102,7 +103,7 @@ public class ComponentExampleEntryPoint implements EntryPoint {
                                         + viewItem.getResources().size()
                                         + " items<span>");
                     }
-                }, new DefaultPopupManagerFactory()));
+                }, new DefaultPopupManagerFactory(new DefaultPopupFactory())));
 
         // create visualization
         barChart = new VisualizationWidget<BarChart>(new BarChart(),

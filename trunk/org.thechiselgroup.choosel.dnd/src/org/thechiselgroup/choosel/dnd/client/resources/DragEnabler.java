@@ -22,7 +22,8 @@ import org.thechiselgroup.choosel.core.client.ui.ZIndex;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction.Type;
-import org.thechiselgroup.choosel.dnd.client.DragProxyEventReceiver;
+import org.thechiselgroup.choosel.dnd.client.DragProxyDetachedEvent;
+import org.thechiselgroup.choosel.dnd.client.DragProxyDetachedEventHandler;
 import org.thechiselgroup.choosel.dnd.client.windows.Desktop;
 
 import com.google.gwt.dom.client.NativeEvent;
@@ -38,23 +39,29 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 public class DragEnabler {
 
     private static class InvisibleResourceSetAvatar extends
-            DraggableResourceSetAvatar implements DragProxyEventReceiver {
+            DraggableResourceSetAvatar {
 
         private final ViewItem item;
 
         private String text;
 
-        private DragEnabler dragEnabler;
-
-        public InvisibleResourceSetAvatar(ViewItem item, String text,
+        public InvisibleResourceSetAvatar(final ViewItem item, String text,
                 String enabledCSSClass, ResourceSetAvatarType type,
-                Element element, DragEnabler dragEnabler) {
+                Element element, final DragEnabler dragEnabler) {
 
             super(text, enabledCSSClass, item.getResources(), type, element);
 
             this.text = text;
             this.item = item;
-            this.dragEnabler = dragEnabler;
+
+            addHandler(new DragProxyDetachedEventHandler() {
+                @Override
+                public void onDragProxyDetached(DragProxyDetachedEvent event) {
+                    item.reportInteraction(new ViewItemInteraction(
+                            Type.DRAG_END));
+                    dragEnabler.removeAvatar();
+                }
+            }, DragProxyDetachedEvent.TYPE);
         }
 
         @Override
@@ -65,16 +72,6 @@ public class DragEnabler {
         public ResourceSetAvatar createProxy() {
             item.reportInteraction(new ViewItemInteraction(Type.DRAG_START));
             return super.createProxy();
-        }
-
-        @Override
-        public void dragProxyAttached() {
-        }
-
-        @Override
-        public void dragProxyDetached() {
-            item.reportInteraction(new ViewItemInteraction(Type.DRAG_END));
-            dragEnabler.removeAvatar();
         }
 
         @Override

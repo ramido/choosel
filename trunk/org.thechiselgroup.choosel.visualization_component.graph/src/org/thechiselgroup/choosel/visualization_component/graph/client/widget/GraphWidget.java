@@ -391,8 +391,8 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
         assert containsNode(node.getId());
         assert targetLocation != null;
 
-        _setNodeLocation(getSwfId(), node.getId(), targetLocation.x,
-                targetLocation.y, true);
+        _setNodeLocation(getSwfId(), node.getId(), targetLocation.getX(),
+                targetLocation.getY(), true);
 
     }
 
@@ -626,7 +626,7 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
         assert containsNode(node.getId());
         assert point != null;
 
-        _setNodeLocation(getSwfId(), node.getId(), point.x, point.y);
+        _setNodeLocation(getSwfId(), node.getId(), point.getX(), point.getY());
     }
 
     @Override

@@ -15,22 +15,15 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.ui.popup;
 
-import org.thechiselgroup.choosel.core.client.geometry.Point;
-
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.event.dom.client.MouseOutHandler;
-import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.event.dom.client.HasAllMouseHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 public interface PopupManager {
 
-    HandlerRegistration addPopupClosedHandler(PopupClosedHandler handler);
-
-    HandlerRegistration addPopupMouseOutHandler(MouseOutHandler handler);
-
-    HandlerRegistration addPopupMouseOverHandler(MouseOverHandler handler);
-
     int getHideDelay();
+
+    Popup getPopup();
 
     int getShowDelay();
 
@@ -38,24 +31,20 @@ public interface PopupManager {
 
     boolean isEnabled();
 
+    HandlerRegistration linkToWidget(HasAllMouseHandlers widget);
+
     /**
      * Mouse down triggers either drag-and-drop operations (left mouse button,
      * popup gets hidden) or context menu operations (right mouse buttons, popup
      * gets shown)
      */
-    void onMouseDown(NativeEvent nativeEvent);
+    void onMouseDown(NativeEvent event);
 
     void onMouseMove(int clientX, int clientY);
 
-    void onMouseMove(Point pointInBrowserClientArea);
-
     void onMouseOut(int clientX, int clientY);
 
-    void onMouseOut(Point pointInBrowserClientArea);
-
     void onMouseOver(int clientX, int clientY);
-
-    void onMouseOver(Point pointInBrowserClientArea);
 
     void setEnabled(boolean enabled);
 
