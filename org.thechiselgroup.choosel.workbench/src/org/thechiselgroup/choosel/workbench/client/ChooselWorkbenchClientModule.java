@@ -43,6 +43,8 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.ui.DefaultDetailsWidgetHelper;
 import org.thechiselgroup.choosel.core.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarFactory;
+import org.thechiselgroup.choosel.core.client.ui.popup.DefaultPopupFactory;
+import org.thechiselgroup.choosel.core.client.ui.popup.PopupFactory;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.core.client.ui.shade.ShadeManager;
 import org.thechiselgroup.choosel.core.client.util.HandlerManagerProvider;
@@ -255,8 +257,10 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
                 MessageBlockingCommandExecutor.class).in(Singleton.class);
         bind(CommandPresenterFactory.class).in(Singleton.class);
 
+        configurePopups();
+
         bind(AbsolutePanel.class).annotatedWith(Names.named(ROOT_PANEL))
-                .toProvider(RootPanelProvider.class);
+                .toProvider(RootPanelProvider.class).in(Singleton.class);
 
         bind(ViewContentDisplaysConfiguration.class).toProvider(
                 getViewContentDisplaysConfigurationProvider()).in(
@@ -293,8 +297,6 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
                 Singleton.class);
         bind(WorkspacePersistenceManager.class).to(
                 DefaultWorkspacePersistenceManager.class).in(Singleton.class);
-        bind(PopupManagerFactory.class).to(
-                DragSupportingPopupManagerFactory.class).in(Singleton.class);
 
         bind(ResourceManager.class).to(DefaultResourceManager.class).in(
                 Singleton.class);
@@ -323,6 +325,13 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
         bindBranding();
         bindCustomServices();
         bindApplication();
+    }
+
+    protected void configurePopups() {
+        bind(PopupFactory.class).to(DefaultPopupFactory.class).in(
+                Singleton.class);
+        bind(PopupManagerFactory.class).to(
+                DragSupportingPopupManagerFactory.class).in(Singleton.class);
     }
 
     /**

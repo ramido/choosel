@@ -17,12 +17,14 @@ package org.thechiselgroup.choosel.workbench.client.ui.dialog;
 
 import org.thechiselgroup.choosel.core.client.ui.DialogPanel;
 import org.thechiselgroup.choosel.core.client.ui.ZIndex;
+import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.dnd.client.windows.WindowPanel;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 
 public final class DialogWindow extends WindowPanel implements DialogCallback {
 
@@ -32,6 +34,11 @@ public final class DialogWindow extends WindowPanel implements DialogCallback {
     private DialogWindowManager dialogController;
 
     private Button okayButton;
+
+    @Inject
+    public DialogWindow(PopupManagerFactory popupManagerFactory) {
+        super(popupManagerFactory);
+    }
 
     /**
      * Close the dialog with an cancel state.

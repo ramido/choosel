@@ -20,10 +20,9 @@ import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarType;
 import org.thechiselgroup.choosel.core.client.ui.CSS;
 import org.thechiselgroup.choosel.core.client.ui.ZIndex;
-import org.thechiselgroup.choosel.dnd.client.DragProxyEventReceiver;
+import org.thechiselgroup.choosel.dnd.client.DragProxyUtils;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.user.client.ui.Widget;
 
 public class DraggableResourceSetAvatar extends ResourceSetAvatar {
 
@@ -84,13 +83,7 @@ public class DraggableResourceSetAvatar extends ResourceSetAvatar {
          * inside presenters).
          */
         if (isProxy()) {
-            Widget w = originalAvatar;
-            while (w != null) {
-                if (w instanceof DragProxyEventReceiver) {
-                    ((DragProxyEventReceiver) w).dragProxyAttached();
-                }
-                w = w.getParent();
-            }
+            DragProxyUtils.fireDragProxyAttached(originalAvatar);
         }
     }
 
@@ -106,13 +99,7 @@ public class DraggableResourceSetAvatar extends ResourceSetAvatar {
          * inside presenters).
          */
         if (isProxy()) {
-            Widget w = originalAvatar;
-            while (w != null) {
-                if (w instanceof DragProxyEventReceiver) {
-                    ((DragProxyEventReceiver) w).dragProxyDetached();
-                }
-                w = w.getParent();
-            }
+            DragProxyUtils.fireDragProxyDetached(originalAvatar);
         }
     }
 

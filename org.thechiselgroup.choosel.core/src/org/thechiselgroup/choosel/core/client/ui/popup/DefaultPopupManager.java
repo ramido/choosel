@@ -15,108 +15,47 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.ui.popup;
 
-import org.adamtacy.client.ui.NEffectPanel;
-import org.adamtacy.client.ui.effects.core.NMorphScalar;
-import org.adamtacy.client.ui.effects.events.EffectCompletedEvent;
-import org.adamtacy.client.ui.effects.events.EffectCompletedHandler;
-import org.thechiselgroup.choosel.core.client.fx.FXUtil;
 import org.thechiselgroup.choosel.core.client.fx.Opacity;
 import org.thechiselgroup.choosel.core.client.geometry.Point;
-import org.thechiselgroup.choosel.core.client.ui.CSS;
-import org.thechiselgroup.choosel.core.client.ui.WidgetFactory;
-import org.thechiselgroup.choosel.core.client.ui.ZIndex;
-import org.thechiselgroup.choosel.core.client.util.Disposable;
 
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.HasAllMouseHandlers;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
-import com.google.gwt.event.dom.client.MouseEvent;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
 
-public class DefaultPopupManager implements Opacity, PopupManager {
-
-    private static class MouseHandlersPopupManagerLink implements
-            MouseOverHandler, MouseOutHandler, MouseMoveHandler,
-            MouseDownHandler {
-
-        private final PopupManager manager;
-
-        public MouseHandlersPopupManagerLink(PopupManager manager) {
-            this.manager = manager;
-        }
+public class DefaultPopupManager implements PopupManager {
+    private class MouseHandlersPopupManagerLink implements MouseOverHandler,
+            MouseOutHandler, MouseMoveHandler, MouseDownHandler {
 
         @Override
         public void onMouseDown(MouseDownEvent event) {
-            manager.onMouseDown(event.getNativeEvent());
+            DefaultPopupManager.this.onMouseDown(event.getNativeEvent());
         }
 
         @Override
         public void onMouseMove(MouseMoveEvent event) {
-            manager.onMouseMove(event.getClientX(), event.getClientY());
+            DefaultPopupManager.this.onMouseMove(event.getClientX(),
+                    event.getClientY());
         }
 
         @Override
         public void onMouseOut(MouseOutEvent event) {
-            manager.onMouseOut(event.getClientX(), event.getClientY());
+            DefaultPopupManager.this.onMouseOut(event.getClientX(),
+                    event.getClientY());
         }
 
         @Override
         public void onMouseOver(MouseOverEvent event) {
-            manager.onMouseOver(event.getClientX(), event.getClientY());
-        }
-
-    }
-
-    private static class PopupMouseEventsHandler implements MouseOverHandler,
-            MouseOutHandler {
-
-        private final DefaultPopupManager manager;
-
-        public PopupMouseEventsHandler(DefaultPopupManager manager) {
-            this.manager = manager;
-        }
-
-        @Override
-        public void onMouseOut(MouseOutEvent event) {
-            updateMousePosition(event);
-            manager.state.onPopupMouseOut(manager);
-            manager.eventBus.fireEvent(event);
-
-        }
-
-        @Override
-        public void onMouseOver(MouseOverEvent event) {
-            updateMousePosition(event);
-            manager.state.onPopupMouseOver(manager);
-            manager.eventBus.fireEvent(event);
-        }
-
-        private void updateMousePosition(MouseEvent<?> event) {
-            manager.updateMousePosition(event.getClientX(), event.getClientY());
-        }
-    }
-
-    protected class PopupPanel extends SimplePanel {
-
-        public HandlerRegistration addMouseOutHandler(MouseOutHandler handler) {
-            return addDomHandler(handler, MouseOutEvent.getType());
-        }
-
-        public HandlerRegistration addMouseOverHandler(MouseOverHandler handler) {
-            return addDomHandler(handler, MouseOverEvent.getType());
+            DefaultPopupManager.this.onMouseOver(event.getClientX(),
+                    event.getClientY());
         }
 
     }
@@ -156,15 +95,11 @@ public class DefaultPopupManager implements Opacity, PopupManager {
 
     }
 
-    protected final static State ACTIVE_STATE = new State() {
+    public final static State ACTIVE_STATE = new State() {
 
         @Override
         public void enter(DefaultPopupManager manager) {
-            hide(manager);
-        }
-
-        private void hide(DefaultPopupManager manager) {
-            manager.setPopupTransparency(OPACITY_OPAQUE);
+            manager.setOpacity(Opacity.OPAQUE);
         }
 
         @Override
@@ -178,8 +113,6 @@ public class DefaultPopupManager implements Opacity, PopupManager {
 
     };
 
-    private static final String CSS_POPUP_CLASS = "popups-Popup";
-
     public static final int DEFAULT_HIDE_DELAY = 250;
 
     /**
@@ -188,7 +121,7 @@ public class DefaultPopupManager implements Opacity, PopupManager {
      */
     public static final int DEFAULT_SHOW_DELAY = 1000;
 
-    protected final static State DISABLED_STATE = new State() {
+    public final static State DISABLED_STATE = new State() {
 
         @Override
         public void enter(DefaultPopupManager manager) {
@@ -197,7 +130,7 @@ public class DefaultPopupManager implements Opacity, PopupManager {
 
     };
 
-    protected final static State INACTIVE_STATE = new State() {
+    public final static State INACTIVE_STATE = new State() {
 
         @Override
         public void enter(DefaultPopupManager manager) {
@@ -219,11 +152,11 @@ public class DefaultPopupManager implements Opacity, PopupManager {
 
     private static final int POPUP_OFFSET_Y = 15;
 
-    protected final static State SEMITRANSPARENT_STATE = new State() {
+    public final static State SEMITRANSPARENT_STATE = new State() {
 
         @Override
         public void enter(DefaultPopupManager manager) {
-            manager.setPopupTransparency(OPACITY_SEMI_TRANSPARENT);
+            manager.setOpacity(Opacity.SEMI_TRANSPARENT);
         }
 
         @Override
@@ -242,11 +175,11 @@ public class DefaultPopupManager implements Opacity, PopupManager {
 
     };
 
-    protected final static State SEMITRANSPARENT_WAITING_STATE = new State() {
+    public final static State SEMITRANSPARENT_WAITING_STATE = new State() {
 
         @Override
         public void enter(DefaultPopupManager manager) {
-            manager.setPopupTransparency(OPACITY_SEMI_TRANSPARENT);
+            manager.setOpacity(Opacity.SEMI_TRANSPARENT);
             manager.startTimer(manager.hideDelay);
         }
 
@@ -272,7 +205,7 @@ public class DefaultPopupManager implements Opacity, PopupManager {
 
     };
 
-    protected final static State WAITING_STATE = new State() {
+    public final static State WAITING_STATE = new State() {
 
         @Override
         public void enter(DefaultPopupManager manager) {
@@ -305,195 +238,53 @@ public class DefaultPopupManager implements Opacity, PopupManager {
         }
     };
 
-    /**
-     * Creates a new popup manager. Needs to be started by calling init()
-     * afterwards.
-     * 
-     * @param source
-     *            Event interface that triggers popup
-     * @param widgetFactory
-     *            Factory that creates the content widget of the popup
-     */
-    // XXX remove
-    public static <T extends HasAllMouseHandlers & HasClickHandlers> DefaultPopupManager createPopupManager(
-            T source, WidgetFactory widgetFactory) {
-
-        DefaultPopupManager manager = new DefaultPopupManager(widgetFactory);
-        linkManagerToSource(manager, source);
-        return manager;
-    }
-
-    private static RootPanel getRootPanel() {
-        return RootPanel.get();
-    }
-
-    /**
-     * Links a source to the popup manager.
-     */
-    public static Disposable linkManagerToSource(PopupManager manager,
-            HasAllMouseHandlers source) {
-
-        MouseHandlersPopupManagerLink link = new MouseHandlersPopupManagerLink(
-                manager);
-
-        final HandlerRegistration reg1 = source.addMouseOverHandler(link);
-        final HandlerRegistration reg2 = source.addMouseOutHandler(link);
-        final HandlerRegistration reg3 = source.addMouseMoveHandler(link);
-        final HandlerRegistration reg4 = source.addMouseDownHandler(link);
-
-        return new Disposable() {
-            @Override
-            public void dispose() {
-                reg1.removeHandler();
-                reg2.removeHandler();
-                reg3.removeHandler();
-                reg4.removeHandler();
-            }
-        };
-    }
-
-    private NMorphScalar currentEffect;
-
-    private final HandlerManager eventBus = new HandlerManager(this);
-
     protected int hideDelay = DEFAULT_HIDE_DELAY;
 
     private int clientX = -1;
 
     private int clientY = -1;
 
-    private NMorphScalar nextEffect;
-
-    private PopupPanel popupContentPanel;
-
-    private NEffectPanel popupEffectsPanel = null;
-
-    private final PopupMouseEventsHandler popupMouseEventsHandler;
-
-    private HandlerRegistration popupMouseOutHandlerRegistration;
-
-    private HandlerRegistration popupMouseOverHandlerRegistration;
-
     protected int showDelay = DEFAULT_SHOW_DELAY;
 
     private State state = INACTIVE_STATE;
 
-    private Timer timer = new Timer() {
-        @Override
-        public void run() {
-            state.onTimeout(DefaultPopupManager.this);
-        }
-    };
+    protected Popup popup;
 
-    private int transparency = OPACITY_TRANSPARENT;
+    private Timer timer;
 
-    private final WidgetFactory widgetFactory;
+    public DefaultPopupManager(Popup popup) {
+        assert popup != null;
+        this.popup = popup;
 
-    public DefaultPopupManager(WidgetFactory widgetFactory) {
-        assert widgetFactory != null;
+        this.popup.addDomHandler(new MouseOutHandler() {
+            @Override
+            public void onMouseOut(MouseOutEvent event) {
+                updateMousePosition(event.getClientX(), event.getClientY());
+                state.onPopupMouseOut(DefaultPopupManager.this);
+            }
+        }, MouseOutEvent.getType());
+        this.popup.addDomHandler(new MouseOverHandler() {
+            @Override
+            public void onMouseOver(MouseOverEvent event) {
+                updateMousePosition(event.getClientX(), event.getClientY());
+                state.onPopupMouseOver(DefaultPopupManager.this);
+            }
+        }, MouseOverEvent.getType());
 
-        this.widgetFactory = widgetFactory;
-        this.popupMouseEventsHandler = new PopupMouseEventsHandler(this);
-    }
-
-    @Override
-    public HandlerRegistration addPopupClosedHandler(PopupClosedHandler handler) {
-        return eventBus.addHandler(PopupClosedEvent.TYPE, handler);
-    }
-
-    private void addPopupMouseListeners() {
-        popupMouseOverHandlerRegistration = popupContentPanel
-                .addMouseOverHandler(popupMouseEventsHandler);
-        popupMouseOutHandlerRegistration = popupContentPanel
-                .addMouseOutHandler(popupMouseEventsHandler);
-    }
-
-    @Override
-    public HandlerRegistration addPopupMouseOutHandler(MouseOutHandler handler) {
-        return eventBus.addHandler(MouseOutEvent.getType(), handler);
-    }
-
-    @Override
-    public HandlerRegistration addPopupMouseOverHandler(MouseOverHandler handler) {
-        return eventBus.addHandler(MouseOverEvent.getType(), handler);
-    }
-
-    private void attachPopup() {
-        NEffectPanel popup = getPopupPanel();
-
-        addPopupMouseListeners();
-
-        Style style = popup.getElement().getStyle();
-
-        /*
-         * position should be fixed, not absolute (otherwise there are problems
-         * with positioning when the window is scrolled)
-         */
-        style.setProperty(CSS.POSITION, CSS.FIXED);
-        style.setProperty(CSS.Z_INDEX, Integer.toString(ZIndex.POPUP));
-        style.setPropertyPx(CSS.LEFT, clientX + POPUP_OFFSET_X);
-        style.setPropertyPx(CSS.TOP, clientY + POPUP_OFFSET_Y);
-
-        getRootPanel().add(popup);
+        this.timer = createTimer();
     }
 
     protected void cancelTimer() {
         timer.cancel();
     }
 
-    private NMorphScalar createMorphEffect(int currentTransparency,
-            int newTransparency) {
-
-        NMorphScalar morph = FXUtil.createOpacityMorph(currentTransparency,
-                newTransparency);
-
-        morph.addEffectCompletedHandler(new EffectCompletedHandler() {
+    protected Timer createTimer() {
+        return new Timer() {
             @Override
-            public void onEffectCompleted(EffectCompletedEvent event) {
-                effectCompleted();
+            public void run() {
+                state.onTimeout(DefaultPopupManager.this);
             }
-        });
-
-        return morph;
-    }
-
-    protected PopupPanel createPopupPanel() {
-        return new PopupPanel();
-    }
-
-    private void detachPopup() {
-        if (popupEffectsPanel == null) {
-            return;
-        }
-
-        popupMouseOverHandlerRegistration.removeHandler();
-        popupMouseOutHandlerRegistration.removeHandler();
-
-        getRootPanel().remove(getPopupPanel());
-
-        /*
-         * We fire a closed event this late, because otherwise the user might
-         * mouse over the popup and trigger other events while a potential
-         * client might believe the popup is closed. This led to problems with
-         * highlighting and popups.
-         */
-        eventBus.fireEvent(new PopupClosedEvent(this));
-    }
-
-    private void effectCompleted() {
-        getPopupPanel().removeEffect(currentEffect);
-        transparency = getNextTransparency();
-
-        if (hasAnotherEffect()) {
-            currentEffect = nextEffect;
-            nextEffect = null;
-            runCurrentEffect();
-        } else {
-            currentEffect = null;
-            if (transparency == OPACITY_TRANSPARENT) {
-                detachPopup();
-            }
-        }
+        };
     }
 
     @Override
@@ -501,23 +292,9 @@ public class DefaultPopupManager implements Opacity, PopupManager {
         return hideDelay;
     }
 
-    private int getNextTransparency() {
-        assert currentEffect != null;
-
-        return (int) currentEffect.getEndValue();
-    }
-
-    private NEffectPanel getPopupPanel() {
-        if (popupEffectsPanel == null) {
-            popupContentPanel = createPopupPanel();
-            popupContentPanel.setStyleName(CSS_POPUP_CLASS);
-            popupContentPanel.add(widgetFactory.createWidget());
-
-            popupEffectsPanel = new NEffectPanel();
-            popupEffectsPanel.add(popupContentPanel);
-        }
-
-        return popupEffectsPanel;
+    @Override
+    public Popup getPopup() {
+        return popup;
     }
 
     /**
@@ -529,12 +306,8 @@ public class DefaultPopupManager implements Opacity, PopupManager {
         return showDelay;
     }
 
-    private boolean hasAnotherEffect() {
-        return nextEffect != null;
-    }
-
-    private void hide() {
-        setPopupTransparency(OPACITY_TRANSPARENT);
+    protected void hide() {
+        setOpacity(Opacity.TRANSPARENT);
     }
 
     @Override
@@ -542,10 +315,6 @@ public class DefaultPopupManager implements Opacity, PopupManager {
         if (isEnabled()) {
             setState(INACTIVE_STATE);
         }
-    }
-
-    private boolean isEffectRunning() {
-        return currentEffect != null;
     }
 
     @Override
@@ -559,6 +328,29 @@ public class DefaultPopupManager implements Opacity, PopupManager {
 
     private boolean isPopupHidingDelayed() {
         return hideDelay > 0;
+    }
+
+    /**
+     * Links a widget source to this {@link PopupManager}.
+     */
+    @Override
+    public HandlerRegistration linkToWidget(HasAllMouseHandlers widget) {
+        MouseHandlersPopupManagerLink link = new MouseHandlersPopupManagerLink();
+
+        final HandlerRegistration reg1 = widget.addMouseOverHandler(link);
+        final HandlerRegistration reg2 = widget.addMouseOutHandler(link);
+        final HandlerRegistration reg3 = widget.addMouseMoveHandler(link);
+        final HandlerRegistration reg4 = widget.addMouseDownHandler(link);
+
+        return new HandlerRegistration() {
+            @Override
+            public void removeHandler() {
+                reg1.removeHandler();
+                reg2.removeHandler();
+                reg3.removeHandler();
+                reg4.removeHandler();
+            }
+        };
     }
 
     // TODO we need to separate the popup display from the
@@ -601,36 +393,15 @@ public class DefaultPopupManager implements Opacity, PopupManager {
     }
 
     @Override
-    public void onMouseMove(Point pointInClientArea) {
-        onMouseMove(pointInClientArea.x, pointInClientArea.y);
-    }
-
-    @Override
     public void onMouseOut(int clientX, int clientY) {
         updateMousePosition(clientX, clientY);
         state.onSourceMouseOut(DefaultPopupManager.this);
     }
 
     @Override
-    public void onMouseOut(Point pointInClientArea) {
-        onMouseOut(pointInClientArea.x, pointInClientArea.y);
-    }
-
-    @Override
     public void onMouseOver(int clientX, int clientY) {
         updateMousePosition(clientX, clientY);
         state.onSourceMouseOver(DefaultPopupManager.this);
-    }
-
-    @Override
-    public void onMouseOver(Point pointInClientArea) {
-        onMouseOver(pointInClientArea.x, pointInClientArea.y);
-    }
-
-    private void runCurrentEffect() {
-        NEffectPanel popup = getPopupPanel();
-        popup.addEffect(currentEffect);
-        popup.playEffects();
     }
 
     @Override
@@ -656,38 +427,13 @@ public class DefaultPopupManager implements Opacity, PopupManager {
         this.hideDelay = delay;
     }
 
-    // TODO move into interface
-    // for test
-    protected void setPopupTransparency(int newTransparency) {
-        assert ((newTransparency >= OPACITY_TRANSPARENT) && (newTransparency <= OPACITY_OPAQUE));
-
-        int currentTransparency = isEffectRunning() ? getNextTransparency()
-                : this.transparency;
-
-        if (newTransparency == currentTransparency) {
-            return;
+    protected void setOpacity(int opacity) {
+        if (popup.getOpacity() == Opacity.TRANSPARENT) {
+            popup.setLocation(new Point(clientX + POPUP_OFFSET_X, clientY
+                    + POPUP_OFFSET_Y));
         }
 
-        if ((newTransparency == OPACITY_TRANSPARENT)
-                && (popupEffectsPanel == null)) {
-            return;
-        }
-
-        // need to attach popup to run effects
-        if (!getPopupPanel().isAttached()) {
-            attachPopup();
-        }
-
-        NMorphScalar effect = createMorphEffect(currentTransparency,
-                newTransparency);
-
-        if (isEffectRunning()) {
-            nextEffect = effect;
-        } else {
-            currentEffect = effect;
-            runCurrentEffect();
-        }
-
+        popup.setOpacity(opacity);
     }
 
     /**
@@ -700,7 +446,7 @@ public class DefaultPopupManager implements Opacity, PopupManager {
         this.showDelay = showDelay;
     }
 
-    protected void setState(State newState) {
+    public void setState(State newState) {
         assert newState != null;
 
         this.state.leave(this);

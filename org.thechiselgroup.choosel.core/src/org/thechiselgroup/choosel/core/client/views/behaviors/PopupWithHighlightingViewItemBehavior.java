@@ -17,28 +17,29 @@ package org.thechiselgroup.choosel.core.client.views.behaviors;
 
 import java.util.Map;
 
+import org.thechiselgroup.choosel.core.client.fx.Opacity;
 import org.thechiselgroup.choosel.core.client.resources.ui.DetailsWidgetHelper;
-import org.thechiselgroup.choosel.core.client.ui.WidgetFactory;
-import org.thechiselgroup.choosel.core.client.ui.popup.PopupClosedEvent;
-import org.thechiselgroup.choosel.core.client.ui.popup.PopupClosedHandler;
+import org.thechiselgroup.choosel.core.client.ui.popup.Popup;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
+import org.thechiselgroup.choosel.core.client.ui.popup.PopupOpacityChangedEvent;
+import org.thechiselgroup.choosel.core.client.ui.popup.PopupOpacityChangedEventHandler;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.views.model.HoverModel;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemBehavior;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction;
 
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Manages {@link ViewItem} popups in a single view.
  */
-public class PopupViewItemBehavior implements ViewItemBehavior {
+public class PopupWithHighlightingViewItemBehavior implements ViewItemBehavior {
 
     /**
      * Maps view item ids to popup managers.
@@ -58,7 +59,7 @@ public class PopupViewItemBehavior implements ViewItemBehavior {
 
     private PopupManagerFactory popupManagerFactory;
 
-    public PopupViewItemBehavior(HoverModel hoverModel,
+    public PopupWithHighlightingViewItemBehavior(HoverModel hoverModel,
             DetailsWidgetHelper detailsWidgetHelper,
             PopupManagerFactory popupManagerFactory) {
 
@@ -69,14 +70,8 @@ public class PopupViewItemBehavior implements ViewItemBehavior {
 
     // for test
     protected PopupManager createPopupManager(final ViewItem viewItem) {
-        WidgetFactory widgetFactory = new WidgetFactory() {
-            @Override
-            public Widget createWidget() {
-                return detailsWidgetHelper.createDetailsWidget(viewItem);
-            }
-        };
-
-        return popupManagerFactory.createPopupManager(widgetFactory);
+        return popupManagerFactory.createPopupManager(detailsWidgetHelper
+                .createDetailsWidget(viewItem));
     }
 
     @Override
@@ -97,7 +92,8 @@ public class PopupViewItemBehavior implements ViewItemBehavior {
             break;
         case MOUSE_DOWN:
             if (interaction.hasNativeEvent()) {
-                popupManager.onMouseDown(interaction.getNativeEvent());
+                NativeEvent nativeEvent = interaction.getNativeEvent();
+                popupManager.onMouseDown(nativeEvent);
             }
             break;
         case MOUSE_OUT:
@@ -121,25 +117,28 @@ public class PopupViewItemBehavior implements ViewItemBehavior {
                 hoverModel, viewItem.getResources());
 
         PopupManager popupManager = createPopupManager(viewItem);
+        Popup popup = popupManager.getPopup();
 
-        popupManager.addPopupMouseOverHandler(new MouseOverHandler() {
+        popup.addDomHandler(new MouseOverHandler() {
             @Override
             public void onMouseOver(MouseOverEvent e) {
                 highlightingManager.setHighlighting(true);
             }
-        });
-        popupManager.addPopupMouseOutHandler(new MouseOutHandler() {
+        }, MouseOverEvent.getType());
+        popup.addDomHandler(new MouseOutHandler() {
             @Override
             public void onMouseOut(MouseOutEvent event) {
                 highlightingManager.setHighlighting(false);
             }
-        });
-        popupManager.addPopupClosedHandler(new PopupClosedHandler() {
+        }, MouseOutEvent.getType());
+        popup.addHandler(new PopupOpacityChangedEventHandler() {
             @Override
-            public void onPopupClosing(PopupClosedEvent event) {
-                highlightingManager.setHighlighting(false);
+            public void onOpacityChangeStarted(PopupOpacityChangedEvent event) {
+                if (event.getOpacity() == Opacity.TRANSPARENT) {
+                    highlightingManager.setHighlighting(false);
+                }
             }
-        });
+        }, PopupOpacityChangedEvent.TYPE);
 
         highlightingManagers.put(viewItem.getViewItemID(), highlightingManager);
         popupManagers.put(viewItem.getViewItemID(), popupManager);

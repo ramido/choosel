@@ -13,29 +13,38 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.core.client.ui.popup;
+package org.thechiselgroup.choosel.dnd.client;
 
+import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.inject.Inject;
 
-public class DefaultPopupManagerFactory implements PopupManagerFactory {
+/**
+ * Fired when the drag proxy is attached (drag and drop operations starts).
+ */
+public class DragProxyAttachedEvent extends
+        GwtEvent<DragProxyAttachedEventHandler> {
 
-    private PopupFactory popupFactory;
+    public static final GwtEvent.Type<DragProxyAttachedEventHandler> TYPE = new GwtEvent.Type<DragProxyAttachedEventHandler>();
 
-    @Inject
-    public DefaultPopupManagerFactory(PopupFactory popupFactory) {
-        this.popupFactory = popupFactory;
+    private final Widget widget;
+
+    public DragProxyAttachedEvent(Widget widget) {
+        assert widget != null;
+        this.widget = widget;
     }
 
     @Override
-    public PopupManager createPopupManager(Widget content) {
-        Popup popup = popupFactory.createPopup();
-        popup.setContentWidget(content);
-        return doCreatePopupManager(popup);
+    protected void dispatch(DragProxyAttachedEventHandler handler) {
+        handler.onDragProxyAttached(this);
     }
 
-    protected PopupManager doCreatePopupManager(Popup popup) {
-        return new DefaultPopupManager(popup);
+    @Override
+    public GwtEvent.Type<DragProxyAttachedEventHandler> getAssociatedType() {
+        return TYPE;
+    }
+
+    public Widget getWidget() {
+        return widget;
     }
 
 }

@@ -15,10 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.dnd.client.popup;
 
-import org.thechiselgroup.choosel.core.client.ui.WidgetFactory;
 import org.thechiselgroup.choosel.core.client.ui.popup.DefaultPopupManagerFactory;
+import org.thechiselgroup.choosel.core.client.ui.popup.Popup;
+import org.thechiselgroup.choosel.core.client.ui.popup.PopupFactory;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManager;
-import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
+
+import com.google.inject.Inject;
 
 /**
  * This factory should be used instead of {@link DefaultPopupManagerFactory} if
@@ -26,11 +28,17 @@ import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
  * 
  * @author Lars Grammel
  */
-public class DragSupportingPopupManagerFactory implements PopupManagerFactory {
+public class DragSupportingPopupManagerFactory extends
+        DefaultPopupManagerFactory {
+
+    @Inject
+    public DragSupportingPopupManagerFactory(PopupFactory popupFactory) {
+        super(popupFactory);
+    }
 
     @Override
-    public PopupManager createPopupManager(WidgetFactory widgetFactory) {
-        return new DragSupportingPopupManager(widgetFactory);
+    protected PopupManager doCreatePopupManager(Popup popup) {
+        return new DragSupportingPopupManager(popup);
     }
 
 }

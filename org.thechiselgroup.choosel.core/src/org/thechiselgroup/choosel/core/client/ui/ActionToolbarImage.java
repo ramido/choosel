@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.ui;
 
-import org.thechiselgroup.choosel.core.client.ui.popup.DefaultPopupManager;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
 
@@ -27,7 +26,6 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Widget;
 
 public class ActionToolbarImage extends Image {
 
@@ -91,13 +89,8 @@ public class ActionToolbarImage extends Image {
     private void initPopup(PopupManagerFactory popupManagerFactory) {
         popupLabel = new Label();
         PopupManager popupManager = popupManagerFactory
-                .createPopupManager(new WidgetFactory() {
-                    @Override
-                    public Widget createWidget() {
-                        return popupLabel;
-                    }
-                });
-        DefaultPopupManager.linkManagerToSource(popupManager, this);
+                .createPopupManager(popupLabel);
+        popupManager.linkToWidget(this);
     }
 
     // TODO do not show popup if disabled?

@@ -43,7 +43,7 @@ import org.thechiselgroup.choosel.core.client.views.SidePanelSection;
 import org.thechiselgroup.choosel.core.client.views.ViewPart;
 import org.thechiselgroup.choosel.core.client.views.behaviors.CompositeViewItemBehavior;
 import org.thechiselgroup.choosel.core.client.views.behaviors.HighlightingViewItemBehavior;
-import org.thechiselgroup.choosel.core.client.views.behaviors.PopupViewItemBehavior;
+import org.thechiselgroup.choosel.core.client.views.behaviors.PopupWithHighlightingViewItemBehavior;
 import org.thechiselgroup.choosel.core.client.views.behaviors.SwitchSelectionOnClickViewItemBehavior;
 import org.thechiselgroup.choosel.core.client.views.model.DefaultResourceModel;
 import org.thechiselgroup.choosel.core.client.views.model.DefaultSelectionModel;
@@ -196,7 +196,7 @@ public class ViewWindowContentProducer implements WindowContentProducer {
         // ViewInteractionLogger(Logger.getLogger("")));
         viewItemBehaviors.add(new HighlightingViewItemBehavior(hoverModel));
         viewItemBehaviors.add(new DragViewItemBehavior(dragEnablerFactory));
-        viewItemBehaviors.add(new PopupViewItemBehavior(hoverModel,
+        viewItemBehaviors.add(new PopupWithHighlightingViewItemBehavior(hoverModel,
                 detailsWidgetHelper, popupManagerFactory));
         viewItemBehaviors.add(new SwitchSelectionOnClickViewItemBehavior(
                 selectionModel));

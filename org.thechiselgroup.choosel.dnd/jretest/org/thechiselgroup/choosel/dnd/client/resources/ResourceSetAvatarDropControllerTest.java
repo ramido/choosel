@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.dnd.client.resources;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -33,14 +34,12 @@ import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.test.TestUndoableCommandWithDescription;
-import org.thechiselgroup.choosel.core.client.ui.popup.DelayedPopup;
+import org.thechiselgroup.choosel.core.client.ui.popup.DelayedPopupManager;
+import org.thechiselgroup.choosel.core.client.ui.popup.PopupFactory;
 import org.thechiselgroup.choosel.core.client.views.View;
 import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.ViewModel;
-import org.thechiselgroup.choosel.dnd.client.resources.DropTargetCapabilityChecker;
-import org.thechiselgroup.choosel.dnd.client.resources.ResourceSetAvatarDropCommandFactory;
-import org.thechiselgroup.choosel.dnd.client.resources.ResourceSetAvatarDropController;
 import org.thechiselgroup.choosel.dnd.client.test.DndTestHelpers;
 
 import com.allen_sauer.gwt.dnd.client.DragContext;
@@ -54,13 +53,16 @@ public class ResourceSetAvatarDropControllerTest {
         private TestDragAvatarDropController(Widget dropTarget,
                 ResourceSetAvatarDropCommandFactory commandFactory,
                 CommandManager commandManager, ViewAccessor viewAccessor,
-                DropTargetCapabilityChecker capabilityChecker) {
+                DropTargetCapabilityChecker capabilityChecker,
+                PopupFactory popupFactory) {
+
             super(dropTarget, commandFactory, commandManager, viewAccessor,
-                    capabilityChecker);
+                    capabilityChecker, popupFactory);
         }
 
         @Override
-        protected DelayedPopup createPopup(DragContext context, String message) {
+        protected DelayedPopupManager createPopup(DragContext context,
+                String message) {
             return null;
         }
     }
@@ -87,7 +89,7 @@ public class ResourceSetAvatarDropControllerTest {
     private Widget dropTarget;
 
     @Mock
-    private DelayedPopup popup;
+    private DelayedPopupManager popup;
 
     private ResourceSet resources;
 
@@ -158,7 +160,8 @@ public class ResourceSetAvatarDropControllerTest {
         DndTestHelpers.mockDragClientBundle(bridge);
 
         underTest = spy(new TestDragAvatarDropController(dropTarget,
-                commandFactory, commandManager, viewAccessor, capabilityChecker));
+                commandFactory, commandManager, viewAccessor,
+                capabilityChecker, mock(PopupFactory.class)));
 
         when(underTest.createPopup(any(DragContext.class), any(String.class)))
                 .thenReturn(popup);

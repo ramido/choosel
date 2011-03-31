@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.dnd.client.resources;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -29,12 +30,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.command.CommandManager;
 import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
+import org.thechiselgroup.choosel.core.client.ui.popup.PopupFactory;
 import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
-import org.thechiselgroup.choosel.dnd.client.resources.AbstractResourceSetAvatarDropTargetManager;
-import org.thechiselgroup.choosel.dnd.client.resources.DropTargetCapabilityChecker;
-import org.thechiselgroup.choosel.dnd.client.resources.ResourceSetAvatarDragController;
-import org.thechiselgroup.choosel.dnd.client.resources.ResourceSetAvatarDropCommandFactory;
-import org.thechiselgroup.choosel.dnd.client.resources.ResourceSetAvatarDropController;
 import org.thechiselgroup.choosel.dnd.client.test.DndTestHelpers;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -43,13 +40,15 @@ public class AbstractResourceSetAvatarDropTargetManagerTest {
 
     public static class TestDragAvatarDropTargetManager extends
             AbstractResourceSetAvatarDropTargetManager {
+
         public TestDragAvatarDropTargetManager(CommandManager commandManager,
                 ResourceSetAvatarDragController dragController,
                 ViewAccessor viewAccessor,
-                DropTargetCapabilityChecker capabilityChecker) {
+                DropTargetCapabilityChecker capabilityChecker,
+                PopupFactory popupFactory) {
 
             super(commandManager, dragController, viewAccessor,
-                    capabilityChecker);
+                    capabilityChecker, popupFactory);
         }
 
         @Override
@@ -103,7 +102,8 @@ public class AbstractResourceSetAvatarDropTargetManagerTest {
         DndTestHelpers.mockDragClientBundle(bridge);
 
         underTest = spy(new TestDragAvatarDropTargetManager(commandManager,
-                dragController, viewAccessor, capabilityChecker));
+                dragController, viewAccessor, capabilityChecker,
+                mock(PopupFactory.class)));
     }
 
     @After

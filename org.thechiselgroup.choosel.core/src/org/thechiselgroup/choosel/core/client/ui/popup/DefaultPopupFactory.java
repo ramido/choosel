@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -15,10 +15,31 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.ui.popup;
 
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.inject.Inject;
 
-public interface PopupManagerFactory {
+public class DefaultPopupFactory implements PopupFactory {
 
-    PopupManager createPopupManager(Widget content);
+    public final static int DEFAULT_POPUP_Z_INDEX = 1400;
+
+    private Panel rootPanel;
+
+    private int zIndex;
+
+    @Inject
+    public DefaultPopupFactory() {
+        this(RootPanel.get(), DEFAULT_POPUP_Z_INDEX);
+    }
+
+    public DefaultPopupFactory(Panel rootPanel, int zIndex) {
+        this.rootPanel = rootPanel;
+        this.zIndex = zIndex;
+    }
+
+    @Override
+    public Popup createPopup() {
+        return new DefaultPopup(rootPanel, zIndex);
+    }
 
 }

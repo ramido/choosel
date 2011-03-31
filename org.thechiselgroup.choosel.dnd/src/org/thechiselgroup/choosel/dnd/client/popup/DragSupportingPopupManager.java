@@ -15,37 +15,26 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.dnd.client.popup;
 
-import org.thechiselgroup.choosel.core.client.ui.WidgetFactory;
 import org.thechiselgroup.choosel.core.client.ui.popup.DefaultPopupManager;
-import org.thechiselgroup.choosel.dnd.client.DragProxyEventReceiver;
+import org.thechiselgroup.choosel.core.client.ui.popup.Popup;
+import org.thechiselgroup.choosel.dnd.client.DragProxyDetachedEvent;
+import org.thechiselgroup.choosel.dnd.client.DragProxyDetachedEventHandler;
 
 public class DragSupportingPopupManager extends DefaultPopupManager {
 
-    public DragSupportingPopupManager(WidgetFactory widgetFactory) {
-        super(widgetFactory);
-    }
+    public DragSupportingPopupManager(Popup popup) {
+        super(popup);
 
-    protected class DragSupportingPopupPanel extends PopupPanel implements
-            DragProxyEventReceiver {
-
-        @Override
-        public void dragProxyAttached() {
-            // do nothing: popup should be visible during drop operation
-        }
-
-        @Override
-        public void dragProxyDetached() {
-            if (isEnabled()) {
-                // TODO use event instead that demands closing
-                // hide once drop operation is completed
-                setState(INACTIVE_STATE);
+        popup.addHandler(new DragProxyDetachedEventHandler() {
+            @Override
+            public void onDragProxyDetached(DragProxyDetachedEvent event) {
+                if (isEnabled()) {
+                    // TODO use event instead that demands closing
+                    // hide once drop operation is completed
+                    setState(INACTIVE_STATE);
+                }
             }
-        }
-    }
-
-    @Override
-    protected PopupPanel createPopupPanel() {
-        return new DragSupportingPopupPanel();
+        }, DragProxyDetachedEvent.TYPE);
     }
 
 }

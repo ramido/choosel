@@ -15,37 +15,45 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.ui.popup;
 
+import org.thechiselgroup.choosel.core.client.fx.Opacity;
+
 import com.google.gwt.event.shared.GwtEvent;
 
-/**
- * Event that is fired when the popup start the transition into the transparent
- * state.
- * 
- * TODO replace with change state events??
- */
-public class PopupClosedEvent extends GwtEvent<PopupClosedHandler> {
+public class PopupOpacityChangedEvent extends
+        GwtEvent<PopupOpacityChangedEventHandler> {
 
-    public static final GwtEvent.Type<PopupClosedHandler> TYPE = new GwtEvent.Type<PopupClosedHandler>();
+    public static final GwtEvent.Type<PopupOpacityChangedEventHandler> TYPE = new GwtEvent.Type<PopupOpacityChangedEventHandler>();
 
-    private final PopupManager manager;
+    private final Popup popup;
 
-    public PopupClosedEvent(PopupManager manager) {
-        assert manager != null;
-        this.manager = manager;
+    private final int opacity;
+
+    public PopupOpacityChangedEvent(Popup popup) {
+        assert popup != null;
+
+        this.opacity = popup.getOpacity();
+        this.popup = popup;
+
+        assert opacity >= Opacity.TRANSPARENT;
+        assert opacity <= Opacity.OPAQUE;
     }
 
     @Override
-    protected void dispatch(PopupClosedHandler handler) {
-        handler.onPopupClosing(this);
+    protected void dispatch(PopupOpacityChangedEventHandler handler) {
+        handler.onOpacityChangeStarted(this);
     }
 
     @Override
-    public GwtEvent.Type<PopupClosedHandler> getAssociatedType() {
+    public GwtEvent.Type<PopupOpacityChangedEventHandler> getAssociatedType() {
         return TYPE;
     }
 
-    public PopupManager getManager() {
-        return manager;
+    public int getOpacity() {
+        return opacity;
+    }
+
+    public Popup getPopup() {
+        return popup;
     }
 
 }

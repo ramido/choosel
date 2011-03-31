@@ -15,33 +15,72 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.ui.popup;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
-import org.thechiselgroup.choosel.core.client.ui.WidgetFactory;
+import org.thechiselgroup.choosel.core.client.test.TestMouseOverEvent;
+
+import com.google.gwt.event.dom.client.HasAllMouseHandlers;
+import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.user.client.Timer;
 
 public class DefaultPopupManagerTest {
 
+    public static class TestDefaultPopupManager extends DefaultPopupManager {
+
+        public TestDefaultPopupManager(Popup popup) {
+            super(popup);
+        }
+
+        @Override
+        protected void cancelTimer() {
+        }
+
+        @Override
+        protected Timer createTimer() {
+            return null;
+        }
+
+        @Override
+        protected void startTimer(int delayInMs) {
+        }
+
+    }
+
     @Mock
-    private PopupClosedHandler closingHandler;
+    private Popup popup;
 
     private DefaultPopupManager underTest;
 
-    @Mock
-    private WidgetFactory widgetFactory;
+    @Test
+    public void linkRegistersCalls() {
+        HasAllMouseHandlers source = mock(HasAllMouseHandlers.class);
+
+        underTest.linkToWidget(source);
+
+        ArgumentCaptor<MouseOverHandler> argument = ArgumentCaptor
+                .forClass(MouseOverHandler.class);
+        verify(source, times(1)).addMouseOverHandler(argument.capture());
+
+        argument.getValue().onMouseOver(new TestMouseOverEvent(0, 0));
+
+        verify(underTest, times(1)).onMouseOver(0, 0);
+    }
 
     @Before
     public void setUp() throws Exception {
-        MockitoGWTBridge.setUp();
         MockitoAnnotations.initMocks(this);
 
-        underTest = new DefaultPopupManager(widgetFactory) {
-            @Override
-            protected void setPopupTransparency(int newTransparency) {
-            }
-        };
+        underTest = spy(new TestDefaultPopupManager(popup));
     }
 
     @After

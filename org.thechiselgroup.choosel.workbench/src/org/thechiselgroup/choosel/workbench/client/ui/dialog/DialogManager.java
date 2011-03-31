@@ -15,11 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.client.ui.dialog;
 
+import org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants;
+import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.core.client.ui.shade.ShadeManager;
 
 import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 /**
  * Implementation note: we need to wait until after the fade out operation
@@ -33,19 +35,22 @@ public class DialogManager {
 
     private ShadeManager shadeManager;
 
-    public DialogManager(AbsolutePanel parentPanel, ShadeManager shadeManager) {
-        this.parentPanel = parentPanel;
-        this.shadeManager = shadeManager;
-    }
+    private final PopupManagerFactory popupManagerFactory;
 
     @Inject
-    public DialogManager(ShadeManager shadeManager) {
-        this(RootPanel.get(), shadeManager);
+    public DialogManager(
+            @Named(ChooselInjectionConstants.ROOT_PANEL) AbsolutePanel parentPanel,
+            ShadeManager shadeManager, PopupManagerFactory popupManagerFactory) {
+
+        this.parentPanel = parentPanel;
+        this.shadeManager = shadeManager;
+        this.popupManagerFactory = popupManagerFactory;
     }
 
     public void show(Dialog dialog) {
         assert dialog != null;
 
-        new DialogWindowManager(parentPanel, dialog, shadeManager).init();
+        new DialogWindowManager(parentPanel, dialog, shadeManager,
+                popupManagerFactory).init();
     }
 }

@@ -22,11 +22,29 @@ public final class FXUtil {
 
     public static final EaseInOutTransitionPhysics EASE_OUT = new EaseInOutTransitionPhysics();
 
-    public static final double MORPH_DURATION_IN_SECONDS = 0.5;
+    /**
+     * Default effect duration in seconds.
+     */
+    public static final double DEFAULT_EFFECT_DURATION = 0.5;
 
-    public static final String OPACITY_MORPH = "opacity";
+    private static final String OPACITY_MORPH = "opacity";
 
-    public static NMorphScalar createOpacityMorph(int start, int end) {
+    public static NMorphScalar createOpacityMorphEffect(int startOpacity,
+            int endOpacity) {
+
+        return createOpacityMorphEffect(startOpacity, endOpacity,
+                FXUtil.DEFAULT_EFFECT_DURATION);
+    }
+
+    protected static NMorphScalar createOpacityMorphEffect(int startOpacity,
+            int endOpacity, double duration) {
+
+        assert startOpacity >= Opacity.TRANSPARENT;
+        assert startOpacity <= Opacity.OPAQUE;
+        assert endOpacity >= Opacity.TRANSPARENT;
+        assert endOpacity <= Opacity.OPAQUE;
+        assert duration >= 0;
+
         NMorphScalar morph = new NMorphScalar(FXUtil.OPACITY_MORPH) {
             @Override
             public void tearDownEffect() {
@@ -34,16 +52,15 @@ public final class FXUtil {
             };
         };
 
-        morph.setStartValue(Integer.toString(start));
-        morph.setEndValue(Integer.toString(end));
+        morph.setStartValue(Integer.toString(startOpacity));
+        morph.setEndValue(Integer.toString(endOpacity));
         morph.setTransitionType(FXUtil.EASE_OUT);
-        morph.setDuration(FXUtil.MORPH_DURATION_IN_SECONDS);
+        morph.setDuration(duration);
 
         return morph;
     }
 
     private FXUtil() {
-
     }
 
 }

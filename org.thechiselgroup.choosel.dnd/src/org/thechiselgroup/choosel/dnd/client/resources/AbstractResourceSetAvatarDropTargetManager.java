@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.dnd.client.resources;
 
 import org.thechiselgroup.choosel.core.client.command.CommandManager;
+import org.thechiselgroup.choosel.core.client.ui.popup.PopupFactory;
 import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -31,17 +32,22 @@ public abstract class AbstractResourceSetAvatarDropTargetManager implements
 
     private ViewAccessor viewAccessor;
 
+    private PopupFactory popupFactory;
+
     public AbstractResourceSetAvatarDropTargetManager(
             CommandManager commandManager,
             ResourceSetAvatarDragController dragController,
             ViewAccessor viewAccessor,
-            DropTargetCapabilityChecker capabilityChecker) {
+            DropTargetCapabilityChecker capabilityChecker,
+            PopupFactory popupFactory) {
 
         assert commandManager != null;
         assert dragController != null;
         assert viewAccessor != null;
         assert capabilityChecker != null;
+        assert popupFactory != null;
 
+        this.popupFactory = popupFactory;
         this.commandManager = commandManager;
         this.dragController = dragController;
         this.viewAccessor = viewAccessor;
@@ -64,7 +70,7 @@ public abstract class AbstractResourceSetAvatarDropTargetManager implements
 
         ResourceSetAvatarDropController controller = new ResourceSetAvatarDropController(
                 dropTarget, createCommandFactory(dropTarget, viewAccessor),
-                commandManager, viewAccessor, capabilityChecker);
+                commandManager, viewAccessor, capabilityChecker, popupFactory);
 
         dragController.registerDropController(controller);
     }

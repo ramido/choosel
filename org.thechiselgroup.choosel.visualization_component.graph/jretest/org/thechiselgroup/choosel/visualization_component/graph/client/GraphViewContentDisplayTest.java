@@ -234,8 +234,8 @@ public class GraphViewContentDisplayTest {
                 argument1.capture());
 
         NodeDragHandler nodeDragHandler = argument1.getValue();
-        nodeDragHandler.onDrag(new NodeDragEvent(node, sourceLocation.x,
-                sourceLocation.y, targetLocation.x, targetLocation.y));
+        nodeDragHandler.onDrag(new NodeDragEvent(node, sourceLocation.getX(),
+                sourceLocation.getY(), targetLocation.getX(), targetLocation.getY()));
 
         ArgumentCaptor<UndoableCommand> argument2 = ArgumentCaptor
                 .forClass(UndoableCommand.class);

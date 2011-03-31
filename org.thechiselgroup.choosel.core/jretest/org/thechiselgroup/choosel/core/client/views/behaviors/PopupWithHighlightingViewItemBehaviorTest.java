@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.core.client.views.behaviors;
 
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -31,6 +32,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ui.DetailsWidgetHelper;
+import org.thechiselgroup.choosel.core.client.ui.popup.Popup;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.core.client.views.model.HoverModel;
@@ -41,7 +43,7 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction.Ty
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 
-public class PopupViewItemBehaviorTest {
+public class PopupWithHighlightingViewItemBehaviorTest {
 
     private static final String VIEW_ITEM_ID = "viewItemCategory";
 
@@ -51,9 +53,12 @@ public class PopupViewItemBehaviorTest {
     private PopupManager popupManager;
 
     @Mock
+    private Popup popup;
+
+    @Mock
     private ViewItem viewItem;
 
-    private PopupViewItemBehavior underTest;
+    private PopupWithHighlightingViewItemBehavior underTest;
 
     private ResourceSet resources;
 
@@ -115,8 +120,9 @@ public class PopupViewItemBehaviorTest {
         resources = createResources(1, 2);
         when(viewItem.getViewItemID()).thenReturn(VIEW_ITEM_ID);
         when(viewItem.getResources()).thenReturn(resources);
+        when(popupManager.getPopup()).thenReturn(popup);
 
-        underTest = new PopupViewItemBehavior(hoverModel,
+        underTest = new PopupWithHighlightingViewItemBehavior(hoverModel,
                 mock(DetailsWidgetHelper.class),
                 mock(PopupManagerFactory.class)) {
             @Override
@@ -129,8 +135,8 @@ public class PopupViewItemBehaviorTest {
     private void simulateMouseOverPopup() {
         ArgumentCaptor<MouseOverHandler> argument = ArgumentCaptor
                 .forClass(MouseOverHandler.class);
-        verify(popupManager, times(1)).addPopupMouseOverHandler(
-                argument.capture());
+        verify(popup, times(1)).addDomHandler(argument.capture(),
+                eq(MouseOverEvent.getType()));
         argument.getValue().onMouseOver(new MouseOverEvent() {
         });
     }

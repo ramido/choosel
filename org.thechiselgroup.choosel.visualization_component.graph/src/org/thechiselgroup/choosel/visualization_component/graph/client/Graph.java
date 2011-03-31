@@ -617,8 +617,8 @@ public class Graph extends AbstractViewContentDisplay implements
             Point location = graphDisplay.getLocation(item.getNode());
 
             Memento nodeMemento = new Memento();
-            nodeMemento.setValue(MEMENTO_X, location.x);
-            nodeMemento.setValue(MEMENTO_Y, location.y);
+            nodeMemento.setValue(MEMENTO_X, location.getX());
+            nodeMemento.setValue(MEMENTO_Y, location.getY());
 
             state.addChild(viewItem.getViewItemID(), nodeMemento);
         }

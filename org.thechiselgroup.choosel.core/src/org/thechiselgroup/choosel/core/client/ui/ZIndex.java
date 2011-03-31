@@ -15,6 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.ui;
 
+import org.thechiselgroup.choosel.core.client.ui.popup.DefaultPopupFactory;
+
 public final class ZIndex {
 
     public static final int DESKTOP_WINDOW_BASE = 1200;
@@ -23,7 +25,7 @@ public final class ZIndex {
 
     public static final int DRAG_AVATAR = 1500;
 
-    public static final int POPUP = 1400;
+    public static final int POPUP = DefaultPopupFactory.DEFAULT_POPUP_Z_INDEX;
 
     public static final int SHADE = 1275;
 

@@ -13,23 +13,14 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.dnd.client;
+package org.thechiselgroup.choosel.core.client.ui.popup;
 
-/**
- * Part of solution to Problem: MouseOutEvents do not get fired if mouse out
- * occurs because of DOM changes (instead of mouse movement) - use as a tagging
- * interface for widgets, will get called automagically by DragAvatar children.
- */
-public interface DragProxyEventReceiver {
+public interface DelayedPopupManager {
 
-    /**
-     * Called when the drag proxy is attached (drag and drop operations starts).
-     */
-    void dragProxyAttached();
+    Popup getPopup();
 
-    /**
-     * Called when the drag proxy is removed (drag and drop operations ends).
-     */
-    void dragProxyDetached();
+    void hideDelayed();
+
+    void showDelayed();
 
 }

@@ -28,10 +28,11 @@ import org.thechiselgroup.choosel.core.client.fx.Opacity;
 import org.thechiselgroup.choosel.core.client.geometry.Point;
 import org.thechiselgroup.choosel.core.client.ui.CSS;
 import org.thechiselgroup.choosel.core.client.ui.ResizingTextBox;
-import org.thechiselgroup.choosel.core.client.ui.WidgetFactory;
-import org.thechiselgroup.choosel.core.client.ui.popup.DefaultPopupManager;
+import org.thechiselgroup.choosel.core.client.ui.popup.PopupManager;
+import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.core.client.util.math.MathUtils;
-import org.thechiselgroup.choosel.dnd.client.DragProxyEventReceiver;
+import org.thechiselgroup.choosel.dnd.client.DragProxyAttachedEvent;
+import org.thechiselgroup.choosel.dnd.client.DragProxyAttachedEventHandler;
 
 import com.allen_sauer.gwt.dnd.client.util.WidgetLocation;
 import com.google.gwt.core.client.GWT;
@@ -53,9 +54,9 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 
-public class WindowPanel extends NEffectPanel implements
-        DragProxyEventReceiver, Opacity, WindowController {
+public class WindowPanel extends NEffectPanel implements WindowController {
 
     private static final int INNER_CSS_BORDER_WIDTH = 2;
 
@@ -131,6 +132,13 @@ public class WindowPanel extends NEffectPanel implements
      */
     private HorizontalPanel headerBar;
 
+    private PopupManagerFactory popupManagerFactory;
+
+    @Inject
+    public WindowPanel(PopupManagerFactory popupManagerFactory) {
+        this.popupManagerFactory = popupManagerFactory;
+    }
+
     /**
      * Adjusts the size of the window or the size of its content. If the window
      * is larger than its content, then the content size is increased. If the
@@ -191,22 +199,13 @@ public class WindowPanel extends NEffectPanel implements
 
     // hook
     protected NEffect createHideEffect() {
-        return FXUtil.createOpacityMorph(Opacity.OPACITY_OPAQUE,
-                OPACITY_TRANSPARENT);
+        return FXUtil.createOpacityMorphEffect(Opacity.OPAQUE,
+                Opacity.TRANSPARENT);
     }
 
     protected NEffect createShowEffect() {
-        return FXUtil.createOpacityMorph(OPACITY_TRANSPARENT, OPACITY_OPAQUE);
-    }
-
-    @Override
-    public void dragProxyAttached() {
-        closeImage.setUrl(getInvisibleCloseImageUrl());
-    }
-
-    @Override
-    public void dragProxyDetached() {
-        // ignored
+        return FXUtil.createOpacityMorphEffect(Opacity.TRANSPARENT,
+                Opacity.OPAQUE);
     }
 
     // TODO use window manager
@@ -410,14 +409,18 @@ public class WindowPanel extends NEffectPanel implements
 
         closeImage.addClickHandler(createCloseButtonClickHandler());
 
-        DefaultPopupManager manager = DefaultPopupManager.createPopupManager(
-                closeImage, new WidgetFactory() {
-                    @Override
-                    public Widget createWidget() {
-                        return new Label(getClosePopupLabel());
-                    }
-                });
-        manager.setHideDelay(0);
+        // hide close image when dnd operation starts
+        addHandler(new DragProxyAttachedEventHandler() {
+            @Override
+            public void onDragProxyAttached(DragProxyAttachedEvent event) {
+                closeImage.setUrl(getInvisibleCloseImageUrl());
+            }
+        }, DragProxyAttachedEvent.TYPE);
+
+        PopupManager popupManager = popupManagerFactory
+                .createPopupManager(new Label(getClosePopupLabel()));
+        popupManager.linkToWidget(closeImage);
+        popupManager.setHideDelay(0);
 
         headerBar.add(closeImage);
         headerBar.setCellHorizontalAlignment(closeImage,
@@ -580,7 +583,7 @@ public class WindowPanel extends NEffectPanel implements
 
         Point location = getLocation();
 
-        Move move = new Move(x - location.x, y - location.y) {
+        Move move = new Move(x - location.getX(), y - location.getY()) {
             @Override
             public void tearDownEffect() {
                 /*
@@ -604,7 +607,7 @@ public class WindowPanel extends NEffectPanel implements
         });
 
         move.setTransitionType(FXUtil.EASE_OUT);
-        move.setDuration(FXUtil.MORPH_DURATION_IN_SECONDS);
+        move.setDuration(FXUtil.DEFAULT_EFFECT_DURATION);
 
         addEffect(move);
         playEffects();

@@ -23,6 +23,7 @@ import org.thechiselgroup.choosel.core.client.command.CommandManager;
 import org.thechiselgroup.choosel.core.client.geometry.HasSize;
 import org.thechiselgroup.choosel.core.client.geometry.Point;
 import org.thechiselgroup.choosel.core.client.ui.ZIndex;
+import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.core.client.views.DefaultView;
 
 import com.google.gwt.core.client.GWT;
@@ -46,11 +47,16 @@ public class DefaultDesktop extends AbsolutePanel implements Desktop, HasSize {
 
     private Branding branding;
 
+    private PopupManagerFactory popupManagerFactory;
+
     @Inject
-    public DefaultDesktop(CommandManager commandManager, Branding branding) {
+    public DefaultDesktop(CommandManager commandManager, Branding branding,
+            PopupManagerFactory popupManagerFactory) {
+
         addStyleName(CSS_DESKTOP);
 
         this.branding = branding;
+        this.popupManagerFactory = popupManagerFactory;
 
         positionManager = new PositionManager(this, 7, 13, 10);
         windowController = new DesktopWindowManager(this, commandManager);
@@ -86,7 +92,7 @@ public class DefaultDesktop extends AbsolutePanel implements Desktop, HasSize {
     private WindowPanel createWindow(String title, boolean titleEditable,
             Widget contentWidget, int x, int y) {
 
-        WindowPanel window = new WindowPanel();
+        WindowPanel window = new WindowPanel(popupManagerFactory);
 
         window.init(windowController, title, titleEditable, contentWidget);
 
@@ -105,8 +111,8 @@ public class DefaultDesktop extends AbsolutePanel implements Desktop, HasSize {
         Point point = positionManager.getNextLocation(500, 400);
 
         WindowPanel window = createWindow(content.getLabel(),
-                content instanceof DefaultView, content.asWidget(), point.x,
-                point.y);
+                content instanceof DefaultView, content.asWidget(),
+                point.getX(), point.getY());
 
         window.setViewContent(content);
 

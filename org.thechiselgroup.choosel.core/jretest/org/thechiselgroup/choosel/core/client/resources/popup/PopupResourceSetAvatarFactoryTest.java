@@ -38,14 +38,13 @@ import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarEnab
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.core.client.resources.ui.popup.PopupResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.core.client.resources.ui.popup.PopupResourceSetAvatarFactory.Action;
+import org.thechiselgroup.choosel.core.client.resources.ui.popup.ResourceSetAvatarPopupWidgetFactory.ResourceSetAvatarPopupWidgetFactoryAction;
 import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
-import org.thechiselgroup.choosel.core.client.test.TestMouseOverEvent;
-import org.thechiselgroup.choosel.core.client.ui.WidgetFactory;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
 
-import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.user.client.ui.Widget;
 
 public class PopupResourceSetAvatarFactoryTest {
 
@@ -109,27 +108,23 @@ public class PopupResourceSetAvatarFactoryTest {
 
         List<Action> actions = Collections.emptyList();
         underTest = new PopupResourceSetAvatarFactory(delegate, viewAccessor,
-                popupManagerFactory, actions, "", "", false);
+                popupManagerFactory, actions, "", "", false) {
 
-        when(popupManagerFactory.createPopupManager(any(WidgetFactory.class)))
+            @Override
+            protected Widget createWidget(
+                    ResourceSet resources,
+                    ResourceSetAvatar avatar,
+                    List<ResourceSetAvatarPopupWidgetFactoryAction> actionAdapters) {
+
+                return null;
+            };
+        };
+
+        when(popupManagerFactory.createPopupManager(any(Widget.class)))
                 .thenReturn(popupManager);
         when(delegate.createAvatar(any(ResourceSet.class))).thenReturn(avatar);
         when(avatar.getResourceSet()).thenReturn(resources);
         when(avatar.getText()).thenReturn("");
-    }
-
-    @Test
-    public void showPopupOnMouseOver() {
-        underTest.createAvatar(createResources(1));
-        when(avatar.isEnabled()).thenReturn(true);
-
-        ArgumentCaptor<MouseOverHandler> argument = ArgumentCaptor
-                .forClass(MouseOverHandler.class);
-        verify(avatar, times(1)).addMouseOverHandler(argument.capture());
-
-        argument.getValue().onMouseOver(new TestMouseOverEvent(0, 0));
-
-        verify(popupManager, times(1)).onMouseOver(0, 0);
     }
 
     @After
