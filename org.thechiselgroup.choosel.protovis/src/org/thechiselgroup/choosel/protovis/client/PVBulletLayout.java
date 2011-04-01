@@ -26,7 +26,7 @@ import com.google.gwt.core.client.JsArrayNumber;
  * 
  * @author Lars Grammel
  */
-public final class PVBulletLayout extends PVAbstractBar<PVBulletLayout> {
+public final class PVBulletLayout extends PVAbstractPanel<PVBulletLayout> {
 
     protected PVBulletLayout() {
     }

@@ -41,6 +41,9 @@ public class ProtovisGWTExamples implements EntryPoint {
     private void initExampleVisualizations() {
         examples = new ArrayList<ProtovisExample>();
 
+        // interaction
+        examples.add(new PanAndZoomExample());
+
         // networks
         examples.add(new ArcDiagramExample());
         examples.add(new ArcDiagramExample2());

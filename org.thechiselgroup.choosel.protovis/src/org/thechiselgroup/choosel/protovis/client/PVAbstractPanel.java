@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -19,31 +19,36 @@ import com.google.gwt.user.client.Element;
 
 /**
  * 
- * @author Bradley Blashko
  * @author Lars Grammel
  */
-public final class PVPanel extends PVAbstractPanel<PVPanel> {
+public abstract class PVAbstractPanel<T extends PVAbstractPanel<T>> extends
+        PVAbstractBar<T> {
 
-    public final static class Type extends PVMarkType<PVPanel> {
-
-        protected Type() {
-        }
-
+    protected PVAbstractPanel() {
     }
 
-    public static native PVPanel create() /*-{
-        return new $wnd.pv.Panel();
+    public final native T canvas(Element element) /*-{
+        return this.canvas(element);
     }-*/;
 
-    /**
-     * Creates a {@link PVPanel} that renders the visualization on
-     * <code>element</code>.
-     */
-    public static PVPanel create(Element element) {
-        return create().canvas(element);
-    }
+    public final native T canvas(String elementId) /*-{
+        return this.canvas(element);
+    }-*/;
 
-    protected PVPanel() {
-    }
+    public final native String overflow() /*-{
+        return this.overflow();
+    }-*/;
+
+    public final native T overflow(String overflow) /*-{
+        return this.overflow(overflow);
+    }-*/;
+
+    public final native PVTransform transform() /*-{
+        return this.transform();
+    }-*/;
+
+    public final native T transform(PVTransform transform) /*-{
+        return this.transform(transform);
+    }-*/;
 
 }

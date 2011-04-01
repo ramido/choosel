@@ -42,6 +42,10 @@ public final class PV {
      */
     public final static class Behavior extends JavaScriptObject {
 
+        public final static String PAN = "pan";
+
+        public final static String ZOOM = "zoom";
+
         public final static native Behavior drag() /*-{
             return $wnd.pv.Behavior.drag();
         }-*/;
@@ -110,6 +114,14 @@ public final class PV {
         private Event() {
         }
 
+    }
+
+    public final static class Events {
+
+        public static final String ALL = "all";
+
+        private Events() {
+        }
     }
 
     /**
@@ -418,6 +430,14 @@ public final class PV {
         return $wnd.pv.reverseOrder;
     }-*/;
 
+    public static native PVColor rgb(int r, int g, int b) /*-{
+        return $wnd.pv.rgb(r, g, b);
+    }-*/;
+
+    public static native PVColor rgb(int r, int g, int b, double a) /*-{
+        return $wnd.pv.rgb(r, g, b, a);
+    }-*/;
+
     private static native PVRule.Type Rule() /*-{
         return $wnd.pv.Rule;
     }-*/;
@@ -437,4 +457,5 @@ public final class PV {
 
     private PV() {
     }
+
 }

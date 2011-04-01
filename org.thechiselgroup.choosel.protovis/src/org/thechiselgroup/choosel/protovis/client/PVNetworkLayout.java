@@ -24,7 +24,7 @@ import com.google.gwt.core.client.JavaScriptObject;
  * @author Lars Grammel
  */
 public abstract class PVNetworkLayout<T extends PVNetworkLayout<T>> extends
-        PVAbstractBar<T> {
+        PVAbstractPanel<T> {
 
     protected PVNetworkLayout() {
     }

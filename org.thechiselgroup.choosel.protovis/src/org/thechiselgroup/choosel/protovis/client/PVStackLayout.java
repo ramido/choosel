@@ -28,7 +28,7 @@ import com.google.gwt.core.client.JavaScriptObject;
  * 
  * @author Lars Grammel
  */
-public final class PVStackLayout extends PVAbstractBar<PVStackLayout> {
+public final class PVStackLayout extends PVAbstractPanel<PVStackLayout> {
 
     protected PVStackLayout() {
     }
