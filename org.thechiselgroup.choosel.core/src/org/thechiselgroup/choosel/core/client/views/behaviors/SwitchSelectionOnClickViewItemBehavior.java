@@ -40,9 +40,13 @@ public class SwitchSelectionOnClickViewItemBehavior implements ViewItemBehavior 
 
         switch (interaction.getEventType()) {
         case CLICK:
-            selectionModel.switchSelection(viewItem.getResources());
+            switchSelection(viewItem);
             break;
         }
+    }
+
+    protected void switchSelection(ViewItem viewItem) {
+        selectionModel.switchSelection(viewItem.getResources());
     }
 
     @Override

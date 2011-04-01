@@ -50,6 +50,22 @@ public final class StringUtils {
         return result;
     }
 
+    public static <T> String toString(String delimeter, T... ts) {
+        if (ts.length == 0) {
+            return "";
+        }
+
+        StringBuilder result = new StringBuilder();
+        result.append(ts[0]);
+
+        for (int i = 1; i < ts.length; i++) {
+            result.append(delimeter).append(ts[i]);
+        }
+
+        return result.toString();
+
+    }
+
     private StringUtils() {
     }
 

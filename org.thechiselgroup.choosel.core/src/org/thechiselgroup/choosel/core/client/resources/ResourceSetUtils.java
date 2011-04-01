@@ -130,6 +130,15 @@ public final class ResourceSetUtils {
 
     }
 
+    public static String[] toResourceIds(ResourceSet resources) {
+        String[] resourceIds = new String[resources.size()];
+        int i = 0;
+        for (Resource resource : resources) {
+            resourceIds[i++] = resource.getUri();
+        }
+        return resourceIds;
+    }
+
     private ResourceSetUtils() {
 
     }
