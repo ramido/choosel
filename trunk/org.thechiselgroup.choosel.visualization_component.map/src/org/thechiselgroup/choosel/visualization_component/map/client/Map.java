@@ -210,13 +210,14 @@ public class Map extends AbstractViewContentDisplay {
         renderer.onDetach();
 
         // might have been disposed (then callback would be null)
-        if (callback != null) {
-            // remove all view items
-            update(LightweightCollections.<ViewItem> emptyCollection(),
-                    LightweightCollections.<ViewItem> emptyCollection(),
-                    callback.getViewItems(),
-                    LightweightCollections.<Slot> emptyCollection());
-        }
+        // XXX broken, TODO reactivate -- what is this for?
+        // if (callback != null) {
+        // // remove all view items
+        // update(LightweightCollections.<ViewItem> emptyCollection(),
+        // LightweightCollections.<ViewItem> emptyCollection(),
+        // callback.getViewItems(),
+        // LightweightCollections.<Slot> emptyCollection());
+        // }
     }
 
     @Override
