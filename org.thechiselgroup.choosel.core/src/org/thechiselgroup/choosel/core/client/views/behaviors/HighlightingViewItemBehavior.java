@@ -34,12 +34,12 @@ public class HighlightingViewItemBehavior implements ViewItemBehavior {
     private Map<String, HighlightingManager> highlightingManagers = CollectionFactory
             .createStringMap();
 
-    private HighlightingModel hoverModel;
+    private HighlightingModel highlightingModel;
 
-    public HighlightingViewItemBehavior(HighlightingModel hoverModel) {
-        assert hoverModel != null;
+    public HighlightingViewItemBehavior(HighlightingModel highlightingModel) {
+        assert highlightingModel != null;
 
-        this.hoverModel = hoverModel;
+        this.highlightingModel = highlightingModel;
     }
 
     protected HighlightingManager getHighlightingManager(ViewItem viewItem) {
@@ -69,7 +69,7 @@ public class HighlightingViewItemBehavior implements ViewItemBehavior {
         assert !highlightingManagers.containsKey(viewItem.getViewItemID());
 
         highlightingManagers.put(viewItem.getViewItemID(),
-                new HighlightingManager(hoverModel, viewItem.getResources()));
+                new HighlightingManager(highlightingModel, viewItem.getResources()));
     }
 
     @Override
