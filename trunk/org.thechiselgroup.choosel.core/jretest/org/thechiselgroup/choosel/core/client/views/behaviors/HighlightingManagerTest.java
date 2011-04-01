@@ -27,12 +27,12 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
-import org.thechiselgroup.choosel.core.client.views.model.HoverModel;
+import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
 
 public class HighlightingManagerTest {
 
     @Mock
-    private HoverModel hoverModel;
+    private HighlightingModel hoverModel;
 
     @Mock
     private ResourceSet resources;

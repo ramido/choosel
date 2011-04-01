@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.core.client.views.behaviors;
 import java.util.Map;
 
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
-import org.thechiselgroup.choosel.core.client.views.model.HoverModel;
+import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemBehavior;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction;
@@ -34,12 +34,16 @@ public class HighlightingViewItemBehavior implements ViewItemBehavior {
     private Map<String, HighlightingManager> highlightingManagers = CollectionFactory
             .createStringMap();
 
-    private HoverModel hoverModel;
+    private HighlightingModel hoverModel;
 
-    public HighlightingViewItemBehavior(HoverModel hoverModel) {
+    public HighlightingViewItemBehavior(HighlightingModel hoverModel) {
         assert hoverModel != null;
 
         this.hoverModel = hoverModel;
+    }
+
+    protected HighlightingManager getHighlightingManager(ViewItem viewItem) {
+        return highlightingManagers.get(viewItem.getViewItemID());
     }
 
     @Override
@@ -48,16 +52,13 @@ public class HighlightingViewItemBehavior implements ViewItemBehavior {
         assert highlightingManagers.containsKey(viewItem.getViewItemID());
         assert interaction != null;
 
-        HighlightingManager highlightingManager = highlightingManagers
-                .get(viewItem.getViewItemID());
-
         switch (interaction.getEventType()) {
         case DRAG_END:
         case MOUSE_OUT:
-            highlightingManager.setHighlighting(false);
+            setHighlighting(viewItem, false);
             break;
         case MOUSE_OVER:
-            highlightingManager.setHighlighting(true);
+            setHighlighting(viewItem, true);
             break;
         }
     }
@@ -79,6 +80,10 @@ public class HighlightingViewItemBehavior implements ViewItemBehavior {
         HighlightingManager manager = highlightingManagers.remove(viewItem
                 .getViewItemID());
         manager.dispose();
+    }
+
+    protected void setHighlighting(ViewItem viewItem, boolean shouldHighlight) {
+        getHighlightingManager(viewItem).setHighlighting(shouldHighlight);
     }
 
 }

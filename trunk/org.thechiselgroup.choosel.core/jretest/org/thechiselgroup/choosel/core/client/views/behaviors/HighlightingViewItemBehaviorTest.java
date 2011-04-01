@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.core.client.views.model.HoverModel;
+import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction.Type;
@@ -35,7 +35,7 @@ public class HighlightingViewItemBehaviorTest {
 
     private static final String VIEW_ITEM_ID = "viewItemCategory";
 
-    private HoverModel hoverModel;
+    private HighlightingModel hoverModel;
 
     @Mock
     private ViewItem viewItem;
@@ -89,7 +89,7 @@ public class HighlightingViewItemBehaviorTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        hoverModel = spy(new HoverModel());
+        hoverModel = spy(new HighlightingModel());
 
         resources = createResources(1, 2);
         when(viewItem.getViewItemID()).thenReturn(VIEW_ITEM_ID);

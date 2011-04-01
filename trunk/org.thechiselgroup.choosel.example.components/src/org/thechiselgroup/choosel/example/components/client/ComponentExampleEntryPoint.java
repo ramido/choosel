@@ -35,7 +35,7 @@ import org.thechiselgroup.choosel.core.client.views.behaviors.HighlightingViewIt
 import org.thechiselgroup.choosel.core.client.views.behaviors.PopupWithHighlightingViewItemBehavior;
 import org.thechiselgroup.choosel.core.client.views.behaviors.SwitchSelectionOnClickViewItemBehavior;
 import org.thechiselgroup.choosel.core.client.views.model.DefaultSelectionModel;
-import org.thechiselgroup.choosel.core.client.views.model.HoverModel;
+import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
 import org.thechiselgroup.choosel.core.client.views.model.SelectionModel;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
@@ -85,7 +85,7 @@ public class ComponentExampleEntryPoint implements EntryPoint {
 
     private VisualizationWidget<BarChart> barChart;
 
-    private void createBarChart(ResourceSet resourceSet, HoverModel hoverModel,
+    private void createBarChart(ResourceSet resourceSet, HighlightingModel hoverModel,
             SelectionModel selectionModel) {
 
         // behaviors: how the view reacts to user interactions
@@ -226,7 +226,7 @@ public class ComponentExampleEntryPoint implements EntryPoint {
             ResourceSet resourceSet = createResourceSet();
 
             // init highlighting and selection models
-            HoverModel hoverModel = new HoverModel();
+            HighlightingModel hoverModel = new HighlightingModel();
             SelectionModel selectionModel = new DefaultSelectionModel(
                     new IncrementingSuffixLabelFactory(""),
                     new DefaultResourceSetFactory());

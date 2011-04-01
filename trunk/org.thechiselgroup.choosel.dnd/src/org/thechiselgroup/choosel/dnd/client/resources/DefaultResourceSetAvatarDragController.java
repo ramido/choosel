@@ -29,7 +29,7 @@ import org.thechiselgroup.choosel.core.client.ui.CSS;
 import org.thechiselgroup.choosel.core.client.ui.shade.ShadeManager;
 import org.thechiselgroup.choosel.core.client.util.RemoveHandle;
 import org.thechiselgroup.choosel.core.client.util.math.MathUtils;
-import org.thechiselgroup.choosel.core.client.views.model.HoverModel;
+import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
 import org.thechiselgroup.choosel.dnd.client.windows.Desktop;
 import org.thechiselgroup.choosel.dnd.client.windows.WindowPanel;
 
@@ -122,14 +122,14 @@ public class DefaultResourceSetAvatarDragController extends
 
     private List<Area> visibleDropAreas;
 
-    private HoverModel hoverModel;
+    private HighlightingModel hoverModel;
 
     private ErrorHandler errorHandler;
 
     @Inject
     public DefaultResourceSetAvatarDragController(
             @Named(ROOT_PANEL) AbsolutePanel panel, Desktop desktop,
-            ShadeManager shadeManager, HoverModel hoverModel,
+            ShadeManager shadeManager, HighlightingModel hoverModel,
             ErrorHandler errorHandler) {
 
         super(panel);

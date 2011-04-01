@@ -24,7 +24,7 @@ import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupOpacityChangedEvent;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupOpacityChangedEventHandler;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
-import org.thechiselgroup.choosel.core.client.views.model.HoverModel;
+import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 
 import com.google.gwt.event.dom.client.MouseOutEvent;
@@ -41,11 +41,11 @@ public class PopupWithHighlightingViewItemBehavior extends
     private Map<String, HighlightingManager> highlightingManagers = CollectionFactory
             .createStringMap();
 
-    private HoverModel hoverModel;
+    private HighlightingModel hoverModel;
 
     public PopupWithHighlightingViewItemBehavior(
             DetailsWidgetHelper detailsWidgetHelper,
-            PopupManagerFactory popupManagerFactory, HoverModel hoverModel) {
+            PopupManagerFactory popupManagerFactory, HighlightingModel hoverModel) {
 
         super(detailsWidgetHelper, popupManagerFactory);
 

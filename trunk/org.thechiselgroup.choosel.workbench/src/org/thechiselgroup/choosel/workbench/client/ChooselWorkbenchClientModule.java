@@ -51,7 +51,7 @@ import org.thechiselgroup.choosel.core.client.util.HandlerManagerProvider;
 import org.thechiselgroup.choosel.core.client.util.URLFetchService;
 import org.thechiselgroup.choosel.core.client.views.DefaultViewAccessor;
 import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
-import org.thechiselgroup.choosel.core.client.views.model.HoverModel;
+import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
 import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplaysConfiguration;
 import org.thechiselgroup.choosel.dnd.client.popup.DragSupportingPopupManagerFactory;
 import org.thechiselgroup.choosel.dnd.client.resources.AllSetDropTargetManager;
@@ -191,7 +191,7 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
     }
 
     private void bindHoverModel() {
-        bind(HoverModel.class).in(Singleton.class);
+        bind(HighlightingModel.class).in(Singleton.class);
     }
 
     private void bindLabelProviders() {

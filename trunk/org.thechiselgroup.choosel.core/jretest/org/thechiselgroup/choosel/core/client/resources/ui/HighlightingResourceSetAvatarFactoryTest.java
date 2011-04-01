@@ -35,7 +35,7 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.UnmodifiableResourceSet;
 import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
-import org.thechiselgroup.choosel.core.client.views.model.HoverModel;
+import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
 
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
@@ -54,7 +54,7 @@ public class HighlightingResourceSetAvatarFactoryTest {
     @Mock
     private HandlerRegistration handlerRegistration;
 
-    private HoverModel hoverModel;
+    private HighlightingModel hoverModel;
 
     private ResourceSet resources;
 
@@ -179,7 +179,7 @@ public class HighlightingResourceSetAvatarFactoryTest {
         MockitoAnnotations.initMocks(this);
 
         resources = spy(createResources(1));
-        hoverModel = spy(new HoverModel());
+        hoverModel = spy(new HighlightingModel());
 
         underTest = new HighlightingResourceSetAvatarFactory(delegate,
                 hoverModel);

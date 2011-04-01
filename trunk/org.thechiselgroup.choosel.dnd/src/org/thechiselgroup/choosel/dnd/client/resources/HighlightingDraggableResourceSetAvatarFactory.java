@@ -20,7 +20,7 @@ import org.thechiselgroup.choosel.core.client.resources.ui.HighlightingResourceS
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
-import org.thechiselgroup.choosel.core.client.views.model.HoverModel;
+import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
 
 import com.allen_sauer.gwt.dnd.client.DragEndEvent;
 import com.allen_sauer.gwt.dnd.client.DragHandler;
@@ -39,7 +39,7 @@ public class HighlightingDraggableResourceSetAvatarFactory extends
     private final ResourceSetAvatarDragController dragController;
 
     public HighlightingDraggableResourceSetAvatarFactory(
-            ResourceSetAvatarFactory delegate, HoverModel hoverModel,
+            ResourceSetAvatarFactory delegate, HighlightingModel hoverModel,
             ResourceSetAvatarDragController dragController) {
 
         super(delegate, hoverModel);
