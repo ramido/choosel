@@ -125,11 +125,40 @@ public class PanAndZoomExample extends ProtovisWidget implements
 
     private JsArrayGeneric<Pair> generateData() {
         JsArrayGeneric<Pair> data = JsUtils.createJsArrayGeneric();
+
+        // circle
         for (int i = 0; i < 100; i++) {
-            double r = .5 + .2 * Math.random();
+            double r = .5 + .15 * Math.random();
             double a = Math.PI * i / 50d;
             data.push(new Pair(r * Math.cos(a), r * Math.sin(a)));
         }
+
+        // eyes
+        for (int i = 0; i < 10; i++) {
+            double x = -.25 + .1 * Math.random();
+            double y = -.2 + .1 * Math.random();
+            data.push(new Pair(x, y));
+        }
+        for (int i = 0; i < 10; i++) {
+            double x = .25 - .1 * Math.random();
+            double y = -.2 + .1 * Math.random();
+            data.push(new Pair(x, y));
+        }
+
+        // nose
+        for (int i = 0; i < 10; i++) {
+            double x = 0.05 - .1 * Math.random();
+            double y = .1 * Math.random();
+            data.push(new Pair(x, y));
+        }
+
+        // mouth
+        for (int i = 0; i < 25; i++) {
+            double r = .3 + 0.05 * Math.random();
+            double a = 2 * Math.PI / 8 + Math.PI * i / (4 * 12.5d);
+            data.push(new Pair(r * Math.cos(a), r * Math.sin(a)));
+        }
+
         return data;
     }
 
