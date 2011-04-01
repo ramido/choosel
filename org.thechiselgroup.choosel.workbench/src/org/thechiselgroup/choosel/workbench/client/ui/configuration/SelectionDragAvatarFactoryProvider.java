@@ -28,7 +28,7 @@ import org.thechiselgroup.choosel.core.client.resources.ui.popup.PopupResourceSe
 import org.thechiselgroup.choosel.core.client.resources.ui.popup.PopupResourceSetAvatarFactory.Action;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
-import org.thechiselgroup.choosel.core.client.views.model.HoverModel;
+import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
 import org.thechiselgroup.choosel.dnd.client.resources.DraggableResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.dnd.client.resources.HighlightingDraggableResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.dnd.client.resources.ResourceSetAvatarDragController;
@@ -43,7 +43,7 @@ public class SelectionDragAvatarFactoryProvider implements
 
     private final ResourceSetAvatarDragController dragController;
 
-    private final HoverModel hoverModel;
+    private final HighlightingModel hoverModel;
 
     private final PopupManagerFactory popupManagerFactory;
 
@@ -52,7 +52,7 @@ public class SelectionDragAvatarFactoryProvider implements
     @Inject
     public SelectionDragAvatarFactoryProvider(
             ResourceSetAvatarDragController dragController,
-            HoverModel hoverModel, ViewAccessor viewAccessor,
+            HighlightingModel hoverModel, ViewAccessor viewAccessor,
             PopupManagerFactory popupManagerFactory,
             CommandManager commandManager) {
 

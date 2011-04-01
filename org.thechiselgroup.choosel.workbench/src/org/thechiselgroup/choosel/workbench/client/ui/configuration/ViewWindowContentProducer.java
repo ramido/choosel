@@ -49,7 +49,7 @@ import org.thechiselgroup.choosel.core.client.views.model.DefaultResourceModel;
 import org.thechiselgroup.choosel.core.client.views.model.DefaultSelectionModel;
 import org.thechiselgroup.choosel.core.client.views.model.DefaultSlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.views.model.DefaultViewModel;
-import org.thechiselgroup.choosel.core.client.views.model.HoverModel;
+import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
 import org.thechiselgroup.choosel.core.client.views.model.RequiresAutomaticResourceSet;
 import org.thechiselgroup.choosel.core.client.views.model.ResourceModel;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingConfiguration;
@@ -105,7 +105,7 @@ public class ViewWindowContentProducer implements WindowContentProducer {
     private ViewContentDisplaysConfiguration viewContentDisplayConfiguration;
 
     @Inject
-    private HoverModel hoverModel;
+    private HighlightingModel hoverModel;
 
     @Inject
     private PopupManagerFactory popupManagerFactory;

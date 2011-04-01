@@ -25,7 +25,7 @@ import org.thechiselgroup.choosel.core.client.resources.UnionResourceSet;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
-public class HoverModel {
+public class HighlightingModel {
 
     private ProxyResourceSet highlightedResourceSetContainer;
 
@@ -33,7 +33,7 @@ public class HoverModel {
 
     private UnionResourceSet combinedHighlightedResources;
 
-    public HoverModel() {
+    public HighlightingModel() {
         highlightedResourceSetContainer = new ProxyResourceSet();
 
         /*

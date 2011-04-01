@@ -17,7 +17,7 @@ package org.thechiselgroup.choosel.core.client.views.behaviors;
 
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
-import org.thechiselgroup.choosel.core.client.views.model.HoverModel;
+import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
 
 /**
  * Manages the highlighting state of a single user interface resource (i.e. if
@@ -35,9 +35,9 @@ public class HighlightingManager implements Disposable {
 
     private ResourceSet resources;
 
-    private HoverModel hoverModel;
+    private HighlightingModel hoverModel;
 
-    public HighlightingManager(HoverModel hoverModel, ResourceSet resources) {
+    public HighlightingManager(HighlightingModel hoverModel, ResourceSet resources) {
         assert hoverModel != null;
         assert resources != null;
 

@@ -35,7 +35,7 @@ import org.thechiselgroup.choosel.core.client.resources.ui.DetailsWidgetHelper;
 import org.thechiselgroup.choosel.core.client.ui.popup.Popup;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManager;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
-import org.thechiselgroup.choosel.core.client.views.model.HoverModel;
+import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemInteraction.Type;
@@ -47,7 +47,7 @@ public class PopupWithHighlightingViewItemBehaviorTest {
 
     private static final String VIEW_ITEM_ID = "viewItemCategory";
 
-    private HoverModel hoverModel;
+    private HighlightingModel hoverModel;
 
     @Mock
     private PopupManager popupManager;
@@ -115,7 +115,7 @@ public class PopupWithHighlightingViewItemBehaviorTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        hoverModel = spy(new HoverModel());
+        hoverModel = spy(new HighlightingModel());
 
         resources = createResources(1, 2);
         when(viewItem.getViewItemID()).thenReturn(VIEW_ITEM_ID);

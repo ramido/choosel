@@ -36,7 +36,7 @@ import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatar;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.core.client.util.Disposable;
-import org.thechiselgroup.choosel.core.client.views.model.HoverModel;
+import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
 import org.thechiselgroup.choosel.dnd.client.test.DndTestHelpers;
 
 import com.allen_sauer.gwt.dnd.client.DragEndEvent;
@@ -59,7 +59,7 @@ public class HighlightingDraggableResourceSetAvatarFactoryTest {
     @Mock
     private HandlerRegistration handlerRegistration;
 
-    private HoverModel hoverModel;
+    private HighlightingModel hoverModel;
 
     private ResourceSet resources;
 
@@ -102,7 +102,7 @@ public class HighlightingDraggableResourceSetAvatarFactoryTest {
         DndTestHelpers.mockDragClientBundle(bridge);
 
         resources = spy(createResources(1));
-        hoverModel = spy(new HoverModel());
+        hoverModel = spy(new HighlightingModel());
 
         underTest = new HighlightingDraggableResourceSetAvatarFactory(delegate,
                 hoverModel, dragController);
