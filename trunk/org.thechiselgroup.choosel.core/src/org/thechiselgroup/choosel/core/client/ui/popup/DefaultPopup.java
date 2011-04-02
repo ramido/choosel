@@ -224,8 +224,8 @@ public class DefaultPopup implements Popup {
             rootPanel.add(effectPanel);
         }
 
-        Size size = new Size(effectPanel.getOffsetWidth(),
-                effectPanel.getOffsetHeight());
+        Size size = new Size(containerPanel.getOffsetWidth(),
+                containerPanel.getOffsetHeight());
 
         if (!attached) {
             rootPanel.remove(effectPanel);
