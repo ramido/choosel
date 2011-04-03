@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -20,9 +20,9 @@ import com.google.gwt.user.client.Element;
 
 /**
  * {@linkplain http://code.google.com/p/simile-widgets/wiki/Timeline}
- * {@linkplain http://code.google.com/p/simile-widgets/wiki/Timeline_BandClass}
+ * {@linkplain http ://code.google.com/p/simile-widgets/wiki/Timeline_BandClass}
  */
-class JsTimeLine extends JavaScriptObject {
+public class JsTimeLine extends JavaScriptObject {
 
     // TODO expose # of bands
     // @formatter:off
@@ -89,20 +89,12 @@ class JsTimeLine extends JavaScriptObject {
         })
         ];
 
-
         bandInfos[1].syncWith = 0;
         bandInfos[1].highlight = true;
 
         return $wnd.Timeline.create(element, bandInfos, $wnd.Timeline.HORIZONTAL);
     }-*/;
-
     // @formatter:on
-
-    // called from JavaScript
-    private static final void onEventPainted(JsTimeLine timeLine,
-            int bandIndex, JsTimeLineEvent event) {
-        timeLine.onEventPainted(bandIndex, event);
-    }
 
     protected JsTimeLine() {
     }
@@ -139,6 +131,22 @@ class JsTimeLine extends JavaScriptObject {
                 + event.getID();
     }
 
+    /**
+     * Returns getMaxVisibleDate() from the band as GMT String in a form similar
+     * to "Fri, 29 Sep 2000 06:23:54 GMT" ("EEE, d MMM yyyy HH:mm:ss Z")
+     */
+    public final native String getMaxVisibleDateAsGMTString(int band) /*-{
+        return this.getBand(band).getMaxVisibleDate().toGMTString();
+    }-*/;
+
+    /**
+     * Returns getMinVisibleDate() from the band as GMT String in a form similar
+     * to "Fri, 29 Sep 2000 06:23:54 GMT" ("EEE, d MMM yyyy HH:mm:ss Z")
+     */
+    public final native String getMinVisibleDateAsGMTString(int band) /*-{
+        return this.getBand(band).getMinVisibleDate().toGMTString();
+    }-*/;
+
     public final native int getTimeLineID() /*-{
         return this.timelineID;
     }-*/;
@@ -148,52 +156,57 @@ class JsTimeLine extends JavaScriptObject {
      * refers to depends on the band (defined in
      * {@link #create(Element, JsTimeLineEventSource, String)}).
      */
-    public final native int getZoomIndex(int bandNumber) /*-{
-        return this.getBand(bandNumber)._zoomIndex;
+    public final native int getZoomIndex(int bandIndex) /*-{
+        return this.getBand(bandIndex)._zoomIndex;
     }-*/;
 
     public final native void layout() /*-{
         this.layout();
     }-*/;
 
-    private final void onEventPainted(int bandIndex, final JsTimeLineEvent event) {
-        String labelElementID = getEventElementID(bandIndex, "label", event);
-        String iconElementID = getEventElementID(bandIndex, "icon", event);
-
-        event.getTimeLineItem().onPainted(labelElementID, iconElementID);
-
-        // TODO use just one listener instead of one per item (for performance)
-        // 1. get the id of the element
-        // ((Element) e.getCurrentEventTarget().cast()).getId()
-        // 2. resolve timeline event from id
-    }
-
     public final native void paint() /*-{
         this.paint();
     }-*/;
 
-    public final native void registerPaintListener() /*-{
+    // @formatter:off
+    public final native void registerPaintListener(JsTimelinePaintCallback callback) /*-{
         var listener = function(band, operation, event, elements) {
-        if ("paintedEvent" == operation) {
-        var bandIndex = band.getIndex();
-        var timeline = band.getTimeline();
-
-        @org.thechiselgroup.choosel.visualization_component.timeline.client.JsTimeLine::onEventPainted(Lorg/thechiselgroup/choosel/visualization_component/timeline/client/JsTimeLine;ILorg/thechiselgroup/choosel/visualization_component/timeline/client/JsTimeLineEvent;)(timeline, bandIndex, event);
-        }
+          if ("paintedEvent" == operation) {
+            var bandIndex = band.getIndex();
+            var timeline = band.getTimeline();
+            callback.@org.thechiselgroup.choosel.visualization_component.timeline.client.JsTimelinePaintCallback::eventPainted(ILorg/thechiselgroup/choosel/visualization_component/timeline/client/JsTimeLineEvent;)(bandIndex, event);
+          }
         };
         for (var i = 0; i < this.getBandCount(); i++) {
-        var eventPainter = this.getBand(i)._eventPainter;
-        if (eventPainter.addEventPaintListener) {
-        eventPainter.addEventPaintListener(listener);
-        }
+          var eventPainter = this.getBand(i)._eventPainter;
+          if (eventPainter.addEventPaintListener) {
+            eventPainter.addEventPaintListener(listener);
+          }
         }
     }-*/;
+    // @formatter:on
 
+    // @formatter:off
+    public final native void registerScrollListener(JsTimelineScrollCallback callback) /*-{
+        var listener = function(band) {
+          var bandIndex = band.getIndex();
+          var timeline = band.getTimeline();
+          callback.@org.thechiselgroup.choosel.visualization_component.timeline.client.JsTimelineScrollCallback::bandScrolled(I)(bandIndex);
+        }
+
+        for (var i = 0; i < this.getBandCount(); i++) {
+          this.getBand(i).addOnScrollListener(listener);
+        }
+    }-*/;
+    // @formatter:on
+
+    // @formatter:off
     public final native String setCenterVisibleDate(String gmtString) /*-{
         // TODO change if bands are not synchronized any more
         // TODO parse date ?!?
         return this.getBand(0).setCenterVisibleDate(Date.parse(gmtString));
     }-*/;
+    // @formatter:on
 
     /**
      * Sets the zoom index of a band. What time interval the zoom index refers
@@ -202,6 +215,7 @@ class JsTimeLine extends JavaScriptObject {
      * calling this function will change the center date of the band, call
      * {@link #setCenterVisibleDate(String)} afterwards.
      */
+    // @formatter:off
     public final native void setZoomIndex(int bandNumber, int zoomIndex) /*-{
         // calculate number of steps because API function is boolean zoom with 
         // location.
@@ -214,8 +228,9 @@ class JsTimeLine extends JavaScriptObject {
 
         var i = 0;
         for (i = 0;i < zoomSteps; i = i + 1) {
-        this.getBand(bandNumber).zoom(zoomIn, 0, 0, null);
+          this.getBand(bandNumber).zoom(zoomIn, 0, 0, null);
         }
     }-*/;
+    // @formatter:on
 
 }

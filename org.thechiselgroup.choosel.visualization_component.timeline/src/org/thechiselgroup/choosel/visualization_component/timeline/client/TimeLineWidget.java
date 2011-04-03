@@ -17,11 +17,15 @@ package org.thechiselgroup.choosel.visualization_component.timeline.client;
 
 import java.util.Date;
 
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
 
 public class TimeLineWidget extends Widget {
+
+    private HandlerManager handlerManager = new HandlerManager(this);
 
     private JsTimeLineEventSource eventSource;
 
@@ -30,10 +34,10 @@ public class TimeLineWidget extends Widget {
 
     // TODO http://code.google.com/p/google-web-toolkit/issues/detail?id=3415
     // wait for fix to switch to "EEE, dd MMM yyyy HH:mm:ss z"
-    private DateTimeFormat outputFormat = DateTimeFormat
+    public final static DateTimeFormat GMT_FORMAT = DateTimeFormat
             .getFormat("dd MMM yyyy HH:mm:ss z");
 
-    private JsTimeLine timeLine;
+    private JsTimeLine jsTimeLine;
 
     private String mainBandWidth = "80%";
 
@@ -45,20 +49,44 @@ public class TimeLineWidget extends Widget {
 
     public void addEvents(JsTimeLineEvent[] events) {
         eventSource.addEvents(events);
-        timeLine.paint();
+        jsTimeLine.paint();
+    }
+
+    public HandlerRegistration addScrollHandler(
+            TimelineScrolledEventHandler handler) {
+        return handlerManager.addHandler(TimelineScrolledEvent.TYPE, handler);
+    }
+
+    private void bandScrolled(int bandIndex) {
+        handlerManager.fireEvent(new TimelineScrolledEvent(this, bandIndex,
+                jsTimeLine.getZoomIndex(bandIndex), jsTimeLine
+                        .getMinVisibleDateAsGMTString(bandIndex), jsTimeLine
+                        .getMaxVisibleDateAsGMTString(bandIndex)));
+    }
+
+    private void eventPainted(int bandIndex, JsTimeLineEvent event) {
+        String labelElementID = getEventElementID(bandIndex, "label", event);
+        String iconElementID = getEventElementID(bandIndex, "icon", event);
+        event.getTimeLineItem().onPainted(labelElementID, iconElementID);
+
+        // TODO use just one listener instead of one per item (for
+        // performance)
+        // 1. get the id of the element
+        // ((Element) e.getCurrentEventTarget().cast()).getId()
+        // 2. resolve timeline event from id
     }
 
     public Date getCenterVisibleDate() {
         // TODO
         // http://code.google.com/p/google-web-toolkit/issues/detail?id=3415
         // wait for fix to switch to "EEE, dd MMM yyyy HH:mm:ss z"
-        return outputFormat.parse(timeLine.getCenterVisibleDateAsGMTString()
+        return GMT_FORMAT.parse(jsTimeLine.getCenterVisibleDateAsGMTString()
                 .substring(5));
     }
 
     public final String getEventElementID(int bandIndex, String elementType,
             JsTimeLineEvent event) {
-        return timeLine.getEventElementID(bandIndex, elementType, event);
+        return jsTimeLine.getEventElementID(bandIndex, elementType, event);
     }
 
     public String getMainBandWidth() {
@@ -70,16 +98,16 @@ public class TimeLineWidget extends Widget {
     }
 
     public JsTimeLine getTimeLine() {
-        return timeLine;
+        return jsTimeLine;
     }
 
     public final int getZoomIndex(int bandNumber) {
-        return timeLine.getZoomIndex(bandNumber);
+        return jsTimeLine.getZoomIndex(bandNumber);
     }
 
     public void layout() {
-        if (timeLine != null) {
-            timeLine.layout();
+        if (jsTimeLine != null) {
+            jsTimeLine.layout();
         }
     }
 
@@ -87,21 +115,32 @@ public class TimeLineWidget extends Widget {
     protected void onAttach() {
         super.onAttach();
 
-        if (timeLine == null) {
+        if (jsTimeLine == null) {
             eventSource = JsTimeLineEventSource.create();
 
-            timeLine = JsTimeLine.create(getElement(), eventSource,
+            jsTimeLine = JsTimeLine.create(getElement(), eventSource,
                     inputFormat.format(new Date()), mainBandWidth,
                     overviewBandWidth);
 
-            timeLine.disableBubbles();
-            timeLine.registerPaintListener();
+            jsTimeLine.disableBubbles();
+            jsTimeLine.registerPaintListener(new JsTimelinePaintCallback() {
+                @Override
+                public void eventPainted(int bandIndex, JsTimeLineEvent event) {
+                    TimeLineWidget.this.eventPainted(bandIndex, event);
+                }
+            });
+            jsTimeLine.registerScrollListener(new JsTimelineScrollCallback() {
+                @Override
+                public void bandScrolled(int bandIndex) {
+                    TimeLineWidget.this.bandScrolled(bandIndex);
+                }
+            });
         }
     }
 
     public void removeEvents(JsTimeLineEvent[] events) {
         eventSource.removeEvents(events);
-        timeLine.paint();
+        jsTimeLine.paint();
     }
 
     public void setCenterVisibleDate(Date date) {
@@ -109,7 +148,7 @@ public class TimeLineWidget extends Widget {
         // TODO use output format once
         // http://code.google.com/p/google-web-toolkit/issues/detail?id=3415
         // is fixed.
-        timeLine.setCenterVisibleDate(DateTimeFormat.getFormat(
+        jsTimeLine.setCenterVisibleDate(DateTimeFormat.getFormat(
                 "EEE, dd MMM yyyy HH:mm:ss z").format(date));
     }
 
@@ -122,6 +161,6 @@ public class TimeLineWidget extends Widget {
     }
 
     public final void setZoomIndex(int bandNumber, int zoomIndex) {
-        timeLine.setZoomIndex(bandNumber, zoomIndex);
+        jsTimeLine.setZoomIndex(bandNumber, zoomIndex);
     }
 }
