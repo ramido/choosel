@@ -32,6 +32,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
 
 public class DefaultPopupManager implements PopupManager {
+
     private class MouseHandlersPopupManagerLink implements MouseOverHandler,
             MouseOutHandler, MouseMoveHandler, MouseDownHandler {
 
@@ -372,8 +373,15 @@ public class DefaultPopupManager implements PopupManager {
 
             state.onSourceRightClick(this);
         } else if (event.getButton() == NativeEvent.BUTTON_LEFT) {
-            // mouse down triggers click operations, popup gets hidden
-            setState(INACTIVE_STATE);
+            /*
+             * NOTE: Mouse down triggers click operations. The popup should not
+             * interfere with this, so if we are already in the waiting state,
+             * the timer is reset.
+             */
+            if (state == WAITING_STATE) {
+                cancelTimer();
+                startTimer(showDelay);
+            }
         }
     }
 
