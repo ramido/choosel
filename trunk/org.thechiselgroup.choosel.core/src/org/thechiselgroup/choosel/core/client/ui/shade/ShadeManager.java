@@ -69,14 +69,17 @@ public class ShadeManager implements HasClickHandlers {
 
     private final int zIndex;
 
+    private final String position;
+
     @Inject
     public ShadeManager(@Named(ROOT_PANEL) AbsolutePanel panel) {
-        this(panel, ZIndex.SHADE);
+        this(panel, ZIndex.SHADE, CSS.ABSOLUTE);
     }
 
-    public ShadeManager(AbsolutePanel panel, int zIndex) {
+    public ShadeManager(AbsolutePanel panel, int zIndex, String position) {
         this.panel = panel;
         this.zIndex = zIndex;
+        this.position = position;
     }
 
     @Override
@@ -89,7 +92,7 @@ public class ShadeManager implements HasClickHandlers {
 
         shadeElement.setClassName(ShadeManager.CSS_SHADE);
 
-        CSS.setPosition(shadeElement, CSS.ABSOLUTE);
+        CSS.setPosition(shadeElement, position);
         CSS.setLeft(shadeElement, r.getX());
         CSS.setTop(shadeElement, r.getY());
         CSS.setHeight(shadeElement, r.getHeight());
