@@ -18,13 +18,10 @@ package org.thechiselgroup.choosel.core.client.util.task;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.google.inject.Inject;
-
 public class LogErrorTaskExecutor extends DelegatingTaskExecutor {
 
     private Logger logger;
 
-    @Inject
     public LogErrorTaskExecutor(TaskExecutor delegate, Logger logger) {
         super(delegate);
 
