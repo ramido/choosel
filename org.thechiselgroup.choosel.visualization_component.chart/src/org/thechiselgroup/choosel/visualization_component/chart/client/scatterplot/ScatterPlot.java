@@ -218,7 +218,7 @@ public class ScatterPlot extends ChartViewContentDisplay {
                 FONT_STYLE, FONT_WEIGHT, FONT_SIZE);
 
         final Map<String, Integer> textWidths = estimator
-                .getTextWidths(shapeLegend.values());
+                .getWidths(shapeLegend.values());
 
         int descriptionsWidth = 0;
         for (Integer integer : textWidths.values()) {
@@ -226,7 +226,7 @@ public class ScatterPlot extends ChartViewContentDisplay {
         }
         descriptionsWidth += textWidths.size()
                 * (SHAPE_SIZE + SHAPE_LEGEND_LABEL_SPACING);
-        int legendLabelWidth = estimator.getTextWidth(shapeLegendLabel);
+        int legendLabelWidth = estimator.getWidth(shapeLegendLabel);
         int shapePanelWidth = legendLabelWidth > descriptionsWidth ? legendLabelWidth
                 : descriptionsWidth;
 

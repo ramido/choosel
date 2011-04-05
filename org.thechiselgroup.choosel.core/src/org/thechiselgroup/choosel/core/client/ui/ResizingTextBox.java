@@ -93,7 +93,7 @@ public class ResizingTextBox extends TextBox {
     }
 
     private void updateWidth(String text) {
-        int width = new TextBoundsEstimator().getTextWidth(text, getElement());
+        int width = new TextBoundsEstimator().getWidth(text, getElement());
 
         // we add some extra width for the focus indicator etc
         width += EXTRA_WIDTH;
