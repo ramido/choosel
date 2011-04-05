@@ -518,7 +518,7 @@ public class BarChart extends ChartViewContentDisplay {
         for (int i = 0; i < viewItemsJsArray.length(); i++) {
             String label = viewItemsJsArray.get(i).getValue(BAR_LABEL);
             estimator.setText(label);
-            int width = estimator.getTextWidth();
+            int width = estimator.getWidth();
 
             if (maxWidth < width) {
                 maxWidth = width;

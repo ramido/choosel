@@ -20,29 +20,19 @@ import java.util.Map;
 
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.RootPanel;
 
-public class TextBoundsEstimator {
-
-    private Element estimatorElement;
-
-    private Element rootElement;
+public class TextBoundsEstimator extends BoundsEstimator {
 
     public TextBoundsEstimator() {
-        this.estimatorElement = createEstimatorElement();
-        this.rootElement = RootPanel.get().getElement();
     }
 
     public TextBoundsEstimator(Element prototype) {
-        this();
         applyFontSettings(prototype);
     }
 
     public TextBoundsEstimator(String fontFamily, String fontStyle,
             String fontWeight, String fontSize) {
-        this();
         applyFontSettings(fontFamily, fontStyle, fontWeight, fontSize);
     }
 
@@ -64,48 +54,27 @@ public class TextBoundsEstimator {
         CSS.setFontSize(estimatorElement, fontSize);
     }
 
-    private Element createEstimatorElement() {
-        Element estimatorElement = DOM.createSpan();
-
-        CSS.setPosition(estimatorElement, CSS.ABSOLUTE);
-        CSS.setLeft(estimatorElement, 0);
-        CSS.setTop(estimatorElement, 0);
-        CSS.setZIndex(estimatorElement, -1000);
-        CSS.setBorder(estimatorElement, "0px none");
-        CSS.setPadding(estimatorElement, 0);
-        CSS.setMargin(estimatorElement, 0);
-
-        return estimatorElement;
-    }
-
-    public int getTextWidth() {
-        rootElement.appendChild(estimatorElement);
-        int width = estimatorElement.getOffsetWidth();
-        rootElement.removeChild(estimatorElement);
-        return width;
-    }
-
-    public int getTextWidth(String text) {
+    public int getWidth(String text) {
         setText(text);
-        return getTextWidth();
+        return getWidth();
     }
 
-    public int getTextWidth(String text, Element prototype) {
+    public int getWidth(String text, Element prototype) {
         applyFontSettings(prototype);
-        return getTextWidth(text);
+        return getWidth(text);
     }
 
     /**
      * Calculates the text widths for the texts and returns a mapping of the
      * texts to their widths.
      */
-    public Map<String, Integer> getTextWidths(Collection<String> texts) {
+    public Map<String, Integer> getWidths(Collection<String> texts) {
         assert texts != null;
 
         Map<String, Integer> result = CollectionFactory.createStringMap();
         for (String value : texts) {
             setText(value);
-            result.put(value, getTextWidth());
+            result.put(value, getWidth());
         }
         return result;
     }
