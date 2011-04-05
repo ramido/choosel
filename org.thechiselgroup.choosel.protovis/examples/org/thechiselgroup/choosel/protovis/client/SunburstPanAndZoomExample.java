@@ -70,7 +70,7 @@ public class SunburstPanAndZoomExample extends ProtovisWidget implements
             }
         });
 
-        /* Use an invisible panel to capture pan & zoom events. */
+        /* capture pan & zoom events on main panel */
         getPVPanel().events(PV.Events.ALL)
                 .event(PV.Event.MOUSEDOWN, PV.Behavior.pan())
                 .event(PV.Event.MOUSEWHEEL, PV.Behavior.zoom());
