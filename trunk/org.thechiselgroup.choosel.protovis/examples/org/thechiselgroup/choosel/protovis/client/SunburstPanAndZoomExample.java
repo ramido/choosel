@@ -21,7 +21,6 @@ import org.thechiselgroup.choosel.protovis.client.jsutil.JsBooleanFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsFunction;
 
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -40,14 +39,7 @@ public class SunburstPanAndZoomExample extends ProtovisWidget implements
     }
 
     private void createVisualization(FlareData.Unit root) {
-        final int w = 900;
-        final int h = 900;
-        final double kx = w / h;
-        final double ky = 1;
-        final PVLinearScale x = PV.Scale.linear(-kx, kx).range(0, w);
-        final PVLinearScale y = PV.Scale.linear(-ky, ky).range(0, h);
-
-        PVPanel vis = getPVPanel().width(w).height(h).bottom(-80);
+        PVPanel vis = getPVPanel().width(900).height(900).bottom(-80);
 
         final PVOrdinalScale category19 = PV.Colors.category19();
 
@@ -78,27 +70,10 @@ public class SunburstPanAndZoomExample extends ProtovisWidget implements
             }
         });
 
-        /** Update the x- and y-scale domains per the new transform. */
-        PVEventHandler transform = new PVEventHandler() {
-            public void onEvent(Event e, String pvEventType, JsArgs args) {
-                PVPanel _this = args.getThis();
-                PVTransform t = _this.transform().invert();
-                // to do scale on the layout
-
-                x.domain(t.x() / w * 2 * kx - kx, (t.k() + t.x() / w) * 2 * kx
-                        - kx);
-                y.domain(t.y() / h * 2 * ky - ky, (t.k() + t.y() / h) * 2 * ky
-                        - ky);
-                getPVPanel().render();
-            }
-        };
-
         /* Use an invisible panel to capture pan & zoom events. */
         getPVPanel().events(PV.Events.ALL)
                 .event(PV.Event.MOUSEDOWN, PV.Behavior.pan())
-                .event(PV.Event.MOUSEWHEEL, PV.Behavior.zoom())
-                .event(PV.Behavior.PAN, transform)
-                .event(PV.Behavior.ZOOM, transform);
+                .event(PV.Event.MOUSEWHEEL, PV.Behavior.zoom());
     }
 
     public String getProtovisExampleURL() {
