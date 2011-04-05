@@ -256,6 +256,10 @@ public final class CSS {
         setStyleAttribute(element, HEIGHT, heightPx + PX);
     }
 
+    public static void setHeight(Element element, String height) {
+        element.getStyle().setProperty(HEIGHT, height);
+    }
+
     public static void setHeight(Widget widget, int heightPx) {
         setHeight(widget.getElement(), heightPx);
     }
@@ -319,7 +323,11 @@ public final class CSS {
     }
 
     public static void setWidth(Element element, int width) {
-        element.getStyle().setProperty(WIDTH, (width + PX));
+        setWidth(element, (width + PX));
+    }
+
+    public static void setWidth(Element element, String width) {
+        element.getStyle().setProperty(WIDTH, width);
     }
 
     public static void setWidth(Widget widget, int width) {
