@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.visualization_component.timeline.client;
 
 import java.util.Date;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -63,6 +64,15 @@ public class TimeLineWidget extends Widget {
                 jsTimeLine.getZoomIndex(bandIndex),
                 jsTimeLine.getMinVisibleDateAsGMTString(bandIndex),
                 jsTimeLine.getMaxVisibleDateAsGMTString(bandIndex));
+    }
+
+    private BandInformation createBandInformation(int bandIndex,
+            JavaScriptObject centerDate) {
+
+        return new BandInformation(bandIndex,
+                jsTimeLine.getZoomIndex(bandIndex),
+                jsTimeLine.getMinVisibleDateAsGMTString(bandIndex, centerDate),
+                jsTimeLine.getMaxVisibleDateAsGMTString(bandIndex, centerDate));
     }
 
     private void eventPainted(int bandIndex, JsTimeLineEvent event) {
@@ -138,6 +148,13 @@ public class TimeLineWidget extends Widget {
                             TimeLineWidget.this.onInteraction(interaction,
                                     bandIndex);
                         }
+
+                        @Override
+                        public void onInteraction(String interaction,
+                                int bandIndex, JavaScriptObject newCenterDate) {
+                            TimeLineWidget.this.onInteraction(interaction,
+                                    bandIndex, newCenterDate);
+                        }
                     });
         }
     }
@@ -151,6 +168,20 @@ public class TimeLineWidget extends Widget {
         handlerManager.fireEvent(new TimelineInteractionEvent(this, bandIndex,
                 interaction, new BandInformation[] { createBandInformation(0),
                         createBandInformation(1) }));
+    }
+
+    protected void onInteraction(String interaction, int bandIndex,
+            JavaScriptObject newCenterDate) {
+
+        // event construction is expensive so we check if there are any handlers
+        if (handlerManager.getHandlerCount(TimelineInteractionEvent.TYPE) == 0) {
+            return;
+        }
+
+        handlerManager.fireEvent(new TimelineInteractionEvent(this, bandIndex,
+                interaction, new BandInformation[] {
+                        createBandInformation(0, newCenterDate),
+                        createBandInformation(1, newCenterDate) }));
     }
 
     public void removeEvents(JsTimeLineEvent[] events) {
