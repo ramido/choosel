@@ -15,8 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.timeline.client;
 
+import com.google.gwt.core.client.JavaScriptObject;
+
 public interface JsTimelineInteractionCallback {
 
     void onInteraction(String interaction, int bandIndex);
+
+    void onInteraction(String interaction, int bandIndex,
+            JavaScriptObject newCenterDate);
 
 }

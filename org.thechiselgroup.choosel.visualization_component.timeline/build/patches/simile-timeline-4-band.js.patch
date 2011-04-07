@@ -1,0 +1,118 @@
+Index: src/org/thechiselgroup/choosel/visualization_component/timeline/public/js/lib/timeline-2.3.0/scripts/band.js
+===================================================================
+--- src/org/thechiselgroup/choosel/visualization_component/timeline/public/js/lib/timeline-2.3.0/scripts/band.js	(revision 1372)
++++ src/org/thechiselgroup/choosel/visualization_component/timeline/public/js/lib/timeline-2.3.0/scripts/band.js	(working copy)
+@@ -357,6 +357,11 @@
+     return this._ether.pixelOffsetToDate(delta);
+ };
+ 
++Timeline._Band.prototype.getMinVisibleDateForCenter = function(centerDate) {
++    var centerOffset = this._ether.dateToPixelOffset(centerDate);
++    return this._ether.pixelOffsetToDate(centerOffset - (this._viewLength / 2));
++};
++
+ Timeline._Band.prototype.getMaxVisibleDate = function() {
+     // Max date currently visible on band
+     return this._ether.pixelOffsetToDate(this._viewLength);
+@@ -367,10 +372,19 @@
+     return this._ether.pixelOffsetToDate(this._viewLength + delta);
+ };
+ 
++Timeline._Band.prototype.getMaxVisibleDateForCenter = function(centerDate) {
++    var centerOffset = this._ether.dateToPixelOffset(centerDate);
++    return this._ether.pixelOffsetToDate(centerOffset + (this._viewLength / 2));
++};
++
+ Timeline._Band.prototype.getCenterVisibleDate = function() {
+     return this._ether.pixelOffsetToDate(this._viewLength / 2);
+ };
+ 
++Timeline._Band.prototype.getCenterVisibleDateAfterDelta = function(delta) {
++    return this._ether.pixelOffsetToDate((this._viewLength / 2) + delta);
++};
++
+ Timeline._Band.prototype.setMinVisibleDate = function(date) {
+     if (!this._changing) {
+         this._moveEther(Math.round(-this._ether.dateToPixelOffset(date)));
+@@ -553,10 +567,11 @@
+     var coords = SimileAjax.DOM.getEventRelativeCoordinates(evt, innerFrame);
+     var distance = coords.x - (this._viewLength / 2 - this._viewOffset);
+     
++    var newCenterDate = this.getCenterVisibleDateAfterDelta(distance);
++    
+     this._autoScroll(-distance);
+     
+-    // Choosel interaction logging
+-    this._fireInteractionEvent("mouse_dblclick");
++    this._fireInteractionEventWithNewCenter("mouse_dblclick", newCenterDate);
+ };
+ 
+ Timeline._Band.prototype._onKeyDown = function(keyboardInput, evt, target) {
+@@ -568,7 +583,6 @@
+         case 38: // up arrow
+             this._scrollSpeed = Math.min(50, Math.abs(this._scrollSpeed * 1.05));
+             this._moveEther(this._scrollSpeed);
+-            // Choosel interaction logging
+             if (evt.keyCode == 37) {
+             	this._fireInteractionEvent("key_left");
+             } else {
+@@ -579,7 +593,6 @@
+         case 40: // down arrow
+             this._scrollSpeed = -Math.min(50, Math.abs(this._scrollSpeed * 1.05));
+             this._moveEther(this._scrollSpeed);
+-            // Choosel interaction logging
+             if (evt.keyCode == 39) {
+             	this._fireInteractionEvent("key_right");
+             } else {
+@@ -604,23 +617,19 @@
+         switch (evt.keyCode) {
+         case 35: // end
+             this.setCenterVisibleDate(this._eventSource.getLatestDate());
+-            // Choosel interaction logging
+             this._fireInteractionEvent("key_end");
+             break;
+         case 36: // home
+             this.setCenterVisibleDate(this._eventSource.getEarliestDate());
+-            // Choosel interaction logging
+             this._fireInteractionEvent("key_home");
+             break;
+         case 33: // page up
+             this._autoScroll(this._timeline.getPixelLength());
+-            // Choosel interaction logging
+-            this._fireInteractionEvent("key_page_up");
++            this._fireInteractionEventWithNewCenter("key_page_up", this.getCenterVisibleDateAfterDelta(-this._timeline.getPixelLength()));
+             break;
+         case 34: // page down
+             this._autoScroll(-this._timeline.getPixelLength());
+-            // Choosel interaction logging
+-            this._fireInteractionEvent("key_page_down");
++            this._fireInteractionEventWithNewCenter("key_page_down", this.getCenterVisibleDateAfterDelta(this._timeline.getPixelLength()));
+             break;
+         default:
+             return true;
+@@ -696,15 +705,22 @@
+     }
+ };
+ 
+-/**
+- * Choosel: Enabling interaction logging
+- */
+ Timeline._Band.prototype._fireInteractionEvent = function(interaction) {
+     for (var i = 0; i < this._interactionHandlers.length; i++) {
+         this._interactionHandlers[i](interaction, this);
+     }
+ };
+ 
++/**
++ * Some events trigger animations. In those cases, we calculate the new expected
++ * center date and return this as part of the event.
++ */
++Timeline._Band.prototype._fireInteractionEventWithNewCenter = function(interaction, newCenterDate) {
++    for (var i = 0; i < this._interactionHandlers.length; i++) {
++        this._interactionHandlers[i](interaction, this, newCenterDate);
++    }
++};
++
+ Timeline._Band.prototype._setSyncWithBandDate = function() {
+     if (this._syncWithBand) {
+         var centerDate = this._ether.pixelOffsetToDate(this.getViewLength() / 2);

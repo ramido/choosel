@@ -139,12 +139,22 @@ public class JsTimeLine extends JavaScriptObject {
         return this.getBand(band).getMaxVisibleDate().toGMTString();
     }-*/;
 
+    public final native String getMaxVisibleDateAsGMTString(int band,
+            JavaScriptObject centerDate) /*-{
+        return this.getBand(band).getMaxVisibleDateForCenter(centerDate).toGMTString();
+    }-*/;
+
     /**
      * Returns getMinVisibleDate() from the band as GMT String in a form similar
      * to "Fri, 29 Sep 2000 06:23:54 GMT" ("EEE, d MMM yyyy HH:mm:ss Z")
      */
     public final native String getMinVisibleDateAsGMTString(int band) /*-{
         return this.getBand(band).getMinVisibleDate().toGMTString();
+    }-*/;
+
+    public final native String getMinVisibleDateAsGMTString(int band,
+            JavaScriptObject centerDate) /*-{
+        return this.getBand(band).getMinVisibleDateForCenter(centerDate).toGMTString();
     }-*/;
 
     public final native int getTimeLineID() /*-{
@@ -170,9 +180,13 @@ public class JsTimeLine extends JavaScriptObject {
 
     // @formatter:off
     public final native void registerInteractionHandler(JsTimelineInteractionCallback callback) /*-{
-        var handler = function(interaction, band) {
+        var handler = function(interaction, band, newCenterDate) {
           var bandIndex = band.getIndex();
-          callback.@org.thechiselgroup.choosel.visualization_component.timeline.client.JsTimelineInteractionCallback::onInteraction(Ljava/lang/String;I)(interaction, bandIndex);
+          if (!newCenterDate) { 
+            callback.@org.thechiselgroup.choosel.visualization_component.timeline.client.JsTimelineInteractionCallback::onInteraction(Ljava/lang/String;I)(interaction, bandIndex);
+          } else {
+            callback.@org.thechiselgroup.choosel.visualization_component.timeline.client.JsTimelineInteractionCallback::onInteraction(Ljava/lang/String;ILcom/google/gwt/core/client/JavaScriptObject;)(interaction, bandIndex, newCenterDate);
+          }
         }
 
         for (var i = 0; i < this.getBandCount(); i++) {
@@ -231,5 +245,4 @@ public class JsTimeLine extends JavaScriptObject {
         }
     }-*/;
     // @formatter:on
-
 }
