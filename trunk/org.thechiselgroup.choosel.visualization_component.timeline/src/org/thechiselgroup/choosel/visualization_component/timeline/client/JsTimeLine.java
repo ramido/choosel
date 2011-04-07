@@ -169,6 +169,19 @@ public class JsTimeLine extends JavaScriptObject {
     }-*/;
 
     // @formatter:off
+    public final native void registerInteractionHandler(JsTimelineInteractionCallback callback) /*-{
+        var handler = function(interaction, band) {
+          var bandIndex = band.getIndex();
+          callback.@org.thechiselgroup.choosel.visualization_component.timeline.client.JsTimelineInteractionCallback::onInteraction(Ljava/lang/String;I)(interaction, bandIndex);
+        }
+
+        for (var i = 0; i < this.getBandCount(); i++) {
+          this.getBand(i).addInteractionHandler(handler);
+        }
+    }-*/;
+    // @formatter:on
+
+    // @formatter:off
     public final native void registerPaintListener(JsTimelinePaintCallback callback) /*-{
         var listener = function(band, operation, event, elements) {
           if ("paintedEvent" == operation) {
@@ -182,20 +195,6 @@ public class JsTimeLine extends JavaScriptObject {
           if (eventPainter.addEventPaintListener) {
             eventPainter.addEventPaintListener(listener);
           }
-        }
-    }-*/;
-    // @formatter:on
-
-    // @formatter:off
-    public final native void registerScrollListener(JsTimelineScrollCallback callback) /*-{
-        var listener = function(band) {
-          var bandIndex = band.getIndex();
-          var timeline = band.getTimeline();
-          callback.@org.thechiselgroup.choosel.visualization_component.timeline.client.JsTimelineScrollCallback::bandScrolled(I)(bandIndex);
-        }
-
-        for (var i = 0; i < this.getBandCount(); i++) {
-          this.getBand(i).addOnScrollListener(listener);
         }
     }-*/;
     // @formatter:on

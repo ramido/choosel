@@ -53,15 +53,16 @@ public class TimeLineWidget extends Widget {
     }
 
     public HandlerRegistration addScrollHandler(
-            TimelineScrolledEventHandler handler) {
-        return handlerManager.addHandler(TimelineScrolledEvent.TYPE, handler);
+            TimelineInteractionEventHandler handler) {
+        return handlerManager
+                .addHandler(TimelineInteractionEvent.TYPE, handler);
     }
 
-    private void bandScrolled(int bandIndex) {
-        handlerManager.fireEvent(new TimelineScrolledEvent(this, bandIndex,
-                jsTimeLine.getZoomIndex(bandIndex), jsTimeLine
-                        .getMinVisibleDateAsGMTString(bandIndex), jsTimeLine
-                        .getMaxVisibleDateAsGMTString(bandIndex)));
+    private BandInformation createBandInformation(int bandIndex) {
+        return new BandInformation(bandIndex,
+                jsTimeLine.getZoomIndex(bandIndex),
+                jsTimeLine.getMinVisibleDateAsGMTString(bandIndex),
+                jsTimeLine.getMaxVisibleDateAsGMTString(bandIndex));
     }
 
     private void eventPainted(int bandIndex, JsTimeLineEvent event) {
@@ -129,13 +130,27 @@ public class TimeLineWidget extends Widget {
                     TimeLineWidget.this.eventPainted(bandIndex, event);
                 }
             });
-            jsTimeLine.registerScrollListener(new JsTimelineScrollCallback() {
-                @Override
-                public void bandScrolled(int bandIndex) {
-                    TimeLineWidget.this.bandScrolled(bandIndex);
-                }
-            });
+            jsTimeLine
+                    .registerInteractionHandler(new JsTimelineInteractionCallback() {
+                        @Override
+                        public void onInteraction(String interaction,
+                                int bandIndex) {
+                            TimeLineWidget.this.onInteraction(interaction,
+                                    bandIndex);
+                        }
+                    });
         }
+    }
+
+    private void onInteraction(String interaction, int bandIndex) {
+        // event construction is expensive so we check if there are any handlers
+        if (handlerManager.getHandlerCount(TimelineInteractionEvent.TYPE) == 0) {
+            return;
+        }
+
+        handlerManager.fireEvent(new TimelineInteractionEvent(this, bandIndex,
+                interaction, new BandInformation[] { createBandInformation(0),
+                        createBandInformation(1) }));
     }
 
     public void removeEvents(JsTimeLineEvent[] events) {

@@ -15,8 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.timeline.client;
 
-public interface JsTimelineScrollCallback {
+public interface JsTimelineInteractionCallback {
 
-    void bandScrolled(int bandIndex);
+    void onInteraction(String interaction, int bandIndex);
 
 }

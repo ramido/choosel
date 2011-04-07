@@ -17,8 +17,8 @@ package org.thechiselgroup.choosel.visualization_component.timeline.client;
 
 import com.google.gwt.event.shared.EventHandler;
 
-public interface TimelineScrolledEventHandler extends EventHandler {
+public interface TimelineInteractionEventHandler extends EventHandler {
 
-    void onScrolled(TimelineScrolledEvent event);
+    void onInteraction(TimelineInteractionEvent event);
 
 }
