@@ -58,6 +58,9 @@ Timeline._Band = function(timeline, bandInfo, index) {
     this._originalScrollSpeed = 5; // pixels
     this._scrollSpeed = this._originalScrollSpeed;
     this._onScrollListeners = [];
+
+    // Choosel: Enabling interaction logging
+    this._interactionHandlers = [];
     
     var b = this;
     this._syncWithBand = null;
@@ -162,6 +165,9 @@ Timeline._Band.prototype.dispose = function() {
     this._decorators = null;
     
     this._onScrollListeners = null;
+    // Choosel: Enabling interaction logging
+    this._interactionHandlers = null;
+
     this._syncWithBandHandler = null;
     this._selectorListener = null;
     
@@ -172,6 +178,11 @@ Timeline._Band.prototype.dispose = function() {
 
 Timeline._Band.prototype.addOnScrollListener = function(listener) {
     this._onScrollListeners.push(listener);
+};
+
+//Choosel: Enabling interaction logging
+Timeline._Band.prototype.addInteractionHandler = function(handler) {
+    this._interactionHandlers.push(handler);
 };
 
 Timeline._Band.prototype.removeOnScrollListener = function(listener) {
@@ -465,6 +476,9 @@ Timeline._Band.prototype._onMouseMove = function(innerFrame, evt, target) {
         
         this._moveEther(this._timeline.isHorizontal() ? diffX : diffY);
         this._positionHighlight();
+        
+        // Choosel interaction logging
+        this._fireInteractionEvent("mouse_drag");
     }
 };
 
@@ -510,11 +524,15 @@ Timeline._Band.prototype._onMouseScroll = function(innerFrame, evt, target) {
           zoomIn = false;
         // call zoom on the timeline so we could zoom multiple bands if desired
         this._timeline.zoom(zoomIn, loc.x, loc.y, innerFrame);
+        // Choosel interaction logging
+        this._fireInteractionEvent("mouse_wheel_zoom");
       }
     }
     else if (mouseWheel === 'scroll') {
     	var move_amt = 50 * (delta < 0 ? -1 : 1);
       this._moveEther(move_amt);
+      // Choosel interaction logging
+      this._fireInteractionEvent("mouse_wheel_scroll");
     }
   }
 
@@ -536,6 +554,9 @@ Timeline._Band.prototype._onDblClick = function(innerFrame, evt, target) {
     var distance = coords.x - (this._viewLength / 2 - this._viewOffset);
     
     this._autoScroll(-distance);
+    
+    // Choosel interaction logging
+    this._fireInteractionEvent("mouse_dblclick");
 };
 
 Timeline._Band.prototype._onKeyDown = function(keyboardInput, evt, target) {
@@ -547,11 +568,23 @@ Timeline._Band.prototype._onKeyDown = function(keyboardInput, evt, target) {
         case 38: // up arrow
             this._scrollSpeed = Math.min(50, Math.abs(this._scrollSpeed * 1.05));
             this._moveEther(this._scrollSpeed);
+            // Choosel interaction logging
+            if (evt.keyCode == 37) {
+            	this._fireInteractionEvent("key_left");
+            } else {
+            	this._fireInteractionEvent("key_up");
+            }
             break;
         case 39: // right arrow
         case 40: // down arrow
             this._scrollSpeed = -Math.min(50, Math.abs(this._scrollSpeed * 1.05));
             this._moveEther(this._scrollSpeed);
+            // Choosel interaction logging
+            if (evt.keyCode == 39) {
+            	this._fireInteractionEvent("key_right");
+            } else {
+            	this._fireInteractionEvent("key_down");
+            }
             break;
         default:
             return true;
@@ -571,15 +604,23 @@ Timeline._Band.prototype._onKeyUp = function(keyboardInput, evt, target) {
         switch (evt.keyCode) {
         case 35: // end
             this.setCenterVisibleDate(this._eventSource.getLatestDate());
+            // Choosel interaction logging
+            this._fireInteractionEvent("key_end");
             break;
         case 36: // home
             this.setCenterVisibleDate(this._eventSource.getEarliestDate());
+            // Choosel interaction logging
+            this._fireInteractionEvent("key_home");
             break;
         case 33: // page up
             this._autoScroll(this._timeline.getPixelLength());
+            // Choosel interaction logging
+            this._fireInteractionEvent("key_page_up");
             break;
         case 34: // page down
             this._autoScroll(-this._timeline.getPixelLength());
+            // Choosel interaction logging
+            this._fireInteractionEvent("key_page_down");
             break;
         default:
             return true;
@@ -652,6 +693,15 @@ Timeline._Band.prototype.busy = function() {
 Timeline._Band.prototype._fireOnScroll = function() {
     for (var i = 0; i < this._onScrollListeners.length; i++) {
         this._onScrollListeners[i](this);
+    }
+};
+
+/**
+ * Choosel: Enabling interaction logging
+ */
+Timeline._Band.prototype._fireInteractionEvent = function(interaction) {
+    for (var i = 0; i < this._interactionHandlers.length; i++) {
+        this._interactionHandlers[i](interaction, this);
     }
 };
 
