@@ -305,6 +305,14 @@ public class BarChart extends ChartViewContentDisplay {
         }
     };
 
+    private JsDoubleFunction completeBarLength = new JsDoubleFunction() {
+        @Override
+        public double f(JsArgs args) {
+            PVMark _this = args.getThis();
+            return calculateBarLength(regularValues[_this.index()]);
+        }
+    };
+
     private JsDoubleFunction barWidth = new JsDoubleFunction() {
         @Override
         public double f(JsArgs args) {
@@ -604,7 +612,7 @@ public class BarChart extends ChartViewContentDisplay {
 
         invisibleInteractionBar = getChart().add(PV.Panel)
                 .data(viewItemsJsArray).left(BAR_STROKE_WIDTH)
-                .width(fullBarLength).bottom(barStart).height(barWidth)
+                .width(completeBarLength).bottom(barStart).height(barWidth)
                 .lineWidth(BAR_STROKE_WIDTH).cursor(POINTER).events(ALL);
     }
 
@@ -677,7 +685,7 @@ public class BarChart extends ChartViewContentDisplay {
 
         invisibleInteractionBar = getChart().add(PV.Panel)
                 .data(viewItemsJsArray).bottom(BAR_STROKE_WIDTH)
-                .height(fullBarLength).left(barStart).width(barWidth)
+                .height(completeBarLength).left(barStart).width(barWidth)
                 .lineWidth(BAR_STROKE_WIDTH).cursor(POINTER).events(ALL);
     }
 
