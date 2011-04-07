@@ -513,10 +513,6 @@ public class BarChart extends ChartViewContentDisplay {
         chartHeight = height - BORDER_BOTTOM - BORDER_TOP;
     }
 
-    private double calculatePartialBarLength(ViewItem d) {
-        return calculateBarLength(d.getValueAsDouble(PARTIAL_BAR_LENGTH));
-    }
-
     private int calculateHorizontalLabelSpace() {
         TextBoundsEstimator estimator = new TextBoundsEstimator();
         estimator.applyFontSettings(FONT_FAMILY, FONT_STYLE, FONT_WEIGHT,
@@ -548,6 +544,10 @@ public class BarChart extends ChartViewContentDisplay {
         }
     }
 
+    private double calculatePartialBarLength(ViewItem d) {
+        return calculateBarLength(d.getValueAsDouble(PARTIAL_BAR_LENGTH));
+    }
+
     private void drawHorizontalBarChart() {
         getChart().left(BORDER_LEFT + calculateHorizontalLabelSpace()).bottom(
                 BORDER_BOTTOM);
@@ -558,6 +558,9 @@ public class BarChart extends ChartViewContentDisplay {
          * The stroke gets added to the length, but is part of the visible
          * appearance. We thus have to adjust the bar length and position for
          * the stroke width.
+         * 
+         * The regular bar starts after the partial bar. Otherwise there are
+         * color differences if the partial bar is semi-transparent.
          */
         regularBar = getChart().add(PV.Bar).data(viewItemsJsArray)
                 .left(partialBarOffset).width(fullBarLength).bottom(barStart)
@@ -621,8 +624,12 @@ public class BarChart extends ChartViewContentDisplay {
     }
 
     private void drawVerticalBarChart() {
+        /*
+         * The regular bar starts after the partial bar. Otherwise there are
+         * color differences if the partial bar is semi-transparent.
+         */
         regularBar = getChart().add(PV.Bar).data(viewItemsJsArray)
-                .bottom(BAR_STROKE_WIDTH).height(fullBarLength).left(barStart)
+                .bottom(partialBarOffset).height(fullBarLength).left(barStart)
                 .width(barWidth)
                 .fillStyle(new ViewItemColorSlotAccessor(BAR_COLOR))
                 .strokeStyle(new ViewItemColorSlotAccessor(BAR_BORDER_COLOR))
