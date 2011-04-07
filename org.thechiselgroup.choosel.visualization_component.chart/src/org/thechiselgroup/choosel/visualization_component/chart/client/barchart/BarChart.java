@@ -284,7 +284,15 @@ public class BarChart extends ChartViewContentDisplay {
     private JsDoubleFunction partialBarLength = new JsDoubleFunction() {
         @Override
         public double f(JsArgs args) {
-            return calculateHighlightedBarLength(args.<ViewItem> getObject());
+            return calculatePartialBarLength(args.<ViewItem> getObject());
+        }
+    };
+
+    private JsDoubleFunction partialBarOffset = new JsDoubleFunction() {
+        @Override
+        public double f(JsArgs args) {
+            return calculatePartialBarLength(args.<ViewItem> getObject())
+                    + BAR_STROKE_WIDTH;
         }
     };
 
@@ -292,7 +300,8 @@ public class BarChart extends ChartViewContentDisplay {
         @Override
         public double f(JsArgs args) {
             PVMark _this = args.getThis();
-            return calculateBarLength(regularValues[_this.index()]);
+            return calculateBarLength(regularValues[_this.index()])
+                    - calculatePartialBarLength(args.<ViewItem> getObject());
         }
     };
 
@@ -504,7 +513,7 @@ public class BarChart extends ChartViewContentDisplay {
         chartHeight = height - BORDER_BOTTOM - BORDER_TOP;
     }
 
-    private double calculateHighlightedBarLength(ViewItem d) {
+    private double calculatePartialBarLength(ViewItem d) {
         return calculateBarLength(d.getValueAsDouble(PARTIAL_BAR_LENGTH));
     }
 
@@ -551,7 +560,7 @@ public class BarChart extends ChartViewContentDisplay {
          * the stroke width.
          */
         regularBar = getChart().add(PV.Bar).data(viewItemsJsArray)
-                .left(BAR_STROKE_WIDTH).width(fullBarLength).bottom(barStart)
+                .left(partialBarOffset).width(fullBarLength).bottom(barStart)
                 .height(barWidth)
                 .fillStyle(new ViewItemColorSlotAccessor(BAR_COLOR))
                 .strokeStyle(new ViewItemColorSlotAccessor(BAR_BORDER_COLOR))
