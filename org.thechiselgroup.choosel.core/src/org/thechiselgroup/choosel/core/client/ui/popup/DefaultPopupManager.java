@@ -120,7 +120,7 @@ public class DefaultPopupManager implements PopupManager {
      * Default delay until popup is shown automatically in semi-transparent
      * state when mouse cursor is over trigger.
      */
-    public static final int DEFAULT_SHOW_DELAY = 1000;
+    public static final int DEFAULT_SHOW_DELAY = 500;
 
     public final static State DISABLED_STATE = new State() {
 
