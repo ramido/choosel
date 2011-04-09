@@ -48,7 +48,7 @@ public class SunburstExample extends ProtovisWidget implements ProtovisExample {
                         .nodes()).size(new JsDoubleFunction() {
                     public double f(JsArgs args) {
                         PVDomNode d = args.getObject();
-                        return d.nodeValue();
+                        return d.nodeValueDouble();
                     }
                 }).order("descending").orient("radial");
 
