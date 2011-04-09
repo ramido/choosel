@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.protovis.client;
 
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsArrayGeneric;
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsUtils;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -41,7 +42,7 @@ public abstract class PVNetworkLayout<T extends PVNetworkLayout<T>> extends
      * @param links
      *            JavaScript array of java objects
      */
-    private final native T links(JavaScriptObject links) /*-{
+    public final native T links(JavaScriptObject links) /*-{
         return this.links(links);
     }-*/;
 
@@ -59,6 +60,10 @@ public abstract class PVNetworkLayout<T extends PVNetworkLayout<T>> extends
 
     public final native T nodes(JavaScriptObject nodes) /*-{
         return this.nodes(nodes);
+    }-*/;
+
+    public final native T nodes(JsFunction<JavaScriptObject> f) /*-{
+        return this.nodes(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsFunction;)(f));
     }-*/;
 
     public final <S> T nodes(PVNodeAdapter<S> adapter, S... nodes) {
@@ -81,6 +86,10 @@ public abstract class PVNetworkLayout<T extends PVNetworkLayout<T>> extends
 
         return this.nodes(jsNodes);
     }
+
+    public final native T reset() /*-{
+        return this.reset();
+    }-*/;
 
     // TODO String[] as nodes
     // TODO double[] / int[] as nodes

@@ -127,6 +127,11 @@ public class ScatterplotExample extends ProtovisWidget implements
         return data;
     }
 
+    @Override
+    public String getDescription() {
+        return null;
+    }
+
     public String getProtovisExampleURL() {
         return "http://vis.stanford.edu/protovis/ex/dot.html";
     }

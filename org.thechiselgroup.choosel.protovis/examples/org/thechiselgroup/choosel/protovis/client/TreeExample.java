@@ -55,6 +55,11 @@ public class TreeExample extends ProtovisWidget implements ProtovisExample {
         tree.label().add(PV.Label);
     }
 
+    @Override
+    public String getDescription() {
+        return null;
+    }
+
     public String getProtovisExampleURL() {
         return "http://vis.stanford.edu/protovis/ex/tree.html";
     }

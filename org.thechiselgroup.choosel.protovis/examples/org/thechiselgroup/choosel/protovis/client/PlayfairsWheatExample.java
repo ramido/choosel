@@ -43,22 +43,6 @@ import com.google.gwt.user.client.ui.Widget;
 public class PlayfairsWheatExample extends ProtovisWidgetWithAnnotations
         implements ProtovisExample {
 
-    public static class WheatPrice {
-
-        public int year;
-
-        public double wheat;
-
-        public double wages;
-
-        private WheatPrice(int year, double wheat, double wages) {
-            this.year = year;
-            this.wheat = wheat;
-            this.wages = wages;
-        }
-
-    }
-
     public static class Monarch {
 
         public String name;
@@ -80,6 +64,34 @@ public class PlayfairsWheatExample extends ProtovisWidgetWithAnnotations
             this.commonwealth = commonwealth;
         }
 
+    }
+
+    public static class WheatPrice {
+
+        public int year;
+
+        public double wheat;
+
+        public double wages;
+
+        private WheatPrice(int year, double wheat, double wages) {
+            this.year = year;
+            this.wheat = wheat;
+            this.wages = wages;
+        }
+
+    }
+
+    private void addDescriptions() {
+        Element div = addDescriptionElement(70, 200,
+                "<center><large style='font-size: medium'>"
+                        + "<b>CHART</b>,<br>Shewing at One View<br/>"
+                        + "The Price of The Quarter of Wheat,"
+                        + "</large><br/>"
+                        + " &amp; Wages of Labour by the Week,<br/>"
+                        + "from The Year 1565 to 1821,<br/>"
+                        + "by WILLIAM PLAYFAIR</center>", null);
+        div.getStyle().setPadding(10, Unit.PX);
     }
 
     @Override
@@ -198,16 +210,46 @@ public class PlayfairsWheatExample extends ProtovisWidgetWithAnnotations
                 });
     }
 
-    private void addDescriptions() {
-        Element div = addDescriptionElement(70, 200,
-                "<center><large style='font-size: medium'>"
-                        + "<b>CHART</b>,<br>Shewing at One View<br/>"
-                        + "The Price of The Quarter of Wheat,"
-                        + "</large><br/>"
-                        + " &amp; Wages of Labour by the Week,<br/>"
-                        + "from The Year 1565 to 1821,<br/>"
-                        + "by WILLIAM PLAYFAIR</center>", null);
-        div.getStyle().setPadding(10, Unit.PX);
+    @Override
+    public String getDescription() {
+        return null;
+    }
+
+    public String getProtovisExampleURL() {
+        return "http://vis.stanford.edu/protovis/ex/wheat.html";
+    }
+
+    public String getSourceCodeFile() {
+        return "PlayfairsWheatExample.java";
+    }
+
+    private Monarch[] monarchData() {
+        return new Monarch[] { new Monarch("Elizabeth", 1565, 1603),
+                new Monarch("James I", 1603, 1625),
+                new Monarch("Charles I", 1625, 1649),
+                new Monarch("Cromwell", 1649, 1660, true),
+                new Monarch("Charles II", 1660, 1685),
+                new Monarch("James II", 1685, 1689),
+                new Monarch("W&M", 1689, 1702),
+                new Monarch("Anne", 1702, 1714),
+                new Monarch("George I", 1714, 1727),
+                new Monarch("George II", 1727, 1760),
+                new Monarch("George III", 1760, 1820),
+                new Monarch("George IV", 1820, 1821) };
+    }
+
+    protected void onAttach() {
+        super.onAttach();
+        getElement().getStyle()
+                .setProperty("font", "oblique small baskerville");
+        initPVPanel();
+        createVisualization(wheatData(), monarchData());
+        getPVPanel().render();
+        addDescriptions();
+    }
+
+    public String toString() {
+        return "Playfair's Wheat";
     }
 
     private WheatPrice[] wheatData() {
@@ -242,42 +284,5 @@ public class PlayfairsWheatExample extends ProtovisWidgetWithAnnotations
                 new WheatPrice(1815, 78, Double.NaN),
                 new WheatPrice(1820, 54, Double.NaN),
                 new WheatPrice(1821, 54, Double.NaN) };
-    }
-
-    private Monarch[] monarchData() {
-        return new Monarch[] { new Monarch("Elizabeth", 1565, 1603),
-                new Monarch("James I", 1603, 1625),
-                new Monarch("Charles I", 1625, 1649),
-                new Monarch("Cromwell", 1649, 1660, true),
-                new Monarch("Charles II", 1660, 1685),
-                new Monarch("James II", 1685, 1689),
-                new Monarch("W&M", 1689, 1702),
-                new Monarch("Anne", 1702, 1714),
-                new Monarch("George I", 1714, 1727),
-                new Monarch("George II", 1727, 1760),
-                new Monarch("George III", 1760, 1820),
-                new Monarch("George IV", 1820, 1821) };
-    }
-
-    public String getProtovisExampleURL() {
-        return "http://vis.stanford.edu/protovis/ex/wheat.html";
-    }
-
-    public String getSourceCodeFile() {
-        return "PlayfairsWheatExample.java";
-    }
-
-    protected void onAttach() {
-        super.onAttach();
-        getElement().getStyle()
-                .setProperty("font", "oblique small baskerville");
-        initPVPanel();
-        createVisualization(wheatData(), monarchData());
-        getPVPanel().render();
-        addDescriptions();
-    }
-
-    public String toString() {
-        return "Playfair's Wheat";
     }
 }

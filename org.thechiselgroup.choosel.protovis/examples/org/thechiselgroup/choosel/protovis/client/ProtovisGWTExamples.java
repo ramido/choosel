@@ -32,6 +32,8 @@ public class ProtovisGWTExamples implements EntryPoint {
 
     private Label visualizationTitle;
 
+    private Label description;
+
     private Anchor protovisExampleLink;
 
     private Anchor sourceCodeLink;
@@ -40,6 +42,8 @@ public class ProtovisGWTExamples implements EntryPoint {
 
     private void initExampleVisualizations() {
         examples = new ArrayList<ProtovisExample>();
+
+        examples.add(new ForceToggleExample());
 
         // networks
         examples.add(new ArcDiagramExample());
@@ -120,12 +124,18 @@ public class ProtovisGWTExamples implements EntryPoint {
         RootPanel.get("visualizationTitle").add(visualizationTitle);
     }
 
+    private void initDescription() {
+        description = new Label();
+        RootPanel.get("visualizationDescription").add(description);
+    }
+
     public void onModuleLoad() {
         initExampleVisualizations();
         initVisualizationTitleLabel();
         initProtovisExampleLink();
         initSourceCodeLink();
         initVisualizationSelector();
+        initDescription();
 
         update();
     }
@@ -141,6 +151,13 @@ public class ProtovisGWTExamples implements EntryPoint {
             protovisExampleLink.setHref(example.getProtovisExampleURL());
         } else {
             protovisExampleLink.setVisible(false);
+        }
+
+        if (example.getDescription() != null) {
+            description.setVisible(true);
+            description.setText(example.getDescription());
+        } else {
+            description.setVisible(false);
         }
 
         sourceCodeLink

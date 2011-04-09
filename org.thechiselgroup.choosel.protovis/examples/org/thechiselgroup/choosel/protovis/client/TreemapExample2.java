@@ -141,6 +141,11 @@ public class TreemapExample2 extends ProtovisWidget implements ProtovisExample {
         });
     }
 
+    @Override
+    public String getDescription() {
+        return null;
+    }
+
     public String getProtovisExampleURL() {
         return null;
     }

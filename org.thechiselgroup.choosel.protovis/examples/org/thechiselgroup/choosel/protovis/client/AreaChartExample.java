@@ -35,31 +35,18 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class AreaChartExample extends ProtovisWidget implements ProtovisExample {
 
-    public static class Point {
-
-        public double x;
-
-        public double y;
-
-        private Point(double x, double y) {
-            this.x = x;
-            this.y = y;
-        }
-
-    }
-
     @Override
     public Widget asWidget() {
         return this;
     }
 
-    private void createVisualization(Point[] points) {
+    private void createVisualization(Pair[] points) {
         int w = 400;
         int h = 200;
 
         final PVLinearScale x = PV.Scale.linear(points, new JsDoubleFunction() {
             public double f(JsArgs args) {
-                Point d = args.getObject();
+                Pair d = args.getObject();
                 return d.x;
             }
         }).range(0, w);
@@ -90,25 +77,30 @@ public class AreaChartExample extends ProtovisWidget implements ProtovisExample 
         /* The area with top line. */
         vis.add(PV.Area).data(points).bottom(1).left(new JsDoubleFunction() {
             public double f(JsArgs args) {
-                Point d = args.getObject();
+                Pair d = args.getObject();
                 return x.fd(d.x);
             }
         }).height(new JsDoubleFunction() {
             public double f(JsArgs args) {
-                Point d = args.getObject();
+                Pair d = args.getObject();
                 return y.fd(d.y);
             }
         }).fillStyle("rgb(121,173,210)").anchor(TOP).add(PV.Line).lineWidth(3);
     }
 
-    private Point[] generateData() {
-        Point[] data = new Point[100];
+    private Pair[] generateData() {
+        Pair[] data = new Pair[100];
         for (int i = 0; i < data.length; i++) {
             double xValue = i / 10d;
-            data[i] = new Point(xValue, Math.sin(xValue) + Math.random() * .5
+            data[i] = new Pair(xValue, Math.sin(xValue) + Math.random() * .5
                     + 2);
         }
         return data;
+    }
+
+    @Override
+    public String getDescription() {
+        return null;
     }
 
     public String getProtovisExampleURL() {

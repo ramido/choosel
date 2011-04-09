@@ -108,6 +108,11 @@ public class BarChartExample extends ProtovisWidget implements ProtovisExample {
         return data;
     }
 
+    @Override
+    public String getDescription() {
+        return null;
+    }
+
     public String getProtovisExampleURL() {
         return "http://vis.stanford.edu/protovis/ex/bar.html";
     }

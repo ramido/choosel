@@ -37,31 +37,18 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class LineChartExample extends ProtovisWidget implements ProtovisExample {
 
-    public static class Point {
-
-        public double x;
-
-        public double y;
-
-        private Point(double x, double y) {
-            this.x = x;
-            this.y = y;
-        }
-
-    }
-
     @Override
     public Widget asWidget() {
         return this;
     }
 
-    private void createVisualization(JsArrayGeneric<Point> data) {
+    private void createVisualization(JsArrayGeneric<Pair> data) {
         /* Sizing and scales. */
         int w = 400;
         int h = 200;
         final PVLinearScale x = PV.Scale.linear(data, new JsDoubleFunction() {
             public double f(JsArgs args) {
-                Point d = args.getObject(0);
+                Pair d = args.getObject(0);
                 return d.x;
             }
         }).range(0, w);
@@ -94,24 +81,29 @@ public class LineChartExample extends ProtovisWidget implements ProtovisExample 
         vis.add(PV.Line).data(data).interpolate(STEP_AFTER)
                 .left(new JsDoubleFunction() {
                     public double f(JsArgs args) {
-                        Point d = args.getObject(0);
+                        Pair d = args.getObject(0);
                         return x.fd(d.x);
                     }
                 }).bottom(new JsDoubleFunction() {
                     public double f(JsArgs args) {
-                        Point d = args.getObject(0);
+                        Pair d = args.getObject(0);
                         return y.fd(d.y);
                     }
                 }).lineWidth(3);
     }
 
-    private JsArrayGeneric<Point> generateData() {
-        JsArrayGeneric<Point> data = JsUtils.createJsArrayGeneric();
+    private JsArrayGeneric<Pair> generateData() {
+        JsArrayGeneric<Pair> data = JsUtils.createJsArrayGeneric();
         for (int i = 0; i < 50; i++) {
             double xValue = i / 5d;
-            data.push(new Point(xValue, Math.sin(xValue) + Math.random() + 1.5));
+            data.push(new Pair(xValue, Math.sin(xValue) + Math.random() + 1.5));
         }
         return data;
+    }
+
+    @Override
+    public String getDescription() {
+        return null;
     }
 
     public String getProtovisExampleURL() {

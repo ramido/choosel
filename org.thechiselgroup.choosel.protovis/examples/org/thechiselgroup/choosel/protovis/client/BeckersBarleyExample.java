@@ -80,11 +80,6 @@ public class BeckersBarleyExample extends ProtovisWidget implements
 
     }
 
-    @Override
-    public Widget asWidget() {
-        return this;
-    }
-
     private static int compareDouble(double a, double b) {
         if (a > b) {
             return -1;
@@ -93,168 +88,11 @@ public class BeckersBarleyExample extends ProtovisWidget implements
             return 0;
         }
         return 1;
-    };
-
-    private double median(List<Barley> barley) {
-        Collections.sort(barley, new Comparator<Barley>() {
-            public int compare(Barley a, Barley b) {
-                return compareDouble(a.yield, b.yield);
-            }
-        });
-
-        int length = barley.size();
-        return (length % 2 == 1) ? barley.get(length / 2).yield
-                : (barley.get(length / 2).yield + barley.get((length / 2) - 1).yield) / 2d;
     }
 
-    private Map<String, Double> calculateMediansPerGroup(
-            Map<String, List<Barley>> values) {
-        Map<String, Double> result = new HashMap<String, Double>();
-        for (Entry<String, List<Barley>> entry : values.entrySet()) {
-            result.put(entry.getKey(), median(entry.getValue()));
-        }
-        return result;
-    }
-
-    private SortedMap<String, List<Barley>> split(Iterable<Barley> barley,
-            String field) {
-        SortedMap<String, List<Barley>> result = new TreeMap<String, List<Barley>>();
-        for (Barley b : barley) {
-            String key = b.getValue(field);
-            if (!result.containsKey(key)) {
-                result.put(key, new ArrayList<Barley>());
-            }
-            result.get(key).add(b);
-        }
-        return result;
-    }
-
-    private void createVisualization(List<Barley> barleyParam) {
-        /* Compute yield medians by site and by variety. */
-        final Map<String, Double> site = calculateMediansPerGroup(split(
-                barleyParam, "site"));
-        final Map<String, Double> variety = calculateMediansPerGroup(split(
-                barleyParam, "variety"));
-
-        /* Nest yields data by site then year. */
-        SortedMap<String, Map<String, List<Barley>>> barley = new TreeMap<String, Map<String, List<Barley>>>(
-                new Comparator<String>() {
-                    public int compare(String a, String b) {
-                        return compareDouble(site.get(a), site.get(b));
-                    }
-                });
-        for (Entry<String, List<Barley>> entry : split(barleyParam, "site")
-                .entrySet()) {
-            Map<String, List<Barley>> byYears = split(entry.getValue(), "year");
-            for (List<Barley> barleyList : byYears.values()) {
-                Collections.sort(barleyList, new Comparator<Barley>() {
-                    public int compare(Barley a, Barley b) {
-                        return compareDouble(variety.get(a.variety),
-                                variety.get(b.variety));
-                    }
-                });
-            }
-            barley.put(entry.getKey(), byYears);
-        }
-
-        /* Sizing and scales. */
-        int w = 242;
-        final int h = 132;
-        final PVLinearScale x = PV.Scale.linear(10, 70).range(0, w);
-        final PVOrdinalScale c = PV.Colors.category10();
-
-        /* The root panel. */
-        PVPanel vis = getPVPanel().width(w).height(h * site.size()).top(15)
-                .left(90).right(20).bottom(25);
-
-        /* A panel per site-year. */
-        PVPanel cell = vis.add(PV.Panel).data(barley.entrySet()).height(h)
-                .top(new JsDoubleFunction() {
-                    public double f(JsArgs args) {
-                        PVMark _this = args.getThis();
-                        return _this.index() * h;
-                    }
-                }).strokeStyle("#999");
-
-        /* Title bar. */
-        cell.add(PV.Bar).height(14).fillStyle("bisque").anchor(CENTER)
-                .add(PV.Label).text(new JsStringFunction() {
-                    public String f(JsArgs args) {
-                        Map.Entry<String, Map<String, List<Barley>>> site = args
-                                .getObject();
-                        return site.getKey();
-                    }
-                });
-
-        /* A dot showing the yield. */
-        PVDot dot = cell
-                .add(PV.Panel)
-                .data(new JsFunction<JsArrayGeneric<Entry<String, List<Barley>>>>() {
-                    public JsArrayGeneric<Entry<String, List<Barley>>> f(
-                            JsArgs args) {
-                        Map.Entry<String, Map<String, List<Barley>>> site = args
-                                .getObject();
-                        return JsUtils.toJsArrayGeneric(site.getValue()
-                                .entrySet());
-                    }
-                }).top(23).add(PV.Dot)
-                .data(new JsFunction<JsArrayGeneric<Barley>>() {
-                    public JsArrayGeneric<Barley> f(JsArgs args) {
-                        Map.Entry<String, List<Barley>> year = args.getObject();
-                        return JsUtils.toJsArrayGeneric(year.getValue());
-                    }
-                }).left(new JsDoubleFunction() {
-                    public double f(JsArgs args) {
-                        Barley d = args.getObject();
-                        return x.fd(d.yield);
-                    }
-                }).top(new JsDoubleFunction() {
-                    public double f(JsArgs args) {
-                        PVMark _this = args.getThis();
-                        return _this.index() * 11;
-                    }
-                }).size(12).lineWidth(2).strokeStyle(new JsFunction<PVColor>() {
-                    public PVColor f(JsArgs args) {
-                        Barley d = args.getObject();
-                        return c.fcolor(d.year);
-                    }
-                });
-
-        /* A label showing the variety. */
-        dot.anchor(LEFT).add(PV.Label).visible(new JsBooleanFunction() {
-            public boolean f(JsArgs args) {
-                PVMark _this = args.getThis();
-                return _this.parent().index() == 0;
-            }
-        }).left(-1).text(new JsStringFunction() {
-            public String f(JsArgs args) {
-                Barley d = args.getObject();
-                return d.variety;
-            }
-        });
-
-        /* X-ticks. */
-        vis.add(PV.Rule).data(x.ticks(7)).left(x).bottom(-5).height(5)
-                .strokeStyle("#999").anchor(BOTTOM).add(PV.Label);
-
-        // /* A legend showing the year. */
-        vis.add(PV.Dot).extend(dot).dataInt(1931, 1932)
-                .left(new JsDoubleFunction() {
-                    public double f(JsArgs args) {
-                        PVMark _this = args.getThis();
-                        return 170 + _this.index() * 40;
-                    }
-                }).top(-8).strokeStyle(new JsFunction<PVColor>() {
-                    public PVColor f(JsArgs args) {
-                        int year = args.getInt();
-                        return c.fcolor(year);
-                    }
-                }).anchor(RIGHT).add(PV.Label).text(new JsStringFunction() {
-                    public String f(JsArgs args) {
-                        int year = args.getInt();
-                        return "" + year;
-                    }
-                });
+    @Override
+    public Widget asWidget() {
+        return this;
     }
 
     private List<Barley> barley() {
@@ -387,6 +225,148 @@ public class BeckersBarleyExample extends ProtovisWidget implements
             result.add(b);
         }
         return result;
+    };
+
+    private Map<String, Double> calculateMediansPerGroup(
+            Map<String, List<Barley>> values) {
+        Map<String, Double> result = new HashMap<String, Double>();
+        for (Entry<String, List<Barley>> entry : values.entrySet()) {
+            result.put(entry.getKey(), median(entry.getValue()));
+        }
+        return result;
+    }
+
+    private void createVisualization(List<Barley> barleyParam) {
+        /* Compute yield medians by site and by variety. */
+        final Map<String, Double> site = calculateMediansPerGroup(split(
+                barleyParam, "site"));
+        final Map<String, Double> variety = calculateMediansPerGroup(split(
+                barleyParam, "variety"));
+
+        /* Nest yields data by site then year. */
+        SortedMap<String, Map<String, List<Barley>>> barley = new TreeMap<String, Map<String, List<Barley>>>(
+                new Comparator<String>() {
+                    public int compare(String a, String b) {
+                        return compareDouble(site.get(a), site.get(b));
+                    }
+                });
+        for (Entry<String, List<Barley>> entry : split(barleyParam, "site")
+                .entrySet()) {
+            Map<String, List<Barley>> byYears = split(entry.getValue(), "year");
+            for (List<Barley> barleyList : byYears.values()) {
+                Collections.sort(barleyList, new Comparator<Barley>() {
+                    public int compare(Barley a, Barley b) {
+                        return compareDouble(variety.get(a.variety),
+                                variety.get(b.variety));
+                    }
+                });
+            }
+            barley.put(entry.getKey(), byYears);
+        }
+
+        /* Sizing and scales. */
+        int w = 242;
+        final int h = 132;
+        final PVLinearScale x = PV.Scale.linear(10, 70).range(0, w);
+        final PVOrdinalScale c = PV.Colors.category10();
+
+        /* The root panel. */
+        PVPanel vis = getPVPanel().width(w).height(h * site.size()).top(15)
+                .left(90).right(20).bottom(25);
+
+        /* A panel per site-year. */
+        PVPanel cell = vis.add(PV.Panel).data(barley.entrySet()).height(h)
+                .top(new JsDoubleFunction() {
+                    public double f(JsArgs args) {
+                        PVMark _this = args.getThis();
+                        return _this.index() * h;
+                    }
+                }).strokeStyle("#999");
+
+        /* Title bar. */
+        cell.add(PV.Bar).height(14).fillStyle("bisque").anchor(CENTER)
+                .add(PV.Label).text(new JsStringFunction() {
+                    public String f(JsArgs args) {
+                        Map.Entry<String, Map<String, List<Barley>>> site = args
+                                .getObject();
+                        return site.getKey();
+                    }
+                });
+
+        /* A dot showing the yield. */
+        PVDot dot = cell
+                .add(PV.Panel)
+                .data(new JsFunction<JsArrayGeneric<Entry<String, List<Barley>>>>() {
+                    public JsArrayGeneric<Entry<String, List<Barley>>> f(
+                            JsArgs args) {
+                        Map.Entry<String, Map<String, List<Barley>>> site = args
+                                .getObject();
+                        return JsUtils.toJsArrayGeneric(site.getValue()
+                                .entrySet());
+                    }
+                }).top(23).add(PV.Dot)
+                .data(new JsFunction<JsArrayGeneric<Barley>>() {
+                    public JsArrayGeneric<Barley> f(JsArgs args) {
+                        Map.Entry<String, List<Barley>> year = args.getObject();
+                        return JsUtils.toJsArrayGeneric(year.getValue());
+                    }
+                }).left(new JsDoubleFunction() {
+                    public double f(JsArgs args) {
+                        Barley d = args.getObject();
+                        return x.fd(d.yield);
+                    }
+                }).top(new JsDoubleFunction() {
+                    public double f(JsArgs args) {
+                        PVMark _this = args.getThis();
+                        return _this.index() * 11;
+                    }
+                }).size(12).lineWidth(2).strokeStyle(new JsFunction<PVColor>() {
+                    public PVColor f(JsArgs args) {
+                        Barley d = args.getObject();
+                        return c.fcolor(d.year);
+                    }
+                });
+
+        /* A label showing the variety. */
+        dot.anchor(LEFT).add(PV.Label).visible(new JsBooleanFunction() {
+            public boolean f(JsArgs args) {
+                PVMark _this = args.getThis();
+                return _this.parent().index() == 0;
+            }
+        }).left(-1).text(new JsStringFunction() {
+            public String f(JsArgs args) {
+                Barley d = args.getObject();
+                return d.variety;
+            }
+        });
+
+        /* X-ticks. */
+        vis.add(PV.Rule).data(x.ticks(7)).left(x).bottom(-5).height(5)
+                .strokeStyle("#999").anchor(BOTTOM).add(PV.Label);
+
+        // /* A legend showing the year. */
+        vis.add(PV.Dot).extend(dot).dataInt(1931, 1932)
+                .left(new JsDoubleFunction() {
+                    public double f(JsArgs args) {
+                        PVMark _this = args.getThis();
+                        return 170 + _this.index() * 40;
+                    }
+                }).top(-8).strokeStyle(new JsFunction<PVColor>() {
+                    public PVColor f(JsArgs args) {
+                        int year = args.getInt();
+                        return c.fcolor(year);
+                    }
+                }).anchor(RIGHT).add(PV.Label).text(new JsStringFunction() {
+                    public String f(JsArgs args) {
+                        int year = args.getInt();
+                        return "" + year;
+                    }
+                });
+    }
+
+    @Override
+    public String getDescription() {
+        return null;
     }
 
     public String getProtovisExampleURL() {
@@ -397,11 +377,36 @@ public class BeckersBarleyExample extends ProtovisWidget implements
         return "BeckersBarleyExample.java";
     }
 
+    private double median(List<Barley> barley) {
+        Collections.sort(barley, new Comparator<Barley>() {
+            public int compare(Barley a, Barley b) {
+                return compareDouble(a.yield, b.yield);
+            }
+        });
+
+        int length = barley.size();
+        return (length % 2 == 1) ? barley.get(length / 2).yield
+                : (barley.get(length / 2).yield + barley.get((length / 2) - 1).yield) / 2d;
+    }
+
     protected void onAttach() {
         super.onAttach();
         initPVPanel();
         createVisualization(barley());
         getPVPanel().render();
+    }
+
+    private SortedMap<String, List<Barley>> split(Iterable<Barley> barley,
+            String field) {
+        SortedMap<String, List<Barley>> result = new TreeMap<String, List<Barley>>();
+        for (Barley b : barley) {
+            String key = b.getValue(field);
+            if (!result.containsKey(key)) {
+                result.put(key, new ArrayList<Barley>());
+            }
+            result.get(key).add(b);
+        }
+        return result;
     }
 
     public String toString() {

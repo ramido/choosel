@@ -265,6 +265,11 @@ public class SeattleWeatherExample extends ProtovisWidget implements
                         new Forecast(53, 46, 43, 38)), };
     }
 
+    @Override
+    public String getDescription() {
+        return null;
+    }
+
     public String getProtovisExampleURL() {
         return "http://vis.stanford.edu/protovis/ex/weather.html";
     }

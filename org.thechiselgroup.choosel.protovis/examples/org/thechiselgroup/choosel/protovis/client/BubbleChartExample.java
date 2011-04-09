@@ -41,17 +41,17 @@ public class BubbleChartExample extends ProtovisWidget implements
 
     public static class ClassData {
 
-        private ClassData(String packageName, String className, int value) {
-            this.packageName = packageName;
-            this.className = className;
-            this.value = value;
-        }
-
         public String packageName;
 
         public String className;
 
         public int value;
+
+        private ClassData(String packageName, String className, int value) {
+            this.packageName = packageName;
+            this.className = className;
+            this.value = value;
+        }
 
     }
 
@@ -107,14 +107,14 @@ public class BubbleChartExample extends ProtovisWidget implements
                     public String f(JsArgs args) {
                         PVDomNode d = args.getObject();
                         return d.nodeName() + ": "
-                                + format.format(d.nodeValue());
+                                + format.format(d.nodeValueDouble());
                     }
                 }).anchor(CENTER).add(PV.Label).text(new JsStringFunction() {
                     public String f(JsArgs args) {
                         PVDomNode d = args.getObject();
                         ClassData nodeObject = d.nodeObject();
                         return nodeObject.className.substring(0, Math.min(
-                                ((int) Math.sqrt(d.nodeValue())) >> 4,
+                                ((int) Math.sqrt(d.nodeValueDouble())) >> 4,
                                 nodeObject.className.length()));
                     }
                 });
@@ -156,6 +156,11 @@ public class BubbleChartExample extends ProtovisWidget implements
             flatten(child, nameStack, result);
         }
         nameStack.removeLast();
+    }
+
+    @Override
+    public String getDescription() {
+        return null;
     }
 
     public String getProtovisExampleURL() {

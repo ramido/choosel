@@ -36,7 +36,6 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class StackedChartExample extends ProtovisWidget implements
         ProtovisExample {
-
     public static class Point {
 
         public double x;
@@ -111,6 +110,11 @@ public class StackedChartExample extends ProtovisWidget implements
             data.push(series);
         }
         return data;
+    }
+
+    @Override
+    public String getDescription() {
+        return null;
     }
 
     public String getProtovisExampleURL() {

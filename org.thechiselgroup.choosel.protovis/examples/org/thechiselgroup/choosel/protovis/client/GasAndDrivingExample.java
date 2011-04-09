@@ -39,8 +39,6 @@ import com.google.gwt.user.client.ui.Widget;
 public class GasAndDrivingExample extends ProtovisWidgetWithAnnotations
         implements ProtovisExample {
 
-    private static final String CSS_CLASS = "gasAndDrivingExample-caption";
-
     public static class DrivingStats {
 
         public String side;
@@ -58,6 +56,26 @@ public class GasAndDrivingExample extends ProtovisWidgetWithAnnotations
             this.gas = gas;
         }
 
+    }
+
+    private static final String CSS_CLASS = "gasAndDrivingExample-caption";
+
+    private void addDescriptions() {
+        addDescriptionElement(320, 150, "Cheap gas,<br/>longer commutes",
+                CSS_CLASS);
+        addDescriptionElement(350, 350, "The Arab<br/>oil embargo", CSS_CLASS);
+        addDescriptionElement(100, 440, "Energy crisis</p>", CSS_CLASS);
+        addDescriptionElement(430, 670, "Record low prices", CSS_CLASS);
+
+        Element div = addDescriptionElement(
+                86,
+                660,
+                "The swing backward"
+                        + "<p>The average number of miles that Americans drive annually beings to"
+                        + "fall, so the chart appears to turn around.</p>",
+                CSS_CLASS);
+        div.getStyle().setWidth(110, Unit.PX);
+        div.getStyle().setPadding(10, Unit.PX);
     }
 
     @Override
@@ -116,24 +134,6 @@ public class GasAndDrivingExample extends ProtovisWidgetWithAnnotations
                         return "" + d.year;
                     }
                 });
-    }
-
-    private void addDescriptions() {
-        addDescriptionElement(320, 150, "Cheap gas,<br/>longer commutes",
-                CSS_CLASS);
-        addDescriptionElement(350, 350, "The Arab<br/>oil embargo", CSS_CLASS);
-        addDescriptionElement(100, 440, "Energy crisis</p>", CSS_CLASS);
-        addDescriptionElement(430, 670, "Record low prices", CSS_CLASS);
-
-        Element div = addDescriptionElement(
-                86,
-                660,
-                "The swing backward"
-                        + "<p>The average number of miles that Americans drive annually beings to"
-                        + "fall, so the chart appears to turn around.</p>",
-                CSS_CLASS);
-        div.getStyle().setWidth(110, Unit.PX);
-        div.getStyle().setPadding(10, Unit.PX);
     }
 
     /**
@@ -201,6 +201,11 @@ public class GasAndDrivingExample extends ProtovisWidgetWithAnnotations
                 new DrivingStats("left", 2008, 9880, 3.31),
                 new DrivingStats("bottom", 2009, 9657, 2.38),
                 new DrivingStats("left", 2010, 9596, 2.61) };
+    }
+
+    @Override
+    public String getDescription() {
+        return null;
     }
 
     public String getProtovisExampleURL() {

@@ -197,6 +197,11 @@ public class CandlestickChartExample extends ProtovisWidget implements
                 new DaySummary("31-Jul-2009", 25.4, 26.22, 24.93, 25.92) };
     }
 
+    @Override
+    public String getDescription() {
+        return null;
+    }
+
     public String getProtovisExampleURL() {
         return "http://vis.stanford.edu/protovis/ex/candlestick.html";
     }

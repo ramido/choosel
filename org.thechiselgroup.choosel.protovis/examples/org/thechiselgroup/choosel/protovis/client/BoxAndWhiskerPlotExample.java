@@ -41,15 +41,29 @@ import com.google.gwt.user.client.ui.Widget;
 public class BoxAndWhiskerPlotExample extends ProtovisWidget implements
         ProtovisExample {
 
-    public static class Point {
+    public static class Experiment {
 
-        public double x;
+        public String id;
 
-        public double y;
+        public double median;
 
-        private Point(double x, double y) {
-            this.x = x;
-            this.y = y;
+        public double uq;
+
+        public double lq;
+
+        public double max;
+
+        public double min;
+
+        private Experiment(String id, double median, double uq, double lq,
+                double max, double min) {
+
+            this.id = id;
+            this.median = median;
+            this.uq = uq;
+            this.lq = lq;
+            this.max = max;
+            this.min = min;
         }
 
     }
@@ -149,33 +163,6 @@ public class BoxAndWhiskerPlotExample extends ProtovisWidget implements
         });
     }
 
-    public static class Experiment {
-
-        public String id;
-
-        public double median;
-
-        public double uq;
-
-        public double lq;
-
-        public double max;
-
-        public double min;
-
-        private Experiment(String id, double median, double uq, double lq,
-                double max, double min) {
-
-            this.id = id;
-            this.median = median;
-            this.uq = uq;
-            this.lq = lq;
-            this.max = max;
-            this.min = min;
-        }
-
-    }
-
     private JsArrayGeneric<Experiment> generateData() {
         JsArrayGeneric<Experiment> experiments = JsUtils.createJsArrayGeneric();
         for (String id : "ABCDEFGHIJKLM".split("")) {
@@ -191,6 +178,11 @@ public class BoxAndWhiskerPlotExample extends ProtovisWidget implements
             }
         }
         return experiments;
+    }
+
+    @Override
+    public String getDescription() {
+        return null;
     }
 
     public String getProtovisExampleURL() {

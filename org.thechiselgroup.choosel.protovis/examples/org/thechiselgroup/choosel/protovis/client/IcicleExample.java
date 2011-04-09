@@ -73,6 +73,11 @@ public class IcicleExample extends ProtovisWidget implements ProtovisExample {
 
     }
 
+    @Override
+    public String getDescription() {
+        return null;
+    }
+
     public String getProtovisExampleURL() {
         return "http://vis.stanford.edu/protovis/ex/icicle.html";
     }

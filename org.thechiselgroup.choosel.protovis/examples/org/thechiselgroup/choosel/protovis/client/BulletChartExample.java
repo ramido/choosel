@@ -136,6 +136,11 @@ public class BulletChartExample extends ProtovisWidget implements
         return bullets;
     }
 
+    @Override
+    public String getDescription() {
+        return null;
+    }
+
     public String getProtovisExampleURL() {
         return "http://vis.stanford.edu/protovis/ex/bullet.html";
     }

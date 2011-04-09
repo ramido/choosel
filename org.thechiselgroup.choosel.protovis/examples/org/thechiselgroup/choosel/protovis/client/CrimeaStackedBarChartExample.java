@@ -39,11 +39,6 @@ import com.google.gwt.user.client.ui.Widget;
 public class CrimeaStackedBarChartExample extends ProtovisWidget implements
         ProtovisExample {
 
-    @Override
-    public Widget asWidget() {
-        return this;
-    }
-
     public static enum Cause {
 
         WOUNDS, OTHER, DISEASE;
@@ -60,6 +55,11 @@ public class CrimeaStackedBarChartExample extends ProtovisWidget implements
 
             throw new RuntimeException("cannot be reached");
         }
+    }
+
+    @Override
+    public Widget asWidget() {
+        return this;
     }
 
     private void createVisualization(CrimeanWarData[] crimea) {
@@ -125,6 +125,11 @@ public class CrimeaStackedBarChartExample extends ProtovisWidget implements
                         return d != 0 ? "rgba(255, 255, 255, .7)" : "black";
                     }
                 }).anchor(RIGHT).add(PV.Label).textMargin(6);
+    }
+
+    @Override
+    public String getDescription() {
+        return null;
     }
 
     public String getProtovisExampleURL() {
