@@ -63,7 +63,7 @@ public class CirclePackingExample extends ProtovisWidget implements
                 PVDomNode d = args.getObject();
                 return d.nodeName()
                         + (d.firstChild() != null ? "" : ": "
-                                + format.format(d.nodeValue()));
+                                + format.format(d.nodeValueDouble()));
             }
         }).lineWidth(1);
 
@@ -75,11 +75,16 @@ public class CirclePackingExample extends ProtovisWidget implements
         }).text(new JsStringFunction() {
             public String f(JsArgs args) {
                 PVDomNode d = args.getObject();
-                int length = (int) Math.sqrt(d.nodeValue()) / 20;
+                int length = (int) Math.sqrt(d.nodeValueDouble()) / 20;
                 return d.nodeName().substring(0,
                         Math.min(d.nodeName().length(), length));
             }
         });
+    }
+
+    @Override
+    public String getDescription() {
+        return null;
     }
 
     public String getProtovisExampleURL() {

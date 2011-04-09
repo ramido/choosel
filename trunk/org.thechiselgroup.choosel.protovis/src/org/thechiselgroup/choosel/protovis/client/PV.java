@@ -111,6 +111,8 @@ public final class PV {
 
         public static final String DRAG = "drag";
 
+        public static final String DOUBLE_CLICK = "dblclick";
+
         private Event() {
         }
 
@@ -190,6 +192,13 @@ public final class PV {
 
         public static native PVTreemapLayout Treemap() /*-{
             return $wnd.pv.Layout.Treemap;
+        }-*/;
+
+        /**
+         * Wrapper for pv.Layout.Hierarchy.Links.
+         */
+        public static native JavaScriptObject HierarchyLinks() /*-{
+            return $wnd.pv.Layout.Hierarchy.links;
         }-*/;
 
         private Layout() {

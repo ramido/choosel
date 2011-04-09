@@ -56,6 +56,11 @@ public class TreemapExample extends ProtovisWidget implements ProtovisExample {
         treemap.label().add(PV.Label);
     }
 
+    @Override
+    public String getDescription() {
+        return null;
+    }
+
     public String getProtovisExampleURL() {
         return "http://vis.stanford.edu/protovis/ex/treemap.html";
     }

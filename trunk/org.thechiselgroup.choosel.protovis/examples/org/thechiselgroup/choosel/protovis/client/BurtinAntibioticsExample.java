@@ -71,10 +71,6 @@ public class BurtinAntibioticsExample extends ProtovisWidget implements
         return this;
     }
 
-    private double radius(double mic, double a, double b) {
-        return a * Math.sqrt(Math.log(mic * 1E4)) + b;
-    }
-
     private void createVisualization(Antibiotics[] antibiotics) {
         /* Basic dimensions. */
         int width = 700;
@@ -260,6 +256,11 @@ public class BurtinAntibioticsExample extends ProtovisWidget implements
                         "positive") };
     }
 
+    @Override
+    public String getDescription() {
+        return null;
+    }
+
     public String getProtovisExampleURL() {
         return "http://vis.stanford.edu/protovis/ex/antibiotics-burtin.html";
     }
@@ -273,6 +274,10 @@ public class BurtinAntibioticsExample extends ProtovisWidget implements
         initPVPanel();
         createVisualization(generateData());
         getPVPanel().render();
+    }
+
+    private double radius(double mic, double a, double b) {
+        return a * Math.sqrt(Math.log(mic * 1E4)) + b;
     }
 
     public String toString() {

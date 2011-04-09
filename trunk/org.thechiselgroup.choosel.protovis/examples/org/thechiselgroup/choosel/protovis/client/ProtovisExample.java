@@ -25,4 +25,6 @@ public interface ProtovisExample {
 
     String getProtovisExampleURL();
 
+    String getDescription();
+
 }

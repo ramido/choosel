@@ -85,13 +85,8 @@ public class ForceDirectedLayoutExample extends ProtovisWidget implements
     }
 
     @Override
-    protected void onDetach() {
-        // stop the force directed layout
-        if (force != null) {
-            force.stop();
-        }
-
-        super.onDetach();
+    public String getDescription() {
+        return null;
     }
 
     public String getProtovisExampleURL() {
@@ -109,6 +104,16 @@ public class ForceDirectedLayoutExample extends ProtovisWidget implements
         getPVPanel().render();
         asWidget().getElement().getStyle()
                 .setProperty("border", "1px solid #aaa");
+    }
+
+    @Override
+    protected void onDetach() {
+        // stop the force directed layout
+        if (force != null) {
+            force.stop();
+        }
+
+        super.onDetach();
     }
 
     public String toString() {

@@ -17,15 +17,20 @@ package org.thechiselgroup.choosel.protovis.client;
 
 import java.util.Comparator;
 
+import org.thechiselgroup.choosel.protovis.client.jsutil.JsBooleanFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsUtils;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**
- * 
  * @author Lars Grammel
+ * @author Guillaume Godin
  */
 public class PVDomNode extends JavaScriptObject {
+
+    public static final native PVDomNode create() /*-{
+        return new $wnd.pv.Dom.Node(Number.NaN);
+    }-*/;
 
     public static final native PVDomNode create(Object o, String nodeName,
             double nodeValue) /*-{
@@ -33,10 +38,6 @@ public class PVDomNode extends JavaScriptObject {
         node.nodeName = nodeName;
         node.nodeObject = o;
         return node;
-    }-*/;
-
-    public static final native PVDomNode create() /*-{
-        return new $wnd.pv.Dom.Node(Number.NaN);
     }-*/;
 
     protected PVDomNode() {
@@ -48,6 +49,10 @@ public class PVDomNode extends JavaScriptObject {
 
     public final native PVDomNode firstChild() /*-{
         return this.firstChild;
+    }-*/;
+
+    public final native boolean hasNodeValue() /*-{
+        return this.nodeValue != undefined;
     }-*/;
 
     public final native String nodeName() /*-{
@@ -65,6 +70,22 @@ public class PVDomNode extends JavaScriptObject {
         return this.nodes();
     }-*/;
 
+    public final native <T> T nodeValue() /*-{
+        return this.nodeValue;
+    }-*/;
+
+    public final native double nodeValueDouble() /*-{
+        return this.nodeValue;
+    }-*/;
+
+    public final native int nodeValueInt() /*-{
+        return this.nodeValue;
+    }-*/;
+
+    public final native PVDomNode parentNode() /*-{
+        return this.parentNode;
+    }-*/;
+
     public final PVDomNode sort(Comparator<PVDomNode> comparator) {
         return sort(JsUtils.toJsComparator(comparator));
     }
@@ -73,12 +94,21 @@ public class PVDomNode extends JavaScriptObject {
         return this.sort(comparator);
     }-*/;
 
-    public final native double nodeValue() /*-{
-        return this.nodeValue;
+    public final native PVDomNode toggle(boolean toogle) /*-{
+        return this.toggle(toogle);
     }-*/;
 
-    public final native PVDomNode parentNode() /*-{
-        return this.parentNode;
+    public final native PVDomNode toggle() /*-{
+        return this.toggle();
+    }-*/;
+
+    public final native PVDomNode toggle(JsBooleanFunction f) /*-{
+        return this.toggle(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsBooleanFunction;)(f));
+    }-*/;
+
+    public final native boolean toggled() /*-{
+        // convert undefined
+        return !this.toggled ? false : true;
     }-*/;
 
 }

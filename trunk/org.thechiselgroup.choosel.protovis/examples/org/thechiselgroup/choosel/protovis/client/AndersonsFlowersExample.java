@@ -45,14 +45,6 @@ import com.google.gwt.user.client.ui.Widget;
 public class AndersonsFlowersExample extends ProtovisWidget implements
         ProtovisExample {
 
-    private static final String PETAL_WIDTH = "petal width";
-
-    private static final String PETAL_LENGTH = "petal length";
-
-    private static final String SEPAL_WIDTH = "sepal width";
-
-    private static final String SEPAL_LENGTH = "sepal length";
-
     public static class Flower {
 
         public double sepalLength;
@@ -111,6 +103,14 @@ public class AndersonsFlowersExample extends ProtovisWidget implements
         }
 
     }
+
+    private static final String PETAL_WIDTH = "petal width";
+
+    private static final String PETAL_LENGTH = "petal length";
+
+    private static final String SEPAL_WIDTH = "sepal width";
+
+    private static final String SEPAL_LENGTH = "sepal length";
 
     @Override
     public Widget asWidget() {
@@ -303,16 +303,6 @@ public class AndersonsFlowersExample extends ProtovisWidget implements
                 }).anchor(RIGHT).add(PV.Label);
     }
 
-    private void putTraitScale(final Map<String, PVLinearScale> position,
-            Flower[] flowers, final String trait, final int size) {
-        position.put(trait, PV.Scale.linear(flowers, new JsDoubleFunction() {
-            public double f(JsArgs args) {
-                Flower d = args.getObject(0);
-                return d.getTraitValue(trait);
-            }
-        }).range(0, size));
-    }
-
     private Flower[] generateFlowerData() {
         return new Flower[] { new Flower(5.1, 3.5, 1.4, 0.2, "setosa"),
                 new Flower(4.9, 3.0, 1.4, 0.2, "setosa"),
@@ -466,6 +456,11 @@ public class AndersonsFlowersExample extends ProtovisWidget implements
                 new Flower(5.9, 3.0, 5.1, 1.8, "virginica") };
     }
 
+    @Override
+    public String getDescription() {
+        return null;
+    }
+
     public String getProtovisExampleURL() {
         return "http://vis.stanford.edu/protovis/ex/flowers.html";
     }
@@ -479,6 +474,16 @@ public class AndersonsFlowersExample extends ProtovisWidget implements
         initPVPanel();
         createVisualization(generateFlowerData());
         getPVPanel().render();
+    }
+
+    private void putTraitScale(final Map<String, PVLinearScale> position,
+            Flower[] flowers, final String trait, final int size) {
+        position.put(trait, PV.Scale.linear(flowers, new JsDoubleFunction() {
+            public double f(JsArgs args) {
+                Flower d = args.getObject(0);
+                return d.getTraitValue(trait);
+            }
+        }).range(0, size));
     }
 
     public String toString() {

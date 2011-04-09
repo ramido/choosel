@@ -34,22 +34,20 @@ import com.google.gwt.user.client.ui.Widget;
 public class StreamgraphExample extends ProtovisWidget implements
         ProtovisExample {
 
-    public static class Point {
-
-        public double x;
-
-        public double y;
-
-        private Point(double x, double y) {
-            this.x = x;
-            this.y = y;
-        }
-
-    }
-
     @Override
     public Widget asWidget() {
         return this;
+    }
+
+    private void bump(JsArrayNumber a, int m) {
+        double x = 1d / (.1 + Math.random());
+        double y = 2d * Math.random() - .5;
+        double z = 10d / (.1 + Math.random());
+
+        for (int i = 0; i < m; i++) {
+            double w = (((double) i) / m - y) * z;
+            a.set(i, a.get(i) + x * Math.exp(-w * w));
+        }
     }
 
     private void createVisualization(JsArrayGeneric<JsArrayNumber> data, int n,
@@ -90,17 +88,6 @@ public class StreamgraphExample extends ProtovisWidget implements
                 });
     }
 
-    private void bump(JsArrayNumber a, int m) {
-        double x = 1d / (.1 + Math.random());
-        double y = 2d * Math.random() - .5;
-        double z = 10d / (.1 + Math.random());
-
-        for (int i = 0; i < m; i++) {
-            double w = (((double) i) / m - y) * z;
-            a.set(i, a.get(i) + x * Math.exp(-w * w));
-        }
-    }
-
     private JsArrayGeneric<JsArrayNumber> generateData(int n, int m) {
         JsArrayGeneric<JsArrayNumber> result = JsUtils.createJsArrayGeneric();
         for (int i = 0; i < n; i++) {
@@ -114,6 +101,11 @@ public class StreamgraphExample extends ProtovisWidget implements
             result.push(a);
         }
         return result;
+    }
+
+    @Override
+    public String getDescription() {
+        return null;
     }
 
     public String getProtovisExampleURL() {

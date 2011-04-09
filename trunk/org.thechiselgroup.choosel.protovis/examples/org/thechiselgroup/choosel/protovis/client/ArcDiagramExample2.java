@@ -224,6 +224,11 @@ public class ArcDiagramExample2 extends ProtovisWidget implements
                 });
     }
 
+    @Override
+    public String getDescription() {
+        return null;
+    }
+
     public String getProtovisExampleURL() {
         return null;
     }

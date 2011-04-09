@@ -63,6 +63,11 @@ public class DendrogramExample extends ProtovisWidget implements
         layout.label().add(PV.Label);
     }
 
+    @Override
+    public String getDescription() {
+        return null;
+    }
+
     public String getProtovisExampleURL() {
         return "http://vis.stanford.edu/protovis/ex/dendrogram.html";
     }

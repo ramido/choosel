@@ -76,6 +76,11 @@ public class SunburstPanAndZoomExample extends ProtovisWidget implements
                 .event(PV.Event.MOUSEWHEEL, PV.Behavior.zoom());
     }
 
+    @Override
+    public String getDescription() {
+        return null;
+    }
+
     public String getProtovisExampleURL() {
         return null;
     }
