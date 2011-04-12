@@ -85,7 +85,7 @@ public class BubbleChartExample extends ProtovisWidget implements
                         }).nodes()).size(new JsDoubleFunction() {
                     public double f(JsArgs args) {
                         PVDomNode d = args.getObject();
-                        return d.nodeValue();
+                        return d.nodeValueDouble();
                     }
                 }).spacing(0).order(null).node().add(PV.Dot)
                 .fillStyle(new JsFunction<PVColor>() {
@@ -183,7 +183,7 @@ public class BubbleChartExample extends ProtovisWidget implements
     }
 
     public String toString() {
-        return "Bubble Charts";
+        return "Bubble Chart";
     }
 
 }
