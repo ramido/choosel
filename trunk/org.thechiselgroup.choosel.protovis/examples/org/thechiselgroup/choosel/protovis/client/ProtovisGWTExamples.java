@@ -103,7 +103,7 @@ public class ProtovisGWTExamples implements EntryPoint {
 
     private void initVisualizationSelector() {
         selectorList = new ListBox();
-        selectorList.setVisibleItemCount(30);
+        selectorList.setVisibleItemCount(1);
         for (int i = 0; i < examples.size(); i++) {
             selectorList.addItem(examples.get(i).toString());
         }

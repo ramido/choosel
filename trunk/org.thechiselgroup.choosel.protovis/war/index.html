@@ -11,9 +11,13 @@
 	    left: 25px; top: 15px;
 	    font-family: Arial, sans-serif; 
 	  }
-	  div#description { width: 600px; }
-	  div#visualizationTitle { font-weight: bold; font-size: 18px; }
-	  div#visualization { padding-top: 20px; }
+	  
+	  #description { width: 600px; }
+	  #visualizationTitle { display: none; }
+	  #visualization { padding-top: 20px; }
+	  #visualizationSelector { padding-top: 5px; padding-bottom: 5px; }
+	  #visualizationSelector select { font-weight: bold; font-size: 20px;}
+	  
 	</style>
   </head>
   <body>
@@ -29,11 +33,7 @@
       <a href="http://code.google.com/p/choosel/">Choosel Visual Data Exploration Framework</a>.       
     </div>
     <div style="padding-top: 15px;">
-      <div style="float: left; width: 260px;">
-      	<div style="font-weight: bold;">Select example:</div>
       	<div id="visualizationSelector"></div>
-      </div>
-      <div>
         <div id="visualizationTitle"></div>
         <div id="visualizationDescription"></div>
         <div id="protovisExampleLink"></div>
