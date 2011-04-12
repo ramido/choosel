@@ -43,8 +43,6 @@ public class ProtovisGWTExamples implements EntryPoint {
     private void initExampleVisualizations() {
         examples = new ArrayList<ProtovisExample>();
 
-        examples.add(new ForceToggleExample());
-
         // networks
         examples.add(new ArcDiagramExample());
         examples.add(new ArcDiagramExample2());
@@ -75,6 +73,7 @@ public class ProtovisGWTExamples implements EntryPoint {
 
         // interaction
         examples.add(new PanAndZoomExample());
+        examples.add(new ForceToggleExample());
 
         // hierarchies
         examples.add(new DendrogramExample());
