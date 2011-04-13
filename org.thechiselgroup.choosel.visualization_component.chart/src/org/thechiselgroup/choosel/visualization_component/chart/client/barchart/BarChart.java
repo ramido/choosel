@@ -261,6 +261,15 @@ public class BarChart extends ChartViewContentDisplay {
     private JsBooleanFunction showPartialBars = new ViewItemPredicateJsBooleanFunction(
             new GreaterThanSlotValuePredicate(PARTIAL_BAR_LENGTH, 0));
 
+    private JsBooleanFunction showRegularBars = new JsBooleanFunction() {
+        @Override
+        public boolean f(JsArgs args) {
+            PVMark _this = args.getThis();
+            return calculateBarLength(regularValues[_this.index()])
+                    - calculatePartialBarLength(args.<ViewItem> getObject()) > 0;
+        }
+    };
+
     private JsDoubleFunction barStart = new JsDoubleFunction() {
         @Override
         public double f(JsArgs args) {
@@ -284,7 +293,8 @@ public class BarChart extends ChartViewContentDisplay {
     private JsDoubleFunction partialBarLength = new JsDoubleFunction() {
         @Override
         public double f(JsArgs args) {
-            return calculatePartialBarLength(args.<ViewItem> getObject());
+            return calculatePartialBarLength(args.<ViewItem> getObject())
+                    - BAR_STROKE_WIDTH; // subtract initial offset
         }
     };
 
@@ -296,12 +306,13 @@ public class BarChart extends ChartViewContentDisplay {
         }
     };
 
-    private JsDoubleFunction fullBarLength = new JsDoubleFunction() {
+    private JsDoubleFunction regularBarLength = new JsDoubleFunction() {
         @Override
         public double f(JsArgs args) {
             PVMark _this = args.getThis();
             return calculateBarLength(regularValues[_this.index()])
-                    - calculatePartialBarLength(args.<ViewItem> getObject());
+                    - calculatePartialBarLength(args.<ViewItem> getObject())
+                    - BAR_STROKE_WIDTH; // subtract initial offset
         }
     };
 
@@ -309,7 +320,8 @@ public class BarChart extends ChartViewContentDisplay {
         @Override
         public double f(JsArgs args) {
             PVMark _this = args.getThis();
-            return calculateBarLength(regularValues[_this.index()]);
+            return calculateBarLength(regularValues[_this.index()])
+                    - BAR_STROKE_WIDTH; // subtract initial offset
         }
     };
 
@@ -489,8 +501,7 @@ public class BarChart extends ChartViewContentDisplay {
     }
 
     private double calculateBarLength(double value) {
-        return (value * getBarLengthSpace() / maxChartItemValue) - 2
-                * BAR_STROKE_WIDTH;
+        return (value * getBarLengthSpace() / maxChartItemValue);
     }
 
     private double calculateBarStart(int index) {
@@ -571,11 +582,11 @@ public class BarChart extends ChartViewContentDisplay {
          * color differences if the partial bar is semi-transparent.
          */
         regularBar = getChart().add(PV.Bar).data(viewItemsJsArray)
-                .left(partialBarOffset).width(fullBarLength).bottom(barStart)
-                .height(barWidth)
+                .left(partialBarOffset).width(regularBarLength)
+                .bottom(barStart).height(barWidth)
                 .fillStyle(new ViewItemColorSlotAccessor(BAR_COLOR))
                 .strokeStyle(new ViewItemColorSlotAccessor(BAR_BORDER_COLOR))
-                .lineWidth(BAR_STROKE_WIDTH);
+                .lineWidth(BAR_STROKE_WIDTH).visible(showRegularBars);
 
         regularBarLabel = regularBar.add(PV.Label).bottom(baselineLabelStart)
                 .textAlign(PVAlignment.RIGHT).left(0).font(FONT)
@@ -637,8 +648,8 @@ public class BarChart extends ChartViewContentDisplay {
          * color differences if the partial bar is semi-transparent.
          */
         regularBar = getChart().add(PV.Bar).data(viewItemsJsArray)
-                .bottom(partialBarOffset).height(fullBarLength).left(barStart)
-                .width(barWidth)
+                .bottom(partialBarOffset).height(regularBarLength)
+                .left(barStart).width(barWidth)
                 .fillStyle(new ViewItemColorSlotAccessor(BAR_COLOR))
                 .strokeStyle(new ViewItemColorSlotAccessor(BAR_BORDER_COLOR))
                 .lineWidth(BAR_STROKE_WIDTH);
