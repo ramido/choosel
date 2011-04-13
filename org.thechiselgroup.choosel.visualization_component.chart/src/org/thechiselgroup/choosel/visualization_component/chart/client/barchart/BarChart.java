@@ -437,7 +437,7 @@ public class BarChart extends ChartViewContentDisplay {
     private Comparator<ViewItem> viewItemComparator = new ViewItemDoubleComparator(
             BAR_LENGTH);
 
-    private PVLabel regularBarLabel;
+    private PVLabel barLabel;
 
     private boolean partialBarThinner = false;
 
@@ -588,11 +588,6 @@ public class BarChart extends ChartViewContentDisplay {
                 .strokeStyle(new ViewItemColorSlotAccessor(BAR_BORDER_COLOR))
                 .lineWidth(BAR_STROKE_WIDTH).visible(showRegularBars);
 
-        regularBarLabel = regularBar.add(PV.Label).bottom(baselineLabelStart)
-                .textAlign(PVAlignment.RIGHT).left(0).font(FONT)
-                .text(new ViewItemStringSlotAccessor(BAR_LABEL))
-                .textBaseline(PVAlignment.MIDDLE).events(ALL).cursor(POINTER);
-
         if (valueLabelVisibility) {
             regularBar.anchor(PVAlignment.RIGHT).add(PV.Label)
                     .textBaseline(PVAlignment.MIDDLE).text(fullMarkLabelText)
@@ -625,6 +620,12 @@ public class BarChart extends ChartViewContentDisplay {
                 .data(viewItemsJsArray).left(BAR_STROKE_WIDTH)
                 .width(completeBarLength).bottom(barStart).height(barWidth)
                 .lineWidth(BAR_STROKE_WIDTH).cursor(POINTER).events(ALL);
+
+        barLabel = getChart().add(PV.Label).data(viewItemsJsArray)
+                .bottom(baselineLabelStart).textAlign(PVAlignment.RIGHT)
+                .left(0).font(FONT)
+                .text(new ViewItemStringSlotAccessor(BAR_LABEL))
+                .textBaseline(PVAlignment.MIDDLE).events(ALL).cursor(POINTER);
     }
 
     private void drawHorizontalGridLines() {
@@ -818,7 +819,7 @@ public class BarChart extends ChartViewContentDisplay {
     @Override
     protected void registerEventHandler(String eventType, PVEventHandler handler) {
         invisibleInteractionBar.event(eventType, handler);
-        regularBarLabel.event(eventType, handler);
+        barLabel.event(eventType, handler);
     }
 
     public void setBarSpacing(boolean barSpacing) {
