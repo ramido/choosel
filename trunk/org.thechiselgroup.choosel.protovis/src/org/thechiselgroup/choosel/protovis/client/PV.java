@@ -170,6 +170,13 @@ public final class PV {
             return $wnd.pv.Layout.Force;
         }-*/;
 
+        /**
+         * Wrapper for pv.Layout.Hierarchy.Links.
+         */
+        public static native JavaScriptObject HierarchyLinks() /*-{
+            return $wnd.pv.Layout.Hierarchy.links;
+        }-*/;
+
         public static native PVMatrixLayout Matrix() /*-{
             return $wnd.pv.Layout.Matrix;
         }-*/;
@@ -192,13 +199,6 @@ public final class PV {
 
         public static native PVTreemapLayout Treemap() /*-{
             return $wnd.pv.Layout.Treemap;
-        }-*/;
-
-        /**
-         * Wrapper for pv.Layout.Hierarchy.Links.
-         */
-        public static native JavaScriptObject HierarchyLinks() /*-{
-            return $wnd.pv.Layout.Hierarchy.links;
         }-*/;
 
         private Layout() {
@@ -347,6 +347,8 @@ public final class PV {
 
     public final static PVDot.Type Dot = Dot();
 
+    public final static PVEllipse.Type Ellipse = Ellipse();
+
     public final static PVLabel.Type Label = Label();
 
     public final static PVLine.Type Line = Line();
@@ -389,6 +391,10 @@ public final class PV {
 
     private static native PVDot.Type Dot() /*-{
         return $wnd.pv.Dot;
+    }-*/;
+
+    private static native PVEllipse.Type Ellipse() /*-{
+        return $wnd.pv.Ellipse;
     }-*/;
 
     private static native PVLabel.Type Label() /*-{
