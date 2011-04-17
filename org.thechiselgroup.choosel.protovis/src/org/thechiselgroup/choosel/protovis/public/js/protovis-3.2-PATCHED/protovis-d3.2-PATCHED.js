@@ -5705,7 +5705,6 @@ pv.SvgScene.ellipse = function(scenes) {
     var fill = s.fillStyle, stroke = s.strokeStyle;
     if (!fill.opacity && !stroke.opacity) continue;
 
-    // TODO x,y are center coordinates, need rx, ry
     e = this.expect(e, "ellipse", {
         "shape-rendering": s.antialias ? null : "crispEdges",
         "pointer-events": s.events,
@@ -5718,7 +5717,8 @@ pv.SvgScene.ellipse = function(scenes) {
         "fill-opacity": fill.opacity || null,
         "stroke": stroke.color,
         "stroke-opacity": stroke.opacity || null,
-        "stroke-width": stroke.opacity ? s.lineWidth / this.scale : null
+        "stroke-width": stroke.opacity ? s.lineWidth / this.scale : null,
+        "transform": "rotate(" + 180 * s.angle / Math.PI + " " + s.left + " " + s.top + ")"
       });
     e = this.append(e, scenes, i);
   }
@@ -7937,6 +7937,7 @@ pv.Ellipse = function() {
 pv.Ellipse.prototype = pv.extend(pv.Mark)
 	.property("horizontalRadius", Number)
 	.property("verticalRadius", Number)
+	.property("angle", Number)	
 	.property("lineWidth", Number)
 	.property("strokeStyle", pv.color)
 	.property("fillStyle", pv.color);
@@ -7945,6 +7946,7 @@ pv.Ellipse.prototype.type = "ellipse";
 
 pv.Ellipse.prototype.defaults = new pv.Ellipse()
 	.extend(pv.Mark.prototype.defaults)
+	.angle(0)
 	.lineWidth(1.5)
 	.horizontalRadius(10)
 	.verticalRadius(10)

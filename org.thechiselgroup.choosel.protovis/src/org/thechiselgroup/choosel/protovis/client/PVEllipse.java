@@ -38,6 +38,18 @@ public final class PVEllipse extends PVAbstractMark<PVEllipse> {
     protected PVEllipse() {
     }
 
+    public final native double angle() /*-{
+        return this.angle();
+    }-*/;
+
+    public final native PVEllipse angle(double height) /*-{
+        return this.angle(height);
+    }-*/;
+
+    public final native PVEllipse angle(JsDoubleFunction f) /*-{
+        return this.angle(@org.thechiselgroup.choosel.protovis.client.jsutil.JsFunctionUtils::toJavaScriptFunction(Lorg/thechiselgroup/choosel/protovis/client/jsutil/JsDoubleFunction;)(f));
+    }-*/;
+
     public final native PVEllipse antialias(boolean antialias) /*-{
         return this.antialias(antialias);
     }-*/;

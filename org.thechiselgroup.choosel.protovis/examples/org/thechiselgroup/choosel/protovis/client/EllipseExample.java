@@ -30,9 +30,11 @@ import com.google.gwt.user.client.ui.Widget;
 public class EllipseExample extends ProtovisWidget implements ProtovisExample {
 
     public final static int[][] EXAMPLE_DATA = new int[][] {
-            new int[] { 200, 100, 25, 25 }, new int[] { 200, 250, 50, 25 },
-            new int[] { 400, 250, 25, 50 }, new int[] { 400, 100, 20, 40 },
-            new int[] { 400, 120, 70, 35 } };
+            new int[] { 200, 100, 25, 25, 0 },
+            new int[] { 200, 250, 50, 25, 45 },
+            new int[] { 400, 250, 25, 50, 0 },
+            new int[] { 400, 100, 20, 40, 175 },
+            new int[] { 400, 120, 70, 35, 0 } };
 
     @Override
     public Widget asWidget() {
@@ -60,6 +62,10 @@ public class EllipseExample extends ProtovisWidget implements ProtovisExample {
                 }).verticalRadius(new JsDoubleFunction() {
                     public double f(JsArgs args) {
                         return args.<int[]> getObject()[3];
+                    }
+                }).angle(new JsDoubleFunction() {
+                    public double f(JsArgs args) {
+                        return (args.<int[]> getObject()[4] * Math.PI) / 180d;
                     }
                 }).fillStyle(new JsFunction<PVColor>() {
                     private PVOrdinalScale colors = PV.Colors.category10();
