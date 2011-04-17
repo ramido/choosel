@@ -80,3 +80,5 @@ Using anonymous inner classes adds boilerplate code that leads to lower readabil
 *Bradley Blashko*: Initial prototype implementation
 
 *Nikita Zhiltsov*: Force-directed Layout support
+
+*Guillaume Godin*: Ellipse Example
