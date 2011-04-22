@@ -14,7 +14,7 @@ For more details on the design decisions, see the [http://lgrammel.blogspot.com/
 
 =Architecture Overview=
 
-http://choosel.googlecode.com/svn/wiki/choosel-architecture.png
+http://choosel.googlecode.com/svn/wiki/images/choosel-architecture.png
 
 The Choosel client is written in [http://code.google.com/webtoolkit/ GWT] and runs in the browser. The Choosel backend is written for the [http://code.google.com/appengine/ Google App engine], but it can be modified to run on any [http://www.oracle.com/technetwork/java/index-jsp-135475.html Java Servlet container].
 
@@ -24,7 +24,7 @@ Choosel provides several services such as view coordination and configuration, a
 
 =Visualization Component Architecture=
 
-http://choosel.googlecode.com/svn/wiki/choosel-visualization_component_architecture-thumbnail.png
+http://choosel.googlecode.com/svn/wiki/images/choosel-visualization_component_architecture-thumbnail.png
 Visualization Component Architecture Overview ([VisualizationComponentArchitectureDiagram enlarge diagram])
 
 The Choosel visualization component architecture separates the core functionality (which is required to use Choosel visualizations in GWT) from the workbench functionality. The visualizations are extracted into separate visualization modules. The architecture consists of three main components:
