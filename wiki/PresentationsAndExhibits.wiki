@@ -12,3 +12,5 @@ Lars Grammel, 2010-Oct-26
 ==VisID Lab presentation==
 Lars Grammel, 2010-Sep-01
 <wiki:gadget url="http://wildfire.gigya.com/wildfire/StpProvider.aspx?ut=Ag8AAAAEAAYAAFUASQBEABQAADEAMwAxADEAMwA2ADcAMwA0ADIABgAASQBJAEQAEgAANwAwADcAMgAxADQAMwAzADIABAAAbgB0AA4AAGkARwBvAG8AZwBsAGUABAAAUABJAAoAADEAMAAxADkAMQA." width="500"  height="500" border="0" />
+
+<wiki:gadget url="http://https://choosel.googlecode.com/svn/wiki/gadgets/test.xml" />
