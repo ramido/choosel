@@ -47,14 +47,14 @@ Related Wiki Page: [Modules Choosel GWT Modules]
 
 =User Interface Elements=
 
-http://choosel.googlecode.com/svn/wiki/choosel-ui-elements.png
+http://choosel.googlecode.com/svn/wiki/images/choosel-ui-elements.png
 
   * [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel.core/src/org/thechiselgroup/choosel/core/client/ui/ActionBar.java ActionBar source code]
   * [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel.core/src/org/thechiselgroup/choosel/core/client/windows/Desktop.java Desktop Interface source code]
   * [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel.core/src/org/thechiselgroup/choosel/core/client/windows/DefaultDesktop.java Desktop Implementation source code]
   * [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel.core/src/org/thechiselgroup/choosel/core/client/windows/WindowPanel.java Window source code]
 
-http://choosel.googlecode.com/svn/wiki/choosel-ui-window.png
+http://choosel.googlecode.com/svn/wiki/images/choosel-ui-window.png
 
   * [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel.core/src/org/thechiselgroup/choosel/core/client/windows/WindowPanel.java Window source code]
   * [http://code.google.com/p/choosel/source/browse/trunk/org.thechiselgroup.choosel.core/src/org/thechiselgroup/choosel/core/client/views/View.java View interface]
