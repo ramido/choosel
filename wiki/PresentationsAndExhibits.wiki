@@ -1,11 +1,14 @@
 #summary Presentations and Exhibits on Choosel
 #labels User,Developer,Featured
 
+==CAS University Days 2011 presentation==
+Lars Grammel, 2011-Apr-21
+<wiki:gadget url="http://wildfire.gigya.com/wildfire/StpProvider.aspx?ut=Ag8AAAAEAAYAAFUASQBEABQAADEANAAyADkAMwA2ADUAMwAyADEABgAASQBJAEQAEgAAOAAxADIAMgAzADcANAAzADEABAAAbgB0AA4AAGkARwBvAG8AZwBsAGUABAAAUABJAAoAADEAMAAxADkAMQA." width="500"  height="500" border="0" />
+
 ==!InfoVis 2010 Poster==
 Lars Grammel, 2010-Oct-26
 <wiki:gadget url="http://wildfire.gigya.com/wildfire/StpProvider.aspx?ut=Ag8AAAAEAAYAAFUASQBEABQAADEAMwAxADEAMwA2ADcAMwA0ADIABgAASQBJAEQAEgAANwAwADcAMgAxADMANQA2ADIABAAAbgB0AA4AAGkARwBvAG8AZwBsAGUABAAAUABJAAoAADEAMAAxADkAMQA." width="500"  height="500" border="0" />
+
 ==VisID Lab presentation==
 Lars Grammel, 2010-Sep-01
 <wiki:gadget url="http://wildfire.gigya.com/wildfire/StpProvider.aspx?ut=Ag8AAAAEAAYAAFUASQBEABQAADEAMwAxADEAMwA2ADcAMwA0ADIABgAASQBJAEQAEgAANwAwADcAMgAxADQAMwAzADIABAAAbgB0AA4AAGkARwBvAG8AZwBsAGUABAAAUABJAAoAADEAMAAxADkAMQA." width="500"  height="500" border="0" />
-
-<div style="width:425px" id="__ss_7708272"> <strong style="display:block;margin:12px 0 4px"><a href="http://www.slideshare.net/lgrammel/choosel-modular-webbased-visualizations" title="Choosel - Modular Web-based Visualizations">Choosel - Modular Web-based Visualizations</a></strong> <iframe src="http://www.slideshare.net/slideshow/embed_code/7708272" width="425" height="355" frameborder="0" marginwidth="0" marginheight="0" scrolling="no"></iframe> <div style="padding:5px 0 12px"> View more <a href="http://www.slideshare.net/">presentations</a> from <a href="http://www.slideshare.net/lgrammel">Lars Grammel</a> </div> </div>
