@@ -13,4 +13,4 @@ Lars Grammel, 2010-Oct-26
 Lars Grammel, 2010-Sep-01
 <wiki:gadget url="http://wildfire.gigya.com/wildfire/StpProvider.aspx?ut=Ag8AAAAEAAYAAFUASQBEABQAADEAMwAxADEAMwA2ADcAMwA0ADIABgAASQBJAEQAEgAANwAwADcAMgAxADQAMwAzADIABAAAbgB0AA4AAGkARwBvAG8AZwBsAGUABAAAUABJAAoAADEAMAAxADkAMQA." width="500"  height="500" border="0" />
 
-<wiki:gadget url="https://choosel.googlecode.com/svn/wiki/gadgets/choosel-modular-webbased-visualizations.xml" />
+<wiki:gadget url="https://choosel.googlecode.com/svn/wiki/gadgets/choosel-modular-webbased-visualizations.xml" width="425"  height="400" border="0" />
