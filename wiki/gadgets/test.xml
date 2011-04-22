@@ -3,7 +3,9 @@
   <ModulePrefs title="hello world example" /> 
   <Content type="html">
      <![CDATA[ 
-       Hello, world!
+<div style="width:425px" id="__ss_7708272">
+<iframe src="http://www.slideshare.net/slideshow/embed_code/7708272" width="425" height="355" frameborder="0" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+</div>
      ]]>
   </Content> 
 </Module>
