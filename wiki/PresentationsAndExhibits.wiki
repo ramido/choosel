@@ -7,7 +7,7 @@ Lars Grammel, 2011-Apr-21
 
 ==!InfoVis 2010 Poster==
 Lars Grammel, 2010-Oct-26
-<wiki:gadget url="https://choosel.googlecode.com/svn/wiki/gadgets/visualization_mashups_for_casual_users.xml" width="425"  height="400" border="0" />
+<wiki:gadget url="https://choosel.googlecode.com/svn/wiki/gadgets/poster-choosel-cam-ready.xml" width="425"  height="400" border="0" />
 
 ==VisID Lab presentation==
 Lars Grammel, 2010-Sep-01
