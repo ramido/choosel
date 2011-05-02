@@ -4,7 +4,7 @@
 = Setting up Java, GAE/J & GWT =
 
    * Install [http://www.java.com/en/download/manual.jsp Java] (at least Java 6 is required because we @Override annotations for interface implementations. If you manually get rid of @Override annotations, Java 5 should work, too)
-   * Install [http://code.google.com/webtoolkit/download.html Google Web Toolkit (GWT)] (Choosel requires [http://code.google.com/webtoolkit/versions.html GWT 2.1] (GWT 2.2 does not work right now)) - please download GWT 2.1.* from [http://code.google.com/webtoolkit/versions.html]
+   * Install [http://code.google.com/webtoolkit/download.html Google Web Toolkit (GWT)] (Choosel requires [http://code.google.com/webtoolkit/versions.html GWT 2.1] (GWT 2.2 does not work right now)) - please download GWT 2.1.'*' from [http://code.google.com/webtoolkit/versions.html here]
    * Install [http://code.google.com/appengine/downloads.html Google App Engine SDK for Java] (Version 1.4 or later is recommended)
 
 = Setting up Eclipse =
