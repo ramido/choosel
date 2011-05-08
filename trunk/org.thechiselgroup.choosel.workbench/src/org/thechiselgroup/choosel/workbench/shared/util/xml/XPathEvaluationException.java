@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.workbench.client.util.xslt;
+package org.thechiselgroup.choosel.workbench.shared.util.xml;
 
-public class NoSuchNodeException extends Exception {
+public class XPathEvaluationException extends Exception {
 
     private static final long serialVersionUID = 1L;
 
@@ -23,8 +23,17 @@ public class NoSuchNodeException extends Exception {
 
     private Object node;
 
-    public NoSuchNodeException(Object node, String xpath) {
-        super("No node with xpath '" + xpath + "' on " + node.toString());
+    public XPathEvaluationException(Object node, String xpath) {
+        super("XPath '" + xpath + "' could not be evaluated on "
+                + node.toString());
+
+        this.xpath = xpath;
+        this.node = node;
+    }
+
+    public XPathEvaluationException(Object node, String xpath, Exception cause) {
+        super("XPath '" + xpath + "' could not be evaluated on "
+                + node.toString(), cause);
 
         this.xpath = xpath;
         this.node = node;
@@ -34,7 +43,7 @@ public class NoSuchNodeException extends Exception {
         return node;
     }
 
-    public String getXpath() {
+    public String getXPath() {
         return xpath;
     }
 

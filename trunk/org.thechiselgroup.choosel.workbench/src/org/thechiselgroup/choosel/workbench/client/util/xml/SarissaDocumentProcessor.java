@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.workbench.client.util.xslt;
+package org.thechiselgroup.choosel.workbench.client.util.xml;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.thechiselgroup.choosel.workbench.shared.util.xml.DocumentProcessor;
+import org.thechiselgroup.choosel.workbench.shared.util.xml.XPathEvaluationException;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -37,7 +39,7 @@ public class SarissaDocumentProcessor implements DocumentProcessor {
 
     // @formatter:off
     private native Node doParseDocument(String xmlText) /*-{
-        var doc = this.@org.thechiselgroup.choosel.workbench.client.util.xslt.SarissaDocumentProcessor::domParser.parseFromString(xmlText, "text/xml");
+        var doc = this.@org.thechiselgroup.choosel.workbench.client.util.xml.SarissaDocumentProcessor::domParser.parseFromString(xmlText, "text/xml");
 
         var parseErrorText = $wnd.Sarissa.getParseErrorText(doc);
         if (parseErrorText != $wnd.Sarissa.PARSED_OK) {
@@ -49,7 +51,7 @@ public class SarissaDocumentProcessor implements DocumentProcessor {
         doc.setProperty("SelectionLanguage", "XPath");
         }
 
-        return @org.thechiselgroup.choosel.workbench.client.util.xslt.Node::create(Lcom/google/gwt/core/client/JavaScriptObject;)(doc);
+        return @org.thechiselgroup.choosel.workbench.client.util.xml.Node::create(Lcom/google/gwt/core/client/JavaScriptObject;)(doc);
     }-*/;
     // @formatter:on
 
@@ -59,11 +61,12 @@ public class SarissaDocumentProcessor implements DocumentProcessor {
     }
 
     @Override
-    public String getText(Object node, String xpath) throws NoSuchNodeException {
+    public String getText(Object node, String xpath)
+            throws XPathEvaluationException {
         List<Node> nodes = doGetNodes(node, xpath);
 
         if (nodes.size() == 0) {
-            throw new NoSuchNodeException(node, xpath);
+            throw new XPathEvaluationException(node, xpath);
         }
 
         return nodes.get(0).getValue().trim();
