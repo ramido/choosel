@@ -24,7 +24,6 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
  */
 public interface GraphNodeExpander {
 
-    void expand(ViewItem resourceItem,
-            GraphNodeExpansionCallback expansionCallback);
+    void expand(ViewItem viewItem, GraphNodeExpansionCallback expansionCallback);
 
 }
