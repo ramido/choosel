@@ -44,26 +44,27 @@ public class Color {
         this.alpha = alpha;
     }
 
-    // String in form #ffffff
+    /**
+     * @param hex
+     *            String in form #ffffff
+     */
     public Color(String hex) {
-        // TODO
-        alpha = 1.0;
+        assert hex != null;
+
         if (hex.charAt(0) != '#' && hex.length() != 7) {
             throw new IllegalArgumentException(
                     "Argument given not of form #ffffff :" + hex);
         }
 
-        char redChar1 = hex.charAt(1);
-        char redChar2 = hex.charAt(2);
-        this.red = 16 * hexToInt(redChar1) + hexToInt(redChar2);
-
-        char greenChar1 = hex.charAt(3);
-        char greenChar2 = hex.charAt(4);
-        this.green = 16 * hexToInt(greenChar1) + hexToInt(greenChar2);
-
-        char blueChar1 = hex.charAt(5);
-        char blueChar2 = hex.charAt(6);
-        this.blue = 16 * hexToInt(blueChar1) + hexToInt(blueChar2);
+        try {
+            this.alpha = 1.0;
+            this.red = Integer.parseInt(hex.substring(1, 3), 16);
+            this.green = Integer.parseInt(hex.substring(3, 5), 16);
+            this.blue = Integer.parseInt(hex.substring(5, 7), 16);
+        } catch (NumberFormatException ex) {
+            throw new IllegalArgumentException(
+                    "Argument given not of form #ffffff :" + hex);
+        }
     }
 
     public Color alpha(double alpha) {
@@ -86,23 +87,6 @@ public class Color {
 
     public int getRed() {
         return red;
-    }
-
-    // credit to
-    // http://introcs.cs.princeton.edu/31datatype/Hex2Decimal.java.html
-    // for neat solution
-    private int hexToInt(char hex) {
-        hex = Character.toLowerCase(hex);
-
-        String digits = "0123456789abcdef";
-
-        for (int i = 0; i < digits.length(); i++) {
-            if (digits.charAt(i) == hex) {
-                return i;
-            }
-        }
-        throw new IllegalArgumentException(
-                "Argument provided must be a valid hex digit : " + hex);
     }
 
     public Color opaque() {
