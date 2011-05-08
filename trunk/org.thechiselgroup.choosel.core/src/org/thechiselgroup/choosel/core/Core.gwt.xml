@@ -40,5 +40,6 @@
   <inherits name='org.adamtacy.GWTEffects' /> 
   
   <source path='client'/>
+  <source path='shared'/>
   
 </module>
