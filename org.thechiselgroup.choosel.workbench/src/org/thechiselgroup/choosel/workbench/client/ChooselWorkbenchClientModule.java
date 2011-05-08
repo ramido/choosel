@@ -85,8 +85,7 @@ import org.thechiselgroup.choosel.workbench.client.ui.messages.MessageBlockingCo
 import org.thechiselgroup.choosel.workbench.client.ui.messages.MessageManager;
 import org.thechiselgroup.choosel.workbench.client.ui.messages.ShadeMessageManager;
 import org.thechiselgroup.choosel.workbench.client.util.FlashURLFetchService;
-import org.thechiselgroup.choosel.workbench.client.util.xslt.DocumentProcessor;
-import org.thechiselgroup.choosel.workbench.client.util.xslt.SarissaDocumentProcessor;
+import org.thechiselgroup.choosel.workbench.client.util.xml.SarissaDocumentProcessor;
 import org.thechiselgroup.choosel.workbench.client.workspace.DefaultShareConfigurationFactory;
 import org.thechiselgroup.choosel.workbench.client.workspace.DefaultViewLoadManager;
 import org.thechiselgroup.choosel.workbench.client.workspace.DefaultViewLoader;
@@ -104,6 +103,7 @@ import org.thechiselgroup.choosel.workbench.client.workspace.WorkspacePersistenc
 import org.thechiselgroup.choosel.workbench.client.workspace.WorkspacePresenter;
 import org.thechiselgroup.choosel.workbench.client.workspace.command.ConfigureSharedViewsDialogCommand;
 import org.thechiselgroup.choosel.workbench.client.workspace.command.LoadWorkspaceDialogCommand;
+import org.thechiselgroup.choosel.workbench.shared.util.xml.DocumentProcessor;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.inject.client.AbstractGinModule;

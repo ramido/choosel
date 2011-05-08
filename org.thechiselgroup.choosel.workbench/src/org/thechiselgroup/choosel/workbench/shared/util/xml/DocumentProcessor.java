@@ -13,13 +13,20 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.workbench.client.util.xslt;
+package org.thechiselgroup.choosel.workbench.shared.util.xml;
 
+/**
+ * Enables XPath operations on XML document independent from implementation
+ * (Standard Java, Sarissa (in GWT client)).
+ * 
+ * @author Lars Grammel
+ */
 public interface DocumentProcessor {
 
-    Object[] getNodes(Object node, String xpath);
+    Object[] getNodes(Object node, String xpath)
+            throws XPathEvaluationException;
 
-    String getText(Object node, String xpath) throws NoSuchNodeException;
+    String getText(Object node, String xpath) throws XPathEvaluationException;
 
     Object parseDocument(String xmlText) throws Exception;
 

@@ -48,5 +48,6 @@
   <script src="js/lib/sarissa-0.9.9.4/sarissa_ieemu_xpath-compressed.js"/>
 
   <source path='client'/>
+  <source path='shared'/>
 
 </module>

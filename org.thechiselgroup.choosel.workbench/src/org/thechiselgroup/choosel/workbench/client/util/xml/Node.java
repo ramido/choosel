@@ -16,7 +16,7 @@
 /**
  * Created on Sep 1, 2006
  */
-package org.thechiselgroup.choosel.workbench.client.util.xslt;
+package org.thechiselgroup.choosel.workbench.client.util.xml;
 
 import java.util.List;
 
@@ -36,18 +36,18 @@ public class Node {
 
     // @formatter:off
     native List<Node> getNodes(String xpathExpression, List<Node> result) /*-{
-        var nativeNode = this.@org.thechiselgroup.choosel.workbench.client.util.xslt.Node::nativeNode;
+        var nativeNode = this.@org.thechiselgroup.choosel.workbench.client.util.xml.Node::nativeNode;
 
         var nodes = nativeNode.selectNodes(xpathExpression);
         for (var i = 0; i < nodes.length; i++) {
-            result.@java.util.List::add(Ljava/lang/Object;)( @org.thechiselgroup.choosel.workbench.client.util.xslt.Node::create(Lcom/google/gwt/core/client/JavaScriptObject;)(nodes[i]));
+            result.@java.util.List::add(Ljava/lang/Object;)( @org.thechiselgroup.choosel.workbench.client.util.xml.Node::create(Lcom/google/gwt/core/client/JavaScriptObject;)(nodes[i]));
         }
 
         return result;
     }-*/;
 
     native String getValue() /*-{
-        var node = this.@org.thechiselgroup.choosel.workbench.client.util.xslt.Node::nativeNode;
+        var node = this.@org.thechiselgroup.choosel.workbench.client.util.xml.Node::nativeNode;
         if ( !node ) {
             return null;
         } else if ( node.childNodes.length == 1 ) {
