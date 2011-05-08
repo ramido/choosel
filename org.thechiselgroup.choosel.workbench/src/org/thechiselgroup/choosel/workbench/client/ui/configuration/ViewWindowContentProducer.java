@@ -147,7 +147,7 @@ public class ViewWindowContentProducer implements WindowContentProducer {
         return CollectionFactory.createLightweightList();
     }
 
-    protected DefaultVisualMappingsControl createVisualMappingsControl(
+    protected VisualMappingsControl createVisualMappingsControl(
             String contentType, ViewContentDisplay contentDisplay,
             SlotMappingConfiguration configuration, ViewModel viewModel) {
 
@@ -196,8 +196,8 @@ public class ViewWindowContentProducer implements WindowContentProducer {
         // ViewInteractionLogger(Logger.getLogger("")));
         viewItemBehaviors.add(new HighlightingViewItemBehavior(hoverModel));
         viewItemBehaviors.add(new DragViewItemBehavior(dragEnablerFactory));
-        viewItemBehaviors.add(new PopupWithHighlightingViewItemBehavior(detailsWidgetHelper,
-                popupManagerFactory, hoverModel));
+        viewItemBehaviors.add(new PopupWithHighlightingViewItemBehavior(
+                detailsWidgetHelper, popupManagerFactory, hoverModel));
         viewItemBehaviors.add(new SwitchSelectionOnClickViewItemBehavior(
                 selectionModel));
 
@@ -218,6 +218,7 @@ public class ViewWindowContentProducer implements WindowContentProducer {
         final VisualMappingsControl visualMappingsControl = createVisualMappingsControl(
                 contentType, contentDisplay, slotMappingConfiguration,
                 viewModel);
+        assert visualMappingsControl != null : "createVisualMappingsControl must not return null";
 
         LightweightList<ViewPart> viewParts = createViewParts(contentType);
 
