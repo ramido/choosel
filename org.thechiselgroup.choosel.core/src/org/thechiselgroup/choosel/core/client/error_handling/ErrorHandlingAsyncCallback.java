@@ -27,12 +27,20 @@ public class ErrorHandlingAsyncCallback<T> implements AsyncCallback<T> {
     }
 
     @Override
-    public void onFailure(Throwable caught) {
+    public final void onFailure(Throwable caught) {
         errorHandler.handleError(caught);
     }
 
     @Override
-    public void onSuccess(T result) {
+    public final void onSuccess(T result) {
+        try {
+            runOnSuccess(result);
+        } catch (Exception e) {
+            onFailure(e);
+        }
+    }
+
+    protected void runOnSuccess(T result) throws Exception {
         // hook method
     }
 
