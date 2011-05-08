@@ -20,6 +20,24 @@ public class Color {
 
     public final static Color TRANSPARENT = new Color(255, 255, 255, 0.0);
 
+    /**
+     * Checks if value is between 0 and 255.
+     */
+    private static boolean isValidRgbComponentValue(int value) {
+        return value >= 0 && value <= 255;
+    }
+
+    private static int parseRgbComponentValueFromHex(String hex,
+            int beginIndex, int endIndex) {
+
+        int value = Integer.parseInt(hex.substring(beginIndex, endIndex), 16);
+        if (!isValidRgbComponentValue(value)) {
+            throw new IllegalArgumentException(
+                    "Argument given not of form #ffffff :" + hex);
+        }
+        return value;
+    }
+
     private int red;
 
     private int green;
@@ -33,9 +51,9 @@ public class Color {
     }
 
     public Color(int red, int green, int blue, double alpha) {
-        assert red >= 0 && red <= 255;
-        assert green >= 0 && red <= 255;
-        assert blue >= 0 && red <= 255;
+        assert isValidRgbComponentValue(red);
+        assert isValidRgbComponentValue(green);
+        assert isValidRgbComponentValue(blue);
         assert alpha >= 0 && alpha <= 1;
 
         this.red = red;
@@ -58,9 +76,9 @@ public class Color {
 
         try {
             this.alpha = 1.0;
-            this.red = Integer.parseInt(hex.substring(1, 3), 16);
-            this.green = Integer.parseInt(hex.substring(3, 5), 16);
-            this.blue = Integer.parseInt(hex.substring(5, 7), 16);
+            this.red = parseRgbComponentValueFromHex(hex, 1, 3);
+            this.green = parseRgbComponentValueFromHex(hex, 3, 5);
+            this.blue = parseRgbComponentValueFromHex(hex, 5, 7);
         } catch (NumberFormatException ex) {
             throw new IllegalArgumentException(
                     "Argument given not of form #ffffff :" + hex);

@@ -63,13 +63,19 @@ public class ColorTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void invalidInput() {
+    public void invalidHex00_000() {
         new Color("00-000");
         fail("Should have thrown IllegalArgumentException: hex contains invalid character");
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void outOfRange() {
+    public void invalidHex00_500() {
+        new Color("#00-500");
+        fail("Should have thrown IllegalArgumentException: hex contains invalid character");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void invalidHex00g000() {
         new Color("#00g000");
         fail("Should have thrown IllegalArgumentException: hex contains invalid character");
     }
