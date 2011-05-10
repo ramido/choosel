@@ -41,6 +41,8 @@ public class ResourceGroupingChangedEvent extends
      */
     private final Map<String, LightweightList<ResourceGroupingChange>> changesByDeltaType;
 
+    // TODO should be: (changes, uncategorizedChange), uncategorizedChange is
+    // never null (but added + removed resources can be empty)
     public ResourceGroupingChangedEvent(
             LightweightList<ResourceGroupingChange> changes) {
 
