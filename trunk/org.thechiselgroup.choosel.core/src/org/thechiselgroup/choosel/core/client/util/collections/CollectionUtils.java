@@ -23,6 +23,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.thechiselgroup.choosel.core.client.resources.Resource;
+
 public final class CollectionUtils {
 
     public static <T> boolean containsNone(Collection<T> container,
@@ -67,6 +69,10 @@ public final class CollectionUtils {
             result.append(delimeter).append(iterator.next());
         }
         return result.toString();
+    }
+
+    public static boolean intersect(List<Resource> list1, List<Resource> list2) {
+        return !(containsNone(list2, list1) && containsNone(list1, list2));
     }
 
     /**
