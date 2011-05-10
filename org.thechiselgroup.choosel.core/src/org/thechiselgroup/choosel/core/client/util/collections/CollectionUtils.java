@@ -71,8 +71,21 @@ public final class CollectionUtils {
         return result.toString();
     }
 
-    public static boolean intersect(List<Resource> list1, List<Resource> list2) {
-        return !(containsNone(list2, list1) && containsNone(list1, list2));
+    public static boolean hasIntersect(Collection<Resource> list1,
+            Collection<Resource> list2) {
+        return CollectionUtils.intersect(list1, list2).size() == 0;
+    }
+
+    /**
+     * returns a new list which contains the intersection of list1 and list2
+     */
+    public static Collection<Resource> intersect(Collection<Resource> list1,
+            Collection<Resource> list2) {
+
+        Collection<Resource> intersection = new ArrayList<Resource>(list1);
+
+        intersection.retainAll(list2);
+        return intersection;
     }
 
     /**
