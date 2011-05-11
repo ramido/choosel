@@ -25,6 +25,7 @@ import java.util.Set;
 
 public final class CollectionUtils {
 
+    // TODO unify with intersects
     public static <T> boolean containsNone(Collection<T> container,
             Collection<T> other) {
 
@@ -80,6 +81,7 @@ public final class CollectionUtils {
         return intersection;
     }
 
+    // TODO unify with containsNone
     public static <T> boolean intersects(Collection<T> collection1,
             Collection<T> collection2) {
 
