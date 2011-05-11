@@ -83,7 +83,7 @@ public final class CollectionUtils {
     public static <T> boolean intersects(Collection<T> collection1,
             Collection<T> collection2) {
 
-        return CollectionUtils.getIntersection(collection1, collection2)
+        return !CollectionUtils.getIntersection(collection1, collection2)
                 .isEmpty();
     }
 
