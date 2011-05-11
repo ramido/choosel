@@ -23,8 +23,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.thechiselgroup.choosel.core.client.resources.Resource;
-
 public final class CollectionUtils {
 
     public static <T> boolean containsNone(Collection<T> container,
@@ -71,21 +69,22 @@ public final class CollectionUtils {
         return result.toString();
     }
 
-    public static boolean hasIntersect(Collection<Resource> list1,
-            Collection<Resource> list2) {
-        return CollectionUtils.intersect(list1, list2).size() == 0;
+    /**
+     * @return intersection of {@code collection1} and {@code collection2}.
+     */
+    public static <T> Collection<T> getIntersection(Collection<T> collection1,
+            Collection<T> collection2) {
+
+        Collection<T> intersection = new ArrayList<T>(collection1);
+        intersection.retainAll(collection2);
+        return intersection;
     }
 
-    /**
-     * returns a new list which contains the intersection of list1 and list2
-     */
-    public static Collection<Resource> intersect(Collection<Resource> list1,
-            Collection<Resource> list2) {
+    public static <T> boolean intersects(Collection<T> collection1,
+            Collection<T> collection2) {
 
-        Collection<Resource> intersection = new ArrayList<Resource>(list1);
-
-        intersection.retainAll(list2);
-        return intersection;
+        return CollectionUtils.getIntersection(collection1, collection2)
+                .isEmpty();
     }
 
     /**
