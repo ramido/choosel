@@ -59,8 +59,10 @@ public class ResourceGroupingChange {
         assert removedResources == null
                 || CollectionUtils.containsNone(resourceSet.toList(),
                         CollectionUtils.toList(removedResources));
-        assert !CollectionUtils.intersects(removedResources.toList(),
-                addedResources.toList());
+        assert removedResources == null
+                || addedResources == null
+                || !CollectionUtils.intersects(removedResources.toList(),
+                        addedResources.toList());
 
         return new ResourceGroupingChange(Delta.GROUP_CHANGED, groupID,
                 resourceSet,
