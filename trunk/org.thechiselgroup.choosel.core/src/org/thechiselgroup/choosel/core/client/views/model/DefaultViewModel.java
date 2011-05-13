@@ -24,8 +24,8 @@ import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.IntersectionResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
-import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChange;
-import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChange.Delta;
+import org.thechiselgroup.choosel.core.client.resources.CategorizableResourceGroupingChange;
+import org.thechiselgroup.choosel.core.client.resources.CategorizableResourceGroupingChange.Delta;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChangedEvent;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChangedHandler;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
@@ -83,10 +83,6 @@ public class DefaultViewModel implements ViewModel, Disposable,
     private ResourceSet highlightedResources;
 
     private SlotMappingInitializer slotMappingInitializer;
-
-    public SlotMappingInitializer getSlotMappingInitializer() {
-        return slotMappingInitializer;
-    }
 
     private IntersectionResourceSet highlightedResourcesIntersection;
 
@@ -237,6 +233,10 @@ public class DefaultViewModel implements ViewModel, Disposable,
         return slotMappingConfiguration;
     }
 
+    public SlotMappingInitializer getSlotMappingInitializer() {
+        return slotMappingInitializer;
+    }
+
     @Override
     public String getSlotResolverDescription(Slot slot) {
         if (!slotMappingConfiguration.containsResolver(slot)) {
@@ -378,7 +378,7 @@ public class DefaultViewModel implements ViewModel, Disposable,
      * Processes the added resource groups when the grouping changes.
      */
     private LightweightCollection<ViewItem> processAddChanges(
-            LightweightList<ResourceGroupingChange> changes) {
+            LightweightList<CategorizableResourceGroupingChange> changes) {
 
         if (changes.isEmpty()) {
             return LightweightCollections.emptyCollection();
@@ -400,7 +400,7 @@ public class DefaultViewModel implements ViewModel, Disposable,
         LightweightList<Resource> selectedResources = getContentResourceSet()
                 .getIntersection(this.selectedResources);
 
-        for (ResourceGroupingChange change : changes) {
+        for (CategorizableResourceGroupingChange change : changes) {
             assert change.getDelta() == Delta.GROUP_CREATED;
 
             addedViewItems.add(createViewItem(change.getGroupID(),
@@ -412,7 +412,7 @@ public class DefaultViewModel implements ViewModel, Disposable,
     }
 
     private LightweightCollection<ViewItem> processRemoveChanges(
-            LightweightList<ResourceGroupingChange> changes) {
+            LightweightList<CategorizableResourceGroupingChange> changes) {
 
         if (changes.isEmpty()) {
             return LightweightCollections.emptyCollection();
@@ -420,7 +420,7 @@ public class DefaultViewModel implements ViewModel, Disposable,
 
         LightweightList<ViewItem> removedViewItems = CollectionFactory
                 .createLightweightList();
-        for (ResourceGroupingChange change : changes) {
+        for (CategorizableResourceGroupingChange change : changes) {
             assert change.getDelta() == Delta.GROUP_REMOVED;
 
             // XXX dispose should be done after method call...
@@ -430,7 +430,7 @@ public class DefaultViewModel implements ViewModel, Disposable,
     }
 
     private LightweightCollection<ViewItem> processUpdates(
-            LightweightList<ResourceGroupingChange> changes) {
+            LightweightList<CategorizableResourceGroupingChange> changes) {
 
         if (changes.isEmpty()) {
             return LightweightCollections.emptyCollection();
@@ -438,7 +438,7 @@ public class DefaultViewModel implements ViewModel, Disposable,
 
         LightweightList<ViewItem> updatedViewItems = CollectionFactory
                 .createLightweightList();
-        for (ResourceGroupingChange change : changes) {
+        for (CategorizableResourceGroupingChange change : changes) {
             assert change.getDelta() == Delta.GROUP_CHANGED;
             DefaultViewItem viewItem = viewItemsByGroupId.get(change
                     .getGroupID());

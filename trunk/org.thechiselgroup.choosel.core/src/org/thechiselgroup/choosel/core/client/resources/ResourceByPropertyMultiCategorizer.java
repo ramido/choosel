@@ -29,6 +29,12 @@ public class ResourceByPropertyMultiCategorizer implements
     }
 
     @Override
+    public boolean canCategorize(Resource resource) {
+        Object value = resource.getValue(property);
+        return value != null && value instanceof String;
+    }
+
+    @Override
     public Set<String> getCategories(Resource resource) {
         return CollectionUtils.toSet((String) resource.getValue(property));
     }

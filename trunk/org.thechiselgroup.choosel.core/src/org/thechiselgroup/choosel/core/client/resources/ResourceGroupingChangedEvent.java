@@ -17,7 +17,7 @@ package org.thechiselgroup.choosel.core.client.resources;
 
 import java.util.Map;
 
-import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChange.Delta;
+import org.thechiselgroup.choosel.core.client.resources.CategorizableResourceGroupingChange.Delta;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 
@@ -34,30 +34,39 @@ public class ResourceGroupingChangedEvent extends
      * a client class before similar elements are removed, this can cause
      * errors, and the unordered nature of sets allows for these errors.
      */
-    private final LightweightList<ResourceGroupingChange> changes;
+    private final LightweightList<CategorizableResourceGroupingChange> changes;
 
     /**
      * Alternatively, the changes can be retrieved based on their type.
      */
-    private final Map<String, LightweightList<ResourceGroupingChange>> changesByDeltaType;
+    private final Map<String, LightweightList<CategorizableResourceGroupingChange>> changesByDeltaType;
 
-    // TODO should be: (changes, uncategorizedChange), uncategorizedChange is
-    // never null (but added + removed resources can be empty)
+    private final UncategorizableResourceGroupingChange uncategorizableChanges;
+
     public ResourceGroupingChangedEvent(
-            LightweightList<ResourceGroupingChange> changes) {
+            LightweightList<CategorizableResourceGroupingChange> changes,
+            UncategorizableResourceGroupingChange uncategorizableChanges) {
 
-        assert changes != null;
-        assert !changes.isEmpty();
+        // either categorizableChanges or uncategorizable changes need to have
+        // occured
+        assert hasActualChanges(changes, uncategorizableChanges);
 
         this.changes = changes;
-
         this.changesByDeltaType = CollectionFactory.createStringMap();
+
+        this.uncategorizableChanges = uncategorizableChanges;
+
         for (Delta deltaType : Delta.values()) {
-            changesByDeltaType.put(deltaType.name(), CollectionFactory
-                    .<ResourceGroupingChange> createLightweightList());
+            changesByDeltaType
+                    .put(deltaType.name(),
+                            CollectionFactory
+                                    .<CategorizableResourceGroupingChange> createLightweightList());
         }
-        for (ResourceGroupingChange change : changes) {
-            changesByDeltaType.get(change.getDelta().name()).add(change);
+        // only try this if there are actually changes
+        if (changes != null && !changes.isEmpty()) {
+            for (CategorizableResourceGroupingChange change : changes) {
+                changesByDeltaType.get(change.getDelta().name()).add(change);
+            }
         }
     }
 
@@ -71,15 +80,27 @@ public class ResourceGroupingChangedEvent extends
         return TYPE;
     }
 
-    public LightweightList<ResourceGroupingChange> getChanges() {
+    public LightweightList<CategorizableResourceGroupingChange> getChanges() {
         return changes;
     }
 
     /**
      * Return the changes for the given {@link Delta}.
      */
-    public LightweightList<ResourceGroupingChange> getChanges(Delta deltaType) {
+    public LightweightList<CategorizableResourceGroupingChange> getChanges(
+            Delta deltaType) {
         return changesByDeltaType.get(deltaType.name());
+    }
+
+    public UncategorizableResourceGroupingChange getUncategorizableResourceChanges() {
+        return uncategorizableChanges;
+    }
+
+    public boolean hasActualChanges(
+            LightweightList<CategorizableResourceGroupingChange> changes,
+            UncategorizableResourceGroupingChange uncategorizableChanges) {
+        return (changes != null && !changes.isEmpty())
+                || uncategorizableChanges.hasActualChanges();
     }
 
 }

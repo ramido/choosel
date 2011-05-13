@@ -21,6 +21,12 @@ import org.thechiselgroup.choosel.core.client.util.collections.CollectionUtils;
 
 public class ResourceByUriMultiCategorizer implements ResourceMultiCategorizer {
 
+    // Note: the uri should never be null
+    @Override
+    public boolean canCategorize(Resource resource) {
+        return resource.getUri() != null;
+    }
+
     @Override
     public Set<String> getCategories(Resource resource) {
         return CollectionUtils.toSet(resource.getUri());
