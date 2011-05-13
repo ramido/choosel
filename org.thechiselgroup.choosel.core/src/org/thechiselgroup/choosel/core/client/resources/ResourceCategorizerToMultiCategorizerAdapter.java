@@ -29,6 +29,12 @@ public class ResourceCategorizerToMultiCategorizerAdapter implements
     }
 
     @Override
+    public boolean canCategorize(Resource resource) {
+        // TODO this still needs to be implemented
+        return true;
+    }
+
+    @Override
     public Set<String> getCategories(Resource resource) {
         Set<String> categories = new HashSet<String>();
         categories.add(categorizer.getCategory(resource));

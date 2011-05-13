@@ -40,6 +40,19 @@ import com.google.inject.Inject;
 public class ResourceGrouping implements HasResourceCategorizer,
         ContainsSingleResourceSet, Disposable {
 
+    private static class ResourcesCategorization {
+        public Map<String, LightweightList<Resource>> resourceMapping;
+
+        public LightweightList<Resource> uncategorizableResources;
+
+        public ResourcesCategorization(
+                Map<String, LightweightList<Resource>> categorizedResourceMapping,
+                LightweightList<Resource> uncategorizedResources) {
+            this.resourceMapping = categorizedResourceMapping;
+            this.uncategorizableResources = uncategorizedResources;
+        }
+    }
+
     private Map<String, ResourceSet> groupedResources = CollectionFactory
             .createStringMap();
 
@@ -51,6 +64,8 @@ public class ResourceGrouping implements HasResourceCategorizer,
 
     private ProxyResourceSet allResources = new ProxyResourceSet();
 
+    private ResourceSet uncategorizableResources;
+
     private Map<String, Set<String>> resourceIdToGroups = CollectionFactory
             .createStringMap();
 
@@ -60,6 +75,7 @@ public class ResourceGrouping implements HasResourceCategorizer,
 
         this.multiCategorizer = multiCategorizer;
         this.resourceSetFactory = resourceSetFactory;
+        this.uncategorizableResources = resourceSetFactory.createResourceSet();
 
         eventBus = new HandlerManager(this);
 
@@ -100,33 +116,40 @@ public class ResourceGrouping implements HasResourceCategorizer,
 
     private void addResourcesToGroup(String group,
             LightweightList<Resource> addedResources,
-            LightweightList<ResourceGroupingChange> changes) {
+            LightweightList<CategorizableResourceGroupingChange> changes) {
 
         assert group != null;
         assert addedResources != null;
         assert changes != null;
 
-        if (groupedResources.containsKey(group)) {
+        if (containsGroup(group)) {
             ResourceSet groupResources = groupedResources.get(group);
             groupResources.addAll(addedResources);
 
-            changes.add(ResourceGroupingChange.newGroupChangedDelta(group,
-                    groupResources, addedResources, null));
+            changes.add(CategorizableResourceGroupingChange
+                    .newGroupChangedDelta(group, groupResources,
+                            addedResources, null));
         } else {
             ResourceSet groupResources = resourceSetFactory.createResourceSet();
             groupResources.addAll(addedResources);
 
             groupedResources.put(group, groupResources);
 
-            changes.add(ResourceGroupingChange.newGroupCreatedDelta(group,
-                    groupResources, addedResources));
+            changes.add(CategorizableResourceGroupingChange
+                    .newGroupCreatedDelta(group, groupResources, addedResources));
         }
     }
 
     private void addResourcesToGrouping(Iterable<Resource> resources,
-            LightweightList<ResourceGroupingChange> changes) {
+            LightweightList<CategorizableResourceGroupingChange> changes,
+            LightweightList<Resource> uncategorizableResources) {
 
-        Map<String, LightweightList<Resource>> resourcesPerCategory = categorize(resources);
+        ResourcesCategorization categorization = categorize(resources);
+        Map<String, LightweightList<Resource>> resourcesPerCategory = categorization.resourceMapping;
+        uncategorizableResources.addAll(categorization.uncategorizableResources);
+
+        this.uncategorizableResources.addAll(uncategorizableResources);
+
         for (Map.Entry<String, LightweightList<Resource>> entry : resourcesPerCategory
                 .entrySet()) {
 
@@ -138,28 +161,35 @@ public class ResourceGrouping implements HasResourceCategorizer,
         }
     }
 
-    private Map<String, LightweightList<Resource>> categorize(
-            Iterable<Resource> resources) {
+    private ResourcesCategorization categorize(Iterable<Resource> resources) {
 
         Map<String, LightweightList<Resource>> resourcesPerCategory = CollectionFactory
                 .createStringMap();
 
+        LightweightList<Resource> uncategorizableResources = CollectionFactory
+                .createLightweightList();
+
         for (Resource resource : resources) {
-            for (String category : multiCategorizer.getCategories(resource)) {
-                assert category != null : "category must not be null";
+            if (!multiCategorizer.canCategorize(resource)) {
+                uncategorizableResources.add(resource);
+                continue;
+            }
+
+            Set<String> categories = multiCategorizer.getCategories(resource);
+            for (String category : categories) {
+                assert category != null;
 
                 if (!resourcesPerCategory.containsKey(category)) {
                     resourcesPerCategory.put(category, CollectionFactory
                             .<Resource> createLightweightList());
                 }
-
                 resourcesPerCategory.get(category).add(resource);
             }
         }
-        return resourcesPerCategory;
+        return new ResourcesCategorization(resourcesPerCategory,
+                uncategorizableResources);
     }
 
-    // TODO test with change to both added and removed resources
     protected void change(LightweightCollection<Resource> addedResources,
             LightweightCollection<Resource> removedResources) {
 
@@ -169,26 +199,49 @@ public class ResourceGrouping implements HasResourceCategorizer,
         assert CollectionUtils.containsNone(allResources.toList(),
                 removedResources.toList());
 
-        LightweightList<ResourceGroupingChange> changes = CollectionFactory
+        LightweightList<CategorizableResourceGroupingChange> changes = CollectionFactory
                 .createLightweightList();
 
-        removeResourcesFromGrouping(removedResources, changes);
-        addResourcesToGrouping(addedResources, changes);
+        LightweightList<Resource> addedUncategorizableResources = CollectionFactory
+                .createLightweightList();
+        LightweightList<Resource> removedUncategorizableResources = CollectionFactory
+                .createLightweightList();
 
-        fireChanges(changes);
+        removeResourcesFromGrouping(removedResources, changes,
+                removedUncategorizableResources);
+        addResourcesToGrouping(addedResources, changes,
+                addedUncategorizableResources);
+
+        UncategorizableResourceGroupingChange uncategorizableResourceChange = UncategorizableResourceGroupingChange
+                .uncategorizedResourceChange(uncategorizableResources,
+                        addedUncategorizableResources,
+                        removedUncategorizableResources);
+
+        fireChanges(changes, uncategorizableResourceChange);
     }
 
     /**
      * Clears the internal grouping structure. The grouping should be
      * recalculated after clearing to maintain a consistent state.
      */
-    private void clearGrouping(LightweightList<ResourceGroupingChange> changes) {
+    private void clearGrouping(
+            LightweightList<CategorizableResourceGroupingChange> changes,
+            LightweightList<Resource> removedResources) {
         for (Entry<String, ResourceSet> entry : groupedResources.entrySet()) {
-            changes.add(ResourceGroupingChange.newGroupRemovedDelta(
-                    entry.getKey(), entry.getValue(), entry.getValue()));
+            changes.add(CategorizableResourceGroupingChange
+                    .newGroupRemovedDelta(entry.getKey(), entry.getValue(),
+                            entry.getValue()));
         }
+        // add the resources being cleared from the set to the
+        removedResources.addAll(uncategorizableResources);
+
+        uncategorizableResources.clear();
         groupedResources.clear();
         resourceIdToGroups.clear();
+    }
+
+    public boolean containsGroup(String groupId) {
+        return groupedResources.containsKey(groupId);
     }
 
     @Override
@@ -197,9 +250,14 @@ public class ResourceGrouping implements HasResourceCategorizer,
         allResources = null;
     }
 
-    private void fireChanges(LightweightList<ResourceGroupingChange> changes) {
-        if (!changes.isEmpty()) {
-            eventBus.fireEvent(new ResourceGroupingChangedEvent(changes));
+    private void fireChanges(
+            LightweightList<CategorizableResourceGroupingChange> changes,
+            UncategorizableResourceGroupingChange uncategorizableChanges) {
+
+        if (!changes.isEmpty() || uncategorizableChanges.hasActualChanges()) {
+
+            eventBus.fireEvent(new ResourceGroupingChangedEvent(changes,
+                    uncategorizableChanges));
         }
     }
 
@@ -233,9 +291,18 @@ public class ResourceGrouping implements HasResourceCategorizer,
         return result;
     }
 
+    public ResourceSet getGroupSet(String groupId) {
+        assert containsGroup(groupId);
+        return groupedResources.get(groupId);
+    }
+
     @Override
     public ResourceSet getResourceSet() {
         return allResources.getResourceSet();
+    }
+
+    public ResourceSet getUncategorizableResources() {
+        return uncategorizableResources;
     }
 
     /**
@@ -258,7 +325,7 @@ public class ResourceGrouping implements HasResourceCategorizer,
 
     private void removeResourcesFromGroup(String group,
             LightweightList<Resource> removedResources,
-            LightweightList<ResourceGroupingChange> changes) {
+            LightweightList<CategorizableResourceGroupingChange> changes) {
 
         ResourceSet groupResources = groupedResources.get(group);
 
@@ -266,19 +333,27 @@ public class ResourceGrouping implements HasResourceCategorizer,
                 && groupResources.containsAll(removedResources)) {
 
             groupedResources.remove(group);
-            changes.add(ResourceGroupingChange.newGroupRemovedDelta(group,
-                    groupResources, removedResources));
+            changes.add(CategorizableResourceGroupingChange
+                    .newGroupRemovedDelta(group, groupResources,
+                            removedResources));
         } else {
             groupResources.removeAll(removedResources);
-            changes.add(ResourceGroupingChange.newGroupChangedDelta(group,
-                    groupResources, null, removedResources));
+            changes.add(CategorizableResourceGroupingChange
+                    .newGroupChangedDelta(group, groupResources, null,
+                            removedResources));
         }
     }
 
     private void removeResourcesFromGrouping(Iterable<Resource> resources,
-            LightweightList<ResourceGroupingChange> changes) {
+            LightweightList<CategorizableResourceGroupingChange> changes,
+            LightweightList<Resource> uncategorizableResources) {
 
-        Map<String, LightweightList<Resource>> resourcesPerCategory = categorize(resources);
+        ResourcesCategorization categorization = categorize(resources);
+        Map<String, LightweightList<Resource>> resourcesPerCategory = categorization.resourceMapping;
+        uncategorizableResources.addAll(categorization.uncategorizableResources);
+        
+        this.uncategorizableResources.removeAll(uncategorizableResources);
+
         for (Map.Entry<String, LightweightList<Resource>> entry : resourcesPerCategory
                 .entrySet()) {
 
@@ -295,6 +370,9 @@ public class ResourceGrouping implements HasResourceCategorizer,
      * whole grouping to be recalculated and triggers an event containining the
      * resulting changes.
      */
+    // TODO is there a bug here in that resources could get removed and then
+    // regrouped to where they were before
+    // thus having them in added and removed sets of a change at the same time
     @Override
     public void setCategorizer(ResourceMultiCategorizer newCategorizer) {
         assert newCategorizer != null;
@@ -305,11 +383,25 @@ public class ResourceGrouping implements HasResourceCategorizer,
 
         multiCategorizer = newCategorizer;
 
-        LightweightList<ResourceGroupingChange> changes = CollectionFactory
+        LightweightList<CategorizableResourceGroupingChange> changes = CollectionFactory
                 .createLightweightList();
-        clearGrouping(changes);
-        addResourcesToGrouping(allResources, changes);
-        fireChanges(changes);
+        LightweightList<Resource> addedUncategorizableResources = CollectionFactory
+                .createLightweightList();
+        LightweightList<Resource> removedUncategorizableResources = CollectionFactory
+                .createLightweightList();
+        clearGrouping(changes, removedUncategorizableResources);
+        addResourcesToGrouping(allResources, changes,
+                addedUncategorizableResources);
+
+        // TODO do some sort of calculation so that I can remove all of the
+        // wrongly removed and added resources
+
+        UncategorizableResourceGroupingChange uncategorizableChanges = UncategorizableResourceGroupingChange
+                .uncategorizedResourceChange(uncategorizableResources,
+                        addedUncategorizableResources,
+                        removedUncategorizableResources);
+
+        fireChanges(changes, uncategorizableChanges);
     }
 
     @Override

@@ -23,6 +23,8 @@ import java.util.Set;
  */
 public interface ResourceMultiCategorizer {
 
+    boolean canCategorize(Resource resource);
+
     /**
      * @return set of category identifiers. Must *not* include <code>null</code>
      *         .
