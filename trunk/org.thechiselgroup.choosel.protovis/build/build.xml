@@ -32,25 +32,29 @@
       </fileset>
     </zip> 
   </target>	
+
+  <target name="create-jar">
+	<jar destfile="${dist}/ProtovisGWT-${version}.jar">
+	      <fileset dir="${src}">
+	      	<exclude name="org/thechiselgroup/choosel/protovis/public/protovis-3.2/examples/**" />
+	      	<exclude name="org/thechiselgroup/choosel/protovis/public/protovis-3.2/jsdoc/**" />
+	      </fileset>
+	      <fileset dir="${class-dir}">
+	    	<include name="**/*.class"/>
+	      </fileset>
+	      <metainf dir=""> 
+	    	<include name="LICENSE"/>
+	    	<include name="LICENSE-PROTOVIS"/>
+	    	<include name="NOTICE"/>
+	      </metainf>
+	    </jar> 
+  	</target>
 	
   <target name="create-release-jar"
   	      description="creates the module jar file"
   	      depends="prepare">
   	
-    <jar destfile="${dist}/ProtovisGWT-${version}.jar">
-      <fileset dir="${src}">
-      	<exclude name="org/thechiselgroup/choosel/protovis/public/protovis-3.2/examples/**" />
-      	<exclude name="org/thechiselgroup/choosel/protovis/public/protovis-3.2/jsdoc/**" />
-      </fileset>
-      <fileset dir="${class-dir}">
-    	<include name="**/*.class"/>
-      </fileset>
-      <metainf dir=""> 
-    	<include name="LICENSE"/>
-    	<include name="LICENSE-PROTOVIS"/>
-    	<include name="NOTICE"/>
-      </metainf>
-    </jar> 
+   <antcall target="create-jar"/>
   </target>
 	
   <target name="clean" description="clean automatically created resources">
