@@ -28,6 +28,12 @@ public class UriList implements Serializable, Iterable<String> {
 
     private boolean isLoaded;
 
+    public UriList(String... uris) {
+        for (String uri : uris) {
+            add(uri);
+        }
+    }
+
     public void add(String uri) {
         assert uri != null;
 
