@@ -25,6 +25,7 @@ import org.thechiselgroup.choosel.visualization_component.graph.client.widget.Gr
 // TODO better separation of concern - introduce factories for the expanders
 // TODO use resource items instead of single resources
 // TODO split up interface
+// TODO rename
 public interface GraphNodeExpansionCallback {
 
     void addAutomaticResource(Resource resource);
@@ -39,13 +40,23 @@ public interface GraphNodeExpansionCallback {
 
     Resource getResourceByUri(String value);
 
-    LightweightCollection<ViewItem> getResourceItems(
-            Iterable<Resource> resources);
-
+    // XXX remove --> should be injected if needed
     ResourceManager getResourceManager();
+
+    LightweightCollection<ViewItem> getViewItems(Iterable<Resource> resources);
 
     boolean isRestoring();
 
-    void updateArcsForViewItems(LightweightCollection<ViewItem> resourceItems);
+    /**
+     * Updates the arcs of all view items that contain any of the resources.
+     */
+    void updateArcsForResources(Iterable<Resource> resources);
+
+    /**
+     * Updates the arc items and arcs for the given view items. The view items
+     * must already be contained in the view content display (i.e. they have
+     * been added already and their nodes must be visible).
+     */
+    void updateArcsForViewItems(LightweightCollection<ViewItem> viewItems);
 
 }

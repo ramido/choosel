@@ -354,13 +354,6 @@ public class Graph extends AbstractViewContentDisplay implements
     }
 
     @Override
-    public LightweightCollection<ViewItem> getResourceItems(
-            Iterable<Resource> resources) {
-
-        return getCallback().getViewItems(resources);
-    }
-
-    @Override
     public ResourceManager getResourceManager() {
         return resourceManager;
     }
@@ -412,6 +405,13 @@ public class Graph extends AbstractViewContentDisplay implements
 
     private ViewItem getViewItem(NodeEvent<?> event) {
         return getViewItem(event.getNode());
+    }
+
+    @Override
+    public LightweightCollection<ViewItem> getViewItems(
+            Iterable<Resource> resources) {
+
+        return getCallback().getViewItems(resources);
     }
 
     @Override
@@ -673,11 +673,11 @@ public class Graph extends AbstractViewContentDisplay implements
         }
     }
 
-    /**
-     * Updates the arc items and arcs for the given view items. The view items
-     * must already be contained in the view content display (i.e. they have
-     * been added already and their nodes must be visible).
-     */
+    @Override
+    public void updateArcsForResources(Iterable<Resource> resources) {
+        updateArcsForViewItems(getViewItems(resources));
+    }
+
     @Override
     public void updateArcsForViewItems(LightweightCollection<ViewItem> viewItems) {
         assert viewItems != null;
