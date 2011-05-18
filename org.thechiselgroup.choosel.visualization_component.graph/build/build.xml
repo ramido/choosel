@@ -36,10 +36,10 @@
 	    </zip> 
 	  </target>	
 		
-	  <target name="create-module-jar"
-	  	      description="creates the module jar file"
-	  	      depends="prepare">
-	  	
+	
+	  <target name="create-jar"
+			description="creates the jar file for external use">
+
 	    <jar destfile="${dist}/${name}-${version}.jar">
 	      <fileset dir="${src}">
 	      </fileset>
@@ -51,6 +51,12 @@
 	    	<include name="NOTICE"/>
 	      </metainf>
 	    </jar> 
+	  </target>
+		
+	  <target name="create-module-jar"
+	  	      description="creates the module jar file"
+	  	      depends="prepare">
+	  		<antcall target="create-jar"/>
 	  </target>
 		
 	  <target name="clean" description="clean automatically created resources">
