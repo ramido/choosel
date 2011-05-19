@@ -17,7 +17,6 @@ package org.thechiselgroup.choosel.core.client.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -26,9 +25,6 @@ import static org.thechiselgroup.choosel.core.client.test.AdvancedAsserts.assert
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.toLabeledResourceSet;
-
-import java.util.Collections;
-import java.util.Set;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -41,6 +37,7 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEvent;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEventHandler;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.views.model.DefaultViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingConfiguration;
@@ -127,27 +124,6 @@ public final class ResourcesTestHelper {
         });
     }
 
-    public static <T> Set<T> emptySet(Class<T> clazz) {
-        return eq(Collections.<T> emptySet());
-    }
-
-    public static LightweightCollection<ViewItem> eqResourceItems(
-            final LightweightCollection<ViewItem> resourceItems) {
-
-        return argThat(new ArgumentMatcher<LightweightCollection<ViewItem>>() {
-            @Override
-            public boolean matches(Object o) {
-                LightweightCollection<ViewItem> set = (LightweightCollection<ViewItem>) o;
-
-                if (set.size() != resourceItems.size()) {
-                    return false;
-                }
-
-                return set.toList().containsAll(resourceItems.toList());
-            }
-        });
-    }
-
     public static LightweightCollection<Resource> eqResources(
             final LightweightCollection<Resource> resources) {
 
@@ -163,6 +139,29 @@ public final class ResourcesTestHelper {
                 return set.toList().containsAll(resources.toList());
             }
         });
+    }
+
+    public static LightweightCollection<ViewItem> eqViewItems(
+            final LightweightCollection<ViewItem> viewItems) {
+
+        return argThat(new ArgumentMatcher<LightweightCollection<ViewItem>>() {
+            @Override
+            public boolean matches(Object o) {
+                LightweightCollection<ViewItem> set = (LightweightCollection<ViewItem>) o;
+
+                if (set.size() != viewItems.size()) {
+                    return false;
+                }
+
+                return set.toList().containsAll(viewItems.toList());
+            }
+        });
+    }
+
+    public static LightweightCollection<ViewItem> eqViewItems(
+            ViewItem... viewItems) {
+
+        return eqViewItems(LightweightCollections.toCollection(viewItems));
     }
 
     public static LightweightCollection<ViewItem> resourceItemsForResourceSets(

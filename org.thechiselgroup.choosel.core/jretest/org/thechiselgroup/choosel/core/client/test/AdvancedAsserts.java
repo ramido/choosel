@@ -15,8 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.test;
 
-import static org.junit.Assert.assertThat;
-import static org.thechiselgroup.choosel.core.client.test.ResourcesMatchers.containsEqualResources;
 import static org.thechiselgroup.choosel.core.client.util.collections.CollectionUtils.toSet;
 
 import java.util.Collection;

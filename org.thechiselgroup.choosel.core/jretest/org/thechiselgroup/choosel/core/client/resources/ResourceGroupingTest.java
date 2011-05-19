@@ -16,15 +16,27 @@
 package org.thechiselgroup.choosel.core.client.resources;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
-import static org.thechiselgroup.choosel.core.client.resources.CategorizableResourceGroupingChange.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.thechiselgroup.choosel.core.client.resources.CategorizableResourceGroupingChange.newGroupChangedDelta;
+import static org.thechiselgroup.choosel.core.client.resources.CategorizableResourceGroupingChange.newGroupCreatedDelta;
+import static org.thechiselgroup.choosel.core.client.resources.CategorizableResourceGroupingChange.newGroupRemovedDelta;
 import static org.thechiselgroup.choosel.core.client.test.AdvancedAsserts.assertContentEquals;
 import static org.thechiselgroup.choosel.core.client.test.AdvancedAsserts.assertMapKeysEqual;
-import static org.thechiselgroup.choosel.core.client.test.ResourcesMatchers.containsEqualResources;
+import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsEqualResources;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.verifyOnResourceSetChanged;
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.*;
+import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.TYPE_1;
+import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.TYPE_2;
+import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
+import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
+import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.toResourceSet;
 import static org.thechiselgroup.choosel.core.client.util.collections.CollectionUtils.toSet;
 
 import java.util.Collections;

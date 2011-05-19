@@ -22,7 +22,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.test.ResourcesMatchers.containsEqualResources;
+import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsEqualResources;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
 
 import org.junit.Before;
@@ -122,9 +122,9 @@ public class PopupWithHighlightingViewItemBehaviorTest {
         when(viewItem.getResources()).thenReturn(resources);
         when(popupManager.getPopup()).thenReturn(popup);
 
-        underTest = new PopupWithHighlightingViewItemBehavior(mock(DetailsWidgetHelper.class),
-                mock(PopupManagerFactory.class),
-                hoverModel) {
+        underTest = new PopupWithHighlightingViewItemBehavior(
+                mock(DetailsWidgetHelper.class),
+                mock(PopupManagerFactory.class), hoverModel) {
             @Override
             protected PopupManager createPopupManager(ViewItem viewItem) {
                 return popupManager;

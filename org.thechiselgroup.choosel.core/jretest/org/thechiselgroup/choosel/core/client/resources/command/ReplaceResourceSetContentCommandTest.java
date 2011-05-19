@@ -16,12 +16,10 @@
 package org.thechiselgroup.choosel.core.client.resources.command;
 
 import static org.junit.Assert.assertThat;
-import static org.thechiselgroup.choosel.core.client.test.ResourcesMatchers.containsEqualResources;
+import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsEqualResources;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 
 public class ReplaceResourceSetContentCommandTest {
