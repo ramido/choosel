@@ -20,6 +20,11 @@ import com.google.gwt.event.shared.HandlerRegistration;
 
 public interface CommandManager {
 
+    /**
+     * Adds a command to the list of executed commands in this command manager.
+     * The command does not get executed. If the command should get executed,
+     * use {@link #execute(UndoableCommand)}.
+     */
     void addExecutedCommand(UndoableCommand command);
 
     <H extends CommandManagerEventHandler> HandlerRegistration addHandler(
@@ -31,6 +36,11 @@ public interface CommandManager {
 
     void clear();
 
+    /**
+     * Executes a command and adds it to the list of executed commands in this
+     * command manager. If the command should not get executed, use
+     * {@link #addExecutedCommand(UndoableCommand)}.
+     */
     void execute(UndoableCommand command);
 
     UndoableCommand getRedoCommand();
