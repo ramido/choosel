@@ -19,6 +19,7 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.junit.internal.matchers.TypeSafeMatcher;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.UriList;
 import org.thechiselgroup.choosel.core.client.util.StringUtils;
 
@@ -28,7 +29,25 @@ import org.thechiselgroup.choosel.core.client.util.StringUtils;
  * 
  * @author Lars Grammel
  */
-public final class ResourceMatchers {
+public final class HamcrestResourceMatchers {
+
+    public static Matcher<ResourceSet> containsEqualResources(
+            final ResourceSet expected) {
+
+        return new TypeSafeMatcher<ResourceSet>() {
+            @Override
+            public void describeTo(Description description) {
+                description
+                        .appendText(" does not contain the same resources as "
+                                + expected.toString());
+            }
+
+            @Override
+            public boolean matchesSafely(ResourceSet actual) {
+                return expected.containsEqualResources(actual);
+            }
+        };
+    }
 
     public static Matcher<UriList> containsExactly(final String... uris) {
         return new TypeSafeMatcher<UriList>() {
@@ -56,7 +75,7 @@ public final class ResourceMatchers {
         };
     }
 
-    private ResourceMatchers() {
+    private HamcrestResourceMatchers() {
     }
 
 }

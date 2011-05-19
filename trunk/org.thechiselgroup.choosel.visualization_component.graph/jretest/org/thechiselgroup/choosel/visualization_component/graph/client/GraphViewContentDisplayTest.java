@@ -24,7 +24,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.core.client.test.AdvancedAsserts.assertContentEquals;
-import static org.thechiselgroup.choosel.core.client.test.ResourcesMatchers.containsEqualResources;
+import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsEqualResources;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.createViewItem;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.createViewItems;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
@@ -235,7 +235,8 @@ public class GraphViewContentDisplayTest {
 
         NodeDragHandler nodeDragHandler = argument1.getValue();
         nodeDragHandler.onDrag(new NodeDragEvent(node, sourceLocation.getX(),
-                sourceLocation.getY(), targetLocation.getX(), targetLocation.getY()));
+                sourceLocation.getY(), targetLocation.getX(), targetLocation
+                        .getY()));
 
         ArgumentCaptor<UndoableCommand> argument2 = ArgumentCaptor
                 .forClass(UndoableCommand.class);

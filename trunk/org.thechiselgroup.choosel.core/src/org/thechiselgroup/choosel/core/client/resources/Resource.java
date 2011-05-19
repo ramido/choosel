@@ -17,6 +17,8 @@ package org.thechiselgroup.choosel.core.client.resources;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 // TODO introduce resource ID's
 // TODO equality / hash based on ID
@@ -45,6 +47,13 @@ public class Resource implements Serializable {
     public Resource(String uri) {
         assert uri != null;
         this.uri = uri;
+    }
+
+    public void applyPartialProperties(
+            Map<String, Serializable> partialProperties) {
+        for (Entry<String, Serializable> entry : partialProperties.entrySet()) {
+            putValue(entry.getKey(), entry.getValue());
+        }
     }
 
     /**

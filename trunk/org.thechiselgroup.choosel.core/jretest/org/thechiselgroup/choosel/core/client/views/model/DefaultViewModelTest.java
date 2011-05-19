@@ -21,9 +21,9 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.thechiselgroup.choosel.core.client.test.ResourcesMatchers.containsEqualResources;
+import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsEqualResources;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.emptyLightweightCollection;
-import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.eqResourceItems;
+import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.eqViewItems;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.resourceItemsForResourceSets;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.TYPE_1;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.TYPE_2;
@@ -292,7 +292,7 @@ public class DefaultViewModelTest {
 
         verify(viewContentDisplay, times(1)).update(
                 emptyLightweightCollection(ViewItem.class),
-                eqResourceItems(addedViewItems),
+                eqViewItems(addedViewItems),
                 emptyLightweightCollection(ViewItem.class),
                 emptyLightweightCollection(Slot.class));
     }
@@ -310,7 +310,7 @@ public class DefaultViewModelTest {
         verify(viewContentDisplay, times(1)).update(
                 emptyLightweightCollection(ViewItem.class),
                 emptyLightweightCollection(ViewItem.class),
-                eqResourceItems(addedViewItems),
+                eqViewItems(addedViewItems),
                 emptyLightweightCollection(Slot.class));
     }
 
@@ -325,7 +325,7 @@ public class DefaultViewModelTest {
 
         verify(viewContentDisplay, times(1)).update(
                 emptyLightweightCollection(ViewItem.class),
-                eqResourceItems(addedViewItems),
+                eqViewItems(addedViewItems),
                 emptyLightweightCollection(ViewItem.class),
                 emptyLightweightCollection(Slot.class));
     }
