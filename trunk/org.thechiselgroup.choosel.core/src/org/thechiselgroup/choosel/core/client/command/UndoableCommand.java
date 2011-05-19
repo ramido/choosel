@@ -19,6 +19,13 @@ import com.google.gwt.user.client.Command;
 
 public interface UndoableCommand extends Command {
 
+    /**
+     * @return True, if {@link #execute()} has been called and {@link #undo()}
+     *         has not been called after that.
+     */
+    // TODO introduce AbstractUndoableCommand with appropriate template methods
+    // TODO boolean hasExecuted();
+
     void undo();
 
 }
