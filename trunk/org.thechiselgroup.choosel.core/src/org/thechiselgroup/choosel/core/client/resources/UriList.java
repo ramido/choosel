@@ -28,6 +28,11 @@ public class UriList implements Serializable, Iterable<String> {
 
     private boolean isLoaded;
 
+    // this constructor is required by GWT for serialization of the object
+    public UriList() {
+
+    }
+
     public UriList(String... uris) {
         for (String uri : uris) {
             add(uri);
