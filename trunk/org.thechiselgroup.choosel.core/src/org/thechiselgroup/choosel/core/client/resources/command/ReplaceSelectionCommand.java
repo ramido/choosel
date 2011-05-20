@@ -15,12 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.resources.command;
 
-import org.thechiselgroup.choosel.core.client.command.UndoableCommand;
+import org.thechiselgroup.choosel.core.client.command.AbstractUndoableCommand;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.HasDescription;
 import org.thechiselgroup.choosel.core.client.views.model.SelectionModel;
 
-public class ReplaceSelectionCommand implements UndoableCommand, HasDescription {
+public class ReplaceSelectionCommand extends AbstractUndoableCommand implements
+        HasDescription {
 
     private ResourceSet originalSelection;
 
@@ -39,15 +40,6 @@ public class ReplaceSelectionCommand implements UndoableCommand, HasDescription 
     }
 
     @Override
-    public void execute() {
-        if (originalSelection == null) {
-            originalSelection = selectionModel.getSelection();
-        }
-
-        selectionModel.setSelection(resources);
-    }
-
-    @Override
     public String getDescription() {
         // XXX label required
         return "Replace selection in '" + selectionModel.toString()
@@ -63,7 +55,16 @@ public class ReplaceSelectionCommand implements UndoableCommand, HasDescription 
     }
 
     @Override
-    public void undo() {
+    public void performExecute() {
+        if (originalSelection == null) {
+            originalSelection = selectionModel.getSelection();
+        }
+
+        selectionModel.setSelection(resources);
+    }
+
+    @Override
+    public void performUndo() {
         selectionModel.setSelection(originalSelection);
     }
 

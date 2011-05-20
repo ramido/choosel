@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.resources.command;
 
-import org.thechiselgroup.choosel.core.client.command.UndoableCommand;
+import org.thechiselgroup.choosel.core.client.command.AbstractUndoableCommand;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.HasDescription;
@@ -26,8 +26,8 @@ import org.thechiselgroup.choosel.core.client.views.model.ResourceModel;
 /**
  * Adds resources to a resource model - not explictly, but to unnamed set.
  */
-public class AddResourcesToResourceModelCommand implements UndoableCommand,
-        HasDescription {
+public class AddResourcesToResourceModelCommand extends AbstractUndoableCommand
+        implements HasDescription {
 
     private LightweightList<Resource> addedResources;
 
@@ -45,8 +45,14 @@ public class AddResourcesToResourceModelCommand implements UndoableCommand,
         this.resources = resources;
     }
 
+    // TODO add view name / label once available
     @Override
-    public void execute() {
+    public String getDescription() {
+        return "Add resources to view";
+    }
+
+    @Override
+    public void performExecute() {
         assert addedResources == null;
 
         ResourceSet viewResources = resourceModel.getResources();
@@ -63,14 +69,8 @@ public class AddResourcesToResourceModelCommand implements UndoableCommand,
         assert resourceModel.containsResources(resources);
     }
 
-    // TODO add view name / label once available
     @Override
-    public String getDescription() {
-        return "Add resources to view";
-    }
-
-    @Override
-    public void undo() {
+    public void performUndo() {
         assert addedResources != null;
         assert resourceModel.containsResources(resources);
 

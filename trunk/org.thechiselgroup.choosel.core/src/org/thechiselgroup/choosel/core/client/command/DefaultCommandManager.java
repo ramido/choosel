@@ -34,18 +34,6 @@ public class DefaultCommandManager implements CommandManager {
     }
 
     @Override
-    public void addExecutedCommand(UndoableCommand command) {
-        assert command != null;
-
-        executedCommands.add(command);
-        undoneCommands.clear();
-        fireEvent(new CommandAddedEvent(this, command));
-
-        assert canUndo();
-        assert !canRedo();
-    }
-
-    @Override
     public <H extends CommandManagerEventHandler> HandlerRegistration addHandler(
             Type<H> type, H handler) {
         return eventBus.addHandler(type, handler);
@@ -72,8 +60,13 @@ public class DefaultCommandManager implements CommandManager {
     public void execute(UndoableCommand command) {
         assert command != null;
 
-        command.execute();
-        addExecutedCommand(command);
+        if (!command.hasExecuted()) {
+            command.execute();
+        }
+
+        executedCommands.add(command);
+        undoneCommands.clear();
+        fireEvent(new CommandAddedEvent(this, command));
 
         assert canUndo();
         assert !canRedo();

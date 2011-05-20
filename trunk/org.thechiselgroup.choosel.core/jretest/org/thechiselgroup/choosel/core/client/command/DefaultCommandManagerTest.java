@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -38,7 +39,9 @@ public class DefaultCommandManagerTest {
 
     @Test
     public void addedCommandIsUndoCommand() {
-        underTest.addExecutedCommand(command1);
+        when(command1.hasExecuted()).thenReturn(true);
+
+        underTest.execute(command1);
         assertEquals(command1, underTest.getUndoCommand());
     }
 
@@ -96,7 +99,7 @@ public class DefaultCommandManagerTest {
 
     @Test
     public void canUndoAfterAddedCommand() {
-        underTest.addExecutedCommand(command1);
+        underTest.execute(command1);
         assertEquals(true, underTest.canUndo());
     }
 
@@ -115,14 +118,6 @@ public class DefaultCommandManagerTest {
     }
 
     @Test
-    public void clearRedoStackOnAddExecutedCommand() {
-        underTest.execute(command1);
-        underTest.undo();
-        underTest.addExecutedCommand(command2);
-        assertEquals(false, underTest.canRedo());
-    }
-
-    @Test
     public void clearRedoStackOnExecute() {
         underTest.execute(command1);
         underTest.undo();
@@ -134,6 +129,13 @@ public class DefaultCommandManagerTest {
     public void executeCommand() {
         underTest.execute(command1);
         verify(command1, times(1)).execute();
+    }
+
+    @Test
+    public void executedCommandIsNotReExecuted() {
+        when(command1.hasExecuted()).thenReturn(true);
+        underTest.execute(command1);
+        verify(command1, times(0)).execute();
     }
 
     @Test
@@ -159,11 +161,11 @@ public class DefaultCommandManagerTest {
     }
 
     @Test
-    public void fireCommandAddedEventOnAddExecutedCommand() {
+    public void fireCommandAddedEventOnExecute() {
         CommandAddedEventHandler handler = mock(CommandAddedEventHandler.class);
 
         underTest.addHandler(CommandAddedEvent.TYPE, handler);
-        underTest.addExecutedCommand(command1);
+        underTest.execute(command1);
 
         ArgumentCaptor<CommandAddedEvent> argument = ArgumentCaptor
                 .forClass(CommandAddedEvent.class);
@@ -174,10 +176,12 @@ public class DefaultCommandManagerTest {
     }
 
     @Test
-    public void fireCommandAddedEventOnExecute() {
+    public void fireCommandAddedEventWhenAlreadyExecutedCommandIsReExecuted() {
+        when(command1.hasExecuted()).thenReturn(true);
         CommandAddedEventHandler handler = mock(CommandAddedEventHandler.class);
 
         underTest.addHandler(CommandAddedEvent.TYPE, handler);
+
         underTest.execute(command1);
 
         ArgumentCaptor<CommandAddedEvent> argument = ArgumentCaptor
@@ -229,7 +233,7 @@ public class DefaultCommandManagerTest {
         verify(command1, times(1)).execute();
         underTest.redo();
         verify(command1, times(2)).execute();
-    } 
+    }
 
     @Before
     public void setUp() {

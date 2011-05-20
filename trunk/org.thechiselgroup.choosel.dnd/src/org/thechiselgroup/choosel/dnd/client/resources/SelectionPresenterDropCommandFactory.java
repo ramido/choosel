@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.dnd.client.resources;
 
+import org.thechiselgroup.choosel.core.client.command.AbstractUndoableCommand;
 import org.thechiselgroup.choosel.core.client.command.UndoableCommand;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatar;
@@ -28,7 +29,7 @@ public class SelectionPresenterDropCommandFactory extends
         AbstractResourceSetAvatarDropCommandFactory {
 
     // TODO refactor (replace avatar with resource set)
-    private class AddSelectionSetCommand implements UndoableCommand,
+    private class AddSelectionSetCommand extends AbstractUndoableCommand implements
             HasDescription {
         private final ResourceSetAvatar avatar;
 
@@ -39,7 +40,7 @@ public class SelectionPresenterDropCommandFactory extends
         }
 
         @Override
-        public void execute() {
+        public void performExecute() {
             oldSelection = getSelectionModel().getSelection();
             getSelectionModel().addSelectionSet(avatar.getResourceSet());
             getSelectionModel().setSelection(avatar.getResourceSet());
@@ -51,7 +52,7 @@ public class SelectionPresenterDropCommandFactory extends
         }
 
         @Override
-        public void undo() {
+        public void performUndo() {
             getSelectionModel().setSelection(oldSelection);
             getSelectionModel().removeSelectionSet(avatar.getResourceSet());
         }

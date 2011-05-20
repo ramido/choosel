@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.core.client.resources.command;
 
 import java.util.List;
 
+import org.thechiselgroup.choosel.core.client.command.AbstractUndoableCommand;
 import org.thechiselgroup.choosel.core.client.command.UndoableCommand;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
@@ -28,8 +29,8 @@ import org.thechiselgroup.choosel.core.client.util.HasDescription;
  * 
  * @author Lars Grammel
  */
-public class ReplaceResourceSetContentCommand implements UndoableCommand,
-        HasDescription {
+public class ReplaceResourceSetContentCommand extends AbstractUndoableCommand
+        implements HasDescription {
 
     private List<Resource> originalTargetResources;
 
@@ -48,7 +49,13 @@ public class ReplaceResourceSetContentCommand implements UndoableCommand,
     }
 
     @Override
-    public void execute() {
+    public String getDescription() {
+        return "Replace content of resource set '" + resourceSet.getLabel()
+                + "' with content from '" + newContent.getLabel() + "'";
+    }
+
+    @Override
+    public void performExecute() {
         if (originalTargetResources == null) {
             originalTargetResources = resourceSet.toList();
         }
@@ -61,13 +68,7 @@ public class ReplaceResourceSetContentCommand implements UndoableCommand,
     }
 
     @Override
-    public String getDescription() {
-        return "Replace content of resource set '" + resourceSet.getLabel()
-                + "' with content from '" + newContent.getLabel() + "'";
-    }
-
-    @Override
-    public void undo() {
+    public void performUndo() {
         resourceSet.clear();
         resourceSet.addAll(originalTargetResources);
     }

@@ -157,8 +157,10 @@ public class ResourceSetAvatarDropController extends SimpleDropController {
                 if (!hasCommandBeenExecuted()) {
                     executeCommand(createCommand(context));
                 }
-
-                commandManager.addExecutedCommand(executedCommand);
+                
+                //add the command to the command stack, and make
+                //the manager fire an event.
+                commandManager.execute(executedCommand);
                 executedCommand = null; // prevent undo from later onLeave
             }
         } finally {

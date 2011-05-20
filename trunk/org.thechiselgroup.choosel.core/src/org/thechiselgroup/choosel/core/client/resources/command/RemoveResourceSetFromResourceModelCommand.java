@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.resources.command;
 
-import org.thechiselgroup.choosel.core.client.command.UndoableCommand;
+import org.thechiselgroup.choosel.core.client.command.AbstractUndoableCommand;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.HasDescription;
 import org.thechiselgroup.choosel.core.client.views.model.ResourceModel;
@@ -25,8 +25,8 @@ import org.thechiselgroup.choosel.core.client.views.model.ResourceModel;
  * resource set, and removes all resources from this set from the view if they
  * are not explicitly contained in another user set for this view.
  */
-public class RemoveResourceSetFromResourceModelCommand implements
-        UndoableCommand, HasDescription {
+public class RemoveResourceSetFromResourceModelCommand extends
+        AbstractUndoableCommand implements HasDescription {
 
     private String description;
 
@@ -54,13 +54,6 @@ public class RemoveResourceSetFromResourceModelCommand implements
         this.resourceSet = resourceSet;
     }
 
-    @Override
-    public void execute() {
-        assert resourceModel.containsResourceSet(resourceSet);
-        resourceModel.removeResourceSet(resourceSet);
-        assert !resourceModel.containsResourceSet(resourceSet);
-    }
-
     // TODO add view name / label once available
     @Override
     public String getDescription() {
@@ -76,7 +69,14 @@ public class RemoveResourceSetFromResourceModelCommand implements
     }
 
     @Override
-    public void undo() {
+    public void performExecute() {
+        assert resourceModel.containsResourceSet(resourceSet);
+        resourceModel.removeResourceSet(resourceSet);
+        assert !resourceModel.containsResourceSet(resourceSet);
+    }
+
+    @Override
+    public void performUndo() {
         assert !resourceModel.containsResourceSet(resourceSet);
         resourceModel.addResourceSet(resourceSet);
         assert resourceModel.containsResourceSet(resourceSet);

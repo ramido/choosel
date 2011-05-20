@@ -34,7 +34,7 @@ public final class WindowMoveController extends WindowDragController {
         WidgetLocation currentLocation = new WidgetLocation(windowPanel,
                 getBoundaryPanel());
 
-        commandManager.addExecutedCommand(new MoveWindowCommand(windowPanel,
+        commandManager.execute(new MoveWindowCommand(windowPanel,
                 originalLocation.getLeft(), originalLocation.getTop(),
                 currentLocation.getLeft(), currentLocation.getTop(), true));
 

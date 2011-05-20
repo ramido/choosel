@@ -130,7 +130,7 @@ public class ResourceSetAvatarDropControllerTest {
         underTest.onDrop(dragContext);
 
         verify(command, times(1)).execute();
-        verify(commandManager, times(1)).addExecutedCommand(command);
+        verify(commandManager, times(1)).execute(command);
     }
 
     @Test
@@ -205,6 +205,7 @@ public class ResourceSetAvatarDropControllerTest {
         underTest.onDrop(dragContext);
 
         verify(command, times(1)).execute();
-        verify(commandManager, times(1)).addExecutedCommand(command);
+        //should not re-execute the command... just add it to the stack
+        verify(commandManager, times(1)).execute(command);
     }
 }
