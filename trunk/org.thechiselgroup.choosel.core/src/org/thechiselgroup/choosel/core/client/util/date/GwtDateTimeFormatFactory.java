@@ -38,6 +38,13 @@ public class GwtDateTimeFormatFactory implements DateTimeFormatFactory {
 
         @Override
         public Date parse(String text) throws IllegalArgumentException {
+            /*
+             * XXX Hack because GWT DateTimeFormat does not support time zone
+             * labels, only works with 'z' parsing and for Pacific Time
+             */
+            text = text.replace("PST", "UTC-8");
+            text = text.replace("PDT", "UTC-7");
+
             return delegate.parse(text);
         }
     }
