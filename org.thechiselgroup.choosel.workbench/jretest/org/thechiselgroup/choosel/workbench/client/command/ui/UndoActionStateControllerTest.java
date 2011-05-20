@@ -38,90 +38,90 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
 
 public class UndoActionStateControllerTest {
 
-    private static final String COMMAND_DESCRIPTION = "command";
+	private static final String COMMAND_DESCRIPTION = "command";
 
-    @Mock
-    private TestUndoableCommandWithDescription command;
+	@Mock
+	private TestUndoableCommandWithDescription command;
 
-    private CommandManager commandManager;
+	private CommandManager commandManager;
 
-    private UndoActionStateController underTest;
+	private UndoActionStateController underTest;
 
-    @Mock
-    private ViewItemValueResolver resolver;
+	@Mock
+	private ViewItemValueResolver resolver;
 
-    private Action action;
+	private Action action;
 
-    // TODO tests for command manager with initial state
-    @Test
-    public void disabledInitialyForEmptyCommandManager() {
-        verify(action, times(1)).setEnabled(false);
-    }
+	// TODO tests for command manager with initial state
+	@Test
+	public void disabledInitialyForEmptyCommandManager() {
+		verify(action, times(1)).setEnabled(false);
+	}
 
-    @Test
-    public void disableOnClear() {
-        commandManager.addExecutedCommand(command);
-        commandManager.addExecutedCommand(command);
-        commandManager.undo();
+	@Test
+	public void disableOnClear() {
+		commandManager.execute(command);
+		commandManager.execute(command);
+		commandManager.undo();
 
-        verify(action, times(1)).setEnabled(false);
+		verify(action, times(1)).setEnabled(false);
 
-        commandManager.clear();
+		commandManager.clear();
 
-        verify(action, times(2)).setEnabled(false);
-    }
+		verify(action, times(2)).setEnabled(false);
+	}
 
-    @Test
-    public void disableUndoButtonOnEventIfNotUndoable() {
-        commandManager.addExecutedCommand(command);
-        commandManager.undo();
+	@Test
+	public void disableUndoButtonOnEventIfNotUndoable() {
+		commandManager.execute(command);
+		commandManager.undo();
 
-        verify(action, times(2)).setEnabled(false);
-    }
+		verify(action, times(2)).setEnabled(false);
+	}
 
-    @Test
-    public void enableUndoButtonOnEventIfUndoable() {
-        commandManager.addExecutedCommand(command);
+	@Test
+	public void enableUndoButtonOnEventIfUndoable() {
+		commandManager.execute(command);
 
-        verify(action).setEnabled(true);
-    }
+		verify(action).setEnabled(true);
+	}
 
-    @Test
-    public void setUndoButtonCommandDescriptionOnEventIfNotUndoable() {
-        commandManager.addExecutedCommand(command);
-        commandManager.undo();
+	@Test
+	public void setUndoButtonCommandDescriptionOnEventIfNotUndoable() {
+		commandManager.execute(command);
+		commandManager.undo();
 
-        verify(action, times(2)).setDescription("");
-    }
+		verify(action, times(2)).setDescription("");
+	}
 
-    @Test
-    public void setUndoButtonDescriptionOnEventIfUndoable() {
-        commandManager.addExecutedCommand(command);
+	@Test
+	public void setUndoButtonDescriptionOnEventIfUndoable() {
+		commandManager.execute(command);
 
-        verify(action).setDescription(COMMAND_DESCRIPTION);
-    }
+		verify(action).setDescription(COMMAND_DESCRIPTION);
+	}
 
-    @Before
-    public void setUp() throws Exception {
-        MockitoGWTBridge.setUp();
-        MockitoAnnotations.initMocks(this);
+	@Before
+	public void setUp() throws Exception {
+		MockitoGWTBridge.setUp();
+		MockitoAnnotations.initMocks(this);
 
-        action = spy(new Action("", new NullCommand()));
-        commandManager = spy(new DefaultCommandManager());
-        underTest = new UndoActionStateController(commandManager, action);
+		action = spy(new Action("", new NullCommand()));
+		commandManager = spy(new DefaultCommandManager());
+		underTest = new UndoActionStateController(commandManager, action);
 
-        when(
-                resolver.resolve(any(ViewItem.class),
-                        any(ViewItemValueResolverContext.class)))
-                .thenReturn("");
-        when(command.getDescription()).thenReturn(COMMAND_DESCRIPTION);
+		when(
+				resolver.resolve(any(ViewItem.class),
+						any(ViewItemValueResolverContext.class)))
+				.thenReturn("");
+		when(command.getDescription()).thenReturn(COMMAND_DESCRIPTION);
 
-        underTest.init();
-    }
+		underTest.init();
+	}
 
-    @After
-    public void tearDown() {
-        MockitoGWTBridge.tearDown();
-    }
+	@After
+	public void tearDown() {
+		MockitoGWTBridge.tearDown();
+	}
 
 }
