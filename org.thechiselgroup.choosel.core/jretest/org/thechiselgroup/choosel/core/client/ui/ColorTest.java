@@ -85,4 +85,43 @@ public class ColorTest {
         fail("Should have thrown IllegalArgumentException: hex contains invalid character");
     }
 
+    @Test
+    public void testInterpolateAll255() {
+        Color color1 = new Color(255, 255, 255);
+        Color color2 = new Color(255, 255, 255);
+
+        assertEquals(new Color(255, 255, 255),
+                color1.interpolateWith(color2, .95));
+    }
+
+    @Test
+    public void testInterpolateAllZero() {
+        Color color1 = new Color(0, 0, 0, 0);
+        Color color2 = new Color(0, 0, 0, 0);
+        assertEquals(new Color(0, 0, 0, 0), color1.interpolateWith(color2, 0.3));
+    }
+
+    @Test
+    public void testInterpolateAverage() {
+        Color color1 = new Color(18, 52, 86);
+        Color color2 = new Color(36, 104, 172);
+        assertEquals(new Color(27, 78, 129),
+                color1.interpolateWith(color2, 0.5));
+    }
+
+    @Test
+    public void testInterpolateWithAlpha() {
+        Color color1 = new Color(200, 111, 5, 0.5);
+        Color color2 = new Color(15, 155, 30, 0.15);
+        assertEquals(new Color(158, 120, 10, 0.4223),
+                color1.interpolateWith(color2, 0.222));
+    }
+
+    @Test
+    public void testInterpolateZeroPointOne() {
+        Color color1 = new Color(169, 226, 81);
+        Color color2 = new Color(19, 87, 155);
+        assertEquals(new Color(154, 212, 88),
+                color1.interpolateWith(color2, 0.1));
+    }
 }
