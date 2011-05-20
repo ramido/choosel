@@ -135,6 +135,7 @@ public class Color {
         return red;
     }
 
+    // TODO Double.doubletoLongBits is non-GWT compliant i think
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -146,6 +147,40 @@ public class Color {
         result = prime * result + green;
         result = prime * result + red;
         return result;
+    }
+
+    /**
+     * Blends b into a with a blendFactor (percentage of b in result).
+     */
+    private double interpolate(double a, double b, double blendFactor) {
+        return (1 - blendFactor) * a + blendFactor * b;
+    }
+
+    /**
+     * Returns a color that is a blend of another color into this color.
+     * 
+     * @param otherColor
+     *            Colors thats gets blend into this color.
+     * @param blendFactor
+     *            Specifies how much (percentage value between 0 and 1) of the
+     *            resulting color is determined by {@code otherColor}.
+     *            Effectively this calculates
+     *            {@code blendFactor * otherColor + (1 - blendFactor) * this}
+     */
+    public Color interpolateWith(Color otherColor, double blendFactor) {
+        assert blendFactor >= 0;
+        assert blendFactor <= 1;
+        assert otherColor != null;
+
+        int red = (int) interpolate(getRed(), otherColor.getRed(), blendFactor);
+        int green = (int) interpolate(getGreen(), otherColor.getGreen(),
+                blendFactor);
+        int blue = (int) interpolate(getBlue(), otherColor.getBlue(),
+                blendFactor);
+        double alpha = interpolate(getAlpha(), otherColor.getAlpha(),
+                blendFactor);
+
+        return new Color(red, green, blue, alpha);
     }
 
     public Color opaque() {
