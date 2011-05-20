@@ -47,15 +47,17 @@ public class Node {
     }-*/;
 
     native String getValue() /*-{
+        // NOTE: .toString() gets called to ensure return type is String
+
         var node = this.@org.thechiselgroup.choosel.workbench.client.util.xml.Node::nativeNode;
         if ( !node ) {
             return null;
         } else if ( node.childNodes.length == 1 ) {
-            return node.childNodes[ 0 ].nodeValue;
+            return node.childNodes[ 0 ].nodeValue.toString();
         } else if ( !node.nodeValue ) {
             return "";
         } else {
-            return node.nodeValue;
+            return node.nodeValue.toString();
         }
     }-*/;
     // @formatter:on
