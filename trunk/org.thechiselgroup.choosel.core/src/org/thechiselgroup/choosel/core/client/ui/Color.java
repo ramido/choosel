@@ -189,6 +189,22 @@ public class Color {
         return new Color(red, green, blue);
     }
 
+    /**
+     * @return This will return the hexidecimal representation of the color in
+     *         the form "#ffffff".
+     */
+    public String toHex() {
+        String hexVal = Integer.toHexString((this.red << 16)
+                | (this.green << 8) | this.blue);
+
+        // This String may not have prepending zeros, we must add them to ensure
+        // 6 hex digits
+        for (int i = hexVal.length(); i < 6; i++) {
+            hexVal = "0" + hexVal;
+        }
+        return "#" + hexVal;
+    }
+
     public String toRGB() {
         return "rgb(" + red + "," + green + "," + blue + ")";
     }
