@@ -1,11 +1,20 @@
 package org.thechiselgroup.choosel.core.client.ui;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
+import org.junit.experimental.theories.DataPoints;
+import org.junit.experimental.theories.Theories;
+import org.junit.experimental.theories.Theory;
+import org.junit.runner.RunWith;
 
+@RunWith(Theories.class)
 public class ColorTest {
+
+    @DataPoints
+    public static String[] hexTestValues = new String[] { "#123f6d", "#0f5d3a",
+            "#a7bccc", "#010101", "#000000", "#ffffff" };
 
     @Test
     public void hex000000() {
@@ -124,4 +133,10 @@ public class ColorTest {
         assertEquals(new Color(154, 212, 88),
                 color1.interpolateWith(color2, 0.1));
     }
+
+    @Theory
+    public void toHex(String hex) {
+        assertThat(new Color(hex).toHex(), equalTo(hex));
+    }
+
 }
