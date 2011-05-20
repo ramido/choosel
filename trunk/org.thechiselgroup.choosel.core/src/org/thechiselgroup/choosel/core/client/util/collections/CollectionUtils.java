@@ -15,8 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.util.collections;
 
-import static org.mockito.Matchers.eq;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -148,10 +146,6 @@ public final class CollectionUtils {
 
     private CollectionUtils() {
 
-    }
-
-    public static <T> Set<T> emptySet(Class<T> clazz) {
-        return eq(Collections.<T> emptySet());
     }
 
 }
