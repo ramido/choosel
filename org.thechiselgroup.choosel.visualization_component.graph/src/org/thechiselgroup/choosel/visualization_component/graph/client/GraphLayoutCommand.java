@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.visualization_component.graph.client;
 import java.util.List;
 import java.util.Map;
 
-import org.thechiselgroup.choosel.core.client.command.UndoableCommand;
+import org.thechiselgroup.choosel.core.client.command.AbstractUndoableCommand;
 import org.thechiselgroup.choosel.core.client.geometry.Point;
 import org.thechiselgroup.choosel.core.client.util.HasDescription;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
@@ -27,44 +27,45 @@ import org.thechiselgroup.choosel.visualization_component.graph.client.widget.No
 
 // TODO store results after execute for redo because some graph layouts are non-deterministic
 // TODO use animations (requires extending the flex graph interface) 
-public class GraphLayoutCommand implements HasDescription, UndoableCommand {
+public class GraphLayoutCommand extends AbstractUndoableCommand implements
+		HasDescription {
 
-    private GraphDisplay display;
+	private GraphDisplay display;
 
-    private String layout;
+	private String layout;
 
-    private List<Node> nodes;
+	private List<Node> nodes;
 
-    private Map<String, Point> nodeLocations = CollectionFactory
-            .createStringMap();
+	private Map<String, Point> nodeLocations = CollectionFactory
+			.createStringMap();
 
-    public GraphLayoutCommand(GraphDisplay display, String layout,
-            List<Node> nodes) {
+	public GraphLayoutCommand(GraphDisplay display, String layout,
+			List<Node> nodes) {
 
-        this.display = display;
-        this.layout = layout;
-        this.nodes = nodes;
-    }
+		this.display = display;
+		this.layout = layout;
+		this.nodes = nodes;
+	}
 
-    @Override
-    public void execute() {
-        for (Node node : nodes) {
-            nodeLocations.put(node.getId(), display.getLocation(node));
-        }
+	@Override
+	public String getDescription() {
+		return "Graph layout " + layout;
+	}
 
-        display.runLayout(layout);
-    }
+	@Override
+	public void performExecute() {
+		for (Node node : nodes) {
+			nodeLocations.put(node.getId(), display.getLocation(node));
+		}
 
-    @Override
-    public String getDescription() {
-        return "Graph layout " + layout;
-    }
+		display.runLayout(layout);
+	}
 
-    @Override
-    public void undo() {
-        for (Node node : nodes) {
-            display.setLocation(node, nodeLocations.get(node.getId()));
-        }
-    }
+	@Override
+	public void performUndo() {
+		for (Node node : nodes) {
+			display.setLocation(node, nodeLocations.get(node.getId()));
+		}
+	}
 
 }

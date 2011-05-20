@@ -15,13 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.resources.command;
 
-import org.thechiselgroup.choosel.core.client.command.UndoableCommand;
+import org.thechiselgroup.choosel.core.client.command.AbstractUndoableCommand;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.HasDescription;
 import org.thechiselgroup.choosel.core.client.views.model.SelectionModel;
 
-public class RemoveSelectionSetFromViewCommand implements UndoableCommand,
-        HasDescription {
+public class RemoveSelectionSetFromViewCommand extends AbstractUndoableCommand
+        implements HasDescription {
 
     private String description;
 
@@ -52,17 +52,6 @@ public class RemoveSelectionSetFromViewCommand implements UndoableCommand,
         this.resourceSet = resourceSet;
     }
 
-    @Override
-    public void execute() {
-        assert selectionModel.containsSelectionSet(resourceSet);
-        if (resourceSet.equals(selectionModel.getSelection())) {
-            selectionModel.setSelection(null);
-            wasSelected = true;
-        }
-        selectionModel.removeSelectionSet(resourceSet);
-        assert !selectionModel.containsSelectionSet(resourceSet);
-    }
-
     // TODO add view name / label once available
     @Override
     public String getDescription() {
@@ -78,7 +67,18 @@ public class RemoveSelectionSetFromViewCommand implements UndoableCommand,
     }
 
     @Override
-    public void undo() {
+    public void performExecute() {
+        assert selectionModel.containsSelectionSet(resourceSet);
+        if (resourceSet.equals(selectionModel.getSelection())) {
+            selectionModel.setSelection(null);
+            wasSelected = true;
+        }
+        selectionModel.removeSelectionSet(resourceSet);
+        assert !selectionModel.containsSelectionSet(resourceSet);
+    }
+
+    @Override
+    public void performUndo() {
         assert !selectionModel.containsSelectionSet(resourceSet);
         selectionModel.addSelectionSet(resourceSet);
         if (wasSelected) {

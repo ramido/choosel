@@ -52,7 +52,7 @@ public class CreateSetAction implements Action {
                         + "' from selection") {
 
             @Override
-            public void execute() {
+            public void performExecute() {
                 view.getSelectionModel().addSelectionSet(newResources);
             }
         };

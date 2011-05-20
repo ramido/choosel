@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.resources.command;
 
-import org.thechiselgroup.choosel.core.client.command.UndoableCommand;
+import org.thechiselgroup.choosel.core.client.command.AbstractUndoableCommand;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.HasDescription;
@@ -26,8 +26,8 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
  * Adds a resource set to another resource set by adding the missing resources
  * to the target set.
  */
-public class AddResourceSetToResourceSetCommand implements UndoableCommand,
-        HasDescription {
+public class AddResourceSetToResourceSetCommand extends AbstractUndoableCommand
+        implements HasDescription {
 
     protected LightweightList<Resource> addedResources = null;
 
@@ -46,22 +46,6 @@ public class AddResourceSetToResourceSetCommand implements UndoableCommand,
         this.modifiedSet = modifiedSet;
     }
 
-    @Override
-    public void execute() {
-        if (addedResources == null) {
-            addedResources = CollectionFactory.createLightweightList();
-            for (Resource resource : addedSet) {
-                if (!modifiedSet.contains(resource)) {
-                    addedResources.add(resource);
-                }
-            }
-        }
-
-        modifiedSet.addAll(addedResources);
-
-        assert modifiedSet.containsAll(addedSet);
-    }
-
     public ResourceSet getAddedSet() {
         return addedSet;
     }
@@ -77,7 +61,23 @@ public class AddResourceSetToResourceSetCommand implements UndoableCommand,
     }
 
     @Override
-    public void undo() {
+    public void performExecute() {
+        if (addedResources == null) {
+            addedResources = CollectionFactory.createLightweightList();
+            for (Resource resource : addedSet) {
+                if (!modifiedSet.contains(resource)) {
+                    addedResources.add(resource);
+                }
+            }
+        }
+
+        modifiedSet.addAll(addedResources);
+
+        assert modifiedSet.containsAll(addedSet);
+    }
+
+    @Override
+    public void performUndo() {
         assert modifiedSet.containsAll(addedSet);
 
         modifiedSet.removeAll(addedResources);

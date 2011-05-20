@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.core.client.resources.command;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.thechiselgroup.choosel.core.client.command.UndoableCommand;
+import org.thechiselgroup.choosel.core.client.command.AbstractUndoableCommand;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.test.Benchmark;
@@ -32,8 +32,8 @@ import com.google.gwt.user.client.Window;
  * Adds a labeled resource set to a resource model as an explicitly displayed
  * resource set.
  */
-public class AddResourceSetToViewCommand implements UndoableCommand,
-        HasDescription {
+public class AddResourceSetToViewCommand extends AbstractUndoableCommand
+        implements HasDescription {
 
     private List<Resource> alreadyContainedResources;
 
@@ -63,8 +63,22 @@ public class AddResourceSetToViewCommand implements UndoableCommand,
         this.resourceSet = resourceSet;
     }
 
+    // TODO add view name / label once available
     @Override
-    public void execute() {
+    public String getDescription() {
+        return description;
+    }
+
+    public ResourceModel getResourceModel() {
+        return resourceModel;
+    }
+
+    public ResourceSet getResourceSet() {
+        return resourceSet;
+    }
+
+    @Override
+    public void performExecute() {
         assert !resourceModel.containsResourceSet(resourceSet);
         assert alreadyContainedResources == null;
 
@@ -86,22 +100,8 @@ public class AddResourceSetToViewCommand implements UndoableCommand,
         assert alreadyContainedResources != null;
     }
 
-    // TODO add view name / label once available
     @Override
-    public String getDescription() {
-        return description;
-    }
-
-    public ResourceModel getResourceModel() {
-        return resourceModel;
-    }
-
-    public ResourceSet getResourceSet() {
-        return resourceSet;
-    }
-
-    @Override
-    public void undo() {
+    public void performUndo() {
         assert resourceModel.containsResourceSet(resourceSet);
         assert alreadyContainedResources != null;
 

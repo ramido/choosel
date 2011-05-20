@@ -15,65 +15,77 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.graph.client;
 
-import org.thechiselgroup.choosel.core.client.command.UndoableCommand;
+import org.thechiselgroup.choosel.core.client.command.AbstractUndoableCommand;
 import org.thechiselgroup.choosel.core.client.geometry.Point;
 import org.thechiselgroup.choosel.core.client.util.HasDescription;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.Node;
 
-public class MoveNodeCommand implements UndoableCommand, HasDescription {
+public class MoveNodeCommand extends AbstractUndoableCommand implements
+		HasDescription {
 
-    private final GraphDisplay graphDisplay;
+	private final GraphDisplay graphDisplay;
 
-    private final Node node;
+	private final Node node;
 
-    private final Point sourceLocation;
+	private final Point sourceLocation;
 
-    private final Point targetLocation;
+	private final Point targetLocation;
 
-    public MoveNodeCommand(GraphDisplay graphDisplay, Node node,
-            Point sourceLocation, Point targetLocation) {
+	/**
+	 * MoveNodeCommand occurs as a result of user interaction in Flex.
+	 * 
+	 * @param graphDisplay
+	 * @param node
+	 * @param sourceLocation
+	 * @param targetLocation
+	 */
+	public MoveNodeCommand(GraphDisplay graphDisplay, Node node,
+			Point sourceLocation, Point targetLocation) {
+		// this command is a result of user interaction, therefore
+		// it does not need to be run by the command manager.
+		super(true);
 
-        assert graphDisplay != null;
-        assert node != null;
-        assert sourceLocation != null;
-        assert targetLocation != null;
+		assert graphDisplay != null;
+		assert node != null;
+		assert sourceLocation != null;
+		assert targetLocation != null;
 
-        this.graphDisplay = graphDisplay;
-        this.node = node;
-        this.sourceLocation = sourceLocation;
-        this.targetLocation = targetLocation;
-    }
+		this.graphDisplay = graphDisplay;
+		this.node = node;
+		this.sourceLocation = sourceLocation;
+		this.targetLocation = targetLocation;
+	}
 
-    @Override
-    public void execute() {
-        graphDisplay.animateMoveTo(node, targetLocation);
-    }
+	@Override
+	public String getDescription() {
+		return "Move node '" + node.getLabel() + "' to " + targetLocation;
+	}
 
-    @Override
-    public String getDescription() {
-        return "Move node '" + node.getLabel() + "' to " + targetLocation;
-    }
+	public GraphDisplay getGraphDisplay() {
+		return graphDisplay;
+	}
 
-    public GraphDisplay getGraphDisplay() {
-        return graphDisplay;
-    }
+	public Node getNode() {
+		return node;
+	}
 
-    public Node getNode() {
-        return node;
-    }
+	public Point getSourceLocation() {
+		return sourceLocation;
+	}
 
-    public Point getSourceLocation() {
-        return sourceLocation;
-    }
+	public Point getTargetLocation() {
+		return targetLocation;
+	}
 
-    public Point getTargetLocation() {
-        return targetLocation;
-    }
+	@Override
+	public void performExecute() {
+		graphDisplay.animateMoveTo(node, targetLocation);
+	}
 
-    @Override
-    public void undo() {
-        graphDisplay.animateMoveTo(node, sourceLocation);
-    }
+	@Override
+	public void performUndo() {
+		graphDisplay.animateMoveTo(node, sourceLocation);
+	}
 
 }

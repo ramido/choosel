@@ -15,11 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.dnd.client.windows;
 
+import org.thechiselgroup.choosel.core.client.command.AbstractUndoableCommand;
 import org.thechiselgroup.choosel.core.client.command.UndoableCommand;
 import org.thechiselgroup.choosel.core.client.util.HasDescription;
 
 // TODO store position
-public class CreateWindowCommand implements UndoableCommand, HasDescription {
+public class CreateWindowCommand extends AbstractUndoableCommand implements HasDescription {
 
     private final WindowContent content;
 
@@ -33,7 +34,7 @@ public class CreateWindowCommand implements UndoableCommand, HasDescription {
     }
 
     @Override
-    public void execute() {
+    public void performExecute() {
         windowPanel = desktop.createWindow(content);
     }
 
@@ -47,7 +48,7 @@ public class CreateWindowCommand implements UndoableCommand, HasDescription {
     }
 
     @Override
-    public void undo() {
+    public void performUndo() {
         assert windowPanel != null;
 
         // FIXME animations missing

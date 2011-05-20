@@ -21,10 +21,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 public class NullCommandManager implements CommandManager {
 
     @Override
-    public void addExecutedCommand(UndoableCommand command) {
-    }
-
-    @Override
     public <H extends CommandManagerEventHandler> HandlerRegistration addHandler(
             Type<H> type, H handler) {
         return null;

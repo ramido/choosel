@@ -20,13 +20,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 
 public interface CommandManager {
 
-    /**
-     * Adds a command to the list of executed commands in this command manager.
-     * The command does not get executed. If the command should get executed,
-     * use {@link #execute(UndoableCommand)}.
-     */
-    void addExecutedCommand(UndoableCommand command);
-
     <H extends CommandManagerEventHandler> HandlerRegistration addHandler(
             Type<H> type, H handler);
 
@@ -37,9 +30,9 @@ public interface CommandManager {
     void clear();
 
     /**
-     * Executes a command and adds it to the list of executed commands in this
-     * command manager. If the command should not get executed, use
-     * {@link #addExecutedCommand(UndoableCommand)}.
+     * Executes the command if it has not already been executed. If it has
+     * already been executed, then the command is pushed onto the command stack
+     * without being executed again.
      */
     void execute(UndoableCommand command);
 

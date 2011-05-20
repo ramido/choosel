@@ -33,13 +33,6 @@ public class MergeResourceSetsCommand extends
     }
 
     @Override
-    public void execute() {
-        super.execute();
-
-        resourceModel.removeResourceSet(addedSet);
-    }
-
-    @Override
     public String getDescription() {
         return "Merge resource set '" + addedSet.getLabel()
                 + "' into resource set '" + modifiedSet.getLabel() + "'";
@@ -50,8 +43,15 @@ public class MergeResourceSetsCommand extends
     }
 
     @Override
-    public void undo() {
-        super.undo();
+    public void performExecute() {
+        super.performExecute();
+
+        resourceModel.removeResourceSet(addedSet);
+    }
+
+    @Override
+    public void performUndo() {
+        super.performUndo();
 
         resourceModel.addResourceSet(addedSet);
     }

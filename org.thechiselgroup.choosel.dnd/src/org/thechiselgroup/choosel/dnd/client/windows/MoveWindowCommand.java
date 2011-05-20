@@ -15,10 +15,11 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.dnd.client.windows;
 
+import org.thechiselgroup.choosel.core.client.command.AbstractUndoableCommand;
 import org.thechiselgroup.choosel.core.client.command.UndoableCommand;
 import org.thechiselgroup.choosel.core.client.util.HasDescription;
 
-public class MoveWindowCommand implements UndoableCommand, HasDescription {
+public class MoveWindowCommand extends AbstractUndoableCommand implements HasDescription {
 
     private final int sourceX;
 
@@ -46,7 +47,9 @@ public class MoveWindowCommand implements UndoableCommand, HasDescription {
      */
     public MoveWindowCommand(WindowPanel windowPanel, int sourceX, int sourceY,
             int targetX, int targetY, boolean animate) {
-
+    	//the move window command gets run as a result of user interaction,
+    	//there is no reason to run it again.
+    	super(true);
         assert windowPanel != null;
 
         this.windowPanel = windowPanel;
@@ -58,7 +61,7 @@ public class MoveWindowCommand implements UndoableCommand, HasDescription {
     }
 
     @Override
-    public void execute() {
+    public void performExecute() {
         windowPanel.setLocation(targetX, targetY, animate);
     }
 
@@ -69,7 +72,7 @@ public class MoveWindowCommand implements UndoableCommand, HasDescription {
     }
 
     @Override
-    public void undo() {
+    public void performUndo() {
         windowPanel.setLocation(sourceX, sourceY, animate);
     }
 

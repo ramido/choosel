@@ -17,14 +17,23 @@ package org.thechiselgroup.choosel.core.client.command;
 
 import com.google.gwt.user.client.Command;
 
+/**
+ * Undoable command interface. Clients should not implement this interface. Use
+ * {@link AbstractUndoableCommand} instead.
+ * 
+ * @author Lars Grammel
+ * 
+ */
 public interface UndoableCommand extends Command {
 
     /**
      * @return True, if {@link #execute()} has been called and {@link #undo()}
-     *         has not been called after that.
+     *         has not been called after that. Returns false if {@link #undo()}
+     *         has been called.
      */
+    boolean hasExecuted();
+
     // TODO introduce AbstractUndoableCommand with appropriate template methods
-    // TODO boolean hasExecuted();
 
     void undo();
 
