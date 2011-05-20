@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.ui;
 
-// TODO move
 public class Color {
 
     public final static Color TRANSPARENT = new Color(255, 255, 255, 0.0);
@@ -103,10 +102,12 @@ public class Color {
             return false;
         }
         Color other = (Color) obj;
-        if (Double.doubleToLongBits(alpha) != Double
-                .doubleToLongBits(other.alpha)) {
+
+        // JavaScript does not have doubleToLongBits
+        if (Math.abs(alpha - other.alpha) > .000001) {
             return false;
         }
+
         if (blue != other.blue) {
             return false;
         }
@@ -116,6 +117,7 @@ public class Color {
         if (red != other.red) {
             return false;
         }
+
         return true;
     }
 
@@ -135,14 +137,14 @@ public class Color {
         return red;
     }
 
-    // TODO Double.doubletoLongBits is non-GWT compliant i think
     @Override
     public int hashCode() {
+        /*
+         * We ignore alpha in hashCode because JavaScript does not have
+         * doubleToLongBits.
+         */
         final int prime = 31;
         int result = 1;
-        long temp;
-        temp = Double.doubleToLongBits(alpha);
-        result = prime * result + (int) (temp ^ (temp >>> 32));
         result = prime * result + blue;
         result = prime * result + green;
         result = prime * result + red;

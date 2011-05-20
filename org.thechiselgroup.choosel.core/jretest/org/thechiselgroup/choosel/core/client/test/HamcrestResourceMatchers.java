@@ -31,10 +31,10 @@ import org.thechiselgroup.choosel.core.client.util.StringUtils;
  */
 public final class HamcrestResourceMatchers {
 
-    public static Matcher<ResourceSet> containsEqualResources(
+    public static Matcher<Iterable<Resource>> containsEqualResources(
             final ResourceSet expected) {
 
-        return new TypeSafeMatcher<ResourceSet>() {
+        return new TypeSafeMatcher<Iterable<Resource>>() {
             @Override
             public void describeTo(Description description) {
                 description
@@ -43,8 +43,14 @@ public final class HamcrestResourceMatchers {
             }
 
             @Override
-            public boolean matchesSafely(ResourceSet actual) {
-                return expected.containsEqualResources(actual);
+            public boolean matchesSafely(Iterable<Resource> actual) {
+                int actualSize = 0;
+                for (Resource resource : actual) {
+                    actualSize++;
+                }
+
+                return expected.containsAll(actual)
+                        && expected.size() == actualSize;
             }
         };
     }

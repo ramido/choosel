@@ -17,6 +17,10 @@ package org.thechiselgroup.choosel.core.client.test;
 
 import static org.mockito.AdditionalMatchers.and;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+
+import java.util.Collections;
+import java.util.Set;
 
 import org.mockito.Matchers;
 
@@ -27,6 +31,10 @@ public final class Matchers2 {
     }
 
     private Matchers2() {
+    }
+
+    public static <T> Set<T> emptySet(Class<T> clazz) {
+        return eq(Collections.<T> emptySet());
     }
 
 }
