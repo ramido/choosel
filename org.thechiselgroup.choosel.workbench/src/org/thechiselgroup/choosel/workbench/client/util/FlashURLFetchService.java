@@ -68,7 +68,8 @@ public class FlashURLFetchService extends SWFWidget implements URLFetchService {
             Logger.getLogger("").log(Level.SEVERE, ex.getMessage(), ex);
         }
     }
-
+    
+    // @formatter:off
     private static native void _requestURL(String swfID, String url) /*-{
         $doc.getElementById(swfID).call(url, "_flexproxy_callback");
     }-*/;
@@ -79,6 +80,7 @@ public class FlashURLFetchService extends SWFWidget implements URLFetchService {
         $wnd._flexproxy_callback=$entry(
         @org.thechiselgroup.choosel.workbench.client.util.FlashURLFetchService::_callback(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;));
     }-*/;
+    // @formatter:on
 
     private Map<String, List<AsyncCallback<String>>> requests = CollectionFactory
             .createStringMap();
@@ -106,18 +108,18 @@ public class FlashURLFetchService extends SWFWidget implements URLFetchService {
     }
 
     private void callback(String content, String url, String error) {
-        assert requests.containsKey(url) : "no callback for URL " + url
-                + " registered";
+        assert requests.containsKey(url) : "no callback for URL '" + url
+                + "' registered";
         List<AsyncCallback<String>> callbacks = requests.remove(url);
 
-        if (error != null) {
+        if (error == null) {
             for (AsyncCallback<String> callback : callbacks) {
-                callback.onFailure(new IOException("Could not retrieve URL "
-                        + url + " (" + error + ")"));
+                callback.onSuccess(content);
             }
         } else {
             for (AsyncCallback<String> callback : callbacks) {
-                callback.onSuccess(content);
+                callback.onFailure(new IOException("Could not retrieve URL '"
+                        + url + "' (" + error + ")"));
             }
         }
     }
