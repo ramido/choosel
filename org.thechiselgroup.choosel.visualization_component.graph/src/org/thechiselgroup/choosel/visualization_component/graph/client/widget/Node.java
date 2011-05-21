@@ -56,4 +56,9 @@ public class Node {
         this.type = type;
     }
 
+    @Override
+    public String toString() {
+        return "Node [id=" + id + ", label=" + label + ", type=" + type + "]";
+    }
+
 }
