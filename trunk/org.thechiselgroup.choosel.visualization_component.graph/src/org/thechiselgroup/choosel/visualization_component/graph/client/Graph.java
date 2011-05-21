@@ -288,11 +288,15 @@ public class Graph extends AbstractViewContentDisplay implements
         graphDisplay.setNodeStyle(graphItem.getNode(), "showArrow", registry
                 .getNodeMenuEntries(type).isEmpty() ? "false" : "true");
 
-        registry.getAutomaticExpander(type).expand(viewItem, this);
-
         nodeResources.addResourceSet(viewItem.getResources());
-
         viewItem.setDisplayObject(graphItem);
+
+        /*
+         * NOTE: all node configuration should be done when calling the
+         * automatic expanders, since they rely on returning the correct graph
+         * contents etc.
+         */
+        registry.getAutomaticExpander(type).expand(viewItem, this);
 
         return graphItem;
     }
