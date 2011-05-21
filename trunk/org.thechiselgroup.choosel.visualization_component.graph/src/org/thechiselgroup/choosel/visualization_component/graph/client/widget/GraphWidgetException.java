@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -15,24 +15,24 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.graph.client.widget;
 
-public class LayoutException extends GraphWidgetException {
+public class GraphWidgetException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    private final String layout;
-
-    public LayoutException(String layout) {
-        super("Failed to layout graph with layout '" + layout + "'");
-        this.layout = layout;
+    public GraphWidgetException() {
+        super();
     }
 
-    public LayoutException(String layout, Throwable cause) {
-        super("Failed to layout graph with layout '" + layout + "'", cause);
-        this.layout = layout;
+    public GraphWidgetException(String message) {
+        super(message);
     }
 
-    public String getLayout() {
-        return layout;
+    public GraphWidgetException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public GraphWidgetException(Throwable cause) {
+        super(cause);
     }
 
 }

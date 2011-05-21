@@ -38,6 +38,11 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 
+/*
+ * IMPLEMENTATION NOTE: We use try-catch blocks around calls into JavaScript, 
+ * because the argument values and the actual calling method are not reported 
+ * in JavaScriptException that occur in GWT hosted mode.
+ */
 public class GraphWidget extends SWFWidget implements GraphDisplay {
 
     public static class Location extends JavaScriptObject {
@@ -84,10 +89,11 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
     // @formatter:on
 
     /*
-     * There is a bug in the JavaScript to Flex conversion for compiled GWT code
-     * that causes the label to appear as [Object object] in the Flex graph if
-     * it is passed in directly. That is why we create a separate JavaScript
-     * String and append the label String passed in from GWT.
+     * IMPLEMENTATION NOTE: There is a bug in the JavaScript to Flex conversion
+     * for compiled GWT code that causes the label to appear as [Object object]
+     * in the Flex graph if it is passed in directly. That is why we create a
+     * separate JavaScript String and append the label String passed in from
+     * GWT.
      */
     // @formatter:off
     private static native void _addNode(String swfID, String id, String type,
@@ -328,9 +334,13 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
         assert nodesByID.containsKey(arc.getTargetNodeId()) : "target node '"
                 + arc.getTargetNodeId() + "'must be available";
 
-        arcsByID.put(arc.getId(), arc);
-        _addArc(getSwfId(), arc.getId(), arc.getSourceNodeId(),
-                arc.getTargetNodeId(), arc.getType(), arc.isDirected());
+        try {
+            arcsByID.put(arc.getId(), arc);
+            _addArc(getSwfId(), arc.getId(), arc.getSourceNodeId(),
+                    arc.getTargetNodeId(), arc.getType(), arc.isDirected());
+        } catch (Exception ex) {
+            throw new GraphWidgetException("addArc(" + arc + ") failed", ex);
+        }
     }
 
     @Override
@@ -370,8 +380,12 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
         assert node != null;
         assert !nodesByID.containsKey(node.getId()) : "node must not be contained";
 
-        _addNode(getSwfId(), node.getId(), node.getType(), node.getLabel());
-        nodesByID.put(node.getId(), node);
+        try {
+            _addNode(getSwfId(), node.getId(), node.getType(), node.getLabel());
+            nodesByID.put(node.getId(), node);
+        } catch (Exception ex) {
+            throw new GraphWidgetException("addNode(" + node + ") failed", ex);
+        }
     }
 
     @Override
@@ -383,9 +397,13 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
         assert nodeType != null;
 
         String id = "menuItemId-" + (nodeMenuItemIdCounter++);
-        nodeMenuItemClickHandlers.put(id, handler);
-
-        _addNodeMenuItem(getSwfId(), id, menuLabel, nodeType);
+        try {
+            nodeMenuItemClickHandlers.put(id, handler);
+            _addNodeMenuItem(getSwfId(), id, menuLabel, nodeType);
+        } catch (Exception ex) {
+            throw new GraphWidgetException("addNodeMenuItemHandler(" + id + ","
+                    + menuLabel + "," + nodeType + ") failed", ex);
+        }
     }
 
     @Override
@@ -394,8 +412,13 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
         assert containsNode(node.getId());
         assert targetLocation != null;
 
-        _setNodeLocation(getSwfId(), node.getId(), targetLocation.getX(),
-                targetLocation.getY(), true);
+        try {
+            _setNodeLocation(getSwfId(), node.getId(), targetLocation.getX(),
+                    targetLocation.getY(), true);
+        } catch (Exception ex) {
+            throw new GraphWidgetException("animateMoveTo(" + node + ","
+                    + targetLocation + ") failed", ex);
+        }
 
     }
 
@@ -440,14 +463,20 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
         assert node != null;
         assert containsNode(node.getId());
 
-        Location result = _getNodeLocation(getSwfId(), node.getId());
-        return new Point((int) result.getX(), (int) result.getY());
+        try {
+            Location result = _getNodeLocation(getSwfId(), node.getId());
+            return new Point((int) result.getX(), (int) result.getY());
+        } catch (Exception ex) {
+            throw new GraphWidgetException("getLocation(" + node + ") failed",
+                    ex);
+        }
     }
 
     @Override
     public Node getNode(String nodeId) {
         assert nodeId != null;
-        assert nodesByID.containsKey(nodeId);
+        assert nodesByID.containsKey(nodeId) : "node '" + nodeId
+                + "' must be contained";
 
         return nodesByID.get(nodeId);
     }
@@ -568,8 +597,12 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
         assert arc != null;
         assert containsArc(arc.getId());
 
-        _removeArc(getSwfId(), arc.getId());
-        arcsByID.remove(arc.getId());
+        try {
+            _removeArc(getSwfId(), arc.getId());
+            arcsByID.remove(arc.getId());
+        } catch (Exception ex) {
+            throw new GraphWidgetException("removeArc(" + arc + ") failed", ex);
+        }
     }
 
     @Override
@@ -577,8 +610,13 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
         assert node != null;
         assert containsNode(node.getId());
 
-        _removeNode(getSwfId(), node.getId());
-        nodesByID.remove(node.getId());
+        try {
+            _removeNode(getSwfId(), node.getId());
+            nodesByID.remove(node.getId());
+        } catch (Exception ex) {
+            throw new GraphWidgetException("removeNode(" + node + ") failed",
+                    ex);
+        }
     }
 
     @Override
@@ -620,7 +658,12 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
         assert styleProperty != null;
         assert styleValue != null;
 
-        _setArcStyle(getSwfId(), arc.getId(), styleProperty, styleValue);
+        try {
+            _setArcStyle(getSwfId(), arc.getId(), styleProperty, styleValue);
+        } catch (Exception ex) {
+            throw new GraphWidgetException("setArcStyle(" + arc + ","
+                    + styleProperty + "," + styleValue + ") failed", ex);
+        }
     }
 
     @Override
@@ -629,7 +672,13 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
         assert containsNode(node.getId());
         assert point != null;
 
-        _setNodeLocation(getSwfId(), node.getId(), point.getX(), point.getY());
+        try {
+            _setNodeLocation(getSwfId(), node.getId(), point.getX(),
+                    point.getY());
+        } catch (Exception ex) {
+            throw new GraphWidgetException("setLocation(" + node + "," + point
+                    + ") failed", ex);
+        }
     }
 
     @Override
@@ -639,7 +688,12 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
         assert styleProperty != null;
         assert styleValue != null;
 
-        _setNodeStyle(getSwfId(), node.getId(), styleProperty, styleValue);
+        try {
+            _setNodeStyle(getSwfId(), node.getId(), styleProperty, styleValue);
+        } catch (Exception ex) {
+            throw new GraphWidgetException("setNodeStyle(" + node + ","
+                    + styleProperty + "," + styleValue + ") failed", ex);
+        }
     }
 
     private String[] toNodeIdArray(Collection<Node> nodes) {

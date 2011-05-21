@@ -344,8 +344,8 @@ public class Graph extends AbstractViewContentDisplay implements
         return "Graph";
     }
 
-    private Node getNodeFromViewItem(ViewItem resourceItem) {
-        return ((GraphItem) resourceItem.getDisplayObject()).getNode();
+    private Node getNodeFromViewItem(ViewItem viewItem) {
+        return ((GraphItem) viewItem.getDisplayObject()).getNode();
     }
 
     @Override
@@ -539,7 +539,7 @@ public class Graph extends AbstractViewContentDisplay implements
                 }, category);
     }
 
-    private void removeViewItem(ViewItem viewItem) {
+    private void removeGraphNode(ViewItem viewItem) {
         assert viewItem != null;
 
         nodeResources.removeResourceSet(viewItem.getResources());
@@ -661,7 +661,7 @@ public class Graph extends AbstractViewContentDisplay implements
         }
 
         for (ViewItem viewItem : removedViewItems) {
-            removeViewItem(viewItem);
+            removeGraphNode(viewItem);
         }
 
         if (!changedSlots.isEmpty()) {
