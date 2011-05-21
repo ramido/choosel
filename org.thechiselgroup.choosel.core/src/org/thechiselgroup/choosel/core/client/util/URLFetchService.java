@@ -19,6 +19,11 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface URLFetchService {
 
+    /**
+     * @see JavaScript escape function
+     */
+    String escape(String urlPart);
+
     void fetchURL(String url, AsyncCallback<String> callback);
 
 }

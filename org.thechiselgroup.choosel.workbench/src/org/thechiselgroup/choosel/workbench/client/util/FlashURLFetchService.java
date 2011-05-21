@@ -122,6 +122,13 @@ public class FlashURLFetchService extends SWFWidget implements URLFetchService {
         }
     }
 
+    // @formatter:off
+    @Override
+    public  native String escape(String url) /*-{
+        return escape(url);
+    }-*/;
+    // @formatter:on
+
     @Override
     public void fetchURL(String url, AsyncCallback<String> callback) {
         addUrlCallback(url, callback);
