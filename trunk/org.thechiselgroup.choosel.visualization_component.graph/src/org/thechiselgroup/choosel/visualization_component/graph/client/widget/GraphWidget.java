@@ -321,9 +321,12 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
     @Override
     public void addArc(Arc arc) {
         assert arc != null;
-        assert !arcsByID.containsKey(arc.getId()) : "arc must not be contained";
-        assert nodesByID.containsKey(arc.getSourceNodeId()) : "source node must be available";
-        assert nodesByID.containsKey(arc.getTargetNodeId()) : "target node must be available";
+        assert !arcsByID.containsKey(arc.getId()) : "arc '" + arc.getId()
+                + "' must not be already contained";
+        assert nodesByID.containsKey(arc.getSourceNodeId()) : "source node '"
+                + arc.getSourceNodeId() + "' must be available";
+        assert nodesByID.containsKey(arc.getTargetNodeId()) : "target node '"
+                + arc.getTargetNodeId() + "'must be available";
 
         arcsByID.put(arc.getId(), arc);
         _addArc(getSwfId(), arc.getId(), arc.getSourceNodeId(),
