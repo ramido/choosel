@@ -56,6 +56,10 @@ public class Resource implements Serializable {
         }
     }
 
+    public boolean containsProperty(String property) {
+        return properties.containsKey(property);
+    }
+
     /**
      * Equals is just based on the <code>uri</code>. In Choosel there should be
      * just one resource per uri.
