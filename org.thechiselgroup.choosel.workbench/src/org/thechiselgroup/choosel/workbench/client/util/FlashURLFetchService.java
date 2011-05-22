@@ -68,7 +68,7 @@ public class FlashURLFetchService extends SWFWidget implements URLFetchService {
             Logger.getLogger("").log(Level.SEVERE, ex.getMessage(), ex);
         }
     }
-    
+
     // @formatter:off
     private static native void _requestURL(String swfID, String url) /*-{
         $doc.getElementById(swfID).call(url, "_flexproxy_callback");
@@ -126,8 +126,8 @@ public class FlashURLFetchService extends SWFWidget implements URLFetchService {
 
     // @formatter:off
     @Override
-    public  native String escape(String url) /*-{
-        return escape(url);
+    public final native String encodeURIComponent(String uriComponent) /*-{
+        return encodeURIComponent(uriComponent);
     }-*/;
     // @formatter:on
 
