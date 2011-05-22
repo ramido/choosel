@@ -40,7 +40,10 @@ public interface GraphNodeExpansionCallback {
 
     Resource getResourceByUri(String value);
 
-    // XXX remove --> should be injected if needed
+    /**
+     * @deprecated {@link ResourceManager} should be injected instead.
+     */
+    @Deprecated
     ResourceManager getResourceManager();
 
     LightweightCollection<ViewItem> getViewItems(Iterable<Resource> resources);
