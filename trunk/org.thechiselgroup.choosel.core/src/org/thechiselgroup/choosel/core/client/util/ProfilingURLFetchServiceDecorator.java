@@ -39,8 +39,8 @@ public class ProfilingURLFetchServiceDecorator implements URLFetchService {
     }
 
     @Override
-    public String escape(String urlPart) {
-        return delegate.escape(urlPart);
+    public String encodeURIComponent(String uriComponent) {
+        return delegate.encodeURIComponent(uriComponent);
     }
 
     @Override
