@@ -68,6 +68,20 @@ public class DefaultResourceManager implements ResourceManager {
     }
 
     @Override
+    public boolean containsAllReferencedResources(Resource resource,
+            String uriListProperty) {
+
+        UriList uriList = (UriList) resource.getValue(uriListProperty);
+        for (String uri : uriList) {
+            if (!contains(uri)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
     public void clear() {
         keysToResourceElements.clear();
     }

@@ -23,6 +23,9 @@ public interface ResourceManager extends ResourceAccessor {
 
     void clear();
 
+    boolean containsAllReferencedResources(Resource resource,
+            String uriListProperty);
+
     void deallocate(String uri);
 
 }
