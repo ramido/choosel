@@ -319,12 +319,16 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
 
         bind(DocumentProcessor.class).to(SarissaDocumentProcessor.class).in(
                 Singleton.class);
-        bind(URLFetchService.class).to(FlashURLFetchService.class).in(
-                Singleton.class);
+        bindUrlFetchService();
 
         bindBranding();
         bindCustomServices();
         bindApplication();
+    }
+
+    protected void bindUrlFetchService() {
+        bind(URLFetchService.class).to(FlashURLFetchService.class).in(
+                Singleton.class);
     }
 
     protected void configurePopups() {
