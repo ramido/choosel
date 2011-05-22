@@ -26,7 +26,6 @@ public final class LightweightCollections {
     }
 
     public static <T> LightweightCollection<T> toCollection(T... values) {
-
         LightweightList<T> result = CollectionFactory.createLightweightList();
         for (T t : values) {
             result.add(t);
@@ -35,7 +34,6 @@ public final class LightweightCollections {
     }
 
     private LightweightCollections() {
-
     }
 
 }
