@@ -155,13 +155,13 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
     }
 
     /*
-     * NOTE: FlexViz returns double for the end location.
+     * NOTE: FlexViz returns double for the locations.
      */
-    public static void _onNodeDrag(String nodeID, int startX, int startY,
+    public static void _onNodeDrag(String nodeID, double startX, double startY,
             double endX, double endY, String swfID) {
 
-        _getGraphWidgetByID(swfID).onNodeDrag(nodeID, startX, startY,
-                (int) endX, (int) endY);
+        _getGraphWidgetByID(swfID).onNodeDrag(nodeID, (int) startX,
+                (int) startY, (int) endX, (int) endY);
     }
 
     public static void _onNodeDragHandleMouseDown(String nodeID, int mouseX,
@@ -303,7 +303,7 @@ public class GraphWidget extends SWFWidget implements GraphDisplay {
         @org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphWidget::_onNodeDragHandleMouseMove(Ljava/lang/String;IILjava/lang/String;))
 
         $wnd._flexvis_nodeDrag=$entry(
-        @org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphWidget::_onNodeDrag(Ljava/lang/String;IIDDLjava/lang/String;));
+        @org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphWidget::_onNodeDrag(Ljava/lang/String;DDDDLjava/lang/String;));
     }-*/;
     // @formatter:on
 
