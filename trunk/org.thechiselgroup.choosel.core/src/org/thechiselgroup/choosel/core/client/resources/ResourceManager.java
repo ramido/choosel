@@ -15,9 +15,21 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.resources;
 
+import java.util.List;
+
 public interface ResourceManager extends ResourceAccessor {
 
+    /**
+     * Adds a resource to this {@code ResourceManager}. If a resource with a
+     * similar uri was already contained, this resource is returned.
+     * 
+     * @param resource
+     *            resource that should be added to the {@code ResourceManager}
+     * @return resource that is contained in the {@code ResourceManager}.
+     */
     Resource add(Resource resource);
+
+    List<Resource> addAll(List<Resource> resources);
 
     Resource allocate(String uri);
 
