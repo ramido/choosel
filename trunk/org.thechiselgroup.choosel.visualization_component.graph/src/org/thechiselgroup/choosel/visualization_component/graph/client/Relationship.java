@@ -19,6 +19,7 @@ import java.io.Serializable;
 
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 
+@Deprecated
 public class Relationship implements Serializable {
 
     private static final long serialVersionUID = -3805249901088642589L;
@@ -37,23 +38,30 @@ public class Relationship implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         Relationship other = (Relationship) obj;
         if (source == null) {
-            if (other.source != null)
+            if (other.source != null) {
                 return false;
-        } else if (!source.equals(other.source))
+            }
+        } else if (!source.equals(other.source)) {
             return false;
+        }
         if (target == null) {
-            if (other.target != null)
+            if (other.target != null) {
                 return false;
-        } else if (!target.equals(other.target))
+            }
+        } else if (!target.equals(other.target)) {
             return false;
+        }
         return true;
     }
 
