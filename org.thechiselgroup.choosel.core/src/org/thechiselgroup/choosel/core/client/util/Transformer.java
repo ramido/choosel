@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -15,9 +15,19 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.util;
 
-// TODO merge with Transformer
-public interface Converter<S, T> {
+/**
+ * Interface for transforming one type of value into another.
+ * 
+ * @author Lars Grammel
+ * 
+ * @param <S>
+ *            Type of input values
+ * @param <T>
+ *            Type of output values
+ */
+// TODO merge Converter into this class
+public interface Transformer<S, T> {
 
-    T convert(S value) throws ConversionException;
+    T transform(S value) throws Exception;
 
 }
