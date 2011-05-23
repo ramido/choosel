@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.util.callbacks;
 
+import org.thechiselgroup.choosel.core.client.util.TransformationException;
 import org.thechiselgroup.choosel.core.client.util.Transformer;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -52,7 +53,8 @@ public class TransformingAsyncCallback<S, T> implements AsyncCallback<S> {
         try {
             callback.onSuccess(transformer.transform(result));
         } catch (Exception e) {
-            callback.onFailure(e);
+            callback.onFailure(new TransformationException(result, e));
         }
     }
+
 }
