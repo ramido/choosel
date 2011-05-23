@@ -35,9 +35,16 @@ public interface ResourceManager extends ResourceAccessor {
 
     void clear();
 
+    /**
+     * @return {@code true}, if a {@link UriList} property is not {@code null}
+     *         and all contained URIs refer to {@link Resource}s in this
+     *         {@link ResourceManager}.
+     */
     boolean containsAllReferencedResources(Resource resource,
             String uriListProperty);
 
     void deallocate(String uri);
+
+    List<Resource> resolveResources(Resource resource, String uriListProperty);
 
 }

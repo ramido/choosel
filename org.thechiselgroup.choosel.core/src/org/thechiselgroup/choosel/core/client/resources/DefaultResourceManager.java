@@ -92,6 +92,10 @@ public class DefaultResourceManager implements ResourceManager {
     public boolean containsAllReferencedResources(Resource resource,
             String uriListProperty) {
 
+        if (!resource.containsProperty(uriListProperty)) {
+            return false;
+        }
+
         UriList uriList = (UriList) resource.getValue(uriListProperty);
         for (String uri : uriList) {
             if (!contains(uri)) {
@@ -131,6 +135,18 @@ public class DefaultResourceManager implements ResourceManager {
 
     private void removeResourceElement(String uri) {
         keysToResourceElements.remove(uri);
+    }
+
+    @Override
+    public List<Resource> resolveResources(Resource resource,
+            String uriListProperty) {
+
+        List<Resource> result = new ArrayList<Resource>();
+        UriList uris = (UriList) resource.getValue(uriListProperty);
+        for (String uri : uris) {
+            result.add(getByUri(uri));
+        }
+        return result;
     }
 
 }
