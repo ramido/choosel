@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 
 import org.thechiselgroup.choosel.core.client.command.AsyncCommand;
 import org.thechiselgroup.choosel.core.client.command.AsyncCommandExecutor;
-import org.thechiselgroup.choosel.core.client.util.NullAsyncCallback;
+import org.thechiselgroup.choosel.core.client.util.callbacks.NullAsyncCallback;
 
 import com.google.inject.Inject;
 
