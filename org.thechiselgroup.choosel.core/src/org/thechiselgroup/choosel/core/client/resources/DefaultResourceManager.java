@@ -15,6 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.resources;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
@@ -61,10 +63,29 @@ public class DefaultResourceManager implements ResourceManager {
     }
 
     @Override
+    public List<Resource> addAll(List<Resource> resources) {
+        List<Resource> addedResources = new ArrayList<Resource>();
+        for (Resource resource : resources) {
+            addedResources.add(add(resource));
+        }
+        return addedResources;
+    }
+
+    @Override
     public Resource allocate(String uri) {
         ResourceElement resourceElement = getResourceElement(uri);
         resourceElement.allocate();
         return resourceElement.resource;
+    }
+
+    @Override
+    public void clear() {
+        keysToResourceElements.clear();
+    }
+
+    @Override
+    public boolean contains(String uri) {
+        return keysToResourceElements.containsKey(uri);
     }
 
     @Override
@@ -79,16 +100,6 @@ public class DefaultResourceManager implements ResourceManager {
         }
 
         return true;
-    }
-
-    @Override
-    public void clear() {
-        keysToResourceElements.clear();
-    }
-
-    @Override
-    public boolean contains(String uri) {
-        return keysToResourceElements.containsKey(uri);
     }
 
     @Override
