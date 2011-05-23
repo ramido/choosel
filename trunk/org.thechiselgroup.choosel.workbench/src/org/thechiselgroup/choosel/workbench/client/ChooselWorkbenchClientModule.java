@@ -48,7 +48,7 @@ import org.thechiselgroup.choosel.core.client.ui.popup.PopupFactory;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.core.client.ui.shade.ShadeManager;
 import org.thechiselgroup.choosel.core.client.util.HandlerManagerProvider;
-import org.thechiselgroup.choosel.core.client.util.URLFetchService;
+import org.thechiselgroup.choosel.core.client.util.url.URLFetchService;
 import org.thechiselgroup.choosel.core.client.views.DefaultViewAccessor;
 import org.thechiselgroup.choosel.core.client.views.ViewAccessor;
 import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
@@ -84,7 +84,7 @@ import org.thechiselgroup.choosel.workbench.client.ui.messages.DefaultMessageMan
 import org.thechiselgroup.choosel.workbench.client.ui.messages.MessageBlockingCommandExecutor;
 import org.thechiselgroup.choosel.workbench.client.ui.messages.MessageManager;
 import org.thechiselgroup.choosel.workbench.client.ui.messages.ShadeMessageManager;
-import org.thechiselgroup.choosel.workbench.client.util.FlashURLFetchService;
+import org.thechiselgroup.choosel.workbench.client.util.url.FlashURLFetchService;
 import org.thechiselgroup.choosel.workbench.client.util.xml.SarissaDocumentProcessor;
 import org.thechiselgroup.choosel.workbench.client.workspace.DefaultShareConfigurationFactory;
 import org.thechiselgroup.choosel.workbench.client.workspace.DefaultViewLoadManager;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -13,21 +13,16 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.core.client.util;
+package org.thechiselgroup.choosel.core.client.util.url;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
+/**
+ * Creates URL builders, which can be pre-configured (e.g. by supplying API key
+ * parameters or server and protocol settings).
+ * 
+ * @author Lars Grammel
+ */
+public interface UrlBuilderFactory {
 
-public interface URLFetchService {
-
-    /**
-     * Similar to JavaScript {@code encodeURIComponent()} function.
-     * 
-     * @see http://xkr.us/articles/javascript/encode-compare/ for details on why
-     *      to prefer {@code encodeURIComponent()} over {@code encode()} and
-     *      {@code encodeURI()}.
-     */
-    String encodeURIComponent(String uriComponent);
-
-    void fetchURL(String url, AsyncCallback<String> callback);
+    UrlBuilder createUrlBuilder();
 
 }

@@ -25,7 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.core.client.util.NullAsyncCallback;
+import org.thechiselgroup.choosel.core.client.util.callbacks.NullAsyncCallback;
 import org.thechiselgroup.choosel.workbench.client.workspace.WorkspacePersistenceManager;
 import org.thechiselgroup.choosel.workbench.client.workspace.WorkspacePreview;
 import org.thechiselgroup.choosel.workbench.client.workspace.command.LoadWorkspaceDialogCommand.DetailsDisplay;
