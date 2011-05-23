@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-/**
- * 
- */
-package org.thechiselgroup.choosel.core.client.util;
+package org.thechiselgroup.choosel.core.client.util.callbacks;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class NullAsyncCallback<T> implements AsyncCallback<T> {
+
     @Override
     public void onFailure(Throwable caught) {
     }
@@ -28,4 +26,5 @@ public class NullAsyncCallback<T> implements AsyncCallback<T> {
     @Override
     public void onSuccess(T result) {
     }
+
 }
