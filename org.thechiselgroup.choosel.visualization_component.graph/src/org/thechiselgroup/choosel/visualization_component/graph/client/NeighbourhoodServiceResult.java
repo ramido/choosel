@@ -23,6 +23,10 @@ import java.util.Set;
 
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 
+/**
+ * @deprecated Use {@link ResourceNeighbourhood} instead.
+ */
+@Deprecated
 public class NeighbourhoodServiceResult implements Serializable {
 
     private static final long serialVersionUID = 3287669903192891528L;

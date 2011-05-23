@@ -22,6 +22,11 @@ import org.thechiselgroup.choosel.core.client.geometry.Point;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.Node;
 
+/**
+ * @deprecated Use {@link AbstractGraphNodeSingleResourceNeighbourhoodExpander}
+ *             instead.
+ */
+@Deprecated
 public abstract class AbstractGraphNodeExpander implements GraphNodeExpander {
 
     protected void addResources(GraphNodeExpansionCallback expansionCallback,

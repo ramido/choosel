@@ -24,6 +24,7 @@ import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.Node;
 
+@Deprecated
 public abstract class AbstractNeighbourhoodCallback extends
         ErrorHandlingAsyncCallback<NeighbourhoodServiceResult> {
 
