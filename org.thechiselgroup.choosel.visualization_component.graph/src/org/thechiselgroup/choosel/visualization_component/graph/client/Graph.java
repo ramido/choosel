@@ -295,8 +295,12 @@ public class Graph extends AbstractViewContentDisplay implements
          * NOTE: all node configuration should be done when calling the
          * automatic expanders, since they rely on returning the correct graph
          * contents etc.
+         * 
+         * NOTE: we do not execute the expanders if we are restoring the graph
          */
-        registry.getAutomaticExpander(type).expand(viewItem, this);
+        if (ready) {
+            registry.getAutomaticExpander(type).expand(viewItem, this);
+        }
 
         return graphItem;
     }
@@ -538,6 +542,10 @@ public class Graph extends AbstractViewContentDisplay implements
                 new NodeMenuItemClickedHandler() {
                     @Override
                     public void onNodeMenuItemClicked(Node node) {
+                        if (!ready) {
+                            return;
+                        }
+
                         nodeExpander.expand(getViewItem(node), Graph.this);
                     }
                 }, category);
