@@ -84,7 +84,7 @@ public abstract class AbstractGraphNodeSingleResourceNeighbourhoodExpander
             Resource resource);
 
     protected abstract void loadNeighbourhood(ViewItem viewItem,
-            Resource resource, AsyncCallback<ResourceNeighbourhood> graph);
+            Resource resource, AsyncCallback<ResourceNeighbourhood> callback);
 
     private void loadNeighbourhood(final ViewItem viewItem,
             final Resource resource, final GraphNodeExpansionCallback graph) {
