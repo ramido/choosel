@@ -29,6 +29,7 @@ import org.thechiselgroup.choosel.core.client.ui.CSS;
 import org.thechiselgroup.choosel.core.client.ui.Color;
 import org.thechiselgroup.choosel.core.client.ui.popup.DefaultPopupFactory;
 import org.thechiselgroup.choosel.core.client.ui.popup.DefaultPopupManagerFactory;
+import org.thechiselgroup.choosel.core.client.util.math.SumCalculation;
 import org.thechiselgroup.choosel.core.client.views.VisualizationWidget;
 import org.thechiselgroup.choosel.core.client.views.behaviors.CompositeViewItemBehavior;
 import org.thechiselgroup.choosel.core.client.views.behaviors.HighlightingViewItemBehavior;
@@ -39,9 +40,11 @@ import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
 import org.thechiselgroup.choosel.core.client.views.model.SelectionModel;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
+import org.thechiselgroup.choosel.core.client.views.resolvers.CalculationResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FirstResourcePropertyResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ResourceCountResolver;
+import org.thechiselgroup.choosel.core.client.views.resolvers.SubsetDelegatingValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemStatusResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemStatusResolver.StatusRule;
 import org.thechiselgroup.choosel.core.client.views.sorting.ViewItemDoubleComparator;
@@ -63,6 +66,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class ComponentExampleEntryPoint implements EntryPoint {
 
+    private static final int CONTROL_HEIGHT = 25;
+
     private static final Color COLOR_DEFAULT = new Color(18, 64, 171, 0.6);
 
     private static final Color COLOR_DEFAULT_BORDER = new Color(6, 38, 111);
@@ -80,13 +85,12 @@ public class ComponentExampleEntryPoint implements EntryPoint {
                     Subset.HIGHLIGHTED), StatusRule.fullOrPartial(
                     COLOR_SELECTION, Subset.SELECTED));
 
-    // height of control element in px, also in index.html
-    private static final int CONTROL_HEIGHT = 25;
-
     private VisualizationWidget<BarChart> barChart;
 
-    private void createBarChart(ResourceSet resourceSet, HighlightingModel hoverModel,
-            SelectionModel selectionModel) {
+    private FlowPanel chartControl;
+
+    private void createBarChart(ResourceSet resourceSet,
+            HighlightingModel hoverModel, SelectionModel selectionModel) {
 
         // behaviors: how the view reacts to user interactions
         CompositeViewItemBehavior barChartBehaviors = new CompositeViewItemBehavior();
@@ -103,7 +107,8 @@ public class ComponentExampleEntryPoint implements EntryPoint {
                                         + viewItem.getResources().size()
                                         + " items<span>");
                     }
-                }, new DefaultPopupManagerFactory(new DefaultPopupFactory()), hoverModel));
+                }, new DefaultPopupManagerFactory(new DefaultPopupFactory()),
+                hoverModel));
 
         // create visualization
         barChart = new VisualizationWidget<BarChart>(new BarChart(),
@@ -123,7 +128,8 @@ public class ComponentExampleEntryPoint implements EntryPoint {
                         StatusRule.fullOrPartial(COLOR_HIGHLIGHTED_BORDER,
                                 Subset.HIGHLIGHTED)));
         barChart.setResolver(BarChart.PARTIAL_BAR_LENGTH,
-                new ResourceCountResolver(Subset.SELECTED));
+                new SubsetDelegatingValueResolver(BarChart.BAR_LENGTH,
+                        Subset.SELECTED));
         barChart.setResolver(BarChart.PARTIAL_BAR_COLOR, COLOR_RESOLVER);
         barChart.setResolver(BarChart.PARTIAL_BAR_BORDER_COLOR,
                 new FixedValueResolver(COLOR_SELECTION_BORDER));
@@ -139,11 +145,10 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         barChart.setContentResourceSet(resourceSet);
     }
 
-    private FlowPanel createChartControl() {
-        FlowPanel panel = new FlowPanel();
-        panel.add(createDoNotGroupBarChartButton());
-        panel.add(createGroupBarChartByText2Button());
-        return panel;
+    private void createChartControl() {
+        chartControl = new FlowPanel();
+        chartControl.add(createDoNotGroupBarChartButton());
+        chartControl.add(createGroupBarChartByText2Button());
     }
 
     private RadioButton createDoNotGroupBarChartButton() {
@@ -189,14 +194,13 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         barChart.setResolver(BarChart.BAR_LABEL,
                 new FirstResourcePropertyResolver(
                         BenchmarkResourceSetFactory.TEXT_2));
-        barChart.setResolver(BarChart.BAR_LENGTH,
-                new FirstResourcePropertyResolver(
-                        BenchmarkResourceSetFactory.NUMBER_2) {
-                    @Override
-                    public String toString() {
-                        return "my axis label"; // example for axis labeling
-                    }
-                });
+        barChart.setResolver(BarChart.BAR_LENGTH, new CalculationResolver(
+                BenchmarkResourceSetFactory.NUMBER_2, new SumCalculation()) {
+            @Override
+            public String toString() {
+                return "my axis label"; // example for axis labeling
+            }
+        });
     }
 
     protected void groupBarChartByText2() {
@@ -232,24 +236,29 @@ public class ComponentExampleEntryPoint implements EntryPoint {
                     new DefaultResourceSetFactory());
 
             createBarChart(resourceSet, hoverModel, selectionModel);
+            createChartControl();
 
-            RootPanel.get("control").add(createChartControl());
-            RootPanel.get("chart").add(barChart);
+            RootPanel.get().add(chartControl);
+            RootPanel.get().add(barChart);
 
             // Set the size of the window, and listen for
             // changes in size.
             Window.enableScrolling(false);
-            barChart.setSize(Window.getClientWidth() + CSS.PX,
-                    Window.getClientHeight() - CONTROL_HEIGHT + CSS.PX);
+            layout();
             Window.addResizeHandler(new ResizeHandler() {
                 @Override
                 public void onResize(ResizeEvent event) {
-                    barChart.setSize(event.getWidth() + CSS.PX,
-                            event.getHeight() - CONTROL_HEIGHT + CSS.PX);
+                    layout();
                 }
             });
         } catch (Throwable ex) {
             handle(ex);
         }
+    }
+
+    private void layout() {
+        CSS.setHeight(chartControl, CONTROL_HEIGHT);
+        barChart.setSize(Window.getClientWidth() + CSS.PX,
+                Window.getClientHeight() - CONTROL_HEIGHT + CSS.PX);
     }
 }
