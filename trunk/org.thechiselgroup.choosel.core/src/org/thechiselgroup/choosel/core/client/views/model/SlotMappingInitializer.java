@@ -17,6 +17,13 @@ package org.thechiselgroup.choosel.core.client.views.model;
 
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 
+/**
+ * this class defines default mappings between slots that are in the view and
+ * Resolvers that are used to resolve that slot.
+ * 
+ * It takes in a slotMappingConfiguration and adds the mappings to that
+ * configuration
+ */
 public interface SlotMappingInitializer {
 
     void initializeMappings(ResourceSet resources,
