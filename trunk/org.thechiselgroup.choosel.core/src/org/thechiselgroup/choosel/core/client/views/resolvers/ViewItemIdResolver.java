@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
+import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
 
@@ -24,6 +25,11 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverC
  * @author Lars Grammel
  */
 public class ViewItemIdResolver implements ViewItemValueResolver {
+
+    @Override
+    public DataType getVisualDimensionDataType() {
+        return DataType.TEXT;
+    }
 
     @Override
     public String resolve(ViewItem viewItem,

@@ -20,12 +20,12 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.thechiselgroup.choosel.core.client.resources.CategorizableResourceGroupingChange;
+import org.thechiselgroup.choosel.core.client.resources.CategorizableResourceGroupingChange.Delta;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.IntersectionResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
-import org.thechiselgroup.choosel.core.client.resources.CategorizableResourceGroupingChange;
-import org.thechiselgroup.choosel.core.client.resources.CategorizableResourceGroupingChange.Delta;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChangedEvent;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGroupingChangedHandler;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;

@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.core.client.views.resolvers;
 
 import java.util.Map;
 
+import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetUtils;
@@ -36,6 +37,11 @@ public class ViewItemColorResolver implements ViewItemValueResolver {
 
     public ViewItemColorResolver(ResourceCategorizer categorizer) {
         this.categorizer = categorizer;
+    }
+
+    @Override
+    public DataType getVisualDimensionDataType() {
+        return DataType.COLOR;
     }
 
     @Override
