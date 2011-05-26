@@ -15,7 +15,11 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.ui;
 
-public class Color {
+import java.io.Serializable;
+
+public class Color implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     public final static Color TRANSPARENT = new Color(255, 255, 255, 0.0);
 
@@ -44,6 +48,12 @@ public class Color {
     private int blue;
 
     private double alpha;
+
+    @SuppressWarnings("unused")
+    private Color() {
+        // for GWT serialization
+        // XXX might need to be public
+    }
 
     public Color(int red, int green, int blue) {
         this(red, green, blue, 1d);

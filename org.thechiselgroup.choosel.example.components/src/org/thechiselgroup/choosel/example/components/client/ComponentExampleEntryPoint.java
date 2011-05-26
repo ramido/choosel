@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.thechiselgroup.choosel.core.client.label.IncrementingSuffixLabelFactory;
+import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByPropertyMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByUriMultiCategorizer;
@@ -79,9 +80,9 @@ public class ComponentExampleEntryPoint implements EntryPoint {
     private static final Color COLOR_HIGHLIGHTED_BORDER = new Color(166, 163, 0);
 
     private static final ViewItemStatusResolver COLOR_RESOLVER = new ViewItemStatusResolver(
-            COLOR_DEFAULT, StatusRule.fullOrPartial(COLOR_HIGHLIGHTED,
-                    Subset.HIGHLIGHTED), StatusRule.fullOrPartial(
-                    COLOR_SELECTION, Subset.SELECTED));
+            COLOR_DEFAULT, DataType.COLOR, StatusRule.fullOrPartial(
+                    COLOR_HIGHLIGHTED, Subset.HIGHLIGHTED),
+            StatusRule.fullOrPartial(COLOR_SELECTION, Subset.SELECTED));
 
     private VisualizationWidget<BarChart> barChart;
 
@@ -110,15 +111,16 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         // configure visual mappings
         pieChart.setResolver(
                 PieChart.COLOR,
-                new ViewItemStatusResolver(COLOR_DEFAULT, StatusRule
-                        .fullOrPartial(COLOR_HIGHLIGHTED, Subset.HIGHLIGHTED),
-                        StatusRule.full(COLOR_SELECTION, Subset.SELECTED)));
+                new ViewItemStatusResolver(COLOR_DEFAULT, DataType.COLOR,
+                        StatusRule.fullOrPartial(COLOR_HIGHLIGHTED,
+                                Subset.HIGHLIGHTED), StatusRule.full(
+                                COLOR_SELECTION, Subset.SELECTED)));
         pieChart.setResolver(
                 PieChart.BORDER_COLOR,
-                new ViewItemStatusResolver(COLOR_DEFAULT_BORDER, StatusRule
-                        .full(COLOR_SELECTION_BORDER, Subset.SELECTED),
-                        StatusRule.fullOrPartial(COLOR_HIGHLIGHTED_BORDER,
-                                Subset.HIGHLIGHTED)));
+                new ViewItemStatusResolver(COLOR_DEFAULT_BORDER,
+                        DataType.COLOR, StatusRule.full(COLOR_SELECTION_BORDER,
+                                Subset.SELECTED), StatusRule.fullOrPartial(
+                                COLOR_HIGHLIGHTED_BORDER, Subset.HIGHLIGHTED)));
         pieChart.setResolver(PieChart.VALUE, new CalculationResolver(
                 BenchmarkResourceSetFactory.NUMBER_2, new SumCalculation()));
         pieChart.setResolver(PieChart.PARTIAL_VALUE,
@@ -126,7 +128,7 @@ public class ComponentExampleEntryPoint implements EntryPoint {
                         Subset.SELECTED));
         pieChart.setResolver(PieChart.PARTIAL_COLOR, COLOR_RESOLVER);
         pieChart.setResolver(PieChart.PARTIAL_BORDER_COLOR,
-                new FixedValueResolver(COLOR_SELECTION_BORDER));
+                new FixedValueResolver(COLOR_SELECTION_BORDER, DataType.COLOR));
 
         // set resources
         pieChart.setContentResourceSet(resourceSet);
@@ -153,21 +155,22 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         // configure visual mappings
         barChart.setResolver(
                 BarChart.BAR_COLOR,
-                new ViewItemStatusResolver(COLOR_DEFAULT, StatusRule
-                        .fullOrPartial(COLOR_HIGHLIGHTED, Subset.HIGHLIGHTED),
-                        StatusRule.full(COLOR_SELECTION, Subset.SELECTED)));
+                new ViewItemStatusResolver(COLOR_DEFAULT, DataType.COLOR,
+                        StatusRule.fullOrPartial(COLOR_HIGHLIGHTED,
+                                Subset.HIGHLIGHTED), StatusRule.full(
+                                COLOR_SELECTION, Subset.SELECTED)));
         barChart.setResolver(
                 BarChart.BAR_BORDER_COLOR,
-                new ViewItemStatusResolver(COLOR_DEFAULT_BORDER, StatusRule
-                        .full(COLOR_SELECTION_BORDER, Subset.SELECTED),
-                        StatusRule.fullOrPartial(COLOR_HIGHLIGHTED_BORDER,
-                                Subset.HIGHLIGHTED)));
+                new ViewItemStatusResolver(COLOR_DEFAULT_BORDER,
+                        DataType.COLOR, StatusRule.full(COLOR_SELECTION_BORDER,
+                                Subset.SELECTED), StatusRule.fullOrPartial(
+                                COLOR_HIGHLIGHTED_BORDER, Subset.HIGHLIGHTED)));
         barChart.setResolver(BarChart.PARTIAL_BAR_LENGTH,
                 new SubsetDelegatingValueResolver(BarChart.BAR_LENGTH,
                         Subset.SELECTED));
         barChart.setResolver(BarChart.PARTIAL_BAR_COLOR, COLOR_RESOLVER);
         barChart.setResolver(BarChart.PARTIAL_BAR_BORDER_COLOR,
-                new FixedValueResolver(COLOR_SELECTION_BORDER));
+                new FixedValueResolver(COLOR_SELECTION_BORDER, DataType.COLOR));
 
         // default settings
         doNotGroupBarChart();
@@ -228,7 +231,7 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         // mappings
         barChart.setResolver(BarChart.BAR_LABEL,
                 new FirstResourcePropertyResolver(
-                        BenchmarkResourceSetFactory.TEXT_2));
+                        BenchmarkResourceSetFactory.TEXT_2, DataType.TEXT));
         barChart.setResolver(BarChart.BAR_LENGTH, new CalculationResolver(
                 BenchmarkResourceSetFactory.NUMBER_2, new SumCalculation()) {
             @Override
@@ -248,7 +251,7 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         // slot mappings
         barChart.setResolver(BarChart.BAR_LABEL,
                 new FirstResourcePropertyResolver(
-                        BenchmarkResourceSetFactory.TEXT_2));
+                        BenchmarkResourceSetFactory.TEXT_2, DataType.TEXT));
         barChart.setResolver(BarChart.BAR_LENGTH, new ResourceCountResolver());
     }
 
