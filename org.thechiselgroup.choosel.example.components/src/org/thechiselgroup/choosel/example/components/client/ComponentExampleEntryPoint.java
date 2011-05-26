@@ -23,7 +23,7 @@ import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactor
 import org.thechiselgroup.choosel.core.client.resources.ResourceByPropertyMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByUriMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.core.client.resources.ui.DetailsWidgetHelper;
+import org.thechiselgroup.choosel.core.client.resources.ui.SimpleDetailsWidgetHelper;
 import org.thechiselgroup.choosel.core.client.test.BenchmarkResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.ui.CSS;
 import org.thechiselgroup.choosel.core.client.ui.Color;
@@ -38,7 +38,6 @@ import org.thechiselgroup.choosel.core.client.views.behaviors.SwitchSelectionOnC
 import org.thechiselgroup.choosel.core.client.views.model.DefaultSelectionModel;
 import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
 import org.thechiselgroup.choosel.core.client.views.model.SelectionModel;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.resolvers.CalculationResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FirstResourcePropertyResolver;
@@ -50,6 +49,7 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemStatusReso
 import org.thechiselgroup.choosel.core.client.views.sorting.ViewItemDoubleComparator;
 import org.thechiselgroup.choosel.core.client.views.sorting.ViewItemStringSlotComparator;
 import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChart;
+import org.thechiselgroup.choosel.visualization_component.chart.client.piechart.PieChart;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -59,10 +59,8 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.UmbrellaException;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 public class ComponentExampleEntryPoint implements EntryPoint {
 
@@ -87,7 +85,52 @@ public class ComponentExampleEntryPoint implements EntryPoint {
 
     private VisualizationWidget<BarChart> barChart;
 
+    private VisualizationWidget<PieChart> pieChart;
+
     private FlowPanel chartControl;
+
+    private void createPieChart(ResourceSet resourceSet,
+            HighlightingModel hoverModel, SelectionModel selectionModel) {
+
+        // behaviors: how the view reacts to user interactions
+        CompositeViewItemBehavior barChartBehaviors = new CompositeViewItemBehavior();
+        barChartBehaviors.add(new HighlightingViewItemBehavior(hoverModel));
+        barChartBehaviors.add(new SwitchSelectionOnClickViewItemBehavior(
+                selectionModel));
+        barChartBehaviors.add(new PopupWithHighlightingViewItemBehavior(
+                new SimpleDetailsWidgetHelper(),
+                new DefaultPopupManagerFactory(new DefaultPopupFactory()),
+                hoverModel));
+
+        // create visualization
+        pieChart = new VisualizationWidget<PieChart>(new PieChart(),
+                selectionModel.getSelectionProxy(), hoverModel.getResources(),
+                barChartBehaviors);
+
+        // configure visual mappings
+        pieChart.setResolver(
+                PieChart.COLOR,
+                new ViewItemStatusResolver(COLOR_DEFAULT, StatusRule
+                        .fullOrPartial(COLOR_HIGHLIGHTED, Subset.HIGHLIGHTED),
+                        StatusRule.full(COLOR_SELECTION, Subset.SELECTED)));
+        pieChart.setResolver(
+                PieChart.BORDER_COLOR,
+                new ViewItemStatusResolver(COLOR_DEFAULT_BORDER, StatusRule
+                        .full(COLOR_SELECTION_BORDER, Subset.SELECTED),
+                        StatusRule.fullOrPartial(COLOR_HIGHLIGHTED_BORDER,
+                                Subset.HIGHLIGHTED)));
+        pieChart.setResolver(PieChart.VALUE, new CalculationResolver(
+                BenchmarkResourceSetFactory.NUMBER_2, new SumCalculation()));
+        pieChart.setResolver(PieChart.PARTIAL_VALUE,
+                new SubsetDelegatingValueResolver(PieChart.VALUE,
+                        Subset.SELECTED));
+        pieChart.setResolver(PieChart.PARTIAL_COLOR, COLOR_RESOLVER);
+        pieChart.setResolver(PieChart.PARTIAL_BORDER_COLOR,
+                new FixedValueResolver(COLOR_SELECTION_BORDER));
+
+        // set resources
+        pieChart.setContentResourceSet(resourceSet);
+    }
 
     private void createBarChart(ResourceSet resourceSet,
             HighlightingModel hoverModel, SelectionModel selectionModel) {
@@ -98,16 +141,8 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         barChartBehaviors.add(new SwitchSelectionOnClickViewItemBehavior(
                 selectionModel));
         barChartBehaviors.add(new PopupWithHighlightingViewItemBehavior(
-                new DetailsWidgetHelper() {
-                    public Widget createDetailsWidget(ViewItem viewItem) {
-                        return new HTML(
-                                "<b style='white-space: nowrap;'>"
-                                        + viewItem.getViewItemID()
-                                        + "</b><br/><span style='white-space: nowrap;'>"
-                                        + viewItem.getResources().size()
-                                        + " items<span>");
-                    }
-                }, new DefaultPopupManagerFactory(new DefaultPopupFactory()),
+                new SimpleDetailsWidgetHelper(),
+                new DefaultPopupManagerFactory(new DefaultPopupFactory()),
                 hoverModel));
 
         // create visualization
@@ -137,7 +172,7 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         // default settings
         doNotGroupBarChart();
 
-        // configure properties
+        // configure properties, e.g.
         // barChart.setPropertyValue(BarChart.LAYOUT_PROPERTY,
         // LayoutType.VERTICAL);
 
@@ -218,7 +253,6 @@ public class ComponentExampleEntryPoint implements EntryPoint {
     }
 
     private void handle(Throwable ex) {
-        // TODO use error handler
         while (ex instanceof UmbrellaException) {
             ex = ex.getCause();
         }
@@ -236,10 +270,12 @@ public class ComponentExampleEntryPoint implements EntryPoint {
                     new DefaultResourceSetFactory());
 
             createBarChart(resourceSet, hoverModel, selectionModel);
+            createPieChart(resourceSet, hoverModel, selectionModel);
             createChartControl();
 
             RootPanel.get().add(chartControl);
             RootPanel.get().add(barChart);
+            RootPanel.get().add(pieChart);
 
             // Set the size of the window, and listen for
             // changes in size.
@@ -259,6 +295,8 @@ public class ComponentExampleEntryPoint implements EntryPoint {
     private void layout() {
         CSS.setHeight(chartControl, CONTROL_HEIGHT);
         barChart.setSize(Window.getClientWidth() + CSS.PX,
-                Window.getClientHeight() - CONTROL_HEIGHT + CSS.PX);
+                (Window.getClientHeight() - CONTROL_HEIGHT) / 2 + CSS.PX);
+        pieChart.setSize(Window.getClientWidth() + CSS.PX,
+                (Window.getClientHeight() - CONTROL_HEIGHT) / 2 + CSS.PX);
     }
 }
