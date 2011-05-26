@@ -18,22 +18,11 @@ package org.thechiselgroup.choosel.core.client.views.model;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsEqualResources;
-import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.emptyLightweightCollection;
-import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.eqViewItems;
-import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.resourceItemsForResourceSets;
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.TYPE_1;
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.TYPE_2;
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createLabeledResources;
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
-import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.toResourceSet;
-import static org.thechiselgroup.choosel.core.client.views.model.DefaultViewModelTestHelper.captureAddedViewItems;
-import static org.thechiselgroup.choosel.core.client.views.model.DefaultViewModelTestHelper.captureAddedViewItemsAsList;
-import static org.thechiselgroup.choosel.core.client.views.model.DefaultViewModelTestHelper.captureUpdatedViewItems;
+import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.*;
+import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.*;
+import static org.thechiselgroup.choosel.core.client.views.model.DefaultViewModelTestHelper.*;
 
 import java.util.List;
 
@@ -73,10 +62,10 @@ public class DefaultViewModelTest {
         resource.putValue("text2", "t2");
 
         underTest.getSlotMappingConfiguration().setResolver(slot,
-                new FirstResourcePropertyResolver("text1"));
+                new FirstResourcePropertyResolver("text1", DataType.TEXT));
         containedResources.add(resource);
         underTest.getSlotMappingConfiguration().setResolver(slot,
-                new FirstResourcePropertyResolver("text2"));
+                new FirstResourcePropertyResolver("text2", DataType.TEXT));
 
         List<ViewItem> resourceItems = underTest.getViewItems().toList();
         assertEquals(1, resourceItems.size());
