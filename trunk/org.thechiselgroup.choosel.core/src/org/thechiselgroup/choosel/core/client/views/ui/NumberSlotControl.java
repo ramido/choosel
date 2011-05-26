@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.core.client.views.ui;
 import java.util.Arrays;
 import java.util.List;
 
+import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.ui.widget.listbox.ExtendedListBox;
 import org.thechiselgroup.choosel.core.client.ui.widget.listbox.ListBoxControl;
 import org.thechiselgroup.choosel.core.client.util.ConversionException;
@@ -97,13 +98,13 @@ public class NumberSlotControl extends SlotControl {
         };
 
         ViewItemResolverFactory[] calculations = new ViewItemResolverFactory[] {
+                new FixedValueResolverFactory(new ResourceCountResolver()),
                 new CalculationResolverFactory(new SumCalculation()),
                 new CalculationResolverFactory(new AverageCalculation()),
                 new CalculationResolverFactory(new MinCalculation()),
                 new CalculationResolverFactory(new MaxCalculation()),
-                new FixedValueResolverFactory(new ResourceCountResolver()),
                 new FixedValueResolverFactory(new FixedValueResolver(
-                        new Double(1))) };
+                        new Double(1), DataType.NUMBER)) };
 
         resolverFactorySelector = new ListBoxControl<ViewItemResolverFactory>(
                 new ExtendedListBox(false),
