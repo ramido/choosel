@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
+import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
 
@@ -26,10 +27,20 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverC
 public interface ViewItemValueResolver {
 
     /**
+     * 
+     * @return The data type that this resolver resolves to
+     */
+    DataType getVisualDimensionDataType();
+
+    /**
      * Calculates a value for a {@link ViewItem}.
      * 
      * @param context
-     *            Context that allows accessing resolvers for other slots.
+     *            Context that allows accessing resolvers for other slots. For
+     *            example, if you want to determine the color of a node's border
+     *            based on it's inner color, you could use the context to find
+     *            the resolver for the inner color, and darken it to resolve the
+     *            border.
      * 
      * @return Value for the {@link ViewItem}.
      */

@@ -121,7 +121,6 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
      * TODO add semantic meta-information as parameter, e.g. expected return
      * type or context (semantic description of slot?)
      */
-    // TODO use view item instead
     public Object resolve(Slot slot, ViewItem viewItem)
             throws SlotMappingResolutionException {
 
@@ -153,7 +152,7 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
                             .getValue(MEMENTO_KEY_PROPERTY);
 
                     setResolver(slot, new FirstResourcePropertyResolver(
-                            property));
+                            property, slot.getDataType()));
                 } else if (MEMENTO_VALUE_CALCULATION.equals(value)) {
                     String property = (String) child
                             .getValue(MEMENTO_KEY_PROPERTY);

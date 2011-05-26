@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
+import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.math.Calculation;
@@ -55,6 +56,11 @@ public class CalculationResolver extends SubsetViewItemValueResolver {
     }
 
     @Override
+    public DataType getVisualDimensionDataType() {
+        return DataType.NUMBER;
+    }
+
+    @Override
     public Double resolve(ViewItem viewItem,
             ViewItemValueResolverContext context, Subset subset) {
         return calculation.calculate(toNumberArray(viewItem
@@ -65,6 +71,10 @@ public class CalculationResolver extends SubsetViewItemValueResolver {
         NumberArray numberArray = MathUtils.createNumberArray();
 
         for (Resource resource : resources) {
+            // TODO, what happens if this is null, should that be possible,
+            // should it not show those resources
+            // TODO also what is used by default and does that make sense
+            // TODO but what would happen to number array if slot was missing
             numberArray.push((Double) resource.getValue(property));
         }
 

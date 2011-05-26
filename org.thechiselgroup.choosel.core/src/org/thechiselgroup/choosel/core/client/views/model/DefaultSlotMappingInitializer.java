@@ -56,7 +56,7 @@ public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
             return new CalculationResolver(firstProperty, new SumCalculation());
         }
 
-        return new FirstResourcePropertyResolver(firstProperty);
+        return new FirstResourcePropertyResolver(firstProperty, dataType);
     }
 
     @Override
@@ -77,9 +77,9 @@ public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
         }
     }
 
-    public void putDefaultDataTypeValues(DataType dataType,
-            ViewItemValueResolver resolver) {
+    public void putDefaultDataTypeValues(ViewItemValueResolver resolver) {
 
-        defaultDataTypeResolvers.put(dataType, resolver);
+        defaultDataTypeResolvers.put(resolver.getVisualDimensionDataType(),
+                resolver);
     }
 }

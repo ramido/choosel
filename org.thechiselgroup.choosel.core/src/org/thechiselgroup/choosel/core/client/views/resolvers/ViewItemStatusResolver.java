@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
+import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.views.filter.ViewItemPredicate;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Status;
@@ -61,12 +62,22 @@ public class ViewItemStatusResolver implements ViewItemValueResolver {
 
     private final StatusRule[] rules;
 
-    public ViewItemStatusResolver(Object defaultValue, StatusRule... rules) {
+    private final DataType dataType;
+
+    public ViewItemStatusResolver(Object defaultValue, DataType dataType,
+            StatusRule... rules) {
         assert defaultValue != null;
         assert rules != null;
+        assert dataType != null;
 
+        this.dataType = dataType;
         this.rules = rules;
         this.defaultValue = defaultValue;
+    }
+
+    @Override
+    public DataType getVisualDimensionDataType() {
+        return dataType;
     }
 
     @Override

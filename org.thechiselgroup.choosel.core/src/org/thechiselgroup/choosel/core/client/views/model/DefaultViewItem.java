@@ -219,8 +219,6 @@ public class DefaultViewItem implements Disposable, ViewItem {
     public <T> T getValue(Slot slot) {
         assert slot != null : "slot must not be null";
 
-        assert slot != null;
-
         String slotId = slot.getId();
         if (cache.containsKey(slotId)) {
             return (T) cache.get(slotId);

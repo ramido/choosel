@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
+import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetUtils;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
@@ -25,18 +26,29 @@ public class FirstResourcePropertyResolver extends SubsetViewItemValueResolver {
 
     protected final String property;
 
-    public FirstResourcePropertyResolver(String property) {
-        this(property, Subset.ALL);
+    protected final DataType dataType;
+
+    public FirstResourcePropertyResolver(String property, DataType dataType) {
+        this(property, dataType, Subset.ALL);
     }
 
-    public FirstResourcePropertyResolver(String property, Subset subset) {
+    public FirstResourcePropertyResolver(String property, DataType dataType,
+            Subset subset) {
         super(subset);
         assert property != null;
+        assert dataType != null;
+        this.dataType = dataType;
         this.property = property;
+
     }
 
     public String getProperty() {
         return property;
+    }
+
+    @Override
+    public DataType getVisualDimensionDataType() {
+        return dataType;
     }
 
     @Override
