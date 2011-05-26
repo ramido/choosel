@@ -30,17 +30,15 @@ import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay;
 import org.thechiselgroup.choosel.visualization_component.chart.client.functions.ViewItemColorSlotAccessor;
 import org.thechiselgroup.choosel.visualization_component.chart.client.functions.ViewItemPredicateJsBooleanFunction;
-import org.thechiselgroup.choosel.visualization_component.chart.client.functions.ViewItemStringSlotAccessor;
 
 public class PieChart extends ChartViewContentDisplay {
 
-    public static final Slot ANGLE_VALUE = new Slot("angleValue",
-            "Angle Value", DataType.NUMBER);
+    public static final Slot VALUE = new Slot("value", "Value", DataType.NUMBER);
 
     public static final Slot LABEL = new Slot("label", "Label", DataType.TEXT);
 
-    public static final Slot PARTIAL_PERCENTAGE = new Slot("partialPercentage",
-            "PartialPercentage", DataType.NUMBER);
+    public static final Slot PARTIAL_VALUE = new Slot("partialValue",
+            "Partial Value", DataType.NUMBER);
 
     public static final Slot COLOR = new Slot("color", "Color", DataType.COLOR);
 
@@ -53,8 +51,8 @@ public class PieChart extends ChartViewContentDisplay {
     public static final Slot PARTIAL_BORDER_COLOR = new Slot(
             "partialBorderColor", "Partial Border Color", DataType.COLOR);
 
-    public static final Slot[] SLOTS = new Slot[] { LABEL, ANGLE_VALUE,
-            PARTIAL_PERCENTAGE, COLOR, BORDER_COLOR, PARTIAL_COLOR,
+    public static final Slot[] SLOTS = new Slot[] { LABEL, VALUE,
+            PARTIAL_VALUE, COLOR, BORDER_COLOR, PARTIAL_COLOR,
             PARTIAL_BORDER_COLOR };
 
     private final static int WEDGE_TEXT_ANGLE = 0;
@@ -63,14 +61,21 @@ public class PieChart extends ChartViewContentDisplay {
         @Override
         public double f(JsArgs args) {
             ViewItem viewItem = args.getObject();
-            double partialPercentage = viewItem
-                    .getValueAsDouble(PARTIAL_PERCENTAGE);
-            assert partialPercentage >= 0 && partialPercentage <= 1;
 
-            // performance optimization
-            if (partialPercentage == 0) {
+            double partialValue = viewItem.getValueAsDouble(PARTIAL_VALUE);
+            double value = viewItem.getValueAsDouble(VALUE);
+
+            // cannot divide by zero
+            if (value == 0) {
                 return 0;
             }
+
+            assert 0 <= partialValue && partialValue <= value;
+
+            double partialPercentage = partialValue / value;
+
+            assert 0 <= partialPercentage && partialPercentage <= 1 : "0 <= partialPercentage <= 1 (was: "
+                    + partialPercentage + ")";
 
             /*
              * This was found to be a visually more accurate solution for both
@@ -78,13 +83,13 @@ public class PieChart extends ChartViewContentDisplay {
              * outerRadius' and to 'Math.sqrt(partialPercentage) * outerRadius'
              */
             return ((Math.sqrt(partialPercentage) + partialPercentage) / 2)
-                    * outerRadius;
+                    * outerRadius / 2;
         }
     };
 
     private double sumOfAngleValues;
 
-    private JsDoubleFunction outRadiusFunction = new JsDoubleFunction() {
+    private JsDoubleFunction outerRadiusFunction = new JsDoubleFunction() {
         @Override
         public double f(JsArgs args) {
             return outerRadius;
@@ -115,30 +120,19 @@ public class PieChart extends ChartViewContentDisplay {
         @Override
         public double f(JsArgs args) {
             ViewItem viewItem = args.getObject();
-            return viewItem.getValueAsDouble(ANGLE_VALUE) * 2 * Math.PI
+            return viewItem.getValueAsDouble(VALUE) * 2 * Math.PI
                     / sumOfAngleValues;
         }
     };
 
     private String wedgeLabelAnchor = PVAlignment.CENTER;
 
-    private JsStringFunction fullMarkLabelText = new ViewItemStringSlotAccessor(
-            PieChart.LABEL);
-
     private JsStringFunction regularMarkLabelText = new JsStringFunction() {
         @Override
         public String f(JsArgs args) {
             ViewItem viewItem = args.getObject();
-
-            double partialPercentage = viewItem
-                    .getValueAsDouble(PARTIAL_PERCENTAGE);
-
-            if (partialPercentage == 1) {
-                return null;
-            }
-
-            return Double.toString(viewItem.getValueAsDouble(ANGLE_VALUE)
-                    * (1 - partialPercentage));
+            return Double.toString(viewItem.getValueAsDouble(VALUE)
+                    - viewItem.getValueAsDouble(PARTIAL_VALUE));
         }
     };
 
@@ -146,16 +140,7 @@ public class PieChart extends ChartViewContentDisplay {
         @Override
         public String f(JsArgs args) {
             ViewItem viewItem = args.getObject();
-
-            double partialPercentage = viewItem
-                    .getValueAsDouble(PARTIAL_PERCENTAGE);
-
-            if (partialPercentage == 0) {
-                return null;
-            }
-
-            return Double.toString(viewItem.getValueAsDouble(ANGLE_VALUE)
-                    * partialPercentage);
+            return Double.toString(viewItem.getValueAsDouble(PARTIAL_VALUE));
         }
     };
 
@@ -175,8 +160,8 @@ public class PieChart extends ChartViewContentDisplay {
 
         mainWedge = getChart().add(PV.Wedge).data(viewItemsJsArray)
                 .left(wedgeLeft).bottom(wedgeBottom)
-                .innerRadius(partialWedgeRadius).outerRadius(outRadiusFunction)
-                .angle(wedgeAngle)
+                .innerRadius(partialWedgeRadius)
+                .outerRadius(outerRadiusFunction).angle(wedgeAngle)
                 .fillStyle(new ViewItemColorSlotAccessor(COLOR))
                 .strokeStyle(new ViewItemColorSlotAccessor(BORDER_COLOR));
 
@@ -186,10 +171,23 @@ public class PieChart extends ChartViewContentDisplay {
 
         partialWedge = mainWedge
                 .add(PV.Wedge)
+                .startAngle(new JsDoubleFunction() {
+                    /*
+                     * NOTE: The wedge position calculation using angle()
+                     * requires the sibling wedges to be visible, which is not
+                     * the case for partial wedges. We thus need to use
+                     * startAngle to specify the position.
+                     */
+                    @Override
+                    public double f(JsArgs args) {
+                        // TODO Auto-generated method stub
+                        return 0;
+                    }
+                })
                 .visible(
                         new ViewItemPredicateJsBooleanFunction(
                                 new GreaterThanSlotValuePredicate(
-                                        PARTIAL_PERCENTAGE, 0)))
+                                        PARTIAL_VALUE, 0)))
                 .innerRadius(0)
                 .outerRadius(partialWedgeRadius)
                 .fillStyle(new ViewItemColorSlotAccessor(PARTIAL_COLOR))
@@ -204,8 +202,7 @@ public class PieChart extends ChartViewContentDisplay {
     private void calculateAllResourcesSum() {
         sumOfAngleValues = 0;
         for (int i = 0; i < viewItemsJsArray.length(); i++) {
-            sumOfAngleValues += viewItemsJsArray.get(i).getValueAsDouble(
-                    ANGLE_VALUE);
+            sumOfAngleValues += viewItemsJsArray.get(i).getValueAsDouble(VALUE);
         }
     }
 
