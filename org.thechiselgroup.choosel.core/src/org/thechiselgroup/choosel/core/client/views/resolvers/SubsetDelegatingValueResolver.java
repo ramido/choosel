@@ -21,7 +21,8 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
 
-public class SubsetDelegatingValueResolver implements ViewItemValueResolver {
+public class SubsetDelegatingValueResolver implements
+        DelegatingViewItemValueResolver {
 
     private Slot slot;
 
@@ -30,6 +31,11 @@ public class SubsetDelegatingValueResolver implements ViewItemValueResolver {
     public SubsetDelegatingValueResolver(Slot slot, Subset subset) {
         this.slot = slot;
         this.subset = subset;
+    }
+
+    @Override
+    public Slot getTargetSlot() {
+        return slot;
     }
 
     @Override
