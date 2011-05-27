@@ -378,7 +378,7 @@ public abstract class PVAbstractMark<T extends PVAbstractMark<T>> extends
     }-*/;
 
     public final native String type() /*-{
-        return this.type();
+        return this.type;
     }-*/;
 
     public final native boolean visible() /*-{
