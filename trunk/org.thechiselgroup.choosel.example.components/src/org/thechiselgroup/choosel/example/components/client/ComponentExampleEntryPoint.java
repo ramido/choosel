@@ -49,8 +49,10 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemStatusReso
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemStatusResolver.StatusRule;
 import org.thechiselgroup.choosel.core.client.views.sorting.ViewItemDoubleComparator;
 import org.thechiselgroup.choosel.core.client.views.sorting.ViewItemStringSlotComparator;
+import org.thechiselgroup.choosel.protovis.client.PVShape;
 import org.thechiselgroup.choosel.visualization_component.chart.client.barchart.BarChart;
 import org.thechiselgroup.choosel.visualization_component.chart.client.piechart.PieChart;
+import org.thechiselgroup.choosel.visualization_component.chart.client.scatterplot.ScatterPlot;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -89,6 +91,57 @@ public class ComponentExampleEntryPoint implements EntryPoint {
     private VisualizationWidget<PieChart> pieChart;
 
     private FlowPanel chartControl;
+
+    private VisualizationWidget<ScatterPlot> scatterPlot;
+
+    private void createScatterPlot(ResourceSet resourceSet,
+            HighlightingModel hoverModel, SelectionModel selectionModel) {
+
+        // behaviors: how the view reacts to user interactions
+        CompositeViewItemBehavior barChartBehaviors = new CompositeViewItemBehavior();
+        barChartBehaviors.add(new HighlightingViewItemBehavior(hoverModel));
+        barChartBehaviors.add(new SwitchSelectionOnClickViewItemBehavior(
+                selectionModel));
+        barChartBehaviors.add(new PopupWithHighlightingViewItemBehavior(
+                new SimpleDetailsWidgetHelper(),
+                new DefaultPopupManagerFactory(new DefaultPopupFactory()),
+                hoverModel));
+
+        // create visualization
+        scatterPlot = new VisualizationWidget<ScatterPlot>(new ScatterPlot(),
+                selectionModel.getSelectionProxy(), hoverModel.getResources(),
+                barChartBehaviors);
+
+        // configure visual mappings
+        scatterPlot.setResolver(
+                ScatterPlot.COLOR,
+                new ViewItemStatusResolver(COLOR_DEFAULT, DataType.COLOR,
+                        StatusRule.fullOrPartial(COLOR_HIGHLIGHTED,
+                                Subset.HIGHLIGHTED), StatusRule.full(
+                                COLOR_SELECTION, Subset.SELECTED)));
+        scatterPlot.setResolver(
+                ScatterPlot.BORDER_COLOR,
+                new ViewItemStatusResolver(COLOR_DEFAULT_BORDER,
+                        DataType.COLOR, StatusRule.full(COLOR_SELECTION_BORDER,
+                                Subset.SELECTED), StatusRule.fullOrPartial(
+                                COLOR_HIGHLIGHTED_BORDER, Subset.HIGHLIGHTED)));
+        scatterPlot.setResolver(ScatterPlot.X_POSITION,
+                new CalculationResolver(BenchmarkResourceSetFactory.NUMBER_2,
+                        new SumCalculation()));
+        scatterPlot.setResolver(ScatterPlot.Y_POSITION,
+                new CalculationResolver(BenchmarkResourceSetFactory.NUMBER_1,
+                        new SumCalculation()));
+        scatterPlot.setResolver(ScatterPlot.SIZE, new FixedValueResolver(10,
+                DataType.NUMBER));
+        // TODO shape variable
+        scatterPlot.setResolver(ScatterPlot.SHAPE, new FixedValueResolver(
+                PVShape.CIRCLE, DataType.SHAPE));
+
+        // set resources
+        scatterPlot.setContentResourceSet(resourceSet);
+
+        // TODO enable shape legend
+    }
 
     private void createPieChart(ResourceSet resourceSet,
             HighlightingModel hoverModel, SelectionModel selectionModel) {
@@ -274,11 +327,13 @@ public class ComponentExampleEntryPoint implements EntryPoint {
 
             createBarChart(resourceSet, hoverModel, selectionModel);
             createPieChart(resourceSet, hoverModel, selectionModel);
+            createScatterPlot(resourceSet, hoverModel, selectionModel);
             createChartControl();
 
             RootPanel.get().add(chartControl);
             RootPanel.get().add(barChart);
             RootPanel.get().add(pieChart);
+            RootPanel.get().add(scatterPlot);
 
             // Set the size of the window, and listen for
             // changes in size.
@@ -297,9 +352,15 @@ public class ComponentExampleEntryPoint implements EntryPoint {
 
     private void layout() {
         CSS.setHeight(chartControl, CONTROL_HEIGHT);
+        CSS.setDisplay(pieChart.getElement(), CSS.INLINE);
+        CSS.setDisplay(scatterPlot.getElement(), CSS.INLINE);
+
         barChart.setSize(Window.getClientWidth() + CSS.PX,
                 (Window.getClientHeight() - CONTROL_HEIGHT) / 2 + CSS.PX);
-        pieChart.setSize(Window.getClientWidth() + CSS.PX,
+
+        pieChart.setSize(Window.getClientWidth() / 2 + CSS.PX,
+                (Window.getClientHeight() - CONTROL_HEIGHT) / 2 + CSS.PX);
+        scatterPlot.setSize(Window.getClientWidth() / 2 + CSS.PX,
                 (Window.getClientHeight() - CONTROL_HEIGHT) / 2 + CSS.PX);
     }
 }
