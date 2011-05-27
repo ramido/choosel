@@ -32,98 +32,88 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 
 public class DialogWindowManager extends AbstractWindowManager {
 
-    private Dialog dialog;
+	private Dialog dialog;
 
-    private RemoveHandle shadeHandle;
+	private RemoveHandle shadeHandle;
 
-    private ShadeManager shadeManager;
+	private ShadeManager shadeManager;
 
-    private PopupManagerFactory popupManagerFactory;
+	private PopupManagerFactory popupManagerFactory;
 
-    DialogWindowManager(AbsolutePanel boundaryPanel, Dialog dialog,
-            ShadeManager shadeManager, PopupManagerFactory popupManagerFactory) {
+	DialogWindowManager(AbsolutePanel boundaryPanel, Dialog dialog,
+			ShadeManager shadeManager, PopupManagerFactory popupManagerFactory) {
 
-        super(boundaryPanel, new NullCommandManager());
+		super(boundaryPanel, new NullCommandManager());
 
-        this.dialog = dialog;
-        this.shadeManager = shadeManager;
-        this.popupManagerFactory = popupManagerFactory;
-    }
+		this.dialog = dialog;
+		this.shadeManager = shadeManager;
+		this.popupManagerFactory = popupManagerFactory;
+	}
 
-    public void cancelDialog(DialogWindow window) {
-        dialog.cancel();
-        window.close();
-    }
+	protected void cancelDialog(DialogWindow window) {
+		dialog.cancel();
+		window.close();
+	}
 
-    @Override
-    public void close(WindowPanel window) {
-        assert window instanceof DialogWindow;
+	@Override
+	public void close(WindowPanel window) {
+		assert window instanceof DialogWindow;
 
-        getBoundaryPanel().remove(window);
-        hideShade();
-    }
+		getBoundaryPanel().remove(window);
+		hideShade();
+	}
 
-    private void hideShade() {
-        shadeHandle.remove();
-    }
+	private void hideShade() {
+		shadeHandle.remove();
+	}
 
-    public void init() {
-        /*
-         * The shade needs to be removed if an exception occurs, otherwise the
-         * user might get locked in a state where he/she cannot remove the
-         * shade.
-         */
-        try {
-            showShade();
+	public void init() {
+		/*
+		 * The shade needs to be removed if an exception occurs, otherwise the
+		 * user might get locked in a state where he/she cannot remove the
+		 * shade.
+		 */
+		try {
+			showShade();
 
-            final DialogWindow dialogWindow = new DialogWindow(
-                    popupManagerFactory);
+			final DialogWindow dialogWindow = new DialogWindow(
+					popupManagerFactory);
 
-            // initialization order important (breaks otherwise)
-            dialogWindow.init(this, dialog);
-            dialog.init(dialogWindow);
+			// initialization order important (breaks otherwise)
+			dialogWindow.init(this, dialog);
 
-            shadeManager.addClickHandler(new ClickHandler() {
-                @Override
-                public void onClick(ClickEvent event) {
-                    cancelDialog(dialogWindow);
-                }
-            });
+			shadeManager.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					cancelDialog(dialogWindow);
+				}
+			});
 
-            getBoundaryPanel().add(dialogWindow);
+			getBoundaryPanel().add(dialogWindow);
 
-            // TODO variable calculation of window size
-            // XXX this fixes problem that dialog window takes up whole screen
-            dialogWindow.setPixelSize(500, 600);
+			// TODO variable calculation of window size
+			// XXX this fixes problem that dialog window takes up whole screen
+			dialogWindow.setPixelSize(500, 600);
 
-            /*
-             * display centered below action bar offsets are useless here --
-             * why? -- use content instead (not exact)
-             */
-            int x = (getBoundaryPanel().getOffsetWidth() - dialogWindow
-                    .getWidth()) / 2;
+			/*
+			 * display centered below action bar offsets are useless here --
+			 * why? -- use content instead (not exact)
+			 */
+			int x = (getBoundaryPanel().getOffsetWidth() - dialogWindow
+					.getWidth()) / 2;
 
-            // TODO extract offset (variable)
-            dialogWindow.setLocation(x, ActionBar.ACTION_BAR_HEIGHT_PX + 10);
-        } catch (RuntimeException e) {
-            hideShade();
-            throw e;
-        } catch (Error e) {
-            hideShade();
-            throw e;
-        }
-    }
+			// TODO extract offset (variable)
+			dialogWindow.setLocation(x, ActionBar.ACTION_BAR_HEIGHT_PX + 10);
+		} catch (RuntimeException e) {
+			hideShade();
+			throw e;
+		} catch (Error e) {
+			hideShade();
+			throw e;
+		}
+	}
 
-    public void okayPressed(DialogWindow window) {
-        try {
-            dialog.okay();
-            window.close();
-        } catch (Exception ex) {
-            dialog.handleException(ex);
-        }
-    }
-
-    private void showShade() {
-        shadeHandle = shadeManager.showShade();
-    }
+	private void showShade() {
+		shadeHandle = shadeManager.showShade();
+	}
 }

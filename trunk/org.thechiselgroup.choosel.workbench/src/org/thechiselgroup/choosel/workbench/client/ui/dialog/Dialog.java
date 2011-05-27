@@ -17,22 +17,30 @@ package org.thechiselgroup.choosel.workbench.client.ui.dialog;
 
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * Default dialog implementation that displays a title, has a custom content,
+ * and an OK and Cancel button. The OK and cancel buttons both close the window
+ * after being pressed.
+ * 
+ * @author Lars Grammel
+ * 
+ */
 public interface Dialog {
 
-    void cancel();
+	void cancel();
 
-    Widget getContent();
+	Widget getContent();
 
-    String getHeader();
+	String getHeader();
 
-    String getOkayButtonLabel();
+	String getOkayButtonLabel();
 
-    String getWindowTitle();
+	String getWindowTitle();
 
-    void handleException(Exception ex);
+	void handleException(Exception ex);
 
-    void init(DialogCallback callback);
+	public void init(DialogCallback callback);
 
-    void okay() throws Exception;
+	void okay() throws Exception;
 
 }

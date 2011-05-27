@@ -15,31 +15,88 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.client.ui.dialog;
 
+import com.google.gwt.user.client.ui.Button;
 
-public abstract class AbstractDialog implements Dialog {
+public abstract class AbstractDialog implements Dialog, DialogExtension {
 
-    private DialogCallback callback;
+	private DialogCallback callback;
+	private DialogWindow window;
 
-    @Override
-    public void handleException(Exception ex) {
-        throw new RuntimeException(ex); // TODO better handling
-    }
+	/**
+	 * Default implementation handles OK and Cancel button presses. Clients may
+	 * override, but are responsible for closing the window if they do.
+	 */
+	@Override
+	public void buttonPressed(int code, Button button, DialogWindow window) {
+		try {
+			switch (code) {
+			case DialogWindow.OK:
+				okay();
+				window.close();
+				break;
+			case DialogWindow.CANCEL:
+				cancel();
+				window.close();
+				break;
+			}
+		} catch (Exception e) {
+			handleException(e);
+		}
+	}
 
-    @Override
-    public void init(DialogCallback callback) {
-        assert callback != null;
+	/**
+	 * Default implementation creates an OK and a cancel button. Clients may
+	 * override to create their own custom buttons.
+	 */
+	@Override
+	public void createButtons(DialogWindow window) {
+		window.createButton(DialogWindow.OK, getOkayButtonLabel());
+		window.createButton(DialogWindow.CANCEL, DialogWindow.CANCEL_LABEL);
+	}
 
-        this.callback = callback;
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.thechiselgroup.choosel.workbench.client.ui.dialog.DialogExtension
+	 * #dialogCreated
+	 * (org.thechiselgroup.choosel.workbench.client.ui.dialog.DialogWindow)
+	 */
+	@Override
+	public void dialogCreated(DialogWindow window) {
+		this.window = window;
+	}
 
-    }
+	@Override
+	public void handleException(Exception ex) {
+		throw new RuntimeException(ex); // TODO better handling
+	}
 
-    protected void setOkayButtonEnabled(boolean enabled) {
-        // TODO find better initialization order
-        if (callback == null) {
-            return;
-        }
+	@Override
+	public void init(DialogCallback callback) {
+		assert callback != null;
 
-        callback.setOkayButtonEnabled(enabled);
-    }
+		this.callback = callback;
+
+	}
+
+	/**
+	 * Sets the enablement of the button with the given code.
+	 * 
+	 * @param code
+	 * @param enabled
+	 */
+	public void setButtonEnablement(int code, boolean enabled) {
+		window.setButtonEnabled(code, enabled);
+	}
+
+	protected void setOkayButtonEnabled(boolean enabled) {
+		// TODO find better initialization order
+		if (callback == null) {
+			return;
+		}
+
+		callback.setOkayButtonEnabled(enabled);
+	}
 
 }
