@@ -15,12 +15,15 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.example.components.client;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.thechiselgroup.choosel.core.client.label.IncrementingSuffixLabelFactory;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
+import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByPropertyMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByUriMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
@@ -39,7 +42,9 @@ import org.thechiselgroup.choosel.core.client.views.behaviors.SwitchSelectionOnC
 import org.thechiselgroup.choosel.core.client.views.model.DefaultSelectionModel;
 import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
 import org.thechiselgroup.choosel.core.client.views.model.SelectionModel;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
 import org.thechiselgroup.choosel.core.client.views.resolvers.CalculationResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FirstResourcePropertyResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueResolver;
@@ -47,6 +52,7 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ResourceCountResol
 import org.thechiselgroup.choosel.core.client.views.resolvers.SubsetDelegatingValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemStatusResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemStatusResolver.StatusRule;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 import org.thechiselgroup.choosel.core.client.views.sorting.ViewItemDoubleComparator;
 import org.thechiselgroup.choosel.core.client.views.sorting.ViewItemStringSlotComparator;
 import org.thechiselgroup.choosel.protovis.client.PVShape;
@@ -115,7 +121,7 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         // configure visual mappings
         scatterPlot.setResolver(
                 ScatterPlot.COLOR,
-                new ViewItemStatusResolver(COLOR_DEFAULT, DataType.COLOR,
+                new ViewItemStatusResolver(Color.TRANSPARENT, DataType.COLOR,
                         StatusRule.fullOrPartial(COLOR_HIGHLIGHTED,
                                 Subset.HIGHLIGHTED), StatusRule.full(
                                 COLOR_SELECTION, Subset.SELECTED)));
@@ -131,16 +137,48 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         scatterPlot.setResolver(ScatterPlot.Y_POSITION,
                 new CalculationResolver(BenchmarkResourceSetFactory.NUMBER_1,
                         new SumCalculation()));
-        scatterPlot.setResolver(ScatterPlot.SIZE, new FixedValueResolver(10,
+        scatterPlot.setResolver(ScatterPlot.SIZE, new FixedValueResolver(20,
                 DataType.NUMBER));
-        // TODO shape variable
-        scatterPlot.setResolver(ScatterPlot.SHAPE, new FixedValueResolver(
-                PVShape.CIRCLE, DataType.SHAPE));
+        scatterPlot.setResolver(ScatterPlot.SHAPE, new ViewItemValueResolver() {
+            public Object resolve(ViewItem viewItem,
+                    ViewItemValueResolverContext context) {
+
+                // assuming 1 resource per viewItem
+                Resource resource = viewItem.getResources().getFirstResource();
+                String category = (String) resource
+                        .getValue(BenchmarkResourceSetFactory.TEXT_2);
+
+                // see PVShape for more shapes
+                if ("category-0".equals(category)) {
+                    return PVShape.DIAMOND;
+                }
+                if ("category-1".equals(category)) {
+                    return PVShape.SQUARE;
+                }
+
+                return PVShape.CIRCLE;
+            }
+
+            public DataType getVisualDimensionDataType() {
+                return DataType.SHAPE;
+            }
+
+            @Override
+            public String toString() {
+                return "Categories";
+            }
+        });
 
         // set resources
         scatterPlot.setContentResourceSet(resourceSet);
 
-        // TODO enable shape legend
+        // shape legend
+        Map<String, String> shapeLegend = new HashMap<String, String>();
+        shapeLegend.put(PVShape.DIAMOND, "Category 0");
+        shapeLegend.put(PVShape.SQUARE, "Category 1");
+        shapeLegend.put(PVShape.CIRCLE, "Other Category");
+        scatterPlot.setPropertyValue(ScatterPlot.SHAPE_LEGEND_PROPERTY,
+                shapeLegend);
     }
 
     private void createPieChart(ResourceSet resourceSet,
