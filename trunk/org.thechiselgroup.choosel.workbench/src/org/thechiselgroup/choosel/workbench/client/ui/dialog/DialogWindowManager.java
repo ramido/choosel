@@ -40,14 +40,17 @@ public class DialogWindowManager extends AbstractWindowManager {
 
 	private PopupManagerFactory popupManagerFactory;
 
+	private boolean modal;
+
 	DialogWindowManager(AbsolutePanel boundaryPanel, Dialog dialog,
-			ShadeManager shadeManager, PopupManagerFactory popupManagerFactory) {
+			ShadeManager shadeManager, PopupManagerFactory popupManagerFactory,
+			boolean modal) {
 
 		super(boundaryPanel, new NullCommandManager());
-
 		this.dialog = dialog;
 		this.shadeManager = shadeManager;
 		this.popupManagerFactory = popupManagerFactory;
+		this.modal = modal;
 	}
 
 	protected void cancelDialog(DialogWindow window) {
@@ -82,12 +85,14 @@ public class DialogWindowManager extends AbstractWindowManager {
 			// initialization order important (breaks otherwise)
 			dialogWindow.init(this, dialog);
 
-			shadeManager.addClickHandler(new ClickHandler() {
-				@Override
-				public void onClick(ClickEvent event) {
-					cancelDialog(dialogWindow);
-				}
-			});
+			if (!modal) {
+				shadeManager.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						cancelDialog(dialogWindow);
+					}
+				});
+			}
 
 			getBoundaryPanel().add(dialogWindow);
 
