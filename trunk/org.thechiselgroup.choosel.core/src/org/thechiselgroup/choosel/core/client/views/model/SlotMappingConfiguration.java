@@ -35,6 +35,7 @@ import org.thechiselgroup.choosel.core.client.util.math.MinCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.SumCalculation;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.resolvers.CalculationResolver;
+import org.thechiselgroup.choosel.core.client.views.resolvers.DelegatingViewItemValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FirstResourcePropertyResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.NullViewItemResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
@@ -243,6 +244,17 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
 
         slotsToValueResolvers.put(slot, resolver);
         handlerManager.fireEvent(new SlotMappingChangedEvent(slot));
+
+        for (Entry<Slot, ViewItemValueResolver> entry : slotsToValueResolvers
+                .entrySet()) {
+
+            if ((entry.getValue() instanceof DelegatingViewItemValueResolver)
+                    && (((DelegatingViewItemValueResolver) entry.getValue())
+                            .getTargetSlot().equals(slot))) {
+                handlerManager.fireEvent(new SlotMappingChangedEvent(entry
+                        .getKey()));
+            }
+        }
     }
 
 }
