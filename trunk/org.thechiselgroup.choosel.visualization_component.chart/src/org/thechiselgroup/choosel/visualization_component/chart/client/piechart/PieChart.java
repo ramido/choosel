@@ -33,6 +33,8 @@ import org.thechiselgroup.choosel.visualization_component.chart.client.functions
 
 public class PieChart extends ChartViewContentDisplay {
 
+    public final static String ID = "org.thechiselgroup.choosel.visualization_component.chart.PieChart";
+
     public static final Slot VALUE = new Slot("value", "Value", DataType.NUMBER);
 
     public static final Slot LABEL = new Slot("label", "Label", DataType.TEXT);
@@ -83,11 +85,18 @@ public class PieChart extends ChartViewContentDisplay {
              * outerRadius' and to 'Math.sqrt(partialPercentage) * outerRadius'
              */
             return ((Math.sqrt(partialPercentage) + partialPercentage) / 2)
-                    * outerRadius / 2;
+                    * outerRadius;
         }
     };
 
-    private double sumOfAngleValues;
+    /**
+     * For each {@link ViewItem} index, it return the sum of the current and all
+     * previous view items. This is required to calculate the start angle, which
+     * we need for the partial wedges (because Protovis only automatically
+     * calculates the correct start index if the sibling wedges are visible,
+     * which is not the case for the partial wedges).
+     */
+    private double[] aggregatedValues;
 
     private JsDoubleFunction outerRadiusFunction = new JsDoubleFunction() {
         @Override
@@ -121,8 +130,9 @@ public class PieChart extends ChartViewContentDisplay {
         public double f(JsArgs args) {
             ViewItem viewItem = args.getObject();
             return viewItem.getValueAsDouble(VALUE) * 2 * Math.PI
-                    / sumOfAngleValues;
+                    / getValueSum();
         }
+
     };
 
     private String wedgeLabelAnchor = PVAlignment.CENTER;
@@ -144,13 +154,32 @@ public class PieChart extends ChartViewContentDisplay {
         }
     };
 
-    public final static String ID = "org.thechiselgroup.choosel.visualization_component.chart.PieChart";
+    /**
+     * The wedge position calculation using angle() requires the sibling wedges
+     * to be visible, which is not the case for partial wedges. We thus need to
+     * use startAngle to specify the position.
+     */
+    private JsDoubleFunction startAngle = new JsDoubleFunction() {
+        @Override
+        public double f(JsArgs args) {
+            int index = args.<PVWedge> getThis().index();
+            if (index == 0) {
+                /*
+                 * -Math.PI / 2 rotates the wedges so the 1st one starts at 12
+                 * o'clock
+                 */
+                return -Math.PI / 2;
+            }
+            return aggregatedValues[index - 1] * 2 * Math.PI / getValueSum()
+                    - Math.PI / 2;
+        }
+    };
 
     @Override
     protected void beforeRender() {
         super.beforeRender();
 
-        calculateAllResourcesSum();
+        calculateAggregatedValues();
         calculateRegularWedgeOuterRadius();
     }
 
@@ -159,7 +188,7 @@ public class PieChart extends ChartViewContentDisplay {
         assert viewItemsJsArray.length() >= 1;
 
         mainWedge = getChart().add(PV.Wedge).data(viewItemsJsArray)
-                .left(wedgeLeft).bottom(wedgeBottom)
+                .left(wedgeLeft).bottom(wedgeBottom).startAngle(startAngle)
                 .innerRadius(partialWedgeRadius)
                 .outerRadius(outerRadiusFunction).angle(wedgeAngle)
                 .fillStyle(new ViewItemColorSlotAccessor(COLOR))
@@ -171,19 +200,6 @@ public class PieChart extends ChartViewContentDisplay {
 
         partialWedge = mainWedge
                 .add(PV.Wedge)
-                .startAngle(new JsDoubleFunction() {
-                    /*
-                     * NOTE: The wedge position calculation using angle()
-                     * requires the sibling wedges to be visible, which is not
-                     * the case for partial wedges. We thus need to use
-                     * startAngle to specify the position.
-                     */
-                    @Override
-                    public double f(JsArgs args) {
-                        // TODO Auto-generated method stub
-                        return 0;
-                    }
-                })
                 .visible(
                         new ViewItemPredicateJsBooleanFunction(
                                 new GreaterThanSlotValuePredicate(
@@ -199,10 +215,12 @@ public class PieChart extends ChartViewContentDisplay {
 
     }
 
-    private void calculateAllResourcesSum() {
-        sumOfAngleValues = 0;
+    private void calculateAggregatedValues() {
+        aggregatedValues = new double[viewItemsJsArray.length()];
+        double sum = 0;
         for (int i = 0; i < viewItemsJsArray.length(); i++) {
-            sumOfAngleValues += viewItemsJsArray.get(i).getValueAsDouble(VALUE);
+            sum += viewItemsJsArray.get(i).getValueAsDouble(VALUE);
+            aggregatedValues[i] = sum;
         }
     }
 
@@ -218,6 +236,13 @@ public class PieChart extends ChartViewContentDisplay {
     @Override
     public Slot[] getSlots() {
         return SLOTS;
+    }
+
+    /**
+     * @return sum of all values
+     */
+    private double getValueSum() {
+        return aggregatedValues[aggregatedValues.length - 1];
     }
 
     @Override
