@@ -362,10 +362,15 @@ public class ComponentExampleEntryPoint implements EntryPoint {
             SelectionModel selectionModel = new DefaultSelectionModel(
                     new IncrementingSuffixLabelFactory(""),
                     new DefaultResourceSetFactory());
+            SelectionModel selectionModel2 = new DefaultSelectionModel(
+                    new IncrementingSuffixLabelFactory(""),
+                    new DefaultResourceSetFactory());
 
             createBarChart(resourceSet, hoverModel, selectionModel);
-            createPieChart(resourceSet, hoverModel, selectionModel);
-            createScatterPlot(resourceSet, hoverModel, selectionModel);
+            createPieChart(selectionModel.getSelectionProxy(), hoverModel,
+                    selectionModel2);
+            createScatterPlot(selectionModel.getSelectionProxy(), hoverModel,
+                    selectionModel2);
             createChartControl();
 
             RootPanel.get().add(chartControl);
