@@ -23,11 +23,13 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-/**
- * Implementation note: we need to wait until after the fade out operation
- * before calling dialog.okay/cancelled as these might block UI updates - but we
- * loose 0.5 seconds on that - can we somehow parallize these things so the UI
- * gets updated & the server gets called? TODO
+/*
+ * IMPLEMENTATION NOTE: we need to wait until after the fade out operation
+ * before calling dialog.okay/canceled as these might block UI updates - but we
+ * loose 0.5 seconds on that. 
+ * 
+ * TODO can we somehow parallelize these things so the UI gets updated & the 
+ * server gets called?
  */
 public class DialogManager {
 
@@ -48,10 +50,13 @@ public class DialogManager {
     }
 
     /**
-     * Shorthand for show(dialog, false). {@link #show(Dialog, boolean)}
+     * Opens up a non-modal dialog. This method is a shorthand notation for
+     * {@code show(dialog, false)}.
      * 
      * @param dialog
      *            the dialog to open.
+     * 
+     * @see #show(Dialog, boolean)
      */
     public void show(Dialog dialog) {
         show(dialog, false);

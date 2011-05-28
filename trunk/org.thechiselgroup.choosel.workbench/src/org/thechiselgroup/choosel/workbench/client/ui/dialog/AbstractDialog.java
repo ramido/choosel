@@ -55,14 +55,6 @@ public abstract class AbstractDialog implements Dialog, DialogExtension {
         window.createButton(DialogWindow.CANCEL, DialogWindow.CANCEL_LABEL);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.thechiselgroup.choosel.workbench.client.ui.dialog.DialogExtension
-     * #dialogCreated
-     * (org.thechiselgroup.choosel.workbench.client.ui.dialog.DialogWindow)
-     */
     @Override
     public void dialogCreated(DialogWindow window) {
         this.window = window;
