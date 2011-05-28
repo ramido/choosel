@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.client.workspace;
 
-
 public interface ViewSaver {
 
     void saveView(DefaultShareConfiguration shareConfiguration);

@@ -27,20 +27,20 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public interface Dialog {
 
-	void cancel();
+    void cancel();
 
-	Widget getContent();
+    Widget getContent();
 
-	String getHeader();
+    String getHeader();
 
-	String getOkayButtonLabel();
+    String getOkayButtonLabel();
 
-	String getWindowTitle();
+    String getWindowTitle();
 
-	void handleException(Exception ex);
+    void handleException(Exception ex);
 
-	public void init(DialogCallback callback);
+    public void init(DialogCallback callback);
 
-	void okay() throws Exception;
+    void okay() throws Exception;
 
 }

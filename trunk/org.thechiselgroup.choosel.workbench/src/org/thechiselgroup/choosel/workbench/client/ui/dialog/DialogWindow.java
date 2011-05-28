@@ -28,203 +28,204 @@ import com.google.inject.Inject;
 
 public final class DialogWindow extends WindowPanel implements DialogCallback {
 
-	private class ButtonClickHandler implements ClickHandler {
+    private class ButtonClickHandler implements ClickHandler {
 
-		private Button button;
+        private Button button;
 
-		protected ButtonClickHandler(Button button) {
-			this.button = button;
-		}
+        protected ButtonClickHandler(Button button) {
+            this.button = button;
+        }
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt
-		 * .event.dom.client.ClickEvent)
-		 */
-		@Override
-		public void onClick(ClickEvent event) {
-			handleButtonClick(button,
-					button.getElement().getPropertyInt(DIALOG_STATUS_CODE));
-		}
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt
+         * .event.dom.client.ClickEvent)
+         */
+        @Override
+        public void onClick(ClickEvent event) {
+            handleButtonClick(button,
+                    button.getElement().getPropertyInt(DIALOG_STATUS_CODE));
+        }
 
-	}
+    }
 
-	// TODO extract for i18n
-	final static String CANCEL_LABEL = "Cancel";
+    // TODO extract for i18n
+    final static String CANCEL_LABEL = "Cancel";
 
-	private static final String DIALOG_STATUS_CODE = "__choosel_dialogs_button_status_code";
-	/**
-	 * Button code for when an OK button is pressed.
-	 */
-	public static final int OK = 1;
+    private static final String DIALOG_STATUS_CODE = "__choosel_dialogs_button_status_code";
 
-	/**
-	 * Button code for when a CANCEL button is pressed.
-	 */
-	public static final int CANCEL = 2;
+    /**
+     * Button code for when an OK button is pressed.
+     */
+    public static final int OK = 1;
 
-	private DialogWindowManager dialogController;
+    /**
+     * Button code for when a CANCEL button is pressed.
+     */
+    public static final int CANCEL = 2;
 
-	private DialogPanel dialogPanel;
+    private DialogWindowManager dialogController;
 
-	private Dialog dialog;
+    private DialogPanel dialogPanel;
 
-	@Inject
-	public DialogWindow(PopupManagerFactory popupManagerFactory) {
-		super(popupManagerFactory);
-	}
+    private Dialog dialog;
 
-	/**
-	 * Close the dialog with an cancel state.
-	 */
-	public final void cancel() {
-		dialogController.cancelDialog(this);
-	}
+    @Inject
+    public DialogWindow(PopupManagerFactory popupManagerFactory) {
+        super(popupManagerFactory);
+    }
 
-	/**
-	 * Closes the dialog window.
-	 */
-	@Override
-	public final void close() {
-		dialogController.close(this);
-	}
+    /**
+     * Close the dialog with an cancel state.
+     */
+    public final void cancel() {
+        dialogController.cancelDialog(this);
+    }
 
-	/**
-	 * Creates and adds a button to this window's button bar. The buttons are
-	 * added from left to right in the order that they are created. The code is
-	 * used to define the action that should be taken when the button is
-	 * created. Two default codes are provided in this class: {@link #OK} and
-	 * {@link #CANCEL}.
-	 * 
-	 * @param code
-	 *            the status code for the button.
-	 * @param label
-	 *            the label to be presented on the button.
-	 * @return the button that has been created and added to the panel.
-	 */
-	public Button createButton(int code, String label) {
-		Button b = dialogPanel.createButton(label);
-		b.getElement().setPropertyInt(DIALOG_STATUS_CODE, code);
-		b.addClickHandler(new ButtonClickHandler(b));
-		return b;
+    /**
+     * Closes the dialog window.
+     */
+    @Override
+    public final void close() {
+        dialogController.close(this);
+    }
 
-	}
+    /**
+     * Creates and adds a button to this window's button bar. The buttons are
+     * added from left to right in the order that they are created. The code is
+     * used to define the action that should be taken when the button is
+     * created. Two default codes are provided in this class: {@link #OK} and
+     * {@link #CANCEL}.
+     * 
+     * @param code
+     *            the status code for the button.
+     * @param label
+     *            the label to be presented on the button.
+     * @return the button that has been created and added to the panel.
+     */
+    public Button createButton(int code, String label) {
+        Button b = dialogPanel.createButton(label);
+        b.getElement().setPropertyInt(DIALOG_STATUS_CODE, code);
+        b.addClickHandler(new ButtonClickHandler(b));
+        return b;
 
-	protected void createCancelButton(DialogPanel dialogPanel) {
-		createButton(CANCEL, CANCEL_LABEL);
-	}
+    }
 
-	@Override
-	protected ClickHandler createCloseButtonClickHandler() {
-		return new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				cancel();
-			}
+    protected void createCancelButton(DialogPanel dialogPanel) {
+        createButton(CANCEL, CANCEL_LABEL);
+    }
 
-		};
-	}
+    @Override
+    protected ClickHandler createCloseButtonClickHandler() {
+        return new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                cancel();
+            }
 
-	protected void createOkayButton(final Dialog dialog, DialogPanel dialogPanel) {
-		createButton(OK, dialog.getOkayButtonLabel());
-	}
+        };
+    }
 
-	/**
-	 * Returns the button with the given status code, or null if it doesn't
-	 * exist.
-	 * 
-	 * @param code
-	 *            the code.
-	 * @return the button.
-	 */
-	public Button getButton(int code) {
-		for (Widget w : dialogPanel) {
-			if (w instanceof Button) {
-				if (w.getElement().getPropertyInt(DIALOG_STATUS_CODE) == code) {
-					return (Button) w;
-				}
-			}
-		}
-		return null;
-	}
+    protected void createOkayButton(final Dialog dialog, DialogPanel dialogPanel) {
+        createButton(OK, dialog.getOkayButtonLabel());
+    }
 
-	@Override
-	protected String getClosePopupLabel() {
-		return CANCEL_LABEL;
-	}
+    /**
+     * Returns the button with the given status code, or null if it doesn't
+     * exist.
+     * 
+     * @param code
+     *            the code.
+     * @return the button.
+     */
+    public Button getButton(int code) {
+        for (Widget w : dialogPanel) {
+            if (w instanceof Button) {
+                if (w.getElement().getPropertyInt(DIALOG_STATUS_CODE) == code) {
+                    return (Button) w;
+                }
+            }
+        }
+        return null;
+    }
 
-	/**
-	 * Generic handler for all button clicks.
-	 * 
-	 * @param button
-	 * @param propertyInt
-	 */
-	protected void handleButtonClick(Button button, int statusCode) {
-		if (dialog instanceof DialogExtension) {
-			((DialogExtension) dialog).buttonPressed(statusCode, button, this);
-		} else {
-			if (statusCode == OK) {
-				okay();
-			} else if (statusCode == CANCEL) {
-				cancel();
-			}
-		}
-	}
+    @Override
+    protected String getClosePopupLabel() {
+        return CANCEL_LABEL;
+    }
 
-	// TODO add explanation area
-	public void init(DialogWindowManager windowController, Dialog dialog) {
+    /**
+     * Generic handler for all button clicks.
+     * 
+     * @param button
+     * @param propertyInt
+     */
+    protected void handleButtonClick(Button button, int statusCode) {
+        if (dialog instanceof DialogExtension) {
+            ((DialogExtension) dialog).buttonPressed(statusCode, button, this);
+        } else {
+            if (statusCode == OK) {
+                okay();
+            } else if (statusCode == CANCEL) {
+                cancel();
+            }
+        }
+    }
 
-		dialogController = windowController;
-		if (dialog instanceof DialogExtension) {
-			((DialogExtension) dialog).dialogCreated(this);
-		}
-		dialogPanel = new DialogPanel();
+    // TODO add explanation area
+    public void init(DialogWindowManager windowController, Dialog dialog) {
 
-		Widget content = dialog.getContent();
-		dialogPanel.setContent(content);
-		dialogPanel.setHeader(dialog.getHeader());
+        dialogController = windowController;
+        if (dialog instanceof DialogExtension) {
+            ((DialogExtension) dialog).dialogCreated(this);
+        }
+        dialogPanel = new DialogPanel();
 
-		initButtons(dialog);
+        Widget content = dialog.getContent();
+        dialogPanel.setContent(content);
+        dialogPanel.setHeader(dialog.getHeader());
 
-		init(windowController, dialog.getWindowTitle(), false, dialogPanel);
+        initButtons(dialog);
 
-		setZIndex(ZIndex.DIALOG);
-		this.dialog = dialog;
-		dialog.init(this);
-	}
+        init(windowController, dialog.getWindowTitle(), false, dialogPanel);
 
-	protected void initButtons(final Dialog dialog) {
-		if (dialog instanceof DialogExtension) {
-			((DialogExtension) dialog).createButtons(this);
-		} else {
-			createOkayButton(dialog, dialogPanel);
-			createCancelButton(dialogPanel);
-		}
-	}
+        setZIndex(ZIndex.DIALOG);
+        this.dialog = dialog;
+        dialog.init(this);
+    }
 
-	/**
-	 * Close the dialog with an okay state.
-	 */
-	public final void okay() {
-		try {
-			dialog.okay();
-			close();
-		} catch (Exception e) {
-			dialog.handleException(e);
-		}
-	}
+    protected void initButtons(final Dialog dialog) {
+        if (dialog instanceof DialogExtension) {
+            ((DialogExtension) dialog).createButtons(this);
+        } else {
+            createOkayButton(dialog, dialogPanel);
+            createCancelButton(dialogPanel);
+        }
+    }
 
-	public void setButtonEnabled(int code, boolean enabled) {
-		Button okayButton = getButton(code);
-		if (okayButton != null) {
-			okayButton.setEnabled(enabled);
-		}
-	}
+    /**
+     * Close the dialog with an okay state.
+     */
+    public final void okay() {
+        try {
+            dialog.okay();
+            close();
+        } catch (Exception e) {
+            dialog.handleException(e);
+        }
+    }
 
-	@Override
-	public void setOkayButtonEnabled(boolean enabled) {
-		setButtonEnabled(OK, enabled);
-	}
+    public void setButtonEnabled(int code, boolean enabled) {
+        Button okayButton = getButton(code);
+        if (okayButton != null) {
+            okayButton.setEnabled(enabled);
+        }
+    }
+
+    @Override
+    public void setOkayButtonEnabled(boolean enabled) {
+        setButtonEnabled(OK, enabled);
+    }
 }

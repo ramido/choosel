@@ -31,47 +31,47 @@ import com.google.inject.name.Named;
  */
 public class DialogManager {
 
-	private AbsolutePanel parentPanel;
+    private AbsolutePanel parentPanel;
 
-	private ShadeManager shadeManager;
+    private ShadeManager shadeManager;
 
-	private final PopupManagerFactory popupManagerFactory;
+    private final PopupManagerFactory popupManagerFactory;
 
-	@Inject
-	public DialogManager(
-			@Named(ChooselInjectionConstants.ROOT_PANEL) AbsolutePanel parentPanel,
-			ShadeManager shadeManager, PopupManagerFactory popupManagerFactory) {
+    @Inject
+    public DialogManager(
+            @Named(ChooselInjectionConstants.ROOT_PANEL) AbsolutePanel parentPanel,
+            ShadeManager shadeManager, PopupManagerFactory popupManagerFactory) {
 
-		this.parentPanel = parentPanel;
-		this.shadeManager = shadeManager;
-		this.popupManagerFactory = popupManagerFactory;
-	}
+        this.parentPanel = parentPanel;
+        this.shadeManager = shadeManager;
+        this.popupManagerFactory = popupManagerFactory;
+    }
 
-	/**
-	 * Shorthand for show(dialog, false). {@link #show(Dialog, boolean)}
-	 * 
-	 * @param dialog
-	 *            the dialog to open.
-	 */
-	public void show(Dialog dialog) {
-		show(dialog, false);
-	}
+    /**
+     * Shorthand for show(dialog, false). {@link #show(Dialog, boolean)}
+     * 
+     * @param dialog
+     *            the dialog to open.
+     */
+    public void show(Dialog dialog) {
+        show(dialog, false);
+    }
 
-	/**
-	 * Opens up a dialog in the given "modal" state. If "modal" is false, then
-	 * clicking on the background will "cancel" and close the dialog. If it is
-	 * true, then clicking on the background (outside of the dialog) will not
-	 * cancel or close the dialog.
-	 * 
-	 * @param dialog
-	 *            the dialog to open.
-	 * @param modal
-	 *            the modal state.
-	 */
-	public void show(Dialog dialog, boolean modal) {
-		assert dialog != null;
+    /**
+     * Opens up a dialog in the given "modal" state. If "modal" is false, then
+     * clicking on the background will "cancel" and close the dialog. If it is
+     * true, then clicking on the background (outside of the dialog) will not
+     * cancel or close the dialog.
+     * 
+     * @param dialog
+     *            the dialog to open.
+     * @param modal
+     *            the modal state.
+     */
+    public void show(Dialog dialog, boolean modal) {
+        assert dialog != null;
 
-		new DialogWindowManager(parentPanel, dialog, shadeManager,
-				popupManagerFactory, modal).init();
-	}
+        new DialogWindowManager(parentPanel, dialog, shadeManager,
+                popupManagerFactory, modal).init();
+    }
 }
