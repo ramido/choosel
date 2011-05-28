@@ -36,13 +36,6 @@ public final class DialogWindow extends WindowPanel implements DialogCallback {
             this.button = button;
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see
-         * com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt
-         * .event.dom.client.ClickEvent)
-         */
         @Override
         public void onClick(ClickEvent event) {
             handleButtonClick(button,
@@ -106,10 +99,14 @@ public final class DialogWindow extends WindowPanel implements DialogCallback {
      * @return the button that has been created and added to the panel.
      */
     public Button createButton(int code, String label) {
-        Button b = dialogPanel.createButton(label);
-        b.getElement().setPropertyInt(DIALOG_STATUS_CODE, code);
-        b.addClickHandler(new ButtonClickHandler(b));
-        return b;
+        Button button = dialogPanel.createButton(label);
+        /*
+         * XXX setting properties on elements makes this difficult to test. Is
+         * there a better way of doing this?
+         */
+        button.getElement().setPropertyInt(DIALOG_STATUS_CODE, code);
+        button.addClickHandler(new ButtonClickHandler(button));
+        return button;
 
     }
 
@@ -141,6 +138,7 @@ public final class DialogWindow extends WindowPanel implements DialogCallback {
      * @return the button.
      */
     public Button getButton(int code) {
+        // TODO replace search with a map-based lookup?
         for (Widget w : dialogPanel) {
             if (w instanceof Button) {
                 if (w.getElement().getPropertyInt(DIALOG_STATUS_CODE) == code) {
@@ -148,6 +146,8 @@ public final class DialogWindow extends WindowPanel implements DialogCallback {
                 }
             }
         }
+
+        // TODO throw Exception instead (illegal argument)?
         return null;
     }
 
@@ -163,6 +163,7 @@ public final class DialogWindow extends WindowPanel implements DialogCallback {
      * @param propertyInt
      */
     protected void handleButtonClick(Button button, int statusCode) {
+        // TODO merge DialogExtension & Dialog
         if (dialog instanceof DialogExtension) {
             ((DialogExtension) dialog).buttonPressed(statusCode, button, this);
         } else {
@@ -174,9 +175,8 @@ public final class DialogWindow extends WindowPanel implements DialogCallback {
         }
     }
 
-    // TODO add explanation area
+    // TODO add area in dialog window that explains current dialog to user
     public void init(DialogWindowManager windowController, Dialog dialog) {
-
         dialogController = windowController;
         if (dialog instanceof DialogExtension) {
             ((DialogExtension) dialog).dialogCreated(this);
@@ -197,6 +197,7 @@ public final class DialogWindow extends WindowPanel implements DialogCallback {
     }
 
     protected void initButtons(final Dialog dialog) {
+        // TODO merge DialogExtension & Dialog
         if (dialog instanceof DialogExtension) {
             ((DialogExtension) dialog).createButtons(this);
         } else {

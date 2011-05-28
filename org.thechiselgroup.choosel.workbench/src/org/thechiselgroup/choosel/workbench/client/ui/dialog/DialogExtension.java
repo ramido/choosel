@@ -22,8 +22,8 @@ import com.google.gwt.user.client.ui.Button;
  * buttons, and the ability to interact with the dialog's parent window.
  * 
  * @author Del
- * 
  */
+// TODO Merge this into dialog (and break the API :-)
 public interface DialogExtension {
 
     /**

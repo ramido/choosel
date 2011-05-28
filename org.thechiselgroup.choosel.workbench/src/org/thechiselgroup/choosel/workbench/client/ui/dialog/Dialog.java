@@ -18,12 +18,11 @@ package org.thechiselgroup.choosel.workbench.client.ui.dialog;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * Default dialog implementation that displays a title, has a custom content,
- * and an OK and Cancel button. The OK and cancel buttons both close the window
- * after being pressed.
+ * Default dialog that displays a title, has a custom content, and an OK and
+ * Cancel button. The OK and cancel buttons both close the window after being
+ * pressed.
  * 
  * @author Lars Grammel
- * 
  */
 public interface Dialog {
 

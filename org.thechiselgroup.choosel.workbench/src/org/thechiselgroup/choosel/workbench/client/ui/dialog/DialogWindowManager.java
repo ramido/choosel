@@ -13,9 +13,6 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-/**
- * 
- */
 package org.thechiselgroup.choosel.workbench.client.ui.dialog;
 
 import org.thechiselgroup.choosel.core.client.command.NullCommandManager;
@@ -72,9 +69,9 @@ public class DialogWindowManager extends AbstractWindowManager {
 
     public void init() {
         /*
-         * The shade needs to be removed if an exception occurs, otherwise the
-         * user might get locked in a state where he/she cannot remove the
-         * shade.
+         * IMPLEMENTATION NOTE: The shade needs to be removed if an exception
+         * occurs, otherwise the user might get locked in a state where he/she
+         * cannot remove the shade.
          */
         try {
             showShade();
