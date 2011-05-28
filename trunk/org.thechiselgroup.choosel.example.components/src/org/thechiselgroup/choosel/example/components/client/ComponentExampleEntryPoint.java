@@ -357,7 +357,14 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         try {
             ResourceSet resourceSet = createResourceSet();
 
-            // init highlighting and selection models
+            /*
+             * Initializes highlighting and selection models - selectionModel is
+             * used as resource model for scatter plot & pie chart. The
+             * selection in the bar chart thus determines the content of the
+             * scatter plot and pie chart (click bars in the bar chart to remove
+             * them from scatter plot & pie chart - these are empty/invisible at
+             * first)
+             */
             HighlightingModel hoverModel = new HighlightingModel();
             SelectionModel selectionModel = new DefaultSelectionModel(
                     new IncrementingSuffixLabelFactory(""),
@@ -378,19 +385,21 @@ public class ComponentExampleEntryPoint implements EntryPoint {
             RootPanel.get().add(pieChart);
             RootPanel.get().add(scatterPlot);
 
-            // Set the size of the window, and listen for
-            // changes in size.
-            Window.enableScrolling(false);
-            layout();
-            Window.addResizeHandler(new ResizeHandler() {
-                @Override
-                public void onResize(ResizeEvent event) {
-                    layout();
-                }
-            });
+            setupLayout();
         } catch (Throwable ex) {
             handle(ex);
         }
+    }
+
+    private void setupLayout() {
+        Window.enableScrolling(false);
+        layout();
+        Window.addResizeHandler(new ResizeHandler() {
+            @Override
+            public void onResize(ResizeEvent event) {
+                layout();
+            }
+        });
     }
 
     private void layout() {
