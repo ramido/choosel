@@ -26,39 +26,39 @@ import com.google.gwt.user.client.ui.Button;
  */
 public interface DialogExtension {
 
-	/**
-	 * Indicates that the button with the given code was pressed within the
-	 * given window. Clients are responsible for performing all functionality
-	 * after a button press, including closing the window if necessary.
-	 * 
-	 * @param code
-	 *            the status code of the button.
-	 * @param button
-	 *            the button pressed.
-	 * @param window
-	 *            the dialog window for the dialog.
-	 */
-	public void buttonPressed(int code, Button button, DialogWindow window);
+    /**
+     * Indicates that the button with the given code was pressed within the
+     * given window. Clients are responsible for performing all functionality
+     * after a button press, including closing the window if necessary.
+     * 
+     * @param code
+     *            the status code of the button.
+     * @param button
+     *            the button pressed.
+     * @param window
+     *            the dialog window for the dialog.
+     */
+    public void buttonPressed(int code, Button button, DialogWindow window);
 
-	/**
-	 * Extension to create custom buttons in the dialog window. Clients should
-	 * call {@link DialogWindow#createButton(int, String)} to create the button.
-	 * Clients will be automatically notified of button presses through the
-	 * {@link #buttonPressed(int, Button, DialogWindow)} callback.
-	 * 
-	 * 
-	 * @param window
-	 *            the window to create the button on.
-	 */
-	public void createButtons(DialogWindow window);
+    /**
+     * Extension to create custom buttons in the dialog window. Clients should
+     * call {@link DialogWindow#createButton(int, String)} to create the button.
+     * Clients will be automatically notified of button presses through the
+     * {@link #buttonPressed(int, Button, DialogWindow)} callback.
+     * 
+     * 
+     * @param window
+     *            the window to create the button on.
+     */
+    public void createButtons(DialogWindow window);
 
-	/**
-	 * Indicates that the dialog has been created on the given parent. Occurs
-	 * before the dialog contents have been created.
-	 * 
-	 * @param window
-	 *            the window that the dialog is created on.
-	 */
-	public void dialogCreated(DialogWindow window);
+    /**
+     * Indicates that the dialog has been created on the given parent. Occurs
+     * before the dialog contents have been created.
+     * 
+     * @param window
+     *            the window that the dialog is created on.
+     */
+    public void dialogCreated(DialogWindow window);
 
 }
