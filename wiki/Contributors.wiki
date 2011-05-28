@@ -1,7 +1,7 @@
 #summary Contributors and their contributions to Choosel
 
 *[http://margaretannestorey.wordpress.com/ Margaret-Anne Storey]*: Project lead
- 
+
 *[http://larsgrammel.de Lars Grammel]*: Project lead, UI design, framework and application design and implementation, project management, screencasts, presentations, marketing etc.
 
 *Patrick Gorman*: Performance testing; various code contributions
