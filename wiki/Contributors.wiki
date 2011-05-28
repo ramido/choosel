@@ -2,18 +2,16 @@
 
 *[http://margaretannestorey.wordpress.com/ Margaret-Anne Storey]*: Project lead
  
-
 *[http://larsgrammel.de Lars Grammel]*: Project lead, UI design, framework and application design and implementation, project management, screencasts, presentations, marketing etc.
 
+*Patrick Gorman*: Performance testing; various code contributions
+
+*Del Myers*: Code modifications to facilitate application development; various code contributions
 
 *Bradley Blashko*: [http://vis.stanford.edu/protovis/ Protovis] charting integration development, diverse code contributions, CASCON 2010 exhibit
 
 *[http://www.jamiestarke.com/ Jamie Starke]*: Lightweight view sharing
 
-*Patrick Gorman*: Performance testing, diverse code contributions
-
 *Chris Callendar*: Adaptations to underlying Flex Graph Widget
-
-*Del Myers*: Code modifications to facilitate application development
 
 *Chris Bennett*: User documentation
