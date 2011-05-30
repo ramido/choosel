@@ -1,17 +1,35 @@
+/*******************************************************************************
+ * Copyright (C) 2011 Lars Grammel 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at 
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0 
+ *     
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ * See the License for the specific language governing permissions and 
+ * limitations under the License.  
+ *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
@@ -26,94 +44,51 @@ public class SlotResolverUIModelTest {
 
     private static final String ID_1 = "ID_1";
 
+    private static final String ID_2 = "ID_2";
+
     private static final String FACT_ID_1 = "FID_1";
 
     private static final String FACT_ID_2 = "FID_2";
 
-    private static final String FACT_ID_3 = "FID_3";
-
-    private static final String FACT_ID_4 = "FID_4";
-
-    private static final String FACT_ID_5 = "FID_5";
+    @Mock
+    private ViewItemValueResolver resolver1;
 
     @Mock
-    public ViewItemValueResolver resolver1;
+    private ViewItemValueResolver resolver2;
+
+    private SlotResolverUIModel underTest;
 
     @Mock
-    public ViewItemValueResolver resolver2;
+    private Slot slot;
 
     @Mock
-    public ViewItemValueResolver resolver3;
+    private SlotMappingChangedHandler handler;
 
     @Mock
-    public ViewItem viewItem1;
-
-    public SlotResolverUIModel underTest;
+    private ViewItemValueResolverFactoryProvider provider;
 
     @Mock
-    public Slot slot;
+    private ViewItemValueResolverFactory factory1;
 
     @Mock
-    public SlotMappingChangedHandler handler;
-
-    @Mock
-    public ViewItemValueResolverFactoryProvider provider;
-
-    @Mock
-    public ViewItemValueResolverFactory factory1;
-
-    @Mock
-    public ViewItemValueResolverFactory factory2;
-
-    @Mock
-    public ViewItemValueResolverFactory factory3;
+    private ViewItemValueResolverFactory factory2;
 
     public SlotMappingChangedEvent captureEvent() {
         ArgumentCaptor<SlotMappingChangedEvent> eventCaptor = ArgumentCaptor
                 .forClass(SlotMappingChangedEvent.class);
         verify(handler, times(1)).onResourceCategoriesChanged(
                 eventCaptor.capture());
-        SlotMappingChangedEvent event = eventCaptor.getValue();
-
-        return event;
-    }
-
-    /**
-     * creates a mocked view item that can be identified by the id that was
-     * passed in in it's creation
-     */
-    public ViewItem createViewItem(String id) {
-        ViewItem viewItem = mock(ViewItem.class);
-        when(viewItem.getViewItemID()).thenReturn(id);
-        return viewItem;
-    }
-
-    public LightweightList<ViewItem> createViewItemList(String... ids) {
-        LightweightList<ViewItem> list = CollectionFactory
-                .createLightweightList();
-
-        for (String id : ids) {
-            list.add(createViewItem(id));
-        }
-        return list;
-    }
-
-    private void linkFactoryToResolver(ViewItemValueResolverFactory factory,
-            ViewItemValueResolver resolver, String id) {
-        when(factory.create()).thenReturn(resolver);
-        when(factory.getId()).thenReturn(id);
-        when(resolver.getResolverId()).thenReturn(id);
-    }
-
-    private void setFactoriesAcceptedViewItems(
-            ViewItemValueResolverFactory factory,
-            LightweightList<ViewItem> viewItems) {
-        when(factory.isApplicable(any(Slot.class), eq(viewItems))).thenReturn(
-                true);
+        return eventCaptor.getValue();
     }
 
     @Test
-    public void setNewCurrentResolverFiresEvent() {
+    public void changeCurrentResolverFiresEvent() {
+        setFactoryIsApplicable(factory1, true);
+        setFactoryIsApplicable(factory2, true);
+
+        underTest.updateAllowableFactories(mockViewItems());
+
+        underTest.setCurrentResolver(resolver2);
         underTest.addEventHandler(handler);
         underTest.setCurrentResolver(resolver1);
 
@@ -121,11 +96,57 @@ public class SlotResolverUIModelTest {
         assertEquals(slot, event.getSlot());
     }
 
-    private void setProvidersFactories(
-            ViewItemValueResolverFactory... factories) {
+    private void linkFactoryToResolver(ViewItemValueResolverFactory factory,
+            ViewItemValueResolver resolver, String id) {
+
+        when(factory.create()).thenReturn(resolver);
+        when(factory.getId()).thenReturn(id);
+        when(resolver.getResolverId()).thenReturn(id);
+    }
+
+    /**
+     * creates a mocked view item that can be identified by the id that was
+     * passed in in it's creation
+     */
+    private ViewItem mockViewItem(final String id) {
+        ViewItem viewItem = mock(ViewItem.class);
+        when(viewItem.getViewItemID()).thenReturn(id);
+        return viewItem;
+    }
+
+    private LightweightList<ViewItem> mockViewItems(String... ids) {
+        LightweightList<ViewItem> list = CollectionFactory
+                .createLightweightList();
+        for (String id : ids) {
+            list.add(mockViewItem(id));
+        }
+        return list;
+    }
+
+    private void setAllowableViewItemsForFactory(
+            ViewItemValueResolverFactory factory,
+            LightweightList<ViewItem> viewItems) {
+
+        when(
+                factory.isApplicable(
+                        any(Slot.class),
+                        (LightweightList<ViewItem>) argThat(containsExactly(viewItems))))
+                .thenReturn(true);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void setFactoryIsApplicable(ViewItemValueResolverFactory factory,
+            boolean isApplicable) {
+
+        when(
+                factory.isApplicable(any(Slot.class),
+                        (LightweightList<ViewItem>) any())).thenReturn(
+                isApplicable);
+    }
+
+    private void setProviderFactories(ViewItemValueResolverFactory... factories) {
         LightweightList<ViewItemValueResolverFactory> list = CollectionFactory
                 .createLightweightList();
-
         for (ViewItemValueResolverFactory factory : factories) {
             list.add(factory);
         }
@@ -134,160 +155,128 @@ public class SlotResolverUIModelTest {
 
     @Test
     public void setSameResolverDoesNotFireEvent() {
-        ViewItemValueResolverFactory factory4 = mock(ViewItemValueResolverFactory.class);
-        ViewItemValueResolver resolver4 = mock(ViewItemValueResolver.class);
-        setToAlwaysApplicableFactory(factory4);
-        linkFactoryToResolver(factory4, resolver4, FACT_ID_4);
+        setFactoryIsApplicable(factory1, true);
+        setFactoryIsApplicable(factory2, true);
 
-        setProvidersFactories(factory4);
-        underTest.updateAllowableFactories(createViewItemList("ID_1"));
+        underTest.updateAllowableFactories(mockViewItems());
+
+        underTest.setCurrentResolver(resolver1);
         underTest.addEventHandler(handler);
-        underTest.setCurrentResolver(resolver4);
+        underTest.setCurrentResolver(resolver1);
 
         verify(handler, times(0)).onResourceCategoriesChanged(
                 any(SlotMappingChangedEvent.class));
     }
 
-    private void setToAlwaysApplicableFactory(
-            ViewItemValueResolverFactory factory) {
-        @SuppressWarnings("unchecked")
-        LightweightList<ViewItem> anylist = (LightweightList<ViewItem>) Mockito
-                .any();
-        when(factory.isApplicable(any(Slot.class), anylist)).thenReturn(true);
-    }
-
     @Test(expected = NoAllowableResolverException.class)
     public void setToNoAllowableResolverFactoriesThrowsNoAllowableResolverException() {
-        setToNonApplicableFactory(factory1);
-        setToNonApplicableFactory(factory2);
-        setToNonApplicableFactory(factory3);
+        setFactoryIsApplicable(factory1, false);
+        setFactoryIsApplicable(factory2, false);
 
-        underTest.updateAllowableFactories(createViewItemList(ID_1));
-        assertTrue(underTest.getResolverFactories().isEmpty());
-    }
-
-    private void setToNonApplicableFactory(ViewItemValueResolverFactory factory) {
-        @SuppressWarnings("unchecked")
-        LightweightList<ViewItem> anylist = (LightweightList<ViewItem>) Mockito
-                .any();
-        when(factory.isApplicable(any(Slot.class), anylist)).thenReturn(false);
+        underTest.updateAllowableFactories(mockViewItems(ID_1));
     }
 
     @Test(expected = InvalidResolverException.class)
     public void setUnallowableResolverThrowsInvalidResolverException() {
-        setToNonApplicableFactory(factory1);
+        setFactoryIsApplicable(factory1, true);
+        setFactoryIsApplicable(factory2, true);
 
-        LightweightList<ViewItem> list = createViewItemList(ID_1);
-        underTest.updateAllowableFactories(list);
+        underTest.setCurrentResolver(resolver2);
+
+        setFactoryIsApplicable(factory1, false);
+
+        underTest.updateAllowableFactories(mockViewItems(ID_1));
         underTest.setCurrentResolver(resolver1);
     }
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        setUpFactories();
-        setProvidersFactories(factory1, factory2, factory3);
         underTest = new SlotResolverUIModel(slot, provider);
-    }
 
-    private void setUpFactories() {
         linkFactoryToResolver(factory1, resolver1, FACT_ID_1);
         linkFactoryToResolver(factory2, resolver2, FACT_ID_2);
-        linkFactoryToResolver(factory3, resolver3, FACT_ID_3);
 
-        setToAlwaysApplicableFactory(factory1);
-        setToAlwaysApplicableFactory(factory2);
-        setToAlwaysApplicableFactory(factory3);
+        setProviderFactories(factory1, factory2);
+    }
+
+    @Test
+    public void updateAllowableFactoriesForTheFirstTimesSetsResolver() {
+        setFactoryIsApplicable(factory1, false);
+        setFactoryIsApplicable(factory2, true);
+
+        underTest.updateAllowableFactories(mockViewItems(ID_1));
+
+        assertThat(underTest.getCurrentResolver(), equalTo(resolver2));
+        verify(handler, times(0)).onResourceCategoriesChanged(
+                any(SlotMappingChangedEvent.class));
     }
 
     @Test
     public void updateAllowableResolverFactoriesMixed() {
-        setToNonApplicableFactory(factory1);
-        setToAlwaysApplicableFactory(factory2);
-        setToAlwaysApplicableFactory(factory3);
+        setFactoryIsApplicable(factory1, false);
+        setFactoryIsApplicable(factory2, true);
 
-        LightweightList<ViewItem> list = createViewItemList(ID_1);
-        underTest.updateAllowableFactories(list);
+        underTest.updateAllowableFactories(mockViewItems(ID_1));
 
-        assertThat(underTest.getResolverFactories(),
-                containsExactly(factory2, factory3));
+        assertThat(underTest.getResolverFactories(), containsExactly(factory2));
     }
 
     @Test
     public void updatedFactoriesThatMatchNotAllViewItemsAreNotAdded() {
-        LightweightList<ViewItem> viewItems = createViewItemList("ID_1",
-                "ID_2", "ID_3");
+        linkFactoryToResolver(factory1, resolver1, FACT_ID_1);
+        linkFactoryToResolver(factory2, resolver2, FACT_ID_2);
 
-        ViewItemValueResolverFactory factory4 = mock(ViewItemValueResolverFactory.class);
-        ViewItemValueResolver resolver4 = mock(ViewItemValueResolver.class);
-        linkFactoryToResolver(factory4, resolver4, FACT_ID_4);
+        /*
+         * NOTE: we cannot stub equals() and thus have to rely on instance
+         * tests.
+         */
+        LightweightList<ViewItem> allowableViewItems = mockViewItems(ID_1, ID_2);
 
-        ViewItemValueResolverFactory factory5 = mock(ViewItemValueResolverFactory.class);
-        ViewItemValueResolver resolver5 = mock(ViewItemValueResolver.class);
-        linkFactoryToResolver(factory5, resolver5, FACT_ID_5);
+        setAllowableViewItemsForFactory(factory1, mockViewItems(ID_1));
+        setAllowableViewItemsForFactory(factory2, allowableViewItems);
 
-        LightweightList<ViewItem> acceptedViewItems = CollectionFactory
-                .createLightweightList();
-        acceptedViewItems.add(viewItems.get(0));
-        acceptedViewItems.add(viewItems.get(2));
-        setFactoriesAcceptedViewItems(factory4, acceptedViewItems);
-        setFactoriesAcceptedViewItems(factory5, viewItems);
+        underTest.updateAllowableFactories(allowableViewItems);
 
-        setProvidersFactories(factory4, factory5);
-        underTest.updateAllowableFactories(viewItems);
-        assertThat(underTest.getResolverFactories(), containsExactly(factory5));
+        assertThat(underTest.getResolverFactories(), containsExactly(factory2));
     }
 
     @Test
     public void updateResolverFactoriesSetsAllResolverFactories() {
-        LightweightList<ViewItem> list = createViewItemList(ID_1);
-        underTest.updateAllowableFactories(list);
+        setFactoryIsApplicable(factory1, true);
+        setFactoryIsApplicable(factory2, true);
+
+        underTest.updateAllowableFactories(mockViewItems(ID_1));
 
         assertThat(underTest.getResolverFactories(),
-                containsExactly(factory1, factory2, factory3));
+                containsExactly(factory1, factory2));
     }
 
     @Test
-    public void updateResolversChangeCurrentResolverFiresEvent() {
-        setToNonApplicableFactory(factory1);
-        setToNonApplicableFactory(factory2);
-        setToNonApplicableFactory(factory3);
+    public void updateResolversThatChangesCurrentResolverFiresEvent() {
+        setFactoryIsApplicable(factory1, true);
+        setFactoryIsApplicable(factory2, true);
 
-        ViewItemValueResolverFactory factory4 = mock(ViewItemValueResolverFactory.class);
-        ViewItemValueResolver resolver4 = mock(ViewItemValueResolver.class);
-        setToAlwaysApplicableFactory(factory4);
-        linkFactoryToResolver(factory4, resolver4, FACT_ID_4);
+        underTest.updateAllowableFactories(mockViewItems(ID_1));
+        underTest.setCurrentResolver(resolver1);
 
-        setProvidersFactories(factory1, factory2, factory3, factory4);
+        setFactoryIsApplicable(factory1, false);
 
         underTest.addEventHandler(handler);
-        underTest.updateAllowableFactories(createViewItemList(ID_1));
+        underTest.updateAllowableFactories(mockViewItems(ID_1));
 
         SlotMappingChangedEvent event = captureEvent();
         assertEquals(slot, event.getSlot());
     }
 
     @Test
-    public void updateResolversDontCurrentResolverDoesNotFiresEvent() {
-        ViewItemValueResolverFactory factory4 = mock(ViewItemValueResolverFactory.class);
-        ViewItemValueResolver resolver4 = mock(ViewItemValueResolver.class);
-        setToAlwaysApplicableFactory(factory4);
-        linkFactoryToResolver(factory4, resolver4, FACT_ID_4);
+    public void updateResolversThatDontChangeCurrentResolverDoesNotFiresEvent() {
+        setFactoryIsApplicable(factory1, true);
+        setProviderFactories(factory1);
 
-        setProvidersFactories(factory1, factory2, factory3, factory4);
-
+        underTest.updateAllowableFactories(mockViewItems(ID_1));
         underTest.addEventHandler(handler);
-        underTest.updateAllowableFactories(createViewItemList(ID_1));
-    }
-
-    @Test
-    public void updateResolversToOneResolverSetsCurrentResolver() {
-        setToNonApplicableFactory(factory1);
-        setToNonApplicableFactory(factory2);
-        setToAlwaysApplicableFactory(factory3);
-
-        underTest.updateAllowableFactories(createViewItemList(ID_1));
-        assertThat(underTest.getCurrentResolver(), equalTo(resolver3));
+        underTest.updateAllowableFactories(mockViewItems(ID_1));
 
         verify(handler, times(0)).onResourceCategoriesChanged(
                 any(SlotMappingChangedEvent.class));
