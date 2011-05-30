@@ -30,7 +30,7 @@ import static org.thechiselgroup.choosel.core.client.resources.CategorizableReso
 import static org.thechiselgroup.choosel.core.client.resources.CategorizableResourceGroupingChange.newGroupRemovedDelta;
 import static org.thechiselgroup.choosel.core.client.test.AdvancedAsserts.assertContentEquals;
 import static org.thechiselgroup.choosel.core.client.test.AdvancedAsserts.assertMapKeysEqual;
-import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsEqualResources;
+import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.verifyOnResourceSetChanged;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.TYPE_1;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.TYPE_2;
@@ -142,7 +142,7 @@ public class ResourceGroupingTest {
                 .getUncategorizableResources();
 
         assertThat(categorizedResourceSets.get(GROUP_1_1),
-                containsEqualResources(createResources(TYPE_1, 2, 5)));
+                containsExactly(createResources(TYPE_1, 2, 5)));
 
         assertContentEquals(uncategorizedResources, createResources(4, 6));
     }
@@ -195,11 +195,11 @@ public class ResourceGroupingTest {
 
         assertMapKeysEqual(result, GROUP_1_1);
         assertThat(result.get(GROUP_1_1),
-                containsEqualResources(createResources(TYPE_1, 1)));
+                containsExactly(createResources(TYPE_1, 1)));
 
         assertNotNull(uncategorizableResources);
         assertThat(uncategorizableResources,
-                containsEqualResources(createResources(TYPE_2, 2)));
+                containsExactly(createResources(TYPE_2, 2)));
     }
 
     @Test
@@ -213,9 +213,9 @@ public class ResourceGroupingTest {
 
         assertMapKeysEqual(result, GROUP_1_1, GROUP_1_2);
         assertThat(result.get(GROUP_1_1),
-                containsEqualResources(createResources(1)));
+                containsExactly(createResources(1)));
         assertThat(result.get(GROUP_1_2),
-                containsEqualResources(createResources(1)));
+                containsExactly(createResources(1)));
     }
 
     // XXX
@@ -231,7 +231,7 @@ public class ResourceGroupingTest {
         LightweightCollection<Resource> addedResources = changes.addedResources;
         LightweightCollection<Resource> removedResources = changes.removedResources;
 
-        assertThat(changes.resourceSet, containsEqualResources(testResources));
+        assertThat(changes.resourceSet, containsExactly(testResources));
         assertTrue(addedResources.contains(createResource(TYPE_1, 1)));
         assertTrue(addedResources.contains(createResource(TYPE_1, 2)));
         assertTrue(removedResources.isEmpty());
@@ -247,7 +247,7 @@ public class ResourceGroupingTest {
         ResourceSet result = underTest.getUncategorizableResources();
 
         assertNotNull(result);
-        assertThat(result, containsEqualResources(testResources));
+        assertThat(result, containsExactly(testResources));
     }
 
     public List<CategorizableResourceGroupingChange> captureChanges() {
@@ -347,7 +347,7 @@ public class ResourceGroupingTest {
         assertTrue(uncategorizedResources.isEmpty());
         assertMapKeysEqual(categorizedResourceSets, GROUP_1_1);
         assertThat(categorizedResourceSets.get(GROUP_1_1),
-                containsEqualResources(createResources(TYPE_1, 1, 2)));
+                containsExactly(createResources(TYPE_1, 1, 2)));
     }
 
     // XXX
@@ -528,13 +528,13 @@ public class ResourceGroupingTest {
 
         assertMapKeysEqual(result, GROUP_2_1, GROUP_2_2, GROUP_2_3, GROUP_2_4);
         assertThat(result.get(GROUP_2_1),
-                containsEqualResources(createResources(1)));
+                containsExactly(createResources(1)));
         assertThat(result.get(GROUP_2_2),
-                containsEqualResources(createResources(2)));
+                containsExactly(createResources(2)));
         assertThat(result.get(GROUP_2_3),
-                containsEqualResources(createResources(3, 4)));
+                containsExactly(createResources(3, 4)));
         assertThat(result.get(GROUP_2_4),
-                containsEqualResources(createResources(4, 5)));
+                containsExactly(createResources(4, 5)));
     }
 
     @Test
@@ -548,9 +548,9 @@ public class ResourceGroupingTest {
 
         assertMapKeysEqual(result, GROUP_1_1, GROUP_1_2);
         assertThat(result.get(GROUP_1_1),
-                containsEqualResources(createResources(1, 2, 3)));
+                containsExactly(createResources(1, 2, 3)));
         assertThat(result.get(GROUP_1_2),
-                containsEqualResources(createResources(4, 5)));
+                containsExactly(createResources(4, 5)));
     }
 
     @Test
@@ -565,9 +565,9 @@ public class ResourceGroupingTest {
 
         assertMapKeysEqual(result, GROUP_2_3, GROUP_2_4);
         assertThat(result.get(GROUP_2_3),
-                containsEqualResources(createResources(3, 4)));
+                containsExactly(createResources(3, 4)));
         assertThat(result.get(GROUP_2_4),
-                containsEqualResources(createResources(4, 5)));
+                containsExactly(createResources(4, 5)));
     }
 
     @Test
@@ -581,9 +581,9 @@ public class ResourceGroupingTest {
 
         assertMapKeysEqual(result, GROUP_2_3, GROUP_2_4);
         assertThat(result.get(GROUP_2_3),
-                containsEqualResources(createResources(3, 4)));
+                containsExactly(createResources(3, 4)));
         assertThat(result.get(GROUP_2_4),
-                containsEqualResources(createResources(4, 5)));
+                containsExactly(createResources(4, 5)));
     }
 
     @Test
@@ -605,9 +605,9 @@ public class ResourceGroupingTest {
 
         assertMapKeysEqual(result, GROUP_1_1, GROUP_1_2);
         assertThat(result.get(GROUP_1_1),
-                containsEqualResources(createResources(1, 2, 3)));
+                containsExactly(createResources(1, 2, 3)));
         assertThat(result.get(GROUP_1_2),
-                containsEqualResources(createResources(4, 5)));
+                containsExactly(createResources(4, 5)));
     }
 
     @Test

@@ -16,7 +16,7 @@
 package org.thechiselgroup.choosel.core.client.resources.command;
 
 import static org.junit.Assert.assertThat;
-import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsEqualResources;
+import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
 
 import org.junit.Test;
@@ -34,7 +34,7 @@ public class ReplaceResourceSetContentCommandTest {
 
         underTest.execute();
 
-        assertThat(resources, containsEqualResources(createResources(1, 2, 3)));
+        assertThat(resources, containsExactly(createResources(1, 2, 3)));
     }
 
     @Test
@@ -44,7 +44,7 @@ public class ReplaceResourceSetContentCommandTest {
         underTest.execute();
         underTest.undo();
 
-        assertThat(resources, containsEqualResources(createResources(4)));
+        assertThat(resources, containsExactly(createResources(4)));
     }
 
     private void setUpCommand(ResourceSet resources, ResourceSet newContent) {

@@ -19,9 +19,11 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.junit.internal.matchers.TypeSafeMatcher;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
-import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.UriList;
 import org.thechiselgroup.choosel.core.client.util.StringUtils;
+import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 
 /**
  * Contains Hamcrest matchers (not Mockito Matchers!) for {@link Resource} and
@@ -31,31 +33,40 @@ import org.thechiselgroup.choosel.core.client.util.StringUtils;
  */
 public final class HamcrestResourceMatchers {
 
-    public static Matcher<Iterable<Resource>> containsEqualResources(
-            final ResourceSet expected) {
+    public static <T> Matcher<Iterable<T>> containsExactly(
+            final LightweightCollection<T> expected) {
 
-        return new TypeSafeMatcher<Iterable<Resource>>() {
+        return new TypeSafeMatcher<Iterable<T>>() {
             @Override
             public void describeTo(Description description) {
-                description
-                        .appendText(" does not contain the same resources as "
-                                + expected.toString());
+                description.appendText(" does not contain the same content as "
+                        + expected.toString());
             }
 
             @Override
-            public boolean matchesSafely(Iterable<Resource> actual) {
+            public boolean matchesSafely(Iterable<T> actual) {
                 int actualSize = 0;
-                for (Resource resource : actual) {
+                for (T t : actual) {
+                    if (!expected.contains(t)) {
+                        return false;
+                    }
                     actualSize++;
                 }
 
-                return expected.containsAll(actual)
-                        && expected.size() == actualSize;
+                return expected.size() == actualSize;
             }
         };
     }
 
-    public static Matcher<UriList> containsExactly(final String... uris) {
+    public static <T> Matcher<Iterable<T>> containsExactly(T... expected) {
+        LightweightList<T> list = CollectionFactory.createLightweightList();
+        for (T t : expected) {
+            list.add(t);
+        }
+        return containsExactly(list);
+    }
+
+    public static Matcher<UriList> containsUrisExactly(final String... uris) {
         return new TypeSafeMatcher<UriList>() {
 
             @Override

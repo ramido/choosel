@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
-import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsEqualResources;
+import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.*;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.*;
 import static org.thechiselgroup.choosel.core.client.views.model.DefaultViewModelTestHelper.*;
@@ -85,12 +85,12 @@ public class DefaultViewModelTest {
         List<ViewItem> set1 = allValues.get(0).toList();
         assertEquals(1, set1.size());
         assertThat(set1.get(0).getResources(),
-                containsEqualResources(createResources(TYPE_1, 1)));
+                containsExactly(createResources(TYPE_1, 1)));
 
         List<ViewItem> set2 = allValues.get(1).toList();
         assertEquals(1, set2.size());
         assertThat(set2.get(0).getResources(),
-                containsEqualResources(createResources(TYPE_2, 2)));
+                containsExactly(createResources(TYPE_2, 2)));
     }
 
     @Test
@@ -104,7 +104,7 @@ public class DefaultViewModelTest {
         selectedResources.removeAll(resources);
 
         assertThat(viewItems.get(0).getResources(Subset.SELECTED),
-                containsEqualResources(createResources()));
+                containsExactly(createResources()));
     }
 
     @Test
@@ -178,7 +178,7 @@ public class DefaultViewModelTest {
         List<ViewItem> viewItems = captureAddedViewItemsAsList(viewContentDisplay);
 
         assertThat(viewItems.get(0).getResources(Subset.HIGHLIGHTED),
-                containsEqualResources(resources));
+                containsExactly(resources));
     }
 
     @Test
@@ -191,7 +191,7 @@ public class DefaultViewModelTest {
         highlightedResources.addAll(resources);
 
         assertThat(viewItems.get(0).getResources(Subset.HIGHLIGHTED),
-                containsEqualResources(resources));
+                containsExactly(resources));
     }
 
     @Test
@@ -207,7 +207,7 @@ public class DefaultViewModelTest {
         highlightedResources.addAll(highlightedResources2);
 
         assertThat(viewItems.get(0).getResources(Subset.HIGHLIGHTED),
-                containsEqualResources(viewResources));
+                containsExactly(viewResources));
     }
 
     @Test
@@ -220,7 +220,7 @@ public class DefaultViewModelTest {
         highlightedResources.addAll(resources);
 
         assertThat(viewItems.get(0).getResources(Subset.HIGHLIGHTED),
-                containsEqualResources(createResources(1)));
+                containsExactly(createResources(1)));
     }
 
     @Test
@@ -234,7 +234,7 @@ public class DefaultViewModelTest {
         highlightedResources.removeAll(resources);
 
         assertThat(viewItems.get(0).getResources(Subset.HIGHLIGHTED),
-                containsEqualResources(createResources()));
+                containsExactly(createResources()));
     }
 
     @Test
@@ -251,7 +251,7 @@ public class DefaultViewModelTest {
         selectedResources.add(createResource(1));
 
         assertThat(viewItems.get(0).getResources(Subset.SELECTED),
-                containsEqualResources(createResources(1)));
+                containsExactly(createResources(1)));
     }
 
     @Before
@@ -367,7 +367,7 @@ public class DefaultViewModelTest {
 
         assertEquals(Status.PARTIAL, viewItem.getStatus(Subset.HIGHLIGHTED));
         assertThat(viewItem.getResources(Subset.HIGHLIGHTED),
-                containsEqualResources(addedResources));
+                containsExactly(addedResources));
     }
 
     /**
@@ -435,11 +435,11 @@ public class DefaultViewModelTest {
 
         assertEquals(Status.PARTIAL, viewItem.getStatus(Subset.SELECTED));
         assertThat(viewItem.getResources(Subset.SELECTED),
-                containsEqualResources(addedResources));
+                containsExactly(addedResources));
 
         assertEquals(Status.PARTIAL, viewItem.getStatus(Subset.HIGHLIGHTED));
         assertThat(viewItem.getResources(Subset.HIGHLIGHTED),
-                containsEqualResources(addedResources));
+                containsExactly(addedResources));
     }
 
     /**
@@ -462,7 +462,7 @@ public class DefaultViewModelTest {
 
         assertEquals(Status.PARTIAL, viewItem.getStatus(Subset.SELECTED));
         assertThat(viewItem.getResources(Subset.SELECTED),
-                containsEqualResources(addedResources));
+                containsExactly(addedResources));
     }
 
     /**
@@ -482,6 +482,6 @@ public class DefaultViewModelTest {
 
         assertEquals(Status.FULL, viewItem.getStatus(Subset.SELECTED));
         assertThat(viewItem.getResources(Subset.SELECTED),
-                containsEqualResources(resources));
+                containsExactly(resources));
     }
 }

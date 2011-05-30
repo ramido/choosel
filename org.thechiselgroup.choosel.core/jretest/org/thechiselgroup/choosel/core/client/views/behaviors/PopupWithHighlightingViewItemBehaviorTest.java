@@ -22,7 +22,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsEqualResources;
+import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
 
 import org.junit.Before;
@@ -75,7 +75,7 @@ public class PopupWithHighlightingViewItemBehaviorTest {
         underTest.onViewItemRemoved(viewItem);
 
         assertThat(hoverModel.getResources(),
-                containsEqualResources(createResources()));
+                containsExactly(createResources()));
     }
 
     @Test
@@ -84,7 +84,7 @@ public class PopupWithHighlightingViewItemBehaviorTest {
         underTest.onInteraction(viewItem, new ViewItemInteraction(
                 Type.MOUSE_OVER));
         simulateMouseOverPopup();
-        assertThat(hoverModel.getResources(), containsEqualResources(resources));
+        assertThat(hoverModel.getResources(), containsExactly(resources));
     }
 
     @Test
