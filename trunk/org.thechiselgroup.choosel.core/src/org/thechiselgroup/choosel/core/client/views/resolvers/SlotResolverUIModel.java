@@ -1,7 +1,6 @@
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
@@ -47,17 +46,15 @@ public class SlotResolverUIModel {
 
     public SlotResolverUIModel(Slot slot,
             ViewItemValueResolverFactoryProvider provider) {
+
         assert slot != null;
         assert provider != null;
+
         this.slot = slot;
         this.provider = provider;
-        eventBus = new HandlerManager(this);
-        allowableResolverFactories = new HashMap<String, ViewItemValueResolverFactory>();
 
-        LightweightList<ViewItem> empty = CollectionFactory
-                .createLightweightList();
-        updateAllowableFactories(empty);
-
+        this.eventBus = new HandlerManager(this);
+        this.allowableResolverFactories = CollectionFactory.createStringMap();
     }
 
     public void addEventHandler(SlotMappingChangedHandler handler) {
@@ -85,7 +82,6 @@ public class SlotResolverUIModel {
      * InvalidResolverException
      */
     public void setCurrentResolver(ViewItemValueResolver resolver) {
-
         if (resolver == null || !isAllowableResolver(resolver)) {
             throw new InvalidResolverException();
         }
