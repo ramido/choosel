@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsEqualResources;
+import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.verifyOnResourceSetChanged;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.verifyOnResourcesAdded;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createLabeledResources;
@@ -55,7 +55,7 @@ public class IntersectionResourceSetTest {
         underTest.addResourceSet(createLabeledResources(1, 2, 3));
         underTest.addResourceSet(createLabeledResources(3, 4, 5));
 
-        assertThat(underTest, containsEqualResources(createResources(3)));
+        assertThat(underTest, containsExactly(createResources(3)));
     }
 
     @Test
@@ -88,7 +88,7 @@ public class IntersectionResourceSetTest {
         underTest.addResourceSet(createLabeledResources(3, 4, 5));
         resources.remove(createResource(3));
 
-        assertThat(underTest, containsEqualResources(createResources()));
+        assertThat(underTest, containsExactly(createResources()));
     }
 
     @Test
@@ -118,7 +118,7 @@ public class IntersectionResourceSetTest {
         underTest.removeResourceSet(resources);
         resources.add(addedResource);
 
-        assertThat(underTest, containsEqualResources(createResources()));
+        assertThat(underTest, containsExactly(createResources()));
     }
 
     @Test
@@ -136,7 +136,7 @@ public class IntersectionResourceSetTest {
         underTest.addResourceSet(resources);
         underTest.removeResourceSet(resources);
 
-        assertThat(underTest, containsEqualResources(createResources(1, 2, 3)));
+        assertThat(underTest, containsExactly(createResources(1, 2, 3)));
     }
 
     @Before

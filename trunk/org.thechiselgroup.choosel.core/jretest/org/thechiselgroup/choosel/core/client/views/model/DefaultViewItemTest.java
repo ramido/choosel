@@ -23,7 +23,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsEqualResources;
+import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
 
 import org.junit.Before;
@@ -65,7 +65,7 @@ public class DefaultViewItemTest {
         underTest.updateHighlightedResources(createResources(5, 6),
                 LightweightCollections.<Resource> emptyCollection());
         assertThat(underTest.getResources(Subset.HIGHLIGHTED),
-                containsEqualResources(createResources()));
+                containsExactly(createResources()));
     }
 
     @Test
@@ -74,7 +74,7 @@ public class DefaultViewItemTest {
         underTest.updateHighlightedResources(createResources(1, 5),
                 LightweightCollections.<Resource> emptyCollection());
         assertThat(underTest.getResources(Subset.HIGHLIGHTED),
-                containsEqualResources(createResources(1)));
+                containsExactly(createResources(1)));
     }
 
     @Test
@@ -85,7 +85,7 @@ public class DefaultViewItemTest {
         underTest.updateHighlightedResources(createResources(2, 5),
                 LightweightCollections.<Resource> emptyCollection());
         assertThat(underTest.getResources(Subset.HIGHLIGHTED),
-                containsEqualResources(createResources(1, 2)));
+                containsExactly(createResources(1, 2)));
     }
 
     @Test
@@ -96,7 +96,7 @@ public class DefaultViewItemTest {
         underTest.updateHighlightedResources(createResources(2, 3),
                 LightweightCollections.<Resource> emptyCollection());
         assertThat(underTest.getResources(Subset.HIGHLIGHTED),
-                containsEqualResources(createResources(1, 2, 3)));
+                containsExactly(createResources(1, 2, 3)));
     }
 
     @Test
@@ -107,7 +107,7 @@ public class DefaultViewItemTest {
         underTest.updateHighlightedResources(createResources(5, 6),
                 LightweightCollections.<Resource> emptyCollection());
         assertThat(underTest.getResources(Subset.HIGHLIGHTED),
-                containsEqualResources(createResources(1)));
+                containsExactly(createResources(1)));
     }
 
     @Test
@@ -116,7 +116,7 @@ public class DefaultViewItemTest {
         underTest.updateHighlightedResources(createResources(1, 2),
                 LightweightCollections.<Resource> emptyCollection());
         assertThat(underTest.getResources(Subset.HIGHLIGHTED),
-                containsEqualResources(createResources(1, 2)));
+                containsExactly(createResources(1, 2)));
     }
 
     @Test
@@ -126,7 +126,7 @@ public class DefaultViewItemTest {
                 LightweightCollections.<Resource> emptyCollection());
         resources.removeAll(createResources(1, 2));
         assertThat(underTest.getResources(Subset.HIGHLIGHTED),
-                containsEqualResources(createResources()));
+                containsExactly(createResources()));
     }
 
     @Test
@@ -136,7 +136,7 @@ public class DefaultViewItemTest {
                 LightweightCollections.<Resource> emptyCollection(),
                 createResources(5, 6));
         assertThat(underTest.getResources(Subset.HIGHLIGHTED),
-                containsEqualResources(createResources()));
+                containsExactly(createResources()));
     }
 
     @Test
@@ -148,7 +148,7 @@ public class DefaultViewItemTest {
                 LightweightCollections.<Resource> emptyCollection(),
                 createResources(1, 6));
         assertThat(underTest.getResources(Subset.HIGHLIGHTED),
-                containsEqualResources(createResources()));
+                containsExactly(createResources()));
     }
 
     @Test
@@ -160,7 +160,7 @@ public class DefaultViewItemTest {
                 LightweightCollections.<Resource> emptyCollection(),
                 createResources(2, 5));
         assertThat(underTest.getResources(Subset.HIGHLIGHTED),
-                containsEqualResources(createResources(1)));
+                containsExactly(createResources(1)));
     }
 
     @Test
@@ -172,7 +172,7 @@ public class DefaultViewItemTest {
                 LightweightCollections.<Resource> emptyCollection(),
                 createResources(1, 2));
         assertThat(underTest.getResources(Subset.HIGHLIGHTED),
-                containsEqualResources(createResources()));
+                containsExactly(createResources()));
     }
 
     @Test
@@ -184,7 +184,7 @@ public class DefaultViewItemTest {
                 LightweightCollections.<Resource> emptyCollection(),
                 createResources(5, 6));
         assertThat(underTest.getResources(Subset.HIGHLIGHTED),
-                containsEqualResources(createResources(1)));
+                containsExactly(createResources(1)));
     }
 
     @Test
@@ -193,7 +193,7 @@ public class DefaultViewItemTest {
         underTest.updateSelectedResources(createResources(5, 6),
                 LightweightCollections.<Resource> emptyCollection());
         assertThat(underTest.getResources(Subset.SELECTED),
-                containsEqualResources(createResources()));
+                containsExactly(createResources()));
     }
 
     @Test
@@ -202,7 +202,7 @@ public class DefaultViewItemTest {
         underTest.updateSelectedResources(createResources(1, 5),
                 LightweightCollections.<Resource> emptyCollection());
         assertThat(underTest.getResources(Subset.SELECTED),
-                containsEqualResources(createResources(1)));
+                containsExactly(createResources(1)));
     }
 
     @Test
@@ -213,7 +213,7 @@ public class DefaultViewItemTest {
         underTest.updateSelectedResources(createResources(2, 5),
                 LightweightCollections.<Resource> emptyCollection());
         assertThat(underTest.getResources(Subset.SELECTED),
-                containsEqualResources(createResources(1, 2)));
+                containsExactly(createResources(1, 2)));
     }
 
     @Test
@@ -224,7 +224,7 @@ public class DefaultViewItemTest {
         underTest.updateSelectedResources(createResources(2, 3),
                 LightweightCollections.<Resource> emptyCollection());
         assertThat(underTest.getResources(Subset.SELECTED),
-                containsEqualResources(createResources(1, 2, 3)));
+                containsExactly(createResources(1, 2, 3)));
     }
 
     @Test
@@ -235,7 +235,7 @@ public class DefaultViewItemTest {
         underTest.updateSelectedResources(createResources(5, 6),
                 LightweightCollections.<Resource> emptyCollection());
         assertThat(underTest.getResources(Subset.SELECTED),
-                containsEqualResources(createResources(1)));
+                containsExactly(createResources(1)));
     }
 
     @Test
@@ -244,7 +244,7 @@ public class DefaultViewItemTest {
         underTest.updateSelectedResources(createResources(1, 2),
                 LightweightCollections.<Resource> emptyCollection());
         assertThat(underTest.getResources(Subset.SELECTED),
-                containsEqualResources(createResources(1, 2)));
+                containsExactly(createResources(1, 2)));
     }
 
     @Test
@@ -254,7 +254,7 @@ public class DefaultViewItemTest {
                 LightweightCollections.<Resource> emptyCollection(),
                 createResources(5, 6));
         assertThat(underTest.getResources(Subset.SELECTED),
-                containsEqualResources(createResources()));
+                containsExactly(createResources()));
     }
 
     @Test
@@ -266,7 +266,7 @@ public class DefaultViewItemTest {
                 LightweightCollections.<Resource> emptyCollection(),
                 createResources(1, 6));
         assertThat(underTest.getResources(Subset.SELECTED),
-                containsEqualResources(createResources()));
+                containsExactly(createResources()));
     }
 
     @Test
@@ -278,7 +278,7 @@ public class DefaultViewItemTest {
                 LightweightCollections.<Resource> emptyCollection(),
                 createResources(2, 5));
         assertThat(underTest.getResources(Subset.SELECTED),
-                containsEqualResources(createResources(1)));
+                containsExactly(createResources(1)));
     }
 
     @Test
@@ -290,7 +290,7 @@ public class DefaultViewItemTest {
                 LightweightCollections.<Resource> emptyCollection(),
                 createResources(1, 2));
         assertThat(underTest.getResources(Subset.SELECTED),
-                containsEqualResources(createResources()));
+                containsExactly(createResources()));
     }
 
     @Test
@@ -302,7 +302,7 @@ public class DefaultViewItemTest {
                 LightweightCollections.<Resource> emptyCollection(),
                 createResources(5, 6));
         assertThat(underTest.getResources(Subset.SELECTED),
-                containsEqualResources(createResources(1)));
+                containsExactly(createResources(1)));
     }
 
     @Test
@@ -312,7 +312,7 @@ public class DefaultViewItemTest {
                 LightweightCollections.<Resource> emptyCollection());
         resources.removeAll(createResources(1, 2));
         assertThat(underTest.getResources(Subset.SELECTED),
-                containsEqualResources(createResources()));
+                containsExactly(createResources()));
     }
 
     @Test

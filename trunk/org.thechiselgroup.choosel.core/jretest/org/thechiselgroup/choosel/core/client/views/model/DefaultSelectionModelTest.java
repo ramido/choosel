@@ -23,7 +23,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsEqualResources;
+import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.verifyOnResourcesAdded;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.verifyOnResourcesRemoved;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
@@ -155,7 +155,7 @@ public class DefaultSelectionModelTest {
         verify(resourceSetAddedHandler, times(1)).onResourceSetAdded(
                 captor.capture());
         assertThat(captor.getValue().getResourceSet(),
-                containsEqualResources(selection));
+                containsExactly(selection));
     }
 
     @Test
@@ -172,7 +172,7 @@ public class DefaultSelectionModelTest {
         verify(resourceSetaddedHandler, times(1)).onResourceSetRemoved(
                 captor.capture());
         assertThat(captor.getValue().getResourceSet(),
-                containsEqualResources(selection));
+                containsExactly(selection));
     }
 
     @Test
@@ -211,7 +211,7 @@ public class DefaultSelectionModelTest {
         underTest.switchSelection(resources1);
         underTest.switchSelection(resources2);
 
-        assertThat(underTest.getSelection(), containsEqualResources(resources2));
+        assertThat(underTest.getSelection(), containsExactly(resources2));
     }
 
     @Before
@@ -243,6 +243,6 @@ public class DefaultSelectionModelTest {
         verify(activatedHandler, times(1)).onResourceSetActivated(
                 captor.capture());
         assertThat(captor.getValue().getResourceSet(),
-                containsEqualResources(selection));
+                containsExactly(selection));
     }
 }

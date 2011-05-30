@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.core.client.views.behaviors;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
-import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsEqualResources;
+import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
 
 import org.junit.Before;
@@ -56,7 +56,7 @@ public class HighlightingViewItemBehaviorTest {
         underTest.onViewItemRemoved(viewItem);
 
         assertThat(hoverModel.getResources(),
-                containsEqualResources(createResources()));
+                containsExactly(createResources()));
     }
 
     /**
@@ -73,7 +73,7 @@ public class HighlightingViewItemBehaviorTest {
                 new ViewItemInteraction(Type.DRAG_END));
 
         assertThat(hoverModel.getResources(),
-                containsEqualResources(createResources()));
+                containsExactly(createResources()));
     }
 
     @Test
@@ -82,7 +82,7 @@ public class HighlightingViewItemBehaviorTest {
         underTest.onInteraction(viewItem, new ViewItemInteraction(
                 Type.MOUSE_OVER));
         assertThat(hoverModel.getResources(),
-                containsEqualResources(createResources(1, 2)));
+                containsExactly(createResources(1, 2)));
     }
 
     @Before
