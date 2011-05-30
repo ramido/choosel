@@ -42,16 +42,16 @@ public class ChooselWorkbenchViewWindowContentProducer extends
 
         DefaultSlotMappingInitializer initializer = new DefaultSlotMappingInitializer();
 
-        initializer.putDefaultDataTypeValues(new FixedValueResolver(new Double(
-                0), DataType.NUMBER));
-        initializer.putDefaultDataTypeValues(new FixedValueResolver("circle",
-                DataType.SHAPE)); // TODO PVShape.CIRCLE
-        initializer.putDefaultDataTypeValues(new FixedValueResolver(new Color(
-                100, 149, 237), DataType.COLOR));
-        initializer.putDefaultDataTypeValues(new FixedValueResolver(new Date(),
-                DataType.DATE));
-        initializer.putDefaultDataTypeValues(new FixedValueResolver("",
-                DataType.TEXT));
+        initializer.putDefaultDataTypeValues(DataType.NUMBER,
+                new FixedValueResolver(new Double(0)));
+        initializer.putDefaultDataTypeValues(DataType.SHAPE,
+                new FixedValueResolver("circle")); // TODO PVShape.CIRCLE
+        initializer.putDefaultDataTypeValues(DataType.COLOR,
+                new FixedValueResolver(new Color(100, 149, 237)));
+        initializer.putDefaultDataTypeValues(DataType.DATE,
+                new FixedValueResolver(new Date()));
+        initializer.putDefaultDataTypeValues(DataType.TEXT,
+                new FixedValueResolver(""));
 
         return initializer;
     }

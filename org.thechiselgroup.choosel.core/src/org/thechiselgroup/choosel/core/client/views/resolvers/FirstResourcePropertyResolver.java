@@ -42,13 +42,13 @@ public class FirstResourcePropertyResolver extends SubsetViewItemValueResolver {
 
     }
 
-    public String getProperty() {
-        return property;
+    @Override
+    public String getResolverId() {
+        return "FirstResourcePropertyResolver:" + property;
     }
 
-    @Override
-    public DataType getVisualDimensionDataType() {
-        return dataType;
+    public String getProperty() {
+        return property;
     }
 
     @Override

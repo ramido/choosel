@@ -111,10 +111,10 @@ public final class DefaultViewModelTestHelper {
 
         // TODO change once relevant tests are migrated
         DefaultSlotMappingInitializer initializer = spy(new DefaultSlotMappingInitializer());
-        initializer.putDefaultDataTypeValues(new FixedValueResolver(new Double(
-                0), DataType.NUMBER));
-        initializer.putDefaultDataTypeValues(new FixedValueResolver("",
-                DataType.TEXT));
+        initializer.putDefaultDataTypeValues(DataType.NUMBER,
+                new FixedValueResolver(new Double(0)));
+        initializer.putDefaultDataTypeValues(DataType.TEXT,
+                new FixedValueResolver(""));
 
         when(contentDisplay.getSlots()).thenReturn(slots);
         when(contentDisplay.isReady()).thenReturn(true);

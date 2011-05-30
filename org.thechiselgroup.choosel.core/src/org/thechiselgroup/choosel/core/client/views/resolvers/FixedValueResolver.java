@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
-import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
 
@@ -23,17 +22,13 @@ public class FixedValueResolver implements ViewItemValueResolver {
 
     private final Object value;
 
-    private final DataType dataType;
-
-    public FixedValueResolver(Object value, DataType dataType) {
-        assert dataType != null;
+    public FixedValueResolver(Object value) {
         this.value = value;
-        this.dataType = dataType;
     }
 
     @Override
-    public DataType getVisualDimensionDataType() {
-        return dataType;
+    public String getResolverId() {
+        return "FixedValueResolver" + value;
     }
 
     @Override
