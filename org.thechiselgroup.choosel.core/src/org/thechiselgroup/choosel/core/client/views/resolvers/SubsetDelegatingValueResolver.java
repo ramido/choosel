@@ -29,7 +29,7 @@ public class SubsetDelegatingValueResolver implements
 
     private String id;
 
-    public SubsetDelegatingValueResolver(Slot slot, Subset subset, String id) {
+    public SubsetDelegatingValueResolver(String id, Slot slot, Subset subset) {
         this.slot = slot;
         this.subset = subset;
         this.id = id;

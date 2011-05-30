@@ -18,7 +18,6 @@ package org.thechiselgroup.choosel.example.workbench.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.ui.Colors;
 import org.thechiselgroup.choosel.core.client.views.model.PreconfiguredViewContentDisplayFactory;
 import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplayFactory;
@@ -54,19 +53,19 @@ public class ChooselExampleWorkbenchViewContentDisplaysConfigurationProvider
 
         factory.setSlotResolver(
                 BarChart.BAR_COLOR,
-                new ViewItemStatusResolver(Colors.STEELBLUE_C, DataType.COLOR,
-                        StatusRule.fullOrPartial(Colors.ORANGE_C,
-                                Subset.SELECTED)));
+                new ViewItemStatusResolver("barColorResolver",
+                        Colors.STEELBLUE_C, StatusRule.fullOrPartial(
+                                Colors.ORANGE_C, Subset.SELECTED)));
         factory.setSlotResolver(BarChart.BAR_BORDER_COLOR,
-                new FixedValueResolver(Colors.STEELBLUE_C, DataType.COLOR));
+                new FixedValueResolver(Colors.STEELBLUE_C));
 
         factory.setSlotResolver(BarChart.PARTIAL_BAR_LENGTH,
-                new SubsetDelegatingValueResolver(BarChart.BAR_LENGTH,
-                        Subset.HIGHLIGHTED));
+                new SubsetDelegatingValueResolver("partialBarLength",
+                        BarChart.BAR_LENGTH, Subset.HIGHLIGHTED));
         factory.setSlotResolver(BarChart.PARTIAL_BAR_COLOR,
-                new FixedValueResolver(Colors.YELLOW_C, DataType.COLOR));
+                new FixedValueResolver(Colors.YELLOW_C));
         factory.setSlotResolver(BarChart.PARTIAL_BAR_BORDER_COLOR,
-                new FixedValueResolver(Colors.STEELBLUE_C, DataType.COLOR));
+                new FixedValueResolver(Colors.STEELBLUE_C));
 
         viewContentDisplayFactories.add(factory);
     }
@@ -88,19 +87,20 @@ public class ChooselExampleWorkbenchViewContentDisplaysConfigurationProvider
 
         preconfiguredFactory.setSlotResolver(
                 Map.COLOR,
-                new ViewItemStatusResolver(Colors.STEELBLUE_C.alpha(0.6),
-                        DataType.COLOR, StatusRule.fullOrPartial(
-                                Colors.YELLOW_C, Subset.HIGHLIGHTED),
+                new ViewItemStatusResolver("mapColorResolver",
+                        Colors.STEELBLUE_C.alpha(0.6), StatusRule
+                                .fullOrPartial(Colors.YELLOW_C,
+                                        Subset.HIGHLIGHTED),
                         StatusRule.fullOrPartial(Colors.ORANGE_C,
                                 Subset.SELECTED)));
         preconfiguredFactory.setSlotResolver(Map.BORDER_COLOR,
-                new FixedValueResolver(Colors.STEELBLUE_C, DataType.COLOR));
+                new FixedValueResolver(Colors.STEELBLUE_C));
 
         // TODO fix z-index
         preconfiguredFactory.setSlotResolver(Map.Z_INDEX,
-                new FixedValueResolver(1, DataType.NUMBER));
+                new FixedValueResolver(1));
         preconfiguredFactory.setSlotResolver(Map.RADIUS,
-                new FixedValueResolver(5, DataType.NUMBER));
+                new FixedValueResolver(5));
 
         viewContentDisplayFactories.add(preconfiguredFactory);
     }
@@ -112,14 +112,15 @@ public class ChooselExampleWorkbenchViewContentDisplaysConfigurationProvider
                 factory);
 
         preconfiguredFactory.setSlotResolver(ScatterPlot.SIZE,
-                new FixedValueResolver(20, DataType.NUMBER));
+                new FixedValueResolver(20));
         preconfiguredFactory.setSlotResolver(ScatterPlot.BORDER_COLOR,
-                new FixedValueResolver(Colors.STEELBLUE_C, DataType.COLOR));
+                new FixedValueResolver(Colors.STEELBLUE_C));
         preconfiguredFactory.setSlotResolver(
                 ScatterPlot.COLOR,
-                new ViewItemStatusResolver(Colors.STEELBLUE_C.alpha(0.6),
-                        DataType.COLOR, StatusRule.fullOrPartial(
-                                Colors.YELLOW_C, Subset.HIGHLIGHTED),
+                new ViewItemStatusResolver("scatterplotColorResolver",
+                        Colors.STEELBLUE_C.alpha(0.6), StatusRule
+                                .fullOrPartial(Colors.YELLOW_C,
+                                        Subset.HIGHLIGHTED),
                         StatusRule.fullOrPartial(Colors.ORANGE_C,
                                 Subset.SELECTED)));
 
@@ -139,12 +140,13 @@ public class ChooselExampleWorkbenchViewContentDisplaysConfigurationProvider
                 factory);
 
         preconfiguredFactory.setSlotResolver(TimeLine.BORDER_COLOR,
-                new FixedValueResolver(Colors.STEELBLUE_C, DataType.COLOR));
+                new FixedValueResolver(Colors.STEELBLUE_C));
         preconfiguredFactory.setSlotResolver(
                 TimeLine.COLOR,
-                new ViewItemStatusResolver(Colors.STEELBLUE_C.alpha(0.6),
-                        DataType.COLOR, StatusRule.fullOrPartial(
-                                Colors.YELLOW_C, Subset.HIGHLIGHTED),
+                new ViewItemStatusResolver("timelineColorResolver",
+                        Colors.STEELBLUE_C.alpha(0.6), StatusRule
+                                .fullOrPartial(Colors.YELLOW_C,
+                                        Subset.HIGHLIGHTED),
                         StatusRule.fullOrPartial(Colors.ORANGE_C,
                                 Subset.SELECTED)));
 

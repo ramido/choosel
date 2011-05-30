@@ -22,6 +22,7 @@ public class FixedValueResolver implements ViewItemValueResolver {
 
     private final Object value;
 
+    // TODO pass in ID
     public FixedValueResolver(Object value) {
         this.value = value;
     }
