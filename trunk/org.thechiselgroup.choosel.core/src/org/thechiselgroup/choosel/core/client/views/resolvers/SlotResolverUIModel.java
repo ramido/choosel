@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright (C) 2011 Lars Grammel 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at 
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0 
+ *     
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ * See the License for the specific language governing permissions and 
+ * limitations under the License.  
+ *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
 import java.util.Collection;
@@ -12,24 +27,22 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 
 import com.google.gwt.event.shared.HandlerManager;
 
-/** 
- * responsibilities:
- * 
- *      make sure the right factories for the slot and view are available
- *      
- *      maintain the current resolver for that slot, also it needs to be allowable
- */
-
 /**
  * This class contains the necessary information to draw a SlotConfiguration UI
  * element. For example, Bar Length is |Sum| of |property|.
+ * 
+ * Responsibilities: (1) make sure the right factories for the slot and view are
+ * available (2) maintain the current resolver for that slot, also it needs to
+ * be allowable
  */
 public class SlotResolverUIModel {
 
+    // TODO should these be regular exceptions?
     public class InvalidResolverException extends IllegalArgumentException {
         private static final long serialVersionUID = 1L;
     }
 
+    // TODO should these be regular exceptions?
     public class NoAllowableResolverException extends RuntimeException {
         private static final long serialVersionUID = 1L;
     }
@@ -71,18 +84,22 @@ public class SlotResolverUIModel {
     }
 
     public boolean isAllowableResolver(ViewItemValueResolver resolver) {
-        return allowableResolverFactories.containsKey(resolver.getResolverId());
+        return resolver != null
+                && allowableResolverFactories.containsKey(resolver
+                        .getResolverId());
     }
 
     /**
-     * checks to see if the currentResolverFactory is changed, and if it is,
-     * throws a SlotMappingChangedEvent to all of it's listeners
+     * Checks to see if the current resolver factory is changed, and if it has,
+     * fires a {@link SlotMappingChangedEvent} to all registered
+     * {@link SlotMappingChangedHandler}s.
      * 
-     * If the resolver is null or is not allowable this method will throw a
-     * InvalidResolverException
+     * @throws InvalidResolverException
+     *             If the resolver is null or is not allowable this method
+     * 
      */
     public void setCurrentResolver(ViewItemValueResolver resolver) {
-        if (resolver == null || !isAllowableResolver(resolver)) {
+        if (!isAllowableResolver(resolver)) {
             throw new InvalidResolverException();
         }
 
@@ -95,24 +112,23 @@ public class SlotResolverUIModel {
     }
 
     /**
-     * Updates the allowableResolverFactories to only the ones that are
-     * allowable given the {@code viewItems} and the current slot
+     * Updates the allowable resolver factories to only the ones that are
+     * allowable given the {@code viewItems} and the current {@link Slot}.
      * 
-     * This may throw an {@link SlotMappingChangedEvent} if the
-     * currentSlotResolver changes to being not applicable
+     * This fires a {@link SlotMappingChangedEvent} when the current slot
+     * resolver changes to being not applicable.
      * 
      * @throws NoAllowableResolverException
      */
     public void updateAllowableFactories(LightweightList<ViewItem> viewItems) {
+        assert viewItems != null;
 
         allowableResolverFactories.clear();
 
         LightweightList<ViewItemValueResolverFactory> allFactories = provider
                 .getResolverFactories();
 
-        if (allFactories == null || allFactories.isEmpty()) {
-            return;
-        }
+        assert allFactories != null;
 
         for (ViewItemValueResolverFactory factory : allFactories) {
             if (factory.isApplicable(slot, viewItems)) {
@@ -120,17 +136,16 @@ public class SlotResolverUIModel {
             }
         }
 
+        if (allowableResolverFactories.isEmpty()) {
+            // there are no available resolvers, throw an exception
+            throw new NoAllowableResolverException();
+        }
+
         // if the current resolver from before the update is no longer
-        // applicable
-        if (currentResolver == null || !isAllowableResolver(currentResolver)) {
-            if (allowableResolverFactories.isEmpty()) {
-                // there are no available resolvers, throw an exception
-                throw new NoAllowableResolverException();
-            } else {
-                // otherwise set it to the first resolver in the map
-                setCurrentResolver(allowableResolverFactories.values()
-                        .iterator().next().create());
-            }
+        // applicable, we replace it
+        if (!isAllowableResolver(currentResolver)) {
+            setCurrentResolver(allowableResolverFactories.values().iterator()
+                    .next().create());
         }
     }
 }
