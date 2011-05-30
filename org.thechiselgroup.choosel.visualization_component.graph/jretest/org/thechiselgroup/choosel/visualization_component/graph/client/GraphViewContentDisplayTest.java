@@ -25,7 +25,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.core.client.test.AdvancedAsserts.assertContentEquals;
-import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsEqualResources;
+import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.createViewItem;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.createViewItems;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
@@ -142,7 +142,7 @@ public class GraphViewContentDisplayTest {
         resourceSet.add(createResource(2));
 
         assertThat(underTest.getAllResources(),
-                containsEqualResources(resourceSet));
+                containsExactly(resourceSet));
     }
 
     private void addViewItemToUnderTest(
@@ -346,7 +346,7 @@ public class GraphViewContentDisplayTest {
                 LightweightCollections.<Slot> emptyCollection());
 
         assertThat(underTest.getAllResources(),
-                containsEqualResources(createResources()));
+                containsExactly(createResources()));
 
     }
 
