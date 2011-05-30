@@ -15,16 +15,16 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
-import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
 
 public class NullViewItemResolver implements ViewItemValueResolver {
 
-    // TODO uhhhhhhhhhhh, Lars?
+    private static final String ID = "NullViewItemResolver";
+
     @Override
-    public DataType getVisualDimensionDataType() {
-        return null;
+    public String getResolverId() {
+        return ID;
     }
 
     @Override

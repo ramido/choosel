@@ -17,7 +17,6 @@ package org.thechiselgroup.choosel.core.client.views.resolvers;
 
 import java.util.Map;
 
-import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetUtils;
@@ -26,6 +25,8 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
 
 public class ViewItemColorResolver implements ViewItemValueResolver {
+
+    private static final String ID = "ViewItemColorResolver";
 
     private static final String[] COLORS = new String[] { "#6495ed", "#b22222",
             "#A9C0B1" };
@@ -40,8 +41,8 @@ public class ViewItemColorResolver implements ViewItemValueResolver {
     }
 
     @Override
-    public DataType getVisualDimensionDataType() {
-        return DataType.COLOR;
+    public String getResolverId() {
+        return ID;
     }
 
     @Override

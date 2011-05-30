@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
-import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
 
@@ -26,11 +25,7 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverC
  */
 public interface ViewItemValueResolver {
 
-    /**
-     * 
-     * @return The data type that this resolver resolves to
-     */
-    DataType getVisualDimensionDataType();
+    String getResolverId();
 
     /**
      * Calculates a value for a {@link ViewItem}.

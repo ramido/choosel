@@ -77,9 +77,8 @@ public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
         }
     }
 
-    public void putDefaultDataTypeValues(ViewItemValueResolver resolver) {
-
-        defaultDataTypeResolvers.put(resolver.getVisualDimensionDataType(),
-                resolver);
+    public void putDefaultDataTypeValues(DataType dataType,
+            ViewItemValueResolver resolver) {
+        defaultDataTypeResolvers.put(dataType, resolver);
     }
 }

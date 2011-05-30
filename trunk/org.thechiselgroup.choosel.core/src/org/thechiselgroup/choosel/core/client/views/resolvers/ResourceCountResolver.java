@@ -15,12 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
-import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
 
 public class ResourceCountResolver extends SubsetViewItemValueResolver {
+
+    private static final String ID = "ResourceCountResolver";
 
     public ResourceCountResolver() {
         this(Subset.ALL);
@@ -31,8 +32,8 @@ public class ResourceCountResolver extends SubsetViewItemValueResolver {
     }
 
     @Override
-    public DataType getVisualDimensionDataType() {
-        return DataType.NUMBER;
+    public String getResolverId() {
+        return ID;
     }
 
     @Override

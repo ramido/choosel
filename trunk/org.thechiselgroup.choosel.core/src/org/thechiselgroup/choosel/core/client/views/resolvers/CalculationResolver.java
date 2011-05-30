@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
-import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.math.Calculation;
@@ -51,13 +50,13 @@ public class CalculationResolver extends SubsetViewItemValueResolver {
         return calculation;
     }
 
-    public String getProperty() {
-        return property;
+    @Override
+    public String getResolverId() {
+        return calculation.getID();
     }
 
-    @Override
-    public DataType getVisualDimensionDataType() {
-        return DataType.NUMBER;
+    public String getProperty() {
+        return property;
     }
 
     @Override
