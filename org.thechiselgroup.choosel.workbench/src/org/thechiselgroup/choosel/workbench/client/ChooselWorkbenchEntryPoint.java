@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -15,6 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.client;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.google.gwt.core.client.EntryPoint;
 
 public abstract class ChooselWorkbenchEntryPoint implements EntryPoint {
@@ -22,21 +25,29 @@ public abstract class ChooselWorkbenchEntryPoint implements EntryPoint {
     /**
      * <p>
      * Choosel applications should override to implement their own
-     * ChooseGinjector that links their custom configuration module. They need
-     * to call GWT.create with their own classes, because the GWT compilation
-     * requires GWT.create to be called with a class literal.
+     * {@link ChooselWorkbenchGinjector} that links their custom configuration
+     * module. They need to call GWT.create with their own classes, because the
+     * GWT compilation requires GWT.create to be called with a class literal.
      * </p>
      * <p>
      * Example <code>
      * return GWT.create(ChooselGinjector.class);</code> with subclass of
-     * ChooselGinjector
+     * {@link ChooselWorkbenchGinjector}
      * </p>
      */
     protected abstract ChooselWorkbenchGinjector createChooselGinjector();
 
     @Override
     public final void onModuleLoad() {
-        createChooselGinjector().getApplication().init();
+        ChooselWorkbenchGinjector injector = createChooselGinjector();
+
+        try {
+            injector.getApplicationInitializer().init();
+        } catch (Throwable ex) {
+            Logger logger = injector.getLoggerProvider().getLogger();
+            logger.log(Level.SEVERE,
+                    "Could not initialize Choosel: " + ex.getMessage(), ex);
+        }
     }
 
 }

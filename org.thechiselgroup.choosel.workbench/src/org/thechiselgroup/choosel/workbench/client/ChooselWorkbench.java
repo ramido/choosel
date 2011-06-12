@@ -83,7 +83,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-public abstract class ChooselWorkbench {
+public abstract class ChooselWorkbench implements ApplicationInitializer {
 
     public static final String WINDOW_CONTENT_HELP = "help";
 
@@ -280,6 +280,7 @@ public abstract class ChooselWorkbench {
         return (ToolbarPanel) actionBar.getPanel(panelId);
     }
 
+    @Override
     public void init() {
         String viewIdParam = Window.Location.getParameter(VIEW_ID);
         String newWorkspace = Window.Location.getParameter(NEW_WORKSPACE);
@@ -287,6 +288,7 @@ public abstract class ChooselWorkbench {
         if ((viewIdParam != null) && (newWorkspace == null)) {
             loadViewIfParamSet(viewIdParam);
         } else {
+            // XXX should come earlier
             BrowserDetect.checkBrowser();
 
             initGlobalErrorHandler();
