@@ -20,4 +20,5 @@ public interface ViewItemValueResolverUIFactory {
     ViewItemValueResolverUI create();
 
     String getId();
+
 }
