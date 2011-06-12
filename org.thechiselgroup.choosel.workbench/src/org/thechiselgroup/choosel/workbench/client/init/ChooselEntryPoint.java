@@ -13,40 +13,44 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.workbench.client;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
+package org.thechiselgroup.choosel.workbench.client.init;
 
 import com.google.gwt.core.client.EntryPoint;
 
-public abstract class ChooselWorkbenchEntryPoint implements EntryPoint {
+/**
+ * Entry point that enables dependency injection during initialization.
+ * 
+ * @author Lars Grammel
+ */
+public abstract class ChooselEntryPoint implements EntryPoint {
 
     /**
      * <p>
      * Choosel applications should override to implement their own
-     * {@link ChooselWorkbenchGinjector} that links their custom configuration
-     * module. They need to call GWT.create with their own classes, because the
-     * GWT compilation requires GWT.create to be called with a class literal.
+     * {@link ChooselGinjector} that links their custom configuration module.
+     * They need to call GWT.create with their own classes, because the GWT
+     * compilation requires GWT.create to be called with a class literal.
      * </p>
      * <p>
      * Example <code>
      * return GWT.create(ChooselGinjector.class);</code> with subclass of
-     * {@link ChooselWorkbenchGinjector}
+     * {@link ChooselGinjector}.
      * </p>
      */
-    protected abstract ChooselWorkbenchGinjector createChooselGinjector();
+    protected abstract ChooselGinjector createChooselGinjector();
 
     @Override
     public final void onModuleLoad() {
-        ChooselWorkbenchGinjector injector = createChooselGinjector();
+        ChooselGinjector injector = createChooselGinjector();
 
         try {
             injector.getApplicationInitializer().init();
         } catch (Throwable ex) {
-            Logger logger = injector.getLoggerProvider().getLogger();
-            logger.log(Level.SEVERE,
-                    "Could not initialize Choosel: " + ex.getMessage(), ex);
+            injector.getLoggingErrorHandler().handleError(ex);
+            /*
+             * TODO it is important to provide user feedback, e.g. by showing
+             * the message on the root panel.
+             */
         }
     }
 

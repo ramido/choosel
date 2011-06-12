@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.workbench.client;
+package org.thechiselgroup.choosel.workbench.client.init;
 
-import org.thechiselgroup.choosel.core.client.error_handling.LoggerProvider;
-import org.thechiselgroup.choosel.workbench.client.init.ApplicationInitializer;
+import org.thechiselgroup.choosel.core.client.error_handling.LoggingErrorHandler;
 
 import com.google.gwt.inject.client.Ginjector;
 
-public interface ChooselWorkbenchGinjector extends Ginjector {
+public interface ChooselGinjector extends Ginjector {
 
     ApplicationInitializer getApplicationInitializer();
 
-    LoggerProvider getLoggerProvider();
+    LoggingErrorHandler getLoggingErrorHandler();
 
 }

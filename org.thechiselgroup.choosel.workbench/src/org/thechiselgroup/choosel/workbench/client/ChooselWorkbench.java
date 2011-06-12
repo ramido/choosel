@@ -104,7 +104,7 @@ public abstract class ChooselWorkbench implements ApplicationInitializer {
 
     public static final String DEVELOPER_MODE_PANEL = "developer_mode";
 
-    private static final String VIEW_ID = "viewId";
+    public static final String VIEW_ID = "viewId";
 
     private static final String NEW_WORKSPACE = "nw";
 
@@ -287,12 +287,14 @@ public abstract class ChooselWorkbench implements ApplicationInitializer {
         String newWorkspace = Window.Location.getParameter(NEW_WORKSPACE);
 
         if ((viewIdParam != null) && (newWorkspace == null)) {
+            initGlobalErrorHandler(); // TODO needs different handler?
+            BrowserDetect.checkBrowser();
             loadViewIfParamSet(viewIdParam);
         } else {
-            // XXX should come earlier
-            BrowserDetect.checkBrowser();
-
+            // XXX should come earlier - how can browser detect be more
+            // flexible?
             initGlobalErrorHandler();
+            BrowserDetect.checkBrowser();
 
             initWindowClosingConfirmationDialog();
 
@@ -309,8 +311,8 @@ public abstract class ChooselWorkbench implements ApplicationInitializer {
                 loadWorkspaceIfParamSet();
             }
 
+            afterInit();
         }
-        afterInit();
     }
 
     protected void initAboutAction() {
@@ -569,6 +571,8 @@ public abstract class ChooselWorkbench implements ApplicationInitializer {
                         RootPanel.get().remove(label);
 
                         RootPanel.get().add(view.asWidget());
+
+                        // TODO no scroll bars
 
                         // Set the size of the window, and listen for
                         // changes in size.
