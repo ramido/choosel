@@ -115,9 +115,9 @@ import com.google.inject.name.Names;
 public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
         implements ChooselInjectionConstants {
 
-    private void bindApplication() {
-        bind(ChooselWorkbench.class).to(getWorkbenchClass())
-                .in(Singleton.class);
+    private void bindApplicationInitializer() {
+        bind(ApplicationInitializer.class).to(getApplicationInitializer()).in(
+                Singleton.class);
     }
 
     private void bindBranding() {
@@ -211,6 +211,11 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
         bind(AsyncCommandExecutor.class)
                 .annotatedWith(Names.named(ErrorHandlingConstants.LOG))
                 .to(LoggingAsyncCommandExecutor.class).in(Singleton.class);
+    }
+
+    protected void bindUrlFetchService() {
+        bind(UrlFetchService.class).to(FlashUrlFetchService.class).in(
+                Singleton.class);
     }
 
     protected void bindWindowContentProducer() {
@@ -323,12 +328,7 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
 
         bindBranding();
         bindCustomServices();
-        bindApplication();
-    }
-
-    protected void bindUrlFetchService() {
-        bind(UrlFetchService.class).to(FlashUrlFetchService.class).in(
-                Singleton.class);
+        bindApplicationInitializer();
     }
 
     protected void configurePopups() {
@@ -336,6 +336,10 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
                 Singleton.class);
         bind(PopupManagerFactory.class).to(
                 DragSupportingPopupManagerFactory.class).in(Singleton.class);
+    }
+
+    protected Class<? extends ApplicationInitializer> getApplicationInitializer() {
+        return ChooselWorkbench.class;
     }
 
     /**
@@ -371,9 +375,5 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
     }
 
     protected abstract Class<? extends Provider<ViewContentDisplaysConfiguration>> getViewContentDisplaysConfigurationProvider();
-
-    protected Class<? extends ChooselWorkbench> getWorkbenchClass() {
-        return ChooselWorkbench.class;
-    }
 
 }

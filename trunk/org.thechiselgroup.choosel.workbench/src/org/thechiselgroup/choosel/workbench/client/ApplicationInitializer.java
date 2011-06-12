@@ -15,14 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.client;
 
-import org.thechiselgroup.choosel.core.client.error_handling.LoggerProvider;
+public interface ApplicationInitializer {
 
-import com.google.gwt.inject.client.Ginjector;
-
-public interface ChooselWorkbenchGinjector extends Ginjector {
-
-    ApplicationInitializer getApplicationInitializer();
-
-    LoggerProvider getLoggerProvider();
+    public void init() throws Exception;
 
 }

@@ -42,7 +42,7 @@ public class ChooselExampleClientModule extends ChooselWorkbenchClientModule {
     }
 
     @Override
-    protected Class<? extends ChooselWorkbench> getWorkbenchClass() {
+    protected Class<? extends ChooselWorkbench> getApplicationInitializer() {
         return ChooselExampleWorkbench.class;
     }
 
