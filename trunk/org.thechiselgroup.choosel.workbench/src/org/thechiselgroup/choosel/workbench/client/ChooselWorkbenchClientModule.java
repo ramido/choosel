@@ -75,6 +75,11 @@ import org.thechiselgroup.choosel.workbench.client.authentication.DefaultAuthent
 import org.thechiselgroup.choosel.workbench.client.command.ui.CommandPresenterFactory;
 import org.thechiselgroup.choosel.workbench.client.error_handling.WorkbenchErrorHandlerProvider;
 import org.thechiselgroup.choosel.workbench.client.init.ApplicationInitializer;
+import org.thechiselgroup.choosel.workbench.client.init.ChooselApplicationInitializer;
+import org.thechiselgroup.choosel.workbench.client.init.DefaultWindowLocation;
+import org.thechiselgroup.choosel.workbench.client.init.EmbedInitializer;
+import org.thechiselgroup.choosel.workbench.client.init.WindowLocation;
+import org.thechiselgroup.choosel.workbench.client.init.WorkbenchInitializer;
 import org.thechiselgroup.choosel.workbench.client.ui.configuration.AllResourceSetAvatarFactoryProvider;
 import org.thechiselgroup.choosel.workbench.client.ui.configuration.DefaultResourceSetAvatarFactoryProvider;
 import org.thechiselgroup.choosel.workbench.client.ui.configuration.ResourceSetsDragAvatarFactoryProvider;
@@ -115,11 +120,6 @@ import com.google.inject.name.Names;
 
 public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
         implements ChooselInjectionConstants {
-
-    private void bindApplicationInitializer() {
-        bind(ApplicationInitializer.class).to(getApplicationInitializer()).in(
-                Singleton.class);
-    }
 
     private void bindBranding() {
         bind(Branding.class).to(getBrandingClass()).in(Singleton.class);
@@ -229,8 +229,8 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
 
     @Override
     protected void configure() {
-        bind(LoggerProvider.class).toProvider(RootLoggerProvider.class).in(
-                Singleton.class);
+        configureGwtApiWrappers();
+        configureLogging();
 
         bind(CommandManager.class).to(DefaultCommandManager.class).in(
                 Singleton.class);
@@ -329,7 +329,35 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
 
         bindBranding();
         bindCustomServices();
-        bindApplicationInitializer();
+        configureApplicationInitializers();
+    }
+
+    protected void configureApplicationInitializers() {
+        bind(ApplicationInitializer.class).to(
+                ChooselApplicationInitializer.class).in(Singleton.class);
+
+        bind(ApplicationInitializer.class)
+                .annotatedWith(
+                        Names.named(ChooselApplicationInitializer.WORKBENCH))
+                .to(getWorkbenchInitializer()).in(Singleton.class);
+
+        bind(ApplicationInitializer.class)
+                .annotatedWith(Names.named(ChooselApplicationInitializer.EMBED))
+                .to(getEmbedInitializer()).in(Singleton.class);
+    }
+
+    /**
+     * GWT API wrappers are object oriented wrappers around static methods in
+     * the GWT API. They faciliate testing with mock objects.
+     */
+    protected void configureGwtApiWrappers() {
+        bind(WindowLocation.class).to(DefaultWindowLocation.class).in(
+                Singleton.class);
+    }
+
+    protected void configureLogging() {
+        bind(LoggerProvider.class).toProvider(RootLoggerProvider.class).in(
+                Singleton.class);
     }
 
     protected void configurePopups() {
@@ -337,10 +365,6 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
                 Singleton.class);
         bind(PopupManagerFactory.class).to(
                 DragSupportingPopupManagerFactory.class).in(Singleton.class);
-    }
-
-    protected Class<? extends ApplicationInitializer> getApplicationInitializer() {
-        return ChooselWorkbench.class;
     }
 
     /**
@@ -367,6 +391,10 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
         return DefaultDropTargetCapabilityChecker.class;
     }
 
+    protected Class<? extends EmbedInitializer> getEmbedInitializer() {
+        return EmbedInitializer.class;
+    }
+
     protected Class<? extends PersistableRestorationServiceProvider> getPersistableRestorationServiceProvider() {
         return PersistableRestorationServiceProvider.class;
     }
@@ -376,5 +404,9 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
     }
 
     protected abstract Class<? extends Provider<ViewContentDisplaysConfiguration>> getViewContentDisplaysConfigurationProvider();
+
+    protected Class<? extends WorkbenchInitializer> getWorkbenchInitializer() {
+        return WorkbenchInitializer.class;
+    }
 
 }

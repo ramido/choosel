@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.workbench.client;
 
 import org.thechiselgroup.choosel.dnd.client.windows.OverlayWindowContentProducer;
 import org.thechiselgroup.choosel.dnd.client.windows.WindowContentProducer;
+import org.thechiselgroup.choosel.workbench.client.init.WorkbenchInitializer;
 import org.thechiselgroup.choosel.workbench.client.ui.HelpWindowContentFactory;
 import org.thechiselgroup.choosel.workbench.client.ui.NoteWindowContentFactory;
 import org.thechiselgroup.choosel.workbench.client.ui.configuration.ViewWindowContentProducer;
@@ -35,9 +36,9 @@ public class DefaultWindowContentProducerProvider implements
         OverlayWindowContentProducer contentProducer = new OverlayWindowContentProducer(
                 viewProducer);
 
-        contentProducer.register(ChooselWorkbench.WINDOW_CONTENT_HELP,
+        contentProducer.register(WorkbenchInitializer.WINDOW_CONTENT_HELP,
                 new HelpWindowContentFactory());
-        contentProducer.register(ChooselWorkbench.WINDOW_CONTENT_NOTE,
+        contentProducer.register(WorkbenchInitializer.WINDOW_CONTENT_NOTE,
                 new NoteWindowContentFactory());
 
         return contentProducer;

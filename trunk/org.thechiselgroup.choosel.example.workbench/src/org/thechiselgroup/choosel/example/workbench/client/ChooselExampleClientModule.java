@@ -19,8 +19,8 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplaysCon
 import org.thechiselgroup.choosel.visualization_component.graph.client.ArcTypeProvider;
 import org.thechiselgroup.choosel.visualization_component.graph.client.DefaultArcTypeProvider;
 import org.thechiselgroup.choosel.visualization_component.graph.client.GraphExpansionRegistry;
-import org.thechiselgroup.choosel.workbench.client.ChooselWorkbench;
 import org.thechiselgroup.choosel.workbench.client.ChooselWorkbenchClientModule;
+import org.thechiselgroup.choosel.workbench.client.init.WorkbenchInitializer;
 
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -42,7 +42,7 @@ public class ChooselExampleClientModule extends ChooselWorkbenchClientModule {
     }
 
     @Override
-    protected Class<? extends ChooselWorkbench> getApplicationInitializer() {
+    protected Class<? extends WorkbenchInitializer> getWorkbenchInitializer() {
         return ChooselExampleWorkbench.class;
     }
 

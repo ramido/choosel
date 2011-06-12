@@ -18,7 +18,6 @@ package org.thechiselgroup.choosel.workbench.client.init;
 import org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants;
 import org.thechiselgroup.choosel.core.client.util.BrowserDetect;
 import org.thechiselgroup.choosel.core.client.views.DefaultView;
-import org.thechiselgroup.choosel.workbench.client.ChooselWorkbench;
 import org.thechiselgroup.choosel.workbench.client.workspace.ViewLoader;
 
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -46,7 +45,7 @@ public class EmbedInitializer implements ApplicationInitializer {
     @Override
     public void init() throws Exception {
         String viewIdString = windowLocation
-                .getParameter(ChooselWorkbench.VIEW_ID);
+                .getParameter(WorkbenchInitializer.VIEW_ID);
         long viewId = Long.parseLong(viewIdString);
         // TODO catch exception, handle in here
 

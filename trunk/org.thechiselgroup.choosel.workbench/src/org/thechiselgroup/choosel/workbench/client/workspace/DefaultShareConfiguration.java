@@ -1,8 +1,26 @@
+/*******************************************************************************
+ * Copyright (C) 2011 Lars Grammel 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at 
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0 
+ *     
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ * See the License for the specific language governing permissions and 
+ * limitations under the License.  
+ *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.client.workspace;
 
+import org.thechiselgroup.choosel.core.client.util.url.UrlBuilder;
 import org.thechiselgroup.choosel.core.client.views.SidePanelSection;
 import org.thechiselgroup.choosel.core.client.views.View;
 import org.thechiselgroup.choosel.workbench.client.authentication.AuthenticationManager;
+import org.thechiselgroup.choosel.workbench.client.init.ChooselApplicationInitializer;
+import org.thechiselgroup.choosel.workbench.client.init.WorkbenchInitializer;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -15,6 +33,10 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class DefaultShareConfiguration implements ShareConfiguration {
+
+    private static final String GWT_CODESVR = "gwt.codesvr";
+
+    private static final String HTTP = "http";
 
     private VerticalPanel sharePanel;
 
@@ -42,6 +64,7 @@ public class DefaultShareConfiguration implements ShareConfiguration {
 
     public DefaultShareConfiguration(ViewSaver viewPersistence,
             AuthenticationManager authenticationManager) {
+
         this.viewPersistence = viewPersistence;
         this.authenticationManager = authenticationManager;
     }
@@ -52,6 +75,26 @@ public class DefaultShareConfiguration implements ShareConfiguration {
             init();
         }
         return sharePanel;
+    }
+
+    protected String createUrl(Long id, String applicationMode) {
+        // TODO create url builder factory that creates same host urls
+        UrlBuilder urlBuilder = new UrlBuilder();
+
+        urlBuilder.setProtocol(HTTP);
+        urlBuilder.setHost(Window.Location.getHost());
+        urlBuilder.setPath(Window.Location.getPath());
+        urlBuilder.setParameter(WorkbenchInitializer.VIEW_ID, id.toString());
+        urlBuilder.setParameter(
+                ChooselApplicationInitializer.APPLICATION_MODE_PARAMETER,
+                applicationMode);
+
+        String gwtHost = Window.Location.getParameter(GWT_CODESVR);
+        if (gwtHost != null) {
+            urlBuilder.setParameter(GWT_CODESVR, gwtHost);
+        }
+
+        return urlBuilder.buildString();
     }
 
     @Override
@@ -75,7 +118,6 @@ public class DefaultShareConfiguration implements ShareConfiguration {
     }
 
     private void initShareControls() {
-
         button = new Button("Share this");
         label = new Label("Generating Share Information...");
         label.setVisible(false);
@@ -87,7 +129,6 @@ public class DefaultShareConfiguration implements ShareConfiguration {
         textArea.setVisible(false);
 
         button.addClickHandler(new ClickHandler() {
-
             @Override
             public void onClick(ClickEvent event) {
                 label.setVisible(false);
@@ -99,15 +140,14 @@ public class DefaultShareConfiguration implements ShareConfiguration {
                 label.setVisible(true);
 
                 viewPersistence.saveView(DefaultShareConfiguration.this);
-
             }
         });
+
         sharePanel.add(button);
         sharePanel.add(label);
         sharePanel.add(textBox);
         sharePanel.add(embedLabel);
         sharePanel.add(textArea);
-
     }
 
     public void notLoggedIn() {
@@ -125,12 +165,7 @@ public class DefaultShareConfiguration implements ShareConfiguration {
 
     @Override
     public void updateSharePanel(Long id) {
-        String url = "http://" + Window.Location.getHost()
-                + Window.Location.getPath() + "?viewId=" + id.toString();
-        String gwtHost = Window.Location.getParameter("gwt.codesvr");
-        if (gwtHost != null) {
-            url += "&gwt.codesvr=" + gwtHost;
-        }
+        String url = createUrl(id, ChooselApplicationInitializer.EMBED);
 
         String embed = "<iframe src=\""
                 + url
@@ -139,7 +174,8 @@ public class DefaultShareConfiguration implements ShareConfiguration {
                 + "\" height=\""
                 + EMBED_HEIGHT
                 + "\">Sorry, your browser doesn't support iFrames</iframe><br /><a href=\""
-                + url + "&nw\">Open in Choosel</a>. " + EMBED_POSTTEXT;
+                + createUrl(id, ChooselApplicationInitializer.WORKBENCH)
+                + "\">Open in Choosel</a>. " + EMBED_POSTTEXT;
 
         // Hide things while we change them
         label.setVisible(false);
@@ -154,7 +190,6 @@ public class DefaultShareConfiguration implements ShareConfiguration {
         textBox.setVisible(true);
         embedLabel.setVisible(true);
         textArea.setVisible(true);
-
     }
 
 }
