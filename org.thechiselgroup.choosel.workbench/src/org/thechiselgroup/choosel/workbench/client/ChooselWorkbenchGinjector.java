@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.workbench.client;
 
 import org.thechiselgroup.choosel.core.client.error_handling.LoggerProvider;
+import org.thechiselgroup.choosel.workbench.client.init.ApplicationInitializer;
 
 import com.google.gwt.inject.client.Ginjector;
 

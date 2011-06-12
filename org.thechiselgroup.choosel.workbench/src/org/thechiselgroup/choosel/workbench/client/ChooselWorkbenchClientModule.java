@@ -74,6 +74,7 @@ import org.thechiselgroup.choosel.workbench.client.authentication.Authentication
 import org.thechiselgroup.choosel.workbench.client.authentication.DefaultAuthenticationManager;
 import org.thechiselgroup.choosel.workbench.client.command.ui.CommandPresenterFactory;
 import org.thechiselgroup.choosel.workbench.client.error_handling.WorkbenchErrorHandlerProvider;
+import org.thechiselgroup.choosel.workbench.client.init.ApplicationInitializer;
 import org.thechiselgroup.choosel.workbench.client.ui.configuration.AllResourceSetAvatarFactoryProvider;
 import org.thechiselgroup.choosel.workbench.client.ui.configuration.DefaultResourceSetAvatarFactoryProvider;
 import org.thechiselgroup.choosel.workbench.client.ui.configuration.ResourceSetsDragAvatarFactoryProvider;
