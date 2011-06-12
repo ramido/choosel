@@ -15,12 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.example.workbench.client;
 
-import org.thechiselgroup.choosel.workbench.client.ChooselWorkbenchGinjector;
+import org.thechiselgroup.choosel.workbench.client.init.ChooselGinjector;
 
 import com.google.gwt.inject.client.GinModules;
 
 @GinModules(ChooselExampleClientModule.class)
 public interface ChooselExampleWorkbenchGinjector extends
-        ChooselWorkbenchGinjector {
+        ChooselGinjector {
 
 }

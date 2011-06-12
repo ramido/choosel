@@ -31,6 +31,11 @@ import com.google.gwt.user.client.Window;
 public interface WindowLocation {
 
     /**
+     * @see Window.Location#getParameter(String)
+     */
+    String getParameter(String name);
+
+    /**
      * @see Window.Location#getParameterMap()
      */
     Map<String, List<String>> getParameterMap();

@@ -18,10 +18,14 @@ package org.thechiselgroup.choosel.workbench.client.init;
 import java.util.List;
 import java.util.Map;
 
+import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-public class DefaultApplicationInitializer implements ApplicationInitializer {
+public class ChooselApplicationInitializer implements ApplicationInitializer {
 
     /**
      * URL parameter for the application mode. The application mode is used to
@@ -32,6 +36,9 @@ public class DefaultApplicationInitializer implements ApplicationInitializer {
     public static final String WORKBENCH = "workbench";
 
     public static final String EMBED = "embed";
+
+    @Inject
+    protected ErrorHandler errorHandler;
 
     @Inject
     @Named(WORKBENCH)
@@ -46,6 +53,11 @@ public class DefaultApplicationInitializer implements ApplicationInitializer {
 
     @Override
     public void init() throws Exception {
+        initGlobalErrorHandler();
+        initApplicationMode();
+    }
+
+    private void initApplicationMode() throws Exception {
         Map<String, List<String>> parameters = windowLocation.getParameterMap();
 
         if (!parameters.containsKey(APPLICATION_MODE_PARAMETER)) {
@@ -73,6 +85,15 @@ public class DefaultApplicationInitializer implements ApplicationInitializer {
                     + APPLICATION_MODE_PARAMETER + " parameter (was: "
                     + applicationMode + ")");
         }
+    }
+
+    private void initGlobalErrorHandler() {
+        GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
+            @Override
+            public void onUncaughtException(Throwable e) {
+                errorHandler.handleError(e);
+            }
+        });
     }
 
 }

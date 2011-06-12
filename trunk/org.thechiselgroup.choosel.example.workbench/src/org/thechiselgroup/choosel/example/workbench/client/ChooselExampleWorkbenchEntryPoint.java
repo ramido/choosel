@@ -15,16 +15,16 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.example.workbench.client;
 
-import org.thechiselgroup.choosel.workbench.client.ChooselWorkbenchEntryPoint;
-import org.thechiselgroup.choosel.workbench.client.ChooselWorkbenchGinjector;
+import org.thechiselgroup.choosel.workbench.client.init.ChooselEntryPoint;
+import org.thechiselgroup.choosel.workbench.client.init.ChooselGinjector;
 
 import com.google.gwt.core.client.GWT;
 
 public class ChooselExampleWorkbenchEntryPoint extends
-        ChooselWorkbenchEntryPoint {
+        ChooselEntryPoint {
 
     @Override
-    protected ChooselWorkbenchGinjector createChooselGinjector() {
+    protected ChooselGinjector createChooselGinjector() {
         return GWT.create(ChooselExampleWorkbenchGinjector.class);
     }
 
