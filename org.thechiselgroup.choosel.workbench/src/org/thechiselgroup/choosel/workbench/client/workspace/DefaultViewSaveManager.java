@@ -133,6 +133,7 @@ public class DefaultViewSaveManager implements ViewSaveManager {
         return viewDTO;
     }
 
+    // XXX should be called with view, not with shareConfiguration
     @Override
     public void saveView(final DefaultShareConfiguration shareConfiguration,
             final AsyncCallback<Void> callback) {

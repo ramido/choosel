@@ -23,14 +23,14 @@ import org.thechiselgroup.choosel.visualization_component.chart.client.scatterpl
 import org.thechiselgroup.choosel.visualization_component.map.client.Map;
 import org.thechiselgroup.choosel.visualization_component.text.client.TextVisualization;
 import org.thechiselgroup.choosel.visualization_component.timeline.client.TimeLine;
-import org.thechiselgroup.choosel.workbench.client.ChooselWorkbench;
 import org.thechiselgroup.choosel.workbench.client.RestrictImporterToOneDataSourceManager;
 import org.thechiselgroup.choosel.workbench.client.importer.ImportDialog;
+import org.thechiselgroup.choosel.workbench.client.init.WorkbenchInitializer;
 import org.thechiselgroup.choosel.workbench.client.workspace.command.ConfigureSharedViewsDialogCommand;
 
 import com.google.inject.Inject;
 
-public class ChooselExampleWorkbench extends ChooselWorkbench {
+public class ChooselExampleWorkbench extends WorkbenchInitializer {
 
     @Inject
     private ConfigureSharedViewsDialogCommand configSharedViewsCommand;
@@ -41,7 +41,7 @@ public class ChooselExampleWorkbench extends ChooselWorkbench {
     @Override
     protected void afterInit() {
         WindowContent content = windowContentProducer
-                .createWindowContent(ChooselWorkbench.WINDOW_CONTENT_HELP);
+                .createWindowContent(WorkbenchInitializer.WINDOW_CONTENT_HELP);
 
         desktop.createWindow(content, 30, 120, 800, 600);
     }

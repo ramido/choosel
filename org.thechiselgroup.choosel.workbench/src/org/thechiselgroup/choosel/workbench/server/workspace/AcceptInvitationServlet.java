@@ -31,8 +31,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.thechiselgroup.choosel.workbench.client.ChooselWorkbench;
 import org.thechiselgroup.choosel.workbench.client.authentication.AuthorizationException;
+import org.thechiselgroup.choosel.workbench.client.init.WorkbenchInitializer;
 import org.thechiselgroup.choosel.workbench.server.PMF;
 
 import com.google.appengine.api.datastore.Key;
@@ -120,7 +120,7 @@ public class AcceptInvitationServlet extends HttpServlet {
 
             // redirect to main with load default workspace
             String targetURL = WorkspaceSharingServiceServlet.constructURL(
-                    "index.html?" + ChooselWorkbench.WORKSPACE_ID + "="
+                    "index.html?" + WorkbenchInitializer.WORKSPACE_ID + "="
                             + workspaceUid, request, getServletContext());
 
             response.sendRedirect(response.encodeRedirectURL(targetURL));

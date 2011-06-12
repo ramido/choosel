@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.workbench.client;
+package org.thechiselgroup.choosel.workbench.client.init;
 
 import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.DATA_SOURCES;
 
@@ -39,17 +39,17 @@ import org.thechiselgroup.choosel.core.client.ui.ActionBar;
 import org.thechiselgroup.choosel.core.client.ui.TextCommandPresenter;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
 import org.thechiselgroup.choosel.core.client.util.BrowserDetect;
-import org.thechiselgroup.choosel.core.client.views.DefaultView;
 import org.thechiselgroup.choosel.dnd.client.windows.AbstractWindowContent;
 import org.thechiselgroup.choosel.dnd.client.windows.CreateWindowCommand;
 import org.thechiselgroup.choosel.dnd.client.windows.Desktop;
 import org.thechiselgroup.choosel.dnd.client.windows.WindowContentProducer;
+import org.thechiselgroup.choosel.workbench.client.InfoDialog;
+import org.thechiselgroup.choosel.workbench.client.ToolbarPanel;
 import org.thechiselgroup.choosel.workbench.client.authentication.AuthenticationManager;
 import org.thechiselgroup.choosel.workbench.client.authentication.ui.AuthenticationBar;
 import org.thechiselgroup.choosel.workbench.client.authentication.ui.AuthenticationBasedEnablingStateWrapper;
 import org.thechiselgroup.choosel.workbench.client.command.ui.RedoActionStateController;
 import org.thechiselgroup.choosel.workbench.client.command.ui.UndoActionStateController;
-import org.thechiselgroup.choosel.workbench.client.init.ApplicationInitializer;
 import org.thechiselgroup.choosel.workbench.client.ui.dialog.Dialog;
 import org.thechiselgroup.choosel.workbench.client.ui.dialog.DialogManager;
 import org.thechiselgroup.choosel.workbench.client.workspace.SaveActionStateController;
@@ -73,10 +73,8 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.Window.ClosingHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -84,7 +82,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-public abstract class ChooselWorkbench implements ApplicationInitializer {
+public abstract class WorkbenchInitializer implements ApplicationInitializer {
 
     public static final String WINDOW_CONTENT_HELP = "help";
 
@@ -105,8 +103,6 @@ public abstract class ChooselWorkbench implements ApplicationInitializer {
     public static final String DEVELOPER_MODE_PANEL = "developer_mode";
 
     public static final String VIEW_ID = "viewId";
-
-    private static final String NEW_WORKSPACE = "nw";
 
     @Inject
     protected ActionBar actionBar;
@@ -282,37 +278,48 @@ public abstract class ChooselWorkbench implements ApplicationInitializer {
     }
 
     @Override
-    public void init() {
+    public void init() throws Exception {
+        initGlobalErrorHandler();
+        BrowserDetect.checkBrowser();
+
+        initWindowClosingConfirmationDialog();
+
+        DockPanel mainPanel = createMainPanel();
+
+        initDesktop(mainPanel);
+        initActionBar(mainPanel);
+        initAuthenticationBar();
+        initActionBarContent();
+
+        /*
+         * TODO 3 options: new workspace, load workspace, load view as workspace
+         * 
+         * There should be a parameter to model this, with new workspace as
+         * fallback mode that is used in case of errors.
+         */
+
         String viewIdParam = Window.Location.getParameter(VIEW_ID);
-        String newWorkspace = Window.Location.getParameter(NEW_WORKSPACE);
+        if (viewIdParam != null) {
+            Long viewID = Long.parseLong(viewIdParam);
+            // XXX potential parsing exception
 
-        if ((viewIdParam != null) && (newWorkspace == null)) {
-            initGlobalErrorHandler(); // TODO needs different handler?
-            BrowserDetect.checkBrowser();
-            loadViewIfParamSet(viewIdParam);
+            LoadViewAsWorkspaceCommand loadWorkspaceCommand = new LoadViewAsWorkspaceCommand(
+                    viewID, viewLoader);
+            asyncCommandExecutor.execute(loadWorkspaceCommand);
         } else {
-            // XXX should come earlier - how can browser detect be more
-            // flexible?
-            initGlobalErrorHandler();
-            BrowserDetect.checkBrowser();
+            String workspaceIdParam = Window.Location
+                    .getParameter(WORKSPACE_ID);
 
-            initWindowClosingConfirmationDialog();
+            if (workspaceIdParam != null) {
+                long workspaceID = Long.parseLong(workspaceIdParam);
 
-            DockPanel mainPanel = createMainPanel();
-
-            initDesktop(mainPanel);
-            initActionBar(mainPanel);
-            initAuthenticationBar();
-            initActionBarContent();
-
-            if (newWorkspace != null) {
-                loadViewAsWorkspace(viewIdParam, newWorkspace);
-            } else {
-                loadWorkspaceIfParamSet();
+                LoadWorkspaceCommand loadWorkspaceCommand = new LoadWorkspaceCommand(
+                        workspaceID, workspacePersistenceManager);
+                asyncCommandExecutor.execute(loadWorkspaceCommand);
             }
-
-            afterInit();
         }
+
+        afterInit();
     }
 
     protected void initAboutAction() {
@@ -539,70 +546,6 @@ public abstract class ChooselWorkbench implements ApplicationInitializer {
                 "actionbar-titleArea-text");
         actionBar.getActionBarTitleArea().add(
                 workspacePresenterDisplay.getTextBox());
-    }
-
-    private void loadViewAsWorkspace(String viewIdParam, String newWorkspace) {
-
-        if (viewIdParam != null) {
-            Long viewID = Long.parseLong(viewIdParam);
-
-            LoadViewAsWorkspaceCommand loadWorkspaceCommand = new LoadViewAsWorkspaceCommand(
-                    viewID, viewLoader);
-            asyncCommandExecutor.execute(loadWorkspaceCommand);
-        }
-
-    }
-
-    private void loadViewIfParamSet(String viewIdParam) {
-        final Label label = new Label();
-        label.setText("Loading View...");
-        RootPanel.get().add(label);
-
-        viewLoader.loadView(Long.parseLong(viewIdParam),
-                new AsyncCallback<DefaultView>() {
-
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        label.setText("Sorry, the specified view is not available.");
-                    }
-
-                    @Override
-                    public void onSuccess(final DefaultView view) {
-                        RootPanel.get().remove(label);
-
-                        RootPanel.get().add(view.asWidget());
-
-                        // TODO no scroll bars
-
-                        // Set the size of the window, and listen for
-                        // changes in size.
-                        view.asWidget().setPixelSize(
-                                Window.getClientWidth() - 1,
-                                Window.getClientHeight() - 1);
-
-                        Window.addResizeHandler(new ResizeHandler() {
-                            @Override
-                            public void onResize(ResizeEvent event) {
-                                view.asWidget().setPixelSize(event.getWidth(),
-                                        event.getHeight());
-                            }
-                        });
-
-                    }
-
-                });
-    }
-
-    private void loadWorkspaceIfParamSet() {
-        String workspaceIdParam = Window.Location.getParameter(WORKSPACE_ID);
-
-        if (workspaceIdParam != null) {
-            long workspaceID = Long.parseLong(workspaceIdParam);
-
-            LoadWorkspaceCommand loadWorkspaceCommand = new LoadWorkspaceCommand(
-                    workspaceID, workspacePersistenceManager);
-            asyncCommandExecutor.execute(loadWorkspaceCommand);
-        }
     }
 
     protected boolean runsInDevelopmentMode() {
