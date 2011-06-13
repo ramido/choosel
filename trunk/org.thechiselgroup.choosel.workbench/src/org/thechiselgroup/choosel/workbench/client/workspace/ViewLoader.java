@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.client.workspace;
 
-import org.thechiselgroup.choosel.core.client.views.DefaultView;
+import org.thechiselgroup.choosel.core.client.views.View;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -23,7 +23,7 @@ public interface ViewLoader {
 
     void deleteView(Long viewId, AsyncCallback<Long> asyncCallback);
 
-    void loadView(Long id, AsyncCallback<DefaultView> callback);
+    void loadView(Long id, AsyncCallback<View> callback);
 
     void loadViewAsWindow(Long viewId, AsyncCallback<Workspace> asyncCallback);
 

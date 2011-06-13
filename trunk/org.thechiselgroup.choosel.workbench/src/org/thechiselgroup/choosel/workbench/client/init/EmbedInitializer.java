@@ -16,8 +16,9 @@
 package org.thechiselgroup.choosel.workbench.client.init;
 
 import org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants;
+import org.thechiselgroup.choosel.core.client.error_handling.LoggingErrorHandler;
 import org.thechiselgroup.choosel.core.client.util.BrowserDetect;
-import org.thechiselgroup.choosel.core.client.views.DefaultView;
+import org.thechiselgroup.choosel.core.client.views.View;
 import org.thechiselgroup.choosel.workbench.client.workspace.ViewLoader;
 
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -42,6 +43,9 @@ public class EmbedInitializer implements ApplicationInitializer {
     @Inject
     private ViewLoader viewLoader;
 
+    @Inject
+    private LoggingErrorHandler loggingErrorHandler;
+
     @Override
     public void init() throws Exception {
         String viewIdString = windowLocation
@@ -63,17 +67,17 @@ public class EmbedInitializer implements ApplicationInitializer {
 
         informationLabel.setText("Loading View...");
 
-        viewLoader.loadView(viewId, new AsyncCallback<DefaultView>() {
+        viewLoader.loadView(viewId, new AsyncCallback<View>() {
 
             @Override
             public void onFailure(Throwable caught) {
-                // TODO use error handler
+                loggingErrorHandler.handleError(caught);
                 informationLabel
                         .setText("Sorry, the specified view is not available.");
             }
 
             @Override
-            public void onSuccess(final DefaultView view) {
+            public void onSuccess(final View view) {
                 final Widget widget = view.asWidget();
 
                 rootPanel.remove(informationLabel);

@@ -16,7 +16,7 @@
 package org.thechiselgroup.choosel.workbench.client.workspace;
 
 import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
-import org.thechiselgroup.choosel.core.client.views.DefaultView;
+import org.thechiselgroup.choosel.core.client.views.View;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -42,7 +42,7 @@ public class DefaultViewLoader implements ViewLoader {
     }
 
     @Override
-    public void loadView(Long id, AsyncCallback<DefaultView> callback) {
+    public void loadView(Long id, AsyncCallback<View> callback) {
         viewPersistenceManager.loadView(id, callback);
     }
 

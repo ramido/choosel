@@ -26,10 +26,11 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.UnmodifiableResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetAccessor;
-import org.thechiselgroup.choosel.core.client.views.DefaultView;
+import org.thechiselgroup.choosel.core.client.views.View;
 import org.thechiselgroup.choosel.dnd.client.windows.Desktop;
 import org.thechiselgroup.choosel.dnd.client.windows.WindowContent;
 import org.thechiselgroup.choosel.dnd.client.windows.WindowContentProducer;
+import org.thechiselgroup.choosel.workbench.client.views.ViewWindowContent;
 import org.thechiselgroup.choosel.workbench.client.workspace.dto.ResourceSetDTO;
 import org.thechiselgroup.choosel.workbench.client.workspace.dto.ViewDTO;
 import org.thechiselgroup.choosel.workbench.client.workspace.dto.ViewPreviewDTO;
@@ -163,7 +164,7 @@ public class DefaultViewLoadManager implements ViewLoadManager {
     }
 
     @Override
-    public void loadView(Long id, final AsyncCallback<DefaultView> callback) {
+    public void loadView(Long id, final AsyncCallback<View> callback) {
         assert callback != null;
 
         service.loadView(id, new AsyncCallback<ViewDTO>() {
@@ -177,7 +178,7 @@ public class DefaultViewLoadManager implements ViewLoadManager {
             @Override
             public void onSuccess(ViewDTO result) {
                 try {
-                    DefaultView view = loadView(result);
+                    View view = loadView(result);
                     callback.onSuccess(view);
                 } catch (Exception e) {
                     callback.onFailure(e);
@@ -186,13 +187,14 @@ public class DefaultViewLoadManager implements ViewLoadManager {
         });
     }
 
-    protected DefaultView loadView(ViewDTO dto) {
-        return (DefaultView) loadResourcesAndView(dto, new ViewInitializer() {
-            @Override
-            public void init(WindowContent content) {
-                content.init();
-            }
-        });
+    protected View loadView(ViewDTO dto) {
+        return ((ViewWindowContent) loadResourcesAndView(dto,
+                new ViewInitializer() {
+                    @Override
+                    public void init(WindowContent content) {
+                        content.init();
+                    }
+                })).getView();
     }
 
     @Override

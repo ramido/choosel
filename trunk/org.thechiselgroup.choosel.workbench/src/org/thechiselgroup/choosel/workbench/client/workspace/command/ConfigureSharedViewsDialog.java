@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.thechiselgroup.choosel.core.client.command.AsyncCommandExecutor;
-import org.thechiselgroup.choosel.core.client.views.DefaultView;
+import org.thechiselgroup.choosel.core.client.views.View;
 import org.thechiselgroup.choosel.workbench.client.ui.dialog.AbstractDialog;
 import org.thechiselgroup.choosel.workbench.client.ui.dialog.DialogCallback;
 import org.thechiselgroup.choosel.workbench.client.workspace.ViewLoader;
@@ -244,7 +244,7 @@ public class ConfigureSharedViewsDialog extends AbstractDialog {
         viewLoading.setText(LOADING_TEXT);
         showLoading();
 
-        loader.loadView(id, new AsyncCallback<DefaultView>() {
+        loader.loadView(id, new AsyncCallback<View>() {
 
             @Override
             public void onFailure(Throwable caught) {
@@ -253,7 +253,7 @@ public class ConfigureSharedViewsDialog extends AbstractDialog {
             }
 
             @Override
-            public void onSuccess(final DefaultView view) {
+            public void onSuccess(final View view) {
                 viewDisplay.clear();
                 view.asWidget().setPixelSize(300, 200);
                 viewDisplay.add(view.asWidget());
