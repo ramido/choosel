@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.core.client.views.model;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
@@ -31,7 +32,9 @@ import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.thechiselgroup.choosel.core.client.persistence.Memento;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
+import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.core.client.views.resolvers.DelegatingViewItemValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 
@@ -56,9 +59,15 @@ public class SlotMappingConfigurationTest {
 
     @Test
     public void doesNotSaveFixedMappingsToMemento() {
-        // create configuration that contains fixed resolvers
-        // store to memento
-        // make sure only variable ones are
+        Map<Slot, ViewItemValueResolver> fixedSlotResolvers = new HashMap<Slot, ViewItemValueResolver>();
+        fixedSlotResolvers.put(slot1, mock(ViewItemValueResolver.class));
+
+        underTest = new SlotMappingConfiguration(fixedSlotResolvers,
+                new Slot[] { slot1 });
+
+        Memento result = underTest.save(mock(ResourceSetCollector.class));
+
+        assertEquals(0, result.getChildren().size());
     }
 
     @Test
