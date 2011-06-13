@@ -16,8 +16,6 @@
 package org.thechiselgroup.choosel.visualization_component.text.client;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -37,11 +35,11 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
-import org.thechiselgroup.choosel.core.client.views.model.DefaultViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.SlotMappingConfiguration;
 import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplayCallback;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Status;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
 
 public class TextViewContentDisplayTest {
 
@@ -63,47 +61,40 @@ public class TextViewContentDisplayTest {
 
     @Test
     public void partialSelectionShownCorrectly_Issue73() {
-        SlotMappingConfiguration slotMappingConfiguration = mock(SlotMappingConfiguration.class);
-
         // create resource item that contains 2 resources
-        DefaultViewItem viewItem = createViewItem("", createResources(1, 2),
-                slotMappingConfiguration);
+        ViewItem viewItem = createViewItem("", createResources(1, 2));
 
-        when(
-                slotMappingConfiguration.resolve(
-                        eq(TextVisualization.FONT_SIZE_SLOT), eq(viewItem)))
-                .thenReturn(new Double(2));
+        when(viewItem.getValue(TextVisualization.FONT_SIZE_SLOT)).thenReturn(
+                new Double(2));
 
-        underTest.update(
-                LightweightCollections.toCollection((ViewItem) viewItem),
+        when(viewItem.getStatus(Subset.HIGHLIGHTED)).thenReturn(Status.NONE);
+        when(viewItem.getStatus(Subset.SELECTED)).thenReturn(Status.NONE);
+
+        underTest.update(LightweightCollections.toCollection(viewItem),
                 LightweightCollections.<ViewItem> emptySet(),
                 LightweightCollections.<ViewItem> emptySet(),
                 LightweightCollections.<Slot> emptySet());
 
         // both resources get highlighted as the selection is dragged
-        viewItem.updateHighlightedResources(createResources(1, 2),
-                LightweightCollections.<Resource> emptyCollection());
+        when(viewItem.getStatus(Subset.HIGHLIGHTED)).thenReturn(Status.FULL);
         underTest.update(LightweightCollections.<ViewItem> emptyCollection(),
-                LightweightCollections.toCollection((ViewItem) viewItem),
+                LightweightCollections.toCollection(viewItem),
                 LightweightCollections.<ViewItem> emptyCollection(),
                 LightweightCollections.<Slot> emptyCollection());
 
         // create selection that contains one of those resources
-        viewItem.updateSelectedResources(createResources(1),
-                LightweightCollections.<Resource> emptyCollection());
+        when(viewItem.getStatus(Subset.SELECTED)).thenReturn(Status.PARTIAL);
         underTest.update(LightweightCollections.<ViewItem> emptySet(),
-                LightweightCollections.toCollection((ViewItem) viewItem),
+                LightweightCollections.toCollection(viewItem),
                 LightweightCollections.<ViewItem> emptySet(),
                 LightweightCollections.<Slot> emptySet());
 
         reset(itemLabel);
 
         // highlighting is removed after drag operation
-        viewItem.updateHighlightedResources(
-                LightweightCollections.<Resource> emptyCollection(),
-                createResources(1, 2));
+        when(viewItem.getStatus(Subset.HIGHLIGHTED)).thenReturn(Status.NONE);
         underTest.update(LightweightCollections.<ViewItem> emptySet(),
-                LightweightCollections.toCollection((ViewItem) viewItem),
+                LightweightCollections.toCollection(viewItem),
                 LightweightCollections.<ViewItem> emptySet(),
                 LightweightCollections.<Slot> emptySet());
 

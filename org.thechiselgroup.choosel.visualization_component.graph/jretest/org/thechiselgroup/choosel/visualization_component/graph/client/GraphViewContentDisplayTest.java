@@ -48,6 +48,7 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.test.MockitoGWTBridge;
 import org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper;
 import org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory;
+import org.thechiselgroup.choosel.core.client.ui.Color;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionUtils;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
@@ -107,11 +108,15 @@ public class GraphViewContentDisplayTest {
 
     private boolean arcDirected;
 
-    private String arcColor;
+    private Color arcColor;
 
     private int arcThickness;
 
     private String arcStyle;
+
+    private Object borderColor;
+
+    private Object backgroundColor;
 
     @Test
     public void addResourceItemsCallsArcTypeGetArcItems() {
@@ -141,8 +146,7 @@ public class GraphViewContentDisplayTest {
 
         resourceSet.add(createResource(2));
 
-        assertThat(underTest.getAllResources(),
-                containsExactly(resourceSet));
+        assertThat(underTest.getAllResources(), containsExactly(resourceSet));
     }
 
     private void addViewItemToUnderTest(
@@ -312,12 +316,12 @@ public class GraphViewContentDisplayTest {
         init();
 
         Resource resource = createResource(1);
-        ViewItem resourceItem = ResourcesTestHelper.createViewItem("1",
+        ViewItem viewItem = ResourcesTestHelper.createViewItem("1",
                 toResourceSet(resource));
 
-        callback.addResourceItem(resourceItem);
-        addViewItemToUnderTest(LightweightCollections
-                .toCollection(resourceItem));
+        stubColorSlotValues(viewItem);
+        callback.addViewItem(viewItem);
+        addViewItemToUnderTest(LightweightCollections.toCollection(viewItem));
 
         ArgumentCaptor<DefaultViewItem> argument = ArgumentCaptor
                 .forClass(DefaultViewItem.class);
@@ -334,15 +338,15 @@ public class GraphViewContentDisplayTest {
         init();
 
         ResourceSet resourceSet = createResources(1);
-        ViewItem resourceItem = createViewItem("1", resourceSet);
+        ViewItem viewItem = createViewItem("1", resourceSet);
 
-        callback.addResourceItem(resourceItem);
-        addViewItemToUnderTest(LightweightCollections
-                .toCollection(resourceItem));
+        stubColorSlotValues(viewItem);
+        callback.addViewItem(viewItem);
+        addViewItemToUnderTest(LightweightCollections.toCollection(viewItem));
 
         underTest.update(LightweightCollections.<ViewItem> emptyCollection(),
                 LightweightCollections.<ViewItem> emptyCollection(),
-                LightweightCollections.toCollection(resourceItem),
+                LightweightCollections.toCollection(viewItem),
                 LightweightCollections.<Slot> emptyCollection());
 
         assertThat(underTest.getAllResources(),
@@ -399,31 +403,28 @@ public class GraphViewContentDisplayTest {
         ResourceSet resourceSet1 = createResources(1);
         ResourceSet resourceSet2 = createResources(2);
 
-        ViewItem resourceItem1 = createViewItem(groupId1, resourceSet1);
-        ViewItem resourceItem2 = createViewItem(groupId2, resourceSet2);
+        ViewItem viewItem1 = createViewItem(groupId1, resourceSet1);
+        ViewItem viewItem2 = createViewItem(groupId2, resourceSet2);
 
-        LightweightCollection<ViewItem> resourceItems = LightweightCollections
-                .toCollection(resourceItem1, resourceItem2);
+        LightweightCollection<ViewItem> viewItems = LightweightCollections
+                .toCollection(viewItem1, viewItem2);
 
         arcStyleProviderReturnArcType();
         init();
         Arc arc = createArc(arcId, groupId1, groupId2);
-        arcTypeReturnsArcs(eq(resourceItem1), arc);
-        arcTypeReturnsArcs(eq(resourceItem2), arc);
+        arcTypeReturnsArcs(eq(viewItem1), arc);
+        arcTypeReturnsArcs(eq(viewItem2), arc);
 
         // simulate add
-        when(graphDisplay.containsNode(groupId1)).thenReturn(true);
-        when(graphDisplay.containsNode(groupId2)).thenReturn(true);
-        callback.addResourceItems(resourceItems);
-        addViewItemToUnderTest(resourceItems);
+        simulateAddViewItems(viewItems);
         when(graphDisplay.containsArc(arcId)).thenReturn(true);
 
         // simulate remove
         when(graphDisplay.containsNode(groupId2)).thenReturn(false);
-        callback.removeResourceItem(resourceItem2);
+        callback.removeResourceItem(viewItem2);
         underTest.update(LightweightCollections.<ViewItem> emptyCollection(),
                 LightweightCollections.<ViewItem> emptyCollection(),
-                LightweightCollections.toCollection(resourceItem2),
+                LightweightCollections.toCollection(viewItem2),
                 LightweightCollections.<Slot> emptyCollection());
 
         verifyArcRemoved(arcId, groupId1, groupId2);
@@ -443,13 +444,13 @@ public class GraphViewContentDisplayTest {
         simulateAddViewItems(resourceItems);
 
         verify(graphDisplay, times(1)).setArcStyle(eq(arc),
-                eq(ArcSettings.ARC_COLOR), eq(arcColor));
+                eq(ArcSettings.ARC_COLOR), eq(arcColor.toHex()));
 
-        String newColor = "#ff0000";
-        underTest.getArcItemContainer(arcTypeId).setArcColor(newColor);
+        Color newColor = new Color("#ff0000");
+        underTest.getArcItemContainer(arcTypeId).setArcColor(newColor.toHex());
 
         verify(graphDisplay, times(1)).setArcStyle(eq(arc),
-                eq(ArcSettings.ARC_COLOR), eq(newColor));
+                eq(ArcSettings.ARC_COLOR), eq(newColor.toHex()));
     }
 
     @Test
@@ -570,15 +571,18 @@ public class GraphViewContentDisplayTest {
 
         arcTypeId = "arcType";
         arcDirected = true;
-        arcColor = "#ffffff";
+        arcColor = new Color("#ffffff");
         arcThickness = 1;
         arcStyle = ArcSettings.ARC_STYLE_SOLID;
+
+        borderColor = new Color("#ff0000");
+        backgroundColor = new Color("#ff0000");
 
         when(arcStyleProvider.getArcTypes()).thenReturn(
                 LightweightCollections.<ArcType> emptyCollection());
 
         when(arcType.getArcTypeID()).thenReturn(arcTypeId);
-        when(arcType.getDefaultArcColor()).thenReturn(arcColor);
+        when(arcType.getDefaultArcColor()).thenReturn(arcColor.toHex());
         when(arcType.getDefaultArcStyle()).thenReturn(arcStyle);
         when(arcType.getDefaultArcThickness()).thenReturn(arcThickness);
 
@@ -593,9 +597,17 @@ public class GraphViewContentDisplayTest {
         for (ViewItem viewItem : viewItems) {
             when(graphDisplay.containsNode(viewItem.getViewItemID()))
                     .thenReturn(true);
+            stubColorSlotValues(viewItem);
         }
-        callback.addResourceItems(viewItems);
+        callback.addViewItems(viewItems);
         addViewItemToUnderTest(viewItems);
+    }
+
+    public void stubColorSlotValues(ViewItem viewItem) {
+        when(viewItem.getValue(Graph.NODE_BORDER_COLOR))
+                .thenReturn(borderColor);
+        when(viewItem.getValue(Graph.NODE_BACKGROUND_COLOR)).thenReturn(
+                backgroundColor);
     }
 
     @After

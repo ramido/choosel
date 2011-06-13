@@ -30,13 +30,13 @@ public class TestViewContentDisplayCallback implements
     private Map<String, ViewItem> viewItemsByGroupId = CollectionFactory
             .createStringMap();
 
-    public void addResourceItem(ViewItem viewItem) {
+    public void addViewItem(ViewItem viewItem) {
         viewItemsByGroupId.put(viewItem.getViewItemID(), viewItem);
     }
 
-    public void addResourceItems(Iterable<ViewItem> viewItems) {
+    public void addViewItems(Iterable<ViewItem> viewItems) {
         for (ViewItem viewItem : viewItems) {
-            addResourceItem(viewItem);
+            addViewItem(viewItem);
         }
     }
 

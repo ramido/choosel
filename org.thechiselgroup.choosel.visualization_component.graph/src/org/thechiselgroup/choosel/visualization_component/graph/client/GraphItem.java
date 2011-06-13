@@ -41,7 +41,7 @@ public class GraphItem {
 
     private Node node;
 
-    private final ViewItem resourceItem;
+    private final ViewItem viewItem;
 
     public GraphItem(ViewItem resourceItem, String type, GraphDisplay display) {
 
@@ -49,32 +49,30 @@ public class GraphItem {
         assert type != null;
         assert display != null;
 
-        this.resourceItem = resourceItem;
+        this.viewItem = resourceItem;
         this.display = display;
 
         node = new Node(resourceItem.getViewItemID(), getLabelValue(), type);
     }
 
     public String getLabelValue() {
-        return resourceItem.getValue(Graph.NODE_LABEL_SLOT);
+        return viewItem.getValue(Graph.NODE_LABEL_SLOT);
     }
 
     public Node getNode() {
         return node;
     }
 
-    public String getNodeBackgroundColorValue() {
-        return resourceItem.<Color> getValue(Graph.NODE_BACKGROUND_COLOR_SLOT)
-                .toHex();
+    public Color getNodeBackgroundColor() {
+        return viewItem.getValue(Graph.NODE_BACKGROUND_COLOR);
     }
 
-    public String getNodeBorderColorValue() {
-        return resourceItem.<Color> getValue(Graph.NODE_BORDER_COLOR_SLOT)
-                .toHex();
+    public Color getNodeBorderColor() {
+        return viewItem.getValue(Graph.NODE_BORDER_COLOR);
     }
 
     public ViewItem getResourceItem() {
-        return resourceItem;
+        return viewItem;
     }
 
     /**
@@ -83,8 +81,8 @@ public class GraphItem {
      */
     // TODO expose border color, node color, font weight, font color as slots
     public void updateNode() {
-        Status highlighStatus = resourceItem.getStatus(Subset.HIGHLIGHTED);
-        Status selectionStatus = resourceItem.getStatus(Subset.SELECTED);
+        Status highlighStatus = viewItem.getStatus(Subset.HIGHLIGHTED);
+        Status selectionStatus = viewItem.getStatus(Subset.SELECTED);
 
         boolean isHighlighted = Status.PARTIAL == highlighStatus
                 || Status.FULL == highlighStatus;
@@ -95,7 +93,7 @@ public class GraphItem {
             display.setNodeStyle(node, NODE_BACKGROUND_COLOR, Colors.YELLOW_1);
         } else {
             display.setNodeStyle(node, NODE_BACKGROUND_COLOR,
-                    getNodeBackgroundColorValue());
+                    getNodeBackgroundColor().toHex());
         }
 
         if (isSelected) {
@@ -112,8 +110,8 @@ public class GraphItem {
         } else if (isSelected) {
             display.setNodeStyle(node, NODE_BORDER_COLOR, Colors.ORANGE);
         } else {
-            display.setNodeStyle(node, NODE_BORDER_COLOR,
-                    getNodeBorderColorValue());
+            display.setNodeStyle(node, NODE_BORDER_COLOR, getNodeBorderColor()
+                    .toHex());
         }
     }
 

@@ -16,21 +16,27 @@
 package org.thechiselgroup.choosel.core.client.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.core.client.test.AdvancedAsserts.assertContentEquals;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResource;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.createResources;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.toLabeledResourceSet;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.junit.Assert;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatcher;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetChangedEvent;
@@ -39,10 +45,7 @@ import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
-import org.thechiselgroup.choosel.core.client.views.model.DefaultViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.SlotMappingConfiguration;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItemBehavior;
 
 public final class ResourcesTestHelper {
 
@@ -53,28 +56,37 @@ public final class ResourcesTestHelper {
                 resourceSet.contains(createResource(resourceType, resourceId)));
     }
 
-    public static DefaultViewItem createViewItem(int id) {
-        return createViewItem("" + id, createResources(id),
-                mock(SlotMappingConfiguration.class));
+    public static ViewItem createViewItem(int id) {
+        return createViewItem("" + id, createResources(id));
     }
 
-    public static DefaultViewItem createViewItem(String groupId,
+    public static ViewItem createViewItem(String viewItemId,
             ResourceSet resources) {
 
-        return createViewItem(groupId, resources,
-                mock(SlotMappingConfiguration.class));
-    }
+        final AtomicReference<Object> displayObjectBuffer = new AtomicReference<Object>();
 
-    public static DefaultViewItem createViewItem(String groupId,
-            ResourceSet resources,
-            SlotMappingConfiguration slotMappingConfiguration) {
+        ViewItem viewItem = mock(ViewItem.class);
 
-        return spy(new DefaultViewItem(groupId, resources,
-                slotMappingConfiguration, mock(ViewItemBehavior.class)));
+        when(viewItem.getResources()).thenReturn(resources);
+        when(viewItem.getViewItemID()).thenReturn(viewItemId);
+        doAnswer(new Answer<Void>() {
+            @Override
+            public Void answer(InvocationOnMock invocation) throws Throwable {
+                displayObjectBuffer.set(invocation.getArguments()[0]);
+                return null;
+            }
+        }).when(viewItem).setDisplayObject(any(Object.class));
+        when(viewItem.getDisplayObject()).thenAnswer(new Answer<Object>() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                return displayObjectBuffer.get();
+            }
+        });
+
+        return viewItem;
     }
 
     public static LightweightList<ViewItem> createViewItems(int... viewItemId) {
-
         ResourceSet[] resourceSets = new ResourceSet[viewItemId.length];
         for (int i = 0; i < resourceSets.length; i++) {
             resourceSets[i] = toLabeledResourceSet("" + viewItemId[i],
