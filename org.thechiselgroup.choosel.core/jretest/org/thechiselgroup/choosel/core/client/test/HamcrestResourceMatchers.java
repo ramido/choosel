@@ -66,23 +66,49 @@ public final class HamcrestResourceMatchers {
         return containsExactly(list);
     }
 
-    public static Matcher<UriList> containsUrisExactly(final String... uris) {
+    public static Matcher<UriList> containsUrisExactly(final String... expectedUris) {
         return new TypeSafeMatcher<UriList>() {
 
             @Override
             public void describeTo(Description description) {
                 description.appendText(" does not exactly contain { "
-                        + StringUtils.toString(",", uris) + " }");
+                        + StringUtils.toString(",", expectedUris) + " }");
             }
 
             @Override
-            public boolean matchesSafely(UriList uriList) {
-                if (uriList.size() != uris.length) {
+            public boolean matchesSafely(UriList actualUris) {
+                if (actualUris.size() != expectedUris.length) {
                     return false;
                 }
 
-                for (String uri : uris) {
-                    if (!uriList.contains(uri)) {
+                for (String uri : expectedUris) {
+                    if (!actualUris.contains(uri)) {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+        };
+    }
+
+    public static <T> Matcher<T[]> equalsArray(final T... expected) {
+        return new TypeSafeMatcher<T[]>() {
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText(" does not match exactly { "
+                        + StringUtils.toString(",", expected) + " }");
+            }
+
+            @Override
+            public boolean matchesSafely(T[] actual) {
+                if (expected.length != actual.length) {
+                    return false;
+                }
+
+                for (int i = 0; i < expected.length; i++) {
+                    if (!expected[i].equals(actual[i])) {
                         return false;
                     }
                 }

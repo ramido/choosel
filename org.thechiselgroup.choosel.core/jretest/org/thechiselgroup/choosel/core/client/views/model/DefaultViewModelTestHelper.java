@@ -16,7 +16,11 @@
 package org.thechiselgroup.choosel.core.client.views.model;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.emptyLightweightCollection;
 
 import java.util.ArrayList;
@@ -107,7 +111,8 @@ public final class DefaultViewModelTestHelper {
             ResourceSet selectedResources, ViewContentDisplay contentDisplay,
             Slot... slots) {
 
-        SlotMappingConfiguration resourceSetToValueResolver = spy(new SlotMappingConfiguration());
+        SlotMappingConfiguration resourceSetToValueResolver = spy(new SlotMappingConfiguration(
+                slots));
 
         // TODO change once relevant tests are migrated
         DefaultSlotMappingInitializer initializer = spy(new DefaultSlotMappingInitializer());

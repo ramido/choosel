@@ -26,6 +26,7 @@ import org.thechiselgroup.choosel.core.client.persistence.PersistableRestoration
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.util.event.PrioritizedEventHandler;
 import org.thechiselgroup.choosel.core.client.util.event.PrioritizedHandlerManager;
 import org.thechiselgroup.choosel.core.client.util.math.AverageCalculation;
@@ -61,8 +62,36 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
 
     private Map<String, Slot> slotsByID = CollectionFactory.createStringMap();
 
-    public SlotMappingConfiguration() {
-        handlerManager = new PrioritizedHandlerManager(this);
+    // TODO way more tests...
+    // TODO also need to calculate available slots --> based on fixed slots and
+    // whats required
+    // --> required slots
+    private Map<Slot, ViewItemValueResolver> fixedSlotResolvers;
+
+    private Slot[] requiredSlots;
+
+    public SlotMappingConfiguration(
+            Map<Slot, ViewItemValueResolver> fixedSlotResolvers,
+            Slot[] requiredSlots) {
+
+        assert fixedSlotResolvers != null;
+
+        this.fixedSlotResolvers = fixedSlotResolvers;
+        this.handlerManager = new PrioritizedHandlerManager(this);
+
+        LightweightList<Slot> slots = CollectionFactory.createLightweightList();
+        for (Slot slot : requiredSlots) {
+            if (!fixedSlotResolvers.containsKey(slot)) {
+                slots.add(slot);
+            }
+        }
+
+        this.requiredSlots = slots.toArray(new Slot[slots.size()]);
+
+    }
+
+    public SlotMappingConfiguration(Slot[] requiredSlots) {
+        this(new HashMap<Slot, ViewItemValueResolver>(), requiredSlots);
     }
 
     /**
@@ -77,7 +106,12 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
     public boolean containsResolver(Slot slot) {
         assert slot != null;
 
-        return slotsToValueResolvers.containsKey(slot);
+        return slotsToValueResolvers.containsKey(slot)
+                || fixedSlotResolvers.containsKey(slot);
+    }
+
+    public Slot[] getRequiredSlots() {
+        return requiredSlots;
     }
 
     // TODO search for calls from outside this class and remove
@@ -87,11 +121,17 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
 
         assert slot != null;
 
-        if (!slotsToValueResolvers.containsKey(slot)) {
+        if (!containsResolver(slot)) {
             throw new NoResolverForSlotException(slot, slotsToValueResolvers);
         }
 
-        return slotsToValueResolvers.get(slot);
+        if (slotsToValueResolvers.containsKey(slot)) {
+            return slotsToValueResolvers.get(slot);
+        }
+
+        assert fixedSlotResolvers.containsKey(slot);
+
+        return fixedSlotResolvers.get(slot);
     }
 
     public Set<Slot> getSlots() {

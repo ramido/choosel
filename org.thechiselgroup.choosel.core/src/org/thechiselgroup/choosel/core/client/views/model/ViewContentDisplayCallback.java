@@ -23,6 +23,4 @@ public interface ViewContentDisplayCallback extends ViewItemContainer {
 
     String getSlotResolverDescription(Slot slot);
 
-    void setResolver(Slot slot, ViewItemValueResolver resolver);
-
 }
