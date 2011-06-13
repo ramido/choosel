@@ -20,30 +20,33 @@ import java.util.Map;
 
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 
-public class PreconfiguredViewContentDisplayFactory implements
+public class ViewContentDisplayConfiguration implements
         ViewContentDisplayFactory {
 
     private Map<Slot, ViewItemValueResolver> fixedSlotResolvers = new HashMap<Slot, ViewItemValueResolver>();
 
-    private ViewContentDisplayFactory delegateFactory;
+    private ViewContentDisplayFactory factory;
 
-    public PreconfiguredViewContentDisplayFactory(
-            ViewContentDisplayFactory delegateFactory) {
-        this.delegateFactory = delegateFactory;
+    public ViewContentDisplayConfiguration(ViewContentDisplayFactory factory) {
+        this.factory = factory;
     }
 
     @Override
     public ViewContentDisplay createViewContentDisplay() {
-        return new PreconfiguredViewContentDisplay(
-                delegateFactory.createViewContentDisplay(), fixedSlotResolvers);
+        return factory.createViewContentDisplay();
+    }
+
+    public Map<Slot, ViewItemValueResolver> getFixedSlotResolvers() {
+        return fixedSlotResolvers;
     }
 
     @Override
     public String getViewContentTypeID() {
-        return delegateFactory.getViewContentTypeID();
+        return factory.getViewContentTypeID();
     }
 
     public void setSlotResolver(Slot slot, ViewItemValueResolver resolver) {
         fixedSlotResolvers.put(slot, resolver);
     }
+
 }

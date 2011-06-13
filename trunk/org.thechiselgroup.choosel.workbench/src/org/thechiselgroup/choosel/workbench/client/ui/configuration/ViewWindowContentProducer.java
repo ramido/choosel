@@ -22,6 +22,7 @@ import static org.thechiselgroup.choosel.core.client.configuration.ChooselInject
 import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.DROP_TARGET_MANAGER_VIEW_CONTENT;
 import static org.thechiselgroup.choosel.core.client.configuration.ChooselInjectionConstants.LABEL_PROVIDER_SELECTION_SET;
 
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.thechiselgroup.choosel.core.client.error_handling.LoggerProvider;
@@ -52,11 +53,13 @@ import org.thechiselgroup.choosel.core.client.views.model.DefaultViewModel;
 import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
 import org.thechiselgroup.choosel.core.client.views.model.RequiresAutomaticResourceSet;
 import org.thechiselgroup.choosel.core.client.views.model.ResourceModel;
+import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingConfiguration;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingInitializer;
 import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplay;
 import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplaysConfiguration;
 import org.thechiselgroup.choosel.core.client.views.model.ViewModel;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 import org.thechiselgroup.choosel.core.client.views.ui.DefaultResourceModelPresenter;
 import org.thechiselgroup.choosel.core.client.views.ui.DefaultSelectionModelPresenter;
 import org.thechiselgroup.choosel.core.client.views.ui.DefaultVisualMappingsControl;
@@ -160,7 +163,7 @@ public class ViewWindowContentProducer implements WindowContentProducer {
         assert contentType != null;
 
         ViewContentDisplay viewContentDisplay = viewContentDisplayConfiguration
-                .getFactory(contentType).createViewContentDisplay();
+                .createDisplay(contentType);
 
         ViewContentDisplay contentDisplay = new DropEnabledViewContentDisplay(
                 viewContentDisplay, contentDropTargetManager);
@@ -188,12 +191,14 @@ public class ViewWindowContentProducer implements WindowContentProducer {
                 new ResourceSetAvatarResourceSetsPresenter(
                         selectionDragAvatarFactory), selectionModel);
 
-        SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration();
+        Map<Slot, ViewItemValueResolver> fixedSlotResolvers = viewContentDisplayConfiguration
+                .getFixedSlotResolvers(contentType);
+        SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration(
+                fixedSlotResolvers, contentDisplay.getSlots());
 
         CompositeViewItemBehavior viewItemBehaviors = new CompositeViewItemBehavior();
-        // TODO inject logger
-        // viewItemBehaviors.add(new
-        // ViewInteractionLogger(Logger.getLogger("")));
+
+        // viewItemBehaviors.add(new ViewInteractionLogger(logger));
         viewItemBehaviors.add(new HighlightingViewItemBehavior(hoverModel));
         viewItemBehaviors.add(new DragViewItemBehavior(dragEnablerFactory));
         viewItemBehaviors.add(new PopupWithHighlightingViewItemBehavior(
@@ -209,7 +214,6 @@ public class ViewWindowContentProducer implements WindowContentProducer {
 
         resourceGrouping.setResourceSet(resourceModel.getResources());
 
-        // TODO inject logger
         DefaultViewModel viewModel = new DefaultViewModel(contentDisplay,
                 slotMappingConfiguration, selectionModel.getSelectionProxy(),
                 hoverModel.getResources(), slotMappingInitializer,

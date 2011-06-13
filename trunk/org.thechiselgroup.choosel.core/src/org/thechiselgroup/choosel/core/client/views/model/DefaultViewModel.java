@@ -248,7 +248,7 @@ public class DefaultViewModel implements ViewModel, Disposable,
 
     @Override
     public Slot[] getSlots() {
-        return contentDisplay.getSlots();
+        return slotMappingConfiguration.getRequiredSlots();
     }
 
     @Override
@@ -492,11 +492,6 @@ public class DefaultViewModel implements ViewModel, Disposable,
     @Override
     public void setConfigured(boolean configured) {
         isConfigurationAvailable = configured;
-    }
-
-    @Override
-    public void setResolver(Slot slot, ViewItemValueResolver resolver) {
-        slotMappingConfiguration.setResolver(slot, resolver);
     }
 
     @Override

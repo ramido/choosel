@@ -15,11 +15,19 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.model;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.equalsArray;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -31,11 +39,30 @@ public class SlotMappingConfigurationTest {
 
     private SlotMappingConfiguration underTest;
 
+    private Slot slot1;
+
+    private Slot slot2;
+
+    @Test
+    public void containsFixedSlot() {
+        Map<Slot, ViewItemValueResolver> fixedSlotResolvers = new HashMap<Slot, ViewItemValueResolver>();
+        fixedSlotResolvers.put(slot1, mock(ViewItemValueResolver.class));
+
+        underTest = new SlotMappingConfiguration(fixedSlotResolvers,
+                new Slot[] { slot1 });
+
+        assertThat(underTest.containsResolver(slot1), is(true));
+    }
+
+    @Test
+    public void doesNotSaveFixedMappingsToMemento() {
+        // create configuration that contains fixed resolvers
+        // store to memento
+        // make sure only variable ones are
+    }
+
     @Test
     public void fireChangesForDelegatingSlotResolversWhenTargetResolverIsChanged() {
-        Slot slot1 = new Slot("s1", "", DataType.NUMBER);
-        final Slot slot2 = new Slot("s2", "", DataType.NUMBER);
-
         DelegatingViewItemValueResolver delegatingResolver = mock(DelegatingViewItemValueResolver.class);
 
         when(delegatingResolver.getTargetSlot()).thenReturn(slot1);
@@ -53,9 +80,40 @@ public class SlotMappingConfigurationTest {
                 argThat(new IsChangeForSlotMatcher(slot2)));
     }
 
+    @Test
+    public void getRequiredSlotsExcludesFixedSlots() {
+        Map<Slot, ViewItemValueResolver> fixedSlotResolvers = new HashMap<Slot, ViewItemValueResolver>();
+        fixedSlotResolvers.put(slot1, mock(ViewItemValueResolver.class));
+
+        underTest = new SlotMappingConfiguration(fixedSlotResolvers,
+                new Slot[] { slot1, slot2 });
+
+        assertThat(underTest.getRequiredSlots(), equalsArray(slot2));
+    }
+
+    @Test
+    public void resolveFixedSlot() {
+        Map<Slot, ViewItemValueResolver> fixedSlotResolvers = new HashMap<Slot, ViewItemValueResolver>();
+        ViewItemValueResolver fixedResolver = mock(ViewItemValueResolver.class);
+        fixedSlotResolvers.put(slot1, fixedResolver);
+
+        underTest = new SlotMappingConfiguration(fixedSlotResolvers,
+                new Slot[] { slot1 });
+
+        ViewItem viewItem = mock(ViewItem.class);
+
+        underTest.resolve(slot1, viewItem);
+
+        verify(fixedResolver, times(1)).resolve(eq(viewItem),
+                any(ViewItemValueResolverContext.class));
+    }
+
     @Before
     public void setUp() {
-        underTest = new SlotMappingConfiguration();
+        slot1 = new Slot("s1", "", DataType.NUMBER);
+        slot2 = new Slot("s2", "", DataType.NUMBER);
+
+        underTest = new SlotMappingConfiguration(new Slot[] { slot1, slot2 });
     }
 
 }

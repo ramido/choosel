@@ -15,13 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.example.workbench.client;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.thechiselgroup.choosel.core.client.ui.Colors;
-import org.thechiselgroup.choosel.core.client.views.model.PreconfiguredViewContentDisplayFactory;
-import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplayFactory;
-import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplaysConfiguration;
+import org.thechiselgroup.choosel.core.client.views.DefaultViewContentDisplaysConfigurationProvider;
+import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplayConfiguration;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.SubsetDelegatingValueResolver;
@@ -38,54 +34,42 @@ import org.thechiselgroup.choosel.visualization_component.timeline.client.TimeLi
 import org.thechiselgroup.choosel.visualization_component.timeline.client.TimeLineViewContentDisplayFactory;
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 public class ChooselExampleWorkbenchViewContentDisplaysConfigurationProvider
-        implements Provider<ViewContentDisplaysConfiguration> {
-
-    private List<ViewContentDisplayFactory> viewContentDisplayFactories = new ArrayList<ViewContentDisplayFactory>();
+        extends DefaultViewContentDisplaysConfigurationProvider {
 
     @SuppressWarnings("unused")
     @Inject
     private void barChart(BarChartViewContentDisplayFactory originalFactory) {
-        PreconfiguredViewContentDisplayFactory factory = new PreconfiguredViewContentDisplayFactory(
+        ViewContentDisplayConfiguration configuration = new ViewContentDisplayConfiguration(
                 originalFactory);
 
-        factory.setSlotResolver(
+        configuration.setSlotResolver(
                 BarChart.BAR_COLOR,
                 new ViewItemStatusResolver("barColorResolver",
                         Colors.STEELBLUE_C, StatusRule.fullOrPartial(
                                 Colors.ORANGE_C, Subset.SELECTED)));
-        factory.setSlotResolver(BarChart.BAR_BORDER_COLOR,
+        configuration.setSlotResolver(BarChart.BAR_BORDER_COLOR,
                 new FixedValueResolver(Colors.STEELBLUE_C));
 
-        factory.setSlotResolver(BarChart.PARTIAL_BAR_LENGTH,
+        configuration.setSlotResolver(BarChart.PARTIAL_BAR_LENGTH,
                 new SubsetDelegatingValueResolver("partialBarLength",
                         BarChart.BAR_LENGTH, Subset.HIGHLIGHTED));
-        factory.setSlotResolver(BarChart.PARTIAL_BAR_COLOR,
+        configuration.setSlotResolver(BarChart.PARTIAL_BAR_COLOR,
                 new FixedValueResolver(Colors.YELLOW_C));
-        factory.setSlotResolver(BarChart.PARTIAL_BAR_BORDER_COLOR,
+        configuration.setSlotResolver(BarChart.PARTIAL_BAR_BORDER_COLOR,
                 new FixedValueResolver(Colors.STEELBLUE_C));
 
-        viewContentDisplayFactories.add(factory);
-    }
-
-    @Override
-    public ViewContentDisplaysConfiguration get() {
-        ViewContentDisplaysConfiguration result = new ViewContentDisplaysConfiguration();
-        for (ViewContentDisplayFactory factory : viewContentDisplayFactories) {
-            result.register(factory);
-        }
-        return result;
+        add(configuration);
     }
 
     @SuppressWarnings("unused")
     @Inject
     private void map(MapViewContentDisplayFactory factory) {
-        PreconfiguredViewContentDisplayFactory preconfiguredFactory = new PreconfiguredViewContentDisplayFactory(
+        ViewContentDisplayConfiguration configuration = new ViewContentDisplayConfiguration(
                 factory);
 
-        preconfiguredFactory.setSlotResolver(
+        configuration.setSlotResolver(
                 Map.COLOR,
                 new ViewItemStatusResolver("mapColorResolver",
                         Colors.STEELBLUE_C.alpha(0.6), StatusRule
@@ -93,29 +77,27 @@ public class ChooselExampleWorkbenchViewContentDisplaysConfigurationProvider
                                         Subset.HIGHLIGHTED),
                         StatusRule.fullOrPartial(Colors.ORANGE_C,
                                 Subset.SELECTED)));
-        preconfiguredFactory.setSlotResolver(Map.BORDER_COLOR,
-                new FixedValueResolver(Colors.STEELBLUE_C));
+        configuration.setSlotResolver(Map.BORDER_COLOR, new FixedValueResolver(
+                Colors.STEELBLUE_C));
 
         // TODO fix z-index
-        preconfiguredFactory.setSlotResolver(Map.Z_INDEX,
-                new FixedValueResolver(1));
-        preconfiguredFactory.setSlotResolver(Map.RADIUS,
-                new FixedValueResolver(5));
+        configuration.setSlotResolver(Map.Z_INDEX, new FixedValueResolver(1));
+        configuration.setSlotResolver(Map.RADIUS, new FixedValueResolver(5));
 
-        viewContentDisplayFactories.add(preconfiguredFactory);
+        add(configuration);
     }
 
     @SuppressWarnings("unused")
     @Inject
     private void scatterPlot(ScatterPlotViewContentDisplayFactory factory) {
-        PreconfiguredViewContentDisplayFactory preconfiguredFactory = new PreconfiguredViewContentDisplayFactory(
+        ViewContentDisplayConfiguration configuration = new ViewContentDisplayConfiguration(
                 factory);
 
-        preconfiguredFactory.setSlotResolver(ScatterPlot.SIZE,
-                new FixedValueResolver(20));
-        preconfiguredFactory.setSlotResolver(ScatterPlot.BORDER_COLOR,
+        configuration.setSlotResolver(ScatterPlot.SIZE, new FixedValueResolver(
+                20));
+        configuration.setSlotResolver(ScatterPlot.BORDER_COLOR,
                 new FixedValueResolver(Colors.STEELBLUE_C));
-        preconfiguredFactory.setSlotResolver(
+        configuration.setSlotResolver(
                 ScatterPlot.COLOR,
                 new ViewItemStatusResolver("scatterplotColorResolver",
                         Colors.STEELBLUE_C.alpha(0.6), StatusRule
@@ -124,24 +106,24 @@ public class ChooselExampleWorkbenchViewContentDisplaysConfigurationProvider
                         StatusRule.fullOrPartial(Colors.ORANGE_C,
                                 Subset.SELECTED)));
 
-        viewContentDisplayFactories.add(preconfiguredFactory);
+        add(configuration);
     }
 
     @SuppressWarnings("unused")
     @Inject
     private void text(TextViewContentDisplayFactory factory) {
-        viewContentDisplayFactories.add(factory);
+        add(factory);
     }
 
     @SuppressWarnings("unused")
     @Inject
     private void timeLine(TimeLineViewContentDisplayFactory factory) {
-        PreconfiguredViewContentDisplayFactory preconfiguredFactory = new PreconfiguredViewContentDisplayFactory(
+        ViewContentDisplayConfiguration configuration = new ViewContentDisplayConfiguration(
                 factory);
 
-        preconfiguredFactory.setSlotResolver(TimeLine.BORDER_COLOR,
+        configuration.setSlotResolver(TimeLine.BORDER_COLOR,
                 new FixedValueResolver(Colors.STEELBLUE_C));
-        preconfiguredFactory.setSlotResolver(
+        configuration.setSlotResolver(
                 TimeLine.COLOR,
                 new ViewItemStatusResolver("timelineColorResolver",
                         Colors.STEELBLUE_C.alpha(0.6), StatusRule
@@ -150,6 +132,6 @@ public class ChooselExampleWorkbenchViewContentDisplaysConfigurationProvider
                         StatusRule.fullOrPartial(Colors.ORANGE_C,
                                 Subset.SELECTED)));
 
-        viewContentDisplayFactories.add(preconfiguredFactory);
+        add(configuration);
     }
 }

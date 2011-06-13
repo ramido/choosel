@@ -56,10 +56,10 @@ public class VisualizationWidget<T extends ViewContentDisplay> extends
 
         this.contentDisplay = contentDisplay;
         this.viewModel = new DefaultViewModel(contentDisplay,
-                new SlotMappingConfiguration(), selectedResource,
-                highlightedResources, new DefaultSlotMappingInitializer(),
-                viewItemBehavior, new ResourceGrouping(
-                        new ResourceByUriMultiCategorizer(),
+                new SlotMappingConfiguration(contentDisplay.getSlots()),
+                selectedResource, highlightedResources,
+                new DefaultSlotMappingInitializer(), viewItemBehavior,
+                new ResourceGrouping(new ResourceByUriMultiCategorizer(),
                         new DefaultResourceSetFactory()), Logger.getLogger(""));
 
         setWidget(contentDisplay.asWidget());

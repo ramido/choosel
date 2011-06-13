@@ -19,33 +19,35 @@ import java.util.Map;
 import java.util.Set;
 
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 
-// TODO move to framework
 public class ViewContentDisplaysConfiguration {
 
-    private Map<String, ViewContentDisplayFactory> factoryMap = CollectionFactory
+    private Map<String, ViewContentDisplayConfiguration> configurationMap = CollectionFactory
             .createStringMap();
 
     public ViewContentDisplay createDisplay(String type) {
-        return getFactory(type).createViewContentDisplay();
+        return getConfiguration(type).createViewContentDisplay();
     }
 
-    public ViewContentDisplayFactory getFactory(String type) {
+    private ViewContentDisplayConfiguration getConfiguration(String type) {
         assert type != null;
-        assert factoryMap.containsKey(type);
+        assert configurationMap.containsKey(type);
 
-        return factoryMap.get(type);
+        return configurationMap.get(type);
+    }
 
+    public Map<Slot, ViewItemValueResolver> getFixedSlotResolvers(String type) {
+        return getConfiguration(type).getFixedSlotResolvers();
     }
 
     public Set<String> getRegisteredTypes() {
-        return factoryMap.keySet();
+        return configurationMap.keySet();
     }
 
-    public void register(ViewContentDisplayFactory factory) {
+    public void register(ViewContentDisplayConfiguration factory) {
         assert factory != null;
-
-        factoryMap.put(factory.getViewContentTypeID(), factory);
+        configurationMap.put(factory.getViewContentTypeID(), factory);
     }
 
 }
