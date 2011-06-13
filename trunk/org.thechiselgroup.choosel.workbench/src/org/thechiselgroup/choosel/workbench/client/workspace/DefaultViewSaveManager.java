@@ -18,12 +18,11 @@ package org.thechiselgroup.choosel.workbench.client.workspace;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.thechiselgroup.choosel.core.client.error_handling.LoggingErrorHandler;
 import org.thechiselgroup.choosel.core.client.persistence.Persistable;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
-import org.thechiselgroup.choosel.core.client.resources.ResourceManager;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.core.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.UnmodifiableResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.persistence.DefaultResourceSetCollector;
 import org.thechiselgroup.choosel.core.client.views.View;
@@ -39,26 +38,19 @@ public class DefaultViewSaveManager implements ViewSaveManager {
 
     private ViewPersistenceServiceAsync service;
 
-    private ResourceSetFactory resourceSetFactory;
-
-    private ResourceManager resourceManager;
+    private final LoggingErrorHandler loggingErrorHandler;
 
     @Inject
     public DefaultViewSaveManager(ViewPersistenceServiceAsync service,
-            ResourceManager resourceManager,
-            ResourceSetFactory resourceSetFactory) {
+            LoggingErrorHandler loggingErrorHandler) {
 
-        assert resourceManager != null;
         assert service != null;
-        assert resourceSetFactory != null;
 
-        this.resourceSetFactory = resourceSetFactory;
-        this.resourceManager = resourceManager;
+        this.loggingErrorHandler = loggingErrorHandler;
         this.service = service;
     }
 
     private ViewDTO createViewDTO(View view) {
-
         assert view instanceof Persistable;
 
         ViewDTO viewDTO = new ViewDTO();
@@ -144,8 +136,8 @@ public class DefaultViewSaveManager implements ViewSaveManager {
         service.saveView(viewDTO, new ForwardingAsyncCallback<Long>(callback) {
             @Override
             public void onFailure(Throwable caught) {
+                loggingErrorHandler.handleError(caught);
                 shareConfiguration.notLoggedIn();
-                // super.onFailure(caught);
             }
 
             @Override
