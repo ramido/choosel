@@ -22,6 +22,7 @@ import static org.thechiselgroup.choosel.visualization_component.graph.client.wi
 import static org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay.NODE_FONT_WEIGHT_BOLD;
 import static org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay.NODE_FONT_WEIGHT_NORMAL;
 
+import org.thechiselgroup.choosel.core.client.ui.Color;
 import org.thechiselgroup.choosel.core.client.ui.Colors;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Status;
@@ -63,11 +64,13 @@ public class GraphItem {
     }
 
     public String getNodeBackgroundColorValue() {
-        return resourceItem.getValue(Graph.NODE_BACKGROUND_COLOR_SLOT);
+        return resourceItem.<Color> getValue(Graph.NODE_BACKGROUND_COLOR_SLOT)
+                .toHex();
     }
 
     public String getNodeBorderColorValue() {
-        return resourceItem.getValue(Graph.NODE_BORDER_COLOR_SLOT);
+        return resourceItem.<Color> getValue(Graph.NODE_BORDER_COLOR_SLOT)
+                .toHex();
     }
 
     public ViewItem getResourceItem() {
