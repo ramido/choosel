@@ -180,10 +180,10 @@ public class Graph extends AbstractViewContentDisplay implements
         }
     }
 
-    public static final Slot NODE_BORDER_COLOR_SLOT = new Slot(
+    public static final Slot NODE_BORDER_COLOR = new Slot(
             "nodeBorderColor", "Node Border Color", DataType.COLOR);
 
-    public static final Slot NODE_BACKGROUND_COLOR_SLOT = new Slot(
+    public static final Slot NODE_BACKGROUND_COLOR = new Slot(
             "nodeBackgroundColor", "Node Color", DataType.COLOR);
 
     public static final Slot NODE_LABEL_SLOT = new Slot("nodeLabel",
@@ -403,8 +403,8 @@ public class Graph extends AbstractViewContentDisplay implements
 
     @Override
     public Slot[] getSlots() {
-        return new Slot[] { NODE_LABEL_SLOT, NODE_BORDER_COLOR_SLOT,
-                NODE_BACKGROUND_COLOR_SLOT };
+        return new Slot[] { NODE_LABEL_SLOT, NODE_BORDER_COLOR,
+                NODE_BACKGROUND_COLOR };
     }
 
     private ViewItem getViewItem(Node node) {
