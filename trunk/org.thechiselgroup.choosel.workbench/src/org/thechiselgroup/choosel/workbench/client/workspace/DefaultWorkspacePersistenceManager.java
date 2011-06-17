@@ -32,7 +32,7 @@ import org.thechiselgroup.choosel.dnd.client.windows.Desktop;
 import org.thechiselgroup.choosel.dnd.client.windows.WindowContent;
 import org.thechiselgroup.choosel.dnd.client.windows.WindowContentProducer;
 import org.thechiselgroup.choosel.dnd.client.windows.WindowPanel;
-import org.thechiselgroup.choosel.workbench.client.services.ForwardingAsyncCallback;
+import org.thechiselgroup.choosel.workbench.client.services.AsyncCallbackVoidDelegate;
 import org.thechiselgroup.choosel.workbench.client.workspace.dto.ResourceSetDTO;
 import org.thechiselgroup.choosel.workbench.client.workspace.dto.WindowDTO;
 import org.thechiselgroup.choosel.workbench.client.workspace.dto.WorkspaceDTO;
@@ -354,21 +354,22 @@ public class DefaultWorkspacePersistenceManager implements
 
         WorkspaceDTO workspaceDTO = createWorkspaceDTO(workspace);
 
-        service.saveWorkspace(workspaceDTO, new ForwardingAsyncCallback<Long>(
-                callback) {
-            @Override
-            public void onFailure(Throwable caught) {
-                workspace.setSavingState(WorkspaceSavingState.NOT_SAVED);
-                super.onFailure(caught);
-            }
+        service.saveWorkspace(workspaceDTO,
+                new AsyncCallbackVoidDelegate<Long>(callback) {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        workspace
+                                .setSavingState(WorkspaceSavingState.NOT_SAVED);
+                        super.onFailure(caught);
+                    }
 
-            @Override
-            public void onSuccess(Long result) {
-                workspace.setId(result);
-                workspace.setSavingState(WorkspaceSavingState.SAVED);
-                super.onSuccess(result);
-            }
-        });
+                    @Override
+                    public void onSuccess(Long result) {
+                        workspace.setId(result);
+                        workspace.setSavingState(WorkspaceSavingState.SAVED);
+                        super.onSuccess(result);
+                    }
+                });
     }
 
     @Override
@@ -384,7 +385,7 @@ public class DefaultWorkspacePersistenceManager implements
          * If workspace is new, save it first and then share it.
          */
         if (workspace.isNew()) {
-            saveWorkspace(new ForwardingAsyncCallback<Void>(callback) {
+            saveWorkspace(new AsyncCallbackVoidDelegate<Void>(callback) {
                 @Override
                 public void onSuccess(Void result) {
                     WorkspaceDTO workspaceDTO = createWorkspaceDTO(workspace);

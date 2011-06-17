@@ -16,7 +16,7 @@
 package org.thechiselgroup.choosel.workbench.client.workspace.command;
 
 import org.thechiselgroup.choosel.core.client.command.AsyncCommand;
-import org.thechiselgroup.choosel.workbench.client.services.ForwardingAsyncCallback;
+import org.thechiselgroup.choosel.workbench.client.services.AsyncCallbackDelegate;
 import org.thechiselgroup.choosel.workbench.client.workspace.WorkspacePersistenceManager;
 
 import com.google.gwt.user.client.Window;
@@ -49,6 +49,6 @@ public class ShareWorkspaceCommand implements AsyncCommand {
 
         // TODO message
         persistenceManager.shareWorkspace(emailAddress,
-                new ForwardingAsyncCallback<Void>(callback));
+                new AsyncCallbackDelegate<Void>(callback));
     }
 }

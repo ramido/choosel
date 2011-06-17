@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.core.client.ui.widget.listbox;
 import java.util.List;
 
 import org.thechiselgroup.choosel.core.client.ui.WidgetAdaptable;
-import org.thechiselgroup.choosel.core.client.util.Converter;
+import org.thechiselgroup.choosel.core.client.util.transform.Transformer;
 
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -34,12 +34,12 @@ public class ListBoxControl<T> implements WidgetAdaptable {
 
     private List<T> values;
 
-    private final Converter<T, String> formatter;
+    private final Transformer<T, String> formatter;
 
     // TODO refactor: use handler registration / deregistration for
     // changeHandler
     public ListBoxControl(ListBoxPresenter presenter,
-            Converter<T, String> formatter) {
+            Transformer<T, String> formatter) {
 
         assert formatter != null;
         assert presenter != null;
@@ -98,7 +98,11 @@ public class ListBoxControl<T> implements WidgetAdaptable {
         this.values = values;
         presenter.clear();
         for (T value : values) {
-            presenter.addItem(formatter.convert(value));
+            try {
+                presenter.addItem(formatter.transform(value));
+            } catch (Exception e) {
+                // TODO handle transformation error
+            }
         }
         setSelectedValue(selectedValue);
 

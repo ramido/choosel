@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2011 Lars Grammel 
+ * Copyright 2009, 2010 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -13,27 +13,26 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.core.client.util;
+package org.thechiselgroup.choosel.workbench.client.services;
 
-/**
- * Wraps exceptions thrown during {@link Transformer#transform(Object)} and
- * contains the original value.
- * 
- * @author Lars Grammel
- */
-public class TransformationException extends Exception {
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
-    private static final long serialVersionUID = 1L;
+public class AsyncCallbackVoidDelegate<T> implements AsyncCallback<T> {
 
-    private final Object originalValue;
+    private AsyncCallback<Void> delegate;
 
-    public TransformationException(Object originalValue, Exception cause) {
-        super("failed to transform '" + originalValue.toString() + "'", cause);
-        this.originalValue = originalValue;
+    public AsyncCallbackVoidDelegate(AsyncCallback<Void> delegate) {
+        assert delegate != null;
+        this.delegate = delegate;
     }
 
-    public Object getOriginalValue() {
-        return originalValue;
+    @Override
+    public void onFailure(Throwable caught) {
+        delegate.onFailure(caught);
     }
 
+    @Override
+    public void onSuccess(T result) {
+        delegate.onSuccess(null);
+    }
 }

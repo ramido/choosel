@@ -18,7 +18,7 @@ package org.thechiselgroup.choosel.workbench.client.ui.messages;
 import org.thechiselgroup.choosel.core.client.command.AsyncCommand;
 import org.thechiselgroup.choosel.core.client.util.HasDescription;
 import org.thechiselgroup.choosel.core.client.util.RemoveHandle;
-import org.thechiselgroup.choosel.workbench.client.services.ForwardingAsyncCallback;
+import org.thechiselgroup.choosel.workbench.client.services.AsyncCallbackDelegate;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -53,7 +53,7 @@ public class AsyncCommandMessageWrapper implements AsyncCommand {
     public void execute(AsyncCallback<Void> callback) {
         final RemoveHandle messageHandle = messageManager.showMessage(message);
 
-        delegate.execute(new ForwardingAsyncCallback<Void>(callback) {
+        delegate.execute(new AsyncCallbackDelegate<Void>(callback) {
             @Override
             public void onFailure(Throwable caught) {
                 messageHandle.remove();

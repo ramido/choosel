@@ -26,7 +26,7 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.UnmodifiableResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.persistence.DefaultResourceSetCollector;
 import org.thechiselgroup.choosel.core.client.views.View;
-import org.thechiselgroup.choosel.workbench.client.services.ForwardingAsyncCallback;
+import org.thechiselgroup.choosel.workbench.client.services.AsyncCallbackDelegate;
 import org.thechiselgroup.choosel.workbench.client.workspace.dto.ResourceSetDTO;
 import org.thechiselgroup.choosel.workbench.client.workspace.dto.ViewDTO;
 import org.thechiselgroup.choosel.workbench.client.workspace.service.ViewPersistenceServiceAsync;
@@ -128,12 +128,12 @@ public class DefaultViewSaveManager implements ViewSaveManager {
     // XXX should be called with view, not with shareConfiguration
     @Override
     public void saveView(final DefaultShareConfiguration shareConfiguration,
-            final AsyncCallback<Void> callback) {
+            final AsyncCallback<Long> callback) {
         assert callback != null;
 
         ViewDTO viewDTO = createViewDTO(shareConfiguration.getView());
 
-        service.saveView(viewDTO, new ForwardingAsyncCallback<Long>(callback) {
+        service.saveView(viewDTO, new AsyncCallbackDelegate<Long>(callback) {
             @Override
             public void onFailure(Throwable caught) {
                 loggingErrorHandler.handleError(caught);

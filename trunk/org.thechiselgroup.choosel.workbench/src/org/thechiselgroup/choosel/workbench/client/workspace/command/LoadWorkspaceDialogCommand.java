@@ -20,7 +20,7 @@ import java.util.List;
 import org.thechiselgroup.choosel.core.client.command.AsyncCommand;
 import org.thechiselgroup.choosel.core.client.command.AsyncCommandExecutor;
 import org.thechiselgroup.choosel.core.client.util.HasDescription;
-import org.thechiselgroup.choosel.workbench.client.services.ForwardingAsyncCallback;
+import org.thechiselgroup.choosel.workbench.client.services.AsyncCallbackVoidDelegate;
 import org.thechiselgroup.choosel.workbench.client.ui.dialog.DialogManager;
 import org.thechiselgroup.choosel.workbench.client.workspace.WorkspacePersistenceManager;
 import org.thechiselgroup.choosel.workbench.client.workspace.WorkspacePreview;
@@ -65,7 +65,7 @@ public class LoadWorkspaceDialogCommand implements AsyncCommand, HasDescription 
     }
 
     public static class LoadWorkspacePreviewsCallback extends
-            ForwardingAsyncCallback<List<WorkspacePreview>> {
+            AsyncCallbackVoidDelegate<List<WorkspacePreview>> {
 
         private final DetailsDisplay detailsDisplay;
 
