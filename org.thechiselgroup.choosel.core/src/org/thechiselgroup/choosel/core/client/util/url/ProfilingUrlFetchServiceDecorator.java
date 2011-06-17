@@ -39,11 +39,6 @@ public class ProfilingUrlFetchServiceDecorator implements UrlFetchService {
     }
 
     @Override
-    public String encodeURIComponent(String uriComponent) {
-        return delegate.encodeURIComponent(uriComponent);
-    }
-
-    @Override
     public void fetchURL(final String url, final AsyncCallback<String> callback) {
         final long start = System.currentTimeMillis();
         logger.info("fetch url '" + url + "'");

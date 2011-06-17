@@ -19,15 +19,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface UrlFetchService {
 
-    /**
-     * Similar to JavaScript {@code encodeURIComponent()} function.
-     * 
-     * @see http://xkr.us/articles/javascript/encode-compare/ for details on why
-     *      to prefer {@code encodeURIComponent()} over {@code encode()} and
-     *      {@code encodeURI()}.
-     */
-    String encodeURIComponent(String uriComponent);
-
     void fetchURL(String url, AsyncCallback<String> callback);
 
 }

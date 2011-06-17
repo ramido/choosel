@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.core.client.test;
+package org.thechiselgroup.choosel.core.client.development;
 
 import com.google.gwt.core.client.GWT;
 
 /**
- * Contains flag to turn benchmarking on and off.
+ * Contains development flags (e.g. to turn benchmarking on and off).
  * 
  * @author Lars Grammel
  */
-public final class Benchmark {
+public final class DevelopmentSettings {
 
     /**
      * Flag that activates / deactivates benchmarking. Change to enable
@@ -54,11 +54,20 @@ public final class Benchmark {
      * 
      * #see {@link #BENCHMARKING}
      */
+    @SuppressWarnings("unused")
     public static boolean isBenchmarkEnabled() {
         return BENCHMARKING && GWT.isClient();
     }
 
-    private Benchmark() {
+    /**
+     * We do not use JavaScript code in OOMPH client mode for performance
+     * reasons.
+     */
+    public static boolean shouldUseJavaScriptImplementation() {
+        return GWT.isScript(); // add "|| GWT.isClient()" to test in hosted mode
+    }
+
+    private DevelopmentSettings() {
     }
 
 }
