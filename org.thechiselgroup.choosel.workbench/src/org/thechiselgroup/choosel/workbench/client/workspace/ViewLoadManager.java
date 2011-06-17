@@ -17,19 +17,9 @@ package org.thechiselgroup.choosel.workbench.client.workspace;
 
 import java.util.List;
 
-import org.thechiselgroup.choosel.core.client.views.View;
-
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public interface ViewLoadManager {
-
-    void deleteView(Long viewId, AsyncCallback<Long> asyncCallback);
-
-    void loadView(Long id, AsyncCallback<View> callback);
-
-    void loadViewAsWindow(Long id, AsyncCallback<Workspace> callback);
-
-    void loadViewAsWorkspace(Long id, AsyncCallback<Workspace> callback);
+public interface ViewLoadManager extends ViewLoader {
 
     void loadViewPreviews(AsyncCallback<List<ViewPreview>> callback);
 

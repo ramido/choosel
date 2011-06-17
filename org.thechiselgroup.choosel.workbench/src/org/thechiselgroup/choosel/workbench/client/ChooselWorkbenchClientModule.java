@@ -94,7 +94,6 @@ import org.thechiselgroup.choosel.workbench.client.util.url.FlashUrlFetchService
 import org.thechiselgroup.choosel.workbench.client.util.xml.SarissaDocumentProcessor;
 import org.thechiselgroup.choosel.workbench.client.workspace.DefaultShareConfigurationFactory;
 import org.thechiselgroup.choosel.workbench.client.workspace.DefaultViewLoadManager;
-import org.thechiselgroup.choosel.workbench.client.workspace.DefaultViewLoader;
 import org.thechiselgroup.choosel.workbench.client.workspace.DefaultViewSaveManager;
 import org.thechiselgroup.choosel.workbench.client.workspace.DefaultViewSaver;
 import org.thechiselgroup.choosel.workbench.client.workspace.DefaultWorkspaceManager;
@@ -279,7 +278,8 @@ public abstract class ChooselWorkbenchClientModule extends AbstractGinModule
         bind(ViewSaver.class).to(DefaultViewSaver.class).in(Singleton.class);
         bind(ViewLoadManager.class).to(DefaultViewLoadManager.class).in(
                 Singleton.class);
-        bind(ViewLoader.class).to(DefaultViewLoader.class).in(Singleton.class);
+        bind(ViewLoader.class).to(DefaultViewLoadManager.class).in(
+                Singleton.class);
 
         bind(ShareConfigurationFactory.class).to(
                 DefaultShareConfigurationFactory.class).in(Singleton.class);

@@ -15,26 +15,25 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.util.callbacks;
 
-import org.thechiselgroup.choosel.core.client.util.TransformationException;
-import org.thechiselgroup.choosel.core.client.util.Transformer;
+import org.thechiselgroup.choosel.core.client.util.transform.Transformer;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public class TransformingAsyncCallback<S, T> implements AsyncCallback<S> {
+public class TransformingAsyncCallback<From, To> implements AsyncCallback<From> {
 
     // NOTE: allows creation without specifying generics twice
-    public static <S, T> TransformingAsyncCallback<S, T> create(
-            AsyncCallback<T> callback, Transformer<S, T> transformer) {
+    public static <From, To> TransformingAsyncCallback<From, To> create(
+            AsyncCallback<To> callback, Transformer<From, To> transformer) {
 
-        return new TransformingAsyncCallback<S, T>(callback, transformer);
+        return new TransformingAsyncCallback<From, To>(callback, transformer);
     }
 
-    private final AsyncCallback<T> callback;
+    private final AsyncCallback<To> callback;
 
-    private final Transformer<S, T> transformer;
+    private final Transformer<From, To> transformer;
 
-    protected TransformingAsyncCallback(AsyncCallback<T> callback,
-            Transformer<S, T> transformer) {
+    protected TransformingAsyncCallback(AsyncCallback<To> callback,
+            Transformer<From, To> transformer) {
 
         assert transformer != null;
         assert callback != null;
@@ -49,7 +48,7 @@ public class TransformingAsyncCallback<S, T> implements AsyncCallback<S> {
     }
 
     @Override
-    public void onSuccess(S result) {
+    public void onSuccess(From result) {
         try {
             callback.onSuccess(transformer.transform(result));
         } catch (Exception e) {

@@ -13,26 +13,13 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.workbench.client.services;
+package org.thechiselgroup.choosel.core.client.util.transform;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-
-public class ForwardingAsyncCallback<T> implements AsyncCallback<T> {
-
-    private AsyncCallback<Void> delegate;
-
-    public ForwardingAsyncCallback(AsyncCallback<Void> delegate) {
-        assert delegate != null;
-        this.delegate = delegate;
-    }
+public class NullTransformer<S> implements Transformer<S, S> {
 
     @Override
-    public void onFailure(Throwable caught) {
-        delegate.onFailure(caught);
+    public S transform(S value) {
+        return value;
     }
 
-    @Override
-    public void onSuccess(T result) {
-        delegate.onSuccess(null);
-    }
 }

@@ -26,6 +26,8 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.UnmodifiableResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetAccessor;
+import org.thechiselgroup.choosel.core.client.util.callbacks.TransformingAsyncCallback;
+import org.thechiselgroup.choosel.core.client.util.transform.Transformer;
 import org.thechiselgroup.choosel.core.client.views.View;
 import org.thechiselgroup.choosel.dnd.client.windows.Desktop;
 import org.thechiselgroup.choosel.dnd.client.windows.WindowContent;
@@ -86,24 +88,7 @@ public class DefaultViewLoadManager implements ViewLoadManager {
     @Override
     public void deleteView(Long id, final AsyncCallback<Long> callback) {
         assert callback != null;
-
-        service.deleteView(id, new AsyncCallback<Long>() {
-
-            @Override
-            public void onFailure(Throwable caught) {
-                callback.onFailure(caught);
-
-            }
-
-            @Override
-            public void onSuccess(Long result) {
-                try {
-                    callback.onSuccess(result);
-                } catch (Exception e) {
-                    callback.onFailure(e);
-                }
-            }
-        });
+        service.deleteView(id, callback);
     }
 
     private WindowContent loadResourcesAndView(ViewDTO dto,
@@ -164,27 +149,14 @@ public class DefaultViewLoadManager implements ViewLoadManager {
     }
 
     @Override
-    public void loadView(Long id, final AsyncCallback<View> callback) {
-        assert callback != null;
-
-        service.loadView(id, new AsyncCallback<ViewDTO>() {
-
-            @Override
-            public void onFailure(Throwable caught) {
-                callback.onFailure(caught);
-
-            }
-
-            @Override
-            public void onSuccess(ViewDTO result) {
-                try {
-                    View view = loadView(result);
-                    callback.onSuccess(view);
-                } catch (Exception e) {
-                    callback.onFailure(e);
-                }
-            }
-        });
+    public void loadView(Long id, AsyncCallback<View> callback) {
+        service.loadView(id, TransformingAsyncCallback.create(callback,
+                new Transformer<ViewDTO, View>() {
+                    @Override
+                    public View transform(ViewDTO dto) throws Exception {
+                        return loadView(dto);
+                    }
+                }));
     }
 
     protected View loadView(ViewDTO dto) {
@@ -198,77 +170,44 @@ public class DefaultViewLoadManager implements ViewLoadManager {
     }
 
     @Override
-    public void loadViewAsWindow(Long id,
-            final AsyncCallback<Workspace> callback) {
-        assert callback != null;
-
-        service.loadView(id, new AsyncCallback<ViewDTO>() {
-
-            @Override
-            public void onFailure(Throwable caught) {
-                callback.onFailure(caught);
-            }
-
-            @Override
-            public void onSuccess(ViewDTO result) {
-                try {
-                    Workspace workspace = loadWindow(result);
-                    callback.onSuccess(workspace);
-                } catch (Exception e) {
-                    callback.onFailure(e);
-                }
-            }
-        });
+    public void loadViewAsWindow(Long id, AsyncCallback<Workspace> callback) {
+        service.loadView(id, TransformingAsyncCallback.create(callback,
+                new Transformer<ViewDTO, Workspace>() {
+                    @Override
+                    public Workspace transform(ViewDTO dto) throws Exception {
+                        return loadWindow(dto);
+                    }
+                }));
     }
 
     @Override
-    public void loadViewAsWorkspace(Long id,
-            final AsyncCallback<Workspace> callback) {
-        assert callback != null;
-
-        service.loadView(id, new AsyncCallback<ViewDTO>() {
-
-            @Override
-            public void onFailure(Throwable caught) {
-                callback.onFailure(caught);
-            }
-
-            @Override
-            public void onSuccess(ViewDTO result) {
-                try {
-                    Workspace workspace = loadWorkspace(result);
-                    callback.onSuccess(workspace);
-                } catch (Exception e) {
-                    callback.onFailure(e);
-                }
-            }
-        });
+    public void loadViewAsWorkspace(Long id, AsyncCallback<Workspace> callback) {
+        service.loadView(id, TransformingAsyncCallback.create(callback,
+                new Transformer<ViewDTO, Workspace>() {
+                    @Override
+                    public Workspace transform(ViewDTO dto) {
+                        return loadWorkspace(dto);
+                    }
+                }));
     }
 
     @Override
     public void loadViewPreviews(final AsyncCallback<List<ViewPreview>> callback) {
-        assert callback != null;
+        service.loadViewPreviews(TransformingAsyncCallback.create(callback,
+                new Transformer<List<ViewPreviewDTO>, List<ViewPreview>>() {
+                    @Override
+                    public List<ViewPreview> transform(
+                            List<ViewPreviewDTO> result) {
 
-        service.loadViewPreviews(new AsyncCallback<List<ViewPreviewDTO>>() {
-
-            @Override
-            public void onFailure(Throwable caught) {
-                callback.onFailure(caught);
-
-            }
-
-            @Override
-            public void onSuccess(List<ViewPreviewDTO> result) {
-                List<ViewPreview> previews = new ArrayList<ViewPreview>();
-                for (ViewPreviewDTO dto : result) {
-                    previews.add(new ViewPreview(dto.getId(), dto.getTitle(),
-                            dto.getType(), dto.getCreated()));
-                }
-
-                callback.onSuccess(previews);
-            }
-
-        });
+                        List<ViewPreview> previews = new ArrayList<ViewPreview>();
+                        for (ViewPreviewDTO dto : result) {
+                            previews.add(new ViewPreview(dto.getId(), dto
+                                    .getTitle(), dto.getType(), dto
+                                    .getCreated()));
+                        }
+                        return previews;
+                    }
+                }));
     }
 
     protected Workspace loadWindow(ViewDTO dto) {

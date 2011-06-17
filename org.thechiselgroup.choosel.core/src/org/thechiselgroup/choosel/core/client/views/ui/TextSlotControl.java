@@ -19,7 +19,7 @@ import java.util.List;
 
 import org.thechiselgroup.choosel.core.client.ui.widget.listbox.ExtendedListBox;
 import org.thechiselgroup.choosel.core.client.ui.widget.listbox.ListBoxControl;
-import org.thechiselgroup.choosel.core.client.util.NullConverter;
+import org.thechiselgroup.choosel.core.client.util.transform.NullTransformer;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingConfiguration;
 import org.thechiselgroup.choosel.core.client.views.resolvers.TextPropertyResolver;
@@ -43,7 +43,7 @@ public class TextSlotControl extends SlotControl {
         this.slotMappingConfiguration = slotMappingConfiguration;
 
         propertySelector = new ListBoxControl<String>(
-                new ExtendedListBox(false), new NullConverter<String>());
+                new ExtendedListBox(false), new NullTransformer<String>());
         propertySelector.setChangeHandler(new ChangeHandler() {
             @Override
             public void onChange(ChangeEvent event) {

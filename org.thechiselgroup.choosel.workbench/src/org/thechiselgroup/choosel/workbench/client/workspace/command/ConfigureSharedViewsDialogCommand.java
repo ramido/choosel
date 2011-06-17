@@ -20,7 +20,7 @@ import java.util.List;
 import org.thechiselgroup.choosel.core.client.command.AsyncCommand;
 import org.thechiselgroup.choosel.core.client.command.AsyncCommandExecutor;
 import org.thechiselgroup.choosel.core.client.util.HasDescription;
-import org.thechiselgroup.choosel.workbench.client.services.ForwardingAsyncCallback;
+import org.thechiselgroup.choosel.workbench.client.services.AsyncCallbackVoidDelegate;
 import org.thechiselgroup.choosel.workbench.client.ui.dialog.DialogManager;
 import org.thechiselgroup.choosel.workbench.client.workspace.ViewLoadManager;
 import org.thechiselgroup.choosel.workbench.client.workspace.ViewLoader;
@@ -66,7 +66,7 @@ public class ConfigureSharedViewsDialogCommand implements AsyncCommand,
     }
 
     public static class LoadViewPreviewsCallback extends
-            ForwardingAsyncCallback<List<ViewPreview>> {
+            AsyncCallbackVoidDelegate<List<ViewPreview>> {
 
         private final DetailsDisplay detailsDisplay;
 

@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.workbench.client.workspace.command;
 
 import org.thechiselgroup.choosel.core.client.command.AsyncCommand;
 import org.thechiselgroup.choosel.core.client.util.HasDescription;
+import org.thechiselgroup.choosel.workbench.client.services.AsyncCallbackVoidDelegate;
 import org.thechiselgroup.choosel.workbench.client.workspace.ViewLoader;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -38,17 +39,8 @@ public class DeleteViewCommand implements AsyncCommand, HasDescription {
 
     @Override
     public void execute(final AsyncCallback<Void> callback) {
-        persistenceManager.deleteView(viewId, new AsyncCallback<Long>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                callback.onFailure(caught);
-            }
-
-            @Override
-            public void onSuccess(Long id) {
-                callback.onSuccess(null);
-            }
-        });
+        persistenceManager.deleteView(viewId,
+                new AsyncCallbackVoidDelegate<Long>(callback));
     }
 
     @Override

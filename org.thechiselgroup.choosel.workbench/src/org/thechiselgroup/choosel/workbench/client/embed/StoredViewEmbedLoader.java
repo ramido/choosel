@@ -18,6 +18,7 @@ package org.thechiselgroup.choosel.workbench.client.embed;
 import org.thechiselgroup.choosel.core.client.views.View;
 import org.thechiselgroup.choosel.workbench.client.init.WindowLocation;
 import org.thechiselgroup.choosel.workbench.client.init.WorkbenchInitializer;
+import org.thechiselgroup.choosel.workbench.client.services.AsyncCallbackDelegate;
 import org.thechiselgroup.choosel.workbench.client.workspace.ViewLoader;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -44,16 +45,11 @@ public class StoredViewEmbedLoader implements EmbeddedViewLoader {
         // TODO catch exception, handle in here
         final long viewId = Long.parseLong(viewIdString);
 
-        viewLoader.loadView(viewId, new AsyncCallback<View>() {
+        viewLoader.loadView(viewId, new AsyncCallbackDelegate<View>(callback) {
             @Override
             public void onFailure(Throwable caught) {
                 callback.onFailure(new Exception(
                         "Could not load visualization " + viewId + "."));
-            }
-
-            @Override
-            public void onSuccess(View view) {
-                callback.onSuccess(view);
             }
         });
     }

@@ -84,10 +84,14 @@ public class EmbedInitializer implements ApplicationInitializer {
                 });
     }
 
+    protected void registerLoader(EmbeddedViewLoader loader) {
+        assert loader != null;
+        embedLoaders.put(loader.getEmbedMode(), loader);
+    }
+
     @SuppressWarnings("unused")
     @Inject
     private void setStoredViewEmbedLoader(StoredViewEmbedLoader loader) {
-        assert loader != null;
-        embedLoaders.put(loader.getEmbedMode(), loader);
+        registerLoader(loader);
     }
 }

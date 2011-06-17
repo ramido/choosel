@@ -37,7 +37,7 @@ public class DefaultViewSaver implements ViewSaver {
     @Override
     public void saveView(DefaultShareConfiguration shareConfiguration) {
         viewPersistenceManager.saveView(shareConfiguration,
-                new ErrorHandlingAsyncCallback<Void>(errorHandler));
+                new ErrorHandlingAsyncCallback<Long>(errorHandler));
 
     }
 

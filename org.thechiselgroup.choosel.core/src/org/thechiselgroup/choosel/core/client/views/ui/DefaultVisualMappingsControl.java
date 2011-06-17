@@ -27,7 +27,7 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSetUtils;
 import org.thechiselgroup.choosel.core.client.ui.ConfigurationPanel;
 import org.thechiselgroup.choosel.core.client.ui.widget.listbox.ExtendedListBox;
 import org.thechiselgroup.choosel.core.client.ui.widget.listbox.ListBoxControl;
-import org.thechiselgroup.choosel.core.client.util.NullConverter;
+import org.thechiselgroup.choosel.core.client.util.transform.NullTransformer;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingConfiguration;
 import org.thechiselgroup.choosel.core.client.views.model.ViewContentDisplay;
@@ -94,7 +94,7 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
         // TODO include bin aggregation for numerical slots
 
         groupingBox = new ListBoxControl<String>(new ExtendedListBox(false),
-                new NullConverter<String>());
+                new NullTransformer<String>());
 
         groupingBox.setChangeHandler(new ChangeHandler() {
             @Override

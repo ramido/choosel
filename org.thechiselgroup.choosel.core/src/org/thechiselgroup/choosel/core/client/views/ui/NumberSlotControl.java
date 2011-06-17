@@ -20,14 +20,13 @@ import java.util.List;
 
 import org.thechiselgroup.choosel.core.client.ui.widget.listbox.ExtendedListBox;
 import org.thechiselgroup.choosel.core.client.ui.widget.listbox.ListBoxControl;
-import org.thechiselgroup.choosel.core.client.util.ConversionException;
-import org.thechiselgroup.choosel.core.client.util.Converter;
-import org.thechiselgroup.choosel.core.client.util.NullConverter;
 import org.thechiselgroup.choosel.core.client.util.math.AverageCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.Calculation;
 import org.thechiselgroup.choosel.core.client.util.math.MaxCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.MinCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.SumCalculation;
+import org.thechiselgroup.choosel.core.client.util.transform.NullTransformer;
+import org.thechiselgroup.choosel.core.client.util.transform.Transformer;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingConfiguration;
 import org.thechiselgroup.choosel.core.client.views.resolvers.CalculationResolver;
@@ -107,10 +106,9 @@ public class NumberSlotControl extends SlotControl {
 
         resolverFactorySelector = new ListBoxControl<ViewItemResolverFactory>(
                 new ExtendedListBox(false),
-                new Converter<ViewItemResolverFactory, String>() {
+                new Transformer<ViewItemResolverFactory, String>() {
                     @Override
-                    public String convert(ViewItemResolverFactory value)
-                            throws ConversionException {
+                    public String transform(ViewItemResolverFactory value) {
                         return value.getDescription();
                     }
                 });
@@ -119,7 +117,7 @@ public class NumberSlotControl extends SlotControl {
         resolverFactorySelector.setChangeHandler(changeHandler);
 
         propertySelector = new ListBoxControl<String>(
-                new ExtendedListBox(false), new NullConverter<String>());
+                new ExtendedListBox(false), new NullTransformer<String>());
         propertySelector.setChangeHandler(changeHandler);
 
         panel = new VerticalPanel();
