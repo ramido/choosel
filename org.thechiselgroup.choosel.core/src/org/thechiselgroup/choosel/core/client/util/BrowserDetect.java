@@ -19,19 +19,11 @@ import com.google.gwt.user.client.Window;
 
 public class BrowserDetect {
 
-    // TODO branding for message
-    public static void checkBrowser() {
-        if (!isValidBrowser()) {
-            Window.alert("Your browser is not supported. "
-                    + "Choosel supports Chrome >=4, Firefox >= 3.5 and Safari >= 5");
-        }
-    }
-
-    public static boolean isValidBrowser() {
+    public boolean isValidBrowser() {
         return isValidBrowser(Window.Navigator.getUserAgent());
     }
 
-    public static boolean isValidBrowser(String userAgent) {
+    public boolean isValidBrowser(String userAgent) {
         try {
             if (userAgent == null) {
                 return false;
