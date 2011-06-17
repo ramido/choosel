@@ -15,12 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.util.collections;
 
+import static org.thechiselgroup.choosel.core.client.development.DevelopmentSettings.shouldUseJavaScriptImplementation;
+
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-
-import com.google.gwt.core.client.GWT;
 
 /**
  * Entry point for creating collections (enable use optimized of JavaScript
@@ -64,14 +64,6 @@ public final class CollectionFactory {
         }
 
         return new HashSet<String>();
-    }
-
-    /**
-     * This class does not use JavaScript code in OOMPH client mode for
-     * performance reasons.
-     */
-    private static boolean shouldUseJavaScriptImplementation() {
-        return GWT.isScript(); // add "|| GWT.isClient()" to test in hosted mode
     }
 
     private CollectionFactory() {

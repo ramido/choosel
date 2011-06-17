@@ -55,6 +55,8 @@ public class EmbedContainer {
     }
 
     public void setWidget(final Widget widget) {
+        assert widget != null;
+
         // XXX allow for multiple calls
 
         rootPanel.remove(informationLabel);

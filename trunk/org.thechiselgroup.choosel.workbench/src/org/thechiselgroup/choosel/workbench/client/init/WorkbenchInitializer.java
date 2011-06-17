@@ -20,6 +20,8 @@ import static org.thechiselgroup.choosel.core.client.configuration.ChooselInject
 import org.thechiselgroup.choosel.core.client.command.AsyncCommandExecutor;
 import org.thechiselgroup.choosel.core.client.command.AsyncCommandToCommandAdapter;
 import org.thechiselgroup.choosel.core.client.command.CommandManager;
+import org.thechiselgroup.choosel.core.client.development.DevelopmentSettings;
+import org.thechiselgroup.choosel.core.client.development.CreateBenchmarkResourcesCommand;
 import org.thechiselgroup.choosel.core.client.error_handling.ErrorHandler;
 import org.thechiselgroup.choosel.core.client.importer.Importer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
@@ -32,8 +34,6 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSetRemovedEventH
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetAvatarResourceSetsPresenter;
 import org.thechiselgroup.choosel.core.client.resources.ui.ResourceSetsPresenter;
-import org.thechiselgroup.choosel.core.client.test.Benchmark;
-import org.thechiselgroup.choosel.core.client.test.CreateBenchmarkResourcesCommand;
 import org.thechiselgroup.choosel.core.client.ui.Action;
 import org.thechiselgroup.choosel.core.client.ui.ActionBar;
 import org.thechiselgroup.choosel.core.client.ui.TextCommandPresenter;
@@ -367,7 +367,7 @@ public abstract class WorkbenchInitializer implements ApplicationInitializer {
     }
 
     protected void initBenchmarkResourceCreator() {
-        if (Benchmark.isBenchmarkEnabled() || runsInDevelopmentMode()) {
+        if (DevelopmentSettings.isBenchmarkEnabled() || runsInDevelopmentMode()) {
             TextCommandPresenter presenter = new TextCommandPresenter(
                     new CreateBenchmarkResourcesCommand(resourceSetFactory,
                             dataSources), "Add");

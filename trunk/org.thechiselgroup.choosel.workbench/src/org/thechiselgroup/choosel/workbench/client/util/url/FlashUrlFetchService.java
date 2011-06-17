@@ -124,13 +124,6 @@ public class FlashUrlFetchService extends SWFWidget implements UrlFetchService {
         }
     }
 
-    // @formatter:off
-    @Override
-    public final native String encodeURIComponent(String uriComponent) /*-{
-        return encodeURIComponent(uriComponent);
-    }-*/;
-    // @formatter:on
-
     @Override
     public void fetchURL(String url, AsyncCallback<String> callback) {
         addUrlCallback(url, callback);

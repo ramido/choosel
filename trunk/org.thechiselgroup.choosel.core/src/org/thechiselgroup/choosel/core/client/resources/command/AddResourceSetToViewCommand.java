@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.thechiselgroup.choosel.core.client.command.AbstractUndoableCommand;
+import org.thechiselgroup.choosel.core.client.development.DevelopmentSettings;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.core.client.test.Benchmark;
 import org.thechiselgroup.choosel.core.client.util.HasDescription;
 import org.thechiselgroup.choosel.core.client.views.model.ResourceModel;
 
@@ -87,7 +87,7 @@ public class AddResourceSetToViewCommand extends AbstractUndoableCommand
         alreadyContainedResources.retainAll(resourceModel.getResources()
                 .toList());
 
-        if (Benchmark.isBenchmarkEnabled()) {
+        if (DevelopmentSettings.isBenchmarkEnabled()) {
             Duration duration = new Duration();
             resourceModel.addResourceSet(resourceSet);
             Window.alert("ResourceModel.addResourceSet execution time: "
