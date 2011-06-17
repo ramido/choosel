@@ -316,6 +316,11 @@ public class DefaultView implements View {
         viewPanel.setCellHeight(contentDisplay.asWidget(), "100%");
     }
 
+    // XXX remove once content display lifecycle working
+    public boolean isReady() {
+        return contentDisplay.isReady();
+    }
+
     @Override
     public void restore(final Memento state,
             final PersistableRestorationService restorationService,
@@ -326,6 +331,7 @@ public class DefaultView implements View {
          * restore)
          */
         // XXX this might be the cause for issue 25
+        // TODO introduce proper view content display lifecycle instead
         if (contentDisplay.isReady()) {
             doRestore(state, restorationService, accessor);
         } else {
