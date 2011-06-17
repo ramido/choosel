@@ -102,7 +102,7 @@ public abstract class WorkbenchInitializer implements ApplicationInitializer {
 
     public static final String DEVELOPER_MODE_PANEL = "developer_mode";
 
-    public static final String VIEW_ID = "viewId";
+    public static final String VIEW_ID = "view_id";
 
     @Inject
     protected ActionBar actionBar;
@@ -180,6 +180,9 @@ public abstract class WorkbenchInitializer implements ApplicationInitializer {
 
     @Inject
     private ResourceSetAvatarFactory resourceSetAvatarFactory;
+
+    @Inject
+    private BrowserDetect browserDetect;
 
     protected void addActionToToolbar(String panelId, Action action) {
         getToolbarPanel(panelId).addAction(action);
@@ -280,7 +283,10 @@ public abstract class WorkbenchInitializer implements ApplicationInitializer {
     @Override
     public void init() throws Exception {
         initGlobalErrorHandler();
-        BrowserDetect.checkBrowser();
+        if (!browserDetect.isValidBrowser()) {
+            Window.alert("Your browser is not supported. "
+                    + "Choosel supports Chrome >=4, Firefox >= 3.5 and Safari >= 5");
+        }
 
         initWindowClosingConfirmationDialog();
 

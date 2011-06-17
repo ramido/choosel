@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -13,13 +13,21 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.workbench.client.workspace;
+package org.thechiselgroup.choosel.workbench.client.embed;
+
+import org.thechiselgroup.choosel.core.client.views.View;
+import org.thechiselgroup.choosel.workbench.client.init.WindowLocation;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public interface ViewSaveManager {
+public interface EmbeddedViewLoader {
 
-    void saveView(DefaultShareConfiguration shareConfiguration,
-            AsyncCallback<Void> callback);
+    /**
+     * @return value that needs to be set as
+     *         {@link EmbedInitializer#EMBED_MODE_PARAMETER} to use this loader.
+     */
+    String getEmbedMode();
+
+    void loadView(WindowLocation windowLocation, AsyncCallback<View> callback);
 
 }

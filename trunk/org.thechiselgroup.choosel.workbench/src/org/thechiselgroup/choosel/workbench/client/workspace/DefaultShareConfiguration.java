@@ -19,6 +19,8 @@ import org.thechiselgroup.choosel.core.client.util.url.UrlBuilder;
 import org.thechiselgroup.choosel.core.client.views.SidePanelSection;
 import org.thechiselgroup.choosel.core.client.views.View;
 import org.thechiselgroup.choosel.workbench.client.authentication.AuthenticationManager;
+import org.thechiselgroup.choosel.workbench.client.embed.EmbedInitializer;
+import org.thechiselgroup.choosel.workbench.client.embed.StoredViewEmbedLoader;
 import org.thechiselgroup.choosel.workbench.client.init.ChooselApplicationInitializer;
 import org.thechiselgroup.choosel.workbench.client.init.WorkbenchInitializer;
 
@@ -50,6 +52,7 @@ public class DefaultShareConfiguration implements ShareConfiguration {
 
     private TextBox textBox;
 
+    // TODO extract into branding - should be injectable
     private final String EMBED_POSTTEXT = "Created with <a href=\"http://choosel-mashups.appspot.com\">Choosel</a>";
 
     private final int EMBED_HEIGHT = 400;
@@ -88,6 +91,11 @@ public class DefaultShareConfiguration implements ShareConfiguration {
         urlBuilder.setParameter(
                 ChooselApplicationInitializer.APPLICATION_MODE_PARAMETER,
                 applicationMode);
+
+        if (ChooselApplicationInitializer.EMBED.equals(applicationMode)) {
+            urlBuilder.setParameter(EmbedInitializer.EMBED_MODE_PARAMETER,
+                    StoredViewEmbedLoader.EMBED_MODE);
+        }
 
         String gwtHost = Window.Location.getParameter(GWT_CODESVR);
         if (gwtHost != null) {
