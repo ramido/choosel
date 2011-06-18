@@ -248,6 +248,7 @@ public class PieChart extends ChartViewContentDisplay {
     @Override
     protected void registerEventHandler(String eventType, PVEventHandler handler) {
         mainWedge.event(eventType, handler);
+        partialWedge.event(eventType, handler);
     }
 
 }
