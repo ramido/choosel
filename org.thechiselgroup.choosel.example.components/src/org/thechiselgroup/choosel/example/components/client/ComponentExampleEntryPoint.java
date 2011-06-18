@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.thechiselgroup.choosel.core.client.development.BenchmarkResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.label.IncrementingSuffixLabelFactory;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
@@ -28,7 +29,6 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceByPropertyMultiC
 import org.thechiselgroup.choosel.core.client.resources.ResourceByUriMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ui.SimpleDetailsWidgetHelper;
-import org.thechiselgroup.choosel.core.client.test.BenchmarkResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.ui.CSS;
 import org.thechiselgroup.choosel.core.client.ui.Color;
 import org.thechiselgroup.choosel.core.client.ui.popup.DefaultPopupFactory;
@@ -88,7 +88,7 @@ public class ComponentExampleEntryPoint implements EntryPoint {
     private static final Color COLOR_HIGHLIGHTED_BORDER = new Color(166, 163, 0);
 
     private static final ViewItemStatusResolver COLOR_RESOLVER = new ViewItemStatusResolver(
-            COLOR_DEFAULT, DataType.COLOR, StatusRule.fullOrPartial(
+            "color_resolver", COLOR_DEFAULT, StatusRule.fullOrPartial(
                     COLOR_HIGHLIGHTED, Subset.HIGHLIGHTED),
             StatusRule.fullOrPartial(COLOR_SELECTION, Subset.SELECTED));
 
@@ -121,25 +121,30 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         // configure visual mappings
         scatterPlot.setResolver(
                 ScatterPlot.COLOR,
-                new ViewItemStatusResolver(Color.TRANSPARENT, DataType.COLOR,
-                        StatusRule.fullOrPartial(COLOR_HIGHLIGHTED,
-                                Subset.HIGHLIGHTED), StatusRule.full(
-                                COLOR_SELECTION, Subset.SELECTED)));
+                new ViewItemStatusResolver("color_resolver_2",
+                        Color.TRANSPARENT, StatusRule.fullOrPartial(
+                                COLOR_HIGHLIGHTED, Subset.HIGHLIGHTED),
+                        StatusRule.full(COLOR_SELECTION, Subset.SELECTED)));
         scatterPlot.setResolver(
                 ScatterPlot.BORDER_COLOR,
-                new ViewItemStatusResolver(COLOR_DEFAULT_BORDER,
-                        DataType.COLOR, StatusRule.full(COLOR_SELECTION_BORDER,
-                                Subset.SELECTED), StatusRule.fullOrPartial(
-                                COLOR_HIGHLIGHTED_BORDER, Subset.HIGHLIGHTED)));
+                new ViewItemStatusResolver("color_resolver_3",
+                        COLOR_DEFAULT_BORDER, StatusRule.full(
+                                COLOR_SELECTION_BORDER, Subset.SELECTED),
+                        StatusRule.fullOrPartial(COLOR_HIGHLIGHTED_BORDER,
+                                Subset.HIGHLIGHTED)));
         scatterPlot.setResolver(ScatterPlot.X_POSITION,
                 new CalculationResolver(BenchmarkResourceSetFactory.NUMBER_2,
                         new SumCalculation()));
         scatterPlot.setResolver(ScatterPlot.Y_POSITION,
                 new CalculationResolver(BenchmarkResourceSetFactory.NUMBER_1,
                         new SumCalculation()));
-        scatterPlot.setResolver(ScatterPlot.SIZE, new FixedValueResolver(20,
-                DataType.NUMBER));
+        scatterPlot.setResolver(ScatterPlot.SIZE, new FixedValueResolver(20));
         scatterPlot.setResolver(ScatterPlot.SHAPE, new ViewItemValueResolver() {
+            @Override
+            public String getResolverId() {
+                return "shape_resolver";
+            }
+
             public Object resolve(ViewItem viewItem,
                     ViewItemValueResolverContext context) {
 
@@ -157,10 +162,6 @@ public class ComponentExampleEntryPoint implements EntryPoint {
                 }
 
                 return PVShape.CIRCLE;
-            }
-
-            public DataType getVisualDimensionDataType() {
-                return DataType.SHAPE;
             }
 
             @Override
@@ -202,24 +203,25 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         // configure visual mappings
         pieChart.setResolver(
                 PieChart.COLOR,
-                new ViewItemStatusResolver(COLOR_DEFAULT, DataType.COLOR,
+                new ViewItemStatusResolver("color_resolver", COLOR_DEFAULT,
                         StatusRule.fullOrPartial(COLOR_HIGHLIGHTED,
                                 Subset.HIGHLIGHTED), StatusRule.full(
                                 COLOR_SELECTION, Subset.SELECTED)));
         pieChart.setResolver(
                 PieChart.BORDER_COLOR,
-                new ViewItemStatusResolver(COLOR_DEFAULT_BORDER,
-                        DataType.COLOR, StatusRule.full(COLOR_SELECTION_BORDER,
-                                Subset.SELECTED), StatusRule.fullOrPartial(
-                                COLOR_HIGHLIGHTED_BORDER, Subset.HIGHLIGHTED)));
+                new ViewItemStatusResolver("color_resolver_2",
+                        COLOR_DEFAULT_BORDER, StatusRule.full(
+                                COLOR_SELECTION_BORDER, Subset.SELECTED),
+                        StatusRule.fullOrPartial(COLOR_HIGHLIGHTED_BORDER,
+                                Subset.HIGHLIGHTED)));
         pieChart.setResolver(PieChart.VALUE, new CalculationResolver(
                 BenchmarkResourceSetFactory.NUMBER_2, new SumCalculation()));
         pieChart.setResolver(PieChart.PARTIAL_VALUE,
-                new SubsetDelegatingValueResolver(PieChart.VALUE,
-                        Subset.SELECTED));
+                new SubsetDelegatingValueResolver("delegating_resolver",
+                        PieChart.VALUE, Subset.SELECTED));
         pieChart.setResolver(PieChart.PARTIAL_COLOR, COLOR_RESOLVER);
         pieChart.setResolver(PieChart.PARTIAL_BORDER_COLOR,
-                new FixedValueResolver(COLOR_SELECTION_BORDER, DataType.COLOR));
+                new FixedValueResolver(COLOR_SELECTION_BORDER));
 
         // set resources
         pieChart.setContentResourceSet(resourceSet);
@@ -246,22 +248,23 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         // configure visual mappings
         barChart.setResolver(
                 BarChart.BAR_COLOR,
-                new ViewItemStatusResolver(COLOR_DEFAULT, DataType.COLOR,
+                new ViewItemStatusResolver("color_resolver_1", COLOR_DEFAULT,
                         StatusRule.fullOrPartial(COLOR_HIGHLIGHTED,
                                 Subset.HIGHLIGHTED), StatusRule.full(
                                 COLOR_SELECTION, Subset.SELECTED)));
         barChart.setResolver(
                 BarChart.BAR_BORDER_COLOR,
-                new ViewItemStatusResolver(COLOR_DEFAULT_BORDER,
-                        DataType.COLOR, StatusRule.full(COLOR_SELECTION_BORDER,
-                                Subset.SELECTED), StatusRule.fullOrPartial(
-                                COLOR_HIGHLIGHTED_BORDER, Subset.HIGHLIGHTED)));
+                new ViewItemStatusResolver("color_resolver_2",
+                        COLOR_DEFAULT_BORDER, StatusRule.full(
+                                COLOR_SELECTION_BORDER, Subset.SELECTED),
+                        StatusRule.fullOrPartial(COLOR_HIGHLIGHTED_BORDER,
+                                Subset.HIGHLIGHTED)));
         barChart.setResolver(BarChart.PARTIAL_BAR_LENGTH,
-                new SubsetDelegatingValueResolver(BarChart.BAR_LENGTH,
-                        Subset.SELECTED));
+                new SubsetDelegatingValueResolver("delegating_resolver",
+                        BarChart.BAR_LENGTH, Subset.SELECTED));
         barChart.setResolver(BarChart.PARTIAL_BAR_COLOR, COLOR_RESOLVER);
         barChart.setResolver(BarChart.PARTIAL_BAR_BORDER_COLOR,
-                new FixedValueResolver(COLOR_SELECTION_BORDER, DataType.COLOR));
+                new FixedValueResolver(COLOR_SELECTION_BORDER));
 
         // default settings
         doNotGroupBarChart();
