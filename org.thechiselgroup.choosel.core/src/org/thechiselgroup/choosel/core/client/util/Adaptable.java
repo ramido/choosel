@@ -30,7 +30,7 @@ public interface Adaptable {
      * @throws NoSuchAdapterException
      *             Object cannot be adapted to {@code clazz}
      */
-    <T> T getAdapter(Class<T> clazz) throws NoSuchAdapterException;
+    <T> T adaptTo(Class<T> clazz) throws NoSuchAdapterException;
 
     /**
      * Tests if this object can be adapted to class {@code clazz}.

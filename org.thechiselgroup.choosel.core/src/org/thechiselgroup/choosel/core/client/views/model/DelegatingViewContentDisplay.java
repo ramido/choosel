@@ -59,8 +59,8 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
     }
 
     @Override
-    public <T> T getAdapter(Class<T> clazz) throws NoSuchAdapterException {
-        return delegate.getAdapter(clazz);
+    public <T> T adaptTo(Class<T> clazz) throws NoSuchAdapterException {
+        return delegate.adaptTo(clazz);
     }
 
     public ViewContentDisplay getDelegate() {
