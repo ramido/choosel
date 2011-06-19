@@ -20,7 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.thechiselgroup.choosel.core.client.command.CommandManager;
-import org.thechiselgroup.choosel.core.client.geometry.HasSize;
+import org.thechiselgroup.choosel.core.client.geometry.Size;
 import org.thechiselgroup.choosel.core.client.geometry.Point;
 import org.thechiselgroup.choosel.core.client.ui.ZIndex;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
@@ -35,7 +35,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 // TODO wrapper similar to action bar
-public class DefaultDesktop extends AbsolutePanel implements Desktop, HasSize {
+public class DefaultDesktop extends AbsolutePanel implements Desktop, Size {
 
     private static final String CSS_DESKTOP = "desktop";
 

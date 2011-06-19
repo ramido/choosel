@@ -22,7 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.thechiselgroup.choosel.core.client.geometry.HasSize;
+import org.thechiselgroup.choosel.core.client.geometry.Size;
 import org.thechiselgroup.choosel.core.client.geometry.Point;
 
 public class PositionManagerTest {
@@ -34,7 +34,7 @@ public class PositionManagerTest {
     private static final int TEST_VERTICAL_STEPS = 3;
 
     @Mock
-    private HasSize desktop;
+    private Size desktop;
 
     private PositionManager manager;
 
