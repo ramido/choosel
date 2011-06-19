@@ -222,6 +222,8 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         pieChart.setResolver(PieChart.PARTIAL_COLOR, COLOR_RESOLVER);
         pieChart.setResolver(PieChart.PARTIAL_BORDER_COLOR,
                 new FixedValueResolver(COLOR_SELECTION_BORDER));
+        pieChart.setResolver(PieChart.LABEL, new FirstResourcePropertyResolver(
+                BenchmarkResourceSetFactory.TEXT_1, DataType.TEXT));
 
         // set resources
         pieChart.setContentResourceSet(resourceSet);
@@ -312,8 +314,14 @@ public class ComponentExampleEntryPoint implements EntryPoint {
     }
 
     private ResourceSet createResourceSet() {
-        return BenchmarkResourceSetFactory.createResourceSet(20,
-                new DefaultResourceSetFactory());
+        ResourceSet resourceSet = BenchmarkResourceSetFactory
+                .createResourceSet(20, new DefaultResourceSetFactory());
+
+        // for (Resource resource : resourceSet) {
+        // resource.putValue(BenchmarkResourceSetFactory.NUMBER_2, 0d);
+        // }
+
+        return resourceSet;
     }
 
     private void doNotGroupBarChart() {

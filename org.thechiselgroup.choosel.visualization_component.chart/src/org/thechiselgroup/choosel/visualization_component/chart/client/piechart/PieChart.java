@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -30,8 +30,11 @@ import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 import org.thechiselgroup.choosel.visualization_component.chart.client.ChartViewContentDisplay;
 import org.thechiselgroup.choosel.visualization_component.chart.client.functions.ViewItemColorSlotAccessor;
 import org.thechiselgroup.choosel.visualization_component.chart.client.functions.ViewItemPredicateJsBooleanFunction;
+import org.thechiselgroup.choosel.visualization_component.chart.client.functions.ViewItemStringSlotAccessor;
 
 public class PieChart extends ChartViewContentDisplay {
+
+    private static final String RGBA_TRANSPARENT = "rgba(0,0,0,0)";
 
     public final static String ID = "org.thechiselgroup.choosel.visualization_component.chart.PieChart";
 
@@ -135,8 +138,6 @@ public class PieChart extends ChartViewContentDisplay {
 
     };
 
-    private String wedgeLabelAnchor = PVAlignment.CENTER;
-
     private JsStringFunction regularMarkLabelText = new JsStringFunction() {
         @Override
         public String f(JsArgs args) {
@@ -175,6 +176,8 @@ public class PieChart extends ChartViewContentDisplay {
         }
     };
 
+    private PVWedge labelWedge;
+
     @Override
     protected void beforeRender() {
         super.beforeRender();
@@ -194,7 +197,7 @@ public class PieChart extends ChartViewContentDisplay {
                 .fillStyle(new ViewItemColorSlotAccessor(COLOR))
                 .strokeStyle(new ViewItemColorSlotAccessor(BORDER_COLOR));
 
-        mainWedge.anchor(wedgeLabelAnchor).add(PV.Label)
+        mainWedge.anchor(PVAlignment.CENTER).add(PV.Label)
                 .textAngle(WEDGE_TEXT_ANGLE).text(regularMarkLabelText)
                 .textStyle(Colors.WHITE);
 
@@ -210,8 +213,18 @@ public class PieChart extends ChartViewContentDisplay {
                 .strokeStyle(
                         new ViewItemColorSlotAccessor(PARTIAL_BORDER_COLOR));
 
-        partialWedge.anchor(wedgeLabelAnchor).add(PV.Label)
+        partialWedge.anchor(PVAlignment.CENTER).add(PV.Label)
                 .textAngle(WEDGE_TEXT_ANGLE).text(highlightedMarkLabelText);
+
+        labelWedge = getChart().add(PV.Wedge).data(viewItemsJsArray)
+                .left(wedgeLeft).bottom(wedgeBottom).startAngle(startAngle)
+                .innerRadius(0).outerRadius(outerRadiusFunction)
+                .angle(wedgeAngle).fillStyle(RGBA_TRANSPARENT)
+                .strokeStyle(RGBA_TRANSPARENT);
+
+        labelWedge.anchor("start").add(PV.Label)
+                .text(new ViewItemStringSlotAccessor(LABEL))
+                .textStyle(new ViewItemColorSlotAccessor(BORDER_COLOR));
 
     }
 
