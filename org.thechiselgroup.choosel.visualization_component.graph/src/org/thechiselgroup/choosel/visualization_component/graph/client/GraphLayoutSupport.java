@@ -15,8 +15,21 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.visualization_component.graph.client;
 
+import org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphLayouts;
+
 public interface GraphLayoutSupport {
 
+    /**
+     * Runs a customized graph layout.
+     */
     void runLayout(GraphLayout layout);
+
+    /**
+     * Runs a graph layout that is defined in the graph widget. The constants
+     * are contained in {@link GraphLayouts}.
+     * 
+     * @see GraphLayouts
+     */
+    void runLayout(String layout);
 
 }
