@@ -21,7 +21,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.thechiselgroup.choosel.core.client.command.CommandManager;
+import org.thechiselgroup.choosel.core.client.geometry.DefaultSize;
 import org.thechiselgroup.choosel.core.client.geometry.Point;
+import org.thechiselgroup.choosel.core.client.geometry.Size;
 import org.thechiselgroup.choosel.core.client.persistence.Memento;
 import org.thechiselgroup.choosel.core.client.persistence.PersistableRestorationService;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
@@ -33,6 +35,7 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.UnionResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
+import org.thechiselgroup.choosel.core.client.util.NoSuchAdapterException;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.SidePanelSection;
@@ -79,7 +82,8 @@ import com.google.inject.Inject;
 // TODO separate out ncbo specific stuff and service calls
 // TODO register listener for double click on node --> change expansion state
 public class Graph extends AbstractViewContentDisplay implements
-        GraphNodeExpansionCallback, RequiresAutomaticResourceSet {
+        GraphNodeExpansionCallback, RequiresAutomaticResourceSet,
+        GraphLayoutSupport, GraphLayoutCallback {
 
     public static class DefaultDisplay extends GraphWidget implements
             GraphDisplay {
@@ -180,8 +184,8 @@ public class Graph extends AbstractViewContentDisplay implements
         }
     }
 
-    public static final Slot NODE_BORDER_COLOR = new Slot(
-            "nodeBorderColor", "Node Border Color", DataType.COLOR);
+    public static final Slot NODE_BORDER_COLOR = new Slot("nodeBorderColor",
+            "Node Border Color", DataType.COLOR);
 
     public static final Slot NODE_BACKGROUND_COLOR = new Slot(
             "nodeBackgroundColor", "Node Color", DataType.COLOR);
@@ -208,9 +212,9 @@ public class Graph extends AbstractViewContentDisplay implements
 
     private ArcTypeProvider arcStyleProvider;
 
-    // advanced node class: (incoming, outgoing, expanded: state machine)
-
     private final CommandManager commandManager;
+
+    // advanced node class: (incoming, outgoing, expanded: state machine)
 
     private final GraphDisplay graphDisplay;
 
@@ -257,6 +261,16 @@ public class Graph extends AbstractViewContentDisplay implements
         initArcTypeContainers();
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T adaptTo(Class<T> clazz) throws NoSuchAdapterException {
+        if (GraphLayoutSupport.class.equals(clazz)) {
+            return (T) this;
+        }
+
+        return super.adaptTo(clazz);
+    }
+
     @Override
     public void addAutomaticResource(Resource resource) {
         automaticResources.add(resource);
@@ -271,11 +285,11 @@ public class Graph extends AbstractViewContentDisplay implements
         return nodeResources.containsResourceWithUri(resourceUri);
     }
 
-    private GraphItem createGraphNodeItem(ViewItem viewItem) {
+    private NodeItem createGraphNodeItem(ViewItem viewItem) {
         // TODO get from group id
         String type = getCategory(viewItem.getResources().getFirstResource());
 
-        GraphItem graphItem = new GraphItem(viewItem, type, graphDisplay);
+        NodeItem graphItem = new NodeItem(viewItem, type, graphDisplay);
 
         graphDisplay.addNode(graphItem.getNode());
         positionNode(graphItem.getNode());
@@ -321,7 +335,6 @@ public class Graph extends AbstractViewContentDisplay implements
         return result;
     }
 
-    @Override
     public ResourceSet getAllResources() {
         return nodeResources;
     }
@@ -337,6 +350,22 @@ public class Graph extends AbstractViewContentDisplay implements
         return arcItemContainersByArcTypeID.values();
     }
 
+    private ArcItem[] getArcItems() {
+        Iterable<ArcItemContainer> arcItemContainers = getArcItemContainers();
+        int size = 0;
+        for (ArcItemContainer arcItemContainer : arcItemContainers) {
+            size += arcItemContainer.getArcItems().size();
+        }
+        ArcItem[] arcs = new ArcItem[size];
+        int i = 0;
+        for (ArcItemContainer arcItemContainer : arcItemContainers) {
+            for (ArcItem arcItem : arcItemContainer.getArcItems()) {
+                arcs[i++] = arcItem;
+            }
+        }
+        return arcs;
+    }
+
     @Override
     public String getCategory(Resource resource) {
         return resourceCategorizer.getCategory(resource);
@@ -348,12 +377,35 @@ public class Graph extends AbstractViewContentDisplay implements
     }
 
     @Override
+    public Size getDisplayArea() {
+        Widget displayWidget = graphDisplay.asWidget();
+        int height = displayWidget.getOffsetHeight();
+        int width = displayWidget.getOffsetWidth();
+        return new DefaultSize(width, height);
+    }
+
+    @Override
     public String getName() {
         return "Graph";
     }
 
     private Node getNodeFromViewItem(ViewItem viewItem) {
-        return ((GraphItem) viewItem.getDisplayObject()).getNode();
+        return getNodeItem(viewItem).getNode();
+    }
+
+    private NodeItem getNodeItem(ViewItem viewItem) {
+        return (NodeItem) viewItem.getDisplayObject();
+    }
+
+    private NodeItem[] getNodeItems() {
+        LightweightCollection<ViewItem> viewItems = getCallback()
+                .getViewItems();
+        NodeItem[] nodes = new NodeItem[viewItems.size()];
+        int i = 0;
+        for (ViewItem viewItem : viewItems) {
+            nodes[i++] = getNodeItem(viewItem);
+        }
+        return nodes;
     }
 
     @Override
@@ -508,6 +560,15 @@ public class Graph extends AbstractViewContentDisplay implements
     }
 
     @Override
+    public boolean isAdaptableTo(Class<?> clazz) {
+        if (GraphLayoutSupport.class.equals(clazz)) {
+            return true;
+        }
+
+        return super.isAdaptableTo(clazz);
+    }
+
+    @Override
     public boolean isReady() {
         return ready;
     }
@@ -585,14 +646,20 @@ public class Graph extends AbstractViewContentDisplay implements
         LightweightCollection<ViewItem> resourceItems = getCallback()
                 .getViewItems();
         for (ViewItem resourceItem : resourceItems) {
-            GraphItem item = (GraphItem) resourceItem.getDisplayObject();
+            NodeItem item = getNodeItem(resourceItem);
             Memento nodeMemento = state.getChild(resourceItem.getViewItemID());
             Point location = new Point(
                     (Integer) nodeMemento.getValue(MEMENTO_X),
                     (Integer) nodeMemento.getValue(MEMENTO_Y));
 
-            graphDisplay.setLocation(item.getNode(), location);
+            setLocation(item, location);
         }
+    }
+
+    @Override
+    public void runLayout(GraphLayout layout) {
+        assert layout != null;
+        layout.run(getNodeItems(), getArcItems(), this);
     }
 
     @Override
@@ -624,7 +691,7 @@ public class Graph extends AbstractViewContentDisplay implements
         LightweightCollection<ViewItem> viewItems = getCallback()
                 .getViewItems();
         for (ViewItem viewItem : viewItems) {
-            GraphItem item = (GraphItem) viewItem.getDisplayObject();
+            NodeItem item = getNodeItem(viewItem);
 
             Point location = graphDisplay.getLocation(item.getNode());
 
@@ -653,6 +720,11 @@ public class Graph extends AbstractViewContentDisplay implements
     @Override
     public void setAutomaticResources(ResourceSet automaticResources) {
         this.automaticResources = automaticResources;
+    }
+
+    @Override
+    public void setLocation(NodeItem node, Point location) {
+        graphDisplay.setLocation(node.getNode(), location);
     }
 
     @Override
@@ -699,6 +771,6 @@ public class Graph extends AbstractViewContentDisplay implements
     }
 
     private void updateNode(ViewItem viewItem) {
-        ((GraphItem) viewItem.getDisplayObject()).updateNode();
+        (getNodeItem(viewItem)).updateNode();
     }
 }
