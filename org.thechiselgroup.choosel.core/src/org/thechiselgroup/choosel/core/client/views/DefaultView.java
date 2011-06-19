@@ -26,6 +26,7 @@ import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetC
 import org.thechiselgroup.choosel.core.client.ui.ImageButton;
 import org.thechiselgroup.choosel.core.client.ui.Presenter;
 import org.thechiselgroup.choosel.core.client.util.DisposeUtil;
+import org.thechiselgroup.choosel.core.client.util.NoSuchAdapterException;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.model.ResourceModel;
 import org.thechiselgroup.choosel.core.client.views.model.SelectionModel;
@@ -156,6 +157,11 @@ public class DefaultView implements View {
         this.model = viewModel;
         this.selectionModel = selectionModel;
         this.resourceModel = resourceModel;
+    }
+
+    @Override
+    public <T> T adaptTo(Class<T> clazz) throws NoSuchAdapterException {
+        return contentDisplay.adaptTo(clazz);
     }
 
     @Override
@@ -314,6 +320,11 @@ public class DefaultView implements View {
         viewPanel.add(sideBar, DockPanel.EAST);
 
         viewPanel.setCellHeight(contentDisplay.asWidget(), "100%");
+    }
+
+    @Override
+    public boolean isAdaptableTo(Class<?> clazz) {
+        return contentDisplay.isAdaptableTo(clazz);
     }
 
     // XXX remove once content display lifecycle working
