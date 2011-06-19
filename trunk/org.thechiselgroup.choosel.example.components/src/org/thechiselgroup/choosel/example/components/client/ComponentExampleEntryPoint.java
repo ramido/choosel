@@ -17,6 +17,7 @@ package org.thechiselgroup.choosel.example.components.client;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,14 +26,15 @@ import org.thechiselgroup.choosel.core.client.label.IncrementingSuffixLabelFacto
 import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
-import org.thechiselgroup.choosel.core.client.resources.ResourceByPropertyMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByUriMultiCategorizer;
+import org.thechiselgroup.choosel.core.client.resources.ResourceMultiCategorizer;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ui.SimpleDetailsWidgetHelper;
 import org.thechiselgroup.choosel.core.client.ui.CSS;
 import org.thechiselgroup.choosel.core.client.ui.Color;
 import org.thechiselgroup.choosel.core.client.ui.popup.DefaultPopupFactory;
 import org.thechiselgroup.choosel.core.client.ui.popup.DefaultPopupManagerFactory;
+import org.thechiselgroup.choosel.core.client.util.collections.CollectionUtils;
 import org.thechiselgroup.choosel.core.client.util.math.SumCalculation;
 import org.thechiselgroup.choosel.core.client.views.VisualizationWidget;
 import org.thechiselgroup.choosel.core.client.views.behaviors.CompositeViewItemBehavior;
@@ -301,12 +303,13 @@ public class ComponentExampleEntryPoint implements EntryPoint {
     }
 
     private RadioButton createGroupBarChartByText2Button() {
-        RadioButton button = new RadioButton("chartSettings", "group by TEXT_2");
+        RadioButton button = new RadioButton("chartSettings",
+                "group by TEXT_2 and NUMBER_3 prefix");
         button.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
             @Override
             public void onValueChange(ValueChangeEvent<Boolean> event) {
                 if (event.getValue()) {
-                    groupBarChartByText2();
+                    groupBarChartByText2AndNumber3Prefix();
                 }
             }
         });
@@ -343,10 +346,28 @@ public class ComponentExampleEntryPoint implements EntryPoint {
         });
     }
 
-    protected void groupBarChartByText2() {
+    protected void groupBarChartByText2AndNumber3Prefix() {
         // grouping
-        barChart.setCategorizer(new ResourceByPropertyMultiCategorizer(
-                BenchmarkResourceSetFactory.TEXT_2));
+        barChart.setCategorizer(new ResourceMultiCategorizer() {
+            @Override
+            public Set<String> getCategories(Resource resource) {
+                String text2Value = (String) resource
+                        .getValue(BenchmarkResourceSetFactory.TEXT_2);
+                Number number3Value = (Number) resource
+                        .getValue(BenchmarkResourceSetFactory.NUMBER_3);
+
+                if (number3Value.doubleValue() >= 0) {
+                    return CollectionUtils.toSet(text2Value);
+                }
+
+                return CollectionUtils.toSet("-" + text2Value);
+            }
+
+            @Override
+            public boolean canCategorize(Resource resource) {
+                return true;
+            }
+        });
         // sorting by label
         barChart.getContentDisplay().setViewItemComparator(
                 new ViewItemStringSlotComparator(BarChart.BAR_LABEL));
