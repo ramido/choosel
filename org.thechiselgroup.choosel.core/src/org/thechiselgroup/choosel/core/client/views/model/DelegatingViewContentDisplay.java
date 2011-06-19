@@ -19,6 +19,7 @@ import org.thechiselgroup.choosel.core.client.persistence.Memento;
 import org.thechiselgroup.choosel.core.client.persistence.PersistableRestorationService;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
+import org.thechiselgroup.choosel.core.client.util.NoSuchAdapterException;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.SidePanelSection;
 
@@ -57,6 +58,11 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
         delegate.endRestore();
     }
 
+    @Override
+    public <T> T getAdapter(Class<T> clazz) throws NoSuchAdapterException {
+        return delegate.getAdapter(clazz);
+    }
+
     public ViewContentDisplay getDelegate() {
         return delegate;
     }
@@ -84,6 +90,11 @@ public class DelegatingViewContentDisplay implements ViewContentDisplay {
     @Override
     public void init(ViewContentDisplayCallback callback) {
         delegate.init(callback);
+    }
+
+    @Override
+    public boolean isAdaptableTo(Class<?> clazz) {
+        return delegate.isAdaptableTo(clazz);
     }
 
     @Override

@@ -22,6 +22,7 @@ import org.thechiselgroup.choosel.core.client.persistence.PersistableRestoration
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.core.client.util.DisposeUtil;
+import org.thechiselgroup.choosel.core.client.util.NoSuchAdapterException;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.views.SidePanelSection;
 
@@ -59,12 +60,17 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
 
         DisposeUtil.dispose(widget);
         widget = null;
-    };
+    }
 
     @Override
     public void endRestore() {
         restoring = false;
     }
+
+    @Override
+    public <T> T getAdapter(Class<T> clazz) throws NoSuchAdapterException {
+        throw new NoSuchAdapterException(this, clazz);
+    };
 
     public ViewContentDisplayCallback getCallback() {
         return callback;
@@ -90,6 +96,11 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
     public void init(ViewContentDisplayCallback callback) {
         assert callback != null;
         this.callback = callback;
+    }
+
+    @Override
+    public boolean isAdaptableTo(Class<?> clazz) {
+        return false;
     }
 
     @Override
