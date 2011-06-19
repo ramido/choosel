@@ -68,7 +68,7 @@ public abstract class AbstractViewContentDisplay implements ViewContentDisplay {
     }
 
     @Override
-    public <T> T getAdapter(Class<T> clazz) throws NoSuchAdapterException {
+    public <T> T adaptTo(Class<T> clazz) throws NoSuchAdapterException {
         throw new NoSuchAdapterException(this, clazz);
     };
 
