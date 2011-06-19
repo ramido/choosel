@@ -663,6 +663,12 @@ public class Graph extends AbstractViewContentDisplay implements
     }
 
     @Override
+    public void runLayout(String layout) {
+        assert layout != null;
+        graphDisplay.runLayout(layout);
+    }
+
+    @Override
     public Memento save(ResourceSetCollector resourceSetCollector) {
         Memento result = new Memento();
 
