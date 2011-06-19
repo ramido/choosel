@@ -17,7 +17,7 @@ package org.thechiselgroup.choosel.core.client.ui.popup;
 
 import org.thechiselgroup.choosel.core.client.fx.Opacity;
 import org.thechiselgroup.choosel.core.client.geometry.Point;
-import org.thechiselgroup.choosel.core.client.geometry.Size;
+import org.thechiselgroup.choosel.core.client.geometry.DefaultSize;
 
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.shared.EventHandler;
@@ -57,7 +57,7 @@ public interface Popup {
     /**
      * @return Size in pixels.
      */
-    Size getSize();
+    DefaultSize getSize();
 
     void hide();
 

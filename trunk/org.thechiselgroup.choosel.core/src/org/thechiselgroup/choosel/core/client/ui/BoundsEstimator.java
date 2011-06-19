@@ -15,7 +15,7 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.ui;
 
-import org.thechiselgroup.choosel.core.client.geometry.Size;
+import org.thechiselgroup.choosel.core.client.geometry.DefaultSize;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -57,12 +57,12 @@ public class BoundsEstimator {
         return height;
     }
 
-    public Size getSize() {
+    public DefaultSize getSize() {
         rootElement.appendChild(estimatorElement);
         int width = estimatorElement.getOffsetWidth();
         int height = estimatorElement.getOffsetHeight();
         rootElement.removeChild(estimatorElement);
-        return new Size(width, height);
+        return new DefaultSize(width, height);
     }
 
     public int getWidth() {

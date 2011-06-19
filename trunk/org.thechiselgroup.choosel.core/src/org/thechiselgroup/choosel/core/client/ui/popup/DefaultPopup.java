@@ -22,7 +22,7 @@ import org.adamtacy.client.ui.effects.events.EffectCompletedHandler;
 import org.thechiselgroup.choosel.core.client.fx.FXUtil;
 import org.thechiselgroup.choosel.core.client.fx.Opacity;
 import org.thechiselgroup.choosel.core.client.geometry.Point;
-import org.thechiselgroup.choosel.core.client.geometry.Size;
+import org.thechiselgroup.choosel.core.client.geometry.DefaultSize;
 import org.thechiselgroup.choosel.core.client.ui.CSS;
 
 import com.google.gwt.dom.client.Style;
@@ -209,7 +209,7 @@ public class DefaultPopup implements Popup {
     }
 
     @Override
-    public Size getSize() {
+    public DefaultSize getSize() {
         /*
          * If the popup panel is not attached --> attach in background, get
          * size, remove panel. Otherwise just report size.
@@ -224,7 +224,7 @@ public class DefaultPopup implements Popup {
             rootPanel.add(effectPanel);
         }
 
-        Size size = new Size(containerPanel.getOffsetWidth(),
+        DefaultSize size = new DefaultSize(containerPanel.getOffsetWidth(),
                 containerPanel.getOffsetHeight());
 
         if (!attached) {
