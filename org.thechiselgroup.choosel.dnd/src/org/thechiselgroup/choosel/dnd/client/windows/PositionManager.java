@@ -15,12 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.dnd.client.windows;
 
-import org.thechiselgroup.choosel.core.client.geometry.HasSize;
+import org.thechiselgroup.choosel.core.client.geometry.Size;
 import org.thechiselgroup.choosel.core.client.geometry.Point;
 
 public class PositionManager {
 
-    private HasSize desktop;
+    private Size desktop;
 
     private final int horizontalSteps;
 
@@ -30,7 +30,7 @@ public class PositionManager {
 
     private final int verticalSteps;
 
-    public PositionManager(HasSize desktop, int horizontalSteps,
+    public PositionManager(Size desktop, int horizontalSteps,
             int verticalSteps, int padding) {
 
         this.desktop = desktop;
