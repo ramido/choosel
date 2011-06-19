@@ -79,7 +79,7 @@ public class ArcItemContainer implements Persistable {
         return arcColor;
     }
 
-    private Collection<ArcItem> getArcItems() {
+    public Collection<ArcItem> getArcItems() {
         return arcItemsById.values();
     }
 

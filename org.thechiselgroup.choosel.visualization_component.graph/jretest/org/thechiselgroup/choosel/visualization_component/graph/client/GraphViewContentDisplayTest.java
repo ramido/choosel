@@ -294,8 +294,8 @@ public class GraphViewContentDisplayTest {
         simulateAddViewItems(LightweightCollections.toCollection(viewItem1,
                 viewItem2));
 
-        Node node1 = ((GraphItem) viewItem1.getDisplayObject()).getNode();
-        Node node2 = ((GraphItem) viewItem2.getDisplayObject()).getNode();
+        Node node1 = ((NodeItem) viewItem1.getDisplayObject()).getNode();
+        Node node2 = ((NodeItem) viewItem2.getDisplayObject()).getNode();
 
         assertContentEquals(CollectionUtils.toList(node1, node2),
                 underTest.getAllNodes());

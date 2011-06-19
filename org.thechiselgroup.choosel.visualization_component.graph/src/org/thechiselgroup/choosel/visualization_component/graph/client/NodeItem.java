@@ -30,12 +30,7 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.GraphDisplay;
 import org.thechiselgroup.choosel.visualization_component.graph.client.widget.Node;
 
-/**
- * Represents a resource item in the graph view.
- * 
- * @author Lars Grammel
- */
-public class GraphItem {
+public class NodeItem {
 
     private GraphDisplay display;
 
@@ -43,16 +38,15 @@ public class GraphItem {
 
     private final ViewItem viewItem;
 
-    public GraphItem(ViewItem resourceItem, String type, GraphDisplay display) {
-
-        assert resourceItem != null;
+    public NodeItem(ViewItem viewItem, String type, GraphDisplay display) {
+        assert viewItem != null;
         assert type != null;
         assert display != null;
 
-        this.viewItem = resourceItem;
+        this.viewItem = viewItem;
         this.display = display;
 
-        node = new Node(resourceItem.getViewItemID(), getLabelValue(), type);
+        node = new Node(viewItem.getViewItemID(), getLabelValue(), type);
     }
 
     public String getLabelValue() {
@@ -71,7 +65,7 @@ public class GraphItem {
         return viewItem.getValue(Graph.NODE_BORDER_COLOR);
     }
 
-    public ViewItem getResourceItem() {
+    public ViewItem getViewItem() {
         return viewItem;
     }
 
