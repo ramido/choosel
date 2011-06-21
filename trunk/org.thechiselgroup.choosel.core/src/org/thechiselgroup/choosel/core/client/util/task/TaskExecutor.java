@@ -17,6 +17,11 @@ package org.thechiselgroup.choosel.core.client.util.task;
 
 public interface TaskExecutor {
 
+    /**
+     * Executes a {@link Task} by calling {@link Task#execute()}. This can
+     * happen later or in a different thread (e.g. when the task executor is
+     * using a thread pool.
+     */
     <T> T execute(Task<T> task) throws Exception;
 
 }
