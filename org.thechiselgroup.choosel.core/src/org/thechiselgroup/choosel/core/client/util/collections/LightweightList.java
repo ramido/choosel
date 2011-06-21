@@ -15,6 +15,8 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.util.collections;
 
+import java.util.Collection;
+
 /**
  * Minimalistic list for intermediary data processing. A JavaScript
  * implementation is available. <code>Null</code> values are not supported.
@@ -51,6 +53,11 @@ public interface LightweightList<T> extends LightweightCollection<T> {
      */
     T get(int i);
 
+    /**
+     * Converts this {@link LightweightList} to an array testing purposes.
+     * 
+     * @see Collection#toArray(Object[])
+     */
     T[] toArray(T[] array);
 
 }
