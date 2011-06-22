@@ -15,6 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.command;
 
+/**
+ * A handler for notifying when a command has been undone.
+ * 
+ * @author Lars Grammel
+ * 
+ */
 public interface CommandUndoneEventHandler extends CommandManagerEventHandler {
 
     void onCommandUndone(CommandUndoneEvent commandUndoneEvent);

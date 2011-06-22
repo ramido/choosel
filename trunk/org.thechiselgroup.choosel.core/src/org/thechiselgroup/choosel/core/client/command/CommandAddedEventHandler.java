@@ -15,6 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.command;
 
+/**
+ * Handler for indicating when a command has been added to the Command Managers
+ * list of executed commands.
+ * 
+ * @author Lars Grammel
+ * 
+ */
 public interface CommandAddedEventHandler extends CommandManagerEventHandler {
 
     void onCommandAdded(CommandAddedEvent event);

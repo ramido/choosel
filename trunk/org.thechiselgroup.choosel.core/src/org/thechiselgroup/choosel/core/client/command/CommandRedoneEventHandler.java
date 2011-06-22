@@ -15,6 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.command;
 
+/**
+ * A handler for being notified when a command is redone.
+ * 
+ * @author Lars Grammel
+ * 
+ */
 public interface CommandRedoneEventHandler extends CommandManagerEventHandler {
 
     void onCommandRedone(CommandRedoneEvent commandRedoneEvent);
