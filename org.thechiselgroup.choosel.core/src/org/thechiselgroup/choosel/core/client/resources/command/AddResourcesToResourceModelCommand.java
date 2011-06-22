@@ -48,7 +48,7 @@ public class AddResourcesToResourceModelCommand extends AbstractUndoableCommand
     // TODO add view name / label once available
     @Override
     public String getDescription() {
-        return "Add resources to view";
+        return "Add resources (" + resources.getLabel() + ") to view";
     }
 
     @Override

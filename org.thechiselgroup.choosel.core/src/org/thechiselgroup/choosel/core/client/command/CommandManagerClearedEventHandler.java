@@ -15,6 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.command;
 
+/**
+ * An event handler for indicating when a the undo stack of a command manager is
+ * cleared.
+ * 
+ * @author Lars Grammel
+ * 
+ */
 public interface CommandManagerClearedEventHandler extends
         CommandManagerEventHandler {
 
