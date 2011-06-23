@@ -16,7 +16,7 @@
 package org.thechiselgroup.choosel.dnd.client.windows;
 
 import org.thechiselgroup.choosel.core.client.command.AbstractUndoableCommand;
-import org.thechiselgroup.choosel.core.client.command.UndoableCommand;
+import org.thechiselgroup.choosel.core.client.geometry.Point;
 import org.thechiselgroup.choosel.core.client.util.HasDescription;
 
 public class MoveWindowCommand extends AbstractUndoableCommand implements HasDescription {
@@ -75,5 +75,20 @@ public class MoveWindowCommand extends AbstractUndoableCommand implements HasDes
     public void performUndo() {
         windowPanel.setLocation(sourceX, sourceY, animate);
     }
+    
+    public Point getSourceLocation() {
+    	return new Point(sourceX, sourceY);
+    }
+    
+    public Point getTargetLocation() {
+    	return new Point(targetX, targetY);
+    }
+    
+    /**
+	 * @return the windowPanel
+	 */
+	public WindowPanel getWindow() {
+		return windowPanel;
+	}
 
 }
