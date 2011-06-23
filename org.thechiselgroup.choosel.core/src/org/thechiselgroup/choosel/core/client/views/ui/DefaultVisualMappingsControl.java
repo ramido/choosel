@@ -113,7 +113,7 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
     private void initSlotControls() {
         slotControlsByDataType = new DataTypeToListMap<SlotControl>();
 
-        for (Slot slot : contentDisplay.getSlots()) {
+        for (Slot slot : resolver.getRequiredSlots()) {
             switch (slot.getDataType()) {
             case TEXT:
                 addSlotControl(new TextSlotControl(slot, resolver));
