@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 1.6.4//EN" "http://google-web-toolkit.googlecode.com/svn/tags/1.6.4/distro-source/core/src/gwt-module.dtd">
+<!--  
+ Copyright 2009-2010 Lars Grammel 
+ 
+ Licensed under the Apache License, Version 2.0 (the "License"); 
+ you may not use this file except in compliance with the License. 
+ You may obtain a copy of the License at 
+ 
+     http://www.apache.org/licenses/LICENSE-2.0 
+     
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the License is distributed on an "AS IS" BASIS, 
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ See the License for the specific language governing permissions and 
+ limitations under the License. 
+-->
+<module rename-to='org.thechiselgroup.choosel.workbench.Workbench'>
+
+  <!-- GWT basics --> 
+  <inherits name='com.google.gwt.user.User'/>
+  <inherits name="com.google.gwt.user.theme.standard.StandardResources" />
+ 
+  <!-- Dependency injection: guice, gin -->
+  <inherits name="com.google.gwt.inject.Inject"/>
+  
+  <!-- Choosel core -->
+  <inherits name='org.thechiselgroup.choosel.core.Core'/>
+
+  <!-- Choosel dnd & windows -->
+  <inherits name='org.thechiselgroup.choosel.dnd.Dnd'/>
+  
+  <!-- GWT SWF Bridge: gwt2swf -->
+  <inherits name='pl.rmalinowski.gwt2swf.GWT2SWF' /> 
+   
+  <!-- client-side logging configuration --> 
+  <set-property name="gwt.logging.logLevel" value="WARNING"/>
+  <set-property name="gwt.logging.enabled" value="TRUE"/> 
+  <set-property name="gwt.logging.popupHandler" value="DISABLED"/>
+  <set-property name="gwt.logging.systemHandler" value="DISABLED"/>
+  <set-property name="gwt.logging.consoleHandler" value="ENABLED"/>
+  <set-property name="gwt.logging.firebugHandler" value="ENABLED"/>
+  <set-property name="gwt.logging.simpleRemoteHandler" value="ENABLED"/>
+  <set-property name="gwt.logging.developmentModeHandler" value="ENABLED"/>
+
+  <!-- Client XPath/XSLT support via wrapping native browser support -->
+  <script src="js/lib/sarissa-0.9.9.4/sarissa-compressed.js"/>
+  <script src="js/lib/sarissa-0.9.9.4/sarissa_ieemu_xpath-compressed.js"/>
+
+  <source path='client'/>
+  <source path='shared'/>
+
+</module>
