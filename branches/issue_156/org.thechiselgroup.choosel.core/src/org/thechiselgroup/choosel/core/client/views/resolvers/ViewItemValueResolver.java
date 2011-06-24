@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -27,13 +27,21 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverC
  * 
  * @author Lars Grammel
  */
+// TODO implementations of this interface should be immutable
+// TODO figure out how to handle the type system - we might need to add stuff
+// here. a view item value resolver has to match the target slot.
 public interface ViewItemValueResolver {
 
+    // XXX remove - can we somehow make this class immutable?
     void addEventHandler(SlotResolverChangedEventHandler handler);
 
+    // XXX remove slot? change list-resource set to viewitem?
+    // should be similar to resolve, except that it returns a boolean value
     boolean canResolve(Slot slot, LightweightList<ResourceSet> resourceSets,
             ViewItemValueResolverContext context);
 
+    // XXX remove - should not be required for basic functionality, could
+    // we do this somehow differently
     String getResolverId();
 
     /**
@@ -48,6 +56,7 @@ public interface ViewItemValueResolver {
      * 
      * @return Value for the {@link ViewItem}.
      */
+    // XXX document exceptions that are thrown if it cannot be resolved
     Object resolve(ViewItem viewItem, ViewItemValueResolverContext context);
 
 }

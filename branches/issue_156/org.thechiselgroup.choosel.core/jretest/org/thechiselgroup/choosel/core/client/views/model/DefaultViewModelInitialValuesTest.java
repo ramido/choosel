@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
@@ -26,6 +27,7 @@ import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
+import org.thechiselgroup.choosel.core.client.views.resolvers.SlotMappingUIModel;
 
 // TODO migrate to change default slot mapping initializer
 public class DefaultViewModelInitialValuesTest {
@@ -44,6 +46,7 @@ public class DefaultViewModelInitialValuesTest {
         resource.putValue("text1", "t1");
         resource.putValue("text2", "t2");
 
+        // XXX breaks because we do not attempt to initialize
         containedResources.add(resource);
 
         assertEquals(true, underTest.getSlotMappingConfiguration()
@@ -79,6 +82,8 @@ public class DefaultViewModelInitialValuesTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
+        SlotMappingUIModel.TESTING = true;
+
         containedResources = new DefaultResourceSet();
 
         textSlot = new Slot("id-1", "text-slot", DataType.TEXT);
@@ -86,7 +91,12 @@ public class DefaultViewModelInitialValuesTest {
 
         underTest = DefaultViewModelTestHelper.createTestViewModel(
                 containedResources, new DefaultResourceSet(),
-                new DefaultResourceSet(), textSlot, numberSlot);
+                new DefaultResourceSet(), false, textSlot, numberSlot);
 
+    }
+
+    @After
+    public void tearDown() {
+        SlotMappingUIModel.TESTING = false;
     }
 }

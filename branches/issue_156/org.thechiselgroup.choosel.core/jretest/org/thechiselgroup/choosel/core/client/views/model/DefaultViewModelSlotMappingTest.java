@@ -106,7 +106,7 @@ public class DefaultViewModelSlotMappingTest {
 
         underTest = DefaultViewModelTestHelper.createTestViewModel(
                 containedResources, highlightedResources, selectedResources,
-                viewContentDisplay, textSlot, numberSlot);
+                viewContentDisplay, true, textSlot, numberSlot);
 
         Resource r1 = new Resource("test:1");
         r1.putValue("property1", new Double(0));

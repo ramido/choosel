@@ -228,7 +228,7 @@ public class DefaultViewPersistenceTest {
 
             originalViewModel = DefaultViewModelTestHelper.createTestViewModel(
                     resourceModel.getResources(), new DefaultResourceSet(),
-                    selectionModel.getSelection(), textSlot, numberSlot);
+                    selectionModel.getSelection(), true, textSlot, numberSlot);
             originalView = createView(originalViewModel, resourceModel,
                     selectionModel);
         }
@@ -241,7 +241,7 @@ public class DefaultViewPersistenceTest {
 
             restoredViewModel = DefaultViewModelTestHelper.createTestViewModel(
                     resourceModel.getResources(), new DefaultResourceSet(),
-                    selectionModel.getSelection(), textSlot, numberSlot);
+                    selectionModel.getSelection(), true, textSlot, numberSlot);
             restoredView = createView(restoredViewModel, resourceModel,
                     selectionModel);
         }

@@ -90,7 +90,7 @@ public class DefaultViewModelDisposeTest {
 
         underTest = DefaultViewModelTestHelper.createTestViewModel(
                 containedResources, highlightedResources, selectedResources,
-                viewContentDisplay);
+                viewContentDisplay, true);
 
         underTest.dispose();
     }

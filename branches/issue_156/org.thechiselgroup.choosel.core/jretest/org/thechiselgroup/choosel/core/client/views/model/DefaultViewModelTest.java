@@ -289,7 +289,7 @@ public class DefaultViewModelTest {
 
         underTest = DefaultViewModelTestHelper.createTestViewModel(
                 containedResources, highlightedResources, selectedResources,
-                viewContentDisplay, slot);
+                viewContentDisplay, true, slot);
     }
 
     @After

@@ -216,8 +216,9 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
             uiModel.addSlotResolverChangedEventHandler(slotResolverChangedEventHandler);
 
         }
-        slotMappingInitializer.initializeMappings(resources, contentDisplay,
-                this);
+        // XXX deactivated, should introduce unresolved state instead...
+        // slotMappingInitializer.initializeMappings(resources, contentDisplay,
+        // this);
     }
 
     // TODO rename / rewrite

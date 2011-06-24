@@ -73,8 +73,10 @@ public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
                 continue;
             }
 
-            slotMappingConfiguration.setResolver(slot,
-                    getSlotResolver(propertiesByDataType, slot));
+            ViewItemValueResolver slotResolver = getSlotResolver(
+                    propertiesByDataType, slot);
+            assert slotResolver != null;
+            slotMappingConfiguration.setResolver(slot, slotResolver);
         }
     }
 

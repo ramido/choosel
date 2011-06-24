@@ -49,8 +49,8 @@ public class SlotMappingUIModel {
 
         private static final long serialVersionUID = 1L;
 
-        public InvalidResolverException(String msg) {
-            super(msg);
+        public InvalidResolverException(String message) {
+            super(message);
         }
 
     }
@@ -60,8 +60,8 @@ public class SlotMappingUIModel {
 
         private static final long serialVersionUID = 1L;
 
-        public NoAllowableResolverException(String msg) {
-            super(msg);
+        public NoAllowableResolverException(String message) {
+            super(message);
         }
     }
 
@@ -169,7 +169,7 @@ public class SlotMappingUIModel {
     /**
      * Checks to see if the current resolver factory is changed, and if it has,
      * fires a {@link SlotMappingChangedEvent} to all registered
-     * {@link SlotMappingChangedHandler}s. It also adds a
+     * {@link SlotMappingChangedHandler}s.
      * 
      * @throws InvalidResolverException
      *             If the resolver is null or is not allowable
@@ -179,12 +179,15 @@ public class SlotMappingUIModel {
             throw new InvalidResolverException(resolver.getResolverId());
         }
 
+        // XXX event handler should get removed from previous resolver
+
         if (resolver.equals(currentResolver)) {
             return;
         }
 
         this.currentResolver = resolver;
         resolver.addEventHandler(resolverChangedEventHandler);
+
         eventBus.fireEvent(new SlotMappingChangedEvent(slot));
     }
 
@@ -220,12 +223,12 @@ public class SlotMappingUIModel {
 
         allowableResolverFactories.clear();
 
-        if (currentResolver != null
-                && !currentResolver.canResolve(slot, resourceSets, null)) {
-            // Uh Oh the current resolver is bad, can we do something here?
-            // TODO handle this elsewhere, update slots should be called on this
-            // slot
-        }
+        // if (currentResolver != null
+        // && !currentResolver.canResolve(slot, resourceSets, null)) {
+        // // Uh Oh the current resolver is bad, can we do something here?
+        // // TODO handle this elsewhere, update slots should be called on this
+        // // slot
+        // }
 
         LightweightList<ViewItemValueResolverFactory> allFactories = provider
                 .getResolverFactories();
