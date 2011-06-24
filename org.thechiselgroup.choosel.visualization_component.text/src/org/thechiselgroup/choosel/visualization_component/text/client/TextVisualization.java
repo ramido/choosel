@@ -94,18 +94,18 @@ public class TextVisualization extends AbstractViewContentDisplay {
      * items.
      * </p>
      */
-    private void addResourceItems(
-            LightweightCollection<ViewItem> addedResourceItems) {
+    private void addViewItems(
+            LightweightCollection<ViewItem> addedViewItems) {
 
-        assert addedResourceItems != null;
+        assert addedViewItems != null;
 
         // PERFORMANCE: do not execute sort if nothing changes
-        if (addedResourceItems.isEmpty()) {
+        if (addedViewItems.isEmpty()) {
             return;
         }
 
-        for (ViewItem resourceItem : addedResourceItems) {
-            TextItem textItem = createTextItem(resourceItem);
+        for (ViewItem viewItem : addedViewItems) {
+            TextItem textItem = createTextItem(viewItem);
             items.add(textItem);
         }
 
@@ -209,21 +209,21 @@ public class TextVisualization extends AbstractViewContentDisplay {
     }
 
     @Override
-    public void update(LightweightCollection<ViewItem> addedResourceItems,
-            LightweightCollection<ViewItem> updatedResourceItems,
-            LightweightCollection<ViewItem> removedResourceItems,
+    public void update(LightweightCollection<ViewItem> addedViewItems,
+            LightweightCollection<ViewItem> updatedViewItems,
+            LightweightCollection<ViewItem> removedViewItems,
             LightweightCollection<Slot> changedSlots) {
 
-        addResourceItems(addedResourceItems);
+        addViewItems(addedViewItems);
 
-        for (ViewItem resourceItem : updatedResourceItems) {
-            TextItem textItem = (TextItem) resourceItem.getDisplayObject();
+        for (ViewItem viewItem : updatedViewItems) {
+            TextItem textItem = (TextItem) viewItem.getDisplayObject();
             textItem.updateContent();
             textItem.updateStatusStyling();
         }
 
-        for (ViewItem resourceItem : removedResourceItems) {
-            removeTextItem((TextItem) resourceItem.getDisplayObject());
+        for (ViewItem viewItem : removedViewItems) {
+            removeTextItem((TextItem) viewItem.getDisplayObject());
         }
 
         if (!changedSlots.isEmpty()) {
