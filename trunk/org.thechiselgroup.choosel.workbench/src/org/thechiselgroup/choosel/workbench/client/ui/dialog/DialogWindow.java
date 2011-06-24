@@ -15,6 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.workbench.client.ui.dialog;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.thechiselgroup.choosel.core.client.ui.DialogPanel;
 import org.thechiselgroup.choosel.core.client.ui.ZIndex;
 import org.thechiselgroup.choosel.core.client.ui.popup.PopupManagerFactory;
@@ -23,6 +26,7 @@ import org.thechiselgroup.choosel.dnd.client.windows.WindowPanel;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -139,10 +143,18 @@ public final class DialogWindow extends WindowPanel implements DialogCallback {
      */
     public Button getButton(int code) {
         // TODO replace search with a map-based lookup?
-        for (Widget w : dialogPanel) {
+        List<Widget> widgets = new LinkedList<Widget>();
+        widgets.add(dialogPanel);
+        while (widgets.size() > 0) {
+            Widget w = widgets.remove(0);
             if (w instanceof Button) {
                 if (w.getElement().getPropertyInt(DIALOG_STATUS_CODE) == code) {
                     return (Button) w;
+                }
+            }
+            if (w instanceof HasWidgets.ForIsWidget) {
+                for (Widget child : ((HasWidgets.ForIsWidget) w)) {
+                    widgets.add(child);
                 }
             }
         }
