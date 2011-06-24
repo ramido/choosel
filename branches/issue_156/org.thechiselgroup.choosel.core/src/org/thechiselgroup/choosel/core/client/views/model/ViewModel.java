@@ -18,30 +18,39 @@ package org.thechiselgroup.choosel.core.client.views.model;
 import org.thechiselgroup.choosel.core.client.resources.ResourceGrouping;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 
+// NOTE: facade to visualization subsystem
+// TODO rename to visualization model?
 public interface ViewModel extends ViewItemContainer, ContainsResourceGrouping {
+
+    // TODO get/set multi categorizer -- superinterface shared with resource
+    // grouping
 
     /**
      * @return {@link ResourceSet} that the {@link ResourceGrouping} of this
      *         {@link ViewModel} is based upon.
      */
+    // TODO rename -- these are all resources in this visualization
     ResourceSet getContentResourceSet();
 
     // TODO Type mapping operations
 
     // TODO set
-    // TODO rename: global highlighting
     // TODO ReadableResourcesSet
     ResourceSet getHighlightedResources();
 
     // TODO set
-    // TODO rename: global selection
     // TODO ReadableResourceSet
     ResourceSet getSelectedResources();
 
+    // TODO set/get for slot mappings, do not expose configuration
     SlotMappingConfiguration getSlotMappingConfiguration();
 
+    // TODO these should be the configurable slots only
+    // TODO introduce superinterface that is implemented by view model
+    // and slot mapping cfg (get,set,slots,errors)
     Slot[] getSlots();
 
+    // TODO remove, expose visualization properties instead
     ViewContentDisplay getViewContentDisplay();
 
 }
