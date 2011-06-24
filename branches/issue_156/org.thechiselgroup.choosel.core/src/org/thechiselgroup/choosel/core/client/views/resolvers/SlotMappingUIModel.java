@@ -163,7 +163,8 @@ public class SlotMappingUIModel {
             return true;
         }
 
-        return allowableResolverFactories.containsKey(resolver.getResolverId());
+        return allowableResolverFactories.containsKey(resolver.getResolverId())
+                && resolver.canResolve(slot, currentResourceSets, null);
     }
 
     /**

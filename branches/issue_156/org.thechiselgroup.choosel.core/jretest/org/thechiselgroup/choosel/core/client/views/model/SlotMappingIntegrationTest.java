@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -218,11 +217,57 @@ public class SlotMappingIntegrationTest {
         assertEquals(1, item.getValue(requiredSlots[0]));
     }
 
-    @Ignore("until implemented")
     @Test
     public void changingResolverManuallyChangesResolution() {
-        // TODO
-        assertTrue(false);
+        Slot[] requiredSlots = createSlots(DataType.NUMBER);
+        when(contentDisplay.getSlots()).thenReturn(requiredSlots);
+
+        resolverProvider
+                .registerFactory(new FirstResourcePropertyResolverFactory(
+                        DataType.NUMBER, resolverId1));
+
+        resolverProvider
+                .registerFactory(new FirstResourcePropertyResolverFactory(
+                        DataType.NUMBER, resolverId2));
+
+        /* define initialization mapping */
+        final Map<Slot, ViewItemValueResolver> initialSlotMapping = new HashMap<Slot, ViewItemValueResolver>();
+        initialSlotMapping.put(requiredSlots[0],
+                new FirstResourcePropertyResolver(resolverId1, property1,
+                        DataType.NUMBER));
+
+        slotMappingInitializer = new TestSlotMappingInitializer(
+                initialSlotMapping);
+
+        SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration(
+                requiredSlots, resolverProvider, slotMappingInitializer);
+
+        ResourceMultiCategorizer multiCategorizer = new ResourceByUriMultiCategorizer();
+        ResourceGrouping resourceGrouping = new ResourceGrouping(
+                multiCategorizer, new DefaultResourceSetFactory());
+
+        DefaultViewModel model = new DefaultViewModel(contentDisplay,
+                slotMappingConfiguration, new DefaultResourceSet(),
+                new DefaultResourceSet(), slotMappingInitializer,
+                viewItemBehavior, resourceGrouping, logger);
+
+        resourceGrouping.setResourceSet(new DefaultResourceSet());
+        Resource resource1 = TestResourceSetFactory.createResource(1);
+        resource1.putValue(property1, 1);
+        resource1.putValue(property2, 2);
+
+        resourceGrouping.getResourceSet().add(resource1);
+
+        /* Should have 1 View Item with Value 1 */
+        slotMappingConfiguration.setResolver(requiredSlots[0],
+                new FirstResourcePropertyResolver(resolverId2, property2,
+                        DataType.NUMBER));
+
+        /* Should have 1 View Item with Value 2 */
+        LightweightCollection<ViewItem> viewItems = model.getViewItems();
+        assertTrue(viewItems.size() == 1);
+        ViewItem item = viewItems.iterator().next();
+        assertEquals(2, item.getValue(requiredSlots[0]));
     }
 
     // (o")9 I have to iterate through all of the umbrella exception to see
@@ -445,18 +490,98 @@ public class SlotMappingIntegrationTest {
         assertEquals(1, first.getValue(requiredSlots[0]));
     }
 
-    @Ignore("until implemented")
     @Test
     public void removingAllResourceDoesNotChangeResolver() {
-        // TODO
-        assertTrue(false);
+        Slot[] requiredSlots = createSlots(DataType.NUMBER);
+        when(contentDisplay.getSlots()).thenReturn(requiredSlots);
+
+        resolverProvider
+                .registerFactory(new FirstResourcePropertyResolverFactory(
+                        DataType.NUMBER, resolverId1));
+
+        resolverProvider
+                .registerFactory(new FirstResourcePropertyResolverFactory(
+                        DataType.NUMBER, resolverId2));
+
+        /* define initialization mapping */
+        final Map<Slot, ViewItemValueResolver> initialSlotMapping = new HashMap<Slot, ViewItemValueResolver>();
+        FirstResourcePropertyResolver resolver = new FirstResourcePropertyResolver(
+                resolverId1, property1, DataType.NUMBER);
+        initialSlotMapping.put(requiredSlots[0], resolver);
+
+        slotMappingInitializer = new TestSlotMappingInitializer(
+                initialSlotMapping);
+
+        SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration(
+                requiredSlots, resolverProvider, slotMappingInitializer);
+
+        ResourceMultiCategorizer multiCategorizer = new ResourceByUriMultiCategorizer();
+        ResourceGrouping resourceGrouping = new ResourceGrouping(
+                multiCategorizer, new DefaultResourceSetFactory());
+
+        DefaultViewModel model = new DefaultViewModel(contentDisplay,
+                slotMappingConfiguration, new DefaultResourceSet(),
+                new DefaultResourceSet(), slotMappingInitializer,
+                viewItemBehavior, resourceGrouping, logger);
+
+        resourceGrouping.setResourceSet(new DefaultResourceSet());
+        Resource resource1 = TestResourceSetFactory.createResource(1);
+        resource1.putValue(property1, 1);
+        resource1.putValue(property2, 2);
+
+        resourceGrouping.getResourceSet().add(resource1);
+        /* Should have 1 View Item with Value 1 */
+        resourceGrouping.setResourceSet(new DefaultResourceSet());
+
+        assertEquals(
+                model.getSlotMappingConfiguration().getCurrentResolver(
+                        requiredSlots[0]), resolver);
     }
 
-    @Ignore("until implemented")
     @Test
     public void removingAllResourcesResultsInNoViewItems() {
-        // TODO
-        assertTrue(false);
+        Slot[] requiredSlots = createSlots(DataType.NUMBER);
+        when(contentDisplay.getSlots()).thenReturn(requiredSlots);
+
+        resolverProvider
+                .registerFactory(new FirstResourcePropertyResolverFactory(
+                        DataType.NUMBER, resolverId1));
+
+        resolverProvider
+                .registerFactory(new FirstResourcePropertyResolverFactory(
+                        DataType.NUMBER, resolverId2));
+
+        /* define initialization mapping */
+        final Map<Slot, ViewItemValueResolver> initialSlotMapping = new HashMap<Slot, ViewItemValueResolver>();
+        FirstResourcePropertyResolver resolver = new FirstResourcePropertyResolver(
+                resolverId1, property1, DataType.NUMBER);
+        initialSlotMapping.put(requiredSlots[0], resolver);
+
+        slotMappingInitializer = new TestSlotMappingInitializer(
+                initialSlotMapping);
+
+        SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration(
+                requiredSlots, resolverProvider, slotMappingInitializer);
+
+        ResourceMultiCategorizer multiCategorizer = new ResourceByUriMultiCategorizer();
+        ResourceGrouping resourceGrouping = new ResourceGrouping(
+                multiCategorizer, new DefaultResourceSetFactory());
+
+        DefaultViewModel model = new DefaultViewModel(contentDisplay,
+                slotMappingConfiguration, new DefaultResourceSet(),
+                new DefaultResourceSet(), slotMappingInitializer,
+                viewItemBehavior, resourceGrouping, logger);
+
+        resourceGrouping.setResourceSet(new DefaultResourceSet());
+        Resource resource1 = TestResourceSetFactory.createResource(1);
+        resource1.putValue(property1, 1);
+        resource1.putValue(property2, 2);
+
+        resourceGrouping.getResourceSet().add(resource1);
+        /* Should have 1 View Item with Value 1 */
+        resourceGrouping.setResourceSet(new DefaultResourceSet());
+
+        assertEquals(model.getViewItems().size(), 0);
     }
 
     /**

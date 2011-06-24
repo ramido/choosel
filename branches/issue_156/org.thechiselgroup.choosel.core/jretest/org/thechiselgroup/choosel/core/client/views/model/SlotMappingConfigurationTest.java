@@ -18,13 +18,8 @@ package org.thechiselgroup.choosel.core.client.views.model;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
 import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.equalsArray;
 
 import java.util.HashMap;
@@ -85,6 +80,7 @@ public class SlotMappingConfigurationTest {
     }
 
     // XXX implementation might be broken!
+    @SuppressWarnings("unchecked")
     @Test
     public void fireChangesForDelegatingSlotResolversWhenTargetResolverIsChanged() {
         String resolverId = "id";
@@ -96,15 +92,26 @@ public class SlotMappingConfigurationTest {
                         any(LightweightList.class))).thenReturn(true);
 
         resolverFactories.add(resolverFactory);
+        when(resolverProvider.getFactoryById(resolverId)).thenReturn(resolverFactory);
 
         underTest.initSlots(new Slot[] { slot1, slot2 }, null, null);
 
         DelegatingViewItemValueResolver delegatingResolver = mock(DelegatingViewItemValueResolver.class);
         when(delegatingResolver.getTargetSlot()).thenReturn(slot1);
         when(delegatingResolver.getResolverId()).thenReturn(resolverId);
+        when(
+                delegatingResolver.canResolve(any(Slot.class),
+                        any(LightweightList.class),
+                        any(ViewItemValueResolverContext.class))).thenReturn(
+                true);
 
         ViewItemValueResolver resolver = mock(ViewItemValueResolver.class);
         when(resolver.getResolverId()).thenReturn(resolverId);
+        when(
+                resolver.canResolve(any(Slot.class),
+                        any(LightweightList.class),
+                        any(ViewItemValueResolverContext.class))).thenReturn(
+                true);
 
         underTest.setResolver(slot1, resolver);
         underTest.setResolver(slot2, delegatingResolver);
@@ -115,7 +122,14 @@ public class SlotMappingConfigurationTest {
 
         ViewItemValueResolver resolver2 = mock(ViewItemValueResolver.class);
         when(resolver2.getResolverId()).thenReturn(resolverId);
+        when(
+                resolver2.canResolve(any(Slot.class),
+                        any(LightweightList.class),
+                        any(ViewItemValueResolverContext.class))).thenReturn(
+                true);
 
+        // XXX shouldnt this be changing slot 2, and if not, shouldn't we be
+        // checking slot 1 below??????
         underTest.setResolver(slot1, resolver2);
 
         verify(handler, times(1)).onResourceCategoriesChanged(
@@ -162,6 +176,8 @@ public class SlotMappingConfigurationTest {
                 .<ViewItemValueResolverFactory> createLightweightList();
         when(resolverProvider.getResolverFactories()).thenReturn(
                 resolverFactories);
+        // TODO
+        // when(resolverProvider.getFactoryById(id)).thenReturn(correctFactory);
 
         underTest = new SlotMappingConfiguration(new Slot[] { slot1, slot2 },
                 resolverProvider, slotMappingInitializer);
