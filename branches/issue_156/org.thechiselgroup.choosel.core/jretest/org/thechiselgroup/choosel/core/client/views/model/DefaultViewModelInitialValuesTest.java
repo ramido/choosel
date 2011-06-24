@@ -46,7 +46,6 @@ public class DefaultViewModelInitialValuesTest {
         resource.putValue("text1", "t1");
         resource.putValue("text2", "t2");
 
-        // XXX breaks because we do not attempt to initialize
         containedResources.add(resource);
 
         assertEquals(true, underTest.getSlotMappingConfiguration()
@@ -74,7 +73,6 @@ public class DefaultViewModelInitialValuesTest {
         assertEquals(1, viewItems.size());
         ViewItem viewItem = viewItems.get(0);
 
-        // XXX we are initializing a fixed one right now...
         assertEquals("t1", viewItem.getValue(textSlot));
     }
 

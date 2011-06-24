@@ -55,10 +55,12 @@ public class VisualizationWidget<T extends ViewContentDisplay> extends
         assert contentDisplay != null;
 
         this.contentDisplay = contentDisplay;
-        this.viewModel = new DefaultViewModel(
-                contentDisplay,
-                // XXX don't worry about this compile error for now
-                new SlotMappingConfiguration(contentDisplay.getSlots()),
+        this.viewModel = new DefaultViewModel(contentDisplay,
+        /*
+         * XXX don't worry about this compile error until the refactoring of the
+         * core parts is completed.
+         */
+        new SlotMappingConfiguration(contentDisplay.getSlots()),
                 selectedResource, highlightedResources,
                 new DefaultSlotMappingInitializer(), viewItemBehavior,
                 new ResourceGrouping(new ResourceByUriMultiCategorizer(),

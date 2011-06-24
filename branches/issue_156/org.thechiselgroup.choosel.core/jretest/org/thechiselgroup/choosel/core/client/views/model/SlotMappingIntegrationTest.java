@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -217,6 +218,7 @@ public class SlotMappingIntegrationTest {
         assertEquals(1, item.getValue(requiredSlots[0]));
     }
 
+    @Ignore("until implemented")
     @Test
     public void changingResolverManuallyChangesResolution() {
         // TODO
@@ -443,12 +445,14 @@ public class SlotMappingIntegrationTest {
         assertEquals(1, first.getValue(requiredSlots[0]));
     }
 
+    @Ignore("until implemented")
     @Test
     public void removingAllResourceDoesNotChangeResolver() {
         // TODO
         assertTrue(false);
     }
 
+    @Ignore("until implemented")
     @Test
     public void removingAllResourcesResultsInNoViewItems() {
         // TODO
