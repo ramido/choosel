@@ -83,14 +83,16 @@ public class DefaultViewModel implements ViewModel, Disposable,
 
     private final Logger logger;
 
+    private final SlotMappingConfigurationUIModel configurationUIModel;
+
     public DefaultViewModel(ViewContentDisplay contentDisplay,
             SlotMappingConfiguration slotMappingConfiguration,
             ResourceSet selectedResources, ResourceSet highlightedResources,
             SlotMappingInitializer slotMappingInitializer,
             ViewItemBehavior viewItemBehavior,
-            ResourceGrouping resourceGrouping, Logger logger) {
+            ResourceGrouping resourceGrouping, Logger logger,
+            SlotMappingConfigurationUIModel configurationUIModel) {
 
-        this.logger = logger;
         assert slotMappingConfiguration != null;
         assert contentDisplay != null;
         assert selectedResources != null;
@@ -107,11 +109,13 @@ public class DefaultViewModel implements ViewModel, Disposable,
         this.highlightedResources = highlightedResources;
         this.viewItemBehavior = viewItemBehavior;
         this.resourceGrouping = resourceGrouping;
+        this.logger = logger;
+        this.configurationUIModel = configurationUIModel;
 
         // XXX why do we initialize when there are no resources yet?
         // we definitely need a state that flag slots as invalid / unresolved
-        slotMappingConfiguration.initSlots(contentDisplay.getSlots(),
-                resourceGrouping.getResourceSet(), contentDisplay);
+        slotMappingConfiguration.initSlots(contentDisplay.getSlots());
+
         init(selectedResources);
         initSelectionModelEventHandlers();
         initResourceGrouping();
@@ -584,9 +588,9 @@ public class DefaultViewModel implements ViewModel, Disposable,
         LightweightList<ResourceSet> resourceSets = CollectionFactory
                 .createLightweightList();
         resourceSets.addAll(resourceSetMap.values());
-        slotMappingConfiguration.updateUIModels(resourceSets);
+        configurationUIModel.updateUIModels(resourceSets);
 
-        LightweightList<Slot> slots = slotMappingConfiguration
+        LightweightList<Slot> slots = configurationUIModel
                 .getSlotsWithInvalidResolvers();
 
         if (!slots.isEmpty()) {

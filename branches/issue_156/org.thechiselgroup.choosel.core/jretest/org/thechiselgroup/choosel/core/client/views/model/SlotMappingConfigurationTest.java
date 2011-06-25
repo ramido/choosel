@@ -55,9 +55,6 @@ public class SlotMappingConfigurationTest {
     @Mock
     private ViewItemValueResolverFactoryProvider resolverProvider;
 
-    @Mock
-    private SlotMappingInitializer slotMappingInitializer;
-
     private LightweightList<ViewItemValueResolverFactory> resolverFactories;
 
     @Test
@@ -66,7 +63,8 @@ public class SlotMappingConfigurationTest {
         fixedSlotResolvers.put(slot1, mock(ViewItemValueResolver.class));
 
         underTest = new SlotMappingConfiguration(fixedSlotResolvers,
-                new Slot[] { slot1 }, resolverProvider);
+                new Slot[] { slot1 }, new SlotMappingConfigurationUIModel(
+                        resolverProvider));
 
         assertThat(underTest.containsResolver(slot1), is(true));
     }
@@ -77,7 +75,8 @@ public class SlotMappingConfigurationTest {
         fixedSlotResolvers.put(slot1, mock(ViewItemValueResolver.class));
 
         underTest = new SlotMappingConfiguration(fixedSlotResolvers,
-                new Slot[] { slot1 }, resolverProvider);
+                new Slot[] { slot1 }, new SlotMappingConfigurationUIModel(
+                        resolverProvider));
 
         Memento result = underTest.save(mock(ResourceSetCollector.class));
 
@@ -100,7 +99,7 @@ public class SlotMappingConfigurationTest {
         when(resolverProvider.getFactoryById(resolverId)).thenReturn(
                 resolverFactory);
 
-        underTest.initSlots(new Slot[] { slot1, slot2 }, null, null);
+        underTest.initSlots(new Slot[] { slot1, slot2 });
 
         DelegatingViewItemValueResolver delegatingResolver = mock(DelegatingViewItemValueResolver.class);
         when(delegatingResolver.getTargetSlot()).thenReturn(slot1);
@@ -150,7 +149,8 @@ public class SlotMappingConfigurationTest {
         fixedSlotResolvers.put(slot1, mock(ViewItemValueResolver.class));
 
         underTest = new SlotMappingConfiguration(fixedSlotResolvers,
-                new Slot[] { slot1, slot2 }, resolverProvider);
+                new Slot[] { slot1, slot2 },
+                new SlotMappingConfigurationUIModel(resolverProvider));
 
         assertThat(underTest.getRequiredSlots(), equalsArray(slot2));
     }
@@ -162,7 +162,8 @@ public class SlotMappingConfigurationTest {
         fixedSlotResolvers.put(slot1, fixedResolver);
 
         underTest = new SlotMappingConfiguration(fixedSlotResolvers,
-                new Slot[] { slot1 }, resolverProvider);
+                new Slot[] { slot1 }, new SlotMappingConfigurationUIModel(
+                        resolverProvider));
 
         ViewItem viewItem = mock(ViewItem.class);
 
@@ -187,8 +188,8 @@ public class SlotMappingConfigurationTest {
         // when(resolverProvider.getFactoryById(id)).thenReturn(correctFactory);
 
         underTest = new SlotMappingConfiguration(new Slot[] { slot1, slot2 },
-                resolverProvider);
+                new SlotMappingConfigurationUIModel(resolverProvider));
 
-        underTest.initSlots(new Slot[] { slot1, slot2 }, null, null);
+        underTest.initSlots(new Slot[] { slot1, slot2 });
     }
 }

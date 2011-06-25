@@ -179,8 +179,10 @@ public final class DefaultViewModelTestHelper {
             }
         }
 
+        SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
+                resolverProvider);
         SlotMappingConfiguration resourceSetToValueResolver = spy(new SlotMappingConfiguration(
-                slots, resolverProvider));
+                slots, configurationUIModel));
 
         when(contentDisplay.getSlots()).thenReturn(slots);
         when(contentDisplay.isReady()).thenReturn(true);
@@ -196,7 +198,7 @@ public final class DefaultViewModelTestHelper {
                 resourceSetToValueResolver, selectedResources,
                 highlightedResources, initializer,
                 mock(ViewItemBehavior.class), resourceGrouping,
-                mock(Logger.class)));
+                mock(Logger.class), configurationUIModel));
 
         // deactivate slot initialization
 
