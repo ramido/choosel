@@ -116,10 +116,7 @@ public class DefaultViewModel implements ViewModel, Disposable,
         // XXX why do we initialize when there are no resources yet?
         // we definitely need a state that flag slots as invalid / unresolved
         slotMappingConfiguration.initSlots(contentDisplay.getSlots());
-        for (Slot slot : contentDisplay.getSlots()) {
-            // XXX this is not correct (slots)
-            configurationUIModel.initSlot(slot);
-        }
+        configurationUIModel.initSlots(slotMappingConfiguration.getSlots());
         init(selectedResources);
         initSelectionModelEventHandlers();
         initResourceGrouping();
@@ -593,6 +590,7 @@ public class DefaultViewModel implements ViewModel, Disposable,
     // TODO update visual mappings based on list of resource sets
     private void updateVisualMappings(Map<String, ResourceSet> resourceSetMap) {
         // check to see if the configuration is still valid
+        ResourceSet viewResources = getResourceGrouping().getResourceSet();
 
         LightweightList<ResourceSet> resourceSets = CollectionFactory
                 .createLightweightList();
@@ -603,16 +601,10 @@ public class DefaultViewModel implements ViewModel, Disposable,
                 .getSlotsWithInvalidResolvers();
 
         if (!slots.isEmpty()) {
-            Map<Slot, ViewItemValueResolver> resolvers = slotMappingInitializer
-                    .getResolvers(getResourceGrouping().getResourceSet(),
-                            getSlots());
-
-            for (Entry<Slot, ViewItemValueResolver> entry : resolvers
-                    .entrySet()) {
-                Slot slot = entry.getKey();
-                ViewItemValueResolver resolver = entry.getValue();
-
-                setResolver(slot, resolver);
+            Slot[] slotsAsArray = slots.toArray(new Slot[slots.size()]);
+            for (Entry<Slot, ViewItemValueResolver> entry : slotMappingInitializer
+                    .getResolvers(viewResources, slotsAsArray).entrySet()) {
+                setResolver(entry.getKey(), entry.getValue());
             }
         }
     }
