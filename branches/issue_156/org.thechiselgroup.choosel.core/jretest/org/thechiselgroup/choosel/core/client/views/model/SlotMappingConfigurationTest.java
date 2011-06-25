@@ -32,17 +32,12 @@ import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.persistence.Memento;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
-import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.views.resolvers.DelegatingViewItemValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
-import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverFactory;
-import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverFactoryProvider;
 
 public class SlotMappingConfigurationTest {
 
@@ -51,11 +46,6 @@ public class SlotMappingConfigurationTest {
     private Slot slot1;
 
     private Slot slot2;
-
-    @Mock
-    private ViewItemValueResolverFactoryProvider resolverProvider;
-
-    private LightweightList<ViewItemValueResolverFactory> resolverFactories;
 
     @Test
     public void containsFixedSlot() {
@@ -81,61 +71,24 @@ public class SlotMappingConfigurationTest {
         assertEquals(0, result.getChildren().size());
     }
 
-    // XXX implementation might be broken!
-    @SuppressWarnings("unchecked")
     @Test
     public void fireChangesForDelegatingSlotResolversWhenTargetResolverIsChanged() {
-        String resolverId = "id";
-
-        ViewItemValueResolverFactory resolverFactory = mock(ViewItemValueResolverFactory.class);
-        when(resolverFactory.getId()).thenReturn(resolverId);
-        when(
-                resolverFactory.canCreateApplicableResolver(any(Slot.class),
-                        any(LightweightList.class))).thenReturn(true);
-
-        resolverFactories.add(resolverFactory);
-        when(resolverProvider.getFactoryById(resolverId)).thenReturn(
-                resolverFactory);
-
         underTest.initSlots(new Slot[] { slot1, slot2 });
 
         DelegatingViewItemValueResolver delegatingResolver = mock(DelegatingViewItemValueResolver.class);
         when(delegatingResolver.getTargetSlot()).thenReturn(slot1);
-        when(delegatingResolver.getResolverId()).thenReturn(resolverId);
-        when(
-                delegatingResolver.canResolve(any(Slot.class),
-                        any(LightweightList.class),
-                        any(ViewItemValueResolverContext.class))).thenReturn(
-                true);
 
-        ViewItemValueResolver resolver = mock(ViewItemValueResolver.class);
-        when(resolver.getResolverId()).thenReturn(resolverId);
-        when(
-                resolver.canResolve(any(Slot.class),
-                        any(LightweightList.class),
-                        any(ViewItemValueResolverContext.class))).thenReturn(
-                true);
-
-        underTest.setResolver(slot1, resolver);
+        underTest.setResolver(slot1, mock(ViewItemValueResolver.class));
         underTest.setResolver(slot2, delegatingResolver);
 
         SlotMappingChangedHandler handler = mock(SlotMappingChangedHandler.class);
-
         underTest.addHandler(handler);
-
-        ViewItemValueResolver resolver2 = mock(ViewItemValueResolver.class);
-        when(resolver2.getResolverId()).thenReturn(resolverId);
-        when(
-                resolver2.canResolve(any(Slot.class),
-                        any(LightweightList.class),
-                        any(ViewItemValueResolverContext.class))).thenReturn(
-                true);
 
         /*
          * changing slot 1 should trigger events for the delegating resolver at
          * slot 2, because it refers to slot 1.
          */
-        underTest.setResolver(slot1, resolver2);
+        underTest.setResolver(slot1, mock(ViewItemValueResolver.class));
 
         verify(handler, times(1)).onResourceCategoriesChanged(
                 argThat(new IsChangeForSlotMatcher(slot2)));
@@ -175,13 +128,6 @@ public class SlotMappingConfigurationTest {
 
         slot1 = new Slot("s1", "", DataType.NUMBER);
         slot2 = new Slot("s2", "", DataType.NUMBER);
-
-        resolverFactories = CollectionFactory
-                .<ViewItemValueResolverFactory> createLightweightList();
-        when(resolverProvider.getResolverFactories()).thenReturn(
-                resolverFactories);
-        // TODO
-        // when(resolverProvider.getFactoryById(id)).thenReturn(correctFactory);
 
         underTest = new SlotMappingConfiguration(new Slot[] { slot1, slot2 });
 
