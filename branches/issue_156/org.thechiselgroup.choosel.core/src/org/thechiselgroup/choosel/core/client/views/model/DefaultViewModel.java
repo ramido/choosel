@@ -590,9 +590,8 @@ public class DefaultViewModel implements ViewModel, Disposable,
                 .getSlotsWithInvalidResolvers();
 
         if (!slots.isEmpty()) {
-            // TODO this toArray call is not good
-            slotMappingConfiguration.updateSlots(slots.toArray(new Slot[0]),
-                    resourceGrouping.getResourceSet());
+            slotMappingInitializer.updateMappings(getResourceGrouping()
+                    .getResourceSet(), slotMappingConfiguration, getSlots());
         }
     }
 }

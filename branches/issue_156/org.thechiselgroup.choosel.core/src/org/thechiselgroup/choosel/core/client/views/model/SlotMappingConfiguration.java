@@ -61,8 +61,6 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
 
     private final ViewItemValueResolverFactoryProvider resolverProvider;
 
-    private final SlotMappingInitializer slotMappingInitializer;
-
     private transient PrioritizedHandlerManager handlerManager;
 
     private Map<Slot, SlotMappingUIModel> slotsToSlotMappings = new HashMap<Slot, SlotMappingUIModel>();
@@ -80,17 +78,14 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
     public SlotMappingConfiguration(
             Map<Slot, ViewItemValueResolver> fixedSlotResolvers,
             Slot[] requiredSlots,
-            ViewItemValueResolverFactoryProvider resolverProvider,
-            SlotMappingInitializer slotMappingInitializer) {
+            ViewItemValueResolverFactoryProvider resolverProvider) {
 
         assert fixedSlotResolvers != null;
         assert resolverProvider != null;
-        assert slotMappingInitializer != null;
 
         this.fixedSlotResolvers = fixedSlotResolvers;
         this.handlerManager = new PrioritizedHandlerManager(this);
         this.resolverProvider = resolverProvider;
-        this.slotMappingInitializer = slotMappingInitializer;
 
         LightweightList<Slot> slots = CollectionFactory.createLightweightList();
         for (Slot slot : requiredSlots) {
@@ -103,10 +98,9 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
     }
 
     public SlotMappingConfiguration(Slot[] requiredSlots,
-            ViewItemValueResolverFactoryProvider resolverProvider,
-            SlotMappingInitializer slotMappingInitializer) {
+            ViewItemValueResolverFactoryProvider resolverProvider) {
         this(new HashMap<Slot, ViewItemValueResolver>(), requiredSlots,
-                resolverProvider, slotMappingInitializer);
+                resolverProvider);
     }
 
     /**
@@ -352,17 +346,6 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
                         .getKey()));
             }
         }
-    }
-
-    /**
-     * call this method when a slot has become invalid, and you need to
-     * reinitialize it from the initializer
-     */
-    public void updateSlots(Slot[] slots, ResourceSet resources) {
-        if (slots == null || slots.length == 0) {
-            return;
-        }
-        slotMappingInitializer.updateMappings(resources, this, slots);
     }
 
     /**

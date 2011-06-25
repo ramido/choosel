@@ -66,7 +66,7 @@ public class SlotMappingConfigurationTest {
         fixedSlotResolvers.put(slot1, mock(ViewItemValueResolver.class));
 
         underTest = new SlotMappingConfiguration(fixedSlotResolvers,
-                new Slot[] { slot1 }, resolverProvider, slotMappingInitializer);
+                new Slot[] { slot1 }, resolverProvider);
 
         assertThat(underTest.containsResolver(slot1), is(true));
     }
@@ -77,7 +77,7 @@ public class SlotMappingConfigurationTest {
         fixedSlotResolvers.put(slot1, mock(ViewItemValueResolver.class));
 
         underTest = new SlotMappingConfiguration(fixedSlotResolvers,
-                new Slot[] { slot1 }, resolverProvider, slotMappingInitializer);
+                new Slot[] { slot1 }, resolverProvider);
 
         Memento result = underTest.save(mock(ResourceSetCollector.class));
 
@@ -150,8 +150,7 @@ public class SlotMappingConfigurationTest {
         fixedSlotResolvers.put(slot1, mock(ViewItemValueResolver.class));
 
         underTest = new SlotMappingConfiguration(fixedSlotResolvers,
-                new Slot[] { slot1, slot2 }, resolverProvider,
-                slotMappingInitializer);
+                new Slot[] { slot1, slot2 }, resolverProvider);
 
         assertThat(underTest.getRequiredSlots(), equalsArray(slot2));
     }
@@ -163,7 +162,7 @@ public class SlotMappingConfigurationTest {
         fixedSlotResolvers.put(slot1, fixedResolver);
 
         underTest = new SlotMappingConfiguration(fixedSlotResolvers,
-                new Slot[] { slot1 }, resolverProvider, slotMappingInitializer);
+                new Slot[] { slot1 }, resolverProvider);
 
         ViewItem viewItem = mock(ViewItem.class);
 
@@ -188,7 +187,7 @@ public class SlotMappingConfigurationTest {
         // when(resolverProvider.getFactoryById(id)).thenReturn(correctFactory);
 
         underTest = new SlotMappingConfiguration(new Slot[] { slot1, slot2 },
-                resolverProvider, slotMappingInitializer);
+                resolverProvider);
 
         underTest.initSlots(new Slot[] { slot1, slot2 }, null, null);
     }

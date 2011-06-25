@@ -180,7 +180,7 @@ public final class DefaultViewModelTestHelper {
         }
 
         SlotMappingConfiguration resourceSetToValueResolver = spy(new SlotMappingConfiguration(
-                slots, resolverProvider, initializer));
+                slots, resolverProvider));
 
         when(contentDisplay.getSlots()).thenReturn(slots);
         when(contentDisplay.isReady()).thenReturn(true);
