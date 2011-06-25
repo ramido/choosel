@@ -49,6 +49,48 @@ import com.google.gwt.event.shared.HandlerRegistration;
 public class SlotMappingConfiguration implements ViewItemValueResolverContext,
         Persistable {
 
+    public static class SlotMappingConfigurationUIModel {
+
+        private ViewItemValueResolverFactoryProvider resolverProvider;
+
+        private Map<Slot, SlotMappingUIModel> slotsToSlotMappings = new HashMap<Slot, SlotMappingUIModel>();
+
+        public SlotMappingConfigurationUIModel(
+                ViewItemValueResolverFactoryProvider resolverProvider) {
+
+            this.resolverProvider = resolverProvider;
+        }
+
+        public LightweightList<Slot> getSlotsWithInvalidResolvers() {
+            LightweightList<Slot> invalidSlots = CollectionFactory
+                    .createLightweightList();
+            for (Entry<Slot, SlotMappingUIModel> entry : slotsToSlotMappings
+                    .entrySet()) {
+
+                if (!entry.getValue().hasCurrentResolver()) {
+                    invalidSlots.add(entry.getKey());
+                }
+            }
+            return invalidSlots;
+        }
+
+        public void initSlot(Slot slot) {
+            slotsToSlotMappings.put(slot, new SlotMappingUIModel(slot,
+                    resolverProvider));
+        }
+
+        public void setResolver(Slot slot, ViewItemValueResolver resolver) {
+            slotsToSlotMappings.get(slot).setCurrentResolver(resolver);
+        }
+
+        public void updateUIModels(LightweightList<ResourceSet> resourceSets) {
+            for (SlotMappingUIModel uiModel : slotsToSlotMappings.values()) {
+                uiModel.updateAllowableFactories(resourceSets);
+            }
+        }
+
+    }
+
     private static final String MEMENTO_KEY_CALCULATION_TYPE = "calculationType";
 
     private static final String MEMENTO_VALUE_CALCULATION = "calculation";
@@ -59,11 +101,9 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
 
     private static final String MEMENTO_KEY_TYPE = "type";
 
-    private final ViewItemValueResolverFactoryProvider resolverProvider;
-
     private transient PrioritizedHandlerManager handlerManager;
 
-    private Map<Slot, SlotMappingUIModel> slotsToSlotMappings = new HashMap<Slot, SlotMappingUIModel>();
+    private SlotMappingConfigurationUIModel configurationUIModel;
 
     private Map<Slot, ViewItemValueResolver> slotsToResolvers = new HashMap<Slot, ViewItemValueResolver>();
 
@@ -87,7 +127,8 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
 
         this.fixedSlotResolvers = fixedSlotResolvers;
         this.handlerManager = new PrioritizedHandlerManager(this);
-        this.resolverProvider = resolverProvider;
+        this.configurationUIModel = new SlotMappingConfigurationUIModel(
+                resolverProvider);
 
         LightweightList<Slot> slots = CollectionFactory.createLightweightList();
         for (Slot slot : requiredSlots) {
@@ -160,17 +201,7 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
      * @return whether or not the current slots all have allowable resolvers
      */
     public LightweightList<Slot> getSlotsWithInvalidResolvers() {
-
-        LightweightList<Slot> invalidSlots = CollectionFactory
-                .createLightweightList();
-        for (Entry<Slot, SlotMappingUIModel> entry : slotsToSlotMappings
-                .entrySet()) {
-
-            if (!entry.getValue().hasCurrentResolver()) {
-                invalidSlots.add(entry.getKey());
-            }
-        }
-        return invalidSlots;
+        return configurationUIModel.getSlotsWithInvalidResolvers();
     }
 
     public void initSlots(Slot[] slots, ResourceSet resources,
@@ -180,11 +211,8 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
 
         for (Slot slot : slots) {
             slotsByID.put(slot.getId(), slot);
-            SlotMappingUIModel uiModel = new SlotMappingUIModel(slot,
-                    resolverProvider);
-            slotsToSlotMappings.put(slot, uiModel);
+            configurationUIModel.initSlot(slot);
             slotsToResolvers.put(slot, null); // XXX
-
         }
         // XXX deactivated, should introduce unresolved state instead...
         // slotMappingInitializer.initializeMappings(resources, contentDisplay,
@@ -333,7 +361,7 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
                     + " is not available in " + slotsToResolvers.keySet());
         }
 
-        slotsToSlotMappings.get(slot).setCurrentResolver(resolver);
+        configurationUIModel.setResolver(slot, resolver);
         slotsToResolvers.put(slot, resolver);
 
         // TODO we should not fire this event, we should capture any event fired
@@ -356,9 +384,7 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
      * call this whenever the model changes (whenever the ViewItems change)
      */
     public void updateUIModels(LightweightList<ResourceSet> resourceSets) {
-        for (SlotMappingUIModel uiModel : slotsToSlotMappings.values()) {
-            uiModel.updateAllowableFactories(resourceSets);
-        }
+        configurationUIModel.updateUIModels(resourceSets);
     }
 
 }
