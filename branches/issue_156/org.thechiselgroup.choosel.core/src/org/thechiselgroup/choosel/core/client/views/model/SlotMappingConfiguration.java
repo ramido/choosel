@@ -65,6 +65,8 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
 
     private Map<Slot, SlotMappingUIModel> slotsToSlotMappings = new HashMap<Slot, SlotMappingUIModel>();
 
+    private Map<Slot, ViewItemValueResolver> slotsToResolvers = new HashMap<Slot, ViewItemValueResolver>();
+
     private Map<String, Slot> slotsByID = CollectionFactory.createStringMap();
 
     // TODO way more tests...
@@ -116,12 +118,12 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
     public boolean containsResolver(Slot slot) {
         assert slot != null;
 
-        return slotsToSlotMappings.containsKey(slot)
+        return slotsToResolvers.containsKey(slot)
                 || fixedSlotResolvers.containsKey(slot);
     }
 
     public ViewItemValueResolver getCurrentResolver(Slot slot) {
-        return slotsToSlotMappings.get(slot).getCurrentResolver();
+        return slotsToResolvers.get(slot);
     }
 
     public Slot[] getRequiredSlots() {
@@ -137,10 +139,10 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
 
         if (!containsResolver(slot)) {
             throw new NoResolverForSlotException(slot,
-                    slotsToSlotMappings.keySet());
+                    slotsToResolvers.keySet());
         }
 
-        if (slotsToSlotMappings.containsKey(slot)) {
+        if (slotsToResolvers.containsKey(slot)) {
             return getCurrentResolver(slot);
         }
 
@@ -149,8 +151,9 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
         return fixedSlotResolvers.get(slot);
     }
 
+    // TODO needs clear definition: all slots that need to be configured
     public Set<Slot> getSlots() {
-        return slotsToSlotMappings.keySet();
+        return slotsToResolvers.keySet();
     }
 
     /**
@@ -180,6 +183,7 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
             SlotMappingUIModel uiModel = new SlotMappingUIModel(slot,
                     resolverProvider);
             slotsToSlotMappings.put(slot, uiModel);
+            slotsToResolvers.put(slot, null); // XXX
 
         }
         // XXX deactivated, should introduce unresolved state instead...
@@ -268,12 +272,11 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
     public Memento save(ResourceSetCollector resourceSetCollector) {
         Memento memento = new Memento();
 
-        for (Entry<Slot, SlotMappingUIModel> entry : slotsToSlotMappings
+        for (Entry<Slot, ViewItemValueResolver> entry : slotsToResolvers
                 .entrySet()) {
 
             Slot slot = entry.getKey();
-            ViewItemValueResolver resolver = entry.getValue()
-                    .getCurrentResolver();
+            ViewItemValueResolver resolver = entry.getValue();
 
             Memento child = new Memento();
 
@@ -325,23 +328,24 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
         if (resolver == null) {
             throw new IllegalArgumentException("resolver must not be null");
         }
-        if (!slotsToSlotMappings.containsKey(slot)) {
+        if (!slotsToResolvers.containsKey(slot)) {
             throw new IllegalArgumentException("slot " + slot
-                    + " is not available in " + slotsToSlotMappings.keySet());
+                    + " is not available in " + slotsToResolvers.keySet());
         }
 
         slotsToSlotMappings.get(slot).setCurrentResolver(resolver);
+        slotsToResolvers.put(slot, resolver);
 
         // TODO we should not fire this event, we should capture any event fired
         // by the UIModel
         handlerManager.fireEvent(new SlotMappingChangedEvent(slot));
 
-        for (Entry<Slot, SlotMappingUIModel> entry : slotsToSlotMappings
+        for (Entry<Slot, ViewItemValueResolver> entry : slotsToResolvers
                 .entrySet()) {
 
-            if ((entry.getValue().getCurrentResolver() instanceof DelegatingViewItemValueResolver)
-                    && (((DelegatingViewItemValueResolver) entry.getValue()
-                            .getCurrentResolver()).getTargetSlot().equals(slot))) {
+            if ((entry.getValue() instanceof DelegatingViewItemValueResolver)
+                    && (((DelegatingViewItemValueResolver) entry.getValue())
+                            .getTargetSlot().equals(slot))) {
                 handlerManager.fireEvent(new SlotMappingChangedEvent(entry
                         .getKey()));
             }
