@@ -87,8 +87,8 @@ public class DefaultViewModel implements ViewModel, Disposable,
             SlotMappingConfiguration slotMappingConfiguration,
             ResourceSet selectedResources, ResourceSet highlightedResources,
             ViewItemBehavior viewItemBehavior,
-            ResourceGrouping resourceGrouping,
-            Logger logger, SlotMappingConfigurationUIModel configurationUIModel) {
+            ResourceGrouping resourceGrouping, Logger logger,
+            SlotMappingConfigurationUIModel configurationUIModel) {
 
         assert slotMappingConfiguration != null;
         assert contentDisplay != null;
@@ -111,6 +111,7 @@ public class DefaultViewModel implements ViewModel, Disposable,
         // we definitely need a state that flag slots as invalid / unresolved
         slotMappingConfiguration.initSlots(contentDisplay.getSlots());
         configurationUIModel.initSlots(slotMappingConfiguration.getSlots());
+
         init(selectedResources);
         initSelectionModelEventHandlers();
         initResourceGrouping();
@@ -537,7 +538,7 @@ public class DefaultViewModel implements ViewModel, Disposable,
     }
 
     /**
-     * Exceptions are logged and not thrown to ensure robustness.
+     * NOTE: Exceptions are logged and not thrown to ensure robustness.
      */
     private void updateViewContentDisplay(
             LightweightCollection<ViewItem> addedViewItems,
@@ -553,9 +554,9 @@ public class DefaultViewModel implements ViewModel, Disposable,
         }
     }
 
-    // TODO add in the updateSlotMappingc
     private void updateViewItemsOnModelChange(ResourceGroupingChangedEvent e) {
         assert e != null;
+
         /*
          * IMPORTANT: remove old items before adding new once (there might be
          * conflicts, i.e. groups with the same id)
