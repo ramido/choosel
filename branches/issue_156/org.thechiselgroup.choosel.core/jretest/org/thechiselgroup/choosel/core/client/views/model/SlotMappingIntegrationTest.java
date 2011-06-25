@@ -113,7 +113,7 @@ public class SlotMappingIntegrationTest {
                 initialSlotMapping);
 
         SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
-                resolverProvider);
+                resolverProvider, slotMappingInitializer);
         SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration(
                 requiredSlots);
 
@@ -187,7 +187,7 @@ public class SlotMappingIntegrationTest {
                 initialSlotMapping);
 
         SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
-                resolverProvider);
+                resolverProvider, slotMappingInitializer);
         SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration(
                 requiredSlots);
 
@@ -256,7 +256,7 @@ public class SlotMappingIntegrationTest {
                 initialSlotMapping);
 
         SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
-                resolverProvider);
+                resolverProvider, slotMappingInitializer);
         SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration(
                 requiredSlots);
 
@@ -363,7 +363,7 @@ public class SlotMappingIntegrationTest {
                 initialSlotMapping);
 
         SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
-                resolverProvider);
+                resolverProvider, slotMappingInitializer);
         SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration(
                 requiredSlots);
 
@@ -427,7 +427,7 @@ public class SlotMappingIntegrationTest {
                 initialSlotMapping);
 
         SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
-                resolverProvider);
+                resolverProvider, slotMappingInitializer);
         SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration(
                 requiredSlots);
 
@@ -494,7 +494,7 @@ public class SlotMappingIntegrationTest {
                 initialSlotMapping);
 
         SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
-                resolverProvider);
+                resolverProvider, slotMappingInitializer);
         SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration(
                 requiredSlots);
 
@@ -545,7 +545,7 @@ public class SlotMappingIntegrationTest {
                 initialSlotMapping);
 
         SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
-                resolverProvider);
+                resolverProvider, slotMappingInitializer);
         SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration(
                 requiredSlots);
 
@@ -593,7 +593,7 @@ public class SlotMappingIntegrationTest {
                 initialSlotMapping);
 
         SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
-                resolverProvider);
+                resolverProvider, slotMappingInitializer);
         SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration(
                 requiredSlots);
 
@@ -653,7 +653,7 @@ public class SlotMappingIntegrationTest {
                 initialSlotMapping);
 
         SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
-                resolverProvider);
+                resolverProvider, slotMappingInitializer);
         SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration(
                 requiredSlots);
 
@@ -722,7 +722,7 @@ public class SlotMappingIntegrationTest {
                 initialSlotMapping);
 
         SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
-                resolverProvider);
+                resolverProvider, slotMappingInitializer);
         SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration(
                 requiredSlots);
 
@@ -789,7 +789,7 @@ public class SlotMappingIntegrationTest {
 
         /* create the slotMappingConfiguration */
         SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
-                resolverProvider);
+                resolverProvider, slotMappingInitializer);
         SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration(
                 requiredSlots);
 

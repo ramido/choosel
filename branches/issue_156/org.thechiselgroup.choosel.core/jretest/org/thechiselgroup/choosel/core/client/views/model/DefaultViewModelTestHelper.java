@@ -180,7 +180,7 @@ public final class DefaultViewModelTestHelper {
         }
 
         SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
-                resolverProvider);
+                resolverProvider, initializer);
         SlotMappingConfiguration resourceSetToValueResolver = spy(new SlotMappingConfiguration(
                 slots));
 

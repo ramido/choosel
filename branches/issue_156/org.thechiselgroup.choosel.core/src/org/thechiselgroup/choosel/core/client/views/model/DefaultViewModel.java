@@ -16,7 +16,6 @@
 package org.thechiselgroup.choosel.core.client.views.model;
 
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -84,7 +83,7 @@ public class DefaultViewModel implements ViewModel, Disposable,
 
     private final Logger logger;
 
-    private final SlotMappingConfigurationUIModel configurationUIModel;
+    final SlotMappingConfigurationUIModel configurationUIModel;
 
     public DefaultViewModel(ViewContentDisplay contentDisplay,
             SlotMappingConfiguration slotMappingConfiguration,
@@ -230,10 +229,6 @@ public class DefaultViewModel implements ViewModel, Disposable,
     @Override
     public SlotMappingConfiguration getSlotMappingConfiguration() {
         return slotMappingConfiguration;
-    }
-
-    public SlotMappingInitializer getSlotMappingInitializer() {
-        return slotMappingInitializer;
     }
 
     @Override
@@ -589,23 +584,8 @@ public class DefaultViewModel implements ViewModel, Disposable,
 
     // TODO update visual mappings based on list of resource sets
     private void updateVisualMappings(Map<String, ResourceSet> resourceSetMap) {
-        // check to see if the configuration is still valid
         ResourceSet viewResources = getResourceGrouping().getResourceSet();
-
-        LightweightList<ResourceSet> resourceSets = CollectionFactory
-                .createLightweightList();
-        resourceSets.addAll(resourceSetMap.values());
-        configurationUIModel.updateUIModels(resourceSets);
-
-        LightweightList<Slot> slots = configurationUIModel
-                .getSlotsWithInvalidResolvers();
-
-        if (!slots.isEmpty()) {
-            Slot[] slotsAsArray = slots.toArray(new Slot[slots.size()]);
-            for (Entry<Slot, ViewItemValueResolver> entry : slotMappingInitializer
-                    .getResolvers(viewResources, slotsAsArray).entrySet()) {
-                setResolver(entry.getKey(), entry.getValue());
-            }
-        }
+        configurationUIModel.updateVisualMappings(this, resourceSetMap,
+                viewResources);
     }
 }

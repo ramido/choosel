@@ -33,10 +33,17 @@ public class SlotMappingConfigurationUIModel {
 
     private Map<Slot, SlotMappingUIModel> slotsToSlotMappings = new HashMap<Slot, SlotMappingUIModel>();
 
+    private SlotMappingInitializer slotMappingInitializer;
+
     public SlotMappingConfigurationUIModel(
-            ViewItemValueResolverFactoryProvider resolverProvider) {
+            ViewItemValueResolverFactoryProvider resolverProvider,
+            SlotMappingInitializer slotMappingInitializer) {
+
+        assert resolverProvider != null;
+        assert slotMappingInitializer != null;
 
         this.resolverProvider = resolverProvider;
+        this.slotMappingInitializer = slotMappingInitializer;
     }
 
     public LightweightList<Slot> getSlotsWithInvalidResolvers() {
@@ -70,6 +77,26 @@ public class SlotMappingConfigurationUIModel {
     public void updateUIModels(LightweightList<ResourceSet> resourceSets) {
         for (SlotMappingUIModel uiModel : slotsToSlotMappings.values()) {
             uiModel.updateAllowableFactories(resourceSets);
+        }
+    }
+
+    public void updateVisualMappings(DefaultViewModel defaultViewModel,
+            Map<String, ResourceSet> resourceSetMap, ResourceSet viewResources) {
+
+        // check to see if the configuration is still valid
+        LightweightList<ResourceSet> resourceSets = CollectionFactory
+                .createLightweightList();
+        resourceSets.addAll(resourceSetMap.values());
+        updateUIModels(resourceSets);
+
+        LightweightList<Slot> slots = getSlotsWithInvalidResolvers();
+
+        if (!slots.isEmpty()) {
+            Slot[] slotsAsArray = slots.toArray(new Slot[slots.size()]);
+            for (Entry<Slot, ViewItemValueResolver> entry : slotMappingInitializer
+                    .getResolvers(viewResources, slotsAsArray).entrySet()) {
+                defaultViewModel.setResolver(entry.getKey(), entry.getValue());
+            }
         }
     }
 
