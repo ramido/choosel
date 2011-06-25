@@ -18,7 +18,6 @@ package org.thechiselgroup.choosel.core.client.views.model;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
@@ -59,7 +58,7 @@ public class SlotMappingConfigurationUIModel {
         return invalidSlots;
     }
 
-    public void initSlots(Set<Slot> slots) {
+    public void initSlots(Slot[] slots) {
         for (Slot slot : slots) {
             slotsToSlotMappings.put(slot, new SlotMappingUIModel(slot,
                     resolverProvider));

@@ -42,6 +42,8 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 
+import com.google.gwt.event.shared.HandlerRegistration;
+
 /**
  * <p>
  * <b>Robustness</b>: If {@link Exception}s are thrown by the
@@ -120,6 +122,16 @@ public class DefaultViewModel implements ViewModel, Disposable,
         initHighlightingModel();
         initContentDisplay();
         initSlotMappingChangeHandler();
+    }
+
+    @Override
+    public HandlerRegistration addHandler(SlotMappingChangedHandler handler) {
+        return slotMappingConfiguration.addHandler(handler);
+    }
+
+    @Override
+    public boolean containsResolver(Slot slot) {
+        return slotMappingConfiguration.containsResolver(slot);
     }
 
     @Override
@@ -254,6 +266,11 @@ public class DefaultViewModel implements ViewModel, Disposable,
     }
 
     @Override
+    public LightweightCollection<Slot> getUnconfiguredSlots() {
+        return slotMappingConfiguration.getUnconfiguredSlots();
+    }
+
+    @Override
     public ViewContentDisplay getViewContentDisplay() {
         return contentDisplay;
     }
@@ -377,7 +394,7 @@ public class DefaultViewModel implements ViewModel, Disposable,
     protected void initSlotMappingChangeHandler() {
         slotMappingConfiguration.addHandler(new SlotMappingChangedHandler() {
             @Override
-            public void onResourceCategoriesChanged(SlotMappingChangedEvent e) {
+            public void onSlotMappingChanged(SlotMappingChangedEvent e) {
                 updateViewContentDisplay(
                         LightweightCollections.<ViewItem> emptyCollection(),
                         LightweightCollections.<ViewItem> emptyCollection(),
@@ -501,6 +518,7 @@ public class DefaultViewModel implements ViewModel, Disposable,
         return viewItem;
     }
 
+    @Override
     public void setResolver(Slot slot, ViewItemValueResolver resolver) {
         configurationUIModel.setResolver(slot, resolver);
         slotMappingConfiguration.setResolver(slot, resolver);

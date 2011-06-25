@@ -21,7 +21,7 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 // NOTE: facade to visualization subsystem
 // TODO rename to visualization model?
 public interface ViewModel extends ViewItemContainer, ContainsResourceGrouping,
-        ViewItemResolutionErrorModel {
+        SlotMappingConfigurationInterface, ViewItemResolutionErrorModel {
 
     /**
      * @return {@link ResourceSet} that the {@link ResourceGrouping} of this
@@ -49,6 +49,7 @@ public interface ViewModel extends ViewItemContainer, ContainsResourceGrouping,
     // TODO these should be the configurable slots only
     // TODO introduce superinterface that is implemented by view model
     // and slot mapping cfg (get,set,slots,errors)
+    @Override
     Slot[] getSlots();
 
     // TODO remove, expose visualization properties instead

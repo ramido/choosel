@@ -566,7 +566,7 @@ public class SlotMappingIntegrationTest {
         resourceGrouping.setResourceSet(new DefaultResourceSet());
 
         assertEquals(
-                model.getSlotMappingConfiguration().getCurrentResolver(
+                model.getSlotMappingConfiguration().getResolver(
                         requiredSlots[0]), resolver);
     }
 
@@ -799,8 +799,8 @@ public class SlotMappingIntegrationTest {
          */
         DefaultViewModel model = new DefaultViewModel(contentDisplay,
                 slotMappingConfiguration, new DefaultResourceSet(),
-                new DefaultResourceSet(), viewItemBehavior,
-                resourceGrouping, logger, configurationUIModel);
+                new DefaultResourceSet(), viewItemBehavior, resourceGrouping,
+                logger, configurationUIModel);
 
         resourceGrouping.setResourceSet(new DefaultResourceSet());
         resourceGrouping.getResourceSet().add(

@@ -63,7 +63,7 @@ public class DefaultViewItem implements Disposable, ViewItem {
         }
 
         @Override
-        public void onResourceCategoriesChanged(SlotMappingChangedEvent e) {
+        public void onSlotMappingChanged(SlotMappingChangedEvent e) {
             String slotId = e.getSlot().getId();
 
             cache.remove(slotId);
@@ -183,8 +183,7 @@ public class DefaultViewItem implements Disposable, ViewItem {
     // TODO move, refactor
     @Override
     public Slot[] getSlots() {
-        return slotMappingConfiguration.getSlots().toArray(
-                new Slot[slotMappingConfiguration.getSlots().size()]);
+        return slotMappingConfiguration.getSlots();
     }
 
     @Override

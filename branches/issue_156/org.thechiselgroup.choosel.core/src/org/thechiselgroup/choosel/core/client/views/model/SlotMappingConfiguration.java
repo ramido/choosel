@@ -18,7 +18,6 @@ package org.thechiselgroup.choosel.core.client.views.model;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.thechiselgroup.choosel.core.client.persistence.Memento;
 import org.thechiselgroup.choosel.core.client.persistence.Persistable;
@@ -26,6 +25,7 @@ import org.thechiselgroup.choosel.core.client.persistence.PersistableRestoration
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetAccessor;
 import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.util.event.PrioritizedEventHandler;
 import org.thechiselgroup.choosel.core.client.util.event.PrioritizedHandlerManager;
@@ -43,8 +43,9 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
-public class SlotMappingConfiguration implements ViewItemValueResolverContext,
-        Persistable {
+// TODO rename to DefaultSlotMappingConfiguration
+public class SlotMappingConfiguration implements
+        SlotMappingConfigurationInterface, Persistable {
 
     private static final String MEMENTO_KEY_CALCULATION_TYPE = "calculationType";
 
@@ -66,6 +67,7 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
     // TODO also need to calculate available slots --> based on fixed slots and
     // whats required
     // --> required slots
+    // TODO move some place else (not core, but workbench functionality).
     private Map<Slot, ViewItemValueResolver> fixedSlotResolvers;
 
     private Slot[] requiredSlots;
@@ -98,21 +100,19 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
      * Adds an event handler that gets called when mappings change. Supports
      * {@link PrioritizedEventHandler}.
      */
+    @Override
     public HandlerRegistration addHandler(SlotMappingChangedHandler handler) {
         assert handler != null;
         return handlerManager.addHandler(SlotMappingChangedEvent.TYPE, handler);
     }
 
     // TODO this is not how we would check this anymore
+    @Override
     public boolean containsResolver(Slot slot) {
         assert slot != null;
 
         return slotsToResolvers.containsKey(slot)
                 || fixedSlotResolvers.containsKey(slot);
-    }
-
-    public ViewItemValueResolver getCurrentResolver(Slot slot) {
-        return slotsToResolvers.get(slot);
     }
 
     public Slot[] getRequiredSlots() {
@@ -132,7 +132,7 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
         }
 
         if (slotsToResolvers.containsKey(slot)) {
-            return getCurrentResolver(slot);
+            return slotsToResolvers.get(slot);
         }
 
         assert fixedSlotResolvers.containsKey(slot);
@@ -140,9 +140,16 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
         return fixedSlotResolvers.get(slot);
     }
 
-    // TODO needs clear definition: all slots that need to be configured
-    public Set<Slot> getSlots() {
-        return slotsToResolvers.keySet();
+    @Override
+    public Slot[] getSlots() {
+        return slotsToResolvers.keySet().toArray(
+                new Slot[slotsToResolvers.keySet().size()]);
+    }
+
+    @Override
+    public LightweightCollection<Slot> getUnconfiguredSlots() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     public void initSlots(Slot[] slots) {
@@ -161,7 +168,8 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
 
     // TODO rename / rewrite
     public boolean isSlotInitialized(Slot slot) {
-        ViewItemValueResolver viewItemValueResolver = getCurrentResolver(slot);
+        ViewItemValueResolver viewItemValueResolver = slotsToResolvers
+                .get(slot);
         return viewItemValueResolver != null
                 && !(viewItemValueResolver instanceof NullViewItemValueResolver);
     }
@@ -282,6 +290,8 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
     }
 
     /**
+     * XXX This note will be outdated once fixed resolvers are separated from
+     * the SlotMappingConfiguration.
      * <p>
      * <b>Note:</b> Slot resolvers that are not returned by getSlots() in the
      * {@link ViewContentDisplay} can still be configured to allow view content
@@ -290,16 +300,10 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
      */
     // TODO the UI Model will throw its own events, we should capture these
     public void setResolver(Slot slot, ViewItemValueResolver resolver) {
-        if (slot == null) {
-            throw new IllegalArgumentException("slot must not be null");
-        }
-        if (resolver == null) {
-            throw new IllegalArgumentException("resolver must not be null");
-        }
-        if (!slotsToResolvers.containsKey(slot)) {
-            throw new IllegalArgumentException("slot " + slot
-                    + " is not available in " + slotsToResolvers.keySet());
-        }
+        assert slot != null : "slot must not be null";
+        assert resolver != null : "resolver must not be null";
+        assert slotsToResolvers.containsKey(slot) : "slot " + slot
+                + " is not available in " + slotsToResolvers.keySet();
 
         slotsToResolvers.put(slot, resolver);
 
@@ -318,5 +322,4 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
             }
         }
     }
-
 }

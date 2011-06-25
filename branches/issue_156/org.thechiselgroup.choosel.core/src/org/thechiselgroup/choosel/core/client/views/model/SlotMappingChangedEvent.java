@@ -25,12 +25,13 @@ public class SlotMappingChangedEvent extends
     private final Slot slot;
 
     public SlotMappingChangedEvent(Slot slot) {
+        assert slot != null;
         this.slot = slot;
     }
 
     @Override
     protected void dispatch(SlotMappingChangedHandler handler) {
-        handler.onResourceCategoriesChanged(this);
+        handler.onSlotMappingChanged(this);
     }
 
     @Override

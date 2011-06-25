@@ -349,7 +349,7 @@ public class DefaultViewItemTest {
                 .thenReturn(2d, 3d);
 
         underTest.getValue(numberSlot);
-        handler.onResourceCategoriesChanged(new SlotMappingChangedEvent(
+        handler.onSlotMappingChanged(new SlotMappingChangedEvent(
                 numberSlot));
         assertEquals(3d, underTest.getValue(numberSlot));
     }

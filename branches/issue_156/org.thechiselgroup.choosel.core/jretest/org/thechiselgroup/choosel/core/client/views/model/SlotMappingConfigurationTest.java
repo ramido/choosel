@@ -90,7 +90,7 @@ public class SlotMappingConfigurationTest {
          */
         underTest.setResolver(slot1, mock(ViewItemValueResolver.class));
 
-        verify(handler, times(1)).onResourceCategoriesChanged(
+        verify(handler, times(1)).onSlotMappingChanged(
                 argThat(new IsChangeForSlotMatcher(slot2)));
     }
 
