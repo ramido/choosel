@@ -27,15 +27,29 @@ public interface ViewItemResolutionErrorModel {
 
     LightweightCollection<Slot> getSlotsWithErrors();
 
+    /**
+     * @return {@link Slot}s that could not be resolved for {@code viewItem}. If
+     *         all slots can be resolved for the view item, an empty list is
+     *         returned.
+     */
     LightweightCollection<Slot> getSlotsWithErrors(ViewItem viewItem);
 
     LightweightCollection<ViewItem> getViewItemsWithErrors();
 
+    /**
+     * @return {@link ViewItems}s that could not be resolved for {@code slot}.
+     *         If all {@link ViewItem}s can be resolved for the slot, an empty
+     *         list is returned.
+     */
     LightweightCollection<ViewItem> getViewItemsWithErrors(Slot slot);
 
     /**
      * @return <code>true</code>, if there are any resolution problems.
      */
     boolean hasErrors();
+
+    boolean hasErrors(Slot slot);
+
+    boolean hasErrors(ViewItem viewItem);
 
 }
