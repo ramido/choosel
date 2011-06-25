@@ -32,7 +32,8 @@ public class ViewContentDisplaysConfiguration {
 
     private ViewContentDisplayConfiguration getConfiguration(String type) {
         assert type != null;
-        assert configurationMap.containsKey(type);
+        assert configurationMap.containsKey(type) : "View Content Display Configuration missing for type: "
+                + type;
 
         return configurationMap.get(type);
     }

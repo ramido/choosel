@@ -33,6 +33,10 @@ public class SwitchSelectionOnClickViewItemBehavior implements ViewItemBehavior 
         this.selectionModel = selectionModel;
     }
 
+    protected SelectionModel getSelectionModel() {
+        return selectionModel;
+    }
+
     @Override
     public void onInteraction(ViewItem viewItem, ViewItemInteraction interaction) {
         assert viewItem != null;
@@ -45,16 +49,16 @@ public class SwitchSelectionOnClickViewItemBehavior implements ViewItemBehavior 
         }
     }
 
-    protected void switchSelection(ViewItem viewItem) {
-        selectionModel.switchSelection(viewItem.getResources());
-    }
-
     @Override
     public void onViewItemCreated(ViewItem viewItem) {
     }
 
     @Override
     public void onViewItemRemoved(ViewItem viewItem) {
+    }
+
+    protected void switchSelection(ViewItem viewItem) {
+        selectionModel.switchSelection(viewItem.getResources());
     }
 
 }

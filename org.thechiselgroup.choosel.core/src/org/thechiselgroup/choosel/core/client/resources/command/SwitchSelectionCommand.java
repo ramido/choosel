@@ -17,59 +17,50 @@ package org.thechiselgroup.choosel.core.client.resources.command;
 
 import org.thechiselgroup.choosel.core.client.command.AbstractUndoableCommand;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.core.client.util.HasDescription;
 import org.thechiselgroup.choosel.core.client.views.model.SelectionModel;
 
-public class ReplaceSelectionCommand extends AbstractUndoableCommand implements
-        HasDescription {
-
-    private ResourceSet originalSelection;
-
-    private ResourceSet resources;
+/**
+ * Command for adding/removing resources from a current selection.
+ * 
+ * @author Del
+ * 
+ */
+public class SwitchSelectionCommand extends AbstractUndoableCommand {
 
     private SelectionModel selectionModel;
 
-    public ReplaceSelectionCommand(SelectionModel selectionModel,
-            ResourceSet resources) {
+    private ResourceSet resources;
 
-        assert selectionModel != null;
-        // assert resources != null;
-
+    public SwitchSelectionCommand(ResourceSet resources,
+            SelectionModel selectionModel) {
         this.selectionModel = selectionModel;
         this.resources = resources;
     }
 
-    @Override
-    public String getDescription() {
-        // XXX label required
-        String resourcesLabel = null;
-        if (resources != null && resources.getLabel() != null) {
-            resourcesLabel = resources.getLabel();
-        }
-        return "Replace selection in '" + selectionModel.toString()
-                + "' with '" + resourcesLabel + "'";
-    }
-
-    public ResourceSet getResources() {
-        return resources;
-    }
-
-    public SelectionModel getSelectionModel() {
-        return selectionModel;
-    }
-
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.thechiselgroup.choosel.core.client.command.AbstractUndoableCommand
+     * #performExecute()
+     */
     @Override
     public void performExecute() {
-        if (originalSelection == null) {
-            originalSelection = selectionModel.getSelection();
-        }
-
-        selectionModel.setSelection(resources);
+        // switch selection is a toggle, so undo/redo should be the same.
+        selectionModel.switchSelection(resources);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.thechiselgroup.choosel.core.client.command.AbstractUndoableCommand
+     * #performUndo()
+     */
     @Override
     public void performUndo() {
-        selectionModel.setSelection(originalSelection);
+        // switch selection is a toggle, so undo/redo should be the same.
+        selectionModel.switchSelection(resources);
     }
 
 }

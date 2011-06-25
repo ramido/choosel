@@ -45,15 +45,19 @@ public class SelectionResourceSetAvatarFactory extends
             public void onClick(ClickEvent event) {
                 SelectionModel selectionModel = viewAccessor.findView(avatar)
                         .getSelectionModel();
-                if (avatar.getResourceSet().equals(
-                        selectionModel.getSelection())) {
-                    selectionModel.setSelection(null);
-                } else {
-                    selectionModel.setSelection(avatar.getResourceSet());
-                }
+                setSelection(selectionModel, avatar.getResourceSet());
             }
         });
 
         return avatar;
+    }
+    
+    protected void setSelection(SelectionModel selectionModel, ResourceSet resourceSet) {
+        if (resourceSet.equals(
+                selectionModel.getSelection())) {
+            selectionModel.setSelection(null);
+        } else {
+            selectionModel.setSelection(resourceSet);
+        }
     }
 }
