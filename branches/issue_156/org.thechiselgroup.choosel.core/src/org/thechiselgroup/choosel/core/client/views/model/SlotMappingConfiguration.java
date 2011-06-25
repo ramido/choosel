@@ -373,9 +373,9 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
         for (Entry<Slot, SlotMappingUIModel> entry : slotsToSlotMappings
                 .entrySet()) {
 
-            if ((entry.getValue() instanceof DelegatingViewItemValueResolver)
-                    && (((DelegatingViewItemValueResolver) entry.getValue())
-                            .getTargetSlot().equals(slot))) {
+            if ((entry.getValue().getCurrentResolver() instanceof DelegatingViewItemValueResolver)
+                    && (((DelegatingViewItemValueResolver) entry.getValue()
+                            .getCurrentResolver()).getTargetSlot().equals(slot))) {
                 handlerManager.fireEvent(new SlotMappingChangedEvent(entry
                         .getKey()));
             }

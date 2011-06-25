@@ -18,8 +18,13 @@ package org.thechiselgroup.choosel.core.client.views.model;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.equalsArray;
 
 import java.util.HashMap;
@@ -92,7 +97,8 @@ public class SlotMappingConfigurationTest {
                         any(LightweightList.class))).thenReturn(true);
 
         resolverFactories.add(resolverFactory);
-        when(resolverProvider.getFactoryById(resolverId)).thenReturn(resolverFactory);
+        when(resolverProvider.getFactoryById(resolverId)).thenReturn(
+                resolverFactory);
 
         underTest.initSlots(new Slot[] { slot1, slot2 }, null, null);
 
@@ -128,8 +134,10 @@ public class SlotMappingConfigurationTest {
                         any(ViewItemValueResolverContext.class))).thenReturn(
                 true);
 
-        // XXX shouldnt this be changing slot 2, and if not, shouldn't we be
-        // checking slot 1 below??????
+        /*
+         * changing slot 1 should trigger events for the delegating resolver at
+         * slot 2, because it refers to slot 1.
+         */
         underTest.setResolver(slot1, resolver2);
 
         verify(handler, times(1)).onResourceCategoriesChanged(
