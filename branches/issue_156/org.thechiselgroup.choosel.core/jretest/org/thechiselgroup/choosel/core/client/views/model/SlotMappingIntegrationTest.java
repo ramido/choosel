@@ -315,8 +315,8 @@ public class SlotMappingIntegrationTest {
             ResourceGrouping resourceGrouping) {
         return new DefaultViewModel(contentDisplay, slotMappingConfiguration,
                 new DefaultResourceSet(), new DefaultResourceSet(),
-                slotMappingInitializer, viewItemBehavior, resourceGrouping,
-                logger, configurationUIModel);
+                viewItemBehavior, resourceGrouping, logger,
+                configurationUIModel);
     }
 
     /**
@@ -799,9 +799,8 @@ public class SlotMappingIntegrationTest {
          */
         DefaultViewModel model = new DefaultViewModel(contentDisplay,
                 slotMappingConfiguration, new DefaultResourceSet(),
-                new DefaultResourceSet(), slotMappingInitializer,
-                viewItemBehavior, resourceGrouping, logger,
-                configurationUIModel);
+                new DefaultResourceSet(), viewItemBehavior,
+                resourceGrouping, logger, configurationUIModel);
 
         resourceGrouping.setResourceSet(new DefaultResourceSet());
         resourceGrouping.getResourceSet().add(

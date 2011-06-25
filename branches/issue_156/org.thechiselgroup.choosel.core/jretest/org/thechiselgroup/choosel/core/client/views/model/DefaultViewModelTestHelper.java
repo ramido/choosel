@@ -196,9 +196,9 @@ public final class DefaultViewModelTestHelper {
 
         DefaultViewModel underTest = spy(new DefaultViewModel(contentDisplay,
                 resourceSetToValueResolver, selectedResources,
-                highlightedResources, initializer,
-                mock(ViewItemBehavior.class), resourceGrouping,
-                mock(Logger.class), configurationUIModel));
+                highlightedResources, mock(ViewItemBehavior.class),
+                resourceGrouping, mock(Logger.class),
+                configurationUIModel));
 
         // deactivate slot initialization
 

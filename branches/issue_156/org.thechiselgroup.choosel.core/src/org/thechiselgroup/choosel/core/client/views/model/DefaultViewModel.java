@@ -73,8 +73,6 @@ public class DefaultViewModel implements ViewModel, Disposable,
 
     private ResourceSet highlightedResources;
 
-    private SlotMappingInitializer slotMappingInitializer;
-
     private IntersectionResourceSet highlightedResourcesIntersection;
 
     private final ViewItemBehavior viewItemBehavior;
@@ -88,21 +86,18 @@ public class DefaultViewModel implements ViewModel, Disposable,
     public DefaultViewModel(ViewContentDisplay contentDisplay,
             SlotMappingConfiguration slotMappingConfiguration,
             ResourceSet selectedResources, ResourceSet highlightedResources,
-            SlotMappingInitializer slotMappingInitializer,
             ViewItemBehavior viewItemBehavior,
-            ResourceGrouping resourceGrouping, Logger logger,
-            SlotMappingConfigurationUIModel configurationUIModel) {
+            ResourceGrouping resourceGrouping,
+            Logger logger, SlotMappingConfigurationUIModel configurationUIModel) {
 
         assert slotMappingConfiguration != null;
         assert contentDisplay != null;
         assert selectedResources != null;
         assert highlightedResources != null;
-        assert slotMappingInitializer != null;
         assert viewItemBehavior != null;
         assert resourceGrouping != null;
         assert logger != null;
 
-        this.slotMappingInitializer = slotMappingInitializer;
         this.slotMappingConfiguration = slotMappingConfiguration;
         this.contentDisplay = contentDisplay;
         this.selectedResources = selectedResources;
