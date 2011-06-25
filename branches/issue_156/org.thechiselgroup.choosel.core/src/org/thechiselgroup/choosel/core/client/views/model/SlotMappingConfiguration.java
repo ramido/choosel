@@ -58,8 +58,6 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
 
     private transient PrioritizedHandlerManager handlerManager;
 
-    private final SlotMappingConfigurationUIModel configurationUIModel;
-
     private Map<Slot, ViewItemValueResolver> slotsToResolvers = new HashMap<Slot, ViewItemValueResolver>();
 
     private Map<String, Slot> slotsByID = CollectionFactory.createStringMap();
@@ -74,14 +72,12 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
 
     public SlotMappingConfiguration(
             Map<Slot, ViewItemValueResolver> fixedSlotResolvers,
-            Slot[] requiredSlots,
-            SlotMappingConfigurationUIModel configurationUIModel) {
+            Slot[] requiredSlots) {
 
         assert fixedSlotResolvers != null;
-        assert configurationUIModel != null;
+        assert requiredSlots != null;
 
         this.fixedSlotResolvers = fixedSlotResolvers;
-        this.configurationUIModel = configurationUIModel;
         this.handlerManager = new PrioritizedHandlerManager(this);
 
         LightweightList<Slot> slots = CollectionFactory.createLightweightList();
@@ -94,10 +90,8 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
         this.requiredSlots = slots.toArray(new Slot[slots.size()]);
     }
 
-    public SlotMappingConfiguration(Slot[] requiredSlots,
-            SlotMappingConfigurationUIModel configurationUIModel) {
-        this(new HashMap<Slot, ViewItemValueResolver>(), requiredSlots,
-                configurationUIModel);
+    public SlotMappingConfiguration(Slot[] requiredSlots) {
+        this(new HashMap<Slot, ViewItemValueResolver>(), requiredSlots);
     }
 
     /**
@@ -158,11 +152,6 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
         for (Slot slot : slots) {
             slotsByID.put(slot.getId(), slot);
             slotsToResolvers.put(slot, null); // XXX
-        }
-
-        for (Slot slot : slots) {
-            // XXX this is not correct
-            configurationUIModel.initSlot(slot);
         }
 
         // XXX deactivated, should introduce unresolved state instead...
@@ -312,7 +301,6 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
                     + " is not available in " + slotsToResolvers.keySet());
         }
 
-        configurationUIModel.setResolver(slot, resolver);
         slotsToResolvers.put(slot, resolver);
 
         // TODO we should not fire this event, we should capture any event fired

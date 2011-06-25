@@ -116,7 +116,10 @@ public class DefaultViewModel implements ViewModel, Disposable,
         // XXX why do we initialize when there are no resources yet?
         // we definitely need a state that flag slots as invalid / unresolved
         slotMappingConfiguration.initSlots(contentDisplay.getSlots());
-
+        for (Slot slot : contentDisplay.getSlots()) {
+            // XXX this is not correct (slots)
+            configurationUIModel.initSlot(slot);
+        }
         init(selectedResources);
         initSelectionModelEventHandlers();
         initResourceGrouping();
@@ -473,6 +476,11 @@ public class DefaultViewModel implements ViewModel, Disposable,
         return viewItem;
     }
 
+    public void setResolver(Slot slot, ViewItemValueResolver resolver) {
+        configurationUIModel.setResolver(slot, resolver);
+        slotMappingConfiguration.setResolver(slot, resolver);
+    }
+
     @Override
     public void setResourceGrouping(ResourceGrouping resourceGrouping) {
         // TODO Auto-generated method stub
@@ -601,8 +609,10 @@ public class DefaultViewModel implements ViewModel, Disposable,
 
             for (Entry<Slot, ViewItemValueResolver> entry : resolvers
                     .entrySet()) {
-                slotMappingConfiguration.setResolver(entry.getKey(),
-                        entry.getValue());
+                Slot slot = entry.getKey();
+                ViewItemValueResolver resolver = entry.getValue();
+
+                setResolver(slot, resolver);
             }
         }
     }
