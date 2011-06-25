@@ -24,8 +24,6 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingChangedEvent;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingChangedHandler;
-import org.thechiselgroup.choosel.core.client.views.model.SlotResolverChangedEvent;
-import org.thechiselgroup.choosel.core.client.views.model.SlotResolverChangedEventHandler;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -84,15 +82,6 @@ public class SlotMappingUIModel {
     // initialize current view items to an empty list
     private LightweightList<ResourceSet> currentResourceSets;
 
-    private SlotResolverChangedEventHandler resolverChangedEventHandler = new SlotResolverChangedEventHandler() {
-        @Override
-        public void onSlotResolverChanged(
-                SlotResolverChangedEvent slotResolverChangedEvent) {
-            // Just fire the event up to the next level
-            eventBus.fireEvent(slotResolverChangedEvent);
-        }
-    };
-
     public SlotMappingUIModel(Slot slot,
             ViewItemValueResolverFactoryProvider provider) {
 
@@ -114,12 +103,6 @@ public class SlotMappingUIModel {
     public void addSlotMappingEventHandler(SlotMappingChangedHandler handler) {
         assert handler != null;
         eventBus.addHandler(SlotMappingChangedEvent.TYPE, handler);
-    }
-
-    public void addSlotResolverChangedEventHandler(
-            SlotResolverChangedEventHandler handler) {
-        assert handler != null;
-        eventBus.addHandler(SlotResolverChangedEvent.TYPE, handler);
     }
 
     /**
@@ -187,7 +170,6 @@ public class SlotMappingUIModel {
         }
 
         this.currentResolver = resolver;
-        resolver.addEventHandler(resolverChangedEventHandler);
 
         eventBus.fireEvent(new SlotMappingChangedEvent(slot));
     }

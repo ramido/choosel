@@ -21,7 +21,6 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetUtils;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.SlotResolverChangedEvent;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
@@ -29,7 +28,7 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverC
 public class FirstResourcePropertyResolver extends SubsetViewItemValueResolver
         implements PropertyDependantViewItemValueResolver {
 
-    protected String property;
+    protected final String property;
 
     protected final DataType dataType;
 
@@ -84,14 +83,6 @@ public class FirstResourcePropertyResolver extends SubsetViewItemValueResolver
             ViewItemValueResolverContext context, Subset subset) {
         ResourceSet resources = viewItem.getResources(subset);
         return ResourceSetUtils.firstResource(resources).getValue(property);
-    }
-
-    @Override
-    public void setProperty(String property) {
-        if (!this.property.equals(property)) {
-            this.property = property;
-            fireEvent(new SlotResolverChangedEvent());
-        }
     }
 
     @Override

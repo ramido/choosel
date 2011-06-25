@@ -18,7 +18,6 @@ package org.thechiselgroup.choosel.core.client.views.resolvers;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.SlotResolverChangedEventHandler;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
 
@@ -31,9 +30,6 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverC
 // TODO figure out how to handle the type system - we might need to add stuff
 // here. a view item value resolver has to match the target slot.
 public interface ViewItemValueResolver {
-
-    // XXX remove - can we somehow make this class immutable?
-    void addEventHandler(SlotResolverChangedEventHandler handler);
 
     // XXX remove slot? change list-resource set to viewitem?
     // should be similar to resolve, except that it returns a boolean value

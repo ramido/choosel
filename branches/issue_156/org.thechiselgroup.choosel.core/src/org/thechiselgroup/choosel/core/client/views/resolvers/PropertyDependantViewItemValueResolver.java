@@ -20,6 +20,4 @@ public interface PropertyDependantViewItemValueResolver extends
 
     public String getProperty();
 
-    public void setProperty(String property);
-
 }

@@ -46,8 +46,8 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
-public class SlotMappingConfiguration implements ViewItemValueResolverContext,
-        Persistable {
+public class SlotMappingConfigurationUIModel implements
+        ViewItemValueResolverContext, Persistable {
 
     private static final String MEMENTO_KEY_CALCULATION_TYPE = "calculationType";
 
@@ -60,8 +60,6 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
     private static final String MEMENTO_KEY_TYPE = "type";
 
     private final ViewItemValueResolverFactoryProvider resolverProvider;
-
-    private final SlotMappingInitializer slotMappingInitializer;
 
     private transient PrioritizedHandlerManager handlerManager;
 
@@ -77,7 +75,7 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
 
     private Slot[] requiredSlots;
 
-    public SlotMappingConfiguration(
+    public SlotMappingConfigurationUIModel(
             Map<Slot, ViewItemValueResolver> fixedSlotResolvers,
             Slot[] requiredSlots,
             ViewItemValueResolverFactoryProvider resolverProvider,
@@ -90,7 +88,6 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
         this.fixedSlotResolvers = fixedSlotResolvers;
         this.handlerManager = new PrioritizedHandlerManager(this);
         this.resolverProvider = resolverProvider;
-        this.slotMappingInitializer = slotMappingInitializer;
 
         LightweightList<Slot> slots = CollectionFactory.createLightweightList();
         for (Slot slot : requiredSlots) {
@@ -102,7 +99,7 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
         this.requiredSlots = slots.toArray(new Slot[slots.size()]);
     }
 
-    public SlotMappingConfiguration(Slot[] requiredSlots,
+    public SlotMappingConfigurationUIModel(Slot[] requiredSlots,
             ViewItemValueResolverFactoryProvider resolverProvider,
             SlotMappingInitializer slotMappingInitializer) {
         this(new HashMap<Slot, ViewItemValueResolver>(), requiredSlots,
@@ -186,7 +183,6 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
             SlotMappingUIModel uiModel = new SlotMappingUIModel(slot,
                     resolverProvider);
             slotsToSlotMappings.put(slot, uiModel);
-
         }
         // XXX deactivated, should introduce unresolved state instead...
         // slotMappingInitializer.initializeMappings(resources, contentDisplay,
@@ -359,10 +355,11 @@ public class SlotMappingConfiguration implements ViewItemValueResolverContext,
      * reinitialize it from the initializer
      */
     public void updateSlots(Slot[] slots, ResourceSet resources) {
+
         if (slots == null || slots.length == 0) {
             return;
         }
-        slotMappingInitializer.updateMappings(resources, this, slots);
+        // slotMappingInitializer.updateMappings(resources, this, slots);
     }
 
     /**

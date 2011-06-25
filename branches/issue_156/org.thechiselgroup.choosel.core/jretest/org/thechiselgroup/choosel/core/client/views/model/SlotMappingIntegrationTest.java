@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright (C) 2011 Lars Grammel 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at 
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0 
+ *     
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ * See the License for the specific language governing permissions and 
+ * limitations under the License.  
+ *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.model;
 
 import static org.junit.Assert.assertEquals;
@@ -10,6 +25,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -61,7 +77,7 @@ public class SlotMappingIntegrationTest {
     private ResourceGrouping resourceGrouping;
 
     /**
-     * <h3>Scenario 7: Changing Property Select</h3>
+     * <h3>Changing Property Select</h3>
      * 
      * Resolvers: 1 resolver, able to resolve a Number based on PropertyName<br>
      * Slots: 1 Number slot <br>
@@ -78,7 +94,6 @@ public class SlotMappingIntegrationTest {
      * ViewItems each with value = 2.
      * </p>
      */
-    // TODO ask Lars if how this test works is ok
     @Test
     public void changeSelectedPropertyChangesViewItems() {
         Slot[] requiredSlots = createSlots(DataType.NUMBER);
@@ -115,7 +130,9 @@ public class SlotMappingIntegrationTest {
         resource.putValue(property2, 2);
         resourceGrouping.getResourceSet().add(resource);
 
-        resolver.setProperty(property2);
+        FirstResourcePropertyResolver resolver2 = new FirstResourcePropertyResolver(
+                resolverId1, property2, DataType.NUMBER);
+        slotMappingConfiguration.setResolver(requiredSlots[0], resolver2);
 
         LightweightCollection<ViewItem> viewItems = model.getViewItems();
 
@@ -126,7 +143,7 @@ public class SlotMappingIntegrationTest {
     }
 
     /**
-     * <h3>Scenario 4: Changing Data changes Resolver and Resolution</h3>
+     * <h3>Changing Data changes Resolver and Resolution</h3>
      * 
      * Resolvers: 2 Resolvers, resolver1: first resources => 1 resolver2: second
      * resources => 2 (specified by initializer) <br>
@@ -423,10 +440,9 @@ public class SlotMappingIntegrationTest {
     }
 
     /**
-     * <h3>Scenario 8: Automatically Change Resolver When Selected Property Not
-     * Applicable</h3>
+     * <h3>Automatically Change Resolver When Selected Property Not Applicable</h3>
      * 
-     * Resolvers: 1 resolver, which resolves a Number based on a property , 1
+     * Resolvers: 1 resolver, which resolves a Number based on a property, 1
      * default resolver that resolves to 2<br>
      * Slots: 1 Number slot <br>
      * Grouping: each resource is grouped alone <br>
@@ -442,6 +458,13 @@ public class SlotMappingIntegrationTest {
      * have 2 ViewItems in it each with value 2.
      * </p>
      */
+    /*
+     * XXX The property of the resolver gets switched in this test case. Since
+     * resolvers are immutable, this needs to change - it should be impossible
+     * to switch to an invalid property. Instead, we should test that the UI
+     * does not provide the possibility to switch to an invalid resolver.
+     */
+    @Ignore("issue 156 refactoring")
     @Test
     public void reinitialzeResolverWhenPropertySelectedIsNotValid() {
         Slot[] requiredSlots = createSlots(DataType.NUMBER);
@@ -480,7 +503,7 @@ public class SlotMappingIntegrationTest {
         resource.putValue(property1, 2);
         resourceGrouping.getResourceSet().add(resource);
 
-        resolver.setProperty(property2);
+        // resolver.setProperty(property2);
 
         LightweightCollection<ViewItem> viewItems = model.getViewItems();
 

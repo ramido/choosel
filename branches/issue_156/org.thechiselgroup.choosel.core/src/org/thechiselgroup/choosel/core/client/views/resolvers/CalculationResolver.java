@@ -24,7 +24,6 @@ import org.thechiselgroup.choosel.core.client.util.math.Calculation;
 import org.thechiselgroup.choosel.core.client.util.math.MathUtils;
 import org.thechiselgroup.choosel.core.client.util.math.NumberArray;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
-import org.thechiselgroup.choosel.core.client.views.model.SlotResolverChangedEvent;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
@@ -32,7 +31,7 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverC
 public class CalculationResolver extends SubsetViewItemValueResolver implements
         PropertyDependantViewItemValueResolver {
 
-    private String property;
+    private final String property;
 
     private final Calculation calculation;
 
@@ -92,18 +91,6 @@ public class CalculationResolver extends SubsetViewItemValueResolver implements
             ViewItemValueResolverContext context, Subset subset) {
         return calculation.calculate(toNumberArray(viewItem
                 .getResources(subset)));
-    }
-
-    /**
-     * This method will set the property of the resolver, and fire an event if
-     * that is a change
-     */
-    @Override
-    public void setProperty(String property) {
-        if (!this.property.equals(property)) {
-            this.property = property;
-            fireEvent(new SlotResolverChangedEvent());
-        }
     }
 
     private NumberArray toNumberArray(LightweightCollection<Resource> resources) {

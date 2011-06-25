@@ -47,7 +47,8 @@ public abstract class PropertyListBoxResolverUIController implements
         public void onChange(ChangeEvent event) {
             String selectedProperty = selector.getSelectedValue();
             if (!selectedProperty.equals(resolver.getProperty())) {
-                resolver.setProperty(selectedProperty);
+                // XXX deactivated in issue 156 refactoring
+                // resolver.setProperty(selectedProperty);
             }
         }
     };
@@ -120,7 +121,8 @@ public abstract class PropertyListBoxResolverUIController implements
         // the new view items can not be resolver by the current resolver, and
         // the property field should be set to something that is valid
         if (!properties.contains(resolver.getProperty())) {
-            resolver.setProperty(properties.get(0));
+            // XXX deactivated in issue 156 refactoring
+            // resolver.setProperty(properties.get(0));
             selector.setSelectedValue(properties.get(0));
         }
     }
