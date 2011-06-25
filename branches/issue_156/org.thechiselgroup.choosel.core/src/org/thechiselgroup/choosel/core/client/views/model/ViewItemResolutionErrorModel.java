@@ -25,6 +25,10 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
  */
 public interface ViewItemResolutionErrorModel {
 
+    /**
+     * @return {@link Slot}s for which there are resolution problems for at
+     *         least one {@link ViewItem}.
+     */
     LightweightCollection<Slot> getSlotsWithErrors();
 
     /**
@@ -34,6 +38,10 @@ public interface ViewItemResolutionErrorModel {
      */
     LightweightCollection<Slot> getSlotsWithErrors(ViewItem viewItem);
 
+    /**
+     * @return {@link ViewItem}s for which there are resolution problems for at
+     *         least one {@link Slot}.
+     */
     LightweightCollection<ViewItem> getViewItemsWithErrors();
 
     /**
@@ -48,8 +56,16 @@ public interface ViewItemResolutionErrorModel {
      */
     boolean hasErrors();
 
+    /**
+     * @return <code>true</code>, if there are any resolution problems for
+     *         {@code slot}.
+     */
     boolean hasErrors(Slot slot);
 
+    /**
+     * @return <code>true</code>, if there are any resolution problems for
+     *         {@code viewItem}.
+     */
     boolean hasErrors(ViewItem viewItem);
 
 }

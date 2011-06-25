@@ -20,10 +20,8 @@ import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 
 // NOTE: facade to visualization subsystem
 // TODO rename to visualization model?
-public interface ViewModel extends ViewItemContainer, ContainsResourceGrouping {
-
-    // TODO get/set multi categorizer -- superinterface shared with resource
-    // grouping
+public interface ViewModel extends ViewItemContainer, ContainsResourceGrouping,
+        ViewItemResolutionErrorModel {
 
     /**
      * @return {@link ResourceSet} that the {@link ResourceGrouping} of this
@@ -31,6 +29,9 @@ public interface ViewModel extends ViewItemContainer, ContainsResourceGrouping {
      */
     // TODO rename -- these are all resources in this visualization
     ResourceSet getContentResourceSet();
+
+    // TODO get/set multi categorizer -- superinterface shared with resource
+    // grouping
 
     // TODO Type mapping operations
 

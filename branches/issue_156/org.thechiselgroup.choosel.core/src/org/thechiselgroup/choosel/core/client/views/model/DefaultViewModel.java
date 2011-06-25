@@ -83,6 +83,8 @@ public class DefaultViewModel implements ViewModel, Disposable,
 
     final SlotMappingConfigurationUIModel configurationUIModel;
 
+    private DefaultViewItemResolutionErrorModel errorModel = new DefaultViewItemResolutionErrorModel();
+
     public DefaultViewModel(ViewContentDisplay contentDisplay,
             SlotMappingConfiguration slotMappingConfiguration,
             ResourceSet selectedResources, ResourceSet highlightedResources,
@@ -242,6 +244,16 @@ public class DefaultViewModel implements ViewModel, Disposable,
     }
 
     @Override
+    public LightweightCollection<Slot> getSlotsWithErrors() {
+        return errorModel.getSlotsWithErrors();
+    }
+
+    @Override
+    public LightweightCollection<Slot> getSlotsWithErrors(ViewItem viewItem) {
+        return errorModel.getSlotsWithErrors(viewItem);
+    }
+
+    @Override
     public ViewContentDisplay getViewContentDisplay() {
         return contentDisplay;
     }
@@ -275,6 +287,31 @@ public class DefaultViewModel implements ViewModel, Disposable,
             result.add(viewItemsByGroupId.get(group));
         }
         return result;
+    }
+
+    @Override
+    public LightweightCollection<ViewItem> getViewItemsWithErrors() {
+        return errorModel.getViewItemsWithErrors();
+    }
+
+    @Override
+    public LightweightCollection<ViewItem> getViewItemsWithErrors(Slot slot) {
+        return errorModel.getViewItemsWithErrors(slot);
+    }
+
+    @Override
+    public boolean hasErrors() {
+        return errorModel.hasErrors();
+    }
+
+    @Override
+    public boolean hasErrors(Slot slot) {
+        return errorModel.hasErrors(slot);
+    }
+
+    @Override
+    public boolean hasErrors(ViewItem viewItem) {
+        return errorModel.hasErrors(viewItem);
     }
 
     private void init(Object target) {
