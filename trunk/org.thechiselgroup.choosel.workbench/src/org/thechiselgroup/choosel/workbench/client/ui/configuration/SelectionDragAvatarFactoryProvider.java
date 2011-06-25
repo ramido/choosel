@@ -32,7 +32,6 @@ import org.thechiselgroup.choosel.core.client.views.model.HighlightingModel;
 import org.thechiselgroup.choosel.dnd.client.resources.DraggableResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.dnd.client.resources.HighlightingDraggableResourceSetAvatarFactory;
 import org.thechiselgroup.choosel.dnd.client.resources.ResourceSetAvatarDragController;
-import org.thechiselgroup.choosel.dnd.client.resources.SelectionResourceSetAvatarFactory;
 
 import com.google.inject.Inject;
 
@@ -75,8 +74,8 @@ public class SelectionDragAvatarFactoryProvider implements
         ResourceSetAvatarFactory highlightingFactory = new HighlightingDraggableResourceSetAvatarFactory(
                 updateFactory, hoverModel, dragController);
 
-        ResourceSetAvatarFactory clickFactory = new SelectionResourceSetAvatarFactory(
-                highlightingFactory, viewAccessor);
+        ResourceSetAvatarFactory clickFactory = new CommandDrivenSelectionResourceSetAvatarFactory(
+                highlightingFactory, viewAccessor, commandManager);
 
         List<Action> actions = new ArrayList<Action>();
         actions.add(new RemoveSelectionSetAction(commandManager));

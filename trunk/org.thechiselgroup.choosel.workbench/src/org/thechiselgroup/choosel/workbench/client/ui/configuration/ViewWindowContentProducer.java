@@ -25,6 +25,7 @@ import static org.thechiselgroup.choosel.core.client.configuration.ChooselInject
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.thechiselgroup.choosel.core.client.command.CommandManager;
 import org.thechiselgroup.choosel.core.client.error_handling.LoggerProvider;
 import org.thechiselgroup.choosel.core.client.label.LabelProvider;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
@@ -42,10 +43,10 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.views.DefaultView;
 import org.thechiselgroup.choosel.core.client.views.SidePanelSection;
 import org.thechiselgroup.choosel.core.client.views.ViewPart;
+import org.thechiselgroup.choosel.core.client.views.behaviors.CommandDrivenSwitchSelectionOnClickViewItemBehaviour;
 import org.thechiselgroup.choosel.core.client.views.behaviors.CompositeViewItemBehavior;
 import org.thechiselgroup.choosel.core.client.views.behaviors.HighlightingViewItemBehavior;
 import org.thechiselgroup.choosel.core.client.views.behaviors.PopupWithHighlightingViewItemBehavior;
-import org.thechiselgroup.choosel.core.client.views.behaviors.SwitchSelectionOnClickViewItemBehavior;
 import org.thechiselgroup.choosel.core.client.views.model.DefaultResourceModel;
 import org.thechiselgroup.choosel.core.client.views.model.DefaultSelectionModel;
 import org.thechiselgroup.choosel.core.client.views.model.DefaultSlotMappingInitializer;
@@ -118,6 +119,9 @@ public class ViewWindowContentProducer implements WindowContentProducer {
 
     @Inject
     private DragEnablerFactory dragEnablerFactory;
+
+    @Inject
+    private CommandManager commandManager;
 
     private Logger logger;
 
@@ -203,8 +207,9 @@ public class ViewWindowContentProducer implements WindowContentProducer {
         viewItemBehaviors.add(new DragViewItemBehavior(dragEnablerFactory));
         viewItemBehaviors.add(new PopupWithHighlightingViewItemBehavior(
                 detailsWidgetHelper, popupManagerFactory, hoverModel));
-        viewItemBehaviors.add(new SwitchSelectionOnClickViewItemBehavior(
-                selectionModel));
+        viewItemBehaviors
+                .add(new CommandDrivenSwitchSelectionOnClickViewItemBehaviour(
+                        selectionModel, commandManager));
 
         SlotMappingInitializer slotMappingInitializer = createSlotMappingInitializer(contentType);
 

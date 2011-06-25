@@ -75,7 +75,8 @@ public class PieChart extends ChartViewContentDisplay {
                 return 0;
             }
 
-            assert 0 <= partialValue && partialValue <= value;
+            assert 0 <= partialValue && partialValue <= value : "invalid partial value. Expected range: [0,"
+                    + value + "]; got: " + partialValue;
 
             double partialPercentage = partialValue / value;
 
