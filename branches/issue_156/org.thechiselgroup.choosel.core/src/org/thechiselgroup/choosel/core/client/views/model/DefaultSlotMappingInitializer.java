@@ -33,6 +33,20 @@ public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
 
     private Map<DataType, ViewItemValueResolver> defaultDataTypeResolvers = new HashMap<DataType, ViewItemValueResolver>();
 
+    @Override
+    public Map<Slot, ViewItemValueResolver> getResolvers(
+            ResourceSet viewResources, Slot[] slotsToUpdate) {
+
+        DataTypeToListMap<String> propertiesByDataType = ResourceSetUtils
+                .getPropertiesByDataType(viewResources);
+
+        Map<Slot, ViewItemValueResolver> result = new HashMap<Slot, ViewItemValueResolver>();
+        for (Slot slot : slotsToUpdate) {
+            result.put(slot, getSlotResolver(propertiesByDataType, slot));
+        }
+        return result;
+    }
+
     private ViewItemValueResolver getSlotResolver(
             DataTypeToListMap<String> propertiesByDataType, Slot slot) {
 
@@ -60,44 +74,8 @@ public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
                 "FirstResourcePropertyResolver", firstProperty, dataType);
     }
 
-    @Override
-    public void initializeMappings(ResourceSet resources,
-            ViewContentDisplay contentDisplay,
-            SlotMappingConfiguration slotMappingConfiguration) {
-
-        DataTypeToListMap<String> propertiesByDataType = ResourceSetUtils
-                .getPropertiesByDataType(resources);
-
-        for (Slot slot : contentDisplay.getSlots()) {
-            if (slotMappingConfiguration.isSlotInitialized(slot)) {
-                continue;
-            }
-
-            ViewItemValueResolver slotResolver = getSlotResolver(
-                    propertiesByDataType, slot);
-            assert slotResolver != null;
-            slotMappingConfiguration.setResolver(slot, slotResolver);
-        }
-    }
-
     public void putDefaultDataTypeValues(DataType dataType,
             ViewItemValueResolver resolver) {
         defaultDataTypeResolvers.put(dataType, resolver);
-    }
-
-    @Override
-    public void updateMappings(ResourceSet resources,
-            SlotMappingConfiguration slotMappingConfiguration,
-            Slot[] slotsToUpdate) {
-
-        DataTypeToListMap<String> propertiesByDataType = ResourceSetUtils
-                .getPropertiesByDataType(resources);
-
-        // TODO add assert that the slotsToUpdate are part of the contentDisplay
-        for (Slot slot : slotsToUpdate) {
-            slotMappingConfiguration.setResolver(slot,
-                    getSlotResolver(propertiesByDataType, slot));
-        }
-
     }
 }

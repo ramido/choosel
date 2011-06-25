@@ -16,6 +16,7 @@
 package org.thechiselgroup.choosel.core.client.views.model;
 
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -594,8 +595,15 @@ public class DefaultViewModel implements ViewModel, Disposable,
                 .getSlotsWithInvalidResolvers();
 
         if (!slots.isEmpty()) {
-            slotMappingInitializer.updateMappings(getResourceGrouping()
-                    .getResourceSet(), slotMappingConfiguration, getSlots());
+            Map<Slot, ViewItemValueResolver> resolvers = slotMappingInitializer
+                    .getResolvers(getResourceGrouping().getResourceSet(),
+                            getSlots());
+
+            for (Entry<Slot, ViewItemValueResolver> entry : resolvers
+                    .entrySet()) {
+                slotMappingConfiguration.setResolver(entry.getKey(),
+                        entry.getValue());
+            }
         }
     }
 }
