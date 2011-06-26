@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -17,20 +17,15 @@ package org.thechiselgroup.choosel.core.client.views.resolvers;
 
 import java.util.Map;
 
-import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceCategorizer;
-import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetUtils;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
-import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
 
-public class ViewItemColorResolver extends
-        AbstractEventHandlingViewItemValueResolver implements
-        ViewItemValueResolver {
+// TODO DataType.Color
+public class ViewItemColorResolver implements ViewItemValueResolver {
 
     private static final String ID = "ViewItemColorResolver";
 
@@ -47,10 +42,10 @@ public class ViewItemColorResolver extends
     }
 
     @Override
-    public boolean canResolve(Slot slot,
-            LightweightList<ResourceSet> resourceSets,
+    public boolean canResolve(ViewItem viewItem,
             ViewItemValueResolverContext context) {
-        return DataType.COLOR.equals(slot.getDataType());
+
+        return true;
     }
 
     @Override

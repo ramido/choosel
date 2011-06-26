@@ -19,8 +19,6 @@ import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSetUtils;
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
-import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
@@ -36,36 +34,42 @@ public class FirstResourcePropertyResolver extends SubsetViewItemValueResolver
 
     public FirstResourcePropertyResolver(String resolverID, String property,
             DataType dataType) {
+
         this(resolverID, property, dataType, Subset.ALL);
     }
 
     public FirstResourcePropertyResolver(String resolverID, String property,
             DataType dataType, Subset subset) {
+
         super(subset);
+
         assert property != null;
         assert dataType != null;
         assert resolverID != null;
+
         this.dataType = dataType;
         this.property = property;
         this.resolverID = resolverID;
     }
 
+    // TODO test
     @Override
-    public boolean canResolve(Slot slot,
-            LightweightList<ResourceSet> resourceSets,
+    public boolean canResolve(ViewItem viewItem,
             ViewItemValueResolverContext context) {
-        if (!slot.getDataType().equals(dataType)) {
+
+        assert viewItem != null;
+        assert context != null;
+
+        ResourceSet resources = viewItem.getResources();
+
+        if (resources.isEmpty()) {
             return false;
         }
 
-        for (ResourceSet resourceSet : resourceSets) {
-            for (Resource resource : resourceSet) {
-                if (!resource.containsProperty(property)) {
-                    return false;
-                }
-            }
-        }
-        return true;
+        Resource resource = ResourceSetUtils.firstResource(resources);
+
+        // XXX need to check for property type
+        return resource.containsProperty(property);
     }
 
     @Override
@@ -81,6 +85,9 @@ public class FirstResourcePropertyResolver extends SubsetViewItemValueResolver
     @Override
     public Object resolve(ViewItem viewItem,
             ViewItemValueResolverContext context, Subset subset) {
+
+        // TODO what if viewItem could be resolved, but not for subset?
+
         ResourceSet resources = viewItem.getResources(subset);
         return ResourceSetUtils.firstResource(resources).getValue(property);
     }

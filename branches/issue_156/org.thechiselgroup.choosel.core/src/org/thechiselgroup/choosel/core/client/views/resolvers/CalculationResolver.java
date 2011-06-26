@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -15,15 +15,11 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
-import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
-import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.util.math.Calculation;
 import org.thechiselgroup.choosel.core.client.util.math.MathUtils;
 import org.thechiselgroup.choosel.core.client.util.math.NumberArray;
-import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
@@ -51,24 +47,28 @@ public class CalculationResolver extends SubsetViewItemValueResolver implements
         this.calculation = calculation;
     }
 
-    // TODO we should check to make sure that the resource's property is the
-    // correct DataType
+    /*
+     * TODO we should check to make sure that the resource's property is the
+     * correct DataType. This should happen in the SlotMappingConfiguration once
+     * Resolvers report their DataType.
+     * 
+     * TODO test (not existing property, invalid data type on property, all
+     * okay)
+     */
     @Override
-    public boolean canResolve(Slot slot,
-            LightweightList<ResourceSet> resourceSets,
+    public boolean canResolve(ViewItem viewItem,
             ViewItemValueResolverContext context) {
 
-        if (!slot.getDataType().equals(DataType.NUMBER)) {
-            return false;
-        }
+        assert viewItem != null;
+        assert context != null;
 
-        for (ResourceSet resourceSet : resourceSets) {
-            for (Resource resource : resourceSet) {
-                if (!resource.containsProperty(property)) {
-                    return false;
-                }
+        for (Resource resource : viewItem.getResources()) {
+            // XXX also need to check property data type.
+            if (!resource.containsProperty(property)) {
+                return false;
             }
         }
+
         return true;
     }
 

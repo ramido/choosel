@@ -15,18 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
-import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.views.filter.ViewItemPredicate;
-import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Status;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
 
-public class ViewItemStatusResolver extends
-        AbstractEventHandlingViewItemValueResolver implements
-        ViewItemValueResolver {
+public class ViewItemStatusResolver implements ViewItemValueResolver {
 
     public static class StatusRule implements ViewItemPredicate {
 
@@ -79,9 +74,9 @@ public class ViewItemStatusResolver extends
     }
 
     @Override
-    public boolean canResolve(Slot slot,
-            LightweightList<ResourceSet> resourceSets,
+    public boolean canResolve(ViewItem viewItem,
             ViewItemValueResolverContext context) {
+
         return true;
     }
 

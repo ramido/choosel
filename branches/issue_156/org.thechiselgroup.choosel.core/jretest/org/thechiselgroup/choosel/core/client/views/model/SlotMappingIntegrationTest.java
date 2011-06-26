@@ -110,10 +110,11 @@ public class SlotMappingIntegrationTest {
         slotMappingInitializer = new TestSlotMappingInitializer(
                 initialSlotMapping);
 
-        SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
-                resolverProvider, slotMappingInitializer);
         SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration(
                 requiredSlots);
+        SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
+                resolverProvider, slotMappingInitializer,
+                slotMappingConfiguration);
 
         ResourceMultiCategorizer multiCategorizer = new ResourceByUriMultiCategorizer();
         ResourceGrouping resourceGrouping = new ResourceGrouping(
@@ -185,10 +186,11 @@ public class SlotMappingIntegrationTest {
         slotMappingInitializer = new TestSlotMappingInitializer(
                 initialSlotMapping);
 
-        SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
-                resolverProvider, slotMappingInitializer);
         SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration(
                 requiredSlots);
+        SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
+                resolverProvider, slotMappingInitializer,
+                slotMappingConfiguration);
 
         ResourceMultiCategorizer multiCategorizer = new ResourceByUriMultiCategorizer();
         ResourceGrouping resourceGrouping = new ResourceGrouping(
@@ -255,10 +257,11 @@ public class SlotMappingIntegrationTest {
         slotMappingInitializer = new TestSlotMappingInitializer(
                 initialSlotMapping);
 
-        SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
-                resolverProvider, slotMappingInitializer);
         SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration(
                 requiredSlots);
+        SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
+                resolverProvider, slotMappingInitializer,
+                slotMappingConfiguration);
 
         ResourceMultiCategorizer multiCategorizer = new ResourceByUriMultiCategorizer();
         ResourceGrouping resourceGrouping = new ResourceGrouping(
@@ -363,17 +366,18 @@ public class SlotMappingIntegrationTest {
         slotMappingInitializer = new TestSlotMappingInitializer(
                 initialSlotMapping);
 
-        SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
-                resolverProvider, slotMappingInitializer);
         SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration(
                 requiredSlots);
+        SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
+                resolverProvider, slotMappingInitializer,
+                slotMappingConfiguration);
 
         ResourceMultiCategorizer multiCategorizer = new ResourceByUriMultiCategorizer();
         ResourceGrouping resourceGrouping = new ResourceGrouping(
                 multiCategorizer, new DefaultResourceSetFactory());
 
-        DefaultViewModel model = createViewModel(configurationUIModel,
-                slotMappingConfiguration, resourceGrouping);
+        createViewModel(configurationUIModel, slotMappingConfiguration,
+                resourceGrouping);
 
         resourceGrouping.setResourceSet(new DefaultResourceSet());
         Resource resource = TestResourceSetFactory.createResource(1);
@@ -428,17 +432,18 @@ public class SlotMappingIntegrationTest {
         slotMappingInitializer = new TestSlotMappingInitializer(
                 initialSlotMapping);
 
-        SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
-                resolverProvider, slotMappingInitializer);
         SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration(
                 requiredSlots);
+        SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
+                resolverProvider, slotMappingInitializer,
+                slotMappingConfiguration);
 
         ResourceMultiCategorizer multiCategorizer = new ResourceByUriMultiCategorizer();
         ResourceGrouping resourceGrouping = new ResourceGrouping(
                 multiCategorizer, new DefaultResourceSetFactory());
 
-        DefaultViewModel model = createViewModel(configurationUIModel,
-                slotMappingConfiguration, resourceGrouping);
+        createViewModel(configurationUIModel, slotMappingConfiguration,
+                resourceGrouping);
 
         resourceGrouping.setResourceSet(new DefaultResourceSet());
         Resource resource = TestResourceSetFactory.createResource(1);
@@ -496,10 +501,11 @@ public class SlotMappingIntegrationTest {
         slotMappingInitializer = new TestSlotMappingInitializer(
                 initialSlotMapping);
 
-        SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
-                resolverProvider, slotMappingInitializer);
         SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration(
                 requiredSlots);
+        SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
+                resolverProvider, slotMappingInitializer,
+                slotMappingConfiguration);
 
         ResourceMultiCategorizer multiCategorizer = new ResourceByUriMultiCategorizer();
         ResourceGrouping resourceGrouping = new ResourceGrouping(
@@ -548,10 +554,11 @@ public class SlotMappingIntegrationTest {
         slotMappingInitializer = new TestSlotMappingInitializer(
                 initialSlotMapping);
 
-        SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
-                resolverProvider, slotMappingInitializer);
         SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration(
                 requiredSlots);
+        SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
+                resolverProvider, slotMappingInitializer,
+                slotMappingConfiguration);
 
         ResourceMultiCategorizer multiCategorizer = new ResourceByUriMultiCategorizer();
         ResourceGrouping resourceGrouping = new ResourceGrouping(
@@ -595,10 +602,11 @@ public class SlotMappingIntegrationTest {
         slotMappingInitializer = new TestSlotMappingInitializer(
                 initialSlotMapping);
 
-        SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
-                resolverProvider, slotMappingInitializer);
         SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration(
                 requiredSlots);
+        SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
+                resolverProvider, slotMappingInitializer,
+                slotMappingConfiguration);
 
         ResourceMultiCategorizer multiCategorizer = new ResourceByUriMultiCategorizer();
         ResourceGrouping resourceGrouping = new ResourceGrouping(
@@ -656,10 +664,11 @@ public class SlotMappingIntegrationTest {
         slotMappingInitializer = new TestSlotMappingInitializer(
                 initialSlotMapping);
 
-        SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
-                resolverProvider, slotMappingInitializer);
         SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration(
                 requiredSlots);
+        SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
+                resolverProvider, slotMappingInitializer,
+                slotMappingConfiguration);
 
         ResourceMultiCategorizer multiCategorizer = new ResourceByUriMultiCategorizer();
         ResourceGrouping resourceGrouping = new ResourceGrouping(
@@ -726,10 +735,11 @@ public class SlotMappingIntegrationTest {
         slotMappingInitializer = new TestSlotMappingInitializer(
                 initialSlotMapping);
 
-        SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
-                resolverProvider, slotMappingInitializer);
         SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration(
                 requiredSlots);
+        SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
+                resolverProvider, slotMappingInitializer,
+                slotMappingConfiguration);
 
         ResourceMultiCategorizer multiCategorizer = new ResourceByUriMultiCategorizer();
         ResourceGrouping resourceGrouping = new ResourceGrouping(
@@ -794,10 +804,11 @@ public class SlotMappingIntegrationTest {
                 initialSlotMapping);
 
         /* create the slotMappingConfiguration */
-        SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
-                resolverProvider, slotMappingInitializer);
         SlotMappingConfiguration slotMappingConfiguration = new SlotMappingConfiguration(
                 requiredSlots);
+        SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
+                resolverProvider, slotMappingInitializer,
+                slotMappingConfiguration);
 
         /*
          * create the ViewModel, as well as initialize the

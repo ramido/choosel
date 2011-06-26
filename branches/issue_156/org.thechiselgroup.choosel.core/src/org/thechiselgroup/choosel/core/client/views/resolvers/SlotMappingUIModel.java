@@ -18,12 +18,13 @@ package org.thechiselgroup.choosel.core.client.views.resolvers;
 import java.util.Collection;
 import java.util.Map;
 
-import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingChangedEvent;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingChangedHandler;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -80,24 +81,29 @@ public class SlotMappingUIModel {
     private HandlerManager eventBus;
 
     // initialize current view items to an empty list
-    private LightweightList<ResourceSet> currentResourceSets;
+    private LightweightList<ViewItem> currentViewItems;
+
+    private ViewItemValueResolverContext context;
 
     public SlotMappingUIModel(Slot slot,
-            ViewItemValueResolverFactoryProvider provider) {
+            ViewItemValueResolverFactoryProvider provider,
+            ViewItemValueResolverContext context) {
 
         assert slot != null;
         assert provider != null;
+        assert context != null;
 
         this.slot = slot;
         this.provider = provider;
+        this.context = context;
 
         this.eventBus = new HandlerManager(this);
         this.allowableResolverFactories = CollectionFactory.createStringMap();
 
-        currentResourceSets = CollectionFactory.createLightweightList();
+        currentViewItems = CollectionFactory.createLightweightList();
 
         updateAllowableFactories(CollectionFactory
-                .<ResourceSet> createLightweightList());
+                .<ViewItem> createLightweightList());
     }
 
     public void addSlotMappingEventHandler(SlotMappingChangedHandler handler) {
@@ -110,10 +116,6 @@ public class SlotMappingUIModel {
      */
     public ViewItemValueResolver getCurrentResolver() {
         return currentResolver;
-    }
-
-    public LightweightList<ResourceSet> getCurrentResourceSets() {
-        return currentResourceSets;
     }
 
     public Collection<ViewItemValueResolverFactory> getResolverFactories() {
@@ -131,6 +133,7 @@ public class SlotMappingUIModel {
         return isAllowableResolver(currentResolver);
     }
 
+    // XXX should use error model, at least in parts.
     public boolean isAllowableResolver(ViewItemValueResolver resolver) {
         if (resolver == null) {
             return false;
@@ -146,8 +149,17 @@ public class SlotMappingUIModel {
             return true;
         }
 
-        return allowableResolverFactories.containsKey(resolver.getResolverId())
-                && resolver.canResolve(slot, currentResourceSets, null);
+        if (!allowableResolverFactories.containsKey(resolver.getResolverId())) {
+            return false;
+        }
+
+        for (ViewItem viewItem : currentViewItems) {
+            if (!resolver.canResolve(viewItem, context)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -184,7 +196,7 @@ public class SlotMappingUIModel {
             throw new InvalidResolverException(resolverID);
         }
         ViewItemValueResolver resolver = (allowableResolverFactories
-                .get(resolverID)).create(currentResourceSets);
+                .get(resolverID)).create(currentViewItems);
         setCurrentResolver(resolver);
     }
 
@@ -198,11 +210,9 @@ public class SlotMappingUIModel {
      * If the resolver can not resolve the set of view items, it will
      * automatically be changed to null
      */
-    public void updateAllowableFactories(
-            LightweightList<ResourceSet> resourceSets) {
-
-        assert resourceSets != null;
-        currentResourceSets = resourceSets;
+    public void updateAllowableFactories(LightweightList<ViewItem> viewItems) {
+        assert viewItems != null;
+        currentViewItems = viewItems;
 
         allowableResolverFactories.clear();
 
@@ -219,7 +229,7 @@ public class SlotMappingUIModel {
         assert allFactories != null;
 
         for (ViewItemValueResolverFactory factory : allFactories) {
-            if (factory.canCreateApplicableResolver(slot, resourceSets)) {
+            if (factory.canCreateApplicableResolver(slot, viewItems)) {
                 allowableResolverFactories.put(factory.getId(), factory);
             }
         }

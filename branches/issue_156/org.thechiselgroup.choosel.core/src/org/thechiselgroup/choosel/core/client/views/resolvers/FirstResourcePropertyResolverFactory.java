@@ -20,9 +20,9 @@ import java.util.List;
 
 import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
-import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 
 public class FirstResourcePropertyResolverFactory implements
         ViewItemValueResolverFactory {
@@ -39,7 +39,7 @@ public class FirstResourcePropertyResolverFactory implements
 
     @Override
     public boolean canCreateApplicableResolver(Slot slot,
-            LightweightList<ResourceSet> resourceSets) {
+            LightweightList<ViewItem> viewItems) {
 
         if (!slot.getDataType().equals(dataType)) {
             return false;
@@ -47,17 +47,16 @@ public class FirstResourcePropertyResolverFactory implements
 
         // for now, all resolvers should be applicable when there are no view
         // items
-        if (resourceSets.isEmpty()) {
+        if (viewItems.isEmpty()) {
             return true;
         }
 
-        return !getSharedProperties(resourceSets).isEmpty();
+        return !getSharedProperties(viewItems).isEmpty();
     }
 
     @Override
-    public ViewItemValueResolver create(
-            LightweightList<ResourceSet> resourceSets) {
-        List<String> properties = getSharedProperties(resourceSets);
+    public ViewItemValueResolver create(LightweightList<ViewItem> viewItems) {
+        List<String> properties = getSharedProperties(viewItems);
         assert !properties.isEmpty();
         return new FirstResourcePropertyResolver(resolverID, properties.get(0),
                 dataType);
@@ -74,20 +73,21 @@ public class FirstResourcePropertyResolverFactory implements
         return "Property Selector";
     }
 
-    private List<String> getSharedProperties(
-            LightweightList<ResourceSet> resourceSets) {
+    private List<String> getSharedProperties(LightweightList<ViewItem> viewItems) {
+
         List<String> properties = new ArrayList<String>();
         // intialize properties to be the ones in the first resource
-        if (resourceSets.isEmpty()) {
+        if (viewItems.isEmpty()) {
             return properties;
         }
 
-        Resource firstResource = resourceSets.get(0).iterator().next();
+        Resource firstResource = viewItems.get(0).getResources().iterator()
+                .next();
         properties.addAll(firstResource.getProperties().keySet());
 
         // only keep properties that are shared by all of the resource
-        for (ResourceSet resourceSet : resourceSets) {
-            for (Resource resource : resourceSet) {
+        for (ViewItem viewItem : viewItems) {
+            for (Resource resource : viewItem.getResources()) {
                 properties.retainAll(resource.getProperties().keySet());
             }
         }

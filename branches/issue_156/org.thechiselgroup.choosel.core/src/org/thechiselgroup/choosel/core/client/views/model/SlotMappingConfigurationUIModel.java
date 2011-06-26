@@ -34,13 +34,18 @@ public class SlotMappingConfigurationUIModel {
 
     private SlotMappingInitializer slotMappingInitializer;
 
+    private ViewItemValueResolverContext context;
+
     public SlotMappingConfigurationUIModel(
             ViewItemValueResolverFactoryProvider resolverProvider,
-            SlotMappingInitializer slotMappingInitializer) {
+            SlotMappingInitializer slotMappingInitializer,
+            ViewItemValueResolverContext context) {
 
         assert resolverProvider != null;
         assert slotMappingInitializer != null;
+        assert context != null;
 
+        this.context = context;
         this.resolverProvider = resolverProvider;
         this.slotMappingInitializer = slotMappingInitializer;
     }
@@ -61,7 +66,7 @@ public class SlotMappingConfigurationUIModel {
     public void initSlots(Slot[] slots) {
         for (Slot slot : slots) {
             slotsToSlotMappings.put(slot, new SlotMappingUIModel(slot,
-                    resolverProvider));
+                    resolverProvider, context));
         }
     }
 
@@ -73,20 +78,26 @@ public class SlotMappingConfigurationUIModel {
      * Call this method whenever the model changes (whenever the
      * {@link ViewItem}s change).
      */
-    public void updateUIModels(LightweightList<ResourceSet> resourceSets) {
+    private void updateUIModels(LightweightList<ViewItem> viewItems) {
         for (SlotMappingUIModel uiModel : slotsToSlotMappings.values()) {
-            uiModel.updateAllowableFactories(resourceSets);
+            uiModel.updateAllowableFactories(viewItems);
         }
     }
 
     public void updateVisualMappings(DefaultViewModel defaultViewModel,
-            Map<String, ResourceSet> resourceSetMap, ResourceSet viewResources) {
+            Map<String, ? extends ViewItem> viewItemMap,
+            ResourceSet viewResources) {
 
+        /*
+         * TODO DefaultViewModel should expose a LightweightCollection of all
+         * ViewItems and pass it in.
+         */
         // check to see if the configuration is still valid
-        LightweightList<ResourceSet> resourceSets = CollectionFactory
+        LightweightList<ViewItem> viewItems = CollectionFactory
                 .createLightweightList();
-        resourceSets.addAll(resourceSetMap.values());
-        updateUIModels(resourceSets);
+        viewItems.addAll(viewItemMap.values());
+
+        updateUIModels(viewItems);
 
         LightweightList<Slot> slots = getSlotsWithInvalidResolvers();
 

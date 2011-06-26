@@ -142,10 +142,10 @@ public final class DefaultViewModelTestHelper {
         when(viewContentDisplay.getSlots()).thenReturn(slots);
         when(viewContentDisplay.isReady()).thenReturn(true);
 
-        SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
-                resolverProvider, initializer);
         SlotMappingConfiguration slotMappingConfiguration = spy(new SlotMappingConfiguration(
                 slots));
+        SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
+                resolverProvider, initializer, slotMappingConfiguration);
 
         ResourceGrouping resourceGrouping = new ResourceGrouping(
                 new ResourceCategorizerToMultiCategorizerAdapter(

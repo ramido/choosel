@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -15,14 +15,11 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
-import org.thechiselgroup.choosel.core.client.resources.DataType;
-import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
-import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
 
+// TODO DataType.NUMBER
 public class ResourceCountResolver extends SubsetViewItemValueResolver {
 
     private static final String ID = "ResourceCountResolver";
@@ -36,10 +33,10 @@ public class ResourceCountResolver extends SubsetViewItemValueResolver {
     }
 
     @Override
-    public boolean canResolve(Slot slot,
-            LightweightList<ResourceSet> resourceSets,
+    public boolean canResolve(ViewItem viewItem,
             ViewItemValueResolverContext context) {
-        return DataType.NUMBER.equals(slot.getDataType());
+
+        return true;
     }
 
     @Override

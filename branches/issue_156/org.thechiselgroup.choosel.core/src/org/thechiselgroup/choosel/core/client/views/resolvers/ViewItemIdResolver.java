@@ -15,10 +15,6 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
-import org.thechiselgroup.choosel.core.client.resources.DataType;
-import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
-import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
 
@@ -27,17 +23,16 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverC
  * 
  * @author Lars Grammel
  */
-public class ViewItemIdResolver extends
-        AbstractEventHandlingViewItemValueResolver implements
-        ViewItemValueResolver {
+// TODO DataType.TEXT
+public class ViewItemIdResolver implements ViewItemValueResolver {
 
     private static final String ID = "ViewItemIdResolver";
 
     @Override
-    public boolean canResolve(Slot slot,
-            LightweightList<ResourceSet> resourceSets,
+    public boolean canResolve(ViewItem viewItem,
             ViewItemValueResolverContext context) {
-        return DataType.TEXT.equals(slot.getDataType());
+
+        return true;
     }
 
     @Override

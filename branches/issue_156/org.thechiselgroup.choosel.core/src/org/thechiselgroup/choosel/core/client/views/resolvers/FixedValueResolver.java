@@ -16,15 +16,11 @@
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
 import org.thechiselgroup.choosel.core.client.resources.DataType;
-import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
-import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
 
-public class FixedValueResolver extends
-        AbstractEventHandlingViewItemValueResolver implements
-        ViewItemValueResolver {
+// TODO expose data type
+public class FixedValueResolver implements ViewItemValueResolver {
 
     private final DataType dataType;
 
@@ -39,10 +35,10 @@ public class FixedValueResolver extends
     }
 
     @Override
-    public boolean canResolve(Slot slot,
-            LightweightList<ResourceSet> resourceSets,
+    public boolean canResolve(ViewItem viewItem,
             ViewItemValueResolverContext context) {
-        return slot.getDataType().equals(dataType);
+
+        return true;
     }
 
     @Override

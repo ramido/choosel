@@ -15,15 +15,12 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
-import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
 
-public class SubsetDelegatingValueResolver extends
-        AbstractEventHandlingViewItemValueResolver implements
+public class SubsetDelegatingValueResolver implements
         DelegatingViewItemValueResolver {
 
     private Slot slot;
@@ -39,11 +36,10 @@ public class SubsetDelegatingValueResolver extends
     }
 
     @Override
-    public boolean canResolve(Slot slot,
-            LightweightList<ResourceSet> resourceSets,
+    public boolean canResolve(ViewItem viewItem,
             ViewItemValueResolverContext context) {
-        return context.getResolver(slot)
-                .canResolve(slot, resourceSets, context);
+
+        return context.getResolver(slot).canResolve(viewItem, context);
     }
 
     // TODO

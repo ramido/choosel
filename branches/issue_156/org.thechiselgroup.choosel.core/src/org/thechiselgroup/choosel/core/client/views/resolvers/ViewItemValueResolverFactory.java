@@ -15,9 +15,9 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
-import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
+import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 
 /**
  * This interface is used to return new instances of a
@@ -33,16 +33,21 @@ public interface ViewItemValueResolverFactory {
      * resolve view items, only how it does the resolution.
      */
     boolean canCreateApplicableResolver(Slot slot,
-            LightweightList<ResourceSet> resourceSets);
+            LightweightList<ViewItem> viewItems);
 
     /**
      * @return A new instance of the corresponding ViewItemValueResolver
      */
-    // TODO what I really want to do is pass in a context of the current view in
-    // here. For example, besides current view items, what about passing in the
-    // currently selected property. This would be great if you wanted to select
-    // the same property by default
-    ViewItemValueResolver create(LightweightList<ResourceSet> resourceSets);
+    /*
+     * TODO what I really want to do is pass in a context of the current view in
+     * here. For example, besides current view items, what about passing in the
+     * currently selected property. This would be great if you wanted to select
+     * the same property by default
+     * 
+     * TODO The create methods might need to be resolver specific, because the
+     * ViewItemValueResolvers are immutable and we need to configure parameters.
+     */
+    ViewItemValueResolver create(LightweightList<ViewItem> viewItems);
 
     /**
      * @return the id of both the factory and the resolver

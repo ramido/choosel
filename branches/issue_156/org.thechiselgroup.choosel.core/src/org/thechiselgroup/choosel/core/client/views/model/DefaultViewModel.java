@@ -57,6 +57,41 @@ import com.google.gwt.event.shared.HandlerRegistration;
 public class DefaultViewModel implements ViewModel, Disposable,
         ViewContentDisplayCallback {
 
+    public static class ViewItemsDelta {
+
+        private LightweightCollection<ViewItem> addedViewItems;
+
+        private LightweightCollection<ViewItem> removedViewItems;
+
+        private LightweightCollection<ViewItem> updatedViewItems;
+
+        public ViewItemsDelta(LightweightCollection<ViewItem> addedViewItems,
+                LightweightCollection<ViewItem> removedViewItems,
+                LightweightCollection<ViewItem> updatedViewItems) {
+
+            assert addedViewItems != null;
+            assert removedViewItems != null;
+            assert updatedViewItems != null;
+
+            this.addedViewItems = addedViewItems;
+            this.removedViewItems = removedViewItems;
+            this.updatedViewItems = updatedViewItems;
+        }
+
+        public LightweightCollection<ViewItem> getAddedViewItems() {
+            return addedViewItems;
+        }
+
+        public LightweightCollection<ViewItem> getRemovedViewItems() {
+            return removedViewItems;
+        }
+
+        public LightweightCollection<ViewItem> getUpdatedViewItems() {
+            return updatedViewItems;
+        }
+
+    }
+
     /**
      * Maps group ids (representing the resource sets that are calculated by the
      * resource grouping, also used as view item ids) to the
@@ -182,10 +217,6 @@ public class DefaultViewModel implements ViewModel, Disposable,
 
         handlerRegistrations.dispose();
         handlerRegistrations = null;
-    }
-
-    public Map<String, ResourceSet> getCategorizedResourceSets() {
-        return resourceGrouping.getCategorizedResourceSets();
     }
 
     @Override
@@ -367,10 +398,12 @@ public class DefaultViewModel implements ViewModel, Disposable,
                  * the visual mappings need to be updated first because the view
                  * items rely on them when the values are resolved
                  */
+                ViewItemsDelta delta = updateViewItemsOnModelChange(e);
                 updateErrorModel();
-                updateVisualMappings(getCategorizedResourceSets());
-                updateViewItemsOnModelChange(e);
+                updateVisualMappings();
+                updateViewContentDisplay(delta);
             }
+
         });
     }
 
@@ -621,7 +654,16 @@ public class DefaultViewModel implements ViewModel, Disposable,
         }
     }
 
-    private void updateViewItemsOnModelChange(ResourceGroupingChangedEvent e) {
+    private void updateViewContentDisplay(ViewItemsDelta delta) {
+        // TODO switch to delta in view content display interface
+        updateViewContentDisplay(delta.getAddedViewItems(),
+                delta.getUpdatedViewItems(), delta.getRemovedViewItems(),
+                LightweightCollections.<Slot> emptyCollection());
+    }
+
+    private ViewItemsDelta updateViewItemsOnModelChange(
+            ResourceGroupingChangedEvent e) {
+
         assert e != null;
 
         /*
@@ -635,15 +677,14 @@ public class DefaultViewModel implements ViewModel, Disposable,
         LightweightCollection<ViewItem> updatedViewItems = processUpdates(e
                 .getChanges(Delta.GROUP_CHANGED));
 
-        updateViewContentDisplay(addedViewItems, updatedViewItems,
-                removedViewItems,
-                LightweightCollections.<Slot> emptyCollection());
+        return new ViewItemsDelta(addedViewItems, removedViewItems,
+                updatedViewItems);
     }
 
-    // TODO update visual mappings based on list of resource sets
-    private void updateVisualMappings(Map<String, ResourceSet> resourceSetMap) {
+    // TODO update visual mappings based on view items
+    private void updateVisualMappings() {
         ResourceSet viewResources = getResourceGrouping().getResourceSet();
-        configurationUIModel.updateVisualMappings(this, resourceSetMap,
+        configurationUIModel.updateVisualMappings(this, viewItemsByGroupId,
                 viewResources);
     }
 }
