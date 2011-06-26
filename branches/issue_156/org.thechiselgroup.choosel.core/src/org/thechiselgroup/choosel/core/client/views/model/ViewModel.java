@@ -43,9 +43,6 @@ public interface ViewModel extends ViewItemContainer, ContainsResourceGrouping,
     // TODO ReadableResourceSet
     ResourceSet getSelectedResources();
 
-    // TODO remove
-    SlotMappingConfiguration getSlotMappingConfiguration();
-
     // TODO these should be the configurable slots only
     // TODO introduce superinterface that is implemented by view model
     // and slot mapping cfg (get,set,slots,errors)

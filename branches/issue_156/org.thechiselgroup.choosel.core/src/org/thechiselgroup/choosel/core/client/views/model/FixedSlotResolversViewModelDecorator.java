@@ -98,11 +98,6 @@ public class FixedSlotResolversViewModelDecorator implements ViewModel {
     }
 
     @Override
-    public SlotMappingConfiguration getSlotMappingConfiguration() {
-        return delegate.getSlotMappingConfiguration();
-    }
-
-    @Override
     public Slot[] getSlots() {
         return slots;
     }

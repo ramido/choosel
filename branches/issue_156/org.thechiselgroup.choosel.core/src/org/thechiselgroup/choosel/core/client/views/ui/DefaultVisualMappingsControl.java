@@ -115,7 +115,7 @@ public class DefaultVisualMappingsControl implements VisualMappingsControl {
     private void initSlotControls() {
         slotControlsByDataType = new DataTypeToListMap<SlotControl>();
 
-        for (Slot slot : resolver.getRequiredSlots()) {
+        for (Slot slot : resolver.getSlots()) {
             // TODO get all factories from the provider, and for any allowable
             // one, add that bad boy in.
 

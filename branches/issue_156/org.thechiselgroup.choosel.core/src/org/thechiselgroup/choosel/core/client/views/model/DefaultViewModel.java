@@ -237,11 +237,6 @@ public class DefaultViewModel implements ViewModel, Disposable,
     }
 
     @Override
-    public SlotMappingConfiguration getSlotMappingConfiguration() {
-        return slotMappingConfiguration;
-    }
-
-    @Override
     public String getSlotResolverDescription(Slot slot) {
         if (!slotMappingConfiguration.isConfigured(slot)) {
             return "N/A";
@@ -252,7 +247,7 @@ public class DefaultViewModel implements ViewModel, Disposable,
 
     @Override
     public Slot[] getSlots() {
-        return slotMappingConfiguration.getRequiredSlots();
+        return slotMappingConfiguration.getSlots();
     }
 
     @Override

@@ -101,7 +101,7 @@ public class VisualizationWidget<T extends ViewContentDisplay> extends
     }
 
     public void setResolver(Slot slot, ViewItemValueResolver resolver) {
-        viewModel.getSlotMappingConfiguration().setResolver(slot, resolver);
+        viewModel.setResolver(slot, resolver);
     }
 
     @Override

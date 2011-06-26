@@ -200,8 +200,7 @@ public class DefaultView implements View {
         contentDisplay.restore(state.getChild(MEMENTO_CONTENT_DISPLAY),
                 restorationService, accessor);
 
-        restore(new SlotMappingConfigurationPersistableAdapter(
-                model.getSlotMappingConfiguration()), state,
+        restore(new SlotMappingConfigurationPersistableAdapter(model), state,
                 MEMENTO_SLOT_MAPPINGS, restorationService, accessor);
 
         contentDisplay.endRestore();
@@ -406,8 +405,7 @@ public class DefaultView implements View {
                 resourceSetCollector);
         memento.addChild(MEMENTO_CONTENT_DISPLAY,
                 contentDisplay.save(resourceSetCollector));
-        save(new SlotMappingConfigurationPersistableAdapter(
-                model.getSlotMappingConfiguration()), memento,
+        save(new SlotMappingConfigurationPersistableAdapter(model), memento,
                 MEMENTO_SLOT_MAPPINGS, resourceSetCollector);
 
         return memento;

@@ -58,10 +58,6 @@ public class SlotMappingConfiguration implements
         return handlerManager.addHandler(SlotMappingChangedEvent.TYPE, handler);
     }
 
-    public Slot[] getRequiredSlots() {
-        return slots;
-    }
-
     // TODO search for calls from outside this class and remove
     @Override
     public ViewItemValueResolver getResolver(Slot slot)
