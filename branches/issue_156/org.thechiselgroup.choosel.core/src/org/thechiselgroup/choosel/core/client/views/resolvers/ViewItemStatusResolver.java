@@ -21,7 +21,7 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Status;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
 
-public class ViewItemStatusResolver implements ViewItemValueResolver {
+public class ViewItemStatusResolver extends AbstractSimpleViewItemValueResolver {
 
     public static class StatusRule implements ViewItemPredicate {
 

@@ -20,18 +20,16 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
 
 // TODO expose data type
-public class FixedValueResolver implements ViewItemValueResolver {
-
-    private final DataType dataType;
+public class FixedValueResolver extends AbstractSimpleViewItemValueResolver {
 
     private final Object value;
 
     private final String id;
 
+    // TODO remove data type
     public FixedValueResolver(Object value, String id, DataType dataType) {
         this.value = value;
         this.id = id;
-        this.dataType = dataType;
     }
 
     @Override

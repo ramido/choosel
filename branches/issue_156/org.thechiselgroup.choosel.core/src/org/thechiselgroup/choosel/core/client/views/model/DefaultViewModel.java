@@ -403,7 +403,6 @@ public class DefaultViewModel implements ViewModel, Disposable,
                 updateVisualMappings();
                 updateViewContentDisplay(delta);
             }
-
         });
     }
 
@@ -681,7 +680,6 @@ public class DefaultViewModel implements ViewModel, Disposable,
                 updatedViewItems);
     }
 
-    // TODO update visual mappings based on view items
     private void updateVisualMappings() {
         ResourceSet viewResources = getResourceGrouping().getResourceSet();
         configurationUIModel.updateVisualMappings(this, viewItemsByGroupId,

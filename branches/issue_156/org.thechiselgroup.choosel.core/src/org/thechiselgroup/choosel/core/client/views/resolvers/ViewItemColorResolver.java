@@ -25,7 +25,7 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
 
 // TODO DataType.Color
-public class ViewItemColorResolver implements ViewItemValueResolver {
+public class ViewItemColorResolver extends AbstractSimpleViewItemValueResolver {
 
     private static final String ID = "ViewItemColorResolver";
 

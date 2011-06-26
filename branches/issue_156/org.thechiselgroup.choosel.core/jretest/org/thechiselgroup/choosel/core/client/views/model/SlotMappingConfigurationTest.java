@@ -22,12 +22,13 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
+import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.mockViewItemValueResolver;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
-import org.thechiselgroup.choosel.core.client.views.resolvers.DelegatingViewItemValueResolver;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 
 public class SlotMappingConfigurationTest {
@@ -40,10 +41,11 @@ public class SlotMappingConfigurationTest {
 
     @Test
     public void fireChangesForDelegatingSlotResolversWhenTargetResolverIsChanged() {
-        DelegatingViewItemValueResolver delegatingResolver = mock(DelegatingViewItemValueResolver.class);
-        when(delegatingResolver.getTargetSlot()).thenReturn(slot1);
+        ViewItemValueResolver delegatingResolver = mock(ViewItemValueResolver.class);
+        when(delegatingResolver.getTargetSlots()).thenReturn(
+                LightweightCollections.toCollection(slot1));
 
-        underTest.setResolver(slot1, mock(ViewItemValueResolver.class));
+        underTest.setResolver(slot1, mockViewItemValueResolver());
         underTest.setResolver(slot2, delegatingResolver);
 
         SlotMappingChangedHandler handler = mock(SlotMappingChangedHandler.class);
@@ -53,7 +55,7 @@ public class SlotMappingConfigurationTest {
          * changing slot 1 should trigger events for the delegating resolver at
          * slot 2, because it refers to slot 1.
          */
-        underTest.setResolver(slot1, mock(ViewItemValueResolver.class));
+        underTest.setResolver(slot1, mockViewItemValueResolver());
 
         verify(handler, times(1)).onSlotMappingChanged(
                 argThat(new IsChangeForSlotMatcher(slot2)));
@@ -61,7 +63,7 @@ public class SlotMappingConfigurationTest {
 
     @Test
     public void getUnconfiguredSlots() {
-        underTest.setResolver(slot1, mock(ViewItemValueResolver.class));
+        underTest.setResolver(slot1, mockViewItemValueResolver());
 
         assertThat(underTest.getUnconfiguredSlots(), containsExactly(slot2));
     }

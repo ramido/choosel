@@ -15,12 +15,24 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
+import org.thechiselgroup.choosel.core.client.views.model.ViewModel;
 
 /**
+ * <p>
  * Calculates a value given a {@link ViewItem}. Implementations of this
  * interface must be immutable.
+ * </p>
+ * <p>
+ * {@code ViewItemValueResolver}s can use other {@code ViewItemValueResolver}s
+ * defined on other {@link Slot}s of this {@link ViewModel} in their
+ * calculation. The {@link ViewItemValueResolverContext} exposes those during
+ * the calculation. However, they must declare the {@link Slot}s they depend on
+ * in {@link #getTargetSlots()}.
+ * </p>
  * 
  * @author Lars Grammel
  */
@@ -53,6 +65,13 @@ public interface ViewItemValueResolver {
     String getResolverId();
 
     /**
+     * @return {@link Slot}s that this {@link ViewItemValueResolver} delegates
+     *         to. Can be {@code null} if the this {@link ViewItemValueResolver}
+     *         does not delegate.
+     */
+    LightweightCollection<Slot> getTargetSlots();
+
+    /**
      * Calculates a value for a {@link ViewItem}.
      * 
      * @param viewItem
@@ -67,7 +86,8 @@ public interface ViewItemValueResolver {
      * 
      * @return Value for the {@link ViewItem}.
      */
-    // XXX document exceptions that are thrown if it cannot be resolved
+    // TODO ? document exceptions that are thrown if it cannot be resolved
+    // TODO return typed result (requires type system)
     Object resolve(ViewItem viewItem, ViewItemValueResolverContext context);
 
 }

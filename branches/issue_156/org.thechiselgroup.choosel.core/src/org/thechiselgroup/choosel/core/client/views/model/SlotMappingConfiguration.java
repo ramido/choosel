@@ -23,7 +23,6 @@ import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.util.event.PrioritizedHandlerManager;
-import org.thechiselgroup.choosel.core.client.views.resolvers.DelegatingViewItemValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -140,12 +139,11 @@ public class SlotMappingConfiguration implements
         // fire events for delegating resolvers that reference this slot
         for (Entry<Slot, ViewItemValueResolver> entry : slotsToResolvers
                 .entrySet()) {
-
-            if ((entry.getValue() instanceof DelegatingViewItemValueResolver)
-                    && (((DelegatingViewItemValueResolver) entry.getValue())
-                            .getTargetSlot().equals(slot))) {
-                handlerManager.fireEvent(new SlotMappingChangedEvent(entry
-                        .getKey()));
+            for (Slot targetSlot : entry.getValue().getTargetSlots()) {
+                if (targetSlot.equals(slot)) {
+                    handlerManager.fireEvent(new SlotMappingChangedEvent(entry
+                            .getKey()));
+                }
             }
         }
     }

@@ -24,7 +24,7 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverC
  * @author Lars Grammel
  */
 // TODO DataType.TEXT
-public class ViewItemIdResolver implements ViewItemValueResolver {
+public class ViewItemIdResolver extends AbstractSimpleViewItemValueResolver {
 
     private static final String ID = "ViewItemIdResolver";
 
