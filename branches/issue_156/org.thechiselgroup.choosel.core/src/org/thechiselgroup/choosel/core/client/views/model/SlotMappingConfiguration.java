@@ -21,7 +21,6 @@ import java.util.Map.Entry;
 
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.util.event.PrioritizedEventHandler;
 import org.thechiselgroup.choosel.core.client.util.event.PrioritizedHandlerManager;
 import org.thechiselgroup.choosel.core.client.views.resolvers.DelegatingViewItemValueResolver;
@@ -40,37 +39,13 @@ public class SlotMappingConfiguration implements
 
     private Map<String, Slot> slotsByID = CollectionFactory.createStringMap();
 
-    // TODO way more tests...
-    // TODO also need to calculate available slots --> based on fixed slots and
-    // whats required
-    // --> required slots
-    // TODO move some place else (not core, but workbench functionality).
-    private Map<Slot, ViewItemValueResolver> fixedSlotResolvers;
+    private Slot[] slots;
 
-    private Slot[] requiredSlots;
+    public SlotMappingConfiguration(Slot[] slots) {
+        assert slots != null;
 
-    public SlotMappingConfiguration(
-            Map<Slot, ViewItemValueResolver> fixedSlotResolvers,
-            Slot[] requiredSlots) {
-
-        assert fixedSlotResolvers != null;
-        assert requiredSlots != null;
-
-        this.fixedSlotResolvers = fixedSlotResolvers;
         this.handlerManager = new PrioritizedHandlerManager(this);
-
-        LightweightList<Slot> slots = CollectionFactory.createLightweightList();
-        for (Slot slot : requiredSlots) {
-            if (!fixedSlotResolvers.containsKey(slot)) {
-                slots.add(slot);
-            }
-        }
-
-        this.requiredSlots = slots.toArray(new Slot[slots.size()]);
-    }
-
-    public SlotMappingConfiguration(Slot[] requiredSlots) {
-        this(new HashMap<Slot, ViewItemValueResolver>(), requiredSlots);
+        this.slots = slots;
     }
 
     /**
@@ -83,17 +58,8 @@ public class SlotMappingConfiguration implements
         return handlerManager.addHandler(SlotMappingChangedEvent.TYPE, handler);
     }
 
-    // TODO this is not how we would check this anymore
-    @Override
-    public boolean isConfigured(Slot slot) {
-        assert slot != null;
-
-        return slotsToResolvers.containsKey(slot)
-                || fixedSlotResolvers.containsKey(slot);
-    }
-
     public Slot[] getRequiredSlots() {
-        return requiredSlots;
+        return slots;
     }
 
     // TODO search for calls from outside this class and remove
@@ -108,13 +74,8 @@ public class SlotMappingConfiguration implements
                     slotsToResolvers.keySet());
         }
 
-        if (slotsToResolvers.containsKey(slot)) {
-            return slotsToResolvers.get(slot);
-        }
-
-        assert fixedSlotResolvers.containsKey(slot);
-
-        return fixedSlotResolvers.get(slot);
+        assert slotsToResolvers.containsKey(slot);
+        return slotsToResolvers.get(slot);
     }
 
     @Override
@@ -125,8 +86,7 @@ public class SlotMappingConfiguration implements
 
     @Override
     public Slot[] getSlots() {
-        return slotsToResolvers.keySet().toArray(
-                new Slot[slotsToResolvers.keySet().size()]);
+        return slots;
     }
 
     @Override
@@ -135,6 +95,7 @@ public class SlotMappingConfiguration implements
         return null;
     }
 
+    // TODO why is this required? remove...
     public void initSlots(Slot[] slots) {
         assert slots != null;
 
@@ -143,13 +104,17 @@ public class SlotMappingConfiguration implements
             slotsByID.put(slot.getId(), slot);
             slotsToResolvers.put(slot, null); // XXX
         }
-
-        // XXX deactivated, should introduce unresolved state instead...
-        // slotMappingInitializer.initializeMappings(resources, contentDisplay,
-        // this);
     }
 
-    // TODO rename / rewrite
+    // TODO this is not how we would check this anymore
+    @Override
+    public boolean isConfigured(Slot slot) {
+        assert slot != null;
+
+        return slotsToResolvers.containsKey(slot);
+    }
+
+    // TODO remove
     public boolean isSlotInitialized(Slot slot) {
         ViewItemValueResolver viewItemValueResolver = slotsToResolvers
                 .get(slot);
