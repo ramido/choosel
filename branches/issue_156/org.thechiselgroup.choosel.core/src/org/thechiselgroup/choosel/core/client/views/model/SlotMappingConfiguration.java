@@ -46,6 +46,8 @@ public class SlotMappingConfiguration implements
 
         this.handlerManager = new PrioritizedHandlerManager(this);
         this.slots = slots;
+
+        initSlotsById(slots);
     }
 
     /**
@@ -66,11 +68,11 @@ public class SlotMappingConfiguration implements
         assert slot != null;
 
         if (!isConfigured(slot)) {
-            throw new NoResolverForSlotException(slot,
-                    slotsToResolvers.keySet());
+            throw new NoResolverForSlotException(slot, slotsToResolvers);
         }
 
         assert slotsToResolvers.containsKey(slot);
+
         return slotsToResolvers.get(slot);
     }
 
@@ -91,14 +93,9 @@ public class SlotMappingConfiguration implements
         return null;
     }
 
-    // TODO why is this required? remove...
-    public void initSlots(Slot[] slots) {
-        assert slots != null;
-
-        // XXX this is not correct because we have fixed slots...
+    private void initSlotsById(Slot[] slots) {
         for (Slot slot : slots) {
             slotsByID.put(slot.getId(), slot);
-            slotsToResolvers.put(slot, null); // XXX
         }
     }
 
@@ -151,8 +148,8 @@ public class SlotMappingConfiguration implements
     public void setResolver(Slot slot, ViewItemValueResolver resolver) {
         assert slot != null : "slot must not be null";
         assert resolver != null : "resolver must not be null";
-        assert slotsToResolvers.containsKey(slot) : "slot " + slot
-                + " is not available in " + slotsToResolvers.keySet();
+        assert slotsByID.containsKey(slot.getId()) : "slot " + slot
+                + " is not allowed (valid slots: " + slotsByID.values() + ")";
 
         slotsToResolvers.put(slot, resolver);
 

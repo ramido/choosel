@@ -38,8 +38,6 @@ public class SlotMappingConfigurationTest {
 
     @Test
     public void fireChangesForDelegatingSlotResolversWhenTargetResolverIsChanged() {
-        underTest.initSlots(new Slot[] { slot1, slot2 });
-
         DelegatingViewItemValueResolver delegatingResolver = mock(DelegatingViewItemValueResolver.class);
         when(delegatingResolver.getTargetSlot()).thenReturn(slot1);
 
@@ -67,7 +65,5 @@ public class SlotMappingConfigurationTest {
         slot2 = new Slot("s2", "", DataType.NUMBER);
 
         underTest = new SlotMappingConfiguration(new Slot[] { slot1, slot2 });
-
-        underTest.initSlots(new Slot[] { slot1, slot2 });
     }
 }

@@ -113,7 +113,6 @@ public class DefaultViewModel implements ViewModel, Disposable,
 
         // XXX why do we initialize when there are no resources yet?
         // we definitely need a state that flag slots as invalid / unresolved
-        slotMappingConfiguration.initSlots(contentDisplay.getSlots());
         configurationUIModel.initSlots(slotMappingConfiguration.getSlots());
 
         init(selectedResources);

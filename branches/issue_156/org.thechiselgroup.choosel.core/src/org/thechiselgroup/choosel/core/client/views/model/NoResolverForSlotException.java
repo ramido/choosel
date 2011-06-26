@@ -15,16 +15,19 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.model;
 
-import java.util.Set;
+import java.util.Map;
+
+import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 
 public class NoResolverForSlotException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    public NoResolverForSlotException(Slot slot, Set<Slot> slots) {
+    public NoResolverForSlotException(Slot slot,
+            Map<Slot, ViewItemValueResolver> slotsToResolvers) {
 
         super("no resolver registered for slot" + slot
-                + " (resolvers registered for slots: " + slots + ")");
+                + " (resolvers registered for slots: " + slotsToResolvers + ")");
     }
 
 }
