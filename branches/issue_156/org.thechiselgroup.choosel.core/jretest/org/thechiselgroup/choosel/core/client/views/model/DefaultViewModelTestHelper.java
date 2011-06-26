@@ -125,69 +125,11 @@ public final class DefaultViewModelTestHelper {
 
     private ViewContentDisplay viewContentDisplay = mock(ViewContentDisplay.class);
 
-    private boolean useDefaultFactories;
+    private ViewItemValueResolverFactoryProvider resolverProvider;
+
+    private DefaultSlotMappingInitializer initializer;
 
     public DefaultViewModel createTestViewModel() {
-        ViewItemValueResolverFactoryProvider resolverProvider = mock(ViewItemValueResolverFactoryProvider.class);
-        final LightweightList<ViewItemValueResolverFactory> resolverFactories = CollectionFactory
-                .createLightweightList();
-
-        when(resolverProvider.getFactoryById(any(String.class))).thenAnswer(
-                new Answer<ViewItemValueResolverFactory>() {
-                    @Override
-                    public ViewItemValueResolverFactory answer(
-                            InvocationOnMock invocation) throws Throwable {
-
-                        ViewItemValueResolverFactory resolverFactory = mock(ViewItemValueResolverFactory.class);
-                        when(
-                                resolverFactory.canCreateApplicableResolver(
-                                        any(Slot.class),
-                                        any(LightweightList.class)))
-                                .thenReturn(true);
-                        when(resolverFactory.getId()).thenReturn(
-                                (String) invocation.getArguments()[0]);
-
-                        resolverFactories.add(resolverFactory);
-
-                        return resolverFactory;
-                    }
-                });
-        when(resolverProvider.getResolverFactories()).thenReturn(
-                resolverFactories);
-
-        // XXX needs corresponding factories
-        // TODO change once relevant tests are migrated
-        DefaultSlotMappingInitializer initializer = spy(new DefaultSlotMappingInitializer());
-        initializer.putDefaultDataTypeValues(DataType.NUMBER,
-                new FixedValueResolver(new Double(0), "Fixed-0",
-                        DataType.NUMBER));
-        {
-
-            ViewItemValueResolverFactory resolverFactory = mock(ViewItemValueResolverFactory.class);
-            when(
-                    resolverFactory.canCreateApplicableResolver(
-                            any(Slot.class), any(LightweightList.class)))
-                    .thenReturn(true);
-            when(resolverFactory.getId()).thenReturn("Fixed-0");
-
-            resolverFactories.add(resolverFactory);
-        }
-        if (useDefaultFactories) {
-            initializer.putDefaultDataTypeValues(DataType.TEXT,
-                    new FixedValueResolver("", "Fixed-EmptyString",
-                            DataType.TEXT));
-            {
-
-                ViewItemValueResolverFactory resolverFactory = mock(ViewItemValueResolverFactory.class);
-                when(
-                        resolverFactory.canCreateApplicableResolver(
-                                any(Slot.class), any(LightweightList.class)))
-                        .thenReturn(true);
-                when(resolverFactory.getId()).thenReturn("Fixed-EmptyString");
-
-                resolverFactories.add(resolverFactory);
-            }
-        }
 
         SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
                 resolverProvider, initializer);
@@ -204,11 +146,10 @@ public final class DefaultViewModelTestHelper {
 
         resourceGrouping.setResourceSet(containedResources);
 
-        return spy(new DefaultViewModel(
-                viewContentDisplay, slotMappingConfiguration,
-                selectedResources, highlightedResources,
-                mock(ViewItemBehavior.class), resourceGrouping,
-                mock(Logger.class), configurationUIModel));
+        return spy(new DefaultViewModel(viewContentDisplay,
+                slotMappingConfiguration, selectedResources,
+                highlightedResources, mock(ViewItemBehavior.class),
+                resourceGrouping, mock(Logger.class), configurationUIModel));
     }
 
     public ResourceSet getContainedResources() {
@@ -229,10 +170,6 @@ public final class DefaultViewModelTestHelper {
 
     public ViewContentDisplay getViewContentDisplay() {
         return viewContentDisplay;
-    }
-
-    public boolean isUseDefaultFactories() {
-        return useDefaultFactories;
     }
 
     public void mockContainedResources() {
@@ -264,7 +201,67 @@ public final class DefaultViewModelTestHelper {
     }
 
     public void setUseDefaultFactories(boolean useDefaultFactories) {
-        this.useDefaultFactories = useDefaultFactories;
+        resolverProvider = mock(ViewItemValueResolverFactoryProvider.class);
+        final LightweightList<ViewItemValueResolverFactory> resolverFactories = CollectionFactory
+                .createLightweightList();
+
+        when(resolverProvider.getFactoryById(any(String.class))).thenAnswer(
+                new Answer<ViewItemValueResolverFactory>() {
+                    @Override
+                    public ViewItemValueResolverFactory answer(
+                            InvocationOnMock invocation) throws Throwable {
+
+                        ViewItemValueResolverFactory resolverFactory = mock(ViewItemValueResolverFactory.class);
+                        when(
+                                resolverFactory.canCreateApplicableResolver(
+                                        any(Slot.class),
+                                        any(LightweightList.class)))
+                                .thenReturn(true);
+                        when(resolverFactory.getId()).thenReturn(
+                                (String) invocation.getArguments()[0]);
+
+                        resolverFactories.add(resolverFactory);
+
+                        return resolverFactory;
+                    }
+                });
+        when(resolverProvider.getResolverFactories()).thenReturn(
+                resolverFactories);
+
+        // XXX needs corresponding factories
+        // TODO change once relevant tests are migrated
+
+        initializer = spy(new DefaultSlotMappingInitializer());
+        initializer.putDefaultDataTypeValues(DataType.NUMBER,
+                new FixedValueResolver(new Double(0), "Fixed-0",
+                        DataType.NUMBER));
+        {
+
+            ViewItemValueResolverFactory resolverFactory = mock(ViewItemValueResolverFactory.class);
+            when(
+                    resolverFactory.canCreateApplicableResolver(
+                            any(Slot.class), any(LightweightList.class)))
+                    .thenReturn(true);
+            when(resolverFactory.getId()).thenReturn("Fixed-0");
+
+            resolverFactories.add(resolverFactory);
+        }
+        if (useDefaultFactories) {
+            initializer.putDefaultDataTypeValues(DataType.TEXT,
+                    new FixedValueResolver("", "Fixed-EmptyString",
+                            DataType.TEXT));
+            {
+
+                ViewItemValueResolverFactory resolverFactory = mock(ViewItemValueResolverFactory.class);
+                when(
+                        resolverFactory.canCreateApplicableResolver(
+                                any(Slot.class), any(LightweightList.class)))
+                        .thenReturn(true);
+                when(resolverFactory.getId()).thenReturn("Fixed-EmptyString");
+
+                resolverFactories.add(resolverFactory);
+            }
+        }
     }
 
     public void setViewContentDisplay(ViewContentDisplay contentDisplay) {
