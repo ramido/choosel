@@ -85,7 +85,7 @@ public class SlotMappingConfiguration implements
 
     // TODO this is not how we would check this anymore
     @Override
-    public boolean containsResolver(Slot slot) {
+    public boolean isConfigured(Slot slot) {
         assert slot != null;
 
         return slotsToResolvers.containsKey(slot)
@@ -103,7 +103,7 @@ public class SlotMappingConfiguration implements
 
         assert slot != null;
 
-        if (!containsResolver(slot)) {
+        if (!isConfigured(slot)) {
             throw new NoResolverForSlotException(slot,
                     slotsToResolvers.keySet());
         }

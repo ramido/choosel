@@ -110,7 +110,7 @@ public class SlotMappingConfigurationPersistableAdapter implements Persistable {
 
         Slot[] slots = slotMappingConfiguration.getSlots();
         for (Slot slot : slots) {
-            if (slotMappingConfiguration.containsResolver(slot)) {
+            if (slotMappingConfiguration.isConfigured(slot)) {
                 ViewItemValueResolver resolver = slotMappingConfiguration
                         .getResolver(slot);
 

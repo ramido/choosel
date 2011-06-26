@@ -46,7 +46,7 @@ public class DefaultViewModelInitialValuesTest {
 
         helper.getContainedResources().add(resource);
 
-        assertEquals(true, underTest.containsResolver(numberSlot));
+        assertEquals(true, underTest.isConfigured(numberSlot));
 
         List<ViewItem> viewItems = underTest.getViewItems().toList();
         assertEquals(1, viewItems.size());
@@ -63,7 +63,7 @@ public class DefaultViewModelInitialValuesTest {
 
         helper.getContainedResources().add(resource);
 
-        assertEquals(true, underTest.containsResolver(textSlot));
+        assertEquals(true, underTest.isConfigured(textSlot));
 
         List<ViewItem> viewItems = underTest.getViewItems().toList();
         assertEquals(1, viewItems.size());

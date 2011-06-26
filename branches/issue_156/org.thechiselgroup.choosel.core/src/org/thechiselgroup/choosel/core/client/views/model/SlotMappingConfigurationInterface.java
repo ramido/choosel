@@ -33,13 +33,6 @@ public interface SlotMappingConfigurationInterface extends
     HandlerRegistration addHandler(SlotMappingChangedHandler handler);
 
     /**
-     * @return {code true}, if a {@link ViewItemValueResolver} is configured for
-     *         {code slot}.
-     */
-    // TODO rename to isConfigured
-    boolean containsResolver(Slot slot);
-
-    /**
      * @param slotId
      *            id of the slot
      * @return {@link Slot} with the ID {@code slotId}
@@ -57,9 +50,15 @@ public interface SlotMappingConfigurationInterface extends
      * @return {@link Slot}s from {@link #getSlots()} for which no
      *         {@link ViewItemValueResolver} are configured.
      * 
-     * @see #containsResolver(Slot)
+     * @see #isConfigured(Slot)
      */
     LightweightCollection<Slot> getUnconfiguredSlots();
+
+    /**
+     * @return {code true}, if a {@link ViewItemValueResolver} is configured for
+     *         {code slot}.
+     */
+    boolean isConfigured(Slot slot);
 
     // TODO document
     void setResolver(Slot slot, ViewItemValueResolver resolver);

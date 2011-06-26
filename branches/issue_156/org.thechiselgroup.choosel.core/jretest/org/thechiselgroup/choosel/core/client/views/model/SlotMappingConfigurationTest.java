@@ -55,7 +55,7 @@ public class SlotMappingConfigurationTest {
         underTest = new SlotMappingConfiguration(fixedSlotResolvers,
                 new Slot[] { slot1 });
 
-        assertThat(underTest.containsResolver(slot1), is(true));
+        assertThat(underTest.isConfigured(slot1), is(true));
     }
 
     @Test

@@ -130,8 +130,8 @@ public class DefaultViewModel implements ViewModel, Disposable,
     }
 
     @Override
-    public boolean containsResolver(Slot slot) {
-        return slotMappingConfiguration.containsResolver(slot);
+    public boolean isConfigured(Slot slot) {
+        return slotMappingConfiguration.isConfigured(slot);
     }
 
     @Override
@@ -243,7 +243,7 @@ public class DefaultViewModel implements ViewModel, Disposable,
 
     @Override
     public String getSlotResolverDescription(Slot slot) {
-        if (!slotMappingConfiguration.containsResolver(slot)) {
+        if (!slotMappingConfiguration.isConfigured(slot)) {
             return "N/A";
         }
 
@@ -535,7 +535,7 @@ public class DefaultViewModel implements ViewModel, Disposable,
     private void updateErrorModel() {
         Slot[] slots = getSlots();
         for (Slot slot : slots) {
-            if (!slotMappingConfiguration.containsResolver(slot)) {
+            if (!slotMappingConfiguration.isConfigured(slot)) {
                 LightweightCollection<ViewItem> viewItems = getViewItems();
                 for (ViewItem viewItem : viewItems) {
                     errorModel.reportError(slot, viewItem);
