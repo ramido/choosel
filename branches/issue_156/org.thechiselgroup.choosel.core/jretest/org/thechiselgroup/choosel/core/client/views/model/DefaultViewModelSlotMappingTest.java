@@ -57,16 +57,16 @@ public class DefaultViewModelSlotMappingTest {
 
     @Test
     public void changeSlotMapping() {
-        underTest.getSlotMappingConfiguration().setResolver(numberSlot,
-                new CalculationResolver("property1", new SumCalculation()));
+        underTest.setResolver(numberSlot, new CalculationResolver("property1",
+                new SumCalculation()));
 
         List<ViewItem> resourceItems = underTest.getViewItems().toList();
         assertEquals(1, resourceItems.size());
         ViewItem resourceItem = resourceItems.get(0);
         resourceItem.getValue(numberSlot);
 
-        underTest.getSlotMappingConfiguration().setResolver(numberSlot,
-                new CalculationResolver("property1", new MaxCalculation()));
+        underTest.setResolver(numberSlot, new CalculationResolver("property1",
+                new MaxCalculation()));
 
         assertEquals(8d, resourceItem.getValue(numberSlot));
     }
@@ -126,8 +126,8 @@ public class DefaultViewModelSlotMappingTest {
     private void testCalculationOverGroup(double expectedResult,
             Calculation calculation) {
 
-        underTest.getSlotMappingConfiguration().setResolver(numberSlot,
-                new CalculationResolver("property1", calculation));
+        underTest.setResolver(numberSlot, new CalculationResolver("property1",
+                calculation));
 
         List<ViewItem> resourceItems = underTest.getViewItems().toList();
         assertEquals(1, resourceItems.size());
@@ -141,10 +141,11 @@ public class DefaultViewModelSlotMappingTest {
      * of the slot update). The resource items need to get the notification
      * first to clean their caching.
      */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Test
     public void viewContentUpdateAfterChangedSlotMapping() {
-        underTest.getSlotMappingConfiguration().setResolver(numberSlot,
-                new CalculationResolver("property1", new SumCalculation()));
+        underTest.setResolver(numberSlot, new CalculationResolver("property1",
+                new SumCalculation()));
 
         List<ViewItem> resourceItems = underTest.getViewItems().toList();
         assertEquals(1, resourceItems.size());
@@ -167,7 +168,7 @@ public class DefaultViewModelSlotMappingTest {
                 any(LightweightCollection.class),
                 any(LightweightCollection.class));
 
-        underTest.getSlotMappingConfiguration().setResolver(numberSlot,
-                new CalculationResolver("property1", new MaxCalculation()));
+        underTest.setResolver(numberSlot, new CalculationResolver("property1",
+                new MaxCalculation()));
     }
 }

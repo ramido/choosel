@@ -565,9 +565,7 @@ public class SlotMappingIntegrationTest {
         /* Should have 1 View Item with Value 1 */
         resourceGrouping.setResourceSet(new DefaultResourceSet());
 
-        assertEquals(
-                model.getSlotMappingConfiguration().getResolver(
-                        requiredSlots[0]), resolver);
+        assertEquals(resolver, model.getResolver(requiredSlots[0]));
     }
 
     @Test
