@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.SlotMappingChangedEvent;
@@ -81,7 +82,7 @@ public class SlotMappingUIModel {
     private HandlerManager eventBus;
 
     // initialize current view items to an empty list
-    private LightweightList<ViewItem> currentViewItems;
+    private LightweightCollection<ViewItem> currentViewItems;
 
     private ViewItemValueResolverContext context;
 
@@ -208,7 +209,9 @@ public class SlotMappingUIModel {
      * If the resolver can not resolve the set of view items, it will
      * automatically be changed to null
      */
-    public void updateAllowableFactories(LightweightList<ViewItem> viewItems) {
+    public void updateAllowableFactories(
+            LightweightCollection<ViewItem> viewItems) {
+
         assert viewItems != null;
         currentViewItems = viewItems;
 

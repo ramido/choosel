@@ -21,6 +21,7 @@ import java.util.Map.Entry;
 
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ManagedViewItemValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.SlotMappingUIModel;
@@ -79,25 +80,16 @@ public class SlotMappingConfigurationUIModel {
      * Call this method whenever the model changes (whenever the
      * {@link ViewItem}s change).
      */
-    private void updateUIModels(LightweightList<ViewItem> viewItems) {
+    private void updateUIModels(LightweightCollection<ViewItem> viewItems) {
         for (SlotMappingUIModel uiModel : slotsToSlotMappings.values()) {
             uiModel.updateAllowableFactories(viewItems);
         }
     }
 
     public void updateVisualMappings(DefaultViewModel defaultViewModel,
-            Map<String, ? extends ViewItem> viewItemMap,
-            ResourceSet viewResources) {
+            LightweightCollection<ViewItem> viewItems, ResourceSet viewResources) {
 
-        /*
-         * TODO DefaultViewModel should expose a LightweightCollection of all
-         * ViewItems and pass it in.
-         */
         // check to see if the configuration is still valid
-        LightweightList<ViewItem> viewItems = CollectionFactory
-                .createLightweightList();
-        viewItems.addAll(viewItemMap.values());
-
         updateUIModels(viewItems);
 
         LightweightList<Slot> slots = getSlotsWithInvalidResolvers();

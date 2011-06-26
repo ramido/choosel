@@ -306,12 +306,11 @@ public class DefaultViewModel implements ViewModel, Disposable,
         return viewItemsByGroupId.get(viewItemId);
     }
 
+    // TODO these view items should be cached & the cache should be updated
     @Override
     public LightweightCollection<ViewItem> getViewItems() {
-        LightweightList<ViewItem> result = CollectionFactory
-                .createLightweightList();
-        result.addAll(viewItemsByGroupId.values());
-        return result;
+        return LightweightCollections
+                .<ViewItem> toCollection(viewItemsByGroupId.values());
     }
 
     /**
@@ -686,7 +685,7 @@ public class DefaultViewModel implements ViewModel, Disposable,
 
     private void updateVisualMappings() {
         ResourceSet viewResources = getResourceGrouping().getResourceSet();
-        configurationUIModel.updateVisualMappings(this, viewItemsByGroupId,
+        configurationUIModel.updateVisualMappings(this, getViewItems(),
                 viewResources);
     }
 }

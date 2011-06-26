@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.math.Calculation;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
@@ -41,7 +41,7 @@ public class CalculationResolverFactory implements ViewItemValueResolverFactory 
 
     @Override
     public boolean canCreateApplicableResolver(Slot slot,
-            LightweightList<ViewItem> viewItems) {
+            LightweightCollection<ViewItem> viewItems) {
 
         if (!slot.getDataType().equals(DataType.NUMBER)) {
             return false;
@@ -56,7 +56,7 @@ public class CalculationResolverFactory implements ViewItemValueResolverFactory 
      */
     @Override
     public ManagedViewItemValueResolver create(
-            LightweightList<ViewItem> viewItems) {
+            LightweightCollection<ViewItem> viewItems) {
 
         List<String> properties = getSharedProperties(viewItems);
 
@@ -77,12 +77,13 @@ public class CalculationResolverFactory implements ViewItemValueResolverFactory 
     }
 
     // TODO move somewhere else
-    private List<String> getSharedProperties(LightweightList<ViewItem> viewItems) {
+    private List<String> getSharedProperties(
+            LightweightCollection<ViewItem> viewItems) {
 
         List<String> properties = new ArrayList<String>();
         // intialize properties to be the ones in the first resource
-        Resource firstResource = viewItems.get(0).getResources().iterator()
-                .next();
+        Resource firstResource = viewItems.iterator().next().getResources()
+                .iterator().next();
         properties.addAll(firstResource.getProperties().keySet());
 
         // only keep properties that are shared by all of the resource

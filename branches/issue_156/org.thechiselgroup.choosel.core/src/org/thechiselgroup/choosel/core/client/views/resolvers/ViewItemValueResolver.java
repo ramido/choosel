@@ -38,6 +38,7 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewModel;
  */
 // TODO figure out how to handle the type system - we might need to add stuff
 // here. a view item value resolver has to match the target slot.
+// TODO move to views.model
 public interface ViewItemValueResolver {
 
     /**

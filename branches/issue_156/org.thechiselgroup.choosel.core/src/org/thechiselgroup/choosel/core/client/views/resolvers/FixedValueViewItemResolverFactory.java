@@ -16,7 +16,7 @@
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
 import org.thechiselgroup.choosel.core.client.resources.DataType;
-import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 
@@ -38,7 +38,7 @@ public class FixedValueViewItemResolverFactory implements
 
     @Override
     public boolean canCreateApplicableResolver(Slot slot,
-            LightweightList<ViewItem> viewItems) {
+            LightweightCollection<ViewItem> viewItems) {
         return slot.getDataType().equals(dataType);
     }
 
@@ -48,7 +48,7 @@ public class FixedValueViewItemResolverFactory implements
      */
     @Override
     public ManagedViewItemValueResolver create(
-            LightweightList<ViewItem> viewItems) {
+            LightweightCollection<ViewItem> viewItems) {
         return new ManagedViewItemValueResolverAdapter(id,
                 new FixedValueResolver(value, dataType));
     }
