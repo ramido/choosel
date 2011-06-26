@@ -130,11 +130,6 @@ public class DefaultViewModel implements ViewModel, Disposable,
     }
 
     @Override
-    public boolean isConfigured(Slot slot) {
-        return slotMappingConfiguration.isConfigured(slot);
-    }
-
-    @Override
     public boolean containsViewItem(String groupId) {
         return viewItemsByGroupId.containsKey(groupId);
     }
@@ -234,6 +229,11 @@ public class DefaultViewModel implements ViewModel, Disposable,
     @Override
     public ResourceSet getSelectedResources() {
         return selectedResources;
+    }
+
+    @Override
+    public Slot getSlotById(String slotId) {
+        return slotMappingConfiguration.getSlotById(slotId);
     }
 
     @Override
@@ -403,6 +403,11 @@ public class DefaultViewModel implements ViewModel, Disposable,
                         LightweightCollections.toCollection(e.getSlot()));
             }
         });
+    }
+
+    @Override
+    public boolean isConfigured(Slot slot) {
+        return slotMappingConfiguration.isConfigured(slot);
     }
 
     /**
