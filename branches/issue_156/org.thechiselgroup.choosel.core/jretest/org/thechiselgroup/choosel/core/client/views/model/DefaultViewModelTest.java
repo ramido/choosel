@@ -275,7 +275,6 @@ public class DefaultViewModelTest {
 
         helper = new DefaultViewModelTestHelper();
         helper.setSlots(slot);
-        helper.setViewContentDisplay(helper.getViewContentDisplay());
         helper.setUseDefaultFactories(true);
 
         underTest = helper.createTestViewModel();

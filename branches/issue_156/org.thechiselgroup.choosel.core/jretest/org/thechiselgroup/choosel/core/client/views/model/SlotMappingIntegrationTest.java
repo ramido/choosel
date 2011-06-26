@@ -50,9 +50,6 @@ import com.google.gwt.event.shared.UmbrellaException;
 
 public class SlotMappingIntegrationTest {
 
-    @Mock
-    private ViewContentDisplay contentDisplay;
-
     private SlotMappingInitializer slotMappingInitializer;
 
     private DefaultViewItemResolverFactoryProvider resolverProvider = new DefaultViewItemResolverFactoryProvider();
@@ -72,9 +69,9 @@ public class SlotMappingIntegrationTest {
 
     private final String property3 = "property3";
 
-    private ResourceMultiCategorizer uriCategorizer;
-
     private ResourceGrouping resourceGrouping;
+
+    private DefaultViewModelTestHelper helper;
 
     /**
      * <h3>Changing Property Select</h3>
@@ -97,7 +94,8 @@ public class SlotMappingIntegrationTest {
     @Test
     public void changeSelectedPropertyChangesViewItems() {
         Slot[] requiredSlots = createSlots(DataType.NUMBER);
-        when(contentDisplay.getSlots()).thenReturn(requiredSlots);
+        when(helper.getViewContentDisplay().getSlots()).thenReturn(
+                requiredSlots);
 
         resolverProvider
                 .registerFactory(new FirstResourcePropertyResolverFactory(
@@ -167,7 +165,8 @@ public class SlotMappingIntegrationTest {
     @Test
     public void changeToUnresolvableDataChangesToResolverSpecifiedByInitializer() {
         Slot[] requiredSlots = createSlots(DataType.NUMBER);
-        when(contentDisplay.getSlots()).thenReturn(requiredSlots);
+        when(helper.getViewContentDisplay().getSlots()).thenReturn(
+                requiredSlots);
 
         resolverProvider
                 .registerFactory(new FirstResourcePropertyResolverFactory(
@@ -236,7 +235,8 @@ public class SlotMappingIntegrationTest {
     @Test
     public void changingResolverManuallyChangesResolution() {
         Slot[] requiredSlots = createSlots(DataType.NUMBER);
-        when(contentDisplay.getSlots()).thenReturn(requiredSlots);
+        when(helper.getViewContentDisplay().getSlots()).thenReturn(
+                requiredSlots);
 
         resolverProvider
                 .registerFactory(new FirstResourcePropertyResolverFactory(
@@ -313,10 +313,10 @@ public class SlotMappingIntegrationTest {
             SlotMappingConfigurationUIModel configurationUIModel,
             SlotMappingConfiguration slotMappingConfiguration,
             ResourceGrouping resourceGrouping) {
-        return new DefaultViewModel(contentDisplay, slotMappingConfiguration,
-                new DefaultResourceSet(), new DefaultResourceSet(),
-                viewItemBehavior, resourceGrouping, logger,
-                configurationUIModel);
+        return new DefaultViewModel(helper.getViewContentDisplay(),
+                slotMappingConfiguration, new DefaultResourceSet(),
+                new DefaultResourceSet(), viewItemBehavior, resourceGrouping,
+                logger, configurationUIModel);
     }
 
     /**
@@ -340,7 +340,8 @@ public class SlotMappingIntegrationTest {
     public void errorThrownWhenResolversCannotResolveOneOfTwoSlots()
             throws Throwable {
         Slot[] requiredSlots = createSlots(DataType.NUMBER, DataType.TEXT);
-        when(contentDisplay.getSlots()).thenReturn(requiredSlots);
+        when(helper.getViewContentDisplay().getSlots()).thenReturn(
+                requiredSlots);
 
         resolverProvider
                 .registerFactory(new FirstResourcePropertyResolverFactory(
@@ -411,7 +412,8 @@ public class SlotMappingIntegrationTest {
             throws Throwable {
 
         Slot[] requiredSlots = createSlots(DataType.NUMBER);
-        when(contentDisplay.getSlots()).thenReturn(requiredSlots);
+        when(helper.getViewContentDisplay().getSlots()).thenReturn(
+                requiredSlots);
 
         resolverProvider
                 .registerFactory(new FirstResourcePropertyResolverFactory(
@@ -477,7 +479,8 @@ public class SlotMappingIntegrationTest {
     @Test
     public void reinitialzeResolverWhenPropertySelectedIsNotValid() {
         Slot[] requiredSlots = createSlots(DataType.NUMBER);
-        when(contentDisplay.getSlots()).thenReturn(requiredSlots);
+        when(helper.getViewContentDisplay().getSlots()).thenReturn(
+                requiredSlots);
 
         resolverProvider
                 .registerFactory(new FirstResourcePropertyResolverFactory(
@@ -525,7 +528,8 @@ public class SlotMappingIntegrationTest {
     @Test
     public void removingAllResourceDoesNotChangeResolver() {
         Slot[] requiredSlots = createSlots(DataType.NUMBER);
-        when(contentDisplay.getSlots()).thenReturn(requiredSlots);
+        when(helper.getViewContentDisplay().getSlots()).thenReturn(
+                requiredSlots);
 
         resolverProvider
                 .registerFactory(new FirstResourcePropertyResolverFactory(
@@ -571,7 +575,8 @@ public class SlotMappingIntegrationTest {
     @Test
     public void removingAllResourcesResultsInNoViewItems() {
         Slot[] requiredSlots = createSlots(DataType.NUMBER);
-        when(contentDisplay.getSlots()).thenReturn(requiredSlots);
+        when(helper.getViewContentDisplay().getSlots()).thenReturn(
+                requiredSlots);
 
         resolverProvider
                 .registerFactory(new FirstResourcePropertyResolverFactory(
@@ -635,7 +640,8 @@ public class SlotMappingIntegrationTest {
     @Test
     public void resolverWithNumberPropertyResolver() {
         Slot[] requiredSlots = createSlots(DataType.NUMBER);
-        when(contentDisplay.getSlots()).thenReturn(requiredSlots);
+        when(helper.getViewContentDisplay().getSlots()).thenReturn(
+                requiredSlots);
 
         resolverProvider
                 .registerFactory(new FirstResourcePropertyResolverFactory(
@@ -697,7 +703,8 @@ public class SlotMappingIntegrationTest {
     public void resolveTwoFieldsWithTwoResolvers() {
         Slot[] requiredSlots = createSlots(DataType.NUMBER, DataType.TEXT);
 
-        when(contentDisplay.getSlots()).thenReturn(requiredSlots);
+        when(helper.getViewContentDisplay().getSlots()).thenReturn(
+                requiredSlots);
 
         resolverProvider
                 .registerFactory(new FirstResourcePropertyResolverFactory(
@@ -771,7 +778,8 @@ public class SlotMappingIntegrationTest {
     public void resolveWithOneFixedResolver() {
         /* set up the slots */
         Slot[] requiredSlots = createSlots(DataType.NUMBER);
-        when(contentDisplay.getSlots()).thenReturn(requiredSlots);
+        when(helper.getViewContentDisplay().getSlots()).thenReturn(
+                requiredSlots);
 
         /* set up the provider to return the correct resolvers */
         resolverProvider.registerFactory(new FixedValueViewItemResolverFactory(
@@ -795,10 +803,11 @@ public class SlotMappingIntegrationTest {
          * create the ViewModel, as well as initialize the
          * slotMappingConfiguration
          */
-        DefaultViewModel model = new DefaultViewModel(contentDisplay,
-                slotMappingConfiguration, new DefaultResourceSet(),
-                new DefaultResourceSet(), viewItemBehavior, resourceGrouping,
-                logger, configurationUIModel);
+        DefaultViewModel model = new DefaultViewModel(
+                helper.getViewContentDisplay(), slotMappingConfiguration,
+                new DefaultResourceSet(), new DefaultResourceSet(),
+                viewItemBehavior, resourceGrouping, logger,
+                configurationUIModel);
 
         resourceGrouping.setResourceSet(new DefaultResourceSet());
         resourceGrouping.getResourceSet().add(
@@ -816,7 +825,9 @@ public class SlotMappingIntegrationTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        uriCategorizer = new ResourceByUriMultiCategorizer();
+        helper = new DefaultViewModelTestHelper();
+
+        ResourceByUriMultiCategorizer uriCategorizer = new ResourceByUriMultiCategorizer();
         resourceGrouping = new ResourceGrouping(uriCategorizer,
                 new DefaultResourceSetFactory());
     }

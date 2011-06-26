@@ -125,19 +125,18 @@ public final class DefaultViewModelTestHelper {
 
     private ViewContentDisplay viewContentDisplay = mock(ViewContentDisplay.class);
 
-    private ViewItemValueResolverFactoryProvider resolverProvider;
+    private ViewItemValueResolverFactoryProvider resolverProvider = mock(ViewItemValueResolverFactoryProvider.class);
 
     private DefaultSlotMappingInitializer initializer;
 
     public DefaultViewModel createTestViewModel() {
+        when(viewContentDisplay.getSlots()).thenReturn(slots);
+        when(viewContentDisplay.isReady()).thenReturn(true);
 
         SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
                 resolverProvider, initializer);
         SlotMappingConfiguration slotMappingConfiguration = spy(new SlotMappingConfiguration(
                 slots));
-
-        when(viewContentDisplay.getSlots()).thenReturn(slots);
-        when(viewContentDisplay.isReady()).thenReturn(true);
 
         ResourceGrouping resourceGrouping = new ResourceGrouping(
                 new ResourceCategorizerToMultiCategorizerAdapter(
@@ -160,12 +159,12 @@ public final class DefaultViewModelTestHelper {
         return highlightedResources;
     }
 
-    public ResourceSet getSelectedResources() {
-        return selectedResources;
+    public ViewItemValueResolverFactoryProvider getResolverProvider() {
+        return resolverProvider;
     }
 
-    public Slot[] getSlots() {
-        return slots;
+    public ResourceSet getSelectedResources() {
+        return selectedResources;
     }
 
     public ViewContentDisplay getViewContentDisplay() {
@@ -201,7 +200,6 @@ public final class DefaultViewModelTestHelper {
     }
 
     public void setUseDefaultFactories(boolean useDefaultFactories) {
-        resolverProvider = mock(ViewItemValueResolverFactoryProvider.class);
         final LightweightList<ViewItemValueResolverFactory> resolverFactories = CollectionFactory
                 .createLightweightList();
 
@@ -262,10 +260,6 @@ public final class DefaultViewModelTestHelper {
                 resolverFactories.add(resolverFactory);
             }
         }
-    }
-
-    public void setViewContentDisplay(ViewContentDisplay contentDisplay) {
-        this.viewContentDisplay = contentDisplay;
     }
 
 }
