@@ -66,7 +66,8 @@ public class SlotMappingConfigurationTest {
         underTest = new SlotMappingConfiguration(fixedSlotResolvers,
                 new Slot[] { slot1 });
 
-        Memento result = underTest.save(mock(ResourceSetCollector.class));
+        Memento result = new SlotMappingConfigurationPersistableAdapter(
+                underTest).save(mock(ResourceSetCollector.class));
 
         assertEquals(0, result.getChildren().size());
     }

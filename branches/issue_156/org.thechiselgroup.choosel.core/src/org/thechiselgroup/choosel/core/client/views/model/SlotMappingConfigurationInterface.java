@@ -40,6 +40,14 @@ public interface SlotMappingConfigurationInterface extends
     boolean containsResolver(Slot slot);
 
     /**
+     * @param slotId
+     *            id of the slot
+     * @return {@link Slot} with the ID {@code slotId}
+     */
+    // TODO throws NoSuchSlotException
+    Slot getSlotById(String slotId);
+
+    /**
      * @return {@link Slot}s that need to be configured.
      */
     // TODO change return type to LightweightCollection<Slot>

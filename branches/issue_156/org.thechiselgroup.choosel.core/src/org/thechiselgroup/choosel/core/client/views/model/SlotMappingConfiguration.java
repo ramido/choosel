@@ -19,25 +19,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.thechiselgroup.choosel.core.client.persistence.Memento;
-import org.thechiselgroup.choosel.core.client.persistence.Persistable;
-import org.thechiselgroup.choosel.core.client.persistence.PersistableRestorationService;
-import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetAccessor;
-import org.thechiselgroup.choosel.core.client.resources.persistence.ResourceSetCollector;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.util.event.PrioritizedEventHandler;
 import org.thechiselgroup.choosel.core.client.util.event.PrioritizedHandlerManager;
-import org.thechiselgroup.choosel.core.client.util.math.AverageCalculation;
-import org.thechiselgroup.choosel.core.client.util.math.Calculation;
-import org.thechiselgroup.choosel.core.client.util.math.MaxCalculation;
-import org.thechiselgroup.choosel.core.client.util.math.MinCalculation;
-import org.thechiselgroup.choosel.core.client.util.math.SumCalculation;
-import org.thechiselgroup.choosel.core.client.views.model.ViewItem.Subset;
-import org.thechiselgroup.choosel.core.client.views.resolvers.CalculationResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.DelegatingViewItemValueResolver;
-import org.thechiselgroup.choosel.core.client.views.resolvers.FirstResourcePropertyResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.NullViewItemValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 
@@ -45,17 +32,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 
 // TODO rename to DefaultSlotMappingConfiguration
 public class SlotMappingConfiguration implements
-        SlotMappingConfigurationInterface, Persistable {
-
-    private static final String MEMENTO_KEY_CALCULATION_TYPE = "calculationType";
-
-    private static final String MEMENTO_VALUE_CALCULATION = "calculation";
-
-    private static final String MEMENTO_VALUE_FIRST_RESOURCE_PROPERTY = "first-resource-property";
-
-    private static final String MEMENTO_KEY_PROPERTY = "property";
-
-    private static final String MEMENTO_KEY_TYPE = "type";
+        SlotMappingConfigurationInterface {
 
     private transient PrioritizedHandlerManager handlerManager;
 
@@ -141,6 +118,12 @@ public class SlotMappingConfiguration implements
     }
 
     @Override
+    public Slot getSlotById(String slotId) {
+        assert slotId != null;
+        return slotsByID.get(slotId);
+    }
+
+    @Override
     public Slot[] getSlots() {
         return slotsToResolvers.keySet().toArray(
                 new Slot[slotsToResolvers.keySet().size()]);
@@ -193,102 +176,6 @@ public class SlotMappingConfiguration implements
         }
     }
 
-    @Override
-    public void restore(Memento memento,
-            PersistableRestorationService restorationService,
-            ResourceSetAccessor accessor) {
-
-        for (Entry<String, Memento> entry : memento.getChildren().entrySet()) {
-            String slotId = entry.getKey();
-            Memento child = entry.getValue();
-
-            assert slotsByID.containsKey(slotId) : "no slot with slot id "
-                    + slotId;
-
-            Slot slot = slotsByID.get(slotId);
-
-            if (child.getFactoryId() == null) {
-                String value = (String) child.getValue(MEMENTO_KEY_TYPE);
-                if (MEMENTO_VALUE_FIRST_RESOURCE_PROPERTY.equals(value)) {
-                    String property = (String) child
-                            .getValue(MEMENTO_KEY_PROPERTY);
-
-                    // XXX correct id
-                    setResolver(slot, new FirstResourcePropertyResolver("id",
-                            property, slot.getDataType()));
-                } else if (MEMENTO_VALUE_CALCULATION.equals(value)) {
-                    String property = (String) child
-                            .getValue(MEMENTO_KEY_PROPERTY);
-                    String calculationType = (String) child
-                            .getValue(MEMENTO_KEY_CALCULATION_TYPE);
-
-                    if ("min".equals(calculationType)) {
-                        setResolver(slot, new CalculationResolver(property,
-                                Subset.ALL, new MinCalculation()));
-                    } else if ("max".equals(calculationType)) {
-                        setResolver(slot, new CalculationResolver(property,
-                                Subset.ALL, new MaxCalculation()));
-                    } else if ("sum".equals(calculationType)) {
-                        setResolver(slot, new CalculationResolver(property,
-                                Subset.ALL, new SumCalculation()));
-                    } else if ("average".equals(calculationType)) {
-                        setResolver(slot, new CalculationResolver(property,
-                                Subset.ALL, new AverageCalculation()));
-                    }
-                }
-            } else {
-                setResolver(slot,
-                        (ViewItemValueResolver) restorationService
-                                .restoreFromMemento(child, accessor));
-            }
-        }
-    }
-
-    @Override
-    public Memento save(ResourceSetCollector resourceSetCollector) {
-        Memento memento = new Memento();
-
-        for (Entry<Slot, ViewItemValueResolver> entry : slotsToResolvers
-                .entrySet()) {
-
-            Slot slot = entry.getKey();
-            ViewItemValueResolver resolver = entry.getValue();
-
-            Memento child = new Memento();
-
-            if (resolver instanceof FirstResourcePropertyResolver) {
-                child.setValue(MEMENTO_KEY_TYPE,
-                        MEMENTO_VALUE_FIRST_RESOURCE_PROPERTY);
-                child.setValue(MEMENTO_KEY_PROPERTY,
-                        ((FirstResourcePropertyResolver) resolver)
-                                .getProperty());
-            } else if (resolver instanceof CalculationResolver) {
-                child.setValue(MEMENTO_KEY_TYPE, MEMENTO_VALUE_CALCULATION);
-
-                Calculation calculation = ((CalculationResolver) resolver)
-                        .getCalculation();
-                child.setValue(MEMENTO_KEY_PROPERTY,
-                        ((CalculationResolver) resolver).getProperty());
-
-                if (calculation instanceof SumCalculation) {
-                    child.setValue(MEMENTO_KEY_CALCULATION_TYPE, "sum");
-                } else if (calculation instanceof AverageCalculation) {
-                    child.setValue(MEMENTO_KEY_CALCULATION_TYPE, "average");
-                } else if (calculation instanceof MinCalculation) {
-                    child.setValue(MEMENTO_KEY_CALCULATION_TYPE, "min");
-                } else if (calculation instanceof MaxCalculation) {
-                    child.setValue(MEMENTO_KEY_CALCULATION_TYPE, "max");
-                }
-            } else if (resolver instanceof Persistable) {
-                child = ((Persistable) resolver).save(resourceSetCollector);
-            }
-
-            memento.addChild(slot.getId(), child);
-        }
-
-        return memento;
-    }
-
     /**
      * XXX This note will be outdated once fixed resolvers are separated from
      * the SlotMappingConfiguration.
@@ -299,6 +186,7 @@ public class SlotMappingConfiguration implements
      * </p>
      */
     // TODO the UI Model will throw its own events, we should capture these
+    @Override
     public void setResolver(Slot slot, ViewItemValueResolver resolver) {
         assert slot != null : "slot must not be null";
         assert resolver != null : "resolver must not be null";
