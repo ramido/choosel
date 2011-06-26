@@ -74,7 +74,7 @@ public class SlotMappingUIModel {
 
     private Map<String, ViewItemValueResolverFactory> allowableResolverFactories;
 
-    private ViewItemValueResolver currentResolver;
+    private ManagedViewItemValueResolver currentResolver;
 
     private ViewItemValueResolverFactoryProvider provider;
 
@@ -114,7 +114,7 @@ public class SlotMappingUIModel {
     /**
      * @return The current @link{ViewItemValueResolver}
      */
-    public ViewItemValueResolver getCurrentResolver() {
+    public ManagedViewItemValueResolver getCurrentResolver() {
         return currentResolver;
     }
 
@@ -130,14 +130,12 @@ public class SlotMappingUIModel {
      * @return whether or not the current resolver is allowable
      */
     public boolean hasCurrentResolver() {
-        return isAllowableResolver(currentResolver);
+        return currentResolver != null && isAllowableResolver(currentResolver);
     }
 
     // XXX should use error model, at least in parts.
-    public boolean isAllowableResolver(ViewItemValueResolver resolver) {
-        if (resolver == null) {
-            return false;
-        }
+    public boolean isAllowableResolver(ManagedViewItemValueResolver resolver) {
+        assert resolver != null;
 
         assert resolver.getResolverId() != null;
 
@@ -170,7 +168,7 @@ public class SlotMappingUIModel {
      * @throws InvalidResolverException
      *             If the resolver is null or is not allowable
      */
-    public void setCurrentResolver(ViewItemValueResolver resolver) {
+    public void setCurrentResolver(ManagedViewItemValueResolver resolver) {
         if (!isAllowableResolver(resolver)) {
             throw new InvalidResolverException(resolver.getResolverId());
         }
@@ -195,7 +193,7 @@ public class SlotMappingUIModel {
         if (!allowableResolverFactories.containsKey(resolverID)) {
             throw new InvalidResolverException(resolverID);
         }
-        ViewItemValueResolver resolver = (allowableResolverFactories
+        ManagedViewItemValueResolver resolver = (allowableResolverFactories
                 .get(resolverID)).create(currentViewItems);
         setCurrentResolver(resolver);
     }

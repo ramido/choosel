@@ -57,20 +57,16 @@ public class ViewItemStatusResolver extends AbstractSimpleViewItemValueResolver 
 
     }
 
-    private final String id;
-
     private final Object defaultValue;
 
     private final StatusRule[] rules;
 
-    public ViewItemStatusResolver(String resolverId, Object defaultValue,
-            StatusRule... rules) {
+    public ViewItemStatusResolver(Object defaultValue, StatusRule... rules) {
         assert defaultValue != null;
         assert rules != null;
 
         this.rules = rules;
         this.defaultValue = defaultValue;
-        this.id = resolverId;
     }
 
     @Override
@@ -78,11 +74,6 @@ public class ViewItemStatusResolver extends AbstractSimpleViewItemValueResolver 
             ViewItemValueResolverContext context) {
 
         return true;
-    }
-
-    @Override
-    public String getResolverId() {
-        return id;
     }
 
     @Override

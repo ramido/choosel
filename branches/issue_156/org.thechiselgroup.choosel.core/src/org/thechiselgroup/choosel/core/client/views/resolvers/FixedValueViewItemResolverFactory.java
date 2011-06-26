@@ -47,8 +47,10 @@ public class FixedValueViewItemResolverFactory implements
      * fixed value
      */
     @Override
-    public ViewItemValueResolver create(LightweightList<ViewItem> viewItems) {
-        return new FixedValueResolver(value, id, dataType);
+    public ManagedViewItemValueResolver create(
+            LightweightList<ViewItem> viewItems) {
+        return new ManagedViewItemValueResolverAdapter(id,
+                new FixedValueResolver(value, dataType));
     }
 
     @Override

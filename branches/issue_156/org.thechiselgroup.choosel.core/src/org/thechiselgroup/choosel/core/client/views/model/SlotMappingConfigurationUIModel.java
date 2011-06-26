@@ -22,6 +22,7 @@ import java.util.Map.Entry;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ManagedViewItemValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.SlotMappingUIModel;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverFactoryProvider;
@@ -70,7 +71,7 @@ public class SlotMappingConfigurationUIModel {
         }
     }
 
-    public void setResolver(Slot slot, ViewItemValueResolver resolver) {
+    public void setResolver(Slot slot, ManagedViewItemValueResolver resolver) {
         slotsToSlotMappings.get(slot).setCurrentResolver(resolver);
     }
 

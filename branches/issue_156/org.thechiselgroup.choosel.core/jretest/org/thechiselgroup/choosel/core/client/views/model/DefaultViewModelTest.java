@@ -65,11 +65,11 @@ public class DefaultViewModelTest {
         resource.putValue("text1", "t1");
         resource.putValue("text2", "t2");
 
-        underTest.setResolver(slot, new FirstResourcePropertyResolver(
-                "FirstResourcePropertyResolver", "text1", DataType.TEXT));
+        underTest.setResolver(slot, new FirstResourcePropertyResolver("text1",
+                DataType.TEXT));
         helper.getContainedResources().add(resource);
-        underTest.setResolver(slot, new FirstResourcePropertyResolver(
-                "FirstResourcePropertyResolver", "text2", DataType.TEXT));
+        underTest.setResolver(slot, new FirstResourcePropertyResolver("text2",
+                DataType.TEXT));
 
         List<ViewItem> resourceItems = underTest.getViewItems().toList();
         assertEquals(1, resourceItems.size());

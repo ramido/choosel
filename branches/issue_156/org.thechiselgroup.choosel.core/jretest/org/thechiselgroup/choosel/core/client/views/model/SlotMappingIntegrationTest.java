@@ -43,6 +43,7 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.FirstResourcePrope
 import org.thechiselgroup.choosel.core.client.views.resolvers.FirstResourcePropertyResolverFactory;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueViewItemResolverFactory;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ManagedViewItemValueResolverAdapter;
 import org.thechiselgroup.choosel.core.client.views.resolvers.SlotMappingUIModel.InvalidResolverException;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 
@@ -103,8 +104,9 @@ public class SlotMappingIntegrationTest {
 
         /* define initialization mapping */
         final Map<Slot, ViewItemValueResolver> initialSlotMapping = new HashMap<Slot, ViewItemValueResolver>();
-        FirstResourcePropertyResolver resolver = new FirstResourcePropertyResolver(
-                resolverId1, property1, DataType.NUMBER);
+        ViewItemValueResolver resolver = new ManagedViewItemValueResolverAdapter(
+                resolverId1, new FirstResourcePropertyResolver(property1,
+                        DataType.NUMBER));
         initialSlotMapping.put(requiredSlots[0], resolver);
 
         slotMappingInitializer = new TestSlotMappingInitializer(
@@ -129,8 +131,9 @@ public class SlotMappingIntegrationTest {
         resource.putValue(property2, 2);
         resourceGrouping.getResourceSet().add(resource);
 
-        FirstResourcePropertyResolver resolver2 = new FirstResourcePropertyResolver(
-                resolverId1, property2, DataType.NUMBER);
+        ViewItemValueResolver resolver2 = new ManagedViewItemValueResolverAdapter(
+                resolverId1, new FirstResourcePropertyResolver(property2,
+                        DataType.NUMBER));
         slotMappingConfiguration.setResolver(requiredSlots[0], resolver2);
 
         LightweightCollection<ViewItem> viewItems = model.getViewItems();
@@ -180,8 +183,9 @@ public class SlotMappingIntegrationTest {
         /* define initialization mapping */
         final Map<Slot, ViewItemValueResolver> initialSlotMapping = new HashMap<Slot, ViewItemValueResolver>();
         initialSlotMapping.put(requiredSlots[0],
-                new FirstResourcePropertyResolver(resolverId1, property1,
-                        DataType.NUMBER));
+                new ManagedViewItemValueResolverAdapter(resolverId1,
+                        new FirstResourcePropertyResolver(property1,
+                                DataType.NUMBER)));
 
         slotMappingInitializer = new TestSlotMappingInitializer(
                 initialSlotMapping);
@@ -207,8 +211,10 @@ public class SlotMappingIntegrationTest {
         resourceGrouping.getResourceSet().add(resource1);
 
         /* Should have 1 View Item with Value 1 */
-        model.setResolver(requiredSlots[0], new FirstResourcePropertyResolver(
-                resolverId2, property2, DataType.NUMBER));
+        model.setResolver(requiredSlots[0],
+                new ManagedViewItemValueResolverAdapter(resolverId1,
+                        new FirstResourcePropertyResolver(property2,
+                                DataType.NUMBER)));
 
         /* Should have 1 View Item with Value 2 */
         LightweightCollection<ViewItem> viewItems = model.getViewItems();
@@ -251,8 +257,9 @@ public class SlotMappingIntegrationTest {
         /* define initialization mapping */
         final Map<Slot, ViewItemValueResolver> initialSlotMapping = new HashMap<Slot, ViewItemValueResolver>();
         initialSlotMapping.put(requiredSlots[0],
-                new FirstResourcePropertyResolver(resolverId1, property1,
-                        DataType.NUMBER));
+                new ManagedViewItemValueResolverAdapter(resolverId1,
+                        new FirstResourcePropertyResolver(property1,
+                                DataType.NUMBER)));
 
         slotMappingInitializer = new TestSlotMappingInitializer(
                 initialSlotMapping);
@@ -279,8 +286,9 @@ public class SlotMappingIntegrationTest {
 
         /* Should have 1 View Item with Value 1 */
         slotMappingConfiguration.setResolver(requiredSlots[0],
-                new FirstResourcePropertyResolver(resolverId2, property2,
-                        DataType.NUMBER));
+                new ManagedViewItemValueResolverAdapter(resolverId2,
+                        new FirstResourcePropertyResolver(property2,
+                                DataType.NUMBER)));
 
         /* Should have 1 View Item with Value 2 */
         LightweightCollection<ViewItem> viewItems = model.getViewItems();
@@ -357,11 +365,13 @@ public class SlotMappingIntegrationTest {
         /* define initialization mapping */
         final Map<Slot, ViewItemValueResolver> initialSlotMapping = new HashMap<Slot, ViewItemValueResolver>();
         initialSlotMapping.put(requiredSlots[0],
-                new FirstResourcePropertyResolver(resolverId1, property1,
-                        DataType.NUMBER));
+                new ManagedViewItemValueResolverAdapter(resolverId1,
+                        new FirstResourcePropertyResolver(property1,
+                                DataType.NUMBER)));
         initialSlotMapping.put(requiredSlots[1],
-                new FirstResourcePropertyResolver(resolverId2, property3,
-                        DataType.TEXT));
+                new ManagedViewItemValueResolverAdapter(resolverId2,
+                        new FirstResourcePropertyResolver(property3,
+                                DataType.TEXT)));
 
         slotMappingInitializer = new TestSlotMappingInitializer(
                 initialSlotMapping);
@@ -426,8 +436,9 @@ public class SlotMappingIntegrationTest {
         /* define initialization mapping */
         final Map<Slot, ViewItemValueResolver> initialSlotMapping = new HashMap<Slot, ViewItemValueResolver>();
         initialSlotMapping.put(requiredSlots[0],
-                new FirstResourcePropertyResolver(resolverId1, property1,
-                        DataType.NUMBER));
+                new ManagedViewItemValueResolverAdapter(resolverId1,
+                        new FirstResourcePropertyResolver(property1,
+                                DataType.NUMBER)));
 
         slotMappingInitializer = new TestSlotMappingInitializer(
                 initialSlotMapping);
@@ -493,10 +504,12 @@ public class SlotMappingIntegrationTest {
 
         /* define initialization mapping */
         final Map<Slot, ViewItemValueResolver> initialSlotMapping = new HashMap<Slot, ViewItemValueResolver>();
-        FirstResourcePropertyResolver resolver = new FirstResourcePropertyResolver(
-                resolverId1, property1, DataType.NUMBER);
-        initialSlotMapping.put(requiredSlots[0], new FixedValueResolver(1,
-                resolverId1, DataType.NUMBER));
+        ViewItemValueResolver resolver = new ManagedViewItemValueResolverAdapter(
+                resolverId1, new FirstResourcePropertyResolver(property1,
+                        DataType.NUMBER));
+        initialSlotMapping.put(requiredSlots[0],
+                new ManagedViewItemValueResolverAdapter(resolverId1,
+                        new FixedValueResolver(1, DataType.NUMBER)));
 
         slotMappingInitializer = new TestSlotMappingInitializer(
                 initialSlotMapping);
@@ -547,8 +560,9 @@ public class SlotMappingIntegrationTest {
 
         /* define initialization mapping */
         final Map<Slot, ViewItemValueResolver> initialSlotMapping = new HashMap<Slot, ViewItemValueResolver>();
-        FirstResourcePropertyResolver resolver = new FirstResourcePropertyResolver(
-                resolverId1, property1, DataType.NUMBER);
+        ViewItemValueResolver resolver = new ManagedViewItemValueResolverAdapter(
+                resolverId1, new FirstResourcePropertyResolver(property1,
+                        DataType.NUMBER));
         initialSlotMapping.put(requiredSlots[0], resolver);
 
         slotMappingInitializer = new TestSlotMappingInitializer(
@@ -595,8 +609,9 @@ public class SlotMappingIntegrationTest {
 
         /* define initialization mapping */
         final Map<Slot, ViewItemValueResolver> initialSlotMapping = new HashMap<Slot, ViewItemValueResolver>();
-        FirstResourcePropertyResolver resolver = new FirstResourcePropertyResolver(
-                resolverId1, property1, DataType.NUMBER);
+        ViewItemValueResolver resolver = new ManagedViewItemValueResolverAdapter(
+                resolverId1, new FirstResourcePropertyResolver(property1,
+                        DataType.NUMBER));
         initialSlotMapping.put(requiredSlots[0], resolver);
 
         slotMappingInitializer = new TestSlotMappingInitializer(
@@ -658,8 +673,9 @@ public class SlotMappingIntegrationTest {
         /* define initialization mapping */
         final Map<Slot, ViewItemValueResolver> initialSlotMapping = new HashMap<Slot, ViewItemValueResolver>();
         initialSlotMapping.put(requiredSlots[0],
-                new FirstResourcePropertyResolver(resolverId1, property1,
-                        DataType.NUMBER));
+                new ManagedViewItemValueResolverAdapter(resolverId1,
+                        new FirstResourcePropertyResolver(property1,
+                                DataType.NUMBER)));
 
         slotMappingInitializer = new TestSlotMappingInitializer(
                 initialSlotMapping);
@@ -726,11 +742,13 @@ public class SlotMappingIntegrationTest {
         /* define initialization mapping */
         final Map<Slot, ViewItemValueResolver> initialSlotMapping = new HashMap<Slot, ViewItemValueResolver>();
         initialSlotMapping.put(requiredSlots[0],
-                new FirstResourcePropertyResolver(resolverId1, property1,
-                        DataType.NUMBER));
+                new ManagedViewItemValueResolverAdapter(resolverId1,
+                        new FirstResourcePropertyResolver(property1,
+                                DataType.NUMBER)));
         initialSlotMapping.put(requiredSlots[1],
-                new FirstResourcePropertyResolver(resolverId2, property2,
-                        DataType.TEXT));
+                new ManagedViewItemValueResolverAdapter(resolverId2,
+                        new FirstResourcePropertyResolver(property2,
+                                DataType.TEXT)));
 
         slotMappingInitializer = new TestSlotMappingInitializer(
                 initialSlotMapping);
@@ -797,8 +815,9 @@ public class SlotMappingIntegrationTest {
 
         /* define and create initializer */
         final Map<Slot, ViewItemValueResolver> initialSlotMapping = new HashMap<Slot, ViewItemValueResolver>();
-        initialSlotMapping.put(requiredSlots[0], new FixedValueResolver(1,
-                resolverId1, DataType.NUMBER));
+        initialSlotMapping.put(requiredSlots[0],
+                new ManagedViewItemValueResolverAdapter(resolverId1,
+                        new FixedValueResolver(1, DataType.NUMBER)));
 
         slotMappingInitializer = new TestSlotMappingInitializer(
                 initialSlotMapping);

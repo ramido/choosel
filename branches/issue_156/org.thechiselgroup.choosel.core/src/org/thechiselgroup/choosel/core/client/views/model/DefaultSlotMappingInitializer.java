@@ -70,8 +70,7 @@ public class DefaultSlotMappingInitializer implements SlotMappingInitializer {
             return new CalculationResolver(firstProperty, new SumCalculation());
         }
 
-        return new FirstResourcePropertyResolver(
-                "FirstResourcePropertyResolver", firstProperty, dataType);
+        return new FirstResourcePropertyResolver(firstProperty, dataType);
     }
 
     public void putDefaultDataTypeValues(DataType dataType,

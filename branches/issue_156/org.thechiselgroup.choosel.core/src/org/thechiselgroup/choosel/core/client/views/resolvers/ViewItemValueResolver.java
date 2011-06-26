@@ -60,10 +60,6 @@ public interface ViewItemValueResolver {
      */
     boolean canResolve(ViewItem viewItem, ViewItemValueResolverContext context);
 
-    // XXX remove - should not be required for basic functionality, could
-    // we do this somehow differently
-    String getResolverId();
-
     /**
      * @return {@link Slot}s that this {@link ViewItemValueResolver} delegates
      *         to. Can be {@code null} if the this {@link ViewItemValueResolver}

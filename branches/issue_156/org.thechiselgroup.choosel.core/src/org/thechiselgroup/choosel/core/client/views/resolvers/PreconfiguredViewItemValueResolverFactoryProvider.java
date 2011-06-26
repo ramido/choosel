@@ -32,10 +32,14 @@ public class PreconfiguredViewItemValueResolverFactoryProvider extends
     public void registerFactories() {
         factories = new HashMap<String, ViewItemValueResolverFactory>();
         registerFactory(new ResourceCountResolverFactory());
-        registerFactory(new CalculationResolverFactory(new SumCalculation()));
-        registerFactory(new CalculationResolverFactory(new AverageCalculation()));
-        registerFactory(new CalculationResolverFactory(new MaxCalculation()));
-        registerFactory(new CalculationResolverFactory(new MinCalculation()));
+        registerFactory(new CalculationResolverFactory("sum",
+                new SumCalculation()));
+        registerFactory(new CalculationResolverFactory("avg",
+                new AverageCalculation()));
+        registerFactory(new CalculationResolverFactory("max",
+                new MaxCalculation()));
+        registerFactory(new CalculationResolverFactory("min",
+                new MinCalculation()));
         registerFactory(new FixedValueViewItemResolverFactory(new Double(1.0),
                 DataType.NUMBER, "Fixed-1"));
         registerFactory(new FirstResourcePropertyResolverFactory(DataType.TEXT,

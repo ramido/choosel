@@ -103,13 +103,11 @@ public class DefaultViewPersistenceTest {
         resource.putValue("property2", "value2");
 
         originalViewModel.setResolver(textSlot,
-                new FirstResourcePropertyResolver("", "property1",
-                        DataType.TEXT));
+                new FirstResourcePropertyResolver("property1", DataType.TEXT));
         originalView.getResourceModel().addUnnamedResources(
                 toResourceSet(resource));
         originalViewModel.setResolver(textSlot,
-                new FirstResourcePropertyResolver("", "property2",
-                        DataType.TEXT));
+                new FirstResourcePropertyResolver("property2", DataType.TEXT));
 
         // 2. save first view
         DefaultResourceSetCollector collector = new DefaultResourceSetCollector();

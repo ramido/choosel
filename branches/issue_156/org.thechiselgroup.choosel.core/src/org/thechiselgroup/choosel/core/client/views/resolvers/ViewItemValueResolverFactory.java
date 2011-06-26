@@ -36,7 +36,8 @@ public interface ViewItemValueResolverFactory {
             LightweightList<ViewItem> viewItems);
 
     /**
-     * @return A new instance of the corresponding ViewItemValueResolver
+     * @return A new instance of the corresponding
+     *         {@link ManagedViewItemValueResolver}
      */
     /*
      * TODO what I really want to do is pass in a context of the current view in
@@ -47,7 +48,7 @@ public interface ViewItemValueResolverFactory {
      * TODO The create methods might need to be resolver specific, because the
      * ViewItemValueResolvers are immutable and we need to configure parameters.
      */
-    ViewItemValueResolver create(LightweightList<ViewItem> viewItems);
+    ManagedViewItemValueResolver create(LightweightList<ViewItem> viewItems);
 
     /**
      * @return the id of both the factory and the resolver

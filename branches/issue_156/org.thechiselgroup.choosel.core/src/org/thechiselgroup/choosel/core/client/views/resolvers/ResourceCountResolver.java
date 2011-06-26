@@ -22,8 +22,6 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverC
 // TODO DataType.NUMBER
 public class ResourceCountResolver extends SubsetViewItemValueResolver {
 
-    private static final String ID = "ResourceCountResolver";
-
     public ResourceCountResolver() {
         this(Subset.ALL);
     }
@@ -37,11 +35,6 @@ public class ResourceCountResolver extends SubsetViewItemValueResolver {
             ViewItemValueResolverContext context) {
 
         return true;
-    }
-
-    @Override
-    public String getResolverId() {
-        return ID;
     }
 
     @Override

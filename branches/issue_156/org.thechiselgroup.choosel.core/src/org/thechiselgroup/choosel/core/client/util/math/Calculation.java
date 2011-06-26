@@ -21,6 +21,4 @@ public interface Calculation {
 
     String getDescription();
 
-    String getID();
-
 }

@@ -23,7 +23,7 @@ import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverC
 public class TextPropertyResolver extends FirstResourcePropertyResolver {
 
     public TextPropertyResolver(String property) {
-        super("", property, DataType.TEXT);
+        super(property, DataType.TEXT);
     }
 
     @Override

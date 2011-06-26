@@ -30,12 +30,9 @@ public class SubsetDelegatingValueResolver implements ViewItemValueResolver {
 
     private Subset subset;
 
-    private String id;
-
-    public SubsetDelegatingValueResolver(String id, Slot slot, Subset subset) {
+    public SubsetDelegatingValueResolver(Slot slot, Subset subset) {
         this.slot = slot;
         this.subset = subset;
-        this.id = id;
 
         this.slots = LightweightCollections.toCollection(slot);
     }
@@ -45,12 +42,6 @@ public class SubsetDelegatingValueResolver implements ViewItemValueResolver {
             ViewItemValueResolverContext context) {
 
         return context.getResolver(slot).canResolve(viewItem, context);
-    }
-
-    // TODO
-    @Override
-    public String getResolverId() {
-        return id;
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -15,41 +15,49 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.resolvers;
 
-import org.thechiselgroup.choosel.core.client.resources.DataType;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
+import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
 
-// TODO expose data type
-public class FixedValueResolver extends AbstractSimpleViewItemValueResolver {
+public class ManagedViewItemValueResolverAdapter implements
+        ManagedViewItemValueResolver {
 
-    private final Object value;
+    private ViewItemValueResolver delegate;
 
-    private final DataType dataType;
+    private String resolverId;
 
-    public FixedValueResolver(Object value, DataType dataType) {
-        assert value != null;
-        assert dataType != null;
+    public ManagedViewItemValueResolverAdapter(String resolverId,
+            ViewItemValueResolver delegate) {
 
-        this.value = value;
-        this.dataType = dataType;
+        this.delegate = delegate;
+        this.resolverId = resolverId;
     }
 
     @Override
     public boolean canResolve(ViewItem viewItem,
             ViewItemValueResolverContext context) {
+        return delegate.canResolve(viewItem, context);
+    }
 
-        return true;
+    public ViewItemValueResolver getDelegate() {
+        return delegate;
+    }
+
+    @Override
+    public String getResolverId() {
+        return resolverId;
+    }
+
+    @Override
+    public LightweightCollection<Slot> getTargetSlots() {
+        return delegate.getTargetSlots();
     }
 
     @Override
     public Object resolve(ViewItem viewItem,
             ViewItemValueResolverContext context) {
-        return value;
-    }
-
-    @Override
-    public String toString() {
-        return "Constant: " + value;
+        return delegate.resolve(viewItem, context);
     }
 
 }

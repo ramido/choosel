@@ -40,6 +40,7 @@ import org.thechiselgroup.choosel.core.client.util.collections.CombinedIterable;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ManagedViewItemValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -552,7 +553,10 @@ public class DefaultViewModel implements ViewModel, Disposable,
 
     @Override
     public void setResolver(Slot slot, ViewItemValueResolver resolver) {
-        configurationUIModel.setResolver(slot, resolver);
+        if (resolver instanceof ManagedViewItemValueResolver) {
+            configurationUIModel.setResolver(slot,
+                    (ManagedViewItemValueResolver) resolver);
+        }
         slotMappingConfiguration.setResolver(slot, resolver);
     }
 

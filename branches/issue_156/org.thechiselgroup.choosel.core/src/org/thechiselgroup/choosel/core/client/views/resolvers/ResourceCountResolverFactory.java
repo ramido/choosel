@@ -41,10 +41,13 @@ public class ResourceCountResolverFactory implements
     }
 
     @Override
-    public ViewItemValueResolver create(LightweightList<ViewItem> viewItems) {
-        return new ResourceCountResolver(subset);
+    public ManagedViewItemValueResolver create(
+            LightweightList<ViewItem> viewItems) {
+        return new ManagedViewItemValueResolverAdapter(getId(),
+                new ResourceCountResolver(subset));
     }
 
+    // TODO use class name?
     @Override
     public String getId() {
         return "org.thechiselgroup.choosel.core.client.views.resolvers.ResourceCountResolverFactory";

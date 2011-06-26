@@ -30,26 +30,20 @@ public class FirstResourcePropertyResolver extends SubsetViewItemValueResolver
 
     protected final DataType dataType;
 
-    protected final String resolverID;
-
-    public FirstResourcePropertyResolver(String resolverID, String property,
-            DataType dataType) {
-
-        this(resolverID, property, dataType, Subset.ALL);
+    public FirstResourcePropertyResolver(String property, DataType dataType) {
+        this(property, dataType, Subset.ALL);
     }
 
-    public FirstResourcePropertyResolver(String resolverID, String property,
-            DataType dataType, Subset subset) {
+    public FirstResourcePropertyResolver(String property, DataType dataType,
+            Subset subset) {
 
         super(subset);
 
         assert property != null;
         assert dataType != null;
-        assert resolverID != null;
 
         this.dataType = dataType;
         this.property = property;
-        this.resolverID = resolverID;
     }
 
     // TODO test
@@ -75,11 +69,6 @@ public class FirstResourcePropertyResolver extends SubsetViewItemValueResolver
     @Override
     public String getProperty() {
         return property;
-    }
-
-    @Override
-    public String getResolverId() {
-        return resolverID;
     }
 
     @Override

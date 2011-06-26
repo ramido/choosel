@@ -82,11 +82,6 @@ public class CalculationResolver extends SubsetViewItemValueResolver implements
     }
 
     @Override
-    public String getResolverId() {
-        return calculation.getID();
-    }
-
-    @Override
     public Double resolve(ViewItem viewItem,
             ViewItemValueResolverContext context, Subset subset) {
         return calculation.calculate(toNumberArray(viewItem

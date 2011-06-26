@@ -28,13 +28,8 @@ public class MaxCalculation implements Calculation {
     }
 
     @Override
-    public String getID() {
-        return "max";
-    }
-
-    @Override
     public String toString() {
-        return getID();
+        return getDescription();
     }
 
 }

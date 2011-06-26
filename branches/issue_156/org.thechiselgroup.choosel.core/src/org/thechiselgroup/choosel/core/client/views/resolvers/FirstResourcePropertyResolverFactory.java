@@ -55,11 +55,12 @@ public class FirstResourcePropertyResolverFactory implements
     }
 
     @Override
-    public ViewItemValueResolver create(LightweightList<ViewItem> viewItems) {
+    public ManagedViewItemValueResolver create(
+            LightweightList<ViewItem> viewItems) {
         List<String> properties = getSharedProperties(viewItems);
         assert !properties.isEmpty();
-        return new FirstResourcePropertyResolver(resolverID, properties.get(0),
-                dataType);
+        return new ManagedViewItemValueResolverAdapter(resolverID,
+                new FirstResourcePropertyResolver(properties.get(0), dataType));
     }
 
     @Override

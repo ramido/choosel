@@ -55,10 +55,14 @@ public class DefaultViewItemResolverUIFactoryProvider implements
     public void registerFactories() {
         idToFactoryMap = new HashMap<String, ViewItemValueResolverUIControllerFactory>();
         add(new ResourceCountResolverUIControllerFactory());
-        add(new CalculationResolverUIControllerFactory(new SumCalculation()));
-        add(new CalculationResolverUIControllerFactory(new AverageCalculation()));
-        add(new CalculationResolverUIControllerFactory(new MinCalculation()));
-        add(new CalculationResolverUIControllerFactory(new MaxCalculation()));
+        add(new CalculationResolverUIControllerFactory(new SumCalculation(),
+                "sum"));
+        add(new CalculationResolverUIControllerFactory(
+                new AverageCalculation(), "avg"));
+        add(new CalculationResolverUIControllerFactory(new MinCalculation(),
+                "min"));
+        add(new CalculationResolverUIControllerFactory(new MaxCalculation(),
+                "max"));
 
         add(new FixedValueViewItemResolverUIControllerFactory("Fixed-1"));
         add(new FirstResourcePropertyResolverUIControllerFactory(

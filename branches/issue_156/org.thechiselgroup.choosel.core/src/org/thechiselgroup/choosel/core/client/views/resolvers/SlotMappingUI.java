@@ -82,7 +82,8 @@ public class SlotMappingUI extends FlowPanel {
             ViewItemValueResolverUIControllerFactoryProvider uiProvider) {
         this.uiModel = uiModel;
         this.uiProvider = uiProvider;
-        ViewItemValueResolver currentResolver = uiModel.getCurrentResolver();
+        ManagedViewItemValueResolver currentResolver = uiModel
+                .getCurrentResolver();
         this.resolverUIController = uiProvider.getFactoryById(
                 currentResolver.getResolverId()).create(currentResolver);
     }

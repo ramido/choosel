@@ -22,8 +22,12 @@ public class CalculationResolverUIControllerFactory implements
 
     private final Calculation calculation;
 
-    public CalculationResolverUIControllerFactory(Calculation calculation) {
+    private final String id;
+
+    public CalculationResolverUIControllerFactory(Calculation calculation,
+            String id) {
         this.calculation = calculation;
+        this.id = id;
     }
 
     @Override
@@ -34,6 +38,6 @@ public class CalculationResolverUIControllerFactory implements
 
     @Override
     public String getId() {
-        return calculation.getID();
+        return id;
     }
 }

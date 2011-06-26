@@ -69,9 +69,10 @@ public class SlotMappingConfigurationPersistableAdapter implements Persistable {
                             .getValue(MEMENTO_KEY_PROPERTY);
 
                     // XXX correct id
-                    slotMappingConfiguration.setResolver(slot,
-                            new FirstResourcePropertyResolver("id", property,
-                                    slot.getDataType()));
+                    slotMappingConfiguration.setResolver(
+                            slot,
+                            new FirstResourcePropertyResolver(property, slot
+                                    .getDataType()));
                 } else if (MEMENTO_VALUE_CALCULATION.equals(value)) {
                     String property = (String) child
                             .getValue(MEMENTO_KEY_PROPERTY);

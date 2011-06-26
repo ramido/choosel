@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2009, 2010 Lars Grammel 
+ * Copyright (C) 2011 Lars Grammel 
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -13,34 +13,16 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.  
  *******************************************************************************/
-package org.thechiselgroup.choosel.core.client.util.math;
+package org.thechiselgroup.choosel.core.client.views.resolvers;
 
-public class SumCalculation implements Calculation {
+/**
+ * Interface for {@link ViewItemValueResolver}s that are created and managed by
+ * a {@link ViewItemValueResolverFactory}.
+ * 
+ * @author Lars Grammel
+ */
+public interface ManagedViewItemValueResolver extends ViewItemValueResolver {
 
-    public static double sum(NumberArray values) {
-        assert values != null;
-
-        double sum = 0;
-        for (int i = 0; i < values.length(); i++) {
-            sum += values.get(i);
-        }
-
-        return sum;
-    }
-
-    @Override
-    public double calculate(NumberArray values) {
-        return sum(values);
-    }
-
-    @Override
-    public String getDescription() {
-        return "Sum";
-    }
-
-    @Override
-    public String toString() {
-        return getDescription();
-    }
+    String getResolverId();
 
 }

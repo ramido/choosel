@@ -29,8 +29,13 @@ public class CalculationResolverFactory implements ViewItemValueResolverFactory 
 
     private final Calculation calculation;
 
-    public CalculationResolverFactory(Calculation calculation) {
+    private final String id;
+
+    public CalculationResolverFactory(String id, Calculation calculation) {
+        this.id = id;
         assert calculation != null;
+        assert id != null;
+
         this.calculation = calculation;
     }
 
@@ -50,17 +55,20 @@ public class CalculationResolverFactory implements ViewItemValueResolverFactory 
      * initial property for the resolver to use
      */
     @Override
-    public ViewItemValueResolver create(LightweightList<ViewItem> viewItems) {
+    public ManagedViewItemValueResolver create(
+            LightweightList<ViewItem> viewItems) {
+
         List<String> properties = getSharedProperties(viewItems);
 
         assert !properties.isEmpty();
 
-        return new CalculationResolver(properties.get(0), calculation);
+        return new ManagedViewItemValueResolverAdapter(id,
+                new CalculationResolver(properties.get(0), calculation));
     }
 
     @Override
     public String getId() {
-        return calculation.getID();
+        return id;
     }
 
     @Override

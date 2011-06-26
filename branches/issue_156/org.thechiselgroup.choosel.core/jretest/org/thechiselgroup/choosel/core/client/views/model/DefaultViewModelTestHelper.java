@@ -44,6 +44,7 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.util.collections.NullIterator;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueResolver;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ManagedViewItemValueResolverAdapter;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverFactory;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverFactoryProvider;
 
@@ -239,9 +240,11 @@ public final class DefaultViewModelTestHelper {
         // TODO change once relevant tests are migrated
 
         DefaultSlotMappingInitializer initializer = spy(new DefaultSlotMappingInitializer());
-        initializer.putDefaultDataTypeValues(DataType.NUMBER,
-                new FixedValueResolver(new Double(0), "Fixed-0",
-                        DataType.NUMBER));
+        initializer
+                .putDefaultDataTypeValues(DataType.NUMBER,
+                        new ManagedViewItemValueResolverAdapter("Fixed-0",
+                                new FixedValueResolver(new Double(0),
+                                        DataType.NUMBER)));
         {
 
             ViewItemValueResolverFactory resolverFactory = mock(ViewItemValueResolverFactory.class);
@@ -255,8 +258,9 @@ public final class DefaultViewModelTestHelper {
         }
         if (useDefaultFactories) {
             initializer.putDefaultDataTypeValues(DataType.TEXT,
-                    new FixedValueResolver("", "Fixed-EmptyString",
-                            DataType.TEXT));
+                    new ManagedViewItemValueResolverAdapter(
+                            "Fixed-EmptyString", new FixedValueResolver("",
+                                    DataType.TEXT)));
             {
 
                 ViewItemValueResolverFactory resolverFactory = mock(ViewItemValueResolverFactory.class);
@@ -272,5 +276,4 @@ public final class DefaultViewModelTestHelper {
 
         this.initializer = initializer;
     }
-
 }

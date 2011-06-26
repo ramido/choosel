@@ -102,7 +102,7 @@ public class NumberSlotControl extends SlotControl {
                 new CalculationResolverFactory(new MinCalculation()),
                 new CalculationResolverFactory(new MaxCalculation()),
                 new FixedValueResolverFactory(new FixedValueResolver(
-                        new Double(1), "Fixed-1", DataType.NUMBER)) };
+                        new Double(1), DataType.NUMBER)) };
 
         resolverFactorySelector = new ListBoxControl<ViewItemResolverFactory>(
                 new ExtendedListBox(false),
