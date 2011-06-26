@@ -26,6 +26,8 @@ public interface SlotMappingConfigurationInterface extends
         ViewItemValueResolverContext {
 
     /**
+     * Adds an event handler that gets called when mappings change.
+     * 
      * @param handler
      *            {@link SlotMappingChangedHandler} that gets called when a slot
      *            mapping changes. Supports {@link PrioritizedEventHandler}.
@@ -37,7 +39,7 @@ public interface SlotMappingConfigurationInterface extends
      *            id of the slot
      * @return {@link Slot} with the ID {@code slotId}
      */
-    // TODO throws NoSuchSlotException
+    // TODO throws InvalidSlotException
     Slot getSlotById(String slotId);
 
     /**
@@ -55,12 +57,19 @@ public interface SlotMappingConfigurationInterface extends
     LightweightCollection<Slot> getUnconfiguredSlots();
 
     /**
+     * Checks if a {@link ViewItemValueResolver} has been set for a {@link Slot}
+     * . This does not mean that the value resolver actually resolves to valid
+     * values. This would be reported in the
+     * {@link ViewItemResolutionErrorModel}.
+     * 
      * @return {code true}, if a {@link ViewItemValueResolver} is configured for
      *         {code slot}.
      */
+    // TODO throws InvalidSlotException
     boolean isConfigured(Slot slot);
 
     // TODO document
+    // TODO throws InvalidSlotException
     void setResolver(Slot slot, ViewItemValueResolver resolver);
 
 }

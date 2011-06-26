@@ -15,11 +15,13 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.model;
 
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -55,6 +57,13 @@ public class SlotMappingConfigurationTest {
 
         verify(handler, times(1)).onSlotMappingChanged(
                 argThat(new IsChangeForSlotMatcher(slot2)));
+    }
+
+    @Test
+    public void getUnconfiguredSlots() {
+        underTest.setResolver(slot1, mock(ViewItemValueResolver.class));
+
+        assertThat(underTest.getUnconfiguredSlots(), containsExactly(slot2));
     }
 
     @Before

@@ -21,10 +21,9 @@ import java.util.Map.Entry;
 
 import org.thechiselgroup.choosel.core.client.util.collections.CollectionFactory;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
-import org.thechiselgroup.choosel.core.client.util.event.PrioritizedEventHandler;
+import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.util.event.PrioritizedHandlerManager;
 import org.thechiselgroup.choosel.core.client.views.resolvers.DelegatingViewItemValueResolver;
-import org.thechiselgroup.choosel.core.client.views.resolvers.NullViewItemValueResolver;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -50,17 +49,12 @@ public class SlotMappingConfiguration implements
         initSlotsById(slots);
     }
 
-    /**
-     * Adds an event handler that gets called when mappings change. Supports
-     * {@link PrioritizedEventHandler}.
-     */
     @Override
     public HandlerRegistration addHandler(SlotMappingChangedHandler handler) {
         assert handler != null;
         return handlerManager.addHandler(SlotMappingChangedEvent.TYPE, handler);
     }
 
-    // TODO search for calls from outside this class and remove
     @Override
     public ViewItemValueResolver getResolver(Slot slot)
             throws NoResolverForSlotException {
@@ -89,8 +83,14 @@ public class SlotMappingConfiguration implements
 
     @Override
     public LightweightCollection<Slot> getUnconfiguredSlots() {
-        // TODO Auto-generated method stub
-        return null;
+        LightweightList<Slot> unconfiguredSlots = CollectionFactory
+                .createLightweightList();
+        for (Slot slot : slots) {
+            if (!isConfigured(slot)) {
+                unconfiguredSlots.add(slot);
+            }
+        }
+        return unconfiguredSlots;
     }
 
     private void initSlotsById(Slot[] slots) {
@@ -99,20 +99,11 @@ public class SlotMappingConfiguration implements
         }
     }
 
-    // TODO this is not how we would check this anymore
     @Override
     public boolean isConfigured(Slot slot) {
         assert slot != null;
 
         return slotsToResolvers.containsKey(slot);
-    }
-
-    // TODO remove
-    public boolean isSlotInitialized(Slot slot) {
-        ViewItemValueResolver viewItemValueResolver = slotsToResolvers
-                .get(slot);
-        return viewItemValueResolver != null
-                && !(viewItemValueResolver instanceof NullViewItemValueResolver);
     }
 
     /**
@@ -134,16 +125,6 @@ public class SlotMappingConfiguration implements
         }
     }
 
-    /**
-     * XXX This note will be outdated once fixed resolvers are separated from
-     * the SlotMappingConfiguration.
-     * <p>
-     * <b>Note:</b> Slot resolvers that are not returned by getSlots() in the
-     * {@link ViewContentDisplay} can still be configured to allow view content
-     * display decorators to hide and preconfigure slots.
-     * </p>
-     */
-    // TODO the UI Model will throw its own events, we should capture these
     @Override
     public void setResolver(Slot slot, ViewItemValueResolver resolver) {
         assert slot != null : "slot must not be null";
@@ -153,10 +134,9 @@ public class SlotMappingConfiguration implements
 
         slotsToResolvers.put(slot, resolver);
 
-        // TODO we should not fire this event, we should capture any event fired
-        // by the UIModel
         handlerManager.fireEvent(new SlotMappingChangedEvent(slot));
 
+        // fire events for delegating resolvers that reference this slot
         for (Entry<Slot, ViewItemValueResolver> entry : slotsToResolvers
                 .entrySet()) {
 
