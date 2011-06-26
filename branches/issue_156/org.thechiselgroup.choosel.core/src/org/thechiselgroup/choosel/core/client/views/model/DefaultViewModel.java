@@ -373,6 +373,7 @@ public class DefaultViewModel implements ViewModel, Disposable,
                  * the visual mappings need to be updated first because the view
                  * items rely on them when the values are resolved
                  */
+                updateErrorModel();
                 updateVisualMappings(getCategorizedResourceSets());
                 updateViewItemsOnModelChange(e);
             }
@@ -531,6 +532,18 @@ public class DefaultViewModel implements ViewModel, Disposable,
         // view items(remove,add)
     }
 
+    private void updateErrorModel() {
+        Slot[] slots = getSlots();
+        for (Slot slot : slots) {
+            if (!slotMappingConfiguration.containsResolver(slot)) {
+                LightweightCollection<ViewItem> viewItems = getViewItems();
+                for (ViewItem viewItem : viewItems) {
+                    errorModel.reportError(slot, viewItem);
+                }
+            }
+        }
+    }
+
     private void updateHighlighting(
             LightweightCollection<Resource> addedResources,
             LightweightCollection<Resource> removedResources) {
@@ -626,11 +639,6 @@ public class DefaultViewModel implements ViewModel, Disposable,
         updateViewContentDisplay(addedViewItems, updatedViewItems,
                 removedViewItems,
                 LightweightCollections.<Slot> emptyCollection());
-
-        LightweightList<ViewItem> allViewItems = CollectionFactory
-                .createLightweightList();
-        allViewItems.addAll(getViewItems());
-
     }
 
     // TODO update visual mappings based on list of resource sets

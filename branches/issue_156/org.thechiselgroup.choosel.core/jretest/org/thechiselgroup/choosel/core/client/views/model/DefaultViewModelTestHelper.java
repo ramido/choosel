@@ -58,6 +58,7 @@ public final class DefaultViewModelTestHelper {
         return captureAddedViewItems(contentDisplay, 1).get(0);
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public static List<LightweightCollection<ViewItem>> captureAddedViewItems(
             ViewContentDisplay contentDisplay, int wantedNumberOfInvocation) {
 
@@ -77,6 +78,7 @@ public final class DefaultViewModelTestHelper {
         return captureAddedViewItems(contentDisplay).toList();
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public static LightweightCollection<ViewItem> captureUpdatedViewItems(
             ViewContentDisplay contentDisplay) {
 
@@ -93,6 +95,7 @@ public final class DefaultViewModelTestHelper {
     /**
      * convert to LightWeightCollection<ViewItem>
      */
+    @SuppressWarnings("rawtypes")
     private static List<LightweightCollection<ViewItem>> cast(
             List<LightweightCollection> allValues) {
 
@@ -127,9 +130,15 @@ public final class DefaultViewModelTestHelper {
 
     private ViewItemValueResolverFactoryProvider resolverProvider = mock(ViewItemValueResolverFactoryProvider.class);
 
-    private DefaultSlotMappingInitializer initializer;
+    private SlotMappingInitializer initializer;
+
+    private LightweightList<ViewItemValueResolverFactory> resolverFactories = CollectionFactory
+            .createLightweightList();
 
     public DefaultViewModel createTestViewModel() {
+        when(resolverProvider.getResolverFactories()).thenReturn(
+                resolverFactories);
+
         when(viewContentDisplay.getSlots()).thenReturn(slots);
         when(viewContentDisplay.isReady()).thenReturn(true);
 
@@ -191,6 +200,10 @@ public final class DefaultViewModelTestHelper {
         this.highlightedResources = highlightedResources;
     }
 
+    public void setInitializer(SlotMappingInitializer initializer) {
+        this.initializer = initializer;
+    }
+
     public void setSelectedResources(ResourceSet selectedResources) {
         this.selectedResources = selectedResources;
     }
@@ -199,10 +212,8 @@ public final class DefaultViewModelTestHelper {
         this.slots = slots;
     }
 
+    @SuppressWarnings("unchecked")
     public void setUseDefaultFactories(boolean useDefaultFactories) {
-        final LightweightList<ViewItemValueResolverFactory> resolverFactories = CollectionFactory
-                .createLightweightList();
-
         when(resolverProvider.getFactoryById(any(String.class))).thenAnswer(
                 new Answer<ViewItemValueResolverFactory>() {
                     @Override
@@ -223,13 +234,11 @@ public final class DefaultViewModelTestHelper {
                         return resolverFactory;
                     }
                 });
-        when(resolverProvider.getResolverFactories()).thenReturn(
-                resolverFactories);
 
         // XXX needs corresponding factories
         // TODO change once relevant tests are migrated
 
-        initializer = spy(new DefaultSlotMappingInitializer());
+        DefaultSlotMappingInitializer initializer = spy(new DefaultSlotMappingInitializer());
         initializer.putDefaultDataTypeValues(DataType.NUMBER,
                 new FixedValueResolver(new Double(0), "Fixed-0",
                         DataType.NUMBER));
@@ -260,6 +269,8 @@ public final class DefaultViewModelTestHelper {
                 resolverFactories.add(resolverFactory);
             }
         }
+
+        this.initializer = initializer;
     }
 
 }
