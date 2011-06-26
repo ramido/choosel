@@ -25,15 +25,12 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
-import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByPropertyMultiCategorizer;
-import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 import org.thechiselgroup.choosel.core.client.util.math.AverageCalculation;
 import org.thechiselgroup.choosel.core.client.util.math.Calculation;
@@ -49,16 +46,9 @@ public class DefaultViewModelSlotMappingTest {
 
     private Slot numberSlot;
 
-    private ResourceSet selectedResources;
-
-    private ResourceSet highlightedResources;
-
-    private ResourceSet containedResources;
-
     private DefaultViewModel underTest;
 
-    @Mock
-    private ViewContentDisplay viewContentDisplay;
+    private DefaultViewModelTestHelper helper;
 
     @Test
     public void averageCalculationOverGroup() {
@@ -97,16 +87,14 @@ public class DefaultViewModelSlotMappingTest {
 
         SlotMappingUIModel.TESTING = true;
 
-        containedResources = new DefaultResourceSet();
-        highlightedResources = new DefaultResourceSet();
-        selectedResources = new DefaultResourceSet();
-
         textSlot = new Slot("id-1", "text-slot", DataType.TEXT);
         numberSlot = new Slot("id-2", "number-slot", DataType.NUMBER);
 
-        underTest = DefaultViewModelTestHelper.createTestViewModel(
-                containedResources, highlightedResources, selectedResources,
-                viewContentDisplay, true, textSlot, numberSlot);
+        helper = new DefaultViewModelTestHelper();
+        helper.setSlots(textSlot, numberSlot);
+        helper.setUseDefaultFactories(true);
+
+        underTest = helper.createTestViewModel();
 
         Resource r1 = new Resource("test:1");
         r1.putValue("property1", new Double(0));
@@ -120,7 +108,7 @@ public class DefaultViewModelSlotMappingTest {
         r3.putValue("property1", new Double(8));
         r3.putValue("property2", "value2");
 
-        containedResources.addAll(toResourceSet(r1, r2, r3));
+        helper.getContainedResources().addAll(toResourceSet(r1, r2, r3));
         underTest.getResourceGrouping().setCategorizer(
                 new ResourceByPropertyMultiCategorizer("property2"));
     }
@@ -173,7 +161,8 @@ public class DefaultViewModelSlotMappingTest {
                 assertEquals(8d, resourceItem.getValue(numberSlot));
                 return null;
             }
-        }).when(viewContentDisplay).update(any(LightweightCollection.class),
+        }).when(helper.getViewContentDisplay()).update(
+                any(LightweightCollection.class),
                 any(LightweightCollection.class),
                 any(LightweightCollection.class),
                 any(LightweightCollection.class));

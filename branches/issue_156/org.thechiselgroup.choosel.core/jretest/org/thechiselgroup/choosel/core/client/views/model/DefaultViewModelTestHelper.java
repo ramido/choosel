@@ -49,6 +49,7 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
+// TODO refactor, change into object-based class
 public final class DefaultViewModelTestHelper {
 
     public static LightweightCollection<ViewItem> captureAddedViewItems(
@@ -102,22 +103,31 @@ public final class DefaultViewModelTestHelper {
         return result;
     }
 
-    public static DefaultViewModel createTestViewModel(
-            ResourceSet containedResources, ResourceSet highlightedResources,
-            ResourceSet selectedResources, boolean useDefaultFactories,
-            Slot... slots) {
+    public static void stubHandlerRegistration(ResourceSet mockedResources,
+            HandlerRegistration handlerRegistrationToReturn) {
 
-        ViewContentDisplay contentDisplay = mock(ViewContentDisplay.class);
+        when(mockedResources.iterator()).thenReturn(
+                NullIterator.<Resource> nullIterator());
 
-        return createTestViewModel(containedResources, highlightedResources,
-                selectedResources, contentDisplay, useDefaultFactories, slots);
+        when(
+                mockedResources
+                        .addEventHandler(any(ResourceSetChangedEventHandler.class)))
+                .thenReturn(handlerRegistrationToReturn);
     }
 
-    public static DefaultViewModel createTestViewModel(
-            ResourceSet containedResources, ResourceSet highlightedResources,
-            ResourceSet selectedResources, ViewContentDisplay contentDisplay,
-            boolean useDefaultFactories, Slot... slots) {
+    private Slot[] slots = new Slot[0];
 
+    private ResourceSet containedResources = new DefaultResourceSet();
+
+    private ResourceSet highlightedResources = new DefaultResourceSet();
+
+    private ResourceSet selectedResources = new DefaultResourceSet();
+
+    private ViewContentDisplay viewContentDisplay = mock(ViewContentDisplay.class);
+
+    private boolean useDefaultFactories;
+
+    public DefaultViewModel createTestViewModel() {
         ViewItemValueResolverFactoryProvider resolverProvider = mock(ViewItemValueResolverFactoryProvider.class);
         final LightweightList<ViewItemValueResolverFactory> resolverFactories = CollectionFactory
                 .createLightweightList();
@@ -181,11 +191,11 @@ public final class DefaultViewModelTestHelper {
 
         SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
                 resolverProvider, initializer);
-        SlotMappingConfiguration resourceSetToValueResolver = spy(new SlotMappingConfiguration(
+        SlotMappingConfiguration slotMappingConfiguration = spy(new SlotMappingConfiguration(
                 slots));
 
-        when(contentDisplay.getSlots()).thenReturn(slots);
-        when(contentDisplay.isReady()).thenReturn(true);
+        when(viewContentDisplay.getSlots()).thenReturn(slots);
+        when(viewContentDisplay.isReady()).thenReturn(true);
 
         ResourceGrouping resourceGrouping = new ResourceGrouping(
                 new ResourceCategorizerToMultiCategorizerAdapter(
@@ -194,40 +204,71 @@ public final class DefaultViewModelTestHelper {
 
         resourceGrouping.setResourceSet(containedResources);
 
-        DefaultViewModel underTest = spy(new DefaultViewModel(contentDisplay,
-                resourceSetToValueResolver, selectedResources,
-                highlightedResources, mock(ViewItemBehavior.class),
-                resourceGrouping, mock(Logger.class),
-                configurationUIModel));
-
-        // deactivate slot initialization
-
-        return underTest;
+        return spy(new DefaultViewModel(
+                viewContentDisplay, slotMappingConfiguration,
+                selectedResources, highlightedResources,
+                mock(ViewItemBehavior.class), resourceGrouping,
+                mock(Logger.class), configurationUIModel));
     }
 
-    public static DefaultViewModel createTestViewModel(Slot... slots) {
-        ResourceSet containedResources = new DefaultResourceSet();
-        ResourceSet highlightedResources = new DefaultResourceSet();
-        ResourceSet selectedResources = new DefaultResourceSet();
-
-        return createTestViewModel(containedResources, highlightedResources,
-                selectedResources, true, slots);
+    public ResourceSet getContainedResources() {
+        return containedResources;
     }
 
-    public static void stubHandlerRegistration(ResourceSet mockedResources,
-            HandlerRegistration handlerRegistrationToReturn) {
-
-        when(mockedResources.iterator()).thenReturn(
-                NullIterator.<Resource> nullIterator());
-
-        when(
-                mockedResources
-                        .addEventHandler(any(ResourceSetChangedEventHandler.class)))
-                .thenReturn(handlerRegistrationToReturn);
+    public ResourceSet getHighlightedResources() {
+        return highlightedResources;
     }
 
-    private DefaultViewModelTestHelper() {
+    public ResourceSet getSelectedResources() {
+        return selectedResources;
+    }
 
+    public Slot[] getSlots() {
+        return slots;
+    }
+
+    public ViewContentDisplay getViewContentDisplay() {
+        return viewContentDisplay;
+    }
+
+    public boolean isUseDefaultFactories() {
+        return useDefaultFactories;
+    }
+
+    public void mockContainedResources() {
+        this.containedResources = mock(ResourceSet.class);
+    }
+
+    public void mockHighlightedResources() {
+        this.highlightedResources = mock(ResourceSet.class);
+    }
+
+    public void mockSelectedResources() {
+        this.selectedResources = mock(ResourceSet.class);
+    }
+
+    public void setContainedResources(ResourceSet containedResources) {
+        this.containedResources = containedResources;
+    }
+
+    public void setHighlightedResources(ResourceSet highlightedResources) {
+        this.highlightedResources = highlightedResources;
+    }
+
+    public void setSelectedResources(ResourceSet selectedResources) {
+        this.selectedResources = selectedResources;
+    }
+
+    public void setSlots(Slot... slots) {
+        this.slots = slots;
+    }
+
+    public void setUseDefaultFactories(boolean useDefaultFactories) {
+        this.useDefaultFactories = useDefaultFactories;
+    }
+
+    public void setViewContentDisplay(ViewContentDisplay contentDisplay) {
+        this.viewContentDisplay = contentDisplay;
     }
 
 }

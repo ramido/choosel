@@ -24,9 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
-import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
-import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.views.resolvers.SlotMappingUIModel;
 
 // TODO migrate to change default slot mapping initializer
@@ -38,7 +36,7 @@ public class DefaultViewModelInitialValuesTest {
 
     private Slot numberSlot;
 
-    private ResourceSet containedResources;
+    private DefaultViewModelTestHelper helper;
 
     @Test
     public void initialSlotValueForNumberSlotIfNoNumberIsAvailable() {
@@ -46,7 +44,7 @@ public class DefaultViewModelInitialValuesTest {
         resource.putValue("text1", "t1");
         resource.putValue("text2", "t2");
 
-        containedResources.add(resource);
+        helper.getContainedResources().add(resource);
 
         assertEquals(true, underTest.getSlotMappingConfiguration()
                 .containsResolver(numberSlot));
@@ -64,7 +62,7 @@ public class DefaultViewModelInitialValuesTest {
         resource.putValue("text1", "t1");
         resource.putValue("text2", "t2");
 
-        containedResources.add(resource);
+        helper.getContainedResources().add(resource);
 
         assertEquals(true, underTest.getSlotMappingConfiguration()
                 .containsResolver(textSlot));
@@ -82,14 +80,14 @@ public class DefaultViewModelInitialValuesTest {
 
         SlotMappingUIModel.TESTING = true;
 
-        containedResources = new DefaultResourceSet();
-
         textSlot = new Slot("id-1", "text-slot", DataType.TEXT);
         numberSlot = new Slot("id-2", "number-slot", DataType.NUMBER);
 
-        underTest = DefaultViewModelTestHelper.createTestViewModel(
-                containedResources, new DefaultResourceSet(),
-                new DefaultResourceSet(), false, textSlot, numberSlot);
+        helper = new DefaultViewModelTestHelper();
+        helper.setSlots(textSlot, numberSlot);
+        helper.setUseDefaultFactories(false);
+
+        underTest = helper.createTestViewModel();
 
     }
 

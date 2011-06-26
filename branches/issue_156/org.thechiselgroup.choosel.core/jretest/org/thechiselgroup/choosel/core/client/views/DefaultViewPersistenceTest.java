@@ -30,7 +30,6 @@ import org.thechiselgroup.choosel.core.client.label.LabelProvider;
 import org.thechiselgroup.choosel.core.client.persistence.Memento;
 import org.thechiselgroup.choosel.core.client.persistence.PersistableRestorationService;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
-import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSet;
 import org.thechiselgroup.choosel.core.client.resources.DefaultResourceSetFactory;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceByPropertyMultiCategorizer;
@@ -226,9 +225,13 @@ public class DefaultViewPersistenceTest {
             DefaultSelectionModel selectionModel = new DefaultSelectionModel(
                     mock(LabelProvider.class), resourceSetFactory);
 
-            originalViewModel = DefaultViewModelTestHelper.createTestViewModel(
-                    resourceModel.getResources(), new DefaultResourceSet(),
-                    selectionModel.getSelection(), true, textSlot, numberSlot);
+            DefaultViewModelTestHelper helper = new DefaultViewModelTestHelper();
+            helper.setSlots(textSlot, numberSlot);
+            helper.setContainedResources(resourceModel.getResources());
+            helper.setSelectedResources(selectionModel.getSelection());
+            helper.setUseDefaultFactories(true);
+
+            originalViewModel = helper.createTestViewModel();
             originalView = createView(originalViewModel, resourceModel,
                     selectionModel);
         }
@@ -239,9 +242,13 @@ public class DefaultViewPersistenceTest {
             DefaultSelectionModel selectionModel = new DefaultSelectionModel(
                     mock(LabelProvider.class), resourceSetFactory);
 
-            restoredViewModel = DefaultViewModelTestHelper.createTestViewModel(
-                    resourceModel.getResources(), new DefaultResourceSet(),
-                    selectionModel.getSelection(), true, textSlot, numberSlot);
+            DefaultViewModelTestHelper helper = new DefaultViewModelTestHelper();
+            helper.setSlots(textSlot, numberSlot);
+            helper.setContainedResources(resourceModel.getResources());
+            helper.setSelectedResources(selectionModel.getSelection());
+            helper.setUseDefaultFactories(true);
+
+            restoredViewModel = helper.createTestViewModel();
             restoredView = createView(restoredViewModel, resourceModel,
                     selectionModel);
         }
