@@ -17,18 +17,15 @@ package org.thechiselgroup.choosel.core.client.views.model;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
 import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
-import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.mockViewItemValueResolver;
+import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.createResolverCanResolveResource;
+import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.mockAlwaysApplicableResolver;
 import static org.thechiselgroup.choosel.core.client.views.model.ViewItemWithSingleResourceMatcher.containsEqualResource;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
@@ -46,152 +43,80 @@ public class DefaultViewModelErrorTest {
 
     private DefaultViewModelTestHelper helper;
 
+    private Resource resource1;
+
+    private Resource resource2;
+
+    private DefaultViewModel underTest;
+
+    private void addResourcesToUndertest() {
+        getResourceSetFromUnderTest().add(resource1);
+        getResourceSetFromUnderTest().add(resource2);
+    }
+
     @Test
     public void allSlotsHaveResolversCausesNoErrors() {
         Slot[] slots = helper.createSlots(DataType.TEXT);
-        DefaultViewModel underTest = helper.createTestViewModel();
+        underTest = helper.createTestViewModel();
 
-        ViewItemValueResolver resolver = mockViewItemValueResolver();
+        underTest.setResolver(slots[0],
+                ViewItemValueResolverTestUtils.mockAlwaysApplicableResolver());
 
-        when(
-                resolver.canResolve(any(ViewItem.class),
-                        any(ViewItemValueResolverContext.class))).thenReturn(
-                true);
-
-        underTest.setResolver(slots[0], resolver);
-
-        underTest.getResourceGrouping().getResourceSet()
-                .add(TestResourceSetFactory.createResource(1));
+        getResourceSetFromUnderTest().add(
+                TestResourceSetFactory.createResource(1));
 
         assertThat(underTest.hasErrors(), is(false));
+    }
+
+    private ResourceSet getResourceSetFromUnderTest() {
+        return underTest.getResourceGrouping().getResourceSet();
     }
 
     @Test
     public void resolverCannotResolveSomeViewItemsFixedByChangingResolverReturnsNoErrors() {
         Slot[] slots = helper.createSlots(DataType.TEXT);
-        DefaultViewModel underTest = helper.createTestViewModel();
+        underTest = helper.createTestViewModel();
 
-        ViewItemValueResolver resolver = mockViewItemValueResolver();
-        /*
-         * We give these resources different types because the testHelper's
-         * categorizer groups by type
-         */
-        final Resource resource1 = TestResourceSetFactory.createResource(
-                "type1", 1);
-        final Resource resource2 = TestResourceSetFactory.createResource(
-                "type12", 2);
-
-        when(
-                resolver.canResolve(any(ViewItem.class),
-                        any(ViewItemValueResolverContext.class))).thenAnswer(
-                new Answer<Boolean>() {
-                    @Override
-                    public Boolean answer(InvocationOnMock invocation)
-                            throws Throwable {
-                        ViewItem viewItem = (ViewItem) invocation
-                                .getArguments()[0];
-                        ResourceSet set = viewItem.getResources();
-
-                        return set.size() == 1 && set.contains(resource1);
-                    };
-                });
-
-        underTest.setResolver(slots[0], resolver);
-
-        underTest.getResourceGrouping().getResourceSet().add(resource1);
-        underTest.getResourceGrouping().getResourceSet().add(resource2);
+        underTest.setResolver(slots[0],
+                createResolverCanResolveResource(resource1));
+        addResourcesToUndertest();
 
         /*
          * there are currently errors on resource2 as per
          * resolverCannotResolveSomeViewItemsThrowsErrors test
          */
 
-        ViewItemValueResolver resolver2 = mockViewItemValueResolver();
-        when(
-                resolver2.canResolve(any(ViewItem.class),
-                        any(ViewItemValueResolverContext.class))).thenReturn(
-                true);
-        underTest.setResolver(slots[0], resolver2);
+        underTest.setResolver(slots[0],
+                ViewItemValueResolverTestUtils.mockAlwaysApplicableResolver());
         assertThat(underTest.hasErrors(), is(false));
     }
 
     @Test
     public void resolverCannotResolveSomeViewItemsFixedByChangingViewItemsReturnsNoErrors() {
         Slot[] slots = helper.createSlots(DataType.TEXT);
-        DefaultViewModel underTest = helper.createTestViewModel();
+        underTest = helper.createTestViewModel();
 
-        ViewItemValueResolver resolver = mockViewItemValueResolver();
-        /*
-         * We give these resources different types because the testHelper's
-         * categorizer groups by type
-         */
-        final Resource resource1 = TestResourceSetFactory.createResource(
-                "type1", 1);
-        final Resource resource2 = TestResourceSetFactory.createResource(
-                "type12", 2);
-
-        when(
-                resolver.canResolve(any(ViewItem.class),
-                        any(ViewItemValueResolverContext.class))).thenAnswer(
-                new Answer<Boolean>() {
-                    @Override
-                    public Boolean answer(InvocationOnMock invocation)
-                            throws Throwable {
-                        ViewItem viewItem = (ViewItem) invocation
-                                .getArguments()[0];
-                        ResourceSet set = viewItem.getResources();
-
-                        return set.size() == 1 && set.contains(resource1);
-                    };
-                });
-
-        underTest.setResolver(slots[0], resolver);
-
-        underTest.getResourceGrouping().getResourceSet().add(resource1);
-        underTest.getResourceGrouping().getResourceSet().add(resource2);
+        underTest.setResolver(slots[0],
+                createResolverCanResolveResource(resource1));
+        addResourcesToUndertest();
 
         /*
          * there are currently errors on resource2 as per
          * resolverCannotResolveSomeViewItemsThrowsErrors test
          */
-        underTest.getResourceGrouping().getResourceSet().remove(resource2);
+        getResourceSetFromUnderTest().remove(resource2);
         assertThat(underTest.hasErrors(), is(false));
     }
 
     @Test
     public void resolverCannotResolveSomeViewItemsThrowsErrors() {
         Slot[] slots = helper.createSlots(DataType.TEXT);
-        DefaultViewModel underTest = helper.createTestViewModel();
+        underTest = helper.createTestViewModel();
 
-        ViewItemValueResolver resolver = mockViewItemValueResolver();
-        /*
-         * We give these resources different types because the testHelper's
-         * categorizer groups by type
-         */
-        final Resource resource1 = TestResourceSetFactory.createResource(
-                "type1", 1);
-        final Resource resource2 = TestResourceSetFactory.createResource(
-                "type12", 2);
+        underTest.setResolver(slots[0],
+                createResolverCanResolveResource(resource1));
 
-        when(
-                resolver.canResolve(any(ViewItem.class),
-                        any(ViewItemValueResolverContext.class))).thenAnswer(
-                new Answer<Boolean>() {
-                    @Override
-                    public Boolean answer(InvocationOnMock invocation)
-                            throws Throwable {
-                        ViewItem viewItem = (ViewItem) invocation
-                                .getArguments()[0];
-                        ResourceSet set = viewItem.getResources();
-
-                        return set.size() == 1 && set.contains(resource1);
-                    };
-                });
-
-        underTest.setResolver(slots[0], resolver);
-
-        underTest.getResourceGrouping().getResourceSet().add(resource1);
-        underTest.getResourceGrouping().getResourceSet().add(resource2);
+        addResourcesToUndertest();
 
         assertThat(underTest.hasErrors(), is(true));
         assertThat(underTest.getSlotsWithErrors(), containsExactly(slots[0]));
@@ -203,21 +128,15 @@ public class DefaultViewModelErrorTest {
     @Test
     public void setResolversFromUnconfiguredToValidReturnsNoErrors() {
         Slot[] slots = helper.createSlots(DataType.TEXT);
-        DefaultViewModel underTest = helper.createTestViewModel();
+        underTest = helper.createTestViewModel();
 
-        underTest.getResourceGrouping().getResourceSet()
-                .add(TestResourceSetFactory.createResource(1));
-
+        getResourceSetFromUnderTest().add(
+                TestResourceSetFactory.createResource(1));
         /*
          * Model currently in a error state as per
          * slotWithoutResolverCausesError test
          */
-
-        ViewItemValueResolver resolver = mockViewItemValueResolver();
-        when(
-                resolver.canResolve(any(ViewItem.class),
-                        any(ViewItemValueResolverContext.class))).thenReturn(
-                true);
+        ViewItemValueResolver resolver = mockAlwaysApplicableResolver();
 
         underTest.setResolver(slots[0], resolver);
         assertThat(underTest.hasErrors(), is(false));
@@ -231,15 +150,22 @@ public class DefaultViewModelErrorTest {
 
         helper = new DefaultViewModelTestHelper();
         helper.mockInitializer();
+
+        /*
+         * We give these resources different types because the testHelper's
+         * categorizer groups by type
+         */
+        resource1 = TestResourceSetFactory.createResource("type1", 1);
+        resource2 = TestResourceSetFactory.createResource("type2", 2);
     }
 
     @Test
     public void slotWithoutResolverCausesError() {
         Slot[] slots = helper.createSlots(DataType.TEXT);
-        DefaultViewModel underTest = helper.createTestViewModel();
+        underTest = helper.createTestViewModel();
 
-        underTest.getResourceGrouping().getResourceSet()
-                .add(TestResourceSetFactory.createResource(1));
+        getResourceSetFromUnderTest().add(
+                TestResourceSetFactory.createResource(1));
 
         assertThat(underTest.hasErrors(), is(true));
         assertThat(underTest.getSlotsWithErrors(), containsExactly(slots[0]));
@@ -249,18 +175,12 @@ public class DefaultViewModelErrorTest {
     public void someSlotsNotConfiguredReturnsError() {
         Slot[] slots = helper.createSlots(DataType.TEXT, DataType.NUMBER);
 
-        DefaultViewModel underTest = helper.createTestViewModel();
+        underTest = helper.createTestViewModel();
 
-        underTest.getResourceGrouping().getResourceSet()
-                .add(TestResourceSetFactory.createResource(1));
+        getResourceSetFromUnderTest().add(
+                TestResourceSetFactory.createResource(1));
 
-        ViewItemValueResolver resolver = mockViewItemValueResolver();
-        when(
-                resolver.canResolve(any(ViewItem.class),
-                        any(ViewItemValueResolverContext.class))).thenReturn(
-                true);
-
-        underTest.setResolver(slots[0], resolver);
+        underTest.setResolver(slots[0], mockAlwaysApplicableResolver());
         assertThat(underTest.hasErrors(), is(true));
         assertThat(underTest.getSlotsWithErrors(), containsExactly(slots[1]));
     }

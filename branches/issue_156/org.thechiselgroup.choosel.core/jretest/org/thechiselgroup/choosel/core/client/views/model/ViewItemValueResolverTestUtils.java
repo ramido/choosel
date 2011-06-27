@@ -15,9 +15,14 @@
  *******************************************************************************/
 package org.thechiselgroup.choosel.core.client.views.model;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.thechiselgroup.choosel.core.client.resources.Resource;
+import org.thechiselgroup.choosel.core.client.resources.ResourceSet;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollections;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolver;
 
@@ -30,6 +35,35 @@ public final class ViewItemValueResolverTestUtils {
         ViewItemValueResolver resolver = mock(ViewItemValueResolver.class);
         when(resolver.getTargetSlots()).thenReturn(
                 LightweightCollections.<Slot> emptyCollection());
+        return resolver;
+    }
+
+    public static ViewItemValueResolver mockAlwaysApplicableResolver() {
+        ViewItemValueResolver resolver = mockViewItemValueResolver();
+        when(
+                resolver.canResolve(any(ViewItem.class),
+                        any(ViewItemValueResolverContext.class))).thenReturn(
+                true);
+        return resolver;
+    }
+
+    public static ViewItemValueResolver createResolverCanResolveResource(
+            final Resource resource) {
+        ViewItemValueResolver resolver = mockViewItemValueResolver();
+        when(
+                resolver.canResolve(any(ViewItem.class),
+                        any(ViewItemValueResolverContext.class))).thenAnswer(
+                new Answer<Boolean>() {
+                    @Override
+                    public Boolean answer(InvocationOnMock invocation)
+                            throws Throwable {
+                        ViewItem viewItem = (ViewItem) invocation
+                                .getArguments()[0];
+                        ResourceSet set = viewItem.getResources();
+    
+                        return set.size() == 1 && set.contains(resource);
+                    };
+                });
         return resolver;
     }
 

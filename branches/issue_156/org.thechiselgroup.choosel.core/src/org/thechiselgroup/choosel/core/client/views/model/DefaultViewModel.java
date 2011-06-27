@@ -572,6 +572,7 @@ public class DefaultViewModel implements ViewModel, Disposable,
     private void updateErrorModel() {
         Slot[] slots = getSlots();
         for (Slot slot : slots) {
+            // TODO we may want to optimize this in the future
             /* remove all errors for this slot and then recalculate them */
             errorModel.clearErrors(slot);
 
