@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -340,7 +339,8 @@ public class SlotMappingIntegrationTest {
     @Test(expected = InvalidResolverException.class)
     public void errorThrownWhenResolversCannotResolveOneOfTwoSlots()
             throws Throwable {
-        Slot[] requiredSlots = helper.createSlots(DataType.NUMBER, DataType.TEXT);
+        Slot[] requiredSlots = helper.createSlots(DataType.NUMBER,
+                DataType.TEXT);
         when(helper.getViewContentDisplay().getSlots()).thenReturn(
                 requiredSlots);
 
@@ -481,7 +481,6 @@ public class SlotMappingIntegrationTest {
      * to switch to an invalid property. Instead, we should test that the UI
      * does not provide the possibility to switch to an invalid resolver.
      */
-    @Ignore("issue 156 refactoring")
     @Test
     public void reinitialzeResolverWhenPropertySelectedIsNotValid() {
         Slot[] requiredSlots = helper.createSlots(DataType.NUMBER);
@@ -716,7 +715,8 @@ public class SlotMappingIntegrationTest {
      */
     @Test
     public void resolveTwoFieldsWithTwoResolvers() {
-        Slot[] requiredSlots = helper.createSlots(DataType.NUMBER, DataType.TEXT);
+        Slot[] requiredSlots = helper.createSlots(DataType.NUMBER,
+                DataType.TEXT);
 
         when(helper.getViewContentDisplay().getSlots()).thenReturn(
                 requiredSlots);
