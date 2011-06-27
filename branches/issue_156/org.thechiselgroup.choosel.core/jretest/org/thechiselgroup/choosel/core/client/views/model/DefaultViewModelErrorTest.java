@@ -67,7 +67,7 @@ public class DefaultViewModelErrorTest {
     }
 
     @Test
-    public void resolverCannotResolveSomeViewItemsFixedByChangingResolverThrowsNoErrors() {
+    public void resolverCannotResolveSomeViewItemsFixedByChangingResolverReturnsNoErrors() {
         Slot[] slots = helper.createSlots(DataType.TEXT);
         DefaultViewModel underTest = helper.createTestViewModel();
 
@@ -116,7 +116,7 @@ public class DefaultViewModelErrorTest {
     }
 
     @Test
-    public void resolverCannotResolveSomeViewItemsFixedByChangingViewItemsThrowsNoErrors() {
+    public void resolverCannotResolveSomeViewItemsFixedByChangingViewItemsReturnsNoErrors() {
         Slot[] slots = helper.createSlots(DataType.TEXT);
         DefaultViewModel underTest = helper.createTestViewModel();
 
@@ -201,7 +201,7 @@ public class DefaultViewModelErrorTest {
     }
 
     @Test
-    public void setResolversFromUnconfiguredToValidThrowsNoErrors() {
+    public void setResolversFromUnconfiguredToValidReturnsNoErrors() {
         Slot[] slots = helper.createSlots(DataType.TEXT);
         DefaultViewModel underTest = helper.createTestViewModel();
 
@@ -246,7 +246,7 @@ public class DefaultViewModelErrorTest {
     }
 
     @Test
-    public void someSlotsNotConfiguredThrowsError() {
+    public void someSlotsNotConfiguredReturnsError() {
         Slot[] slots = helper.createSlots(DataType.TEXT, DataType.NUMBER);
 
         DefaultViewModel underTest = helper.createTestViewModel();
