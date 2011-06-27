@@ -49,6 +49,7 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
 
 import com.google.gwt.event.shared.UmbrellaException;
 
+// TODO think about test name schema - unit, module, system, integration test etc
 public class SlotMappingIntegrationTest {
 
     private SlotMappingInitializer slotMappingInitializer;
@@ -72,7 +73,7 @@ public class SlotMappingIntegrationTest {
 
     private ResourceGrouping resourceGrouping;
 
-    private DefaultViewModelTestHelper helper;
+    DefaultViewModelTestHelper helper;
 
     /**
      * <h3>Changing Property Select</h3>
@@ -94,7 +95,7 @@ public class SlotMappingIntegrationTest {
      */
     @Test
     public void changeSelectedPropertyChangesViewItems() {
-        Slot[] requiredSlots = createSlots(DataType.NUMBER);
+        Slot[] requiredSlots = helper.createSlots(DataType.NUMBER);
         when(helper.getViewContentDisplay().getSlots()).thenReturn(
                 requiredSlots);
 
@@ -168,7 +169,7 @@ public class SlotMappingIntegrationTest {
      */
     @Test
     public void changeToUnresolvableDataChangesToResolverSpecifiedByInitializer() {
-        Slot[] requiredSlots = createSlots(DataType.NUMBER);
+        Slot[] requiredSlots = helper.createSlots(DataType.NUMBER);
         when(helper.getViewContentDisplay().getSlots()).thenReturn(
                 requiredSlots);
 
@@ -242,7 +243,7 @@ public class SlotMappingIntegrationTest {
 
     @Test
     public void changingResolverManuallyChangesResolution() {
-        Slot[] requiredSlots = createSlots(DataType.NUMBER);
+        Slot[] requiredSlots = helper.createSlots(DataType.NUMBER);
         when(helper.getViewContentDisplay().getSlots()).thenReturn(
                 requiredSlots);
 
@@ -309,17 +310,6 @@ public class SlotMappingIntegrationTest {
         }
     }
 
-    private Slot[] createSlots(DataType... dataTypes) {
-        Slot[] slots = new Slot[dataTypes.length];
-
-        int i = 0;
-        for (DataType dataType : dataTypes) {
-            slots[i] = new Slot("slot" + i, "Slot " + i, dataType);
-            i++;
-        }
-        return slots;
-    }
-
     private DefaultViewModel createViewModel(
             SlotMappingConfigurationUIModel configurationUIModel,
             SlotMappingConfiguration slotMappingConfiguration,
@@ -350,7 +340,7 @@ public class SlotMappingIntegrationTest {
     @Test(expected = InvalidResolverException.class)
     public void errorThrownWhenResolversCannotResolveOneOfTwoSlots()
             throws Throwable {
-        Slot[] requiredSlots = createSlots(DataType.NUMBER, DataType.TEXT);
+        Slot[] requiredSlots = helper.createSlots(DataType.NUMBER, DataType.TEXT);
         when(helper.getViewContentDisplay().getSlots()).thenReturn(
                 requiredSlots);
 
@@ -425,7 +415,7 @@ public class SlotMappingIntegrationTest {
     public void errorThrownWhenResolvingOneUnresolvableResource()
             throws Throwable {
 
-        Slot[] requiredSlots = createSlots(DataType.NUMBER);
+        Slot[] requiredSlots = helper.createSlots(DataType.NUMBER);
         when(helper.getViewContentDisplay().getSlots()).thenReturn(
                 requiredSlots);
 
@@ -494,7 +484,7 @@ public class SlotMappingIntegrationTest {
     @Ignore("issue 156 refactoring")
     @Test
     public void reinitialzeResolverWhenPropertySelectedIsNotValid() {
-        Slot[] requiredSlots = createSlots(DataType.NUMBER);
+        Slot[] requiredSlots = helper.createSlots(DataType.NUMBER);
         when(helper.getViewContentDisplay().getSlots()).thenReturn(
                 requiredSlots);
 
@@ -546,7 +536,7 @@ public class SlotMappingIntegrationTest {
 
     @Test
     public void removingAllResourceDoesNotChangeResolver() {
-        Slot[] requiredSlots = createSlots(DataType.NUMBER);
+        Slot[] requiredSlots = helper.createSlots(DataType.NUMBER);
         when(helper.getViewContentDisplay().getSlots()).thenReturn(
                 requiredSlots);
 
@@ -595,7 +585,7 @@ public class SlotMappingIntegrationTest {
 
     @Test
     public void removingAllResourcesResultsInNoViewItems() {
-        Slot[] requiredSlots = createSlots(DataType.NUMBER);
+        Slot[] requiredSlots = helper.createSlots(DataType.NUMBER);
         when(helper.getViewContentDisplay().getSlots()).thenReturn(
                 requiredSlots);
 
@@ -662,7 +652,7 @@ public class SlotMappingIntegrationTest {
      */
     @Test
     public void resolverWithNumberPropertyResolver() {
-        Slot[] requiredSlots = createSlots(DataType.NUMBER);
+        Slot[] requiredSlots = helper.createSlots(DataType.NUMBER);
         when(helper.getViewContentDisplay().getSlots()).thenReturn(
                 requiredSlots);
 
@@ -726,7 +716,7 @@ public class SlotMappingIntegrationTest {
      */
     @Test
     public void resolveTwoFieldsWithTwoResolvers() {
-        Slot[] requiredSlots = createSlots(DataType.NUMBER, DataType.TEXT);
+        Slot[] requiredSlots = helper.createSlots(DataType.NUMBER, DataType.TEXT);
 
         when(helper.getViewContentDisplay().getSlots()).thenReturn(
                 requiredSlots);
@@ -805,7 +795,7 @@ public class SlotMappingIntegrationTest {
     @Test
     public void resolveWithOneFixedResolver() {
         /* set up the slots */
-        Slot[] requiredSlots = createSlots(DataType.NUMBER);
+        Slot[] requiredSlots = helper.createSlots(DataType.NUMBER);
         when(helper.getViewContentDisplay().getSlots()).thenReturn(
                 requiredSlots);
 

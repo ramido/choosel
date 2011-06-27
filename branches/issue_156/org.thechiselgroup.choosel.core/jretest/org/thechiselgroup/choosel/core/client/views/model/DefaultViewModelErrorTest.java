@@ -17,12 +17,10 @@ package org.thechiselgroup.choosel.core.client.views.model;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.containsExactly;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 import org.thechiselgroup.choosel.core.client.resources.DataType;
@@ -37,29 +35,28 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.SlotMappingUIModel
  */
 public class DefaultViewModelErrorTest {
 
+    private DefaultViewModelTestHelper helper;
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
         SlotMappingUIModel.TESTING = true;
+
+        helper = new DefaultViewModelTestHelper();
+        helper.mockInitializer();
     }
 
-    @Ignore("issue 156 - reactivate once fixed stuff is exported from mapping cfg")
     @Test
     public void slotWithoutResolverCausesError() {
-        Slot slot = new Slot("id-1", "text-slot", DataType.TEXT);
-
-        DefaultViewModelTestHelper helper = new DefaultViewModelTestHelper();
-        helper.setSlots(slot);
-        helper.setInitializer(mock(SlotMappingInitializer.class));
-
+        Slot[] slots = helper.createSlots(DataType.TEXT);
         DefaultViewModel underTest = helper.createTestViewModel();
 
         underTest.getResourceGrouping().getResourceSet()
                 .add(TestResourceSetFactory.createResource(1));
 
         assertThat(underTest.hasErrors(), is(true));
-        assertThat(underTest.getSlotsWithErrors(), containsExactly(slot));
+        assertThat(underTest.getSlotsWithErrors(), containsExactly(slots[0]));
     }
 
     @After

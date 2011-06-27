@@ -136,6 +136,19 @@ public final class DefaultViewModelTestHelper {
     private LightweightList<ViewItemValueResolverFactory> resolverFactories = CollectionFactory
             .createLightweightList();
 
+    public Slot[] createSlots(DataType... dataTypes) {
+        assert dataTypes != null;
+
+        Slot[] slots = new Slot[dataTypes.length];
+        for (int i = 0; i < slots.length; i++) {
+            slots[i] = new Slot("slot" + i, "Slot " + i, dataTypes[i]);
+        }
+
+        setSlots(slots);
+
+        return slots;
+    }
+
     public DefaultViewModel createTestViewModel() {
         when(resolverProvider.getResolverFactories()).thenReturn(
                 resolverFactories);
@@ -189,6 +202,10 @@ public final class DefaultViewModelTestHelper {
         this.highlightedResources = mock(ResourceSet.class);
     }
 
+    public void mockInitializer() {
+        this.initializer = mock(SlotMappingInitializer.class);
+    }
+
     public void mockSelectedResources() {
         this.selectedResources = mock(ResourceSet.class);
     }
@@ -199,10 +216,6 @@ public final class DefaultViewModelTestHelper {
 
     public void setHighlightedResources(ResourceSet highlightedResources) {
         this.highlightedResources = highlightedResources;
-    }
-
-    public void setInitializer(SlotMappingInitializer initializer) {
-        this.initializer = initializer;
     }
 
     public void setSelectedResources(ResourceSet selectedResources) {
