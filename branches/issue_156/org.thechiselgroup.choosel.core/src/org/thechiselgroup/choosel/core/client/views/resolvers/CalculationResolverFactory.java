@@ -62,7 +62,7 @@ public class CalculationResolverFactory implements ViewItemValueResolverFactory 
 
         assert !properties.isEmpty();
 
-        return new ManagedViewItemValueResolverAdapter(id,
+        return new ManagedViewItemValueResolverDecorator(id,
                 new CalculationResolver(properties.get(0), calculation));
     }
 

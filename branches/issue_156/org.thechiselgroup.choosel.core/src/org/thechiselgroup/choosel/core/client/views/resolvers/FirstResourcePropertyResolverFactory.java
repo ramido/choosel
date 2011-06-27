@@ -59,7 +59,7 @@ public class FirstResourcePropertyResolverFactory implements
             LightweightCollection<ViewItem> viewItems) {
         List<String> properties = getSharedProperties(viewItems);
         assert !properties.isEmpty();
-        return new ManagedViewItemValueResolverAdapter(resolverID,
+        return new ManagedViewItemValueResolverDecorator(resolverID,
                 new FirstResourcePropertyResolver(properties.get(0), dataType));
     }
 

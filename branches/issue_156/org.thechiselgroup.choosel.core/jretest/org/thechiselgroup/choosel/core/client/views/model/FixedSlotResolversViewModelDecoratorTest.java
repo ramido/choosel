@@ -16,9 +16,7 @@
 package org.thechiselgroup.choosel.core.client.views.model;
 
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatchers.equalsArray;
 
 import java.util.HashMap;

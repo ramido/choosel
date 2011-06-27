@@ -35,6 +35,17 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
 public class DefaultViewItemResolutionErrorModel implements
         ViewItemResolutionErrorModel {
 
+    // TODO think about extractign this
+    private static <T> void assertDoesNotContainEmptyLists(
+            Map<String, ArrayListToLightweightListAdapter<T>> map) {
+
+        for (Entry<String, ArrayListToLightweightListAdapter<T>> entry : map
+                .entrySet()) {
+            assert !entry.getValue().isEmpty() : "empty list at key "
+                    + entry.getKey();
+        }
+    }
+
     /**
      * Contains ids of all slots that have errors as keys, and the
      * {@link ViewItem}s that could not be resolved for that slot as values.
@@ -88,16 +99,6 @@ public class DefaultViewItemResolutionErrorModel implements
                 .get(slotId);
         if (!slotErrors.contains(viewItem)) {
             slotErrors.add(viewItem);
-        }
-    }
-
-    private <T> void assertDoesNotContainEmptyLists(
-            Map<String, ArrayListToLightweightListAdapter<T>> map) {
-
-        for (Entry<String, ArrayListToLightweightListAdapter<T>> entry : map
-                .entrySet()) {
-            assert !entry.getValue().isEmpty() : "empty list at key "
-                    + entry.getKey();
         }
     }
 

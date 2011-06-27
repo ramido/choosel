@@ -20,14 +20,14 @@ import org.thechiselgroup.choosel.core.client.views.model.Slot;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItem;
 import org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverContext;
 
-public class ManagedViewItemValueResolverAdapter implements
+public class ManagedViewItemValueResolverDecorator implements
         ManagedViewItemValueResolver {
 
     private ViewItemValueResolver delegate;
 
     private String resolverId;
 
-    public ManagedViewItemValueResolverAdapter(String resolverId,
+    public ManagedViewItemValueResolverDecorator(String resolverId,
             ViewItemValueResolver delegate) {
 
         this.delegate = delegate;

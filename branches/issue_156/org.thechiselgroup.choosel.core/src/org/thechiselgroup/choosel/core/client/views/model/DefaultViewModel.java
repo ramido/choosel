@@ -576,7 +576,15 @@ public class DefaultViewModel implements ViewModel, Disposable,
                 for (ViewItem viewItem : viewItems) {
                     errorModel.reportError(slot, viewItem);
                 }
+            } else {
+                for (ViewItem viewItem : getViewItems()) {
+                    if (!slotMappingConfiguration.getResolver(slot).canResolve(
+                            viewItem, this)) {
+                        errorModel.reportError(slot, viewItem);
+                    }
+                }
             }
+
         }
     }
 

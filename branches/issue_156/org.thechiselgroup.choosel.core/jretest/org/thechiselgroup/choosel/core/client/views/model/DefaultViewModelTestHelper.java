@@ -16,11 +16,7 @@
 package org.thechiselgroup.choosel.core.client.views.model;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.emptyLightweightCollection;
 
 import java.util.ArrayList;
@@ -44,7 +40,7 @@ import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollec
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightList;
 import org.thechiselgroup.choosel.core.client.util.collections.NullIterator;
 import org.thechiselgroup.choosel.core.client.views.resolvers.FixedValueResolver;
-import org.thechiselgroup.choosel.core.client.views.resolvers.ManagedViewItemValueResolverAdapter;
+import org.thechiselgroup.choosel.core.client.views.resolvers.ManagedViewItemValueResolverDecorator;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverFactory;
 import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResolverFactoryProvider;
 
@@ -161,6 +157,7 @@ public final class DefaultViewModelTestHelper {
         SlotMappingConfigurationUIModel configurationUIModel = new SlotMappingConfigurationUIModel(
                 resolverProvider, initializer, slotMappingConfiguration);
 
+        // TODO we want to make the categorizer more flexible
         ResourceGrouping resourceGrouping = new ResourceGrouping(
                 new ResourceCategorizerToMultiCategorizerAdapter(
                         new ResourceByUriTypeCategorizer()),
@@ -255,7 +252,7 @@ public final class DefaultViewModelTestHelper {
         DefaultSlotMappingInitializer initializer = spy(new DefaultSlotMappingInitializer());
         initializer
                 .putDefaultDataTypeValues(DataType.NUMBER,
-                        new ManagedViewItemValueResolverAdapter("Fixed-0",
+                        new ManagedViewItemValueResolverDecorator("Fixed-0",
                                 new FixedValueResolver(new Double(0),
                                         DataType.NUMBER)));
         {
@@ -271,7 +268,7 @@ public final class DefaultViewModelTestHelper {
         }
         if (useDefaultFactories) {
             initializer.putDefaultDataTypeValues(DataType.TEXT,
-                    new ManagedViewItemValueResolverAdapter(
+                    new ManagedViewItemValueResolverDecorator(
                             "Fixed-EmptyString", new FixedValueResolver("",
                                     DataType.TEXT)));
             {

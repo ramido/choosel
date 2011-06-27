@@ -43,7 +43,7 @@ public class ResourceCountResolverFactory implements
     @Override
     public ManagedViewItemValueResolver create(
             LightweightCollection<ViewItem> viewItems) {
-        return new ManagedViewItemValueResolverAdapter(getId(),
+        return new ManagedViewItemValueResolverDecorator(getId(),
                 new ResourceCountResolver(subset));
     }
 

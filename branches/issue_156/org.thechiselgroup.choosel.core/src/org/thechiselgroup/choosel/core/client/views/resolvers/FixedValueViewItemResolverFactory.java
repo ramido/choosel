@@ -49,7 +49,7 @@ public class FixedValueViewItemResolverFactory implements
     @Override
     public ManagedViewItemValueResolver create(
             LightweightCollection<ViewItem> viewItems) {
-        return new ManagedViewItemValueResolverAdapter(id,
+        return new ManagedViewItemValueResolverDecorator(id,
                 new FixedValueResolver(value, dataType));
     }
 
