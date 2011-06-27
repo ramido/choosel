@@ -550,6 +550,8 @@ public class DefaultViewModel implements ViewModel, Disposable,
         return viewItem;
     }
 
+    // TODO Pat thinks there needs to be a check that the slot exists and more
+    // importantly is not fixed
     @Override
     public void setResolver(Slot slot, ViewItemValueResolver resolver) {
         if (resolver instanceof ManagedViewItemValueResolver) {

@@ -163,6 +163,11 @@ public class FixedSlotResolversViewModelDecorator implements ViewModel {
         return delegate.hasErrors(viewItem);
     }
 
+    /**
+     * This method calculates and initialized the slots field to the non-fixed
+     * slots that are in the slotMappingConfiguration of the delegate. These
+     * slots represent slots that the user is able to configure in the UI
+     */
     private void initAvailableSlots(ViewModel delegate,
             Map<Slot, ViewItemValueResolver> fixedSlotResolvers) {
         ArrayList<Slot> slotList = new ArrayList<Slot>();
