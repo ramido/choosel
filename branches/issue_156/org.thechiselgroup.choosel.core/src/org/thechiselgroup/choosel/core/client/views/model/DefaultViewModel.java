@@ -550,8 +550,6 @@ public class DefaultViewModel implements ViewModel, Disposable,
         return viewItem;
     }
 
-    // TODO Pat thinks there needs to be a check that the slot exists and more
-    // importantly is not fixed
     @Override
     public void setResolver(Slot slot, ViewItemValueResolver resolver) {
         if (resolver instanceof ManagedViewItemValueResolver) {
@@ -559,6 +557,9 @@ public class DefaultViewModel implements ViewModel, Disposable,
                     (ManagedViewItemValueResolver) resolver);
         }
         slotMappingConfiguration.setResolver(slot, resolver);
+
+        /* This may have caused/fixed errors in model */
+        updateErrorModel();
     }
 
     @Override
@@ -571,6 +572,9 @@ public class DefaultViewModel implements ViewModel, Disposable,
     private void updateErrorModel() {
         Slot[] slots = getSlots();
         for (Slot slot : slots) {
+            /* remove all errors for this slot and then recalculate them */
+            errorModel.clearErrors(slot);
+
             if (!slotMappingConfiguration.isConfigured(slot)) {
                 LightweightCollection<ViewItem> viewItems = getViewItems();
                 for (ViewItem viewItem : viewItems) {
@@ -584,7 +588,6 @@ public class DefaultViewModel implements ViewModel, Disposable,
                     }
                 }
             }
-
         }
     }
 
