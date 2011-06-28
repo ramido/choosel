@@ -23,7 +23,7 @@ import static org.thechiselgroup.choosel.core.client.test.HamcrestResourceMatche
 import static org.thechiselgroup.choosel.core.client.test.ResourcesTestHelper.*;
 import static org.thechiselgroup.choosel.core.client.test.TestResourceSetFactory.*;
 import static org.thechiselgroup.choosel.core.client.views.model.DefaultViewModelTestHelper.*;
-import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.createResolverCanResolveIfContainsAllResources;
+import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.createResolverCanResolveIfContainsExactlyAllResources;
 import static org.thechiselgroup.choosel.core.client.views.model.ViewItemValueResolverTestUtils.createResolverCanResolveResource;
 import static org.thechiselgroup.choosel.core.client.views.model.ViewItemWithResourcesMatcher.containsEqualResource;
 import static org.thechiselgroup.choosel.core.client.views.model.ViewItemWithResourcesMatcher.containsEqualResources;
@@ -429,9 +429,10 @@ public class DefaultViewModelTest {
         ResourceSet resources = createResources();
         resources.add(resource1);
         resources.add(resource2);
-
-        underTest.setResolver(slot,
-                createResolverCanResolveIfContainsAllResources(resources));
+        underTest
+                .setResolver(
+                        slot,
+                        createResolverCanResolveIfContainsExactlyAllResources(resources));
 
         helper.getContainedResources().add(resource1);
 
@@ -453,15 +454,80 @@ public class DefaultViewModelTest {
         assertThat(addedViewItems, containsEqualResources(resources));
     }
 
-    @Ignore("not implemented")
     @Test
     public void updatedViewItemChangingFromValidToInvalidGetsAddedToRemovedDelta() {
 
+        Resource resource1 = TestResourceSetFactory.createResource(
+                RESOURCE_TYPE_1, 1);
+        Resource resource2 = TestResourceSetFactory.createResource(
+                RESOURCE_TYPE_1, 2);
+        Resource resource3 = TestResourceSetFactory.createResource(
+                RESOURCE_TYPE_1, 3);
+
+        ResourceSet resources = createResources();
+        resources.add(resource1);
+        resources.add(resource2);
+
+        underTest
+                .setResolver(
+                        slot,
+                        createResolverCanResolveIfContainsExactlyAllResources(resources));
+
+        helper.getContainedResources().addAll(resources);
+
+        /* should now have 1 valid view item */
+
+        helper.getContainedResources().remove(resource2);
+
+        ArgumentCaptor<LightweightCollection> captor = ArgumentCaptor
+                .forClass(LightweightCollection.class);
+        verify(helper.getViewContentDisplay(), times(3)).update(
+                emptyLightweightCollection(ViewItem.class),
+                emptyLightweightCollection(ViewItem.class), captor.capture(),
+                any(LightweightCollection.class));
+
+        LightweightCollection<ViewItem> removedViewItems = captor
+                .getAllValues().get(2);
+
+        assertEquals(1, removedViewItems.size());
+        assertThat(removedViewItems, containsEqualResource(resource1));
     }
 
-    @Ignore("not implemented")
     @Test
-    public void updatedViewItemInvalidBeforeAndAfterDoesNotGetsIgnored() {
+    public void updatedViewItemInvalidBeforeAndAfterGetsIgnored() {
+
+        Resource resource1 = TestResourceSetFactory.createResource(
+                RESOURCE_TYPE_1, 1);
+        Resource resource2 = TestResourceSetFactory.createResource(
+                RESOURCE_TYPE_1, 2);
+        Resource resource3 = TestResourceSetFactory.createResource(
+                RESOURCE_TYPE_1, 3);
+
+        ResourceSet validResources = createResources();
+        validResources.add(resource3);
+
+        ResourceSet otherResources = createResources();
+        otherResources.add(resource1);
+        otherResources.add(resource2);
+
+        underTest
+                .setResolver(
+                        slot,
+                        createResolverCanResolveIfContainsExactlyAllResources(validResources));
+
+        helper.getContainedResources().addAll(otherResources);
+
+        helper.getContainedResources().remove(resource2);
+
+        ArgumentCaptor<LightweightCollection> captor = ArgumentCaptor
+                .forClass(LightweightCollection.class);
+
+        // TODO will this enforce that they are all empty the 4th time?
+        verify(helper.getViewContentDisplay(), times(4)).update(
+                emptyLightweightCollection(ViewItem.class),
+                emptyLightweightCollection(ViewItem.class),
+                emptyLightweightCollection(ViewItem.class),
+                any(LightweightCollection.class));
 
     }
 

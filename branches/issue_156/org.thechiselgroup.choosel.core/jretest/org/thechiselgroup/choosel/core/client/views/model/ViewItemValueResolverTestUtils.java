@@ -28,7 +28,7 @@ import org.thechiselgroup.choosel.core.client.views.resolvers.ViewItemValueResol
 
 public final class ViewItemValueResolverTestUtils {
 
-    public static ViewItemValueResolver createResolverCanResolveIfContainsAllResources(
+    public static ViewItemValueResolver createResolverCanResolveIfContainsExactlyAllResources(
             final ResourceSet resources) {
         ViewItemValueResolver resolver = mockViewItemValueResolver();
         when(
@@ -41,7 +41,8 @@ public final class ViewItemValueResolverTestUtils {
                         ViewItem viewItem = (ViewItem) invocation
                                 .getArguments()[0];
                         ResourceSet set = viewItem.getResources();
-                        return set.containsAll(resources);
+                        return set.size() == resources.size()
+                                && set.containsAll(resources);
 
                     };
                 });
