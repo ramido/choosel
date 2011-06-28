@@ -18,12 +18,12 @@ package org.thechiselgroup.choosel.core.client.views.model;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 
 /**
- * Delta of changes to a set of {@link ViewItem}s: new view items, changed view
- * items, and removed view items.
+ * Delta of changes to a {@link ViewItemContainer}: new, changed, and removed
+ * {@link ViewItem}s.
  * 
  * @author Lars Grammel
  */
-public class ViewItemsDelta {
+public class ViewItemContainerDelta {
 
     private LightweightCollection<ViewItem> addedViewItems;
 
@@ -31,7 +31,8 @@ public class ViewItemsDelta {
 
     private LightweightCollection<ViewItem> updatedViewItems;
 
-    public ViewItemsDelta(LightweightCollection<ViewItem> addedViewItems,
+    public ViewItemContainerDelta(
+            LightweightCollection<ViewItem> addedViewItems,
             LightweightCollection<ViewItem> removedViewItems,
             LightweightCollection<ViewItem> updatedViewItems) {
 

@@ -18,14 +18,26 @@ package org.thechiselgroup.choosel.core.client.views.model;
 import org.thechiselgroup.choosel.core.client.resources.Resource;
 import org.thechiselgroup.choosel.core.client.util.collections.LightweightCollection;
 
+import com.google.gwt.event.shared.HandlerRegistration;
+
 /**
- * Provides read access to {@link ViewItem}s.
+ * Read-only container of {@link ViewItem}s.
  * 
  * @author Lars Grammel
  * 
  * @see ViewItem
  */
 public interface ViewItemContainer {
+
+    /**
+     * @param handler
+     *            Handler that will be notified whenever the {@link ViewItem}s
+     *            in this container change.
+     * 
+     * @return {@link HandlerRegistration} that can used to remove
+     *         {@code handler} from this container.
+     */
+    HandlerRegistration addHandler(ViewItemContainerChangeEventHandler handler);
 
     /**
      * @return <code>true</code>, if there is a {@link ViewItem} with the

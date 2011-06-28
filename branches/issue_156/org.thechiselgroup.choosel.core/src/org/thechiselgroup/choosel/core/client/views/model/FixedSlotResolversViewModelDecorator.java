@@ -63,6 +63,13 @@ public class FixedSlotResolversViewModelDecorator implements ViewModel {
     }
 
     @Override
+    public HandlerRegistration addHandler(
+            ViewItemContainerChangeEventHandler handler) {
+
+        return delegate.addHandler(handler);
+    }
+
+    @Override
     public boolean containsViewItem(String viewItemId) {
         return delegate.containsViewItem(viewItemId);
     }

@@ -130,6 +130,14 @@ public class DefaultViewModel implements ViewModel, Disposable,
     }
 
     @Override
+    public HandlerRegistration addHandler(
+            ViewItemContainerChangeEventHandler handler) {
+
+        // TODO implement
+        return null;
+    }
+
+    @Override
     public boolean containsViewItem(String groupId) {
         return viewItemsByGroupId.containsKey(groupId);
     }
@@ -363,7 +371,7 @@ public class DefaultViewModel implements ViewModel, Disposable,
                  * the visual mappings need to be updated first because the view
                  * items rely on them when the values are resolved
                  */
-                ViewItemsDelta delta = updateViewItemsOnModelChange(e);
+                ViewItemContainerDelta delta = updateViewItemsOnModelChange(e);
                 updateErrorModel();
                 updateVisualMappings();
                 updateViewContentDisplay(delta);
@@ -635,14 +643,14 @@ public class DefaultViewModel implements ViewModel, Disposable,
         }
     }
 
-    private void updateViewContentDisplay(ViewItemsDelta delta) {
+    private void updateViewContentDisplay(ViewItemContainerDelta delta) {
         // TODO switch to delta in view content display interface
         updateViewContentDisplay(delta.getAddedViewItems(),
                 delta.getUpdatedViewItems(), delta.getRemovedViewItems(),
                 LightweightCollections.<Slot> emptyCollection());
     }
 
-    private ViewItemsDelta updateViewItemsOnModelChange(
+    private ViewItemContainerDelta updateViewItemsOnModelChange(
             ResourceGroupingChangedEvent e) {
 
         assert e != null;
@@ -658,7 +666,7 @@ public class DefaultViewModel implements ViewModel, Disposable,
         LightweightCollection<ViewItem> updatedViewItems = processUpdates(e
                 .getChanges(Delta.GROUP_CHANGED));
 
-        return new ViewItemsDelta(addedViewItems, removedViewItems,
+        return new ViewItemContainerDelta(addedViewItems, removedViewItems,
                 updatedViewItems);
     }
 
