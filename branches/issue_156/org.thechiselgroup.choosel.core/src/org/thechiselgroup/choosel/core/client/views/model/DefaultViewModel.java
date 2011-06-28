@@ -58,41 +58,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 public class DefaultViewModel implements ViewModel, Disposable,
         ViewContentDisplayCallback {
 
-    public static class ViewItemsDelta {
-
-        private LightweightCollection<ViewItem> addedViewItems;
-
-        private LightweightCollection<ViewItem> removedViewItems;
-
-        private LightweightCollection<ViewItem> updatedViewItems;
-
-        public ViewItemsDelta(LightweightCollection<ViewItem> addedViewItems,
-                LightweightCollection<ViewItem> removedViewItems,
-                LightweightCollection<ViewItem> updatedViewItems) {
-
-            assert addedViewItems != null;
-            assert removedViewItems != null;
-            assert updatedViewItems != null;
-
-            this.addedViewItems = addedViewItems;
-            this.removedViewItems = removedViewItems;
-            this.updatedViewItems = updatedViewItems;
-        }
-
-        public LightweightCollection<ViewItem> getAddedViewItems() {
-            return addedViewItems;
-        }
-
-        public LightweightCollection<ViewItem> getRemovedViewItems() {
-            return removedViewItems;
-        }
-
-        public LightweightCollection<ViewItem> getUpdatedViewItems() {
-            return updatedViewItems;
-        }
-
-    }
-
     /**
      * Maps group ids (representing the resource sets that are calculated by the
      * resource grouping, also used as view item ids) to the
